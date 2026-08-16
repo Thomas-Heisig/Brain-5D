@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.embodiment.models import EmbodimentMetrics
-
 JSONScalar = str | int | float | bool | None
 JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 
@@ -24,7 +22,6 @@ class SystemMetrics:
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
-
         return {
             "tick": self.tick,
             "neurons": self.neurons,
@@ -49,7 +46,6 @@ class LearningMetrics:
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
-
         return {
             "stdp_updates": self.stdp_updates,
             "reward_updates": self.reward_updates,
@@ -78,7 +74,6 @@ class StorageMetrics:
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
-
         return {
             "queue_depth": self.queue_depth,
             "queue_capacity": self.queue_capacity,
@@ -105,7 +100,6 @@ class SelfOrganizationMetrics:
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
-
         return {
             "neurons_created": self.neurons_created,
             "neurons_removed": self.neurons_removed,
@@ -116,25 +110,32 @@ class SelfOrganizationMetrics:
 
 @dataclass(frozen=True, slots=True)
 class HomeostasisMetrics:
-    """Read-only bridge metrics for the upcoming v0.5 homeostasis engine."""
+    """Self-regulation metrics introduced with v0.5."""
 
+    enabled: bool = False
     target_rate_hz: float = 0.0
-    actual_rate_hz: float = 0.0
-    rate_error_hz: float = 0.0
+    mean_rate_hz: float = 0.0
+    mean_rate_error_hz: float = 0.0
     mean_threshold_adaptation: float = 0.0
+    target_energy: float = 0.0
+    mean_energy: float = 0.0
     mean_energy_error: float = 0.0
     active_neurons: int = 0
+    updates: int = 0
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
-
         return {
+            "enabled": self.enabled,
             "target_rate_hz": self.target_rate_hz,
-            "actual_rate_hz": self.actual_rate_hz,
-            "rate_error_hz": self.rate_error_hz,
+            "mean_rate_hz": self.mean_rate_hz,
+            "mean_rate_error_hz": self.mean_rate_error_hz,
             "mean_threshold_adaptation": self.mean_threshold_adaptation,
+            "target_energy": self.target_energy,
+            "mean_energy": self.mean_energy,
             "mean_energy_error": self.mean_energy_error,
             "active_neurons": self.active_neurons,
+            "updates": self.updates,
         }
 
 
@@ -147,13 +148,11 @@ class DashboardSnapshot:
     storage: StorageMetrics = StorageMetrics()
     self_organization: SelfOrganizationMetrics = SelfOrganizationMetrics()
     homeostasis: HomeostasisMetrics = HomeostasisMetrics()
-    embodiment: EmbodimentMetrics = EmbodimentMetrics()
     status: str = "idle"
-    version: str = "0.4.0-alpha.7"
+    version: str = "0.5.0-alpha.1"
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
-
         return {
             "status": self.status,
             "version": self.version,
@@ -162,5 +161,4 @@ class DashboardSnapshot:
             "storage": self.storage.to_json(),
             "self_organization": self.self_organization.to_json(),
             "homeostasis": self.homeostasis.to_json(),
-            "embodiment": self.embodiment.to_json(),
         }

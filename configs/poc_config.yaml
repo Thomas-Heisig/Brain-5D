@@ -86,8 +86,6 @@ reward:
   trace_epsilon: 1.0e-12
   reward_source: external
 
-# Structural adaptation stays opt-in. This mirrors configs/self_organization.yaml
-# so the main PoC exposes every available subsystem in one place.
 self_organization:
   enabled: false
   interval_ticks: 100
@@ -104,8 +102,20 @@ self_organization:
   neurogenesis_radius: 1.0
   neurogenesis_max_per_cycle: 1
 
-# .b5d V1 is provided as a storage API in this update. It is intentionally not
-# auto-saved by src.main yet; explicit snapshots avoid hidden I/O costs.
+# v0.5.0-alpha.1: conservative self-regulation, disabled by default.
+homeostasis:
+  enabled: false
+  target_rate_hz: 5.0
+  rate_tau_ticks: 200.0
+  threshold_learning_rate: 0.001
+  threshold_min: -15.0
+  threshold_max: 30.0
+  energy_enabled: true
+  target_energy: 1.0
+  energy_recovery_rate: 0.001
+  energy_min: 0.0
+  energy_max: 1.0
+
 storage:
   enabled: false
   format: b5d

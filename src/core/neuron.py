@@ -1,8 +1,12 @@
+"""Izhikevich neuron model used by the sparse Brain-5D core."""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class Neuron:
+    """One deterministic spiking neuron with energy and adaptive threshold."""
+
     neuron_id: int
     a: float = 0.02
     b: float = 0.2
@@ -19,6 +23,7 @@ class Neuron:
     last_synaptic_current: float = 0.0
 
     def step(self, input_current: float, tick: int) -> bool:
+        """Advance the neuron by one millisecond and return whether it spiked."""
         self.v += 0.5 * (
             0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current
         )
@@ -26,7 +31,8 @@ class Neuron:
             0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current
         )
         self.u += self.a * (self.b * self.v - self.u)
-        if self.v >= 30.0:
+        threshold = 30.0 + self.threshold_adaptation
+        if self.v >= threshold:
             self.v = self.c
             self.u += self.d
             self.spike_counter += 1

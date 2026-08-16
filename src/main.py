@@ -1,10 +1,11 @@
+"""Brain-5D command-line simulation entry point."""
+
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 import random
 import statistics
-from dataclasses import asdict
-from pathlib import Path
 
 from src.config.loader import load_config
 from src.core.network import NeuralNetwork
@@ -17,6 +18,7 @@ from src.core.spatial_index import (
 from src.diagnostics.propagation import PropagationAnalyzer
 from src.diagnostics.stimulus import StimulusEngine
 from src.diagnostics.topology_health import TopologyHealth
+from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 from src.telemetry.history import History
 from src.telemetry.probes import ProbeManager
@@ -25,39 +27,48 @@ from src.utils.run_artifacts import RunArtifacts
 
 
 def sample_positions_excluding_poc(
-    total: int, reserved: set[int], n: int, rng: random.Random
+    total: int,
+    reserved: set[int],
+    n: int,
+    rng: random.Random,
 ) -> list[int]:
-    available = [i for i in range(total) if i not in reserved]
+    """Sample free linear positions while preserving reserved PoC cells."""
+    available = [index for index in range(total) if index not in reserved]
     if n > len(available):
         raise ValueError("Not enough unreserved positions")
     return rng.sample(available, n)
 
 
 def build_network(config: dict) -> tuple[NeuralNetwork, random.Random]:
+    """Build the deterministic sparse PoC network from configuration."""
     rng = random.Random(int(config["seed"]))
     network = NeuralNetwork(config, rng)
     dims = tuple(config["dimensions"])
     total = 1
-    for d in dims:
-        total *= d
+    for dimension in dims:
+        total *= dimension
     topology = config["topology"]
     input_coord = make_boundary_coord(
-        dims, topology["input"]["dimension"], topology["input"]["coordinate"]
+        dims,
+        topology["input"]["dimension"],
+        topology["input"]["coordinate"],
     )
     output_coord = make_boundary_coord(
-        dims, topology["output"]["dimension"], topology["output"]["coordinate"]
+        dims,
+        topology["output"]["dimension"],
+        topology["output"]["coordinate"],
     )
     diag_coord = tuple(config["diagnostics"]["target_coord"])
     reserved_coords = {input_coord, output_coord, diag_coord}
-    reserved_indices = {coords_to_linear(c, dims) for c in reserved_coords}
+    reserved_indices = {coords_to_linear(coord, dims) for coord in reserved_coords}
     chosen = sample_positions_excluding_poc(
         total,
         reserved_indices,
         int(config["initial_neurons"]) - len(reserved_coords),
         rng,
     )
-    for idx in chosen:
-        network.add_neuron(linear_to_5d(idx, dims))
+    for index in chosen:
+        network.add_neuron(linear_to_5d(index, dims))
     for coord in sorted(reserved_coords):
         network.add_neuron(coord)
     network.set_input_output_cells(
@@ -74,8 +85,9 @@ def build_network(config: dict) -> tuple[NeuralNetwork, random.Random]:
 
 
 def main() -> int:
+    """Run the configured Brain-5D simulation."""
     parser = argparse.ArgumentParser(
-        description="Brain 5D Sprint 2C - three-factor plasticity and heatmap"
+        description="Brain 5D v0.5 - homeostatic self-regulation"
     )
     parser.add_argument("--config", default="configs/poc_config.yaml")
     parser.add_argument("--observe", action="store_true")
@@ -89,6 +101,9 @@ def main() -> int:
     learning = LearningEngine(network, config)
     if learning.enabled:
         learning.attach()
+    homeostasis = HomeostasisEngine(network, config)
+    if homeostasis.enabled:
+        homeostasis.attach()
 
     health = TopologyHealth(network).analyze()
     stimulus = StimulusEngine(config, rng)
@@ -98,23 +113,26 @@ def main() -> int:
     propagation = PropagationAnalyzer(network.output_cells)
     diag_target = tuple(config["diagnostics"]["target_coord"])
     diag_id = next(
-        (nid for nid in network.neurons if unpack_coords(nid) == diag_target), None
+        (nid for nid in network.neurons if unpack_coords(nid) == diag_target),
+        None,
     )
     if diag_id is not None:
         probes.add_probe(diag_id)
-    obs = None
+
+    observatory = None
     if config["visualization"].get("enabled"):
         from src.visualization.observatory import Observatory
 
-        obs = Observatory(network, config, spike_history, history, probes)
+        observatory = Observatory(network, config, spike_history, history, probes)
 
-    core_times = []
+    core_times: list[float] = []
     warmup = 100
-    print("Brain 5D - Sprint 2C three-factor plasticity + heatmap")
+    print("Brain 5D - v0.5.0-alpha.1 homeostasis")
     print(
         f"Neurons={len(network.neurons)} Synapses={network.synapse_count} "
         f"Input={len(network.input_cells)} Output={len(network.output_cells)} "
-        f"Learning={'on' if learning.enabled else 'off'}"
+        f"Learning={'on' if learning.enabled else 'off'} "
+        f"Homeostasis={'on' if homeostasis.enabled else 'off'}"
     )
 
     with RunArtifacts(config) as artifacts:
@@ -142,17 +160,18 @@ def main() -> int:
             if args.benchmark and result.tick >= warmup:
                 core_times.append(result.core_step_ms)
             if (
-                obs
+                observatory
                 and (result.tick + 1)
                 % int(config["visualization"]["refresh_interval_ticks"])
                 == 0
             ):
-                obs.draw()
+                observatory.draw()
             if (result.tick + 1) % int(config["logging"]["interval_ticks"]) == 0:
                 print(
-                    f"Tick {result.tick+1:4d} | spikes={result.spikes_this_tick:4d} | "
-                    f"total={result.total_spikes:6d} | queue={result.queued_events:5d} | "
-                    f"{result.core_step_ms:.3f} ms"
+                    f"Tick {result.tick + 1:4d} | spikes={result.spikes_this_tick:4d} "
+                    f"| total={result.total_spikes:6d} "
+                    f"| queue={result.queued_events:5d} "
+                    f"| {result.core_step_ms:.3f} ms"
                 )
 
         report = propagation.get_report()
@@ -167,6 +186,8 @@ def main() -> int:
         }
         if learning.enabled:
             summary["learning"] = asdict(learning.stats)
+        if homeostasis.enabled:
+            summary["homeostasis"] = asdict(homeostasis.stats)
         if core_times:
             ordered = sorted(core_times)
             p95 = ordered[max(0, int(len(ordered) * 0.95) - 1)]
@@ -181,8 +202,10 @@ def main() -> int:
     print("Propagation:", report)
     if learning.enabled:
         print("Learning:", learning.stats)
-    if obs:
-        obs.block_until_closed()
+    if homeostasis.enabled:
+        print("Homeostasis:", homeostasis.stats)
+    if observatory:
+        observatory.block_until_closed()
     return 0
 
 

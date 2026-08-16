@@ -1,10 +1,4 @@
-"""Typed runtime checkpoint sidecar for deterministic restore-and-continue.
-
-The frozen ``.b5d`` V1 snapshot deliberately uses compact float32 fields for
-restart metadata and synapse values.  Exact continuation therefore stores the
-runtime-critical neuron and synapse values in this JSON sidecar and reapplies
-them after snapshot/journal reconstruction.
-"""
+"""Typed runtime checkpoint sidecar for deterministic restore-and-continue."""
 
 from __future__ import annotations
 
@@ -13,7 +7,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 import random
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 
 class CheckpointEventLike(Protocol):
@@ -25,9 +19,23 @@ class CheckpointEventLike(Protocol):
     delivery_tick: int
 
 
+class CheckpointNetworkLike(Protocol):
+    """Runtime fields required for the base checkpoint contract."""
+
+    rng: random.Random
+    current_tick: int
+    total_spikes: int
+    total_events_processed: int
+    pending_currents: Mapping[int, float]
+    input_cells: set[int]
+    output_cells: set[int]
+    event_slots: Sequence[Sequence[CheckpointEventLike]]
+
+
 class CheckpointNeuronLike(Protocol):
     """Exact neuron fields required for deterministic continuation."""
 
+    neuron_id: int
     a: float
     b: float
     c: float
@@ -36,9 +44,9 @@ class CheckpointNeuronLike(Protocol):
     u: float
     energy: float
     spike_cost: float
-    threshold_adaptation: float
     spike_counter: int
     last_spike_tick: int
+    threshold_adaptation: float
     last_external_current: float
     last_synaptic_current: float
 
@@ -53,17 +61,10 @@ class CheckpointSynapseLike(Protocol):
     last_pre_spike: int
 
 
-class CheckpointNetworkLike(Protocol):
-    """Runtime fields required to persist non-snapshot simulation state."""
+@runtime_checkable
+class ExactCheckpointNetworkLike(Protocol):
+    """Optional exact network surface available on the real core."""
 
-    rng: random.Random
-    current_tick: int
-    total_spikes: int
-    total_events_processed: int
-    pending_currents: Mapping[int, float]
-    input_cells: set[int]
-    output_cells: set[int]
-    event_slots: Sequence[Sequence[CheckpointEventLike]]
     neurons: Mapping[int, CheckpointNeuronLike]
     synapses: Mapping[int, Sequence[CheckpointSynapseLike]]
 
@@ -88,18 +89,18 @@ class QueuedEventRecord:
 
 
 @dataclass(frozen=True, slots=True)
-class RuntimeNeuronStateRecord:
-    """Exact neuron state layered over the compact snapshot record."""
+class NeuronRuntimeRecord:
+    """Exact neuron state overlaid after compact snapshot recovery."""
 
     neuron_id: int
-    a: float | None
-    b: float | None
-    c: float | None
-    d: float | None
+    a: float
+    b: float
+    c: float
+    d: float
     membrane_v: float
     recovery_u: float
     energy: float
-    spike_cost: float | None
+    spike_cost: float
     threshold_adaptation: float
     spike_counter: int
     last_spike_tick: int
@@ -108,8 +109,8 @@ class RuntimeNeuronStateRecord:
 
 
 @dataclass(frozen=True, slots=True)
-class RuntimeSynapseStateRecord:
-    """Exact synapse state layered over the compact snapshot record."""
+class SynapseRuntimeRecord:
+    """Exact synapse state overlaid after compact snapshot recovery."""
 
     source_id: int
     target_id: int
@@ -121,8 +122,9 @@ class RuntimeSynapseStateRecord:
 
 @dataclass(frozen=True, slots=True)
 class RuntimeCheckpoint:
-    """Runtime state required for deterministic continuation."""
+    """Runtime state required for deterministic restore-and-continue."""
 
+    version: int
     current_tick: int
     total_spikes: int
     total_events_processed: int
@@ -131,15 +133,13 @@ class RuntimeCheckpoint:
     input_cells: tuple[int, ...]
     output_cells: tuple[int, ...]
     queued_events: tuple[QueuedEventRecord, ...]
-    neuron_states: tuple[RuntimeNeuronStateRecord, ...] = ()
-    synapse_states: tuple[RuntimeSynapseStateRecord, ...] = ()
+    neuron_states: tuple[NeuronRuntimeRecord, ...] = ()
+    synapse_states: tuple[SynapseRuntimeRecord, ...] = ()
 
 
 def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpoint:
-    """Capture exact runtime state from a live network at a tick boundary."""
-
+    """Capture runtime state and exact core state when available."""
     version, raw_state, gauss_next = network.rng.getstate()
-    state_tuple = tuple(int(value) for value in raw_state)
     queued = tuple(
         QueuedEventRecord(
             source_id=int(event.source_id),
@@ -150,44 +150,48 @@ def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpo
         for slot in network.event_slots
         for event in slot
     )
-    neuron_states = tuple(
-        RuntimeNeuronStateRecord(
-            neuron_id=int(neuron_id),
-            a=float(neuron.a),
-            b=float(neuron.b),
-            c=float(neuron.c),
-            d=float(neuron.d),
-            membrane_v=float(neuron.v),
-            recovery_u=float(neuron.u),
-            energy=float(neuron.energy),
-            spike_cost=float(neuron.spike_cost),
-            threshold_adaptation=float(neuron.threshold_adaptation),
-            spike_counter=int(neuron.spike_counter),
-            last_spike_tick=int(neuron.last_spike_tick),
-            last_external_current=float(neuron.last_external_current),
-            last_synaptic_current=float(neuron.last_synaptic_current),
+    neuron_states: tuple[NeuronRuntimeRecord, ...] = ()
+    synapse_states: tuple[SynapseRuntimeRecord, ...] = ()
+    if isinstance(network, ExactCheckpointNetworkLike):
+        neuron_states = tuple(
+            NeuronRuntimeRecord(
+                neuron_id=int(neuron_id),
+                a=float(neuron.a),
+                b=float(neuron.b),
+                c=float(neuron.c),
+                d=float(neuron.d),
+                membrane_v=float(neuron.v),
+                recovery_u=float(neuron.u),
+                energy=float(neuron.energy),
+                spike_cost=float(neuron.spike_cost),
+                threshold_adaptation=float(neuron.threshold_adaptation),
+                spike_counter=int(neuron.spike_counter),
+                last_spike_tick=int(neuron.last_spike_tick),
+                last_external_current=float(neuron.last_external_current),
+                last_synaptic_current=float(neuron.last_synaptic_current),
+            )
+            for neuron_id, neuron in sorted(network.neurons.items())
         )
-        for neuron_id, neuron in sorted(network.neurons.items())
-    )
-    synapse_states = tuple(
-        RuntimeSynapseStateRecord(
-            source_id=int(source_id),
-            target_id=int(synapse.target_id),
-            weight=float(synapse.weight),
-            delay=int(synapse.delay),
-            eligibility=float(synapse.eligibility),
-            last_pre_spike=int(synapse.last_pre_spike),
+        synapse_states = tuple(
+            SynapseRuntimeRecord(
+                source_id=int(source_id),
+                target_id=int(synapse.target_id),
+                weight=float(synapse.weight),
+                delay=int(synapse.delay),
+                eligibility=float(synapse.eligibility),
+                last_pre_spike=int(synapse.last_pre_spike),
+            )
+            for source_id, synapses in sorted(network.synapses.items())
+            for synapse in synapses
         )
-        for source_id in sorted(network.synapses)
-        for synapse in sorted(
-            network.synapses[source_id], key=lambda item: int(item.target_id)
-        )
-    )
     return RuntimeCheckpoint(
+        version=3,
         current_tick=int(network.current_tick),
         total_spikes=int(network.total_spikes),
         total_events_processed=int(network.total_events_processed),
-        rng=RandomStateRecord(int(version), state_tuple, gauss_next),
+        rng=RandomStateRecord(
+            int(version), tuple(int(value) for value in raw_state), gauss_next
+        ),
         pending_currents=tuple(
             sorted(
                 (int(key), float(value))
@@ -203,8 +207,7 @@ def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpo
 
 
 def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
-    """Write a deterministic version-3 JSON checkpoint sidecar."""
-
+    """Write a deterministic JSON runtime sidecar."""
     payload: dict[str, object] = {
         "version": 3,
         "current_tick": checkpoint.current_tick,
@@ -265,196 +268,140 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
     )
 
 
-def _mapping(value: object, message: str) -> dict[str, object]:
+def _mapping(value: object, name: str) -> dict[str, object]:
     if not isinstance(value, dict):
-        raise ValueError(message)
-    return {str(key): item for key, item in value.items()}
+        raise ValueError(f"{name} must be an object")
+    result: dict[str, object] = {}
+    for key, item in value.items():
+        if not isinstance(key, str):
+            raise ValueError(f"{name} contains a non-string key")
+        result[key] = item
+    return result
 
 
-def _list(value: object, message: str) -> list[object]:
+def _list(value: object, name: str) -> list[object]:
     if not isinstance(value, list):
-        raise ValueError(message)
+        raise ValueError(f"{name} must be a list")
+    return list(value)
+
+
+def _int(value: object, name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be an integer")
     return value
 
 
-def _int_value(value: object, message: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, float, str)):
-        raise ValueError(message)
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError) as exc:
-        raise ValueError(message) from exc
+def _float(value: object, name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{name} must be numeric")
+    return float(value)
 
 
-def _float_value(value: object, message: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float, str)):
-        raise ValueError(message)
-    try:
-        return float(value)
-    except (TypeError, ValueError, OverflowError) as exc:
-        raise ValueError(message) from exc
-
-
-def _optional_float(value: object, message: str) -> float | None:
+def _optional_float(value: object, name: str) -> float | None:
     if value is None:
         return None
-    return _float_value(value, message)
-
-
-def _legacy_neuron_state(state: dict[str, object]) -> RuntimeNeuronStateRecord:
-    """Read a v2 neuron state and fill exact static values from safe defaults."""
-
-    return RuntimeNeuronStateRecord(
-        neuron_id=_int_value(state.get("neuron_id"), "invalid neuron_id"),
-        a=None,
-        b=None,
-        c=None,
-        d=None,
-        membrane_v=_float_value(state.get("membrane_v"), "invalid membrane_v"),
-        recovery_u=_float_value(state.get("recovery_u"), "invalid recovery_u"),
-        energy=_float_value(state.get("energy"), "invalid energy"),
-        spike_cost=None,
-        threshold_adaptation=_float_value(
-            state.get("threshold_adaptation"), "invalid threshold adaptation"
-        ),
-        spike_counter=_int_value(state.get("spike_counter"), "invalid spike counter"),
-        last_spike_tick=_int_value(
-            state.get("last_spike_tick"), "invalid last spike tick"
-        ),
-        last_external_current=0.0,
-        last_synaptic_current=0.0,
-    )
+    return _float(value, name)
 
 
 def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
-    """Read and validate runtime checkpoint sidecar version 1, 2, or 3."""
-
-    raw_object: object = json.loads(path.read_text(encoding="utf-8"))
-    raw = _mapping(raw_object, "runtime checkpoint must be an object")
-    version = _int_value(raw.get("version", 0), "invalid runtime checkpoint version")
+    """Read and strictly validate checkpoint versions 1 through 3."""
+    loaded: object = json.loads(path.read_text(encoding="utf-8"))
+    raw = _mapping(loaded, "checkpoint")
+    version = _int(raw.get("version", 0), "version")
     if version not in {1, 2, 3}:
         raise ValueError("unsupported runtime checkpoint")
-
-    rng_raw = _mapping(raw.get("rng"), "runtime checkpoint RNG state is missing")
-    state_raw = _list(rng_raw.get("state"), "runtime checkpoint RNG vector is invalid")
-    pending_raw = _list(raw.get("pending_currents", []), "invalid pending currents")
-    queued_raw = _list(raw.get("queued_events", []), "invalid queued events")
-    input_raw = _list(raw.get("input_cells", []), "invalid input cells")
-    output_raw = _list(raw.get("output_cells", []), "invalid output cells")
+    rng_raw = _mapping(raw.get("rng"), "rng")
+    state_raw = _list(rng_raw.get("state"), "rng.state")
 
     pending: list[tuple[int, float]] = []
-    for item in pending_raw:
-        pair = _list(item, "invalid pending-current record")
+    for index, item in enumerate(_list(raw.get("pending_currents", []), "pending")):
+        pair = _list(item, f"pending_currents[{index}]")
         if len(pair) != 2:
             raise ValueError("invalid pending-current record")
         pending.append(
             (
-                _int_value(pair[0], "invalid pending-current neuron id"),
-                _float_value(pair[1], "invalid pending-current value"),
+                _int(pair[0], f"pending_currents[{index}].id"),
+                _float(pair[1], f"pending_currents[{index}].value"),
             )
         )
 
     events: list[QueuedEventRecord] = []
-    for item in queued_raw:
-        event = _mapping(item, "invalid queued-event record")
+    for index, item in enumerate(_list(raw.get("queued_events", []), "events")):
+        event = _mapping(item, f"queued_events[{index}]")
         events.append(
             QueuedEventRecord(
-                source_id=_int_value(event.get("source_id"), "invalid source_id"),
-                target_id=_int_value(event.get("target_id"), "invalid target_id"),
-                weight=_float_value(event.get("weight"), "invalid event weight"),
-                delivery_tick=_int_value(
-                    event.get("delivery_tick"), "invalid delivery tick"
+                source_id=_int(event.get("source_id"), "event.source_id"),
+                target_id=_int(event.get("target_id"), "event.target_id"),
+                weight=_float(event.get("weight"), "event.weight"),
+                delivery_tick=_int(event.get("delivery_tick"), "event.delivery_tick"),
+            )
+        )
+
+    neuron_states: list[NeuronRuntimeRecord] = []
+    for index, item in enumerate(_list(raw.get("neuron_states", []), "neurons")):
+        state = _mapping(item, f"neuron_states[{index}]")
+        neuron_states.append(
+            NeuronRuntimeRecord(
+                neuron_id=_int(state.get("neuron_id"), "neuron.neuron_id"),
+                a=_float(state.get("a"), "neuron.a"),
+                b=_float(state.get("b"), "neuron.b"),
+                c=_float(state.get("c"), "neuron.c"),
+                d=_float(state.get("d"), "neuron.d"),
+                membrane_v=_float(state.get("membrane_v"), "neuron.v"),
+                recovery_u=_float(state.get("recovery_u"), "neuron.u"),
+                energy=_float(state.get("energy"), "neuron.energy"),
+                spike_cost=_float(state.get("spike_cost"), "neuron.spike_cost"),
+                threshold_adaptation=_float(
+                    state.get("threshold_adaptation"), "neuron.threshold"
+                ),
+                spike_counter=_int(state.get("spike_counter"), "neuron.spike_counter"),
+                last_spike_tick=_int(
+                    state.get("last_spike_tick"), "neuron.last_spike_tick"
+                ),
+                last_external_current=_float(
+                    state.get("last_external_current", 0.0),
+                    "neuron.last_external_current",
+                ),
+                last_synaptic_current=_float(
+                    state.get("last_synaptic_current", 0.0),
+                    "neuron.last_synaptic_current",
                 ),
             )
         )
 
-    neuron_states: list[RuntimeNeuronStateRecord] = []
-    if version >= 2:
-        states_raw = _list(raw.get("neuron_states", []), "invalid neuron states")
-        for item in states_raw:
-            state = _mapping(item, "invalid neuron-state record")
-            if version == 2:
-                neuron_states.append(_legacy_neuron_state(state))
-                continue
-            neuron_states.append(
-                RuntimeNeuronStateRecord(
-                    neuron_id=_int_value(state.get("neuron_id"), "invalid neuron_id"),
-                    a=_float_value(state.get("a"), "invalid neuron a"),
-                    b=_float_value(state.get("b"), "invalid neuron b"),
-                    c=_float_value(state.get("c"), "invalid neuron c"),
-                    d=_float_value(state.get("d"), "invalid neuron d"),
-                    membrane_v=_float_value(
-                        state.get("membrane_v"), "invalid membrane_v"
-                    ),
-                    recovery_u=_float_value(
-                        state.get("recovery_u"), "invalid recovery_u"
-                    ),
-                    energy=_float_value(state.get("energy"), "invalid energy"),
-                    spike_cost=_float_value(
-                        state.get("spike_cost"), "invalid spike cost"
-                    ),
-                    threshold_adaptation=_float_value(
-                        state.get("threshold_adaptation"),
-                        "invalid threshold adaptation",
-                    ),
-                    spike_counter=_int_value(
-                        state.get("spike_counter"), "invalid spike counter"
-                    ),
-                    last_spike_tick=_int_value(
-                        state.get("last_spike_tick"), "invalid last spike tick"
-                    ),
-                    last_external_current=_float_value(
-                        state.get("last_external_current", 0.0),
-                        "invalid last external current",
-                    ),
-                    last_synaptic_current=_float_value(
-                        state.get("last_synaptic_current", 0.0),
-                        "invalid last synaptic current",
-                    ),
-                )
+    synapse_states: list[SynapseRuntimeRecord] = []
+    for index, item in enumerate(_list(raw.get("synapse_states", []), "synapses")):
+        state = _mapping(item, f"synapse_states[{index}]")
+        synapse_states.append(
+            SynapseRuntimeRecord(
+                source_id=_int(state.get("source_id"), "synapse.source_id"),
+                target_id=_int(state.get("target_id"), "synapse.target_id"),
+                weight=_float(state.get("weight"), "synapse.weight"),
+                delay=_int(state.get("delay"), "synapse.delay"),
+                eligibility=_float(state.get("eligibility"), "synapse.eligibility"),
+                last_pre_spike=_int(
+                    state.get("last_pre_spike"), "synapse.last_pre_spike"
+                ),
             )
+        )
 
-    synapse_states: list[RuntimeSynapseStateRecord] = []
-    if version >= 3:
-        synapses_raw = _list(raw.get("synapse_states", []), "invalid synapse states")
-        for item in synapses_raw:
-            state = _mapping(item, "invalid synapse-state record")
-            synapse_states.append(
-                RuntimeSynapseStateRecord(
-                    source_id=_int_value(state.get("source_id"), "invalid source_id"),
-                    target_id=_int_value(state.get("target_id"), "invalid target_id"),
-                    weight=_float_value(state.get("weight"), "invalid synapse weight"),
-                    delay=_int_value(state.get("delay"), "invalid synapse delay"),
-                    eligibility=_float_value(
-                        state.get("eligibility"), "invalid synapse eligibility"
-                    ),
-                    last_pre_spike=_int_value(
-                        state.get("last_pre_spike"), "invalid last_pre_spike"
-                    ),
-                )
-            )
-
-    gauss_next = _optional_float(rng_raw.get("gauss_next"), "invalid gauss_next")
+    input_raw = _list(raw.get("input_cells", []), "input_cells")
+    output_raw = _list(raw.get("output_cells", []), "output_cells")
     return RuntimeCheckpoint(
-        current_tick=_int_value(raw.get("current_tick"), "invalid current_tick"),
-        total_spikes=_int_value(raw.get("total_spikes"), "invalid total_spikes"),
-        total_events_processed=_int_value(
-            raw.get("total_events_processed"), "invalid total_events_processed"
+        version=version,
+        current_tick=_int(raw.get("current_tick"), "current_tick"),
+        total_spikes=_int(raw.get("total_spikes"), "total_spikes"),
+        total_events_processed=_int(
+            raw.get("total_events_processed"), "total_events_processed"
         ),
         rng=RandomStateRecord(
-            version=_int_value(rng_raw.get("version"), "invalid RNG version"),
-            state=tuple(
-                _int_value(value, "invalid RNG state value") for value in state_raw
-            ),
-            gauss_next=gauss_next,
+            version=_int(rng_raw.get("version"), "rng.version"),
+            state=tuple(_int(value, "rng.state item") for value in state_raw),
+            gauss_next=_optional_float(rng_raw.get("gauss_next"), "rng.gauss_next"),
         ),
         pending_currents=tuple(pending),
-        input_cells=tuple(
-            _int_value(value, "invalid input cell") for value in input_raw
-        ),
-        output_cells=tuple(
-            _int_value(value, "invalid output cell") for value in output_raw
-        ),
+        input_cells=tuple(_int(value, "input cell") for value in input_raw),
+        output_cells=tuple(_int(value, "output cell") for value in output_raw),
         queued_events=tuple(events),
         neuron_states=tuple(neuron_states),
         synapse_states=tuple(synapse_states),

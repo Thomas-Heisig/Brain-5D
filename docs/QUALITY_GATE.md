@@ -1,33 +1,26 @@
-# v0.4.0 Persistence Quality Gate
+# Brain-5D Release Quality Gate
 
-The persistence milestone may be tagged `v0.4.0` only when all gates below pass
-on the real Windows repository checkout.
+A release may be tagged only after all required gates are green:
 
-## Functional
+```powershell
+python -m pytest -v
+black --check src tests
+mypy src
+pylint src
+python scripts/verify_dashboard.py
+git diff --check
+```
 
-- full `pytest` suite passes
-- 50k `.b5d` smoke test passes
-- 100k journal smoke test passes
-- deterministic restore-and-continue test passes
-- dashboard tests pass
+Required outcome:
 
-## Static quality
+- pytest: 100% passing
+- Black: no files would be reformatted
+- mypy: zero errors for the configured strict scope
+- Pylint: score >= 9.0 and no unresolved fatal/error diagnostics
+- dashboard verification: pass
+- deterministic restore test: exact equality, not tolerance-based equality
+- git diff check: no whitespace errors
 
-- `black --check src tests` reports no changes
-- `mypy src` reports zero errors
-- `pylint src` score is at least 9.0
-- `mypy --strict src/dashboard` reports zero errors
-- `git diff --check` reports no whitespace errors
-
-## Dashboard
-
-- `/healthz` returns success
-- `/api/status` returns valid JSON
-- heatmap API works when a snapshot is configured
-- dashboard remains read-only
-- homeostasis metrics are present as a v0.5 bridge but do not change core state
-
-## Persistence terminology
-
-A `.b5d` snapshot alone is not advertised as bit-exact continuation. Exact
-continuation requires snapshot + committed journal + runtime checkpoint v2.
+Warnings that are explicitly documented and non-functional may be accepted only
+with a release-note entry. The quality gate must never be bypassed with broad
+`Any` or blanket `type: ignore` additions.
