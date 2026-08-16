@@ -42,14 +42,3 @@ supported local filesystems. Directory-level durability differs between
 platforms; Windows does not expose the same directory-fsync pattern as POSIX.
 The release documentation therefore distinguishes **file atomicity** from a
 formal power-loss guarantee for every filesystem/controller combination.
-
-## Windows fsync compatibility
-
-On Windows, `os.fsync()` maps to the CRT `_commit()` operation. The descriptor
-must therefore be opened with write access. Recovery validates the temporary
-snapshot first, then reopens it as `r+b`, flushes and fsyncs that writable
-descriptor before `os.replace()` publishes the file. Opening the temporary
-snapshot as `rb` and calling `os.fsync()` can raise `[Errno 9] Bad file
-descriptor` on Windows even though the file itself is valid.
-
-This does not change the `.b5d` or journal binary formats.

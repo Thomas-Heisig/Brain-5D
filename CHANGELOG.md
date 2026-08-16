@@ -1,11 +1,3 @@
-## v0.4.0-alpha.3 recovery hotfix
-
-### Fixed
-- Windows recovery publication no longer calls `os.fsync()` on a read-only
-  descriptor. The validated temporary snapshot is reopened with `r+b`, flushed,
-  fsynced, and then atomically published with `os.replace()`.
-- No `.b5d` or `.b5d.journal` format change.
-
 # v0.4.0-alpha.3 – Runtime Storage & Lazy Snapshot Views
 
 - completed alpha.2 append-only journal protocol with immutable header;
@@ -77,3 +69,25 @@
 - deterministic input/output hyperfaces
 - diagnostic stimulus engine and developer observatory
 - reproducible run artifacts and Golden Chain regression
+
+### v0.4.0-alpha.3 verification follow-up
+
+- Cross-platform Python release verification runner.
+- Windows CMD launcher avoids PowerShell execution-policy/signature failures.
+- Generated package metadata and caches excluded from source-control hygiene.
+- `.b5d` and journal wire formats remain unchanged.
+
+## v0.4.0-alpha.4 – Persistence Finalization
+
+### Added
+- bounded asynchronous storage queue with explicit backpressure/drop policy
+- storage telemetry for queue depth, deltas, bytes and write/commit latency
+- runtime checkpoint sidecar for RNG/event queue/pending currents
+- generation manifest for crash-safe compaction promotion
+- real NeuralNetwork restore foundation
+- alpha.4 preparation/verification scripts
+
+### Fixed
+- mypy variable-inference collisions in runtime/recovery storage code
+- Windows recovery fsync uses a writable file descriptor
+- narrow legacy typing fixes for manipulator, self-organization and learning lab

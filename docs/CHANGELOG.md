@@ -65,3 +65,10 @@
 - Added `scripts/verify_b5d.cmd` for Windows environments that block unsigned PowerShell scripts.
 - Added repository-hygiene rules for generated `*.egg-info`, caches and runtime storage artifacts.
 - No binary storage format changes.
+
+## v0.4.0-alpha.4
+
+Persistence-finalization layer: asynchronous bounded journal writes, storage
+telemetry, generation-based compaction, runtime checkpoint sidecar and
+restore-and-continue foundation. The frozen `.b5d` V1 and journal V1 layouts
+remain unchanged.

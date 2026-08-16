@@ -48,11 +48,12 @@ def _base_steps() -> tuple[VerificationStep, ...]:
         "tests/test_recovery.py",
         "tests/test_storage_runtime.py",
         "tests/test_lazy_storage_view.py",
+        "tests/test_async_storage.py",
+        "tests/test_checkpoint.py",
+        "tests/test_compaction.py",
+        "tests/test_restore_continue.py",
     )
-    black_targets: tuple[str, ...] = (
-        "src/storage",
-        *test_files,
-    )
+    black_targets: tuple[str, ...] = ("src", "tests")
 
     return (
         VerificationStep(
@@ -70,11 +71,11 @@ def _base_steps() -> tuple[VerificationStep, ...]:
         ),
         VerificationStep(
             "mypy strict",
-            (PYTHON, "-m", "mypy", "--strict", "src/storage"),
+            (PYTHON, "-m", "mypy", "src"),
         ),
         VerificationStep(
             "Pylint",
-            (PYTHON, "-m", "pylint", "src/storage"),
+            (PYTHON, "-m", "pylint", "src"),
         ),
         VerificationStep(
             "Compile",
@@ -137,7 +138,7 @@ def _large_tests_enabled(environment: dict[str, str]) -> bool:
 def main(arguments: Sequence[str] | None = None) -> int:
     """Run all release checks and optional large persistence smoke tests."""
     del arguments
-    print("Brain-5D v0.4.0-alpha.3 persistence verification")
+    print("Brain-5D v0.4.0-alpha.4 persistence verification")
     print("===================================================")
 
     for step in _base_steps():

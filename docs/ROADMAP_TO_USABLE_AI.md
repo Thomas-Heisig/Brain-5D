@@ -261,3 +261,21 @@ Only after v1.0 evidence should the project evaluate:
 - hardware accelerators;
 - physical/neuromorphic sensor bridges;
 - continual-learning research beyond the fixed curriculum.
+
+## Status update – v0.4.0-alpha.4
+
+Alpha.4 is the persistence-finalization revision. It closes the synchronous-I/O
+and checkpoint gaps before the v0.4.0 persistence contract is frozen.
+
+Exit criteria for v0.4.0 final:
+
+- bounded async queue has no silent data loss
+- storage telemetry is observable and exportable
+- generation compaction survives interruption before/after manifest publish
+- restore-and-continue reproduces a continuous reference run
+- full pytest suite, Black, mypy and Pylint gates pass
+
+After v0.4.0 the project moves to v0.5 homoeostasis + event-driven dirty
+tracking, then v0.6 chunking/parallel scale, v0.7 reproducible learning
+environments, v0.8 multimodal input, v0.9 memory/context/goals, v0.10 HMI/API,
+v0.11 bounded autonomy, v0.12 release candidate and v1.0 usable Brain-5D AI.

@@ -165,3 +165,20 @@ scripts\verify_b5d.cmd
 ```
 
 The Python runner is fail-fast and checks storage tests, the full regression suite, Black, strict mypy, Pylint, compilation, binary-format invariants, and Pyright when available. Large storage tests remain opt-in through `BRAIN5D_RUN_LARGE_STORAGE_TESTS=1`.
+
+## v0.4.0-alpha.4 – Persistence Finalization
+
+Alpha.4 adds bounded asynchronous persistence, storage telemetry,
+generation-based crash-safe compaction and a runtime checkpoint sidecar for
+restore-and-continue. The existing `.b5d` and journal binary layouts remain
+frozen and unchanged.
+
+Preparation after applying the overlay:
+
+```powershell
+python scripts/prepare_alpha4.py
+python scripts/verify_b5d.py
+```
+
+`prepare_alpha4.py` applies the narrow legacy typing fixes found during the
+104-test alpha.3 acceptance run and normalizes `src/` + `tests/` with Black.

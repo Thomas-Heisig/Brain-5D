@@ -72,7 +72,7 @@ class _RecoveredNetwork:
     synapses: dict[int, list[_SynapseState]]
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class _SnapshotView:
     """Read-only typed adapter passed to the frozen V1 snapshot writer."""
 
@@ -230,14 +230,14 @@ class RecoveryManager:
     ]:
         neurons: dict[int, _NeuronState] = {}
         optical: dict[int, OpticalPointState] = {}
-        for record in reader.iter_neurons():
-            a = record.a
-            b = record.b
-            c = record.c
-            d = record.d
-            spike_cost = record.spike_cost
-            spike_counter = record.spike_counter
-            last_spike_tick = record.last_spike_tick
+        for neuron_record in reader.iter_neurons():
+            a = neuron_record.a
+            b = neuron_record.b
+            c = neuron_record.c
+            d = neuron_record.d
+            spike_cost = neuron_record.spike_cost
+            spike_counter = neuron_record.spike_counter
+            last_spike_tick = neuron_record.last_spike_tick
             if (
                 a is None
                 or b is None
@@ -248,7 +248,7 @@ class RecoveryManager:
                 or last_spike_tick is None
             ):
                 raise RecoveryError("restart-capable neuron record is incomplete")
-            neurons[record.neuron_id] = _NeuronState(
+            neurons[neuron_record.neuron_id] = _NeuronState(
                 a=a,
                 b=b,
                 c=c,
@@ -256,21 +256,21 @@ class RecoveryManager:
                 spike_cost=spike_cost,
                 spike_counter=spike_counter,
                 last_spike_tick=last_spike_tick,
-                v=record.optical.membrane_v,
-                u=record.optical.recovery_u,
-                energy=record.optical.energy,
-                threshold_adaptation=record.optical.threshold_adaptation,
+                v=neuron_record.optical.membrane_v,
+                u=neuron_record.optical.recovery_u,
+                energy=neuron_record.optical.energy,
+                threshold_adaptation=neuron_record.optical.threshold_adaptation,
             )
-            optical[record.neuron_id] = record.optical
+            optical[neuron_record.neuron_id] = neuron_record.optical
         synapses: dict[int, list[_SynapseState]] = {}
-        for record in reader.iter_synapses():
-            synapses.setdefault(record.source_id, []).append(
+        for synapse_record in reader.iter_synapses():
+            synapses.setdefault(synapse_record.source_id, []).append(
                 _SynapseState(
-                    target_id=record.target_id,
-                    weight=record.weight,
-                    delay=record.delay,
-                    eligibility=record.eligibility,
-                    last_pre_spike=record.last_pre_spike,
+                    target_id=synapse_record.target_id,
+                    weight=synapse_record.weight,
+                    delay=synapse_record.delay,
+                    eligibility=synapse_record.eligibility,
+                    last_pre_spike=synapse_record.last_pre_spike,
                 )
             )
         network = _RecoveredNetwork(
@@ -297,93 +297,103 @@ class RecoveryManager:
         entry: JournalEntry,
     ) -> bool:
         if entry.delta_type is DeltaType.NEURON_STATE:
-            delta = decode_neuron_state(entry.payload)
-            neuron = network.neurons.get(delta.neuron_id)
-            optical = optical_states.get(delta.neuron_id)
+            neuron_delta = decode_neuron_state(entry.payload)
+            neuron = network.neurons.get(neuron_delta.neuron_id)
+            optical = optical_states.get(neuron_delta.neuron_id)
             if neuron is None or optical is None:
-                raise RecoveryError(f"neuron not found: {delta.neuron_id}")
-            neuron.v = delta.membrane_v
-            neuron.u = delta.recovery_u
-            neuron.energy = delta.energy
-            neuron.spike_counter = delta.spike_counter
-            neuron.last_spike_tick = delta.last_spike_tick
-            optical_states[delta.neuron_id] = replace(
+                raise RecoveryError(f"neuron not found: {neuron_delta.neuron_id}")
+            neuron.v = neuron_delta.membrane_v
+            neuron.u = neuron_delta.recovery_u
+            neuron.energy = neuron_delta.energy
+            neuron.spike_counter = neuron_delta.spike_counter
+            neuron.last_spike_tick = neuron_delta.last_spike_tick
+            optical_states[neuron_delta.neuron_id] = replace(
                 optical,
-                membrane_v=delta.membrane_v,
-                recovery_u=delta.recovery_u,
-                energy=delta.energy,
+                membrane_v=neuron_delta.membrane_v,
+                recovery_u=neuron_delta.recovery_u,
+                energy=neuron_delta.energy,
             )
             return True
 
         if entry.delta_type is DeltaType.SYNAPSE_WEIGHT:
-            delta = decode_synapse_weight(entry.payload)
-            synapse = self._find_synapse(network, delta.source_id, delta.target_id)
-            synapse.weight = delta.weight
-            synapse.eligibility = delta.eligibility
-            synapse.last_pre_spike = delta.last_pre_spike
+            weight_delta = decode_synapse_weight(entry.payload)
+            synapse = self._find_synapse(
+                network, weight_delta.source_id, weight_delta.target_id
+            )
+            synapse.weight = weight_delta.weight
+            synapse.eligibility = weight_delta.eligibility
+            synapse.last_pre_spike = weight_delta.last_pre_spike
             return True
 
         if entry.delta_type is DeltaType.SYNAPSE_ADD:
-            delta = decode_synapse_add(entry.payload)
+            synapse_add_delta = decode_synapse_add(entry.payload)
             if (
-                delta.source_id not in network.neurons
-                or delta.target_id not in network.neurons
+                synapse_add_delta.source_id not in network.neurons
+                or synapse_add_delta.target_id not in network.neurons
             ):
                 raise RecoveryError("cannot add synapse with missing endpoint")
-            existing = network.synapses.setdefault(delta.source_id, [])
-            if any(item.target_id == delta.target_id for item in existing):
+            existing = network.synapses.setdefault(synapse_add_delta.source_id, [])
+            if any(
+                item.target_id == synapse_add_delta.target_id for item in existing
+            ):
                 raise RecoveryError("duplicate synapse add delta")
             existing.append(
                 _SynapseState(
-                    target_id=delta.target_id,
-                    weight=delta.weight,
-                    delay=delta.delay,
-                    eligibility=delta.eligibility,
-                    last_pre_spike=delta.last_pre_spike,
+                    target_id=synapse_add_delta.target_id,
+                    weight=synapse_add_delta.weight,
+                    delay=synapse_add_delta.delay,
+                    eligibility=synapse_add_delta.eligibility,
+                    last_pre_spike=synapse_add_delta.last_pre_spike,
                 )
             )
             existing.sort(key=lambda item: item.target_id)
             return True
 
         if entry.delta_type is DeltaType.SYNAPSE_REMOVE:
-            delta = decode_synapse_remove(entry.payload)
-            outgoing = network.synapses.get(delta.source_id, [])
-            remaining = [item for item in outgoing if item.target_id != delta.target_id]
+            synapse_remove_delta = decode_synapse_remove(entry.payload)
+            outgoing = network.synapses.get(synapse_remove_delta.source_id, [])
+            remaining = [
+                item
+                for item in outgoing
+                if item.target_id != synapse_remove_delta.target_id
+            ]
             if len(remaining) == len(outgoing):
                 raise RecoveryError("synapse remove delta targets missing synapse")
-            network.synapses[delta.source_id] = remaining
+            network.synapses[synapse_remove_delta.source_id] = remaining
             return True
 
         if entry.delta_type is DeltaType.NEURON_ADD:
-            delta = decode_neuron_add(entry.payload)
-            if delta.neuron_id in network.neurons:
+            neuron_add_delta = decode_neuron_add(entry.payload)
+            if neuron_add_delta.neuron_id in network.neurons:
                 raise RecoveryError("duplicate neuron add delta")
-            network.neurons[delta.neuron_id] = _NeuronState(
-                a=delta.a,
-                b=delta.b,
-                c=delta.c,
-                d=delta.d,
-                spike_cost=delta.spike_cost,
-                spike_counter=delta.spike_counter,
-                last_spike_tick=delta.last_spike_tick,
-                v=delta.optical.membrane_v,
-                u=delta.optical.recovery_u,
-                energy=delta.optical.energy,
-                threshold_adaptation=delta.optical.threshold_adaptation,
+            network.neurons[neuron_add_delta.neuron_id] = _NeuronState(
+                a=neuron_add_delta.a,
+                b=neuron_add_delta.b,
+                c=neuron_add_delta.c,
+                d=neuron_add_delta.d,
+                spike_cost=neuron_add_delta.spike_cost,
+                spike_counter=neuron_add_delta.spike_counter,
+                last_spike_tick=neuron_add_delta.last_spike_tick,
+                v=neuron_add_delta.optical.membrane_v,
+                u=neuron_add_delta.optical.recovery_u,
+                energy=neuron_add_delta.optical.energy,
+                threshold_adaptation=neuron_add_delta.optical.threshold_adaptation,
             )
-            optical_states[delta.neuron_id] = delta.optical
+            optical_states[neuron_add_delta.neuron_id] = neuron_add_delta.optical
             return True
 
         if entry.delta_type is DeltaType.NEURON_REMOVE:
-            delta = decode_neuron_remove(entry.payload)
-            if delta.neuron_id not in network.neurons:
+            neuron_remove_delta = decode_neuron_remove(entry.payload)
+            if neuron_remove_delta.neuron_id not in network.neurons:
                 raise RecoveryError("neuron remove delta targets missing neuron")
-            network.neurons.pop(delta.neuron_id)
-            optical_states.pop(delta.neuron_id, None)
-            network.synapses.pop(delta.neuron_id, None)
+            network.neurons.pop(neuron_remove_delta.neuron_id)
+            optical_states.pop(neuron_remove_delta.neuron_id, None)
+            network.synapses.pop(neuron_remove_delta.neuron_id, None)
             for source_id, outgoing in tuple(network.synapses.items()):
                 network.synapses[source_id] = [
-                    item for item in outgoing if item.target_id != delta.neuron_id
+                    item
+                    for item in outgoing
+                    if item.target_id != neuron_remove_delta.neuron_id
                 ]
             return True
 

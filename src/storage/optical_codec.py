@@ -41,7 +41,9 @@ def _from_u16_norm(value: int) -> float:
 class OpticalPointState:
     """Compact optical/electrical/chemical equivalent of one neuron."""
 
-    spectrum: tuple[int, ...] = field(default_factory=lambda: (0,) * SPECTRAL_BINS)
+    spectrum: tuple[int, ...] = field(
+        default_factory=lambda: (0,) * SPECTRAL_BINS
+    )
     brightness: float = 0.0
     phase: float = 0.0
     stokes: tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0)
@@ -66,7 +68,9 @@ class OpticalPointState:
     def validate(self) -> None:
         """Validate fixed-size optical record constraints."""
         if len(self.spectrum) != SPECTRAL_BINS:
-            raise ValueError(f"spectrum must contain {SPECTRAL_BINS} uint16 bins")
+            raise ValueError(
+                f"spectrum must contain {SPECTRAL_BINS} uint16 bins"
+            )
         if any(not 0 <= int(value) <= 65_535 for value in self.spectrum):
             raise ValueError("spectrum values must be 0..65535")
 

@@ -122,6 +122,23 @@ storage:
     enabled: false
     capture_spike_events: true
     capture_policy: full_change_scan
+    async_enabled: false
+    async_queue_size: 1000
+    async_workers: 1
+    drop_on_overflow: false
+    enqueue_timeout_s: 0.25
+  telemetry:
+    enabled: true
+    export_interval_ticks: 100
+  checkpoint:
+    enabled: false
+    path: artifacts/brain5d_runtime.json
+  compaction:
+    enabled: false
+    manifest_path: artifacts/brain5d.manifest.json
+    trigger_journal_size_mb: 100
+    trigger_ticks: 10000
+    keep_generations: 2
   lazy_observatory:
     enabled: false
     heatmap_type: activity

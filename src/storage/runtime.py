@@ -29,7 +29,7 @@ from .delta_codec import (
     encode_synapse_remove,
     encode_synapse_weight,
 )
-from .delta_journal import DeltaJournal
+from .delta_journal import DeltaJournal, DeltaRecord
 from .optical_codec import state_from_neuron
 
 
@@ -181,20 +181,29 @@ class StorageSession:
             commits=self._commits,
         )
 
+    def prepare_snapshot(self) -> None:
+        """Create the base snapshot once, without opening the journal."""
+        if self.config.snapshot_path.exists():
+            return
+        writer = B5DSnapshotWriter(restart_capable=self.config.restart_capable)
+        writer.write(
+            self.config.snapshot_path,
+            self.network,
+            metadata={
+                "storage_runtime": "alpha.4",
+                "capture_policy": "full_change_scan",
+            },
+        )
+
+    def prime(self) -> None:
+        """Capture the current network fingerprints without performing I/O."""
+        self._prime_fingerprints()
+
     def start(self) -> None:
         """Create a base snapshot if needed, open its journal, and attach."""
         if self._attached:
             return
-        if not self.config.snapshot_path.exists():
-            writer = B5DSnapshotWriter(restart_capable=self.config.restart_capable)
-            writer.write(
-                self.config.snapshot_path,
-                self.network,
-                metadata={
-                    "storage_runtime": "alpha.3",
-                    "capture_policy": "full_change_scan",
-                },
-            )
+        self.prepare_snapshot()
         self._journal = DeltaJournal(
             self.config.journal_path,
             base_tick=self.network.current_tick,
@@ -203,7 +212,7 @@ class StorageSession:
         scan = self._journal.validate()
         if scan.has_uncommitted_tail:
             self._journal.truncate_uncommitted_tail()
-        self._prime_fingerprints()
+        self.prime()
         self.network.add_post_step_hook(self.capture)
         self._attached = True
 
@@ -254,22 +263,22 @@ class StorageSession:
             for synapse in outgoing
         }
 
-    def capture(self, result: StepResultLike) -> None:
-        """Capture one completed tick as typed, append-only state changes."""
-        journal = self._require_journal()
+    def collect_deltas(self, result: StepResultLike) -> tuple[DeltaRecord, ...]:
+        """Collect typed deltas for one completed tick without performing I/O."""
+        deltas: list[DeltaRecord] = []
         tick = int(result.tick)
         current_neuron_ids = {int(value) for value in self.network.neurons}
         previous_neuron_ids = set(self._neurons)
 
         for removed_id in sorted(previous_neuron_ids - current_neuron_ids):
-            journal.append(encode_neuron_remove(tick, NeuronRemoveDelta(removed_id)))
+            deltas.append(encode_neuron_remove(tick, NeuronRemoveDelta(removed_id)))
             self._neurons.pop(removed_id, None)
             self._topology_deltas += 1
 
         for added_id in sorted(current_neuron_ids - previous_neuron_ids):
             neuron = self.network.neurons[added_id]
             optical = state_from_neuron(neuron)
-            journal.append(
+            deltas.append(
                 encode_neuron_add(
                     tick,
                     NeuronAddDelta(
@@ -290,24 +299,24 @@ class StorageSession:
 
         for neuron_id, neuron in self.network.neurons.items():
             numeric_id = int(neuron_id)
-            fingerprint = self._neuron_fingerprint(neuron)
-            previous = self._neurons.get(numeric_id)
-            if previous is not None and fingerprint != previous:
-                journal.append(
+            neuron_fingerprint = self._neuron_fingerprint(neuron)
+            previous_neuron = self._neurons.get(numeric_id)
+            if previous_neuron is not None and neuron_fingerprint != previous_neuron:
+                deltas.append(
                     encode_neuron_state(
                         tick,
                         NeuronStateDelta(
                             neuron_id=numeric_id,
-                            membrane_v=fingerprint.v,
-                            recovery_u=fingerprint.u,
-                            energy=fingerprint.energy,
-                            spike_counter=fingerprint.spike_counter,
-                            last_spike_tick=fingerprint.last_spike_tick,
+                            membrane_v=neuron_fingerprint.v,
+                            recovery_u=neuron_fingerprint.u,
+                            energy=neuron_fingerprint.energy,
+                            spike_counter=neuron_fingerprint.spike_counter,
+                            last_spike_tick=neuron_fingerprint.last_spike_tick,
                         ),
                     )
                 )
                 self._neuron_deltas += 1
-            self._neurons[numeric_id] = fingerprint
+            self._neurons[numeric_id] = neuron_fingerprint
 
         current_synapses: dict[
             tuple[int, int], tuple[RuntimeSynapseLike, _SynapseFingerprint]
@@ -322,7 +331,7 @@ class StorageSession:
         for source_id, target_id in sorted(
             previous_synapse_keys - current_synapse_keys
         ):
-            journal.append(
+            deltas.append(
                 encode_synapse_remove(
                     tick, SynapseRemoveDelta(source_id=source_id, target_id=target_id)
                 )
@@ -333,51 +342,62 @@ class StorageSession:
         for source_id, target_id in sorted(
             current_synapse_keys - previous_synapse_keys
         ):
-            synapse, fingerprint = current_synapses[(source_id, target_id)]
-            journal.append(
+            synapse, synapse_fingerprint = current_synapses[(source_id, target_id)]
+            deltas.append(
                 encode_synapse_add(
                     tick,
                     SynapseAddDelta(
                         source_id=source_id,
                         target_id=target_id,
-                        weight=fingerprint.weight,
-                        eligibility=fingerprint.eligibility,
-                        delay=fingerprint.delay,
-                        last_pre_spike=fingerprint.last_pre_spike,
+                        weight=synapse_fingerprint.weight,
+                        eligibility=synapse_fingerprint.eligibility,
+                        delay=synapse_fingerprint.delay,
+                        last_pre_spike=synapse_fingerprint.last_pre_spike,
                     ),
                 )
             )
-            self._synapses[(source_id, target_id)] = fingerprint
+            self._synapses[(source_id, target_id)] = synapse_fingerprint
             self._topology_deltas += 1
 
         for key in sorted(current_synapse_keys & previous_synapse_keys):
-            _, fingerprint = current_synapses[key]
-            previous = self._synapses[key]
-            if fingerprint != previous:
+            _, synapse_fingerprint = current_synapses[key]
+            previous_synapse = self._synapses[key]
+            if synapse_fingerprint != previous_synapse:
                 source_id, target_id = key
-                journal.append(
+                deltas.append(
                     encode_synapse_weight(
                         tick,
                         SynapseWeightDelta(
                             source_id=source_id,
                             target_id=target_id,
-                            weight=fingerprint.weight,
-                            eligibility=fingerprint.eligibility,
-                            last_pre_spike=fingerprint.last_pre_spike,
+                            weight=synapse_fingerprint.weight,
+                            eligibility=synapse_fingerprint.eligibility,
+                            last_pre_spike=synapse_fingerprint.last_pre_spike,
                         ),
                     )
                 )
                 self._synapse_deltas += 1
-            self._synapses[key] = fingerprint
+            self._synapses[key] = synapse_fingerprint
 
         if self.config.capture_spike_events:
             for neuron_id in result.spike_ids:
-                journal.append(
+                deltas.append(
                     encode_spike_event(tick, SpikeEventDelta(neuron_id=int(neuron_id)))
                 )
                 self._spike_events += 1
 
+        return tuple(deltas)
+
+    def capture(self, result: StepResultLike) -> None:
+        """Capture one completed tick and synchronously persist its deltas."""
+        journal = self._require_journal()
+        deltas = self.collect_deltas(result)
+        for delta in deltas:
+            journal.append(delta)
         self._captured_ticks += 1
-        if tick % self.config.commit_interval_ticks == 0 and journal.dirty_entry_count:
+        if (
+            int(result.tick) % self.config.commit_interval_ticks == 0
+            and journal.dirty_entry_count
+        ):
             if journal.commit() is not None:
                 self._commits += 1

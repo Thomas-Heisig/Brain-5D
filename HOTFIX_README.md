@@ -1,11 +1,11 @@
-# Brain-5D v0.4.0-alpha.3 Windows Recovery Hotfix
+# Applying v0.4.0-alpha.4
 
-This overlay fixes Windows `Errno 9: Bad file descriptor` during recovery
-publication. No binary format changes are introduced.
+1. Extract this overlay into the Brain-5D repository.
+2. Run `python scripts/prepare_alpha4.py` once. This applies the narrow legacy
+   mypy fixes identified by the 104-test alpha.3 acceptance run and normalizes
+   Python files with Black.
+3. Run `python scripts/verify_b5d.py`.
+4. Do not tag v0.4.0 final until `tests/test_restore_continue.py` also passes on
+   the real core and the complete mypy/Pylint gates are green.
 
-After applying, run:
-
-```powershell
-python -m pytest tests/test_recovery.py -v
-python scripts/verify_b5d.py
-```
+The overlay does not change the frozen `.b5d` V1 or journal V1 binary formats.
