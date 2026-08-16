@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brain-5D Operator Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Brain-5D</p>
+      <h1>Operator Dashboard</h1>
+    </div>
+    <div class="status-pill" id="system-status">offline</div>
+  </header>
+
+  <main>
+    <section class="grid metrics-grid">
+      <article class="card metric"><span>Tick</span><strong id="tick">0</strong></article>
+      <article class="card metric"><span>Neuronen</span><strong id="neurons">0</strong></article>
+      <article class="card metric"><span>Synapsen</span><strong id="synapses">0</strong></article>
+      <article class="card metric"><span>Spikes</span><strong id="spikes">0</strong></article>
+      <article class="card metric"><span>Core ms</span><strong id="core-ms">0.000</strong></article>
+      <article class="card metric"><span>Energie</span><strong id="energy">0.000</strong></article>
+    </section>
+
+    <section class="grid detail-grid">
+      <article class="card panel">
+        <div class="panel-title"><h2>Persistenz</h2><span id="queue-badge">0 / 0</span></div>
+        <div class="bar"><div class="bar-fill" id="queue-fill"></div></div>
+        <dl class="kv">
+          <div><dt>Deltas</dt><dd id="deltas">0</dd></div>
+          <div><dt>Bytes</dt><dd id="bytes">0 B</dd></div>
+          <div><dt>Write</dt><dd id="write-ms">0.000 ms</dd></div>
+          <div><dt>Commit</dt><dd id="commit-ms">0.000 ms</dd></div>
+          <div><dt>Journal</dt><dd id="journal-size">0 B</dd></div>
+          <div><dt>Drops</dt><dd id="drops">0</dd></div>
+        </dl>
+      </article>
+
+      <article class="card panel">
+        <div class="panel-title"><h2>Lernen</h2><span>STDP + Reward</span></div>
+        <dl class="kv">
+          <div><dt>STDP Updates</dt><dd id="stdp">0</dd></div>
+          <div><dt>Reward Updates</dt><dd id="reward-updates">0</dd></div>
+          <div><dt>Rewards</dt><dd id="rewards">0</dd></div>
+          <div><dt>Pending</dt><dd id="pending">0</dd></div>
+          <div><dt>Updatezeit</dt><dd id="learning-ms">0.000 ms</dd></div>
+        </dl>
+      </article>
+
+      <article class="card panel">
+        <div class="panel-title"><h2>Selbstorganisation</h2><span>Struktur</span></div>
+        <dl class="kv">
+          <div><dt>Neuronen +</dt><dd id="neurons-created">0</dd></div>
+          <div><dt>Neuronen -</dt><dd id="neurons-removed">0</dd></div>
+          <div><dt>Synapsen +</dt><dd id="synapses-created">0</dd></div>
+          <div><dt>Pruning</dt><dd id="synapses-pruned">0</dd></div>
+        </dl>
+      </article>
+    </section>
+
+    <section class="card heatmap-panel">
+      <div class="panel-title">
+        <div><h2>5D X-Y Projektion</h2><p>Lazy mmap aus .b5d Snapshot</p></div>
+        <div class="button-group">
+          <button data-kind="activity" class="active">Aktivität</button>
+          <button data-kind="weights">Gewichte</button>
+          <button data-kind="energy">Energie</button>
+        </div>
+      </div>
+      <div class="heatmap-wrap">
+        <canvas id="heatmap" width="800" height="420"></canvas>
+        <div class="heatmap-meta" id="heatmap-meta">Kein Snapshot verbunden.</div>
+      </div>
+    </section>
+
+    <section class="grid roadmap-grid">
+      <article class="card roadmap current"><strong>v0.4</strong><span>Persistenz</span></article>
+      <article class="card roadmap"><strong>v0.5</strong><span>Selbstregulation</span></article>
+      <article class="card roadmap"><strong>v0.6</strong><span>Skalierung</span></article>
+      <article class="card roadmap"><strong>v0.7</strong><span>Learning Env.</span></article>
+      <article class="card roadmap"><strong>v0.8+</strong><span>Modalität → HMI → KI</span></article>
+    </section>
+  </main>
+
+  <footer>Brain-5D Operator Dashboard · lokal · read-only</footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

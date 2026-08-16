@@ -1,31 +1,30 @@
-# v0.4.0-alpha.4 Update Manifest
+# Brain-5D v0.4.0-alpha.5 Overlay Manifest
 
-## Modified
+## Neu
 
-- `src/storage/runtime.py`
-- `src/storage/recovery.py`
-- `src/storage/__init__.py`
-- `configs/poc_config.yaml`
-- `pyproject.toml`
-- `scripts/verify_b5d.py`
-- `CHANGELOG.md`
-- `docs/CHANGELOG.md`
-- `docs/ROADMAP_TO_USABLE_AI.md`
+- `src/dashboard/__init__.py`
+- `src/dashboard/__main__.py`
+- `src/dashboard/models.py`
+- `src/dashboard/state.py`
+- `src/dashboard/heatmap_source.py`
+- `src/dashboard/server.py`
+- `src/dashboard/static/index.html`
+- `src/dashboard/static/styles.css`
+- `src/dashboard/static/app.js`
+- `tests/test_dashboard.py`
+- `scripts/verify_dashboard.py`
+- `docs/DASHBOARD.md`
+- `docs/ROADMAP_ALPHA5.md`
 
-## Added
+## Bewusste Grenzen
 
-- `src/storage/async_runtime.py`
-- `src/storage/checkpoint.py`
-- `src/storage/compaction.py`
-- `src/storage/core_restore.py`
-- `tests/test_async_storage.py`
-- `tests/test_checkpoint.py`
-- `tests/test_compaction.py`
-- `scripts/apply_alpha4_quality_fixes.py`
-- `scripts/prepare_alpha4.py`
-- `docs/SPRINT_STORAGE_V4.md`
-- `docs/ROADMAP_ALPHA4.md`
+- Dashboard ist read-only.
+- Keine externe Bind-Adresse per Default.
+- Keine Authentifizierung in alpha.5.
+- Keine TypeScript-Toolchain: das Frontend ist bewusst Vanilla JavaScript.
+- `Analyse_Deepseek.md` und `Der_weg_zur_KI.md` werden referenziert, aber erst
+  nach Verfuegbarkeit im Repository inhaltlich fusioniert.
 
-## Compatibility
+## Empfohlene Versionsbezeichnung
 
-No byte-level change to frozen `.b5d` V1 or `.b5d.journal` V1.
+`0.4.0a5`
