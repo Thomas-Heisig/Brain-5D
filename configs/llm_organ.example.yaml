@@ -1,0 +1,16 @@
+# Brain-5D alpha.6 contract example. Disabled by default.
+language_organ:
+  enabled: false
+  backend: "null"
+  model_path: null
+  context_length: 2048
+  worker:
+    asynchronous: true
+    timeout_seconds: 10.0
+    max_queue_depth: 8
+
+knowledge_intake:
+  enabled: false
+  allow_network: false
+  require_provenance: true
+  deduplicate_by_sha256: true
