@@ -85,3 +85,29 @@ reward:
   reset_trace_after_reward: false
   trace_epsilon: 1.0e-12
   reward_source: external
+
+# Structural adaptation stays opt-in. This mirrors configs/self_organization.yaml
+# so the main PoC exposes every available subsystem in one place.
+self_organization:
+  enabled: false
+  interval_ticks: 100
+  pruning_enabled: false
+  pruning_weight_threshold: 0.005
+  pruning_min_age_ticks: 1000
+  sprouting_enabled: false
+  sprouting_max_out_degree: 12
+  sprouting_radius: 2.0
+  sprouting_weight: 0.05
+  sprouting_delay: 1
+  neurogenesis_enabled: false
+  neurogenesis_spike_delta_threshold: 50
+  neurogenesis_radius: 1.0
+  neurogenesis_max_per_cycle: 1
+
+# .b5d V1 is provided as a storage API in this update. It is intentionally not
+# auto-saved by src.main yet; explicit snapshots avoid hidden I/O costs.
+storage:
+  enabled: false
+  format: b5d
+  path: artifacts/brain5d_snapshot.b5d
+  restart_capable: true

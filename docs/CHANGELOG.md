@@ -1,43 +1,49 @@
-# Changelog
+# Documentation Changelog
 
-## 0.3.1 - Learning proof and repository synchronization - 2026-08-16
+## 0.4.0-alpha.1 - Storage V1 final robustness freeze - 2026-08-16
 
-### Added
-- Deterministic end-to-end learning experiment in `src/experiments/learning_lab.py`.
-- Checked-in experiment configuration `configs/learning_experiment.yaml`.
-- System acceptance tests proving reward-driven weights change network behaviour.
-- Regression tests for the generic network post-step hook.
-- Windows verification script `scripts/verify_v031.ps1`.
+### Storage contract
 
-### Fixed
-- Restored the generic post-step hook required by `LearningEngine.attach()` in the
-  published core network file.
-- Synchronized README documentation with the actual v0.3 learning feature set.
-- Aligned mypy and Pylint development targets with the Python 3.13 verification
-  environment while retaining Python 3.11-compatible source syntax.
+- `.b5d` V1 byte layout is now documented as frozen.
+- Little-endian encoding, exact struct sizes and 64-byte section alignment are
+  explicit compatibility requirements.
+- Metadata is a deterministic UTF-8 JSON object capped at 65,536 bytes.
+- The reader documents structural corruption guarantees and the deliberate
+  absence of payload CRC in V1.
+- Neuron IDs are strictly increasing; synapse source/target references must
+  resolve to persisted neurons.
 
-### Scope
-- No new plasticity rule is introduced.
-- No homeostasis or intrinsic motivation is introduced yet.
+### Verification
+
+- robustness suite covers format sizes, endian policy, roundtrip, random access,
+  source-scoped synapse lookup, duplicate-ID corruption, dangling targets,
+  metadata limits/JSON corruption, version/magic failures, truncation,
+  non-zero padding, resource cleanup and byte determinism;
+- 50k-neuron scalability smoke test is available as an explicit opt-in release
+  check rather than slowing normal unit-test runs;
+- PowerShell verifier runs full regression and Clean Code gates.
+
+### Clean Code / Pylance
+
+- `b5d.py` contains no explicit `Any` types;
+- Protocol-based typed boundaries describe the required network/neuron/synapse
+  surfaces;
+- strict `pyrightconfig.json` targets the new storage boundary.
+
+### Roadmap
+
+- added `ROADMAP_TO_USABLE_AI.md` with staged milestones from persistence,
+  journaling and homeostasis through learning curriculum, multimodal adapters,
+  memory/context, HMI, bounded autonomy, evaluation and v1.0 release criteria.
+
+## 0.4.0-alpha.1 - Storage V1 foundation - 2026-08-16
+
+- `.b5d` fixed-layout snapshot format V1 introduced.
+- Memory-mapped `B5DReader` and deterministic `B5DSnapshotWriter` introduced.
+- Optional restart-capable neuron extension introduced.
 
 ## 0.3.0 - Sprint 2C - 2026-08-16
 
-### Added
 - RewardSignal with configurable delay.
 - Signed three-factor plasticity (`eta * reward * eligibility`).
-- Positive and negative reward handling.
-- Optional trace reset after reward.
 - Activity, incoming-weight and energy heatmap projections.
-- Heatmap Observatory panel.
-- Reward and heatmap unit tests.
-- Black, Pylint and strict-mypy development configuration.
-
-### Changed
-- Package version raised to 0.3.0.
-- Learning statistics distinguish STDP and reward weight updates.
-- `main.py` supports optional `output_spike` reward generation while keeping
-  `external` as the default reward source.
-
-### Compatibility
-- Default reward learning remains disabled in `configs/poc_config.yaml`.
-- Sprint 1C core spike dynamics are not changed by Sprint 2C.

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: brain5d-core
-Version: 0.3.0
+Version: 0.4.0a1
 Summary: Sparse 5D spiking-neural simulation with observable plasticity.
 Requires-Python: >=3.11
 Requires-Dist: PyYAML>=6.0

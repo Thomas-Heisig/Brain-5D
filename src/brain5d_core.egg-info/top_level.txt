@@ -2,8 +2,12 @@ __init__
 config
 core
 diagnostics
+experiments
 learning
 main
+manipulation
+self_organization
+storage
 telemetry
 utils
 visualization
