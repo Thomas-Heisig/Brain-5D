@@ -3,11 +3,51 @@ from __future__ import annotations
 import random
 import time
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Set, Tuple
+from typing import Callable, Dict, List, Set, Tuple, TypedDict
 
 from .neuron import Neuron
 from .spatial_index import DIM_NAMES, Coord5D, iter_neighbour_coords, pack_coords, unpack_coords
 from .synapse import Synapse
+
+
+# -------------------- TypedDict definitions for configuration --------------------
+class SimulationConfig(TypedDict, total=False):
+    dt_ms: float
+    max_delay: int
+    debug_invariants: bool
+
+
+class NeuronConfig(TypedDict, total=False):
+    a: float
+    b: float
+    c: float
+    d: float
+
+
+class EnergyConfig(TypedDict, total=False):
+    initial: float
+    spike_cost: float
+
+
+class TopologyConfig(TypedDict, total=False):
+    allow_self_connections: bool
+    allow_parallel_connections: bool
+
+
+class NetworkConfig(TypedDict, total=False):
+    weight_min: float
+    weight_max: float
+
+
+class ConfigDict(TypedDict, total=False):
+    dimensions: List[int]
+    simulation: SimulationConfig
+    neuron: NeuronConfig
+    energy: EnergyConfig
+    topology: TopologyConfig
+    network: NetworkConfig
+    # Additional optional keys can be added as needed
+# -----------------------------------------------------------------------------
 
 
 @dataclass(slots=True)
@@ -53,15 +93,24 @@ class NeuralNetwork:
     - current_tick becomes t+1 only after the whole core step is complete.
     """
 
-    def __init__(self, config: dict, rng: random.Random):
+    def __init__(self, config: ConfigDict, rng: random.Random):
         self.config = config
         self.rng = rng
-        self.dimensions: Coord5D = tuple(config["dimensions"])  # type: ignore[assignment]
-        self.max_delay = int(config["simulation"]["max_delay"])
-        self.dt_ms = float(config["simulation"]["dt_ms"])
+
+        # Extract dimensions – assume they are present and valid
+        dims_raw = config.get("dimensions")
+        if not isinstance(dims_raw, (list, tuple)) or len(dims_raw) != 5:
+            raise ValueError("dimensions must be a list/tuple of 5 ints")
+        self.dimensions: Coord5D = tuple(dims_raw)  # type: ignore[assignment]
+
+        # Extract simulation settings with defaults
+        sim_cfg = config.get("simulation", {})
+        self.max_delay = int(sim_cfg.get("max_delay", 1))
+        self.dt_ms = float(sim_cfg.get("dt_ms", 1.0))
         if self.dt_ms != 1.0:
             raise ValueError("Sprint 1 reference core supports dt_ms=1.0 only")
-        self.debug_invariants = bool(config["simulation"].get("debug_invariants", False))
+        self.debug_invariants = bool(sim_cfg.get("debug_invariants", False))
+
         self.neurons: Dict[int, Neuron] = {}
         self.synapses: Dict[int, List[Synapse]] = {}
         self.in_degree: Dict[int, int] = {}
@@ -75,6 +124,7 @@ class NeuralNetwork:
         self.input_cells: Set[int] = set()
         self.output_cells: Set[int] = set()
         self._post_step_hooks: list[PostStepHook] = []
+
         topology = config.get("topology", {})
         self.allow_self_connections = bool(topology.get("allow_self_connections", False))
         self.allow_parallel_connections = bool(topology.get("allow_parallel_connections", False))
@@ -95,13 +145,25 @@ class NeuralNetwork:
         nid = pack_coords(*coord)
         if nid in self.neurons:
             raise KeyError(f"Neuron at {coord} already exists")
-        ncfg = self.config["neuron"]
+
+        # Neuron config – assume present and with required keys
+        ncfg = self.config.get("neuron", {})
+        # Use explicit casts to float for type safety
+        a = float(ncfg.get("a", 0.0))
+        b = float(ncfg.get("b", 0.0))
+        c = float(ncfg.get("c", 0.0))
+        d = float(ncfg.get("d", 0.0))
+
+        energy_cfg = self.config.get("energy", {})
+        initial_energy = float(energy_cfg.get("initial", 0.0))
+        spike_cost = float(energy_cfg.get("spike_cost", 0.0))
+
         self.neurons[nid] = Neuron(
             neuron_id=nid,
-            a=float(ncfg["a"]), b=float(ncfg["b"]), c=float(ncfg["c"]), d=float(ncfg["d"]),
-            v=float(ncfg["c"]), u=float(ncfg["b"]) * float(ncfg["c"]),
-            energy=float(self.config["energy"]["initial"]),
-            spike_cost=float(self.config["energy"]["spike_cost"]),
+            a=a, b=b, c=c, d=d,
+            v=c, u=b * c,
+            energy=initial_energy,
+            spike_cost=spike_cost,
         )
         self.synapses[nid] = []
         self.in_degree[nid] = 0
@@ -110,22 +172,28 @@ class NeuralNetwork:
     def remove_neuron(self, neuron_id: int) -> None:
         if neuron_id not in self.neurons:
             return
+
+        # Entferne eingehende Synapsen von anderen Neuronen zu diesem Neuron
         for pre_id, syn_list in list(self.synapses.items()):
             if pre_id == neuron_id:
                 continue
-            kept = []
+            kept: list[Synapse] = []   # Explizite Typannotation für die Liste
             for syn in syn_list:
                 if syn.target_id == neuron_id:
                     self._synapse_count -= 1
                     self.in_degree[neuron_id] = max(0, self.in_degree.get(neuron_id, 0) - 1)
                 else:
-                    kept.append(syn)
+                    kept.append(syn)   # append wird nun korrekt als (Synapse) -> None erkannt
             self.synapses[pre_id] = kept
+
+        # Entferne ausgehende Synapsen von diesem Neuron
         outgoing = self.synapses.pop(neuron_id, [])
         for syn in outgoing:
             if syn.target_id in self.in_degree:
                 self.in_degree[syn.target_id] = max(0, self.in_degree[syn.target_id] - 1)
             self._synapse_count -= 1
+
+        # Lösche das Neuron und die zugehörigen Metadaten
         del self.neurons[neuron_id]
         self.in_degree.pop(neuron_id, None)
         self.input_cells.discard(neuron_id)
@@ -159,25 +227,41 @@ class NeuralNetwork:
             self.pending_currents[neuron_id] = self.pending_currents.get(neuron_id, 0.0) + float(current)
 
     def initialize_random_connections(self, connections_per_neuron: int, radius: float) -> None:
-        wmin = float(self.config["network"].get("weight_min", 0.0))
-        wmax = float(self.config["network"].get("weight_max", 0.5))
+        """
+        Erstellt zufällige Verbindungen zwischen Neuronen innerhalb eines
+        bestimmten Radius im 5D-Gitter.
+        """
+        net_cfg = self.config.get("network", {})
+        wmin = float(net_cfg.get("weight_min", 0.0))
+        wmax = float(net_cfg.get("weight_max", 0.5))
+
         for pre_id in list(self.neurons):
             pre_coord = unpack_coords(pre_id)
-            candidates = []
+            # Explizite Typannotation für die Kandidatenliste
+            candidates: list[int] = []
             for ncoord in iter_neighbour_coords(pre_coord, self.dimensions, radius):
                 nid = pack_coords(*ncoord)
                 if nid not in self.neurons:
                     continue
                 if nid == pre_id and not self.allow_self_connections:
                     continue
-                candidates.append(nid)
+                candidates.append(nid)   # append ist nun klar als (int) -> None typisiert
+
             if not candidates:
                 continue
-            for post_id in self.rng.sample(candidates, min(connections_per_neuron, len(candidates))):
-                self.connect(pre_id, post_id, self.rng.uniform(wmin, wmax), self.rng.randint(1, self.max_delay))
+
+            sample_size = min(connections_per_neuron, len(candidates))
+            for post_id in self.rng.sample(candidates, sample_size):
+                self.connect(
+                    pre_id,
+                    post_id,
+                    self.rng.uniform(wmin, wmax),
+                    self.rng.randint(1, self.max_delay)
+                )
 
     def set_input_output_cells(self, input_dim: str, input_coord: int, output_dim: str, output_coord: int) -> None:
-        self.input_cells.clear(); self.output_cells.clear()
+        self.input_cells.clear()
+        self.output_cells.clear()
         if input_dim not in DIM_NAMES or output_dim not in DIM_NAMES:
             raise ValueError("Unknown topology dimension")
         ii, oi = DIM_NAMES[input_dim], DIM_NAMES[output_dim]
@@ -210,28 +294,36 @@ class NeuralNetwork:
         spike_ids: list[int] = []
         output_spikes: list[int] = []
         active = len(self.neurons)
-        sum_v = sum_energy = 0.0
-        min_v = float("inf"); max_v = -float("inf")
+        sum_v = 0.0
+        sum_energy = 0.0
+        min_v = float("inf")
+        max_v = -float("inf")
         for nid, neuron in self.neurons.items():
             ext = external_currents.get(nid, 0.0)
             syn = synaptic_currents.get(nid, 0.0)
             neuron.last_external_current = ext
             neuron.last_synaptic_current = syn
             spiked = neuron.step(ext + syn, tick)
-            sum_v += neuron.v; sum_energy += neuron.energy
-            min_v = min(min_v, neuron.v); max_v = max(max_v, neuron.v)
+            sum_v += neuron.v
+            sum_energy += neuron.energy
+            min_v = min(min_v, neuron.v)
+            max_v = max(max_v, neuron.v)
             if spiked:
-                spike_ids.append(nid); self.total_spikes += 1
+                spike_ids.append(nid)
+                self.total_spikes += 1
                 if nid in self.output_cells:
                     output_spikes.append(nid)
                 for connection in self.synapses[nid]:
                     connection.last_pre_spike = tick
                     delivery_tick = tick + connection.delay
                     slot = delivery_tick % len(self.event_slots)
-                    self.event_slots[slot].append(SpikeEvent(nid, connection.target_id, connection.weight, delivery_tick))
+                    self.event_slots[slot].append(
+                        SpikeEvent(nid, connection.target_id, connection.weight, delivery_tick)
+                    )
                     self._queued_event_count += 1
         if active:
-            mean_v = sum_v / active; mean_energy = sum_energy / active
+            mean_v = sum_v / active
+            mean_energy = sum_energy / active
         else:
             mean_v = min_v = max_v = mean_energy = 0.0
 
@@ -243,12 +335,20 @@ class NeuralNetwork:
         elapsed = (time.perf_counter() - start) * 1000.0
         result = StepResult(
             tick=tick,
-            spike_ids=tuple(spike_ids), output_spike_ids=tuple(output_spikes),
-            spikes_this_tick=len(spike_ids), total_spikes=self.total_spikes,
-            delivered_events=delivered, queued_events=self._queued_event_count,
-            external_injection_count=len(external_currents), external_total_current=sum(external_currents.values()),
-            synaptic_current_targets=len(synaptic_currents), mean_v=mean_v, min_v=min_v, max_v=max_v,
-            mean_energy=mean_energy, core_step_ms=elapsed,
+            spike_ids=tuple(spike_ids),
+            output_spike_ids=tuple(output_spikes),
+            spikes_this_tick=len(spike_ids),
+            total_spikes=self.total_spikes,
+            delivered_events=delivered,
+            queued_events=self._queued_event_count,
+            external_injection_count=len(external_currents),
+            external_total_current=sum(external_currents.values()),
+            synaptic_current_targets=len(synaptic_currents),
+            mean_v=mean_v,
+            min_v=min_v,
+            max_v=max_v,
+            mean_energy=mean_energy,
+            core_step_ms=elapsed,
         )
         for hook in tuple(self._post_step_hooks):
             hook(result)

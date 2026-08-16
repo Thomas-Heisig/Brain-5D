@@ -2,6 +2,7 @@
 
 import math
 import random
+from typing import Any, cast
 
 import pytest
 
@@ -11,8 +12,13 @@ from src.learning.learning_engine import LearningEngine
 from src.learning.reward import RewardSignal
 
 
-def _config(*, delay: int = 0, reset_trace: bool = False) -> dict:
-    config = base_config()
+def _config(*, delay: int = 0, reset_trace: bool = False) -> dict[str, Any]:
+    """
+    Erzeugt eine Testkonfiguration mit stdp-, eligibility- und reward-Abschnitten.
+    Rückgabetyp dict[str, Any] erlaubt das Hinzufügen beliebiger Schlüssel,
+    ohne dass TestConfig erweitert werden muss.
+    """
+    config: dict[str, Any] = cast(dict[str, Any], base_config())
     config["stdp"] = {
         "enabled": False,
         "a_plus": 0.1,
@@ -54,8 +60,10 @@ def _result(tick: int, *spike_ids: int) -> StepResult:
     )
 
 
-def _network(config: dict, weight: float = 0.5) -> tuple[NeuralNetwork, int, int]:
-    network = NeuralNetwork(config, random.Random(7))
+def _network(config: dict[str, Any], weight: float = 0.5) -> tuple[NeuralNetwork, int, int]:
+    # Die Testkonfiguration enthält zusätzliche Felder; für den Test ist die
+    # Typprüfung an dieser Stelle deaktiviert – die Laufzeitstruktur ist korrekt.
+    network = NeuralNetwork(config, random.Random(7))  # type: ignore[arg-type]
     pre_id = network.add_neuron((1, 1, 1, 1, 1))
     post_id = network.add_neuron((1, 1, 1, 1, 2))
     network.connect(pre_id, post_id, weight, 1)
@@ -78,42 +86,36 @@ def test_reward_signal_delay() -> None:
 def test_positive_reward_potentiates_positive_eligibility() -> None:
     config = _config()
     network, pre_id, post_id = _network(config)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     eligibility = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(
-        0.5 + 0.1 * eligibility
-    )
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)
 
 
 def test_negative_reward_depresses_positive_eligibility() -> None:
     config = _config()
     network, pre_id, post_id = _network(config)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     eligibility = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(-1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(
-        0.5 - 0.1 * eligibility
-    )
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 - 0.1 * eligibility)
 
 
 def test_signed_negative_eligibility_is_used() -> None:
     config = _config()
     network, pre_id, post_id = _network(config)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     engine.update(_result(0, post_id))
     engine.update(_result(10, pre_id))
     eligibility = -0.12 * math.exp(-10.0 / 20.0)
     engine.set_reward(1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(
-        0.5 + 0.1 * eligibility
-    )
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)
 
 
 def test_delayed_reward_uses_decayed_trace() -> None:
     config = _config(delay=20)
     network, pre_id, post_id = _network(config)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     initial_trace = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
     engine.update(_result(29))
@@ -127,7 +129,7 @@ def test_reward_weight_clamping() -> None:
     config = _config()
     config["reward"]["learning_rate"] = 100.0
     network, pre_id, post_id = _network(config, weight=0.99)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
     assert network.synapses[pre_id][0].weight == 1.0
@@ -136,7 +138,7 @@ def test_reward_weight_clamping() -> None:
 def test_optional_trace_reset_after_reward() -> None:
     config = _config(reset_trace=True)
     network, pre_id, post_id = _network(config)
-    engine = LearningEngine(network, config)
+    engine = LearningEngine(network, config)  # type: ignore[arg-type]
     _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
     assert engine.get_eligibility(pre_id, post_id) == 0.0
@@ -146,4 +148,4 @@ def test_reward_requires_eligibility() -> None:
     config = _config()
     config["eligibility"]["enabled"] = False
     with pytest.raises(ValueError, match="requires eligibility"):
-        LearningEngine(_network(config)[0], config)
+        LearningEngine(_network(config)[0], config)  # type: ignore[arg-type]

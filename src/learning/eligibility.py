@@ -54,6 +54,7 @@ class EligibilityTrace:
         return self.value
 
     def reset(self) -> None:
+        """Reset the trace value and timestamp to the initial state."""
         self.value = 0.0
         self.last_tick = None
 

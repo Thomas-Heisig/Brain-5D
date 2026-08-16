@@ -201,9 +201,7 @@ class LearningEngine:
                     self._states[synapse_id] = _SynapseLearningState(
                         pre_id=pre_id,
                         synapse=synapse,
-                        eligibility=EligibilityTrace(
-                            self.params.eligibility_tau_ticks
-                        ),
+                        eligibility=EligibilityTrace(self.params.eligibility_tau_ticks),
                     )
         self._states = {
             synapse_id: state

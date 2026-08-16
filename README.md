@@ -1,100 +1,97 @@
-# Brain 5D Core v0.1.0
+# Brain 5D Core v0.3.1
 
-**Sprint 1C – Verified Observable Core**
+Sparse 5D spiking-neural simulation with observable plasticity.
 
-Dieses Repository bildet den vollständigen Stand 1 des Brain-5D-Projekts ab: einen deterministischen, sparse gespeicherten, beobachtbaren Referenzkern für ein 5-dimensionales Spiking-Neuronennetzwerk.
+## Current status
 
-## Stand-1-Ziele
+Brain-5D contains a deterministic sparse 5D spiking core plus an optional learning
+layer. The learning layer remains outside `src/core` and observes completed core
+steps through a generic post-step hook.
 
-- 5D-Koordinatenraum mit gepackten 40-Bit-IDs
-- Sparse Neuronen- und Synapsenspeicherung
-- Izhikevich-Regular-Spiking-Neuronen, 1 ms Tick
-- verzögerte Spike-Events über Ringpuffer
-- konfigurierbare Input-/Output-Hyperflächen
-- diagnostische Stimuli
-- echte Spike-Historie und Developer Observatory
-- Topologie-Health-Check
-- Propagations-/Rekrutierungsanalyse
-- reproduzierbare Run-Artefakte
-- Golden-Chain-Referenztest A(0) -> B(2) -> C(5)
+Implemented and tested:
 
-**Nicht Bestandteil von Stand 1:** STDP, Eligibility Traces, Reward Learning, Homöostase mit Verhaltenswirkung, Neurogenese, Pruning oder selbstmodifizierender Code.
+- 5D coordinate space and sparse neuron/synapse storage
+- Izhikevich regular-spiking neurons with delayed spike events
+- deterministic Golden Chain regression
+- Observatory, telemetry and run artifacts
+- nearest-neighbour STDP
+- signed exponentially decaying eligibility traces
+- reward-modulated three-factor plasticity
+- activity, incoming-weight and energy heatmaps
+- deterministic end-to-end learning experiment
+
+The v0.3.1 experiment demonstrates the full chain:
+
+`PRE spike -> POST spike -> eligibility -> reward -> weight change -> changed network response`
 
 ## Installation
 
-```bash
+```powershell
 python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# Linux/macOS: source .venv/bin/activate
+.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 ```
 
-Alternativ:
+## Regression tests
 
-```bash
-pip install -r requirements.txt
-```
-
-## Tests
-
-```bash
+```powershell
 python -m pytest -v
-```
-
-Golden Chain separat:
-
-```bash
 python -m pytest tests/test_golden_chain.py -v
 ```
 
-## Start
+## Controlled learning experiment
+
+```powershell
+python -m src.experiments.learning_lab --config configs/learning_experiment.yaml
+```
+
+The checked-in experiment starts with subthreshold convergent synapses. Repeated
+PRE/POST pairings create eligibility, positive reward strengthens the synapses, and
+a fresh evaluation network must then produce a target spike from the trained
+weights while the baseline network remains subthreshold.
+
+## Main PoC
 
 Headless:
 
-```bash
+```powershell
 python -m src.main
 ```
 
-Mit Observatory:
+Observatory:
 
-```bash
+```powershell
 python -m src.main --observe
 ```
 
 Benchmark:
 
-```bash
+```powershell
 python -m src.main --benchmark
 ```
 
-## Git-Referenzstand
+## Quality checks
 
-Nach erfolgreichem Testlauf:
+The project keeps Python 3.11 as the minimum runtime syntax target, while the
+current development/lint environment is Python 3.13.
 
-```bash
-git init
-git add .
-git commit -m "feat: verified observable Brain 5D Sprint 1 core"
-git tag -a brain5d-core-v0.1.0 -m "Sprint 1C VERIFIED - observable deterministic reference core"
+```powershell
+black --check src/learning src/experiments src/visualization/heatmap.py tests/test_learning_experiment.py tests/test_network_hooks.py
+mypy src/learning src/experiments src/visualization/heatmap.py
+pylint src/learning src/experiments src/visualization/heatmap.py
 ```
 
-```bash
-…or create a new repository on the command line
-echo "# Brain-5D" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Thomas-Heisig/Brain-5D.git
-git push -u origin main
+For a complete local verification on Windows:
+
+```powershell
+.\scripts\verify_v031.ps1
 ```
 
-```bash
-…or push an existing repository from the command line
-git remote add origin https://github.com/Thomas-Heisig/Brain-5D.git
-git branch -M main
-git push -u origin main
-```
+## Version line
 
-Siehe `docs/GIT_WORKFLOW.md` und `docs/ACCEPTANCE.md`.
-# Brain-5D
+- `brain5d-core-v0.1.0` - verified observable reference core
+- `brain5d-core-v0.2.0` - STDP integration and eligibility traces
+- `brain5d-core-v0.3.0` - three-factor reward learning and heatmap observatory
+- `brain5d-core-v0.3.1` - repository synchronization and end-to-end learning proof
+
+See `docs/CHANGELOG.md` and `docs/SPRINT_2D_FOUNDATION.md`.

@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, Set, Tuple
 
+from ..core.network import StepResult
+from .stimulus import StimulusResult
+
 
 @dataclass(slots=True)
 class PropagationReport:
@@ -41,7 +44,7 @@ class PropagationAnalyzer:
         self._stimulus_tick = -1
         self._stimulus_mode = ""
 
-    def observe(self, stimulus_result, step_result) -> None:
+    def observe(self, stimulus_result: StimulusResult, step_result: StepResult) -> None:
         if stimulus_result.target_ids:
             if self._stimulus_tick < 0:
                 self._stimulus_tick = stimulus_result.tick

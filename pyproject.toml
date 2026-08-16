@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brain5d-core"
-version = "0.3.0"
+version = "0.3.1"
 description = "Sparse 5D spiking-neural simulation with observable plasticity."
 requires-python = ">=3.11"
 dependencies = [
@@ -32,7 +32,7 @@ line-length = 88
 target-version = ["py311"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.13"
 strict = true
 warn_unreachable = true
 show_error_codes = true
@@ -52,7 +52,7 @@ exclude = [
 ]
 
 [tool.pylint.main]
-py-version = "3.11"
+py-version = "3.13"
 ignore-paths = ["^tests/"]
 
 [tool.pylint.format]

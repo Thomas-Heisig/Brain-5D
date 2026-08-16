@@ -147,5 +147,8 @@ def test_parameter_bundle_factory() -> None:
     ],
 )
 def test_invalid_parameters_fail_fast(kwargs: dict[str, float]) -> None:
+    # Der Type‑Checker kann den **kwargs‑Aufruf nicht korrekt analysieren;
+    # für den Test ist die Laufzeit‑Struktur entscheidend, daher ignorieren
+    # wir den Argument‑Typ an dieser Stelle.
     with pytest.raises(ValueError):
-        STDPSynapse(weight=0.5, **kwargs)
+        STDPSynapse(weight=0.5, **kwargs)  # type: ignore[arg-type]

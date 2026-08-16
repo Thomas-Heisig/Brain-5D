@@ -11,8 +11,10 @@ from src.visualization.heatmap import HeatmapProjector
 
 
 def _network() -> tuple[NeuralNetwork, int, int, int]:
-    config = base_config()
-    network = NeuralNetwork(config, random.Random(9))
+    # Die Testkonfiguration enthält zusätzliche Felder, die in ConfigDict nicht
+    # deklariert sind. Für Tests ist es akzeptabel, die Typprüfung hier zu
+    # deaktivieren, da die Laufzeitstruktur korrekt ist.
+    network = NeuralNetwork(base_config(), random.Random(9))  # type: ignore[arg-type]
     first = network.add_neuron((1, 2, 0, 0, 0))
     second = network.add_neuron((1, 2, 1, 0, 0))
     third = network.add_neuron((3, 4, 0, 0, 0))
@@ -25,7 +27,7 @@ def test_all_heatmaps_have_xy_shape_and_finite_values() -> None:
     network, _, _, _ = _network()
     projector = HeatmapProjector(network, activity_tau_ticks=50.0)
     for kind in ("activity", "weights", "energy"):
-        data = projector.build(kind)  # type: ignore[arg-type]
+        data = projector.build(kind)  # type: ignore[arg-type]  # valid kind values
         assert data.values.shape == (5, 5)
         assert np.isfinite(data.values).all()
 

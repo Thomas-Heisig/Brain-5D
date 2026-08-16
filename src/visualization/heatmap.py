@@ -165,3 +165,13 @@ class HeatmapView:
         self.axis.set_ylabel("Y")
         if self._colorbar is not None:
             self._colorbar.set_label(data.label)
+
+    def clear(self) -> None:
+        """Clear rendered state while keeping the caller-owned axis reusable."""
+        if self._colorbar is not None:
+            self._colorbar.remove()
+            self._colorbar = None
+        if self._image is not None:
+            self._image.remove()
+            self._image = None
+        self.axis.clear()
