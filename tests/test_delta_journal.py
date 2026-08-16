@@ -110,7 +110,9 @@ def test_truncated_commit_falls_back_to_previous_commit(tmp_path: Path) -> None:
         assert [entry.sequence for entry in scan.committed_entries] == [1]
 
 
-def test_large_journal_100k_entries_opt_in(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_large_journal_100k_entries_opt_in(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Optional 100k-entry sequential write/read/recovery smoke test."""
     import os
 

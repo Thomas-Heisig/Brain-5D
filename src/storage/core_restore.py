@@ -17,7 +17,8 @@ class RestoredNeuralNetwork(NeuralNetwork):
     """NeuralNetwork subclass exposing a narrow restoration hook."""
 
     def restore_queued_count(self, value: int) -> None:
-        """Restore the queue counter after event slots have been reconstructed."""
+        """Restore queue counter after event slots have been reconstructed."""
+
         self._queued_event_count = value
 
 
@@ -29,12 +30,15 @@ def restore_network(
     recovered_path: Path,
 ) -> RestoredNeuralNetwork:
     """Recover persisted state and return a runnable deterministic network."""
+
     result = RecoveryManager(snapshot_path, journal_path).recover(recovered_path)
     if not result.success:
         raise RuntimeError(result.error or "snapshot recovery failed")
+
     checkpoint = read_runtime_checkpoint(checkpoint_path)
     rng = _restore_rng(checkpoint)
     network = RestoredNeuralNetwork(config, rng)
+
     with B5DReader(recovered_path) as reader:
         for neuron_record in reader.iter_neurons():
             neuron_id = network.add_neuron(unpack_coords(neuron_record.neuron_id))
@@ -60,6 +64,7 @@ def restore_network(
             neuron.u = neuron_record.optical.recovery_u
             neuron.energy = neuron_record.optical.energy
             neuron.threshold_adaptation = neuron_record.optical.threshold_adaptation
+
         for synapse_record in reader.iter_synapses():
             network.connect(
                 synapse_record.source_id,
@@ -70,7 +75,9 @@ def restore_network(
             synapse = network.synapses[synapse_record.source_id][-1]
             synapse.eligibility = synapse_record.eligibility
             synapse.last_pre_spike = synapse_record.last_pre_spike
+
     _restore_runtime(network, checkpoint)
+    _restore_exact_neuron_state(network, checkpoint)
     return network
 
 
@@ -87,7 +94,8 @@ def _restore_rng(checkpoint: RuntimeCheckpoint) -> random.Random:
 
 
 def _restore_runtime(
-    network: RestoredNeuralNetwork, checkpoint: RuntimeCheckpoint
+    network: RestoredNeuralNetwork,
+    checkpoint: RuntimeCheckpoint,
 ) -> None:
     network.current_tick = checkpoint.current_tick
     network.total_spikes = checkpoint.total_spikes
@@ -109,3 +117,23 @@ def _restore_runtime(
         )
         queued += 1
     network.restore_queued_count(queued)
+
+
+def _restore_exact_neuron_state(
+    network: RestoredNeuralNetwork,
+    checkpoint: RuntimeCheckpoint,
+) -> None:
+    """Overlay exact float state lost by the compact optical representation."""
+
+    for state in checkpoint.neuron_states:
+        neuron = network.neurons.get(state.neuron_id)
+        if neuron is None:
+            raise ValueError(
+                f"runtime checkpoint references missing neuron {state.neuron_id}"
+            )
+        neuron.v = state.membrane_v
+        neuron.u = state.recovery_u
+        neuron.energy = state.energy
+        neuron.threshold_adaptation = state.threshold_adaptation
+        neuron.spike_counter = state.spike_counter
+        neuron.last_spike_tick = state.last_spike_tick

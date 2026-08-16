@@ -11,7 +11,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from src.core.spatial_index import iter_neighbour_coords, pack_coords, unpack_coords
+from src.core.spatial_index import (
+    Coord5D,
+    iter_neighbour_coords,
+    pack_coords,
+    unpack_coords,
+)
 from src.manipulation.manipulator import Brain5DManipulator
 
 
@@ -196,7 +201,7 @@ class SelfOrganizationEngine:
             if created >= self.params.neurogenesis_max_per_cycle:
                 break
 
-    def _find_free_coord(self, neuron_id: int):
+    def _find_free_coord(self, neuron_id: int) -> Coord5D | None:
         coord = unpack_coords(neuron_id)
         for candidate in iter_neighbour_coords(
             coord, self.network.dimensions, self.params.neurogenesis_radius

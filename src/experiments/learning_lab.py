@@ -21,7 +21,7 @@ from typing import Any, Iterable, Mapping, Sequence, cast
 
 import yaml
 
-from src.core.network import NeuralNetwork
+from src.core.network import ConfigDict, NeuralNetwork
 from src.learning.learning_engine import LearningEngine
 
 Config = Mapping[str, Any]
@@ -94,7 +94,8 @@ def _build_convergent_network(
     if pre_count > len(available):
         raise ValueError("not enough coordinates for requested presynaptic neurons")
 
-    network = NeuralNetwork(dict(config), random.Random(int(config.get("seed", 42))))
+    network_config = cast(ConfigDict, dict(config))
+    network = NeuralNetwork(network_config, random.Random(int(config.get("seed", 42))))
     pre_ids = tuple(network.add_neuron(coord) for coord in available[:pre_count])
     target_id = network.add_neuron(target_coord)
     delay = int(exp.get("connection_delay_ticks", 1))

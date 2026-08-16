@@ -26,6 +26,7 @@ async function refreshStatus() {
     const storage = data.storage;
     const learning = data.learning;
     const selfOrg = data.self_organization;
+    const homeostasis = data.homeostasis || {};
 
     setText("tick", system.tick);
     setText("neurons", system.neurons.toLocaleString());
@@ -57,9 +58,21 @@ async function refreshStatus() {
     setText("synapses-created", selfOrg.synapses_created);
     setText("synapses-pruned", selfOrg.synapses_pruned);
 
+    setText("homeo-target", `${Number(homeostasis.target_rate_hz || 0).toFixed(3)} Hz`);
+    setText("homeo-actual", `${Number(homeostasis.actual_rate_hz || 0).toFixed(3)} Hz`);
+    setText("homeo-error", `${Number(homeostasis.rate_error_hz || 0).toFixed(3)} Hz`);
+    setText(
+      "homeo-threshold",
+      Number(homeostasis.mean_threshold_adaptation || 0).toFixed(3),
+    );
+    setText("homeo-energy", Number(homeostasis.mean_energy_error || 0).toFixed(3));
+    setText("homeo-active", Number(homeostasis.active_neurons || 0).toLocaleString());
+
     const status = $("system-status");
     status.textContent = `${data.status} · ${data.version}`;
-    status.className = storage.worker_failed ? "status-pill error" : "status-pill online";
+    status.className = storage.worker_failed
+      ? "status-pill error"
+      : "status-pill online";
   } catch (error) {
     const status = $("system-status");
     status.textContent = "offline";
@@ -94,12 +107,17 @@ function drawHeatmap(payload) {
       ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
     });
   });
-  setText("heatmap-meta", `${payload.kind} · Tick ${payload.tick} · ${payload.samples} Samples · ${min.toFixed(4)}…${max.toFixed(4)}`);
+  setText(
+    "heatmap-meta",
+    `${payload.kind} · Tick ${payload.tick} · ${payload.samples} Samples · `
+      + `${min.toFixed(4)}…${max.toFixed(4)}`,
+  );
 }
 
 async function refreshHeatmap() {
   try {
-    const response = await fetch(`/api/heatmap?kind=${encodeURIComponent(heatmapKind)}`, {cache: "no-store"});
+    const path = `/api/heatmap?kind=${encodeURIComponent(heatmapKind)}`;
+    const response = await fetch(path, {cache: "no-store"});
     if (!response.ok) {
       const data = await response.json();
       setText("heatmap-meta", data.error || `Heatmap HTTP ${response.status}`);
@@ -114,7 +132,9 @@ async function refreshHeatmap() {
 document.querySelectorAll("button[data-kind]").forEach((button) => {
   button.addEventListener("click", () => {
     heatmapKind = button.dataset.kind;
-    document.querySelectorAll("button[data-kind]").forEach((node) => node.classList.remove("active"));
+    document.querySelectorAll("button[data-kind]").forEach((node) => {
+      node.classList.remove("active");
+    });
     button.classList.add("active");
     void refreshHeatmap();
   });

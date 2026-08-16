@@ -78,9 +78,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
     def _serve_static(self, request_path: str) -> None:
         relative = (
-            "index.html"
-            if request_path in {"", "/"}
-            else request_path.lstrip("/")
+            "index.html" if request_path in {"", "/"} else request_path.lstrip("/")
         )
         candidate = (_STATIC_ROOT / relative).resolve()
         static_root = _STATIC_ROOT.resolve()

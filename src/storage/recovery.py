@@ -72,7 +72,7 @@ class _RecoveredNetwork:
     synapses: dict[int, list[_SynapseState]]
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class _SnapshotView:
     """Read-only typed adapter passed to the frozen V1 snapshot writer."""
 
@@ -333,9 +333,7 @@ class RecoveryManager:
             ):
                 raise RecoveryError("cannot add synapse with missing endpoint")
             existing = network.synapses.setdefault(synapse_add_delta.source_id, [])
-            if any(
-                item.target_id == synapse_add_delta.target_id for item in existing
-            ):
+            if any(item.target_id == synapse_add_delta.target_id for item in existing):
                 raise RecoveryError("duplicate synapse add delta")
             existing.append(
                 _SynapseState(

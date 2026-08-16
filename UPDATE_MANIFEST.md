@@ -1,30 +1,30 @@
-# Brain-5D v0.4.0-alpha.5 Overlay Manifest
+# v0.4.0-alpha.6 Overlay Manifest
 
-## Neu
+## Replaced files
 
-- `src/dashboard/__init__.py`
-- `src/dashboard/__main__.py`
+- `src/storage/checkpoint.py`
+- `src/storage/core_restore.py`
 - `src/dashboard/models.py`
-- `src/dashboard/state.py`
-- `src/dashboard/heatmap_source.py`
-- `src/dashboard/server.py`
 - `src/dashboard/static/index.html`
-- `src/dashboard/static/styles.css`
 - `src/dashboard/static/app.js`
-- `tests/test_dashboard.py`
-- `scripts/verify_dashboard.py`
-- `docs/DASHBOARD.md`
-- `docs/ROADMAP_ALPHA5.md`
+- `tests/test_checkpoint.py`
 
-## Bewusste Grenzen
+## New files
 
-- Dashboard ist read-only.
-- Keine externe Bind-Adresse per Default.
-- Keine Authentifizierung in alpha.5.
-- Keine TypeScript-Toolchain: das Frontend ist bewusst Vanilla JavaScript.
-- `Analyse_Deepseek.md` und `Der_weg_zur_KI.md` werden referenziert, aber erst
-  nach Verfuegbarkeit im Repository inhaltlich fusioniert.
+- `tests/test_dashboard_alpha6.py`
+- `scripts/apply_alpha6_quality_fixes.py`
+- `scripts/apply_alpha6_metadata.py`
+- `docs/DETERMINISTIC_RESTORE.md`
+- `docs/RESEARCH_ALIGNMENT.md`
+- `docs/QUALITY_GATE.md`
+- `README_ALPHA6.md`
 
-## Empfohlene Versionsbezeichnung
+## In-place migrations performed by scripts
 
-`0.4.0a5`
+- `src/manipulation/manipulator.py`: explicit `int` return from neuron creation
+- `src/self_organization/engine.py`: typed `Coord5D | None` return
+- `src/experiments/learning_lab.py`: typed `ConfigDict` bridge
+- `src/storage/recovery.py`: mutable protocol adapter for mypy
+- `pyproject.toml`: alpha.6 package version
+- `README.md`: deterministic restore and strategy links
+- `docs/ROADMAP_TO_USABLE_AI.md`: research alignment marker

@@ -182,3 +182,13 @@ python scripts/verify_b5d.py
 
 `prepare_alpha4.py` applies the narrow legacy typing fixes found during the
 104-test alpha.3 acceptance run and normalizes `src/` + `tests/` with Black.
+
+<!-- alpha6-strategy -->
+"
+        "## Strategy and deterministic restore
+
+"
+        "The persistence quality gate now distinguishes compact `.b5d` snapshots "
+        "from deterministic checkpoints. See `docs/DETERMINISTIC_RESTORE.md`. "
+        "Research and roadmap alignment is documented in "
+        "`docs/RESEARCH_ALIGNMENT.md`.

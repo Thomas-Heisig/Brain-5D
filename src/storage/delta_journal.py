@@ -308,9 +308,7 @@ class DeltaJournal:
         if magic != JOURNAL_MAGIC:
             raise JournalCorruptionError(f"invalid journal magic: {magic!r}")
         if version != JOURNAL_VERSION:
-            raise JournalCorruptionError(
-                f"unsupported journal version: {version}"
-            )
+            raise JournalCorruptionError(f"unsupported journal version: {version}")
         if header_size != JOURNAL_HEADER_SIZE:
             raise JournalCorruptionError("invalid journal header size")
         if reserved0 != 0 or reserved1 != 0 or padding != b"\x00" * 16:

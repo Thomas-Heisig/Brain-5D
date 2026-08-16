@@ -176,7 +176,7 @@ class Brain5DManipulator:
     def create_neuron(
         self, coord: Coord5D, optical: OpticalPointState | None = None
     ) -> int:
-        nid = self.network.add_neuron(coord)
+        nid = int(self.network.add_neuron(coord))
         self.optical[nid] = optical or state_from_neuron(self.network.neurons[nid])
         self._record_inverse("delete_neuron", neuron_id=nid)
         self._audit("CREATE_NEURON", neuron_id=nid, coord=coord)

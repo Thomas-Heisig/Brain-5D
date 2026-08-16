@@ -98,9 +98,13 @@ def test_recovery_ignores_uncommitted_tail(tmp_path: Path) -> None:
     recovered = tmp_path / "recovered.b5d"
     _snapshot(snapshot)
     with DeltaJournal(journal_path, base_tick=5) as journal:
-        journal.append(encode_neuron_state(6, NeuronStateDelta(1, -50.0, -9.0, 0.7, 1, 6)))
+        journal.append(
+            encode_neuron_state(6, NeuronStateDelta(1, -50.0, -9.0, 0.7, 1, 6))
+        )
         journal.commit()
-        journal.append(encode_neuron_state(7, NeuronStateDelta(1, -20.0, -2.0, 0.2, 2, 7)))
+        journal.append(
+            encode_neuron_state(7, NeuronStateDelta(1, -20.0, -2.0, 0.2, 2, 7))
+        )
     result = RecoveryManager(snapshot, journal_path).recover(recovered)
     assert result.success, result.error
     with B5DReader(recovered) as reader:

@@ -279,3 +279,13 @@ After v0.4.0 the project moves to v0.5 homoeostasis + event-driven dirty
 tracking, then v0.6 chunking/parallel scale, v0.7 reproducible learning
 environments, v0.8 multimodal input, v0.9 memory/context/goals, v0.10 HMI/API,
 v0.11 bounded autonomy, v0.12 release candidate and v1.0 usable Brain-5D AI.
+
+<!-- research-alignment-alpha6 -->
+"
+        "## Research alignment update
+
+"
+        "The roadmap now treats embodiment, continual-learning retention, causal "
+        "evaluation and neuro-symbolic composition as explicit later-stage "
+        "benchmarks. See `docs/RESEARCH_ALIGNMENT.md` for the mapping from "
+        "`Analyse_Deepseek.md`, `Der_weg_zur_KI.md` and `Research.md`.
