@@ -34,11 +34,9 @@ def restore_network(
     result = RecoveryManager(snapshot_path, journal_path).recover(recovered_path)
     if not result.success:
         raise RuntimeError(result.error or "snapshot recovery failed")
-
     checkpoint = read_runtime_checkpoint(checkpoint_path)
     rng = _restore_rng(checkpoint)
     network = RestoredNeuralNetwork(config, rng)
-
     with B5DReader(recovered_path) as reader:
         for neuron_record in reader.iter_neurons():
             neuron_id = network.add_neuron(unpack_coords(neuron_record.neuron_id))
@@ -64,7 +62,6 @@ def restore_network(
             neuron.u = neuron_record.optical.recovery_u
             neuron.energy = neuron_record.optical.energy
             neuron.threshold_adaptation = neuron_record.optical.threshold_adaptation
-
         for synapse_record in reader.iter_synapses():
             network.connect(
                 synapse_record.source_id,
@@ -75,9 +72,9 @@ def restore_network(
             synapse = network.synapses[synapse_record.source_id][-1]
             synapse.eligibility = synapse_record.eligibility
             synapse.last_pre_spike = synapse_record.last_pre_spike
-
     _restore_runtime(network, checkpoint)
     _restore_exact_neuron_state(network, checkpoint)
+    _restore_exact_synapse_state(network, checkpoint)
     return network
 
 
@@ -123,7 +120,7 @@ def _restore_exact_neuron_state(
     network: RestoredNeuralNetwork,
     checkpoint: RuntimeCheckpoint,
 ) -> None:
-    """Overlay exact float state lost by the compact optical representation."""
+    """Overlay exact values lost by the compact snapshot representation."""
 
     for state in checkpoint.neuron_states:
         neuron = network.neurons.get(state.neuron_id)
@@ -131,9 +128,50 @@ def _restore_exact_neuron_state(
             raise ValueError(
                 f"runtime checkpoint references missing neuron {state.neuron_id}"
             )
+        if state.a is not None:
+            neuron.a = state.a
+        if state.b is not None:
+            neuron.b = state.b
+        if state.c is not None:
+            neuron.c = state.c
+        if state.d is not None:
+            neuron.d = state.d
         neuron.v = state.membrane_v
         neuron.u = state.recovery_u
         neuron.energy = state.energy
+        if state.spike_cost is not None:
+            neuron.spike_cost = state.spike_cost
         neuron.threshold_adaptation = state.threshold_adaptation
         neuron.spike_counter = state.spike_counter
         neuron.last_spike_tick = state.last_spike_tick
+        neuron.last_external_current = state.last_external_current
+        neuron.last_synaptic_current = state.last_synaptic_current
+
+
+def _restore_exact_synapse_state(
+    network: RestoredNeuralNetwork,
+    checkpoint: RuntimeCheckpoint,
+) -> None:
+    """Overlay exact synaptic float state lost by V1 float32 fields."""
+
+    if not checkpoint.synapse_states:
+        return
+    for state in checkpoint.synapse_states:
+        candidates = network.synapses.get(state.source_id)
+        if candidates is None:
+            raise ValueError(
+                f"runtime checkpoint references missing source {state.source_id}"
+            )
+        synapse = next(
+            (item for item in candidates if item.target_id == state.target_id),
+            None,
+        )
+        if synapse is None:
+            raise ValueError(
+                "runtime checkpoint references missing synapse "
+                f"{state.source_id}->{state.target_id}"
+            )
+        synapse.weight = state.weight
+        synapse.delay = state.delay
+        synapse.eligibility = state.eligibility
+        synapse.last_pre_spike = state.last_pre_spike

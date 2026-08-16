@@ -12,8 +12,12 @@
       <p class="eyebrow">Brain-5D</p>
       <h1>Operator Dashboard</h1>
     </div>
-    <div class="status-pill" id="system-status">offline</div>
+    <div class="topbar-actions">
+      <button id="docs-btn" class="secondary">Dokumentation</button>
+      <div class="status-pill" id="system-status">offline</div>
+    </div>
   </header>
+
   <main>
     <section class="grid metrics-grid">
       <article class="card metric"><span>Tick</span><strong id="tick">0</strong></article>
@@ -70,11 +74,30 @@
           <div><dt>Aktive Zellen</dt><dd id="homeo-active">0</dd></div>
         </dl>
       </article>
+
+      <article class="card panel embodiment-card">
+        <div class="panel-title"><h2>Embodiment</h2><span>Foundation</span></div>
+        <dl class="kv">
+          <div><dt>Umgebung</dt><dd id="embodiment-kind">unconfigured</dd></div>
+          <div><dt>Sensoren</dt><dd id="embodiment-sensors">0</dd></div>
+          <div><dt>Aktoren</dt><dd id="embodiment-actuators">0</dd></div>
+          <div><dt>Episode</dt><dd id="embodiment-episode">0</dd></div>
+          <div><dt>Reward</dt><dd id="embodiment-reward">0.000</dd></div>
+          <div><dt>Letzte Aktion</dt><dd id="embodiment-action">—</dd></div>
+        </dl>
+      </article>
     </section>
 
     <section class="card heatmap-panel">
-      <div class="panel-title">
-        <div><h2>5D X-Y Projektion</h2><p>Lazy mmap aus .b5d Snapshot</p></div>
+      <div class="panel-title heatmap-toolbar">
+        <div>
+          <h2>5D X-Y Projektion</h2>
+          <p>Lazy mmap aus .b5d Snapshot</p>
+        </div>
+        <div class="snapshot-control">
+          <label for="snapshot-select">Snapshot</label>
+          <select id="snapshot-select"></select>
+        </div>
         <div class="button-group">
           <button data-kind="activity" class="active">Aktivität</button>
           <button data-kind="weights">Gewichte</button>
@@ -82,20 +105,28 @@
         </div>
       </div>
       <div class="heatmap-wrap">
-        <canvas id="heatmap" width="800" height="420"></canvas>
-        <div class="heatmap-meta" id="heatmap-meta">Kein Snapshot verbunden.</div>
+        <canvas id="heatmap" width="900" height="480"></canvas>
       </div>
-    </section>
-
-    <section class="grid roadmap-grid">
-      <article class="card roadmap current"><strong>v0.4</strong><span>Persistenz</span></article>
-      <article class="card roadmap"><strong>v0.5</strong><span>Selbstregulation</span></article>
-      <article class="card roadmap"><strong>v0.6</strong><span>Skalierung</span></article>
-      <article class="card roadmap"><strong>v0.7</strong><span>Learning Env.</span></article>
-      <article class="card roadmap"><strong>v0.8+</strong><span>Embodiment → Kognition → HMI</span></article>
+      <p id="heatmap-meta" class="muted">Noch keine Daten.</p>
     </section>
   </main>
-  <footer>Brain-5D Operator Dashboard · lokal · read-only</footer>
-  <script type="module" src="/app.js"></script>
+
+  <div id="docs-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Brain-5D Dokumentation</h2>
+        <button id="docs-close" class="icon-button" aria-label="Schließen">×</button>
+      </div>
+      <div class="docs-layout">
+        <nav id="docs-list" class="docs-list"></nav>
+        <article class="docs-viewer">
+          <h3 id="docs-title">Dokument auswählen</h3>
+          <pre id="docs-content"></pre>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
 </body>
 </html>

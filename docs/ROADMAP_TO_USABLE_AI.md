@@ -1,291 +1,145 @@
-# Brain-5D Roadmap – From Storage Foundation to a Usable AI
+# Brain-5D Roadmap – From Persistent SNN to Usable AI
 
-## Definition of “usable AI” for this project
+## Definition of usable AI
 
-Brain-5D reaches a **usable AI** milestone when it can reproducibly:
+Brain-5D v1.0 is an engineering milestone, not a claim of AGI, consciousness,
+or biological equivalence.  A usable system must demonstrate persistent
+learning, stable self-regulation, measurable task improvement, multimodal
+inputs, retained context, bounded actions, observability, deterministic
+recovery, and documented limits.
 
-1. persist and restore its learned state;
-2. receive structured sensory/input signals;
-3. learn measurable tasks from feedback without manual weight editing;
-4. retain useful learning across restarts;
-5. regulate unstable activity instead of diverging or becoming silent;
-6. expose an observable decision/output path;
-7. communicate through a stable application/API interface;
-8. run bounded autonomous experiments with safety/resource limits;
-9. report confidence, provenance and internal telemetry for debugging;
-10. pass a fixed evaluation suite on unseen task episodes.
+The roadmap is informed by `Analyse_Deepseek.md`, `Der_weg_zur_KI.md`, and
+`Research.md`.  Ideas from those documents become roadmap items only when they
+have an implementation boundary, experiment, and exit criterion.
 
-This definition does **not** assume AGI, consciousness or human-equivalent
-intelligence. Each milestone must be demonstrated by tests and repeatable
-experiments.
+## v0.4 – Persistence Contract
 
----
+### alpha.1
 
-## v0.4 – Persistent Brain-5D State
+Frozen `.b5d` Snapshot V1, mmap access, format invariants and 50k smoke test.
 
-### v0.4.0-alpha.1 – `.b5d` Snapshot V1
+### alpha.2
 
-**Status:** DONE – frozen snapshot foundation.
+Append-only journal, CRC, commit markers, crash-tail handling and replay.
 
-- fixed snapshot header and records;
-- mmap/random access;
-- strict structural validation;
-- optical/restart modes;
-- 50k scalability smoke test.
+### alpha.3
 
-**Exit:** full regression + Clean Code + format invariants green.
+Runtime capture and lazy snapshot views.
 
-### v0.4.0-alpha.2 – Delta Journal & Crash Safety
+### alpha.4
 
-**Status:** DONE in the cumulative alpha.3 update.
+Bounded asynchronous I/O, storage telemetry, generation compaction and runtime
+checkpoint foundation.
 
-- append-only tick journal;
-- changed-neuron deltas;
-- synapse weight deltas;
-- topology add/remove deltas;
-- commit markers;
-- per-frame checksum/CRC;
-- recovery that ignores incomplete tail records;
-- snapshot + journal replay to an arbitrary committed tick.
+### alpha.5-alpha.6
 
-**Exit:** forced-crash tests reconstruct exactly the last committed state.
+Read-only operator dashboard, research alignment and deterministic checkpoint
+work.
 
-### v0.4.0-alpha.3 – Storage Integration & Lazy Observatory
+### alpha.7
 
-**Status:** CURRENT – runtime capture and lazy snapshot projections implemented.
+- runtime checkpoint V3 overlays exact neuron model parameters and synapse
+  floating-point state;
+- deterministic restore is required to match a continuous reference exactly;
+- dashboard adds safe documentation browsing, snapshot selection and embodiment
+  status;
+- typed embodiment interfaces are introduced without enabling autonomous
+  external actions.
 
-Implemented:
+### v0.4.0 final exit
 
-- optional `StorageSession` post-step integration;
-- changed-neuron/synapse/topology journal capture;
-- configurable commit cadence;
-- lazy mmap-backed activity/weight/energy projections;
-- storage remains disabled by default.
+- full quality gate in `docs/QUALITY_GATE_V040.md` passes;
+- persistent state survives restart exactly at the defined tick boundary;
+- dashboard and recovery runbooks are documented;
+- binary `.b5d` V1 remains frozen.
 
-Still required before alpha.3 exit:
-
-- bounded asynchronous write queue/back-pressure;
-- storage latency telemetry and benchmark budget;
-- crash-safe compaction/rotation policy;
-- CLI/main integration after measured overhead;
-- restore-and-continue against the real `NeuralNetwork`.
-
-**Exit:** storage enabled without violating the agreed simulation latency
-budget and without loading full large snapshots into RAM.
-
-### v0.4.0 final – Persistence Contract
-
-- migration/compatibility tests;
-- documented recovery procedure;
-- deterministic experiment IDs and metadata;
-- stable public `StorageBackend` interface.
-
-**Exit:** multi-run training state survives restart and produces the same
-post-restore behavior within defined numeric tolerances.
-
----
-
-## v0.5 – Stable Self-Organization
-
-### v0.5.0-alpha – Homeostatic Regulation
+## v0.5 – Self-Regulation
 
 - target firing-rate bands;
-- slow threshold/excitability adaptation;
-- energy-aware regulation;
-- configurable time constants;
-- heatmaps for firing-rate error and homeostatic state.
+- adaptive threshold/excitability control;
+- energy homeostasis;
+- bounded neurogenesis and pruning;
+- dirty tracking for changed neurons/synapses;
+- dashboard homeostasis metrics become live.
 
-### v0.5.0-beta – Structural Plasticity Safety
+**Exit:** reference workloads remain active without runaway excitation or
+permanent silence over long deterministic runs.
 
-- bounded sprouting/pruning budgets;
-- minimum/maximum degree constraints;
-- transaction rollback for topology mutations;
-- interaction tests with STDP and reward learning;
-- persistent topology deltas.
+## v0.6 – Scaling
 
-### v0.5.0 final
+- dirty regions/chunks;
+- chunked persistence and indexing;
+- deterministic domain decomposition fallback;
+- subsystem profiling;
+- staged 50k -> 500k -> 1M benchmarks before larger claims.
 
-**Exit:** long-running networks neither explode nor collapse into permanent
-silence under the reference workloads, and topology mutations remain valid.
+**Exit:** measured scaling curves for RAM, ticks/s, queue pressure and storage.
 
----
+## v0.7 – Learning Environments
 
-## v0.6 – Scalable Simulation Engine
-
-- chunk-aware neuron iteration;
-- sparse event scheduling improvements;
-- profiling by subsystem;
-- parallel execution experiments with deterministic fallback;
-- memory budgets and back-pressure;
-- 50k -> 500k -> multi-million-neuron staged benchmarks.
-
-**Exit:** documented scaling curves for RAM, ticks/s and storage throughput;
-no claim of 312.5M real-time operation until measured.
-
----
-
-## v0.7 – Learning Environment & Curriculum
-
-- stable Environment/Input/Action interfaces;
 - deterministic episodes and seeds;
-- positive/negative/delayed reward tasks;
-- train/evaluate split;
-- checkpointed learning curves;
-- baseline agents for comparison;
-- catastrophic-forgetting tests.
+- train/evaluation split;
+- delayed reward tasks;
+- baseline agents;
+- continual-learning retention and forgetting measurements;
+- embodiment environment contract used by simulated reference tasks.
 
-Reference tasks progress from simple to harder:
+**Exit:** repeatable held-out improvement over untrained/random baselines.
 
-1. conditioned response;
-2. temporal association;
-3. delayed reward choice;
-4. multi-step navigation/state task;
-5. transfer to unseen episode variants.
+## v0.8 – Embodiment and Sensory Representation
 
-**Exit:** statistically repeatable improvement over untrained and random
-baselines on held-out episodes.
-
----
-
-## v0.8 – Sensory Representation Layer
-
-- typed adapters for text tokens, scalar sensors, image features and audio
-  features;
+- text/scalar/image/audio feature adapters;
+- sensor adapters and actuator adapters;
+- simulated, physical, digital and hybrid environment implementations;
 - explicit encoding/decoding contracts;
-- no direct dependency of the core on a particular sensor;
-- representation quality diagnostics;
-- persistent learned associations.
+- permissioned action boundary;
+- dashboard sensor/action observability.
 
-The first production path should use **feature adapters**, not raw megapixel or
-raw-waveform fan-out, until scaling evidence supports more direct encoding.
+**Exit:** at least two modalities drive trained tasks through the same learning
+API, and actions remain bounded and auditable.
 
-**Exit:** at least two input modalities can drive trained tasks through the
-same network/learning API.
+## v0.9 – Memory, Context and World Model
 
----
+- working context;
+- long-term memory retrieval;
+- goal/task state;
+- novelty and prediction-error signals;
+- explicit observed/learned/hypothesized knowledge separation.
 
-## v0.9 – Memory, Context and Goal Loop
+**Exit:** retained context measurably improves multi-step tasks.
 
-- short-term working context;
-- long-term `.b5d`-backed memory retrieval/index;
-- goal state and task context;
-- bounded action selection;
-- novelty/error signals as optional intrinsic reward inputs;
-- explicit separation of observed facts, learned associations and generated
-  hypotheses.
+## v0.10 – Cognitive Evaluation
 
-**Exit:** multi-step tasks require and measurably benefit from retained context
-and persistent memory.
+- causal intervention tasks;
+- compositional generalization;
+- neuro-symbolic bridge experiments;
+- confidence/provenance metrics;
+- language/HMI experiments as an observable bridge rather than hidden core.
 
----
+**Exit:** fixed causal/compositional suites show repeatable gains over baselines.
 
-## v0.10 – Language / HMI Bridge
+## v0.11 – HMI, Permissions and Bounded Autonomy
 
-- stable chat/API interface;
-- token/text encoder and decoder experiments;
-- optional external language-model bridge as a **tool/teacher**, not hidden
-  inside the neural core;
-- provenance showing whether an answer came from Brain-5D memory, an external
-  model, or a deterministic tool;
-- file/input adapters and observable output traces.
-
-**Exit:** Brain-5D can accept a user request, select a bounded learned/tool
-behavior, and return a traceable result through one HMI/API.
-
----
-
-## v0.11 – Bounded Autonomy & Safety
-
+- stable API/chat interface;
 - capability permissions;
 - resource/time/action budgets;
-- sandboxed tool execution;
 - audit log;
-- reversible/transactional external actions where possible;
-- safe-stop and recovery;
-- adversarial and malformed-input tests;
-- no self-modifying executable code without a separate sandbox and explicit
-  policy gate.
+- sandboxed tools;
+- reversible external actions where practical;
+- safe stop and recovery.
 
-**Exit:** autonomous experiment loops remain inside configured permissions and
-recover cleanly from failures.
+**Exit:** autonomous experiment loops remain inside configured permissions.
 
----
+## v0.12 – Release Candidate
 
-## v0.12 – Evaluation & Release Candidate
-
-- fixed benchmark suite;
-- regression baselines for learning, memory and latency;
-- reproducibility across fresh installations;
-- restore-and-continue tests;
-- long-duration soak tests;
-- documentation and operator runbook;
-- API stability review.
-
-**Exit:** release candidate satisfies all “usable AI” criteria at the top of
-this document on the defined reference hardware/workloads.
-
----
+- benchmark freeze;
+- restore-and-continue regression;
+- long soak tests;
+- clean install/reproduction tests;
+- operator runbook and API stability review.
 
 ## v1.0 – Usable Brain-5D AI
 
-A v1.0 release is earned only when the system demonstrates, rather than merely
-contains code for:
-
-- persistent learning;
-- stable self-regulation;
-- reproducible task improvement;
-- multimodal input through typed adapters;
-- retained context/memory;
-- an observable HMI/API output path;
-- bounded autonomous operation;
-- deterministic recovery and auditability;
-- documented performance limits.
-
-### v1.0 non-goals
-
-The release must not be described as conscious, sentient, generally
-intelligent or biologically equivalent unless separate empirical evidence
-supports such claims. Brain-5D v1.0 is defined by useful, measurable behavior
-and engineering reliability.
-
----
-
-## Post-v1.0 directions
-
-Only after v1.0 evidence should the project evaluate:
-
-- distributed multi-node simulation;
-- larger 5D spaces and adaptive chunk placement;
-- learned compression of inactive regions;
-- richer neuromodulators and cell types;
-- hardware accelerators;
-- physical/neuromorphic sensor bridges;
-- continual-learning research beyond the fixed curriculum.
-
-## Status update – v0.4.0-alpha.4
-
-Alpha.4 is the persistence-finalization revision. It closes the synchronous-I/O
-and checkpoint gaps before the v0.4.0 persistence contract is frozen.
-
-Exit criteria for v0.4.0 final:
-
-- bounded async queue has no silent data loss
-- storage telemetry is observable and exportable
-- generation compaction survives interruption before/after manifest publish
-- restore-and-continue reproduces a continuous reference run
-- full pytest suite, Black, mypy and Pylint gates pass
-
-After v0.4.0 the project moves to v0.5 homoeostasis + event-driven dirty
-tracking, then v0.6 chunking/parallel scale, v0.7 reproducible learning
-environments, v0.8 multimodal input, v0.9 memory/context/goals, v0.10 HMI/API,
-v0.11 bounded autonomy, v0.12 release candidate and v1.0 usable Brain-5D AI.
-
-<!-- research-alignment-alpha6 -->
-"
-        "## Research alignment update
-
-"
-        "The roadmap now treats embodiment, continual-learning retention, causal "
-        "evaluation and neuro-symbolic composition as explicit later-stage "
-        "benchmarks. See `docs/RESEARCH_ALIGNMENT.md` for the mapping from "
-        "`Analyse_Deepseek.md`, `Der_weg_zur_KI.md` and `Research.md`.
+Release only after demonstrated persistent learning, stable self-regulation,
+held-out task improvement, multimodal perception, retained context, bounded
+and auditable actions, deterministic recovery, and reproducible installation.

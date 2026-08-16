@@ -1,0 +1,27 @@
+# Brain-5D v0.4.0-alpha.7
+
+## Fixed
+
+- deterministic restore now overlays exact double-precision neuron parameters;
+- exact synapse weight/eligibility state is preserved in runtime checkpoint V3;
+- JSON checkpoint parsing is strict-typing safe without `Any` or `type: ignore`;
+- v1/v2 runtime checkpoint files remain readable.
+
+## Added
+
+- typed embodiment interfaces for sensors, actuators, environments and episodes;
+- read-only embodiment metrics in the operator dashboard;
+- safe Markdown documentation API and popup viewer;
+- safe sibling `.b5d` snapshot selector;
+- cross-platform PID-tracked launcher plus PowerShell/CMD wrappers;
+- consolidated `scripts/verify_all.py` quality gate;
+- updated roadmap aligned with `Analyse_Deepseek.md`, `Der_weg_zur_KI.md`, and
+  `Research.md`.
+
+## Compatibility
+
+- `.b5d` V1 binary layout is unchanged;
+- journal layout is unchanged;
+- Runtime Checkpoint JSON advances to version 3;
+- checkpoint versions 1 and 2 remain readable but cannot guarantee exact restore
+  for values that were never stored losslessly.

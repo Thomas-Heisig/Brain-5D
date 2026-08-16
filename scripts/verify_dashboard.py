@@ -1,29 +1,47 @@
-"""Verify the Brain-5D operator dashboard and its static assets."""
+"""Quality verification for the Brain-5D operator dashboard and embodiment bridge."""
 
 from __future__ import annotations
 
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def run(*command: str) -> None:
-    """Execute one command from the repository root and fail fast."""
-    print("+", " ".join(command))
-    result = subprocess.run(command, cwd=ROOT, check=False)
-    if result.returncode != 0:
-        raise SystemExit(result.returncode)
+    """Run one command and fail immediately if it fails."""
+    print("+", " ".join(command), flush=True)
+    subprocess.run(command, cwd=ROOT, check=True)
 
 
-def main() -> None:
-    """Run dashboard unit, format, type, and lint checks."""
-    run(sys.executable, "-m", "pytest", "tests/test_dashboard.py", "-v")
-    run("black", "--check", "src/dashboard", "tests/test_dashboard.py")
-    run("mypy", "--strict", "src/dashboard")
-    run("pylint", "src/dashboard")
+def main() -> int:
+    """Verify dashboard and embodiment quality surfaces."""
+    python = sys.executable
+    run(
+        python,
+        "-m",
+        "pytest",
+        "tests/test_dashboard.py",
+        "tests/test_dashboard_alpha6.py",
+        "tests/test_dashboard_alpha7.py",
+        "tests/test_embodiment.py",
+        "-v",
+    )
+    run(
+        "black",
+        "--check",
+        "src/dashboard",
+        "src/embodiment",
+        "tests/test_dashboard.py",
+        "tests/test_dashboard_alpha6.py",
+        "tests/test_dashboard_alpha7.py",
+        "tests/test_embodiment.py",
+    )
+    run("mypy", "--strict", "src/dashboard", "src/embodiment")
+    run("pylint", "src/dashboard", "src/embodiment")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

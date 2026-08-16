@@ -1,40 +1,25 @@
-# Brain 5D Core v0.4.0-alpha.1
+# Brain-5D v0.4.0-alpha.7
 
-Sparse 5D spiking-neural simulation with observable plasticity, optical state,
-controlled structural self-organization, and experimental `.b5d` persistence with append-only journals and lazy snapshot views.
+Brain-5D is an experimental sparse 5D spiking-neural platform with observable
+plasticity, persistent state, controlled self-organization, and a growing
+perception/action architecture.
 
-## Current status
+The project is an engineering and research system. Current versions do not
+claim AGI, consciousness, sentience, or biological equivalence.
 
-Brain-5D contains a deterministic sparse 5D spiking core plus optional layers
-for learning, inspection/manipulation, structural adaptation, visualization,
-and storage. The neural core remains the reference execution layer; newer
-subsystems attach through public APIs and generic post-step hooks.
+## Implemented foundation
 
-Implemented and tested before this storage overlay:
-
-- 5D coordinate space and sparse neuron/synapse storage
-- Izhikevich regular-spiking neurons with delayed spike events
-- deterministic Golden Chain regression
-- Observatory, telemetry and run artifacts
-- nearest-neighbour STDP
-- signed exponentially decaying eligibility traces
-- reward-modulated three-factor plasticity
-- activity, incoming-weight and energy heatmaps
-- deterministic end-to-end learning experiment
-- 128-byte optical neuron-state codec
-- safe manipulator facade with transaction/rollback support
-- optional pruning, sprouting, and neurogenesis engine
-
-Added in v0.4.0-alpha.1:
-
-- `.b5d` snapshot format V1
-- fixed header and deterministic section layout
-- 128-byte optical-only or 160-byte restart-capable neuron records
-- fixed 40-byte synapse records
-- memory-mapped snapshot reader
-- O(log n) random neuron lookup
-- explicit line-ending policy through `.gitattributes`
-- frozen V1 robustness contract: strict little-endian sizes, bounded JSON metadata, structural corruption detection, sorted/unique IDs, referential topology validation, and resource-safe mmap access
+- sparse 5D coordinate space with packed neuron IDs;
+- Izhikevich regular-spiking neurons and delayed event propagation;
+- STDP, signed eligibility traces, and reward-modulated three-factor learning;
+- activity, weight, and energy observability;
+- controlled structural self-organization;
+- frozen `.b5d` Snapshot V1 with mmap/random access;
+- append-only delta journal, CRC, crash recovery, and generation compaction;
+- asynchronous storage queue and persistence telemetry;
+- runtime checkpoint sidecar for deterministic continuation;
+- local read-only operator dashboard;
+- typed embodiment interfaces for future perception/action environments.
 
 ## Installation
 
@@ -44,24 +29,27 @@ python -m venv .venv
 pip install -e ".[dev]"
 ```
 
-## Regression tests
+## Quality gate
 
 ```powershell
 python -m pytest -v
-python -m pytest tests/test_golden_chain.py -v
+black --check src tests
+mypy src
+pylint src
+python scripts/verify_dashboard.py
+python scripts/verify_all.py
+git diff --check
 ```
 
-## Controlled learning experiment
+Large storage smoke tests are opt-in:
 
 ```powershell
-python -m src.experiments.learning_lab --config configs/learning_experiment.yaml
+$env:BRAIN5D_RUN_LARGE_STORAGE_TEST="1"
+$env:BRAIN5D_RUN_LARGE_STORAGE_TESTS="1"
+python scripts/verify_b5d.py
 ```
 
-The controlled experiment demonstrates:
-
-`PRE spike -> POST spike -> eligibility -> reward -> weight change -> changed network response`
-
-## Main PoC
+## Main simulation
 
 ```powershell
 python -m src.main
@@ -69,126 +57,66 @@ python -m src.main --observe
 python -m src.main --benchmark
 ```
 
-Self-organization and storage remain disabled in the main PoC configuration by
-default. The `.b5d` API is explicit in this alpha release; `src.main` does not
-silently perform large snapshot writes.
-
-## `.b5d` snapshot example
-
-```python
-from src.storage import B5DReader, B5DSnapshotWriter
-
-writer = B5DSnapshotWriter(restart_capable=True)
-writer.write(
-    "artifacts/brain5d_snapshot.b5d",
-    network,
-    optical_states=manipulator.optical,
-    metadata={"seed": 42},
-)
-
-with B5DReader("artifacts/brain5d_snapshot.b5d") as reader:
-    print(reader.header)
-    print(reader.get_neuron(1234))
-```
-
-See `docs/B5D_FORMAT.md` for the frozen V1 layout, invariants and corruption model.
-
-Journal and recovery example:
-
-```python
-from src.storage import DeltaJournal, RecoveryManager
-
-with DeltaJournal("artifacts/brain5d_snapshot.b5d.journal", base_tick=network.current_tick) as journal:
-    # append typed DeltaRecord values, then create a durable boundary
-    journal.commit()
-
-result = RecoveryManager(
-    "artifacts/brain5d_snapshot.b5d",
-    "artifacts/brain5d_snapshot.b5d.journal",
-).recover("artifacts/recovered.b5d")
-```
-
-Runtime storage is opt-in through `StorageSession`. Alpha.3 currently uses a
-correctness-first O(N+E) change scan and is therefore not yet the final
-million-neuron persistence path. Lazy heatmaps can be produced directly from
-a memory-mapped snapshot through `B5DLazyProjector`.
-
-See `docs/DELTA_JOURNAL.md`, `docs/CRASH_RECOVERY.md`, and
-`docs/SPRINT_STORAGE_V3.md`.
-
-Project progression toward a measurable, usable AI is tracked in `docs/ROADMAP_TO_USABLE_AI.md`. The roadmap defines explicit exit criteria and does not treat implementation presence as proof of intelligence.
-
-## Quality checks
-
-The project keeps Python 3.11 as the minimum runtime syntax target while the
-current development/lint environment is Python 3.13.
+## Operator dashboard
 
 ```powershell
-black --check src/storage tests/test_b5d_storage.py tests/test_crc.py tests/test_delta_journal.py tests/test_recovery.py tests/test_storage_runtime.py tests/test_lazy_storage_view.py
-mypy --strict src/storage
-pylint src/storage
+python -m src.dashboard --snapshot artifacts/brain5d_snapshot.b5d
 ```
 
-Pylance/Pyright strict checking for the new storage boundary is configured in `pyrightconfig.json`. `src/storage/b5d.py` intentionally contains no `Any` annotations; network/core coupling is expressed through typed `Protocol` interfaces.
+Open `http://127.0.0.1:8765`.
 
-Storage-only verification:
+The dashboard is read-only. Alpha.7 adds safe documentation browsing, a sibling
+snapshot selector, storage telemetry, homeostasis placeholders, and embodiment
+status metrics.
+
+## One-click launcher
 
 ```powershell
-.\scripts\verify_b5d.ps1
+.\start.ps1 -OpenBrowser
+.\stop.ps1
 ```
 
-## Version line
-
-- `brain5d-core-v0.1.0` - verified observable reference core
-- `brain5d-core-v0.2.0` - STDP integration and eligibility traces
-- `brain5d-core-v0.3.0` - three-factor reward learning and heatmap observatory
-- `brain5d-core-v0.3.1` - repository synchronization and end-to-end learning proof
-- `v0.4.0-alpha.1` - frozen `.b5d` snapshot/storage foundation
-- `v0.4.0-alpha.2` - append-only delta journal + crash recovery
-- `v0.4.0-alpha.3` - current runtime-storage/lazy-observatory development
-
-The alpha storage version should only be tagged after the full local regression,
-Black, mypy, and Pylint checks pass on the repository working tree.
-
-### Persistence verification on Windows
-
-Use the cross-platform verifier as the canonical release check:
-
-```powershell
-python scripts/verify_b5d.py
-```
-
-or, from `cmd.exe`/PowerShell without executing a PowerShell script:
+If PowerShell policy blocks local scripts:
 
 ```cmd
-scripts\verify_b5d.cmd
+start.cmd
+stop.cmd
 ```
 
-The Python runner is fail-fast and checks storage tests, the full regression suite, Black, strict mypy, Pylint, compilation, binary-format invariants, and Pyright when available. Large storage tests remain opt-in through `BRAIN5D_RUN_LARGE_STORAGE_TESTS=1`.
+The launcher records only the PIDs it starts and never terminates unrelated
+Python processes.
 
-## v0.4.0-alpha.4 – Persistence Finalization
+## Persistence model
 
-Alpha.4 adds bounded asynchronous persistence, storage telemetry,
-generation-based crash-safe compaction and a runtime checkpoint sidecar for
-restore-and-continue. The existing `.b5d` and journal binary layouts remain
-frozen and unchanged.
+The frozen `.b5d` V1 snapshot remains compact and memory-mappable. Runtime
+Checkpoint V3 layers exact Python floating-point values over it so a restored
+network can continue bit-exactly at a checkpoint boundary.
 
-Preparation after applying the overlay:
+See:
 
-```powershell
-python scripts/prepare_alpha4.py
-python scripts/verify_b5d.py
-```
+- `docs/B5D_FORMAT.md`
+- `docs/DELTA_JOURNAL.md`
+- `docs/CRASH_RECOVERY.md`
+- `docs/DETERMINISTIC_RESTORE_V3.md`
+- `docs/QUALITY_GATE_V040.md`
 
-`prepare_alpha4.py` applies the narrow legacy typing fixes found during the
-104-test alpha.3 acceptance run and normalizes `src/` + `tests/` with Black.
+## Research and roadmap
 
-<!-- alpha6-strategy -->
-"
-        "## Strategy and deterministic restore
+`docs/Analyse_Deepseek.md`, `docs/Der_weg_zur_KI.md`, and `docs/Research.md` are
+research/design inputs. Their proposals become implementation milestones only
+when paired with an experiment and exit criterion.
 
-"
-        "The persistence quality gate now distinguishes compact `.b5d` snapshots "
-        "from deterministic checkpoints. See `docs/DETERMINISTIC_RESTORE.md`. "
-        "Research and roadmap alignment is documented in "
-        "`docs/RESEARCH_ALIGNMENT.md`.
+The current roadmap is `docs/ROADMAP_TO_USABLE_AI.md`.
+
+Near-term sequence:
+
+1. finish the v0.4.0 persistence quality gate;
+2. v0.5 self-regulation/homeostasis and dirty tracking;
+3. v0.6 chunked scaling;
+4. v0.7 deterministic learning environments;
+5. v0.8 production embodiment and multimodal adapters;
+6. v0.9 memory/context/world model;
+7. v0.10 cognitive evaluation;
+8. v0.11 bounded HMI/autonomy and permissions;
+9. v0.12 release candidate;
+10. v1.0 usable Brain-5D AI by measured engineering criteria.

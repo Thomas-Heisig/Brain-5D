@@ -1,5 +1,6 @@
 const $ = (id) => document.getElementById(id);
 let heatmapKind = "activity";
+let selectedSnapshot = "";
 
 function formatBytes(value) {
   const units = ["B", "KiB", "MiB", "GiB"];
@@ -27,6 +28,7 @@ async function refreshStatus() {
     const learning = data.learning;
     const selfOrg = data.self_organization;
     const homeostasis = data.homeostasis || {};
+    const embodiment = data.embodiment || {};
 
     setText("tick", system.tick);
     setText("neurons", system.neurons.toLocaleString());
@@ -61,18 +63,20 @@ async function refreshStatus() {
     setText("homeo-target", `${Number(homeostasis.target_rate_hz || 0).toFixed(3)} Hz`);
     setText("homeo-actual", `${Number(homeostasis.actual_rate_hz || 0).toFixed(3)} Hz`);
     setText("homeo-error", `${Number(homeostasis.rate_error_hz || 0).toFixed(3)} Hz`);
-    setText(
-      "homeo-threshold",
-      Number(homeostasis.mean_threshold_adaptation || 0).toFixed(3),
-    );
+    setText("homeo-threshold", Number(homeostasis.mean_threshold_adaptation || 0).toFixed(3));
     setText("homeo-energy", Number(homeostasis.mean_energy_error || 0).toFixed(3));
     setText("homeo-active", Number(homeostasis.active_neurons || 0).toLocaleString());
 
+    setText("embodiment-kind", embodiment.environment_kind || "unconfigured");
+    setText("embodiment-sensors", Number(embodiment.active_sensors || 0));
+    setText("embodiment-actuators", Number(embodiment.active_actuators || 0));
+    setText("embodiment-episode", Number(embodiment.episode || 0));
+    setText("embodiment-reward", Number(embodiment.last_reward || 0).toFixed(3));
+    setText("embodiment-action", embodiment.last_action || "—");
+
     const status = $("system-status");
     status.textContent = `${data.status} · ${data.version}`;
-    status.className = storage.worker_failed
-      ? "status-pill error"
-      : "status-pill online";
+    status.className = storage.worker_failed ? "status-pill error" : "status-pill online";
   } catch (error) {
     const status = $("system-status");
     status.textContent = "offline";
@@ -109,15 +113,16 @@ function drawHeatmap(payload) {
   });
   setText(
     "heatmap-meta",
-    `${payload.kind} · Tick ${payload.tick} · ${payload.samples} Samples · `
-      + `${min.toFixed(4)}…${max.toFixed(4)}`,
+    `${payload.snapshot} · ${payload.kind} · Tick ${payload.tick} · `
+      + `${payload.samples} Samples · ${min.toFixed(4)}…${max.toFixed(4)}`,
   );
 }
 
 async function refreshHeatmap() {
   try {
-    const path = `/api/heatmap?kind=${encodeURIComponent(heatmapKind)}`;
-    const response = await fetch(path, {cache: "no-store"});
+    const params = new URLSearchParams({kind: heatmapKind});
+    if (selectedSnapshot) params.set("snapshot", selectedSnapshot);
+    const response = await fetch(`/api/heatmap?${params}`, {cache: "no-store"});
     if (!response.ok) {
       const data = await response.json();
       setText("heatmap-meta", data.error || `Heatmap HTTP ${response.status}`);
@@ -127,6 +132,79 @@ async function refreshHeatmap() {
   } catch (error) {
     setText("heatmap-meta", "Heatmap nicht erreichbar.");
   }
+}
+
+async function refreshSnapshots() {
+  const select = $("snapshot-select");
+  try {
+    const response = await fetch("/api/snapshots", {cache: "no-store"});
+    if (!response.ok) return;
+    const data = await response.json();
+    const snapshots = data.snapshots || [];
+    const previous = selectedSnapshot;
+    select.replaceChildren();
+    snapshots.forEach((entry) => {
+      const option = document.createElement("option");
+      option.value = entry.name;
+      option.textContent = `${entry.name} (${formatBytes(entry.size_bytes)})`;
+      select.appendChild(option);
+    });
+    if (snapshots.length) {
+      selectedSnapshot = snapshots.some((entry) => entry.name === previous)
+        ? previous
+        : snapshots[0].name;
+      select.value = selectedSnapshot;
+    } else {
+      const option = document.createElement("option");
+      option.textContent = "Kein Snapshot";
+      option.value = "";
+      select.appendChild(option);
+      selectedSnapshot = "";
+    }
+  } catch (error) {
+    selectedSnapshot = "";
+  }
+}
+
+function escapeText(value) {
+  return String(value ?? "");
+}
+
+async function loadDocument(name) {
+  const response = await fetch(`/api/docs?name=${encodeURIComponent(name)}`);
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  setText("docs-title", data.name);
+  setText("docs-content", escapeText(data.content));
+}
+
+async function openDocs() {
+  const modal = $("docs-modal");
+  const list = $("docs-list");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  list.replaceChildren();
+  try {
+    const response = await fetch("/api/docs", {cache: "no-store"});
+    const data = await response.json();
+    const documents = data.documents || [];
+    documents.forEach((entry) => {
+      const button = document.createElement("button");
+      button.className = "doc-link";
+      button.textContent = entry.name;
+      button.addEventListener("click", () => void loadDocument(entry.name));
+      list.appendChild(button);
+    });
+    if (documents.length) void loadDocument(documents[0].name);
+  } catch (error) {
+    setText("docs-content", "Dokumentation konnte nicht geladen werden.");
+  }
+}
+
+function closeDocs() {
+  const modal = $("docs-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 document.querySelectorAll("button[data-kind]").forEach((button) => {
@@ -140,7 +218,23 @@ document.querySelectorAll("button[data-kind]").forEach((button) => {
   });
 });
 
-void refreshStatus();
-void refreshHeatmap();
+$("snapshot-select").addEventListener("change", (event) => {
+  selectedSnapshot = event.target.value;
+  void refreshHeatmap();
+});
+$("docs-btn").addEventListener("click", () => void openDocs());
+$("docs-close").addEventListener("click", closeDocs);
+$("docs-modal").addEventListener("click", (event) => {
+  if (event.target === $("docs-modal")) closeDocs();
+});
+
+async function initialize() {
+  await refreshSnapshots();
+  await refreshStatus();
+  await refreshHeatmap();
+}
+
+void initialize();
 setInterval(() => void refreshStatus(), 1000);
 setInterval(() => void refreshHeatmap(), 5000);
+setInterval(() => void refreshSnapshots(), 30000);

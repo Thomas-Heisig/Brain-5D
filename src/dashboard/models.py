@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.embodiment.models import EmbodimentMetrics
+
 JSONScalar = str | int | float | bool | None
 JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 
@@ -145,8 +147,9 @@ class DashboardSnapshot:
     storage: StorageMetrics = StorageMetrics()
     self_organization: SelfOrganizationMetrics = SelfOrganizationMetrics()
     homeostasis: HomeostasisMetrics = HomeostasisMetrics()
+    embodiment: EmbodimentMetrics = EmbodimentMetrics()
     status: str = "idle"
-    version: str = "0.4.0-alpha.6"
+    version: str = "0.4.0-alpha.7"
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
@@ -159,4 +162,5 @@ class DashboardSnapshot:
             "storage": self.storage.to_json(),
             "self_organization": self.self_organization.to_json(),
             "homeostasis": self.homeostasis.to_json(),
+            "embodiment": self.embodiment.to_json(),
         }

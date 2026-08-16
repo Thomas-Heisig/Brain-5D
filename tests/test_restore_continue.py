@@ -1,4 +1,4 @@
-"""End-to-end restore-and-continue test against the real core."""
+"""End-to-end deterministic restore-and-continue test against the real core."""
 
 from __future__ import annotations
 
@@ -15,8 +15,13 @@ def _config() -> ConfigDict:
     return {
         "dimensions": [4, 1, 1, 1, 1],
         "simulation": {"dt_ms": 1.0, "max_delay": 4, "debug_invariants": True},
-        "neuron": {"a": 0.02, "b": 0.2, "c": -65.0, "d": 8.0},
-        "energy": {"initial": 1.0, "spike_cost": 0.001},
+        "neuron": {
+            "a": 0.020000000000000004,
+            "b": 0.20000000000000004,
+            "c": -65.0,
+            "d": 8.000000000000002,
+        },
+        "energy": {"initial": 1.0, "spike_cost": 0.0010000000000000002},
         "topology": {
             "allow_self_connections": False,
             "allow_parallel_connections": False,
@@ -38,6 +43,11 @@ def _signature(network: NeuralNetwork, steps: int) -> tuple[tuple[object, ...], 
                 tuple(network.neurons[nid].v for nid in ids),
                 tuple(network.neurons[nid].u for nid in ids),
                 tuple(network.neurons[nid].energy for nid in ids),
+                tuple(
+                    synapse.weight
+                    for source_id in ids
+                    for synapse in network.synapses[source_id]
+                ),
             )
         )
     return tuple(rows)
@@ -48,7 +58,8 @@ def test_restore_and_continue_matches_continuous_reference(tmp_path: Path) -> No
     network = NeuralNetwork(config, random.Random(1234))
     source = network.add_neuron((0, 0, 0, 0, 0))
     target = network.add_neuron((1, 0, 0, 0, 0))
-    network.connect(source, target, 0.5, 2)
+    network.connect(source, target, 0.3333333333333333, 2)
+    network.synapses[source][0].eligibility = 0.1234567890123456
 
     runtime = StorageRuntimeConfig(
         snapshot_path=tmp_path / "base.b5d",
