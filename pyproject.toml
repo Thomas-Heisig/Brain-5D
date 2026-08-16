@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brain5d-core"
-version = "0.1.0"
-description = "Verified observable sparse 5D spiking-neural simulation core (Sprint 1C reference)."
+version = "0.3.0"
+description = "Sparse 5D spiking-neural simulation with observable plasticity."
 requires-python = ">=3.11"
 dependencies = [
   "PyYAML>=6.0",
@@ -14,9 +14,55 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = [
+  "black>=24.0",
+  "mypy>=1.10",
+  "pylint>=3.2",
+  "pytest>=8.0",
+  "types-PyYAML>=6.0",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "-ra"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+pretty = true
+
+# Sprint 1C predates strict typing. Strict enforcement is introduced first for
+# the Sprint 2 learning/heatmap surface and can be expanded incrementally.
+exclude = [
+  "src/core/",
+  "src/config/",
+  "src/diagnostics/",
+  "src/telemetry/",
+  "src/utils/",
+  "src/main.py",
+  "src/visualization/observatory.py",
+  "tests/",
+]
+
+[tool.pylint.main]
+py-version = "3.11"
+ignore-paths = ["^tests/"]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.design]
+max-args = 8
+max-attributes = 20
+
+[tool.pylint.messages_control]
+disable = [
+  "duplicate-code",
+]

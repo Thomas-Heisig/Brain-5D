@@ -78,5 +78,23 @@ git commit -m "feat: verified observable Brain 5D Sprint 1 core"
 git tag -a brain5d-core-v0.1.0 -m "Sprint 1C VERIFIED - observable deterministic reference core"
 ```
 
+```bash
+…or create a new repository on the command line
+echo "# Brain-5D" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Thomas-Heisig/Brain-5D.git
+git push -u origin main
+```
+
+```bash
+…or push an existing repository from the command line
+git remote add origin https://github.com/Thomas-Heisig/Brain-5D.git
+git branch -M main
+git push -u origin main
+```
+
 Siehe `docs/GIT_WORKFLOW.md` und `docs/ACCEPTANCE.md`.
 # Brain-5D

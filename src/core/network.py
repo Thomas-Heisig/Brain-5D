@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Set, Tuple
+from typing import Callable, Dict, List, Set, Tuple
 
 from .neuron import Neuron
 from .spatial_index import DIM_NAMES, Coord5D, iter_neighbour_coords, pack_coords, unpack_coords
@@ -37,6 +37,9 @@ class StepResult:
     core_step_ms: float
 
 
+PostStepHook = Callable[[StepResult], None]
+
+
 class NeuralNetwork:
     """Sparse 5D spiking network.
 
@@ -45,7 +48,9 @@ class NeuralNetwork:
     - external currents already queued for t are read first.
     - events with delivery_tick=t are delivered in t.
     - spikes emitted in t schedule events for t+delay.
-    - current_tick becomes t+1 only after the whole step is complete.
+    - post-step hooks run after the core result is complete and after events
+      for this tick have been queued.
+    - current_tick becomes t+1 only after the whole core step is complete.
     """
 
     def __init__(self, config: dict, rng: random.Random):
@@ -57,7 +62,6 @@ class NeuralNetwork:
         if self.dt_ms != 1.0:
             raise ValueError("Sprint 1 reference core supports dt_ms=1.0 only")
         self.debug_invariants = bool(config["simulation"].get("debug_invariants", False))
-
         self.neurons: Dict[int, Neuron] = {}
         self.synapses: Dict[int, List[Synapse]] = {}
         self.in_degree: Dict[int, int] = {}
@@ -70,9 +74,22 @@ class NeuralNetwork:
         self.total_events_processed = 0
         self.input_cells: Set[int] = set()
         self.output_cells: Set[int] = set()
+        self._post_step_hooks: list[PostStepHook] = []
         topology = config.get("topology", {})
         self.allow_self_connections = bool(topology.get("allow_self_connections", False))
         self.allow_parallel_connections = bool(topology.get("allow_parallel_connections", False))
+
+    def add_post_step_hook(self, hook: PostStepHook) -> None:
+        """Register a generic observer that runs after each completed core tick."""
+        if hook not in self._post_step_hooks:
+            self._post_step_hooks.append(hook)
+
+    def remove_post_step_hook(self, hook: PostStepHook) -> None:
+        """Remove a previously registered post-step observer."""
+        try:
+            self._post_step_hooks.remove(hook)
+        except ValueError:
+            pass
 
     def add_neuron(self, coord: Coord5D) -> int:
         nid = pack_coords(*coord)
@@ -178,7 +195,6 @@ class NeuralNetwork:
         external_currents = self.pending_currents.copy()
         self.pending_currents.clear()
         synaptic_currents: Dict[int, float] = {}
-
         events = self.event_slots[slot_index]
         for ev in events:
             if ev.delivery_tick != tick:
@@ -191,13 +207,11 @@ class NeuralNetwork:
         self._queued_event_count -= delivered
         if self._queued_event_count < 0:
             raise RuntimeError("queued_event_count became negative")
-
         spike_ids: list[int] = []
         output_spikes: list[int] = []
         active = len(self.neurons)
         sum_v = sum_energy = 0.0
         min_v = float("inf"); max_v = -float("inf")
-
         for nid, neuron in self.neurons.items():
             ext = external_currents.get(nid, 0.0)
             syn = synaptic_currents.get(nid, 0.0)
@@ -216,7 +230,6 @@ class NeuralNetwork:
                     slot = delivery_tick % len(self.event_slots)
                     self.event_slots[slot].append(SpikeEvent(nid, connection.target_id, connection.weight, delivery_tick))
                     self._queued_event_count += 1
-
         if active:
             mean_v = sum_v / active; mean_energy = sum_energy / active
         else:
@@ -227,9 +240,8 @@ class NeuralNetwork:
             actual = sum(len(s) for s in self.event_slots)
             if actual != self._queued_event_count:
                 raise RuntimeError(f"Queue accounting mismatch: counter={self._queued_event_count}, actual={actual}")
-
         elapsed = (time.perf_counter() - start) * 1000.0
-        return StepResult(
+        result = StepResult(
             tick=tick,
             spike_ids=tuple(spike_ids), output_spike_ids=tuple(output_spikes),
             spikes_this_tick=len(spike_ids), total_spikes=self.total_spikes,
@@ -238,6 +250,9 @@ class NeuralNetwork:
             synaptic_current_targets=len(synaptic_currents), mean_v=mean_v, min_v=min_v, max_v=max_v,
             mean_energy=mean_energy, core_step_ms=elapsed,
         )
+        for hook in tuple(self._post_step_hooks):
+            hook(result)
+        return result
 
     @property
     def synapse_count(self) -> int:

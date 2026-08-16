@@ -1,3 +1,5 @@
+# Sprint 2C learning-enabled laboratory configuration.
+# Use with: python -m src.main --config configs/poc_config_stdp_on.yaml
 seed: 42
 
 dimensions: [10, 10, 10, 10, 10]
@@ -59,7 +61,7 @@ visualization:
   projection_4d: d4
   activity_tau_ticks: 50.0
   show_heatmap: true
-  heatmap_type: activity
+  heatmap_type: weights
 
 logging:
   interval_ticks: 100
@@ -78,7 +80,7 @@ eligibility:
   tau_ticks: 200.0
 
 reward:
-  enabled: false
+  enabled: true
   learning_rate: 0.01
   delay_ticks: 0
   clamp_weights: true
