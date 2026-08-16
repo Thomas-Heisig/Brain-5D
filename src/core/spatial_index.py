@@ -49,10 +49,14 @@ def linear_to_5d(idx: int, dims: Coord5D) -> Coord5D:
         total *= d
     if idx < 0 or idx >= total:
         raise ValueError(f"Linear index {idx} outside [0,{total})")
-    d5 = idx % dims[4]; idx //= dims[4]
-    d4 = idx % dims[3]; idx //= dims[3]
-    z = idx % dims[2]; idx //= dims[2]
-    y = idx % dims[1]; idx //= dims[1]
+    d5 = idx % dims[4]
+    idx //= dims[4]
+    d4 = idx % dims[3]
+    idx //= dims[3]
+    z = idx % dims[2]
+    idx //= dims[2]
+    y = idx % dims[1]
+    idx //= dims[1]
     x = idx
     return (x, y, z, d4, d5)
 
@@ -71,7 +75,9 @@ def neighbour_offsets(radius: float) -> tuple[Coord5D, ...]:
     return tuple(offsets)
 
 
-def iter_neighbour_coords(coord: Coord5D, dimensions: Coord5D, radius: float) -> Iterable[Coord5D]:
+def iter_neighbour_coords(
+    coord: Coord5D, dimensions: Coord5D, radius: float
+) -> Iterable[Coord5D]:
     for off in neighbour_offsets(radius):
         candidate = tuple(c + dc for c, dc in zip(coord, off))
         if all(0 <= candidate[i] < dimensions[i] for i in range(5)):

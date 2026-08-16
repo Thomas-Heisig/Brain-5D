@@ -104,7 +104,9 @@ def test_independent_repeated_pairs() -> None:
 
 def test_continuous_sequence_exposes_nearest_neighbour_pairing() -> None:
     """Document the actual online rule: PRE after an earlier POST causes LTD."""
-    syn = STDPSynapse(weight=0.5, a_plus=0.1, a_minus=0.12, tau_plus=20.0, tau_minus=20.0)
+    syn = STDPSynapse(
+        weight=0.5, a_plus=0.1, a_minus=0.12, tau_plus=20.0, tau_minus=20.0
+    )
 
     syn.pre_spike(0)
     ltp_1 = syn.post_spike(10)

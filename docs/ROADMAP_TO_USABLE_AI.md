@@ -25,7 +25,7 @@ experiments.
 
 ### v0.4.0-alpha.1 – `.b5d` Snapshot V1
 
-**Status:** current format-freeze stage.
+**Status:** DONE – frozen snapshot foundation.
 
 - fixed snapshot header and records;
 - mmap/random access;
@@ -36,6 +36,8 @@ experiments.
 **Exit:** full regression + Clean Code + format invariants green.
 
 ### v0.4.0-alpha.2 – Delta Journal & Crash Safety
+
+**Status:** DONE in the cumulative alpha.3 update.
 
 - append-only tick journal;
 - changed-neuron deltas;
@@ -50,11 +52,23 @@ experiments.
 
 ### v0.4.0-alpha.3 – Storage Integration & Lazy Observatory
 
-- configurable snapshot cadence;
-- asynchronous/bounded storage queue;
-- storage latency telemetry;
-- Observatory reads selected regions/ticks lazily;
-- compaction: base snapshot + journal -> new base snapshot.
+**Status:** CURRENT – runtime capture and lazy snapshot projections implemented.
+
+Implemented:
+
+- optional `StorageSession` post-step integration;
+- changed-neuron/synapse/topology journal capture;
+- configurable commit cadence;
+- lazy mmap-backed activity/weight/energy projections;
+- storage remains disabled by default.
+
+Still required before alpha.3 exit:
+
+- bounded asynchronous write queue/back-pressure;
+- storage latency telemetry and benchmark budget;
+- crash-safe compaction/rotation policy;
+- CLI/main integration after measured overhead;
+- restore-and-continue against the real `NeuralNetwork`.
 
 **Exit:** storage enabled without violating the agreed simulation latency
 budget and without loading full large snapshots into RAM.

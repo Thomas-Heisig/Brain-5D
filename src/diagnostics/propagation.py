@@ -30,6 +30,7 @@ class PropagationAnalyzer:
     This is experimental classification, not a proof of causal propagation in
     arbitrary networks. Causal attribution requires event tracing (future work).
     """
+
     def __init__(self, output_cells: Set[int]):
         self.output_cells = set(output_cells)
         self.stimulated_ids: Set[int] = set()

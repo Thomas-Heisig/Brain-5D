@@ -12,12 +12,14 @@ import yaml
 
 class SimulationConfig(TypedDict, total=False):
     """Expected structure of the 'simulation' section."""
+
     dt_ms: float
     max_delay: int
 
 
 class ConfigDict(TypedDict, total=False):
     """Expected structure of the entire configuration dictionary."""
+
     dimensions: List[int]
     initial_neurons: int
     simulation: SimulationConfig

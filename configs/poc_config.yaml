@@ -111,3 +111,18 @@ storage:
   format: b5d
   path: artifacts/brain5d_snapshot.b5d
   restart_capable: true
+  journal:
+    enabled: false
+    path: artifacts/brain5d_snapshot.b5d.journal
+    crc: true
+    fsync_on_commit: true
+    commit_interval_ticks: 10
+    max_payload_size: 1048576
+  runtime:
+    enabled: false
+    capture_spike_events: true
+    capture_policy: full_change_scan
+  lazy_observatory:
+    enabled: false
+    heatmap_type: activity
+    activity_tau_ticks: 50.0

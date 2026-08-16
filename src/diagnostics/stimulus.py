@@ -33,7 +33,8 @@ class StimulusEngine:
         def add(nid: int, current: float) -> None:
             if nid in network.neurons:
                 network.inject_current(nid, current)
-                targets.append(nid); amps.append(current)
+                targets.append(nid)
+                amps.append(current)
 
         if mode == "single_pulse":
             if tick == start:
@@ -42,7 +43,11 @@ class StimulusEngine:
             if start <= tick < start + duration:
                 add(pack_coords(*tuple(self.diag["target_coord"])), amp)
         elif mode in ("input_plane_pulse", "input_plane_drive"):
-            active = tick == start if mode == "input_plane_pulse" else start <= tick < start + duration
+            active = (
+                tick == start
+                if mode == "input_plane_pulse"
+                else start <= tick < start + duration
+            )
             if active:
                 dim = DIM_NAMES[self.diag.get("input_plane_dim", "x")]
                 for nid in network.neurons:

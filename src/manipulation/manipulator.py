@@ -4,12 +4,18 @@ All topology mutations go through the existing NeuralNetwork API. Extended
 optical and graph properties are sidecars so Sprint-1/2 core determinism and
 binary compatibility remain intact.
 """
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from typing import Any, Iterable
 
-from src.core.spatial_index import Coord5D, iter_neighbour_coords, pack_coords, unpack_coords
+from src.core.spatial_index import (
+    Coord5D,
+    iter_neighbour_coords,
+    pack_coords,
+    unpack_coords,
+)
 from src.storage.optical_codec import OpticalPointState, state_from_neuron
 
 
@@ -47,9 +53,19 @@ class Brain5DManipulator:
     """Instrument for inspection, mutation, journaling and rollback."""
 
     _NEURON_WRITABLE = {
-        "a", "b", "c", "d", "v", "u", "energy", "spike_cost",
-        "spike_counter", "last_spike_tick", "threshold_adaptation",
-        "last_external_current", "last_synaptic_current",
+        "a",
+        "b",
+        "c",
+        "d",
+        "v",
+        "u",
+        "energy",
+        "spike_cost",
+        "spike_counter",
+        "last_spike_tick",
+        "threshold_adaptation",
+        "last_external_current",
+        "last_synaptic_current",
     }
     _SYNAPSE_WRITABLE = {"weight", "delay", "eligibility", "last_pre_spike"}
 
@@ -61,7 +77,9 @@ class Brain5DManipulator:
         self._transaction: Transaction | None = None
 
     def _audit(self, operation: str, **payload: Any) -> None:
-        self.audit_log.append({"tick": int(self.network.current_tick), "operation": operation, **payload})
+        self.audit_log.append(
+            {"tick": int(self.network.current_tick), "operation": operation, **payload}
+        )
 
     def _record_inverse(self, operation: str, **payload: Any) -> None:
         if self._transaction is not None:
@@ -75,7 +93,11 @@ class Brain5DManipulator:
     def commit(self) -> None:
         if self._transaction is None:
             raise RuntimeError("no active transaction")
-        self._audit("COMMIT", name=self._transaction.name, operations=len(self._transaction.inverse))
+        self._audit(
+            "COMMIT",
+            name=self._transaction.name,
+            operations=len(self._transaction.inverse),
+        )
         self._transaction = None
 
     def rollback(self) -> None:
@@ -106,7 +128,9 @@ class Brain5DManipulator:
         elif mutation.operation == "delete_synapse":
             self.delete_synapse(p["source_id"], p["target_id"])
         elif mutation.operation == "restore_synapse":
-            self.create_synapse(p["source_id"], p["target_id"], p["weight"], p["delay"], p["metadata"])
+            self.create_synapse(
+                p["source_id"], p["target_id"], p["weight"], p["delay"], p["metadata"]
+            )
         elif mutation.operation == "set_synapse":
             self.update_synapse(p["source_id"], p["target_id"], **p["values"])
 
@@ -136,7 +160,9 @@ class Brain5DManipulator:
     def set_optical(self, neuron_id: int, **values: Any) -> OpticalPointState:
         if neuron_id not in self.network.neurons:
             raise KeyError(neuron_id)
-        state = self.optical.get(neuron_id) or state_from_neuron(self.network.neurons[neuron_id])
+        state = self.optical.get(neuron_id) or state_from_neuron(
+            self.network.neurons[neuron_id]
+        )
         old = {key: getattr(state, key) for key in values}
         for key, value in values.items():
             if not hasattr(state, key):
@@ -147,7 +173,9 @@ class Brain5DManipulator:
         self._audit("SET_OPTICAL", neuron_id=neuron_id, values=values, previous=old)
         return state
 
-    def create_neuron(self, coord: Coord5D, optical: OpticalPointState | None = None) -> int:
+    def create_neuron(
+        self, coord: Coord5D, optical: OpticalPointState | None = None
+    ) -> int:
         nid = self.network.add_neuron(coord)
         self.optical[nid] = optical or state_from_neuron(self.network.neurons[nid])
         self._record_inverse("delete_neuron", neuron_id=nid)
@@ -161,15 +189,34 @@ class Brain5DManipulator:
         values = {name: getattr(n, name) for name in self._NEURON_WRITABLE}
         outgoing = []
         for syn in self.network.synapses.get(neuron_id, ()):
-            outgoing.append((syn.target_id, syn.weight, syn.delay, self.synapse_metadata.get((neuron_id, syn.target_id))))
+            outgoing.append(
+                (
+                    syn.target_id,
+                    syn.weight,
+                    syn.delay,
+                    self.synapse_metadata.get((neuron_id, syn.target_id)),
+                )
+            )
         incoming = []
         for source_id, synapses in self.network.synapses.items():
             for syn in synapses:
                 if syn.target_id == neuron_id:
-                    incoming.append((source_id, syn.weight, syn.delay, self.synapse_metadata.get((source_id, neuron_id))))
+                    incoming.append(
+                        (
+                            source_id,
+                            syn.weight,
+                            syn.delay,
+                            self.synapse_metadata.get((source_id, neuron_id)),
+                        )
+                    )
         self._record_inverse(
-            "restore_neuron", neuron_id=neuron_id, coord=unpack_coords(neuron_id), values=values,
-            optical=self.optical.get(neuron_id) or state_from_neuron(n), outgoing=outgoing, incoming=incoming,
+            "restore_neuron",
+            neuron_id=neuron_id,
+            coord=unpack_coords(neuron_id),
+            values=values,
+            optical=self.optical.get(neuron_id) or state_from_neuron(n),
+            outgoing=outgoing,
+            incoming=incoming,
         )
         self.network.remove_neuron(neuron_id)
         self.optical.pop(neuron_id, None)
@@ -184,14 +231,27 @@ class Brain5DManipulator:
         raise KeyError((source_id, target_id))
 
     def create_synapse(
-        self, source_id: int, target_id: int, weight: float, delay: int,
+        self,
+        source_id: int,
+        target_id: int,
+        weight: float,
+        delay: int,
         metadata: SynapseMetadata | None = None,
     ) -> None:
         self.network.connect(source_id, target_id, weight, delay)
-        meta = metadata or SynapseMetadata(created_tick=int(self.network.current_tick), modified_tick=int(self.network.current_tick))
+        meta = metadata or SynapseMetadata(
+            created_tick=int(self.network.current_tick),
+            modified_tick=int(self.network.current_tick),
+        )
         self.synapse_metadata[(source_id, target_id)] = meta
         self._record_inverse("delete_synapse", source_id=source_id, target_id=target_id)
-        self._audit("CREATE_SYNAPSE", source_id=source_id, target_id=target_id, weight=weight, delay=delay)
+        self._audit(
+            "CREATE_SYNAPSE",
+            source_id=source_id,
+            target_id=target_id,
+            weight=weight,
+            delay=delay,
+        )
 
     def update_synapse(self, source_id: int, target_id: int, **values: Any) -> None:
         syn = self._find_synapse(source_id, target_id)
@@ -199,7 +259,9 @@ class Brain5DManipulator:
         if unknown:
             raise ValueError(f"non-writable synapse fields: {sorted(unknown)}")
         old = {key: getattr(syn, key) for key in values}
-        self._record_inverse("set_synapse", source_id=source_id, target_id=target_id, values=old)
+        self._record_inverse(
+            "set_synapse", source_id=source_id, target_id=target_id, values=old
+        )
         for key, value in values.items():
             if key == "delay" and not 1 <= int(value) <= int(self.network.max_delay):
                 raise ValueError(f"delay must be 1..{self.network.max_delay}")
@@ -207,17 +269,29 @@ class Brain5DManipulator:
         meta = self.synapse_metadata.get((source_id, target_id))
         if meta is not None:
             meta.modified_tick = int(self.network.current_tick)
-        self._audit("UPDATE_SYNAPSE", source_id=source_id, target_id=target_id, values=values)
+        self._audit(
+            "UPDATE_SYNAPSE", source_id=source_id, target_id=target_id, values=values
+        )
 
-    def set_synapse_metadata(self, source_id: int, target_id: int, **values: Any) -> SynapseMetadata:
+    def set_synapse_metadata(
+        self, source_id: int, target_id: int, **values: Any
+    ) -> SynapseMetadata:
         self._find_synapse(source_id, target_id)
-        meta = self.synapse_metadata.setdefault((source_id, target_id), SynapseMetadata(created_tick=int(self.network.current_tick)))
+        meta = self.synapse_metadata.setdefault(
+            (source_id, target_id),
+            SynapseMetadata(created_tick=int(self.network.current_tick)),
+        )
         for key, value in values.items():
             if not hasattr(meta, key):
                 raise ValueError(f"unknown synapse metadata field: {key}")
             setattr(meta, key, value)
         meta.modified_tick = int(self.network.current_tick)
-        self._audit("SET_SYNAPSE_METADATA", source_id=source_id, target_id=target_id, values=values)
+        self._audit(
+            "SET_SYNAPSE_METADATA",
+            source_id=source_id,
+            target_id=target_id,
+            values=values,
+        )
         return meta
 
     def delete_synapse(self, source_id: int, target_id: int) -> None:
@@ -227,14 +301,20 @@ class Brain5DManipulator:
             return
         meta = self.synapse_metadata.get((source_id, target_id))
         self._record_inverse(
-            "restore_synapse", source_id=source_id, target_id=target_id,
-            weight=syn.weight, delay=syn.delay, metadata=meta,
+            "restore_synapse",
+            source_id=source_id,
+            target_id=target_id,
+            weight=syn.weight,
+            delay=syn.delay,
+            metadata=meta,
         )
         self.network.disconnect(source_id, target_id)
         self.synapse_metadata.pop((source_id, target_id), None)
         self._audit("DELETE_SYNAPSE", source_id=source_id, target_id=target_id)
 
-    def neighbours(self, neuron_id: int, radius: float = 1.0, existing_only: bool = True) -> list[int]:
+    def neighbours(
+        self, neuron_id: int, radius: float = 1.0, existing_only: bool = True
+    ) -> list[int]:
         coord = unpack_coords(neuron_id)
         result = []
         for candidate in iter_neighbour_coords(coord, self.network.dimensions, radius):
@@ -244,8 +324,13 @@ class Brain5DManipulator:
         return result
 
     def query(
-        self, *, min_activation_v: float | None = None, min_energy: float | None = None,
-        coord_center: Coord5D | None = None, radius: float | None = None, limit: int | None = None,
+        self,
+        *,
+        min_activation_v: float | None = None,
+        min_energy: float | None = None,
+        coord_center: Coord5D | None = None,
+        radius: float | None = None,
+        limit: int | None = None,
     ) -> list[int]:
         candidates: Iterable[int]
         if coord_center is not None and radius is not None:
@@ -253,7 +338,9 @@ class Brain5DManipulator:
             center_id = pack_coords(*coord_center)
             if center_id in self.network.neurons:
                 ids.append(center_id)
-            for c in iter_neighbour_coords(coord_center, self.network.dimensions, radius):
+            for c in iter_neighbour_coords(
+                coord_center, self.network.dimensions, radius
+            ):
                 nid = pack_coords(*c)
                 if nid in self.network.neurons:
                     ids.append(nid)

@@ -1,30 +1,41 @@
-# Brain-5D v0.4.0-alpha.1 Final Robustness Overlay
+# Brain-5D v0.4.0-alpha.3 cumulative persistence update
 
-This overlay finalizes the `.b5d` Snapshot V1 contract without introducing the
-alpha.2 delta journal.
+This overlay contains the frozen alpha.1 snapshot implementation plus the
+corrected alpha.2 journal/recovery layer and the alpha.3 runtime/lazy-view
+foundation.
 
-## Changed
+## New modules
 
-- `src/storage/b5d.py`
-- `src/storage/__init__.py`
-- `tests/test_b5d_storage.py`
-- `docs/B5D_FORMAT.md`
-- `docs/SPRINT_STORAGE_V1.md`
-- `docs/CHANGELOG.md`
-- `README.md`
-- `CHANGELOG.md`
-- `scripts/verify_b5d.ps1`
+- `src/storage/crc.py`
+- `src/storage/delta_journal.py`
+- `src/storage/delta_codec.py`
+- `src/storage/recovery.py`
+- `src/storage/runtime.py`
+- `src/storage/lazy_view.py`
 
-## Added
+## New tests
 
-- `docs/ROADMAP_TO_USABLE_AI.md`
-- `docs/RELEASE_CHECKLIST_V040A1.md`
-- `pyrightconfig.json`
+- `tests/test_crc.py`
+- `tests/test_delta_journal.py`
+- `tests/test_recovery.py`
+- `tests/test_storage_runtime.py`
+- `tests/test_lazy_storage_view.py`
 
-## Key decisions
+## Important compatibility rule
 
-- Snapshot format V1 is frozen after this robustness pass.
-- V1 detects structural corruption but does not add CRC/checksum fields.
-- Checksums, crash-safe commit markers and tick deltas are alpha.2 journal work.
-- `src/storage/b5d.py` has no `Any` annotations and uses Protocol boundaries.
-- The 50k scalability test is opt-in and executed by the release verifier.
+`src/storage/b5d.py` remains the frozen `.b5d` Snapshot V1 implementation.
+Journal evolution uses a separate `.b5d.journal` format version.
+
+## Alpha.3 is not final persistence yet
+
+The current runtime hook deliberately uses an O(N+E) change scan when enabled.
+Asynchronous bounded queues, measured storage latency, crash-safe compaction,
+and real-network restore-and-continue remain the exit work for alpha.3/final.
+
+
+## Recovery hotfix
+
+`src/storage/recovery.py` contains a Windows-specific durability fix: the
+temporary recovered snapshot is opened with write access before `os.fsync()`.
+This addresses `[Errno 9] Bad file descriptor` observed on Python 3.13/Windows.
+The storage and journal formats remain unchanged.

@@ -80,12 +80,8 @@ class Observatory:
         if not self.show_heatmap:
             self.ax_heat.set_visible(False)
 
-        self.status_text = self.fig.text(
-            0.02, 0.02, "", family="monospace", fontsize=9
-        )
-        self.probe_text = self.fig.text(
-            0.72, 0.02, "", family="monospace", fontsize=9
-        )
+        self.status_text = self.fig.text(0.02, 0.02, "", family="monospace", fontsize=9)
+        self.probe_text = self.fig.text(0.72, 0.02, "", family="monospace", fontsize=9)
         self.snapshot_dir = Path("artifacts/snapshots")
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
         self.fig.canvas.mpl_connect("key_press_event", self._on_key)
@@ -122,9 +118,7 @@ class Observatory:
         activity_2d: list[float] = []
 
         for neuron_id, neuron in sample:
-            x_coord, y_coord, z_coord, d4_coord, d5_coord = unpack_coords(
-                neuron_id
-            )
+            x_coord, y_coord, z_coord, d4_coord, d5_coord = unpack_coords(neuron_id)
             value = self._activity(neuron)
             x_values.append(x_coord)
             y_values.append(y_coord)
@@ -137,9 +131,7 @@ class Observatory:
         self.scatter_xyz._offsets3d = (x_values, y_values, z_values)
         self.scatter_xyz.set_array(np.asarray(activity))
         points_2d = (
-            np.column_stack((xd_values, yd_values))
-            if xd_values
-            else np.empty((0, 2))
+            np.column_stack((xd_values, yd_values)) if xd_values else np.empty((0, 2))
         )
         self.scatter_xd.set_offsets(points_2d)
         self.scatter_xd.set_array(np.asarray(activity_2d))
@@ -148,9 +140,7 @@ class Observatory:
             ylim=(0, self.dims[1] - 1),
             zlim=(0, self.dims[2] - 1),
         )
-        projection_size = (
-            self.dims[3] if self.proj_dim == "d4" else self.dims[4]
-        )
+        projection_size = self.dims[3] if self.proj_dim == "d4" else self.dims[4]
         self.ax2.set(
             xlim=(0, self.dims[0] - 1),
             ylim=(0, projection_size - 1),
@@ -176,9 +166,7 @@ class Observatory:
                 ticks, [item["spikes_this_tick"] for item in history]
             )
             self.line_v.set_data(ticks, [item["mean_v"] for item in history])
-            self.line_queue.set_data(
-                ticks, [item["queued_events"] for item in history]
-            )
+            self.line_queue.set_data(ticks, [item["queued_events"] for item in history])
             self.ax4.relim()
             self.ax4.autoscale_view()
 

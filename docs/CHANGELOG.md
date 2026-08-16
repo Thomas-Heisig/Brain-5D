@@ -1,3 +1,14 @@
+# v0.4.0-alpha.3 – Runtime Storage & Lazy Snapshot Views
+
+- completed alpha.2 append-only journal protocol with immutable header;
+- added typed delta codecs and real snapshot replay;
+- added CRC32 and committed-corruption detection;
+- added uncommitted-tail truncation and atomic recovered snapshot publication;
+- added `StorageSession` post-step persistence hook;
+- added mmap-backed lazy activity/weight/energy snapshot projector;
+- added strict no-`Any` storage boundaries and Pyright coverage;
+- `.b5d` Snapshot V1 remains byte-for-byte frozen.
+
 # Documentation Changelog
 
 ## 0.4.0-alpha.1 - Storage V1 final robustness freeze - 2026-08-16
@@ -47,3 +58,10 @@
 - RewardSignal with configurable delay.
 - Signed three-factor plasticity (`eta * reward * eligibility`).
 - Activity, incoming-weight and energy heatmap projections.
+
+### Verification follow-up
+
+- Added cross-platform `scripts/verify_b5d.py` as canonical storage verifier.
+- Added `scripts/verify_b5d.cmd` for Windows environments that block unsigned PowerShell scripts.
+- Added repository-hygiene rules for generated `*.egg-info`, caches and runtime storage artifacts.
+- No binary storage format changes.

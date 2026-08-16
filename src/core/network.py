@@ -6,7 +6,13 @@ from dataclasses import dataclass
 from typing import Callable, Dict, List, Set, Tuple, TypedDict
 
 from .neuron import Neuron
-from .spatial_index import DIM_NAMES, Coord5D, iter_neighbour_coords, pack_coords, unpack_coords
+from .spatial_index import (
+    DIM_NAMES,
+    Coord5D,
+    iter_neighbour_coords,
+    pack_coords,
+    unpack_coords,
+)
 from .synapse import Synapse
 
 
@@ -47,6 +53,8 @@ class ConfigDict(TypedDict, total=False):
     topology: TopologyConfig
     network: NetworkConfig
     # Additional optional keys can be added as needed
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -116,7 +124,9 @@ class NeuralNetwork:
         self.in_degree: Dict[int, int] = {}
         self._synapse_count = 0
         self._queued_event_count = 0
-        self.event_slots: List[List[SpikeEvent]] = [[] for _ in range(self.max_delay + 1)]
+        self.event_slots: List[List[SpikeEvent]] = [
+            [] for _ in range(self.max_delay + 1)
+        ]
         self.current_tick = 0
         self.pending_currents: Dict[int, float] = {}
         self.total_spikes = 0
@@ -126,8 +136,12 @@ class NeuralNetwork:
         self._post_step_hooks: list[PostStepHook] = []
 
         topology = config.get("topology", {})
-        self.allow_self_connections = bool(topology.get("allow_self_connections", False))
-        self.allow_parallel_connections = bool(topology.get("allow_parallel_connections", False))
+        self.allow_self_connections = bool(
+            topology.get("allow_self_connections", False)
+        )
+        self.allow_parallel_connections = bool(
+            topology.get("allow_parallel_connections", False)
+        )
 
     def add_post_step_hook(self, hook: PostStepHook) -> None:
         """Register a generic observer that runs after each completed core tick."""
@@ -160,8 +174,12 @@ class NeuralNetwork:
 
         self.neurons[nid] = Neuron(
             neuron_id=nid,
-            a=a, b=b, c=c, d=d,
-            v=c, u=b * c,
+            a=a,
+            b=b,
+            c=c,
+            d=d,
+            v=c,
+            u=b * c,
             energy=initial_energy,
             spike_cost=spike_cost,
         )
@@ -177,20 +195,26 @@ class NeuralNetwork:
         for pre_id, syn_list in list(self.synapses.items()):
             if pre_id == neuron_id:
                 continue
-            kept: list[Synapse] = []   # Explizite Typannotation für die Liste
+            kept: list[Synapse] = []  # Explizite Typannotation für die Liste
             for syn in syn_list:
                 if syn.target_id == neuron_id:
                     self._synapse_count -= 1
-                    self.in_degree[neuron_id] = max(0, self.in_degree.get(neuron_id, 0) - 1)
+                    self.in_degree[neuron_id] = max(
+                        0, self.in_degree.get(neuron_id, 0) - 1
+                    )
                 else:
-                    kept.append(syn)   # append wird nun korrekt als (Synapse) -> None erkannt
+                    kept.append(
+                        syn
+                    )  # append wird nun korrekt als (Synapse) -> None erkannt
             self.synapses[pre_id] = kept
 
         # Entferne ausgehende Synapsen von diesem Neuron
         outgoing = self.synapses.pop(neuron_id, [])
         for syn in outgoing:
             if syn.target_id in self.in_degree:
-                self.in_degree[syn.target_id] = max(0, self.in_degree[syn.target_id] - 1)
+                self.in_degree[syn.target_id] = max(
+                    0, self.in_degree[syn.target_id] - 1
+                )
             self._synapse_count -= 1
 
         # Lösche das Neuron und die zugehörigen Metadaten
@@ -206,7 +230,9 @@ class NeuralNetwork:
             raise ValueError(f"delay must be 1..{self.max_delay}")
         if pre_id == post_id and not self.allow_self_connections:
             raise ValueError("Self-connections are disabled")
-        if not self.allow_parallel_connections and any(s.target_id == post_id for s in self.synapses[pre_id]):
+        if not self.allow_parallel_connections and any(
+            s.target_id == post_id for s in self.synapses[pre_id]
+        ):
             raise ValueError("Parallel connection already exists")
         self.synapses[pre_id].append(Synapse(post_id, float(weight), int(delay)))
         self._synapse_count += 1
@@ -216,7 +242,9 @@ class NeuralNetwork:
         if pre_id not in self.synapses:
             return
         old = len(self.synapses[pre_id])
-        self.synapses[pre_id] = [s for s in self.synapses[pre_id] if s.target_id != post_id]
+        self.synapses[pre_id] = [
+            s for s in self.synapses[pre_id] if s.target_id != post_id
+        ]
         removed = old - len(self.synapses[pre_id])
         self._synapse_count -= removed
         if post_id in self.in_degree:
@@ -224,9 +252,13 @@ class NeuralNetwork:
 
     def inject_current(self, neuron_id: int, current: float) -> None:
         if neuron_id in self.neurons:
-            self.pending_currents[neuron_id] = self.pending_currents.get(neuron_id, 0.0) + float(current)
+            self.pending_currents[neuron_id] = self.pending_currents.get(
+                neuron_id, 0.0
+            ) + float(current)
 
-    def initialize_random_connections(self, connections_per_neuron: int, radius: float) -> None:
+    def initialize_random_connections(
+        self, connections_per_neuron: int, radius: float
+    ) -> None:
         """
         Erstellt zufällige Verbindungen zwischen Neuronen innerhalb eines
         bestimmten Radius im 5D-Gitter.
@@ -245,7 +277,9 @@ class NeuralNetwork:
                     continue
                 if nid == pre_id and not self.allow_self_connections:
                     continue
-                candidates.append(nid)   # append ist nun klar als (int) -> None typisiert
+                candidates.append(
+                    nid
+                )  # append ist nun klar als (int) -> None typisiert
 
             if not candidates:
                 continue
@@ -256,10 +290,12 @@ class NeuralNetwork:
                     pre_id,
                     post_id,
                     self.rng.uniform(wmin, wmax),
-                    self.rng.randint(1, self.max_delay)
+                    self.rng.randint(1, self.max_delay),
                 )
 
-    def set_input_output_cells(self, input_dim: str, input_coord: int, output_dim: str, output_coord: int) -> None:
+    def set_input_output_cells(
+        self, input_dim: str, input_coord: int, output_dim: str, output_coord: int
+    ) -> None:
         self.input_cells.clear()
         self.output_cells.clear()
         if input_dim not in DIM_NAMES or output_dim not in DIM_NAMES:
@@ -282,9 +318,13 @@ class NeuralNetwork:
         events = self.event_slots[slot_index]
         for ev in events:
             if ev.delivery_tick != tick:
-                raise RuntimeError(f"Queue invariant violated: tick={tick}, delivery={ev.delivery_tick}")
+                raise RuntimeError(
+                    f"Queue invariant violated: tick={tick}, delivery={ev.delivery_tick}"
+                )
             if ev.target_id in self.neurons:
-                synaptic_currents[ev.target_id] = synaptic_currents.get(ev.target_id, 0.0) + ev.weight
+                synaptic_currents[ev.target_id] = (
+                    synaptic_currents.get(ev.target_id, 0.0) + ev.weight
+                )
             self.total_events_processed += 1
         delivered = len(events)
         self.event_slots[slot_index] = []
@@ -318,7 +358,9 @@ class NeuralNetwork:
                     delivery_tick = tick + connection.delay
                     slot = delivery_tick % len(self.event_slots)
                     self.event_slots[slot].append(
-                        SpikeEvent(nid, connection.target_id, connection.weight, delivery_tick)
+                        SpikeEvent(
+                            nid, connection.target_id, connection.weight, delivery_tick
+                        )
                     )
                     self._queued_event_count += 1
         if active:
@@ -331,7 +373,9 @@ class NeuralNetwork:
         if self.debug_invariants:
             actual = sum(len(s) for s in self.event_slots)
             if actual != self._queued_event_count:
-                raise RuntimeError(f"Queue accounting mismatch: counter={self._queued_event_count}, actual={actual}")
+                raise RuntimeError(
+                    f"Queue accounting mismatch: counter={self._queued_event_count}, actual={actual}"
+                )
         elapsed = (time.perf_counter() - start) * 1000.0
         result = StepResult(
             tick=tick,

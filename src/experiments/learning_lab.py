@@ -155,9 +155,7 @@ def _train(config: Config) -> tuple[tuple[float, ...], LearningEngine]:
         learning.reset_state()
 
     weights = tuple(
-        synapse.weight
-        for pre_id in pre_ids
-        for synapse in network.synapses[pre_id]
+        synapse.weight for pre_id in pre_ids for synapse in network.synapses[pre_id]
     )
     return weights, learning
 

@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/storage/b5d.py"
+    "src/storage"
   ],
   "pythonVersion": "3.13",
   "typeCheckingMode": "strict",

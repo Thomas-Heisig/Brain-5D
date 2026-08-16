@@ -19,8 +19,12 @@ class Neuron:
     last_synaptic_current: float = 0.0
 
     def step(self, input_current: float, tick: int) -> bool:
-        self.v += 0.5 * (0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current)
-        self.v += 0.5 * (0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current)
+        self.v += 0.5 * (
+            0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current
+        )
+        self.v += 0.5 * (
+            0.04 * self.v * self.v + 5.0 * self.v + 140.0 - self.u + input_current
+        )
         self.u += self.a * (self.b * self.v - self.u)
         if self.v >= 30.0:
             self.v = self.c

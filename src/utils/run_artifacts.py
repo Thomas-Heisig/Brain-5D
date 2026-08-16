@@ -14,7 +14,12 @@ import yaml
 
 
 class RunArtifacts:
-    def __init__(self, config: Dict[str, Any], run_id: Optional[str] = None, root: str | Path = "artifacts/runs"):
+    def __init__(
+        self,
+        config: Dict[str, Any],
+        run_id: Optional[str] = None,
+        root: str | Path = "artifacts/runs",
+    ):
         if run_id is None:
             run_id = datetime.now().strftime("%Y%m%d_%H%M%S") + f"_seed{config['seed']}"
         self.run_dir = Path(root) / run_id
@@ -28,20 +33,34 @@ class RunArtifacts:
         self.summary: dict = {}
         self._topology_data = None
         with (self.run_dir / "environment.json").open("w", encoding="utf-8") as f:
-            json.dump({
-                "python_version": sys.version, "platform": platform.platform(),
-                "machine": platform.machine(), "processor": platform.processor(),
-                "run_id": run_id, "seed": config["seed"], "timestamp": datetime.now().isoformat(),
-                "config_hash": self.config_hash,
-            }, f, indent=2)
+            json.dump(
+                {
+                    "python_version": sys.version,
+                    "platform": platform.platform(),
+                    "machine": platform.machine(),
+                    "processor": platform.processor(),
+                    "run_id": run_id,
+                    "seed": config["seed"],
+                    "timestamp": datetime.now().isoformat(),
+                    "config_hash": self.config_hash,
+                },
+                f,
+                indent=2,
+            )
         with (self.run_dir / "effective_config.yaml").open("w", encoding="utf-8") as f:
             yaml.safe_dump(config, f, sort_keys=False)
-        (self.run_dir / "config_hash.txt").write_text(self.config_hash, encoding="utf-8")
+        (self.run_dir / "config_hash.txt").write_text(
+            self.config_hash, encoding="utf-8"
+        )
 
     def __enter__(self):
-        self._metrics_handle = (self.run_dir / "metrics.csv").open("w", newline="", encoding="utf-8")
+        self._metrics_handle = (self.run_dir / "metrics.csv").open(
+            "w", newline="", encoding="utf-8"
+        )
         self._spike_handle = (self.run_dir / "spikes.jsonl").open("w", encoding="utf-8")
-        self._stimulus_handle = (self.run_dir / "stimulus.jsonl").open("w", encoding="utf-8")
+        self._stimulus_handle = (self.run_dir / "stimulus.jsonl").open(
+            "w", encoding="utf-8"
+        )
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -49,20 +68,32 @@ class RunArtifacts:
             if handle:
                 handle.close()
         if self._topology_data is not None:
-            (self.run_dir / "topology.json").write_text(json.dumps(self._topology_data, indent=2), encoding="utf-8")
-        (self.run_dir / "run_summary.json").write_text(json.dumps(self.summary, indent=2), encoding="utf-8")
+            (self.run_dir / "topology.json").write_text(
+                json.dumps(self._topology_data, indent=2), encoding="utf-8"
+            )
+        (self.run_dir / "run_summary.json").write_text(
+            json.dumps(self.summary, indent=2), encoding="utf-8"
+        )
 
     def log_metrics(self, metric_dict: Dict[str, Any]) -> None:
         if self._metrics_writer is None:
-            self._metrics_writer = csv.DictWriter(self._metrics_handle, fieldnames=list(metric_dict.keys()))
+            self._metrics_writer = csv.DictWriter(
+                self._metrics_handle, fieldnames=list(metric_dict.keys())
+            )
             self._metrics_writer.writeheader()
         self._metrics_writer.writerow(metric_dict)
 
     def log_spikes(self, tick: int, spike_ids: Tuple[int, ...]) -> None:
-        self._spike_handle.write(json.dumps({"tick": tick, "spikes": list(spike_ids)}) + "\n")
+        self._spike_handle.write(
+            json.dumps({"tick": tick, "spikes": list(spike_ids)}) + "\n"
+        )
 
     def log_stimulus(self, stimulus_result: Any) -> None:
-        data = asdict(stimulus_result) if is_dataclass(stimulus_result) else vars(stimulus_result)
+        data = (
+            asdict(stimulus_result)
+            if is_dataclass(stimulus_result)
+            else vars(stimulus_result)
+        )
         self._stimulus_handle.write(json.dumps(data) + "\n")
 
     def save_topology(self, topology_data: Dict[str, Any]) -> None:

@@ -1,7 +1,7 @@
 # Brain 5D Core v0.4.0-alpha.1
 
 Sparse 5D spiking-neural simulation with observable plasticity, optical state,
-controlled structural self-organization, and experimental `.b5d` persistence.
+controlled structural self-organization, and experimental `.b5d` persistence with append-only journals and lazy snapshot views.
 
 ## Current status
 
@@ -93,6 +93,29 @@ with B5DReader("artifacts/brain5d_snapshot.b5d") as reader:
 
 See `docs/B5D_FORMAT.md` for the frozen V1 layout, invariants and corruption model.
 
+Journal and recovery example:
+
+```python
+from src.storage import DeltaJournal, RecoveryManager
+
+with DeltaJournal("artifacts/brain5d_snapshot.b5d.journal", base_tick=network.current_tick) as journal:
+    # append typed DeltaRecord values, then create a durable boundary
+    journal.commit()
+
+result = RecoveryManager(
+    "artifacts/brain5d_snapshot.b5d",
+    "artifacts/brain5d_snapshot.b5d.journal",
+).recover("artifacts/recovered.b5d")
+```
+
+Runtime storage is opt-in through `StorageSession`. Alpha.3 currently uses a
+correctness-first O(N+E) change scan and is therefore not yet the final
+million-neuron persistence path. Lazy heatmaps can be produced directly from
+a memory-mapped snapshot through `B5DLazyProjector`.
+
+See `docs/DELTA_JOURNAL.md`, `docs/CRASH_RECOVERY.md`, and
+`docs/SPRINT_STORAGE_V3.md`.
+
 Project progression toward a measurable, usable AI is tracked in `docs/ROADMAP_TO_USABLE_AI.md`. The roadmap defines explicit exit criteria and does not treat implementation presence as proof of intelligence.
 
 ## Quality checks
@@ -101,9 +124,9 @@ The project keeps Python 3.11 as the minimum runtime syntax target while the
 current development/lint environment is Python 3.13.
 
 ```powershell
-black --check src/storage/b5d.py tests/test_b5d_storage.py
-mypy src/storage/b5d.py
-pylint src/storage/b5d.py
+black --check src/storage tests/test_b5d_storage.py tests/test_crc.py tests/test_delta_journal.py tests/test_recovery.py tests/test_storage_runtime.py tests/test_lazy_storage_view.py
+mypy --strict src/storage
+pylint src/storage
 ```
 
 Pylance/Pyright strict checking for the new storage boundary is configured in `pyrightconfig.json`. `src/storage/b5d.py` intentionally contains no `Any` annotations; network/core coupling is expressed through typed `Protocol` interfaces.
@@ -120,7 +143,25 @@ Storage-only verification:
 - `brain5d-core-v0.2.0` - STDP integration and eligibility traces
 - `brain5d-core-v0.3.0` - three-factor reward learning and heatmap observatory
 - `brain5d-core-v0.3.1` - repository synchronization and end-to-end learning proof
-- `v0.4.0-alpha.1` - `.b5d` snapshot/storage foundation; not yet a final tag
+- `v0.4.0-alpha.1` - frozen `.b5d` snapshot/storage foundation
+- `v0.4.0-alpha.2` - append-only delta journal + crash recovery
+- `v0.4.0-alpha.3` - current runtime-storage/lazy-observatory development
 
 The alpha storage version should only be tagged after the full local regression,
 Black, mypy, and Pylint checks pass on the repository working tree.
+
+### Persistence verification on Windows
+
+Use the cross-platform verifier as the canonical release check:
+
+```powershell
+python scripts/verify_b5d.py
+```
+
+or, from `cmd.exe`/PowerShell without executing a PowerShell script:
+
+```cmd
+scripts\verify_b5d.cmd
+```
+
+The Python runner is fail-fast and checks storage tests, the full regression suite, Black, strict mypy, Pylint, compilation, binary-format invariants, and Pyright when available. Large storage tests remain opt-in through `BRAIN5D_RUN_LARGE_STORAGE_TESTS=1`.

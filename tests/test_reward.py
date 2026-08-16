@@ -60,7 +60,9 @@ def _result(tick: int, *spike_ids: int) -> StepResult:
     )
 
 
-def _network(config: dict[str, Any], weight: float = 0.5) -> tuple[NeuralNetwork, int, int]:
+def _network(
+    config: dict[str, Any], weight: float = 0.5
+) -> tuple[NeuralNetwork, int, int]:
     # Die Testkonfiguration enthält zusätzliche Felder; für den Test ist die
     # Typprüfung an dieser Stelle deaktiviert – die Laufzeitstruktur ist korrekt.
     network = NeuralNetwork(config, random.Random(7))  # type: ignore[arg-type]

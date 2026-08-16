@@ -97,9 +97,7 @@ class HeatmapProjector:
             x_coord, y_coord, _, _, _ = unpack_coords(neuron_id)
             incoming_count = per_neuron_count.get(neuron_id, 0)
             value = (
-                per_neuron_sum[neuron_id] / incoming_count
-                if incoming_count
-                else 0.0
+                per_neuron_sum[neuron_id] / incoming_count if incoming_count else 0.0
             )
             sums[x_coord, y_coord] += value
             counts[x_coord, y_coord] += 1.0

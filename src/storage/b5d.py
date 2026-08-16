@@ -187,6 +187,7 @@ def _validate_uint64(value: int, label: str) -> int:
         raise ValueError(f"{label} must fit uint64: {value}")
     return value
 
+
 def _validate_finite(value: float, label: str) -> float:
     """Return *value* when it is finite and safe for persistent state."""
     if not math.isfinite(value):
@@ -546,9 +547,7 @@ class B5DReader:
         file_size = self.path.stat().st_size
         if file_size < HEADER_SIZE:
             self._handle.close()
-            raise B5DFormatError(
-                f"file too small: {file_size} < {HEADER_SIZE} bytes"
-            )
+            raise B5DFormatError(f"file too small: {file_size} < {HEADER_SIZE} bytes")
         self._mmap = mmap.mmap(self._handle.fileno(), 0, access=mmap.ACCESS_READ)
         self._metadata: dict[str, JSONValue] = {}
         try:
@@ -681,8 +680,8 @@ class B5DReader:
             )
         core_end = optical_end + CORE_EXTENSION_SIZE
         extension = bytes(self._mmap[optical_end:core_end])
-        a, b, c, d, spike_cost, spike_counter, last_spike_tick = (
-            _decode_core_extension(extension)
+        a, b, c, d, spike_cost, spike_counter, last_spike_tick = _decode_core_extension(
+            extension
         )
         return B5DNeuronRecord(
             neuron_id=int(neuron_id),

@@ -273,16 +273,12 @@ class LearningEngine:
         if event.pre_spiked and state.last_post_tick is not None:
             dt = state.last_post_tick - tick
             if dt < 0:
-                raw_delta -= self.params.a_minus * math.exp(
-                    dt / self.params.tau_minus
-                )
+                raw_delta -= self.params.a_minus * math.exp(dt / self.params.tau_minus)
 
         if event.post_spiked and state.last_pre_tick is not None:
             dt = tick - state.last_pre_tick
             if dt > 0:
-                raw_delta += self.params.a_plus * math.exp(
-                    -dt / self.params.tau_plus
-                )
+                raw_delta += self.params.a_plus * math.exp(-dt / self.params.tau_plus)
 
         if self.params.eligibility_enabled and raw_delta != 0.0:
             state.eligibility.add(raw_delta, tick)

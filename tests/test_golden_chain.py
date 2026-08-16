@@ -14,8 +14,8 @@ import yaml
 class SimulationConfig(TypedDict, total=False):
     dt_ms: float
     max_delay: int
-    ticks: int                     # for tests / experiments
-    debug_invariants: bool         # for tests / experiments
+    ticks: int  # for tests / experiments
+    debug_invariants: bool  # for tests / experiments
 
 
 class NeuronConfig(TypedDict, total=False):
@@ -88,6 +88,8 @@ class ConfigDict(TypedDict, total=False):
     telemetry: TelemetryConfig
     visualization: VisualizationConfig
     logging: LoggingConfig
+
+
 # --------------------------------------------------------------------------
 
 
@@ -121,7 +123,7 @@ def load_config(path: str | Path) -> ConfigDict:
         raise ValueError("Configuration file must contain a YAML dictionary")
 
     # Inform type checker about the expected structure
-    cfg: ConfigDict = raw   # type: ignore[assignment]  # raw is Any, but we know it's a dict
+    cfg: ConfigDict = raw  # type: ignore[assignment]  # raw is Any, but we know it's a dict
 
     # Validate dimensions
     dims_raw = cfg.get("dimensions")

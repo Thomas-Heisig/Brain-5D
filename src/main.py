@@ -8,7 +8,12 @@ from pathlib import Path
 
 from src.config.loader import load_config
 from src.core.network import NeuralNetwork
-from src.core.spatial_index import coords_to_linear, linear_to_5d, make_boundary_coord, unpack_coords
+from src.core.spatial_index import (
+    coords_to_linear,
+    linear_to_5d,
+    make_boundary_coord,
+    unpack_coords,
+)
 from src.diagnostics.propagation import PropagationAnalyzer
 from src.diagnostics.stimulus import StimulusEngine
 from src.diagnostics.topology_health import TopologyHealth
@@ -19,7 +24,9 @@ from src.telemetry.spike_history import SpikeHistory
 from src.utils.run_artifacts import RunArtifacts
 
 
-def sample_positions_excluding_poc(total: int, reserved: set[int], n: int, rng: random.Random) -> list[int]:
+def sample_positions_excluding_poc(
+    total: int, reserved: set[int], n: int, rng: random.Random
+) -> list[int]:
     available = [i for i in range(total) if i not in reserved]
     if n > len(available):
         raise ValueError("Not enough unreserved positions")
@@ -34,19 +41,30 @@ def build_network(config: dict) -> tuple[NeuralNetwork, random.Random]:
     for d in dims:
         total *= d
     topology = config["topology"]
-    input_coord = make_boundary_coord(dims, topology["input"]["dimension"], topology["input"]["coordinate"])
-    output_coord = make_boundary_coord(dims, topology["output"]["dimension"], topology["output"]["coordinate"])
+    input_coord = make_boundary_coord(
+        dims, topology["input"]["dimension"], topology["input"]["coordinate"]
+    )
+    output_coord = make_boundary_coord(
+        dims, topology["output"]["dimension"], topology["output"]["coordinate"]
+    )
     diag_coord = tuple(config["diagnostics"]["target_coord"])
     reserved_coords = {input_coord, output_coord, diag_coord}
     reserved_indices = {coords_to_linear(c, dims) for c in reserved_coords}
-    chosen = sample_positions_excluding_poc(total, reserved_indices, int(config["initial_neurons"]) - len(reserved_coords), rng)
+    chosen = sample_positions_excluding_poc(
+        total,
+        reserved_indices,
+        int(config["initial_neurons"]) - len(reserved_coords),
+        rng,
+    )
     for idx in chosen:
         network.add_neuron(linear_to_5d(idx, dims))
     for coord in sorted(reserved_coords):
         network.add_neuron(coord)
     network.set_input_output_cells(
-        topology["input"]["dimension"], topology["input"]["coordinate"],
-        topology["output"]["dimension"], topology["output"]["coordinate"],
+        topology["input"]["dimension"],
+        topology["input"]["coordinate"],
+        topology["output"]["dimension"],
+        topology["output"]["coordinate"],
     )
     network.initialize_random_connections(
         int(config["network"]["initial_connections_per_neuron"]),
@@ -56,7 +74,9 @@ def build_network(config: dict) -> tuple[NeuralNetwork, random.Random]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Brain 5D Sprint 2C - three-factor plasticity and heatmap")
+    parser = argparse.ArgumentParser(
+        description="Brain 5D Sprint 2C - three-factor plasticity and heatmap"
+    )
     parser.add_argument("--config", default="configs/poc_config.yaml")
     parser.add_argument("--observe", action="store_true")
     parser.add_argument("--benchmark", action="store_true")
@@ -77,12 +97,15 @@ def main() -> int:
     probes = ProbeManager(network, config)
     propagation = PropagationAnalyzer(network.output_cells)
     diag_target = tuple(config["diagnostics"]["target_coord"])
-    diag_id = next((nid for nid in network.neurons if unpack_coords(nid) == diag_target), None)
+    diag_id = next(
+        (nid for nid in network.neurons if unpack_coords(nid) == diag_target), None
+    )
     if diag_id is not None:
         probes.add_probe(diag_id)
     obs = None
     if config["visualization"].get("enabled"):
         from src.visualization.observatory import Observatory
+
         obs = Observatory(network, config, spike_history, history, probes)
 
     core_times = []
@@ -118,7 +141,12 @@ def main() -> int:
             artifacts.log_stimulus(stim)
             if args.benchmark and result.tick >= warmup:
                 core_times.append(result.core_step_ms)
-            if obs and (result.tick + 1) % int(config["visualization"]["refresh_interval_ticks"]) == 0:
+            if (
+                obs
+                and (result.tick + 1)
+                % int(config["visualization"]["refresh_interval_ticks"])
+                == 0
+            ):
                 obs.draw()
             if (result.tick + 1) % int(config["logging"]["interval_ticks"]) == 0:
                 print(

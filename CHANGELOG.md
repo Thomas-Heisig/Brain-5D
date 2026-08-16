@@ -1,3 +1,22 @@
+## v0.4.0-alpha.3 recovery hotfix
+
+### Fixed
+- Windows recovery publication no longer calls `os.fsync()` on a read-only
+  descriptor. The validated temporary snapshot is reopened with `r+b`, flushed,
+  fsynced, and then atomically published with `os.replace()`.
+- No `.b5d` or `.b5d.journal` format change.
+
+# v0.4.0-alpha.3 – Runtime Storage & Lazy Snapshot Views
+
+- completed alpha.2 append-only journal protocol with immutable header;
+- added typed delta codecs and real snapshot replay;
+- added CRC32 and committed-corruption detection;
+- added uncommitted-tail truncation and atomic recovered snapshot publication;
+- added `StorageSession` post-step persistence hook;
+- added mmap-backed lazy activity/weight/energy snapshot projector;
+- added strict no-`Any` storage boundaries and Pyright coverage;
+- `.b5d` Snapshot V1 remains byte-for-byte frozen.
+
 # Changelog
 
 ## 0.4.0-alpha.1 - `.b5d` Storage V1 robustness freeze - 2026-08-16
