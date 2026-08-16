@@ -108,7 +108,7 @@ def main() -> int:
         homeostasis.attach()
 
     # TopologyHealth.analyze() returns dict[str, Any]; cast for clarity.
-    health: dict[str, Any] = cast(dict[str, Any], TopologyHealth(network).analyze()) # type: ignore[arg-type]
+    health: dict[str, Any] = cast(dict[str, Any], TopologyHealth(network).analyze())  # type: ignore[arg-type]
     stimulus = StimulusEngine(config, rng)
     history = History(int(config["telemetry"]["history_ticks"]))
     spike_history = SpikeHistory(int(config["telemetry"]["spike_history_ticks"]))
@@ -141,7 +141,7 @@ def main() -> int:
     with RunArtifacts(config) as artifacts:  # type: ignore[arg-type]
         artifacts.save_topology(health)  # type: ignore[arg-type]
         for _ in range(int(config["simulation"]["ticks"])):
-            stim: StimulusResult = stimulus.apply(network, network.current_tick) # type: ignore[arg-type]
+            stim: StimulusResult = stimulus.apply(network, network.current_tick)  # type: ignore[arg-type]
             result = network.step()
             reward_cfg = config.get("reward", {})
             if (

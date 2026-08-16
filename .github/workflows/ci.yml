@@ -1,0 +1,97 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  fast-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install project and development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Black
+        run: python -m black --check src tests scripts
+
+      - name: mypy
+        run: python -m mypy src
+
+      - name: Pylint quality threshold
+        run: python -m pylint --fail-under=9.0 src
+
+      - name: Fast tests
+        run: python -m pytest -v -m "not slow"
+
+      - name: Whitespace check
+        run: git diff --check
+
+  alpha5-pyright:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install project and development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Strict Pyright - alpha.5 integration scope
+        run: |
+          python -m pyright \
+            src/storage/structural_journal.py \
+            src/storage/structural_recovery.py \
+            src/storage/core_restore.py \
+            src/self_organization/approval.py \
+            src/self_organization/undo.py \
+            src/self_organization/plasticity.py \
+            src/self_organization/coordinator.py \
+            src/dashboard/structural_api.py \
+            src/dashboard/operator_bridge.py \
+            src/dashboard/server.py \
+            src/runtime/control.py \
+            src/controller/runtime.py \
+            src/visualization/structural_heatmap.py
+
+  alpha5-verifier:
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('scripts/verify_v050a5.py') != '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install project and development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run alpha.5 verifier
+        run: python scripts/verify_v050a5.py

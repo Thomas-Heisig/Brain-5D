@@ -1,270 +1,714 @@
-# 🧠 Brain-5D
+# Brain-5D v0.5.0-alpha.5
 
-**Persistent Structural Plasticity — v0.5.0-alpha.5**
+Brain-5D is an experimental sparse 5D spiking-neural platform for
+persistent, observable and controlled neural simulation. The current
+development line combines spiking dynamics, plasticity, homeostasis,
+structural self-organization, deterministic persistence and an
+operator-facing dashboard.
 
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![mypy](https://img.shields.io/badge/mypy-passing-green.svg)](https://github.com/python/mypy)
-[![Pyright](https://img.shields.io/badge/pyright-strict-21BA45.svg)](https://github.com/microsoft/pyright)
-[![Tests](https://img.shields.io/badge/tests-148%20passing%2C%202%20skipped-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D)
-[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+> **Research status**
+>
+> Brain-5D is an engineering and research project. The current
+> implementation does **not** claim AGI, consciousness, sentience or
+> biological equivalence.
 
-Brain-5D is an experimental sparse **5D spiking-neural platform** for persistent, observable and controlled neural simulation. The current development line combines spiking dynamics, plasticity, homeostasis, structural self-organization, deterministic persistence and an operator-facing dashboard.
+------------------------------------------------------------------------
 
----
+## Current status
 
-## 📋 Table of Contents
+**Version:** `0.5.0a5`\
+**Development stage:** Persistent Structural Plasticity
 
-- [What is Brain-5D?](#what-is-brain-5d)
-- [Key Features](#key-features)
-- [Current Status](#current-status)
-- [Quick Start](#quick-start)
-- [Starting Brain-5D](#starting-brain-5d)
-- [Testing](#testing)
-- [Static Quality Checks](#static-quality-checks)
-- [Project Structure](#project-structure)
-- [Roadmap](#roadmap)
-- [Safety & Scope](#safety--scope)
-- [Contributing](#contributing)
-- [License](#license)
+The current alpha.5 integration provides the complete controlled path:
 
----
+``` text
+HomeostasisEngine
+        │
+        ▼
+HomeostasisSignal
+        │
+        ▼
+SelfOrganizationPolicy
+        │
+        ▼
+StructuralProposal
+        │
+        ▼
+SelfOrganizationCoordinator
+        │
+        ├── Reject
+        │
+        ├── Manual Approval
+        │
+        └── Auto-Approval Policy
+                    │
+                    ▼
+        StructuralPlasticityEngine
+                    │
+                    ▼
+               Manipulator
+                    │
+                    ▼
+               NeuralNetwork
+                    │
+                    ▼
+          StructuralChangeRecord
+                    │
+                    ▼
+           StructuralJournal
+              │           │
+              ▼           ▼
+            Undo       Recovery
+              │           │
+              └─────┬─────┘
+                    ▼
+              Operator Dashboard
+```
 
-## 🧬 What is Brain-5D?
+### Verified alpha.5 integration
 
-Brain-5D is a research platform for exploring **persistent spiking neural networks** in a **5D spatial coordinate space**. It provides:
+Latest integration result:
 
-- A **sparse neural core** with 40‑bit packed neuron identifiers
-- Biologically inspired **spiking dynamics** (Izhikevich neurons)
-- **STDP**, **eligibility traces** and **reward-modulated three-factor learning**
-- **Homeostatic regulation** of firing rate, threshold and energy
-- **Controlled structural plasticity** with operator approval
-- **Crash-safe persistence** via `.b5d` snapshots + journals
-- An **operator dashboard** for observation and control
+-   `148 passed`
+-   `2 skipped`
+-   `20` focused alpha.5 tests passed
+-   `mypy src`: clean across `61` source files
+-   alpha.5 Pyright strict scope: clean
+-   Black: clean
+-   `git diff --check`: clean
+-   structural restore/continue integration: passing
 
-> **Research status:** Brain-5D is an engineering and research project. The current implementation does **not** claim AGI, consciousness, sentience or biological equivalence.
+Repository-wide strict Pyright and Pylint still contain
+historical/legacy findings outside the alpha.5 implementation scope.
+These are tracked as quality work and are not hidden with broad
+suppressions.
 
----
+------------------------------------------------------------------------
 
-## ✨ Key Features
+## Implemented foundation
 
-| Area | Features |
-|------|----------|
-| **Neural Core** | Sparse 5D coordinate space, Izhikevich neurons, delayed events, deterministic RNG, input/output cell boundaries |
-| **Learning** | STDP, eligibility traces, reward-modulated three-factor learning, delayed rewards, deterministic experiments |
-| **Homeostasis** | Target firing-rate regulation, threshold adaptation, energy homeostasis, heatmaps |
-| **Self-Organization** | Structural proposals (neurogenesis, pruning, synaptogenesis), coordinator, manual/auto approval, cooldown limits |
-| **Structural Plasticity** | Controlled mutation, undo/redo, persistent change records, structural journal, recovery |
-| **Persistence** | `.b5d` snapshot, state delta journal, structural journal, runtime checkpoint, crash-safe replay |
-| **Dashboard** | Status, spike activity, heatmaps, structural approvals, undo, tick control, snapshot requests |
+### Neural core
 
----
+-   sparse 5D coordinate space;
+-   packed neuron identifiers;
+-   Izhikevich regular-spiking neurons;
+-   delayed event propagation;
+-   deterministic random-state handling;
+-   input/output cell boundaries;
+-   topology inspection and diagnostics.
 
-## 📊 Current Status
+### Learning
 
-| Aspect | Status |
-|--------|--------|
-| **Version** | v0.5.0-alpha.5 |
-| **Stage** | Persistent Structural Plasticity |
-| **Tests** | 148 passed, 2 skipped |
-| **Alpha.5 Tests** | 20 focused tests passed |
-| **mypy** | 61 source files clean |
-| **Pyright (strict)** | Clean |
-| **Black** | Clean |
-| **git diff --check** | Clean |
+-   STDP;
+-   signed eligibility traces;
+-   reward-modulated three-factor learning;
+-   delayed rewards;
+-   deterministic learning experiments;
+-   learning observability.
 
----
+### Homeostasis
 
-## 🚀 Quick Start
+-   target firing-rate regulation;
+-   smoothed per-neuron rate state;
+-   adaptive threshold regulation;
+-   energy homeostasis;
+-   `HomeostasisSignal` as a read-only boundary;
+-   homeostasis heatmaps;
+-   long-term stability test support.
 
-### 1. Clone the repository
+### Controlled self-organization
 
-```bash
+-   `SelfOrganizationPolicy`;
+-   chronic structural proposals;
+-   neurogenesis proposals;
+-   pruning proposals;
+-   synapse sprouting/pruning proposals;
+-   coordinator with legacy alpha.3 and current alpha.4/alpha.5 APIs;
+-   safety validation;
+-   manual approval;
+-   optional auto approval;
+-   cooldown and per-tick mutation limits;
+-   neuron pruning disabled by default.
+
+### Structural plasticity
+
+-   controlled structural mutation through the Manipulator boundary;
+-   neuron creation/removal support;
+-   synapse creation/removal support;
+-   persistent structural change records;
+-   immutable inverse operations for undo;
+-   structural activity history;
+-   structural heatmaps.
+
+------------------------------------------------------------------------
+
+## Persistence contract
+
+Brain-5D currently uses four coordinated persistence layers:
+
+``` text
+.b5d Snapshot
+      +
+State Delta Journal
+      +
+Structural Journal
+      +
+Runtime Checkpoint
+```
+
+### Snapshot
+
+The frozen `.b5d` V1 format provides:
+
+-   compact binary records;
+-   deterministic layout;
+-   memory mapping;
+-   random access;
+-   sorted neuron/synapse records;
+-   optical sidecar support.
+
+### State delta journal
+
+The state journal provides:
+
+-   append-only delta records;
+-   CRC protection;
+-   commit markers;
+-   monotonic tick handling;
+-   recovery from uncommitted tails;
+-   crash-safe replay.
+
+### Structural journal
+
+Alpha.5 adds a separate append-only structural journal for:
+
+-   neuron additions;
+-   neuron removals;
+-   synapse additions;
+-   synapse removals;
+-   committed CRC-protected records;
+-   monotonic sequence numbers;
+-   deterministic replay;
+-   persistent inverse undo.
+
+Undo **never deletes history**. It appends an inverse structural record.
+
+### Runtime checkpoint
+
+The runtime checkpoint preserves state that is not fully represented by
+the frozen snapshot alone, including:
+
+-   current tick;
+-   total spikes;
+-   total processed events;
+-   RNG state;
+-   pending currents;
+-   queued events;
+-   input/output cells;
+-   exact floating-point continuation state.
+
+### Restore order
+
+The current restore lifecycle is:
+
+``` text
+1. Load .b5d snapshot
+2. Apply committed state-delta journal records
+3. Replay committed structural journal records
+4. Restore runtime checkpoint
+5. Validate consistency
+6. Continue simulation
+```
+
+The structural replay occurs before the runtime checkpoint is overlaid,
+preserving the expected network topology for deterministic continuation.
+
+------------------------------------------------------------------------
+
+## Operator dashboard
+
+Brain-5D includes a local operator dashboard that acts as the system
+control and inspection surface.
+
+Default address:
+
+``` text
+http://127.0.0.1:8765
+```
+
+Current dashboard functions include:
+
+-   system status;
+-   current tick;
+-   neuron/synapse counts;
+-   spike activity;
+-   storage telemetry;
+-   homeostasis metrics;
+-   homeostasis heatmaps;
+-   structural proposals;
+-   structural approval/rejection;
+-   structural journal history;
+-   persistent undo;
+-   structural heatmaps;
+-   documentation browser;
+-   snapshot requests;
+-   exact manual tick execution;
+-   bounded loop control;
+-   pause/resume/stop;
+-   embodiment status placeholders/interfaces.
+
+The dashboard does not directly manipulate `NeuralNetwork` internals.
+Mutating operations are routed through the operator/controller/bridge
+boundaries.
+
+------------------------------------------------------------------------
+
+# Quick start
+
+## 1. Clone or update the repository
+
+``` powershell
 git clone https://github.com/Thomas-Heisig/Brain-5D.git
 cd Brain-5D
 ```
 
-### 2. Create and activate virtual environment
+For an existing checkout:
 
-```bash
+``` powershell
+git pull --rebase origin main
+```
+
+------------------------------------------------------------------------
+
+## 2. Create the virtual environment
+
+``` powershell
 python -m venv .venv
 ```
 
-**Windows:**
-```powershell
-.\.venv\Scripts\Activate.ps1
+Activate it:
+
+``` powershell
+.venv\Scripts\Activate.ps1
 ```
 
-**Linux/macOS:**
-```bash
-source .venv/bin/activate
-```
+If the environment already exists, only activation is required.
 
-### 3. Install Brain-5D and development tools
+------------------------------------------------------------------------
 
-```bash
+## 3. Install Brain-5D and development tools
+
+``` powershell
 pip install -e ".[dev]"
 ```
 
----
+The development environment includes the quality tooling required by the
+project, including pytest, Black, mypy, Pylint and Pyright.
 
-## ▶️ Starting Brain-5D
+------------------------------------------------------------------------
 
-### Option A — Python Launcher (recommended on Windows)
+# Starting Brain-5D
 
-```bash
-python scripts/brain5d_launcher.py start --open-browser
+There are several supported start paths.
+
+## Option A --- Python launcher
+
+Recommended on Windows when PowerShell execution policy blocks `.ps1`
+scripts:
+
+``` powershell
+python scripts\brain5d_launcher.py --dashboard
 ```
 
-### Option B — PowerShell Launcher
+The launcher starts the required Brain-5D processes and records only the
+PIDs it owns.
 
-```powershell
+------------------------------------------------------------------------
+
+## Option B --- PowerShell launcher
+
+``` powershell
 .\start.ps1 -OpenBrowser
 ```
 
-If PowerShell blocks the script due to execution policy, use Option A or C.
+If PowerShell reports that the script is not digitally signed, either
+use the Python launcher above or the CMD wrapper below.
 
-### Option C — CMD Launcher
+Do **not** weaken the machine-wide PowerShell execution policy only to
+start Brain-5D.
 
-```cmd
+------------------------------------------------------------------------
+
+## Option C --- CMD launcher
+
+``` cmd
 start.cmd
 ```
 
-**Stop:**
-```cmd
+To stop:
+
+``` cmd
 stop.cmd
 ```
 
-### Manual Component Start
+------------------------------------------------------------------------
 
-**Simulation only:**
-```bash
+# Starting components manually
+
+## Main simulation
+
+``` powershell
 python -m src.main
 ```
 
-**With observatory:**
-```bash
+With observatory:
+
+``` powershell
 python -m src.main --observe
 ```
 
-**Dashboard only:**
-```bash
+Benchmark mode:
+
+``` powershell
+python -m src.main --benchmark
+```
+
+The `src.main` CLI intentionally has its own argument contract.
+Launcher-specific arguments are not forwarded blindly to it.
+
+------------------------------------------------------------------------
+
+## Dashboard only
+
+With a snapshot:
+
+``` powershell
 python -m src.dashboard --snapshot artifacts/brain5d_snapshot.b5d
 ```
 
-Then open: [http://127.0.0.1:8765](http://127.0.0.1:8765)
+Then open:
 
----
-
-## 🧪 Testing
-
-### Fast regression suite (recommended before commit)
-
-```bash
-python -m pytest -v -m "not slow"
+``` text
+http://127.0.0.1:8765
 ```
 
-### Full test suite
+If no usable snapshot/network source is attached, some heatmap or
+runtime controls may be unavailable by design.
 
-```bash
-python -m pytest -v
+------------------------------------------------------------------------
+
+# Operator runtime controls
+
+The alpha.5 controller supports bounded interactive execution.
+
+Typical controls exposed through the operator layer are:
+
+``` text
+1 Tick
+10 Ticks
+100 Ticks
+1000 Ticks
+Custom Tick Count
+Run
+Pause
+Resume
+Stop
+Snapshot
 ```
 
-### Alpha.5 verifier
+Controller requests are validated. Negative tick counts and values above
+the configured manual limit are rejected.
 
-```bash
-python scripts/verify_v050a5.py
+Only one controlled runtime execution path should own the simulation
+loop at a time.
+
+------------------------------------------------------------------------
+
+# Structural approval
+
+Structural changes are deliberately conservative.
+
+Default safety posture:
+
+``` yaml
+self_organization:
+  enabled: false
+  dry_run: true
+  auto_approval: false
+  allow_neuron_pruning: false
 ```
 
-### Storage verification
+This means:
 
-```bash
-python scripts/verify_b5d.py
+-   self-organization does not mutate the network by default;
+-   auto approval is OFF;
+-   neuron pruning is OFF;
+-   structural changes require an explicitly enabled and valid mutation
+    path.
+
+Auto approval is only permitted when all configured confidence, cooldown
+and safety limits are satisfied.
+
+------------------------------------------------------------------------
+
+# Snapshot behavior
+
+A dashboard snapshot request does not write arbitrary state immediately
+in the HTTP request thread.
+
+The runtime controller records the request and processes it at a safe
+runtime boundary.
+
+The intended persistence ordering is:
+
+``` text
+Structural Journal flush/commit
+        ↓
+.b5d Snapshot
+        ↓
+Runtime Checkpoint
+        ↓
+Dashboard completion/status update
 ```
 
-**Large storage smoke tests (opt‑in):**
+This prevents the operator interface from capturing a topology in the
+middle of a controlled structural mutation batch.
 
-```powershell
-# Windows
+------------------------------------------------------------------------
+
+# Testing
+
+Always run tests from the project virtual environment.
+
+## Fast regression suite
+
+``` powershell
+.\.venv\Scripts\python.exe -m pytest -v -m "not slow"
+```
+
+Current confirmed alpha.5 result:
+
+``` text
+148 passed
+2 skipped
+```
+
+------------------------------------------------------------------------
+
+## Full pytest run
+
+``` powershell
+.\.venv\Scripts\python.exe -m pytest -v
+```
+
+------------------------------------------------------------------------
+
+## Alpha.5 verifier
+
+``` powershell
+.\.venv\Scripts\python.exe scripts\verify_v050a5.py
+```
+
+The verifier is intended to call tools through the active Python
+environment instead of silently depending on globally installed
+executables.
+
+------------------------------------------------------------------------
+
+## Dashboard verification
+
+``` powershell
+.\.venv\Scripts\python.exe scripts\verify_dashboard.py
+```
+
+------------------------------------------------------------------------
+
+## Storage verification
+
+``` powershell
+.\.venv\Scripts\python.exe scripts\verify_b5d.py
+```
+
+Large storage smoke tests are opt-in:
+
+``` powershell
 $env:BRAIN5D_RUN_LARGE_STORAGE_TEST="1"
-python scripts/verify_b5d.py
+$env:BRAIN5D_RUN_LARGE_STORAGE_TESTS="1"
+.\.venv\Scripts\python.exe scripts\verify_b5d.py
 ```
 
-```bash
-# Linux/macOS
-export BRAIN5D_RUN_LARGE_STORAGE_TEST=1
-python scripts/verify_b5d.py
-```
+------------------------------------------------------------------------
 
----
+# Static quality checks
 
-## 🔍 Static Quality Checks
+## Black
 
-### Formatting (Black)
-
-```bash
-python -m black --check src tests scripts
+``` powershell
+.\.venv\Scripts\python.exe -m black --check src tests scripts
 ```
 
 To format:
-```bash
-python -m black src tests scripts
+
+``` powershell
+.\.venv\Scripts\python.exe -m black src tests scripts
 ```
 
-### Type Checking (mypy)
+------------------------------------------------------------------------
 
-```bash
-python -m mypy src
+## Mypy
+
+``` powershell
+.\.venv\Scripts\python.exe -m mypy src
 ```
 
-### Type Checking (Pyright)
+Current alpha.5 source result:
 
-```bash
-python -m pyright src scripts tests
+``` text
+61 source files clean
 ```
 
-### Linting (Pylint)
+------------------------------------------------------------------------
 
-```bash
-python -m pylint src
+## Pyright
+
+``` powershell
+.\.venv\Scripts\python.exe -m pyright src scripts tests
 ```
 
-### Git whitespace check
+The alpha.5 implementation scope is strict-Pyright clean.
+Repository-wide strict mode can still expose legacy findings in older
+modules; these should be corrected incrementally rather than hidden with
+broad suppressions.
 
-```bash
+------------------------------------------------------------------------
+
+## Pylint
+
+``` powershell
+.\.venv\Scripts\python.exe -m pylint src
+```
+
+Historical complexity/documentation findings are still present in parts
+of the codebase. They are tracked separately from alpha.5 functional
+correctness.
+
+------------------------------------------------------------------------
+
+## Git whitespace check
+
+``` powershell
 git diff --check
 ```
 
-### Recommended pre-push sequence
+------------------------------------------------------------------------
 
-```bash
-python -m pytest -v -m "not slow"
-python -m mypy src
-python -m black --check src tests scripts
-python -m pyright src scripts tests
-python -m pylint src
+# Recommended pre-push sequence
+
+``` powershell
+.\.venv\Scripts\python.exe -m pytest -v -m "not slow"
+.\.venv\Scripts\python.exe -m mypy src
+.\.venv\Scripts\python.exe -m black --check src tests scripts
+.\.venv\Scripts\python.exe -m pyright src scripts tests
+.\.venv\Scripts\python.exe -m pylint src
 git diff --check
-python scripts/verify_v050a5.py
+.\.venv\Scripts\python.exe scripts\verify_v050a5.py
 ```
 
----
+Slow tests can be run separately:
 
-## 📁 Project Structure
-
+``` powershell
+.\.venv\Scripts\python.exe -m pytest -v -m slow
 ```
+
+------------------------------------------------------------------------
+
+# Type-safety policy
+
+Brain-5D treats type safety as an architectural requirement.
+
+Current rules include:
+
+-   no unparameterized `dict`, `list`, `tuple`, `deque`, etc.;
+-   JSON/YAML data enters the system as untrusted `object` and is
+    narrowed explicitly;
+-   no dynamic runtime attributes on neuron objects;
+-   no broad `Any` escape hatches;
+-   no broad `type: ignore` / `pyright: ignore`;
+-   subprocess arguments use explicit typed argument lists;
+-   configuration keys must exist in the declared typed contracts;
+-   dashboard code must not reach into private network/engine
+    attributes;
+-   enum handling should be exhaustive;
+-   mutable internals stay behind typed public interfaces.
+
+Shared contracts should live in or reuse:
+
+``` text
+src/typing_contracts.py
+```
+
+------------------------------------------------------------------------
+
+# Windows notes
+
+## PowerShell execution policy
+
+If:
+
+``` powershell
+.\start.ps1
+```
+
+fails with a digital-signature/execution-policy error, use:
+
+``` powershell
+python scripts\brain5d_launcher.py --dashboard
+```
+
+or:
+
+``` cmd
+start.cmd
+```
+
+This avoids requiring a machine-wide policy change.
+
+------------------------------------------------------------------------
+
+## Virtual environment matters
+
+Run quality tools through:
+
+``` text
+.\.venv\Scripts\python.exe
+```
+
+rather than relying on the Windows Store Python or global PATH.
+
+This prevents false discrepancies between VS Code/Pylance, pytest, mypy
+and the actual project environment.
+
+------------------------------------------------------------------------
+
+# Project structure
+
+Important current areas:
+
+``` text
 src/
-├── core/                 # Neural network core (Neuron, Synapse, Network, SpatialIndex)
-├── controller/           # Operator/runtime controller
-├── runtime/              # Interactive runtime control
-├── learning/             # STDP, eligibility, reward learning
-├── homeostasis/          # Firing-rate, threshold, energy regulation
-├── self_organization/    # Policy, coordinator, approval, plasticity, undo
-├── manipulation/         # Controlled mutation boundary
-├── storage/              # Snapshot, journals, checkpoint, recovery
-├── visualization/        # Observatory and heatmaps
-├── dashboard/            # Local operator console and API
-├── embodiment/           # Perception/action interface foundation (placeholder)
-├── telemetry/            # Runtime metrics
-└── typing_contracts.py   # Shared type contracts
+├── core/                 neural network and neuron/synapse core
+├── controller/           operator/runtime controller
+├── runtime/              interactive runtime control
+├── learning/             STDP, eligibility and reward learning
+├── homeostasis/          firing-rate / threshold / energy regulation
+├── self_organization/    policy, coordinator, approval, plasticity and undo
+├── manipulation/         controlled mutation boundary
+├── storage/              snapshot, journals, checkpoint, recovery
+├── visualization/        observatory and heatmaps
+├── dashboard/            local operator console and API
+├── embodiment/           perception/action interface foundation
+├── telemetry/            runtime metrics
+└── typing_contracts.py   shared type contracts
 
 tests/
 scripts/
@@ -273,69 +717,282 @@ docs/
 artifacts/
 ```
 
----
+------------------------------------------------------------------------
 
-## 🗺️ Roadmap
+# Research and design documents
 
-### v0.4 — Persistence Foundation ✓
-- `.b5d` Snapshot • Delta Journal • Crash Recovery • Runtime Checkpoint • Async Storage • Compaction • Dashboard foundation
+The project contains research/design material that informs future
+experiments. These documents are inputs to engineering decisions, not
+automatically implemented features.
 
-### v0.5 — Self-Regulation & Structural Plasticity
-- **alpha.1** Homeostasis Engine ✓
-- **alpha.2** Homeostasis Heatmaps + Type Safety ✓
-- **alpha.3** Operator Console + Structural Proposals ✓
-- **alpha.4** Controlled Structural Plasticity ✓
-- **alpha.5** Structural Journal + Persistent Undo + Recovery ✓
-- **alpha.6** Morphological Self-Regulation
+Examples include:
 
-### v0.6 — Scaling & Performance
-- Dirty tracking • Chunked storage • Regional processing • Larger deterministic benchmarks
+-   `Analyse_Deepseek.md`
+-   `Der_weg_zur_KI.md`
+-   `Research.md`
 
-### v0.7 — Learning Environments
-- Episodes • Train/eval separation • Delayed reward tasks • Continual-learning retention
+A research proposal becomes a project milestone only after it has a
+concrete experiment, measurable acceptance criteria and a defined
+software boundary.
 
-### v0.8 — Embodiment & Multimodal Adapters
-### v0.9 — Memory, Context & World Model
-### v0.10 — Cognitive Evaluation
-### v0.11 — Bounded HMI, Permissions & Autonomy
-### v0.12 — Release Candidate
-### v1.0 — Usable Brain-5D system by measured engineering criteria
+------------------------------------------------------------------------
 
-The detailed v0.5 roadmap is maintained in [docs/Roadmap/](./docs/Roadmap/).
+# Roadmap
 
----
+The active v0.5 development line is moving from controlled structural
+mutation toward stable morphological self-regulation.
 
-## 🛡️ Safety & Scope
+``` text
+v0.4
+Persistence foundation
+    ├── .b5d Snapshot
+    ├── Delta Journal
+    ├── Crash Recovery
+    ├── Runtime Checkpoint
+    ├── Async Storage
+    ├── Compaction
+    └── Dashboard foundation
 
-Brain-5D v0.5.0-alpha.5 **deliberately does not implement**:
+v0.5
+Self-regulation and structural plasticity
+    ├── alpha.1 Homeostasis Engine
+    ├── alpha.2 Homeostasis Heatmaps + Type Safety
+    ├── alpha.3 Operator Console + Structural Proposals
+    ├── alpha.4 Controlled Structural Plasticity
+    ├── alpha.5 Structural Journal + Persistent Undo + Recovery
+    └── alpha.6 Morphological Self-Regulation
 
-- Unrestricted autonomous self-organization
-- Autonomous deletion of large network regions
-- Unrestricted resource allocation
-- Autonomous source-code modification
-- Self-modifying Python code
-- Unrestricted shell/browser execution
-- Production LLM integration
-- Uncontrolled internet access
-- Multi-node distributed simulation
-- Chunked-storage rewrite
+v0.6
+Scaling and performance
+    ├── dirty tracking
+    ├── chunked storage
+    ├── regional processing
+    └── larger deterministic benchmarks
 
-These belong to later milestones with separate safety, resource and evaluation contracts.
+v0.7
+Learning environments
+    ├── episodes
+    ├── train/eval separation
+    ├── delayed reward tasks
+    └── continual-learning retention
 
----
+v0.8
+Embodiment and multimodal adapters
 
-## 🤝 Contributing
+v0.9
+Memory, context and world model
 
-Brain-5D is currently developed as an experimental research/engineering project. Before substantial external contribution or redistribution, please check the repository for the current license and contribution policy.
+v0.10
+Cognitive evaluation
 
----
+v0.11
+Bounded HMI, permissions and autonomy
 
-## 📄 License
+v0.12
+Release candidate
 
-Please see the `LICENSE` file in the repository root for the current license terms.
+v1.0
+Usable Brain-5D system by measured engineering criteria
+```
 
----
+The detailed v0.5 roadmap is maintained in the organized roadmap
+documentation under `docs/Roadmap/`.
 
-**🧠 Brain-5D — persistent structural plasticity for computational neuroscience research.**
+------------------------------------------------------------------------
 
----
+# Next evolution --- v0.5.0-alpha.6
+
+The recommended next stage is **Morphological Self-Regulation**.
+
+Alpha.6 should not simply increase autonomous mutation. It should make
+structural plasticity temporally and spatially stable.
+
+Planned concepts:
+
+-   chronic rather than single-tick structural signals;
+-   regional 5D structural pressure;
+-   neuron/synapse structural age;
+-   minimum lifetime / grace periods;
+-   growth budgets;
+-   structural resource costs;
+-   hysteresis between growth and pruning thresholds;
+-   anti-oscillation rules;
+-   region-local neurogenesis pressure;
+-   region-local pruning pressure;
+-   structural stability telemetry;
+-   dashboard visualization of structural budgets and chronic pressure.
+
+Conceptually:
+
+``` text
+alpha.3  observe structure
+alpha.4  change structure under control
+alpha.5  persist, audit, undo and recover structure
+alpha.6  regulate structure over long time scales
+```
+
+------------------------------------------------------------------------
+
+# Safety and scope
+
+Brain-5D alpha.5 deliberately does **not** implement:
+
+-   unrestricted autonomous self-organization;
+-   autonomous deletion of large network regions;
+-   unrestricted resource allocation;
+-   autonomous source-code modification;
+-   self-modifying Python code;
+-   unrestricted shell/browser execution;
+-   production LLM integration;
+-   uncontrolled internet access;
+-   multi-node distributed simulation;
+-   chunked-storage rewrite.
+
+These belong to later milestones and require separate safety, resource
+and evaluation contracts.
+
+------------------------------------------------------------------------
+
+# License and contribution status
+
+Brain-5D is currently developed as an experimental research/engineering
+project.
+
+Before substantial external contribution or redistribution, check the
+repository for the current license and contribution policy.
+
+------------------------------------------------------------------------
+
+## Current milestone summary
+
+**Brain-5D v0.5.0-alpha.5** can now:
+
+-   simulate a sparse 5D spiking network;
+-   learn through STDP and reward-modulated eligibility;
+-   regulate rate, threshold and energy homeostasis;
+-   generate structural proposals;
+-   require bounded approval before structural mutation;
+-   persist neural state;
+-   persist structural changes separately;
+-   recover committed topology changes;
+-   undo structural mutations without deleting history;
+-   expose structural activity in the operator dashboard;
+-   execute bounded ticks interactively;
+-   request consistent snapshots at safe runtime boundaries;
+-   restore and continue with the structural topology reconstructed
+    before runtime state.
+
+The next engineering target is long-term **morphological stability**,
+not unrestricted autonomy.
+------------------------------------------------------------------------
+
+## Repository resources
+
+Project repository:
+
+- [Brain-5D on GitHub](https://github.com/Thomas-Heisig/Brain-5D)
+- [Issues](https://github.com/Thomas-Heisig/Brain-5D/issues)
+- [Pull requests](https://github.com/Thomas-Heisig/Brain-5D/pulls)
+- [Actions / CI](https://github.com/Thomas-Heisig/Brain-5D/actions)
+- [Security](https://github.com/Thomas-Heisig/Brain-5D/security)
+
+Project documents:
+
+- [User Guide](docs/UserGuide.md)
+- [Developer Guide](docs/DeveloperGuide.md)
+- [Contributing](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Storage Theory — Alpha.5 Update](docs/Brain-5D_STORAGE_THEORY_ALPHA5_UPDATE.md)
+- [Structural Plasticity Architecture](docs/Architecture/STRUCTURAL_PLASTICITY_ALPHA5.md)
+- [Roadmap Alpha.5 → Alpha.6](docs/Roadmap/ROADMAP_ALPHA5_TO_ALPHA6.md)
+
+## Start-to-dashboard workflow
+
+Recommended Windows workflow from a fresh checkout:
+
+```powershell
+git clone https://github.com/Thomas-Heisig/Brain-5D.git
+cd Brain-5D
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+```
+
+Run the simulation:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.main --config configs/poc_config.yaml
+```
+
+Start the dashboard against a snapshot:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.dashboard --snapshot artifacts/brain5d_snapshot.b5d
+```
+
+Open:
+
+```text
+http://127.0.0.1:8765
+```
+
+Or use the launcher:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\brain5d_launcher.py --dashboard
+```
+
+If local PowerShell script execution is allowed:
+
+```powershell
+.\start.ps1 -OpenBrowser
+```
+
+If PowerShell execution policy blocks `.ps1` files, use the Python launcher or
+the provided `.cmd` wrappers instead of changing the machine-wide execution
+policy solely for Brain-5D.
+
+## Recommended verification sequence
+
+Fast test and static-quality sequence:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v -m "not slow"
+.\.venv\Scripts\python.exe -m mypy src
+.\.venv\Scripts\python.exe -m black --check src tests scripts
+.\.venv\Scripts\python.exe -m pylint --fail-under=9.0 src
+git diff --check
+```
+
+Alpha.5 focused Pyright validation is documented in the Developer Guide.
+Repository-wide strict Pyright still contains historical findings outside the
+alpha.5 scope, so new code must not add additional strict-type debt.
+
+Run the alpha.5 verifier when available:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\verify_v050a5.py
+```
+
+Large or slow tests remain separate:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v -m slow
+```
+
+## Community and security
+
+Contributions are welcome when they preserve the typed architecture, safety
+boundaries, deterministic persistence contracts, and existing tests.
+
+Before opening a pull request, read:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SECURITY.md](SECURITY.md)
+
+For security-sensitive findings, do not publish exploit details in a normal
+issue. Use GitHub's private security-reporting facilities when available.
