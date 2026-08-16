@@ -14,14 +14,18 @@ class SensorAdapter(Protocol):
     @property
     def sensor_id(self) -> str:
         """Return the stable adapter identifier."""
+        ...
 
     @property
     def modality(self) -> str:
         """Return the sensor modality name."""
+        ...
 
     @property
     def active(self) -> bool:
         """Return whether the sensor is currently available."""
+        ...
 
     def sample(self, tick: int) -> SensorFrame:
         """Capture one sensor frame for *tick*."""
+        ...

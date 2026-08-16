@@ -1,0 +1,58 @@
+--- a/src/dashboard/server.py
++++ b/src/dashboard/server.py
+@@
+ from .heatmap_source import SnapshotHeatmapSource
+ from .models import JSONValue
+ from .state import DashboardStateStore
++from .control_http import execute_control_request
++from .control_service import DashboardControlService
+@@
+ class DashboardServer(ThreadingHTTPServer):
+@@
+     def __init__(
+         self,
+         address: tuple[str, int],
+         state: DashboardStateStore,
+         heatmaps: SnapshotHeatmapSource | None,
++        control: DashboardControlService | None = None,
++        homeostasis_heatmaps: HomeostasisHeatmapSource | None = None,
+     ) -> None:
+         super().__init__(address, DashboardRequestHandler)
+         self.dashboard_state = state
+         self.heatmap_source = heatmaps
++        self.control_service = control
++        self.homeostasis_heatmaps = homeostasis_heatmaps
+@@
+     def do_GET(self) -> None:
+@@
++        if parsed.path == "/api/control":
++            if server.control_service is None:
++                self._send_json(
++                    {"error": "Runtime control is not configured."},
++                    HTTPStatus.SERVICE_UNAVAILABLE,
++                )
++                return
++            self._send_json(server.control_service.state())
++            return
+@@
+         self._serve_static(parsed.path)
++
++    def do_POST(self) -> None:  # noqa: N802 - stdlib handler API
++        """Serve bounded operator control commands."""
++        server = self.server
++        if not isinstance(server, DashboardServer):
++            self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
++            return
++        parsed = urlparse(self.path)
++        if parsed.path != "/api/control":
++            self.send_error(HTTPStatus.NOT_FOUND)
++            return
++        service = server.control_service
++        if service is None:
++            self._send_json(
++                {"error": "Runtime control is not configured."},
++                HTTPStatus.SERVICE_UNAVAILABLE,
++            )
++            return
++        status, payload = execute_control_request(self, service)
++        self._send_json(payload, status)

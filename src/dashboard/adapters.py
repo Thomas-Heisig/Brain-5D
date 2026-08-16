@@ -27,6 +27,8 @@ def homeostasis_metrics(stats: HomeostasisStatsLike) -> HomeostasisMetrics:
     return HomeostasisMetrics(
         enabled=stats.enabled,
         target_rate_hz=stats.target_rate_hz,
+        actual_rate_hz=stats.mean_rate_hz,
+        rate_error_hz=stats.mean_rate_error_hz,
         mean_rate_hz=stats.mean_rate_hz,
         mean_rate_error_hz=stats.mean_rate_error_hz,
         mean_threshold_adaptation=stats.mean_threshold_adaptation,

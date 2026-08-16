@@ -1,0 +1,10 @@
+--- a/src/dashboard/static/index.html
++++ b/src/dashboard/static/index.html
+@@
+   <link rel="stylesheet" href="styles.css" />
++  <link rel="stylesheet" href="control-panel.css" />
+@@
++  <!-- Insert the contents of control-panel.fragment.html in the dashboard control column/card area. -->
+@@
+   <script src="app.js"></script>
++  <script src="control-panel.js"></script>

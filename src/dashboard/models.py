@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.embodiment.models import EmbodimentMetrics
+
 JSONScalar = str | int | float | bool | None
 JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 
@@ -110,10 +112,18 @@ class SelfOrganizationMetrics:
 
 @dataclass(frozen=True, slots=True)
 class HomeostasisMetrics:
-    """Self-regulation metrics introduced with v0.5."""
+    """Backward-compatible homeostasis metrics for dashboard consumers.
+
+    ``actual_rate_hz`` / ``rate_error_hz`` are the alpha.6 names.  The
+    ``mean_*`` fields are the v0.5 regulator names.  Both contracts remain
+    available during the v0.5 transition so older dashboard tests, scripts,
+    and saved API consumers do not break.
+    """
 
     enabled: bool = False
     target_rate_hz: float = 0.0
+    actual_rate_hz: float = 0.0
+    rate_error_hz: float = 0.0
     mean_rate_hz: float = 0.0
     mean_rate_error_hz: float = 0.0
     mean_threshold_adaptation: float = 0.0
@@ -123,13 +133,29 @@ class HomeostasisMetrics:
     active_neurons: int = 0
     updates: int = 0
 
+    def _resolved_rate(self) -> float:
+        """Resolve the canonical rate while honoring the legacy alias."""
+        if self.mean_rate_hz != 0.0 or self.actual_rate_hz == 0.0:
+            return self.mean_rate_hz
+        return self.actual_rate_hz
+
+    def _resolved_error(self) -> float:
+        """Resolve the canonical rate error while honoring the legacy alias."""
+        if self.mean_rate_error_hz != 0.0 or self.rate_error_hz == 0.0:
+            return self.mean_rate_error_hz
+        return self.rate_error_hz
+
     def to_json(self) -> dict[str, JSONValue]:
-        """Return a JSON-serializable representation."""
+        """Return both the legacy and canonical JSON field names."""
+        rate = self._resolved_rate()
+        error = self._resolved_error()
         return {
             "enabled": self.enabled,
             "target_rate_hz": self.target_rate_hz,
-            "mean_rate_hz": self.mean_rate_hz,
-            "mean_rate_error_hz": self.mean_rate_error_hz,
+            "actual_rate_hz": rate,
+            "rate_error_hz": error,
+            "mean_rate_hz": rate,
+            "mean_rate_error_hz": error,
             "mean_threshold_adaptation": self.mean_threshold_adaptation,
             "target_energy": self.target_energy,
             "mean_energy": self.mean_energy,
@@ -148,8 +174,9 @@ class DashboardSnapshot:
     storage: StorageMetrics = StorageMetrics()
     self_organization: SelfOrganizationMetrics = SelfOrganizationMetrics()
     homeostasis: HomeostasisMetrics = HomeostasisMetrics()
+    embodiment: EmbodimentMetrics = EmbodimentMetrics()
     status: str = "idle"
-    version: str = "0.5.0-alpha.1"
+    version: str = "0.5.0-alpha.2"
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
@@ -161,4 +188,5 @@ class DashboardSnapshot:
             "storage": self.storage.to_json(),
             "self_organization": self.self_organization.to_json(),
             "homeostasis": self.homeostasis.to_json(),
+            "embodiment": self.embodiment.to_json(),
         }

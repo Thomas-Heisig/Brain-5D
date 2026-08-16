@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brain5d-core"
-version = "0.5.0a1"
+version = "0.5.0a2"
 description = "Sparse 5D spiking-neural simulation with observable plasticity."
 requires-python = ">=3.11"
 dependencies = [

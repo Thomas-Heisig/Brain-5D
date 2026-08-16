@@ -14,10 +14,13 @@ class ActuatorAdapter(Protocol):
     @property
     def actuator_id(self) -> str:
         """Return the stable actuator identifier."""
+        ...
 
     @property
     def active(self) -> bool:
         """Return whether the actuator is currently available."""
+        ...
 
     def apply(self, command: ActionCommand) -> ActuatorResult:
         """Apply one explicitly supplied action command."""
+        ...

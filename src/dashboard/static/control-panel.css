@@ -1,0 +1,130 @@
+.control-card {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 16px;
+  background: rgba(12, 18, 28, 0.92);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.control-card__header,
+.proposal-line,
+.switch-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.control-card__header h2,
+.self-org-controls h3 {
+  margin: 0;
+}
+
+.control-card__header p {
+  margin: 4px 0 0;
+  opacity: 0.7;
+}
+
+.runtime-state {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(120, 140, 170, 0.25);
+}
+
+.runtime-state[data-mode="running"] { background: rgba(36, 180, 110, 0.28); }
+.runtime-state[data-mode="paused"] { background: rgba(230, 170, 40, 0.28); }
+.runtime-state[data-mode="faulted"],
+.runtime-state[data-mode="stopped"] { background: rgba(220, 70, 70, 0.3); }
+
+.runtime-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.runtime-metrics > div {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.runtime-metrics span,
+.runtime-metrics strong {
+  display: block;
+}
+
+.runtime-metrics span { opacity: 0.65; font-size: 0.78rem; }
+.runtime-metrics strong { margin-top: 4px; font-size: 1.05rem; }
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.control-grid label {
+  display: grid;
+  gap: 5px;
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+.control-grid input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+}
+
+.control-grid button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.control-grid button.danger { background: #8b2d35; color: white; }
+.control-grid button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.self-org-controls {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: grid;
+  gap: 8px;
+}
+
+.switch-line {
+  justify-content: flex-start;
+}
+
+.control-message {
+  display: block;
+  min-height: 1.2em;
+  margin-top: 10px;
+  font-size: 0.84rem;
+  opacity: 0.82;
+}
+
+@media (max-width: 800px) {
+  .runtime-metrics,
+  .control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .runtime-metrics,
+  .control-grid {
+    grid-template-columns: 1fr;
+  }
+}

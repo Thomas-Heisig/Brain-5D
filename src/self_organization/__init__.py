@@ -1,11 +1,18 @@
-from .engine import (
-    SelfOrganizationEngine,
+"""Self-organization policy and coordination interfaces."""
+
+from .coordinator import SelfOrganizationCoordinator, SelfOrganizationSnapshot
+from .policy import (
     SelfOrganizationParameters,
-    SelfOrganizationStats,
+    SelfOrganizationPolicy,
+    StructuralAction,
+    StructuralProposal,
 )
 
 __all__ = [
-    "SelfOrganizationEngine",
+    "SelfOrganizationCoordinator",
+    "SelfOrganizationSnapshot",
     "SelfOrganizationParameters",
-    "SelfOrganizationStats",
+    "SelfOrganizationPolicy",
+    "StructuralAction",
+    "StructuralProposal",
 ]

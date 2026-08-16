@@ -1,0 +1,51 @@
+Integration sketch for src/main.py
+==================================
+
+The concrete main.py differs between alpha builds, therefore this overlay does not
+replace it blindly. Wire the controller around the EXISTING single-tick execution
+path. The callback must perform exactly the same work as one current simulation tick.
+
+Required imports:
+
+    from src.runtime.control import RuntimeController
+    from src.dashboard.control_service import DashboardControlService
+    from src.self_organization.policy import SelfOrganizationPolicy
+    from src.self_organization.coordinator import SelfOrganizationCoordinator
+
+After network/homeostasis creation:
+
+    self_org_policy = SelfOrganizationPolicy()
+    self_org = SelfOrganizationCoordinator(
+        executor=None,          # alpha.3 starts auditable and safe
+        enabled=True,
+        dry_run=True,
+    )
+
+Create one canonical step function. Do NOT duplicate simulation logic:
+
+    def execute_one_tick() -> None:
+        result = network.step()
+        # Keep existing telemetry/storage/hooks exactly as before.
+        # If HomeostasisEngine is attached via post-step hook, do not call it twice.
+        signal = homeostasis.build_signal(result.tick)
+        proposal = self_org_policy.evaluate(signal)
+        self_org.submit(proposal)
+        # Publish dashboard metrics as already done by alpha.2.
+
+Then:
+
+    runtime_controller = RuntimeController(
+        execute_one_tick,
+        snapshot_callback=create_snapshot_callback_or_none,
+        initial_loop_size=100,
+    )
+    dashboard_control = DashboardControlService(runtime_controller, self_org)
+
+Pass dashboard_control into serve_dashboard/DashboardServer using the server patch.
+
+IMPORTANT:
+- In interactive mode, RuntimeController owns stepping.
+- Do not leave a second foreground for-loop running at the same time.
+- In non-interactive/batch mode, the existing deterministic for-loop may remain.
+- Shutdown must call runtime_controller.close().
+- STOP is terminal for a controller instance; use PAUSE for normal operator control.
