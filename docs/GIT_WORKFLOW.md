@@ -132,7 +132,7 @@ Wenn der aktuelle Stand bereits geprüft wurde:
 git checkout main
 git status
 git add -A
-git commit -m "Update Brain-5D"
+git commit -m "Update Brain-5D - alpha 5"
 git push origin main
 ```
 

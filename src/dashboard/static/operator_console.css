@@ -1,0 +1,10 @@
+.operator-console .operator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: .6rem;
+}
+.operator-console button, .operator-console input {
+  min-height: 2.4rem;
+}
+.operator-note { opacity: .75; font-size: .9rem; }
+.proposal-item { border: 1px solid currentColor; border-radius: .4rem; padding: .6rem; margin-top: .5rem; }

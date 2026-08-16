@@ -6,6 +6,7 @@ import argparse
 from dataclasses import asdict
 import random
 import statistics
+from typing import Any, cast
 
 from src.config.loader import load_config
 from src.core.network import NeuralNetwork
@@ -16,7 +17,7 @@ from src.core.spatial_index import (
     unpack_coords,
 )
 from src.diagnostics.propagation import PropagationAnalyzer
-from src.diagnostics.stimulus import StimulusEngine
+from src.diagnostics.stimulus import StimulusEngine, StimulusResult
 from src.diagnostics.topology_health import TopologyHealth
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
@@ -39,10 +40,10 @@ def sample_positions_excluding_poc(
     return rng.sample(available, n)
 
 
-def build_network(config: dict) -> tuple[NeuralNetwork, random.Random]:
+def build_network(config: dict[str, Any]) -> tuple[NeuralNetwork, random.Random]:
     """Build the deterministic sparse PoC network from configuration."""
     rng = random.Random(int(config["seed"]))
-    network = NeuralNetwork(config, rng)
+    network = NeuralNetwork(config, rng)  # type: ignore[arg-type]
     dims = tuple(config["dimensions"])
     total = 1
     for dimension in dims:
@@ -93,19 +94,21 @@ def main() -> int:
     parser.add_argument("--observe", action="store_true")
     parser.add_argument("--benchmark", action="store_true")
     args = parser.parse_args()
-    config = load_config(args.config)
+    # Load config and treat as generic dict to simplify typing
+    config = cast(dict[str, Any], load_config(args.config))
     if args.observe:
         config["visualization"]["enabled"] = True
 
     network, rng = build_network(config)
-    learning = LearningEngine(network, config)
+    learning = LearningEngine(network, config)  # type: ignore[arg-type]
     if learning.enabled:
         learning.attach()
-    homeostasis = HomeostasisEngine(network, config)
+    homeostasis = HomeostasisEngine(network, config)  # type: ignore[arg-type]
     if homeostasis.enabled:
         homeostasis.attach()
 
-    health = TopologyHealth(network).analyze()
+    # TopologyHealth.analyze() returns dict[str, Any]; cast for clarity.
+    health: dict[str, Any] = cast(dict[str, Any], TopologyHealth(network).analyze()) # type: ignore[arg-type]
     stimulus = StimulusEngine(config, rng)
     history = History(int(config["telemetry"]["history_ticks"]))
     spike_history = SpikeHistory(int(config["telemetry"]["spike_history_ticks"]))
@@ -135,10 +138,10 @@ def main() -> int:
         f"Homeostasis={'on' if homeostasis.enabled else 'off'}"
     )
 
-    with RunArtifacts(config) as artifacts:
-        artifacts.save_topology(health)
+    with RunArtifacts(config) as artifacts:  # type: ignore[arg-type]
+        artifacts.save_topology(health)  # type: ignore[arg-type]
         for _ in range(int(config["simulation"]["ticks"])):
-            stim = stimulus.apply(network, network.current_tick)
+            stim: StimulusResult = stimulus.apply(network, network.current_tick) # type: ignore[arg-type]
             result = network.step()
             reward_cfg = config.get("reward", {})
             if (
@@ -150,11 +153,11 @@ def main() -> int:
                     float(reward_cfg.get("output_spike_value", 1.0)),
                     result.tick,
                 )
-            history.append_from_stepresult(result)
+            history.append_from_stepresult(result)  # type: ignore[arg-type]
             spike_history.append(result.tick, result.spike_ids)
             propagation.observe(stim, result)
-            metric = history.get_all()[-1]
-            artifacts.log_metrics(metric)
+            metric: dict[str, Any] = history.get_all()[-1]  # type: ignore[assignment]
+            artifacts.log_metrics(metric)  # type: ignore[arg-type]
             artifacts.log_spikes(result.tick, result.spike_ids)
             artifacts.log_stimulus(stim)
             if args.benchmark and result.tick >= warmup:
@@ -175,7 +178,7 @@ def main() -> int:
                 )
 
         report = propagation.get_report()
-        summary = {
+        summary: dict[str, Any] = {
             "seed": config["seed"],
             "ticks": config["simulation"]["ticks"],
             "final_neurons": len(network.neurons),
@@ -197,7 +200,7 @@ def main() -> int:
                 "p95_ms": p95,
             }
             print("Benchmark:", summary["benchmark"])
-        artifacts.save_summary(summary)
+        artifacts.save_summary(summary)  # type: ignore[arg-type]
 
     print("Propagation:", report)
     if learning.enabled:

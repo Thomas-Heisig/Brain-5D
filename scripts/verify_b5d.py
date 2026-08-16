@@ -34,9 +34,7 @@ def _run(step: VerificationStep) -> None:
     print(f"\n== {step.name} ==")
     completed = subprocess.run(step.command, cwd=ROOT, check=False)
     if completed.returncode != 0:
-        raise SystemExit(
-            f"{step.name} failed with exit code {completed.returncode}"
-        )
+        raise SystemExit(f"{step.name} failed with exit code {completed.returncode}")
 
 
 def _base_steps() -> tuple[VerificationStep, ...]:
@@ -60,10 +58,13 @@ def _base_steps() -> tuple[VerificationStep, ...]:
             "Install dev dependencies",
             (PYTHON, "-m", "pip", "install", "-e", ".[dev]", "-q"),
         ),
-        *(VerificationStep(
-            f"Test {Path(test_file).name}",
-            (PYTHON, "-m", "pytest", test_file, "-v"),
-        ) for test_file in test_files),
+        *(
+            VerificationStep(
+                f"Test {Path(test_file).name}",
+                (PYTHON, "-m", "pytest", test_file, "-v"),
+            )
+            for test_file in test_files
+        ),
         VerificationStep("Full regression", (PYTHON, "-m", "pytest", "-v")),
         VerificationStep(
             "Black",

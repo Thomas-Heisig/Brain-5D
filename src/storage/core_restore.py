@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import random
+from typing import Protocol, assert_never
 
 from src.core.network import ConfigDict, NeuralNetwork, SpikeEvent
 from src.core.spatial_index import unpack_coords
@@ -11,6 +12,55 @@ from src.core.spatial_index import unpack_coords
 from .b5d import B5DReader
 from .checkpoint import RuntimeCheckpoint, read_runtime_checkpoint
 from .recovery import RecoveryManager
+from .structural_journal import StructuralChangeKind, StructuralChangeRecord
+from .structural_recovery import StructuralRecoveryManager
+
+
+class StructuralRestoreManipulator(Protocol):
+    def create_neuron(self, coord: tuple[int, int, int, int, int]) -> int: ...
+    def delete_neuron(self, neuron_id: int) -> None: ...
+    def create_synapse(
+        self, source_id: int, target_id: int, weight: float, delay: int
+    ) -> None: ...
+    def delete_synapse(self, source_id: int, target_id: int) -> None: ...
+
+
+class _StructuralReplayTarget:
+    def __init__(self, manipulator: StructuralRestoreManipulator) -> None:
+        self._manipulator = manipulator
+
+    def apply_structural_record(self, record: StructuralChangeRecord) -> bool:
+        if record.kind is StructuralChangeKind.NEURON_ADD:
+            if record.coord is None:
+                return False
+            neuron_id = self._manipulator.create_neuron(record.coord)
+            return record.neuron_id is None or neuron_id == record.neuron_id
+        if record.kind is StructuralChangeKind.NEURON_REMOVE:
+            if record.neuron_id is None:
+                return False
+            self._manipulator.delete_neuron(record.neuron_id)
+            return True
+        if record.kind is StructuralChangeKind.SYNAPSE_ADD:
+            if (
+                record.source_id is None
+                or record.target_id is None
+                or record.weight is None
+                or record.delay is None
+            ):
+                return False
+            self._manipulator.create_synapse(
+                record.source_id,
+                record.target_id,
+                record.weight,
+                record.delay,
+            )
+            return True
+        if record.kind is StructuralChangeKind.SYNAPSE_REMOVE:
+            if record.source_id is None or record.target_id is None:
+                return False
+            self._manipulator.delete_synapse(record.source_id, record.target_id)
+            return True
+        assert_never(record.kind)
 
 
 class RestoredNeuralNetwork(NeuralNetwork):
@@ -28,6 +78,8 @@ def restore_network(
     checkpoint_path: Path,
     config: ConfigDict,
     recovered_path: Path,
+    *,
+    structural_journal_path: Path | None = None,
 ) -> RestoredNeuralNetwork:
     """Recover persisted state and return a runnable deterministic network."""
 
@@ -72,6 +124,14 @@ def restore_network(
             synapse = network.synapses[synapse_record.source_id][-1]
             synapse.eligibility = synapse_record.eligibility
             synapse.last_pre_spike = synapse_record.last_pre_spike
+    if structural_journal_path is not None:
+        from src.manipulation.manipulator import Brain5DManipulator
+
+        structural_target = _StructuralReplayTarget(Brain5DManipulator(network))
+        StructuralRecoveryManager().replay(
+            structural_target,
+            structural_journal_path,
+        )
     _restore_runtime(network, checkpoint)
     _restore_exact_neuron_state(network, checkpoint)
     _restore_exact_synapse_state(network, checkpoint)
@@ -128,19 +188,14 @@ def _restore_exact_neuron_state(
             raise ValueError(
                 f"runtime checkpoint references missing neuron {state.neuron_id}"
             )
-        if state.a is not None:
-            neuron.a = state.a
-        if state.b is not None:
-            neuron.b = state.b
-        if state.c is not None:
-            neuron.c = state.c
-        if state.d is not None:
-            neuron.d = state.d
+        neuron.a = state.a
+        neuron.b = state.b
+        neuron.c = state.c
+        neuron.d = state.d
         neuron.v = state.membrane_v
         neuron.u = state.recovery_u
         neuron.energy = state.energy
-        if state.spike_cost is not None:
-            neuron.spike_cost = state.spike_cost
+        neuron.spike_cost = state.spike_cost
         neuron.threshold_adaptation = state.threshold_adaptation
         neuron.spike_counter = state.spike_counter
         neuron.last_spike_tick = state.last_spike_tick

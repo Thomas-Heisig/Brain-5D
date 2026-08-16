@@ -102,7 +102,9 @@ class DashboardControlService:
             payload={"ok": True, "runtime": state.to_json()},
         )
 
-    def _configure_self_organization(self, body: dict[object, object]) -> ControlResponse:
+    def _configure_self_organization(
+        self, body: dict[object, object]
+    ) -> ControlResponse:
         coordinator = self._self_organization
         if coordinator is None:
             return self._error(503, "Self-organization coordinator is not available.")

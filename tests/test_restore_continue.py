@@ -4,11 +4,23 @@ from __future__ import annotations
 
 from pathlib import Path
 import random
+from typing import cast
 
 from src.core.network import ConfigDict, NeuralNetwork
-from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
+from src.core.spatial_index import pack_coords
+from src.manipulation.manipulator import Brain5DManipulator
+from src.storage.checkpoint import (
+    CheckpointNetworkLike,
+    capture_runtime_checkpoint,
+    write_runtime_checkpoint,
+)
 from src.storage.core_restore import restore_network
-from src.storage.runtime import StorageRuntimeConfig, StorageSession
+from src.storage.runtime import RuntimeNetworkLike, StorageRuntimeConfig, StorageSession
+from src.storage.structural_journal import (
+    StructuralChangeKind,
+    StructuralChangeRecord,
+    StructuralJournal,
+)
 
 
 def _config() -> ConfigDict:
@@ -66,14 +78,30 @@ def test_restore_and_continue_matches_continuous_reference(tmp_path: Path) -> No
         journal_path=tmp_path / "base.b5d.journal",
         commit_interval_ticks=1,
     )
-    with StorageSession(network, runtime):
+    with StorageSession(cast(RuntimeNetworkLike, network), runtime):
         network.inject_current(source, 100.0)
         network.step()
+
+    structural_path = tmp_path / "structural.journal"
+    structural_journal = StructuralJournal(structural_path)
+    added_coord = (2, 0, 0, 0, 0)
+    added_id = Brain5DManipulator(network).create_neuron(added_coord)
+    assert added_id == pack_coords(*added_coord)
+    structural_journal.append_and_commit(
+        StructuralChangeRecord(
+            sequence=1,
+            tick=network.current_tick,
+            kind=StructuralChangeKind.NEURON_ADD,
+            neuron_id=added_id,
+            coord=added_coord,
+            reason="restore order test",
+        )
+    )
 
     checkpoint_path = tmp_path / "runtime.json"
     write_runtime_checkpoint(
         checkpoint_path,
-        capture_runtime_checkpoint(network),
+        capture_runtime_checkpoint(cast(CheckpointNetworkLike, network)),
     )
     reference = _signature(network, 5)
 
@@ -83,6 +111,7 @@ def test_restore_and_continue_matches_continuous_reference(tmp_path: Path) -> No
         checkpoint_path,
         config,
         tmp_path / "recovered.b5d",
+        structural_journal_path=structural_path,
     )
     resumed = _signature(restored, 5)
     assert resumed == reference

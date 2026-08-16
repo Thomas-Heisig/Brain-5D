@@ -48,6 +48,16 @@ from .delta_journal import (
 from .lazy_view import B5DLazyProjector, StorageHeatmap, StorageHeatmapKind
 from .recovery import RecoveryInspection, RecoveryManager, RecoveryResult
 from .runtime import StorageRuntimeConfig, StorageRuntimeStats, StorageSession
+from .structural_journal import (
+    NeuronStructuralSnapshot,
+    StructuralChangeKind,
+    StructuralChangeRecord,
+    StructuralJournal,
+    StructuralJournalError,
+    StructuralJournalScan,
+    StructuralSnapshotLifecycle,
+    SynapseSnapshot,
+)
 
 __all__ = [
     "ALIGNMENT",
@@ -85,6 +95,14 @@ __all__ = [
     "StorageRuntimeConfig",
     "StorageRuntimeStats",
     "StorageSession",
+    "StructuralChangeKind",
+    "StructuralChangeRecord",
+    "StructuralJournal",
+    "StructuralJournalError",
+    "StructuralJournalScan",
+    "StructuralSnapshotLifecycle",
+    "SynapseSnapshot",
+    "NeuronStructuralSnapshot",
     "SynapseAddDelta",
     "SynapseRemoveDelta",
     "SynapseWeightDelta",

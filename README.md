@@ -1,4 +1,4 @@
-# Brain-5D v0.4.0-alpha.7
+# Brain-5D v0.5.0-alpha.5
 
 Brain-5D is an experimental sparse 5D spiking-neural platform with observable
 plasticity, persistent state, controlled self-organization, and a growing
@@ -16,9 +16,11 @@ claim AGI, consciousness, sentience, or biological equivalence.
 - controlled structural self-organization;
 - frozen `.b5d` Snapshot V1 with mmap/random access;
 - append-only delta journal, CRC, crash recovery, and generation compaction;
+- append-only structural journal with committed recovery and persistent inverse
+	undo records;
 - asynchronous storage queue and persistence telemetry;
 - runtime checkpoint sidecar for deterministic continuation;
-- local read-only operator dashboard;
+- local operator dashboard with bounded structural approval and runtime controls;
 - typed embodiment interfaces for future perception/action environments.
 
 ## Installation
@@ -65,9 +67,9 @@ python -m src.dashboard --snapshot artifacts/brain5d_snapshot.b5d
 
 Open `http://127.0.0.1:8765`.
 
-The dashboard is read-only. Alpha.7 adds safe documentation browsing, a sibling
-snapshot selector, storage telemetry, homeostasis placeholders, and embodiment
-status metrics.
+The dashboard keeps file and documentation views read-only. Alpha.5 adds typed,
+bounded endpoints for structural approval, rejection, journal history, heatmaps,
+persistent undo, snapshots, and exact tick execution.
 
 ## One-click launcher
 
@@ -120,3 +122,26 @@ Near-term sequence:
 8. v0.11 bounded HMI/autonomy and permissions;
 9. v0.12 release candidate;
 10. v1.0 usable Brain-5D AI by measured engineering criteria.
+
+<!-- BRAIN5D:ALPHA4:START -->
+## v0.5.0-alpha.4 — Operator Control & Controlled Structural Plasticity
+
+Brain-5D now has a typed operator-control boundary for single ticks, finite tick batches, continuous loops, pause/resume/stop and snapshot requests. Self-organization stays split into observation, proposal and mutation phases: `HomeostasisSignal -> SelfOrganizationPolicy -> StructuralProposal -> operator approval -> StructuralPlasticityEngine -> Manipulator`.
+
+The default remains conservative: proposals may be generated automatically, but structural mutations require explicit approval. This preserves the project's storage principle that state, graph, fields and time remain separately traceable and that structural changes are executed through the Manipulator boundary rather than hidden inside storage or learning code.
+
+On Windows with restricted PowerShell execution policy, use `start.cmd` or `python scripts/brain5d_launcher.py --dashboard` instead of requiring `start.ps1`.
+
+Quality gate: `pytest`, Black, mypy and Pyright must pass before release.
+<!-- BRAIN5D:ALPHA4:END -->
+
+## v0.5.0-alpha.5 - Structural Persistence
+
+Approved structural changes now produce CRC-protected, committed journal
+records. Recovery replays committed records deterministically, while undo
+appends an inverse record instead of deleting history. Auto-approval, dry-run,
+pruning, mutation limits, and cooldowns remain explicit typed configuration.
+
+The operator API exposes proposals, decisions, history, structural heatmaps,
+undo, snapshot requests, and bounded 1/10/100/1000/custom tick execution.
+<!-- BRAIN5D:ALPHA5:END -->

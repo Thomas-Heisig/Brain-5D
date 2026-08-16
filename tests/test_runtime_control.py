@@ -5,6 +5,8 @@ from __future__ import annotations
 from threading import Event
 from time import monotonic, sleep
 
+import pytest
+
 from src.runtime.control import ControlMode, RuntimeController
 
 
@@ -67,6 +69,43 @@ def test_snapshot_capability_is_explicit() -> None:
     try:
         assert controller.snapshot().can_snapshot is True
         controller.request_snapshot()
-        assert called.is_set()
+        assert called.wait(1.0)
+    finally:
+        controller.close()
+
+
+def test_snapshot_waits_for_active_batch_boundary() -> None:
+    tick_started = Event()
+    release_tick = Event()
+    snapshot_called = Event()
+
+    def step() -> None:
+        tick_started.set()
+        assert release_tick.wait(1.0)
+
+    controller = RuntimeController(
+        step,
+        snapshot_callback=snapshot_called.set,
+        initial_loop_size=1,
+    )
+    try:
+        controller.step()
+        assert tick_started.wait(1.0)
+        controller.request_snapshot()
+        assert not snapshot_called.is_set()
+        release_tick.set()
+        assert snapshot_called.wait(1.0)
+    finally:
+        release_tick.set()
+        controller.close()
+
+
+def test_alpha5_manual_tick_api_is_bounded() -> None:
+    controller = RuntimeController(lambda: None, max_manual_ticks=100)
+    try:
+        controller.single_step()
+        controller.run_ticks(100)
+        with pytest.raises(ValueError):
+            controller.run_ticks(101)
     finally:
         controller.close()

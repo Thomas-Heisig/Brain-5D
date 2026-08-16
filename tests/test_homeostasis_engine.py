@@ -72,3 +72,21 @@ def test_disabled_homeostasis_is_behaviorally_inert() -> None:
     assert neuron.threshold_adaptation == 0.0
     assert neuron.energy == 0.5
     assert engine.stats.updates == 0
+
+
+def test_build_signal_exposes_canonical_read_only_fields() -> None:
+    core, runtime = _configs()
+    network = NeuralNetwork(core, random.Random(7))
+    neuron_id = network.add_neuron((0, 0, 0, 0, 0))
+    engine = HomeostasisEngine(network, runtime)
+    engine.attach()
+    network.inject_current(neuron_id, 100.0)
+    network.step()
+
+    signal = engine.build_signal(tick=42)
+
+    assert signal.tick == 42
+    assert signal.neuron_count == 1
+    assert signal.target_rate_hz == engine.params.target_rate_hz
+    assert signal.rate_error_hz == signal.mean_rate_hz - signal.target_rate_hz
+    assert signal.rate_variance_hz2 == 0.0

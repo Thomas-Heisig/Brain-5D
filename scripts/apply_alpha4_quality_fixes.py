@@ -51,11 +51,11 @@ def main() -> int:
         learning_lab,
         (
             "network = NeuralNetwork(dict(config), "
-            "random.Random(int(config.get(\"seed\", 42))))"
+            'random.Random(int(config.get("seed", 42))))'
         ),
         "network = NeuralNetwork(\n"
         "        cast(ConfigDict, dict(config)),\n"
-        "        random.Random(int(config.get(\"seed\", 42))),\n"
+        '        random.Random(int(config.get("seed", 42))),\n'
         "    )",
     )
     print("Applied alpha.4 legacy typing fixes.")

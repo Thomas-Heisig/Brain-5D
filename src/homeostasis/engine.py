@@ -5,7 +5,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 import math
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
+
+from .signals import HomeostasisSignal
 
 if TYPE_CHECKING:
     from src.core.network import NeuralNetwork, StepResult
@@ -218,12 +220,51 @@ class HomeostasisEngine:
             raise KeyError(neuron_id)
         return self._rates_hz.get(neuron_id, 0.0)
 
+    def build_signal(self, tick: int | None = None) -> HomeostasisSignal:
+        """Build an immutable aggregate for higher-level policies."""
+        neurons = tuple(self.network.neurons.items())
+        rates = tuple(self._rates_hz.get(neuron_id, 0.0) for neuron_id, _ in neurons)
+        energies = tuple(float(neuron.energy) for _, neuron in neurons)
+        adaptations = tuple(float(neuron.threshold_adaptation) for _, neuron in neurons)
+        count = len(neurons)
+        mean_rate = sum(rates) / count if count else 0.0
+        variance = (
+            sum((rate - mean_rate) ** 2 for rate in rates) / count if count else 0.0
+        )
+        mean_energy = sum(energies) / count if count else 0.0
+        mean_adaptation = sum(adaptations) / count if count else 0.0
+        low_rate_boundary = self.params.target_rate_hz * 0.5
+        high_rate_boundary = self.params.target_rate_hz * 1.5
+        low_energy_boundary = (self.params.energy_min + self.params.target_energy) / 2.0
+        high_energy_boundary = (
+            self.params.target_energy + self.params.energy_max
+        ) / 2.0
+
+        return HomeostasisSignal(
+            tick=int(self.network.current_tick if tick is None else tick),
+            neuron_count=count,
+            target_rate_hz=self.params.target_rate_hz,
+            mean_rate_hz=mean_rate,
+            rate_variance_hz2=variance,
+            rate_error_hz=mean_rate - self.params.target_rate_hz,
+            mean_threshold_adaptation=mean_adaptation,
+            mean_energy=mean_energy,
+            mean_energy_error=self.params.target_energy - mean_energy,
+            low_rate_neurons=sum(rate < low_rate_boundary for rate in rates),
+            high_rate_neurons=sum(rate > high_rate_boundary for rate in rates),
+            low_energy_neurons=sum(energy < low_energy_boundary for energy in energies),
+            high_energy_neurons=sum(
+                energy > high_energy_boundary for energy in energies
+            ),
+        )
+
 
 def _string_mapping(value: object, name: str) -> dict[str, object]:
     if not isinstance(value, Mapping):
         raise TypeError(f"{name} config must be a mapping")
+    mapping = cast(Mapping[object, object], value)
     result: dict[str, object] = {}
-    for key, item in value.items():
+    for key, item in mapping.items():
         if not isinstance(key, str):
             raise TypeError(f"{name} config keys must be strings")
         result[key] = item

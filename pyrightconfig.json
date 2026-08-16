@@ -1,6 +1,7 @@
 {
   "include": [
-    "src/storage"
+    "src/storage",
+    "src/homeostasis"
   ],
   "pythonVersion": "3.13",
   "typeCheckingMode": "strict",

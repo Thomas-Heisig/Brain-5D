@@ -5,6 +5,13 @@
 - alpha.1: firing-rate homeostasis and energy recovery
 - alpha.2: rate/threshold heatmaps and regulator persistence metrics
 - alpha.3: coordinated structural plasticity limits with pruning/neurogenesis
+- alpha.4 compatibility: stable legacy engine exports, canonical read-only
+	homeostasis signals, and isolated launcher/dashboard arguments
+- alpha.5: proposal -> operator approval -> structural plasticity -> manipulator
+	-> persistent structural-change record -> recovery/undo/heatmap, including
+	ordered snapshot persistence and structural replay before runtime restoration
+- next alpha.6: chronic signals, growth budgets, cell/synapse age, and stabilized
+	morphological self-regulation
 - final: 100k-tick stability benchmark without runaway or extinction
 
 ## v0.6 - Scaling

@@ -1,0 +1,18 @@
+self_organization:
+  enabled: false
+  dry_run: true
+  auto_approval: false
+  auto_approval_threshold: 0.8
+  max_changes_per_tick: 5
+  max_neuron_additions_per_tick: 2
+  max_neuron_removals_per_tick: 0
+  max_synapse_additions_per_tick: 5
+  max_synapse_removals_per_tick: 5
+  min_neurons: 100
+  max_neurons: 10000
+  allow_neuron_pruning: false
+  allow_synapse_pruning: true
+  cooldown_ticks: 100
+  structural_journal:
+    enabled: true
+    path: artifacts/brain5d_structural.b5d.journal

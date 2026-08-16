@@ -1,0 +1,20 @@
+controller:
+  batch_size: 10
+  loop_delay_ms: 0.0
+  telemetry_interval_ticks: 10
+self_organization:
+  enabled: true
+  dry_run: true
+  neurogenesis_threshold: 0.9
+  pruning_threshold: 0.9
+  synapse_sprouting_threshold: 0.5
+  synapse_pruning_threshold: 0.5
+  max_neurons: 10000
+  min_neurons: 100
+structural_plasticity:
+  operator_approval_required: true
+  max_changes_per_tick: 1
+  allow_neurogenesis: true
+  allow_neuron_pruning: false
+  allow_synapse_sprouting: true
+  allow_synapse_pruning: true

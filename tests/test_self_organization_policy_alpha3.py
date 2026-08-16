@@ -8,7 +8,9 @@ from src.self_organization.policy import (
 )
 
 
-def _signal(tick: int, *, low: int = 0, high: int = 0, low_energy: int = 0) -> HomeostasisSignal:
+def _signal(
+    tick: int, *, low: int = 0, high: int = 0, low_energy: int = 0
+) -> HomeostasisSignal:
     return HomeostasisSignal(
         tick=tick,
         neuron_count=100,

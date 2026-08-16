@@ -1,5 +1,42 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural Persistence
+
+### Added
+
+- CRC-protected structural journal with commit markers and uncommitted-tail
+  recovery;
+- deterministic structural replay and persistent inverse-record undo;
+- safe manual and optional policy-based proposal approval;
+- journal-backed structural history and heatmaps;
+- typed dashboard routes for proposals, decisions, undo, configuration,
+  snapshots, and bounded tick execution;
+- worker-boundary manual snapshots with ordered structural flush, `.b5d` write,
+  runtime checkpoint write, and completion notification;
+- optional structural journal replay in the central restore path before runtime
+  checkpoint overlay.
+
+### Compatibility
+
+- alpha.3 coordinator and alpha.4 proposal/plasticity APIs remain available;
+- automatic approval, neuron pruning, and mutation outside reviewed boundaries
+  remain disabled by default.
+
+## v0.5.0-alpha.4 - Compatibility Repair
+
+### Fixed
+
+- restored the public `SelfOrganizationEngine` and alpha.3 policy contracts;
+- added the immutable canonical `HomeostasisSignal` contract and engine builder;
+- added `src/homeostasis` to the strict Pyright project graph;
+- separated launcher-only dashboard, browser, host, and port options from the
+  `src.main` subprocess command.
+
+### Compatibility
+
+- alpha.4 proposal and structural-plasticity APIs remain available alongside
+  the alpha.2/alpha.3 interfaces.
+
 ## v0.4.0-alpha.7 – Embodiment Foundation & Deterministic Restore V3
 
 ### Fixed

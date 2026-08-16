@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from threading import Condition, RLock, Thread
 from time import perf_counter, sleep
-from typing import Callable, Final, Literal
+from typing import Callable, Final
 
 from src.dashboard.models import JSONValue
 
@@ -91,6 +91,7 @@ class RuntimeController:
         stop_callback: OptionalCallback | None = None,
         initial_loop_size: int = 100,
         initial_delay_ms: float = 0.0,
+        max_manual_ticks: int = 1_000,
     ) -> None:
         self._step_callback = step_callback
         self._snapshot_callback = snapshot_callback
@@ -102,10 +103,12 @@ class RuntimeController:
         self._ticks_executed = 0
         self._loop_size = self._validate_loop_size(initial_loop_size)
         self._delay_ms = self._validate_delay(initial_delay_ms)
+        self._max_manual_ticks = self._validate_tick_count(max_manual_ticks)
         self._last_batch_ticks = 0
         self._last_batch_ms = 0.0
         self._total_runtime_ms = 0.0
         self._fault: str | None = None
+        self._snapshot_requested = False
         self._shutdown = False
         self._worker = Thread(
             target=self._worker_main,
@@ -141,6 +144,23 @@ class RuntimeController:
             self._condition.notify_all()
         return self.snapshot()
 
+    def single_step(self) -> ControlSnapshot:
+        """Queue exactly one operator-requested tick."""
+        return self.step(1)
+
+    def run_ticks(self, count: int) -> ControlSnapshot:
+        """Queue a bounded number of operator-requested ticks."""
+        validated = self._validate_tick_count(count)
+        if validated > self._max_manual_ticks:
+            raise ValueError(f"count must be in [1, {self._max_manual_ticks}]")
+        return self.step(validated)
+
+    def run_loop(self, count: int | None = None) -> ControlSnapshot:
+        """Start continuous execution or queue a bounded finite run."""
+        if count is None:
+            return self.run()
+        return self.run_ticks(count)
+
     def run(self, *, loop_size: int | None = None) -> ControlSnapshot:
         """Start continuous execution in bounded loop batches."""
         with self._condition:
@@ -174,13 +194,13 @@ class RuntimeController:
         return self.snapshot()
 
     def request_snapshot(self) -> ControlSnapshot:
-        """Create a storage snapshot through the application-provided callback."""
-        callback = self._snapshot_callback
-        if callback is None:
+        """Request a storage snapshot at the next safe worker boundary."""
+        if self._snapshot_callback is None:
             raise RuntimeError("Snapshot capability is not configured.")
-        with self._lock:
+        with self._condition:
             self._ensure_operational()
-        callback()
+            self._snapshot_requested = True
+            self._condition.notify_all()
         return self.snapshot()
 
     def configure(
@@ -221,6 +241,8 @@ class RuntimeController:
                     self._queued_ticks -= batch
                 elif mode is ControlMode.RUNNING:
                     batch = self._loop_size
+                elif self._snapshot_requested:
+                    batch = 0
                 else:
                     continue
                 delay_ms = self._delay_ms
@@ -235,12 +257,16 @@ class RuntimeController:
                             ControlMode.FAULTED,
                         }:
                             break
-                        if mode is ControlMode.RUNNING and self._mode is not ControlMode.RUNNING:
+                        if (
+                            mode is ControlMode.RUNNING
+                            and self._mode is not ControlMode.RUNNING
+                        ):
                             break
                     self._step_callback()
                     completed += 1
                     if delay_ms > 0.0:
                         sleep(delay_ms / 1000.0)
+                self._flush_snapshot_request()
             except Exception as exc:  # controller boundary must contain core faults
                 with self._condition:
                     self._mode = ControlMode.FAULTED
@@ -256,9 +282,18 @@ class RuntimeController:
                 self._last_batch_ms = elapsed_ms
                 self._total_runtime_ms += elapsed_ms
 
+    def _flush_snapshot_request(self) -> None:
+        with self._lock:
+            requested = self._snapshot_requested
+            self._snapshot_requested = False
+        callback = self._snapshot_callback
+        if requested and callback is not None:
+            callback()
+
     def _has_work_or_shutdown(self) -> bool:
         return (
             self._shutdown
+            or self._snapshot_requested
             or self._queued_ticks > 0
             or self._mode is ControlMode.RUNNING
             or self._mode in {ControlMode.STOPPED, ControlMode.FAULTED}
@@ -272,7 +307,7 @@ class RuntimeController:
 
     @classmethod
     def _validate_tick_count(cls, ticks: int) -> int:
-        if isinstance(ticks, bool) or not isinstance(ticks, int):
+        if isinstance(ticks, bool):
             raise TypeError("ticks must be an integer")
         if ticks < 1 or ticks > cls._MAX_QUEUE:
             raise ValueError(f"ticks must be in [1, {cls._MAX_QUEUE}]")
@@ -280,7 +315,7 @@ class RuntimeController:
 
     @classmethod
     def _validate_loop_size(cls, loop_size: int) -> int:
-        if isinstance(loop_size, bool) or not isinstance(loop_size, int):
+        if isinstance(loop_size, bool):
             raise TypeError("loop_size must be an integer")
         if not cls._MIN_LOOP_SIZE <= loop_size <= cls._MAX_LOOP_SIZE:
             raise ValueError(

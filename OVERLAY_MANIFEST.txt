@@ -1,0 +1,20 @@
+Brain-5D v0.5.0-alpha.4 overlay
+
+Adds:
+- src/controller/runtime.py
+- src/self_organization/policy.py
+- src/self_organization/coordinator.py
+- src/self_organization/plasticity.py
+- src/dashboard/operator_bridge.py
+- dashboard operator UI fragment/js/css
+- typed launcher + start.cmd
+- verification script
+- tests
+- config
+- release/type-safety docs
+- non-destructive README updater
+
+High-risk files intentionally not overwritten:
+- src/main.py
+- src/dashboard/server.py
+- existing README.md body

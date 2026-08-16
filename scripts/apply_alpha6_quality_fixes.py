@@ -71,13 +71,13 @@ def patch_learning_lab() -> None:
             raise RuntimeError("Learning-lab core import not found")
         text = text.replace(old_import, new_import, 1)
     old_line = (
-        'network = NeuralNetwork(dict(config), '
+        "network = NeuralNetwork(dict(config), "
         'random.Random(int(config.get("seed", 42))))'
     )
     new_lines = (
         "network_config = cast(ConfigDict, dict(config))\n"
         "    network = NeuralNetwork(\n"
-        "        network_config, random.Random(int(config.get(\"seed\", 42)))\n"
+        '        network_config, random.Random(int(config.get("seed", 42)))\n'
         "    )"
     )
     if "network_config = cast(ConfigDict, dict(config))" not in text:
