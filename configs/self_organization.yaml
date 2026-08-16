@@ -1,0 +1,20 @@
+# Merge this block into configs/poc_config.yaml.
+# Safe default: everything disabled until explicitly activated.
+self_organization:
+  enabled: false
+  interval_ticks: 100
+
+  pruning_enabled: false
+  pruning_weight_threshold: 0.005
+  pruning_min_age_ticks: 1000
+
+  sprouting_enabled: false
+  sprouting_max_out_degree: 12
+  sprouting_radius: 2.0
+  sprouting_weight: 0.05
+  sprouting_delay: 1
+
+  neurogenesis_enabled: false
+  neurogenesis_spike_delta_threshold: 50
+  neurogenesis_radius: 1.0
+  neurogenesis_max_per_cycle: 1

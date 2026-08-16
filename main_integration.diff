@@ -1,0 +1,24 @@
+--- a/src/main.py
++++ b/src/main.py
+@@
+ from src.learning.learning_engine import LearningEngine
++from src.manipulation import Brain5DManipulator
++from src.self_organization import SelfOrganizationEngine
+@@
+     learning = LearningEngine(network, config)
+     if learning.enabled:
+         learning.attach()
++
++    manipulator = Brain5DManipulator(network)
++    self_organization = SelfOrganizationEngine(network, manipulator, config)
++    if self_organization.params.enabled:
++        self_organization.attach()
+@@
+-        f"Learning={'on' if learning.enabled else 'off'}"
++        f"Learning={'on' if learning.enabled else 'off'} "
++        f"SelfOrg={'on' if self_organization.params.enabled else 'off'}"
+@@
+     if learning.enabled:
+         summary["learning"] = asdict(learning.stats)
++    if self_organization.params.enabled:
++        summary["self_organization"] = asdict(self_organization.stats)
