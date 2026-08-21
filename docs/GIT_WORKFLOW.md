@@ -133,7 +133,7 @@ git checkout main
 git status
 git add -A
 git commit -m "Update Brain-5D - alpha 5 cognitive bridge "
-git push origin main
+git push origin main --force
 ```
 
 ---

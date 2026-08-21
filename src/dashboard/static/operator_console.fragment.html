@@ -1,17 +1,149 @@
-<section class="card operator-console" id="operator-console">
-  <h2>Operator Console</h2>
-  <div class="operator-grid">
-    <button id="b5d-step">+1 Tick</button>
-    <input id="b5d-tick-count" type="number" min="1" value="100" aria-label="Tick count">
-    <button id="b5d-run-ticks">Run N Ticks</button>
-    <button id="b5d-start">Start Loop</button>
-    <button id="b5d-pause">Pause</button>
-    <button id="b5d-resume">Resume</button>
-    <button id="b5d-stop">Stop</button>
-    <button id="b5d-snapshot">Snapshot</button>
-    <button id="b5d-undo">Undo Structural Change</button>
+<section class="card operator-console" id="operator-console" aria-labelledby="console-title">
+  
+  <!-- ========================================================================
+       Header
+       ==================================================================== -->
+  <div class="console-header">
+    <div class="console-title-group">
+      <h2 id="console-title">🧠 Operator Console</h2>
+      <p class="console-subtitle">
+        Step execution, loop control, structural proposals &amp; system monitoring
+      </p>
+    </div>
+    <div class="console-status-group">
+      <span class="status-badge" id="b5d-state-badge">idle</span>
+      <span class="tick-display" id="b5d-tick-display">0</span>
+    </div>
   </div>
-  <p class="operator-note">Structural proposals remain approval-gated. No autonomous mutation is enabled by this panel.</p>
-  <div id="operator-status"></div>
-  <div id="self-org-proposals"></div>
+
+  <!-- ========================================================================
+       Live Metrics
+       ==================================================================== -->
+  <div class="console-metrics" id="b5d-metrics" role="group" aria-label="System metrics">
+    <span class="metric">🧠 <span id="metric-neurons">0</span></span>
+    <span class="metric">🔗 <span id="metric-synapses">0</span></span>
+    <span class="metric">⚡ <span id="metric-spikes">0</span></span>
+    <span class="metric">📦 <span id="metric-queue">0</span></span>
+  </div>
+
+  <!-- ========================================================================
+       Control Grid
+       ==================================================================== -->
+  <div class="console-controls">
+    
+    <!-- Step Control -->
+    <div class="control-group">
+      <div class="control-group__header">
+        <span class="control-group__title">Step</span>
+        <span class="shortcut-hint">Ctrl+Enter</span>
+      </div>
+      <div class="control-group__body">
+        <button id="b5d-step" class="btn-primary" title="Execute one tick (Ctrl+Enter)">
+          <span class="icon">▶</span> +1 Tick
+        </button>
+      </div>
+    </div>
+
+    <!-- Run N Ticks -->
+    <div class="control-group">
+      <div class="control-group__header">
+        <span class="control-group__title">Run N Ticks</span>
+      </div>
+      <div class="control-group__body">
+        <label class="input-label" for="b5d-tick-count">
+          <input 
+            id="b5d-tick-count" 
+            type="number" 
+            min="1" 
+            max="10000000" 
+            value="100" 
+            aria-label="Number of ticks to run"
+            title="Number of ticks to execute"
+          />
+        </label>
+        <button id="b5d-run-ticks" class="btn-success" title="Run the specified number of ticks">
+          <span class="icon">⏩</span> Run
+        </button>
+      </div>
+    </div>
+
+    <!-- Runtime Control -->
+    <div class="control-group">
+      <div class="control-group__header">
+        <span class="control-group__title">Runtime</span>
+        <span class="shortcut-hint">Ctrl+Shift+…</span>
+      </div>
+      <div class="control-group__body actions-row">
+        <button id="b5d-start" class="btn-success" title="Start the runtime loop (Ctrl+Shift+S)">
+          <span class="icon">▶</span> Start
+        </button>
+        <button id="b5d-pause" class="btn-warning" title="Pause the runtime loop (Ctrl+Shift+P)">
+          <span class="icon">⏸</span> Pause
+        </button>
+        <button id="b5d-resume" class="btn-primary" title="Resume the runtime loop (Ctrl+Shift+R)">
+          <span class="icon">⏯</span> Resume
+        </button>
+        <button id="b5d-stop" class="btn-danger" title="Stop the runtime loop (Ctrl+Shift+Space)">
+          <span class="icon">⏹</span> Stop
+        </button>
+      </div>
+    </div>
+
+    <!-- Utilities -->
+    <div class="control-group">
+      <div class="control-group__header">
+        <span class="control-group__title">Utilities</span>
+        <span class="shortcut-hint">Ctrl+Shift+N</span>
+      </div>
+      <div class="control-group__body actions-row">
+        <button id="b5d-snapshot" class="btn-info" title="Request a snapshot (Ctrl+Shift+N)">
+          <span class="icon">💾</span> Snapshot
+        </button>
+        <button id="b5d-undo" class="btn-undo" title="Undo the last structural change">
+          <span class="icon">↩</span> Undo Change
+        </button>
+        <button id="b5d-clear-console" class="btn-secondary" title="Clear the console output (Ctrl+L)">
+          <span class="icon">🗑</span> Clear
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================
+       Structural Proposals
+       ==================================================================== -->
+  <details class="proposals-section" id="proposals-section">
+    <summary class="proposals-summary">
+      <span class="proposals-title">📋 Structural Proposals</span>
+      <span class="badge" id="proposals-count">0 pending</span>
+    </summary>
+    <div id="b5d-proposals" class="proposals-list">
+      <div class="proposal-empty">No pending proposals</div>
+    </div>
+  </details>
+
+  <!-- ========================================================================
+       Console Output
+       ==================================================================== -->
+  <div class="console-output-wrapper">
+    <div class="console-output-header">
+      <span class="console-output-title">📝 Console Log</span>
+      <span class="console-output-hint">Auto-scroll • Max 1000 entries</span>
+    </div>
+    <div id="console-output" class="console-output" role="log" aria-live="polite">
+      <div class="log-entry log-info">
+        <span class="log-time">[00:00:00]</span> 🧠 Brain-5D Operator Console ready
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Footer Note
+       ==================================================================== -->
+  <p class="operator-note">
+    ⚠️ Structural proposals remain approval-gated. 
+    No autonomous mutation is enabled by this panel.
+  </p>
+
 </section>
