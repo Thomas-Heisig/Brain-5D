@@ -21,7 +21,7 @@ from typing import Any, Iterable, Mapping, Sequence, cast
 
 import yaml
 
-from src.core.network import ConfigDict, NeuralNetwork
+from src.core import NeuralNetwork
 from src.learning.learning_engine import LearningEngine
 
 Config = Mapping[str, Any]
@@ -57,24 +57,34 @@ class LearningExperimentResult:
         )
 
 
-def _experiment_config(config: Config) -> Mapping[str, Any]:
+def _experiment_config(config: Config) -> dict[str, Any]:
+    """Extract the learning_experiment section from the configuration."""
     section = config.get("learning_experiment", {})
     if not isinstance(section, Mapping):
         raise TypeError("learning_experiment config must be a mapping")
-    return section
+    # Cast to dict[str, Any] to satisfy the type checker
+    return cast(dict[str, Any], section)
 
 
 def _validated_dimensions(config: Config) -> Coord5D:
+    """Validate and extract dimensions from the configuration."""
     raw = config.get("dimensions")
-    if not isinstance(raw, Sequence) or len(raw) != 5:
+    if not isinstance(raw, Sequence):
+        raise ValueError("dimensions must be a sequence")
+
+    # Cast to Sequence[int] for type safety
+    dims_seq = cast(Sequence[int], raw)
+    if len(dims_seq) != 5:
         raise ValueError("dimensions must contain exactly five entries")
-    dims = cast(Coord5D, tuple(int(value) for value in raw))
-    if any(value <= 0 for value in dims):
+
+    dims = tuple(int(v) for v in dims_seq)
+    if len(dims) != 5 or any(v <= 0 for v in dims):
         raise ValueError("all dimensions must be > 0")
-    return dims
+    return dims  # type: ignore[return-value]
 
 
 def _candidate_coords(dims: Coord5D) -> Iterable[Coord5D]:
+    """Generate all possible 5D coordinates within the given dimensions."""
     product = itertools.product(*(range(size) for size in dims))
     return (cast(Coord5D, coord) for coord in product)
 
@@ -83,6 +93,7 @@ def _build_convergent_network(
     config: Config,
     weight: float,
 ) -> tuple[NeuralNetwork, tuple[int, ...], int]:
+    """Build a convergent network with presynaptic neurons connected to a target."""
     exp = _experiment_config(config)
     pre_count = int(exp.get("presynaptic_neurons", 48))
     if pre_count <= 0:
@@ -94,7 +105,9 @@ def _build_convergent_network(
     if pre_count > len(available):
         raise ValueError("not enough coordinates for requested presynaptic neurons")
 
-    network_config = cast(ConfigDict, dict(config))
+    # Convert to plain dict for NeuralNetwork constructor
+    network_config = dict(config)
+
     network = NeuralNetwork(network_config, random.Random(int(config.get("seed", 42))))
     pre_ids = tuple(network.add_neuron(coord) for coord in available[:pre_count])
     target_id = network.add_neuron(target_coord)
@@ -106,6 +119,7 @@ def _build_convergent_network(
 
 
 def _advance_to_tick(network: NeuralNetwork, tick: int) -> None:
+    """Advance the network to a specific tick."""
     if tick < network.current_tick:
         raise ValueError("cannot move network backwards in time")
     while network.current_tick < tick:
@@ -113,6 +127,7 @@ def _advance_to_tick(network: NeuralNetwork, tick: int) -> None:
 
 
 def _train(config: Config) -> tuple[tuple[float, ...], LearningEngine]:
+    """Train the network using reward-modulated STDP."""
     exp = _experiment_config(config)
     trials = int(exp.get("training_trials", 20))
     spacing = int(exp.get("trial_spacing_ticks", 25))
@@ -165,6 +180,7 @@ def _probe_response(
     config: Config,
     weights: Sequence[float],
 ) -> tuple[bool, float, int | None]:
+    """Probe the network response with given weights."""
     exp = _experiment_config(config)
     drive = float(exp.get("drive_current", 100.0))
     probe_ticks = int(exp.get("probe_ticks", 5))
@@ -226,11 +242,12 @@ def run_learning_experiment(config: Config) -> LearningExperimentResult:
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:
+    """Load and validate a YAML configuration file."""
     with path.open("r", encoding="utf-8") as handle:
         loaded = yaml.safe_load(handle)
     if not isinstance(loaded, dict):
         raise TypeError("experiment config root must be a mapping")
-    return loaded
+    return cast(dict[str, Any], loaded)
 
 
 def main() -> int:

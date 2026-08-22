@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+from typing import Any, cast
 
 from .b5d import B5DReader
 from .delta_journal import DeltaJournal
@@ -43,14 +44,41 @@ class StorageManifest:
 
     def read(self) -> StorageGeneration:
         """Read the currently active storage generation."""
-        raw = json.loads(self.path.read_text(encoding="utf-8"))
-        if not isinstance(raw, dict) or raw.get("version") != 1:
-            raise ValueError("invalid storage manifest")
+        raw_data = json.loads(self.path.read_text(encoding="utf-8"))
+        if not isinstance(raw_data, dict):
+            raise ValueError("invalid storage manifest: root must be a dict")
+
+        raw = cast(dict[str, Any], raw_data)
+
+        if raw.get("version") != 1:
+            raise ValueError("invalid storage manifest: version must be 1")
+
+        # Extract values with explicit type conversion
+        generation_raw = raw.get("generation")
+        if not isinstance(generation_raw, int):
+            raise ValueError("manifest missing 'generation' field")
+        generation = int(generation_raw)
+
+        snapshot = raw.get("snapshot")
+        if not isinstance(snapshot, str):
+            raise ValueError("manifest missing 'snapshot' field")
+        snapshot = str(snapshot)
+
+        journal = raw.get("journal")
+        if not isinstance(journal, str):
+            raise ValueError("manifest missing 'journal' field")
+        journal = str(journal)
+
+        base_tick_raw = raw.get("base_tick")
+        if not isinstance(base_tick_raw, int):
+            raise ValueError("manifest missing 'base_tick' field")
+        base_tick = int(base_tick_raw)
+
         return StorageGeneration(
-            generation=int(raw["generation"]),
-            snapshot=str(raw["snapshot"]),
-            journal=str(raw["journal"]),
-            base_tick=int(raw["base_tick"]),
+            generation=generation,
+            snapshot=snapshot,
+            journal=journal,
+            base_tick=base_tick,
         )
 
     def write_atomic(self, generation: StorageGeneration) -> None:
@@ -112,6 +140,7 @@ class StorageCompactor:
         active = self.manifest.read()
         snapshot_path = self.root / active.snapshot
         journal_path = self.root / active.journal
+
         with DeltaJournal(journal_path, base_tick=active.base_tick) as journal:
             scan = journal.validate()
             marker = scan.last_commit
@@ -125,18 +154,23 @@ class StorageCompactor:
                     manifest_path=self.manifest.path,
                 )
             committed_tick = marker.tick
+
         next_generation = active.generation + 1
         next_snapshot = self.root / f"{self.stem}.g{next_generation}.b5d"
         next_journal = self.root / f"{self.stem}.g{next_generation}.b5d.journal"
+
         recovery = RecoveryManager(snapshot_path, journal_path).recover(next_snapshot)
         if not recovery.success:
             raise RuntimeError(recovery.error or "compaction recovery failed")
+
         with B5DReader(next_snapshot) as reader:
             reader.validate_invariants()
             if reader.header.snapshot_tick != committed_tick:
                 raise RuntimeError("compacted snapshot tick does not match commit")
+
         with DeltaJournal(next_journal, base_tick=committed_tick):
             pass
+
         published = StorageGeneration(
             generation=next_generation,
             snapshot=next_snapshot.name,
@@ -144,6 +178,7 @@ class StorageCompactor:
             base_tick=committed_tick,
         )
         self.manifest.write_atomic(published)
+
         return CompactionResult(
             compacted=True,
             generation=next_generation,

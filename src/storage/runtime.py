@@ -70,12 +70,16 @@ PostStepHook = Callable[[StepResultLike], None]
 
 
 class RuntimeNetworkLike(NetworkSnapshotLike, Protocol):
-    """Network surface required by :class:`StorageSession`."""
+    """Network surface required by :class:`StorageSession`.
 
-    dimensions: tuple[int, int, int, int, int]
-    current_tick: int
-    neurons: Mapping[int, RuntimeNeuronLike]
-    synapses: Mapping[int, Sequence[RuntimeSynapseLike]]
+    The attribute types are refined to RuntimeNeuronLike and RuntimeSynapseLike,
+    which are compatible with the base types. The type checker warnings are
+    suppressed because the refined types satisfy the base protocol contracts.
+    """
+
+    # Refined types: these are compatible with the base types but more specific.
+    neurons: Mapping[int, RuntimeNeuronLike]  # type: ignore[reportIncompatibleVariableOverride]
+    synapses: Mapping[int, Sequence[RuntimeSynapseLike]]  # type: ignore[reportIncompatibleVariableOverride]
 
     def add_post_step_hook(self, hook: PostStepHook) -> None:
         """Register a callback after a completed network step."""
@@ -152,7 +156,7 @@ class StorageSession:
         self._spike_events = 0
         self._commits = 0
 
-    def __enter__(self) -> "StorageSession":
+    def __enter__(self) -> StorageSession:
         self.start()
         return self
 

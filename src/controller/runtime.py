@@ -2,6 +2,28 @@
 
 The controller owns *when* ticks run, not the network implementation itself.
 It is intentionally dependency-light and works against a small typed Protocol.
+
+This provides a clean separation between:
+- The simulation core (network, neurons, synapses)
+- The control layer (start, pause, stop, step, run_ticks)
+- The presentation layer (dashboard, telemetry)
+
+The controller runs in a separate daemon thread and provides thread-safe
+access to the simulation state via locks and events.
+
+Example:
+    >>> from src.controller import RuntimeController
+    >>> controller = RuntimeController(network)
+    >>> controller.start()
+    >>> time.sleep(1)
+    >>> controller.pause()
+    >>> controller.run_ticks(10)
+    >>> controller.stop()
+
+Integration with dashboard:
+    >>> from src.dashboard.operator_bridge import OperatorBridge
+    >>> bridge = OperatorBridge(controller=controller)
+    >>> serve_dashboard(host="127.0.0.1", port=8765, structural_bridge=bridge)
 """
 
 from __future__ import annotations
@@ -11,8 +33,12 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Protocol
+from typing import Any, Protocol
 
+
+# ============================================================================
+# Protocols (Minimal contracts for loose coupling)
+# ============================================================================
 
 class StepResultLike(Protocol):
     """Minimal result contract required by the controller."""
@@ -44,21 +70,41 @@ class RuntimeNetworkLike(Protocol):
 
 
 class HomeostasisLike(Protocol):
+    """Minimal homeostasis contract required by the controller."""
+
     @property
     def enabled(self) -> bool: ...
 
     def update(self, tick: int, dt_ms: float = 1.0) -> None: ...
 
 
+# ============================================================================
+# Enums
+# ============================================================================
+
 class ControllerState(str, Enum):
+    """Possible states of the runtime controller."""
+
     IDLE = "idle"
     RUNNING = "running"
     PAUSED = "paused"
     STOPPED = "stopped"
     ERROR = "error"
 
+    @property
+    def is_active(self) -> bool:
+        """Return True if the controller is in a running or paused state."""
+        return self in {ControllerState.RUNNING, ControllerState.PAUSED}
+
+    @property
+    def is_terminated(self) -> bool:
+        """Return True if the controller is stopped or in error state."""
+        return self in {ControllerState.STOPPED, ControllerState.ERROR}
+
 
 class ControllerCommand(str, Enum):
+    """Commands that can be sent to the runtime controller."""
+
     START = "start"
     PAUSE = "pause"
     RESUME = "resume"
@@ -67,9 +113,37 @@ class ControllerCommand(str, Enum):
     RUN_TICKS = "run_ticks"
     SNAPSHOT = "snapshot"
 
+    @classmethod
+    def from_string(cls, value: str) -> ControllerCommand | None:
+        """Convert a string to a ControllerCommand, or return None."""
+        try:
+            return cls(value)
+        except ValueError:
+            return None
+
+
+# ============================================================================
+# Telemetry
+# ============================================================================
 
 @dataclass(frozen=True, slots=True)
 class RuntimeTelemetry:
+    """Snapshot of runtime telemetry data.
+
+    Attributes:
+        tick: Current simulation tick.
+        ticks_per_second: Achieved tick rate (ticks per second).
+        batch_duration_ms: Time taken for the last batch in milliseconds.
+        spikes_this_batch: Number of spikes in the last batch.
+        neurons: Total number of neurons in the network.
+        synapses: Total number of synapses in the network.
+        queue_depth: Number of queued spike events.
+        controller_state: Current state of the controller.
+        requested_ticks: Total ticks requested by manual commands.
+        completed_ticks: Total ticks completed.
+        last_error: Last error message (if any).
+    """
+
     tick: int
     ticks_per_second: float
     batch_duration_ms: float
@@ -82,13 +156,68 @@ class RuntimeTelemetry:
     completed_ticks: int
     last_error: str | None = None
 
+    def to_dict(self) -> dict[str, int | float | str | None]:
+        """Convert to dictionary for JSON serialization."""
+        return {
+            "tick": self.tick,
+            "ticks_per_second": self.ticks_per_second,
+            "batch_duration_ms": self.batch_duration_ms,
+            "spikes_this_batch": self.spikes_this_batch,
+            "neurons": self.neurons,
+            "synapses": self.synapses,
+            "queue_depth": self.queue_depth,
+            "controller_state": self.controller_state.value,
+            "requested_ticks": self.requested_ticks,
+            "completed_ticks": self.completed_ticks,
+            "last_error": self.last_error,
+        }
+
+
+# ============================================================================
+# Callback Types
+# ============================================================================
 
 SnapshotCallback = Callable[[], None]
-PostTickHook = Callable[[int], None]
+"""Callback for snapshot requests."""
 
+PostTickHook = Callable[[int], None]
+"""Callback after each tick, receives current tick number."""
+
+ErrorCallback = Callable[[Exception], None]
+"""Callback when an error occurs in the runtime loop."""
+
+
+# ============================================================================
+# Runtime Controller
+# ============================================================================
 
 class RuntimeController:
-    """Own the simulation clock and expose safe operator commands."""
+    """Own the simulation clock and expose safe operator commands.
+
+    This controller provides thread-safe control over the Brain-5D simulation:
+    - Start/stop continuous execution in a daemon thread
+    - Pause/resume execution
+    - Execute finite batches of ticks synchronously
+    - Request snapshots at safe boundaries
+    - Register post-tick hooks
+
+    The controller is designed to be used with the dashboard's OperatorBridge
+    for interactive control.
+
+    Thread-safety:
+        All public methods are thread-safe. The controller uses an RLock
+        for state access and threading.Event for pause/stop signaling.
+
+    Example:
+        >>> controller = RuntimeController(network, homeostasis)
+        >>> controller.add_hook(lambda tick: print(f"Tick {tick}"))
+        >>> controller.start()
+        >>> time.sleep(2)
+        >>> controller.run_ticks(100)  # runs synchronously
+        >>> controller.pause()
+        >>> controller.resume()
+        >>> controller.stop()
+    """
 
     def __init__(
         self,
@@ -101,57 +230,154 @@ class RuntimeController:
         snapshot_callback: SnapshotCallback | None = None,
         max_manual_ticks: int = 1_000,
     ) -> None:
+        """Initialize the runtime controller.
+
+        Args:
+            network: The network instance (must implement RuntimeNetworkLike).
+            homeostasis: Optional homeostasis engine for rate regulation.
+            batch_size: Number of ticks per batch in continuous mode.
+            loop_delay_ms: Delay between batches in continuous mode.
+            telemetry_interval_ticks: How often to update telemetry.
+            snapshot_callback: Callback for snapshot requests.
+            max_manual_ticks: Maximum ticks allowed in a single run_ticks call.
+
+        Raises:
+            ValueError: If batch_size, loop_delay_ms, telemetry_interval_ticks,
+                or max_manual_ticks have invalid values.
+        """
         if batch_size <= 0:
-            raise ValueError("batch_size must be > 0")
+            raise ValueError(f"batch_size must be > 0, got {batch_size}")
         if telemetry_interval_ticks <= 0:
-            raise ValueError("telemetry_interval_ticks must be > 0")
+            raise ValueError(
+                f"telemetry_interval_ticks must be > 0, got {telemetry_interval_ticks}"
+            )
         if loop_delay_ms < 0:
-            raise ValueError("loop_delay_ms must be >= 0")
+            raise ValueError(f"loop_delay_ms must be >= 0, got {loop_delay_ms}")
         if max_manual_ticks <= 0:
-            raise ValueError("max_manual_ticks must be > 0")
+            raise ValueError(f"max_manual_ticks must be > 0, got {max_manual_ticks}")
 
-        self.network = network
-        self.homeostasis = homeostasis
-        self._batch_size = batch_size
-        self._loop_delay_ms = loop_delay_ms
-        self._telemetry_interval_ticks = telemetry_interval_ticks
-        self._snapshot_callback = snapshot_callback
-        self._max_manual_ticks = max_manual_ticks
+        self.network: RuntimeNetworkLike = network
+        self.homeostasis: HomeostasisLike | None = homeostasis
+        self._batch_size: int = batch_size
+        self._loop_delay_ms: float = loop_delay_ms
+        self._telemetry_interval_ticks: int = telemetry_interval_ticks
+        self._snapshot_callback: SnapshotCallback | None = snapshot_callback
+        self._max_manual_ticks: int = max_manual_ticks
 
-        self._state = ControllerState.IDLE
-        self._lock = threading.RLock()
-        self._stop_event = threading.Event()
-        self._pause_event = threading.Event()
+        self._state: ControllerState = ControllerState.IDLE
+        self._lock: threading.RLock = threading.RLock()
+        self._stop_event: threading.Event = threading.Event()
+        self._pause_event: threading.Event = threading.Event()
         self._thread: threading.Thread | None = None
         self._hooks: list[PostTickHook] = []
-        self._snapshot_requested = False
-        self._requested_ticks = 0
-        self._completed_ticks = 0
-        self._telemetry = self._make_telemetry(0.0, 0.0, 0)
+        self._error_callbacks: list[ErrorCallback] = []
+        self._snapshot_requested: bool = False
+        self._requested_ticks: int = 0
+        self._completed_ticks: int = 0
+        self._telemetry: RuntimeTelemetry = self._make_telemetry(0.0, 0.0, 0)
+
+    # ========================================================================
+    # Properties
+    # ========================================================================
 
     @property
     def state(self) -> ControllerState:
+        """Get the current controller state (thread-safe)."""
         with self._lock:
             return self._state
 
     @property
     def telemetry(self) -> RuntimeTelemetry:
+        """Get the latest telemetry snapshot (thread-safe)."""
         with self._lock:
             return self._telemetry
 
-    def add_hook(self, hook: PostTickHook) -> None:
+    @property
+    def is_running(self) -> bool:
+        """Check if the controller is currently running (thread-safe)."""
         with self._lock:
-            self._hooks.append(hook)
+            return self._state == ControllerState.RUNNING
+
+    @property
+    def is_paused(self) -> bool:
+        """Check if the controller is currently paused (thread-safe)."""
+        with self._lock:
+            return self._state == ControllerState.PAUSED
+
+    @property
+    def is_idle(self) -> bool:
+        """Check if the controller is idle (thread-safe)."""
+        with self._lock:
+            return self._state == ControllerState.IDLE
+
+    # ========================================================================
+    # Hook Management
+    # ========================================================================
+
+    def add_hook(self, hook: PostTickHook) -> None:
+        """Register a hook that runs after each tick.
+
+        Args:
+            hook: Callback receiving the current tick number.
+        """
+        with self._lock:
+            if hook not in self._hooks:
+                self._hooks.append(hook)
+
+    def remove_hook(self, hook: PostTickHook) -> bool:
+        """Remove a previously registered hook.
+
+        Returns:
+            True if the hook was removed, False if not found.
+        """
+        with self._lock:
+            try:
+                self._hooks.remove(hook)
+                return True
+            except ValueError:
+                return False
+
+    def clear_hooks(self) -> None:
+        """Remove all registered hooks."""
+        with self._lock:
+            self._hooks.clear()
+
+    def add_error_callback(self, callback: ErrorCallback) -> None:
+        """Register a callback for runtime errors.
+
+        Args:
+            callback: Function receiving the exception.
+        """
+        with self._lock:
+            if callback not in self._error_callbacks:
+                self._error_callbacks.append(callback)
+
+    # ========================================================================
+    # Control Commands
+    # ========================================================================
 
     def start(self) -> None:
-        """Start continuous execution in a daemon thread."""
+        """Start continuous execution in a daemon thread.
+
+        If the controller is already running, this is a no-op.
+        If the controller is paused, it resumes execution.
+        If the controller is stopped, it creates a new thread.
+        """
         with self._lock:
             if self._state == ControllerState.RUNNING:
                 return
+
+            if self._state == ControllerState.PAUSED:
+                self._state = ControllerState.RUNNING
+                self._pause_event.clear()
+                return
+
             if self._thread is not None and self._thread.is_alive():
                 self._state = ControllerState.RUNNING
                 self._pause_event.clear()
                 return
+
+            # Start new thread
             self._stop_event.clear()
             self._pause_event.clear()
             self._state = ControllerState.RUNNING
@@ -163,75 +389,140 @@ class RuntimeController:
             self._thread.start()
 
     def pause(self) -> None:
+        """Pause continuous execution.
+
+        The controller remains in a paused state until resume() is called.
+        """
         with self._lock:
             if self._state == ControllerState.RUNNING:
                 self._state = ControllerState.PAUSED
                 self._pause_event.set()
 
     def resume(self) -> None:
+        """Resume continuous execution after pause."""
         with self._lock:
             if self._state == ControllerState.PAUSED:
                 self._state = ControllerState.RUNNING
                 self._pause_event.clear()
 
     def stop(self) -> None:
+        """Stop continuous execution gracefully.
+
+        The controller thread will exit after completing the current batch.
+        """
         with self._lock:
             self._stop_event.set()
             self._pause_event.set()
             self._state = ControllerState.STOPPED
 
     def step_once(self) -> RuntimeTelemetry:
-        """Execute exactly one tick while not continuously running."""
+        """Execute exactly one tick synchronously.
+
+        This method is only available when the controller is not running
+        continuously.
+
+        Returns:
+            Updated telemetry after the step.
+
+        Raises:
+            RuntimeError: If the controller is currently running.
+        """
         if self.state == ControllerState.RUNNING:
             raise RuntimeError("step_once is unavailable while running")
         return self.run_ticks(1)
 
     def single_step(self) -> RuntimeTelemetry:
-        """Execute exactly one tick through the alpha.5 control contract."""
+        """Alias for step_once (for compatibility with OperatorBridge)."""
         return self.step_once()
 
     def run_ticks(self, count: int) -> RuntimeTelemetry:
-        """Execute a finite operator-requested batch synchronously."""
+        """Execute a finite batch of ticks synchronously.
+
+        This method is only available when the controller is not running
+        continuously.
+
+        Args:
+            count: Number of ticks to execute (1 - max_manual_ticks).
+
+        Returns:
+            Updated telemetry after the batch.
+
+        Raises:
+            TypeError: If count is not an integer.
+            ValueError: If count is out of range.
+            RuntimeError: If the controller is currently running.
+        """
         if isinstance(count, bool):
             raise TypeError("count must be an integer")
         if not 0 < count <= self._max_manual_ticks:
             raise ValueError(f"count must be in [1, {self._max_manual_ticks}]")
         if self.state == ControllerState.RUNNING:
             raise RuntimeError("run_ticks is unavailable while running")
+
         with self._lock:
             self._requested_ticks += count
+
         started = time.perf_counter()
         spikes = self._execute_ticks(count)
         elapsed_ms = (time.perf_counter() - started) * 1000.0
+
         with self._lock:
             self._completed_ticks += count
             self._telemetry = self._make_telemetry(elapsed_ms, elapsed_ms, spikes)
             return self._telemetry
 
     def run_loop(self, count: int | None = None) -> RuntimeTelemetry:
-        """Start continuous execution or run one bounded finite batch."""
+        """Run a finite batch or start continuous execution.
+
+        This is a convenience method that delegates to either run_ticks
+        (if count is provided) or start() (if count is None).
+
+        Args:
+            count: Optional number of ticks to run. If provided, runs
+                synchronously via run_ticks. If None, starts continuous
+                execution.
+
+        Returns:
+            Current telemetry.
+        """
         if count is not None:
             return self.run_ticks(count)
         self.start()
         return self.telemetry
 
     def request_snapshot(self) -> None:
-        """Request a snapshot at the next safe controller boundary."""
+        """Request a snapshot at the next safe controller boundary.
+
+        If the controller is not running, the snapshot is taken immediately.
+        """
         with self._lock:
             self._snapshot_requested = True
+
+        # If not running, flush immediately
         if self.state != ControllerState.RUNNING:
             self._flush_snapshot_request()
 
+    # ========================================================================
+    # Internal Methods
+    # ========================================================================
+
     def _run_loop(self) -> None:
+        """Main loop for the daemon thread."""
         last_tick = self.network.current_tick
+
         try:
             while not self._stop_event.is_set():
+                # Check pause
                 if self._pause_event.is_set():
                     time.sleep(0.05)
                     continue
+
+                # Execute batch
                 started = time.perf_counter()
                 spikes = self._execute_ticks(self._batch_size)
                 elapsed_ms = (time.perf_counter() - started) * 1000.0
+
+                # Update telemetry
                 with self._lock:
                     self._completed_ticks += self._batch_size
                     tick_delta = self.network.current_tick - last_tick
@@ -242,10 +533,16 @@ class RuntimeController:
                             spikes,
                         )
                         last_tick = self.network.current_tick
+
+                # Flush snapshot request
                 self._flush_snapshot_request()
+
+                # Delay between batches
                 if self._loop_delay_ms:
                     time.sleep(self._loop_delay_ms / 1000.0)
-        except Exception as exc:  # controller boundary: persist the error state
+
+        except Exception as exc:
+            # Handle errors and propagate to callbacks
             with self._lock:
                 self._state = ControllerState.ERROR
                 old = self._telemetry
@@ -262,31 +559,59 @@ class RuntimeController:
                     completed_ticks=old.completed_ticks,
                     last_error=str(exc),
                 )
+
+            # Notify error callbacks
+            with self._lock:
+                callbacks = tuple(self._error_callbacks)
+            for callback in callbacks:
+                try:
+                    callback(exc)
+                except Exception:
+                    pass
             return
+
         with self._lock:
             self._state = ControllerState.STOPPED
 
     def _execute_ticks(self, count: int) -> int:
+        """Execute a number of ticks and return total spikes."""
         spikes_total = 0
+
         for _ in range(count):
+            # Check stop signal
             if self._stop_event.is_set() and self.state == ControllerState.RUNNING:
                 break
+
+            # Execute one tick
             result = self.network.step()
             spikes_total += result.spikes_this_tick
+
+            # Update homeostasis
             if self.homeostasis is not None and self.homeostasis.enabled:
                 self.homeostasis.update(self.network.current_tick)
+
+            # Run hooks
             with self._lock:
                 hooks = tuple(self._hooks)
             for hook in hooks:
-                hook(self.network.current_tick)
+                try:
+                    hook(self.network.current_tick)
+                except Exception:
+                    pass  # Hook errors are isolated
+
         return spikes_total
 
     def _flush_snapshot_request(self) -> None:
+        """Execute the snapshot callback if requested."""
         with self._lock:
             requested = self._snapshot_requested
             self._snapshot_requested = False
+
         if requested and self._snapshot_callback is not None:
-            self._snapshot_callback()
+            try:
+                self._snapshot_callback()
+            except Exception:
+                pass  # Callback errors are isolated
 
     def _make_telemetry(
         self,
@@ -294,9 +619,11 @@ class RuntimeController:
         elapsed_ms: float,
         spikes: int,
     ) -> RuntimeTelemetry:
-        tps = 0.0
+        """Create a telemetry snapshot."""
+        tps: float = 0.0
         if elapsed_ms > 0:
             tps = self._batch_size * 1000.0 / elapsed_ms
+
         return RuntimeTelemetry(
             tick=self.network.current_tick,
             ticks_per_second=tps,
@@ -309,3 +636,59 @@ class RuntimeController:
             requested_ticks=self._requested_ticks,
             completed_ticks=self._completed_ticks,
         )
+
+    # ========================================================================
+    # Snapshot (for OperatorBridge compatibility)
+    # ========================================================================
+
+    def snapshot(self) -> RuntimeTelemetry:
+        """Return the current telemetry snapshot (for OperatorBridge).
+
+        Returns:
+            Current telemetry data.
+        """
+        return self.telemetry
+
+    def configure(self, **kwargs: Any) -> None:
+        """Configure runtime parameters (for OperatorBridge).
+
+        Args:
+            loop_size: Override batch_size.
+            delay_ms: Override loop_delay_ms.
+        """
+        with self._lock:
+            if "loop_size" in kwargs:
+                loop_size = kwargs["loop_size"]
+                if loop_size is not None:
+                    if not isinstance(loop_size, int) or loop_size <= 0:
+                        raise ValueError(f"loop_size must be a positive int, got {loop_size}")
+                    self._batch_size = loop_size
+            if "delay_ms" in kwargs:
+                delay_ms = kwargs["delay_ms"]
+                if delay_ms is not None:
+                    if not isinstance(delay_ms, (int, float)) or delay_ms < 0:
+                        raise ValueError(f"delay_ms must be >= 0, got {delay_ms}")
+                    self._loop_delay_ms = float(delay_ms)
+
+
+# ============================================================================
+# Module Exports
+# ============================================================================
+
+__all__ = [
+    # Protocols
+    "StepResultLike",
+    "RuntimeNetworkLike",
+    "HomeostasisLike",
+    # Enums
+    "ControllerState",
+    "ControllerCommand",
+    # Telemetry
+    "RuntimeTelemetry",
+    # Callbacks
+    "SnapshotCallback",
+    "PostTickHook",
+    "ErrorCallback",
+    # Main class
+    "RuntimeController",
+]
