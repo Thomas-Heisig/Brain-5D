@@ -4,6 +4,32 @@ Format V1 is a deterministic, little-endian, memory-mappable snapshot format.
 It deliberately contains only immutable snapshot sections. Delta journaling,
 checksums and crash-recovery markers belong to the V2 journal layer and do not
 change this V1 snapshot contract.
+
+File Structure (V1):
+    ┌─────────────────────────────────────────────────────────────┐
+    │ 128-byte Header (MAGIC, version, flags, offsets, counts)  │
+    ├─────────────────────────────────────────────────────────────┤
+    │ JSON Metadata (max 64 KB, UTF-8, sorted keys)             │
+    ├─────────────────────────────────────────────────────────────┤
+    │ Alignment Padding (to 64-byte boundary)                   │
+    ├─────────────────────────────────────────────────────────────┤
+    │ Neuron Records (fixed size: 128 or 160 bytes each)        │
+    │   - Optical state (128 bytes)                             │
+    │   - Core extension (32 bytes, optional, restart-capable)  │
+    ├─────────────────────────────────────────────────────────────┤
+    │ Alignment Padding (to 64-byte boundary)                   │
+    ├─────────────────────────────────────────────────────────────┤
+    │ Synapse Records (40 bytes each)                           │
+    │   - source_id, target_id, weight, eligibility, delay,     │
+    │     last_pre_spike                                        │
+    └─────────────────────────────────────────────────────────────┘
+
+The format is:
+- Little-endian for cross-platform compatibility.
+- Memory-mappable for efficient random access.
+- Sorted by neuron ID and synapse (source_id, target_id) for binary search.
+
+Author: Thomas Heisig
 """
 
 from __future__ import annotations
@@ -15,7 +41,7 @@ import mmap
 from pathlib import Path
 import struct
 import time
-from typing import Iterator, Mapping, Protocol, Sequence, TypeAlias, runtime_checkable
+from typing import Iterator, Mapping, Protocol, Sequence, TypeAlias, cast, runtime_checkable
 
 from .optical_codec import (
     RECORD_SIZE as OPTICAL_RECORD_SIZE,
@@ -24,6 +50,10 @@ from .optical_codec import (
     encode_optical_record,
     state_from_neuron,
 )
+
+# ============================================================================
+# Format Constants (V1 – frozen, never changed)
+# ============================================================================
 
 ENDIANNESS = "<"
 BYTE_ORDER = "little"
@@ -40,32 +70,76 @@ MAX_UINT64 = (1 << 64) - 1
 FLAG_RESTART_CAPABLE = 0x0001
 _KNOWN_FLAGS = FLAG_RESTART_CAPABLE
 
+# ============================================================================
+# Struct Definitions (compile-time checked)
+# ============================================================================
+
 # 128 bytes exactly:
-# magic, version, header_size, flags,
-# created_ns, snapshot_tick, neuron_count, synapse_count,
-# neuron_record_size, synapse_record_size,
-# five dimensions, alignment padding,
-# metadata_offset, metadata_size, neuron_offset, synapse_offset, file_size,
-# reserved padding.
+# magic[8], version[2], header_size[2], flags[2],
+# created_ns[8], snapshot_tick[8], neuron_count[8], synapse_count[8],
+# neuron_record_size[4], synapse_record_size[4],
+# five dimensions[5*2=10], alignment padding[6],
+# metadata_offset[8], metadata_size[8], neuron_offset[8],
+# synapse_offset[8], file_size[8], reserved padding[16].
 _HEADER_STRUCT = struct.Struct("<8sHHIQQQQII5H6xQQQQQ16x")
+
+# Core extension: a, b, c, d, spike_cost (5 floats), spike_counter (uint32),
+# last_spike_tick (int64)
 _CORE_EXTENSION_STRUCT = struct.Struct("<5fIq")
-# source_id, target_id, weight, eligibility, delay, padding,
-# last_pre_spike, reserved padding.
+
+# Synapse record: source_id, target_id (2*uint64), weight, eligibility (2*float),
+# delay (uint16), padding[2], last_pre_spike (int64), padding[4]
 _SYNAPSE_STRUCT = struct.Struct("<QQffH2xq4x")
+
+# For reading individual IDs
 _NEURON_ID_STRUCT = struct.Struct("<Q")
+
+# ============================================================================
+# Type Aliases (JSON-safe types for metadata)
+# ============================================================================
 
 JSONScalar: TypeAlias = str | int | float | bool | None
 JSONValue: TypeAlias = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 JSONMapping: TypeAlias = Mapping[str, JSONValue]
 
 
-class B5DFormatError(ValueError):
-    """Raised when a `.b5d` file violates the frozen V1 format contract."""
+# ============================================================================
+# Custom Exception
+# ============================================================================
 
+class B5DFormatError(ValueError):
+    """Raised when a `.b5d` file violates the frozen V1 format contract.
+
+    This exception is used for:
+    - Invalid magic bytes or format version.
+    - Truncated or malformed records.
+    - Inconsistent header fields (size mismatches, invalid offsets).
+    - Corrupted metadata or reserved bytes.
+    - Validation failures during full scan.
+    """
+
+
+# ============================================================================
+# Protocols (for the snapshot writer)
+# ============================================================================
 
 @runtime_checkable
 class NeuronSnapshotLike(Protocol):
-    """Minimum neuron surface required by the V1 snapshot writer."""
+    """Minimum neuron surface required by the V1 snapshot writer.
+
+    This protocol defines the attributes that must be present on a neuron
+    object for it to be written to a .b5d snapshot. The writer uses these
+    to extract core state and optical state.
+
+    Attributes:
+        a, b, c, d: Izhikevich parameters.
+        v, u: Membrane potential and recovery variable.
+        energy: Current energy level.
+        spike_cost: Energy cost per spike.
+        spike_counter: Total spikes fired.
+        last_spike_tick: Tick of the last spike.
+        threshold_adaptation: Adaptive threshold offset.
+    """
 
     a: float
     b: float
@@ -82,7 +156,15 @@ class NeuronSnapshotLike(Protocol):
 
 @runtime_checkable
 class SynapseSnapshotLike(Protocol):
-    """Minimum synapse surface required by the V1 snapshot writer."""
+    """Minimum synapse surface required by the V1 snapshot writer.
+
+    Attributes:
+        target_id: ID of the postsynaptic neuron.
+        weight: Synaptic weight.
+        delay: Transmission delay in ticks.
+        eligibility: STDP eligibility trace.
+        last_pre_spike: Tick of the last presynaptic spike.
+    """
 
     target_id: int
     weight: float
@@ -92,7 +174,18 @@ class SynapseSnapshotLike(Protocol):
 
 
 class NetworkSnapshotLike(Protocol):
-    """Network surface consumed by :class:`B5DSnapshotWriter`."""
+    """Network surface consumed by :class:`B5DSnapshotWriter`.
+
+    This protocol defines the minimal network interface needed to write
+    a complete snapshot. The network must provide dimensions, current tick,
+    neurons (mapped by ID), and synapses (mapped by presynaptic neuron ID).
+
+    Attributes:
+        dimensions: 5D dimensions (x, y, z, d4, d5).
+        current_tick: Current simulation tick.
+        neurons: Mapping from neuron ID to NeuronSnapshotLike.
+        synapses: Mapping from presynaptic ID to list of SynapseSnapshotLike.
+    """
 
     dimensions: tuple[int, int, int, int, int]
     current_tick: int
@@ -100,9 +193,33 @@ class NetworkSnapshotLike(Protocol):
     synapses: Mapping[int, Sequence[SynapseSnapshotLike]]
 
 
+# ============================================================================
+# Header and Record Dataclasses
+# ============================================================================
+
 @dataclass(frozen=True, slots=True)
 class B5DHeader:
-    """Decoded immutable `.b5d` file-header information."""
+    """Decoded immutable `.b5d` file-header information.
+
+    All fields are extracted directly from the 128-byte header and
+    validated during parsing.
+
+    Attributes:
+        version: Format version (must be 1).
+        flags: Bitmask of feature flags.
+        created_ns: Creation timestamp in nanoseconds.
+        snapshot_tick: Tick at which the snapshot was taken.
+        neuron_count: Number of neuron records.
+        synapse_count: Number of synapse records.
+        neuron_record_size: Size of each neuron record (128 or 160 bytes).
+        synapse_record_size: Size of each synapse record (40 bytes).
+        dimensions: 5D dimensions (x, y, z, d4, d5).
+        metadata_offset: Offset of JSON metadata section.
+        metadata_size: Size of JSON metadata in bytes.
+        neuron_offset: Offset of neuron record section.
+        synapse_offset: Offset of synapse record section.
+        file_size: Total file size in bytes.
+    """
 
     version: int
     flags: int
@@ -127,7 +244,17 @@ class B5DHeader:
 
 @dataclass(frozen=True, slots=True)
 class B5DNeuronRecord:
-    """Decoded neuron snapshot from one fixed-size `.b5d` record."""
+    """Decoded neuron snapshot from one fixed-size `.b5d` record.
+
+    Attributes:
+        neuron_id: Unique neuron ID (packed 5D coordinate).
+        tick: Tick at which the snapshot was taken.
+        optical: OpticalPointState (membrane_v, recovery_u, energy, etc.).
+        a, b, c, d: Izhikevich parameters (None if not restart-capable).
+        spike_cost: Energy cost per spike (None if not restart-capable).
+        spike_counter: Total spikes fired (None if not restart-capable).
+        last_spike_tick: Tick of the last spike (None if not restart-capable).
+    """
 
     neuron_id: int
     tick: int
@@ -143,7 +270,16 @@ class B5DNeuronRecord:
 
 @dataclass(frozen=True, slots=True)
 class B5DSynapseRecord:
-    """Decoded fixed-size synapse snapshot."""
+    """Decoded fixed-size synapse snapshot.
+
+    Attributes:
+        source_id: ID of the presynaptic neuron.
+        target_id: ID of the postsynaptic neuron.
+        weight: Synaptic weight (float32 in storage, converted to float64).
+        eligibility: STDP eligibility trace (float32 in storage).
+        delay: Transmission delay in ticks.
+        last_pre_spike: Tick of the last presynaptic spike.
+    """
 
     source_id: int
     target_id: int
@@ -153,8 +289,20 @@ class B5DSynapseRecord:
     last_pre_spike: int
 
 
+# ============================================================================
+# Format Invariant Validation
+# ============================================================================
+
 def assert_format_invariants() -> None:
-    """Raise if compile-time record sizes no longer match frozen V1 sizes."""
+    """Raise if compile-time record sizes no longer match frozen V1 sizes.
+
+    This function is called at the start of every writer/reader operation
+    to ensure that the struct definitions still match the declared constants.
+    If the format changes, this will fail loudly.
+
+    Raises:
+        RuntimeError: If any record size invariant is broken.
+    """
     expected = {
         "header": (HEADER_SIZE, _HEADER_STRUCT.size),
         "optical": (128, OPTICAL_RECORD_SIZE),
@@ -172,8 +320,20 @@ def assert_format_invariants() -> None:
         raise RuntimeError(".b5d V1 must remain little-endian")
 
 
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
 def _align(value: int, alignment: int = ALIGNMENT) -> int:
-    """Round *value* up to the next alignment boundary."""
+    """Round *value* up to the next alignment boundary.
+
+    Args:
+        value: The value to align.
+        alignment: The alignment boundary (must be positive).
+
+    Returns:
+        The aligned value.
+    """
     if value < 0:
         raise ValueError("value must be non-negative")
     if alignment <= 0:
@@ -182,20 +342,53 @@ def _align(value: int, alignment: int = ALIGNMENT) -> int:
 
 
 def _validate_uint64(value: int, label: str) -> int:
-    """Return *value* if it is representable as an unsigned 64-bit integer."""
+    """Return *value* if it is representable as an unsigned 64-bit integer.
+
+    Args:
+        value: The value to validate.
+        label: A label for error messages.
+
+    Returns:
+        The validated value.
+
+    Raises:
+        ValueError: If value is outside the uint64 range.
+    """
     if not 0 <= value <= MAX_UINT64:
         raise ValueError(f"{label} must fit uint64: {value}")
     return value
 
 
 def _validate_finite(value: float, label: str) -> float:
-    """Return *value* when it is finite and safe for persistent state."""
+    """Return *value* when it is finite and safe for persistent state.
+
+    Args:
+        value: The value to validate.
+        label: A label for error messages.
+
+    Returns:
+        The validated value.
+
+    Raises:
+        ValueError: If value is not finite.
+    """
     if not math.isfinite(value):
         raise ValueError(f"{label} must be finite: {value}")
     return value
 
 
 def _network_dimensions(network: NetworkSnapshotLike) -> tuple[int, int, int, int, int]:
+    """Extract and validate network dimensions.
+
+    Args:
+        network: The network to extract dimensions from.
+
+    Returns:
+        The validated 5D dimensions tuple.
+
+    Raises:
+        ValueError: If dimensions are invalid.
+    """
     dims = tuple(int(value) for value in network.dimensions)
     if len(dims) != 5:
         raise ValueError("network dimensions must contain exactly five values")
@@ -204,7 +397,25 @@ def _network_dimensions(network: NetworkSnapshotLike) -> tuple[int, int, int, in
     return (dims[0], dims[1], dims[2], dims[3], dims[4])
 
 
+# ============================================================================
+# Core Extension Encoding/Decoding
+# ============================================================================
+
 def _encode_core_extension(neuron: NeuronSnapshotLike) -> bytes:
+    """Encode the core-state extension for a neuron.
+
+    The core extension stores Izhikevich parameters, spike cost, and
+    spike statistics that are not included in the optical record.
+
+    Args:
+        neuron: The neuron to encode.
+
+    Returns:
+        A 32-byte packed structure.
+
+    Raises:
+        ValueError: If spike_counter does not fit uint32.
+    """
     spike_counter = int(neuron.spike_counter)
     if not 0 <= spike_counter <= 0xFFFFFFFF:
         raise ValueError("spike_counter must fit uint32")
@@ -222,6 +433,17 @@ def _encode_core_extension(neuron: NeuronSnapshotLike) -> bytes:
 def _decode_core_extension(
     data: bytes,
 ) -> tuple[float, float, float, float, float, int, int]:
+    """Decode the core-state extension from a 32-byte record.
+
+    Args:
+        data: The raw extension data.
+
+    Returns:
+        A tuple of (a, b, c, d, spike_cost, spike_counter, last_spike_tick).
+
+    Raises:
+        B5DFormatError: If the data is truncated.
+    """
     if len(data) != CORE_EXTENSION_SIZE:
         raise B5DFormatError("truncated core-extension record")
     a, b, c, d, spike_cost, spike_counter, last_spike_tick = (
@@ -238,7 +460,23 @@ def _decode_core_extension(
     )
 
 
+# ============================================================================
+# Synapse Encoding/Decoding
+# ============================================================================
+
 def _encode_synapse(source_id: int, synapse: SynapseSnapshotLike) -> bytes:
+    """Encode a synapse into a 40-byte record.
+
+    Args:
+        source_id: The presynaptic neuron ID.
+        synapse: The synapse to encode.
+
+    Returns:
+        A 40-byte packed structure.
+
+    Raises:
+        ValueError: If delay is out of range or values are invalid.
+    """
     source = _validate_uint64(int(source_id), "source_id")
     target = _validate_uint64(int(synapse.target_id), "target_id")
     delay = int(synapse.delay)
@@ -255,6 +493,17 @@ def _encode_synapse(source_id: int, synapse: SynapseSnapshotLike) -> bytes:
 
 
 def _decode_synapse(data: bytes) -> B5DSynapseRecord:
+    """Decode a synapse from a 40-byte record.
+
+    Args:
+        data: The raw synapse data.
+
+    Returns:
+        A B5DSynapseRecord.
+
+    Raises:
+        B5DFormatError: If the data is truncated.
+    """
     if len(data) != SYNAPSE_RECORD_SIZE:
         raise B5DFormatError("truncated synapse record")
     source_id, target_id, weight, eligibility, delay, last_pre_spike = (
@@ -270,24 +519,76 @@ def _decode_synapse(data: bytes) -> B5DSynapseRecord:
     )
 
 
+# ============================================================================
+# JSON Metadata Validation
+# ============================================================================
+
 def _validate_json_value(value: object) -> JSONValue:
-    """Validate JSON-decoded data and return a strictly typed JSON value."""
+    """Validate JSON-decoded data and return a strictly typed JSON value.
+
+    This function recursively traverses JSON data and ensures that all
+    values are of acceptable types. It casts dictionaries and lists
+    to the expected generic types for type checker compatibility.
+
+    Args:
+        value: The JSON-decoded value to validate.
+
+    Returns:
+        A strictly typed JSON value.
+
+    Raises:
+        B5DFormatError: If the value type is not supported or keys are not strings.
+    """
+    # Base cases: None, primitive types
     if value is None or isinstance(value, (str, bool, int, float)):
         return value
-    if isinstance(value, list):
-        return [_validate_json_value(item) for item in value]
-    if isinstance(value, dict):
-        result: dict[str, JSONValue] = {}
-        for key, item in value.items():
-            if not isinstance(key, str):
-                raise B5DFormatError("metadata object keys must be strings")
-            result[key] = _validate_json_value(item)
-        return result
-    raise B5DFormatError(f"unsupported metadata value type: {type(value).__name__}")
 
+    # Lists: recursively validate each item
+    if isinstance(value, list):
+        # The type checker cannot infer the type of items in the list,
+        # but we know they are JSON-decodable. We cast the final result.
+        return cast(JSONValue, [_validate_json_value(item) for item in value])  # type: ignore[reportUnknownVariableType, reportUnknownArgumentType]
+
+    # Dictionaries: ensure keys are strings and recursively validate values
+    if isinstance(value, dict):
+        # After checking that value is a dict, we can safely cast to dict[str, object]
+        dict_value = cast(dict[str, object], value)
+        result: dict[str, JSONValue] = {}
+        for key, item in dict_value.items():
+            # key is guaranteed to be a string by the cast, so no need to check again.
+            # If you want to keep a runtime safety check, uncomment:
+            # if not isinstance(key, str):
+            #     raise B5DFormatError("metadata object keys must be strings")
+            result[key] = _validate_json_value(item)  # type: ignore[reportUnknownArgumentType]
+        return result
+
+    # Unsupported type
+    raise B5DFormatError(
+        f"unsupported metadata value type: {type(value).__name__}"
+    )
+
+
+# ============================================================================
+# Metadata Encoding/Decoding
+# ============================================================================
 
 def _encode_metadata(metadata: JSONMapping | None) -> bytes:
-    """Serialize metadata deterministically and enforce the V1 size limit."""
+    """Serialize metadata deterministically and enforce the V1 size limit.
+
+    The metadata is serialized as UTF-8 JSON with:
+    - Sorted keys for determinism.
+    - Compact separators (no spaces).
+    - No NaN/Infinity (raises error if present).
+
+    Args:
+        metadata: The metadata mapping to encode.
+
+    Returns:
+        UTF-8 encoded JSON bytes.
+
+    Raises:
+        ValueError: If metadata exceeds the V1 size limit.
+    """
     payload = dict(metadata or {})
     raw = json.dumps(
         payload,
@@ -304,19 +605,41 @@ def _encode_metadata(metadata: JSONMapping | None) -> bytes:
 
 
 def _decode_metadata(data: bytes) -> dict[str, JSONValue]:
-    """Decode UTF-8 JSON metadata and enforce an object at the top level."""
+    """Decode UTF-8 JSON metadata and enforce an object at the top level.
+
+    Args:
+        data: The raw metadata bytes.
+
+    Returns:
+        A dictionary of decoded metadata.
+
+    Raises:
+        B5DFormatError: If the data is not valid JSON or not an object.
+    """
     try:
         decoded: object = json.loads(data.decode("utf-8")) if data else {}
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise B5DFormatError(f"invalid metadata: {exc}") from exc
+
     value = _validate_json_value(decoded)
     if not isinstance(value, dict):
         raise B5DFormatError(".b5d metadata must be a JSON object")
     return value
 
 
+# ============================================================================
+# Header Encoding/Decoding
+# ============================================================================
+
 def _build_header_bytes(header: B5DHeader) -> bytes:
-    """Pack one exact 128-byte V1 header."""
+    """Pack one exact 128-byte V1 header.
+
+    Args:
+        header: The header to encode.
+
+    Returns:
+        A 128-byte packed header.
+    """
     return _HEADER_STRUCT.pack(
         MAGIC,
         header.version,
@@ -338,14 +661,28 @@ def _build_header_bytes(header: B5DHeader) -> bytes:
 
 
 def _parse_header_bytes(data: bytes) -> B5DHeader:
-    """Decode and structurally validate one V1 header."""
+    """Decode and structurally validate one V1 header.
+
+    Args:
+        data: The raw header data (must be exactly 128 bytes).
+
+    Returns:
+        A B5DHeader instance.
+
+    Raises:
+        B5DFormatError: If the header is invalid or corrupted.
+    """
     if len(data) != HEADER_SIZE:
-        raise B5DFormatError(f"file too small for {HEADER_SIZE}-byte .b5d header")
+        raise B5DFormatError(
+            f"file too small for {HEADER_SIZE}-byte .b5d header"
+        )
+
     values = _HEADER_STRUCT.unpack(data)
     magic = values[0]
     version = int(values[1])
     header_size = int(values[2])
     flags = int(values[3])
+
     if magic != MAGIC:
         raise B5DFormatError("invalid .b5d magic")
     if any(data[66:72]) or any(data[112:128]):
@@ -376,6 +713,7 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
     synapse_offset = int(values[18])
     file_size = int(values[19])
 
+    # Validate record sizes are consistent with flags
     expected_neuron_size = (
         RESTARTABLE_NEURON_RECORD_SIZE
         if flags & FLAG_RESTART_CAPABLE
@@ -386,7 +724,10 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
             "neuron record size is inconsistent with restart-capable flag"
         )
     if synapse_record_size != SYNAPSE_RECORD_SIZE:
-        raise B5DFormatError(f"unsupported synapse record size: {synapse_record_size}")
+        raise B5DFormatError(
+            f"unsupported synapse record size: {synapse_record_size}"
+        )
+
     if metadata_size > MAX_METADATA_SIZE:
         raise B5DFormatError(
             f"metadata exceeds V1 limit: {metadata_size} > {MAX_METADATA_SIZE} bytes"
@@ -412,10 +753,30 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
     )
 
 
+# ============================================================================
+# Snapshot Writer
+# ============================================================================
+
 class B5DSnapshotWriter:
-    """Write deterministic Brain-5D V1 snapshot containers."""
+    """Write deterministic Brain-5D V1 snapshot containers.
+
+    The writer produces immutable .b5d files with:
+    - Fixed-size records for efficient random access.
+    - Sorted neuron IDs and synapses for binary search.
+    - Optional restart-capable mode with core-state extension.
+
+    Example:
+        >>> writer = B5DSnapshotWriter(restart_capable=True)
+        >>> header = writer.write("snapshot.b5d", network, metadata={"version": "1.0"})
+        >>> print(f"Written {header.neuron_count} neurons, {header.synapse_count} synapses")
+    """
 
     def __init__(self, *, restart_capable: bool = True) -> None:
+        """Initialize the snapshot writer.
+
+        Args:
+            restart_capable: If True, include core-state extension for restart.
+        """
         self.restart_capable = bool(restart_capable)
         assert_format_invariants()
 
@@ -426,11 +787,21 @@ class B5DSnapshotWriter:
         *,
         metadata_size: int = 0,
     ) -> int:
-        """Estimate final file size for the supplied record counts."""
+        """Estimate final file size for the supplied record counts.
+
+        Args:
+            neuron_count: Number of neurons.
+            synapse_count: Number of synapses.
+            metadata_size: Size of metadata in bytes.
+
+        Returns:
+            Estimated file size in bytes.
+        """
         if neuron_count < 0 or synapse_count < 0 or metadata_size < 0:
             raise ValueError("record counts and metadata size must be non-negative")
         if metadata_size > MAX_METADATA_SIZE:
             raise ValueError("metadata_size exceeds the V1 limit")
+
         neuron_record_size = (
             RESTARTABLE_NEURON_RECORD_SIZE
             if self.restart_capable
@@ -449,10 +820,26 @@ class B5DSnapshotWriter:
         metadata: JSONMapping | None = None,
         created_ns: int | None = None,
     ) -> B5DHeader:
-        """Write *network* to *path* and return the emitted V1 header."""
+        """Write *network* to *path* and return the emitted V1 header.
+
+        Args:
+            path: Output file path.
+            network: The network to snapshot.
+            optical_states: Optional mapping of neuron_id to optical state.
+            metadata: Optional JSON metadata.
+            created_ns: Optional creation timestamp (default: current time).
+
+        Returns:
+            The B5DHeader of the written file.
+
+        Raises:
+            ValueError: If the network contains invalid data.
+            RuntimeError: If the file size does not match the estimate.
+        """
         destination = Path(path)
         destination.parent.mkdir(parents=True, exist_ok=True)
 
+        # Collect and validate neuron IDs
         neuron_ids = sorted(int(neuron_id) for neuron_id in network.neurons)
         _validate_uint64(len(neuron_ids), "neuron_count")
         if len(neuron_ids) != len(set(neuron_ids)):
@@ -460,6 +847,7 @@ class B5DSnapshotWriter:
         for neuron_id in neuron_ids:
             _validate_uint64(neuron_id, "neuron_id")
 
+        # Collect and validate synapses
         neuron_id_set = set(neuron_ids)
         synapse_pairs: list[tuple[int, SynapseSnapshotLike]] = []
         for source_id in sorted(int(value) for value in network.synapses):
@@ -476,6 +864,8 @@ class B5DSnapshotWriter:
                 synapse_pairs.append((source_id, synapse))
 
         _validate_uint64(len(synapse_pairs), "synapse_count")
+
+        # Build header
         dimensions = _network_dimensions(network)
         tick = _validate_uint64(int(network.current_tick), "current_tick")
         metadata_bytes = _encode_metadata(metadata)
@@ -513,10 +903,12 @@ class B5DSnapshotWriter:
             file_size=file_size,
         )
 
+        # Write file
         with destination.open("wb") as handle:
             handle.write(_build_header_bytes(header))
             handle.write(metadata_bytes)
             handle.write(b"\x00" * (neuron_offset - handle.tell()))
+
             for neuron_id in neuron_ids:
                 neuron = network.neurons[neuron_id]
                 optical = optical_states.get(neuron_id) if optical_states else None
@@ -525,10 +917,12 @@ class B5DSnapshotWriter:
                 handle.write(encode_optical_record(neuron_id, tick, optical))
                 if self.restart_capable:
                     handle.write(_encode_core_extension(neuron))
+
             handle.write(b"\x00" * (synapse_offset - handle.tell()))
             for source_id, synapse in synapse_pairs:
                 handle.write(_encode_synapse(source_id, synapse))
 
+        # Verify file size
         actual_size = destination.stat().st_size
         if actual_size != file_size:
             raise RuntimeError(
@@ -537,17 +931,43 @@ class B5DSnapshotWriter:
         return header
 
 
+# ============================================================================
+# Snapshot Reader (Memory-Mapped)
+# ============================================================================
+
 class B5DReader:
-    """Memory-mapped random-access reader for frozen Brain-5D V1 snapshots."""
+    """Memory-mapped random-access reader for frozen Brain-5D V1 snapshots.
+
+    The reader provides O(log n) binary search for neurons and synapses,
+    and O(1) sequential iteration over all records.
+
+    Example:
+        >>> with B5DReader("snapshot.b5d") as reader:
+        ...     print(f"Neurons: {reader.neuron_count}")
+        ...     neuron = reader.get_neuron(123456)
+        ...     for synapse in reader.get_synapses(123456):
+        ...         print(f"-> {synapse.target_id}: {synapse.weight}")
+    """
 
     def __init__(self, path: str | Path) -> None:
+        """Initialize the reader and memory-map the file.
+
+        Args:
+            path: Path to the .b5d file.
+
+        Raises:
+            B5DFormatError: If the file is invalid or corrupted.
+            FileNotFoundError: If the file does not exist.
+        """
         assert_format_invariants()
         self.path = Path(path)
         self._handle = self.path.open("rb")
         file_size = self.path.stat().st_size
         if file_size < HEADER_SIZE:
             self._handle.close()
-            raise B5DFormatError(f"file too small: {file_size} < {HEADER_SIZE} bytes")
+            raise B5DFormatError(
+                f"file too small: {file_size} < {HEADER_SIZE} bytes"
+            )
         self._mmap = mmap.mmap(self._handle.fileno(), 0, access=mmap.ACCESS_READ)
         self._metadata: dict[str, JSONValue] = {}
         try:
@@ -558,7 +978,7 @@ class B5DReader:
             self.close()
             raise
 
-    def __enter__(self) -> "B5DReader":
+    def __enter__(self) -> B5DReader:
         return self
 
     def __exit__(
@@ -597,6 +1017,7 @@ class B5DReader:
             self._handle.close()
 
     def _validate_sections(self) -> None:
+        """Validate section offsets and non-overlap."""
         if len(self._mmap) != self.header.file_size:
             raise B5DFormatError(
                 "file-size mismatch: "
@@ -626,25 +1047,30 @@ class B5DReader:
             raise B5DFormatError("file truncated or header counts are inconsistent")
 
     def _read_metadata(self) -> dict[str, JSONValue]:
+        """Read and decode the metadata section."""
         start = self.header.metadata_offset
         end = start + self.header.metadata_size
         return _decode_metadata(bytes(self._mmap[start:end]))
 
     def _neuron_offset_for_index(self, index: int) -> int:
+        """Get the file offset for a neuron record by index."""
         if not 0 <= index < self.header.neuron_count:
             raise IndexError("neuron record index out of range")
         return self.header.neuron_offset + index * self.header.neuron_record_size
 
     def _neuron_id_at_index(self, index: int) -> int:
+        """Read a neuron ID at a given index (for binary search)."""
         offset = self._neuron_offset_for_index(index)
         return int(_NEURON_ID_STRUCT.unpack_from(self._mmap, offset)[0])
 
     def _synapse_offset_for_index(self, index: int) -> int:
+        """Get the file offset for a synapse record by index."""
         if not 0 <= index < self.header.synapse_count:
             raise IndexError("synapse record index out of range")
         return self.header.synapse_offset + index * SYNAPSE_RECORD_SIZE
 
     def _synapse_source_at_index(self, index: int) -> int:
+        """Read a synapse source ID at a given index (for binary search)."""
         return int(
             _NEURON_ID_STRUCT.unpack_from(
                 self._mmap, self._synapse_offset_for_index(index)
@@ -652,7 +1078,14 @@ class B5DReader:
         )
 
     def get_neuron(self, neuron_id: int) -> B5DNeuronRecord | None:
-        """Return one neuron by ID using O(log n) binary search."""
+        """Return one neuron by ID using O(log n) binary search.
+
+        Args:
+            neuron_id: The ID of the neuron to find.
+
+        Returns:
+            A B5DNeuronRecord, or None if not found.
+        """
         low = 0
         high = self.header.neuron_count - 1
         target = int(neuron_id)
@@ -668,16 +1101,19 @@ class B5DReader:
         return None
 
     def _decode_neuron_index(self, index: int) -> B5DNeuronRecord:
+        """Decode a neuron record at a given index."""
         offset = self._neuron_offset_for_index(index)
         optical_end = offset + OPTICAL_RECORD_SIZE
         raw_optical = bytes(self._mmap[offset:optical_end])
         if len(raw_optical) != OPTICAL_RECORD_SIZE:
             raise B5DFormatError("truncated optical neuron record")
         neuron_id, tick, optical = decode_optical_record(raw_optical)
+
         if not self.header.restart_capable:
             return B5DNeuronRecord(
                 neuron_id=int(neuron_id), tick=int(tick), optical=optical
             )
+
         core_end = optical_end + CORE_EXTENSION_SIZE
         extension = bytes(self._mmap[optical_end:core_end])
         a, b, c, d, spike_cost, spike_counter, last_spike_tick = _decode_core_extension(
@@ -697,23 +1133,40 @@ class B5DReader:
         )
 
     def iter_neurons(self) -> Iterator[B5DNeuronRecord]:
-        """Yield neuron records in ascending neuron-ID order."""
+        """Yield neuron records in ascending neuron-ID order.
+
+        Yields:
+            B5DNeuronRecord for each neuron.
+        """
         for index in range(self.header.neuron_count):
             yield self._decode_neuron_index(index)
 
     def _decode_synapse_index(self, index: int) -> B5DSynapseRecord:
+        """Decode a synapse record at a given index."""
         offset = self._synapse_offset_for_index(index)
         end = offset + SYNAPSE_RECORD_SIZE
         return _decode_synapse(bytes(self._mmap[offset:end]))
 
     def iter_synapses(self) -> Iterator[B5DSynapseRecord]:
-        """Yield all synapse records in source/target sort order."""
+        """Yield all synapse records in source/target sort order.
+
+        Yields:
+            B5DSynapseRecord for each synapse.
+        """
         for index in range(self.header.synapse_count):
             yield self._decode_synapse_index(index)
 
     def get_synapses(self, source_id: int) -> Iterator[B5DSynapseRecord]:
-        """Yield one source neuron's synapses via binary-search range lookup."""
+        """Yield one source neuron's synapses via binary-search range lookup.
+
+        Args:
+            source_id: The presynaptic neuron ID.
+
+        Yields:
+            B5DSynapseRecord for each synapse from this source.
+        """
         target = int(source_id)
+        # Binary search for the first synapse with source_id >= target
         low = 0
         high = self.header.synapse_count
         while low < high:
@@ -722,6 +1175,8 @@ class B5DReader:
                 low = mid + 1
             else:
                 high = mid
+
+        # Yield all synapses with matching source_id
         index = low
         while index < self.header.synapse_count:
             if self._synapse_source_at_index(index) != target:
@@ -733,14 +1188,21 @@ class B5DReader:
         """Validate V1 structure and optionally scan sorted record invariants.
 
         Structural header/offset/metadata validation already runs during open.
-        ``full_scan=True`` additionally verifies neuron-ID uniqueness/order,
-        synapse source/target ordering, referential integrity, and zero padding.
+        ``full_scan=True`` additionally verifies:
+        - Neuron-ID uniqueness and strictly increasing order.
+        - Synapse source/target ordering.
+        - Referential integrity (all synapse targets exist).
+        - Zero padding in reserved sections.
+
+        Args:
+            full_scan: If True, perform the full scan (slower but more thorough).
         """
         assert_format_invariants()
         self._validate_sections()
         if not full_scan:
             return
 
+        # Check alignment padding is zero
         metadata_end = self.header.metadata_offset + self.header.metadata_size
         neurons_end = (
             self.header.neuron_offset
@@ -751,6 +1213,7 @@ class B5DReader:
         if any(self._mmap[neurons_end : self.header.synapse_offset]):
             raise B5DFormatError("non-zero neuron alignment padding")
 
+        # Validate neuron IDs are strictly increasing
         previous_neuron_id: int | None = None
         neuron_ids: set[int] = set()
         for index in range(self.header.neuron_count):
@@ -760,14 +1223,17 @@ class B5DReader:
             neuron_ids.add(neuron_id)
             previous_neuron_id = neuron_id
 
+        # Validate synapses sorted and referentially intact
         previous_pair: tuple[int, int] | None = None
         for index in range(self.header.synapse_count):
             offset = self._synapse_offset_for_index(index)
             raw = self._mmap[offset : offset + SYNAPSE_RECORD_SIZE]
             if any(raw[26:28]) or any(raw[36:40]):
                 raise B5DFormatError("reserved synapse bytes must be zero")
+
             synapse = self._decode_synapse_index(index)
             pair = (synapse.source_id, synapse.target_id)
+
             if previous_pair is not None and pair < previous_pair:
                 raise B5DFormatError(
                     "synapse records must be sorted by source_id, target_id"
@@ -782,6 +1248,10 @@ class B5DReader:
                 )
             previous_pair = pair
 
+
+# ============================================================================
+# Module Exports
+# ============================================================================
 
 __all__ = [
     "ALIGNMENT",

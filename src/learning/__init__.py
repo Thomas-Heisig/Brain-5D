@@ -1,15 +1,30 @@
-"""Learning components for Brain 5D."""
+"""Learning and plasticity for Brain-5D.
 
-from .eligibility import EligibilityTrace
+This package provides:
+- Pair-based STDP (isolated and production variants)
+- Reward-modulated plasticity
+- Eligibility traces
+- Learning engine for network integration
+"""
+
+from .eligibility import EligibilityTrace, create_eligibility_trace
 from .learning_engine import LearningEngine, LearningParameters, LearningStats
-from .reward import RewardSignal
-from .stdp_plugin import STDPSynapse
+from .reward import RewardSignal, create_reward
+from .stdp_plugin import STDPParameters, STDPSynapse, create_stdp_synapse
 
 __all__ = [
-    "EligibilityTrace",
+    # STDP
+    "STDPParameters",
+    "STDPSynapse",
+    "create_stdp_synapse",
+    # Reward
+    "RewardSignal",
+    "create_reward",
+    # Learning Engine
     "LearningEngine",
     "LearningParameters",
     "LearningStats",
-    "RewardSignal",
-    "STDPSynapse",
+    # Eligibility
+    "EligibilityTrace",
+    "create_eligibility_trace",
 ]

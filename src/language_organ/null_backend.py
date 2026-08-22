@@ -1,22 +1,27 @@
-"""No-op backend used when the language organ is disabled."""
+"""Read-only, replaceable language model organ for Brain-5D.
 
-from __future__ import annotations
+This package provides a controlled, replaceable interface between
+Brain-5D and external language models. The Language Organ is:
 
-from .protocols import LanguageRequest, LanguageResponse
+- Optional and replaceable (NullBackend, LlamaCppBackend, etc.)
+- Read-only (never mutates Brain-5D state)
+- Fault-tolerant (failures do not stop the simulation)
+- Asynchronous (does not block the simulation loop)
 
+The Language Organ translates between symbolic text and subsymbolic
+SignalFrames, enabling semantic interpretation and monitoring without
+allowing direct network mutation.
+"""
 
-class NullLanguageBackend:
-    """A deterministic backend that performs no model inference."""
+from .null_backend import NullBackend, NullLanguageBackend
+from .protocols import LanguageModelBackend, LanguageRequest, LanguageResponse
 
-    @property
-    def name(self) -> str:
-        return "null"
-
-    def infer(self, request: LanguageRequest) -> LanguageResponse:
-        return LanguageResponse(
-            request_id=request.request_id,
-            text="",
-            backend_name=self.name,
-            success=False,
-            error="language organ disabled",
-        )
+__all__ = [
+    # Backends
+    "NullLanguageBackend",
+    "NullBackend",
+    # Protocols
+    "LanguageModelBackend",
+    "LanguageRequest",
+    "LanguageResponse",
+]

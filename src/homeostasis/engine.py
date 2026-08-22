@@ -1,17 +1,26 @@
-"""Homeostatic self-regulation for Brain-5D v0.5."""
+"""Homeostatic self-regulation for Brain-5D v0.5.
+
+This module provides firing-rate and energy homeostasis through a post-step
+observer that continuously adjusts neuron thresholds and energy levels
+to maintain stable network activity.
+"""
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping
 from dataclasses import dataclass
-import math
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from .signals import HomeostasisSignal
 
 if TYPE_CHECKING:
     from src.core.network import NeuralNetwork, StepResult
 
+
+# ============================================================================
+# Parameters
+# ============================================================================
 
 @dataclass(frozen=True, slots=True)
 class HomeostasisParameters:
@@ -30,7 +39,7 @@ class HomeostasisParameters:
     energy_max: float = 1.0
 
     @classmethod
-    def from_config(cls, config: Mapping[str, object]) -> "HomeostasisParameters":
+    def from_config(cls, config: Mapping[str, object]) -> HomeostasisParameters:
         """Load the optional ``homeostasis`` section from configuration."""
         section = _string_mapping(config.get("homeostasis", {}), "homeostasis")
         params = cls(
@@ -87,6 +96,10 @@ class HomeostasisParameters:
             raise ValueError("target_energy must be inside energy bounds")
 
 
+# ============================================================================
+# Statistics
+# ============================================================================
+
 @dataclass(frozen=True, slots=True)
 class HomeostasisStats:
     """Immutable observable state of the regulator."""
@@ -102,17 +115,53 @@ class HomeostasisStats:
     mean_energy_error: float
     active_neurons: int
 
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "enabled": self.enabled,
+            "updates": self.updates,
+            "target_rate_hz": self.target_rate_hz,
+            "mean_rate_hz": self.mean_rate_hz,
+            "mean_rate_error_hz": self.mean_rate_error_hz,
+            "mean_threshold_adaptation": self.mean_threshold_adaptation,
+            "target_energy": self.target_energy,
+            "mean_energy": self.mean_energy,
+            "mean_energy_error": self.mean_energy_error,
+            "active_neurons": self.active_neurons,
+        }
+
+
+# ============================================================================
+# Engine
+# ============================================================================
 
 class HomeostasisEngine:
-    """Regulate firing rate and energy through a post-step observer."""
+    """Regulate firing rate and energy through a post-step observer.
 
-    def __init__(self, network: "NeuralNetwork", config: Mapping[str, object]) -> None:
-        self.network = network
-        self.params = HomeostasisParameters.from_config(config)
+    This engine attaches to the network as a post-step hook and continuously
+    adjusts neuron thresholds and energy levels to maintain homeostasis.
+
+    Example:
+        >>> engine = HomeostasisEngine(network, config)
+        >>> engine.attach()
+        >>> # ... run simulation ...
+        >>> stats = engine.stats
+        >>> signal = engine.build_signal()
+    """
+
+    def __init__(self, network: NeuralNetwork, config: Mapping[str, object]) -> None:
+        """Initialize the homeostasis engine.
+
+        Args:
+            network: The neural network to regulate.
+            config: Configuration dictionary containing the 'homeostasis' section.
+        """
+        self.network: NeuralNetwork = network
+        self.params: HomeostasisParameters = HomeostasisParameters.from_config(config)
         self._rates_hz: dict[int, float] = {}
-        self._attached = False
-        self._updates = 0
-        self._last_stats = HomeostasisStats(
+        self._attached: bool = False
+        self._updates: int = 0
+        self._last_stats: HomeostasisStats = HomeostasisStats(
             enabled=self.params.enabled,
             updates=0,
             target_rate_hz=self.params.target_rate_hz,
@@ -147,19 +196,27 @@ class HomeostasisEngine:
             self.network.remove_post_step_hook(self.update)
             self._attached = False
 
-    def update(self, step_result: "StepResult") -> None:
-        """Observe one completed tick and apply slow homeostatic feedback."""
+    def update(self, step_result: StepResult) -> None:
+        """Observe one completed tick and apply slow homeostatic feedback.
+
+        Args:
+            step_result: The result of the completed network step.
+        """
         if not self.params.enabled:
             return
+
         spike_ids = set(step_result.spike_ids)
         alpha = 1.0 - math.exp(-1.0 / self.params.rate_tau_ticks)
-        instantaneous_hz = 1000.0 / self.network.dt_ms
+        # The reference core always uses dt_ms = 1.0
+        instantaneous_hz: float = 1000.0
 
-        rate_sum = 0.0
-        threshold_sum = 0.0
-        energy_sum = 0.0
-        active_neurons = 0
+        rate_sum: float = 0.0
+        threshold_sum: float = 0.0
+        energy_sum: float = 0.0
+        active_neurons: int = 0
         live_ids = set(self.network.neurons)
+
+        # Remove rates for deleted neurons
         self._rates_hz = {
             neuron_id: rate
             for neuron_id, rate in self._rates_hz.items()
@@ -171,9 +228,11 @@ class HomeostasisEngine:
             sample = instantaneous_hz if neuron_id in spike_ids else 0.0
             rate = previous_rate + alpha * (sample - previous_rate)
             self._rates_hz[neuron_id] = rate
+
             if neuron_id in spike_ids:
                 active_neurons += 1
 
+            # Rate homeostasis
             rate_error = rate - self.params.target_rate_hz
             adjustment = self.params.threshold_learning_rate * rate_error
             neuron.threshold_adaptation = _clamp(
@@ -182,6 +241,7 @@ class HomeostasisEngine:
                 self.params.threshold_max,
             )
 
+            # Energy homeostasis
             if self.params.energy_enabled:
                 recovery = self.params.energy_recovery_rate * (
                     self.params.target_energy - neuron.energy
@@ -198,9 +258,11 @@ class HomeostasisEngine:
 
         self._updates += 1
         count = len(self.network.neurons)
+
         mean_rate = rate_sum / count if count else 0.0
         mean_threshold = threshold_sum / count if count else 0.0
         mean_energy = energy_sum / count if count else 0.0
+
         self._last_stats = HomeostasisStats(
             enabled=True,
             updates=self._updates,
@@ -215,17 +277,35 @@ class HomeostasisEngine:
         )
 
     def rate_hz(self, neuron_id: int) -> float:
-        """Return the exponentially smoothed firing rate of one neuron."""
+        """Return the exponentially smoothed firing rate of one neuron.
+
+        Args:
+            neuron_id: ID of the neuron.
+
+        Returns:
+            Smoothed firing rate in Hz.
+
+        Raises:
+            KeyError: If the neuron does not exist.
+        """
         if neuron_id not in self.network.neurons:
-            raise KeyError(neuron_id)
+            raise KeyError(f"Neuron {neuron_id} not found")
         return self._rates_hz.get(neuron_id, 0.0)
 
     def build_signal(self, tick: int | None = None) -> HomeostasisSignal:
-        """Build an immutable aggregate for higher-level policies."""
+        """Build an immutable aggregate for higher-level policies.
+
+        Args:
+            tick: Optional tick number. If not provided, uses current network tick.
+
+        Returns:
+            A HomeostasisSignal with aggregate statistics.
+        """
         neurons = tuple(self.network.neurons.items())
         rates = tuple(self._rates_hz.get(neuron_id, 0.0) for neuron_id, _ in neurons)
         energies = tuple(float(neuron.energy) for _, neuron in neurons)
         adaptations = tuple(float(neuron.threshold_adaptation) for _, neuron in neurons)
+
         count = len(neurons)
         mean_rate = sum(rates) / count if count else 0.0
         variance = (
@@ -233,6 +313,7 @@ class HomeostasisEngine:
         )
         mean_energy = sum(energies) / count if count else 0.0
         mean_adaptation = sum(adaptations) / count if count else 0.0
+
         low_rate_boundary = self.params.target_rate_hz * 0.5
         high_rate_boundary = self.params.target_rate_hz * 1.5
         low_energy_boundary = (self.params.energy_min + self.params.target_energy) / 2.0
@@ -259,9 +340,15 @@ class HomeostasisEngine:
         )
 
 
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
 def _string_mapping(value: object, name: str) -> dict[str, object]:
+    """Convert a Mapping to a dict with string keys."""
     if not isinstance(value, Mapping):
         raise TypeError(f"{name} config must be a mapping")
+
     mapping = cast(Mapping[object, object], value)
     result: dict[str, object] = {}
     for key, item in mapping.items():
@@ -272,16 +359,30 @@ def _string_mapping(value: object, name: str) -> dict[str, object]:
 
 
 def _clamp(value: float, minimum: float, maximum: float) -> float:
+    """Clamp a value between minimum and maximum."""
     return max(minimum, min(maximum, value))
 
 
 def _float_value(value: object, name: str) -> float:
+    """Extract a float value from a configuration field."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeError(f"homeostasis.{name} must be numeric")
     return float(value)
 
 
 def _bool_value(value: object, name: str) -> bool:
+    """Extract a boolean value from a configuration field."""
     if not isinstance(value, bool):
         raise TypeError(f"homeostasis.{name} must be boolean")
     return value
+
+
+# ============================================================================
+# Module Exports
+# ============================================================================
+
+__all__ = [
+    "HomeostasisEngine",
+    "HomeostasisParameters",
+    "HomeostasisStats",
+]

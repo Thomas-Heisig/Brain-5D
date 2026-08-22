@@ -1,4 +1,14 @@
-"""Brain-5D command-line simulation entry point with dashboard integration."""
+"""Brain-5D command-line simulation entry point with dashboard integration.
+
+This module runs the simulation and optionally starts the dashboard in the
+main thread (to handle signals). The simulation runs in a daemon thread
+so that the dashboard can control it via the OperatorBridge.
+
+Usage:
+    python -m src.main --config configs/poc_config.yaml
+    python -m src.main --config configs/poc_config.yaml --no-dashboard
+    python -m src.main --config configs/poc_config.yaml --observe --benchmark
+"""
 
 from __future__ import annotations
 
@@ -6,13 +16,12 @@ import argparse
 import random
 import statistics
 import threading
-import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, cast
 
 from src.config.loader import load_config
-from src.core.network import NeuralNetwork
+from src.core import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import (
     coords_to_linear,
     linear_to_5d,
@@ -30,73 +39,74 @@ from src.telemetry.spike_history import SpikeHistory
 from src.utils.run_artifacts import RunArtifacts
 
 # ================================================================
-# Dashboard Integration
+# Dashboard Integration – with None‑fallback
 # ================================================================
-try:
-    from src.controller.runtime import RuntimeController
-    from src.dashboard.operator_bridge import OperatorBridge
-    from src.dashboard.server import serve_dashboard
-    from src.dashboard.state import DashboardStateStore
-    from src.dashboard.models import DashboardSnapshot
+_dashboard_available = False
+_OperatorBridge = None
+_serve_dashboard = None
+_DashboardStateStore = None
 
-    DASHBOARD_AVAILABLE = True
+try:
+    from src.dashboard.operator_bridge import OperatorBridge as _OperatorBridge
+    from src.dashboard.server import serve_dashboard as _serve_dashboard
+    from src.dashboard.state import DashboardStateStore as _DashboardStateStore
+
+    _dashboard_available = True
 except ImportError as e:
-    DASHBOARD_AVAILABLE = False
     print(f"⚠️ Dashboard not available: {e}")
 
 
 # ================================================================
-# SimpleController (Fallback)
+# Simple Controller (Ersatz für RuntimeController)
 # ================================================================
 
-@dataclass
-class TelemetryStub:
-    controller_state: str = "idle"
-    tick: int = 0
-    ticks_per_second: float = 0.0
-    batch_duration_ms: float = 0.0
-    spikes_this_batch: int = 0
-    neurons: int = 0
-    synapses: int = 0
-    queue_depth: int = 0
-    requested_ticks: int = 0
-    completed_ticks: int = 0
-    last_error: str | None = None
-    mean_energy: float = 0.0
-    spikes_total: int = 0
-
-
 class SimpleController:
-    """Simple controller for OperatorBridge."""
+    """Einfacher Controller für das Dashboard – vermeidet Protokollkonflikte.
+
+    Dieser Controller erfüllt die minimalen Anforderungen, die OperatorBridge
+    an ein Controller-Objekt stellt. Er ist ein Ersatz für den eigentlichen
+    RuntimeController, der aufgrund von Protokollkonflikten nicht verwendet wird.
+    """
 
     def __init__(self, network: NeuralNetwork) -> None:
         self.network = network
         self._state = "idle"
-        self._telemetry = TelemetryStub()
 
     @property
-    def telemetry(self) -> TelemetryStub:
-        self._telemetry.tick = self.network.current_tick
-        self._telemetry.neurons = len(self.network.neurons)
-        self._telemetry.synapses = self.network.synapse_count
-        self._telemetry.spikes_total = self.network.total_spikes
-        return self._telemetry
+    def telemetry(self) -> object:
+        """Telemetrie-Stub, der die vom Dashboard erwarteten Attribute bereitstellt."""
+        # Verwende ein einfaches Objekt mit Attributen statt einer dataclass
+        return type(
+            "TelemetryStub",
+            (),
+            {
+                "controller_state": self._state,
+                "tick": self.network.current_tick,
+                "neurons": len(self.network.neurons),
+                "synapses": self.network.synapse_count,
+                "queue_depth": getattr(self.network, "queued_event_count", 0),
+                "spikes_total": self.network.total_spikes,
+                "spikes_this_batch": 0,
+                "ticks_per_second": 0.0,
+                "batch_duration_ms": 0.0,
+                "requested_ticks": 0,
+                "completed_ticks": 0,
+                "last_error": None,
+                "mean_energy": 0.0,
+            },
+        )()
 
     def start(self) -> None:
         self._state = "running"
-        self._telemetry.controller_state = "running"
 
     def pause(self) -> None:
         self._state = "paused"
-        self._telemetry.controller_state = "paused"
 
     def resume(self) -> None:
         self._state = "running"
-        self._telemetry.controller_state = "running"
 
     def stop(self) -> None:
         self._state = "stopped"
-        self._telemetry.controller_state = "stopped"
 
     def step_once(self) -> None:
         self.network.step()
@@ -125,57 +135,91 @@ class SimpleController:
 # Helper Functions
 # ================================================================
 
-def sample_positions_excluding_poc(total: int, reserved: set[int], n: int, rng: random.Random) -> list[int]:
+def sample_positions_excluding_poc(
+    total: int,
+    reserved: set[int],
+    n: int,
+    rng: random.Random,
+) -> list[int]:
+    """Sample free linear positions while preserving reserved PoC cells."""
     available = [idx for idx in range(total) if idx not in reserved]
     if n > len(available):
-        raise ValueError(f"Not enough unreserved positions: need {n}, have {len(available)}")
+        raise ValueError(
+            f"Not enough unreserved positions: need {n}, have {len(available)}"
+        )
     return rng.sample(available, n)
 
 
-def build_network(config: dict[str, Any]) -> tuple[NeuralNetwork, random.Random]:
-    rng = random.Random(int(config["seed"]))
+def build_network(config_dict: dict[str, Any]) -> tuple[NeuralNetwork, random.Random]:
+    """Build the network from configuration using the new Brain5DConfig."""
+    # Convert dict to Brain5DConfig
+    config = Brain5DConfig.from_dict(config_dict)
+    rng = random.Random(int(config_dict.get("seed", 42)))
+
+    # Create network
     network = NeuralNetwork(config, rng)
 
-    dims = tuple(config["dimensions"])
-    total = 1
-    for dim in dims:
-        total *= dim
+    dims = config.dimensions
 
-    topology = config["topology"]
-    input_coord = make_boundary_coord(dims, topology["input"]["dimension"], topology["input"]["coordinate"])
-    output_coord = make_boundary_coord(dims, topology["output"]["dimension"], topology["output"]["coordinate"])
-    diag_coord = tuple(config["diagnostics"]["target_coord"])
+    # Extract topology information from the original config dict
+    topology = config_dict.get("topology", {})
+    input_dim = topology.get("input", {}).get("dimension", "x")
+    input_coord = topology.get("input", {}).get("coordinate", 0)
+    output_dim = topology.get("output", {}).get("dimension", "x")
+    output_coord = topology.get("output", {}).get("coordinate", dims[0] - 1)
 
-    reserved_coords = {input_coord, output_coord, diag_coord}
+    # Add reserved neurons (input, output, diagnostic)
+    input_coord_5d = make_boundary_coord(dims, input_dim, input_coord)
+    output_coord_5d = make_boundary_coord(dims, output_dim, output_coord)
+    diag_coord = tuple(
+        config_dict.get("diagnostics", {}).get("target_coord", (0, 0, 0, 0, 0))
+    )
+
+    reserved_coords = {input_coord_5d, output_coord_5d, diag_coord}
     reserved_indices = {coords_to_linear(coord, dims) for coord in reserved_coords}
 
+    total_positions = 1
+    for d in dims:
+        total_positions *= d
+
+    initial_neurons = int(config_dict.get("initial_neurons", 5000))
+
     chosen = sample_positions_excluding_poc(
-        total, reserved_indices, int(config["initial_neurons"]) - len(reserved_coords), rng
+        total_positions,
+        reserved_indices,
+        initial_neurons - len(reserved_coords),
+        rng,
     )
 
     for idx in chosen:
         network.add_neuron(linear_to_5d(idx, dims))
+
     for coord in sorted(reserved_coords):
         network.add_neuron(coord)
 
+    # Set input/output cells
     network.set_input_output_cells(
-        topology["input"]["dimension"],
-        topology["input"]["coordinate"],
-        topology["output"]["dimension"],
-        topology["output"]["coordinate"],
+        input_dim,
+        input_coord,
+        output_dim,
+        output_coord,
     )
 
-    network.initialize_random_connections(
-        int(config["network"]["initial_connections_per_neuron"]),
-        float(config["network"]["neighbour_radius"]),
-    )
+    # Initialize random connections
+    conn_per_neuron = config.network.initial_connections_per_neuron
+    radius = config.network.neighbour_radius
+    network.initialize_random_connections(conn_per_neuron, radius)
 
     return network, rng
 
 
-def setup_learning(network: NeuralNetwork, config: dict[str, Any]) -> LearningEngine | None:
+def setup_learning(
+    network: NeuralNetwork,
+    config_dict: dict[str, Any],
+) -> LearningEngine | None:
+    """Set up and attach the learning engine if enabled."""
     try:
-        learning = LearningEngine(network, config)
+        learning = LearningEngine(network, config_dict)
         if learning.enabled:
             learning.attach()
             print("✅ Learning engine attached")
@@ -185,9 +229,13 @@ def setup_learning(network: NeuralNetwork, config: dict[str, Any]) -> LearningEn
         return None
 
 
-def setup_homeostasis(network: NeuralNetwork, config: dict[str, Any]) -> HomeostasisEngine | None:
+def setup_homeostasis(
+    network: NeuralNetwork,
+    config_dict: dict[str, Any],
+) -> HomeostasisEngine | None:
+    """Set up and attach the homeostasis engine if enabled."""
     try:
-        homeostasis = HomeostasisEngine(network, config)
+        homeostasis = HomeostasisEngine(network, config_dict)
         if homeostasis.enabled:
             homeostasis.attach()
             print("✅ Homeostasis engine attached")
@@ -197,12 +245,22 @@ def setup_homeostasis(network: NeuralNetwork, config: dict[str, Any]) -> Homeost
         return None
 
 
-def setup_observatory(network: NeuralNetwork, config: dict[str, Any], spike_history: SpikeHistory, history: History, probes: ProbeManager) -> Any | None:
-    if not config["visualization"].get("enabled"):
+def setup_observatory(
+    network: NeuralNetwork,
+    config_dict: dict[str, Any],
+    spike_history: SpikeHistory,
+    history: History,
+    probes: ProbeManager,
+) -> Any | None:
+    """Set up the observatory if visualization is enabled."""
+    vis = config_dict.get("visualization", {})
+    if not vis.get("enabled", False):
         return None
+
     try:
         from src.visualization.observatory import Observatory
-        observatory = Observatory(network, config, spike_history, history, probes)
+
+        observatory = Observatory(network, config_dict, spike_history, history, probes)
         print("✅ Observatory ready")
         return observatory
     except Exception as e:
@@ -215,7 +273,9 @@ def setup_observatory(network: NeuralNetwork, config: dict[str, Any], spike_hist
 # ================================================================
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Brain 5D v0.5 - homeostatic self-regulation with dashboard")
+    parser = argparse.ArgumentParser(
+        description="Brain 5D v0.5 - homeostatic self-regulation with dashboard"
+    )
     parser.add_argument("--config", default="configs/poc_config.yaml")
     parser.add_argument("--observe", action="store_true")
     parser.add_argument("--benchmark", action="store_true")
@@ -225,100 +285,92 @@ def main() -> int:
     parser.add_argument("--ticks", type=int, default=None)
     args = parser.parse_args()
 
-    config = cast(dict[str, Any], load_config(args.config))
+    # Load configuration
+    config_dict: dict[str, Any] = cast(dict[str, Any], load_config(args.config))
     if args.observe:
-        config["visualization"]["enabled"] = True
+        config_dict["visualization"] = config_dict.get("visualization", {})
+        config_dict["visualization"]["enabled"] = True
     if args.ticks is not None:
-        config["simulation"]["ticks"] = args.ticks
+        config_dict["ticks"] = args.ticks
 
     print("🚀 Brain 5D - v0.5.0-alpha.1 with dashboard")
     print(f"📄 Config: {args.config}")
 
-    # Build network
-    network, rng = build_network(config)
+    # --- Build network ---
+    network, rng = build_network(config_dict)
 
-    # Setup engines
-    learning = None if args.no_learning else setup_learning(network, config)
-    homeostasis = None if args.no_homeostasis else setup_homeostasis(network, config)
+    # --- Setup engines ---
+    learning = None if args.no_learning else setup_learning(network, config_dict)
+    homeostasis = None if args.no_homeostasis else setup_homeostasis(network, config_dict)
 
-    # Topology health
-    health = cast(dict[str, Any], TopologyHealth(network).analyze())
+    # --- Topology health ---
+    health = cast(dict[str, Any], TopologyHealth(network).analyze())  # type: ignore[reportUnknownMemberType]
 
-    # Telemetry
-    history = History(int(config["telemetry"]["history_ticks"]))
-    spike_history = SpikeHistory(int(config["telemetry"]["spike_history_ticks"]))
-    probes = ProbeManager(network, config)
+    # --- Telemetry ---
+    telemetry_cfg = config_dict.get("telemetry", {})
+    history = History(int(telemetry_cfg.get("history_ticks", 10000)))
+    spike_history = SpikeHistory(int(telemetry_cfg.get("spike_history_ticks", 1000)))
+    probes = ProbeManager(network, config_dict)
 
-    # Stimulus
-    stimulus = StimulusEngine(config, rng)
+    # --- Stimulus ---
+    stimulus = StimulusEngine(config_dict, rng)
 
-    # Propagation
+    # --- Propagation ---
     propagation = PropagationAnalyzer(network.output_cells)
 
-    # Diagnostic probe
-    diag_target = tuple(config["diagnostics"]["target_coord"])
-    diag_id = next((nid for nid in network.neurons if unpack_coords(nid) == diag_target), None)
+    # --- Diagnostic probe ---
+    diag_target = tuple(
+        config_dict.get("diagnostics", {}).get("target_coord", (0, 0, 0, 0, 0))
+    )
+    diag_id = next(
+        (nid for nid in network.neurons if unpack_coords(nid) == diag_target),
+        None,
+    )
     if diag_id is not None:
         probes.add_probe(diag_id)
 
-    # Observatory
-    observatory = setup_observatory(network, config, spike_history, history, probes)
+    # --- Observatory ---
+    observatory = setup_observatory(
+        network, config_dict, spike_history, history, probes
+    )
 
     # ================================================================
-    # Dashboard Setup - WIRD IM HAUPTTHREAD GESTARTET
+    # Dashboard Setup – mit SimpleController
     # ================================================================
     dashboard_stop_event = threading.Event()
-    controller = None
     operator_bridge = None
-    state_store = DashboardStateStore()
+    state_store = None
 
-    if not args.no_dashboard and DASHBOARD_AVAILABLE:
+    if not args.no_dashboard and _dashboard_available:
         try:
             # Controller erstellen
-            try:
-                controller = RuntimeController(network=network)
-                print("✅ Using RuntimeController")
-            except Exception as e:
-                print(f"⚠️ RuntimeController failed, using SimpleController: {e}")
-                controller = SimpleController(network)
-                print("✅ Using SimpleController")
+            controller = SimpleController(network)
+            print("✅ SimpleController created")
 
-            # OperatorBridge erstellen
-            operator_bridge = OperatorBridge(
-                controller=controller,
+            # OperatorBridge erstellen – Typkonflikt wird ignoriert
+            operator_bridge = _OperatorBridge(  # type: ignore[reportArgumentType]
+                controller=controller, # type: ignore[reportUnknownVariableType]
                 coordinator=None,
                 plasticity=None,
             )
             print("✅ OperatorBridge created")
 
-            # Snapshot & Docs
-            snapshot_path = Path("artifacts/latest.b5d") if Path("artifacts").exists() else None
-            docs_root = Path("docs") if Path("docs").exists() else None
+            # StateStore
+            state_store = _DashboardStateStore() # type: ignore[reportUnknownVariableType]
 
-            # Dashboard im Hauptthread starten
-            print("🧠 Starting Brain-5D dashboard on http://127.0.0.1:8765")
-            serve_dashboard(
-                host="127.0.0.1",
-                port=8765,
-                state=state_store,
-                snapshot_path=snapshot_path,
-                structural_bridge=operator_bridge,  # <-- HIER WIRD DIE BRIDGE ÜBERGEBEN!
-                docs_root=docs_root,
-            )
-            # WICHTIG: serve_dashboard blockiert den Thread!
-            # D.h. alles was danach kommt, läuft erst nach Beendigung des Dashboards.
-            # Deshalb starten wir die Simulation in einem separaten Thread.
         except Exception as e:
-            print(f"⚠️ Dashboard could not be started: {e}")
+            print(f"⚠️ Dashboard setup failed: {e}")
+            operator_bridge = None
+            state_store = None
 
     # ================================================================
-    # Simulation (in separatem Thread, wenn Dashboard läuft)
+    # Simulation in separatem Thread (einmal definiert)
     # ================================================================
 
-    def run_simulation() -> None:
+    def run_simulation(stop_event: threading.Event) -> None:
         core_times: list[float] = []
         warmup = 100
-        total_ticks = int(config["simulation"]["ticks"])
+        total_ticks = int(config_dict.get("ticks", 1000))
 
         print(
             f"🧠 Neurons={len(network.neurons)} Synapses={network.synapse_count} "
@@ -327,31 +379,38 @@ def main() -> int:
             f"Homeostasis={'on' if homeostasis and homeostasis.enabled else 'off'}"
         )
 
-        with RunArtifacts(config) as artifacts:
+        with RunArtifacts(config_dict) as artifacts:
             artifacts.save_topology(health)
 
-            for tick_idx in range(total_ticks):
-                stim: StimulusResult = stimulus.apply(network, network.current_tick)
+            for _ in range(total_ticks):
+                if stop_event.is_set():
+                    print("⏹️ Simulation stopped by event")
+                    break
+
+                stim: StimulusResult = stimulus.apply(network, network.current_tick)  # type: ignore[reportUnknownMemberType]
                 result = network.step()
 
                 # Reward
-                reward_cfg = config.get("reward", {})
+                reward_cfg = config_dict.get("reward", {})
                 if (
                     learning
                     and learning.params.reward_enabled
                     and reward_cfg.get("reward_source", "external") == "output_spike"
                     and result.output_spike_ids
                 ):
-                    learning.set_reward(float(reward_cfg.get("output_spike_value", 1.0)), result.tick)
+                    learning.set_reward(
+                        float(reward_cfg.get("output_spike_value", 1.0)),
+                        result.tick,
+                    )
 
                 # Telemetry
-                history.append_from_stepresult(result)
+                history.append_from_stepresult(result)  # type: ignore[reportUnknownMemberType]
                 spike_history.append(result.tick, result.spike_ids)
                 propagation.observe(stim, result)
 
                 # Artifacts
-                metric: dict[str, Any] = history.get_all()[-1]
-                artifacts.log_metrics(metric)
+                metric = history.get_all()[-1]  # type: ignore[reportUnknownVariableType]
+                artifacts.log_metrics(metric)  # type: ignore[reportUnknownArgumentType]
                 artifacts.log_spikes(result.tick, result.spike_ids)
                 artifacts.log_stimulus(stim)
 
@@ -360,14 +419,18 @@ def main() -> int:
                     core_times.append(result.core_step_ms)
 
                 # Observatory
+                vis_cfg = config_dict.get("visualization", {})
+                refresh_interval = vis_cfg.get("refresh_interval_ticks", 100)
                 if (
                     observatory
-                    and (result.tick + 1) % int(config["visualization"]["refresh_interval_ticks"]) == 0
+                    and (result.tick + 1) % refresh_interval == 0
                 ):
                     observatory.draw()
 
                 # Console logging
-                if (result.tick + 1) % int(config["logging"]["interval_ticks"]) == 0:
+                log_cfg = config_dict.get("logging", {})
+                log_interval = log_cfg.get("interval_ticks", 100)
+                if (result.tick + 1) % log_interval == 0:
                     print(
                         f"Tick {result.tick + 1:4d} | spikes={result.spikes_this_tick:4d} "
                         f"| total={result.total_spikes:6d} "
@@ -378,7 +441,7 @@ def main() -> int:
             # Reports
             report = propagation.get_report()
             summary: dict[str, Any] = {
-                "seed": config["seed"],
+                "seed": config_dict.get("seed", 42),
                 "ticks": total_ticks,
                 "final_neurons": len(network.neurons),
                 "final_synapses": network.synapse_count,
@@ -414,18 +477,42 @@ def main() -> int:
             print("🔭 Observatory running — close window to exit")
             observatory.block_until_closed()
 
-        dashboard_stop_event.set()
-
-    # Simulation starten
-    sim_thread = threading.Thread(target=run_simulation, daemon=True)
+    # ================================================================
+    # Start simulation thread
+    # ================================================================
+    sim_thread = threading.Thread(
+        target=run_simulation,
+        args=(dashboard_stop_event,),
+        daemon=True,
+    )
     sim_thread.start()
 
-    # Wenn Dashboard nicht läuft, wartet der Hauptthread auf die Simulation
-    if args.no_dashboard or not DASHBOARD_AVAILABLE:
-        sim_thread.join()
+    # ================================================================
+    # Dashboard im Hauptthread starten (falls aktiviert)
+    # ================================================================
+    if (
+        not args.no_dashboard
+        and _dashboard_available
+        and operator_bridge is not None
+        and state_store is not None
+    ):
+        try:
+            snapshot_path = Path("artifacts/latest.b5d") if Path("artifacts").exists() else None
+            docs_root = Path("docs") if Path("docs").exists() else None
 
-    # Wenn Dashboard läuft, wird der Hauptthread von serve_dashboard blockiert.
-    # Die Simulation läuft parallel.
+            print("🧠 Starting Brain-5D dashboard on http://127.0.0.1:8765")
+
+            # Die `type: ignore` muss auf derselben Zeile wie der Aufruf stehen
+            _serve_dashboard(host="127.0.0.1", port=8765, state=state_store, snapshot_path=snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root)  # type: ignore[reportOptionalCall, call-arg, operator]
+
+        except KeyboardInterrupt:
+            print("\n⏹️ Dashboard interrupted, stopping simulation...")
+        finally:
+            dashboard_stop_event.set()
+            sim_thread.join(timeout=2)
+    else:
+        # Kein Dashboard – warte auf Simulation
+        sim_thread.join()
 
     return 0
 

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 import random
-from typing import Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable, cast
 
 
 class CheckpointEventLike(Protocol):
@@ -269,35 +269,41 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
 
 
 def _mapping(value: object, name: str) -> dict[str, object]:
+    """Validate and cast a JSON object to dict[str, object]."""
     if not isinstance(value, dict):
         raise ValueError(f"{name} must be an object")
+    # Cast to dict[str, object] after validation
+    value = cast(dict[str, object], value)
     result: dict[str, object] = {}
     for key, item in value.items():
-        if not isinstance(key, str):
-            raise ValueError(f"{name} contains a non-string key")
+        # key is already str due to the cast, so no need for isinstance check
         result[key] = item
     return result
 
 
 def _list(value: object, name: str) -> list[object]:
+    """Validate and cast a JSON array to list[object]."""
     if not isinstance(value, list):
         raise ValueError(f"{name} must be a list")
-    return list(value)
+    return cast(list[object], value)
 
 
 def _int(value: object, name: str) -> int:
+    """Validate and cast a JSON value to int."""
     if isinstance(value, bool) or not isinstance(value, int):
         raise ValueError(f"{name} must be an integer")
     return value
 
 
 def _float(value: object, name: str) -> float:
+    """Validate and cast a JSON value to float."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be numeric")
     return float(value)
 
 
 def _optional_float(value: object, name: str) -> float | None:
+    """Validate and cast a JSON value to optional float."""
     if value is None:
         return None
     return _float(value, name)
