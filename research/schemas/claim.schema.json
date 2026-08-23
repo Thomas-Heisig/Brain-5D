@@ -50,6 +50,11 @@
       "type": "string",
       "enum": ["none", "low", "medium", "high", "very_high"]
     },
+    "evidence_level": {
+      "type": "string",
+      "enum": ["E0", "E1", "E2", "E3", "E4"],
+      "description": "Evidence hierarchy level: E0=theoretical, E1=unit test, E2=single controlled experiment, E3=replicated across seeds, E4=ablation+control+replication."
+    },
     "required_evidence": {
       "type": "array",
       "items": { "type": "string" },

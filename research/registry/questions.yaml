@@ -41,14 +41,30 @@
   created: "2026-08-23"
   updated: "2026-08-23"
 
-- id: RQ-SNN-003
-  domain: Spiking Neural Networks
+- id: RQ-DET-001
+  domain: Determinism
   question: "Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?"
   relevance: "Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung."
   literature:
     - SRC-IZHIKEVICH-2003
   hypotheses:
     - H-SNN-003-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+  created: "2026-08-23"
+  updated: "2026-08-23"
+
+- id: RQ-SNN-003
+  domain: Spiking Neural Networks
+  question: "Wie variiert die Propagation mit der Topologie?"
+  relevance: "Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs."
+  literature:
+    - SRC-WATTS-STROGATZ-1998
+    - SRC-BARABASI-1999
+  hypotheses: []
   evidence: []
   status: open
   answer:

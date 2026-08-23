@@ -316,6 +316,30 @@ async function refreshIntegrationStatus() {
 }
 
 /**
+ * Refresh snapshot info from /api/snapshot-info
+ */
+async function refreshSnapshotInfo() {
+  try {
+    const response = await fetch('/api/snapshot-info', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const info = await response.json();
+    if (info.active) {
+      setText('snapshot-file', info.path || '—');
+      setText('snapshot-tick', info.tick != null ? formatNumber(info.tick) : '—');
+      setText('snapshot-size', info.size_bytes != null ? formatBytes(info.size_bytes) : '—');
+      setText('snapshot-status', '✅ aktiv');
+    } else {
+      setText('snapshot-file', '—');
+      setText('snapshot-tick', '—');
+      setText('snapshot-size', '—');
+      setText('snapshot-status', '⏳ initializing...');
+    }
+  } catch {
+    setText('snapshot-status', '⚠️ offline');
+  }
+}
+
+/**
  * Refresh heatmap from /api/heatmap
  */
 async function refreshHeatmap() {
@@ -474,6 +498,7 @@ function initDashboard() {
   // Initial loads
   refreshStatus();
   refreshHeatmap();
+  refreshSnapshotInfo();
 
   // Set up intervals
   if (refreshInterval) clearInterval(refreshInterval);
@@ -481,6 +506,7 @@ function initDashboard() {
 
   refreshInterval = setInterval(refreshStatus, 1000);
   heatmapInterval = setInterval(refreshHeatmap, 5000);
+  setInterval(refreshSnapshotInfo, 3000);
 
   // Heatmap kind buttons
   $$('button[data-kind]').forEach(button => {

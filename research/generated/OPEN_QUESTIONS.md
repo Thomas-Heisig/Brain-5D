@@ -38,9 +38,9 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-## RQ-SNN-003
+## RQ-DET-001
 
-**Domäne:** Spiking Neural Networks
+**Domäne:** Determinism
 
 **Frage:** Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?
 
@@ -51,6 +51,16 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 **Hypothesen:**
 - `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch.
+
+---
+
+## RQ-SNN-003
+
+**Domäne:** Spiking Neural Networks
+
+**Frage:** Wie variiert die Propagation mit der Topologie?
+
+**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
 
 ---
 
@@ -393,4 +403,4 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 27 offene Fragen.*
+*Insgesamt 28 offene Fragen.*

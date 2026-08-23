@@ -12,7 +12,7 @@ Einführung in SNN-Theorie, Izhikevich-Modell, deterministische Dynamik
 **Forschungsfragen:**
 - `RQ-SNN-001`: Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?... *(open)*
 - `RQ-SNN-002`: Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefo... *(open)*
-- `RQ-SNN-003`: Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?... *(open)*
+- `RQ-DET-001`: Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?... *(open)*
 
 **Literatur:**
 - `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)

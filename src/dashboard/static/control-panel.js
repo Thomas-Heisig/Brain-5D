@@ -151,15 +151,16 @@ export class ControlAPI {
 
   /**
    * Execute a control command.
-   * @param {string} action - Command action
+   * Canonical contract: POST /api/control  { "command": "run_ticks", "ticks": 100 }
+   * @param {string} command - Command name
    * @param {object} params - Command parameters
    * @returns {Promise<Object>} Command result
    */
-  static async executeCommand(action, params = {}) {
+  static async executeCommand(command, params = {}) {
     return this.fetchJSON('/api/control', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, ...params }),
+      body: JSON.stringify({ command, ...params }),
     });
   }
 
@@ -182,11 +183,27 @@ export class ControlAPI {
   }
 
   /**
+   * Start runtime (continuous execution).
+   * @returns {Promise<Object>} Result
+   */
+  static async start() {
+    return this.executeCommand('start');
+  }
+
+  /**
    * Pause runtime.
    * @returns {Promise<Object>} Result
    */
   static async pause() {
     return this.executeCommand('pause');
+  }
+
+  /**
+   * Resume runtime.
+   * @returns {Promise<Object>} Result
+   */
+  static async resume() {
+    return this.executeCommand('resume');
   }
 
   /**

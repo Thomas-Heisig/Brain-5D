@@ -174,6 +174,10 @@ class RuntimeTelemetry:
             "last_error": self.last_error,
         }
 
+    def to_json(self) -> dict[str, int | float | str | None]:
+        """Alias for to_dict() for DashboardControlService compatibility."""
+        return self.to_dict()
+
 
 # ============================================================================
 # Callback Types
@@ -182,8 +186,15 @@ class RuntimeTelemetry:
 SnapshotCallback = Callable[[], None]
 """Callback for snapshot requests."""
 
-PostTickHook = Callable[[int], None]
-"""Callback after each tick, receives current tick number."""
+PostTickHook = Callable[[int, Any], None]
+"""Callback after each tick, receives current tick number and the StepResult.
+
+The second argument is the StepResult-like object returned by network.step().
+Hooks should accept ``**kwargs`` for forward compatibility.
+"""
+
+PreTickHook = Callable[[int], None]
+"""Callback before each tick, receives current tick number before stepping."""
 
 ErrorCallback = Callable[[Exception], None]
 """Callback when an error occurs in the runtime loop."""
@@ -273,6 +284,7 @@ class RuntimeController:
         self._pause_event: threading.Event = threading.Event()
         self._thread: threading.Thread | None = None
         self._hooks: list[PostTickHook] = []
+        self._pre_hooks: list[PreTickHook] = []
         self._error_callbacks: list[ErrorCallback] = []
         self._snapshot_requested: bool = False
         self._requested_ticks: int = 0
@@ -321,7 +333,7 @@ class RuntimeController:
         """Register a hook that runs after each tick.
 
         Args:
-            hook: Callback receiving the current tick number.
+            hook: Callback receiving the current tick number and StepResult.
         """
         with self._lock:
             if hook not in self._hooks:
@@ -345,6 +357,29 @@ class RuntimeController:
         with self._lock:
             self._hooks.clear()
 
+    def add_pre_hook(self, hook: PreTickHook) -> None:
+        """Register a hook that runs before each tick.
+
+        Args:
+            hook: Callback receiving the current tick number before stepping.
+        """
+        with self._lock:
+            if hook not in self._pre_hooks:
+                self._pre_hooks.append(hook)
+
+    def remove_pre_hook(self, hook: PreTickHook) -> bool:
+        """Remove a previously registered pre-tick hook.
+
+        Returns:
+            True if the hook was removed, False if not found.
+        """
+        with self._lock:
+            try:
+                self._pre_hooks.remove(hook)
+                return True
+            except ValueError:
+                return False
+
     def add_error_callback(self, callback: ErrorCallback) -> None:
         """Register a callback for runtime errors.
 
@@ -359,26 +394,29 @@ class RuntimeController:
     # Control Commands
     # ========================================================================
 
-    def start(self) -> None:
+    def start(self) -> RuntimeTelemetry:
         """Start continuous execution in a daemon thread.
 
         If the controller is already running, this is a no-op.
         If the controller is paused, it resumes execution.
         If the controller is stopped, it creates a new thread.
+
+        Returns:
+            Current telemetry snapshot.
         """
         with self._lock:
             if self._state == ControllerState.RUNNING:
-                return
+                return self._telemetry
 
             if self._state == ControllerState.PAUSED:
                 self._state = ControllerState.RUNNING
                 self._pause_event.clear()
-                return
+                return self._telemetry
 
             if self._thread is not None and self._thread.is_alive():
                 self._state = ControllerState.RUNNING
                 self._pause_event.clear()
-                return
+                return self._telemetry
 
             # Start new thread
             self._stop_event.clear()
@@ -390,33 +428,47 @@ class RuntimeController:
                 daemon=True,
             )
             self._thread.start()
+            return self._telemetry
 
-    def pause(self) -> None:
+    def pause(self) -> RuntimeTelemetry:
         """Pause continuous execution.
 
         The controller remains in a paused state until resume() is called.
+
+        Returns:
+            Current telemetry snapshot.
         """
         with self._lock:
             if self._state == ControllerState.RUNNING:
                 self._state = ControllerState.PAUSED
                 self._pause_event.set()
+            return self._telemetry
 
-    def resume(self) -> None:
-        """Resume continuous execution after pause."""
+    def resume(self) -> RuntimeTelemetry:
+        """Resume continuous execution after pause.
+
+        Returns:
+            Current telemetry snapshot.
+        """
         with self._lock:
             if self._state == ControllerState.PAUSED:
                 self._state = ControllerState.RUNNING
                 self._pause_event.clear()
+            return self._telemetry
 
-    def stop(self) -> None:
+    def stop(self) -> RuntimeTelemetry:
         """Stop continuous execution gracefully.
 
         The controller thread will exit after completing the current batch.
+
+        Returns:
+            Current telemetry snapshot.
         """
         with self._lock:
             self._stop_event.set()
             self._pause_event.set()
             self._state = ControllerState.STOPPED
+            return self._telemetry
 
     def step_once(self) -> RuntimeTelemetry:
         """Execute exactly one tick synchronously.
@@ -493,10 +545,13 @@ class RuntimeController:
         self.start()
         return self.telemetry
 
-    def request_snapshot(self) -> None:
+    def request_snapshot(self) -> RuntimeTelemetry:
         """Request a snapshot at the next safe controller boundary.
 
         If the controller is not running, the snapshot is taken immediately.
+
+        Returns:
+            Current telemetry snapshot.
         """
         with self._lock:
             self._snapshot_requested = True
@@ -504,6 +559,8 @@ class RuntimeController:
         # If not running, flush immediately
         if self.state != ControllerState.RUNNING:
             self._flush_snapshot_request()
+
+        return self.telemetry
 
     # ========================================================================
     # Internal Methods
@@ -585,6 +642,15 @@ class RuntimeController:
             if self._stop_event.is_set() and self.state == ControllerState.RUNNING:
                 break
 
+            # Run pre-tick hooks (e.g. stimulus)
+            with self._lock:
+                pre_hooks = tuple(self._pre_hooks)
+            for hook in pre_hooks:
+                try:
+                    hook(self.network.current_tick)
+                except Exception:
+                    pass  # Hook errors are isolated
+
             # Execute one tick
             result = self.network.step()
             spikes_total += result.spikes_this_tick
@@ -593,12 +659,12 @@ class RuntimeController:
             if self.homeostasis is not None and self.homeostasis.enabled:
                 self.homeostasis.update(self.network.current_tick)
 
-            # Run hooks
+            # Run post-tick hooks
             with self._lock:
                 hooks = tuple(self._hooks)
             for hook in hooks:
                 try:
-                    hook(self.network.current_tick)
+                    hook(self.network.current_tick, result)
                 except Exception:
                     pass  # Hook errors are isolated
 
@@ -652,12 +718,52 @@ class RuntimeController:
         """
         return self.telemetry
 
-    def configure(self, **kwargs: Any) -> None:
+    # ========================================================================
+    # DashboardControlService Compatibility
+    # ========================================================================
+
+    def step(self, ticks: int = 1) -> RuntimeTelemetry:
+        """Execute a finite batch of ticks synchronously (alias for run_ticks).
+
+        This method provides compatibility with DashboardControlService which
+        expects a ``step(ticks)`` signature.
+
+        Args:
+            ticks: Number of ticks to execute.
+
+        Returns:
+            Updated telemetry after the batch.
+
+        Raises:
+            RuntimeError: If the controller is currently running continuously.
+        """
+        return self.run_ticks(ticks)
+
+    def run(self, *, loop_size: int | None = None) -> RuntimeTelemetry:
+        """Start continuous execution (alias for start).
+
+        This method provides compatibility with DashboardControlService which
+        expects a ``run()`` signature.
+
+        Args:
+            loop_size: Ignored in this implementation; continuous execution
+                uses the batch_size configured at construction time.
+
+        Returns:
+            Current telemetry.
+        """
+        self.start()
+        return self.telemetry
+
+    def configure(self, **kwargs: Any) -> RuntimeTelemetry:
         """Configure runtime parameters (for OperatorBridge).
 
         Args:
             loop_size: Override batch_size.
             delay_ms: Override loop_delay_ms.
+
+        Returns:
+            Current telemetry snapshot.
         """
         with self._lock:
             if "loop_size" in kwargs:
@@ -674,6 +780,7 @@ class RuntimeController:
                     if not isinstance(delay_ms, (int, float)) or delay_ms < 0:
                         raise ValueError(f"delay_ms must be >= 0, got {delay_ms}")
                     self._loop_delay_ms = float(delay_ms)
+            return self._telemetry
 
 
 # ============================================================================
@@ -693,6 +800,7 @@ __all__ = [
     # Callbacks
     "SnapshotCallback",
     "PostTickHook",
+    "PreTickHook",
     "ErrorCallback",
     # Main class
     "RuntimeController",

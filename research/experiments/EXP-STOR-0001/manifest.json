@@ -1,0 +1,17 @@
+{
+  "experiment_id": "EXP-STOR-0001",
+  "experiment_status": "not_started",
+  "timestamp": "",
+  "research_questions": [
+    "RQ-STOR-001",
+    "RQ-STOR-002"
+  ],
+  "hypotheses": [],
+  "git": {},
+  "software": {},
+  "simulation": {},
+  "results": {},
+  "artifacts": {},
+  "runtime": {},
+  "evidence": []
+}

@@ -17,6 +17,11 @@
       "pattern": "^EXP-(DET|SNN|STDP|HOM|STRUCT|5D|MEM|STOR|SCALE|ROB|EMB|LLM|ETH|GEN)-[0-9]{4}$",
       "description": "Unique experiment identifier following the convention EXP-{TYPE}-{NNNN}."
     },
+    "experiment_status": {
+      "type": "string",
+      "enum": ["template", "not_started", "running", "completed", "failed", "invalid"],
+      "description": "Execution status of the experiment."
+    },
     "timestamp": {
       "type": "string",
       "format": "date-time",
@@ -166,6 +171,11 @@
           "description": "Any exceptions or warnings during the run."
         }
       }
+    },
+    "data_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^DATA-" },
+      "description": "References to DATA-* measurement artifacts produced by this experiment."
     },
     "artifacts": {
       "type": "object",

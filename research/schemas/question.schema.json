@@ -43,6 +43,21 @@
       "items": { "type": "string", "pattern": "^EVID-" },
       "description": "Evidence IDs supporting the answer."
     },
+    "registry_status": {
+      "type": "string",
+      "enum": ["draft", "registered", "deprecated"],
+      "description": "Registration status of the question."
+    },
+    "experiment_status": {
+      "type": "string",
+      "enum": ["not_started", "in_progress", "completed", "replicated"],
+      "description": "Status of experiments addressing this question."
+    },
+    "evidence_status": {
+      "type": "string",
+      "enum": ["none", "low", "moderate", "strong"],
+      "description": "Overall evidence strength for this question."
+    },
     "status": {
       "type": "string",
       "enum": ["open", "in_progress", "answered", "superseded"],

@@ -234,6 +234,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._serve_snapshots()
                 return
 
+            if path == "/api/snapshot-info":
+                self._serve_snapshot_info()
+                return
+
             # ----------------------------------------------------------------
             # Documentation
             # ----------------------------------------------------------------
@@ -711,6 +715,45 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 {
                     "error": str(exc),
                 },
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    def _serve_snapshot_info(self) -> None:
+        """Return info about the current active snapshot."""
+        source = self.dashboard_server.heatmap_source
+
+        if source is None or not hasattr(source, "snapshot_path"):
+            self._send_json({
+                "active": False,
+                "path": None,
+                "tick": None,
+                "size_bytes": None,
+                "message": "No snapshot source configured.",
+            })
+            return
+
+        try:
+            path = source.snapshot_path
+            info: dict[str, object] = {
+                "active": path.exists(),
+                "path": str(path.name) if path.exists() else None,
+                "tick": None,
+                "size_bytes": path.stat().st_size if path.exists() else None,
+            }
+
+            if path.exists():
+                try:
+                    from src.storage.b5d import B5DReader
+                    reader = B5DReader(str(path))
+                    info["tick"] = reader.header.snapshot_tick
+                    reader.close()
+                except Exception:
+                    pass
+
+            self._send_json(cast(dict[str, JSONValue], info))
+        except Exception as exc:
+            self._send_json(
+                {"active": False, "error": str(exc)},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
 

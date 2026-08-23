@@ -24,7 +24,7 @@
   updated: "2026-08-23"
 
 - id: H-SNN-003-A
-  research_question: RQ-SNN-003
+  research_question: RQ-DET-001
   hypothesis: "Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch."
   status: untested
   evidence: []

@@ -19,6 +19,7 @@
     - SRC-BI-POO-1998
   status: untested
   confidence: none
+  evidence_level: E0
   created: "2026-08-23"
   updated: "2026-08-23"
 
@@ -31,6 +32,7 @@
   sources: []
   status: untested
   confidence: none
+  evidence_level: E0
   required_evidence:
     - dimensional_ablation
     - damage_experiment
@@ -48,6 +50,7 @@
   sources: []
   status: untested
   confidence: none
+  evidence_level: E0
   required_evidence:
     - information_capacity_measurement
     - dimensional_ablation
@@ -65,6 +68,7 @@
   sources: []
   status: untested
   confidence: none
+  evidence_level: E0
   required_evidence:
     - serialize_deserialize_roundtrip
     - state_equality_check
@@ -81,6 +85,7 @@
   sources: []
   status: untested
   confidence: none
+  evidence_level: E0
   required_evidence:
     - module_detection
     - control_comparison

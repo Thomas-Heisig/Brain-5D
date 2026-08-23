@@ -22,7 +22,7 @@
   brain5d_questions:
     - RQ-SNN-001
     - RQ-SNN-002
-    - RQ-SNN-003
+    - RQ-DET-001
   brain5d_relevance: "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
 
 - source_id: SRC-GERSTNER-2014

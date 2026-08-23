@@ -13,10 +13,10 @@ dashboard control functionality.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Literal, Optional, cast
+from typing import Any, Literal, cast
 
 from src.dashboard.models import JSONValue
-from src.runtime.control import RuntimeController
+from src.controller.runtime import RuntimeController
 from src.self_organization.coordinator import SelfOrganizationCoordinator
 
 # ============================================================================
@@ -46,25 +46,21 @@ JSONBody = dict[str, Any]
 class ControlError(Exception):
     """Base exception for control service errors."""
 
-    pass
 
 
 class ValidationError(ControlError):
     """Raised when a command parameter is invalid."""
 
-    pass
 
 
 class UnknownActionError(ControlError):
     """Raised when an unknown control action is requested."""
 
-    pass
 
 
 class CoordinatorUnavailableError(ControlError):
     """Raised when the self-organization coordinator is not available."""
 
-    pass
 
 
 # ============================================================================
@@ -204,16 +200,19 @@ class DashboardControlService:
     def execute(self, body: object) -> ControlResponse:
         """Validate and execute one dashboard command.
 
+        Accepts both ``{"action": "..."}`` and ``{"command": "..."}`` for
+        backward compatibility. The canonical contract is:
+
+        .. code-block:: json
+
+            {"command": "run_ticks", "ticks": 100}
+
         Args:
             body: The request body, expected to be a dictionary with 'action'
-                and optional parameters.
+                or 'command' and optional parameters.
 
         Returns:
             ControlResponse with the result of the command.
-
-        Raises:
-            The method catches all exceptions and returns error responses,
-            so it never raises directly.
         """
         # Validate body type
         if not isinstance(body, dict):
@@ -222,17 +221,21 @@ class DashboardControlService:
         # Cast to JSONBody for the type checker
         body_dict = cast(JSONBody, body)
 
-        # Get action
-        action = body_dict.get("action")
+        # Accept both "action" (legacy) and "command" (canonical)
+        action = body_dict.get("command") or body_dict.get("action")
         if not isinstance(action, str):
-            return ControlResponse.error(400, "Missing string field 'action'.")
+            return ControlResponse.error(
+                400, "Missing string field 'command' (or legacy 'action')."
+            )
 
         # Dispatch to the appropriate handler
         try:
-            if action == "step":
+            if action in ("step", "single_step"):
                 return self._handle_step(body_dict)
-            elif action == "run":
+            elif action in ("run", "start", "resume"):
                 return self._handle_run(body_dict)
+            elif action == "run_ticks":
+                return self._handle_run_ticks(body_dict)
             elif action == "pause":
                 return self._handle_pause()
             elif action == "stop":
@@ -265,6 +268,14 @@ class DashboardControlService:
         """Handle the 'step' command."""
         ticks = self._int_field(body, "ticks", default=1, minimum=1)
         state = self._runtime.step(ticks)
+        return ControlResponse.success(
+            {"ok": True, "runtime": state.to_json(), "ticks": ticks}
+        )
+
+    def _handle_run_ticks(self, body: JSONBody) -> ControlResponse:
+        """Handle the 'run_ticks' command (canonical contract)."""
+        ticks = self._int_field(body, "ticks", default=100, minimum=1)
+        state = self._runtime.run_ticks(ticks)
         return ControlResponse.success(
             {"ok": True, "runtime": state.to_json(), "ticks": ticks}
         )
@@ -459,7 +470,7 @@ class DashboardControlService:
         body: JSONBody,
         name: str,
         *,
-        allowed_values: Optional[list[str]] = None,
+        allowed_values: list[str] | None = None,
     ) -> str | None:
         """Extract and validate an optional string field.
 
@@ -537,12 +548,12 @@ def control_response_to_http(
 
 __all__ = [
     "ControlAction",
-    "ControlResponse",
-    "DashboardControlService",
-    "create_control_service",
-    "control_response_to_http",
     "ControlError",
-    "ValidationError",
-    "UnknownActionError",
+    "ControlResponse",
     "CoordinatorUnavailableError",
+    "DashboardControlService",
+    "UnknownActionError",
+    "ValidationError",
+    "control_response_to_http",
+    "create_control_service",
 ]

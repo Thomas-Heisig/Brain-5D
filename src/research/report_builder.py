@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .registry import REPO_ROOT, ResearchQuestion, ResearchRegistry
 
@@ -241,7 +241,7 @@ class ReportBuilder:
         """Generate a dissertation structure mapped to research entities."""
         chapters: dict[str, dict[str, Any]] = {
             "Kapitel 1 – Theorie und Grundlagen": {
-                "questions": ["RQ-SNN-001", "RQ-SNN-002", "RQ-SNN-003"],
+                "questions": ["RQ-SNN-001", "RQ-SNN-002", "RQ-DET-001"],
                 "sources": [
                     "SRC-IZHIKEVICH-2003",
                     "SRC-GERSTNER-2014",
@@ -343,7 +343,7 @@ class ReportBuilder:
 
         return "\n".join(lines)
 
-    def write_all(self, output_dir: Optional[Path] = None) -> Dict[str, Path]:
+    def write_all(self, output_dir: Path | None = None) -> dict[str, Path]:
         """Generate and write all reports. Returns dict of name -> path."""
         out = output_dir or GENERATED_DIR
         out.mkdir(parents=True, exist_ok=True)

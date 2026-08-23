@@ -4,7 +4,7 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 27
+- **Forschungsfragen:** 28
 - **Hypothesen:** 27
 - **Claims:** 5
 - **Literaturquellen:** 8
@@ -67,6 +67,23 @@
 
 **Claims:**
 - `CLAIM-5D-002`: 5D-Netzwerke zeigen eine höhere Informationskapazität als niedrigdimensionale Netzwerke gleicher Neuronenzahl. *(untested, none)*
+
+---
+
+## Determinism
+
+### RQ-DET-001
+
+**Frage:** Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?
+
+**Status:** open
+**Relevanz:** Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung.
+
+**Hypothesen:**
+- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(untested)*
+
+**Literatur:**
+- `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
 
 ---
 
@@ -299,16 +316,10 @@
 
 ### RQ-SNN-003
 
-**Frage:** Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?
+**Frage:** Wie variiert die Propagation mit der Topologie?
 
 **Status:** open
-**Relevanz:** Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung.
-
-**Hypothesen:**
-- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(untested)*
-
-**Literatur:**
-- `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
+**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
 
 ---
 

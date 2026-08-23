@@ -1,0 +1,18 @@
+{
+  "experiment_id": "EXP-DET-0001",
+  "experiment_status": "not_started",
+  "timestamp": "",
+  "research_questions": [
+    "RQ-DET-001"
+  ],
+  "hypotheses": [
+    "H-SNN-003-A"
+  ],
+  "git": {},
+  "software": {},
+  "simulation": {},
+  "results": {},
+  "artifacts": {},
+  "runtime": {},
+  "evidence": []
+}

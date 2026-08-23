@@ -1,9 +1,10 @@
 {
   "experiment_id": "EXP-2026-0001",
+  "experiment_status": "template",
   "timestamp": "2026-08-23T12:00:00+02:00",
   "research_questions": [
     "RQ-SNN-001",
-    "RQ-SNN-003"
+    "RQ-DET-001"
   ],
   "hypotheses": [
     "H-SNN-001-A",

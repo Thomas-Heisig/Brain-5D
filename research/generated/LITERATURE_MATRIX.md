@@ -2,7 +2,7 @@
 
 | Quelle | Aussage | Brain-5D-Frage(n) | Status |
 |--------|---------|-------------------|--------|
-| Izhikevich (2003) | Simple spiking models can reproduce multiple cortical firing patterns. | RQ-SNN-001, RQ-SNN-002, RQ-SNN-003 | open |
+| Izhikevich (2003) | Simple spiking models can reproduce multiple cortical firing patterns. | RQ-SNN-001, RQ-SNN-002, RQ-DET-001 | open |
 | Gerstner (2014) | Spiking neural networks can model cognitive processes. | RQ-SNN-001, RQ-SNN-002 | open |
 | Song (2000) | STDP can produce competitive synaptic modification. | RQ-SNN-004, RQ-SNN-005, RQ-STDP-001, RQ-STDP-002 | open |
 | Bi (1998) | Spike timing determines the direction and magnitude of synaptic modification. | RQ-STDP-001 | open |

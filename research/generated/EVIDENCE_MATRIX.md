@@ -6,7 +6,8 @@
 |----------------|-----------|-----------|-------------|---------|---------|
 | `RQ-SNN-001` | `H-SNN-001-A` | 2 | — | 0 | offen |
 | `RQ-SNN-002` | `H-SNN-002-A` | 2 | — | 0 | offen |
-| `RQ-SNN-003` | `H-SNN-003-A` | 1 | — | 0 | offen |
+| `RQ-DET-001` | `H-SNN-003-A` | 1 | — | 0 | offen |
+| `RQ-SNN-003` | — | 0 | — | 0 | offen |
 | `RQ-SNN-004` | `H-SNN-004-A` | 2 | `CLAIM-SNN-001` | 0 | offen |
 | `RQ-SNN-005` | `H-SNN-005-A` | 2 | — | 0 | offen |
 | `RQ-STDP-001` | `H-STDP-001-A` | 2 | — | 0 | offen |

@@ -321,6 +321,45 @@ main {
 }
 
 /* ============================================================================
+   SNAPSHOT INFO
+   ============================================================================ */
+
+.snapshot-info-card {
+  padding: 16px 20px;
+  margin-top: 14px;
+}
+
+.snapshot-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.snapshot-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #050d14;
+  border-radius: 8px;
+  border: 1px solid #16394b;
+}
+
+.snapshot-info-item span {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.snapshot-info-item strong {
+  font-size: 15px;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+   ============================================================================
    HEATMAP
    ============================================================================ */
 
