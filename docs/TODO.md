@@ -460,16 +460,20 @@ Independent review reported a non-green test baseline. Reproduce it locally befo
 ## Current Verified Baseline
 
 ```
-Commit:         c7b7951
+Tested commit:  4fa22a4
 Python:         3.13.14
-Collected:      218
-Passed:         216
-Failed:         0
-Skipped:        2 (BRAIN5D_RUN_LARGE_STORAGE_TEST, BRAIN5D_RUN_LARGE_STORAGE_TESTS)
-Collection errors: 2 (test_async_storage.py, test_compaction.py — pre-existing)
+Recorded in:    tests/test_baseline.json
+
+Full collection:    2 collection errors (test_async_storage.py, test_compaction.py)
+
+Verified subset:
+  Command:  python -m pytest tests/ -q --ignore=tests/test_async_storage.py --ignore=tests/test_compaction.py
+  Passed:   216
+  Failed:   0
+  Skipped:  2 (large storage tests require env vars)
 ```
 
-**Important:** Collection errors exist. `216 passed` does NOT imply `complete pytest collection succeeds`. The two collection errors must be resolved before Gate B can close.
+**Important:** `216 passed` is from a run with two **ignored** modules. The full collection has 2 collection errors. Both must be resolved before Gate B can close.
 
 ## Reported Collection Problems to Reproduce
 

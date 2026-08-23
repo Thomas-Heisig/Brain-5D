@@ -1,22 +1,26 @@
 {
+  "tested_commit": "4fa22a4d908aaeafe924711d21d38ff1e6ba04cc",
+  "recorded_in_commit": "4fa22a4d908aaeafe924711d21d38ff1e6ba04cc",
   "timestamp": "2026-08-23T15:15:00+02:00",
-  "git_commit": "c7b795162bfe047c379b2b311bb92f3974d51e7c",
   "python": "3.13.14",
-  "collected": 218,
-  "passed": 216,
-  "failed": 0,
-  "skipped": 2,
-  "skipped_reasons": [
-    "BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
-    "BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable"
-  ],
-  "collection_errors": 2,
-  "collection_error_modules": [
-    "test_async_storage.py",
-    "test_compaction.py"
-  ],
-  "ignored_modules": [
-    "test_async_storage.py",
-    "test_compaction.py"
-  ]
+
+  "full_collection": {
+    "status": "collection_error",
+    "collection_errors": 2,
+    "modules": [
+      "test_async_storage.py",
+      "test_compaction.py"
+    ]
+  },
+
+  "verified_subset": {
+    "command": "python -m pytest tests/ -q --ignore=tests/test_async_storage.py --ignore=tests/test_compaction.py",
+    "passed": 216,
+    "failed": 0,
+    "skipped": 2,
+    "skipped_reasons": [
+      "BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
+      "BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable"
+    ]
+  }
 }
