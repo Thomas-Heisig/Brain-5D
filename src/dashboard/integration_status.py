@@ -16,13 +16,11 @@ A component disabled by config is NEVER reported as "failed".
 
 from __future__ import annotations
 
-import hashlib
-import json
-import subprocess
 from pathlib import Path
 from typing import Any, cast
 
 from src.dashboard.models import JSONValue
+from src.dashboard.verification import evaluate_test_baseline
 
 # ============================================================================
 # Scientifically relevant source paths
@@ -31,6 +29,8 @@ from src.dashboard.models import JSONValue
 # A test-baseline change (this file, docs, CHANGELOG) must NOT invalidate the
 # test status. Only changes to the scientifically relevant source tree should
 # mark the baseline as stale. This is why we digest the tree, not the commit.
+# The canonical list lives in verification.py; this alias is kept for
+# backward compatibility with any code that imported the constant directly.
 _SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml"]
 
 # ============================================================================
@@ -290,8 +290,9 @@ class IntegrationStatusBuilder:
         - ``stale``   — scientifically relevant source code changed since baseline
         - ``pending`` — baseline missing or HEAD/tree digest unavailable
         """
-        baseline_path = self.repo_root / "tests" / "test_baseline.json"
-        if not baseline_path.exists():
+        ev = evaluate_test_baseline(self.repo_root)
+
+        if not ev.available:
             return {
                 "name": "Tests",
                 "status": PENDING,
@@ -299,52 +300,33 @@ class IntegrationStatusBuilder:
                 "message": "test_baseline.json not found",
             }
 
-        try:
-            baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
-        except Exception as e:
-            return {
-                "name": "Tests",
-                "status": FAILED,
-                "source": "test_baseline",
-                "message": f"cannot parse test_baseline.json: {e}",
-            }
-
-        tested_commit = baseline.get("tested_commit")
-        recorded_in_commit = baseline.get("recorded_in_commit")
-        tested_tree_digest = baseline.get("tested_tree_digest")
-        current_commit = self._current_git_head()
-        current_tree_digest = self._current_tree_digest()
-
-        if current_tree_digest is None:
+        if ev.current_tree_digest is None:
             return {
                 "name": "Tests",
                 "status": PENDING,
                 "source": "test_baseline",
                 "message": "cannot compute current tree digest",
-                "tested_commit": tested_commit,
-                "current_commit": current_commit,
+                "tested_commit": ev.tested_commit,
+                "current_commit": ev.current_commit,
             }
 
         # Tree-digest match: only docs/baseline metadata changed since baseline.
-        if tested_tree_digest is not None and tested_tree_digest == current_tree_digest:
-            verified = baseline.get("verified_subset", {})
+        if not ev.stale:
             return {
                 "name": "Tests",
                 "status": PASSED,
                 "source": "test_baseline",
                 "message": (
-                    f"verified tree digest matches: {verified.get('passed', 0)} passed, "
-                    f"{verified.get('failed', 0)} failed, "
-                    f"{verified.get('skipped', 0)} skipped"
+                    f"verified tree digest matches: {ev.passed} passed, "
+                    f"{ev.failed} failed, {ev.skipped} skipped"
                 ),
-                "tested_commit": tested_commit,
-                "recorded_in_commit": recorded_in_commit,
-                "current_commit": current_commit,
-                "tested_tree_digest": tested_tree_digest,
-                "current_tree_digest": current_tree_digest,
-                "passed": verified.get("passed", 0),
-                "failed": verified.get("failed", 0),
-                "skipped": verified.get("skipped", 0),
+                "tested_commit": ev.tested_commit,
+                "current_commit": ev.current_commit,
+                "tested_tree_digest": ev.tested_tree_digest,
+                "current_tree_digest": ev.current_tree_digest,
+                "passed": ev.passed,
+                "failed": ev.failed,
+                "skipped": ev.skipped,
             }
 
         # Scientifically relevant source code changed since baseline — STALE.
@@ -354,14 +336,13 @@ class IntegrationStatusBuilder:
             "source": "test_baseline",
             "message": (
                 f"source tree changed since baseline "
-                f"(tested_commit {(tested_commit or 'unknown')[:8]}, "
-                f"HEAD {(current_commit or 'unknown')[:8]})"
+                f"(tested_commit {(ev.tested_commit or 'unknown')[:8]}, "
+                f"HEAD {(ev.current_commit or 'unknown')[:8]})"
             ),
-            "tested_commit": tested_commit,
-            "recorded_in_commit": recorded_in_commit,
-            "current_commit": current_commit,
-            "tested_tree_digest": tested_tree_digest,
-            "current_tree_digest": current_tree_digest,
+            "tested_commit": ev.tested_commit,
+            "current_commit": ev.current_commit,
+            "tested_tree_digest": ev.tested_tree_digest,
+            "current_tree_digest": ev.current_tree_digest,
         }
 
     def _check_error_visibility(self) -> dict[str, JSONValue]:
@@ -375,60 +356,22 @@ class IntegrationStatusBuilder:
         }
 
     # ------------------------------------------------------------------------
-    # Helpers
+    # Helpers (delegated to verification.py for a single source of truth)
     # ------------------------------------------------------------------------
 
     def _current_git_head(self) -> str | None:
         """Return the current git HEAD SHA, or None if unavailable."""
-        try:
-            result = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
-                capture_output=True,
-                text=True,
-                timeout=5,
-                cwd=str(self.repo_root),
-            )
-            if result.returncode == 0:
-                return result.stdout.strip()
-        except Exception:
-            pass
-        return None
+        from src.dashboard.verification import current_git_head
+
+        return current_git_head(self.repo_root)
 
     def _current_tree_digest(self) -> str | None:
         """Return a SHA-256 digest of the scientifically relevant source tree.
 
-        The digest covers ``src/``, ``configs/``, ``research/schemas/`` and
-        ``pyproject.toml``. It is stable across pure documentation/baseline
-        changes (docs/, CHANGELOG.md, tests/test_baseline.json), so updating
-        the test baseline no longer artificially invalidates the test status.
-
-        The digest is computed from file contents (not git blobs) so it works
-        in a dirty working tree and does not require a clean git state.
+        Delegates to :func:`verification.compute_source_tree_digest` so that
+        ``/api/integration/status`` and ``/api/gate/status`` can never
+        disagree about the same source tree.
         """
-        try:
-            hasher = hashlib.sha256()
-            found_any = False
-            for rel in _SCIENTIFIC_PATHS:
-                target = self.repo_root / rel
-                if target.is_file():
-                    hasher.update(rel.encode("utf-8"))
-                    hasher.update(b"\0")
-                    hasher.update(target.read_bytes())
-                    hasher.update(b"\0")
-                    found_any = True
-                elif target.is_dir():
-                    for path in sorted(target.rglob("*")):
-                        if not path.is_file():
-                            continue
-                        # Normalise path separators for cross-platform stability.
-                        rel_path = path.relative_to(self.repo_root).as_posix()
-                        hasher.update(rel_path.encode("utf-8"))
-                        hasher.update(b"\0")
-                        hasher.update(path.read_bytes())
-                        hasher.update(b"\0")
-                        found_any = True
-            if not found_any:
-                return None
-            return hasher.hexdigest()
-        except Exception:
-            return None
+        from src.dashboard.verification import compute_source_tree_digest
+
+        return compute_source_tree_digest(self.repo_root)

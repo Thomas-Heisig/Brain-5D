@@ -3,6 +3,7 @@
 > Last updated: 2026-08-23
 > Sources: `docs/Roadmap/`, `docs/sprints/`, `CHANGELOG.md`, runtime/dashboard audit, independent reviews, scientific evidence planning
 > Status: **Alpha.5 technical integration near completion; structural end-to-end verification and scientific baseline experiments pending**
+> Dashboard: **Alpha.5 Gate tab is now fully dynamic — rendered from `/api/gate/status` (GateStatusBuilder). No hardcoded checklist remains.**
 
 ---
 
@@ -1879,7 +1880,7 @@ Dashboard Observability      ██████████  Gate A (Alpha.5 Das
 Integration Status (real)    ██████████  Gate A (/api/integration/status, stale detection)
 Truthful Null/Disabled       ██████████  Gate A (no fake zeros, disabled≠failed)
 Structural Runtime Chain     ███░░░░░░░  Gate A remaining (config-disabled in poc_config)
-Test Baseline                ██████████░  Gate B (verified runnable subset: 236 passed, 2 collection errors)
+Test Baseline                ██████████  Gate B (239 passed, 2 skipped, 0 collection errors — tree digest may be stale)
 Structural E2E Verification  ░░░░░░░░░░  Gate B (separate test config needed)
 Error Visibility             ████████░░  Gate B (integration endpoint surfaces errors)
 Restore Determinism          ░░░░░░░░░░  Gate B
@@ -1901,15 +1902,15 @@ Dies ist ein sehr sinnvoller Entwicklungsstand: **Wir müssen jetzt nicht mehr d
 - **Phase 8/9 — Real 5D Network Inspector:** Neue Endpunkte `/api/network/summary`, `/api/network/neurons`, `/api/network/synapses`, `/api/network/projection` liefern echte 5D-Koordinaten, v, u, energy, weights, delays. Serverseitige Pagination. Neuer `🔍 Inspect` Tab.
 - **Phase 14 — Real Integration Status:** `/api/integration/status` berechnet real Bridge/Controller/Runtime/Structural/Snapshot/Delta-Storage/Structural-Journal/Research/Tests/Error-Visibility. Disabled-by-config ≠ failed. Tests-STALE-Erkennung liest `test_baseline.json` und vergleicht `tested_commit` mit HEAD.
 - **Phase 16 — Provenance:** Network-Inspector-Daten als `LIVE` badged.
-- **Phase 18 — Tests:** 21 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, tree-digest stale detection, no demo source). **Verified runnable subset: 236 passed, 2 skipped; full collection still blocked by 2 collection errors.**
+- **Phase 18 — Tests:** 21 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, tree-digest stale detection, no demo source). **Verified baseline: 239 passed, 2 skipped, 0 collection errors (full suite without `--ignore`).**
 - **Phase 19 — Manual E2E:** Fresh start zeigt Tick 0: 5000 Neuronen, 36031 Synapsen, idle, storage disabled. Step (+1), run_ticks (+100), snapshot (neue .b5d) verifiziert via API.
 
 ## Verbleibend (nicht in dieser Aufgabe)
 
 - Structural E2E benötigt separate Test-Config (poc_config bleibt disabled).
-- 2 collection errors (`test_async_storage.py`, `test_compaction.py` importieren nicht-existierendes `tests.test_storage_runtime`).
 - Restore Determinism (Gate B).
 - Scientific Experiments (Gate C).
+- Tree-digest may be STALE after source changes; re-run baseline when new tests are finalized.
 
 ---
 
@@ -1945,10 +1946,10 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 
 === GATE B — Verification ====================================================
 
-12. Run complete pytest baseline ... verified runnable subset: 236 passed, 2 skipped; full collection still blocked by 2 collection errors
-13. Repair all test collection/failures ...................... 🔴 Gate B
-14. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
-15. Eliminate silent hook failures .......................... 🔴 Gate B
+12. Run complete pytest baseline ... 239 passed, 2 skipped, 0 collection errors (full suite without --ignore) ✅
+13. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
+14. Eliminate silent hook failures .......................... 🔴 Gate B
+15. Restore-and-continue determinism ........................ 🔴 Gate B
 
 === GATE C — Scientific Baseline =============================================
 
@@ -2056,9 +2057,10 @@ Code fertig ≠ Integration fertig ≠ Wissenschaft fertig.
 
 ### Test Baseline
 
-* [ ] Zero collection errors (currently 2: `test_async_storage.py`, `test_compaction.py`)
-* [ ] Zero unexplained failures
-* [ ] Full test suite runs without ignored core modules
+* [x] Zero collection errors (resolved: `tests/__init__.py` added)
+* [x] Zero unexplained failures (239 passed, 0 failed)
+* [x] Full test suite runs without ignored core modules (`python -m pytest tests/ -q`)
+* [ ] Tree-digest matches current source tree (re-run baseline after finalizing new tests)
 
 ### Structural Chain — End-to-End Verification
 

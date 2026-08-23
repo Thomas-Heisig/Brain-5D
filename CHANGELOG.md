@@ -1,5 +1,51 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Dynamic Alpha.5 Release Gate (2026-08-23)
+
+### Added
+
+- **Dynamic Alpha.5 Release Gate** (`src/dashboard/gate_status.py`):
+  - `GET /api/gate/status` — evidence-based gate status for Gate A (Technical Integration), Gate B (Verification), Gate C (Scientific Baseline)
+  - Strict separation: Live Runtime Status (active/disabled/unavailable/error) vs Gate Status (passed/pending/blocked/stale/failed) vs Maturity (implemented/integrated/verified/evidenced)
+  - Runtime disabled ≠ gate failed. Runtime disabled ≠ gate passed. IMPLEMENTED ≠ VERIFIED. VERIFIED ≠ EVIDENCED.
+  - Gate A criteria carry test-file evidence (`evidence.test_ids`), not hardcoded `passed` flags
+  - Config-aware live status: `config.enabled=false` → DISABLED; `config.enabled=true` + component missing → ERROR
+  - Experiment `executed` requires `experiment_status=completed` only (not_started/template/running/failed are NOT executed)
+  - Registry counts use the typed `ResearchRegistry` API, not string counting
+  - Tests and Research are NOT live runtime subsystems — Tests belong to Gate B, evidence belongs to Gate C
+- **Shared verification module** (`src/dashboard/verification.py`):
+  - Single `compute_source_tree_digest()` and `evaluate_test_baseline()` used by both `IntegrationStatusBuilder` and `GateStatusBuilder`
+  - Prevents `/api/integration/status` and `/api/gate/status` from disagreeing about the same source tree
+  - Handles both new (`full_suite`/`full_collection`) and legacy (`verified_subset`) baseline formats
+- **22 new tests** in `tests/test_gate_status.py` covering all six architectural guarantees
+
+### Fixed
+
+- **Baseline format bug** (`src/dashboard/integration_status.py`): `_check_tests` now reads `full_suite` (new format) with `verified_subset` fallback, so the integration status no longer reports `0 passed` after a current baseline run
+- **Duplicate tree-digest implementations** removed: `integration_status.py` and `gate_status.py` now delegate to `verification.py`
+- **Config-aware live status**: structural and delta storage live status now distinguishes "disabled by config" from "config enabled but component missing" (ERROR)
+- **Experiment execution semantics**: `_experiment_executed` now requires `completed` status only
+- **Registry counts**: now use `ResearchRegistry` typed API instead of fragile YAML string counting
+- **test_structural_e2e.py**: fixed malformed docstrings (escaped `\"\"\"` → `"""`)
+
+### Changed
+
+- `index.html`: removed hardcoded `gate-todo`/`gate-done` checklist; replaced with dynamic `gate-a-list`/`gate-b-list`/`gate-c-list` containers rendered from `/api/gate/status`
+- `app.js`: `refreshGateStatus` now fetches `/api/gate/status` and renders Gate A/B/C criteria tables with Live/Maturity/Gate columns
+- `styles.css`: added dynamic gate criteria table, live runtime grid, maturity badge colors
+- `src/main.py`: `OperatorBridge` now carries `config_dict` attribute so the gate builder can distinguish disabled-by-config from config-enabled-component-missing
+- `docs/TODO.md`: normalized contradictory baseline numbers (236/2 collection errors → 261/0 collection errors); removed duplicated historical sections
+- `tests/test_baseline.json`: updated to 261 passed, 2 skipped, 0 failed, 0 collection errors (full suite without `--ignore`)
+
+### Test Results (real run, 2026-08-23)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q`
+- **Result**: 261 passed, 2 skipped, 0 failed, 0 collection errors
+- **Full suite runs without `--ignore`**
+
+---
+
 ## v0.5.0-alpha.5 - Dashboard Completion & Scientific Observability (2026-08-23)
 
 ### Added

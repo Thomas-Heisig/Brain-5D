@@ -1313,64 +1313,125 @@ function initGateBoard() {
 }
 
 async function refreshGateStatus() {
-  // Use the real backend integration status (Phase 14) instead of
-  // per-item frontend probes. A disabled-by-config component is NOT failed.
+  // Fetch the dynamic Alpha.5 release-gate status from the backend.
+  // The browser NEVER infers scientific completion — the gate truth is
+  // built by the backend GateStatusBuilder from real evidence.
   let data = null;
   try {
-    const r = await fetch('/api/integration/status', { cache: 'no-store' });
+    const r = await fetch('/api/gate/status', { cache: 'no-store' });
     if (r.ok) data = await r.json();
   } catch {
     data = null;
   }
 
-  const nameToId = {
-    'Bridge': 'gate-bridge',
-    'Controller': 'gate-controller',
-    'Runtime': 'gate-runtime',
-    'Structural': 'gate-structural',
-    'Snapshot': 'gate-snapshots',
-    'Research': 'gate-research',
-    'Tests': 'gate-tests',
-    'Delta Storage': 'gate-delta-storage',
-    'Structural Journal': 'gate-structural-journal',
-    'Error Visibility': 'gate-error-visibility',
-  };
-
-  if (data && data.items) {
-    for (const item of data.items) {
-      const id = nameToId[item.name];
-      if (!id) continue;
-      const el = $(id);
-      if (!el) continue;
-      const status = item.status || 'pending';
-      el.className = `gate-item gate-${status}`;
-      const statusEl = el.querySelector('.gate-status');
-      if (statusEl) {
-        statusEl.textContent = status === 'passed' ? '✅'
-          : status === 'disabled' ? '⊘'
-          : status === 'stale' ? '⏳'
-          : status === 'failed' ? '❌'
-          : '…';
-      }
-      const msgEl = el.querySelector('.gate-message');
-      if (msgEl) msgEl.textContent = item.message || '';
-    }
-    // Overall badge
+  if (!data) {
+    // Fallback: show unavailable message
     const overallEl = $('gate-overall');
     if (overallEl) {
-      overallEl.textContent = data.overall || 'pending';
-      overallEl.className = `gate-badge gate-${data.overall || 'pending'}`;
+      overallEl.textContent = 'unavailable';
+      overallEl.className = 'gate-badge gate-failed';
     }
-  } else {
-    // Fallback: mark all as pending if backend unavailable
-    const ids = Object.values(nameToId);
-    for (const id of ids) {
-      const el = $(id);
-      if (!el) continue;
-      el.className = 'gate-item gate-pending';
-      const statusEl = el.querySelector('.gate-status');
-      if (statusEl) statusEl.textContent = '…';
-    }
+    return;
+  }
+
+  // Overall badge
+  const overallEl = $('gate-overall');
+  if (overallEl) {
+    overallEl.textContent = data.overall || 'pending';
+    overallEl.className = `gate-badge gate-${data.overall || 'pending'}`;
+  }
+
+  // Live Runtime Profile
+  if (data.live_runtime) {
+    renderLiveRuntime(data.live_runtime);
+  }
+
+  // Gate A / B / C criteria tables
+  if (data.gate_a && data.gate_a.items) {
+    renderGateCriteria('gate-a-list', data.gate_a.items);
+  }
+  if (data.gate_b && data.gate_b.items) {
+    renderGateCriteria('gate-b-list', data.gate_b.items);
+  }
+  if (data.gate_c && data.gate_c.items) {
+    renderGateCriteria('gate-c-list', data.gate_c.items);
+  }
+}
+
+// ----------------------------------------------------------------
+// Render helpers for the dynamic gate
+// ----------------------------------------------------------------
+
+const GATE_STATUS_ICON = {
+  passed: '✅',
+  pending: '⏳',
+  blocked: '🚫',
+  stale: '🔄',
+  failed: '❌',
+};
+
+const LIVE_STATUS_ICON = {
+  active: '✅',
+  disabled: '⊘',
+  unavailable: '—',
+  error: '❌',
+};
+
+function renderLiveRuntime(items) {
+  const container = $('gate-live-list');
+  if (!container) return;
+  container.innerHTML = '';
+  for (const item of items) {
+    const ls = item.live_status || 'unavailable';
+    const icon = LIVE_STATUS_ICON[ls] || '—';
+    const div = document.createElement('div');
+    div.className = `gate-live-item live-${ls}`;
+    div.innerHTML = `
+      <span class="gate-live-icon">${icon}</span>
+      <div class="gate-live-label">
+        <strong>${item.name}</strong>
+        <span class="gate-live-msg">${item.message || ''}</span>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+}
+
+function renderGateCriteria(containerId, items) {
+  const container = $(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  // Table header
+  const header = document.createElement('div');
+  header.className = 'gate-row gate-row-header';
+  header.innerHTML = `
+    <span class="gate-col-criterion">Criterion</span>
+    <span class="gate-col-live">Live</span>
+    <span class="gate-col-maturity">Maturity</span>
+    <span class="gate-col-result">Gate</span>
+  `;
+  container.appendChild(header);
+
+  for (const item of items) {
+    const status = item.status || 'pending';
+    const maturity = item.maturity || 'implemented';
+    const live = item.live_status || null;
+    const icon = GATE_STATUS_ICON[status] || '…';
+    const liveIcon = live ? (LIVE_STATUS_ICON[live] || '—') : 'n/a';
+
+    const row = document.createElement('div');
+    row.className = `gate-row gate-row-${status}`;
+    row.innerHTML = `
+      <span class="gate-col-criterion" title="${item.id || ''}">
+        <strong>${item.label}</strong>
+        <span class="gate-col-msg">${item.message || ''}</span>
+      </span>
+      <span class="gate-col-live live-${live || 'na'}">${liveIcon}</span>
+      <span class="gate-col-maturity maturity-${maturity}">${maturity.toUpperCase()}</span>
+      <span class="gate-col-result gate-${status}">${icon} ${status}</span>
+    `;
+    container.appendChild(row);
   }
 }
 

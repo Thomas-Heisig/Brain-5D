@@ -549,89 +549,47 @@
     <section class="tab-content" id="tab-gate">
       <div class="gate-board">
         <div class="gate-header">
-          <h2>🚪 Alpha.5 Integration Gate</h2>
+          <h2>🚪 Alpha.5 Release Gate</h2>
           <p class="gate-subtitle">
-            Alpha.5 is complete only when all criteria below pass.
+            Alpha.5 is complete only when all Gate A, B and C criteria pass.
             <span class="gate-rule">Do not advance to alpha.6 while this gate is open.</span>
+          </p>
+          <p class="gate-legend">
+            <strong>Live</strong> = current runtime config state ·
+            <strong>Maturity</strong> = IMPLEMENTED → INTEGRATED → VERIFIED → EVIDENCED ·
+            <strong>Gate</strong> = release verification result.
+            Runtime disabled ≠ gate failed. Runtime disabled ≠ gate passed.
           </p>
           <button id="gate-refresh" type="button" class="btn-secondary">🔄 Re-check</button>
         </div>
 
-        <div class="gate-grid">
-          <div class="gate-item gate-pending" id="gate-bridge">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>OperatorBridge reachable</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-controller">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Controller exists</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-runtime">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Runtime telemetry</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-structural">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Structural Coordinator</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-snapshots">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Snapshot pipeline</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-delta-storage">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Delta Storage</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-structural-journal">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Structural Journal</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-research">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Research (B5D-SEF)</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-tests">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Tests (test_baseline.json)</strong><span class="gate-message"></span></div>
-          </div>
-          <div class="gate-item gate-pending" id="gate-error-visibility">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Error Visibility</strong><span class="gate-message"></span></div>
-          </div>
-        </div>
         <div class="gate-overall-row">
-          <strong>Overall:</strong> <span class="gate-badge pending" id="gate-overall">pending</span>
+          <strong>ALPHA.5 Overall:</strong>
+          <span class="gate-badge pending" id="gate-overall">pending</span>
         </div>
 
-        <div class="gate-roadmap">
-          <h3>Remaining Gate Criteria (not yet automated)</h3>
-          <ul class="gate-checklist">
-            <li class="gate-todo">☐ One canonical RuntimeController (remove SimpleController)</li>
-            <li class="gate-todo">☐ Simulation starts idle, no auto 1000-tick run</li>
-            <li class="gate-todo">☐ No duplicate frontend commands</li>
-            <li class="gate-todo">☐ StructuralPlasticityEngine connected</li>
-            <li class="gate-todo">☐ Manipulator is canonical mutation path</li>
-            <li class="gate-todo">☐ Manual approval works</li>
-            <li class="gate-todo">☐ Undo works</li>
-            <li class="gate-todo">☐ Structural Journal works</li>
-            <li class="gate-todo">☐ .b5d snapshot creation works</li>
-            <li class="gate-todo">☐ Heatmap reads actual snapshots</li>
-            <li class="gate-todo">☐ Restore-and-continue works</li>
-            <li class="gate-todo">☐ Determinism test passes</li>
-            <li class="gate-todo">☐ Complete pytest collection succeeds</li>
-            <li class="gate-todo">☐ No unexplained failing tests</li>
-            <li class="gate-todo">☐ No silent scientific-path exceptions</li>
-            <li class="gate-done">☑ Every major mechanism has an associated Research Question (27 registered)</li>
-            <li class="gate-todo">☐ Every scientific run produces an experiment manifest</li>
-            <li class="gate-done">☑ First automatically generated RESEARCH_CATALOG.md exists</li>
-            <li class="gate-done">☑ First automatically generated EVIDENCE_MATRIX.md exists</li>
-            <li class="gate-done">☑ Research directory structure created</li>
-            <li class="gate-done">☑ Registry YAML files created</li>
-            <li class="gate-done">☑ JSON schemas created</li>
-            <li class="gate-done">☑ Python modules created</li>
-            <li class="gate-done">☑ BibTeX literature database created</li>
-            <li class="gate-done">☑ Report generator script created and executed</li>
-          </ul>
+        <!-- Live Runtime Profile (current poc_config, NOT the release gate) -->
+        <div class="gate-section">
+          <h3>📡 Live Runtime Profile <span class="gate-section-hint">(current config — not the release gate)</span></h3>
+          <div id="gate-live-list" class="gate-live-grid"></div>
+        </div>
+
+        <!-- Gate A — Technical Integration -->
+        <div class="gate-section">
+          <h3>Gate A — Technical Integration</h3>
+          <div id="gate-a-list" class="gate-criteria-table"></div>
+        </div>
+
+        <!-- Gate B — Verification -->
+        <div class="gate-section">
+          <h3>Gate B — Verification</h3>
+          <div id="gate-b-list" class="gate-criteria-table"></div>
+        </div>
+
+        <!-- Gate C — Scientific Baseline -->
+        <div class="gate-section">
+          <h3>Gate C — Scientific Baseline</h3>
+          <div id="gate-c-list" class="gate-criteria-table"></div>
         </div>
       </div>
     </section> <!-- /tab-gate -->

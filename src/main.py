@@ -779,6 +779,10 @@ def main() -> int:
                 coordinator=_self_org_coordinator,
                 plasticity=_self_org_plasticity,
             )
+            # Attach the runtime config so the dashboard gate builder can
+            # distinguish "disabled by config" from "config enabled but
+            # component missing" (ERROR).
+            operator_bridge.config_dict = config_dict  # type: ignore[attr-defined]
             print("✅ OperatorBridge created with canonical RuntimeController")
 
             _DashboardStateStore_cls = cast(type, _DashboardStateStore)

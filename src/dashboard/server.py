@@ -42,6 +42,7 @@ from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
+from .gate_status import GateStatusBuilder
 from .integration_status import IntegrationStatusBuilder
 from .models import JSONValue
 from .network_inspector import NetworkInspector
@@ -311,6 +312,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/integration/status":
                 self._serve_integration_status()
+                return
+
+            # ----------------------------------------------------------------
+            # Alpha.5 Release Gate Status (dynamic, evidence-based)
+            # ----------------------------------------------------------------
+
+            if path == "/api/gate/status":
+                self._serve_gate_status()
                 return
 
             # ----------------------------------------------------------------
@@ -611,6 +620,26 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             heatmap_source=server.heatmap_source,
             research_source=server.research_source,
             repo_root=Path(__file__).resolve().parents[2],
+        )
+        self._send_json(builder.build())
+
+    def _serve_gate_status(self) -> None:
+        """Serve the dynamic Alpha.5 release-gate status.
+
+        This endpoint returns the evidence-based gate status (Gate A, B, C)
+        plus the live runtime profile. The browser must NEVER infer
+        scientific completion from this data — the gate truth is built here.
+        """
+        server = self.dashboard_server
+        bridge = server.structural_bridge
+        # The bridge may carry a config_dict attribute (set by main.py);
+        # if absent, the builder uses an empty dict (all subsystems unknown).
+        config_dict = getattr(bridge, "config_dict", None) or {}
+        builder = GateStatusBuilder(
+            bridge=bridge,
+            research_source=server.research_source,
+            repo_root=Path(__file__).resolve().parents[2],
+            config_dict=config_dict,
         )
         self._send_json(builder.build())
 

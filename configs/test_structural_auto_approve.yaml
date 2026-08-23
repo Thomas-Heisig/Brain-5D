@@ -1,0 +1,107 @@
+# Brain-5D Structural Auto-Approval Test Configuration
+# Same as test_structural_e2e.yaml but with auto_approval enabled.
+# Used only for explicit auto-approval tests.
+
+seed: 42
+
+dimensions: [5, 5, 5, 5, 5]
+initial_neurons: 10
+max_neurons: 100
+
+simulation:
+  dt_ms: 1.0
+  ticks: 50
+  max_delay: 5
+  debug_invariants: true
+
+neuron:
+  a: 0.02
+  b: 0.2
+  c: -65.0
+  d: 8.0
+
+network:
+  initial_connections_per_neuron: 3
+  neighbour_radius: 2.0
+  weight_min: 0.0
+  weight_max: 0.5
+
+energy:
+  initial: 1.0
+  spike_cost: 0.001
+  affects_firing: false
+
+topology:
+  input:
+    dimension: x
+    coordinate: 0
+  output:
+    dimension: x
+    coordinate: 4
+  allow_self_connections: false
+  allow_parallel_connections: false
+
+diagnostics:
+  mode: single_neuron_drive
+  start_tick: 0
+  duration_ticks: 5
+  amplitude: 50.0
+  target_coord: [0, 0, 0, 0, 0]
+  input_plane_dim: x
+  poisson_rate_hz: 0.0
+  poisson_amplitude: 0.0
+
+telemetry:
+  enabled: false
+  history_ticks: 100
+  spike_history_ticks: 100
+
+visualization:
+  enabled: false
+  refresh_interval_ticks: 100
+  spike_raster_neurons: 10
+  projection_4d: d4
+  activity_tau_ticks: 50.0
+  show_heatmap: false
+  heatmap_type: activity
+
+logging:
+  interval_ticks: 1000
+
+stdp:
+  enabled: false
+  a_plus: 0.1
+  a_minus: 0.12
+  tau_plus: 20.0
+  tau_minus: 20.0
+  max_weight: 1.0
+  min_weight: 0.0
+
+eligibility:
+  enabled: false
+  tau_ticks: 200.0
+
+reward:
+  enabled: false
+  learning_rate: 0.01
+  delay_ticks: 0
+  clamp_weights: true
+  reset_trace_after_reward: false
+  trace_epsilon: 1.0e-12
+  reward_source: external
+
+self_organization:
+  enabled: true
+  interval_ticks: 10
+  pruning_enabled: false
+  pruning_weight_threshold: 0.005
+  pruning_min_age_ticks: 100
+  sprouting_enabled: false
+  sprouting_max_out_degree: 12
+  sprouting_radius: 2.0
+  sprouting_weight: 0.05
+  sprouting_delay: 1
+  neurogenesis_enabled: false
+  neurogenesis_spike_delta_threshold: 10
+  neurogenesis_radius: 1.0
+  neurogenesis_max_per_cycle: 1
