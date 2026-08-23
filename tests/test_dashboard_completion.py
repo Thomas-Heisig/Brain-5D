@@ -327,16 +327,18 @@ def test_projection_endpoint_contains_real_5d_coordinates() -> None:
 # ============================================================
 
 
-def test_integration_status_reads_test_baseline(tmp_path: Path) -> None:
-    """Integration status must read tests/test_baseline.json and report
-    the tested_commit vs current HEAD.
+def test_integration_status_reads_test_baseline() -> None:
+    """Integration status must read tests/test_baseline.json and report the
+    tested_commit vs current HEAD plus the tree-digest staleness model.
 
-    Uses the real repo root so git HEAD can be determined. The fake
-    baseline commit will not match the real HEAD, so status is 'stale'.
+    A baseline whose ``tested_tree_digest`` does NOT match the current
+    source-tree digest must be reported as STALE.
     """
     repo_root = Path(__file__).resolve().parents[1]
     baseline = {
         "tested_commit": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+        "recorded_in_commit": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+        "tested_tree_digest": "0" * 64,  # intentionally wrong digest
         "python": "3.13.14",
         "verified_subset": {"passed": 216, "failed": 0, "skipped": 2},
     }
@@ -360,21 +362,26 @@ def test_integration_status_reads_test_baseline(tmp_path: Path) -> None:
         )
         status = builder.build()
         tests_item = {i["name"]: i for i in status["items"]}["Tests"]
-        # The fake baseline commit won't match the real git HEAD => STALE
+        # The fake tree digest won't match the real source tree => STALE
         assert tests_item["status"] == "stale"
         assert tests_item["tested_commit"] == baseline["tested_commit"]
         assert "current_commit" in tests_item
         assert tests_item["current_commit"] is not None
+        assert "current_tree_digest" in tests_item
+        assert tests_item["current_tree_digest"] != baseline["tested_tree_digest"]
     finally:
         if original is not None:
             real_baseline.write_text(original, encoding="utf-8")
 
 
 def test_stale_tested_commit_detection() -> None:
-    """When tested_commit != current HEAD, status must be 'stale'."""
+    """When the source tree changed since the baseline (tree digest mismatch),
+    status must be 'stale' — even if the commit SHA differs only by baseline
+    metadata. This is the scientifically correct staleness model."""
     repo_root = Path(__file__).resolve().parents[1]
     baseline = {
         "tested_commit": "aaaa1111aaaa1111aaaa1111aaaa1111aaaa1111",
+        "tested_tree_digest": "f" * 64,  # wrong digest => stale
         "verified_subset": {"passed": 10, "failed": 0, "skipped": 0},
     }
     real_baseline = repo_root / "tests" / "test_baseline.json"
@@ -394,8 +401,46 @@ def test_stale_tested_commit_detection() -> None:
         )
         status = builder.build()
         tests_item = {i["name"]: i for i in status["items"]}["Tests"]
-        # The fake commit cannot match the real repo HEAD
+        # The fake tree digest cannot match the real source tree
         assert tests_item["status"] == "stale"
+    finally:
+        if original is not None:
+            real_baseline.write_text(original, encoding="utf-8")
+
+
+def test_tree_digest_match_reports_passed() -> None:
+    """When the recorded tree digest matches the current source tree, the
+    test status must be PASSED — even though the commit SHA differs. This
+    proves that a pure baseline/docs change does not invalidate the tests."""
+    repo_root = Path(__file__).resolve().parents[1]
+    # First compute the real current tree digest.
+    network = _build_real_network(n=50)
+    bridge = _bridge_with_network(network)
+    store = DashboardStateStore()
+    store.publish(DashboardSnapshot(status="idle", system=SystemMetrics()))
+    builder = IntegrationStatusBuilder(
+        store.snapshot(),
+        bridge=bridge,
+        repo_root=repo_root,
+    )
+    real_digest = builder._current_tree_digest()
+    assert real_digest is not None, "tree digest must be computable"
+
+    baseline = {
+        "tested_commit": "aaaa2222aaaa2222aaaa2222aaaa2222aaaa2222",
+        "tested_tree_digest": real_digest,  # matches current tree
+        "verified_subset": {"passed": 236, "failed": 0, "skipped": 2},
+    }
+    real_baseline = repo_root / "tests" / "test_baseline.json"
+    original = real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    try:
+        real_baseline.write_text(json.dumps(baseline), encoding="utf-8")
+
+        status = builder.build()
+        tests_item = {i["name"]: i for i in status["items"]}["Tests"]
+        # Digest matches => PASSED, even though commit SHA differs
+        assert tests_item["status"] == "passed"
+        assert tests_item["passed"] == 236
     finally:
         if original is not None:
             real_baseline.write_text(original, encoding="utf-8")

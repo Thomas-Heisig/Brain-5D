@@ -24,19 +24,20 @@
 - **Truthful null/disabled formatting** (`src/dashboard/static/app.js`): `formatNumber`/`formatFloat`/`formatBytes` now return `"—"` for null/undefined instead of fake `0`. Storage/Homeostasis/Self-Org panels show "disabled by config" / "—" when disabled, not measured zeros.
 - **Structural config-aware UI** (`src/dashboard/static/control-panel.js`): Self-Organization badge shows `DISABLED BY CONFIG` when `self_organization.enabled=false` (was static `Configured`). Controls auto-disable.
 - **Integration status badges** (`app.js`): `refreshIntegrationStatus` and `refreshGateStatus` now use the real `/api/integration/status` backend instead of frontend heuristics that hardcoded `int-tests` to `false`.
+- **Tree-digest staleness model** (`src/dashboard/integration_status.py`): Tests status no longer compares `tested_commit == current_commit` (a file inside a commit cannot stably contain its own SHA). Instead it compares a `tested_tree_digest` (SHA-256 over `src/`, `configs/`, `research/schemas/`, `pyproject.toml`) with the current tree digest. Pure docs/baseline changes no longer artificially invalidate the test status.
 - **Gate tab** (`index.html`): added Runtime, Delta Storage, Structural Journal, Tests, Error Visibility gate items with real backend data.
 
 ### Changed
 
-- `tests/test_baseline.json`: updated from real test run — 236 passed, 2 skipped, 2 collection errors (test_async_storage.py, test_compaction.py import non-existent tests.test_storage_runtime)
+- `tests/test_baseline.json`: updated from real test run — **verified runnable subset**: 236 passed, 2 skipped; full collection still blocked by 2 collection errors (test_async_storage.py, test_compaction.py import non-existent tests.test_storage_runtime). Now includes `tested_tree_digest` so baseline/docs-only changes no longer artificially invalidate the test status.
 - `docs/TODO.md`: Alpha.5 Dashboard Completion section added; Gate visualization updated
 
 ### Test Results (real run, 2026-08-23)
 
 - **Python**: 3.13.14
 - **Command**: `python -m pytest tests/ -q --ignore=tests/test_async_storage.py --ignore=tests/test_compaction.py`
-- **Result**: 236 passed, 2 skipped, 0 failed
-- **Collection errors**: 2 (pre-existing: test_async_storage.py, test_compaction.py)
+- **Result (verified runnable subset)**: 236 passed, 2 skipped, 0 failed
+- **Full collection**: still blocked by 2 collection errors (pre-existing: test_async_storage.py, test_compaction.py) — not a complete suite run
 
 ### Manual E2E Verification
 

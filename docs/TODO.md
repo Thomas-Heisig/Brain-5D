@@ -473,7 +473,22 @@ Verified subset:
   Skipped:  2 (large storage tests require env vars)
 ```
 
-**Important:** `216 passed` is from a run with two **ignored** modules. The full collection has 2 collection errors. Both must be resolved before Gate B can close.
+**Important:** `236 passed` is the **verified runnable subset** with two **ignored** modules (full collection still blocked by 2 collection errors). Both collection errors must be resolved before Gate B can close.
+
+### Tree-Digest Staleness Model (test_baseline.json)
+
+A file inside a commit cannot stably contain its own commit SHA: amending the
+baseline to match the new HEAD produces yet another SHA. The integration
+status therefore does NOT compare `tested_commit == current_commit`.
+
+Instead it compares a `tested_tree_digest` (SHA-256 over `src/`, `configs/`,
+`research/schemas/`, `pyproject.toml`) with the current tree digest:
+
+- **PASS** — tree digest matches (only docs/baseline metadata changed)
+- **STALE** — scientifically relevant source code changed since baseline
+
+This means updating `test_baseline.json`, `CHANGELOG.md` or `docs/` no longer
+artificially marks the tests as stale.
 
 ## Reported Collection Problems to Reproduce
 
@@ -1872,7 +1887,7 @@ Dashboard Observability      ██████████  Gate A (Alpha.5 Das
 Integration Status (real)    ██████████  Gate A (/api/integration/status, stale detection)
 Truthful Null/Disabled       ██████████  Gate A (no fake zeros, disabled≠failed)
 Structural Runtime Chain     ███░░░░░░░  Gate A remaining (config-disabled in poc_config)
-Test Baseline                ██████████░  Gate B (236 passed, 2 collection errors)
+Test Baseline                ██████████░  Gate B (verified runnable subset: 236 passed, 2 collection errors)
 Structural E2E Verification  ░░░░░░░░░░  Gate B (separate test config needed)
 Error Visibility             ████████░░  Gate B (integration endpoint surfaces errors)
 Restore Determinism          ░░░░░░░░░░  Gate B
@@ -1894,7 +1909,7 @@ Dies ist ein sehr sinnvoller Entwicklungsstand: **Wir müssen jetzt nicht mehr d
 - **Phase 8/9 — Real 5D Network Inspector:** Neue Endpunkte `/api/network/summary`, `/api/network/neurons`, `/api/network/synapses`, `/api/network/projection` liefern echte 5D-Koordinaten, v, u, energy, weights, delays. Serverseitige Pagination. Neuer `🔍 Inspect` Tab.
 - **Phase 14 — Real Integration Status:** `/api/integration/status` berechnet real Bridge/Controller/Runtime/Structural/Snapshot/Delta-Storage/Structural-Journal/Research/Tests/Error-Visibility. Disabled-by-config ≠ failed. Tests-STALE-Erkennung liest `test_baseline.json` und vergleicht `tested_commit` mit HEAD.
 - **Phase 16 — Provenance:** Network-Inspector-Daten als `LIVE` badged.
-- **Phase 18 — Tests:** 20 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, stale detection, no demo source). **236 passed, 2 skipped, 2 collection errors.**
+- **Phase 18 — Tests:** 21 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, tree-digest stale detection, no demo source). **Verified runnable subset: 236 passed, 2 skipped; full collection still blocked by 2 collection errors.**
 - **Phase 19 — Manual E2E:** Fresh start zeigt Tick 0: 5000 Neuronen, 36031 Synapsen, idle, storage disabled. Step (+1), run_ticks (+100), snapshot (neue .b5d) verifiziert via API.
 
 ## Verbleibend (nicht in dieser Aufgabe)
@@ -1938,7 +1953,7 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 
 === GATE B — Verification ====================================================
 
-12. Run complete pytest baseline ................ 236/238, 2 collection errors
+12. Run complete pytest baseline ... verified runnable subset: 236 passed, 2 skipped; full collection still blocked by 2 collection errors
 13. Repair all test collection/failures ...................... 🔴 Gate B
 14. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
 15. Eliminate silent hook failures .......................... 🔴 Gate B

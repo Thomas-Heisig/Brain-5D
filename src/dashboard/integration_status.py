@@ -16,12 +16,22 @@ A component disabled by config is NEVER reported as "failed".
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from src.dashboard.models import JSONValue
+
+# ============================================================================
+# Scientifically relevant source paths
+# ============================================================================
+
+# A test-baseline change (this file, docs, CHANGELOG) must NOT invalidate the
+# test status. Only changes to the scientifically relevant source tree should
+# mark the baseline as stale. This is why we digest the tree, not the commit.
+_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml"]
 
 # ============================================================================
 # Status constants
@@ -106,7 +116,7 @@ class IntegrationStatusBuilder:
             "disabled": disabled,
             "stale": stale,
             "total": len(items),
-            "items": items,
+            "items": cast(JSONValue, items),
             "source": "live_backend",
         }
 
@@ -263,9 +273,22 @@ class IntegrationStatusBuilder:
     def _check_tests(self) -> dict[str, JSONValue]:
         """Read tests/test_baseline.json and detect staleness.
 
-        The test baseline records the commit at which the test suite was
-        last verified. If that commit differs from the current HEAD, the
-        tests are STALE (not pass, not fail).
+        Scientific staleness model
+        --------------------------
+        A test baseline records the commit at which the test suite was last
+        verified AND a digest of the scientifically relevant source tree
+        (``src/``, ``configs/``, ``research/schemas/``, ``pyproject.toml``).
+
+        A file inside a commit cannot stably contain its own commit SHA:
+        amending the baseline to match the new HEAD produces yet another SHA.
+        We therefore do NOT compare ``tested_commit == current_commit``.
+
+        Instead we compare the recorded ``tested_tree_digest`` with the
+        current tree digest. The baseline is:
+
+        - ``passed``  — tree digest matches (only docs/baseline metadata changed)
+        - ``stale``   — scientifically relevant source code changed since baseline
+        - ``pending`` — baseline missing or HEAD/tree digest unavailable
         """
         baseline_path = self.repo_root / "tests" / "test_baseline.json"
         if not baseline_path.exists():
@@ -287,48 +310,58 @@ class IntegrationStatusBuilder:
             }
 
         tested_commit = baseline.get("tested_commit")
+        recorded_in_commit = baseline.get("recorded_in_commit")
+        tested_tree_digest = baseline.get("tested_tree_digest")
         current_commit = self._current_git_head()
+        current_tree_digest = self._current_tree_digest()
 
-        if current_commit is None:
+        if current_tree_digest is None:
             return {
                 "name": "Tests",
                 "status": PENDING,
                 "source": "test_baseline",
-                "message": "cannot determine current HEAD",
+                "message": "cannot compute current tree digest",
                 "tested_commit": tested_commit,
-                "current_commit": None,
+                "current_commit": current_commit,
             }
 
-        if tested_commit == current_commit:
-            # Baseline matches HEAD — report the recorded result.
+        # Tree-digest match: only docs/baseline metadata changed since baseline.
+        if tested_tree_digest is not None and tested_tree_digest == current_tree_digest:
             verified = baseline.get("verified_subset", {})
             return {
                 "name": "Tests",
                 "status": PASSED,
                 "source": "test_baseline",
                 "message": (
-                    f"verified at HEAD: {verified.get('passed', 0)} passed, "
+                    f"verified tree digest matches: {verified.get('passed', 0)} passed, "
                     f"{verified.get('failed', 0)} failed, "
                     f"{verified.get('skipped', 0)} skipped"
                 ),
                 "tested_commit": tested_commit,
+                "recorded_in_commit": recorded_in_commit,
                 "current_commit": current_commit,
+                "tested_tree_digest": tested_tree_digest,
+                "current_tree_digest": current_tree_digest,
                 "passed": verified.get("passed", 0),
                 "failed": verified.get("failed", 0),
                 "skipped": verified.get("skipped", 0),
             }
 
-        # Baseline is for an older commit — tests are STALE.
+        # Scientifically relevant source code changed since baseline — STALE.
         return {
             "name": "Tests",
             "status": STALE,
             "source": "test_baseline",
             "message": (
-                f"test baseline is for {tested_commit[:8] if tested_commit else 'unknown'} "
-                f"but HEAD is {current_commit[:8]}"
+                f"source tree changed since baseline "
+                f"(tested_commit {(tested_commit or 'unknown')[:8]}, "
+                f"HEAD {(current_commit or 'unknown')[:8]})"
             ),
             "tested_commit": tested_commit,
+            "recorded_in_commit": recorded_in_commit,
             "current_commit": current_commit,
+            "tested_tree_digest": tested_tree_digest,
+            "current_tree_digest": current_tree_digest,
         }
 
     def _check_error_visibility(self) -> dict[str, JSONValue]:
@@ -360,3 +393,42 @@ class IntegrationStatusBuilder:
         except Exception:
             pass
         return None
+
+    def _current_tree_digest(self) -> str | None:
+        """Return a SHA-256 digest of the scientifically relevant source tree.
+
+        The digest covers ``src/``, ``configs/``, ``research/schemas/`` and
+        ``pyproject.toml``. It is stable across pure documentation/baseline
+        changes (docs/, CHANGELOG.md, tests/test_baseline.json), so updating
+        the test baseline no longer artificially invalidates the test status.
+
+        The digest is computed from file contents (not git blobs) so it works
+        in a dirty working tree and does not require a clean git state.
+        """
+        try:
+            hasher = hashlib.sha256()
+            found_any = False
+            for rel in _SCIENTIFIC_PATHS:
+                target = self.repo_root / rel
+                if target.is_file():
+                    hasher.update(rel.encode("utf-8"))
+                    hasher.update(b"\0")
+                    hasher.update(target.read_bytes())
+                    hasher.update(b"\0")
+                    found_any = True
+                elif target.is_dir():
+                    for path in sorted(target.rglob("*")):
+                        if not path.is_file():
+                            continue
+                        # Normalise path separators for cross-platform stability.
+                        rel_path = path.relative_to(self.repo_root).as_posix()
+                        hasher.update(rel_path.encode("utf-8"))
+                        hasher.update(b"\0")
+                        hasher.update(path.read_bytes())
+                        hasher.update(b"\0")
+                        found_any = True
+            if not found_any:
+                return None
+            return hasher.hexdigest()
+        except Exception:
+            return None
