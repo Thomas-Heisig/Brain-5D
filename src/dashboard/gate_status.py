@@ -210,6 +210,53 @@ class GateStatusBuilder:
         return G_PENDING
 
     # --------------------------------------------------------------------
+    # Structural E2E artifact reader
+    # --------------------------------------------------------------------
+
+    def _read_structural_e2e_artifact(self) -> dict[str, Any] | None:
+        """Read ``artifacts/structural_e2e_results.json``.
+
+        Returns ``None`` if the artifact is missing or unparseable.
+        This is the machine-readable evidence that the structural E2E
+        tests actually passed — the gate builder reads it instead of
+        guessing from the mere existence of a test file.
+        """
+        artifact_path = self.repo_root / "artifacts" / "structural_e2e_results.json"
+        if not artifact_path.exists():
+            return None
+        try:
+            return json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _structural_e2e_verified(self) -> bool:
+        """Return True if the structural E2E artifact shows all proofs passed."""
+        artifact = self._read_structural_e2e_artifact()
+        if artifact is None:
+            return False
+        if artifact.get("status") != "verified":
+            return False
+        proofs = artifact.get("proofs", {})
+        if not isinstance(proofs, dict) or not proofs:
+            return False
+        return all(bool(v) for v in proofs.values())
+
+    def _structural_proof_status(self, proof_num: int) -> str:
+        """Return the gate status for a specific structural E2E proof."""
+        artifact = self._read_structural_e2e_artifact()
+        if artifact is None or artifact.get("status") != "verified":
+            return G_PENDING
+        proofs = artifact.get("proofs", {})
+        if not isinstance(proofs, dict):
+            return G_PENDING
+        proof_key = f"{proof_num:02d}"
+        # The artifact uses named keys like "01_coordinator"; match by prefix.
+        for key, value in proofs.items():
+            if key.startswith(proof_key):
+                return G_PASSED if bool(value) else G_FAILED
+        return G_PENDING
+
+    # --------------------------------------------------------------------
     # Gate A -- Technical Integration
     # --------------------------------------------------------------------
 
@@ -270,7 +317,8 @@ class GateStatusBuilder:
                 evidence={"test_ids": cast(JSONValue, test_ids)},
             ))
 
-        # --- Structural composition: pending until E2E proves them ---
+        # --- Structural composition: evidence-based from E2E artifact ---
+        structural_verified = self._structural_e2e_verified()
         structural_live = self._structural_live_status()
         structural_pending: list[tuple[str, str]] = [
             ("A-STRUCT-COORDINATOR", "Structural Coordinator production composition"),
@@ -286,11 +334,12 @@ class GateStatusBuilder:
                 id=cid,
                 category="structural_composition",
                 label=label,
-                status=G_PENDING,
-                maturity=INTEGRATED,
-                source="structural_e2e",
-                message="Pending structural E2E verification proof",
+                status=G_PASSED if structural_verified else G_PENDING,
+                maturity=VERIFIED if structural_verified else INTEGRATED,
+                source="artifacts/structural_e2e_results.json" if structural_verified else "structural_e2e",
+                message="Verified by structural E2E artifact" if structural_verified else "Pending structural E2E verification proof",
                 live_status=structural_live,
+                evidence={"artifact": "artifacts/structural_e2e_results.json"} if structural_verified else None,
             ))
 
         return items
@@ -393,17 +442,19 @@ class GateStatusBuilder:
         ))
 
         # --- Structural E2E proofs (proof_01 .. proof_10) ---
+        # Evidence-based: read from artifacts/structural_e2e_results.json
         structural_live = self._structural_live_status()
         for i in range(1, 11):
+            proof_status = self._structural_proof_status(i)
             items.append(_criterion(
                 gate=GATE_B,
                 id=f"B-STRUCT-PROOF-{i:02d}",
                 category="structural_e2e",
                 label=f"Structural E2E proof {i}/10",
-                status=G_PENDING,
-                maturity=INTEGRATED,
-                source="tests/test_structural_e2e.py",
-                message="Pending structural E2E test execution",
+                status=proof_status,
+                maturity=VERIFIED if proof_status == G_PASSED else INTEGRATED,
+                source="artifacts/structural_e2e_results.json" if proof_status == G_PASSED else "tests/test_structural_e2e.py",
+                message="Verified by structural E2E artifact" if proof_status == G_PASSED else "Pending structural E2E test execution",
                 live_status=structural_live,
             ))
 

@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural E2E Verification (2026-08-23)
+
+### Added
+
+- **Structural E2E Ten Proofs** (`tests/test_structural_e2e.py`):
+  - Proof 1: Coordinator is instantiated
+  - Proof 2: PlasticityEngine is instantiated
+  - Proof 3: Bridge contains exactly these instances
+  - Proof 4: Proposal originates from real runtime signal
+  - Proof 5: Proposal alone does NOT mutate the network
+  - Proof 6: Reject does NOT mutate the network
+  - Proof 7: Approve produces exactly one mutation
+  - Proof 8: Mutation produces exactly one Journal record
+  - Proof 9: Undo restores the previous topology
+  - Proof 10: Restart + Replay produces the same state
+  - Machine-readable verification artifact written to `artifacts/structural_e2e_results.json`
+- **Evidence-based structural gate** (`src/dashboard/gate_status.py`):
+  - GateStatusBuilder now reads `artifacts/structural_e2e_results.json`
+  - Structural criteria in Gate A and proofs in Gate B are set from real evidence
+  - When artifact shows `status: verified`, criteria move from `pending` to `passed`
+  - When artifact is absent, criteria remain `pending` (no guessing)
+
+### Changed
+
+- `tests/test_gate_status.py`: updated structural tests to account for the E2E artifact
+- `tests/test_baseline.json`: updated to 273 passed, 2 skipped, 0 failed, 0 collection errors
+
+### Test Results (real run, 2026-08-23)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q`
+- **Result**: 273 passed, 2 skipped, 0 failed, 0 collection errors
+- **Structural E2E**: 10/10 proofs verified
+
+---
+
 ## v0.5.0-alpha.5 - Dynamic Alpha.5 Release Gate (2026-08-23)
 
 ### Added
