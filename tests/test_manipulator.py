@@ -1,6 +1,6 @@
 import random
 
-from conftest import base_config
+from tests.conftest import base_config
 
 from src.core.network import NeuralNetwork
 from src.manipulation import Brain5DManipulator

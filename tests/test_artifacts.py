@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
-from conftest import TestConfig, base_config
+from tests.conftest import TestConfig, base_config
 
 from src.diagnostics.stimulus import StimulusResult
 from src.utils.run_artifacts import RunArtifacts

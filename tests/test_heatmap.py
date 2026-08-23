@@ -4,7 +4,7 @@ import random
 
 import numpy as np
 import pytest
-from conftest import base_config
+from tests.conftest import base_config
 
 from src.core.network import NeuralNetwork
 from src.visualization.heatmap import HeatmapProjector

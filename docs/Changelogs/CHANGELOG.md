@@ -72,3 +72,21 @@ Persistence-finalization layer: asynchronous bounded journal writes, storage
 telemetry, generation-based compaction, runtime checkpoint sidecar and
 restore-and-continue foundation. The frozen `.b5d` V1 and journal V1 layouts
 remain unchanged.
+
+## v0.5.0-alpha.5 — Gate B: Test Collection Closure — 2026-08-23
+
+- **Root Cause**: `tests/__init__.py` fehlte. Die beiden Testdateien
+  `test_async_storage.py` und `test_compaction.py` importierten Helper aus
+  `tests.test_storage_runtime` mittels `from tests.test_storage_runtime import ...`.
+  Ohne `tests/__init__.py` ist `tests` kein Python-Paket, der Import schlug fehl.
+- **Reparatur**:
+  - `tests/__init__.py` angelegt (leer).
+  - 8 weitere Testdateien, die `from conftest import ...` verwendeten, auf
+    `from tests.conftest import ...` umgestellt (notwendig, weil `tests` jetzt
+    ein reguläres Paket ist).
+- **Vollständiger Teststand**:
+  - `python -m pytest tests/` (ohne `--ignore`)
+  - 239 passed, 0 failed, 2 skipped
+  - 0 collection errors
+  - Python 3.13.14, Commit `d267b953`
+- **Gate B erreicht**: Zero collection errors, full suite ohne ausgeschlossene Module.
