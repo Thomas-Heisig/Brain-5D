@@ -35,10 +35,10 @@ from typing import Any, Protocol
 
 from src.signal_processing.models import SignalFrame
 
-
 # ============================================================================
 # Request / Response Models
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class LanguageRequest:
@@ -112,6 +112,7 @@ class LanguageResponse:
 # ============================================================================
 # Backend Protocol
 # ============================================================================
+
 
 class LanguageModelBackend(Protocol):
     """Backend contract that deliberately exposes no Brain-5D runtime object.

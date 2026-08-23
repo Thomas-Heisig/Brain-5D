@@ -39,10 +39,10 @@ from src.core.spatial_index import (
 )
 from src.storage.optical_codec import OpticalPointState, state_from_neuron
 
-
 # ============================================================================
 # Synapse Metadata
 # ============================================================================
+
 
 @dataclass(slots=True)
 class SynapseMetadata:
@@ -128,6 +128,7 @@ class SynapseMetadata:
 # Mutation and Transaction Types
 # ============================================================================
 
+
 @dataclass(slots=True)
 class Mutation:
     """A single operation for transaction rollback.
@@ -151,11 +152,13 @@ class Transaction:
     """
 
     name: str
-    inverse: list[Mutation] = field(default_factory=list) # type: ignore
+    inverse: list[Mutation] = field(default_factory=list)  # type: ignore
+
 
 # ============================================================================
 # Manipulator
 # ============================================================================
+
 
 class Brain5DManipulator:
     """Instrument for inspection, mutation, journaling and rollback.
@@ -770,7 +773,9 @@ class Brain5DManipulator:
             if center_id in self.network.neurons:
                 ids.append(center_id)
 
-            for c in iter_neighbour_coords(coord_center, self.network.dimensions, radius):
+            for c in iter_neighbour_coords(
+                coord_center, self.network.dimensions, radius
+            ):
                 nid = pack_coords(*c)
                 if nid in self.network.neurons:
                     ids.append(nid)

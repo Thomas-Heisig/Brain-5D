@@ -1,16 +1,17 @@
 /**
- * Brain-5D Operator Console
- * 
- * Professional operator console for Brain-5D dashboard providing:
- * - Real-time system control (start, pause, stop, step, run_ticks)
- * - Structural plasticity management (proposals, approve, reject, undo)
- * - Snapshot management
- * - Command history and autocomplete
- * - Real-time status updates
- * - Keyboard shortcuts
- * - Robust error handling with user feedback
- * 
- * @version 2.0.0
+ * Brain-5D Operator Console — ES Module
+ *
+ * This module is a pure ES module. It does NOT self-initialize and does NOT
+ * register any DOMContentLoaded listeners. The sole lifecycle owner is
+ * `app.js`, which imports and instantiates `OperatorConsole` exactly once when
+ * the Console tab is first activated.
+ *
+ * Canonical command contract (unified with ControlPanel):
+ *   POST /api/control  { "command": "run_ticks", "ticks": 100 }
+ *
+ * No CommonJS fallbacks. No `module.exports`. No global side effects on import.
+ *
+ * @version 2.1.0
  * @license MIT
  */
 
@@ -107,7 +108,7 @@ function debounce(fn, delay) {
 // API Client
 // ============================================================================
 
-class OperatorAPI {
+export class OperatorAPI {
   /**
    * Fetch JSON from the dashboard API.
    * @param {string} url - API endpoint
@@ -282,7 +283,7 @@ class OperatorAPI {
 // Console Logger
 // ============================================================================
 
-class ConsoleLogger {
+export class ConsoleLogger {
   constructor(containerId) {
     this.container = byId(containerId);
     this.entries = [];
@@ -357,7 +358,7 @@ class ConsoleLogger {
 // Operator Console
 // ============================================================================
 
-class OperatorConsole {
+export class OperatorConsole {
   constructor() {
     this.logger = null;
     this.pollingInterval = null;
@@ -782,41 +783,4 @@ class OperatorConsole {
     this.stopPolling();
     this.logger.log('🛑 Operator Console shutting down', 'info');
   }
-}
-
-// ============================================================================
-// Initialization
-// ============================================================================
-
-let consoleInstance = null;
-
-/**
- * Initialize the operator console.
- */
-function initOperatorConsole() {
-  if (consoleInstance) {
-    consoleInstance.destroy();
-  }
-  consoleInstance = new OperatorConsole();
-  return consoleInstance;
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initOperatorConsole);
-} else {
-  initOperatorConsole();
-}
-
-// ============================================================================
-// Module Exports (for bundlers)
-// ============================================================================
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    OperatorAPI,
-    OperatorConsole,
-    ConsoleLogger,
-    initOperatorConsole,
-  };
 }

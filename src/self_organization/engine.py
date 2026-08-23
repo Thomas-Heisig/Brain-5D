@@ -36,11 +36,18 @@ class SelfOrganizationParameters:
     neurogenesis_spike_delta_threshold: int = 50
     neurogenesis_radius: float = 1.0
     neurogenesis_max_per_cycle: int = 1
+    max_neurons: int = 0  # 0 = unlimited
 
     @classmethod
     def from_config(cls, config: dict[str, Any]) -> "SelfOrganizationParameters":
         c = config.get("self_organization", {})
-        return cls(**{k: c[k] for k in cls.__dataclass_fields__ if k in c})
+        params = cls(
+            **{k: c[k] for k in cls.__dataclass_fields__ if k in c}
+        )  # pylint: disable=no-member
+        # Also support top-level max_neurons for backward compatibility
+        if params.max_neurons == 0 and "max_neurons" in config:
+            object.__setattr__(params, "max_neurons", int(config["max_neurons"]))
+        return params
 
     def validate(self) -> None:
         if self.interval_ticks < 1:
@@ -160,8 +167,9 @@ class SelfOrganizationEngine:
             self._created_synapses += 1
 
     def _run_neurogenesis(self, tick: int) -> None:
-        if len(self.network.neurons) >= int(
-            self.network.config.get("max_neurons", len(self.network.neurons))
+        if (
+            self.params.max_neurons
+            and len(self.network.neurons) >= self.params.max_neurons
         ):
             return
         created = 0

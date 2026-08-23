@@ -1,9 +1,29 @@
 """Dependency-free local HTTP server for the Brain-5D operator dashboard.
 
-This module provides a lightweight HTTP server that serves the dashboard
-frontend and provides RESTful API endpoints for controlling and monitoring
-the Brain-5D runtime. All endpoints are read-only except for explicit
-operator commands that go through the StructuralOperatorBridge.
+The dashboard server is intentionally lightweight and uses only Python's
+standard HTTP server infrastructure.
+
+Architecture
+------------
+The DashboardServer instance owns all runtime-facing dependencies:
+
+- DashboardStateStore
+- SnapshotHeatmapSource
+- OperatorBridge
+- DocumentationSource
+
+The request handler never relies on module-global runtime state. In
+particular, the OperatorBridge is obtained exclusively through the active
+DashboardServer instance.
+
+This is important because the dashboard, controller and Brain-5D runtime
+must operate inside one coherent application process.
+
+API requests are strictly separated from SPA/static-file routing:
+unknown ``/api/...`` paths always return JSON errors and can never fall
+through to ``index.html``.
+
+Mutation is possible only through explicit operator endpoints.
 """
 
 from __future__ import annotations
@@ -11,67 +31,87 @@ from __future__ import annotations
 import argparse
 import json
 import signal
-from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import cast
-from urllib.parse import parse_qs, urlparse
+from typing import Any, cast
+from urllib.parse import parse_qs, unquote, urlparse
 
 from .control_http import handle_control_get, handle_control_post
+from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .models import JSONValue
 from .operator_bridge import OperatorBridge
+from .research_source import ResearchSource, create_research_source
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
-# Static assets directory
+# ============================================================================
+# Paths and limits
+# ============================================================================
+
 _STATIC_ROOT = Path(__file__).with_name("static")
-_DOCS_ROOT = Path(__file__).resolve().parents[2] / "docs"
+_DEFAULT_DOCS_ROOT = Path(__file__).resolve().parents[2] / "docs"
+_DEFAULT_RESEARCH_ROOT = Path(__file__).resolve().parents[2] / "research"
 
-# Maximum request body size (64KB)
 _MAX_BODY_SIZE = 64 * 1024
-
-# Maximum number of history records to return
 _MAX_HISTORY_LIMIT = 1000
 
-# Allowed static file extensions
 _ALLOWED_STATIC_EXTENSIONS = {
-    ".html", ".css", ".js", ".svg", ".ico",
-    ".png", ".jpg", ".jpeg", ".gif", ".webp"
+    ".html",
+    ".css",
+    ".js",
+    ".svg",
+    ".ico",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
 }
 
-# HTTP 413 Payload Too Large
-_HTTP_413_PAYLOAD_TOO_LARGE = 413
-
-# ================================================================
-# 🔥 GLOBALE BRIDGE (Kleinbuchstaben, damit Pylance es nicht als Konstante sieht)
-# ================================================================
-_global_bridge: OperatorBridge | None = None
-
 
 # ============================================================================
-# Custom Exceptions
+# Exceptions
 # ============================================================================
+
 
 class DashboardError(Exception):
-    pass
+    """Base class for dashboard request errors."""
 
 
 class InvalidRequestError(DashboardError):
-    pass
+    """Raised when an HTTP request cannot be validated."""
 
 
 class BridgeNotConfiguredError(DashboardError):
-    pass
+    """Raised when an operator command requires an unavailable bridge."""
+
+
+class RequestBodyTooLargeError(DashboardError):
+    """Raised when an incoming JSON request exceeds the configured limit."""
+
+
+class UnsupportedMediaTypeError(DashboardError):
+    """Raised when a JSON endpoint receives an unsupported content type."""
 
 
 # ============================================================================
-# HTTP Server
+# HTTP server
 # ============================================================================
+
 
 class DashboardServer(ThreadingHTTPServer):
+    """Threaded Brain-5D dashboard HTTP server.
+
+    All dependencies used by request handlers are stored on this server
+    instance. No mutable module-global runtime state is used.
+    """
+
+    allow_reuse_address = True
+    daemon_threads = True
+
     def __init__(
         self,
         address: tuple[str, int],
@@ -79,244 +119,407 @@ class DashboardServer(ThreadingHTTPServer):
         heatmaps: SnapshotHeatmapSource | None,
         structural_bridge: OperatorBridge | None = None,
         docs_source: DocumentationSource | None = None,
+        research_source: ResearchSource | None = None,
     ) -> None:
         super().__init__(address, DashboardRequestHandler)
+
         self.dashboard_state = state
         self.heatmap_source = heatmaps
         self.structural_bridge = structural_bridge
         self.docs_source = docs_source
-        self._running = True
+        self.research_source = research_source
 
-    def shutdown(self) -> None:
-        self._running = False
-        super().shutdown()
 
-    def serve_forever(self, poll_interval: float = 0.5) -> None:
-        self._running = True
-        super().serve_forever(poll_interval)
+# ============================================================================
+# Request handler
+# ============================================================================
 
 
 class DashboardRequestHandler(BaseHTTPRequestHandler):
-    server_version = "Brain5DDashboard/0.5.0-alpha.2"
+    """HTTP request handler for Brain-5D dashboard and operator APIs."""
+
+    server_version = "Brain5DDashboard/0.5.0-alpha.5"
 
     @property
     def dashboard_server(self) -> DashboardServer:
+        """Return the concrete Brain-5D dashboard server."""
         return cast(DashboardServer, self.server)
 
-    # -------------------------------------------------------------------------
-    # HTTP Methods
-    # -------------------------------------------------------------------------
+    # ========================================================================
+    # Bridge access
+    # ========================================================================
+
+    def _require_bridge(self) -> OperatorBridge:
+        """Return the active OperatorBridge or raise a service error."""
+        bridge = self.dashboard_server.structural_bridge
+
+        if bridge is None:
+            raise BridgeNotConfiguredError(
+                "Structural operator bridge is not configured."
+            )
+
+        return bridge
+
+    # ========================================================================
+    # GET
+    # ========================================================================
 
     def do_GET(self) -> None:
         server = self.dashboard_server
         parsed = urlparse(self.path)
+        path = parsed.path
+        query = parse_qs(parsed.query)
 
         try:
-            # ================================================================
-            # DEBUG: Bridge-Status
-            # ================================================================
-            if parsed.path == "/api/debug/bridge":
-                self._send_json({
-                    "global_bridge_exists": _global_bridge is not None,
-                    "global_bridge_type": str(type(_global_bridge)) if _global_bridge else None,
-                    "server_bridge_exists": server.structural_bridge is not None,
-                    "server_bridge_type": str(type(server.structural_bridge)) if server.structural_bridge else None,
-                })
+            # ----------------------------------------------------------------
+            # Debug / diagnostics
+            # ----------------------------------------------------------------
+
+            if path == "/api/debug/bridge":
+                bridge = server.structural_bridge
+
+                self._send_json(
+                    {
+                        "bridge_exists": bridge is not None,
+                        "bridge_type": (
+                            f"{type(bridge).__module__}.{type(bridge).__qualname__}"
+                            if bridge is not None
+                            else None
+                        ),
+                        "server_id": id(server),
+                        "controller_exists": (
+                            bridge is not None
+                            and getattr(bridge, "controller", None) is not None
+                        ),
+                    }
+                )
                 return
 
-            # ================================================================
-            # CONTROL API (GET)
-            # ================================================================
-            if parsed.path == "/api/control":
-                bridge = _global_bridge
-                if bridge is None:
-                    self._send_json(
-                        {"error": "Bridge not configured"},
-                        HTTPStatus.SERVICE_UNAVAILABLE,
-                    )
-                    return
+            # ----------------------------------------------------------------
+            # Control API
+            # ----------------------------------------------------------------
 
-                # Controller aus der Bridge holen
-                if not hasattr(bridge, "controller"):
-                    self._send_json(
-                        {"error": "Bridge has no controller"},
-                        HTTPStatus.SERVICE_UNAVAILABLE,
-                    )
-                    return
+            if path == "/api/control":
+                bridge = self._require_bridge()
 
-                ctrl = bridge.controller
+                # Transitional adapter boundary:
+                #
+                # DashboardControlService currently declares a concrete
+                # RuntimeController type while OperatorBridge exposes its own
+                # controller contract. The controller architecture should be
+                # unified separately. Runtime behavior is intentionally not
+                # altered here.
+                service = DashboardControlService(cast(Any, bridge.controller))
 
-                # ControlService mit dem Controller erstellen
-                from .control_service import DashboardControlService
-                service = DashboardControlService(ctrl)  # type: ignore[reportArgumentType]
                 handle_control_get(self, service)
                 return
 
-            # ================================================================
-            # Status & Heatmap & Docs & Structural
-            # ================================================================
-            if parsed.path == "/api/status":
+            # ----------------------------------------------------------------
+            # Dashboard state
+            # ----------------------------------------------------------------
+
+            if path == "/api/status":
                 self._send_json(server.dashboard_state.snapshot().to_json())
                 return
 
-            if parsed.path == "/api/heatmap":
-                self._serve_heatmap(parse_qs(parsed.query))
+            # ----------------------------------------------------------------
+            # Heatmaps / snapshots
+            # ----------------------------------------------------------------
+
+            if path == "/api/heatmap":
+                self._serve_heatmap(query)
                 return
 
-            if parsed.path == "/api/snapshots":
+            if path == "/api/snapshots":
                 self._serve_snapshots()
                 return
 
-            if parsed.path == "/api/docs":
-                self._serve_docs(parse_qs(parsed.query))
+            # ----------------------------------------------------------------
+            # Documentation
+            # ----------------------------------------------------------------
+
+            if path == "/api/docs":
+                self._serve_docs(query)
                 return
 
-            if parsed.path.startswith("/api/structural/"):
-                self._serve_structural_get(parsed.path, parse_qs(parsed.query))
+            if path == "/api/docs/tree":
+                self._serve_docs_tree()
                 return
 
-            if parsed.path.startswith("/api/docs-files/"):
-                self._serve_doc_file(parsed.path)
+            if path == "/api/docs/statistics":
+                self._serve_docs_statistics()
                 return
 
-            if parsed.path == "/healthz":
-                self._send_json({"status": "ok", "version": self.server_version})
+            if path == "/api/docs/search":
+                self._serve_docs_search(query)
                 return
 
-            self._serve_static(parsed.path)
+            if path.startswith("/api/docs-files/"):
+                self._serve_doc_file(path, query)
+                return
 
-        except (ValueError, TypeError, json.JSONDecodeError) as e:
-            self._send_json({"error": str(e)}, HTTPStatus.BAD_REQUEST)
-        except FileNotFoundError as e:
-            self._send_json({"error": str(e)}, HTTPStatus.NOT_FOUND)
-        except (RuntimeError, DashboardError) as e:
-            self._send_json({"error": str(e)}, HTTPStatus.SERVICE_UNAVAILABLE)
-        except Exception as e:
-            self._send_json(
-                {"error": f"Internal server error: {e}"},
-                HTTPStatus.INTERNAL_SERVER_ERROR
-            )
+            # ----------------------------------------------------------------
+            # Research API (B5D-SEF)
+            # ----------------------------------------------------------------
+
+            if path == "/api/research":
+                self._serve_research_summary()
+                return
+
+            if path == "/api/research/documents":
+                self._serve_research_documents()
+                return
+
+            if path == "/api/research/reports":
+                self._serve_research_reports()
+                return
+
+            if path == "/api/research/experiments":
+                self._serve_research_experiments()
+                return
+
+            if path.startswith("/api/research-files/"):
+                self._serve_research_file(path)
+                return
+
+            # ----------------------------------------------------------------
+            # Structural API
+            # ----------------------------------------------------------------
+
+            if path.startswith("/api/structural/"):
+                self._serve_structural_get(path, query)
+                return
+
+            # ----------------------------------------------------------------
+            # Health
+            # ----------------------------------------------------------------
+
+            if path == "/healthz":
+                self._send_json(
+                    {
+                        "status": "ok",
+                        "version": self.server_version,
+                        "bridge_configured": (server.structural_bridge is not None),
+                    }
+                )
+                return
+
+            # ----------------------------------------------------------------
+            # IMPORTANT:
+            # API paths must NEVER fall through into SPA/static routing.
+            # ----------------------------------------------------------------
+
+            if path.startswith("/api/"):
+                self._send_api_not_found(path)
+                return
+
+            # ----------------------------------------------------------------
+            # Static / SPA
+            # ----------------------------------------------------------------
+
+            self._serve_static(path)
+
+        except Exception as exc:
+            self._handle_exception(exc)
+
+    # ========================================================================
+    # POST
+    # ========================================================================
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
+        path = parsed.path
 
         try:
-            # ================================================================
-            # CONTROL API (POST)
-            # ================================================================
-            if parsed.path == "/api/control":
-                bridge = _global_bridge
-                if bridge is None:
-                    self._send_json(
-                        {"error": "Bridge not configured"},
-                        HTTPStatus.SERVICE_UNAVAILABLE,
-                    )
-                    return
+            # ----------------------------------------------------------------
+            # Control API
+            # ----------------------------------------------------------------
 
-                if not hasattr(bridge, "controller"):
-                    self._send_json(
-                        {"error": "Bridge has no controller"},
-                        HTTPStatus.SERVICE_UNAVAILABLE,
-                    )
-                    return
+            if path == "/api/control":
+                bridge = self._require_bridge()
 
-                ctrl = bridge.controller
-
-                from .control_service import DashboardControlService
-                service = DashboardControlService(ctrl)  # type: ignore[reportArgumentType]
+                service = DashboardControlService(cast(Any, bridge.controller))
 
                 handle_control_post(self, service)
                 return
 
-            # ================================================================
-            # Structural POST
-            # ================================================================
-            bridge = _global_bridge
-            if bridge is None:
-                self._send_json(
-                    {"error": "Structural operator bridge is not configured."},
-                    HTTPStatus.SERVICE_UNAVAILABLE,
+            # ----------------------------------------------------------------
+            # Structural / runtime operator commands
+            # ----------------------------------------------------------------
+
+            if path.startswith("/api/structural/") or path.startswith("/api/runtime/"):
+                bridge = self._require_bridge()
+                body = self._read_json_object()
+
+                result = self._dispatch_structural_post(
+                    bridge,
+                    path,
+                    body,
                 )
-                return
 
-            body = self._read_json_object()
-            result = self._dispatch_structural_post(bridge, parsed.path, body)
-            if result is None:
-                self.send_error(HTTPStatus.NOT_FOUND)
-                return
-            self._send_command_result(result)
+                if result is None:
+                    self._send_api_not_found(path)
+                    return
 
-        except (TypeError, ValueError, json.JSONDecodeError) as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
-        except BridgeNotConfiguredError as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.SERVICE_UNAVAILABLE)
-
-    def do_PUT(self) -> None:
-        bridge = _global_bridge
-        if bridge is None:
-            self._send_json(
-                {"error": "Structural operator bridge is not configured."},
-                HTTPStatus.SERVICE_UNAVAILABLE,
-            )
-            return
-
-        parsed = urlparse(self.path)
-        try:
-            body = self._read_json_object()
-            if parsed.path == "/api/structural/config":
-                result = bridge.update_structural_config(**body)
                 self._send_command_result(result)
                 return
-            self.send_error(HTTPStatus.NOT_FOUND)
-        except (TypeError, ValueError, json.JSONDecodeError) as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
+
+            # ----------------------------------------------------------------
+            # Unknown API
+            # ----------------------------------------------------------------
+
+            if path.startswith("/api/"):
+                self._send_api_not_found(path)
+                return
+
+            self._send_json(
+                {
+                    "error": f"POST is not supported for path: {path}",
+                },
+                HTTPStatus.METHOD_NOT_ALLOWED,
+            )
+
+        except Exception as exc:
+            self._handle_exception(exc)
+
+    # ========================================================================
+    # PUT
+    # ========================================================================
+
+    def do_PUT(self) -> None:
+        parsed = urlparse(self.path)
+        path = parsed.path
+
+        try:
+            if path == "/api/structural/config":
+                bridge = self._require_bridge()
+                body = self._read_json_object()
+
+                result = bridge.update_structural_config(**body)
+
+                self._send_command_result(result)
+                return
+
+            if path.startswith("/api/"):
+                self._send_api_not_found(path)
+                return
+
+            self._send_json(
+                {
+                    "error": f"PUT is not supported for path: {path}",
+                },
+                HTTPStatus.METHOD_NOT_ALLOWED,
+            )
+
+        except Exception as exc:
+            self._handle_exception(exc)
+
+    # ========================================================================
+    # DELETE
+    # ========================================================================
 
     def do_DELETE(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path == "/api/structural/history":
-            self._send_json({"ok": True, "message": "History cleared"})
-            return
-        self.send_error(HTTPStatus.NOT_FOUND)
+        path = parsed.path
 
-    def log_message(self, format: str, *args: object) -> None:
-        pass
-
-    # =========================================================================
-    # Structural GET
-    # =========================================================================
-
-    def _serve_structural_get(self, path: str, query: dict[str, list[str]]) -> None:
-        bridge = _global_bridge
-        if bridge is None:
+        # Structural history is deliberately append-only.
+        # The dashboard must not silently erase audit history.
+        if path == "/api/structural/history":
             self._send_json(
-                {"error": "Structural operator bridge is not configured."},
-                HTTPStatus.SERVICE_UNAVAILABLE,
+                {
+                    "ok": False,
+                    "error": (
+                        "Structural history is append-only and cannot be "
+                        "cleared through the dashboard."
+                    ),
+                },
+                HTTPStatus.METHOD_NOT_ALLOWED,
             )
             return
 
-        if path == "/api/structural/status":
-            payload = bridge.structural_status()
-        elif path == "/api/structural/proposals":
-            proposals = bridge.structural_proposals()
-            payload = {"proposals": cast(list[JSONValue], proposals)}
-        elif path == "/api/structural/history":
-            limit = self._query_int(query, "limit", default=100, maximum=_MAX_HISTORY_LIMIT)
-            history = bridge.structural_history(limit)
-            payload = {"history": cast(list[JSONValue], history)}
-        elif path == "/api/structural/heatmap":
-            kind = query.get("kind", ["total_structural_activity"])[0]
-            payload = bridge.structural_heatmap(kind)
-        elif path == "/api/structural/config":
-            payload = bridge.structural_config()
-        else:
-            self.send_error(HTTPStatus.NOT_FOUND)
+        if path.startswith("/api/"):
+            self._send_api_not_found(path)
             return
 
-        self._send_json(payload)  # type: ignore[arg-type]
+        self._send_json(
+            {
+                "error": f"DELETE is not supported for path: {path}",
+            },
+            HTTPStatus.METHOD_NOT_ALLOWED,
+        )
 
-    # =========================================================================
-    # Dispatch Structural POST
-    # =========================================================================
+    # ========================================================================
+    # HTTP logging
+    # ========================================================================
+
+    def log_message(self, format: str, *args: object) -> None:
+        """Suppress BaseHTTPRequestHandler's default stderr logging.
+
+        Runtime/dashboard logging is handled by Brain-5D itself.
+        """
+        return
+
+    # ========================================================================
+    # Structural GET
+    # ========================================================================
+
+    def _serve_structural_get(
+        self,
+        path: str,
+        query: dict[str, list[str]],
+    ) -> None:
+        bridge = self._require_bridge()
+
+        if path == "/api/structural/status":
+            payload = bridge.structural_status()
+
+        elif path == "/api/structural/proposals":
+            proposals = bridge.structural_proposals()
+
+            payload = {
+                "proposals": cast(
+                    list[JSONValue],
+                    proposals,
+                )
+            }
+
+        elif path == "/api/structural/history":
+            limit = self._query_int(
+                query,
+                "limit",
+                default=100,
+                maximum=_MAX_HISTORY_LIMIT,
+            )
+
+            history = bridge.structural_history(limit)
+
+            payload = {
+                "history": cast(
+                    list[JSONValue],
+                    history,
+                )
+            }
+
+        elif path == "/api/structural/heatmap":
+            kind = query.get(
+                "kind",
+                ["total_structural_activity"],
+            )[0]
+
+            payload = bridge.structural_heatmap(kind)
+
+        elif path == "/api/structural/config":
+            payload = bridge.structural_config()
+
+        else:
+            self._send_api_not_found(path)
+            return
+
+        self._send_json(payload)
+
+    # ========================================================================
+    # Structural / runtime POST dispatch
+    # ========================================================================
 
     def _dispatch_structural_post(
         self,
@@ -324,236 +527,887 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         path: str,
         body: dict[str, object],
     ) -> StructuralCommandResult | None:
+        """Dispatch one explicit operator mutation command."""
+
         if path == "/api/structural/approve":
-            return bridge.approve_structural(self._string_field(body, "proposal_id"))
+            return bridge.approve_structural(
+                self._string_field(
+                    body,
+                    "proposal_id",
+                )
+            )
+
         if path == "/api/structural/reject":
-            return bridge.reject_structural(self._string_field(body, "proposal_id"))
+            return bridge.reject_structural(
+                self._string_field(
+                    body,
+                    "proposal_id",
+                )
+            )
+
         if path == "/api/structural/undo":
             return bridge.undo_structural()
+
         if path == "/api/structural/auto-approval":
-            return bridge.set_auto_approval(self._bool_field(body, "enabled"))
+            return bridge.set_auto_approval(
+                self._bool_field(
+                    body,
+                    "enabled",
+                )
+            )
+
         if path == "/api/runtime/ticks":
-            count = self._int_field(body, "count", minimum=1, maximum=10_000)
+            count = self._int_field(
+                body,
+                "count",
+                minimum=1,
+                maximum=10_000,
+            )
+
             return bridge.run_ticks(count)
+
         if path == "/api/runtime/single-step":
             return bridge.single_step()
+
         if path == "/api/runtime/snapshot":
             return bridge.request_snapshot()
+
         if path == "/api/runtime/command":
-            command = self._string_field(body, "command")
-            ticks = body.get("ticks")
-            if ticks is not None and isinstance(ticks, int):
-                result = bridge.command(command, ticks=ticks)
-                return StructuralCommandResult(
-                    bool(result.get("ok", False)),
-                    str(result.get("status", {}))
-                )
-            result = bridge.command(command)
-            return StructuralCommandResult(
-                bool(result.get("ok", False)),
-                str(result.get("status", {}))
+            command = self._string_field(
+                body,
+                "command",
             )
+
+            ticks_value = body.get("ticks")
+
+            if ticks_value is not None:
+                ticks = self._int_field(
+                    body,
+                    "ticks",
+                    minimum=1,
+                    maximum=10_000,
+                )
+
+                result = bridge.command(
+                    command,
+                    ticks=ticks,
+                )
+
+            else:
+                result = bridge.command(command)
+
+            ok = bool(result.get("ok", False))
+
+            if ok:
+                message = str(
+                    result.get(
+                        "status",
+                        "command completed",
+                    )
+                )
+            else:
+                message = str(
+                    result.get(
+                        "error",
+                        "command failed",
+                    )
+                )
+
+            return StructuralCommandResult(
+                ok,
+                message,
+            )
+
         return None
 
-    # =========================================================================
-    # Heatmap, Snapshots, Docs, Static
-    # =========================================================================
+    # ========================================================================
+    # Heatmap
+    # ========================================================================
 
-    def _serve_heatmap(self, query: dict[str, list[str]]) -> None:
+    def _serve_heatmap(
+        self,
+        query: dict[str, list[str]],
+    ) -> None:
         source = self.dashboard_server.heatmap_source
+
         if source is None:
             self._send_json(
-                {"error": "No .b5d snapshot configured for heatmaps."},
+                {"error": ("No .b5d snapshot configured for heatmaps.")},
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
             return
 
-        kind = query.get("kind", ["activity"])[0]
-        snapshot_name = query.get("snapshot", [None])[0]
+        kind = query.get(
+            "kind",
+            ["activity"],
+        )[0]
+
+        snapshot_name = query.get(
+            "snapshot",
+            [None],
+        )[0]
 
         try:
-            payload = source.build(kind, snapshot_name)
+            payload = source.build(
+                kind,
+                snapshot_name,
+            )
+
         except ValueError as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.BAD_REQUEST,
+            )
             return
+
         except FileNotFoundError as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.NOT_FOUND)
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.NOT_FOUND,
+            )
             return
+
         except RuntimeError as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.SERVICE_UNAVAILABLE)
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
             return
 
         self._send_json(payload.to_json())
 
+    # ========================================================================
+    # Snapshots
+    # ========================================================================
+
     def _serve_snapshots(self) -> None:
         source = self.dashboard_server.heatmap_source
+
         if source is None:
             self._send_json(
-                {"error": "No heatmap source configured."},
+                {
+                    "error": "No heatmap source configured.",
+                },
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
             return
 
         try:
             entries = source.list_snapshots()
-            snapshots = [entry.to_json() for entry in entries]
-            self._send_json({"snapshots": snapshots})  # type: ignore[arg-type]
-        except Exception as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def _serve_docs(self, query: dict[str, list[str]]) -> None:
-        docs_source = self.dashboard_server.docs_source or create_docs_source(_DOCS_ROOT)
-        recursive = query.get("recursive", ["false"])[0].lower() == "true"
-        file_type = query.get("type", [None])[0]
+            snapshots = [entry.to_json() for entry in entries]
+
+            self._send_json(
+                {
+                    "snapshots": cast(
+                        list[JSONValue],
+                        snapshots,
+                    )
+                }
+            )
+
+        except Exception as exc:
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    # ========================================================================
+    # Documentation
+    # ========================================================================
+
+    def _serve_docs(
+        self,
+        query: dict[str, list[str]],
+    ) -> None:
+        docs_source = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
+
+        recursive = (
+            query.get(
+                "recursive",
+                ["false"],
+            )[0].lower()
+            == "true"
+        )
+
+        file_type = query.get(
+            "type",
+            [None],
+        )[0]
 
         try:
-            entries = docs_source.list_documents(recursive=recursive)
+            from .docs_source import DocumentationEntry
+
+            entries: list[DocumentationEntry] = list(
+                docs_source.list_documents(recursive=recursive)
+            )
+
             if file_type:
                 from .docs_source import FileType
-                try:
-                    ft = FileType(file_type)
-                    entries = [e for e in entries if e.file_type == ft]
-                except ValueError:
-                    pass
-            documents = [e.to_json() for e in entries]
-            self._send_json({"documents": documents})  # type: ignore[arg-type]
-        except Exception as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def _serve_doc_file(self, path: str) -> None:
-        docs_source = self.dashboard_server.docs_source or create_docs_source(_DOCS_ROOT)
+                try:
+                    requested_type = FileType(file_type)
+
+                    entries = [
+                        entry for entry in entries if entry.file_type == requested_type
+                    ]
+
+                except ValueError:
+                    self._send_json(
+                        {
+                            "error": (
+                                f"Unknown documentation file type: " f"{file_type}"
+                            )
+                        },
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+
+            documents = [entry.to_json() for entry in entries]
+
+            self._send_json(
+                {
+                    "documents": cast(
+                        list[JSONValue],
+                        documents,
+                    )
+                }
+            )
+
+        except FileNotFoundError as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.NOT_FOUND,
+            )
+
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    def _serve_doc_file(
+        self,
+        path: str,
+        query: dict[str, list[str]],
+    ) -> None:
+        docs_source = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
+
         prefix = "/api/docs-files/"
+
         if not path.startswith(prefix):
-            self.send_error(HTTPStatus.NOT_FOUND)
+            self._send_api_not_found(path)
             return
-        file_path = path[len(prefix):]
-        preview = "preview" in parse_qs(urlparse(path).query)
+
+        file_path = unquote(path[len(prefix) :])
+
+        if not file_path:
+            raise InvalidRequestError("Document path must not be empty.")
+
+        preview = query.get(
+            "preview",
+            ["false"],
+        )[
+            0
+        ].lower() in {"1", "true", "yes", "on"}
 
         try:
             entry = docs_source.get_document(file_path)
-            content = docs_source.read_preview(file_path) if preview else docs_source.read_content(file_path)
-            self._send_json({
-                "metadata": entry.to_json(),
-                "content": content,
-                "is_preview": preview,
-            })
-        except FileNotFoundError:
-            self._send_json({"error": f"Document not found: {file_path}"}, HTTPStatus.NOT_FOUND)
-        except ValueError as exc:
-            self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
-    def _serve_static(self, request_path: str) -> None:
+            if preview:
+                content = docs_source.read_preview(file_path)
+            else:
+                content = docs_source.read_content(file_path)
+
+            self._send_json(
+                {
+                    "metadata": entry.to_json(),
+                    "content": content,
+                    "is_preview": preview,
+                }
+            )
+
+        except FileNotFoundError:
+            self._send_json(
+                {"error": (f"Document not found: {file_path}")},
+                HTTPStatus.NOT_FOUND,
+            )
+
+        except ValueError as exc:
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.BAD_REQUEST,
+            )
+
+    # ========================================================================
+    # Docs API – Tree, Statistics, Search
+    # ========================================================================
+
+    def _serve_docs_tree(self) -> None:
+        docs_source = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
+        try:
+            tree = docs_source.get_directory_structure()
+            self._send_json(tree)
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    def _serve_docs_statistics(self) -> None:
+        docs_source = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
+        try:
+            entries = docs_source.list_documents(recursive=True)
+            total_files = len(entries)
+            total_size = sum(e.size_bytes for e in entries)
+            supported = sum(1 for e in entries if e.supported)
+            self._send_json(
+                {
+                    "total_files": total_files,
+                    "total_size_bytes": total_size,
+                    "supported_files": supported,
+                }
+            )
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    def _serve_docs_search(self, query: dict[str, list[str]]) -> None:
+        docs_source = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
+        q = query.get("q", [""])[0].lower().strip()
+        if not q or len(q) < 2:
+            self._send_json({"results": []})
+            return
+        try:
+            entries = docs_source.list_documents(recursive=True)
+            results = [
+                {
+                    "name": e.name,
+                    "path": e.path,
+                    "size_bytes": e.size_bytes,
+                    "file_type": e.file_type.value,
+                }
+                for e in entries
+                if q in e.name.lower() or q in e.path.lower()
+            ]
+            self._send_json({"results": cast(list[JSONValue], results)})
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    # ========================================================================
+    # Research API (B5D-SEF)
+    # ========================================================================
+
+    def _require_research_source(self) -> ResearchSource:
+        source = self.dashboard_server.research_source
+        if source is None or not source.is_available():
+            raise BridgeNotConfiguredError("Research source is not configured.")
+        return source
+
+    def _serve_research_summary(self) -> None:
+        source = self.dashboard_server.research_source
+        if source is None:
+            self._send_json(
+                {"available": False, "categories": {}},
+                HTTPStatus.OK,
+            )
+            return
+        self._send_json(source.registry_summary())
+
+    def _serve_research_documents(self) -> None:
+        source = self.dashboard_server.research_source
+        if source is None:
+            self._send_json(
+                {"documents": []},
+                HTTPStatus.OK,
+            )
+            return
+        documents = [
+            {
+                "name": doc.name,
+                "path": doc.path,
+                "kind": doc.kind,
+                "size_bytes": doc.size_bytes,
+                "category": doc.category,
+            }
+            for doc in source.list_documents()
+        ]
+        self._send_json({"documents": cast(list[JSONValue], documents)})
+
+    def _serve_research_reports(self) -> None:
+        source = self.dashboard_server.research_source
+        if source is None:
+            self._send_json(
+                {"reports": []},
+                HTTPStatus.OK,
+            )
+            return
+        self._send_json({"reports": cast(list[JSONValue], source.generated_reports())})
+
+    def _serve_research_experiments(self) -> None:
+        source = self.dashboard_server.research_source
+        if source is None:
+            self._send_json(
+                {"experiments": []},
+                HTTPStatus.OK,
+            )
+            return
+        self._send_json(
+            {"experiments": cast(list[JSONValue], source.list_experiments())}
+        )
+
+    def _serve_research_file(self, path: str) -> None:
+        source = self._require_research_source()
+        prefix = "/api/research-files/"
+        if not path.startswith(prefix):
+            self._send_api_not_found(path)
+            return
+
+        file_path = unquote(path[len(prefix) :])
+        if not file_path:
+            raise InvalidRequestError("Research document path must not be empty.")
+
+        try:
+            content = source.read_content(file_path)
+        except FileNotFoundError:
+            self._send_json(
+                {"error": f"Research document not found: {file_path}"},
+                HTTPStatus.NOT_FOUND,
+            )
+            return
+        except ValueError as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        self._send_json(
+            {
+                "path": file_path,
+                "content": content,
+                "size_bytes": len(content.encode("utf-8")),
+            }
+        )
+
+    # ========================================================================
+    # Static / SPA
+    # ========================================================================
+
+    def _serve_static(
+        self,
+        request_path: str,
+    ) -> None:
+        """Serve dashboard assets or the SPA entry point.
+
+        This method must never be called for ``/api/...`` requests.
+        """
+
+        if request_path.startswith("/api/"):
+            self._send_api_not_found(request_path)
+            return
+
         if request_path in {"", "/"}:
             relative = "index.html"
         else:
             relative = request_path.lstrip("/")
 
         if ".." in relative or relative.startswith("/"):
-            self.send_error(HTTPStatus.NOT_FOUND)
+            self._send_static_not_found()
             return
 
-        candidate = (_STATIC_ROOT / relative).resolve()
         static_root = _STATIC_ROOT.resolve()
+        candidate = (_STATIC_ROOT / relative).resolve()
 
         try:
             candidate.relative_to(static_root)
+
         except ValueError:
-            self.send_error(HTTPStatus.NOT_FOUND)
+            self._send_static_not_found()
             return
 
+        # SPA fallback is allowed only outside /api.
         if not candidate.is_file():
-            candidate = _STATIC_ROOT / "index.html"
+            candidate = (_STATIC_ROOT / "index.html").resolve()
 
         if candidate.suffix.lower() not in _ALLOWED_STATIC_EXTENSIONS:
-            self.send_error(HTTPStatus.NOT_FOUND)
+            self._send_static_not_found()
             return
 
         try:
             content = candidate.read_bytes()
-            self.send_response(HTTPStatus.OK)
-            self.send_header("Content-Type", _media_type(candidate.suffix))
-            self.send_header("Content-Length", str(len(content)))
-            self.send_header("Cache-Control", "no-cache")
-            self.end_headers()
-            self.wfile.write(content)
+
         except OSError:
-            self.send_error(HTTPStatus.NOT_FOUND)
+            self._send_static_not_found()
+            return
 
-    # =========================================================================
-    # JSON Helpers
-    # =========================================================================
+        self.send_response(HTTPStatus.OK)
 
-    def _send_json(self, payload: dict[str, JSONValue], status: HTTPStatus = HTTPStatus.OK) -> None:
+        self.send_header(
+            "Content-Type",
+            _media_type(candidate.suffix),
+        )
+
+        self.send_header(
+            "Content-Length",
+            str(len(content)),
+        )
+
+        self.send_header(
+            "Cache-Control",
+            "no-cache",
+        )
+
+        self.end_headers()
+
+        self.wfile.write(content)
+
+    def _send_static_not_found(self) -> None:
+        """Return a minimal non-API 404 response."""
+        content = b"404 Not Found"
+
+        self.send_response(HTTPStatus.NOT_FOUND)
+
+        self.send_header(
+            "Content-Type",
+            "text/plain; charset=utf-8",
+        )
+
+        self.send_header(
+            "Content-Length",
+            str(len(content)),
+        )
+
+        self.end_headers()
+
+        self.wfile.write(content)
+
+    # ========================================================================
+    # JSON response helpers
+    # ========================================================================
+
+    def _send_json(
+        self,
+        payload: dict[str, JSONValue],
+        status: HTTPStatus = HTTPStatus.OK,
+    ) -> None:
+        """Serialize and send a JSON HTTP response."""
+
         try:
-            encoded = json.dumps(payload, separators=(",", ":")).encode("utf-8")
-        except TypeError as e:
-            encoded = json.dumps({"error": f"Serialization error: {e}"}).encode("utf-8")
+            encoded = json.dumps(
+                payload,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            ).encode("utf-8")
+
+        except (TypeError, ValueError) as exc:
             status = HTTPStatus.INTERNAL_SERVER_ERROR
 
+            encoded = json.dumps(
+                {"error": (f"JSON serialization error: {exc}")},
+                ensure_ascii=False,
+                separators=(",", ":"),
+            ).encode("utf-8")
+
         self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
-        self.send_header("Content-Length", str(len(encoded)))
+
+        self.send_header(
+            "Content-Type",
+            "application/json; charset=utf-8",
+        )
+
+        self.send_header(
+            "Cache-Control",
+            "no-store, no-cache, must-revalidate",
+        )
+
+        self.send_header(
+            "Content-Length",
+            str(len(encoded)),
+        )
+
         self.end_headers()
+
         self.wfile.write(encoded)
 
-    def _send_command_result(self, result: StructuralCommandResult) -> None:
-        status = HTTPStatus.OK if result.ok else HTTPStatus.CONFLICT
-        self._send_json({"ok": result.ok, "message": result.message}, status)
+    def _send_api_not_found(
+        self,
+        path: str,
+    ) -> None:
+        """Return a JSON 404 for unknown API routes."""
+        self._send_json(
+            {"error": (f"Unknown API endpoint: {path}")},
+            HTTPStatus.NOT_FOUND,
+        )
 
-    def _read_json_object(self) -> dict[str, object]:
+    def _send_command_result(
+        self,
+        result: StructuralCommandResult,
+    ) -> None:
+        """Serialize a structural command result."""
+
+        status = HTTPStatus.OK if result.ok else HTTPStatus.CONFLICT
+
+        self._send_json(
+            {
+                "ok": result.ok,
+                "message": result.message,
+            },
+            status,
+        )
+
+    # ========================================================================
+    # Request parsing
+    # ========================================================================
+
+    def _read_json_object(
+        self,
+    ) -> dict[str, object]:
+        """Read one bounded JSON object from the request body."""
+
+        content_type = self.headers.get_content_type()
+
+        if content_type != "application/json":
+            raise UnsupportedMediaTypeError("Content-Type must be application/json.")
+
         length_header = self.headers.get("Content-Length")
+
         if length_header is None:
+            raise InvalidRequestError("Content-Length header is required.")
+
+        try:
+            length = int(length_header)
+
+        except ValueError as exc:
+            raise InvalidRequestError("Invalid Content-Length header.") from exc
+
+        if length < 0:
+            raise InvalidRequestError("Content-Length cannot be negative.")
+
+        if length > _MAX_BODY_SIZE:
+            raise RequestBodyTooLargeError(
+                f"Request body too large " f"(max {_MAX_BODY_SIZE} bytes)."
+            )
+
+        if length == 0:
             return {}
 
-        length = int(length_header)
-        if not 0 <= length <= _MAX_BODY_SIZE:
-            raise ValueError(f"Request body too large (max {_MAX_BODY_SIZE} bytes)")
+        raw_bytes = self.rfile.read(length)
 
-        raw = json.loads(self.rfile.read(length).decode("utf-8"))
-        if not isinstance(raw, Mapping):
-            raise TypeError("JSON body must be an object")
+        try:
+            raw_text = raw_bytes.decode("utf-8")
 
-        return {str(k): v for k, v in raw.items()}  # type: ignore[arg-type, var-annotated]
+        except UnicodeDecodeError as exc:
+            raise InvalidRequestError("Request body must be UTF-8.") from exc
 
-    # =========================================================================
-    # Field Validation
-    # =========================================================================
+        try:
+            decoded: Any = json.loads(raw_text)
+
+        except json.JSONDecodeError as exc:
+            raise InvalidRequestError(f"Invalid JSON: {exc.msg}") from exc
+
+        if not isinstance(decoded, dict):
+            raise InvalidRequestError("JSON body must be an object.")
+
+        return {str(key): value for key, value in decoded.items()}
+
+    # ========================================================================
+    # Exception handling
+    # ========================================================================
+
+    def _handle_exception(
+        self,
+        exc: Exception,
+    ) -> None:
+        """Translate request exceptions into JSON responses."""
+
+        if isinstance(
+            exc,
+            BridgeNotConfiguredError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        if isinstance(
+            exc,
+            RequestBodyTooLargeError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+            )
+            return
+
+        if isinstance(
+            exc,
+            UnsupportedMediaTypeError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+            )
+            return
+
+        if isinstance(
+            exc,
+            (
+                InvalidRequestError,
+                TypeError,
+                ValueError,
+                json.JSONDecodeError,
+            ),
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        if isinstance(
+            exc,
+            FileNotFoundError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.NOT_FOUND,
+            )
+            return
+
+        if isinstance(
+            exc,
+            RuntimeError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        self._send_json(
+            {"error": (f"Internal server error: " f"{type(exc).__name__}: {exc}")},
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
+
+    # ========================================================================
+    # Field validation
+    # ========================================================================
 
     @staticmethod
-    def _string_field(body: dict[str, object], name: str) -> str:
+    def _string_field(
+        body: dict[str, object],
+        name: str,
+    ) -> str:
         value = body.get(name)
-        if not isinstance(value, str) or not value:
-            raise TypeError(f"'{name}' must be a non-empty string")
-        return value
+
+        if not isinstance(value, str) or not value.strip():
+            raise TypeError(f"'{name}' must be a non-empty string.")
+
+        return value.strip()
 
     @staticmethod
-    def _bool_field(body: dict[str, object], name: str) -> bool:
+    def _bool_field(
+        body: dict[str, object],
+        name: str,
+    ) -> bool:
         value = body.get(name)
+
         if not isinstance(value, bool):
-            raise TypeError(f"'{name}' must be boolean")
+            raise TypeError(f"'{name}' must be boolean.")
+
         return value
 
     @staticmethod
-    def _int_field(body: dict[str, object], name: str, *, minimum: int, maximum: int) -> int:
+    def _int_field(
+        body: dict[str, object],
+        name: str,
+        *,
+        minimum: int,
+        maximum: int,
+    ) -> int:
         value = body.get(name)
+
         if isinstance(value, bool) or not isinstance(value, int):
-            raise TypeError(f"'{name}' must be an integer")
+            raise TypeError(f"'{name}' must be an integer.")
+
         if not minimum <= value <= maximum:
-            raise ValueError(f"'{name}' must be in [{minimum}, {maximum}]")
+            raise ValueError(f"'{name}' must be in " f"[{minimum}, {maximum}].")
+
         return value
 
     @classmethod
-    def _query_int(cls, query: dict[str, list[str]], name: str, *, default: int, maximum: int) -> int:
-        raw = query.get(name, [str(default)])[0]
+    def _query_int(
+        cls,
+        query: dict[str, list[str]],
+        name: str,
+        *,
+        default: int,
+        maximum: int,
+    ) -> int:
+        raw = query.get(
+            name,
+            [str(default)],
+        )[0]
+
         try:
             value = int(raw)
+
         except ValueError:
-            value = default
-        return cls._int_field({name: value}, name, minimum=1, maximum=maximum)
+            raise ValueError(f"Query parameter '{name}' " f"must be an integer.")
+
+        return cls._int_field(
+            {
+                name: value,
+            },
+            name,
+            minimum=1,
+            maximum=maximum,
+        )
 
 
-def _media_type(suffix: str) -> str:
+# ============================================================================
+# MIME types
+# ============================================================================
+
+
+def _media_type(
+    suffix: str,
+) -> str:
+    """Return MIME type for one supported dashboard asset."""
+
     return {
         ".html": "text/html; charset=utf-8",
         ".css": "text/css; charset=utf-8",
@@ -565,25 +1419,48 @@ def _media_type(suffix: str) -> str:
         ".jpeg": "image/jpeg",
         ".gif": "image/gif",
         ".webp": "image/webp",
-    }.get(suffix.lower(), "application/octet-stream")
+    }.get(
+        suffix.lower(),
+        "application/octet-stream",
+    )
 
 
 # ============================================================================
-# Signal Handling
+# Signal handling
 # ============================================================================
 
-def _setup_signal_handlers(server: DashboardServer) -> None:
-    def signal_handler(sig: int, frame: object) -> None:
-        print("\nShutting down dashboard...")
+
+def _setup_signal_handlers(
+    server: DashboardServer,
+) -> None:
+    """Install graceful process shutdown handlers."""
+
+    def signal_handler(
+        signum: int,
+        frame: object,
+    ) -> None:
+        del signum
+        del frame
+
+        print("\n⏹️ Shutting down Brain-5D dashboard...")
+
         server.shutdown()
 
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(
+        signal.SIGINT,
+        signal_handler,
+    )
+
+    signal.signal(
+        signal.SIGTERM,
+        signal_handler,
+    )
 
 
 # ============================================================================
-# Main Functions
+# Server composition
 # ============================================================================
+
 
 def serve_dashboard(
     host: str,
@@ -592,31 +1469,71 @@ def serve_dashboard(
     snapshot_path: Path | None = None,
     structural_bridge: OperatorBridge | None = None,
     docs_root: Path | None = None,
+    research_root: Path | None = None,
 ) -> None:
-    """Run the local operator dashboard until interrupted."""
-    global _global_bridge
+    """Run the local Brain-5D operator dashboard until interrupted."""
 
-    store = state or DashboardStateStore()
+    store = state if state is not None else DashboardStateStore()
 
-    # Setup heatmap source
-    heatmaps = None
-    if snapshot_path and snapshot_path.exists():
+    # ------------------------------------------------------------------------
+    # Snapshot / heatmap source
+    # ------------------------------------------------------------------------
+
+    heatmaps: SnapshotHeatmapSource | None = None
+
+    if snapshot_path is not None and snapshot_path.exists():
         try:
             heatmaps = create_heatmap_source(snapshot_path)
+
         except FileNotFoundError:
-            print(f"Warning: Default snapshot not found: {snapshot_path}")
+            print(f"⚠️ Snapshot not found: " f"{snapshot_path}")
 
-    # Setup docs source
-    docs_source = None
-    if docs_root and docs_root.exists():
+    # If no real heatmap source, create a demo source that generates
+    # synthetic heatmap data so the dashboard always shows something.
+    if heatmaps is None:
         try:
-            docs_source = create_docs_source(docs_root)
-        except Exception as e:
-            print(f"Warning: Failed to initialize docs source: {e}")
+            from .heatmap_source import DemoHeatmapSource
 
-    # 🔥 Globale Bridge setzen – bevor der Server startet
-    _global_bridge = structural_bridge
-    print(f"🌉 Global bridge set: {_global_bridge is not None}")
+            heatmaps = DemoHeatmapSource()  # type: ignore[assignment]
+            print("ℹ️ Using demo heatmap source (no .b5d snapshot configured)")
+        except ImportError:
+            pass
+
+    # ------------------------------------------------------------------------
+    # Documentation source
+    # ------------------------------------------------------------------------
+
+    docs_source: DocumentationSource | None = None
+
+    effective_docs_root = docs_root if docs_root is not None else _DEFAULT_DOCS_ROOT
+
+    if effective_docs_root.exists():
+        try:
+            docs_source = create_docs_source(effective_docs_root)
+
+        except Exception as exc:
+            print("⚠️ Documentation source could not " f"be initialized: {exc}")
+
+    # ------------------------------------------------------------------------
+    # Research source (B5D-SEF)
+    # ------------------------------------------------------------------------
+
+    effective_research_root = (
+        research_root if research_root is not None else _DEFAULT_RESEARCH_ROOT
+    )
+
+    research_source: ResearchSource | None = None
+    if effective_research_root.exists():
+        try:
+            research_source = create_research_source(effective_research_root)
+        except Exception as exc:
+            print("⚠️ Research source could not " f"be initialized: {exc}")
+
+    # ------------------------------------------------------------------------
+    # Server
+    # ------------------------------------------------------------------------
+
+    print("🌉 Operator bridge configured: " f"{structural_bridge is not None}")
 
     with DashboardServer(
         (host, port),
@@ -624,29 +1541,76 @@ def serve_dashboard(
         heatmaps,
         structural_bridge,
         docs_source,
+        research_source,
     ) as server:
-
         if structural_bridge is not None:
-            server.structural_bridge = structural_bridge
-            print("✅ Bridge stored in server instance")
+            print("✅ Operator bridge attached to " "dashboard server")
+        else:
+            print(
+                "⚠️ Dashboard started without an "
+                "operator bridge; control APIs are unavailable."
+            )
 
-        print(f"🧠 Brain-5D dashboard: http://{host}:{port}")
+        print(f"🧠 Brain-5D dashboard: " f"http://{host}:{port}")
+
         print("Press Ctrl+C to stop")
+
         _setup_signal_handlers(server)
+
         try:
-            server.serve_forever()
+            server.serve_forever(poll_interval=0.25)
+
         except KeyboardInterrupt:
-            print("\nDashboard stopped.")
+            print("\n⏹️ Dashboard stopped.")
+
+
+# ============================================================================
+# Standalone CLI
+# ============================================================================
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Brain-5D operator dashboard")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=8765)
-    parser.add_argument("--snapshot", type=Path)
-    parser.add_argument("--docs", type=Path)
+    """Run a standalone dashboard.
+
+    A standalone dashboard has no Brain-5D OperatorBridge and therefore
+    exposes monitoring/documentation only. Runtime control requires the
+    integrated ``src.main`` application path.
+    """
+
+    parser = argparse.ArgumentParser(description=("Brain-5D operator dashboard"))
+
+    parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8765,
+    )
+
+    parser.add_argument(
+        "--snapshot",
+        type=Path,
+    )
+
+    parser.add_argument(
+        "--docs",
+        type=Path,
+    )
+
     args = parser.parse_args()
-    serve_dashboard(args.host, args.port, snapshot_path=args.snapshot, docs_root=args.docs)
+
+    if not 1 <= args.port <= 65535:
+        parser.error("--port must be in the range 1..65535")
+
+    serve_dashboard(
+        args.host,
+        args.port,
+        snapshot_path=args.snapshot,
+        docs_root=args.docs,
+    )
 
 
 if __name__ == "__main__":

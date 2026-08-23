@@ -41,7 +41,15 @@ import mmap
 from pathlib import Path
 import struct
 import time
-from typing import Iterator, Mapping, Protocol, Sequence, TypeAlias, cast, runtime_checkable
+from typing import (
+    Iterator,
+    Mapping,
+    Protocol,
+    Sequence,
+    TypeAlias,
+    cast,
+    runtime_checkable,
+)
 
 from .optical_codec import (
     RECORD_SIZE as OPTICAL_RECORD_SIZE,
@@ -107,6 +115,7 @@ JSONMapping: TypeAlias = Mapping[str, JSONValue]
 # Custom Exception
 # ============================================================================
 
+
 class B5DFormatError(ValueError):
     """Raised when a `.b5d` file violates the frozen V1 format contract.
 
@@ -122,6 +131,7 @@ class B5DFormatError(ValueError):
 # ============================================================================
 # Protocols (for the snapshot writer)
 # ============================================================================
+
 
 @runtime_checkable
 class NeuronSnapshotLike(Protocol):
@@ -196,6 +206,7 @@ class NetworkSnapshotLike(Protocol):
 # ============================================================================
 # Header and Record Dataclasses
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class B5DHeader:
@@ -293,6 +304,7 @@ class B5DSynapseRecord:
 # Format Invariant Validation
 # ============================================================================
 
+
 def assert_format_invariants() -> None:
     """Raise if compile-time record sizes no longer match frozen V1 sizes.
 
@@ -323,6 +335,7 @@ def assert_format_invariants() -> None:
 # ============================================================================
 # Helper Functions
 # ============================================================================
+
 
 def _align(value: int, alignment: int = ALIGNMENT) -> int:
     """Round *value* up to the next alignment boundary.
@@ -401,6 +414,7 @@ def _network_dimensions(network: NetworkSnapshotLike) -> tuple[int, int, int, in
 # Core Extension Encoding/Decoding
 # ============================================================================
 
+
 def _encode_core_extension(neuron: NeuronSnapshotLike) -> bytes:
     """Encode the core-state extension for a neuron.
 
@@ -464,6 +478,7 @@ def _decode_core_extension(
 # Synapse Encoding/Decoding
 # ============================================================================
 
+
 def _encode_synapse(source_id: int, synapse: SynapseSnapshotLike) -> bytes:
     """Encode a synapse into a 40-byte record.
 
@@ -523,6 +538,7 @@ def _decode_synapse(data: bytes) -> B5DSynapseRecord:
 # JSON Metadata Validation
 # ============================================================================
 
+
 def _validate_json_value(value: object) -> JSONValue:
     """Validate JSON-decoded data and return a strictly typed JSON value.
 
@@ -559,18 +575,17 @@ def _validate_json_value(value: object) -> JSONValue:
             # If you want to keep a runtime safety check, uncomment:
             # if not isinstance(key, str):
             #     raise B5DFormatError("metadata object keys must be strings")
-            result[key] = _validate_json_value(item)  # type: ignore[reportUnknownArgumentType]
+            result[key] = _validate_json_value(item)
         return result
 
     # Unsupported type
-    raise B5DFormatError(
-        f"unsupported metadata value type: {type(value).__name__}"
-    )
+    raise B5DFormatError(f"unsupported metadata value type: {type(value).__name__}")
 
 
 # ============================================================================
 # Metadata Encoding/Decoding
 # ============================================================================
+
 
 def _encode_metadata(metadata: JSONMapping | None) -> bytes:
     """Serialize metadata deterministically and enforce the V1 size limit.
@@ -631,6 +646,7 @@ def _decode_metadata(data: bytes) -> dict[str, JSONValue]:
 # Header Encoding/Decoding
 # ============================================================================
 
+
 def _build_header_bytes(header: B5DHeader) -> bytes:
     """Pack one exact 128-byte V1 header.
 
@@ -673,9 +689,7 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
         B5DFormatError: If the header is invalid or corrupted.
     """
     if len(data) != HEADER_SIZE:
-        raise B5DFormatError(
-            f"file too small for {HEADER_SIZE}-byte .b5d header"
-        )
+        raise B5DFormatError(f"file too small for {HEADER_SIZE}-byte .b5d header")
 
     values = _HEADER_STRUCT.unpack(data)
     magic = values[0]
@@ -724,9 +738,7 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
             "neuron record size is inconsistent with restart-capable flag"
         )
     if synapse_record_size != SYNAPSE_RECORD_SIZE:
-        raise B5DFormatError(
-            f"unsupported synapse record size: {synapse_record_size}"
-        )
+        raise B5DFormatError(f"unsupported synapse record size: {synapse_record_size}")
 
     if metadata_size > MAX_METADATA_SIZE:
         raise B5DFormatError(
@@ -756,6 +768,7 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
 # ============================================================================
 # Snapshot Writer
 # ============================================================================
+
 
 class B5DSnapshotWriter:
     """Write deterministic Brain-5D V1 snapshot containers.
@@ -935,6 +948,7 @@ class B5DSnapshotWriter:
 # Snapshot Reader (Memory-Mapped)
 # ============================================================================
 
+
 class B5DReader:
     """Memory-mapped random-access reader for frozen Brain-5D V1 snapshots.
 
@@ -965,9 +979,7 @@ class B5DReader:
         file_size = self.path.stat().st_size
         if file_size < HEADER_SIZE:
             self._handle.close()
-            raise B5DFormatError(
-                f"file too small: {file_size} < {HEADER_SIZE} bytes"
-            )
+            raise B5DFormatError(f"file too small: {file_size} < {HEADER_SIZE} bytes")
         self._mmap = mmap.mmap(self._handle.fileno(), 0, access=mmap.ACCESS_READ)
         self._metadata: dict[str, JSONValue] = {}
         try:
@@ -983,9 +995,9 @@ class B5DReader:
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None,
-        exc: BaseException | None,
-        traceback: object,
+        _exc_type: type[BaseException] | None,
+        _exc: BaseException | None,
+        _traceback: object,
     ) -> None:
         self.close()
 

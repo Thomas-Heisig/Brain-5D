@@ -37,7 +37,9 @@ def main() -> int:
         from .server import main as server_main
 
         if not (Path(__file__).parent / "static").exists():
-            logger.warning("Static directory not found. Dashboard may not display correctly.")
+            logger.warning(
+                "Static directory not found. Dashboard may not display correctly."
+            )
 
         server_main()
         return 0

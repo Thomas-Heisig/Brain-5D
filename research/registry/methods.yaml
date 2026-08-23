@@ -1,0 +1,153 @@
+# =============================================================================
+# Brain-5D Scientific Evidence Framework — Standardized Methods Registry
+# =============================================================================
+# Defines standardized experiment classes and measurement protocols.
+# Each experiment type has a prefix for ID generation.
+
+methods:
+  - prefix: EXP-DET
+    name: Determinism
+    description: "Prüft deterministisches Verhalten bei identischen Seeds und Zuständen."
+    measurement_protocols:
+      - "SpikeTrain(A) == SpikeTrain(B)"
+      - "MembranePotential(A) == MembranePotential(B)"
+      - "WeightMatrix(A) == WeightMatrix(B)"
+    minimum_runs: 3
+    controls:
+      - "Seed-Variation"
+      - "Platform-Vergleich"
+
+  - prefix: EXP-SNN
+    name: Neuron Dynamics
+    description: "Charakterisiert Spike-Dynamik, Feuerraten und Membranpotentialverläufe."
+    measurement_protocols:
+      - "SpikeCount über Zeitfenster"
+      - "ISI-Verteilung"
+      - "Membranpotential-Trajektorien"
+      - "Burst-Detection"
+    minimum_runs: 10
+    controls: []
+
+  - prefix: EXP-STDP
+    name: Plasticity
+    description: "Untersucht STDP-getriebene Gewichtsveränderungen und Timing-Abhängigkeit."
+    measurement_protocols:
+      - "Δw(Δt)-Kurve"
+      - "Gewichtsverteilung vor/nach"
+      - "w¯(t) und Var(w)"
+    minimum_runs: 10
+    controls:
+      - "Keine STDP (Kontrollgruppe)"
+
+  - prefix: EXP-HOM
+    name: Homeostasis
+    description: "Analysiert Feuerraten-Stabilisierung durch synaptische Homeostase."
+    measurement_protocols:
+      - "FiringRate(t) mit/ohne Homeostase"
+      - "Zielraten-Abweichung"
+    minimum_runs: 10
+    controls:
+      - "Ohne Homeostase"
+
+  - prefix: EXP-STRUCT
+    name: Structural Plasticity
+    description: "Untersucht Pruning, Sprouting und strukturelle Netzwerkanpassung."
+    measurement_protocols:
+      - "Synapsenzahl(t)"
+      - "Neuronenzahl(t)"
+      - "Konaktivitätsdichte(t)"
+    minimum_runs: 10
+    controls:
+      - "Ohne strukturelle Plastizität"
+
+  - prefix: EXP-5D
+    name: Dimensional Ablation
+    description: "Vergleicht Netzwerkdynamik zwischen 1D, 2D, 3D, 5D und Random Graph."
+    measurement_protocols:
+      - "Signalpropagationszeit T_prop"
+      - "P(output|input)"
+      - "Rekrutierte Neuronen N_recruited"
+      - "Pfadlängen PathLength"
+      - "Modularität Q_modularity"
+      - "Clustering-Koeffizient"
+      - "Motif-Verteilungen"
+    minimum_runs: 30
+    controls:
+      - "1D-Kontrolle"
+      - "2D-Kontrolle"
+      - "3D-Kontrolle"
+      - "Random Graph Kontrolle"
+
+  - prefix: EXP-MEM
+    name: Memory
+    description: "Prüft Speicherung und Abruf von Informationen über synaptische Gewichte."
+    measurement_protocols:
+      - "Pattern Completion Rate"
+      - "Retention über Zeit"
+      - "Interferenz-Test"
+    minimum_runs: 20
+    controls:
+      - "Zufallsgewichte"
+
+  - prefix: EXP-STOR
+    name: Storage/Restore
+    description: "Validiert verlustfreie Serialisierung und Deserialisierung."
+    measurement_protocols:
+      - "S_original == S_restore"
+      - "Dateigröße pro Neuron (B_N)"
+      - "Dateigröße pro Synapse (B_S)"
+    minimum_runs: 5
+    controls:
+      - "Mehrere Seeds"
+
+  - prefix: EXP-SCALE
+    name: Scaling
+    description: "Testet Skalierbarkeit von 5k bis 50M+ Neuronen."
+    measurement_protocols:
+      - "Laufzeit(t)"
+      - "RAM-Verbrauch(N)"
+      - "Dynamik-Ähnlichkeit"
+    minimum_runs: 3
+    controls:
+      - "Kleinste Konfiguration als Baseline"
+
+  - prefix: EXP-ROB
+    name: Robustness
+    description: "Prüft Robustheit gegenüber Läsionen, Rauschen und Parameter-Variation."
+    measurement_protocols:
+      - "Performance nach Läsion"
+      - "Rausch-Toleranz"
+      - "Parameter-Sensitivität"
+    minimum_runs: 30
+    controls:
+      - "Intaktes Netzwerk"
+
+  - prefix: EXP-EMB
+    name: Embodiment
+    description: "Testet Brain-5D in geschlossener Sensor-Aktor-Schleife."
+    measurement_protocols:
+      - "Reaktionszeit"
+      - "Zielerreichungsrate"
+      - "Verhaltens-Stabilität"
+    minimum_runs: 20
+    controls:
+      - "Zufallsverhalten"
+
+  - prefix: EXP-LLM
+    name: Language Organ
+    description: "Evaluierung der SNN↔LLM-Kommunikationsschnittstelle."
+    measurement_protocols:
+      - "Semantische Ähnlichkeit"
+      - "Konsistenz bei Wiederholung"
+    minimum_runs: 10
+    controls:
+      - "Direkter LLM-Output (ohne SNN)"
+
+  - prefix: EXP-ETH
+    name: Ethics
+    description: "Untersucht Autorenschaft, Kontrolle und Verantwortung."
+    measurement_protocols:
+      - "Entscheidungs-Tracking"
+      - "Eingriffs-Tiefe"
+    minimum_runs: 5
+    controls: []

@@ -1,0 +1,32 @@
+# Brain-5D Experiment Configuration: EXP-2026-0001
+# Baseline stability test with STDP and homeostasis
+
+simulation:
+  seed: 42
+  ticks: 100000
+  dimensions: [10, 10, 10, 10, 10]
+  neurons_initial: 5000
+  learning: true
+  homeostasis: true
+  structural_plasticity: false
+  neuron_model: izhikevich
+  integrator: euler
+
+stdp:
+  a_plus: 0.01
+  a_minus: 0.012
+  tau_plus: 20.0
+  tau_minus: 20.0
+
+homeostasis:
+  target_rate: 5.0
+  learning_rate: 0.001
+
+input:
+  pattern: poisson_train
+  rate_hz: 10.0
+
+output:
+  snapshot: state-final.b5d
+  metrics: metrics.csv
+  log_level: INFO

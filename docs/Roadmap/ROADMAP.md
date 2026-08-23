@@ -1,8 +1,23 @@
 # Roadmap
 
+> Last updated: 2026-08-23
+> Detailed task list: `docs/TODO.md`
+
 ## Stand 1 – abgeschlossenes Zielbild
 
 Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Historie, Diagnose, Topologieprüfung und Observatory.
+
+## v0.5.0-alpha.5 — Integration Hardening (in progress)
+
+- [x] Single-process launcher, single DashboardServer, OperatorBridge attached
+- [x] Frontend lifecycle unified (app.js sole owner, ES modules, no CommonJS)
+- [x] Canonical command contract `{"command":"run_ticks","ticks":N}`
+- [x] B5D-SEF research API + Research tab in dashboard
+- [x] Alpha.5 Integration Gate tab with live checks
+- [ ] Canonical RuntimeController (remove SimpleController)
+- [ ] .b5d snapshot pipeline → heatmap
+- [ ] Structural plasticity wired through approval-gated manipulator
+- [ ] Green test baseline (zero collection errors)
 
 ## Sprint 2A – STDP-Labor
 
@@ -20,6 +35,10 @@ Erst nach isolierter STDP-Verifikation.
 ## Sprint 2C – Homöostase
 
 Schwellen-/Ratenregulation isoliert messen.
+
+## v0.5.0-alpha.6 — Morphological Self-Regulation
+
+> Blocked until Alpha.5 Integration Gate passes.
 
 ## Später
 

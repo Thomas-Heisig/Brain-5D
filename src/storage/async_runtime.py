@@ -95,9 +95,9 @@ class AsyncStorageSession:
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None,
-        exc: BaseException | None,
-        traceback: object,
+        _exc_type: type[BaseException] | None,
+        _exc: BaseException | None,
+        _traceback: object,
     ) -> None:
         self.close()
 

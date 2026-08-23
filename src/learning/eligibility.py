@@ -29,10 +29,10 @@ import math
 from dataclasses import asdict, dataclass
 from typing import Any
 
-
 # ============================================================================
 # Eligibility Trace
 # ============================================================================
+
 
 @dataclass(slots=True)
 class EligibilityTrace:
@@ -272,6 +272,7 @@ class EligibilityTrace:
 # ============================================================================
 # Factory Function
 # ============================================================================
+
 
 def create_eligibility_trace(tau_ticks: float = 200.0) -> EligibilityTrace:
     """Create a new eligibility trace with the given time constant.

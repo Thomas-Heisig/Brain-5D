@@ -34,6 +34,7 @@ Args:
 # Protocols
 # ============================================================================
 
+
 class StateSource(Protocol):
     """Protocol for objects that can provide a dashboard snapshot."""
 
@@ -45,6 +46,7 @@ class StateSource(Protocol):
 # ============================================================================
 # State Store
 # ============================================================================
+
 
 class DashboardStateStore:
     """Publish and retrieve immutable dashboard snapshots safely.
@@ -115,7 +117,7 @@ class DashboardStateStore:
             if self._max_history > 0:
                 self._history.append(snapshot)
                 if len(self._history) > self._max_history:
-                    self._history = self._history[-self._max_history:]
+                    self._history = self._history[-self._max_history :]
 
             # Notify callbacks
             if self._notify_on_update:
@@ -161,7 +163,7 @@ class DashboardStateStore:
             if self._max_history > 0:
                 self._history.append(new_snapshot)
                 if len(self._history) > self._max_history:
-                    self._history = self._history[-self._max_history:]
+                    self._history = self._history[-self._max_history :]
 
             # Notify callbacks
             if self._notify_on_update:
@@ -169,14 +171,27 @@ class DashboardStateStore:
 
             return new_snapshot
 
-    def _update_snapshot(self, snapshot: DashboardSnapshot, **kwargs: Any) -> DashboardSnapshot:
+    def _update_snapshot(
+        self, snapshot: DashboardSnapshot, **kwargs: Any
+    ) -> DashboardSnapshot:
         """Create a new snapshot with updated fields."""
         # Get all fields of DashboardSnapshot
         field_names = [
-            "system", "learning", "storage", "self_organization",
-            "homeostasis", "structural", "spikes", "network",
-            "language_organ", "knowledge_intake", "signal_metrics",
-            "experiment", "embodiment", "status", "version"
+            "system",
+            "learning",
+            "storage",
+            "self_organization",
+            "homeostasis",
+            "structural",
+            "spikes",
+            "network",
+            "language_organ",
+            "knowledge_intake",
+            "signal_metrics",
+            "experiment",
+            "embodiment",
+            "status",
+            "version",
         ]
 
         # Build replacement dict
@@ -400,6 +415,7 @@ class DashboardStateStore:
 # Factory Functions
 # ============================================================================
 
+
 def create_state_store(
     initial: DashboardSnapshot | None = None,
     *,
@@ -431,6 +447,7 @@ def create_state_store(
 # ============================================================================
 # Global State Manager (Optional)
 # ============================================================================
+
 
 class StateManager:
     """Global state manager for the dashboard.

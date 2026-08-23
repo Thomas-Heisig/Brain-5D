@@ -47,6 +47,7 @@ Config = Mapping[str, Any]
 # Learning Parameters
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class LearningParameters:
     """Validated plasticity parameters loaded from configuration.
@@ -180,6 +181,7 @@ class LearningParameters:
 # Learning State
 # ============================================================================
 
+
 @dataclass(slots=True)
 class _SynapseLearningState:
     """State for a single synapse tracked by the learning engine.
@@ -219,6 +221,7 @@ class _SynapseTickEvent:
 # ============================================================================
 # Learning Statistics
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class LearningStats:
@@ -261,6 +264,7 @@ class LearningStats:
 # ============================================================================
 # Learning Engine
 # ============================================================================
+
 
 class LearningEngine:
     """Nearest-neighbour STDP, eligibility and reward-modulated plasticity.
@@ -637,8 +641,4 @@ __all__ = [
     "LearningParameters",
     "LearningStats",
     "RewardSignal",
-    "create_reward",
-    "STDPParameters",
-    "STDPSynapse",
-    "create_stdp_synapse",
 ]

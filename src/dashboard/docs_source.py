@@ -180,10 +180,14 @@ class DocumentationSource:
 
         return tuple(entries)
 
-    def list_documents_by_type(self, file_type: FileType) -> tuple[DocumentationEntry, ...]:
+    def list_documents_by_type(
+        self, file_type: FileType
+    ) -> tuple[DocumentationEntry, ...]:
         """List documents filtered by file type."""
         return tuple(
-            entry for entry in self.list_documents(recursive=True) if entry.file_type == file_type
+            entry
+            for entry in self.list_documents(recursive=True)
+            if entry.file_type == file_type
         )
 
     def get_document(self, path: str) -> DocumentationEntry:
@@ -196,6 +200,10 @@ class DocumentationSource:
         if entry is None:
             raise ValueError(f"Unsupported file type: {path}")
         return entry
+
+    def read(self, path: str) -> str:
+        """Read the full content of a document (convenience alias)."""
+        return self.read_content(path)
 
     def read_content(self, path: str) -> str:
         """Read the full content of a document (text extraction)."""
@@ -293,7 +301,11 @@ class DocumentationSource:
                             entry_kwargs["line_count"] = full_content.count("\n") + 1
 
                 # Sheet names for Excel
-                if file_type == FileType.XLSX and has_openpyxl and load_workbook is not None:
+                if (
+                    file_type == FileType.XLSX
+                    and has_openpyxl
+                    and load_workbook is not None
+                ):
                     try:
                         wb = load_workbook(path, read_only=True, data_only=True)
                         entry_kwargs["sheet_names"] = tuple(wb.sheetnames)
@@ -309,7 +321,9 @@ class DocumentationSource:
         except Exception:
             return None
 
-    def _extract_content(self, path: Path, file_type: FileType, full: bool = False) -> str:
+    def _extract_content(
+        self, path: Path, file_type: FileType, full: bool = False
+    ) -> str:
         """Extract text content from a file based on its type."""
         if file_type == FileType.MARKDOWN or file_type == FileType.TEXT:
             return path.read_text(encoding="utf-8", errors="replace")
@@ -409,7 +423,9 @@ class DocumentationSource:
                     if row_count >= max_rows:
                         lines.append("... (truncated)")
                         break
-                    row_str = " | ".join(str(cell) if cell is not None else "" for cell in row)
+                    row_str = " | ".join(
+                        str(cell) if cell is not None else "" for cell in row
+                    )
                     if row_str.strip():
                         lines.append(row_str)
                     row_count += 1

@@ -35,7 +35,6 @@ from .spatial_index import (
 )
 from .synapse import Synapse, SynapseConfig, create_synapse
 
-
 # ============================================================================
 # Type Aliases
 # ============================================================================
@@ -43,10 +42,14 @@ from .synapse import Synapse, SynapseConfig, create_synapse
 PostStepHook = Callable[["StepResult"], None]
 """Callback function type for post-step hooks."""
 
+ConfigDict = dict[str, object]
+"""Type alias for a configuration dictionary passed to NeuralNetwork.__init__."""
+
 
 # ============================================================================
 # Configuration Classes
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class SimulationConfig:
@@ -112,12 +115,16 @@ class Brain5DConfig:
             ),
             topology=TopologyConfig(
                 allow_self_connections=bool(topo.get("allow_self_connections", False)),
-                allow_parallel_connections=bool(topo.get("allow_parallel_connections", False)),
+                allow_parallel_connections=bool(
+                    topo.get("allow_parallel_connections", False)
+                ),
             ),
             network=NetworkConfig(
                 weight_min=float(net.get("weight_min", 0.0)),
                 weight_max=float(net.get("weight_max", 0.5)),
-                initial_connections_per_neuron=int(net.get("initial_connections_per_neuron", 10)),
+                initial_connections_per_neuron=int(
+                    net.get("initial_connections_per_neuron", 10)
+                ),
                 neighbour_radius=float(net.get("neighbour_radius", 5.0)),
             ),
             neuron=NeuronConfig(
@@ -136,7 +143,9 @@ class Brain5DConfig:
                 w_min=float(net.get("weight_min", 0.0)),
                 w_max=float(net.get("weight_max", 0.5)),
                 enable_triplet=bool(data.get("stdp", {}).get("enable_triplet", False)),
-                enable_metaplasticity=bool(data.get("stdp", {}).get("enable_metaplasticity", False)),
+                enable_metaplasticity=bool(
+                    data.get("stdp", {}).get("enable_metaplasticity", False)
+                ),
             ),
         )
 
@@ -144,6 +153,7 @@ class Brain5DConfig:
 # ============================================================================
 # Event Classes
 # ============================================================================
+
 
 @dataclass(slots=True)
 class SpikeEvent:
@@ -201,7 +211,7 @@ class StepResult:
     max_v: float = 0.0
     mean_energy: float = 0.0
     core_step_ms: float = 0.0
-    neuron_activity: Dict[int, bool] = field(default_factory=dict) # type: ignore
+    neuron_activity: Dict[int, bool] = field(default_factory=dict)  # type: ignore
     total_synapses: int = 0
 
     def to_dict(self) -> dict[str, Any]:
@@ -229,6 +239,7 @@ class StepResult:
 # ============================================================================
 # NeuralNetwork Class
 # ============================================================================
+
 
 class NeuralNetwork:
     """Sparse 5D spiking neural network.
@@ -402,7 +413,9 @@ class NeuralNetwork:
             for syn in syn_list:
                 if syn.target_id == neuron_id:
                     self._synapse_count -= 1
-                    self.in_degree[neuron_id] = max(0, self.in_degree.get(neuron_id, 0) - 1)
+                    self.in_degree[neuron_id] = max(
+                        0, self.in_degree.get(neuron_id, 0) - 1
+                    )
                 else:
                     kept.append(syn)
             self.synapses[pre_id] = kept
@@ -411,7 +424,9 @@ class NeuralNetwork:
         outgoing = self.synapses.pop(neuron_id, [])
         for syn in outgoing:
             if syn.target_id in self.in_degree:
-                self.in_degree[syn.target_id] = max(0, self.in_degree[syn.target_id] - 1)
+                self.in_degree[syn.target_id] = max(
+                    0, self.in_degree[syn.target_id] - 1
+                )
             self._synapse_count -= 1
 
         # Remove the neuron
@@ -527,7 +542,9 @@ class NeuralNetwork:
             return False
 
         old_len = len(self.synapses[pre_id])
-        self.synapses[pre_id] = [s for s in self.synapses[pre_id] if s.target_id != post_id]
+        self.synapses[pre_id] = [
+            s for s in self.synapses[pre_id] if s.target_id != post_id
+        ]
         removed = old_len - len(self.synapses[pre_id])
 
         if removed > 0:
@@ -570,6 +587,11 @@ class NeuralNetwork:
         """Number of synapses in the network."""
         return self._synapse_count
 
+    @property
+    def queued_event_count(self) -> int:
+        """Number of events currently queued in the event buffer."""
+        return self._queued_event_count
+
     # ========================================================================
     # Connection Initialization
     # ========================================================================
@@ -595,7 +617,10 @@ class NeuralNetwork:
         if radius is None:
             radius = self.network_config.neighbour_radius
         if weight_range is None:
-            weight_range = (self.network_config.weight_min, self.network_config.weight_max)
+            weight_range = (
+                self.network_config.weight_min,
+                self.network_config.weight_max,
+            )
 
         wmin, wmax = weight_range
 
@@ -647,7 +672,10 @@ class NeuralNetwork:
                 post_id = pack_coords(*ncoord)
                 if post_id not in self.neurons:
                     continue
-                if post_id == pre_id and not self.topology_config.allow_self_connections:
+                if (
+                    post_id == pre_id
+                    and not self.topology_config.allow_self_connections
+                ):
                     continue
 
                 if self.rng.random() < probability:
@@ -670,7 +698,9 @@ class NeuralNetwork:
             current: Current value to inject (can be positive or negative).
         """
         if neuron_id in self.neurons:
-            self.pending_currents[neuron_id] = self.pending_currents.get(neuron_id, 0.0) + current
+            self.pending_currents[neuron_id] = (
+                self.pending_currents.get(neuron_id, 0.0) + current
+            )
 
     def inject_current_batch(self, currents: Dict[int, float]) -> None:
         """Inject currents into multiple neurons.
@@ -1072,6 +1102,7 @@ class NeuralNetwork:
 # Factory Functions
 # ============================================================================
 
+
 def create_network(
     dimensions: Dim5D = (50, 50, 50, 50, 50),
     seed: Optional[int] = None,
@@ -1115,4 +1146,5 @@ __all__ = [
     "create_network",
     # Types
     "PostStepHook",
+    "ConfigDict",
 ]

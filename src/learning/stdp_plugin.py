@@ -32,10 +32,10 @@ import math
 from dataclasses import dataclass
 from typing import Any
 
-
 # ============================================================================
 # STDP Parameters
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class STDPParameters:
@@ -93,6 +93,7 @@ class STDPParameters:
 # ============================================================================
 # STDP Synapse
 # ============================================================================
+
 
 @dataclass(slots=True)
 class STDPSynapse:
@@ -347,6 +348,7 @@ class STDPSynapse:
 # ============================================================================
 # Factory Function
 # ============================================================================
+
 
 def create_stdp_synapse(
     weight: float = 0.5,

@@ -16,10 +16,10 @@ from src.storage.lazy_view import B5DLazyProjector, StorageHeatmapKind
 
 from .models import JSONValue
 
-
 # ============================================================================
 # Custom Exceptions
 # ============================================================================
+
 
 class HeatmapError(Exception):
     """Base exception for heatmap-related errors."""
@@ -48,6 +48,7 @@ class InvalidSnapshotError(HeatmapError):
 # ============================================================================
 # Data Models
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class HeatmapPayload:
@@ -105,6 +106,7 @@ class SnapshotEntry:
 # ============================================================================
 # Main Heatmap Source
 # ============================================================================
+
 
 class SnapshotHeatmapSource:
     """Build heatmaps without loading the whole network into RAM.
@@ -167,7 +169,9 @@ class SnapshotHeatmapSource:
 
         return tuple(entries)
 
-    def build(self, kind_name: str, snapshot_name: Optional[str] = None) -> HeatmapPayload:
+    def build(
+        self, kind_name: str, snapshot_name: Optional[str] = None
+    ) -> HeatmapPayload:
         """Build a heatmap from a snapshot.
 
         Args:
@@ -292,8 +296,81 @@ class SnapshotHeatmapSource:
 
 
 # ============================================================================
+# Demo Heatmap Source (Fallback when no .b5d snapshot exists)
+# ============================================================================
+
+
+class DemoHeatmapSource:
+    """Fallback heatmap source that generates synthetic demo data.
+
+    This source is used when no .b5d snapshot file is available. It
+    generates realistic-looking synthetic heatmaps so the dashboard
+    always has something to display, even without a running simulation.
+    """
+
+    def __init__(self) -> None:
+        self._tick = 0
+        self._rng_seed = 42
+
+    def list_snapshots(self) -> tuple[SnapshotEntry, ...]:
+        """Return an empty list (no real snapshots available)."""
+        return ()
+
+    def build(
+        self,
+        kind_name: str,
+        snapshot_name: str | None = None,
+    ) -> HeatmapPayload:
+        """Build a synthetic demo heatmap.
+
+        Args:
+            kind_name: Type of heatmap (ignored for demo).
+            snapshot_name: Optional snapshot name (ignored for demo).
+
+        Returns:
+            A HeatmapPayload with synthetic data.
+        """
+        self._tick += 1
+        import random
+
+        rng = random.Random(self._rng_seed + self._tick)
+
+        # Generate a 40x20 grid of synthetic values with some structure
+        rows, cols = 40, 20
+        values: list[list[float]] = []
+        for y in range(cols):
+            row: list[float] = []
+            for x in range(rows):
+                # Create some spatial structure: clusters of activity
+                cx, cy = rows // 2, cols // 2
+                dist = ((x - cx) / cx) ** 2 + ((y - cy) / cy) ** 2
+                cluster = max(0, 1.0 - dist * 0.5)
+                noise = rng.gauss(0, 0.15)
+                val = max(0.0, min(1.0, cluster + noise))
+                row.append(val)
+            values.append(row)
+
+        return HeatmapPayload(
+            kind=kind_name or "activity",
+            tick=self._tick * 100,
+            samples=rows * cols,
+            snapshot="demo (no .b5d snapshot)",
+            values=values,
+        )
+
+    def has_snapshot(self, snapshot_name: str) -> bool:
+        """Demo source has no real snapshots."""
+        return False
+
+    def get_snapshot_info(self, snapshot_name: str) -> SnapshotEntry:
+        """Demo source has no real snapshots."""
+        raise FileNotFoundError(f"No snapshot available: {snapshot_name}")
+
+
+# ============================================================================
 # Factory Function
 # ============================================================================
+
 
 def create_heatmap_source(
     snapshot_path: str | Path,

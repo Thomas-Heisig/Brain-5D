@@ -15,6 +15,7 @@ JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 # Core Metrics
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class SystemMetrics:
     """Core simulation metrics presented on the dashboard."""
@@ -119,6 +120,7 @@ class SelfOrganizationMetrics:
 # Homeostasis Metrics
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class HomeostasisMetrics:
     """Backward-compatible homeostasis metrics for dashboard consumers.
@@ -178,6 +180,7 @@ class HomeostasisMetrics:
 # Structural Metrics (for adapters.py)
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class StructuralMetrics:
     """Structural plasticity metrics for dashboard display.
@@ -215,6 +218,7 @@ class StructuralMetrics:
 # Spike Metrics (for adapters.py)
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class SpikeMetrics:
     """Spike recording metrics for dashboard display.
@@ -245,6 +249,7 @@ class SpikeMetrics:
 # ============================================================================
 # Network Metrics
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class NetworkMetrics:
@@ -291,6 +296,7 @@ class NetworkMetrics:
 # Language Organ Metrics
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class LanguageOrganMetrics:
     """Metrics for the Language Organ (LLM integration).
@@ -333,6 +339,7 @@ class LanguageOrganMetrics:
 # ============================================================================
 # Knowledge Intake Metrics
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class KnowledgeIntakeMetrics:
@@ -377,6 +384,7 @@ class KnowledgeIntakeMetrics:
 # Signal Metrics (for Signal Bridge)
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class SignalMetrics:
     """Metrics for the Signal Bridge layer.
@@ -413,6 +421,7 @@ class SignalMetrics:
 # ============================================================================
 # Experiment Metrics
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class ExperimentMetrics:
@@ -454,6 +463,7 @@ class ExperimentMetrics:
 # ============================================================================
 # Dashboard Snapshot (Enhanced)
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class DashboardSnapshot:
@@ -500,6 +510,7 @@ class DashboardSnapshot:
 # Utility Functions
 # ============================================================================
 
+
 def to_json_serializable(obj: Any) -> JSONValue:
     """Convert any object to a JSON-serializable value.
 
@@ -520,7 +531,9 @@ def to_json_serializable(obj: Any) -> JSONValue:
         return to_json_serializable(result)
     if hasattr(obj, "__dataclass_fields__"):
         # Fallback for dataclasses without to_json
-        field_dict = {field.name: getattr(obj, field.name) for field in dataclass_fields(obj)}
+        field_dict = {
+            field.name: getattr(obj, field.name) for field in dataclass_fields(obj)
+        }
         return to_json_serializable(field_dict)
     # For anything else, convert to string
     return str(obj)
@@ -529,6 +542,7 @@ def to_json_serializable(obj: Any) -> JSONValue:
 # ============================================================================
 # Metric Aggregator
 # ============================================================================
+
 
 class MetricAggregator:
     """Helper for collecting and aggregating metrics from multiple sources.
@@ -569,7 +583,9 @@ class MetricAggregator:
     def update_homeostasis(self, **kwargs: Any) -> MetricAggregator:
         """Update HomeostasisMetrics fields."""
         fields = {k: v for k, v in kwargs.items() if hasattr(self._homeostasis, k)}
-        self._homeostasis = HomeostasisMetrics(**{**self._homeostasis.__dict__, **fields})
+        self._homeostasis = HomeostasisMetrics(
+            **{**self._homeostasis.__dict__, **fields}
+        )
         return self
 
     def update_structural(self, **kwargs: Any) -> MetricAggregator:

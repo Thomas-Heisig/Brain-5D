@@ -31,10 +31,10 @@ import math
 from dataclasses import asdict, dataclass
 from typing import Any
 
-
 # ============================================================================
 # Reward Signal
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class RewardSignal:
@@ -138,6 +138,7 @@ class RewardSignal:
 # ============================================================================
 # Factory Function
 # ============================================================================
+
 
 def create_reward(value: float, tick: int) -> RewardSignal:
     """Create a reward signal with the given value and tick.

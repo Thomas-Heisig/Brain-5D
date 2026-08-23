@@ -320,8 +320,6 @@ class OperatorBridge:
                 self.controller.run_ticks(ticks or 1)
             elif cmd == ControllerCommand.SNAPSHOT:
                 self.controller.request_snapshot()
-            else:
-                return {"ok": False, "error": f"command not implemented: {command}"}
         except Exception as e:
             return {"ok": False, "error": str(e)}
 
@@ -359,7 +357,10 @@ class OperatorBridge:
         )
 
         if not decision_recorded:
-            return {"ok": False, "error": f"failed to record decision for: {proposal_id}"}
+            return {
+                "ok": False,
+                "error": f"failed to record decision for: {proposal_id}",
+            }
 
         # Apply the change if approved
         if approved:
@@ -419,7 +420,9 @@ class OperatorBridge:
         if change is None:
             return StructuralCommandResult(False, "failed to apply approved proposal")
 
-        return StructuralCommandResult(True, f"proposal {proposal_id} approved and applied")
+        return StructuralCommandResult(
+            True, f"proposal {proposal_id} approved and applied"
+        )
 
     def reject_structural(self, proposal_id: str) -> StructuralCommandResult:
         """Reject a structural plasticity proposal.
@@ -483,8 +486,7 @@ class OperatorBridge:
             )
 
         return StructuralCommandResult(
-            True,
-            f"auto-approval {'enabled' if enabled else 'disabled'}"
+            True, f"auto-approval {'enabled' if enabled else 'disabled'}"
         )
 
     def update_structural_config(self, **kwargs: Any) -> StructuralCommandResult:
@@ -503,13 +505,17 @@ class OperatorBridge:
 
         # Get current config and update with new values
         current = self.approval_policy.config
-        config_dict = {k: v for k, v in current.__dict__.items() if not k.startswith("_")}
+        config_dict = {
+            k: v for k, v in current.__dict__.items() if not k.startswith("_")
+        }
 
         for key, value in kwargs.items():
             if key in config_dict:
                 config_dict[key] = value
             else:
-                return StructuralCommandResult(False, f"unknown config parameter: {key}")
+                return StructuralCommandResult(
+                    False, f"unknown config parameter: {key}"
+                )
 
         # Create new config and policy
         new_config = StructuralPlasticityConfig(**config_dict)
@@ -606,7 +612,7 @@ class OperatorBridge:
             new_synapses=int(report.synapse_sprouting_pressure),
             pruned_synapses=int(report.synapse_pruning_pressure),
             growth_budget=1.0,  # Placeholder - actual value from config
-            used_budget=0.0,    # Placeholder - actual value from engine
+            used_budget=0.0,  # Placeholder - actual value from engine
             structural_changes=len(report.proposals),
         )
 

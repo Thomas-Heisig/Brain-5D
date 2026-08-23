@@ -36,6 +36,7 @@ JSONMapping = dict[str, JSONValue]
 # Command Result
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class StructuralCommandResult:
     """Result of a structural operator command.
@@ -96,6 +97,7 @@ class StructuralCommandResult:
 # ============================================================================
 # Operator Bridge Protocol
 # ============================================================================
+
 
 @runtime_checkable
 class StructuralOperatorBridge(Protocol):
@@ -358,6 +360,7 @@ class StructuralOperatorBridge(Protocol):
 # Utility Functions
 # ============================================================================
 
+
 def is_command_success(result: StructuralCommandResult) -> bool:
     """Check if a StructuralCommandResult indicates success.
 
@@ -398,6 +401,7 @@ def command_result_to_json(result: StructuralCommandResult) -> JSONMapping:
 # Error Codes
 # ============================================================================
 
+
 class StructuralErrorCode:
     """Common error codes for structural operator operations.
 
@@ -421,6 +425,7 @@ class StructuralErrorCode:
 # ============================================================================
 # Extended Command Result
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class ExtendedStructuralCommandResult:
@@ -498,7 +503,10 @@ class ExtendedStructuralCommandResult:
 
 # ... (restliche Datei bleibt unverändert) ...
 
-def validate_bridge(bridge: StructuralOperatorBridge | None) -> StructuralOperatorBridge:
+
+def validate_bridge(
+    bridge: StructuralOperatorBridge | None,
+) -> StructuralOperatorBridge:
     """Validate that a bridge is properly configured.
 
     Args:

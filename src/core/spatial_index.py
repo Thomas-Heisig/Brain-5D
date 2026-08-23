@@ -20,7 +20,7 @@ from __future__ import annotations
 import math
 from functools import lru_cache
 from itertools import product
-from typing import Iterable, Iterator, Tuple, Union
+from typing import Iterable, Iterator, Tuple
 
 # ============================================================================
 # Type Aliases
@@ -65,6 +65,7 @@ MAX_COORD: int = 255
 # Coordinate Validation
 # ============================================================================
 
+
 def validate_coord(coord: Coord5D) -> None:
     """Validate that all coordinates are within the 0-255 range.
 
@@ -108,9 +109,7 @@ def validate_coord_in_dims(coord: Coord5D, dims: Dim5D) -> None:
     validate_dims(dims)
     for i, (c, d) in enumerate(zip(coord, dims)):
         if c < 0 or c >= d:
-            raise ValueError(
-                f"Coordinate {c} at dimension {i} outside dimension {d}"
-            )
+            raise ValueError(f"Coordinate {c} at dimension {i} outside dimension {d}")
 
 
 def is_valid_coord(coord: Coord5D) -> bool:
@@ -149,6 +148,7 @@ def is_valid_coord_in_dims(coord: Coord5D, dims: Dim5D) -> bool:
 # ============================================================================
 # Packing / Unpacking
 # ============================================================================
+
 
 def pack_coords(x: int, y: int, z: int, d4: int, d5: int) -> int:
     """Pack five 8-bit coordinates into a single 64-bit integer.
@@ -216,6 +216,7 @@ def unpack_coords(index: int) -> Coord5D:
 # Linear Index Conversion
 # ============================================================================
 
+
 def coords_to_linear(coord: Coord5D, dims: Dim5D) -> int:
     """Convert 5D coordinates to a linear index (row-major order).
 
@@ -271,9 +272,7 @@ def linear_to_5d(index: int, dims: Dim5D) -> Coord5D:
         total *= d
 
     if index < 0 or index >= total:
-        raise ValueError(
-            f"Linear index {index} outside [0, {total})"
-        )
+        raise ValueError(f"Linear index {index} outside [0, {total})")
 
     # Decode in reverse order (row-major)
     idx = index
@@ -298,6 +297,7 @@ def linear_to_coord(index: int, dims: Dim5D) -> Coord5D:
 # ============================================================================
 # Distance Functions
 # ============================================================================
+
 
 def euclidean_distance_5d(a: Coord5D, b: Coord5D) -> float:
     """Calculate the Euclidean distance between two 5D coordinates.
@@ -378,6 +378,7 @@ def manhattan_distance_5d(a: Coord5D, b: Coord5D) -> float:
 # ============================================================================
 # Neighbor Generation
 # ============================================================================
+
 
 @lru_cache(maxsize=32)
 def neighbour_offsets(radius: float) -> tuple[Coord5D, ...]:
@@ -494,6 +495,7 @@ def neighbour_count(dims: Dim5D, radius: float) -> int:
 # Boundary Coordinates
 # ============================================================================
 
+
 def make_boundary_coord(
     dims: Dim5D,
     dimension: str,
@@ -564,6 +566,7 @@ def get_dimension_index(name: str) -> int | None:
 # ============================================================================
 # Utility Functions
 # ============================================================================
+
 
 def total_cells(dims: Dim5D) -> int:
     """Calculate the total number of cells in the 5D grid.

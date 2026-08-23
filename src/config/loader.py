@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 # Type Definitions
 # ============================================================================
 
+
 class SimulationConfig(TypedDict, total=False):
     """Configuration for simulation parameters."""
 
@@ -199,6 +200,7 @@ DEFAULT_CONFIG: ConfigDict = {
 # Validation Functions
 # ============================================================================
 
+
 def _validate_dimensions(value: Any) -> Tuple[int, int, int, int, int]:
     """Validate dimensions parameter."""
     if not isinstance(value, (list, tuple)):
@@ -295,7 +297,10 @@ def _validate_topology_config(
         raw.get("allow_self_connections", defaults.get("allow_self_connections", False))
     )
     result["allow_parallel_connections"] = bool(
-        raw.get("allow_parallel_connections", defaults.get("allow_parallel_connections", False))
+        raw.get(
+            "allow_parallel_connections",
+            defaults.get("allow_parallel_connections", False),
+        )
     )
 
     return result
@@ -342,7 +347,9 @@ def _validate_network_config(
     # neighbour_radius
     radius_raw = raw.get("neighbour_radius", defaults.get("neighbour_radius", 5.0))
     if not isinstance(radius_raw, (int, float)):
-        raise ValueError(f"neighbour_radius must be numeric, got {type(radius_raw).__name__}")
+        raise ValueError(
+            f"neighbour_radius must be numeric, got {type(radius_raw).__name__}"
+        )
     radius = float(radius_raw)
     if radius < 0:
         raise ValueError(f"neighbour_radius must be >= 0, got {radius}")
@@ -363,7 +370,9 @@ def _validate_neuron_config(
         if value is None:
             continue
         if not isinstance(value, (int, float)):
-            raise ValueError(f"neuron.{key} must be numeric, got {type(value).__name__}")
+            raise ValueError(
+                f"neuron.{key} must be numeric, got {type(value).__name__}"
+            )
         result[key] = float(value)  # type: ignore[literal-required]
 
     return result
@@ -379,13 +388,17 @@ def _validate_energy_config(
     # initial
     init_raw = raw.get("initial", defaults.get("initial", 1.0))
     if not isinstance(init_raw, (int, float)):
-        raise ValueError(f"energy.initial must be numeric, got {type(init_raw).__name__}")
+        raise ValueError(
+            f"energy.initial must be numeric, got {type(init_raw).__name__}"
+        )
     result["initial"] = float(init_raw)
 
     # spike_cost
     cost_raw = raw.get("spike_cost", defaults.get("spike_cost", 0.001))
     if not isinstance(cost_raw, (int, float)):
-        raise ValueError(f"energy.spike_cost must be numeric, got {type(cost_raw).__name__}")
+        raise ValueError(
+            f"energy.spike_cost must be numeric, got {type(cost_raw).__name__}"
+        )
     result["spike_cost"] = float(cost_raw)
 
     return result
@@ -429,7 +442,9 @@ def _validate_reward_config(
     if not isinstance(source, str):
         raise ValueError(f"reward_source must be a string, got {type(source).__name__}")
     if source not in {"external", "output_spike"}:
-        raise ValueError(f"reward_source must be 'external' or 'output_spike', got {source}")
+        raise ValueError(
+            f"reward_source must be 'external' or 'output_spike', got {source}"
+        )
     result["reward_source"] = source
 
     # output_spike_value
@@ -450,11 +465,11 @@ def _validate_visualization_config(
     """Validate and merge visualization configuration."""
     result: VisualizationConfig = {}
 
-    result["enabled"] = bool(
-        raw.get("enabled", defaults.get("enabled", False))
-    )
+    result["enabled"] = bool(raw.get("enabled", defaults.get("enabled", False)))
 
-    refresh_raw = raw.get("refresh_interval_ticks", defaults.get("refresh_interval_ticks", 100))
+    refresh_raw = raw.get(
+        "refresh_interval_ticks", defaults.get("refresh_interval_ticks", 100)
+    )
     if not isinstance(refresh_raw, (int, float)):
         raise ValueError(
             f"refresh_interval_ticks must be numeric, got {type(refresh_raw).__name__}"
@@ -479,7 +494,9 @@ def _validate_telemetry_config(
         if value is None:
             continue
         if not isinstance(value, (int, float)):
-            raise ValueError(f"telemetry.{key} must be numeric, got {type(value).__name__}")
+            raise ValueError(
+                f"telemetry.{key} must be numeric, got {type(value).__name__}"
+            )
         val = int(value)
         if val < 1:
             raise ValueError(f"telemetry.{key} must be >= 1, got {val}")
@@ -497,7 +514,9 @@ def _validate_logging_config(
 
     interval_raw = raw.get("interval_ticks", defaults.get("interval_ticks", 100))
     if not isinstance(interval_raw, (int, float)):
-        raise ValueError(f"interval_ticks must be numeric, got {type(interval_raw).__name__}")
+        raise ValueError(
+            f"interval_ticks must be numeric, got {type(interval_raw).__name__}"
+        )
     interval = int(interval_raw)
     if interval < 1:
         raise ValueError(f"interval_ticks must be >= 1, got {interval}")
@@ -509,6 +528,7 @@ def _validate_logging_config(
 # ============================================================================
 # Main Loader
 # ============================================================================
+
 
 def load_config(
     path: str | Path,
@@ -617,7 +637,9 @@ def load_config(
     vis_raw = raw.get("visualization", {})
     if not isinstance(vis_raw, dict):
         raise ValueError("visualization section must be a dictionary")
-    result["visualization"] = _validate_visualization_config(vis_raw, defaults["visualization"])
+    result["visualization"] = _validate_visualization_config(
+        vis_raw, defaults["visualization"]
+    )
 
     # Telemetry
     tele_raw = raw.get("telemetry", {})
@@ -682,6 +704,7 @@ def validate_config(config: ConfigDict) -> None:
 # ============================================================================
 # Helper Functions
 # ============================================================================
+
 
 def config_to_dict(config: ConfigDict) -> dict[str, Any]:
     """Convert ConfigDict to a plain dictionary (for serialization)."""

@@ -39,6 +39,7 @@ _HTTP_413_PAYLOAD_TOO_LARGE = 413
 # Custom Exceptions
 # ============================================================================
 
+
 class ControlHTTPError(Exception):
     """Base exception for HTTP control layer errors."""
 
@@ -59,12 +60,16 @@ class BodyTooLargeError(ControlHTTPError):
     """Raised when the request body exceeds the size limit."""
 
     def __init__(self, max_size: int = _MAX_CONTROL_BODY_BYTES) -> None:
-        super().__init__(f"Control request body too large (max {max_size} bytes)", _HTTP_413_PAYLOAD_TOO_LARGE)
+        super().__init__(
+            f"Control request body too large (max {max_size} bytes)",
+            _HTTP_413_PAYLOAD_TOO_LARGE,
+        )
 
 
 # ============================================================================
 # JSON Body Reader
 # ============================================================================
+
 
 def read_json_body(handler: BaseHTTPRequestHandler) -> object:
     """Read one bounded JSON request body.
@@ -123,7 +128,9 @@ def read_json_body(handler: BaseHTTPRequestHandler) -> object:
         raise ValueError(f"Invalid JSON request body: {exc.msg}") from exc
 
 
-def safe_read_json_body(handler: BaseHTTPRequestHandler) -> tuple[object | None, str | None]:
+def safe_read_json_body(
+    handler: BaseHTTPRequestHandler,
+) -> tuple[object | None, str | None]:
     """Read a JSON body with safe error handling.
 
     This is a convenience wrapper that catches all exceptions and returns
@@ -152,6 +159,7 @@ def safe_read_json_body(handler: BaseHTTPRequestHandler) -> tuple[object | None,
 # ============================================================================
 # Control Request Executor
 # ============================================================================
+
 
 def execute_control_request(
     handler: BaseHTTPRequestHandler,
@@ -188,7 +196,10 @@ def execute_control_request(
         return HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(e)}
     except Exception as e:
         logger.warning(f"Unexpected error reading control request: {e}")
-        return HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "Internal server error"}
+        return HTTPStatus.INTERNAL_SERVER_ERROR, {
+            "ok": False,
+            "error": "Internal server error",
+        }
 
     # Execute the command
     try:
@@ -196,7 +207,10 @@ def execute_control_request(
         return response.status, response.payload
     except Exception as e:
         logger.error(f"Control execution failed: {e}")
-        return HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "Internal server error"}
+        return HTTPStatus.INTERNAL_SERVER_ERROR, {
+            "ok": False,
+            "error": "Internal server error",
+        }
 
 
 def execute_control_request_with_logging(
@@ -233,6 +247,7 @@ def execute_control_request_with_logging(
 # ============================================================================
 # Integration with server.py
 # ============================================================================
+
 
 def handle_control_post(
     handler: BaseHTTPRequestHandler,
@@ -272,9 +287,13 @@ def handle_control_get(
         state = service.state()
         body: dict[str, JSONValue] = {"ok": True, "state": state}
         status = HTTPStatus.OK
+    except AttributeError as e:
+        logger.error(f"Control status failed (AttributeError): {e}")
+        body = {"ok": False, "error": f"Control status failed: {e}"}
+        status = HTTPStatus.INTERNAL_SERVER_ERROR
     except Exception as e:
         logger.error(f"Control status failed: {e}")
-        body = {"ok": False, "error": "Failed to get control status"}
+        body = {"ok": False, "error": f"Failed to get control status: {e}"}
         status = HTTPStatus.INTERNAL_SERVER_ERROR
 
     handler.send_response(status)

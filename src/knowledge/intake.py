@@ -18,10 +18,10 @@ from typing import Any
 
 from .models import KnowledgeItem, SourceRecord
 
-
 # ============================================================================
 # Knowledge Draft
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class KnowledgeDraft:
@@ -58,6 +58,7 @@ class KnowledgeDraft:
 # ============================================================================
 # Knowledge Intake Validator
 # ============================================================================
+
 
 class KnowledgeIntakeValidator:
     """Create provenance-bearing items from already retrieved content.

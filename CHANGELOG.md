@@ -4,8 +4,46 @@
 
 ### Added
 
+- B5D-SEF research dashboard API (`/api/research`, `/api/research/documents`,
+  `/api/research/reports`, `/api/research/experiments`, `/api/research-files/`)
+  exposing the Scientific Evidence Framework registry, generated reports and
+  experiment manifests to the operator dashboard;
+- `src/dashboard/research_source.py` — read-only, path-traversal-safe
+  research source with registry summary, generated-report listing and
+  experiment manifest loading;
+- research dashboard route tests
+  (`tests/test_research_dashboard_routes.py`, 6 tests) covering summary,
+  reports, file content, path-traversal rejection and JSON-404 isolation;
+- single-instance binding regression suite
+  (`tests/test_dashboard_single_instance.py`, 9 tests) verifying the P0
+  process-architecture contract: bridge identity stability across HTTP
+  requests, `/api/debug/bridge` reporting `bridge_exists`/`controller_exists`,
+  `/api/structural/status` never reporting the bridge as missing when attached,
+  JSON-404 isolation for unknown `/api/...` paths, and bridge object identity
+  matching the server attachment;
+- dashboard frontend expanded with Research tab (B5D-SEF browser) and
+  Alpha.5 Integration Gate tab (live criteria board with automated checks
+  and remaining manual checklist);
+- dashboard frontend now shows integration status badges on the Dashboard tab;
 - CRC-protected structural journal with commit markers and uncommitted-tail
   recovery;
+
+### Changed
+
+- `control-panel.js` converted to a pure ES module: `export class` syntax,
+  no self-initialization on `DOMContentLoaded`, no CommonJS `module.exports`,
+  no module-global state; `ControlAPI.run()` renamed to `runTicks()` to match
+  the canonical `{"command": "run_ticks", "ticks": N}` contract;
+- `operator_console.js` converted to a pure ES module: `export class` syntax,
+  no self-initialization, no CommonJS fallbacks;
+- `app.js` is now the sole frontend lifecycle owner: static ES module imports
+  replace dynamic `import()` with try/catch fallback; duplicate fallback
+  command handlers removed; `module.exports` block removed; canonical command
+  contract unified across Control and Console tabs;
+- `DashboardServer` now accepts an optional `ResearchSource` and exposes
+  `/api/research*` routes;
+- `serve_dashboard()` accepts a `research_root` parameter; `src/main.py`
+  passes `research/` as the research root.
 - deterministic structural replay and persistent inverse-record undo;
 - safe manual and optional policy-based proposal approval;
 - journal-backed structural history and heatmaps;

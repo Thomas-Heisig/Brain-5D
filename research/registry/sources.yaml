@@ -1,0 +1,152 @@
+# =============================================================================
+# Brain-5D Scientific Evidence Framework — Literature Sources Registry
+# =============================================================================
+# Maps external literature to Brain-5D research questions and claims.
+# Enables automatic generation of literature-relevance matrices.
+#
+# ID convention: SRC-{AUTHOR}-{YEAR}
+
+- source_id: SRC-IZHIKEVICH-2003
+  authors:
+    - Eugene M. Izhikevich
+  title: "Simple model of spiking neurons"
+  year: 2003
+  journal: "IEEE Transactions on Neural Networks"
+  doi: "10.1109/TNN.2003.820440"
+  topic:
+    - neuron_model
+    - spiking
+    - snn_dynamics
+  claims:
+    - "Simple spiking models can reproduce multiple cortical firing patterns."
+  brain5d_questions:
+    - RQ-SNN-001
+    - RQ-SNN-002
+    - RQ-SNN-003
+  brain5d_relevance: "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+
+- source_id: SRC-GERSTNER-2014
+  authors:
+    - Wulfram Gerstner
+    - Werner M. Kistler
+    - Richard Naud
+    - Liam Paninski
+  title: "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition"
+  year: 2014
+  publisher: "Cambridge University Press"
+  topic:
+    - neuron_model
+    - spiking
+    - snn_dynamics
+    - plasticity
+  claims:
+    - "Spiking neural networks can model cognitive processes."
+  brain5d_questions:
+    - RQ-SNN-001
+    - RQ-SNN-002
+  brain5d_relevance: "Standardreferenz für SNN-Theorie und Dynamik."
+
+- source_id: SRC-SONG-ABBOTT-2000
+  authors:
+    - Sen Song
+    - Kenneth D. Miller
+    - Larry F. Abbott
+  title: "Competitive Hebbian learning through spike-timing-dependent synaptic plasticity"
+  year: 2000
+  journal: "Nature Neuroscience"
+  doi: "10.1038/78829"
+  topic:
+    - stdp
+    - plasticity
+  claims:
+    - "STDP can produce competitive synaptic modification."
+  brain5d_questions:
+    - RQ-SNN-004
+    - RQ-SNN-005
+    - RQ-STDP-001
+    - RQ-STDP-002
+  brain5d_relevance: "Fundamentale STDP-Referenz für Timing-abhängige Plastizität."
+
+- source_id: SRC-BI-POO-1998
+  authors:
+    - Guo-Qiang Bi
+    - Mu-ming Poo
+  title: "Synaptic Modifications in Cultured Hippocampal Neurons: Dependence on Spike Timing, Synaptic Strength, and Postsynaptic Cell Type"
+  year: 1998
+  journal: "Journal of Neuroscience"
+  doi: "10.1523/JNEUROSCI.18-24-10464.1998"
+  topic:
+    - stdp
+    - plasticity
+  claims:
+    - "Spike timing determines the direction and magnitude of synaptic modification."
+  brain5d_questions:
+    - RQ-STDP-001
+  brain5d_relevance: "Biologische Evidenz für STDP-Mechanismen."
+
+- source_id: SRC-TURRIGIANO-2008
+  authors:
+    - Gina G. Turrigiano
+  title: "The Self-Tuning Neuron: Synaptic Scaling of Excitatory Synapses"
+  year: 2008
+  journal: "Cell"
+  doi: "10.1016/j.cell.2008.10.008"
+  topic:
+    - homeostasis
+    - plasticity
+  claims:
+    - "Synaptic scaling stabilizes firing rates in neural networks."
+  brain5d_questions:
+    - RQ-HOM-001
+    - RQ-HOM-002
+  brain5d_relevance: "Referenz für synaptische Homeostase-Mechanismen."
+
+- source_id: SRC-MARKRAM-2015
+  authors:
+    - Henry Markram
+    - et al.
+  title: "Reconstruction and Simulation of Neocortical Microcircuitry"
+  year: 2015
+  journal: "Cell"
+  doi: "10.1016/j.cell.2015.09.029"
+  topic:
+    - snn_dynamics
+    - large_scale
+    - simulation
+  claims:
+    - "Large-scale SNN simulations can reproduce microcircuit dynamics."
+  brain5d_questions:
+    - RQ-SCALE-001
+  brain5d_relevance: "Vergleichsmaßstab für große SNN-Simulationen."
+
+- source_id: SRC-MAASS-1997
+  authors:
+    - Wolfgang Maass
+  title: "Networks of spiking neurons: The third generation of neural network models"
+  year: 1997
+  journal: "Neural Networks"
+  doi: "10.1016/S0893-6080(97)00011-7"
+  topic:
+    - snn_dynamics
+    - computation
+  claims:
+    - "Spiking neurons are computationally more powerful than sigmoidal neurons."
+  brain5d_questions:
+    - RQ-SNN-001
+  brain5d_relevance: "Theoretische Grundlage für die Berechnungskraft von SNNs."
+
+- source_id: SRC-HEBB-1949
+  authors:
+    - Donald O. Hebb
+  title: "The Organization of Behavior"
+  year: 1949
+  publisher: "Wiley & Sons"
+  topic:
+    - plasticity
+    - learning
+  claims:
+    - "Neurons that fire together, wire together."
+  brain5d_questions:
+    - RQ-SNN-004
+    - RQ-SELF-001
+  brain5d_relevance: "Historische Grundlage aller Hebbschen Plastizitätstheorien."

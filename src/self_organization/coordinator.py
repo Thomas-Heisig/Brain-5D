@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from threading import RLock
-from typing import Callable
-
-from src.dashboard.models import JSONValue
+from typing import Callable, TYPE_CHECKING
 
 from .approval import ProposalApprovalPolicy
+
+if TYPE_CHECKING:
+    from src.dashboard.models import JSONValue
 from .policy import (
     LegacyStructuralProposal,
     PolicyReport,

@@ -60,6 +60,7 @@ except ImportError as e:
 # Simple Controller (Ersatz für RuntimeController)
 # ================================================================
 
+
 class SimpleController:
     """Einfacher Controller für das Dashboard – vermeidet Protokollkonflikte.
 
@@ -124,16 +125,50 @@ class SimpleController:
     def request_snapshot(self) -> None:
         pass
 
-    def configure(self, **kwargs: Any) -> None:
+    def configure(self, **_kwargs: Any) -> None:
         pass
 
-    def snapshot(self) -> dict[str, Any]:
-        return {"tick": self.network.current_tick}
+    def snapshot(self) -> "ControlSnapshot":
+        """Return a snapshot object with to_json() for the dashboard."""
+        return ControlSnapshot(
+            tick=self.network.current_tick,
+            mode=self._state,
+        )
+
+
+class ControlSnapshot:
+    """Lightweight snapshot for dashboard compatibility.
+
+    The dashboard's DashboardControlService calls .to_json() on the
+    object returned by controller.snapshot(). This class provides that
+    contract without requiring the full runtime RuntimeController.
+    """
+
+    __slots__ = ("tick", "mode")
+
+    def __init__(self, tick: int = 0, mode: str = "idle") -> None:
+        self.tick = tick
+        self.mode = mode
+
+    def to_json(self) -> dict[str, object]:
+        return {
+            "tick": self.tick,
+            "mode": self.mode,
+            "queued_ticks": 0,
+            "loop_size": 100,
+            "delay_ms": 0.0,
+            "last_batch_ticks": 0,
+            "last_batch_ms": 0.0,
+            "total_runtime_ms": 0.0,
+            "fault": None,
+            "can_snapshot": False,
+        }
 
 
 # ================================================================
 # Helper Functions
 # ================================================================
+
 
 def sample_positions_excluding_poc(
     total: int,
@@ -272,6 +307,7 @@ def setup_observatory(
 # Main
 # ================================================================
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Brain 5D v0.5 - homeostatic self-regulation with dashboard"
@@ -301,7 +337,9 @@ def main() -> int:
 
     # --- Setup engines ---
     learning = None if args.no_learning else setup_learning(network, config_dict)
-    homeostasis = None if args.no_homeostasis else setup_homeostasis(network, config_dict)
+    homeostasis = (
+        None if args.no_homeostasis else setup_homeostasis(network, config_dict)
+    )
 
     # --- Topology health ---
     health = cast(dict[str, Any], TopologyHealth(network).analyze())  # type: ignore[reportUnknownMemberType]
@@ -349,14 +387,14 @@ def main() -> int:
 
             # OperatorBridge erstellen – Typkonflikt wird ignoriert
             operator_bridge = _OperatorBridge(  # type: ignore[reportArgumentType]
-                controller=controller, # type: ignore[reportUnknownVariableType]
+                controller=controller,  # type: ignore[reportUnknownVariableType]
                 coordinator=None,
                 plasticity=None,
             )
             print("✅ OperatorBridge created")
 
             # StateStore
-            state_store = _DashboardStateStore() # type: ignore[reportUnknownVariableType]
+            state_store = _DashboardStateStore()  # type: ignore[reportUnknownVariableType]
 
         except Exception as e:
             print(f"⚠️ Dashboard setup failed: {e}")
@@ -421,10 +459,7 @@ def main() -> int:
                 # Observatory
                 vis_cfg = config_dict.get("visualization", {})
                 refresh_interval = vis_cfg.get("refresh_interval_ticks", 100)
-                if (
-                    observatory
-                    and (result.tick + 1) % refresh_interval == 0
-                ):
+                if observatory and (result.tick + 1) % refresh_interval == 0:
                     observatory.draw()
 
                 # Console logging
@@ -497,13 +532,16 @@ def main() -> int:
         and state_store is not None
     ):
         try:
-            snapshot_path = Path("artifacts/latest.b5d") if Path("artifacts").exists() else None
+            snapshot_path = (
+                Path("artifacts/latest.b5d") if Path("artifacts").exists() else None
+            )
             docs_root = Path("docs") if Path("docs").exists() else None
+            research_root = Path("research") if Path("research").exists() else None
 
             print("🧠 Starting Brain-5D dashboard on http://127.0.0.1:8765")
 
             # Die `type: ignore` muss auf derselben Zeile wie der Aufruf stehen
-            _serve_dashboard(host="127.0.0.1", port=8765, state=state_store, snapshot_path=snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root)  # type: ignore[reportOptionalCall, call-arg, operator]
+            _serve_dashboard(host="127.0.0.1", port=8765, state=state_store, snapshot_path=snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
 
         except KeyboardInterrupt:
             print("\n⏹️ Dashboard interrupted, stopping simulation...")

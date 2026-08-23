@@ -1,54 +1,38 @@
 /**
- * Brain-5D Operator Dashboard – Main Application
- * 
- * This module initializes all dashboard components and handles tab switching.
- * It integrates the Control Panel, Operator Console, and Documentation Browser
- * into a single cohesive application with lazy loading for performance.
- * 
+ * Brain-5D Operator Dashboard – Main Application (Sole Lifecycle Owner)
+ *
+ * This module is the ONLY component that initializes dashboard sub-modules.
+ * ControlPanel and OperatorConsole are pure ES modules that do NOT
+ * self-initialize. app.js imports them statically and instantiates each
+ * exactly once, when its tab is first activated. This eliminates the
+ * duplicate event-handler / duplicate-log symptom.
+ *
+ * Canonical command contract (unified across Control + Console):
+ *   POST /api/control  { "command": "run_ticks", "ticks": 100 }
+ *
  * Features:
- * - Tab-based navigation (Dashboard, Control, Console, Docs)
+ * - Tab-based navigation (Dashboard, Control, Console, Research, Docs, Gate)
  * - Real-time system monitoring with auto-refresh
  * - Heatmap visualization
  * - Runtime control (step, run, pause, stop, snapshot)
  * - Structural plasticity management (proposals, approve, reject, undo)
+ * - Research registry browser (B5D-SEF)
+ * - Alpha.5 Integration Gate status board
  * - Documentation browsing with multi-format support
  * - Keyboard shortcuts for all major actions
- * 
- * @version 2.0.0
+ *
+ * @version 3.0.0
  * @license MIT
  */
 
 "use strict";
-fetch('/api/debug/bridge')
-  .then(r => r.json())
-  .then(console.log)
-  .catch(console.error);
+
 // ================================================================
-// IMPORTS
+// IMPORTS — static ES module imports (no dynamic fallback)
 // ================================================================
 
-// Import component modules (if available as ES modules)
-// These will be lazy-initialized when their tab is first activated.
-// If the modules are not available, fallback to inline implementations.
-let ControlPanel, OperatorConsole;
-
-try {
-  // Dynamic import for code splitting – loads only when needed
-  // The actual import paths should match your project structure
-  const controlModule = await import('./control-panel.js');
-  ControlPanel = controlModule.ControlPanel || controlModule.default;
-} catch {
-  console.warn('ControlPanel module not found, using fallback');
-  ControlPanel = null;
-}
-
-try {
-  const consoleModule = await import('./operator_console.js');
-  OperatorConsole = consoleModule.OperatorConsole || consoleModule.default;
-} catch {
-  console.warn('OperatorConsole module not found, using fallback');
-  OperatorConsole = null;
-}
+import { ControlPanel } from './control-panel.js';
+import { OperatorConsole } from './operator_console.js';
 
 // ================================================================
 // DOM HELPERS
@@ -131,7 +115,9 @@ function setupTabs() {
     dashboard: document.getElementById('tab-dashboard'),
     control: document.getElementById('tab-control'),
     console: document.getElementById('tab-console'),
+    research: document.getElementById('tab-research'),
     docs: document.getElementById('tab-docs'),
+    gate: document.getElementById('tab-gate'),
   };
 
   // Track initialization state
@@ -139,6 +125,8 @@ function setupTabs() {
     control: false,
     console: false,
     docs: false,
+    research: false,
+    gate: false,
   };
 
   // Component instances
@@ -174,6 +162,14 @@ function setupTabs() {
       if (tabName === 'docs' && !initialized.docs) {
         initDocumentationBrowser();
         initialized.docs = true;
+      }
+      if (tabName === 'research' && !initialized.research) {
+        initResearchBrowser();
+        initialized.research = true;
+      }
+      if (tabName === 'gate' && !initialized.gate) {
+        initGateBoard();
+        initialized.gate = true;
       }
     });
   });
@@ -264,12 +260,58 @@ async function refreshStatus() {
       statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
       statusEl.className = storage.worker_failed ? 'status-pill error' : 'status-pill online';
     }
+
+    // Integration status badges (dashboard tab)
+    refreshIntegrationStatus();
   } catch (error) {
     const statusEl = $('system-status');
     if (statusEl) {
       statusEl.textContent = '⚠️ offline';
       statusEl.className = 'status-pill error';
     }
+  }
+}
+
+/**
+ * Refresh the integration status badges on the dashboard tab.
+ */
+async function refreshIntegrationStatus() {
+  const checks = [
+    { id: 'int-bridge', fn: async () => {
+      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; }
+    }},
+    { id: 'int-controller', fn: async () => {
+      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; }
+    }},
+    { id: 'int-structural', fn: async () => {
+      try { const r = await fetch('/api/structural/status'); const d = await r.json(); return d.configured === true; } catch { return false; }
+    }},
+    { id: 'int-snapshots', fn: async () => {
+      try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; }
+    }},
+    { id: 'int-research', fn: async () => {
+      try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; }
+    }},
+    { id: 'int-tests', fn: async () => false }, // not yet automated
+  ];
+
+  let passed = 0;
+  for (const c of checks) {
+    const el = $(c.id);
+    if (!el) continue;
+    try {
+      const ok = await c.fn();
+      el.className = `integration-item ${ok ? 'int-passed' : 'int-failed'}`;
+      if (ok) passed++;
+    } catch {
+      el.className = 'integration-item int-failed';
+    }
+  }
+
+  const badge = $('integration-badge');
+  if (badge) {
+    badge.textContent = `${passed}/${checks.length} passed`;
+    badge.className = passed === checks.length ? 'gate-badge passed' : 'gate-badge pending';
   }
 }
 
@@ -331,6 +373,98 @@ function drawHeatmap(payload) {
     'heatmap-meta',
     `${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.samples || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
   );
+
+  // Also draw the 5D projection if available
+  draw5DProjection(payload);
+}
+
+/**
+ * Draw a 5D projection visualization alongside the heatmap.
+ * Uses a 3D perspective projection of the 5D network space.
+ */
+function draw5DProjection(payload) {
+  const canvas = document.getElementById('projection-5d');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const values = payload.values || [];
+  if (!values.length) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const rows = values.length;
+  const cols = values[0]?.length || 1;
+
+  // Create a pseudo-3D isometric projection
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const scale = Math.min(canvas.width, canvas.height) * 0.35 / Math.max(rows, cols);
+
+  const flat = values.flat();
+  const min = Math.min(...flat);
+  const max = Math.max(...flat);
+  const range = max - min || 1;
+
+  // Draw grid points with height based on value
+  for (let y = 0; y < rows; y += 2) {
+    for (let x = 0; x < cols; x += 2) {
+      const val = (values[y]?.[x] || 0);
+      const normalized = (val - min) / range;
+
+      // Isometric projection
+      const isoX = (x - y) * scale * 0.7;
+      const isoY = (x + y) * scale * 0.35 - normalized * scale * 2;
+
+      const size = 2 + normalized * 4;
+      const hue = 210 - normalized * 195;
+      const light = 20 + normalized * 50;
+
+      ctx.beginPath();
+      ctx.arc(cx + isoX, cy + isoY - 20, size, 0, Math.PI * 2);
+      ctx.fillStyle = `hsl(${hue}, 85%, ${light}%)`;
+      ctx.fill();
+
+      // Subtle glow for high values
+      if (normalized > 0.6) {
+        ctx.beginPath();
+        ctx.arc(cx + isoX, cy + isoY - 20, size * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 85%, ${light}%, 0.15)`;
+        ctx.fill();
+      }
+    }
+  }
+
+  // Draw connecting lines for structure
+  ctx.strokeStyle = 'rgba(64, 224, 208, 0.08)';
+  ctx.lineWidth = 0.5;
+  for (let y = 0; y < rows - 2; y += 3) {
+    for (let x = 0; x < cols - 2; x += 3) {
+      const v1 = (values[y]?.[x] || 0);
+      const v2 = (values[y]?.[x + 2] || 0);
+      const v3 = (values[y + 2]?.[x] || 0);
+
+      const n1 = (v1 - min) / range;
+      const n2 = (v2 - min) / range;
+      const n3 = (v3 - min) / range;
+
+      const x1 = cx + (x - y) * scale * 0.7;
+      const y1 = cy + (x + y) * scale * 0.35 - n1 * scale * 2 - 20;
+      const x2 = cx + ((x + 2) - y) * scale * 0.7;
+      const y2 = cy + ((x + 2) + y) * scale * 0.35 - n2 * scale * 2 - 20;
+      const x3 = cx + (x - (y + 2)) * scale * 0.7;
+      const y3 = cy + (x + (y + 2)) * scale * 0.35 - n3 * scale * 2 - 20;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x3, y3);
+      ctx.stroke();
+    }
+  }
 }
 
 /**
@@ -360,369 +494,25 @@ function initDashboard() {
 }
 
 // ================================================================
-// CONTROL PANEL INITIALIZATION
+// CONTROL PANEL INITIALIZATION (sole owner)
 // ================================================================
 
 function initControlPanel() {
   console.log('🎮 Control Panel initializing...');
-
-  // If ControlPanel class is available, instantiate it
-  if (ControlPanel) {
-    try {
-      const instance = new ControlPanel();
-      console.log('✅ Control Panel initialized (module)');
-      return instance;
-    } catch (e) {
-      console.warn('ControlPanel instantiation failed, using fallback:', e);
-    }
-  }
-
-  // Fallback: use the control-panel.js logic directly
-  // This assumes the control-panel.js script is loaded (via script tag or inline)
-  if (typeof initControlPanelFallback === 'function') {
-    return initControlPanelFallback();
-  }
-
-  // Minimal fallback: bind basic events
-  bindControlEvents();
-  return null;
-}
-
-/**
- * Minimal fallback for control panel events
- */
-function bindControlEvents() {
-  // Step
-  const stepBtn = $('step-button');
-  if (stepBtn) {
-    stepBtn.addEventListener('click', () => {
-      const ticks = parseInt($('step-ticks')?.value || '1', 10);
-      sendControlCommand('step', { ticks });
-    });
-  }
-
-  // Run
-  const runBtn = $('run-button');
-  if (runBtn) {
-    runBtn.addEventListener('click', () => {
-      const loopSize = parseInt($('loop-size')?.value || '100', 10);
-      sendControlCommand('run', { loop_size: loopSize });
-    });
-  }
-
-  // Pause
-  const pauseBtn = $('pause-button');
-  if (pauseBtn) {
-    pauseBtn.addEventListener('click', () => sendControlCommand('pause'));
-  }
-
-  // Stop
-  const stopBtn = $('stop-button');
-  if (stopBtn) {
-    stopBtn.addEventListener('click', () => sendControlCommand('stop'));
-  }
-
-  // Snapshot
-  const snapshotBtn = $('snapshot-button');
-  if (snapshotBtn) {
-    snapshotBtn.addEventListener('click', () => sendControlCommand('snapshot'));
-  }
-
-  // Configure
-  const applyBtn = $('apply-runtime-config');
-  if (applyBtn) {
-    applyBtn.addEventListener('click', () => {
-      const loopSize = parseInt($('loop-size')?.value || '100', 10);
-      const delayMs = parseFloat($('delay-ms')?.value || '0');
-      sendControlCommand('configure', { loop_size: loopSize, delay_ms: delayMs });
-    });
-  }
-
-  // Self-organization toggles
-  const selfOrgEnabled = $('self-org-enabled');
-  const selfOrgDryRun = $('self-org-dry-run');
-  if (selfOrgEnabled) {
-    selfOrgEnabled.addEventListener('change', updateSelfOrganization);
-  }
-  if (selfOrgDryRun) {
-    selfOrgDryRun.addEventListener('change', updateSelfOrganization);
-  }
-
-  // Undo structural
-  const undoBtn = $('btn-undo-structural');
-  if (undoBtn) {
-    undoBtn.addEventListener('click', () => {
-      sendStructuralCommand('undo');
-    });
-  }
-
-  // Auto-approval
-  const autoApprovalBtn = $('btn-auto-approval');
-  if (autoApprovalBtn) {
-    autoApprovalBtn.addEventListener('click', () => {
-      const enabled = autoApprovalBtn.dataset.enabled === 'true';
-      sendStructuralCommand('auto-approval', { enabled: !enabled });
-    });
-  }
-
-  console.log('✅ Control Panel initialized (fallback)');
-}
-
-/**
- * Send control command via API
- */
-async function sendControlCommand(action, params = {}) {
-  const msgEl = $('control-message');
-  if (msgEl) {
-    msgEl.textContent = `⏳ ${action}...`;
-    msgEl.dataset.kind = 'info';
-  }
-
-  try {
-    const response = await fetch('/api/control', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, ...params }),
-    });
-    const data = await response.json();
-    if (!response.ok || data.ok === false) {
-      throw new Error(data.error || `HTTP ${response.status}`);
-    }
-    if (msgEl) {
-      msgEl.textContent = `✅ ${action} completed`;
-      msgEl.dataset.kind = 'success';
-    }
-    // Refresh status after command
-    refreshStatus();
-  } catch (error) {
-    if (msgEl) {
-      msgEl.textContent = `❌ ${action} failed: ${error.message}`;
-      msgEl.dataset.kind = 'error';
-    }
-  }
-}
-
-/**
- * Send structural command via API
- */
-async function sendStructuralCommand(action, params = {}) {
-  const msgEl = $('control-message');
-  if (msgEl) {
-    msgEl.textContent = `⏳ Structural ${action}...`;
-    msgEl.dataset.kind = 'info';
-  }
-
-  try {
-    const response = await fetch(`/api/structural/${action}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params),
-    });
-    const data = await response.json();
-    if (!response.ok || data.ok === false) {
-      throw new Error(data.message || data.error || `HTTP ${response.status}`);
-    }
-    if (msgEl) {
-      msgEl.textContent = `✅ Structural ${action}: ${data.message || 'completed'}`;
-      msgEl.dataset.kind = 'success';
-    }
-    refreshStatus();
-  } catch (error) {
-    if (msgEl) {
-      msgEl.textContent = `❌ Structural ${action} failed: ${error.message}`;
-      msgEl.dataset.kind = 'error';
-    }
-  }
-}
-
-/**
- * Update self-organization configuration
- */
-function updateSelfOrganization() {
-  const enabled = $('self-org-enabled')?.checked || false;
-  const dryRun = $('self-org-dry-run')?.checked || false;
-  sendControlCommand('self_organization', { enabled, dry_run: dryRun });
+  const instance = new ControlPanel();
+  console.log('✅ Control Panel initialized');
+  return instance;
 }
 
 // ================================================================
-// OPERATOR CONSOLE INITIALIZATION
+// OPERATOR CONSOLE INITIALIZATION (sole owner)
 // ================================================================
 
 function initOperatorConsole() {
   console.log('📟 Operator Console initializing...');
-
-  // If OperatorConsole class is available, instantiate it
-  if (OperatorConsole) {
-    try {
-      const instance = new OperatorConsole();
-      console.log('✅ Operator Console initialized (module)');
-      return instance;
-    } catch (e) {
-      console.warn('OperatorConsole instantiation failed, using fallback:', e);
-    }
-  }
-
-  // Fallback: bind console events
-  bindConsoleEvents();
-  return null;
-}
-
-/**
- * Minimal fallback for operator console events
- */
-function bindConsoleEvents() {
-  // Step
-  const stepBtn = $('b5d-step');
-  if (stepBtn) {
-    stepBtn.addEventListener('click', () => {
-      sendConsoleCommand('step');
-    });
-  }
-
-  // Run N Ticks
-  const runBtn = $('b5d-run-ticks');
-  if (runBtn) {
-    runBtn.addEventListener('click', () => {
-      const count = parseInt($('b5d-tick-count')?.value || '100', 10);
-      sendConsoleCommand('run_ticks', { ticks: count });
-    });
-  }
-
-  // Start
-  const startBtn = $('b5d-start');
-  if (startBtn) {
-    startBtn.addEventListener('click', () => sendConsoleCommand('start'));
-  }
-
-  // Pause
-  const pauseBtn = $('b5d-pause');
-  if (pauseBtn) {
-    pauseBtn.addEventListener('click', () => sendConsoleCommand('pause'));
-  }
-
-  // Resume
-  const resumeBtn = $('b5d-resume');
-  if (resumeBtn) {
-    resumeBtn.addEventListener('click', () => sendConsoleCommand('resume'));
-  }
-
-  // Stop
-  const stopBtn = $('b5d-stop');
-  if (stopBtn) {
-    stopBtn.addEventListener('click', () => sendConsoleCommand('stop'));
-  }
-
-  // Snapshot
-  const snapshotBtn = $('b5d-snapshot');
-  if (snapshotBtn) {
-    snapshotBtn.addEventListener('click', () => sendConsoleCommand('snapshot'));
-  }
-
-  // Undo
-  const undoBtn = $('b5d-undo');
-  if (undoBtn) {
-    undoBtn.addEventListener('click', () => sendConsoleCommand('undo'));
-  }
-
-  // Clear console
-  const clearBtn = $('b5d-clear-console');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      const output = $('console-output');
-      if (output) {
-        output.innerHTML = `<div class="log-entry log-info">
-          <span class="log-time">[${new Date().toLocaleTimeString()}]</span> 🧹 Console cleared
-        </div>`;
-      }
-    });
-  }
-
-  // Keyboard shortcuts for console
-  document.addEventListener('keydown', (e) => {
-    // Ctrl+Enter = Step
-    if (e.ctrlKey && e.key === 'Enter' && document.activeElement?.id !== 'b5d-tick-count') {
-      e.preventDefault();
-      sendConsoleCommand('step');
-      return;
-    }
-    // Ctrl+Shift+S = Start
-    if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-      e.preventDefault();
-      sendConsoleCommand('start');
-      return;
-    }
-    // Ctrl+Shift+P = Pause
-    if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-      e.preventDefault();
-      sendConsoleCommand('pause');
-      return;
-    }
-    // Ctrl+Shift+Space = Stop
-    if (e.ctrlKey && e.shiftKey && e.key === ' ') {
-      e.preventDefault();
-      sendConsoleCommand('stop');
-      return;
-    }
-    // Ctrl+Shift+N = Snapshot
-    if (e.ctrlKey && e.shiftKey && e.key === 'N') {
-      e.preventDefault();
-      sendConsoleCommand('snapshot');
-      return;
-    }
-  });
-
-  console.log('✅ Operator Console initialized (fallback)');
-}
-
-/**
- * Send console command via API with logging
- */
-async function sendConsoleCommand(action, params = {}) {
-  const output = $('console-output');
-  const time = new Date().toLocaleTimeString();
-
-  // Log command to console
-  if (output) {
-    const logEntry = document.createElement('div');
-    logEntry.className = 'log-entry log-info';
-    logEntry.innerHTML = `<span class="log-time">[${time}]</span> ▶ ${action}${params.ticks ? ` (${params.ticks} ticks)` : ''}`;
-    output.appendChild(logEntry);
-    output.scrollTop = output.scrollHeight;
-  }
-
-  try {
-    const response = await fetch('/api/control', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: action, ...params }),
-    });
-    const data = await response.json();
-    if (!response.ok || data.ok === false) {
-      throw new Error(data.error || `HTTP ${response.status}`);
-    }
-
-    // Log success
-    if (output) {
-      const logEntry = document.createElement('div');
-      logEntry.className = 'log-entry log-success';
-      logEntry.innerHTML = `<span class="log-time">[${new Date().toLocaleTimeString()}]</span> ✅ ${action} completed`;
-      output.appendChild(logEntry);
-      output.scrollTop = output.scrollHeight;
-    }
-
-    refreshStatus();
-    refreshConsoleStatus();
-
-  } catch (error) {
-    // Log error
-    if (output) {
-      const logEntry = document.createElement('div');
-      logEntry.className = 'log-entry log-error';
-      logEntry.innerHTML = `<span class="log-time">[${new Date().toLocaleTimeString()}]</span> ❌ ${action} failed: ${error.message}`;
-      output.appendChild(logEntry);
-      output.scrollTop = output.scrollHeight;
-    }
-  }
+  const instance = new OperatorConsole();
+  console.log('✅ Operator Console initialized');
+  return instance;
 }
 
 /**
@@ -1036,6 +826,381 @@ function setupDocSearch() {
 }
 
 // ================================================================
+// RESEARCH BROWSER (B5D-SEF)
+// ================================================================
+
+let researchLoaded = false;
+
+function initResearchBrowser() {
+  console.log('🔬 Research Browser initializing...');
+  if (!researchLoaded) {
+    refreshResearchSummary();
+    loadResearchReports();
+    loadResearchDocuments();
+    loadResearchExperiments();
+    researchLoaded = true;
+  }
+}
+
+async function refreshResearchSummary() {
+  try {
+    const res = await fetch('/api/research', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const el = $('research-summary');
+    if (!el) return;
+
+    if (!data.available) {
+      el.innerHTML = '<span class="research-unavailable">⚠️ Research-Quelle nicht konfiguriert (B5D-SEF registry nicht gefunden)</span>';
+      return;
+    }
+
+    const cats = data.categories || {};
+    const items = Object.entries(cats).map(([k, v]) =>
+      `<span class="research-stat"><strong>${v}</strong> ${escapeHtml(k)}</span>`
+    ).join('');
+    el.innerHTML = `<span class="research-available">✅ B5D-SEF aktiv</span>${items}`;
+  } catch (error) {
+    const el = $('research-summary');
+    if (el) el.innerHTML = `<span class="research-unavailable">⚠️ Research API nicht erreichbar: ${error.message || 'unbekannt'}</span>`;
+  }
+}
+
+async function loadResearchReports() {
+  try {
+    const res = await fetch('/api/research/reports', { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = $('research-reports');
+    if (!container) return;
+    const reports = data.reports || [];
+    if (!reports.length) {
+      container.innerHTML = '<div class="research-empty">No generated reports</div>';
+      return;
+    }
+    container.innerHTML = reports.map(r => `
+      <div class="research-report-item" data-path="${escapeHtml(r.path)}">
+        <span class="research-report-name">📄 ${escapeHtml(r.name)}</span>
+        <span class="research-report-size">${formatBytes(r.size_bytes)}</span>
+      </div>
+    `).join('');
+    container.querySelectorAll('.research-report-item').forEach(item => {
+      item.addEventListener('click', () => openResearchDocument(item.dataset.path));
+    });
+  } catch {
+    // silently fail
+  }
+}
+
+async function loadResearchDocuments() {
+  try {
+    const res = await fetch('/api/research/documents', { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = $('research-documents');
+    if (!container) return;
+    const docs = data.documents || [];
+    if (!docs.length) {
+      container.innerHTML = '<div class="research-empty">No registry documents</div>';
+      return;
+    }
+    const byCategory = {};
+    for (const d of docs) {
+      if (!byCategory[d.category]) byCategory[d.category] = [];
+      byCategory[d.category].push(d);
+    }
+    let html = '';
+    for (const [cat, items] of Object.entries(byCategory)) {
+      html += `<div class="research-category"><h4>${escapeHtml(cat)}</h4><ul>`;
+      for (const d of items) {
+        html += `<li class="research-doc-item" data-path="${escapeHtml(d.path)}">📄 ${escapeHtml(d.name)} <span class="research-doc-kind">${escapeHtml(d.kind)}</span></li>`;
+      }
+      html += '</ul></div>';
+    }
+    container.innerHTML = html;
+    container.querySelectorAll('.research-doc-item').forEach(item => {
+      item.addEventListener('click', () => openResearchDocument(item.dataset.path));
+    });
+  } catch {
+    // silently fail
+  }
+}
+
+async function loadResearchExperiments() {
+  try {
+    const res = await fetch('/api/research/experiments', { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = $('research-experiments');
+    if (!container) return;
+    const exps = data.experiments || [];
+    if (!exps.length) {
+      container.innerHTML = '<div class="research-empty">No experiments registered</div>';
+      return;
+    }
+    container.innerHTML = exps.map(e => {
+      const m = e.manifest || {};
+      return `<div class="research-experiment-item">
+        <span class="research-exp-id">${escapeHtml(e.id)}</span>
+        <span class="research-exp-tick">Tick ${m.tick_count || '?'}</span>
+        <span class="research-exp-neurons">🧠 ${m.final_neuron_count || m.initial_neuron_count || '?'}</span>
+      </div>`;
+    }).join('');
+  } catch {
+    // silently fail
+  }
+}
+
+async function openResearchDocument(path) {
+  try {
+    const res = await fetch(`/api/research-files/${encodeURIComponent(path)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const viewer = $('research-viewer');
+    if (!viewer) return;
+    viewer.innerHTML = `
+      <div class="research-doc-header">
+        <h3>${escapeHtml(path)}</h3>
+        <span>${formatBytes(data.size_bytes)}</span>
+      </div>
+      <div class="research-doc-content"><pre>${escapeHtml(data.content || '')}</pre></div>
+    `;
+  } catch (e) {
+    const viewer = $('research-viewer');
+    if (viewer) viewer.innerHTML = `<div class="research-error">⚠️ ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+// ================================================================
+// ALPHA.5 INTEGRATION GATE STATUS
+// ================================================================
+
+let gateLoaded = false;
+
+function initGateBoard() {
+  console.log('🚪 Alpha.5 Integration Gate initializing...');
+  if (!gateLoaded) {
+    refreshGateStatus();
+    const refreshBtn = $('gate-refresh');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', refreshGateStatus);
+    }
+    gateLoaded = true;
+  }
+}
+
+async function refreshGateStatus() {
+  const items = [
+    { id: 'gate-process', label: 'One application process', check: async () => {
+      try { const r = await fetch('/api/debug/bridge'); return r.ok; } catch { return false; }
+    }},
+    { id: 'gate-bridge', label: 'OperatorBridge consistently reachable', check: async () => {
+      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; }
+    }},
+    { id: 'gate-controller', label: 'Controller exists', check: async () => {
+      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; }
+    }},
+    { id: 'gate-structural', label: 'Structural Coordinator connected', check: async () => {
+      try { const r = await fetch('/api/structural/status'); const d = await r.json(); return d.configured === true; } catch { return false; }
+    }},
+    { id: 'gate-snapshots', label: 'Snapshot pipeline available', check: async () => {
+      try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; }
+    }},
+    { id: 'gate-research', label: 'Research framework (B5D-SEF) active', check: async () => {
+      try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; }
+    }},
+  ];
+
+  for (const item of items) {
+    const el = $(item.id);
+    if (!el) continue;
+    el.className = 'gate-item gate-pending';
+    el.querySelector('.gate-status').textContent = '…';
+    try {
+      const ok = await item.check();
+      el.className = `gate-item ${ok ? 'gate-passed' : 'gate-failed'}`;
+      el.querySelector('.gate-status').textContent = ok ? '✅' : '❌';
+    } catch {
+      el.className = 'gate-item gate-failed';
+      el.querySelector('.gate-status').textContent = '❌';
+    }
+  }
+}
+
+// ================================================================
+// INTEGRATION STATUS MODAL (Popup für alle Versionen)
+// ================================================================
+
+/**
+ * Build version-specific integration checks.
+ * Each version has its own set of checks that reflect what was
+ * integrated at that stage of Brain-5D development.
+ */
+function getVersionChecks() {
+  return {
+    'v0.4 (Persistenz)': [
+      { label: 'Delta-Journal', icon: '💾', check: async () => { try { const r = await fetch('/api/status'); return r.ok; } catch { return false; } }},
+      { label: 'Storage Pipeline', icon: '📦', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.storage?.deltas_written !== undefined; } catch { return false; } }},
+      { label: 'Crash Recovery', icon: '🛡️', check: async () => { try { const r = await fetch('/api/status'); return r.ok; } catch { return false; } }},
+    ],
+    'v0.5 (Integration Hardening)': [
+      { label: 'OperatorBridge', icon: '🌉', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; } }},
+      { label: 'Controller', icon: '🎮', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; } }},
+      { label: 'Structural API', icon: '🧠', check: async () => { try { const r = await fetch('/api/structural/status'); return r.ok; } catch { return false; } }},
+      { label: 'Snapshots', icon: '💾', check: async () => { try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; } }},
+      { label: 'Research (B5D-SEF)', icon: '🔬', check: async () => { try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; } }},
+      { label: 'Heatmaps', icon: '🔥', check: async () => { try { const r = await fetch('/api/heatmap?kind=activity'); return r.ok; } catch { return false; } }},
+      { label: 'Docs Browser', icon: '📄', check: async () => { try { const r = await fetch('/api/docs'); return r.ok; } catch { return false; } }},
+    ],
+    'v0.5α6 (Morphological Self-Reg)': [
+      { label: 'Self-Organization', icon: '🧬', check: async () => { try { const r = await fetch('/api/structural/status'); const d = await r.json(); return d.configured === true; } catch { return false; } }},
+      { label: 'Proposals', icon: '📋', check: async () => { try { const r = await fetch('/api/structural/proposals'); return r.ok; } catch { return false; } }},
+      { label: 'Homeostasis', icon: '⚖️', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.homeostasis?.enabled !== undefined; } catch { return false; } }},
+    ],
+    'v0.6 (Skalierung)': [
+      { label: 'Large Network', icon: '🌐', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return (d.system?.neurons || 0) > 100; } catch { return false; } }},
+      { label: 'Performance', icon: '⚡', check: async () => { try { const r = await fetch('/api/status'); return r.ok; } catch { return false; } }},
+    ],
+    'v0.7 (Learning Env.)': [
+      { label: 'STDP', icon: '🧪', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.learning?.stdp_updates !== undefined; } catch { return false; } }},
+      { label: 'Reward System', icon: '🏆', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.learning?.reward_updates !== undefined; } catch { return false; } }},
+    ],
+    'v0.8+ (Embodiment → HMI → KI)': [
+      { label: 'Embodiment', icon: '🤖', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.embodiment !== undefined; } catch { return false; } }},
+      { label: 'Signal Bridge', icon: '📡', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.signal_metrics !== undefined; } catch { return false; } }},
+    ],
+  };
+}
+
+/**
+ * Open the integration status modal with all version checks.
+ */
+async function openIntegrationModal() {
+  const modal = document.getElementById('integration-modal');
+  const body = document.getElementById('integration-modal-body');
+  if (!modal || !body) return;
+
+  modal.style.display = 'flex';
+  body.innerHTML = '<div class="modal-loading">🔄 Lade Integrationsdaten…</div>';
+
+  const versions = getVersionChecks();
+  let html = '';
+
+  for (const [version, checks] of Object.entries(versions)) {
+    html += `<div class="int-version-section"><h3>${escapeHtml(version)}</h3><div class="int-version-grid">`;
+    for (const c of checks) {
+      let status = 'unknown';
+      let icon = '⏳';
+      try {
+        const ok = await c.check();
+        status = ok ? 'passed' : 'failed';
+        icon = ok ? '✅' : '❌';
+      } catch {
+        status = 'unknown';
+        icon = '⚠️';
+      }
+      html += `<div class="int-version-item int-${status}">
+        <span class="int-version-icon">${icon}</span>
+        <span class="int-version-label">${c.icon} ${escapeHtml(c.label)}</span>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
+  body.innerHTML = html;
+}
+
+/**
+ * Close the integration modal.
+ */
+function closeIntegrationModal() {
+  const modal = document.getElementById('integration-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+// ================================================================
+// ENHANCED DASHBOARD – Interactive Features
+// ================================================================
+
+/**
+ * Make integration status items clickable – opens the modal
+ * with detailed version-by-version integration info.
+ */
+function setupIntegrationClickHandlers() {
+  // Click on the integration section header or badge opens the modal
+  const header = document.querySelector('.integration-status .panel-title h2');
+  if (header) {
+    header.style.cursor = 'pointer';
+    header.addEventListener('click', openIntegrationModal);
+  }
+
+  const badge = document.getElementById('integration-badge');
+  if (badge) {
+    badge.style.cursor = 'pointer';
+    badge.addEventListener('click', openIntegrationModal);
+  }
+
+  // Each integration item shows a tooltip with detail on click
+  document.querySelectorAll('.integration-item.clickable').forEach(el => {
+    el.addEventListener('click', openIntegrationModal);
+  });
+
+  // Modal close handlers
+  const closeBtns = document.querySelectorAll('#modal-close-btn, #modal-close-btn2');
+  closeBtns.forEach(btn => btn.addEventListener('click', closeIntegrationModal));
+
+  const modal = document.getElementById('integration-modal');
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeIntegrationModal();
+    });
+  }
+
+  // Refresh button
+  const refreshBtn = document.getElementById('modal-refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', openIntegrationModal);
+  }
+
+  // Escape key closes modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeIntegrationModal();
+  });
+}
+
+/**
+ * Add auto-refresh toggle to the dashboard.
+ */
+function setupAutoRefreshToggle() {
+  const statusEl = document.getElementById('system-status');
+  if (!statusEl) return;
+
+  statusEl.addEventListener('dblclick', () => {
+    // Toggle auto-refresh on/off
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+      clearInterval(heatmapInterval);
+      refreshInterval = null;
+      heatmapInterval = null;
+      statusEl.textContent += ' (paused)';
+    } else {
+      refreshInterval = setInterval(refreshStatus, 1000);
+      heatmapInterval = setInterval(refreshHeatmap, 5000);
+      statusEl.textContent = statusEl.textContent.replace(' (paused)', '');
+    }
+  });
+}
+
+/**
+ * Add a system command runner to the dashboard header.
+ */
+function setupQuickActions() {
+  // Ctrl+Shift+R = force refresh all
+  // Ctrl+Shift+M = open integration modal
+  // Already handled by keyboard shortcuts below
+}
+
+// ================================================================
 // KEYBOARD SHORTCUTS (Global)
 // ================================================================
 
@@ -1049,8 +1214,15 @@ function setupGlobalShortcuts() {
       return;
     }
 
-    // Ctrl+1-4 = Tab switching
-    if (e.ctrlKey && e.key >= '1' && e.key <= '4') {
+    // Ctrl+Shift+I = Open Integration Modal
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+      e.preventDefault();
+      openIntegrationModal();
+      return;
+    }
+
+    // Ctrl+1-6 = Tab switching
+    if (e.ctrlKey && e.key >= '1' && e.key <= '6') {
       e.preventDefault();
       const index = parseInt(e.key) - 1;
       const tabs = $$('.tab-btn');
@@ -1067,7 +1239,7 @@ function setupGlobalShortcuts() {
 // ================================================================
 
 function init() {
-  console.log('🧠 Brain-5D Operator Dashboard v2.0.0');
+  console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
 
   // Setup tab navigation (also initializes components lazily)
   setupTabs();
@@ -1075,13 +1247,14 @@ function init() {
   // Initialize dashboard (status & heatmap)
   initDashboard();
 
+  // Setup integration click handlers
+  setupIntegrationClickHandlers();
+
+  // Setup auto-refresh toggle
+  setupAutoRefreshToggle();
+
   // Setup global shortcuts
   setupGlobalShortcuts();
-
-  // Make functions globally accessible for inline onclick handlers
-  window.openDocument = openDocument;
-  window.refreshStatus = refreshStatus;
-  window.refreshHeatmap = refreshHeatmap;
 
   console.log('✅ Dashboard ready');
 }
@@ -1095,45 +1268,4 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
-}
-
-// ================================================================
-// MODULE EXPORTS (for bundlers/testing)
-// ================================================================
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    // Dashboard
-    refreshStatus,
-    refreshHeatmap,
-    drawHeatmap,
-    initDashboard,
-
-    // Control Panel
-    initControlPanel,
-    sendControlCommand,
-    sendStructuralCommand,
-
-    // Operator Console
-    initOperatorConsole,
-    sendConsoleCommand,
-    loadProposals,
-    handleProposal,
-
-    // Documentation Browser
-    initDocumentationBrowser,
-    loadDocsTree,
-    openDocument,
-    displayDocument,
-
-    // Utilities
-    formatBytes,
-    formatNumber,
-    formatFloat,
-    debounce,
-    escapeHtml,
-
-    // Main
-    init,
-  };
 }

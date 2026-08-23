@@ -43,7 +43,12 @@ from .models import (
     JSONValue,
 )
 from .server import serve_dashboard
-from .state import DashboardStateStore, create_state_store, get_current_state, publish_state
+from .state import (
+    DashboardStateStore,
+    create_state_store,
+    get_current_state,
+    publish_state,
+)
 from .operator_bridge import OperatorBridge
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .docs_source import DocumentationSource, create_docs_source
@@ -58,6 +63,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 # Convenience Functions
 # ============================================================================
+
 
 def create_default_dashboard(
     host: str = "127.0.0.1",
@@ -116,7 +122,6 @@ __all__ = [
     "OperatorBridge",
     "DocumentationSource",
     "SnapshotHeatmapSource",
-
     # Metric models
     "SystemMetrics",
     "LearningMetrics",
@@ -131,20 +136,16 @@ __all__ = [
     "SignalMetrics",
     "ExperimentMetrics",
     "JSONValue",
-
     # Server functions
     "serve_dashboard",
     "create_default_dashboard",
-
     # State management
     "create_state_store",
     "get_current_state",
     "publish_state",
-
     # Factory functions
     "create_heatmap_source",
     "create_docs_source",
-
     # Version
     "__version__",
 ]

@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Mapping, Protocol, TypeAlias
+from typing import Mapping, Protocol, TYPE_CHECKING, TypeAlias
 
-from src.dashboard.models import JSONValue
+if TYPE_CHECKING:
+    from src.dashboard.models import JSONValue
 
 JSONScalar: TypeAlias = str | int | float | bool | None
 ProposalMetadata: TypeAlias = Mapping[str, JSONScalar]

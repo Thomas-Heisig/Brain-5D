@@ -1,0 +1,69 @@
+{
+  "experiment_id": "EXP-2026-0001",
+  "timestamp": "2026-08-23T12:00:00+02:00",
+  "research_questions": [
+    "RQ-SNN-001",
+    "RQ-SNN-003"
+  ],
+  "hypotheses": [
+    "H-SNN-001-A",
+    "H-SNN-003-A"
+  ],
+  "git": {
+    "commit": "0e535c7d9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d",
+    "dirty": false,
+    "branch": "main"
+  },
+  "software": {
+    "brain5d_version": "0.5.0a5",
+    "python": "3.13.14",
+    "os": "Windows 10"
+  },
+  "simulation": {
+    "seed": 42,
+    "ticks": 100000,
+    "dimensions": [10, 10, 10, 10, 10],
+    "neurons_initial": 5000,
+    "neurons_final": 5000,
+    "synapses_initial": 25000,
+    "synapses_final": 24800,
+    "learning": true,
+    "homeostasis": true,
+    "structural_plasticity": false,
+    "neuron_model": "izhikevich",
+    "integrator": "euler",
+    "stdp_params": {
+      "a_plus": 0.01,
+      "a_minus": 0.012,
+      "tau_plus": 20.0,
+      "tau_minus": 20.0
+    },
+    "homeostasis_params": {
+      "target_rate": 5.0,
+      "learning_rate": 0.001
+    },
+    "input_pattern": "poisson_train_10hz"
+  },
+  "results": {
+    "metrics_summary": {
+      "mean_firing_rate": 4.87,
+      "std_firing_rate": 1.23,
+      "mean_synaptic_weight": 0.52,
+      "std_synaptic_weight": 0.31,
+      "weight_drift": 0.003
+    },
+    "exceptions": []
+  },
+  "artifacts": {
+    "snapshot": "state-final.b5d",
+    "metrics": "metrics.csv",
+    "config": "config.yaml",
+    "logs": "simulation.log"
+  },
+  "runtime": {
+    "duration_seconds": 342.5,
+    "ram_peak_mb": 128.4
+  },
+  "evidence": [],
+  "test_status": "passed"
+}

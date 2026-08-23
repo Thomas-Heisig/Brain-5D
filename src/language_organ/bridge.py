@@ -42,10 +42,10 @@ from src.signal_processing.models import SignalFrame
 
 from .protocols import LanguageModelBackend, LanguageRequest, LanguageResponse
 
-
 # ============================================================================
 # Status Model
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class LanguageOrganStatus:
@@ -70,6 +70,7 @@ class LanguageOrganStatus:
 # ============================================================================
 # Language Organ
 # ============================================================================
+
 
 class LanguageOrgan:
     """Own only language requests; never own the Brain-5D runtime loop.

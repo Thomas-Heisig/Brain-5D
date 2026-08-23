@@ -42,6 +42,7 @@ JSONBody = dict[str, Any]
 # Custom Exceptions
 # ============================================================================
 
+
 class ControlError(Exception):
     """Base exception for control service errors."""
 
@@ -69,6 +70,7 @@ class CoordinatorUnavailableError(ControlError):
 # ============================================================================
 # Control Response
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class ControlResponse:
@@ -102,7 +104,9 @@ class ControlResponse:
         return cls(ok=True, status=200, payload=payload or {"ok": True})
 
     @classmethod
-    def error(cls, status: int, message: str, details: dict[str, JSONValue] | None = None) -> ControlResponse:
+    def error(
+        cls, status: int, message: str, details: dict[str, JSONValue] | None = None
+    ) -> ControlResponse:
         """Create an error response."""
         payload: dict[str, JSONValue] = {"ok": False, "error": message}
         if details is not None:
@@ -123,6 +127,7 @@ class ControlResponse:
 # ============================================================================
 # Control Service
 # ============================================================================
+
 
 class DashboardControlService:
     """Validate dashboard commands before they reach runtime components.
@@ -310,7 +315,9 @@ class DashboardControlService:
         """Handle the 'self_organization' command."""
         coordinator = self._self_organization
         if coordinator is None:
-            raise CoordinatorUnavailableError("Self-organization coordinator is not available.")
+            raise CoordinatorUnavailableError(
+                "Self-organization coordinator is not available."
+            )
 
         enabled = self._optional_bool_field(body, "enabled")
         dry_run = self._optional_bool_field(body, "dry_run")
@@ -474,15 +481,14 @@ class DashboardControlService:
         if not isinstance(value, str):
             raise TypeError(f"'{name}' must be a string.")
         if allowed_values is not None and value not in allowed_values:
-            raise ValueError(
-                f"'{name}' must be one of: {', '.join(allowed_values)}"
-            )
+            raise ValueError(f"'{name}' must be one of: {', '.join(allowed_values)}")
         return value
 
 
 # ============================================================================
 # Factory Function
 # ============================================================================
+
 
 def create_control_service(
     runtime: RuntimeController,
@@ -507,6 +513,7 @@ def create_control_service(
 # ============================================================================
 # Integration Helper
 # ============================================================================
+
 
 def control_response_to_http(
     response: ControlResponse,

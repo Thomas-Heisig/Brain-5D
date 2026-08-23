@@ -26,7 +26,9 @@
     <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
     <button class="tab-btn" data-tab="control">🎮 Control</button>
     <button class="tab-btn" data-tab="console">📟 Console</button>
+    <button class="tab-btn" data-tab="research">🔬 Research</button>
     <button class="tab-btn" data-tab="docs">📄 Docs</button>
+    <button class="tab-btn" data-tab="gate">🚪 Alpha.5 Gate</button>
   </nav>
 
   <!-- ============================================================ -->
@@ -103,29 +105,52 @@
         </article>
       </section>
 
-      <!-- Heatmap -->
+      <!-- Heatmap + 5D Projection -->
       <section class="card heatmap-panel">
         <div class="panel-title">
-          <div><h2>5D X‑Y Projektion</h2><p>Lazy mmap aus .b5d Snapshot</p></div>
+          <div><h2>5D Netzwerk-Projektion</h2><p>Lazy mmap aus .b5d Snapshot · Isometrische 3D-Ansicht</p></div>
           <div class="button-group">
             <button data-kind="activity" class="active">Aktivität</button>
             <button data-kind="weights">Gewichte</button>
             <button data-kind="energy">Energie</button>
           </div>
         </div>
-        <div class="heatmap-wrap">
-          <canvas id="heatmap" width="800" height="420"></canvas>
-          <div class="heatmap-meta" id="heatmap-meta">Kein Snapshot verbunden.</div>
+        <div class="heatmap-split">
+          <div class="heatmap-wrap">
+            <canvas id="heatmap" width="800" height="420"></canvas>
+            <div class="heatmap-meta" id="heatmap-meta">Kein Snapshot verbunden.</div>
+          </div>
+          <div class="projection-wrap">
+            <canvas id="projection-5d" width="400" height="420"></canvas>
+            <div class="heatmap-meta">5D Isometrische Projektion</div>
+          </div>
         </div>
       </section>
 
       <!-- Roadmap -->
       <section class="grid roadmap-grid">
         <article class="card roadmap"><strong>v0.4</strong><span>Persistenz</span></article>
-        <article class="card roadmap current"><strong>v0.5</strong><span>Selbstregulation</span></article>
+        <article class="card roadmap current"><strong>v0.5</strong><span>Integration Hardening</span></article>
+        <article class="card roadmap"><strong>v0.5α6</strong><span>Morphological Self-Reg</span></article>
         <article class="card roadmap"><strong>v0.6</strong><span>Skalierung</span></article>
         <article class="card roadmap"><strong>v0.7</strong><span>Learning Env.</span></article>
         <article class="card roadmap"><strong>v0.8+</strong><span>Embodiment → HMI → KI</span></article>
+      </section>
+
+      <!-- Integration Status -->
+      <section class="card integration-status">
+        <div class="panel-title">
+          <h2>🔗 Integration Status <span style="font-size:0.7rem;font-weight:400;color:var(--muted);cursor:pointer;" id="integration-version-hint">(klick für Details)</span></h2>
+          <span id="integration-badge">checking…</span>
+        </div>
+        <div class="integration-grid" id="integration-grid">
+          <div class="integration-item clickable" id="int-bridge" data-version="alpha.5">🌉 Bridge</div>
+          <div class="integration-item clickable" id="int-controller" data-version="alpha.5">🎮 Controller</div>
+          <div class="integration-item clickable" id="int-structural" data-version="alpha.5">🧠 Structural</div>
+          <div class="integration-item clickable" id="int-snapshots" data-version="alpha.5">💾 Snapshots</div>
+          <div class="integration-item clickable" id="int-research" data-version="alpha.5">🔬 Research</div>
+          <div class="integration-item clickable" id="int-tests" data-version="alpha.5">🧪 Tests</div>
+        </div>
       </section>
 
     </section> <!-- /tab-dashboard -->
@@ -352,6 +377,44 @@
     </section> <!-- /tab-console -->
 
     <!-- ========================================================== -->
+    <!-- TAB: RESEARCH (B5D-SEF) -->
+    <!-- ========================================================== -->
+    <section class="tab-content" id="tab-research">
+      <div class="research-browser">
+        <div class="research-sidebar">
+          <div class="research-toolbar">
+            <h3>🔬 B5D Scientific Evidence Framework</h3>
+            <div id="research-summary" class="research-summary"><span class="research-stat">⏳ Initialisiere Research-Quelle…</span></div>
+          </div>
+
+          <div class="research-section">
+            <h4>📊 Generated Reports</h4>
+            <div id="research-reports" class="research-list"><span class="research-empty">⏳ Wird geladen…</span></div>
+          </div>
+
+          <div class="research-section">
+            <h4>📋 Registry</h4>
+            <div id="research-documents" class="research-docs"><span class="research-empty">⏳ Wird geladen…</span></div>
+          </div>
+
+          <div class="research-section">
+            <h4>🧪 Experiments</h4>
+            <div id="research-experiments" class="research-list"><span class="research-empty">⏳ Wird geladen…</span></div>
+          </div>
+        </div>
+
+        <div id="research-viewer" class="research-viewer">
+          <div class="research-placeholder">
+            <p>Select a research document to view its contents.</p>
+            <p class="research-hint">
+              B5D-SEF registry: 27 Research Questions · 27 Hypotheses · 5 Claims · 8 Sources · 13 Methods
+            </p>
+          </div>
+        </div>
+      </div>
+    </section> <!-- /tab-research -->
+
+    <!-- ========================================================== -->
     <!-- TAB: DOCS -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-docs">
@@ -363,8 +426,8 @@
             <div id="doc-filter-container"></div>
             <button id="doc-refresh">🔄</button>
           </div>
-          <div id="doc-stats" class="doc-stats">Loading…</div>
-          <div id="doc-tree" class="doc-tree">Loading directory structure…</div>
+          <div id="doc-stats" class="doc-stats">⏳ Lade Dokumentation…</div>
+          <div id="doc-tree" class="doc-tree">⏳ Lade Verzeichnisstruktur…</div>
         </div>
         <div id="doc-viewer" class="doc-viewer">
           <div class="doc-placeholder">
@@ -377,12 +440,105 @@
       </div>
     </section> <!-- /tab-docs -->
 
+    <!-- ========================================================== -->
+    <!-- TAB: ALPHA.5 INTEGRATION GATE -->
+    <!-- ========================================================== -->
+    <section class="tab-content" id="tab-gate">
+      <div class="gate-board">
+        <div class="gate-header">
+          <h2>🚪 Alpha.5 Integration Gate</h2>
+          <p class="gate-subtitle">
+            Alpha.5 is complete only when all criteria below pass.
+            <span class="gate-rule">Do not advance to alpha.6 while this gate is open.</span>
+          </p>
+          <button id="gate-refresh" type="button" class="btn-secondary">🔄 Re-check</button>
+        </div>
+
+        <div class="gate-grid">
+          <div class="gate-item gate-pending" id="gate-process">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>One application process</strong><span>Launcher starts exactly one src.main PID</span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-bridge">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>OperatorBridge reachable</strong><span>/api/debug/bridge reports bridge_exists=true</span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-controller">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Controller exists</strong><span>controller_exists=true on bridge</span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-structural">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Structural Coordinator connected</strong><span>/api/structural/status configured=true</span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-snapshots">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Snapshot pipeline available</strong><span>/api/snapshots responds</span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-research">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Research framework (B5D-SEF) active</strong><span>/api/research available=true</span></div>
+          </div>
+        </div>
+
+        <div class="gate-roadmap">
+          <h3>Remaining Gate Criteria (not yet automated)</h3>
+          <ul class="gate-checklist">
+            <li class="gate-todo">☐ One canonical RuntimeController (remove SimpleController)</li>
+            <li class="gate-todo">☐ Simulation starts idle, no auto 1000-tick run</li>
+            <li class="gate-todo">☐ No duplicate frontend commands</li>
+            <li class="gate-todo">☐ StructuralPlasticityEngine connected</li>
+            <li class="gate-todo">☐ Manipulator is canonical mutation path</li>
+            <li class="gate-todo">☐ Manual approval works</li>
+            <li class="gate-todo">☐ Undo works</li>
+            <li class="gate-todo">☐ Structural Journal works</li>
+            <li class="gate-todo">☐ .b5d snapshot creation works</li>
+            <li class="gate-todo">☐ Heatmap reads actual snapshots</li>
+            <li class="gate-todo">☐ Restore-and-continue works</li>
+            <li class="gate-todo">☐ Determinism test passes</li>
+            <li class="gate-todo">☐ Complete pytest collection succeeds</li>
+            <li class="gate-todo">☐ No unexplained failing tests</li>
+            <li class="gate-todo">☐ No silent scientific-path exceptions</li>
+            <li class="gate-done">☑ Every major mechanism has an associated Research Question (27 registered)</li>
+            <li class="gate-todo">☐ Every scientific run produces an experiment manifest</li>
+            <li class="gate-done">☑ First automatically generated RESEARCH_CATALOG.md exists</li>
+            <li class="gate-done">☑ First automatically generated EVIDENCE_MATRIX.md exists</li>
+            <li class="gate-done">☑ Research directory structure created</li>
+            <li class="gate-done">☑ Registry YAML files created</li>
+            <li class="gate-done">☑ JSON schemas created</li>
+            <li class="gate-done">☑ Python modules created</li>
+            <li class="gate-done">☑ BibTeX literature database created</li>
+            <li class="gate-done">☑ Report generator script created and executed</li>
+          </ul>
+        </div>
+      </div>
+    </section> <!-- /tab-gate -->
+
   </main>
+
+  <!-- ============================================================ -->
+  <!-- INTEGRATION STATUS MODAL (Popup) -->
+  <!-- ============================================================ -->
+  <div id="integration-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔗 Integration Status – Alle Versionen</h2>
+        <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="integration-modal-body">
+        <div class="modal-loading">Lade Integrationsdaten…</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-refresh-btn">🔄 Aktualisieren</button>
+        <button class="btn-primary" id="modal-close-btn2">Schließen</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============================================================ -->
   <!-- FOOTER -->
   <!-- ============================================================ -->
-  <footer>Brain‑5D Operator Dashboard · lokal · read‑only</footer>
+  <footer>Brain‑5D Operator Dashboard · lokal · interaktiv · v0.5.0-alpha.5</footer>
 
   <!-- ============================================================ -->
   <!-- SCRIPTS -->

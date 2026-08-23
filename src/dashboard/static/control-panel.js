@@ -1,19 +1,17 @@
 /**
- * Brain-5D Control Panel
- * 
- * This module provides the control panel interface for the Brain-5D dashboard,
- * allowing users to control the runtime, manage self-organization, and monitor
- * system state.
- * 
- * Features:
- * - Runtime control (step, run, pause, stop, configure)
- * - Self-organization control (enable/disable, dry-run)
- * - Snapshot management
- * - Real-time state updates
- * - Keyboard shortcuts
- * - Robust error handling with user feedback
- * 
- * @version 1.0.0
+ * Brain-5D Control Panel — ES Module
+ *
+ * This module is a pure ES module. It does NOT self-initialize and does NOT
+ * register any DOMContentLoaded listeners. The sole lifecycle owner is
+ * `app.js`, which imports and instantiates `ControlPanel` exactly once when
+ * the Control tab is first activated.
+ *
+ * Canonical command contract (unified with OperatorConsole):
+ *   POST /api/control  { "command": "run_ticks", "ticks": 100 }
+ *
+ * No CommonJS fallbacks. No `module.exports`. No global side effects on import.
+ *
+ * @version 2.1.0
  * @license MIT
  */
 
@@ -118,10 +116,10 @@ function getIntegerValue(element, fallback = 0) {
 }
 
 // ============================================================================
-// API Client
+// API Client — canonical command contract
 // ============================================================================
 
-class ControlAPI {
+export class ControlAPI {
   /**
    * Fetch JSON from the control endpoint.
    * @param {string} endpoint - API endpoint
@@ -175,12 +173,12 @@ class ControlAPI {
   }
 
   /**
-   * Run with loop size.
-   * @param {number} loopSize - Loop size
+   * Run ticks.
+   * @param {number} ticks - Number of ticks
    * @returns {Promise<Object>} Result
    */
-  static async run(loopSize = 100) {
-    return this.executeCommand('run', { loop_size: loopSize });
+  static async runTicks(ticks = 100) {
+    return this.executeCommand('run_ticks', { ticks });
   }
 
   /**
@@ -230,7 +228,7 @@ class ControlAPI {
 // Control State
 // ============================================================================
 
-class ControlState {
+export class ControlState {
   constructor() {
     this.runtime = null;
     this.selfOrganization = null;
@@ -328,7 +326,7 @@ class ControlState {
 // Control Panel
 // ============================================================================
 
-class ControlPanel {
+export class ControlPanel {
   constructor() {
     this.state = new ControlState();
     this.pollingInterval = null;
@@ -603,7 +601,7 @@ class ControlPanel {
    */
   async _handleRun() {
     const loopSize = getIntegerValue(this._elements['loop-size'], 100);
-    await this._executeCommand(() => ControlAPI.run(loopSize), `run ${loopSize}`);
+    await this._executeCommand(() => ControlAPI.runTicks(loopSize), `run ${loopSize}`);
   }
 
   /**
@@ -779,43 +777,9 @@ class ControlPanel {
    */
   destroy() {
     this.stopPolling();
-    // Remove event listeners if needed
+    if (this._keyboardHandler) {
+      document.removeEventListener('keydown', this._keyboardHandler);
+      this._keyboardHandler = null;
+    }
   }
-}
-
-// ============================================================================
-// Initialization
-// ============================================================================
-
-let controlPanel = null;
-
-/**
- * Initialize the control panel.
- */
-function initControlPanel() {
-  if (controlPanel) {
-    controlPanel.destroy();
-  }
-  controlPanel = new ControlPanel();
-  return controlPanel;
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initControlPanel);
-} else {
-  initControlPanel();
-}
-
-// ============================================================================
-// Module Exports (for bundlers)
-// ============================================================================
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    ControlAPI,
-    ControlState,
-    ControlPanel,
-    initControlPanel,
-  };
 }

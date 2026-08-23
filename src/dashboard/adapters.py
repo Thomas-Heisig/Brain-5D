@@ -11,10 +11,10 @@ from typing import Protocol, Optional
 
 from .models import HomeostasisMetrics, StructuralMetrics, SpikeMetrics
 
-
 # ============================================================================
 # Protocols (Type Contracts)
 # ============================================================================
+
 
 class HomeostasisStatsLike(Protocol):
     """Fields consumed from the homeostasis engine stats snapshot."""
@@ -59,6 +59,7 @@ class SpikeStatsLike(Protocol):
 # ============================================================================
 # Adapter Functions
 # ============================================================================
+
 
 def homeostasis_metrics(stats: HomeostasisStatsLike | None) -> HomeostasisMetrics:
     """Convert regulator statistics into the immutable dashboard contract.
@@ -169,6 +170,7 @@ def spike_metrics(stats: SpikeStatsLike | None) -> SpikeMetrics:
 # Aggregated Adapter
 # ============================================================================
 
+
 def aggregate_metrics(
     homeostasis: HomeostasisStatsLike | None = None,
     structural: StructuralStatsLike | None = None,
@@ -196,6 +198,7 @@ def aggregate_metrics(
 # ============================================================================
 # Validation Helpers
 # ============================================================================
+
 
 def sanitize_float(value: Optional[float], default: float = 0.0) -> float:
     """Sanitize a float value, replacing None with default."""

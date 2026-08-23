@@ -35,10 +35,10 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Protocol
 
-
 # ============================================================================
 # Protocols (Minimal contracts for loose coupling)
 # ============================================================================
+
 
 class StepResultLike(Protocol):
     """Minimal result contract required by the controller."""
@@ -81,6 +81,7 @@ class HomeostasisLike(Protocol):
 # ============================================================================
 # Enums
 # ============================================================================
+
 
 class ControllerState(str, Enum):
     """Possible states of the runtime controller."""
@@ -125,6 +126,7 @@ class ControllerCommand(str, Enum):
 # ============================================================================
 # Telemetry
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class RuntimeTelemetry:
@@ -190,6 +192,7 @@ ErrorCallback = Callable[[Exception], None]
 # ============================================================================
 # Runtime Controller
 # ============================================================================
+
 
 class RuntimeController:
     """Own the simulation clock and expose safe operator commands.
@@ -661,7 +664,9 @@ class RuntimeController:
                 loop_size = kwargs["loop_size"]
                 if loop_size is not None:
                     if not isinstance(loop_size, int) or loop_size <= 0:
-                        raise ValueError(f"loop_size must be a positive int, got {loop_size}")
+                        raise ValueError(
+                            f"loop_size must be a positive int, got {loop_size}"
+                        )
                     self._batch_size = loop_size
             if "delay_ms" in kwargs:
                 delay_ms = kwargs["delay_ms"]

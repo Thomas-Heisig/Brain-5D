@@ -14,23 +14,23 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-
 # ============================================================================
 # STDP Constants (Default values from Song & Abbott 2000)
 # ============================================================================
 
-A_PLUS: float = 0.1      # LTP amplitude
-A_MINUS: float = 0.12    # LTD amplitude
-TAU_PLUS: float = 20.0   # LTP time constant (ms)
+A_PLUS: float = 0.1  # LTP amplitude
+A_MINUS: float = 0.12  # LTD amplitude
+TAU_PLUS: float = 20.0  # LTP time constant (ms)
 TAU_MINUS: float = 20.0  # LTD time constant (ms)
-W_MIN: float = 0.0       # Minimum weight
-W_MAX: float = 1.0       # Maximum weight
+W_MIN: float = 0.0  # Minimum weight
+W_MAX: float = 1.0  # Maximum weight
 ELIGIBILITY_DECAY: float = 0.95  # Eligibility trace decay per tick
 
 
 # ============================================================================
 # Synapse Configuration
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class SynapseConfig:
@@ -50,6 +50,7 @@ class SynapseConfig:
 # ============================================================================
 # Synapse Class
 # ============================================================================
+
 
 @dataclass(slots=True)
 class Synapse:
@@ -82,11 +83,11 @@ class Synapse:
     last_post_spike: int = -1
 
     # === Triplet STDP traces (optional) ===
-    pre_trace: float = 0.0      # Presynaptic trace for triplet
-    post_trace: float = 0.0     # Postsynaptic trace for triplet
+    pre_trace: float = 0.0  # Presynaptic trace for triplet
+    post_trace: float = 0.0  # Postsynaptic trace for triplet
 
     # === Metaplasticity (optional) ===
-    meta_state: float = 0.5     # Metaplasticity state (0.0 - 1.0)
+    meta_state: float = 0.5  # Metaplasticity state (0.0 - 1.0)
 
     # === Statistics ===
     update_count: int = 0
@@ -372,6 +373,7 @@ class Synapse:
 # ============================================================================
 # Factory Functions
 # ============================================================================
+
 
 def create_synapse(
     target_id: int,

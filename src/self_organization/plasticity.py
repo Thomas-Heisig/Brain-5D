@@ -262,3 +262,5 @@ class StructuralPlasticityEngine:
                 source_id=source,
                 target_id=target,
             )
+        # All known ProposalKind values are handled above.
+        return None  # pragma: no cover

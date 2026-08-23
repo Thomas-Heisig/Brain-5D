@@ -81,6 +81,8 @@ def inverse_record(
             undo_of_sequence=record.sequence,
             neuron_snapshot=snapshot,
         )
+    # All known StructuralChangeKind values are handled above.
+    return None  # pragma: no cover
 
 
 class StructuralUndoManager:

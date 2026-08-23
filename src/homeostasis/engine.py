@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 # Parameters
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class HomeostasisParameters:
     """Validated parameters for firing-rate and energy homeostasis."""
@@ -100,6 +101,7 @@ class HomeostasisParameters:
 # Statistics
 # ============================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class HomeostasisStats:
     """Immutable observable state of the regulator."""
@@ -134,6 +136,7 @@ class HomeostasisStats:
 # ============================================================================
 # Engine
 # ============================================================================
+
 
 class HomeostasisEngine:
     """Regulate firing rate and energy through a post-step observer.
@@ -343,6 +346,7 @@ class HomeostasisEngine:
 # ============================================================================
 # Helper Functions
 # ============================================================================
+
 
 def _string_mapping(value: object, name: str) -> dict[str, object]:
     """Convert a Mapping to a dict with string keys."""

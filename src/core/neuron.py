@@ -15,22 +15,22 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Any
 
-
 # ============================================================================
 # Neuron Types
 # ============================================================================
 
+
 class NeuronType(Enum):
     """Types of neurons with distinct Izhikevich parameters."""
 
-    REGULAR_SPIKING = auto()    # RS - typical excitatory
-    FAST_SPIKING = auto()       # FS - fast inhibitory
+    REGULAR_SPIKING = auto()  # RS - typical excitatory
+    FAST_SPIKING = auto()  # FS - fast inhibitory
     INTRINSICALLY_BURSTING = auto()  # IB - bursting neurons
-    CHATTERING = auto()         # CH - chattering
-    LOW_THRESHOLD_SPIKING = auto()   # LTS - low-threshold
-    RESONATOR = auto()          # RZ - resonator
-    SENSORY = auto()            # Sensory input neuron
-    MOTOR = auto()              # Motor output neuron
+    CHATTERING = auto()  # CH - chattering
+    LOW_THRESHOLD_SPIKING = auto()  # LTS - low-threshold
+    RESONATOR = auto()  # RZ - resonator
+    SENSORY = auto()  # Sensory input neuron
+    MOTOR = auto()  # Motor output neuron
 
     @property
     def default_params(self) -> tuple[float, float, float, float]:
@@ -46,8 +46,8 @@ class NeuronType(Enum):
             NeuronType.CHATTERING: (0.02, 0.2, -50.0, 2.0),
             NeuronType.LOW_THRESHOLD_SPIKING: (0.02, 0.25, -65.0, 2.0),
             NeuronType.RESONATOR: (0.1, 0.26, -65.0, 2.0),
-            NeuronType.SENSORY: (0.02, 0.2, -65.0, 8.0),   # same as RS
-            NeuronType.MOTOR: (0.02, 0.2, -65.0, 8.0),      # same as RS
+            NeuronType.SENSORY: (0.02, 0.2, -65.0, 8.0),  # same as RS
+            NeuronType.MOTOR: (0.02, 0.2, -65.0, 8.0),  # same as RS
         }
         return params.get(self, (0.02, 0.2, -65.0, 8.0))
 
@@ -55,6 +55,7 @@ class NeuronType(Enum):
 # ============================================================================
 # Neuron Configuration
 # ============================================================================
+
 
 @dataclass(frozen=True, slots=True)
 class NeuronConfig:
@@ -67,26 +68,27 @@ class NeuronConfig:
     d: float = 8.0
 
     # Threshold adaptation
-    threshold_adaptation_rate: float = 0.01   # per spike
+    threshold_adaptation_rate: float = 0.01  # per spike
     threshold_adaptation_decay: float = 0.999  # per tick (homeostasis)
 
     # Energy
     spike_cost: float = 0.001
     resting_energy: float = 1.0
-    energy_recovery_rate: float = 0.0001      # per tick
+    energy_recovery_rate: float = 0.0001  # per tick
 
     # STDP traces (for neuron-level eligibility)
-    trace_decay: float = 0.95                 # per tick
-    trace_increment: float = 1.0              # on spike
+    trace_decay: float = 0.95  # per tick
+    trace_increment: float = 1.0  # on spike
 
     # Homeostasis
-    target_rate_hz: float = 10.0              # desired firing rate
+    target_rate_hz: float = 10.0  # desired firing rate
     homeostasis_learning_rate: float = 0.001  # per tick
 
 
 # ============================================================================
 # Neuron Class
 # ============================================================================
+
 
 @dataclass(slots=True)
 class Neuron:
@@ -151,8 +153,8 @@ class Neuron:
     neuron_type: NeuronType = NeuronType.REGULAR_SPIKING
 
     # === STDP traces ===
-    pre_trace: float = 0.0      # Presynaptic trace for triplet STDP
-    post_trace: float = 0.0     # Postsynaptic trace for triplet STDP
+    pre_trace: float = 0.0  # Presynaptic trace for triplet STDP
+    post_trace: float = 0.0  # Postsynaptic trace for triplet STDP
 
     # === Homeostasis ===
     firing_rate_estimate: float = 0.0
@@ -306,7 +308,9 @@ class Neuron:
         alpha = 1.0 / (10.0 + dt)  # adaptive smoothing
         # Estimate rate from recent spike count
         rate = self._spike_count_window / max(1, dt)
-        self.firing_rate_estimate = (1.0 - alpha) * self.firing_rate_estimate + alpha * rate
+        self.firing_rate_estimate = (
+            1.0 - alpha
+        ) * self.firing_rate_estimate + alpha * rate
         # Reset window counter periodically
         if dt > 100:
             self._spike_count_window = 0
@@ -449,6 +453,7 @@ class Neuron:
 # ============================================================================
 # Factory Functions
 # ============================================================================
+
 
 def create_neuron(
     neuron_id: int,
