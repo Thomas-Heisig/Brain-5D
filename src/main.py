@@ -685,61 +685,88 @@ def main() -> int:
             print(f"⚠️ Self-organization setup failed: {e}")
 
     # ================================================================
-    # Storage Telemetry (bestehende AsyncStorageSession anbinden)
+    # Runtime Delta Persistence (AsyncStorageSession)
+    # ------------------------------------------------
+    # CONFIG-AUTHORITATIVE: This subsystem is ONLY started when the
+    # authoritative config enables it. poc_config.yaml has
+    #   storage.enabled = false
+    #   storage.runtime.enabled = false
+    # so the dashboard must show "disabled by config" for Delta Storage,
+    # NOT fake zeros from a silently-active worker.
+    #
+    # The four persistence systems are deliberately separated:
+    #   1. Snapshot Service           -> always on (dashboard inspection)
+    #   2. Runtime Delta Persistence   -> gated by storage.runtime.enabled
+    #   3. Structural Journal          -> gated by self_organization.enabled
+    #   4. Runtime Checkpoint          -> gated by storage.checkpoint.enabled
     # ================================================================
-    try:
-        from src.storage.async_runtime import AsyncStorageConfig, AsyncStorageSession
-        from src.storage.delta_journal import DeltaJournal
-        from src.storage.runtime import StorageRuntimeConfig
+    _storage_cfg = config_dict.get("storage", {})
+    _storage_runtime_cfg = _storage_cfg.get("runtime", {}) if isinstance(_storage_cfg, dict) else {}
+    _storage_runtime_enabled = bool(_storage_cfg.get("enabled", False)) and bool(
+        _storage_runtime_cfg.get("enabled", False)
+    )
 
-        _journal_path = _snapshot_dir / "latest.b5d.journal"
-        _storage_runtime_config = StorageRuntimeConfig(
-            snapshot_path=_snapshot_path,
-            journal_path=_journal_path,
-            commit_interval_ticks=10,
-        )
-        _delta_journal = DeltaJournal(str(_journal_path))
-        _delta_journal.open()
-        from src.storage.runtime import RuntimeNetworkLike
+    if _storage_runtime_enabled:
+        try:
+            from src.storage.async_runtime import AsyncStorageConfig, AsyncStorageSession
+            from src.storage.delta_journal import DeltaJournal
+            from src.storage.runtime import StorageRuntimeConfig
 
-        _async_config = AsyncStorageConfig()
-        _async_storage = AsyncStorageSession(
-            network=cast("RuntimeNetworkLike", network),
-            runtime_config=_storage_runtime_config,
-            async_config=_async_config,
-        )
-        _async_storage.start()
+            _journal_path = _snapshot_dir / "latest.b5d.journal"
+            _storage_runtime_config = StorageRuntimeConfig(
+                snapshot_path=_snapshot_path,
+                journal_path=_journal_path,
+                commit_interval_ticks=int(
+                    _storage_cfg.get("journal", {}).get("commit_interval_ticks", 10)
+                ),
+            )
+            _delta_journal = DeltaJournal(str(_journal_path))
+            _delta_journal.open()
+            from src.storage.runtime import RuntimeNetworkLike
 
-        # Periodisch Telemetrie auslesen
-        def _update_storage_telemetry() -> None:
-            try:
-                tel = _async_storage.telemetry
-                _storage_telemetry.update(
-                    available=True,
-                    queue_depth=tel.queue_depth,
-                    queue_capacity=tel.queue_capacity,
-                    batches_enqueued=tel.batches_enqueued,
-                    batches_written=tel.batches_written,
-                    deltas_written=tel.deltas_written,
-                    bytes_written=tel.bytes_written,
-                    dropped_batches=tel.dropped_batches,
-                    write_latency_ms=tel.write_latency_ms,
-                    commit_latency_ms=tel.commit_latency_ms,
-                    journal_size_bytes=(
-                        _delta_journal.path.stat().st_size if _delta_journal.path.exists() else 0
-                    ),
-                    worker_failed=tel.worker_failed,
-                )
-            except Exception:
-                pass
+            _async_config = AsyncStorageConfig()
+            _async_storage = AsyncStorageSession(
+                network=cast("RuntimeNetworkLike", network),
+                runtime_config=_storage_runtime_config,
+                async_config=_async_config,
+            )
+            _async_storage.start()
 
-        # Storage-Telemetrie im post-tick hook aktualisieren
-        if controller is not None:
-            controller.add_hook(lambda _tick, _result: _update_storage_telemetry())
+            # Periodisch Telemetrie auslesen
+            def _update_storage_telemetry() -> None:
+                try:
+                    tel = _async_storage.telemetry
+                    _storage_telemetry.update(
+                        available=True,
+                        queue_depth=tel.queue_depth,
+                        queue_capacity=tel.queue_capacity,
+                        batches_enqueued=tel.batches_enqueued,
+                        batches_written=tel.batches_written,
+                        deltas_written=tel.deltas_written,
+                        bytes_written=tel.bytes_written,
+                        dropped_batches=tel.dropped_batches,
+                        write_latency_ms=tel.write_latency_ms,
+                        commit_latency_ms=tel.commit_latency_ms,
+                        journal_size_bytes=(
+                            _delta_journal.path.stat().st_size if _delta_journal.path.exists() else 0
+                        ),
+                        worker_failed=tel.worker_failed,
+                    )
+                except Exception:
+                    pass
 
-        print("✅ AsyncStorageSession attached with telemetry")
-    except Exception as e:
-        print(f"⚠️ Storage telemetry setup failed: {type(e).__name__}: {e}")
+            # Storage-Telemetrie im post-tick hook aktualisieren
+            if controller is not None:
+                controller.add_hook(lambda _tick, _result: _update_storage_telemetry())
+
+            print("✅ AsyncStorageSession attached with telemetry (config-enabled)")
+        except Exception as e:
+            print(f"⚠️ Storage telemetry setup failed: {type(e).__name__}: {e}")
+    else:
+        # Storage is disabled by config — keep telemetry explicitly unavailable
+        # so the dashboard renders "disabled by config" instead of fake zeros.
+        _storage_telemetry.update(available=False)
+        print("ℹ️ Runtime Delta Persistence: disabled by config (storage.runtime.enabled=false)")
 
     # ================================================================
     # OperatorBridge & Dashboard Setup

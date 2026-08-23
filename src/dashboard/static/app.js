@@ -61,8 +61,10 @@ function setClass(id, className) {
 // ================================================================
 
 function formatBytes(value) {
+  // null/undefined => unavailable, NOT fake zero
+  if (value === null || value === undefined) return '—';
   const units = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
-  let size = Number(value || 0);
+  let size = Number(value);
   let idx = 0;
   while (size >= 1024 && idx < units.length - 1) {
     size /= 1024;
@@ -72,11 +74,24 @@ function formatBytes(value) {
 }
 
 function formatNumber(value) {
-  return Number(value || 0).toLocaleString();
+  // null/undefined => unavailable, NOT fake zero
+  if (value === null || value === undefined) return '—';
+  return Number(value).toLocaleString();
 }
 
 function formatFloat(value, decimals = 3) {
-  return Number(value || 0).toFixed(decimals);
+  // null/undefined => unavailable, NOT fake zero
+  if (value === null || value === undefined) return '—';
+  return Number(value).toFixed(decimals);
+}
+
+/**
+ * Format an optional metric with a unit suffix.
+ * null/undefined => "—" (unavailable), measured zero => "0.000 unit".
+ */
+function formatMetricUnit(value, unit, decimals = 3) {
+  if (value === null || value === undefined) return '—';
+  return `${Number(value).toFixed(decimals)} ${unit}`;
 }
 
 function debounce(fn, delay) {
@@ -113,6 +128,7 @@ function setupTabs() {
   const buttons = $$('.tab-btn');
   const contents = {
     dashboard: document.getElementById('tab-dashboard'),
+    inspect: document.getElementById('tab-inspect'),
     control: document.getElementById('tab-control'),
     console: document.getElementById('tab-console'),
     research: document.getElementById('tab-research'),
@@ -122,6 +138,7 @@ function setupTabs() {
 
   // Track initialization state
   const initialized = {
+    inspect: false,
     control: false,
     console: false,
     docs: false,
@@ -151,6 +168,10 @@ function setupTabs() {
       });
 
       // Lazy initialize components when their tab becomes visible
+      if (tabName === 'inspect' && !initialized.inspect) {
+        initInspectTab();
+        initialized.inspect = true;
+      }
       if (tabName === 'control' && !initialized.control) {
         instances.control = initControlPanel();
         initialized.control = true;
@@ -206,7 +227,7 @@ async function refreshStatus() {
     const selfOrg = data.self_organization || {};
     const homeostasis = data.homeostasis || {};
 
-    // System metrics
+    // System metrics (always measured, real values)
     setText('tick', formatNumber(system.tick));
     setText('neurons', formatNumber(system.neurons));
     setText('synapses', formatNumber(system.synapses));
@@ -214,51 +235,94 @@ async function refreshStatus() {
     setText('core-ms', formatFloat(system.core_step_ms, 3));
     setText('energy', formatFloat(system.mean_energy, 3));
 
-    // Storage metrics
-    setText('deltas', formatNumber(storage.deltas_written));
-    setText('bytes', formatBytes(storage.bytes_written));
-    setText('write-ms', `${formatFloat(storage.write_latency_ms, 3)} ms`);
-    setText('commit-ms', `${formatFloat(storage.commit_latency_ms, 3)} ms`);
-    setText('journal-size', formatBytes(storage.journal_size_bytes));
-    setText('drops', formatNumber(storage.dropped_batches));
+    // Storage metrics — distinguish disabled/unavailable from measured zero.
+    // storage.available=false (poc_config) => "disabled by config", all metrics "—".
+    if (storage.available === false) {
+      setText('deltas', '—');
+      setText('bytes', '—');
+      setText('write-ms', '—');
+      setText('commit-ms', '—');
+      setText('journal-size', '—');
+      setText('drops', '—');
+      setText('queue-badge', 'disabled');
+      const fill = $('queue-fill');
+      if (fill) fill.style.width = '0%';
+    } else {
+      setText('deltas', formatNumber(storage.deltas_written));
+      setText('bytes', formatBytes(storage.bytes_written));
+      setText('write-ms', formatMetricUnit(storage.write_latency_ms, 'ms', 3));
+      setText('commit-ms', formatMetricUnit(storage.commit_latency_ms, 'ms', 3));
+      setText('journal-size', formatBytes(storage.journal_size_bytes));
+      setText('drops', formatNumber(storage.dropped_batches));
 
-    // Queue progress
-    const depth = storage.queue_depth || 0;
-    const capacity = storage.queue_capacity || 1;
-    setText('queue-badge', `${depth} / ${capacity}`);
-    const fill = $('queue-fill');
-    if (fill) {
-      const percent = Math.min(100, (depth / capacity) * 100);
-      fill.style.width = `${percent}%`;
+      // Queue progress
+      const depth = storage.queue_depth;
+      const capacity = storage.queue_capacity;
+      if (depth === null || depth === undefined || capacity === null || capacity === undefined) {
+        setText('queue-badge', '—');
+        const fill = $('queue-fill');
+        if (fill) fill.style.width = '0%';
+      } else {
+        setText('queue-badge', `${depth} / ${capacity}`);
+        const fill = $('queue-fill');
+        if (fill) {
+          const percent = capacity > 0 ? Math.min(100, (depth / capacity) * 100) : 0;
+          fill.style.width = `${percent}%`;
+        }
+      }
     }
 
-    // Learning metrics
+    // Learning metrics — when STDP/Reward disabled by config, show "—" not fake 0.
+    // The backend reports 0 for disabled counters because no updates occur,
+    // but we surface the disabled state via the homeostasis/self-org flags.
+    // Learning counters are real measured zeros when disabled (0 updates happened),
+    // so we keep formatNumber here.
     setText('stdp', formatNumber(learning.stdp_updates));
     setText('reward-updates', formatNumber(learning.reward_updates));
     setText('rewards', `${formatNumber(learning.rewards_applied)} / ${formatNumber(learning.rewards_received)}`);
     setText('pending', formatNumber(learning.pending_rewards));
-    setText('learning-ms', `${formatFloat(learning.update_ms, 3)} ms`);
+    setText('learning-ms', formatMetricUnit(learning.update_ms, 'ms', 3));
 
-    // Homeostasis
-    setText('homeostasis-state', homeostasis.enabled ? 'aktiv' : 'aus');
-    setText('target-rate', `${formatFloat(homeostasis.target_rate_hz, 3)} Hz`);
-    setText('mean-rate', `${formatFloat(homeostasis.mean_rate_hz || homeostasis.actual_rate_hz, 3)} Hz`);
-    setText('rate-error', `${formatFloat(homeostasis.mean_rate_error_hz || homeostasis.rate_error_hz, 3)} Hz`);
-    setText('threshold-adaptation', formatFloat(homeostasis.mean_threshold_adaptation, 4));
-    setText('energy-error', formatFloat(homeostasis.mean_energy_error, 4));
-    setText('active-neurons', formatNumber(homeostasis.active_neurons));
+    // Homeostasis — disabled by config => explicit "disabled", not fake zeros.
+    if (homeostasis.enabled === false) {
+      setText('homeostasis-state', 'disabled by config');
+      setText('target-rate', '—');
+      setText('mean-rate', '—');
+      setText('rate-error', '—');
+      setText('threshold-adaptation', '—');
+      setText('energy-error', '—');
+      setText('active-neurons', '—');
+    } else {
+      setText('homeostasis-state', 'aktiv');
+      setText('target-rate', formatMetricUnit(homeostasis.target_rate_hz, 'Hz', 3));
+      setText('mean-rate', formatMetricUnit(homeostasis.mean_rate_hz || homeostasis.actual_rate_hz, 'Hz', 3));
+      setText('rate-error', formatMetricUnit(homeostasis.mean_rate_error_hz || homeostasis.rate_error_hz, 'Hz', 3));
+      setText('threshold-adaptation', formatFloat(homeostasis.mean_threshold_adaptation, 4));
+      setText('energy-error', formatFloat(homeostasis.mean_energy_error, 4));
+      setText('active-neurons', formatNumber(homeostasis.active_neurons));
+    }
 
-    // Self-organization
-    setText('neurons-created', formatNumber(selfOrg.neurons_created));
-    setText('neurons-removed', formatNumber(selfOrg.neurons_removed));
-    setText('synapses-created', formatNumber(selfOrg.synapses_created));
-    setText('synapses-pruned', formatNumber(selfOrg.synapses_pruned));
+    // Self-organization — disabled by config => explicit "—", not fake 0.
+    if (selfOrg.available === false) {
+      setText('neurons-created', '—');
+      setText('neurons-removed', '—');
+      setText('synapses-created', '—');
+      setText('synapses-pruned', '—');
+    } else {
+      setText('neurons-created', formatNumber(selfOrg.neurons_created));
+      setText('neurons-removed', formatNumber(selfOrg.neurons_removed));
+      setText('synapses-created', formatNumber(selfOrg.synapses_created));
+      setText('synapses-pruned', formatNumber(selfOrg.synapses_pruned));
+    }
 
     // Status badge
     const statusEl = $('system-status');
     if (statusEl) {
       statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
-      statusEl.className = storage.worker_failed ? 'status-pill error' : 'status-pill online';
+      const workerFailed = storage.worker_failed;
+      statusEl.className = workerFailed === true
+        ? 'status-pill error'
+        : (workerFailed === false ? 'status-pill online' : 'status-pill');
     }
 
     // Integration status badges (dashboard tab)
@@ -274,44 +338,68 @@ async function refreshStatus() {
 
 /**
  * Refresh the integration status badges on the dashboard tab.
+ *
+ * Uses the real backend endpoint /api/integration/status (Phase 14)
+ * instead of the previous frontend-only heuristic that hardcoded
+ * int-tests to false.
  */
 async function refreshIntegrationStatus() {
-  const checks = [
-    { id: 'int-bridge', fn: async () => {
-      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; }
-    }},
-    { id: 'int-controller', fn: async () => {
-      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; }
-    }},
-    { id: 'int-structural', fn: async () => {
-      try { const r = await fetch('/api/structural/status'); const d = await r.json(); return d.configured === true; } catch { return false; }
-    }},
-    { id: 'int-snapshots', fn: async () => {
-      try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; }
-    }},
-    { id: 'int-research', fn: async () => {
-      try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; }
-    }},
-    { id: 'int-tests', fn: async () => false }, // not yet automated
-  ];
+  const itemIds = ['int-bridge', 'int-controller', 'int-structural', 'int-snapshots', 'int-research', 'int-tests'];
+  const nameToId = {
+    'Bridge': 'int-bridge',
+    'Controller': 'int-controller',
+    'Structural': 'int-structural',
+    'Snapshot': 'int-snapshots',
+    'Research': 'int-research',
+    'Tests': 'int-tests',
+  };
 
-  let passed = 0;
-  for (const c of checks) {
-    const el = $(c.id);
-    if (!el) continue;
-    try {
-      const ok = await c.fn();
-      el.className = `integration-item ${ok ? 'int-passed' : 'int-failed'}`;
-      if (ok) passed++;
-    } catch {
-      el.className = 'integration-item int-failed';
+  try {
+    const r = await fetch('/api/integration/status', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const items = data.items || [];
+
+    let passed = 0;
+    for (const item of items) {
+      const id = nameToId[item.name];
+      if (!id) continue;
+      const el = $(id);
+      if (!el) continue;
+      const status = item.status || 'pending';
+      const cls = status === 'passed' ? 'int-passed'
+        : status === 'disabled' ? 'int-disabled'
+        : status === 'stale' ? 'int-stale'
+        : status === 'failed' ? 'int-failed'
+        : 'int-pending';
+      el.className = `integration-item clickable ${cls}`;
+      el.title = item.message || '';
+      if (status === 'passed') passed++;
     }
-  }
 
-  const badge = $('integration-badge');
-  if (badge) {
-    badge.textContent = `${passed}/${checks.length} passed`;
-    badge.className = passed === checks.length ? 'gate-badge passed' : 'gate-badge pending';
+    const badge = $('integration-badge');
+    if (badge) {
+      const overall = data.overall || 'pending';
+      const label = overall === 'passed' ? `${passed}/${data.total} passed`
+        : overall === 'stale' ? `STALE (${data.stale})`
+        : overall === 'failed' ? `FAILED (${data.failed})`
+        : `${passed}/${data.total} passed`;
+      badge.textContent = label;
+      badge.className = overall === 'passed' ? 'gate-badge passed'
+        : overall === 'stale' ? 'gate-badge stale'
+        : overall === 'failed' ? 'gate-badge failed'
+        : 'gate-badge pending';
+    }
+  } catch {
+    for (const id of itemIds) {
+      const el = $(id);
+      if (el) el.className = 'integration-item int-failed';
+    }
+    const badge = $('integration-badge');
+    if (badge) {
+      badge.textContent = 'offline';
+      badge.className = 'gate-badge failed';
+    }
   }
 }
 
@@ -520,6 +608,213 @@ function initDashboard() {
 }
 
 // ================================================================
+// INSPECT TAB (real 5D network inspector, Phase 8/9)
+// ================================================================
+
+let inspectInterval = null;
+
+function initInspectTab() {
+  console.log('🔍 Inspect tab initializing...');
+  refreshNetworkSummary();
+  loadNeuronPage();
+  loadSynapsePage();
+  loadProjection();
+
+  const refreshBtn = $('inspect-refresh');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => {
+    refreshNetworkSummary();
+    loadNeuronPage();
+    loadSynapsePage();
+    loadProjection();
+  });
+
+  const neuronLoad = $('neuron-load');
+  if (neuronLoad) neuronLoad.addEventListener('click', loadNeuronPage);
+
+  const synapseLoad = $('synapse-load');
+  if (synapseLoad) synapseLoad.addEventListener('click', loadSynapsePage);
+
+  const projMode = $('projection-mode');
+  if (projMode) projMode.addEventListener('change', loadProjection);
+
+  // Auto-refresh summary every 2s while inspect tab is active
+  if (inspectInterval) clearInterval(inspectInterval);
+  inspectInterval = setInterval(refreshNetworkSummary, 2000);
+  console.log('✅ Inspect tab ready');
+}
+
+async function refreshNetworkSummary() {
+  try {
+    const r = await fetch('/api/network/summary', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    setText('inspect-dimensions', (d.dimensions || []).join(' × '));
+    setText('inspect-neuron-count', formatNumber(d.neuron_count));
+    setText('inspect-synapse-count', formatNumber(d.synapse_count));
+    setText('inspect-input-count', formatNumber(d.input_count));
+    setText('inspect-output-count', formatNumber(d.output_count));
+    setText('inspect-active-neurons', formatNumber(d.active_neurons));
+    setText('inspect-silent-neurons', formatNumber(d.silent_neurons));
+    setText('inspect-queue-depth', formatNumber(d.queue_depth));
+    setText('inspect-tick', formatNumber(d.current_tick));
+    setText('inspect-total-spikes', formatNumber(d.total_spikes));
+    setText('inspect-mean-energy', formatFloat(d.mean_energy, 4));
+    setText('inspect-mean-v', formatFloat(d.mean_v, 4));
+  } catch {
+    ['inspect-dimensions','inspect-neuron-count','inspect-synapse-count','inspect-input-count',
+     'inspect-output-count','inspect-active-neurons','inspect-silent-neurons','inspect-queue-depth',
+     'inspect-tick','inspect-total-spikes','inspect-mean-energy','inspect-mean-v']
+      .forEach(id => setText(id, '—'));
+  }
+}
+
+async function loadNeuronPage() {
+  const limit = parseInt($('neuron-limit')?.value || '200', 10);
+  const offset = parseInt($('neuron-offset')?.value || '0', 10);
+  const activeOnly = $('neuron-active-only')?.checked || false;
+  try {
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (activeOnly) params.set('active_only', 'true');
+    const r = await fetch(`/api/network/neurons?${params}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const body = $('neuron-table-body');
+    if (!body) return;
+    const rows = d.neurons || [];
+    body.innerHTML = rows.map(n => `
+      <tr>
+        <td>${n.neuron_id}</td>
+        <td>${n.x1}</td><td>${n.x2}</td><td>${n.x3}</td><td>${n.x4}</td><td>${n.x5}</td>
+        <td>${formatFloat(n.v, 3)}</td>
+        <td>${formatFloat(n.u, 3)}</td>
+        <td>${formatFloat(n.energy, 4)}</td>
+        <td>${n.last_spike < 0 ? '—' : n.last_spike}</td>
+        <td>${n.spike_count}</td>
+        <td>${n.is_input ? 'I' : (n.is_output ? 'O' : '')}</td>
+      </tr>`).join('');
+    setText('neuron-page-meta',
+      `${d.returned}/${d.total} (offset ${d.offset}, limit ${d.limit}) · source: ${d.source}`);
+  } catch (e) {
+    const body = $('neuron-table-body');
+    if (body) body.innerHTML = `<tr><td colspan="12">⚠️ ${escapeHtml(e.message)}</td></tr>`;
+    setText('neuron-page-meta', '—');
+  }
+}
+
+async function loadSynapsePage() {
+  const limit = parseInt($('synapse-limit')?.value || '200', 10);
+  const offset = parseInt($('synapse-offset')?.value || '0', 10);
+  const sourceRaw = $('synapse-source')?.value;
+  const minWeightRaw = $('synapse-min-weight')?.value;
+  try {
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (sourceRaw) params.set('source', sourceRaw);
+    if (minWeightRaw) params.set('min_weight', minWeightRaw);
+    const r = await fetch(`/api/network/synapses?${params}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const body = $('synapse-table-body');
+    if (!body) return;
+    const rows = d.synapses || [];
+    body.innerHTML = rows.map(s => `
+      <tr>
+        <td>${s.source_id}</td>
+        <td>${s.target_id ?? '—'}</td>
+        <td>${formatFloat(s.weight, 4)}</td>
+        <td>${s.delay ?? '—'}</td>
+        <td>${formatFloat(s.eligibility, 4)}</td>
+      </tr>`).join('');
+    setText('synapse-page-meta',
+      `${d.returned}/${d.total} (offset ${d.offset}, limit ${d.limit}) · source: ${d.source}`);
+  } catch (e) {
+    const body = $('synapse-table-body');
+    if (body) body.innerHTML = `<tr><td colspan="5">⚠️ ${escapeHtml(e.message)}</td></tr>`;
+    setText('synapse-page-meta', '—');
+  }
+}
+
+async function loadProjection() {
+  const canvas = $('inspect-projection');
+  if (!canvas) return;
+  const mode = $('projection-mode')?.value || 'activity';
+  try {
+    const r = await fetch(`/api/network/projection?limit=2000&mode=${encodeURIComponent(mode)}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    drawInspectProjection(canvas, d);
+    setText('projection-meta',
+      `${d.label} · ${d.sample_count}/${d.total_count} samples · ${d.sampling_method} · source: ${d.source}`);
+  } catch (e) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setText('projection-meta', `⚠️ ${e.message}`);
+  }
+}
+
+function drawInspectProjection(canvas, payload) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const points = payload.points || [];
+  if (!points.length) {
+    setText('projection-meta', 'No projection data.');
+    return;
+  }
+
+  // Determine value range for colour mapping.
+  const vals = points.map(p => p.value);
+  const vMin = Math.min(...vals);
+  const vMax = Math.max(...vals);
+  const range = vMax - vMin || 1;
+
+  // Spatial range for x,y,z (first three dims).
+  const xs = points.map(p => p.x);
+  const ys = points.map(p => p.y);
+  const zs = points.map(p => p.z);
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = Math.min(...ys), yMax = Math.max(...ys);
+  const zMin = Math.min(...zs), zMax = Math.max(...zs);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const scale = Math.min(canvas.width, canvas.height) * 0.35 / Math.max(xMax - xMin, yMax - yMin, zMax - zMin, 1);
+
+  // Draw points: x,y as visible axes, z as depth (size), d4/d5 carried as data.
+  for (const p of points) {
+    const nx = (p.x - xMin) / Math.max(xMax - xMin, 1);
+    const ny = (p.y - yMin) / Math.max(yMax - yMin, 1);
+    const nz = (p.z - zMin) / Math.max(zMax - zMin, 1);
+    const valN = (p.value - vMin) / range;
+
+    // Isometric-ish projection: x,y visible, z shifts vertically.
+    const px = cx + (nx - 0.5) * canvas.width * 0.8;
+    const py = cy + (ny - 0.5) * canvas.height * 0.7 - nz * scale * 1.5;
+
+    const size = 1.5 + valN * 4 + (p.is_input || p.is_output ? 2 : 0);
+    const hue = 210 - valN * 195;
+    const light = 20 + valN * 50;
+
+    ctx.beginPath();
+    ctx.arc(px, py, size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${hue}, 85%, ${light}%)`;
+    ctx.fill();
+
+    // Highlight input/output cells.
+    if (p.is_input || p.is_output) {
+      ctx.strokeStyle = p.is_input ? '#40e0a8' : '#f0a840';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(px, py, size + 2, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Legend for d4/d5 (carried as filter attributes, not visualised here).
+  ctx.fillStyle = '#8899bb';
+  ctx.font = '11px monospace';
+  ctx.fillText('X,Y visible · Z=depth · D4/D5 in point data (filter TBD)', 10, canvas.height - 10);
+}
+
+// ================================================================
 // CONTROL PANEL INITIALIZATION (sole owner)
 // ================================================================
 
@@ -569,7 +864,9 @@ async function refreshConsoleStatus() {
     setText('metric-neurons', formatNumber(system.neurons));
     setText('metric-synapses', formatNumber(system.synapses));
     setText('metric-spikes', formatNumber(system.spikes_total));
-    setText('metric-queue', formatNumber(system.queue_depth || 0));
+    // queue_depth is part of controller telemetry, surfaced via /api/control state;
+    // here it is not present in /api/status.system, so show "—" not fake 0.
+    setText('metric-queue', formatNumber(system.queue_depth));
 
     // Load proposals
     loadProposals();
@@ -1016,39 +1313,63 @@ function initGateBoard() {
 }
 
 async function refreshGateStatus() {
-  const items = [
-    { id: 'gate-process', label: 'One application process', check: async () => {
-      try { const r = await fetch('/api/debug/bridge'); return r.ok; } catch { return false; }
-    }},
-    { id: 'gate-bridge', label: 'OperatorBridge consistently reachable', check: async () => {
-      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; }
-    }},
-    { id: 'gate-controller', label: 'Controller exists', check: async () => {
-      try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; }
-    }},
-    { id: 'gate-structural', label: 'Structural Coordinator connected', check: async () => {
-      try { const r = await fetch('/api/structural/status'); const d = await r.json(); return d.configured === true; } catch { return false; }
-    }},
-    { id: 'gate-snapshots', label: 'Snapshot pipeline available', check: async () => {
-      try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; }
-    }},
-    { id: 'gate-research', label: 'Research framework (B5D-SEF) active', check: async () => {
-      try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; }
-    }},
-  ];
+  // Use the real backend integration status (Phase 14) instead of
+  // per-item frontend probes. A disabled-by-config component is NOT failed.
+  let data = null;
+  try {
+    const r = await fetch('/api/integration/status', { cache: 'no-store' });
+    if (r.ok) data = await r.json();
+  } catch {
+    data = null;
+  }
 
-  for (const item of items) {
-    const el = $(item.id);
-    if (!el) continue;
-    el.className = 'gate-item gate-pending';
-    el.querySelector('.gate-status').textContent = '…';
-    try {
-      const ok = await item.check();
-      el.className = `gate-item ${ok ? 'gate-passed' : 'gate-failed'}`;
-      el.querySelector('.gate-status').textContent = ok ? '✅' : '❌';
-    } catch {
-      el.className = 'gate-item gate-failed';
-      el.querySelector('.gate-status').textContent = '❌';
+  const nameToId = {
+    'Bridge': 'gate-bridge',
+    'Controller': 'gate-controller',
+    'Runtime': 'gate-runtime',
+    'Structural': 'gate-structural',
+    'Snapshot': 'gate-snapshots',
+    'Research': 'gate-research',
+    'Tests': 'gate-tests',
+    'Delta Storage': 'gate-delta-storage',
+    'Structural Journal': 'gate-structural-journal',
+    'Error Visibility': 'gate-error-visibility',
+  };
+
+  if (data && data.items) {
+    for (const item of data.items) {
+      const id = nameToId[item.name];
+      if (!id) continue;
+      const el = $(id);
+      if (!el) continue;
+      const status = item.status || 'pending';
+      el.className = `gate-item gate-${status}`;
+      const statusEl = el.querySelector('.gate-status');
+      if (statusEl) {
+        statusEl.textContent = status === 'passed' ? '✅'
+          : status === 'disabled' ? '⊘'
+          : status === 'stale' ? '⏳'
+          : status === 'failed' ? '❌'
+          : '…';
+      }
+      const msgEl = el.querySelector('.gate-message');
+      if (msgEl) msgEl.textContent = item.message || '';
+    }
+    // Overall badge
+    const overallEl = $('gate-overall');
+    if (overallEl) {
+      overallEl.textContent = data.overall || 'pending';
+      overallEl.className = `gate-badge gate-${data.overall || 'pending'}`;
+    }
+  } else {
+    // Fallback: mark all as pending if backend unavailable
+    const ids = Object.values(nameToId);
+    for (const id of ids) {
+      const el = $(id);
+      if (!el) continue;
+      el.className = 'gate-item gate-pending';
+      const statusEl = el.querySelector('.gate-status');
+      if (statusEl) statusEl.textContent = '…';
     }
   }
 }

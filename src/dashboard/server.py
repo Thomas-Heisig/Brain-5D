@@ -42,7 +42,9 @@ from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
+from .integration_status import IntegrationStatusBuilder
 from .models import JSONValue
+from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
 from .research_source import ResearchSource, create_research_source
 from .state import DashboardStateStore
@@ -296,6 +298,22 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Network Inspector (real 5D coordinates, Phase 8/9)
+            # ----------------------------------------------------------------
+
+            if path.startswith("/api/network/"):
+                self._serve_network_get(path, query)
+                return
+
+            # ----------------------------------------------------------------
+            # Integration Status (real backend data, Phase 14)
+            # ----------------------------------------------------------------
+
+            if path == "/api/integration/status":
+                self._serve_integration_status()
+                return
+
+            # ----------------------------------------------------------------
             # Health
             # ----------------------------------------------------------------
 
@@ -521,6 +539,80 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         self._send_json(payload)
+
+    # ========================================================================
+    # Network Inspector (real 5D coordinates, Phase 8/9)
+    # ========================================================================
+
+    def _serve_network_get(
+        self,
+        path: str,
+        query: dict[str, list[str]],
+    ) -> None:
+        bridge = self._require_bridge()
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json(
+                {"error": "Live network is not available through the controller."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        inspector = NetworkInspector(network)
+
+        if path == "/api/network/summary":
+            self._send_json(inspector.summary().to_json())
+            return
+
+        if path == "/api/network/neurons":
+            limit = self._query_int(query, "limit", default=500, maximum=5000)
+            offset = self._query_offset(query, "offset", default=0, maximum=10_000_000)
+            active_only = query.get("active_only", ["false"])[0].lower() == "true"
+            self._send_json(
+                inspector.neurons(limit=limit, offset=offset, active_only=active_only).to_json()
+            )
+            return
+
+        if path == "/api/network/synapses":
+            limit = self._query_int(query, "limit", default=500, maximum=5000)
+            offset = self._query_offset(query, "offset", default=0, maximum=10_000_000)
+            source_id = self._optional_query_int(query, "source")
+            target_id = self._optional_query_int(query, "target")
+            min_weight = self._optional_query_float(query, "min_weight")
+            self._send_json(
+                inspector.synapses(
+                    limit=limit,
+                    offset=offset,
+                    source_id=source_id,
+                    target_id=target_id,
+                    min_weight=min_weight,
+                ).to_json()
+            )
+            return
+
+        if path == "/api/network/projection":
+            limit = self._query_int(query, "limit", default=2000, maximum=2000)
+            mode = query.get("mode", ["activity"])[0]
+            self._send_json(inspector.projection(limit=limit, mode=mode).to_json())
+            return
+
+        self._send_api_not_found(path)
+
+    # ========================================================================
+    # Integration Status (real backend data, Phase 14)
+    # ========================================================================
+
+    def _serve_integration_status(self) -> None:
+        server = self.dashboard_server
+        bridge = server.structural_bridge
+        builder = IntegrationStatusBuilder(
+            server.dashboard_state.snapshot(),
+            bridge=bridge,
+            heatmap_source=server.heatmap_source,
+            research_source=server.research_source,
+            repo_root=Path(__file__).resolve().parents[2],
+        )
+        self._send_json(builder.build())
 
     # ========================================================================
     # Structural / runtime POST dispatch
@@ -1444,6 +1536,54 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             minimum=1,
             maximum=maximum,
         )
+
+    @staticmethod
+    def _optional_query_int(
+        query: dict[str, list[str]],
+        name: str,
+    ) -> int | None:
+        """Return an optional integer query parameter, or None if absent."""
+        raw_list = query.get(name)
+        if not raw_list or not raw_list[0]:
+            return None
+        try:
+            return int(raw_list[0])
+        except ValueError:
+            raise ValueError(f"Query parameter '{name}' must be an integer.")
+
+    @staticmethod
+    def _optional_query_float(
+        query: dict[str, list[str]],
+        name: str,
+    ) -> float | None:
+        """Return an optional float query parameter, or None if absent."""
+        raw_list = query.get(name)
+        if not raw_list or not raw_list[0]:
+            return None
+        try:
+            return float(raw_list[0])
+        except ValueError:
+            raise ValueError(f"Query parameter '{name}' must be a number.")
+
+    @staticmethod
+    def _query_offset(
+        query: dict[str, list[str]],
+        name: str,
+        *,
+        default: int,
+        maximum: int,
+    ) -> int:
+        """Return a non-negative integer offset query parameter."""
+        raw = query.get(name, [str(default)])[0]
+        try:
+            value = int(raw)
+        except ValueError:
+            raise ValueError(f"Query parameter '{name}' must be an integer.")
+        if value < 0:
+            raise ValueError(f"Query parameter '{name}' must be >= 0.")
+        if value > maximum:
+            raise ValueError(f"Query parameter '{name}' exceeds maximum {maximum}.")
+        return value
 
 
 # ============================================================================

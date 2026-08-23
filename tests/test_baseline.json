@@ -1,7 +1,7 @@
 {
-  "tested_commit": "4fa22a4d908aaeafe924711d21d38ff1e6ba04cc",
-  "recorded_in_commit": "4fa22a4d908aaeafe924711d21d38ff1e6ba04cc",
-  "timestamp": "2026-08-23T15:15:00+02:00",
+  "tested_commit": "6ab02dee705a393a37b9fbeaa1211a99bca23c3a",
+  "recorded_in_commit": "6ab02dee705a393a37b9fbeaa1211a99bca23c3a",
+  "timestamp": "2026-08-23T18:20:30+02:00",
   "python": "3.13.14",
 
   "full_collection": {
@@ -15,7 +15,7 @@
 
   "verified_subset": {
     "command": "python -m pytest tests/ -q --ignore=tests/test_async_storage.py --ignore=tests/test_compaction.py",
-    "passed": 216,
+    "passed": 236,
     "failed": 0,
     "skipped": 2,
     "skipped_reasons": [

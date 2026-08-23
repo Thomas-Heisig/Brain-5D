@@ -1,5 +1,51 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Dashboard Completion & Scientific Observability (2026-08-23)
+
+### Added
+
+- **Real 5D Network Inspector** (`src/dashboard/network_inspector.py`):
+  - `GET /api/network/summary` — real neuron/synapse counts, dimensions, mean energy/v
+  - `GET /api/network/neurons` — paginated real 5D coordinates (x1-x5), v, u, energy, last_spike, spike_count
+  - `GET /api/network/synapses` — paginated real source/target, weight, delay, eligibility
+  - `GET /api/network/projection` — real 5D→3D projection with stride sampling, honestly labelled
+- **Real Integration Status** (`src/dashboard/integration_status.py`):
+  - `GET /api/integration/status` — computes Bridge/Controller/Runtime/Structural/Snapshot/Delta-Storage/Structural-Journal/Research/Tests/Error-Visibility
+  - Status values: `passed`, `disabled`, `pending`, `stale`, `failed`
+  - Disabled-by-config is NEVER `failed`
+  - Tests-STALE detection reads `tests/test_baseline.json` and compares `tested_commit` with current git HEAD
+- **Inspect Tab** in dashboard (`index.html`, `app.js`) with network summary, 5D projection canvas, neurons/synapses paginated tables
+- **Provenance badges** (`LIVE`/`SNAPSHOT`/`CONFIG`/`RESEARCH`/`TEST`) in `styles.css`
+- **20 new tests** in `tests/test_dashboard_completion.py` covering Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, stale detection, no demo source
+
+### Fixed
+
+- **Config-authoritative storage** (`src/main.py`): `AsyncStorageSession` is now ONLY started when `storage.runtime.enabled=true`. With `poc_config.yaml` (disabled), Delta Storage reports "disabled by config" instead of silently running with fake zeros.
+- **Truthful null/disabled formatting** (`src/dashboard/static/app.js`): `formatNumber`/`formatFloat`/`formatBytes` now return `"—"` for null/undefined instead of fake `0`. Storage/Homeostasis/Self-Org panels show "disabled by config" / "—" when disabled, not measured zeros.
+- **Structural config-aware UI** (`src/dashboard/static/control-panel.js`): Self-Organization badge shows `DISABLED BY CONFIG` when `self_organization.enabled=false` (was static `Configured`). Controls auto-disable.
+- **Integration status badges** (`app.js`): `refreshIntegrationStatus` and `refreshGateStatus` now use the real `/api/integration/status` backend instead of frontend heuristics that hardcoded `int-tests` to `false`.
+- **Gate tab** (`index.html`): added Runtime, Delta Storage, Structural Journal, Tests, Error Visibility gate items with real backend data.
+
+### Changed
+
+- `tests/test_baseline.json`: updated from real test run — 236 passed, 2 skipped, 2 collection errors (test_async_storage.py, test_compaction.py import non-existent tests.test_storage_runtime)
+- `docs/TODO.md`: Alpha.5 Dashboard Completion section added; Gate visualization updated
+
+### Test Results (real run, 2026-08-23)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q --ignore=tests/test_async_storage.py --ignore=tests/test_compaction.py`
+- **Result**: 236 passed, 2 skipped, 0 failed
+- **Collection errors**: 2 (pre-existing: test_async_storage.py, test_compaction.py)
+
+### Manual E2E Verification
+
+- Fresh start at Tick 0: 5000 real neurons, 36031 real synapses, idle, storage disabled by config
+- `step` → exactly +1 tick; `run_ticks 100` → exactly +100 ticks; `snapshot` → new real .b5d file
+- `/api/integration/status`: overall=stale (Tests baseline 4fa22a4 vs HEAD 4b8502b), 6 passed, 3 disabled, 0 failed
+
+---
+
 ## v0.5.0-alpha.5 - Structural Persistence (CI & Test-Suite Overhaul)
 
 ### Added

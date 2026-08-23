@@ -24,6 +24,7 @@
   <!-- ============================================================ -->
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+    <button class="tab-btn" data-tab="inspect">🔍 Inspect</button>
     <button class="tab-btn" data-tab="control">🎮 Control</button>
     <button class="tab-btn" data-tab="console">📟 Console</button>
     <button class="tab-btn" data-tab="research">🔬 Research</button>
@@ -169,6 +170,95 @@
     </section> <!-- /tab-dashboard -->
 
     <!-- ========================================================== -->
+    <!-- TAB: INSPECT (real 5D network inspector, Phase 8/9/12) -->
+    <!-- ========================================================== -->
+    <section class="tab-content" id="tab-inspect">
+
+      <!-- Network Summary -->
+      <section class="card panel">
+        <div class="panel-title">
+          <h2>🧠 Network Summary <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <button id="inspect-refresh" type="button" class="btn-secondary">🔄 Refresh</button>
+        </div>
+        <dl class="kv" id="inspect-network-summary">
+          <div><dt>Dimensions</dt><dd id="inspect-dimensions">—</dd></div>
+          <div><dt>Neurons</dt><dd id="inspect-neuron-count">—</dd></div>
+          <div><dt>Synapses</dt><dd id="inspect-synapse-count">—</dd></div>
+          <div><dt>Input cells</dt><dd id="inspect-input-count">—</dd></div>
+          <div><dt>Output cells</dt><dd id="inspect-output-count">—</dd></div>
+          <div><dt>Active neurons</dt><dd id="inspect-active-neurons">—</dd></div>
+          <div><dt>Silent neurons</dt><dd id="inspect-silent-neurons">—</dd></div>
+          <div><dt>Queue depth</dt><dd id="inspect-queue-depth">—</dd></div>
+          <div><dt>Tick</dt><dd id="inspect-tick">—</dd></div>
+          <div><dt>Total spikes</dt><dd id="inspect-total-spikes">—</dd></div>
+          <div><dt>Mean energy</dt><dd id="inspect-mean-energy">—</dd></div>
+          <div><dt>Mean v</dt><dd id="inspect-mean-v">—</dd></div>
+        </dl>
+      </section>
+
+      <!-- 5D Projection -->
+      <section class="card panel">
+        <div class="panel-title">
+          <h2>🌐 5D Coordinate Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <div class="button-group">
+            <select id="projection-mode">
+              <option value="activity">Activity (spike count)</option>
+              <option value="energy">Energy</option>
+              <option value="potential">Membrane potential</option>
+            </select>
+          </div>
+        </div>
+        <p class="heatmap-meta" id="projection-meta">Projection of 5D coordinates into 3D · sampling live network</p>
+        <canvas id="inspect-projection" width="900" height="480"></canvas>
+      </section>
+
+      <!-- Neurons Table -->
+      <section class="card panel">
+        <div class="panel-title">
+          <h2>🔬 Neurons <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <div class="button-group">
+            <label class="input-label">Limit <input id="neuron-limit" type="number" min="1" max="5000" value="200" /></label>
+            <label class="input-label">Offset <input id="neuron-offset" type="number" min="0" max="10000000" value="0" /></label>
+            <label class="input-label"><input id="neuron-active-only" type="checkbox" /> Active only</label>
+            <button id="neuron-load" type="button" class="btn-secondary">Load</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="inspect-table">
+            <thead>
+              <tr><th>ID</th><th>x1</th><th>x2</th><th>x3</th><th>x4</th><th>x5</th><th>v</th><th>u</th><th>energy</th><th>last_spike</th><th>spikes</th><th>I/O</th></tr>
+            </thead>
+            <tbody id="neuron-table-body"></tbody>
+          </table>
+        </div>
+        <p class="heatmap-meta" id="neuron-page-meta">—</p>
+      </section>
+
+      <!-- Synapses Table -->
+      <section class="card panel">
+        <div class="panel-title">
+          <h2>🔗 Synapses <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <div class="button-group">
+            <label class="input-label">Limit <input id="synapse-limit" type="number" min="1" max="5000" value="200" /></label>
+            <label class="input-label">Offset <input id="synapse-offset" type="number" min="0" max="10000000" value="0" /></label>
+            <label class="input-label">Source <input id="synapse-source" type="number" placeholder="—" /></label>
+            <label class="input-label">Min weight <input id="synapse-min-weight" type="number" step="0.001" placeholder="—" /></label>
+            <button id="synapse-load" type="button" class="btn-secondary">Load</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="inspect-table">
+            <thead>
+              <tr><th>source</th><th>target</th><th>weight</th><th>delay</th><th>eligibility</th></tr>
+            </thead>
+            <tbody id="synapse-table-body"></tbody>
+          </table>
+        </div>
+        <p class="heatmap-meta" id="synapse-page-meta">—</p>
+      </section>
+    </section> <!-- /tab-inspect -->
+
+    <!-- ========================================================== -->
     <!-- TAB: CONTROL -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-control">
@@ -252,7 +342,7 @@
         <details class="self-org-section" id="self-org-section">
           <summary class="self-org-summary">
             <h3>🧠 Self-Organization Gate</h3>
-            <span class="badge" id="self-org-status-badge">Configured</span>
+            <span class="badge" id="self-org-status-badge">checking…</span>
           </summary>
           <div class="self-org-controls">
             <div class="self-org-row">
@@ -468,30 +558,49 @@
         </div>
 
         <div class="gate-grid">
-          <div class="gate-item gate-pending" id="gate-process">
-            <span class="gate-status">…</span>
-            <div class="gate-label"><strong>One application process</strong><span>Launcher starts exactly one src.main PID</span></div>
-          </div>
           <div class="gate-item gate-pending" id="gate-bridge">
             <span class="gate-status">…</span>
-            <div class="gate-label"><strong>OperatorBridge reachable</strong><span>/api/debug/bridge reports bridge_exists=true</span></div>
+            <div class="gate-label"><strong>OperatorBridge reachable</strong><span class="gate-message"></span></div>
           </div>
           <div class="gate-item gate-pending" id="gate-controller">
             <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Controller exists</strong><span>controller_exists=true on bridge</span></div>
+            <div class="gate-label"><strong>Controller exists</strong><span class="gate-message"></span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-runtime">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Runtime telemetry</strong><span class="gate-message"></span></div>
           </div>
           <div class="gate-item gate-pending" id="gate-structural">
             <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Structural Coordinator connected</strong><span>/api/structural/status configured=true</span></div>
+            <div class="gate-label"><strong>Structural Coordinator</strong><span class="gate-message"></span></div>
           </div>
           <div class="gate-item gate-pending" id="gate-snapshots">
             <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Snapshot pipeline available</strong><span>/api/snapshots responds</span></div>
+            <div class="gate-label"><strong>Snapshot pipeline</strong><span class="gate-message"></span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-delta-storage">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Delta Storage</strong><span class="gate-message"></span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-structural-journal">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Structural Journal</strong><span class="gate-message"></span></div>
           </div>
           <div class="gate-item gate-pending" id="gate-research">
             <span class="gate-status">…</span>
-            <div class="gate-label"><strong>Research framework (B5D-SEF) active</strong><span>/api/research available=true</span></div>
+            <div class="gate-label"><strong>Research (B5D-SEF)</strong><span class="gate-message"></span></div>
           </div>
+          <div class="gate-item gate-pending" id="gate-tests">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Tests (test_baseline.json)</strong><span class="gate-message"></span></div>
+          </div>
+          <div class="gate-item gate-pending" id="gate-error-visibility">
+            <span class="gate-status">…</span>
+            <div class="gate-label"><strong>Error Visibility</strong><span class="gate-message"></span></div>
+          </div>
+        </div>
+        <div class="gate-overall-row">
+          <strong>Overall:</strong> <span class="gate-badge pending" id="gate-overall">pending</span>
         </div>
 
         <div class="gate-roadmap">

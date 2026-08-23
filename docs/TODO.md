@@ -1867,16 +1867,42 @@ Control API                  ██████████  Gate A
 Frontend Lifecycle           ██████████  Gate A
 Snapshot Runtime             ██████████  Gate A
 .b5d → Heatmap               ██████████  Gate A
-Structural Runtime Chain     ███░░░░░░░  Gate A remaining
-Test Baseline                ████████░░  Gate B (2 collection errors)
-Structural E2E Verification  ░░░░░░░░░░  Gate B
-Error Visibility             ██░░░░░░░░  Gate B
+Dashboard Observability      ██████████  Gate A (Alpha.5 Dashboard Completion)
+5D Network Inspector         ██████████  Gate A (real 5D coordinates, pagination)
+Integration Status (real)    ██████████  Gate A (/api/integration/status, stale detection)
+Truthful Null/Disabled       ██████████  Gate A (no fake zeros, disabled≠failed)
+Structural Runtime Chain     ███░░░░░░░  Gate A remaining (config-disabled in poc_config)
+Test Baseline                ██████████░  Gate B (236 passed, 2 collection errors)
+Structural E2E Verification  ░░░░░░░░░░  Gate B (separate test config needed)
+Error Visibility             ████████░░  Gate B (integration endpoint surfaces errors)
 Restore Determinism          ░░░░░░░░░░  Gate B
 Scientific Experiments       ░░░░░░░░░░  Gate C
 Evidence Records             ░░░░░░░░░░  Gate C
 ```
 
 Dies ist ein sehr sinnvoller Entwicklungsstand: **Wir müssen jetzt nicht mehr darüber nachdenken, wie Forschung dokumentiert werden soll. Diese Infrastruktur existiert.**
+
+---
+
+# Alpha.5 Dashboard Completion (2026-08-23)
+
+## Erledigt (Dashboard als wissenschaftliches Beobachtungsinstrument)
+
+- **Phase 4 — Config-Authoritative Storage:** `main.py` startet `AsyncStorageSession` nur noch, wenn `storage.runtime.enabled=true`. Bei `poc_config` (disabled) bleibt Delta Storage "disabled by config", keine still-aktive Persistenz.
+- **Phase 3 — Truthful Formatting:** `app.js` unterscheidet `null/undefined → "—"`, measured zero → `"0"`, disabled → `"disabled by config"`. Kein `Number(value || 0)` mehr für Storage/Homeostasis/Self-Org.
+- **Phase 6 — Structural Config-Aware UI:** Control-Panel Badge zeigt `DISABLED BY CONFIG` wenn `self_organization.enabled=false`, nicht statisch `Configured`. Controls werden deaktiviert.
+- **Phase 8/9 — Real 5D Network Inspector:** Neue Endpunkte `/api/network/summary`, `/api/network/neurons`, `/api/network/synapses`, `/api/network/projection` liefern echte 5D-Koordinaten, v, u, energy, weights, delays. Serverseitige Pagination. Neuer `🔍 Inspect` Tab.
+- **Phase 14 — Real Integration Status:** `/api/integration/status` berechnet real Bridge/Controller/Runtime/Structural/Snapshot/Delta-Storage/Structural-Journal/Research/Tests/Error-Visibility. Disabled-by-config ≠ failed. Tests-STALE-Erkennung liest `test_baseline.json` und vergleicht `tested_commit` mit HEAD.
+- **Phase 16 — Provenance:** Network-Inspector-Daten als `LIVE` badged.
+- **Phase 18 — Tests:** 20 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, stale detection, no demo source). **236 passed, 2 skipped, 2 collection errors.**
+- **Phase 19 — Manual E2E:** Fresh start zeigt Tick 0: 5000 Neuronen, 36031 Synapsen, idle, storage disabled. Step (+1), run_ticks (+100), snapshot (neue .b5d) verifiziert via API.
+
+## Verbleibend (nicht in dieser Aufgabe)
+
+- Structural E2E benötigt separate Test-Config (poc_config bleibt disabled).
+- 2 collection errors (`test_async_storage.py`, `test_compaction.py` importieren nicht-existierendes `tests.test_storage_runtime`).
+- Restore Determinism (Gate B).
+- Scientific Experiments (Gate C).
 
 ---
 
@@ -1902,12 +1928,17 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 7. Unify /api/control contract ............................. ✅
 8. Connect snapshot pipeline to RuntimeController ........... ✅
 9. Verify .b5d → Heatmap live chain ........................ ✅
-10. Wire structural runtime chain into src.main ............. 🔴 Gate A
-11. Verify approval → mutation → journal → undo ............. 🔴 Gate A
+10. Wire structural runtime chain into src.main ............. 🔴 Gate A (poc_config disabled by design)
+11. Verify approval → mutation → journal → undo ............. 🔴 Gate A (separate test config)
+12. Dashboard Completion: config-authoritative storage ....... ✅ (Phase 4)
+13. Dashboard Completion: truthful null/disabled formatting .. ✅ (Phase 3)
+14. Dashboard Completion: real 5D network inspector ......... ✅ (Phase 8/9)
+15. Dashboard Completion: real integration status ........... ✅ (Phase 14)
+16. Dashboard Completion: structural config-aware UI ........ ✅ (Phase 6)
 
 === GATE B — Verification ====================================================
 
-12. Run complete pytest baseline ................ 216/218, 2 collection errors
+12. Run complete pytest baseline ................ 236/238, 2 collection errors
 13. Repair all test collection/failures ...................... 🔴 Gate B
 14. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
 15. Eliminate silent hook failures .......................... 🔴 Gate B

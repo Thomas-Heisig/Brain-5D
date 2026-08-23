@@ -384,6 +384,9 @@ export class ControlPanel {
       'self-org-enabled',
       'self-org-dry-run',
       'self-org-proposal',
+      'self-org-status-badge',
+      'btn-undo-structural',
+      'btn-auto-approval',
       'control-message',
     ];
 
@@ -482,25 +485,76 @@ export class ControlPanel {
 
   /**
    * Render self-organization state.
+   *
+   * CONFIG-AUTHORITATIVE: When structural plasticity is disabled by config
+   * (self_organization.enabled=false in poc_config.yaml), the controls must
+   * be visibly disabled and the badge must read "DISABLED BY CONFIG",
+   * not the static "Configured" placeholder.
    * @param {ControlState} state - Control state
    */
-  _renderSelfOrganization(state) {
+  async _renderSelfOrganization(state) {
     const selfOrg = state.selfOrganization;
-    if (!selfOrg) return;
-
+    const badge = this._elements['self-org-status-badge'];
     const enabled = this._elements['self-org-enabled'];
     const dryRun = this._elements['self-org-dry-run'];
     const proposal = this._elements['self-org-proposal'];
+    const undoBtn = this._elements['btn-undo-structural'];
+    const autoBtn = this._elements['btn-auto-approval'];
 
-    if (enabled) enabled.checked = Boolean(selfOrg.enabled);
-    if (dryRun) dryRun.checked = Boolean(selfOrg.dry_run);
+    // Query the real structural config from the backend.
+    let configured = false;
+    let configEnabled = false;
+    try {
+      const r = await fetch('/api/structural/status', { cache: 'no-store' });
+      if (r.ok) {
+        const d = await r.json();
+        configured = d.configured === true;
+      }
+    } catch {
+      configured = false;
+    }
+    if (configured) {
+      try {
+        const r = await fetch('/api/structural/config', { cache: 'no-store' });
+        if (r.ok) {
+          const d = await r.json();
+          configEnabled = d.enabled === true;
+        }
+      } catch {
+        configEnabled = false;
+      }
+    }
+
+    if (!configured) {
+      // Structural plasticity is disabled by config — disable all controls.
+      if (badge) {
+        badge.textContent = 'DISABLED BY CONFIG';
+        badge.className = 'badge badge-disabled';
+      }
+      if (enabled) { enabled.checked = false; enabled.disabled = true; }
+      if (dryRun) { dryRun.checked = false; dryRun.disabled = true; }
+      if (proposal) proposal.textContent = 'disabled by config';
+      if (undoBtn) undoBtn.disabled = true;
+      if (autoBtn) autoBtn.disabled = true;
+      return;
+    }
+
+    // Structural is configured and active.
+    if (badge) {
+      badge.textContent = configEnabled ? 'ACTIVE' : 'CONFIGURED (disabled)';
+      badge.className = configEnabled ? 'badge badge-active' : 'badge badge-disabled';
+    }
+    if (enabled) { enabled.disabled = false; enabled.checked = Boolean(selfOrg?.enabled); }
+    if (dryRun) { dryRun.disabled = false; dryRun.checked = Boolean(selfOrg?.dry_run); }
 
     if (proposal) {
-      const last = selfOrg.last_proposal;
+      const last = selfOrg?.last_proposal;
       proposal.textContent = last
         ? `${last.action || 'unknown'} × ${last.count || 0} — ${last.reason || 'no reason'}`
         : 'none';
     }
+    if (undoBtn) undoBtn.disabled = false;
+    if (autoBtn) autoBtn.disabled = false;
   }
 
   /**
