@@ -2,7 +2,7 @@
 
 > Last updated: 2026-08-23
 > Sources: `docs/Roadmap/`, `docs/sprints/`, `CHANGELOG.md`, runtime/dashboard audit, independent reviews, scientific evidence planning
-> Status: **Alpha.5 integration hardening in progress**
+> Status: **Alpha.5 technical integration near completion; structural end-to-end verification and scientific baseline experiments pending**
 
 ---
 
@@ -50,7 +50,7 @@ Bedeutung:
 
 ---
 
-# v0.5.0-alpha.5 — Integration Hardening
+# v0.5.0-alpha.5 — Current Status
 
 ## Bereits implementiert laut Changelog (dürfen nicht mehr als offen geführt werden)
 
@@ -76,7 +76,29 @@ Bedeutung:
 - Bridge identity regression tests
 - JSON-404 API isolation regression tests
 
-Diese Punkte dürfen deshalb nicht mehr als „noch zu implementieren“ geführt werden. Der Fokus verschiebt sich von **Implementierung** zu **Integration, Verifikation und Evidenz**.
+Diese Punkte dürfen deshalb nicht mehr als „noch zu implementieren" geführt werden. Der Fokus verschiebt sich von **Implementierung** zu **Integration, Verifikation und Evidenz**.
+
+## Verified Technical Baseline (Commit `c7b7951`)
+
+```
+Process Architecture          VERIFIED
+Canonical Runtime             INTEGRATED
+Control API                   INTEGRATED
+Frontend Lifecycle            INTEGRATED
+Snapshot Runtime              VERIFIED
+.b5d → Heatmap                VERIFIED
+B5D-SEF                       IMPLEMENTED
+```
+
+## Offen
+
+```
+Structural Runtime Chain      → Gate A
+Test Baseline Integrity       → Gate B
+Restore Determinism           → Gate B
+Scientific Experiments        → Gate C
+Evidence Generation           → Gate C
+```
 
 ## P0 — Process Architecture
 
@@ -105,8 +127,9 @@ Diese Punkte dürfen deshalb nicht mehr als „noch zu implementieren“ geführ
 
 * [x] Exactly one application PID
   * Verified: `test_launcher_starts_exactly_one_process` reads the PID file and asserts exactly one positive integer.
-* [x] Exactly one dashboard listener
-  * Verified: `test_only_one_listener_owns_bound_port` asserts single-object identity; production single-listener guaranteed by single-PID launcher.
+* [ ] Exactly one dashboard listener
+  * `test_only_one_listener_owns_bound_port` asserts single-object identity.
+  * A single PID can open multiple listeners. An end-to-end port-ownership test is needed to verify that only one `DashboardServer` binds `127.0.0.1:8765`.
 * [x] No second dashboard process
   * Verified: launcher starts exactly one `src.main` process; no separate `python -m src.dashboard` process.
 * [x] No global bridge state
@@ -318,11 +341,13 @@ No .b5d snapshot configured for heatmaps.
 * [x] Include neuron count
 * [x] Include synapse count
 * [x] Include dimensions
-* [x] Include configuration hash
-  * Config file path is included.
+* [ ] Include configuration SHA-256 hash
+  * Config file path is included (`config` field), but path ≠ hash.
+  * Needs: `{"config": {"path": "configs/poc_config.yaml", "sha256": "87f1..."}}`
 * [x] Include Git commit
-* [x] Include RNG provenance
-  * Seed is included.
+* [ ] Include full RNG state for deterministic restore
+  * Seed is included, but seed ≠ full RNG state.
+  * For deterministic restore, the complete `random.Random` state must be persisted (via `RuntimeCheckpoint` or equivalent).
 
 ## Dashboard Integration
 
@@ -432,20 +457,26 @@ Measurement
 
 Independent review reported a non-green test baseline. Reproduce it locally before treating it as authoritative.
 
-## Baseline
+## Current Verified Baseline
 
-* [ ] Run complete test collection
-* [ ] Record exact test count
-* [ ] Record Python version
-* [ ] Record Git commit
-* [ ] Do not hide failing modules using permanent `--ignore`
+```
+Commit:         c7b7951
+Python:         3.13.14
+Collected:      218
+Passed:         216
+Failed:         0
+Skipped:        2 (BRAIN5D_RUN_LARGE_STORAGE_TEST, BRAIN5D_RUN_LARGE_STORAGE_TESTS)
+Collection errors: 2 (test_async_storage.py, test_compaction.py — pre-existing)
+```
+
+**Important:** Collection errors exist. `216 passed` does NOT imply `complete pytest collection succeeds`. The two collection errors must be resolved before Gate B can close.
 
 ## Reported Collection Problems to Reproduce
 
-* [ ] `test_async_storage.py`
+* [ ] `test_async_storage.py` — depends on missing `tests.test_storage_runtime` module
 * [ ] `test_auto_approval.py`
-* [ ] `test_brain5d_launcher.py`
-* [ ] `test_compaction.py`
+* [ ] `test_brain5d_launcher.py` — now passes (2 tests)
+* [ ] `test_compaction.py` — depends on missing `tests.test_storage_runtime` module
 * [ ] `test_homeostasis_engine.py`
 * [ ] `test_language_organ_contracts.py`
 * [ ] `test_restore_continue.py`
@@ -457,7 +488,7 @@ Independent review reported a non-green test baseline. Reproduce it locally befo
 * [ ] documentation path traversal test
 * [ ] neurogenesis neighboring-child test
 
-## Alpha.5 Test Gate
+## Alpha.5 Test Gate (Gate B)
 
 * [ ] Zero collection errors
 * [ ] Zero unexplained failures
@@ -473,8 +504,9 @@ Independent review reported a non-green test baseline. Reproduce it locally befo
 # P0 — Error Visibility and Scientific Integrity
 
 * [x] Find all `except Exception: pass`
-  * Audited: 9 occurrences in `src/`. All are hook isolation (controller, network), dashboard safety (main), or file parsing (docs_source). No silent failures in scientific execution paths.
+  * Audited: 9 occurrences in `src/`. All are hook isolation (controller, network), dashboard safety (main), or file parsing (docs_source).
 * [ ] Eliminate silent failures in scientific execution paths
+  * Hook exceptions are caught but not observable. Until hook failures produce structured runtime error events, silent failures in scientific execution paths are not eliminated.
 * [ ] Hook failures must be observable
 * [ ] Add structured runtime error events
 * [ ] Add fail-fast research mode
@@ -793,7 +825,8 @@ All comparisons must control for:
 
 # Determinism and Causality
 
-* [x] RQ-SNN-003 — Identical seed + state + input → identical run?
+* [x] RQ-DET-001 — Identical seed + state + input → identical run?
+  * (ID corrected from `RQ-SNN-003`; `RQ-SNN-003` is exclusively the propagation question.)
 * [ ] RQ-DET-002 — Snapshot/restore continuation identical to uninterrupted run?
 * [ ] RQ-DET-003 — Structural decisions deterministic?
 * [ ] RQ-DET-004 — Is iteration order explicitly controlled?
@@ -1824,12 +1857,19 @@ Research Infrastructure     ██████████  implemented
 Research Registries         ██████████  implemented
 Report Generation           ██████████  implemented
 
-Runtime Integration         ███████░░░  near complete
-Dashboard Control           ████████░░  mostly complete
-Runtime Snapshot Wiring     ██████████  complete
-Structural Runtime Wiring   █████░░░░░  verify
-Test Integrity              █████░░░░░  verify
-Real Scientific Evidence    █░░░░░░░░░  beginning
+Process Architecture         ██████████  Gate A
+Canonical Runtime            ██████████  Gate A
+Control API                  ██████████  Gate A
+Frontend Lifecycle           ██████████  Gate A
+Snapshot Runtime             ██████████  Gate A
+.b5d → Heatmap               ██████████  Gate A
+Structural Runtime Chain     ███░░░░░░░  Gate A remaining
+Test Baseline                ████████░░  Gate B (2 collection errors)
+Structural E2E Verification  ░░░░░░░░░░  Gate B
+Error Visibility             ██░░░░░░░░  Gate B
+Restore Determinism          ░░░░░░░░░░  Gate B
+Scientific Experiments       ░░░░░░░░░░  Gate C
+Evidence Records             ░░░░░░░░░░  Gate C
 ```
 
 Dies ist ein sehr sinnvoller Entwicklungsstand: **Wir müssen jetzt nicht mehr darüber nachdenken, wie Forschung dokumentiert werden soll. Diese Infrastruktur existiert.**
@@ -1847,6 +1887,8 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 # Immediate Execution Order — Updated
 
 ```text
+=== GATE A — Technical Integration (near complete) ===========================
+
 1. Verify current real HTTP Bridge state ...................... ✅
 2. Fix frontend double initialization ........................ ✅
 3. Select canonical RuntimeController ........................ ✅
@@ -1854,122 +1896,238 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 5. Make RuntimeController sole simulation-clock owner ........ ✅
 6. Remove automatic startup 1000-tick execution .............. ✅
 7. Unify /api/control contract ............................. ✅
-8. Connect existing worker-boundary snapshot pipeline
-   to canonical RuntimeController ............... ✅
-        ↓
-9. Verify .b5d → Heatmap live chain ........... ✅
-        ↓
-10. Verify Coordinator + StructuralPlasticityEngine
-    are active in src.main
-        ↓
-11. Verify approval → mutation → journal → undo
-        ↓
-12. Run complete pytest baseline .......................... 216 passed, 2 skipped
-        ↓
-13. Repair all test collection/failures
-        ↓
-14. Correct research registry ID collisions ............... ✅
-        ↓
-15. Add DATA-* object type ................................ ✅
-        ↓
-16. Harden experiment manifests ........................... ✅
-        ↓
-17. Run first real Alpha.5 scientific experiments
-        ↓
-18. Generate evidence from actual runs
-        ↓
-19. Close ALPHA.5 INTEGRATION GATE
-        ↓
-20. Begin alpha.6
+8. Connect snapshot pipeline to RuntimeController ........... ✅
+9. Verify .b5d → Heatmap live chain ........................ ✅
+10. Wire structural runtime chain into src.main ............. 🔴 Gate A
+11. Verify approval → mutation → journal → undo ............. 🔴 Gate A
+
+=== GATE B — Verification ====================================================
+
+12. Run complete pytest baseline ................ 216/218, 2 collection errors
+13. Repair all test collection/failures ...................... 🔴 Gate B
+14. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
+15. Eliminate silent hook failures .......................... 🔴 Gate B
+
+=== GATE C — Scientific Baseline =============================================
+
+16. Correct research registry ID collisions ................. ✅
+17. Add DATA-* object type ................................. ✅
+18. Harden experiment manifests ............................ ✅
+19. Run EXP-DET-0001 (deterministic replay) ................ 🔴 Gate C
+20. Run EXP-STOR-0001 (snapshot/restore identity) .......... 🔴 Gate C
+21. Generate evidence from actual runs ..................... 🔴 Gate C
+22. Close ALPHA.5 ......................................... 🎯
+23. Begin alpha.6
 ```
 
-# Alpha.5 Integration Gate — Revised
+# Alpha.5 — Three-Gate Structure
 
-**Alpha.5 should only be declared technically complete when:**
+Code fertig ≠ Integration fertig ≠ Wissenschaft fertig.
 
-- structural persistence architecture implemented
-- Structural Journal implemented
-- CRC + commit recovery implemented
-- structural replay implemented
-- persistent Undo implemented
-- manual approval capability implemented
-- snapshot worker-boundary capability implemented
-- runtime checkpoint capability implemented
-- Structural Journal restore integration implemented
-- Dashboard single-instance regression suite exists
-- B5D-SEF foundation exists
-- Research Catalog generator exists
-- Evidence Matrix generator exists
-- Research registries exist
-- one canonical RuntimeController
-- one simulation clock
-- no `SimpleController`
-- no automatic uncontrolled 1000-tick simulation
-- Dashboard commands actually operate canonical runtime
-- no duplicate frontend commands
-- active Bridge verified through real HTTP path
-- Coordinator active in production composition
-- StructuralPlasticityEngine active in production composition
-- Manipulator verified as mutation boundary
-- manual proposal approval demonstrated end-to-end
-- reject demonstrated
-- journal persistence demonstrated
-- Undo demonstrated
-- [x] `.b5d` operator snapshot demonstrated
-  * Snapshot button triggers `B5DSnapshotWriter` -> validated `artifacts/latest.b5d`.
-- [x] Heatmap demonstrates generated snapshot
-  * Activity/weights/energy heatmaps read from real `.b5d` via `B5DReader` + `B5DLazyProjector`.
-- uninterrupted vs restore continuation comparison passes
-- complete pytest collection passes
-- no unexplained test failures
-- no silent scientific-path failures
-- first real experiment manifests generated automatically
-- first evidence records refer to actual experiments
-- at least one hypothesis supported or refuted by reproducible experiment
-- `RESEARCH_CATALOG.md` rebuilt from actual evidence
-- `EVIDENCE_MATRIX.md` rebuilt from actual evidence
+## Gate A — Technical Integration
 
-## Checklist
+**Ziel:** Alle technischen Komponenten sind im realen `src.main`-Pfad angeschlossen.
 
-* [x] One application process
-  * Verified: `test_launcher_starts_exactly_one_process`.
-* [x] One canonical RuntimeController
-  * `src.controller.runtime.RuntimeController` is the sole canonical controller.
-* [x] One simulation clock owner
-  * The controller worker thread is the only caller of `network.step()`.
-* [x] Dashboard commands actually control simulation
-  * `OperatorBridge` and `DashboardControlService` both use the canonical controller.
-* [x] No duplicate frontend commands
-  * Verified in previous P0 Frontend Lifecycle section.
-* [x] OperatorBridge consistently reachable
-  * Verified: `test_bridge_identity_stable_across_requests`.
-* [ ] Structural Coordinator connected
-* [ ] StructuralPlasticityEngine connected
-* [ ] Manipulator is canonical mutation path
-* [ ] Manual approval works
-* [ ] Undo works
-* [ ] Structural Journal works
-* [x] `.b5d` snapshot creation works
-  * `B5DSnapshotWriter` writes validated `.b5d` with metadata.
-* [x] Heatmap reads actual snapshots
-  * `B5DLazyProjector` reads from mmap'd `.b5d` for activity/weights/energy heatmaps.
-* [ ] Restore-and-continue works
-* [ ] Determinism test passes
-* [ ] Complete pytest collection succeeds
-  * 189 passed, 2 skipped (pre-existing collection errors: `test_async_storage.py`, `test_compaction.py`).
-* [ ] No unexplained failing tests
-* [ ] No silent scientific-path exceptions
-* [x] Every major mechanism has an associated Research Question (27 registered)
-* [ ] Every scientific run produces an experiment manifest
+### Process Architecture
+
+* [x] One application process (single PID)
+* [x] No separate `python -m src.dashboard` process
+* [x] Integrated dashboard receives `OperatorBridge` during startup
+* [x] No module-global bridge state
+* [x] Bridge identity stable across HTTP requests
+
+### Canonical Runtime
+
+* [x] One canonical `RuntimeController` (`src.controller.runtime`)
+* [x] One simulation clock owner (controller worker is sole `network.step()` caller)
+* [x] No `SimpleController`
+* [x] No automatic uncontrolled 1000-tick simulation
+* [x] Controller starts in IDLE state
+* [x] All canonical commands: `start`, `pause`, `resume`, `stop`, `step`, `run_ticks`, `snapshot`
+
+### Control API
+
+* [x] Canonical contract: `POST /api/control { "command": "run_ticks", "ticks": 100 }`
+* [x] Backward-compatible: `{ "action": "..." }` still accepted
+* [x] Input validation (integer tick counts, unknown commands → 400)
+* [x] Structured JSON errors
+* [x] JSON 404 for unknown API paths
+* [x] API tests for every runtime command (19 tests)
+
+### Frontend Lifecycle
+
+* [x] `app.js` sole lifecycle owner
+* [x] No duplicate initialization or event listeners
+* [x] Canonical `{"command": "..."}` contract in both Console and Control tabs
+* [x] No duplicate API calls or log messages
+
+### Snapshot Runtime
+
+* [x] Canonical RuntimeController snapshot command connected to `B5DSnapshotWriter`
+* [x] Atomic snapshot writing (temp → validate → rename)
+* [x] Initial snapshot at dashboard startup
+* [x] Historical snapshots (timestamped copies)
+* [x] Metadata: tick, neuron/synapse count, dimensions, git commit, seed, config path
+* [ ] Configuration SHA-256 hash (path only, not hash)
+* [ ] Full RNG state for deterministic restore (seed only, not complete state)
+* [x] `/api/snapshots` lists available `.b5d` files
+* [x] `/api/snapshot-info` returns tick, file, size, status
+* [x] Snapshot info card in dashboard UI
+
+### Heatmap
+
+* [x] Activity heatmap from real `.b5d` data
+* [x] Weight heatmap from real `.b5d` data
+* [x] Energy heatmap from real `.b5d` data
+* [x] No demo fallback when real snapshot exists
+
+### B5D-SEF Foundation
+
+* [x] Research registries (questions, hypotheses, claims, sources, methods)
+* [x] Experiment recorder with manifest generation
+* [x] Evidence engine
+* [x] Report builder (RESEARCH_CATALOG, EVIDENCE_MATRIX, etc.)
+* [x] Registry uniqueness validation (8 tests)
+* [x] `DATA-*` object type in schema
+* [x] `evidence_level` (E0–E4) in claim schema
+* [x] `experiment_status` in manifest schema
+* [x] `EXP-DET-0001` and `EXP-STOR-0001` registered
+* [x] ID correction: `RQ-SNN-003` → `RQ-DET-001` for determinism question
+
+### Structural Runtime Chain — Gate A remaining
+
+* [ ] `src.main` instantiates actual `SelfOrganizationCoordinator`
+* [ ] `src.main` instantiates actual `StructuralPlasticityEngine`
+* [ ] `Brain5DManipulator` is actual mutation boundary
+* [ ] Approval policy attached in normal startup
+* [ ] Journal attached in normal startup
+* [ ] Undo uses persistent inverse records
+* [ ] Bridge receives active coordinator and plasticity engine
+* [ ] Proposals generated from actual measurements
+* [ ] Mutation requires accepted proposal
+
+---
+
+## Gate B — Verification
+
+**Ziel:** Jede Behauptung ist durch einen Test oder einen dokumentierten Lauf belegt.
+
+### Test Baseline
+
+* [ ] Zero collection errors (currently 2: `test_async_storage.py`, `test_compaction.py`)
+* [ ] Zero unexplained failures
+* [ ] Full test suite runs without ignored core modules
+
+### Structural Chain — End-to-End Verification
+
+Ten concrete proofs required:
+
+1. [ ] Coordinator is in `src.main` actually instantiated
+2. [ ] PlasticityEngine is actually instantiated
+3. [ ] Bridge contains exactly these instances
+4. [ ] Proposal originates from real runtime signal
+5. [ ] Proposal alone does NOT mutate the network
+6. [ ] Reject does NOT mutate the network
+7. [ ] Approve produces exactly one mutation
+8. [ ] Mutation produces exactly one Journal record
+9. [ ] Undo restores the previous state
+10. [ ] Restart + Replay produces the same state
+
+### Error Visibility
+
+* [ ] Hook failures produce structured runtime error events
+* [ ] No silent `except Exception: pass` in scientific execution paths
+* [ ] Experiment manifest records runtime exceptions
+* [ ] Invalid experiment runs cannot become evidence
+
+### Restore Determinism
+
+* [ ] Snapshot/restore continuation identical to uninterrupted run
+* [ ] Structural decisions deterministic
+* [ ] Iteration order explicitly controlled
+* [ ] RNG state persisted for deterministic restore
+
+---
+
+## Gate C — Scientific Baseline
+
+**Ziel:** Mindestens eine reproduzierbare wissenschaftliche Aussage mit dokumentierter Evidenz.
+
+### Experiment Sequence
+
+```
+EXP-DET-0001   deterministic independent runs
+        ↓
+EXP-STOR-0001  snapshot/restore identity
+        ↓
+EXP-SNN-0001   stable neural dynamics
+        ↓
+EXP-STDP-0001  PRE→POST
+        ↓
+EXP-STDP-0002  POST→PRE
+        ↓
+EXP-STRUCT-0001 proposal→approve→mutation
+        ↓
+EXP-STRUCT-0002 mutation→undo
+        ↓
+EXP-STRUCT-0003 restart→replay
+```
+
+### EXP-DET-0001 — Deterministic Replay Baseline
+
+Hypothesis: $S_A(t) = S_B(t)$ at identical:
+- Code, Config, Seed, Input, Initial State, Tick Count
+
+Compared at minimum:
+- `current_tick`, spike sequence, neuron v/u, energy, threshold adaptation
+- spike counters, synaptic weights, eligibility, event queue, structural state
+
+Success criterion: **exact equality** for integer state; documented tolerance for float conversion.
+
+### EXP-STOR-0001 — Restore Identity
+
+Three conditions compared:
+
+```
+A: uninterrupted
+0 ---------------------- 10000
+
+B:
+0 ---------- 5000
+               ↓
+            snapshot
+               ↓
+            restore
+               ↓
+5000 -------------------- 10000
+
+C:
+0 ---------- 5000
+               ↓
+ snapshot + process exit
+               ↓
+ new process + restore
+               ↓
+5000 -------------------- 10000
+```
+
+`B` tests restore within same runtime. `C` tests **true persistence across process restart**.
+
+### Gate C Deliverables
+
+* [ ] First real experiment manifests generated automatically
+* [ ] First evidence records refer to actual experiments
+* [ ] Claims associated with experiments and evidence
 * [ ] At least one hypothesis supported or refuted by reproducible experiment
-* [x] First automatically generated `RESEARCH_CATALOG.md` exists
-* [x] First automatically generated `EVIDENCE_MATRIX.md` exists
-* [x] Research directory structure created (`research/registry/`, `research/experiments/`, `research/literature/`, `research/generated/`, `research/schemas/`)
-* [x] Registry YAML files created (questions, hypotheses, claims, sources, methods)
-* [x] JSON schemas created (experiment, question, evidence, claim)
-* [x] Python modules created (registry, experiment_recorder, evidence_engine, literature_registry, report_builder)
-* [x] BibTeX literature database created (5 category files)
-* [x] Report generator script created and executed
-* [x] Generated reports: RESEARCH_CATALOG.md, EVIDENCE_MATRIX.md, OPEN_QUESTIONS.md, CLAIM_REGISTER.md, DISSERTATION_MAP.md, LITERATURE_MATRIX.md
+* [ ] `RESEARCH_CATALOG.md` rebuilt from actual evidence
+* [ ] `EVIDENCE_MATRIX.md` rebuilt from actual evidence
+
+---
+
+## Alpha.5 Abschlusskriterium
+
+Sobald alle drei Gates geschlossen sind, kann Alpha.5 wie folgt abgeschlossen werden:
+
+> **Brain-5D Alpha.5 establishes a reproducible, operator-controlled, persistable and experimentally traceable spiking neural runtime with approval-gated structural modification.**
 
 Damit wird die TODO nicht nur zu einer Entwicklungsroadmap, sondern gleichzeitig zum **wissenschaftlichen Arbeitsplan von Brain-5D**: Jede technische Funktion muss künftig beantworten, **welche Frage sie untersucht, wie sie getestet wird, welche Evidenz entstanden ist und was daraus tatsächlich geschlossen werden darf**.
