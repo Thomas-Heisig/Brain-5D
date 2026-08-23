@@ -1,0 +1,47 @@
+# Dependabot dependency update automation for Brain-5D.
+#
+# Documentation:
+#   https://docs.github.com/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # Python (pip) dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Berlin"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    groups:
+      dev-dependencies:
+        patterns:
+          - "black"
+          - "mypy"
+          - "pylint"
+          - "pyright"
+          - "pytest*"
+          - "ruff"
+          - "types-*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Berlin"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(ci)"

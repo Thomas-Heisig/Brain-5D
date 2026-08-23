@@ -70,9 +70,21 @@ From the repository root in the project virtual environment:
 .\.venv\Scripts\python.exe -m pytest -v -m "not slow"
 .\.venv\Scripts\python.exe -m mypy src
 .\.venv\Scripts\python.exe -m black --check src tests scripts
+.\.venv\Scripts\python.exe -m ruff check src/ tests/ scripts/
+.\.venv\Scripts\python.exe -m pyright
 .\.venv\Scripts\python.exe -m pylint --fail-under=9.0 src
 git diff --check
 ```
+
+The CI pipeline runs the same gates on every push/PR:
+
+| Job | Tools | Scope |
+|-----|-------|-------|
+| `lint-format` | Black, Ruff, Pylint, whitespace | `src/`, `tests/`, `scripts/` |
+| `type-check` | Mypy + Pyright (2 scopes) | `src/` |
+| `tests` | Pytest (3.11/3.12/3.13 matrix) | `tests/` |
+| `build` | `python -m build` + verify | wheel |
+| `smoke` | Import/config smoke tests | `src/` + `configs/` |
 
 Alpha.5 introduced a strict Pyright-clean integration scope. Repository-wide
 strict Pyright still contains historical findings, therefore pull requests must

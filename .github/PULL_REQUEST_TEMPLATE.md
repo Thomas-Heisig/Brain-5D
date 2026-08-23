@@ -27,6 +27,8 @@ List the exact commands run and results.
 - [ ] `pytest -m "not slow"`
 - [ ] `mypy src`
 - [ ] `black --check src tests scripts`
+- [ ] `ruff check src/ tests/ scripts/`
+- [ ] `pyright`
 - [ ] Pyright/Pylance clean for changed/new files
 - [ ] Pylint quality threshold maintained
 - [ ] `git diff --check`

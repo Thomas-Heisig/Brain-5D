@@ -1,12 +1,28 @@
+# ============================================================================
+# Brain-5D — requirements.txt
+# ============================================================================
+# NOTE: The authoritative dependency declaration lives in pyproject.toml
+# under [project] and [project.optional-dependencies].
+#
+# This file is generated/maintained for tools that do not read
+# pyproject.toml (e.g. pip-compile, some CI systems).
+#
+# Install via:  pip install -e ".[dev]"
+# ============================================================================
+
+# Core dependencies (from pyproject.toml [project])
 PyYAML>=6.0
 matplotlib>=3.8
 numpy>=1.26
+
+# Development dependencies (from pyproject.toml [project.optional-dependencies] dev)
 pytest>=8.0
-# Für DOCX-Unterstützung
+
+# Optional: DOCX-Unterstützung
 python-docx>=0.8.11
 
-# Für XLSX-Unterstützung
+# Optional: XLSX-Unterstützung
 openpyxl>=3.1.0
 
-# Für PDF-Unterstützung (optional)
+# Optional: PDF-Unterstützung
 PyPDF2>=3.0.0

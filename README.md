@@ -2,11 +2,14 @@
 
 **Persistent Structural Plasticity — v0.5.0‑alpha.5**
 
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![CI](https://github.com/Thomas-Heisig/Brain-5D/actions/workflows/ci.yml/badge.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions/workflows/ci.yml)
 [![mypy](https://img.shields.io/badge/mypy-passing-green.svg)](https://github.com/python/mypy)
 [![Pyright](https://img.shields.io/badge/pyright-strict-21BA45.svg)](https://github.com/microsoft/pyright)
-[![Tests](https://img.shields.io/badge/tests-148%20passing%2C%202%20skipped-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D)
+[![Tests](https://img.shields.io/badge/tests-166%20passing%2C%202%20skipped-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/badge/linter-ruff-D1514F.svg)](https://github.com/astral-sh/ruff)
+[![Python 3.11|3.12|3.13](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://www.python.org/)
 
 **Brain‑5D** is an experimental sparse **5D spiking‑neural platform** for persistent, observable and controlled neural simulation.  
 The current development line combines spiking dynamics, plasticity, homeostasis, structural self‑organization, deterministic persistence and an operator‑facing dashboard.
@@ -102,14 +105,17 @@ SelfOrganizationCoordinator
 
 Latest integration result:
 
-- `148 passed`
-- `2 skipped`
+- `166 passed` (full suite)
+- `2 skipped` (large storage tests – opt‑in)
 - `20` focused alpha.5 tests passed
-- `mypy src`: clean across `61` source files
-- alpha.5 Pyright strict scope: clean
+- `mypy src`: clean (0 real type errors)
+- Pyright strict scope: clean (0 errors, 0 warnings)
+- Pylint: `--fail-under=9.0` pass
 - Black: clean
+- Ruff: clean
 - `git diff --check`: clean
 - structural restore/continue integration: passing
+- CI matrix: Python 3.11 / 3.12 / 3.13
 
 Repository‑wide strict Pyright and Pylint still contain historical/legacy findings outside the alpha.5 implementation scope.  
 These are tracked as quality work and are not hidden with broad suppressions.
@@ -483,7 +489,7 @@ Always run tests from the project virtual environment.
 Current confirmed alpha.5 result:
 
 ```text
-148 passed
+166 passed
 2 skipped
 ```
 
@@ -491,6 +497,30 @@ Current confirmed alpha.5 result:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -v
+```
+
+### Smoke tests (CI entry point)
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v -m smoke
+```
+
+### Tests by category
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v -m core
+.\.venv\Scripts\python.exe -m pytest -v -m storage
+.\.venv\Scripts\python.exe -m pytest -v -m dashboard
+.\.venv\Scripts\python.exe -m pytest -v -m plasticity
+.\.venv\Scripts\python.exe -m pytest -v -m homeostasis
+.\.venv\Scripts\python.exe -m pytest -v -m learning
+.\.venv\Scripts\python.exe -m pytest -v -m embodiment
+```
+
+### Coverage report
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest --cov=src --cov-report=term-missing
 ```
 
 ### Alpha.5 verifier
@@ -537,22 +567,24 @@ To format:
 .\.venv\Scripts\python.exe -m black src tests scripts
 ```
 
+### Ruff (fast linter)
+
+```powershell
+.\.venv\Scripts\python.exe -m ruff check src/ tests/ scripts/
+```
+
 ### Mypy
 
 ```powershell
 .\.venv\Scripts\python.exe -m mypy src
 ```
 
-Current alpha.5 source result:
-
-```text
-61 source files clean
-```
+Current alpha.5 source result: **clean** (0 real type errors).
 
 ### Pyright
 
 ```powershell
-.\.venv\Scripts\python.exe -m pyright src scripts tests
+.\.venv\Scripts\python.exe -m pyright
 ```
 
 The alpha.5 implementation scope is strict‑Pyright clean. Repository‑wide strict mode can still expose legacy findings in older modules; these should be corrected incrementally rather than hidden with broad suppressions.
@@ -579,7 +611,8 @@ git diff --check
 .\.venv\Scripts\python.exe -m pytest -v -m "not slow"
 .\.venv\Scripts\python.exe -m mypy src
 .\.venv\Scripts\python.exe -m black --check src tests scripts
-.\.venv\Scripts\python.exe -m pyright src scripts tests
+.\.venv\Scripts\python.exe -m ruff check src/ tests/ scripts/
+.\.venv\Scripts\python.exe -m pyright
 .\.venv\Scripts\python.exe -m pylint src
 git diff --check
 .\.venv\Scripts\python.exe scripts\verify_v050a5.py
@@ -590,6 +623,18 @@ Slow tests can be run separately:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -v -m slow
 ```
+
+### CI pipeline (GitHub Actions)
+
+The CI pipeline runs automatically on push/PR to `main`/`develop`:
+
+| Job | Tools |
+|-----|-------|
+| `lint-format` | Black, Ruff, Pylint, whitespace check |
+| `type-check` | Mypy, Pyright (2 scopes) |
+| `tests` | Pytest on Python 3.11 / 3.12 / 3.13 |
+| `build` | Wheel build + verify install |
+| `smoke` | Import smoke tests, config loader, verifier |
 
 ---
 
@@ -918,6 +963,8 @@ Fast test and static‑quality sequence:
 .\.venv\Scripts\python.exe -m pytest -v -m "not slow"
 .\.venv\Scripts\python.exe -m mypy src
 .\.venv\Scripts\python.exe -m black --check src tests scripts
+.\.venv\Scripts\python.exe -m ruff check src/ tests/ scripts/
+.\.venv\Scripts\python.exe -m pyright
 .\.venv\Scripts\python.exe -m pylint --fail-under=9.0 src
 git diff --check
 ```

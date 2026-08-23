@@ -5,7 +5,10 @@ __pycache__/
 .mypy_cache/
 .pyright/
 .ruff_cache/
+
+# Coverage
 .coverage
+.coverage.*
 htmlcov/
 
 # Packaging/build output
@@ -21,6 +24,17 @@ venv/
 # IDE/editor state
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# Environment files (secrets, local config)
+.env
+.env.*
+.python-version
+
+# Logs
+*.log
 
 # Runtime artifacts
 artifacts/
@@ -31,3 +45,6 @@ artifacts/
 # OS noise
 .DS_Store
 Thumbs.db
+
+# Pre-commit
+.pre-commit-config.yaml.bak

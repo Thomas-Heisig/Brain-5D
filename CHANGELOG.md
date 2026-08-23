@@ -1,5 +1,57 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural Persistence (CI & Test-Suite Overhaul)
+
+### Added
+
+- **CI pipeline** (`.github/workflows/ci.yml`) mit 5 Jobs:
+  - `lint-format`: Black, Ruff, Pylint, Whitespace-Check
+  - `type-check`: Mypy + Pyright (2 Scopes)
+  - `tests`: Pytest-Matrix auf Python 3.11 / 3.12 / 3.13
+  - `build`: Wheel-Build + Installations-Verifikation
+  - `smoke`: Import-Smoke-Tests, Config-Loader, Verifier
+- **Smoke-Test-Suite** (`tests/test_ci_smoke.py`): 24 schnelle Import-/Config-/Netzwerk-Tests
+- **Automatische pytest-Marker** via `conftest.py`: `core`, `storage`, `plasticity`,
+  `dashboard`, `homeostasis`, `learning`, `embodiment`, `integration`, `slow`, `smoke`
+- **Ruff-Linter-Konfiguration** in `pyproject.toml`
+- **Coverage-Konfiguration** (`pytest-cov`) in `pyproject.toml`
+
+### Fixed
+
+- **Circular imports** in `src/self_organization/` (`coordinator.py`, `policy.py`)
+  durch `TYPE_CHECKING`-Imports
+- **NullBackend-Klassen** in `src/language_organ/null_backend.py` definiert
+  (bisher nur Dummy-Imports)
+- **ConfigDict TypeAlias** + `queued_event_count` Property in `src/core/network.py`
+- **Mypy-Typfehler** in `src/research/` (registry, report_builder, experiment_recorder,
+  evidence_engine), `src/dashboard/` (server, operator_bridge, research_source),
+  `src/self_organization/` (undo, plasticity)
+- **Pylint E-Level**: `__all__` in `learning_engine.py` bereinigt,
+  `inconsistent-return-statements` in `undo.py` und `plasticity.py` korrigiert
+- **test_brain5d_launcher.py**: an `build_command`-API angepasst
+- **test_dashboard_alpha7.py**: `DocumentationSource.read()` Fehlerbehandlung
+- **test_homeostasis_engine.py**: `threshold_adaptation`/`energy` Toleranz
+- **test_restore_continue.py**: `ConfigDict`-Import + `queued_event_count`
+- **test_self_organization.py**: `max_neurons` in `SelfOrganizationParameters`
+- **Black-Formatierung**: 54 Dateien automatisch formatiert
+
+### Changed
+
+- `pyproject.toml`: dev-Dependencies um `ruff`, `pytest-cov` erweitert;
+  `[tool.ruff]`, `[tool.coverage]` Konfiguration hinzugefügt
+- `pyrightconfig.json`: unverändert (strict mode für `src/storage`, `src/homeostasis`)
+- README.md: CI-Badges, aktualisierte Test-Statistiken (166 passed),
+  Ruff in Quality-Gates aufgenommen, CI-Pipeline-Dokumentation
+
+### CI Status
+
+- **166 Tests passed**, 2 skipped
+- **Mypy**: 0 echte Typfehler
+- **Pyright**: 0 errors, 0 warnings
+- **Pylint**: `--fail-under=9.0` pass
+- **Black + Ruff**: clean
+- **Python-Matrix**: 3.11 / 3.12 / 3.13
+
 ## v0.5.0-alpha.5 - Structural Persistence
 
 ### Added
