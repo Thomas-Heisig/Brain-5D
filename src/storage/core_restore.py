@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import random
-from typing import Protocol, assert_never, cast
-from typing import Any
+from pathlib import Path
+from typing import Any, Protocol, assert_never, cast
 
+from src.config.loader import ConfigDict
 from src.core.network import NeuralNetwork, SpikeEvent
 from src.core.spatial_index import unpack_coords
-from src.config.loader import ConfigDict
 
 from .b5d import B5DReader
 from .checkpoint import RuntimeCheckpoint, read_runtime_checkpoint

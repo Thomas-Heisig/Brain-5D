@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 from collections import deque
+from typing import Any
+
+from src.core.network import StepResult
 
 
 class History:
-    def __init__(self, maxlen: int):
-        self.data = deque(maxlen=maxlen)
+    def __init__(self, maxlen: int) -> None:
+        self.data: deque[dict[str, Any]] = deque(maxlen=maxlen)
 
-    def append_from_stepresult(self, result) -> None:
+    def append_from_stepresult(self, result: StepResult) -> None:
         self.data.append(
             {
                 "tick": result.tick,
@@ -24,5 +29,5 @@ class History:
             }
         )
 
-    def get_all(self):
+    def get_all(self) -> list[dict[str, Any]]:
         return list(self.data)

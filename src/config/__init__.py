@@ -6,15 +6,15 @@ Brain-5D configuration files in YAML format.
 """
 
 from .loader import (
-    ConfigDict,
     DEFAULT_CONFIG,
+    ConfigDict,
     EnergyConfig,
     LoggingConfig,
     NetworkConfig,
     NeuronConfig,
     RewardConfig,
-    STDPConfig,
     SimulationConfig,
+    STDPConfig,
     TelemetryConfig,
     TopologyConfig,
     VisualizationConfig,

@@ -8,7 +8,7 @@ import sys
 from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, cast
 
 import yaml
 
@@ -16,8 +16,8 @@ import yaml
 class RunArtifacts:
     def __init__(
         self,
-        config: Dict[str, Any],
-        run_id: Optional[str] = None,
+        config: dict[str, Any],
+        run_id: str | None = None,
         root: str | Path = "artifacts/runs",
     ):
         if run_id is None:
@@ -30,7 +30,7 @@ class RunArtifacts:
         self.config_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
         self._metrics_handle = self._spike_handle = self._stimulus_handle = None
         self._metrics_writer = None
-        self.summary: dict = {}
+        self.summary: dict[str, Any] = {}
         self._topology_data = None
         with (self.run_dir / "environment.json").open("w", encoding="utf-8") as f:
             json.dump(
@@ -63,7 +63,12 @@ class RunArtifacts:
         )
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: object,
+    ) -> None:
         for handle in (self._metrics_handle, self._spike_handle, self._stimulus_handle):
             if handle:
                 handle.close()
@@ -75,29 +80,28 @@ class RunArtifacts:
             json.dumps(self.summary, indent=2), encoding="utf-8"
         )
 
-    def log_metrics(self, metric_dict: Dict[str, Any]) -> None:
+    def log_metrics(self, metric_dict: dict[str, Any]) -> None:
         if self._metrics_writer is None:
             self._metrics_writer = csv.DictWriter(
-                self._metrics_handle, fieldnames=list(metric_dict.keys())
+                self._metrics_handle, fieldnames=list(metric_dict.keys())  # type: ignore[reportArgumentType]
             )
             self._metrics_writer.writeheader()
         self._metrics_writer.writerow(metric_dict)
 
-    def log_spikes(self, tick: int, spike_ids: Tuple[int, ...]) -> None:
-        self._spike_handle.write(
+    def log_spikes(self, tick: int, spike_ids: tuple[int, ...]) -> None:
+        self._spike_handle.write(  # type: ignore[reportOptionalMemberAccess]
             json.dumps({"tick": tick, "spikes": list(spike_ids)}) + "\n"
         )
 
     def log_stimulus(self, stimulus_result: Any) -> None:
-        data = (
-            asdict(stimulus_result)
-            if is_dataclass(stimulus_result)
-            else vars(stimulus_result)
-        )
-        self._stimulus_handle.write(json.dumps(data) + "\n")
+        if is_dataclass(stimulus_result):
+            data: dict[str, Any] = asdict(stimulus_result)  # type: ignore[reportArgumentType]
+        else:
+            data = cast("dict[str, Any]", vars(stimulus_result))
+        self._stimulus_handle.write(json.dumps(data) + "\n")  # type: ignore[reportOptionalMemberAccess]
 
-    def save_topology(self, topology_data: Dict[str, Any]) -> None:
+    def save_topology(self, topology_data: dict[str, Any]) -> None:
         self._topology_data = topology_data
 
-    def save_summary(self, summary: Dict[str, Any]) -> None:
+    def save_summary(self, summary: dict[str, Any]) -> None:
         self.summary.update(summary)

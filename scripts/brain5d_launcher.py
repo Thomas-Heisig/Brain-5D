@@ -36,6 +36,7 @@ PID_FILE = ROOT / "artifacts" / "brain5d.pid"
 # Helpers
 # ============================================================================
 
+
 def _ensure_artifacts_dir() -> None:
     """Ensure the artifacts directory exists for PID file."""
     (ROOT / "artifacts").mkdir(parents=True, exist_ok=True)
@@ -141,6 +142,7 @@ def dashboard_url(args: argparse.Namespace) -> str:
 # ============================================================================
 # Subcommand: start
 # ============================================================================
+
 
 def add_start_parser(subparsers: argparse._SubParsersAction) -> None:
     """Add the ``start`` subcommand parser."""
@@ -278,6 +280,7 @@ def _cmd_start(args: argparse.Namespace) -> int:
 # Subcommand: stop
 # ============================================================================
 
+
 def add_stop_parser(subparsers: argparse._SubParsersAction) -> None:
     """Add the ``stop`` subcommand parser."""
     parser = subparsers.add_parser(
@@ -316,6 +319,7 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
 # ============================================================================
 # Entry point
 # ============================================================================
+
 
 def main() -> int:
     """Parse arguments and dispatch to the appropriate subcommand."""

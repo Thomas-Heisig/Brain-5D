@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from threading import RLock
-from typing import Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .approval import ProposalApprovalPolicy
 

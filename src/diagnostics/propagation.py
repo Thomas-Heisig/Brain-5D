@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Set, Tuple
 
 from ..core.network import StepResult
 from .stimulus import StimulusResult
@@ -11,16 +10,16 @@ from .stimulus import StimulusResult
 class PropagationReport:
     stimulus_tick: int
     stimulus_mode: str
-    directly_stimulated_cells: Tuple[int, ...]
+    directly_stimulated_cells: tuple[int, ...]
     direct_spike_cells_count: int
     direct_spike_total: int
-    secondary_recruited_cells: Tuple[int, ...]
+    secondary_recruited_cells: tuple[int, ...]
     secondary_recruited_count: int
-    first_secondary_tick: Optional[int]
-    peak_tick: Optional[int]
+    first_secondary_tick: int | None
+    peak_tick: int | None
     peak_spikes_per_tick: int
     output_reached: bool
-    first_output_tick: Optional[int]
+    first_output_tick: int | None
     output_spikes_total: int
 
 
@@ -31,12 +30,12 @@ class PropagationAnalyzer:
     arbitrary networks. Causal attribution requires event tracing (future work).
     """
 
-    def __init__(self, output_cells: Set[int]):
+    def __init__(self, output_cells: set[int]):
         self.output_cells = set(output_cells)
-        self.stimulated_ids: Set[int] = set()
-        self.direct_spike_cells: Set[int] = set()
+        self.stimulated_ids: set[int] = set()
+        self.direct_spike_cells: set[int] = set()
         self.direct_spike_total = 0
-        self.secondary_ids: Set[int] = set()
+        self.secondary_ids: set[int] = set()
         self.first_secondary_tick = None
         self.first_output_tick = None
         self.peak_tick = None

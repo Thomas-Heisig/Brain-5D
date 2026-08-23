@@ -6,9 +6,10 @@ import os
 import shutil
 import subprocess
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, Sequence
+from typing import Final
 
 ROOT: Final[Path] = Path(__file__).resolve().parents[1]
 PYTHON: Final[str] = sys.executable

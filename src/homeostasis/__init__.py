@@ -10,6 +10,6 @@ from .signals import HomeostasisSignal
 __all__ = [
     "HomeostasisEngine",
     "HomeostasisParameters",
-    "HomeostasisStats",
     "HomeostasisSignal",
+    "HomeostasisStats",
 ]

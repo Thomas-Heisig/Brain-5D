@@ -26,7 +26,7 @@ Example:
 from __future__ import annotations
 
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any
 
 # ============================================================================
@@ -248,11 +248,8 @@ class EligibilityTrace:
             tick: The tick value to validate.
 
         Raises:
-            TypeError: If tick is not an integer.
             ValueError: If tick is negative.
         """
-        if not isinstance(tick, int):
-            raise TypeError(f"tick must be an int, got {type(tick).__name__}")
         if tick < 0:
             raise ValueError(f"tick must be >= 0, got {tick}")
 

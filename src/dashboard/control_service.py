@@ -15,8 +15,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Literal, cast
 
-from src.dashboard.models import JSONValue
 from src.controller.runtime import RuntimeController
+from src.dashboard.models import JSONValue
 from src.self_organization.coordinator import SelfOrganizationCoordinator
 
 # ============================================================================
@@ -47,20 +47,16 @@ class ControlError(Exception):
     """Base exception for control service errors."""
 
 
-
 class ValidationError(ControlError):
     """Raised when a command parameter is invalid."""
-
 
 
 class UnknownActionError(ControlError):
     """Raised when an unknown control action is requested."""
 
 
-
 class CoordinatorUnavailableError(ControlError):
     """Raised when the self-organization coordinator is not available."""
-
 
 
 # ============================================================================
@@ -169,10 +165,12 @@ class DashboardControlService:
             self-organization state.
         """
         payload: dict[str, JSONValue] = {
-            "runtime": self._runtime.snapshot().to_json(),
+            "runtime": cast(JSONValue, self._runtime.snapshot().to_json()),
         }
         if self._self_organization is not None:
-            payload["self_organization"] = self._self_organization.snapshot().to_json()
+            payload["self_organization"] = cast(
+                JSONValue, self._self_organization.snapshot().to_json()
+            )
         return payload
 
     def runtime_status(self) -> dict[str, JSONValue]:
@@ -181,7 +179,7 @@ class DashboardControlService:
         Returns:
             A dictionary with runtime status information.
         """
-        return self._runtime.snapshot().to_json()
+        return cast(dict[str, JSONValue], self._runtime.snapshot().to_json())
 
     def self_organization_status(self) -> dict[str, JSONValue] | None:
         """Return self-organization status if available.
@@ -190,7 +188,7 @@ class DashboardControlService:
             Self-organization snapshot or None if not configured.
         """
         if self._self_organization is not None:
-            return self._self_organization.snapshot().to_json()
+            return self._self_organization.snapshot().to_json()  # type: ignore[return-value]
         return None
 
     # =========================================================================
@@ -269,7 +267,10 @@ class DashboardControlService:
         ticks = self._int_field(body, "ticks", default=1, minimum=1)
         state = self._runtime.step(ticks)
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "ticks": ticks}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "ticks": ticks},
+            )
         )
 
     def _handle_run_ticks(self, body: JSONBody) -> ControlResponse:
@@ -277,7 +278,10 @@ class DashboardControlService:
         ticks = self._int_field(body, "ticks", default=100, minimum=1)
         state = self._runtime.run_ticks(ticks)
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "ticks": ticks}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "ticks": ticks},
+            )
         )
 
     def _handle_run(self, body: JSONBody) -> ControlResponse:
@@ -285,21 +289,30 @@ class DashboardControlService:
         loop_size = self._optional_int_field(body, "loop_size", minimum=1)
         state = self._runtime.run(loop_size=loop_size)
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "loop_size": loop_size}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "loop_size": loop_size},
+            )
         )
 
     def _handle_pause(self) -> ControlResponse:
         """Handle the 'pause' command."""
         state = self._runtime.pause()
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "paused": True}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "paused": True},
+            )
         )
 
     def _handle_stop(self) -> ControlResponse:
         """Handle the 'stop' command."""
         state = self._runtime.stop()
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "stopped": True}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "stopped": True},
+            )
         )
 
     def _handle_configure(self, body: JSONBody) -> ControlResponse:
@@ -308,18 +321,24 @@ class DashboardControlService:
         delay_ms = self._optional_float_field(body, "delay_ms", minimum=0.0)
         state = self._runtime.configure(loop_size=loop_size, delay_ms=delay_ms)
         return ControlResponse.success(
-            {
-                "ok": True,
-                "runtime": state.to_json(),
-                "configured": {"loop_size": loop_size, "delay_ms": delay_ms},
-            }
+            cast(
+                dict[str, JSONValue],
+                {
+                    "ok": True,
+                    "runtime": state.to_json(),
+                    "configured": {"loop_size": loop_size, "delay_ms": delay_ms},
+                },
+            )
         )
 
     def _handle_snapshot(self) -> ControlResponse:
         """Handle the 'snapshot' command."""
         state = self._runtime.request_snapshot()
         return ControlResponse.success(
-            {"ok": True, "runtime": state.to_json(), "snapshot_requested": True}
+            cast(
+                dict[str, JSONValue],
+                {"ok": True, "runtime": state.to_json(), "snapshot_requested": True},
+            )
         )
 
     def _handle_self_organization(self, body: JSONBody) -> ControlResponse:

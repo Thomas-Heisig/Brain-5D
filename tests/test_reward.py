@@ -5,8 +5,8 @@ import random
 from typing import Any, cast
 
 import pytest
-
 from conftest import base_config
+
 from src.core.network import NeuralNetwork, StepResult
 from src.learning.learning_engine import LearningEngine
 from src.learning.reward import RewardSignal

@@ -7,10 +7,10 @@ the neuron ID.
 
 from __future__ import annotations
 
+import struct
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Protocol
-import struct
 
 RECORD_SIZE = 128
 SPECTRAL_BINS = 32

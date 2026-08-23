@@ -12,7 +12,7 @@ from datetime import datetime
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from .models import JSONValue
 
@@ -42,9 +42,9 @@ except ImportError:
     PyPDF2 = None  # type: ignore[assignment]
 
 __all__ = [
-    "FileType",
     "DocumentationEntry",
     "DocumentationSource",
+    "FileType",
     "create_docs_source",
 ]
 
@@ -99,10 +99,10 @@ class DocumentationEntry:
     size_bytes: int
     file_type: FileType
     modified_time: str
-    content_preview: Optional[str] = None
-    word_count: Optional[int] = None
-    line_count: Optional[int] = None
-    sheet_names: Optional[tuple[str, ...]] = None
+    content_preview: str | None = None
+    word_count: int | None = None
+    line_count: int | None = None
+    sheet_names: tuple[str, ...] | None = None
     supported: bool = True
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -262,7 +262,7 @@ class DocumentationSource:
 
         return result
 
-    def _build_entry(self, path: Path) -> Optional[DocumentationEntry]:
+    def _build_entry(self, path: Path) -> DocumentationEntry | None:
         """Build a DocumentationEntry from a file path."""
         try:
             stat = path.stat()
@@ -349,7 +349,7 @@ class DocumentationSource:
         """Extract CSV content as readable text."""
         try:
             lines: list[str] = []
-            with open(path, "r", encoding="utf-8", errors="replace") as f:
+            with open(path, encoding="utf-8", errors="replace") as f:
                 reader = csv.reader(f)
                 if not full:
                     for i, row in enumerate(reader):
@@ -456,7 +456,7 @@ class DocumentationSource:
         except Exception:
             return f"[Could not read PDF: {path.name}]"
 
-    def _resolve_path(self, path: str) -> Optional[Path]:
+    def _resolve_path(self, path: str) -> Path | None:
         """Resolve a path relative to docs_root with security checks."""
         # Basic security: prevent path traversal
         if ".." in path or path.startswith("/") or path.startswith("\\"):
@@ -506,7 +506,7 @@ class DocumentationSource:
         self._get_cached_list.cache_clear()
 
     def search_documents(
-        self, query: str, file_types: Optional[list[FileType]] = None
+        self, query: str, file_types: list[FileType] | None = None
     ) -> tuple[DocumentationEntry, ...]:
         """Search documents by filename (basic search)."""
         query_lower = query.lower()

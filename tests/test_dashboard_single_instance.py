@@ -20,7 +20,6 @@ in place.
 
 from __future__ import annotations
 
-
 import json
 from http.client import HTTPConnection
 from threading import Thread
@@ -279,7 +278,7 @@ def test_only_one_listener_owns_bound_port() -> None:
 def test_bridge_object_identity_matches_server_attachment() -> None:
     """The bridge exposed via HTTP must be the exact object attached at start."""
     bridge = _Bridge(_StubController())
-    server, thread, _host, _port = _start_server(bridge)  # noqa: F841
+    server, thread, _host, _port = _start_server(bridge)
     try:
         # The server instance must own the exact bridge object.
         assert server.structural_bridge is bridge

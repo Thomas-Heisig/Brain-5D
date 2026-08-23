@@ -34,18 +34,16 @@ Author: Thomas Heisig
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 import math
 import mmap
-from pathlib import Path
 import struct
 import time
+from collections.abc import Iterator, Mapping, Sequence
+from dataclasses import dataclass
+from pathlib import Path
 from typing import (
-    Iterator,
-    Mapping,
     Protocol,
-    Sequence,
     TypeAlias,
     cast,
     runtime_checkable,
@@ -53,6 +51,8 @@ from typing import (
 
 from .optical_codec import (
     RECORD_SIZE as OPTICAL_RECORD_SIZE,
+)
+from .optical_codec import (
     OpticalPointState,
     decode_optical_record,
     encode_optical_record,
@@ -1267,26 +1267,26 @@ class B5DReader:
 
 __all__ = [
     "ALIGNMENT",
+    "BYTE_ORDER",
+    "CORE_EXTENSION_SIZE",
+    "ENDIANNESS",
+    "FORMAT_VERSION",
+    "HEADER_SIZE",
+    "MAGIC",
+    "MAX_METADATA_SIZE",
+    "OPTICAL_RECORD_SIZE",
+    "RESTARTABLE_NEURON_RECORD_SIZE",
+    "SYNAPSE_RECORD_SIZE",
     "B5DFormatError",
     "B5DHeader",
     "B5DNeuronRecord",
     "B5DReader",
     "B5DSnapshotWriter",
     "B5DSynapseRecord",
-    "BYTE_ORDER",
-    "CORE_EXTENSION_SIZE",
-    "ENDIANNESS",
-    "FORMAT_VERSION",
-    "HEADER_SIZE",
     "JSONMapping",
     "JSONValue",
-    "MAGIC",
-    "MAX_METADATA_SIZE",
     "NetworkSnapshotLike",
     "NeuronSnapshotLike",
-    "OPTICAL_RECORD_SIZE",
-    "RESTARTABLE_NEURON_RECORD_SIZE",
-    "SYNAPSE_RECORD_SIZE",
     "SynapseSnapshotLike",
     "assert_format_invariants",
 ]

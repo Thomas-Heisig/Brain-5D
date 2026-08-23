@@ -18,18 +18,18 @@ The 5D space is organized as (x, y, z, d4, d5) where:
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable, Iterator
 from functools import lru_cache
 from itertools import product
-from typing import Iterable, Iterator, Tuple
 
 # ============================================================================
 # Type Aliases
 # ============================================================================
 
-Coord5D = Tuple[int, int, int, int, int]
+Coord5D = tuple[int, int, int, int, int]
 """Type alias for a 5D coordinate."""
 
-Dim5D = Tuple[int, int, int, int, int]
+Dim5D = tuple[int, int, int, int, int]
 """Type alias for 5D dimensions."""
 
 # ============================================================================
@@ -42,7 +42,7 @@ BITS_PER_DIM: int = 8
 MASK: int = 0xFF
 """Bitmask for extracting a single dimension (8 bits)."""
 
-SHIFTS: Tuple[int, int, int, int, int] = (0, 8, 16, 24, 32)
+SHIFTS: tuple[int, int, int, int, int] = (0, 8, 16, 24, 32)
 """Bit shifts for each dimension in packed representation."""
 
 DIM_NAMES: dict[str, int] = {
@@ -320,7 +320,7 @@ def distance_5d(a: Coord5D, b: Coord5D) -> float:
 def weighted_distance_5d(
     a: Coord5D,
     b: Coord5D,
-    weights: Tuple[float, float, float, float, float],
+    weights: tuple[float, float, float, float, float],
 ) -> float:
     """Calculate weighted Euclidean distance between two 5D coordinates.
 

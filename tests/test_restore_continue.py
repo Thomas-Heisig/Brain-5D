@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import random
+from pathlib import Path
 from typing import cast
 
 from src.core.network import ConfigDict, NeuralNetwork

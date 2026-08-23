@@ -1,8 +1,18 @@
+from __future__ import annotations
+
+from typing import Any
+
+from src.core.network import NeuralNetwork
+from src.core.neuron import Neuron
 from src.core.spatial_index import unpack_coords
 
 
 class ProbeManager:
-    def __init__(self, network, config=None):
+    """Manage probe neurons and read their live state."""
+
+    def __init__(
+        self, network: NeuralNetwork, config: dict[str, Any] | None = None
+    ) -> None:
         self.network = network
         self.probes: list[int] = []
 
@@ -14,8 +24,8 @@ class ProbeManager:
         if neuron_id in self.probes:
             self.probes.remove(neuron_id)
 
-    def get_probe_data(self, neuron_id: int) -> dict:
-        neuron = self.network.neurons.get(neuron_id)
+    def get_probe_data(self, neuron_id: int) -> dict[str, Any]:
+        neuron: Neuron | None = self.network.neurons.get(neuron_id)
         if neuron is None:
             return {}
         return {

@@ -85,6 +85,6 @@ class KnowledgeItem:
 # ============================================================================
 
 __all__ = [
-    "SourceRecord",
     "KnowledgeItem",
+    "SourceRecord",
 ]

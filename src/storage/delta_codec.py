@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import struct
+from dataclasses import dataclass
 
 from .b5d import B5DNeuronRecord, B5DSynapseRecord
 from .delta_journal import DeltaRecord, DeltaType
 from .optical_codec import (
     RECORD_SIZE as OPTICAL_RECORD_SIZE,
+)
+from .optical_codec import (
     OpticalPointState,
     decode_optical_record,
     encode_optical_record,

@@ -356,7 +356,7 @@ class ReportBuilder:
             "DISSERTATION_MAP.md": self.build_dissertation_map,
         }
 
-        paths = {}
+        paths: dict[str, Path] = {}
         for name, builder in reports.items():
             path = out / name
             path.write_text(builder(), encoding="utf-8")

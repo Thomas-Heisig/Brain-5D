@@ -11,17 +11,15 @@ After each experiment, the evidence engine:
 from __future__ import annotations
 
 import json
-import uuid
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, cast
 
 from .registry import (
-    REPO_ROOT,
     REGISTRY_DIR,
+    REPO_ROOT,
+    Claim,
     Hypothesis,
     ResearchRegistry,
-    Claim,
 )
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
@@ -52,7 +50,7 @@ class EvidenceEngine:
         effect_size: dict[str, Any] | None = None,
         statistical_significance: dict[str, Any] | None = None,
         status: str = "inconclusive",
-        limitations: Optional[str] = None,
+        limitations: str | None = None,
     ) -> str:
         """
         Evaluate an experiment and create an evidence entry.
@@ -61,7 +59,7 @@ class EvidenceEngine:
         """
         evidence_id = _next_evidence_id()
 
-        evidence = {
+        evidence: dict[str, Any] = {
             "evidence_id": evidence_id,
             "experiment_id": experiment_id,
             "claim_id": claim_id,
@@ -170,11 +168,11 @@ class EvidenceEngine:
         path = EVIDENCE_DIR / f"{evidence_id}.json"
         if not path.exists():
             return None
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data if isinstance(data, dict) else None
+        with open(path, encoding="utf-8") as f:
+            data: Any = json.load(f)
+            return cast("dict[str, Any]", data) if isinstance(data, dict) else None
 
-    def generate_followup_questions(self, experiment_id: str) -> List[Dict[str, str]]:
+    def generate_followup_questions(self, experiment_id: str) -> list[dict[str, str]]:
         """
         Automatically generate follow-up research questions based on
         experimental outcomes. Returns candidate questions for human review.
@@ -183,7 +181,7 @@ class EvidenceEngine:
         if not manifest_path.exists():
             return []
 
-        with open(manifest_path, "r", encoding="utf-8") as f:
+        with open(manifest_path, encoding="utf-8") as f:
             manifest = json.load(f)
 
         sim = manifest.get("simulation", {})

@@ -2,30 +2,20 @@
 
 from .b5d import (
     ALIGNMENT,
-    B5DFormatError,
-    B5DHeader,
-    B5DNeuronRecord,
-    B5DReader,
-    B5DSnapshotWriter,
-    B5DSynapseRecord,
     BYTE_ORDER,
     FORMAT_VERSION,
     HEADER_SIZE,
     MAX_METADATA_SIZE,
     RESTARTABLE_NEURON_RECORD_SIZE,
     SYNAPSE_RECORD_SIZE,
+    B5DFormatError,
+    B5DHeader,
+    B5DNeuronRecord,
+    B5DReader,
+    B5DSnapshotWriter,
+    B5DSynapseRecord,
     assert_format_invariants,
 )
-from .optical_codec import (
-    RECORD_SIZE,
-    SPECTRAL_BINS,
-    NeuronOpticalLike,
-    OpticalPointState,
-    decode_optical_record,
-    encode_optical_record,
-    state_from_neuron,
-)
-
 from .crc import compute_crc32, verify_crc32
 from .delta_codec import (
     NeuronAddDelta,
@@ -46,6 +36,15 @@ from .delta_journal import (
     assert_journal_format_invariants,
 )
 from .lazy_view import B5DLazyProjector, StorageHeatmap, StorageHeatmapKind
+from .optical_codec import (
+    RECORD_SIZE,
+    SPECTRAL_BINS,
+    NeuronOpticalLike,
+    OpticalPointState,
+    decode_optical_record,
+    encode_optical_record,
+    state_from_neuron,
+)
 from .recovery import RecoveryInspection, RecoveryManager, RecoveryResult
 from .runtime import StorageRuntimeConfig, StorageRuntimeStats, StorageSession
 from .structural_journal import (
@@ -61,6 +60,14 @@ from .structural_journal import (
 
 __all__ = [
     "ALIGNMENT",
+    "BYTE_ORDER",
+    "FORMAT_VERSION",
+    "HEADER_SIZE",
+    "MAX_METADATA_SIZE",
+    "RECORD_SIZE",
+    "RESTARTABLE_NEURON_RECORD_SIZE",
+    "SPECTRAL_BINS",
+    "SYNAPSE_RECORD_SIZE",
     "B5DFormatError",
     "B5DHeader",
     "B5DLazyProjector",
@@ -68,27 +75,20 @@ __all__ = [
     "B5DReader",
     "B5DSnapshotWriter",
     "B5DSynapseRecord",
-    "BYTE_ORDER",
     "DeltaJournal",
     "DeltaRecord",
     "DeltaType",
-    "FORMAT_VERSION",
-    "HEADER_SIZE",
     "JournalCorruptionError",
     "JournalError",
-    "MAX_METADATA_SIZE",
     "NeuronAddDelta",
     "NeuronOpticalLike",
     "NeuronRemoveDelta",
     "NeuronStateDelta",
+    "NeuronStructuralSnapshot",
     "OpticalPointState",
-    "RECORD_SIZE",
-    "RESTARTABLE_NEURON_RECORD_SIZE",
     "RecoveryInspection",
     "RecoveryManager",
     "RecoveryResult",
-    "SPECTRAL_BINS",
-    "SYNAPSE_RECORD_SIZE",
     "SpikeEventDelta",
     "StorageHeatmap",
     "StorageHeatmapKind",
@@ -101,10 +101,9 @@ __all__ = [
     "StructuralJournalError",
     "StructuralJournalScan",
     "StructuralSnapshotLifecycle",
-    "SynapseSnapshot",
-    "NeuronStructuralSnapshot",
     "SynapseAddDelta",
     "SynapseRemoveDelta",
+    "SynapseSnapshot",
     "SynapseWeightDelta",
     "UncommittedTailError",
     "assert_format_invariants",

@@ -13,7 +13,7 @@ import platform
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, cast
 
 from .registry import REPO_ROOT
 
@@ -63,7 +63,7 @@ def get_software_info() -> dict[str, Any]:
 
 def get_hardware_info() -> dict[str, Any]:
     """Basic hardware information."""
-    info = {"cpu": platform.processor() or "unknown"}
+    info: dict[str, Any] = {"cpu": platform.processor() or "unknown"}
     try:
         import psutil  # type: ignore[import-untyped]
 
@@ -76,11 +76,11 @@ def get_hardware_info() -> dict[str, Any]:
 class ExperimentRecorder:
     """Records experiment manifests for scientific reproducibility."""
 
-    def __init__(self, experiment_id: str, output_dir: Optional[Path] = None):
+    def __init__(self, experiment_id: str, output_dir: Path | None = None):
         self.experiment_id = experiment_id
         self.output_dir = output_dir or (EXPERIMENTS_DIR / experiment_id)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self._manifest: Dict[str, Any] = {
+        self._manifest: dict[str, Any] = {
             "experiment_id": experiment_id,
             "timestamp": datetime.now().isoformat(),
             "git": get_git_info(),
@@ -91,16 +91,18 @@ class ExperimentRecorder:
             "hypotheses": [],
         }
 
-    def record_simulation_params(self: ExperimentRecorder, **kwargs: Any) -> ExperimentRecorder:
+    def record_simulation_params(
+        self: ExperimentRecorder, **kwargs: Any
+    ) -> ExperimentRecorder:
         """Record simulation parameters (seed, ticks, dimensions, etc.)."""
         self._manifest["simulation"].update(kwargs)
         return self
 
     def record_research_links(
         self,
-        research_questions: Optional[List[str]] = None,
-        hypotheses: Optional[List[str]] = None,
-    ) -> "ExperimentRecorder":
+        research_questions: list[str] | None = None,
+        hypotheses: list[str] | None = None,
+    ) -> ExperimentRecorder:
         """Link this experiment to research questions and hypotheses."""
         if research_questions:
             self._manifest["research_questions"] = research_questions
@@ -108,7 +110,7 @@ class ExperimentRecorder:
             self._manifest["hypotheses"] = hypotheses
         return self
 
-    def record_artifact(self, key: str, path: str) -> "ExperimentRecorder":
+    def record_artifact(self, key: str, path: str) -> ExperimentRecorder:
         """Record a produced artifact path."""
         self._manifest["artifacts"][key] = str(path)
         return self
@@ -119,8 +121,8 @@ class ExperimentRecorder:
         return self
 
     def record_runtime(
-        self, duration_seconds: float, ram_peak_mb: Optional[float] = None
-    ) -> "ExperimentRecorder":
+        self, duration_seconds: float, ram_peak_mb: float | None = None
+    ) -> ExperimentRecorder:
         """Record runtime information."""
         self._manifest["runtime"] = {"duration_seconds": duration_seconds}
         if ram_peak_mb is not None:
@@ -135,7 +137,6 @@ class ExperimentRecorder:
         return manifest_path
 
     @property
-    @property
     def manifest(self) -> dict[str, Any]:
         return self._manifest
 
@@ -145,6 +146,6 @@ class ExperimentRecorder:
         path = EXPERIMENTS_DIR / experiment_id / "manifest.json"
         if not path.exists():
             return None
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data if isinstance(data, dict) else None
+        with open(path, encoding="utf-8") as f:
+            data: Any = json.load(f)
+            return cast("dict[str, Any]", data) if isinstance(data, dict) else None

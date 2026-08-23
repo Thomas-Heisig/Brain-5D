@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
 
 from src.storage.delta_journal import DeltaJournal, DeltaType
 from src.storage.runtime import StorageRuntimeConfig, StorageSession

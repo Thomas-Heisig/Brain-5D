@@ -4,8 +4,8 @@ import json
 from http.client import HTTPConnection
 from threading import Thread
 
-from src.dashboard.server import DashboardServer
 from src.dashboard.models import JSONValue
+from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
 from src.dashboard.structural_api import JSONMapping, StructuralCommandResult
 

@@ -8,11 +8,12 @@ bounded work without mutating the network from request-handler threads.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
 from threading import Condition, RLock, Thread
 from time import perf_counter, sleep
-from typing import Callable, Final
+from typing import Final
 
 from src.dashboard.models import JSONValue
 

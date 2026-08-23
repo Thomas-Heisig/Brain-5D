@@ -802,6 +802,106 @@ class Brain5DManipulator:
         return out
 
     # ========================================================================
+    # StructuralManipulator Protocol Implementation
+    # ========================================================================
+
+    def create_neuron_near(self, neuron_id: int | None = None) -> int:
+        """Create a new neuron near an existing one (StructuralManipulator protocol).
+
+        Args:
+            neuron_id: Optional reference neuron ID. If None, creates at origin.
+
+        Returns:
+            The ID of the created neuron.
+        """
+        if neuron_id is not None and neuron_id in self.network.neurons:
+            coord = unpack_coords(neuron_id)
+            # Try neighbours first
+            for c in iter_neighbour_coords(coord, self.network.dimensions, 1.0):
+                nid = pack_coords(*c)
+                if nid not in self.network.neurons:
+                    return self.create_neuron(c)
+        # Fallback: create at origin
+        return self.create_neuron((0, 0, 0, 0, 0))
+
+    def remove_neuron(self, neuron_id: int) -> bool:
+        """Remove a neuron (StructuralManipulator protocol).
+
+        Args:
+            neuron_id: The ID of the neuron to remove.
+
+        Returns:
+            True if the neuron was removed, False if it did not exist.
+        """
+        if neuron_id not in self.network.neurons:
+            return False
+        self.delete_neuron(neuron_id)
+        return True
+
+    def sprout_synapse(
+        self, source_id: int | None = None, target_id: int | None = None
+    ) -> tuple[int, int]:
+        """Create a synapse between two neurons (StructuralManipulator protocol).
+
+        Args:
+            source_id: Optional presynaptic neuron ID.
+            target_id: Optional postsynaptic neuron ID.
+
+        Returns:
+            Tuple of (source_id, target_id) of the created synapse.
+        """
+        src: int = (
+            source_id
+            if source_id is not None
+            else next(iter(self.network.neurons), 0)
+        )
+        tgt: int = target_id if target_id is not None else src
+        if target_id is None:
+            # Find a different neuron
+            for nid in self.network.neurons:
+                if nid != src:
+                    tgt = nid
+                    break
+        self.create_synapse(src, tgt, weight=1.0, delay=1)
+        return (src, tgt)
+
+    def prune_synapse(
+        self, source_id: int | None = None, target_id: int | None = None
+    ) -> tuple[int, int]:
+        """Remove a synapse between two neurons (StructuralManipulator protocol).
+
+        Args:
+            source_id: Optional presynaptic neuron ID.
+            target_id: Optional postsynaptic neuron ID.
+
+        Returns:
+            Tuple of (source_id, target_id) of the pruned synapse.
+        """
+        src: int = (
+            source_id
+            if source_id is not None
+            else (next(iter(self.network.synapses), 0) if self.network.synapses else 0)
+        )
+        tgt: int = target_id if target_id is not None else 0
+        if target_id is None and src in self.network.synapses:
+            synapses = list(self.network.synapses[src])
+            if synapses:
+                tgt = synapses[0].target_id
+        self.delete_synapse(src, tgt)
+        return (src, tgt)
+
+    def undo(self) -> bool:
+        """Undo the last transaction (StructuralManipulator protocol).
+
+        Returns:
+            True if undo was performed, False if no transaction was active.
+        """
+        if self._transaction is None:
+            return False
+        self.rollback()
+        return True
+
+    # ========================================================================
     # String Representation
     # ========================================================================
 
@@ -821,7 +921,7 @@ class Brain5DManipulator:
 
 __all__ = [
     "Brain5DManipulator",
-    "SynapseMetadata",
     "Mutation",
+    "SynapseMetadata",
     "Transaction",
 ]

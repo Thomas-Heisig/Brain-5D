@@ -15,9 +15,10 @@ import argparse
 import itertools
 import random
 import statistics
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence, cast
+from typing import Any, cast
 
 import yaml
 

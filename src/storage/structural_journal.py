@@ -7,10 +7,11 @@ import os
 import struct
 import time
 import zlib
+from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 from pathlib import Path
-from typing import Callable, Iterator, TypeAlias, cast
+from typing import TypeAlias, cast
 
 Coord5D: TypeAlias = tuple[int, int, int, int, int]
 
@@ -46,7 +47,7 @@ class SynapseSnapshot:
 class NeuronStructuralSnapshot:
     neuron_id: int
     coord: Coord5D
-    parameters: dict[str, float] = field(default_factory=lambda: {})
+    parameters: dict[str, float] = field(default_factory=dict)
     incoming: tuple[SynapseSnapshot, ...] = ()
     outgoing: tuple[SynapseSnapshot, ...] = ()
 
@@ -70,7 +71,7 @@ class StructuralChangeRecord:
     neuron_snapshot: NeuronStructuralSnapshot | None = None
     timestamp_ns: int = 0
 
-    def with_timestamp(self) -> "StructuralChangeRecord":
+    def with_timestamp(self) -> StructuralChangeRecord:
         if self.timestamp_ns:
             return self
         return replace(self, timestamp_ns=time.time_ns())

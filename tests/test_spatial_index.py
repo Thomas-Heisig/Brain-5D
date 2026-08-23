@@ -1,5 +1,13 @@
 import pytest
-from src.core.spatial_index import *
+
+from src.core.spatial_index import (
+    coords_to_linear,
+    euclidean_distance_5d,
+    iter_neighbour_coords,
+    linear_to_5d,
+    pack_coords,
+    unpack_coords,
+)
 
 
 def test_pack_roundtrip():

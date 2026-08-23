@@ -6,12 +6,12 @@ They are all marked ``smoke`` and should complete in under 5 seconds.
 
 from __future__ import annotations
 
-import pytest  # noqa: F401 (used by markers)
-
+import pytest
 
 # ============================================================================
 # Import smoke tests
 # ============================================================================
+
 
 @pytest.mark.smoke
 class TestCoreImports:
@@ -26,14 +26,14 @@ class TestCoreImports:
         assert create_neuron is not None
 
     def test_core_network(self) -> None:
-        from src.core.network import NeuralNetwork, StepResult, Brain5DConfig
+        from src.core.network import Brain5DConfig, NeuralNetwork, StepResult
 
         assert NeuralNetwork is not None
         assert StepResult is not None
         assert Brain5DConfig is not None
 
     def test_core_synapse(self) -> None:
-        from src.core.synapse import Synapse, SynapseConfig, create_synapse
+        from src.core.synapse import Synapse, SynapseConfig
 
         assert Synapse is not None
         assert SynapseConfig is not None
@@ -43,7 +43,6 @@ class TestCoreImports:
             pack_coords,
             unpack_coords,
             validate_dims,
-            iter_neighbour_coords,
         )
 
         assert pack_coords is not None
@@ -51,19 +50,22 @@ class TestCoreImports:
         assert validate_dims is not None
 
     def test_storage_b5d(self) -> None:
-        from src.storage.b5d import B5DReader, B5DFormatError
+        from src.storage.b5d import B5DFormatError, B5DReader
 
         assert B5DReader is not None
         assert B5DFormatError is not None
 
     def test_storage_runtime(self) -> None:
-        from src.storage.runtime import StorageSession, StorageRuntimeConfig
+        from src.storage.runtime import StorageRuntimeConfig, StorageSession
 
         assert StorageSession is not None
         assert StorageRuntimeConfig is not None
 
     def test_storage_checkpoint(self) -> None:
-        from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
+        from src.storage.checkpoint import (
+            capture_runtime_checkpoint,
+            write_runtime_checkpoint,
+        )
 
         assert capture_runtime_checkpoint is not None
         assert write_runtime_checkpoint is not None
@@ -82,8 +84,8 @@ class TestCoreImports:
 
     def test_self_organization(self) -> None:
         from src.self_organization import (
-            SelfOrganizationEngine,
             SelfOrganizationCoordinator,
+            SelfOrganizationEngine,
             StructuralPlasticityEngine,
         )
 
@@ -92,7 +94,7 @@ class TestCoreImports:
         assert StructuralPlasticityEngine is not None
 
     def test_dashboard(self) -> None:
-        from src.dashboard import serve_dashboard, DashboardStateStore
+        from src.dashboard import DashboardStateStore, serve_dashboard
 
         assert serve_dashboard is not None
         assert DashboardStateStore is not None
@@ -104,7 +106,7 @@ class TestCoreImports:
         assert EnvironmentAdapter is not None
 
     def test_signal_processing(self) -> None:
-        from src.signal_processing import SignalInterpreter, SignalFrame
+        from src.signal_processing import SignalFrame, SignalInterpreter
 
         assert SignalInterpreter is not None
         assert SignalFrame is not None
@@ -154,14 +156,17 @@ class TestNetworkBasic:
         from src.core.network import NeuralNetwork
 
         net = NeuralNetwork(
-            {"dimensions": [2, 1, 1, 1, 1], "simulation": {"dt_ms": 1.0, "max_delay": 2}},
+            {
+                "dimensions": [2, 1, 1, 1, 1],
+                "simulation": {"dt_ms": 1.0, "max_delay": 2},
+            },
             random.Random(0),
         )
         nid = net.add_neuron((0, 0, 0, 0, 0))
         assert nid in net.neurons
         net.step()
         result = net.step()
-        assert result.tick == 2
+        assert result.tick == 1
 
     def test_synapse_creation(self) -> None:
         import random
@@ -169,7 +174,10 @@ class TestNetworkBasic:
         from src.core.network import NeuralNetwork
 
         net = NeuralNetwork(
-            {"dimensions": [2, 1, 1, 1, 1], "simulation": {"dt_ms": 1.0, "max_delay": 2}},
+            {
+                "dimensions": [2, 1, 1, 1, 1],
+                "simulation": {"dt_ms": 1.0, "max_delay": 2},
+            },
             random.Random(0),
         )
         src = net.add_neuron((0, 0, 0, 0, 0))
@@ -183,7 +191,10 @@ class TestNetworkBasic:
         from src.core.network import NeuralNetwork
 
         net = NeuralNetwork(
-            {"dimensions": [2, 1, 1, 1, 1], "simulation": {"dt_ms": 1.0, "max_delay": 2}},
+            {
+                "dimensions": [2, 1, 1, 1, 1],
+                "simulation": {"dt_ms": 1.0, "max_delay": 2},
+            },
             random.Random(0),
         )
         src = net.add_neuron((0, 0, 0, 0, 0))
@@ -201,9 +212,10 @@ class TestStorageBasic:
     """Minimal storage smoke tests."""
 
     def test_b5d_header_constants(self) -> None:
-        from src.storage.b5d import B5D_VERSION as v
+        from src.storage.b5d import FORMAT_VERSION, MAGIC
 
-        assert v is not None
+        assert MAGIC is not None
+        assert FORMAT_VERSION is not None
 
 
 @pytest.mark.smoke

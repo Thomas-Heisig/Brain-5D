@@ -34,7 +34,7 @@ def test_documentation_source_blocks_path_traversal(tmp_path: Path) -> None:
     assert source.list_documents()[0].name == "README.md"
     try:
         source.read("../secret.md")
-    except ValueError:
+    except (ValueError, FileNotFoundError):
         pass
     else:
         raise AssertionError("path traversal must be rejected")

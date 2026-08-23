@@ -429,15 +429,15 @@ def create_random_synapse(
 # ============================================================================
 
 __all__ = [
+    "A_MINUS",
+    "A_PLUS",
+    "ELIGIBILITY_DECAY",
+    "TAU_MINUS",
+    "TAU_PLUS",
+    "W_MAX",
+    "W_MIN",
     "Synapse",
     "SynapseConfig",
-    "create_synapse",
     "create_random_synapse",
-    "A_PLUS",
-    "A_MINUS",
-    "TAU_PLUS",
-    "TAU_MINUS",
-    "W_MIN",
-    "W_MAX",
-    "ELIGIBILITY_DECAY",
+    "create_synapse",
 ]

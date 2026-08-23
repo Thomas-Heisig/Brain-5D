@@ -75,7 +75,7 @@ class HomeostasisLike(Protocol):
     @property
     def enabled(self) -> bool: ...
 
-    def update(self, tick: int, dt_ms: float = 1.0) -> None: ...
+    def update(self, step_result: StepResultLike) -> None: ...
 
 
 # ============================================================================
@@ -657,14 +657,14 @@ class RuntimeController:
 
             # Update homeostasis
             if self.homeostasis is not None and self.homeostasis.enabled:
-                self.homeostasis.update(self.network.current_tick)
+                self.homeostasis.update(result)
 
             # Run post-tick hooks
             with self._lock:
                 hooks = tuple(self._hooks)
-            for hook in hooks:
+            for i in range(len(hooks)):
                 try:
-                    hook(self.network.current_tick, result)
+                    hooks[i](self.network.current_tick, result)
                 except Exception:
                     pass  # Hook errors are isolated
 

@@ -176,7 +176,7 @@ class LanguageModelBackend(Protocol):
 # ============================================================================
 
 __all__ = [
+    "LanguageModelBackend",
     "LanguageRequest",
     "LanguageResponse",
-    "LanguageModelBackend",
 ]

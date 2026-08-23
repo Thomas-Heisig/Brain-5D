@@ -25,23 +25,25 @@ from __future__ import annotations
 
 import logging
 
-
+from .docs_source import DocumentationSource, create_docs_source
+from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .models import (
     DashboardSnapshot,
+    ExperimentMetrics,
     HomeostasisMetrics,
+    JSONValue,
+    KnowledgeIntakeMetrics,
+    LanguageOrganMetrics,
     LearningMetrics,
+    NetworkMetrics,
     SelfOrganizationMetrics,
+    SignalMetrics,
+    SpikeMetrics,
     StorageMetrics,
     StructuralMetrics,
     SystemMetrics,
-    SpikeMetrics,
-    NetworkMetrics,
-    LanguageOrganMetrics,
-    KnowledgeIntakeMetrics,
-    SignalMetrics,
-    ExperimentMetrics,
-    JSONValue,
 )
+from .operator_bridge import OperatorBridge
 from .server import serve_dashboard
 from .state import (
     DashboardStateStore,
@@ -49,9 +51,6 @@ from .state import (
     get_current_state,
     publish_state,
 )
-from .operator_bridge import OperatorBridge
-from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
-from .docs_source import DocumentationSource, create_docs_source
 
 # Package version
 __version__ = "0.5.0-alpha.2"

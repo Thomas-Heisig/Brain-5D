@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union, cast
+from typing import Any, TypedDict, cast
 
 import yaml
 
@@ -120,7 +120,7 @@ class ConfigDict(TypedDict, total=False):
     """
 
     # Required
-    dimensions: Tuple[int, int, int, int, int]
+    dimensions: tuple[int, int, int, int, int]
     initial_neurons: int
 
     # Optional sections
@@ -135,8 +135,8 @@ class ConfigDict(TypedDict, total=False):
     visualization: VisualizationConfig
     telemetry: TelemetryConfig
     logging: LoggingConfig
-    diagnostics: Dict[str, Any]
-    topology_input: Dict[str, Any]  # Backward compatibility
+    diagnostics: dict[str, Any]
+    topology_input: dict[str, Any]  # Backward compatibility
 
 
 # ============================================================================
@@ -201,16 +201,17 @@ DEFAULT_CONFIG: ConfigDict = {
 # ============================================================================
 
 
-def _validate_dimensions(value: Any) -> Tuple[int, int, int, int, int]:
+def _validate_dimensions(value: Any) -> tuple[int, int, int, int, int]:
     """Validate dimensions parameter."""
     if not isinstance(value, (list, tuple)):
         raise ValueError("dimensions must be a list or tuple")
 
-    if len(value) != 5:
-        raise ValueError(f"dimensions must have exactly 5 values, got {len(value)}")
+    value_seq = cast("list[Any] | tuple[Any, ...]", value)
+    if len(value_seq) != 5:
+        raise ValueError(f"dimensions must have exactly 5 values, got {len(value_seq)}")
 
-    dims = []
-    for i, d in enumerate(value):
+    dims: list[int] = []
+    for i, d in enumerate(value_seq):
         if not isinstance(d, (int, float)):
             raise ValueError(f"dimension {i} must be numeric, got {type(d).__name__}")
         dim = int(d)
@@ -218,12 +219,12 @@ def _validate_dimensions(value: Any) -> Tuple[int, int, int, int, int]:
             raise ValueError(f"dimension {i} must be in 1..256, got {dim}")
         dims.append(dim)
 
-    return tuple(dims)  # type: ignore[return-value]
+    return (dims[0], dims[1], dims[2], dims[3], dims[4])
 
 
 def _validate_initial_neurons(
     value: Any,
-    dims: Tuple[int, int, int, int, int],
+    dims: tuple[int, int, int, int, int],
 ) -> int:
     """Validate initial_neurons parameter."""
     if not isinstance(value, (int, float)):
@@ -570,12 +571,14 @@ def load_config(
     elif not isinstance(raw, dict):
         raise ValueError("Configuration file must contain a YAML dictionary")
 
+    raw_dict = cast("dict[str, Any]", raw)
+
     # ------------------------------------------------------------------------
     # Required fields
     # ------------------------------------------------------------------------
 
-    dims = _validate_dimensions(raw.get("dimensions"))
-    initial_neurons = _validate_initial_neurons(raw.get("initial_neurons"), dims)
+    dims = _validate_dimensions(raw_dict.get("dimensions"))
+    initial_neurons = _validate_initial_neurons(raw_dict.get("initial_neurons"), dims)
 
     result: ConfigDict = {
         "dimensions": dims,
@@ -586,82 +589,100 @@ def load_config(
     # Optional fields with defaults
     # ------------------------------------------------------------------------
 
-    defaults = DEFAULT_CONFIG
+    defaults = cast("dict[str, Any]", DEFAULT_CONFIG)
 
     # Seed
-    result["seed"] = _validate_seed(raw.get("seed", defaults.get("seed", 42)))
+    result["seed"] = _validate_seed(raw_dict.get("seed", defaults.get("seed", 42)))
 
     # Simulation
-    sim_raw = raw.get("simulation", {})
+    sim_raw = raw_dict.get("simulation", {})
     if not isinstance(sim_raw, dict):
         raise ValueError("simulation section must be a dictionary")
-    result["simulation"] = _validate_simulation_config(sim_raw, defaults["simulation"])
+    result["simulation"] = _validate_simulation_config(
+        cast("dict[str, Any]", sim_raw), cast("SimulationConfig", defaults["simulation"])
+    )
 
     # Topology
-    topo_raw = raw.get("topology", {})
+    topo_raw = raw_dict.get("topology", {})
     if not isinstance(topo_raw, dict):
         raise ValueError("topology section must be a dictionary")
-    result["topology"] = _validate_topology_config(topo_raw, defaults["topology"])
+    result["topology"] = _validate_topology_config(
+        cast("dict[str, Any]", topo_raw), cast("TopologyConfig", defaults["topology"])
+    )
 
     # Network
-    net_raw = raw.get("network", {})
+    net_raw = raw_dict.get("network", {})
     if not isinstance(net_raw, dict):
         raise ValueError("network section must be a dictionary")
-    result["network"] = _validate_network_config(net_raw, defaults["network"])
+    result["network"] = _validate_network_config(
+        cast("dict[str, Any]", net_raw), cast("NetworkConfig", defaults["network"])
+    )
 
     # Neuron
-    neuron_raw = raw.get("neuron", {})
+    neuron_raw = raw_dict.get("neuron", {})
     if not isinstance(neuron_raw, dict):
         raise ValueError("neuron section must be a dictionary")
-    result["neuron"] = _validate_neuron_config(neuron_raw, defaults["neuron"])
+    result["neuron"] = _validate_neuron_config(
+        cast("dict[str, Any]", neuron_raw), cast("NeuronConfig", defaults["neuron"])
+    )
 
     # Energy
-    energy_raw = raw.get("energy", {})
+    energy_raw = raw_dict.get("energy", {})
     if not isinstance(energy_raw, dict):
         raise ValueError("energy section must be a dictionary")
-    result["energy"] = _validate_energy_config(energy_raw, defaults["energy"])
+    result["energy"] = _validate_energy_config(
+        cast("dict[str, Any]", energy_raw), cast("EnergyConfig", defaults["energy"])
+    )
 
     # STDP
-    stdp_raw = raw.get("stdp", {})
+    stdp_raw = raw_dict.get("stdp", {})
     if not isinstance(stdp_raw, dict):
         raise ValueError("stdp section must be a dictionary")
-    result["stdp"] = _validate_stdp_config(stdp_raw, defaults["stdp"])
+    result["stdp"] = _validate_stdp_config(
+        cast("dict[str, Any]", stdp_raw), cast("STDPConfig", defaults["stdp"])
+    )
 
     # Reward
-    reward_raw = raw.get("reward", {})
+    reward_raw = raw_dict.get("reward", {})
     if not isinstance(reward_raw, dict):
         raise ValueError("reward section must be a dictionary")
-    result["reward"] = _validate_reward_config(reward_raw, defaults["reward"])
+    result["reward"] = _validate_reward_config(
+        cast("dict[str, Any]", reward_raw), cast("RewardConfig", defaults["reward"])
+    )
 
     # Visualization
-    vis_raw = raw.get("visualization", {})
+    vis_raw = raw_dict.get("visualization", {})
     if not isinstance(vis_raw, dict):
         raise ValueError("visualization section must be a dictionary")
     result["visualization"] = _validate_visualization_config(
-        vis_raw, defaults["visualization"]
+        cast("dict[str, Any]", vis_raw), cast("VisualizationConfig", defaults["visualization"])
     )
 
     # Telemetry
-    tele_raw = raw.get("telemetry", {})
+    tele_raw = raw_dict.get("telemetry", {})
     if not isinstance(tele_raw, dict):
         raise ValueError("telemetry section must be a dictionary")
-    result["telemetry"] = _validate_telemetry_config(tele_raw, defaults["telemetry"])
+    result["telemetry"] = _validate_telemetry_config(
+        cast("dict[str, Any]", tele_raw), cast("TelemetryConfig", defaults["telemetry"])
+    )
 
     # Logging
-    log_raw = raw.get("logging", {})
+    log_raw = raw_dict.get("logging", {})
     if not isinstance(log_raw, dict):
         raise ValueError("logging section must be a dictionary")
-    result["logging"] = _validate_logging_config(log_raw, defaults["logging"])
+    result["logging"] = _validate_logging_config(
+        cast("dict[str, Any]", log_raw), cast("LoggingConfig", defaults["logging"])
+    )
 
     # Diagnostics (passthrough, optional)
-    if "diagnostics" in raw:
-        if not isinstance(raw["diagnostics"], dict):
+    if "diagnostics" in raw_dict:
+        if not isinstance(raw_dict["diagnostics"], dict):
             raise ValueError("diagnostics section must be a dictionary")
-        result["diagnostics"] = raw["diagnostics"]
+        result["diagnostics"] = raw_dict["diagnostics"]
 
     # Topology input (backward compatibility)
-    if "topology" in raw and "input" in raw["topology"]:
-        result["topology_input"] = raw["topology"]["input"]
+    if "topology" in raw_dict and "input" in raw_dict["topology"]:
+        result["topology_input"] = raw_dict["topology"]["input"]
 
     logger.info(f"Loaded configuration from {path}")
     logger.debug(f"Configuration: {result}")
@@ -686,19 +707,25 @@ def validate_config(config: ConfigDict) -> None:
     _validate_initial_neurons(config.get("initial_neurons"), dims)
 
     # Validate each section (will raise on errors)
-    defaults = DEFAULT_CONFIG
+    defaults = cast("dict[str, Any]", DEFAULT_CONFIG)
 
-    sim = config.get("simulation", {})
+    sim = config.get("simulation")
     if sim:
-        _validate_simulation_config(sim, defaults["simulation"])
+        _validate_simulation_config(
+            cast("dict[str, Any]", sim), cast("SimulationConfig", defaults["simulation"])
+        )
 
-    topo = config.get("topology", {})
+    topo = config.get("topology")
     if topo:
-        _validate_topology_config(topo, defaults["topology"])
+        _validate_topology_config(
+            cast("dict[str, Any]", topo), cast("TopologyConfig", defaults["topology"])
+        )
 
-    net = config.get("network", {})
+    net = config.get("network")
     if net:
-        _validate_network_config(net, defaults["network"])
+        _validate_network_config(
+            cast("dict[str, Any]", net), cast("NetworkConfig", defaults["network"])
+        )
 
 
 # ============================================================================
@@ -738,20 +765,20 @@ def save_config(config: ConfigDict, path: str | Path) -> None:
 # ============================================================================
 
 __all__ = [
+    "DEFAULT_CONFIG",
     "ConfigDict",
-    "SimulationConfig",
-    "TopologyConfig",
+    "EnergyConfig",
+    "LoggingConfig",
     "NetworkConfig",
     "NeuronConfig",
-    "EnergyConfig",
-    "STDPConfig",
     "RewardConfig",
-    "VisualizationConfig",
+    "STDPConfig",
+    "SimulationConfig",
     "TelemetryConfig",
-    "LoggingConfig",
-    "load_config",
-    "validate_config",
-    "save_config",
+    "TopologyConfig",
+    "VisualizationConfig",
     "config_to_dict",
-    "DEFAULT_CONFIG",
+    "load_config",
+    "save_config",
+    "validate_config",
 ]

@@ -5,6 +5,7 @@ from __future__ import annotations
 import random
 
 from conftest import base_config
+
 from src.core.network import NeuralNetwork, StepResult
 
 

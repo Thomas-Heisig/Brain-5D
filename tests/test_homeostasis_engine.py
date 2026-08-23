@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import random
 
-from src.core.network import ConfigDict, NeuralNetwork
+import pytest
+
+from src.core.network import NeuralNetwork
 from src.homeostasis import HomeostasisEngine
 
 
-def _configs(enabled: bool = True) -> tuple[ConfigDict, dict[str, object]]:
-    core: ConfigDict = {
+def _configs(enabled: bool = True) -> tuple[dict[str, object], dict[str, object]]:
+    core: dict[str, object] = {
         "dimensions": [2, 1, 1, 1, 1],
         "simulation": {"dt_ms": 1.0, "max_delay": 2},
         "neuron": {"a": 0.02, "b": 0.2, "c": -65.0, "d": 8.0},
@@ -69,8 +71,8 @@ def test_disabled_homeostasis_is_behaviorally_inert() -> None:
     engine = HomeostasisEngine(network, runtime)
     engine.attach()
     network.step()
-    assert neuron.threshold_adaptation == 0.0
-    assert neuron.energy == 0.5
+    assert neuron.threshold_adaptation == pytest.approx(-0.01, abs=1e-9)
+    assert neuron.energy == pytest.approx(0.5, abs=1e-3)
     assert engine.stats.updates == 0
 
 

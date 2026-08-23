@@ -13,17 +13,43 @@ All components are fully typed and support serialization.
 from __future__ import annotations
 
 # ============================================================================
+# Network
+# ============================================================================
+from .network import (
+    Brain5DConfig,
+    NetworkConfig,
+    NeuralNetwork,
+    PostStepHook,
+    SimulationConfig,
+    SpikeEvent,
+    StepResult,
+    TopologyConfig,
+    create_network,
+)
+
+# ============================================================================
+# Neuron
+# ============================================================================
+from .neuron import (
+    Neuron,
+    NeuronConfig,
+    NeuronType,
+    create_neuron,
+    create_random_neuron,
+)
+
+# ============================================================================
 # Spatial Index
 # ============================================================================
 from .spatial_index import (
     BITS_PER_DIM,
     DIM_INDICES,
     DIM_NAMES,
+    MASK,
+    MAX_COORD,
+    SHIFTS,
     Coord5D,
     Dim5D,
-    MAX_COORD,
-    MASK,
-    SHIFTS,
     chebyshev_distance_5d,
     coords_to_linear,
     coords_to_linear_batch,
@@ -52,17 +78,6 @@ from .spatial_index import (
 )
 
 # ============================================================================
-# Neuron
-# ============================================================================
-from .neuron import (
-    Neuron,
-    NeuronConfig,
-    NeuronType,
-    create_neuron,
-    create_random_neuron,
-)
-
-# ============================================================================
 # Synapse
 # ============================================================================
 from .synapse import (
@@ -77,21 +92,6 @@ from .synapse import (
     SynapseConfig,
     create_random_synapse,
     create_synapse,
-)
-
-# ============================================================================
-# Network
-# ============================================================================
-from .network import (
-    Brain5DConfig,
-    NetworkConfig,
-    NeuralNetwork,
-    PostStepHook,
-    SimulationConfig,
-    SpikeEvent,
-    StepResult,
-    TopologyConfig,
-    create_network,
 )
 
 # ============================================================================

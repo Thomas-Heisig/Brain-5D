@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Any, cast
 
 from src.core.spatial_index import DIM_NAMES, pack_coords, unpack_coords
 
@@ -11,22 +11,31 @@ from src.core.spatial_index import DIM_NAMES, pack_coords, unpack_coords
 class StimulusResult:
     tick: int
     mode: str
-    target_ids: Tuple[int, ...]
-    amplitudes: Tuple[float, ...]
+    target_ids: tuple[int, ...]
+    amplitudes: tuple[float, ...]
     total_injected: float
 
 
 class StimulusEngine:
-    def __init__(self, config: dict, rng: random.Random):
+    """Configurable stimulus injection engine.
+
+    The ``config`` dict must contain a ``"diagnostics"`` key with the
+    stimulus parameters (mode, amplitude, timing, target coordinates, etc.).
+    """
+
+    def __init__(self, config: dict[str, Any], rng: random.Random) -> None:
         self.config = config
         self.rng = rng
-        self.diag = config["diagnostics"]
+        diag_raw = config.get("diagnostics", {})
+        if not isinstance(diag_raw, dict):
+            raise ValueError("config['diagnostics'] must be a dictionary")
+        self.diag: dict[str, Any] = cast("dict[str, Any]", diag_raw)
 
-    def apply(self, network, tick: int) -> StimulusResult:
-        mode = self.diag["mode"]
-        start = int(self.diag["start_tick"])
-        duration = int(self.diag["duration_ticks"])
-        amp = float(self.diag["amplitude"])
+    def apply(self, network: Any, tick: int) -> StimulusResult:
+        mode: str | None = cast("str | None", self.diag.get("mode"))
+        start = int(cast("int | float", self.diag.get("start_tick", 0)))
+        duration = int(cast("int | float", self.diag.get("duration_ticks", 0)))
+        amp = float(cast("int | float", self.diag.get("amplitude", 0.0)))
         targets: list[int] = []
         amps: list[float] = []
 
@@ -38,10 +47,12 @@ class StimulusEngine:
 
         if mode == "single_pulse":
             if tick == start:
-                add(pack_coords(*tuple(self.diag["target_coord"])), amp)
+                target_coord = cast("list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ()))
+                add(pack_coords(*tuple(target_coord)), amp)
         elif mode == "single_neuron_drive":
             if start <= tick < start + duration:
-                add(pack_coords(*tuple(self.diag["target_coord"])), amp)
+                target_coord = cast("list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ()))
+                add(pack_coords(*tuple(target_coord)), amp)
         elif mode in ("input_plane_pulse", "input_plane_drive"):
             active = (
                 tick == start
@@ -49,16 +60,17 @@ class StimulusEngine:
                 else start <= tick < start + duration
             )
             if active:
-                dim = DIM_NAMES[self.diag.get("input_plane_dim", "x")]
+                dim_name = cast("str", self.diag.get("input_plane_dim", "x"))
+                dim = DIM_NAMES.get(dim_name, 0)
                 for nid in network.neurons:
                     if unpack_coords(nid)[dim] == 0:
                         add(nid, amp)
         elif mode == "poisson_noise":
             if tick >= start:
-                rate_hz = float(self.diag.get("poisson_rate_hz", 0.0))
+                rate_hz = float(cast("int | float", self.diag.get("poisson_rate_hz", 0.0)))
                 p = rate_hz * network.dt_ms / 1000.0
                 p = min(max(p, 0.0), 1.0)
-                noise_amp = float(self.diag.get("poisson_amplitude", amp))
+                noise_amp = float(cast("int | float", self.diag.get("poisson_amplitude", amp)))
                 for nid in network.neurons:
                     if self.rng.random() < p:
                         add(nid, noise_amp)

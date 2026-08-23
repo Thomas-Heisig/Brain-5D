@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TypedDict, List, Dict, Union
+from typing import TypedDict
 
 import pytest
 
@@ -36,8 +36,8 @@ class EnergyConfig(TypedDict, total=False):
 
 
 class TopologyConfig(TypedDict, total=False):
-    input: Dict[str, Union[str, int]]
-    output: Dict[str, Union[str, int]]
+    input: dict[str, str | int]
+    output: dict[str, str | int]
     allow_self_connections: bool
     allow_parallel_connections: bool
 
@@ -47,7 +47,7 @@ class DiagnosticsConfig(TypedDict, total=False):
     start_tick: int
     duration_ticks: int
     amplitude: float
-    target_coord: List[int]
+    target_coord: list[int]
     input_plane_dim: str
     poisson_rate_hz: float
     poisson_amplitude: float
@@ -73,7 +73,7 @@ class LoggingConfig(TypedDict, total=False):
 
 class TestConfig(TypedDict, total=False):
     seed: int
-    dimensions: List[int]
+    dimensions: list[int]
     initial_neurons: int
     max_neurons: int
     simulation: SimulationConfig
@@ -208,7 +208,9 @@ _SLOW: set[str] = {
 }
 
 
-def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
     """Automatically assign markers to tests based on module filename."""
     for item in items:
         node_id = item.nodeid

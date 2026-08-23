@@ -21,6 +21,11 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.config.loader import load_config
+
+# ================================================================
+# Canonical Runtime Controller
+# ================================================================
+from src.controller.runtime import RuntimeController as _RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import (
     coords_to_linear,
@@ -33,28 +38,23 @@ from src.diagnostics.stimulus import StimulusEngine, StimulusResult
 from src.diagnostics.topology_health import TopologyHealth
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
+
+# ================================================================
+# Snapshot Writer
+# ================================================================
+from src.storage import B5DSnapshotWriter
 from src.telemetry.history import History
 from src.telemetry.probes import ProbeManager
 from src.telemetry.spike_history import SpikeHistory
 from src.utils.run_artifacts import RunArtifacts
 
 # ================================================================
-# Canonical Runtime Controller
-# ================================================================
-from src.controller.runtime import RuntimeController as _RuntimeController
-
-# ================================================================
-# Snapshot Writer
-# ================================================================
-from src.storage import B5DSnapshotWriter
-
-# ================================================================
 # Dashboard Integration – with None‑fallback
 # ================================================================
 _dashboard_available = False
-_OperatorBridge = None
-_serve_dashboard = None
-_DashboardStateStore = None
+_OperatorBridge: type | None = None
+_serve_dashboard: Any = None
+_DashboardStateStore: type | None = None
 
 try:
     from src.dashboard.operator_bridge import OperatorBridge as _OperatorBridge
@@ -281,6 +281,13 @@ def main() -> int:
     state_store = None
     controller = None
 
+    # Shared telemetry holders (filled by hooks, read by dashboard publisher)
+    _storage_telemetry: dict[str, Any] = {"available": False}
+    _self_org_stats: dict[str, Any] = {"available": False}
+
+    def _self_org_stats_func() -> dict[str, Any]:
+        return _self_org_stats
+
     # Telemetry and logging state (shared via closure)
     core_times: list[float] = []
     warmup = 100
@@ -302,23 +309,30 @@ def main() -> int:
             git_dirty = True
             try:
                 import subprocess
+
                 result = subprocess.run(
                     ["git", "rev-parse", "HEAD"],
-                    capture_output=True, text=True, timeout=5,
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
                     cwd=Path(__file__).resolve().parents[1],
                 )
                 if result.returncode == 0:
                     git_commit = result.stdout.strip()
                 dirty_result = subprocess.run(
                     ["git", "status", "--porcelain"],
-                    capture_output=True, text=True, timeout=5,
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
                     cwd=Path(__file__).resolve().parents[1],
                 )
                 git_dirty = bool(dirty_result.stdout.strip())
             except Exception:
                 pass
 
-            metadata: dict[str, object] = {
+            from src.storage.b5d import JSONMapping
+
+            metadata: JSONMapping = {
                 "type": "brain5d-snapshot",
                 "version": "0.5.0-alpha.5",
                 "tick": network.current_tick,
@@ -332,14 +346,17 @@ def main() -> int:
             }
 
             # Write to temp file
+            from src.storage.b5d import NetworkSnapshotLike
+
             _snapshot_writer.write(
                 str(_snapshot_temp),
-                network,
+                cast("NetworkSnapshotLike", network),
                 metadata=metadata,
             )
 
             # Validate written file (reader must be closed before rename on Windows)
             from src.storage.b5d import B5DReader
+
             reader = B5DReader(str(_snapshot_temp))
             try:
                 reader.validate_invariants(full_scan=False)
@@ -351,11 +368,13 @@ def main() -> int:
 
             # Preserve immutable historical snapshot with timestamp
             import time as _time
+
             tick = network.current_tick
             ts = _time.strftime("%Y%m%d_%H%M%S")
             historical = _snapshot_dir / f"snapshot_t{tick}_{ts}.b5d"
             try:
                 import shutil
+
                 shutil.copy2(_snapshot_path, historical)
             except Exception:
                 pass
@@ -367,6 +386,131 @@ def main() -> int:
                 _snapshot_temp.unlink(missing_ok=True)
             except Exception:
                 pass
+
+    # ================================================================
+    # Dashboard State Publishing Helper
+    # ================================================================
+
+    def _publish_dashboard_state(
+        state_store: Any,
+        network: NeuralNetwork,
+        result: Any,
+        learning: Any,
+        homeostasis: Any,
+        storage_telemetry: dict[str, Any],
+        self_org_stats: dict[str, Any],
+        status: str,
+    ) -> None:
+        """Build and publish a DashboardSnapshot from live runtime data."""
+        from src.dashboard.models import (
+            DashboardSnapshot,
+            HomeostasisMetrics,
+            LearningMetrics,
+            NetworkMetrics,
+            SelfOrganizationMetrics,
+            SpikeMetrics,
+            StorageMetrics,
+            SystemMetrics,
+        )
+
+        learning_stats = learning.stats if learning is not None else None
+        homeo_stats = homeostasis.stats if homeostasis is not None else None
+
+        # Storage telemetry: only populate if available
+        storage_available = storage_telemetry.get("available", False)
+        storage = StorageMetrics(available=storage_available)
+        if storage_available:
+            storage = StorageMetrics(
+                available=True,
+                queue_depth=storage_telemetry.get("queue_depth"),
+                queue_capacity=storage_telemetry.get("queue_capacity"),
+                batches_enqueued=storage_telemetry.get("batches_enqueued"),
+                batches_written=storage_telemetry.get("batches_written"),
+                deltas_written=storage_telemetry.get("deltas_written"),
+                bytes_written=storage_telemetry.get("bytes_written"),
+                dropped_batches=storage_telemetry.get("dropped_batches"),
+                write_latency_ms=storage_telemetry.get("write_latency_ms"),
+                commit_latency_ms=storage_telemetry.get("commit_latency_ms"),
+                journal_size_bytes=storage_telemetry.get("journal_size_bytes"),
+                worker_failed=storage_telemetry.get("worker_failed"),
+            )
+
+        # Self-organization metrics: only populate if available
+        so_available = self_org_stats.get("available", False)
+        self_org = SelfOrganizationMetrics(available=so_available)
+        if so_available:
+            self_org = SelfOrganizationMetrics(
+                available=True,
+                neurons_created=self_org_stats.get("neurons_created"),
+                neurons_removed=self_org_stats.get("neurons_removed"),
+                synapses_created=self_org_stats.get("synapses_created"),
+                synapses_pruned=self_org_stats.get("synapses_pruned"),
+            )
+
+        snapshot = DashboardSnapshot(
+            status=status,
+            version="0.5.0-alpha.5",
+            system=SystemMetrics(
+                tick=result.tick,
+                neurons=len(network.neurons),
+                synapses=getattr(result, "total_synapses", network.synapse_count),
+                spikes_total=result.total_spikes,
+                spikes_last_tick=getattr(result, "spikes_this_tick", 0),
+                core_step_ms=getattr(result, "core_step_ms", 0.0),
+                mean_energy=getattr(result, "mean_energy", 0.0),
+            ),
+            learning=LearningMetrics(
+                stdp_updates=getattr(learning_stats, "stdp_weight_updates", 0),
+                reward_updates=getattr(learning_stats, "reward_weight_updates", 0),
+                rewards_received=getattr(learning_stats, "rewards_received", 0),
+                rewards_applied=getattr(learning_stats, "rewards_applied", 0),
+                pending_rewards=getattr(learning_stats, "pending_rewards", 0),
+                update_ms=getattr(learning_stats, "last_update_ms", 0.0),
+            ),
+            storage=storage,
+            self_organization=self_org,
+            homeostasis=HomeostasisMetrics(
+                enabled=getattr(homeo_stats, "enabled", False),
+                target_rate_hz=getattr(homeo_stats, "target_rate_hz", 0.0),
+                actual_rate_hz=getattr(homeo_stats, "mean_rate_hz", 0.0),
+                rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
+                mean_rate_hz=getattr(homeo_stats, "mean_rate_hz", 0.0),
+                mean_rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
+                mean_threshold_adaptation=getattr(
+                    homeo_stats, "mean_threshold_adaptation", 0.0
+                ),
+                target_energy=getattr(homeo_stats, "target_energy", 0.0),
+                mean_energy=getattr(homeo_stats, "mean_energy", 0.0),
+                mean_energy_error=getattr(homeo_stats, "mean_energy_error", 0.0),
+                active_neurons=getattr(homeo_stats, "active_neurons", 0),
+                updates=getattr(homeo_stats, "updates", 0),
+            ),
+            spikes=SpikeMetrics(
+                total_spikes=result.total_spikes,
+                active_neurons=len(getattr(result, "spike_ids", ())),
+                mean_firing_rate_hz=0.0,
+                burst_index=0.0,
+                synchrony=0.0,
+                spike_count_last_tick=getattr(result, "spikes_this_tick", 0),
+            ),
+            network=NetworkMetrics(
+                tick=result.tick,
+                neuron_count=len(network.neurons),
+                synapse_count=getattr(result, "total_synapses", network.synapse_count),
+                active_neurons=len(getattr(result, "spike_ids", ())),
+                silent_neurons=len(network.neurons)
+                - len(getattr(result, "spike_ids", ())),
+                mean_firing_rate_hz=0.0,
+                burst_index=0.0,
+                synchrony=0.0,
+                mean_energy=getattr(result, "mean_energy", 0.0),
+                mean_threshold_adaptation=0.0,
+                e_i_ratio=0.0,
+                clustering_coefficient=0.0,
+                mean_path_length=0.0,
+            ),
+        )
+        state_store.publish(snapshot)
 
     try:
         controller = _RuntimeController(
@@ -440,95 +584,16 @@ def main() -> int:
             # Dashboard state publishing (every tick for live updates)
             if state_store is not None:
                 try:
-                    from src.dashboard.models import (
-                        DashboardSnapshot,
-                        HomeostasisMetrics,
-                        LearningMetrics,
-                        NetworkMetrics,
-                        SelfOrganizationMetrics,
-                        SpikeMetrics,
-                        StorageMetrics,
-                        SystemMetrics,
-                    )
-
-                    learning_stats = learning.stats if learning is not None else None
-                    homeo_stats = homeostasis.stats if homeostasis is not None else None
-
-                    snapshot = DashboardSnapshot(
+                    _publish_dashboard_state(
+                        state_store=state_store,
+                        network=network,
+                        result=result,
+                        learning=learning,
+                        homeostasis=homeostasis,
+                        storage_telemetry=_storage_telemetry,
+                        self_org_stats=_self_org_stats_func(),
                         status="running",
-                        version="0.5.0-alpha.5",
-                        system=SystemMetrics(
-                            tick=result.tick,
-                            neurons=len(network.neurons),
-                            synapses=result.total_synapses,
-                            spikes_total=result.total_spikes,
-                            spikes_last_tick=result.spikes_this_tick,
-                            core_step_ms=result.core_step_ms,
-                            mean_energy=result.mean_energy,
-                        ),
-                        learning=LearningMetrics(
-                            stdp_updates=getattr(learning_stats, "stdp_weight_updates", 0),
-                            reward_updates=getattr(learning_stats, "reward_weight_updates", 0),
-                            rewards_received=getattr(learning_stats, "rewards_received", 0),
-                            rewards_applied=getattr(learning_stats, "rewards_applied", 0),
-                            pending_rewards=getattr(learning_stats, "pending_rewards", 0),
-                            update_ms=getattr(learning_stats, "last_update_ms", 0.0),
-                        ),
-                        storage=StorageMetrics(
-                            queue_depth=result.queued_events,
-                            queue_capacity=0,
-                            deltas_written=0,
-                            bytes_written=0,
-                            write_latency_ms=0.0,
-                            commit_latency_ms=0.0,
-                            journal_size_bytes=0,
-                            dropped_batches=0,
-                        ),
-                        self_organization=SelfOrganizationMetrics(
-                            neurons_created=0,
-                            neurons_removed=0,
-                            synapses_created=0,
-                            synapses_pruned=0,
-                        ),
-                        homeostasis=HomeostasisMetrics(
-                            enabled=getattr(homeo_stats, "enabled", False),
-                            target_rate_hz=getattr(homeo_stats, "target_rate_hz", 0.0),
-                            actual_rate_hz=getattr(homeo_stats, "mean_rate_hz", 0.0),
-                            rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
-                            mean_rate_hz=getattr(homeo_stats, "mean_rate_hz", 0.0),
-                            mean_rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
-                            mean_threshold_adaptation=getattr(homeo_stats, "mean_threshold_adaptation", 0.0),
-                            target_energy=getattr(homeo_stats, "target_energy", 0.0),
-                            mean_energy=getattr(homeo_stats, "mean_energy", 0.0),
-                            mean_energy_error=getattr(homeo_stats, "mean_energy_error", 0.0),
-                            active_neurons=getattr(homeo_stats, "active_neurons", 0),
-                            updates=getattr(homeo_stats, "updates", 0),
-                        ),
-                        spikes=SpikeMetrics(
-                            total_spikes=result.total_spikes,
-                            active_neurons=len(result.spike_ids),
-                            mean_firing_rate_hz=0.0,
-                            burst_index=0.0,
-                            synchrony=0.0,
-                            spike_count_last_tick=result.spikes_this_tick,
-                        ),
-                        network=NetworkMetrics(
-                            tick=result.tick,
-                            neuron_count=len(network.neurons),
-                            synapse_count=result.total_synapses,
-                            active_neurons=len(result.spike_ids),
-                            silent_neurons=len(network.neurons) - len(result.spike_ids),
-                            mean_firing_rate_hz=0.0,
-                            burst_index=0.0,
-                            synchrony=0.0,
-                            mean_energy=result.mean_energy,
-                            mean_threshold_adaptation=0.0,
-                            e_i_ratio=0.0,
-                            clustering_coefficient=0.0,
-                            mean_path_length=0.0,
-                        ),
                     )
-                    state_store.publish(snapshot)
                 except Exception:
                     pass  # Dashboard publishing must never break simulation
 
@@ -538,28 +603,198 @@ def main() -> int:
         vis_cfg = config_dict.get("visualization", {})
         refresh_interval = vis_cfg.get("refresh_interval_ticks", 100)
         if observatory:
-            controller.add_hook(lambda t, r=None: observatory.draw() if (t + 1) % refresh_interval == 0 else None)
+            controller.add_hook(
+                lambda t, r=None: (
+                    observatory.draw() if (t + 1) % refresh_interval == 0 else None
+                )
+            )
 
     except Exception as e:
         print(f"⚠️ RuntimeController setup failed: {e}")
         controller = None
 
     # ================================================================
+    # Self-Organization Setup (optional, verdrahtet Coordinator + Plasticity + Journal)
+    # ================================================================
+    _self_org_coordinator = None
+    _self_org_plasticity = None
+    _structural_journal = None
+
+    so_cfg = config_dict.get("self_organization", {})
+    if so_cfg.get("enabled", False) and controller is not None:
+        try:
+            from src.manipulation.manipulator import Brain5DManipulator
+            from src.self_organization.coordinator import SelfOrganizationCoordinator
+            from src.self_organization.engine import SelfOrganizationEngine
+            from src.self_organization.plasticity import StructuralPlasticityEngine
+
+            _manipulator = Brain5DManipulator(network)
+            _self_org_engine = SelfOrganizationEngine(
+                network, _manipulator, config_dict
+            )
+            if _self_org_engine.params.enabled:
+                _self_org_engine.attach()
+
+            _structural_journal_path = _snapshot_dir / "structural.journal"
+            from src.storage.structural_journal import StructuralJournal
+
+            _structural_journal = StructuralJournal(_structural_journal_path)
+
+            _self_org_plasticity = StructuralPlasticityEngine(
+                manipulator=_manipulator,
+                journal=_structural_journal,
+            )
+
+            def _plasticity_executor(proposal: Any) -> int:
+                """Adapter: translate LegacyStructuralProposal → apply_proposal call."""
+                from src.self_organization.policy import ProposalKind, StructuralProposal
+
+                kind_map = {
+                    "neurogenesis": ProposalKind.NEUROGENESIS,
+                    "prune": ProposalKind.PRUNING,
+                }
+                sp = StructuralProposal(
+                    proposal_id=f"legacy-{proposal.tick}-{proposal.action.value}",
+                    kind=kind_map.get(
+                        proposal.action.value, ProposalKind.NEUROGENESIS
+                    ),
+                    reason=proposal.reason,
+                )
+                _self_org_plasticity.apply_proposal(
+                    tick=int(network.current_tick),
+                    proposal=sp,
+                    approved=True,
+                )
+                return 0
+
+            _self_org_coordinator = SelfOrganizationCoordinator(
+                executor=_plasticity_executor,
+            )
+
+            # Update self-org telemetry
+            _self_org_stats.update(
+                available=True,
+                neurons_created=0,
+                neurons_removed=0,
+                synapses_created=0,
+                synapses_pruned=0,
+            )
+
+            print("✅ SelfOrganizationCoordinator + PlasticityEngine + Journal created")
+        except Exception as e:
+            print(f"⚠️ Self-organization setup failed: {e}")
+
+    # ================================================================
+    # Storage Telemetry (bestehende AsyncStorageSession anbinden)
+    # ================================================================
+    try:
+        from src.storage.async_runtime import AsyncStorageConfig, AsyncStorageSession
+        from src.storage.delta_journal import DeltaJournal
+        from src.storage.runtime import StorageRuntimeConfig
+
+        _journal_path = _snapshot_dir / "latest.b5d.journal"
+        _storage_runtime_config = StorageRuntimeConfig(
+            snapshot_path=_snapshot_path,
+            journal_path=_journal_path,
+            commit_interval_ticks=10,
+        )
+        _delta_journal = DeltaJournal(str(_journal_path))
+        _delta_journal.open()
+        from src.storage.runtime import RuntimeNetworkLike
+
+        _async_config = AsyncStorageConfig()
+        _async_storage = AsyncStorageSession(
+            network=cast("RuntimeNetworkLike", network),
+            runtime_config=_storage_runtime_config,
+            async_config=_async_config,
+        )
+        _async_storage.start()
+
+        # Periodisch Telemetrie auslesen
+        def _update_storage_telemetry() -> None:
+            try:
+                tel = _async_storage.telemetry
+                _storage_telemetry.update(
+                    available=True,
+                    queue_depth=tel.queue_depth,
+                    queue_capacity=tel.queue_capacity,
+                    batches_enqueued=tel.batches_enqueued,
+                    batches_written=tel.batches_written,
+                    deltas_written=tel.deltas_written,
+                    bytes_written=tel.bytes_written,
+                    dropped_batches=tel.dropped_batches,
+                    write_latency_ms=tel.write_latency_ms,
+                    commit_latency_ms=tel.commit_latency_ms,
+                    journal_size_bytes=(
+                        _delta_journal.path.stat().st_size if _delta_journal.path.exists() else 0
+                    ),
+                    worker_failed=tel.worker_failed,
+                )
+            except Exception:
+                pass
+
+        # Storage-Telemetrie im post-tick hook aktualisieren
+        if controller is not None:
+            controller.add_hook(lambda _tick, _result: _update_storage_telemetry())
+
+        print("✅ AsyncStorageSession attached with telemetry")
+    except Exception as e:
+        print(f"⚠️ Storage telemetry setup failed: {type(e).__name__}: {e}")
+
+    # ================================================================
     # OperatorBridge & Dashboard Setup
     # ================================================================
     if not args.no_dashboard and _dashboard_available and controller is not None:
         try:
-            operator_bridge = _OperatorBridge(
+            _OperatorBridge_cls = cast(type, _OperatorBridge)
+            operator_bridge = _OperatorBridge_cls(
                 controller=controller,
-                coordinator=None,
-                plasticity=None,
+                coordinator=_self_org_coordinator,
+                plasticity=_self_org_plasticity,
             )
             print("✅ OperatorBridge created with canonical RuntimeController")
 
-            state_store = _DashboardStateStore()
+            _DashboardStateStore_cls = cast(type, _DashboardStateStore)
+            state_store = _DashboardStateStore_cls()
+
+            # Initialen Dashboard-Snapshot bei Tick 0 publizieren
+            # (bevor der erste Tick ausgeführt wird, damit das Dashboard
+            #  echte Netzwerkdaten anzeigt und nicht Nullen)
+            from src.core.network import StepResult
+
+            _initial_result = StepResult(
+                tick=0,
+                spike_ids=(),
+                output_spike_ids=(),
+                spikes_this_tick=0,
+                total_spikes=0,
+                delivered_events=0,
+                queued_events=0,
+                external_injection_count=0,
+                external_total_current=0.0,
+                synaptic_current_targets=0,
+                mean_v=0.0,
+                min_v=0.0,
+                max_v=0.0,
+                mean_energy=0.0,
+                core_step_ms=0.0,
+                neuron_activity={},
+                total_synapses=network.synapse_count,
+            )
+            _publish_dashboard_state(
+                state_store=state_store,
+                network=network,
+                result=_initial_result,
+                learning=learning,
+                homeostasis=homeostasis,
+                storage_telemetry=_storage_telemetry,
+                self_org_stats=_self_org_stats_func(),
+                status="idle",
+            )
+            print("✅ Initial dashboard state published (Tick 0)")
 
         except Exception as e:
-            print(f"⚠️ Dashboard setup failed: {e}")
+            print(f"⚠️ Dashboard setup failed: {type(e).__name__}: {e}")
             operator_bridge = None
             state_store = None
 
@@ -598,7 +833,8 @@ def main() -> int:
             print("🧠 Starting Brain-5D dashboard on http://127.0.0.1:8765")
             print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
 
-            _serve_dashboard(host="127.0.0.1", port=8765, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
+            if _serve_dashboard is not None:
+                _serve_dashboard(host="127.0.0.1", port=8765, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
 
         except KeyboardInterrupt:
             print("\n⏹️ Dashboard interrupted, stopping simulation...")
@@ -609,7 +845,10 @@ def main() -> int:
         # Kein Dashboard – starte Simulation mit konfigurierten Ticks
         total_ticks = int(config_dict.get("ticks", 1000))
         print(f"▶️  Running {total_ticks} ticks (no dashboard)...")
-        controller.run_ticks(total_ticks)
+        if controller is not None:
+            controller.run_ticks(total_ticks)
+        else:
+            print("⚠️ Controller not available, skipping simulation")
         # Write final snapshot
         print("💾 Writing final .b5d snapshot...")
         _write_snapshot()
@@ -684,7 +923,9 @@ def main() -> int:
                     rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
                     mean_rate_hz=getattr(homeo_stats, "mean_rate_hz", 0.0),
                     mean_rate_error_hz=getattr(homeo_stats, "mean_rate_error_hz", 0.0),
-                    mean_threshold_adaptation=getattr(homeo_stats, "mean_threshold_adaptation", 0.0),
+                    mean_threshold_adaptation=getattr(
+                        homeo_stats, "mean_threshold_adaptation", 0.0
+                    ),
                     target_energy=getattr(homeo_stats, "target_energy", 0.0),
                     mean_energy=getattr(homeo_stats, "mean_energy", 0.0),
                     mean_energy_error=getattr(homeo_stats, "mean_energy_error", 0.0),

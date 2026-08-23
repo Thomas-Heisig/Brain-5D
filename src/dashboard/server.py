@@ -34,6 +34,7 @@ import signal
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from collections.abc import Mapping
 from typing import Any, cast
 from urllib.parse import parse_qs, unquote, urlparse
 
@@ -723,13 +724,15 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self.dashboard_server.heatmap_source
 
         if source is None or not hasattr(source, "snapshot_path"):
-            self._send_json({
-                "active": False,
-                "path": None,
-                "tick": None,
-                "size_bytes": None,
-                "message": "No snapshot source configured.",
-            })
+            self._send_json(
+                {
+                    "active": False,
+                    "path": None,
+                    "tick": None,
+                    "size_bytes": None,
+                    "message": "No snapshot source configured.",
+                }
+            )
             return
 
         try:
@@ -744,6 +747,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path.exists():
                 try:
                     from src.storage.b5d import B5DReader
+
                     reader = B5DReader(str(path))
                     info["tick"] = reader.header.snapshot_tick
                     reader.close()
@@ -1150,7 +1154,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
     def _send_json(
         self,
-        payload: dict[str, JSONValue],
+        payload: Mapping[str, JSONValue],
         status: HTTPStatus = HTTPStatus.OK,
     ) -> None:
         """Serialize and send a JSON HTTP response."""
@@ -1271,7 +1275,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(decoded, dict):
             raise InvalidRequestError("JSON body must be an object.")
 
-        return {str(key): value for key, value in decoded.items()}
+        decoded_dict = cast("dict[str, object]", decoded)
+        return {k: cast("JSONValue", v) for k, v in decoded_dict.items()}
 
     # ========================================================================
     # Exception handling
@@ -1531,16 +1536,11 @@ def serve_dashboard(
         except FileNotFoundError:
             print(f"⚠️ Snapshot not found: " f"{snapshot_path}")
 
-    # If no real heatmap source, create a demo source that generates
-    # synthetic heatmap data so the dashboard always shows something.
+    # If no real heatmap source, do NOT create a demo source.
+    # Synthetic demo data must never be presented as real network state.
+    # The dashboard will show "NO REAL SNAPSHOT AVAILABLE" instead.
     if heatmaps is None:
-        try:
-            from .heatmap_source import DemoHeatmapSource
-
-            heatmaps = DemoHeatmapSource()  # type: ignore[assignment]
-            print("ℹ️ Using demo heatmap source (no .b5d snapshot configured)")
-        except ImportError:
-            pass
+        print("⚠️ No .b5d snapshot available — heatmap projection disabled")
 
     # ------------------------------------------------------------------------
     # Documentation source

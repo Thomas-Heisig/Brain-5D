@@ -16,13 +16,11 @@ from typing import Any, cast
 
 import pytest
 
-from src.dashboard.control_service import DashboardControlService
 from src.dashboard.models import JSONValue
 from src.dashboard.operator_bridge import OperatorBridge
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
 from src.dashboard.structural_api import JSONMapping, StructuralCommandResult
-
 
 # ============================================================================
 # Stubs
@@ -158,9 +156,7 @@ class _Bridge:
 
 
 @pytest.fixture(scope="module")
-def server_and_client() -> (
-    tuple[DashboardServer, Thread, str, int]
-):
+def server_and_client() -> tuple[DashboardServer, Thread, str, int]:
     """Start a dashboard server with a stub bridge for testing."""
     bridge = _Bridge()
     server = DashboardServer(
@@ -210,14 +206,18 @@ class TestCanonicalContract:
 
     def test_run_ticks_command(self, server_and_client):
         _, _, host, port = server_and_client
-        status, body = _post(host, port, "/api/control", {"command": "run_ticks", "ticks": 10})
+        status, body = _post(
+            host, port, "/api/control", {"command": "run_ticks", "ticks": 10}
+        )
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
     def test_step_command(self, server_and_client):
         _, _, host, port = server_and_client
-        status, body = _post(host, port, "/api/control", {"command": "step", "ticks": 1})
+        status, body = _post(
+            host, port, "/api/control", {"command": "step", "ticks": 1}
+        )
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
@@ -260,7 +260,9 @@ class TestCanonicalContract:
     def test_configure_command(self, server_and_client):
         _, _, host, port = server_and_client
         status, body = _post(
-            host, port, "/api/control",
+            host,
+            port,
+            "/api/control",
             {"command": "configure", "loop_size": 50, "delay_ms": 1.0},
         )
         assert status == 200
@@ -292,7 +294,9 @@ class TestLegacyContract:
 
     def test_legacy_run_ticks_action(self, server_and_client):
         _, _, host, port = server_and_client
-        status, body = _post(host, port, "/api/control", {"action": "run_ticks", "ticks": 10})
+        status, body = _post(
+            host, port, "/api/control", {"action": "run_ticks", "ticks": 10}
+        )
         assert status == 200
         assert body.get("ok") is True
 
@@ -342,7 +346,9 @@ class TestValidation:
     def test_invalid_ticks_type_returns_400(self, server_and_client):
         _, _, host, port = server_and_client
         status, body = _post(
-            host, port, "/api/control",
+            host,
+            port,
+            "/api/control",
             {"command": "run_ticks", "ticks": "not-a-number"},
         )
         assert status == 400
@@ -360,7 +366,7 @@ class TestValidation:
                 {"Content-Type": "text/plain"},
             )
             resp = conn.getresponse()
-            data = resp.read()
+            _data = resp.read()
             assert resp.status in (400, 415)
         finally:
             conn.close()

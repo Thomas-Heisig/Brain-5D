@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import os
-from pathlib import Path
 import random
 import struct
 import time
+from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
 from src.storage.b5d import (
     ALIGNMENT,
-    B5DFormatError,
-    B5DReader,
-    B5DSnapshotWriter,
     BYTE_ORDER,
     ENDIANNESS,
     FORMAT_VERSION,
@@ -25,6 +22,9 @@ from src.storage.b5d import (
     OPTICAL_RECORD_SIZE,
     RESTARTABLE_NEURON_RECORD_SIZE,
     SYNAPSE_RECORD_SIZE,
+    B5DFormatError,
+    B5DReader,
+    B5DSnapshotWriter,
     assert_format_invariants,
 )
 from src.storage.optical_codec import OpticalPointState

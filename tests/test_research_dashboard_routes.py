@@ -120,9 +120,7 @@ def test_research_file_path_traversal_rejected(tmp_path: Path) -> None:
 
     server, thread, host, port = _start_server(root)
     try:
-        status, _payload = _get(
-            host, port, "/api/research-files/../secret.md"
-        )  # noqa: F841
+        status, _payload = _get(host, port, "/api/research-files/../secret.md")
         assert status in (400, 404)
     finally:
         _stop(server, thread)

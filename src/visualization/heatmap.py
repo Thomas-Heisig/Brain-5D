@@ -32,7 +32,7 @@ class HeatmapData:
 class HeatmapProjector:
     """Project sparse 5D network state onto the X-Y plane."""
 
-    def __init__(self, network: "NeuralNetwork", activity_tau_ticks: float = 50.0):
+    def __init__(self, network: NeuralNetwork, activity_tau_ticks: float = 50.0):
         if activity_tau_ticks <= 0.0:
             raise ValueError("activity_tau_ticks must be > 0")
         self.network = network
@@ -139,16 +139,16 @@ class HeatmapView:
         """Render or update a heatmap without creating duplicate colorbars."""
         display_values = data.values.T
         if self._image is None:
-            self._image = self.axis.imshow(
+            self._image = self.axis.imshow(  # type: ignore[reportUnknownMemberType]
                 display_values,
                 origin="lower",
                 interpolation="nearest",
                 cmap="hot",
                 aspect="auto",
             )
-            self._colorbar = self.axis.figure.colorbar(self._image, ax=self.axis)
+            self._colorbar = self.axis.figure.colorbar(self._image, ax=self.axis)  # type: ignore[reportUnknownMemberType]
         else:
-            self._image.set_data(display_values)
+            self._image.set_data(display_values)  # type: ignore[reportUnknownMemberType]
 
         finite = display_values[np.isfinite(display_values)]
         if finite.size:
@@ -156,13 +156,13 @@ class HeatmapView:
             value_max = float(np.max(finite))
             if value_min == value_max:
                 value_max = value_min + 1.0
-            self._image.set_clim(value_min, value_max)
+            self._image.set_clim(value_min, value_max)  # type: ignore[reportUnknownMemberType]
 
-        self.axis.set_title(data.title)
-        self.axis.set_xlabel("X")
-        self.axis.set_ylabel("Y")
+        self.axis.set_title(data.title)  # type: ignore[reportUnknownMemberType]
+        self.axis.set_xlabel("X")  # type: ignore[reportUnknownMemberType]
+        self.axis.set_ylabel("Y")  # type: ignore[reportUnknownMemberType]
         if self._colorbar is not None:
-            self._colorbar.set_label(data.label)
+            self._colorbar.set_label(data.label)  # type: ignore[reportUnknownMemberType]
 
     def clear(self) -> None:
         """Clear rendered state while keeping the caller-owned axis reusable."""

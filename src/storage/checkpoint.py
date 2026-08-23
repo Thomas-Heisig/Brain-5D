@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import random
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-import json
 from pathlib import Path
-import random
-from typing import Protocol, runtime_checkable, cast
+from typing import Protocol, cast, runtime_checkable
 
 
 class CheckpointEventLike(Protocol):

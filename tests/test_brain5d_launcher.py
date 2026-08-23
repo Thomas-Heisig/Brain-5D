@@ -130,23 +130,21 @@ def test_launcher_starts_exactly_one_process() -> None:
         # Assert: exactly one PID (the file contains exactly one integer)
         raw = PID_FILE.read_text(encoding="utf-8").strip()
         parts = raw.split()
-        assert len(parts) == 1, (
-            f"PID file must contain exactly one PID, got {len(parts)}: {parts}"
-        )
+        assert (
+            len(parts) == 1
+        ), f"PID file must contain exactly one PID, got {len(parts)}: {parts}"
 
         # Assert: the process is actually running
         try:
             os.kill(pid_from_file, 0)  # signal 0 = existence check only
         except OSError as exc:
-            pytest.fail(
-                f"Process {pid_from_file} is not running: {exc}"
-            )
+            pytest.fail(f"Process {pid_from_file} is not running: {exc}")
 
         # Assert: the PID matches the launcher's child PID
         # (The launcher spawns one child; the PID file stores that child's PID)
-        assert proc.returncode is None, (
-            f"Launcher process exited prematurely with code {proc.returncode}"
-        )
+        assert (
+            proc.returncode is None
+        ), f"Launcher process exited prematurely with code {proc.returncode}"
 
     finally:
         # Stop the process via the launcher's stop command

@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from queue import Full, Queue
 from threading import Event, Lock, Thread
-import time
 from typing import Final
 
 from .delta_journal import DeltaJournal, DeltaRecord
@@ -89,7 +89,7 @@ class AsyncStorageSession:
         self._write_latency_ms = 0.0
         self._commit_latency_ms = 0.0
 
-    def __enter__(self) -> "AsyncStorageSession":
+    def __enter__(self) -> AsyncStorageSession:
         self.start()
         return self
 

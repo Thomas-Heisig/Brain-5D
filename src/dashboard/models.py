@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, fields as dataclass_fields
-from typing import Any, Optional
+from dataclasses import dataclass
+from dataclasses import fields as dataclass_fields
+from typing import Any
 
 from src.embodiment.models import EmbodimentMetrics
 
@@ -66,23 +67,30 @@ class LearningMetrics:
 
 @dataclass(frozen=True, slots=True)
 class StorageMetrics:
-    """Persistence metrics exposed by storage telemetry."""
+    """Persistence metrics exposed by storage telemetry.
 
-    queue_depth: int = 0
-    queue_capacity: int = 0
-    batches_enqueued: int = 0
-    batches_written: int = 0
-    deltas_written: int = 0
-    bytes_written: int = 0
-    dropped_batches: int = 0
-    write_latency_ms: float = 0.0
-    commit_latency_ms: float = 0.0
-    journal_size_bytes: int = 0
-    worker_failed: bool = False
+    All numeric fields default to ``None`` to distinguish
+    "not available / not connected" from "measured and zero".
+    The dashboard should display ``—`` for ``None`` fields.
+    """
+
+    available: bool = False
+    queue_depth: int | None = None
+    queue_capacity: int | None = None
+    batches_enqueued: int | None = None
+    batches_written: int | None = None
+    deltas_written: int | None = None
+    bytes_written: int | None = None
+    dropped_batches: int | None = None
+    write_latency_ms: float | None = None
+    commit_latency_ms: float | None = None
+    journal_size_bytes: int | None = None
+    worker_failed: bool | None = None
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
         return {
+            "available": self.available,
             "queue_depth": self.queue_depth,
             "queue_capacity": self.queue_capacity,
             "batches_enqueued": self.batches_enqueued,
@@ -99,16 +107,22 @@ class StorageMetrics:
 
 @dataclass(frozen=True, slots=True)
 class SelfOrganizationMetrics:
-    """Structural self-organization counters."""
+    """Structural self-organization counters.
 
-    neurons_created: int = 0
-    neurons_removed: int = 0
-    synapses_created: int = 0
-    synapses_pruned: int = 0
+    All numeric fields default to ``None`` to distinguish
+    "not configured / not connected" from "measured and zero".
+    """
+
+    available: bool = False
+    neurons_created: int | None = None
+    neurons_removed: int | None = None
+    synapses_created: int | None = None
+    synapses_pruned: int | None = None
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
         return {
+            "available": self.available,
             "neurons_created": self.neurons_created,
             "neurons_removed": self.neurons_removed,
             "synapses_created": self.synapses_created,
@@ -313,7 +327,7 @@ class LanguageOrganMetrics:
     inference_time_ms: float = 0.0
     avg_inference_time_ms: float = 0.0
     errors: int = 0
-    last_error: Optional[str] = None
+    last_error: str | None = None
     queue_depth: int = 0
     max_queue_depth: int = 0
 
@@ -358,7 +372,7 @@ class KnowledgeIntakeMetrics:
     trust_failures: int = 0
     intake_queue_depth: int = 0
     intake_queue_capacity: int = 0
-    last_ingestion_time: Optional[str] = None
+    last_ingestion_time: str | None = None
     active_sources: int = 0
 
     def to_json(self) -> dict[str, JSONValue]:

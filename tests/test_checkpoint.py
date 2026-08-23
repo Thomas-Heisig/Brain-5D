@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass
 from pathlib import Path
-import random
 
 from src.storage.checkpoint import (
     capture_runtime_checkpoint,

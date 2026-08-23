@@ -19,10 +19,11 @@ from __future__ import annotations
 
 import random
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
 
-from .neuron import Neuron, NeuronType, create_neuron, NeuronConfig
+from .neuron import Neuron, NeuronConfig, NeuronType, create_neuron
 from .spatial_index import (
     DIM_NAMES,
     Coord5D,
@@ -197,8 +198,8 @@ class StepResult:
     """
 
     tick: int = 0
-    spike_ids: Tuple[int, ...] = ()
-    output_spike_ids: Tuple[int, ...] = ()
+    spike_ids: tuple[int, ...] = ()
+    output_spike_ids: tuple[int, ...] = ()
     spikes_this_tick: int = 0
     total_spikes: int = 0
     delivered_events: int = 0
@@ -211,7 +212,7 @@ class StepResult:
     max_v: float = 0.0
     mean_energy: float = 0.0
     core_step_ms: float = 0.0
-    neuron_activity: Dict[int, bool] = field(default_factory=dict)  # type: ignore
+    neuron_activity: dict[int, bool] = field(default_factory=dict)  # type: ignore
     total_synapses: int = 0
 
     def to_dict(self) -> dict[str, Any]:
@@ -269,7 +270,7 @@ class NeuralNetwork:
     def __init__(
         self,
         config: Brain5DConfig | dict[str, Any] | None = None,
-        rng: Optional[random.Random] = None,
+        rng: random.Random | None = None,
     ) -> None:
         """Initialize the neural network.
 
@@ -302,13 +303,13 @@ class NeuralNetwork:
         self.rng = rng or random.Random()
 
         # Core data structures
-        self.neurons: Dict[int, Neuron] = {}
-        self.synapses: Dict[int, List[Synapse]] = {}
-        self.in_degree: Dict[int, int] = {}
+        self.neurons: dict[int, Neuron] = {}
+        self.synapses: dict[int, list[Synapse]] = {}
+        self.in_degree: dict[int, int] = {}
 
         # Event queue (circular buffer)
         self.max_delay = self.sim_config.max_delay
-        self.event_slots: List[List[SpikeEvent]] = [
+        self.event_slots: list[list[SpikeEvent]] = [
             [] for _ in range(self.max_delay + 1)
         ]
         self._queued_event_count = 0
@@ -318,14 +319,14 @@ class NeuralNetwork:
         self.current_tick = 0
         self.total_spikes = 0
         self.total_events_processed = 0
-        self.pending_currents: Dict[int, float] = {}
+        self.pending_currents: dict[int, float] = {}
 
         # Input/output cells
-        self.input_cells: Set[int] = set()
-        self.output_cells: Set[int] = set()
+        self.input_cells: set[int] = set()
+        self.output_cells: set[int] = set()
 
         # Post-step hooks
-        self._post_step_hooks: List[PostStepHook] = []
+        self._post_step_hooks: list[PostStepHook] = []
 
         # Performance tracking
         self._step_count = 0
@@ -409,7 +410,7 @@ class NeuralNetwork:
         for pre_id, syn_list in list(self.synapses.items()):
             if pre_id == neuron_id:
                 continue
-            kept: List[Synapse] = []
+            kept: list[Synapse] = []
             for syn in syn_list:
                 if syn.target_id == neuron_id:
                     self._synapse_count -= 1
@@ -476,7 +477,7 @@ class NeuralNetwork:
         """Number of neurons in the network."""
         return len(self.neurons)
 
-    def neuron_ids(self) -> Set[int]:
+    def neuron_ids(self) -> set[int]:
         """Get all neuron IDs."""
         return set(self.neurons.keys())
 
@@ -490,7 +491,7 @@ class NeuralNetwork:
         post_id: int,
         weight: float,
         delay: int,
-        config: Optional[SynapseConfig] = None,
+        config: SynapseConfig | None = None,
     ) -> bool:
         """Create a synaptic connection between two neurons.
 
@@ -555,7 +556,7 @@ class NeuralNetwork:
 
         return False
 
-    def get_synapses(self, pre_id: int) -> List[Synapse]:
+    def get_synapses(self, pre_id: int) -> list[Synapse]:
         """Get all synapses from a neuron.
 
         Args:
@@ -566,7 +567,7 @@ class NeuralNetwork:
         """
         return self.synapses.get(pre_id, [])
 
-    def get_incoming_synapses(self, post_id: int) -> List[Tuple[int, Synapse]]:
+    def get_incoming_synapses(self, post_id: int) -> list[tuple[int, Synapse]]:
         """Get all synapses targeting a neuron.
 
         Args:
@@ -575,7 +576,7 @@ class NeuralNetwork:
         Returns:
             List of (presynaptic_neuron_id, Synapse) tuples.
         """
-        incoming: List[Tuple[int, Synapse]] = []
+        incoming: list[tuple[int, Synapse]] = []
         for pre_id, syn_list in self.synapses.items():
             for syn in syn_list:
                 if syn.target_id == post_id:
@@ -598,9 +599,9 @@ class NeuralNetwork:
 
     def initialize_random_connections(
         self,
-        connections_per_neuron: Optional[int] = None,
-        radius: Optional[float] = None,
-        weight_range: Tuple[float, float] | None = None,
+        connections_per_neuron: int | None = None,
+        radius: float | None = None,
+        weight_range: tuple[float, float] | None = None,
     ) -> None:
         """Initialize random connections between neurons within a radius.
 
@@ -628,7 +629,7 @@ class NeuralNetwork:
             pre_coord = unpack_coords(pre_id)
 
             # Collect candidate neurons within radius
-            candidates: List[int] = []
+            candidates: list[int] = []
             for ncoord in iter_neighbour_coords(pre_coord, self.dimensions, radius):
                 nid = pack_coords(*ncoord)
                 if nid not in self.neurons:
@@ -653,7 +654,7 @@ class NeuralNetwork:
     def connect_neighbours(
         self,
         radius: float,
-        weight_range: Tuple[float, float] = (0.0, 0.5),
+        weight_range: tuple[float, float] = (0.0, 0.5),
         probability: float = 0.1,
     ) -> None:
         """Connect neurons probabilistically within a radius.
@@ -702,7 +703,7 @@ class NeuralNetwork:
                 self.pending_currents.get(neuron_id, 0.0) + current
             )
 
-    def inject_current_batch(self, currents: Dict[int, float]) -> None:
+    def inject_current_batch(self, currents: dict[int, float]) -> None:
         """Inject currents into multiple neurons.
 
         Args:
@@ -785,7 +786,7 @@ class NeuralNetwork:
         self.pending_currents.clear()
 
         # 2. Deliver queued spike events
-        synaptic_currents: Dict[int, float] = {}
+        synaptic_currents: dict[int, float] = {}
         events = self.event_slots[slot_index]
 
         for ev in events:
@@ -807,9 +808,9 @@ class NeuralNetwork:
             raise RuntimeError("queued_event_count became negative")
 
         # 3. Update neurons
-        spike_ids: List[int] = []
-        output_spikes: List[int] = []
-        neuron_activity: Dict[int, bool] = {}
+        spike_ids: list[int] = []
+        output_spikes: list[int] = []
+        neuron_activity: dict[int, bool] = {}
 
         active = len(self.neurons)
         sum_v = 0.0
@@ -950,13 +951,13 @@ class NeuralNetwork:
             "dimensions": self.dimensions,
         }
 
-    def get_neurons_by_type(self) -> Dict[NeuronType, List[int]]:
+    def get_neurons_by_type(self) -> dict[NeuronType, list[int]]:
         """Get neurons grouped by type.
 
         Returns:
             Dictionary mapping NeuronType to list of neuron IDs.
         """
-        result: Dict[NeuronType, List[int]] = {}
+        result: dict[NeuronType, list[int]] = {}
         for nid, neuron in self.neurons.items():
             neuron_type = neuron.neuron_type
             result.setdefault(neuron_type, []).append(nid)
@@ -1034,7 +1035,7 @@ class NeuralNetwork:
     def from_dict(
         cls,
         data: dict[str, Any],
-        rng: Optional[random.Random] = None,
+        rng: random.Random | None = None,
     ) -> NeuralNetwork:
         """Deserialize a network from a dictionary.
 
@@ -1105,7 +1106,7 @@ class NeuralNetwork:
 
 def create_network(
     dimensions: Dim5D = (50, 50, 50, 50, 50),
-    seed: Optional[int] = None,
+    seed: int | None = None,
     **kwargs: Any,
 ) -> NeuralNetwork:
     """Create a neural network with default configuration.

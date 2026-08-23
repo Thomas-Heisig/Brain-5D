@@ -1,6 +1,5 @@
 """Self-organization and controlled structural plasticity."""
 
-from .engine import SelfOrganizationEngine
 from .approval import (
     ApprovalDecision,
     ProposalApprovalPolicy,
@@ -11,6 +10,7 @@ from .coordinator import (
     SelfOrganizationCoordinator,
     SelfOrganizationSnapshot,
 )
+from .engine import SelfOrganizationEngine
 from .plasticity import (
     ChangeKind,
     PlasticitySafetyLimits,
@@ -32,18 +32,18 @@ __all__ = [
     "ChangeKind",
     "PlasticitySafetyLimits",
     "PolicyReport",
-    "ProposalKind",
-    "ProposalDecision",
     "ProposalApprovalPolicy",
-    "SelfOrganizationEngine",
+    "ProposalDecision",
+    "ProposalKind",
     "SelfOrganizationCoordinator",
+    "SelfOrganizationEngine",
     "SelfOrganizationParameters",
     "SelfOrganizationPolicy",
     "SelfOrganizationPolicyConfig",
     "SelfOrganizationSnapshot",
     "StructuralAction",
     "StructuralChange",
-    "StructuralPlasticityEngine",
     "StructuralPlasticityConfig",
+    "StructuralPlasticityEngine",
     "StructuralProposal",
 ]

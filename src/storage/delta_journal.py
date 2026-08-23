@@ -7,13 +7,14 @@ commit markers are appended sequentially and protected with CRC32.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from enum import IntEnum
 import os
-from pathlib import Path
 import struct
 import time
-from typing import BinaryIO, Iterator
+from collections.abc import Iterator
+from dataclasses import dataclass
+from enum import IntEnum
+from pathlib import Path
+from typing import BinaryIO
 
 from .crc import compute_crc32, verify_crc32
 
@@ -186,7 +187,7 @@ class DeltaJournal:
         self._dirty_entry_count = 0
         self._preexisting_uncommitted_tail = False
 
-    def __enter__(self) -> "DeltaJournal":
+    def __enter__(self) -> DeltaJournal:
         self.open()
         return self
 

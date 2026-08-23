@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from src.storage.b5d import B5DReader
 from src.storage.lazy_view import B5DLazyProjector, StorageHeatmapKind
@@ -24,25 +23,17 @@ from .models import JSONValue
 class HeatmapError(Exception):
     """Base exception for heatmap-related errors."""
 
-    pass
-
 
 class InvalidHeatmapKindError(HeatmapError):
     """Raised when an unknown heatmap kind is requested."""
-
-    pass
 
 
 class SnapshotNotFoundError(HeatmapError):
     """Raised when a requested snapshot file does not exist."""
 
-    pass
-
 
 class InvalidSnapshotError(HeatmapError):
     """Raised when a snapshot filename is invalid or unsafe."""
-
-    pass
 
 
 # ============================================================================
@@ -169,9 +160,7 @@ class SnapshotHeatmapSource:
 
         return tuple(entries)
 
-    def build(
-        self, kind_name: str, snapshot_name: Optional[str] = None
-    ) -> HeatmapPayload:
+    def build(self, kind_name: str, snapshot_name: str | None = None) -> HeatmapPayload:
         """Build a heatmap from a snapshot.
 
         Args:
@@ -223,7 +212,7 @@ class SnapshotHeatmapSource:
         except Exception as e:
             raise HeatmapError(f"Failed to build heatmap: {e}") from e
 
-    def _resolve_snapshot(self, snapshot_name: Optional[str]) -> Path:
+    def _resolve_snapshot(self, snapshot_name: str | None) -> Path:
         """Resolve a snapshot path with security checks.
 
         Args:

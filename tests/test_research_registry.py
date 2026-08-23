@@ -74,9 +74,7 @@ class TestRegistryUniqueness:
             # We count occurrences to detect duplicates.
             pass  # The set construction already deduplicates; we test cross-file below.
 
-    def test_no_duplicate_ids_across_files(
-        self, all_ids: dict[str, set[str]]
-    ) -> None:
+    def test_no_duplicate_ids_across_files(self, all_ids: dict[str, set[str]]) -> None:
         """IDs from different registries must not collide.
 
         Different ID prefixes (RQ-, H-, CLAIM-, SRC-, METHOD-) are
@@ -107,9 +105,9 @@ class TestRegistryUniqueness:
         pattern = re.compile(r"^RQ-[A-Z0-9]+-[0-9]{3}$")
         for entry in registry_data.get("questions", []):
             qid = entry.get("id", "")
-            assert pattern.match(qid), (
-                f"Question ID '{qid}' does not match pattern RQ-{{DOMAIN}}-{{NNN}}"
-            )
+            assert pattern.match(
+                qid
+            ), f"Question ID '{qid}' does not match pattern RQ-{{DOMAIN}}-{{NNN}}"
 
     def test_hypothesis_ids_have_correct_format(
         self, registry_data: dict[str, list[dict]]
@@ -120,9 +118,9 @@ class TestRegistryUniqueness:
         pattern = re.compile(r"^H-[A-Z0-9]+-[0-9]{3}-[A-Z]$")
         for entry in registry_data.get("hypotheses", []):
             hid = entry.get("id", "")
-            assert pattern.match(hid), (
-                f"Hypothesis ID '{hid}' does not match pattern H-{{DOMAIN}}-{{NNN}}-{{VARIANT}}"
-            )
+            assert pattern.match(
+                hid
+            ), f"Hypothesis ID '{hid}' does not match pattern H-{{DOMAIN}}-{{NNN}}-{{VARIANT}}"
 
     def test_claim_ids_have_correct_format(
         self, registry_data: dict[str, list[dict]]
@@ -133,52 +131,44 @@ class TestRegistryUniqueness:
         pattern = re.compile(r"^CLAIM-[A-Z0-9]+-[0-9]{3}$")
         for entry in registry_data.get("claims", []):
             cid = entry.get("id", "")
-            assert pattern.match(cid), (
-                f"Claim ID '{cid}' does not match pattern CLAIM-{{DOMAIN}}-{{NNN}}"
-            )
+            assert pattern.match(
+                cid
+            ), f"Claim ID '{cid}' does not match pattern CLAIM-{{DOMAIN}}-{{NNN}}"
 
     def test_hypothesis_references_resolve(
         self, registry_data: dict[str, list[dict]]
     ) -> None:
         """Every hypothesis must reference an existing research question."""
-        question_ids = {
-            entry["id"] for entry in registry_data.get("questions", [])
-        }
+        question_ids = {entry["id"] for entry in registry_data.get("questions", [])}
         for entry in registry_data.get("hypotheses", []):
             rq = entry.get("research_question", "")
-            assert rq in question_ids, (
-                f"Hypothesis '{entry.get('id')}' references unknown question '{rq}'"
-            )
+            assert (
+                rq in question_ids
+            ), f"Hypothesis '{entry.get('id')}' references unknown question '{rq}'"
 
     def test_claim_references_resolve(
         self, registry_data: dict[str, list[dict]]
     ) -> None:
         """Every claim must reference existing research question and hypothesis."""
-        question_ids = {
-            entry["id"] for entry in registry_data.get("questions", [])
-        }
-        hypothesis_ids = {
-            entry["id"] for entry in registry_data.get("hypotheses", [])
-        }
+        question_ids = {entry["id"] for entry in registry_data.get("questions", [])}
+        hypothesis_ids = {entry["id"] for entry in registry_data.get("hypotheses", [])}
         for entry in registry_data.get("claims", []):
             rq = entry.get("research_question", "")
             hyp = entry.get("hypothesis", "")
             if rq:
-                assert rq in question_ids, (
-                    f"Claim '{entry.get('id')}' references unknown question '{rq}'"
-                )
+                assert (
+                    rq in question_ids
+                ), f"Claim '{entry.get('id')}' references unknown question '{rq}'"
             if hyp:
-                assert hyp in hypothesis_ids, (
-                    f"Claim '{entry.get('id')}' references unknown hypothesis '{hyp}'"
-                )
+                assert (
+                    hyp in hypothesis_ids
+                ), f"Claim '{entry.get('id')}' references unknown hypothesis '{hyp}'"
 
     def test_no_unreferenced_hypotheses(
         self, registry_data: dict[str, list[dict]]
     ) -> None:
         """Every hypothesis should be referenced by at least one claim or question."""
-        hypothesis_ids = {
-            entry["id"] for entry in registry_data.get("hypotheses", [])
-        }
+        hypothesis_ids = {entry["id"] for entry in registry_data.get("hypotheses", [])}
         referenced: set[str] = set()
         for entry in registry_data.get("questions", []):
             referenced.update(entry.get("hypotheses", []))

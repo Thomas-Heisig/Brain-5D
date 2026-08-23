@@ -8,9 +8,10 @@ for state subscribers.
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import replace
 from threading import RLock
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
 from .models import DashboardSnapshot
 

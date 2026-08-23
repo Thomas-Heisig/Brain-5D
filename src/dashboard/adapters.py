@@ -7,9 +7,9 @@ All adapters include error handling and graceful fallbacks.
 
 from __future__ import annotations
 
-from typing import Protocol, Optional
+from typing import Protocol
 
-from .models import HomeostasisMetrics, StructuralMetrics, SpikeMetrics
+from .models import HomeostasisMetrics, SpikeMetrics, StructuralMetrics
 
 # ============================================================================
 # Protocols (Type Contracts)
@@ -200,7 +200,7 @@ def aggregate_metrics(
 # ============================================================================
 
 
-def sanitize_float(value: Optional[float], default: float = 0.0) -> float:
+def sanitize_float(value: float | None, default: float = 0.0) -> float:
     """Sanitize a float value, replacing None with default."""
     if value is None:
         return default
@@ -210,7 +210,7 @@ def sanitize_float(value: Optional[float], default: float = 0.0) -> float:
         return default
 
 
-def sanitize_int(value: Optional[int], default: int = 0) -> int:
+def sanitize_int(value: int | None, default: int = 0) -> int:
     """Sanitize an integer value, replacing None with default."""
     if value is None:
         return default
@@ -220,7 +220,7 @@ def sanitize_int(value: Optional[int], default: int = 0) -> int:
         return default
 
 
-def sanitize_bool(value: Optional[bool], default: bool = False) -> bool:
+def sanitize_bool(value: bool | None, default: bool = False) -> bool:
     """Sanitize a boolean value, replacing None with default."""
     if value is None:
         return default

@@ -13,7 +13,7 @@ from .manipulator import (
 
 __all__ = [
     "Brain5DManipulator",
-    "SynapseMetadata",
     "Mutation",
+    "SynapseMetadata",
     "Transaction",
 ]

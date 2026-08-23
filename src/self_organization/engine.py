@@ -39,7 +39,7 @@ class SelfOrganizationParameters:
     max_neurons: int = 0  # 0 = unlimited
 
     @classmethod
-    def from_config(cls, config: dict[str, Any]) -> "SelfOrganizationParameters":
+    def from_config(cls, config: dict[str, Any]) -> SelfOrganizationParameters:
         c = config.get("self_organization", {})
         params = cls(
             **{k: c[k] for k in cls.__dataclass_fields__ if k in c}

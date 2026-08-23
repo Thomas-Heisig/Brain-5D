@@ -7,12 +7,23 @@ sources.yaml, and methods.yaml.
 
 from __future__ import annotations
 
-import os
 from datetime import date
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, cast
 
 import yaml
+
+
+def _parse_date(d: Any) -> date | None:
+    """Parse a date from various input formats."""
+    if isinstance(d, date):
+        return d
+    if isinstance(d, str):
+        try:
+            return date.fromisoformat(d)
+        except ValueError:
+            return None
+    return None
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -28,9 +39,9 @@ REGISTRY_DIR = REPO_ROOT / "research" / "registry"
 
 
 class Answer:
-    current: Optional[str]
+    current: str | None
     confidence: str  # none | low | medium | high | very_high
-    limitations: Optional[str]
+    limitations: str | None
 
     def __init__(self, data: dict[str, Any]) -> None:
         self.current = data.get("current")
@@ -43,9 +54,9 @@ class ResearchQuestion:
     domain: str
     question: str
     relevance: str
-    literature: List[str]
-    hypotheses: List[str]
-    evidence: List[str]
+    literature: list[str]
+    hypotheses: list[str]
+    evidence: list[str]
     status: str  # open | in_progress | answered | superseded
     answer: Answer
     created: date | None
@@ -61,19 +72,8 @@ class ResearchQuestion:
         self.evidence = data.get("evidence", [])
         self.status = data.get("status", "open")
         self.answer = Answer(data.get("answer", {}))
-        self.created = self._parse_date(data.get("created"))
-        self.updated = self._parse_date(data.get("updated"))
-
-    @staticmethod
-    def _parse_date(d: Any) -> Optional[date]:
-        if isinstance(d, date):
-            return d
-        if isinstance(d, str):
-            try:
-                return date.fromisoformat(d)
-            except ValueError:
-                return None
-        return None
+        self.created = _parse_date(data.get("created"))
+        self.updated = _parse_date(data.get("updated"))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -100,7 +100,7 @@ class Hypothesis:
     research_question: str
     hypothesis: str
     status: str  # untested | inconclusive | supported | refuted
-    evidence: List[str]
+    evidence: list[str]
     created: date | None
     updated: date | None
 
@@ -110,8 +110,8 @@ class Hypothesis:
         self.hypothesis = data["hypothesis"]
         self.status = data.get("status", "untested")
         self.evidence = data.get("evidence", [])
-        self.created = ResearchQuestion._parse_date(data.get("created"))
-        self.updated = ResearchQuestion._parse_date(data.get("updated"))
+        self.created = _parse_date(data.get("created"))
+        self.updated = _parse_date(data.get("updated"))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -130,12 +130,12 @@ class Claim:
     claim: str
     research_question: str
     hypothesis: str
-    evidence: List[str]
-    experiments: List[str]
-    sources: List[str]
+    evidence: list[str]
+    experiments: list[str]
+    sources: list[str]
     status: str  # untested | inconclusive | supported | refuted
     confidence: str
-    required_evidence: List[str]
+    required_evidence: list[str]
     minimum_runs: int
     created: date | None
     updated: date | None
@@ -152,8 +152,8 @@ class Claim:
         self.confidence = data.get("confidence", "none")
         self.required_evidence = data.get("required_evidence", [])
         self.minimum_runs = data.get("minimum_runs", 10)
-        self.created = ResearchQuestion._parse_date(data.get("created"))
-        self.updated = ResearchQuestion._parse_date(data.get("updated"))
+        self.created = _parse_date(data.get("created"))
+        self.updated = _parse_date(data.get("updated"))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -175,16 +175,16 @@ class Claim:
 
 class Source:
     source_id: str
-    authors: List[str]
+    authors: list[str]
     title: str
     year: int
-    journal: Optional[str]
-    publisher: Optional[str]
-    doi: Optional[str]
-    topic: List[str]
-    claims: List[str]
-    brain5d_questions: List[str]
-    brain5d_relevance: Optional[str]
+    journal: str | None
+    publisher: str | None
+    doi: str | None
+    topic: list[str]
+    claims: list[str]
+    brain5d_questions: list[str]
+    brain5d_relevance: str | None
 
     def __init__(self, data: dict[str, Any]) -> None:
         self.source_id = data["source_id"]
@@ -225,12 +225,12 @@ class ResearchRegistry:
 
     def __init__(self, registry_dir: Path = REGISTRY_DIR):
         self._registry_dir = registry_dir
-        self.questions: Dict[str, ResearchQuestion] = {}
-        self.hypotheses: Dict[str, Hypothesis] = {}
-        self.claims: Dict[str, Claim] = {}
-        self.sources: Dict[str, Source] = {}
+        self.questions: dict[str, ResearchQuestion] = {}
+        self.hypotheses: dict[str, Hypothesis] = {}
+        self.claims: dict[str, Claim] = {}
+        self.sources: dict[str, Source] = {}
 
-    def load_all(self) -> "ResearchRegistry":
+    def load_all(self) -> ResearchRegistry:
         """Load all registry files from disk."""
         self.questions = self._load_yaml("questions.yaml", ResearchQuestion)
         self.hypotheses = self._load_yaml("hypotheses.yaml", Hypothesis)
@@ -242,10 +242,11 @@ class ResearchRegistry:
         path = self._registry_dir / filename
         if not path.exists():
             return {}
-        with open(path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f) or []
+        with open(path, encoding="utf-8") as f:
+            raw: Any = yaml.safe_load(f) or []
+        data: list[dict[str, Any]] = cast("list[dict[str, Any]]", raw)
         return {
-            item["id"] if "id" in item else item.get("source_id"): cls(item)
+            item.get("id", item.get("source_id", "")): cls(item)
             for item in data
         }
 
@@ -271,30 +272,30 @@ class ResearchRegistry:
 
     # -- Queries ------------------------------------------------------------
 
-    def questions_by_domain(self, domain: str) -> List[ResearchQuestion]:
+    def questions_by_domain(self, domain: str) -> list[ResearchQuestion]:
         return [
             q for q in self.questions.values() if q.domain.lower() == domain.lower()
         ]
 
-    def questions_by_status(self, status: str) -> List[ResearchQuestion]:
+    def questions_by_status(self, status: str) -> list[ResearchQuestion]:
         return [q for q in self.questions.values() if q.status == status]
 
-    def open_questions(self) -> List[ResearchQuestion]:
+    def open_questions(self) -> list[ResearchQuestion]:
         return self.questions_by_status("open")
 
-    def hypotheses_for_question(self, question_id: str) -> List[Hypothesis]:
+    def hypotheses_for_question(self, question_id: str) -> list[Hypothesis]:
         return [
             h for h in self.hypotheses.values() if h.research_question == question_id
         ]
 
-    def claims_for_question(self, question_id: str) -> List[Claim]:
+    def claims_for_question(self, question_id: str) -> list[Claim]:
         return [c for c in self.claims.values() if c.research_question == question_id]
 
-    def evidence_for_claim(self, claim_id: str) -> List[str]:
+    def evidence_for_claim(self, claim_id: str) -> list[str]:
         claim = self.claims.get(claim_id)
         return claim.evidence if claim else []
 
-    def sources_for_question(self, question_id: str) -> List[Source]:
+    def sources_for_question(self, question_id: str) -> list[Source]:
         question = self.questions.get(question_id)
         if not question:
             return []

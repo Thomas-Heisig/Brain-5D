@@ -30,8 +30,9 @@ from __future__ import annotations
 
 import math
 import time
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass, field
-from typing import TYPE_CHECKING, Any, Mapping, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from .eligibility import EligibilityTrace
 from .reward import RewardSignal
@@ -41,6 +42,13 @@ if TYPE_CHECKING:
     from src.core.synapse import Synapse
 
 Config = Mapping[str, Any]
+
+
+def _as_mapping(value: Any, name: str) -> Mapping[str, Any]:
+    """Validate and cast a config subsection to a typed mapping."""
+    if not isinstance(value, Mapping):
+        raise TypeError(f"{name} config must be a mapping")
+    return cast("Mapping[str, Any]", value)
 
 
 # ============================================================================
@@ -106,16 +114,9 @@ class LearningParameters:
             TypeError: If any section is not a mapping.
             ValueError: If any parameter is invalid.
         """
-        stdp = config.get("stdp", {})
-        eligibility = config.get("eligibility", {})
-        reward = config.get("reward", {})
-
-        if not isinstance(stdp, Mapping):
-            raise TypeError("stdp config must be a mapping")
-        if not isinstance(eligibility, Mapping):
-            raise TypeError("eligibility config must be a mapping")
-        if not isinstance(reward, Mapping):
-            raise TypeError("reward config must be a mapping")
+        stdp = _as_mapping(config.get("stdp", {}), "stdp")
+        eligibility = _as_mapping(config.get("eligibility", {}), "eligibility")
+        reward = _as_mapping(config.get("reward", {}), "reward")
 
         params = cls(
             stdp_enabled=bool(stdp.get("enabled", False)),

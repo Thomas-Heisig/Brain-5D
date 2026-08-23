@@ -1,7 +1,7 @@
 """Direct tests for the alpha.5 structural operator bridge."""
 
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 
 from src.controller.runtime import RuntimeController
 from src.dashboard.operator_bridge import OperatorBridge

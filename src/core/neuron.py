@@ -555,8 +555,8 @@ def create_random_neuron(
 
 __all__ = [
     "Neuron",
-    "NeuronType",
     "NeuronConfig",
+    "NeuronType",
     "create_neuron",
     "create_random_neuron",
 ]
