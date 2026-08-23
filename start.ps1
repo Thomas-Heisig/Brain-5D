@@ -1,13 +1,16 @@
 <#
 .SYNOPSIS
-    Startet Brain-5D mit dem Launcher.
+    Startet Brain-5D mit Dashboard und Browser.
 .DESCRIPTION
-    Startet die Brain-5D-Simulation mit optionalem Dashboard.
-    Verwendet bevorzugt die venv-Umgebung, falls vorhanden.
-    Der Launcher startet src.main als einzigen Prozess (dieser enthält
-    Simulation, Controller, OperatorBridge und Dashboard-Server).
+    Startet die Brain-5D-Simulation mit integriertem Dashboard und oeffnet
+    den Browser. Der Launcher startet src.main als einzigen Prozess.
+    Verwendet bevorzugt die venv-Umgebung.
+
+    Einfachster Aufruf:  .\start.ps1
 .PARAMETER Config
     Pfad zur YAML-Konfigurationsdatei (default: configs/poc_config.yaml).
+.PARAMETER NoDashboard
+    Dashboard deaktivieren.
 .PARAMETER Observe
     Observatory-Fenster aktivieren.
 .PARAMETER Benchmark
@@ -17,55 +20,35 @@
 .PARAMETER NoHomeostasis
     Homeostasis-Engine deaktivieren.
 .PARAMETER Ticks
-    Simulations-Ticks überschreiben.
-.PARAMETER Dashboard
-    Integriertes Dashboard starten (default: true).
-.PARAMETER NoDashboard
-    Dashboard deaktivieren.
-.PARAMETER OpenBrowser
-    Dashboard im Standard-Browser öffnen.
-.PARAMETER Host
-    Dashboard-Host (default: 127.0.0.1).
-.PARAMETER Port
-    Dashboard-Port (default: 8765).
+    Simulations-Ticks ueberschreiben.
+.PARAMETER PassThru
+    Nur die Launcher-Argumente ausgeben, nicht ausfuehren.
 .PARAMETER Help
-    Zeigt diese Hilfe an.
+    Zeigt Hilfe zum Launcher an.
 .EXAMPLE
     .\start.ps1
-    Startet mit poc_config.yaml ohne Dashboard.
+    Startet mit poc_config.yaml, Dashboard + Browser.
 .EXAMPLE
-    .\start.ps1 -Dashboard -OpenBrowser
-    Startet mit Dashboard und öffnet den Browser.
+    .\start.ps1 -NoDashboard
+    Startet ohne Dashboard.
 .EXAMPLE
-    .\start.ps1 -Config configs/stdp_on.yaml -Observe
+    .\start.ps1 -Config configs\stdp_on.yaml -Observe
     Startet mit STDP-Konfiguration und Observatory.
 #>
 
 param(
-    [Parameter(Position = 0)]
     [string]$Config = "configs/poc_config.yaml",
 
+    [switch]$NoDashboard,
     [switch]$Observe,
     [switch]$Benchmark,
     [switch]$NoLearning,
     [switch]$NoHomeostasis,
     [int]$Ticks = 0,
 
-    [switch]$Dashboard,
-    [switch]$NoDashboard,
-    [switch]$OpenBrowser,
-
-    [string]$Host_ = "127.0.0.1",
-    [int]$Port = 8765,
-
+    [switch]$PassThru,
     [switch]$Help
 )
-
-# Hilfe anzeigen
-if ($Help) {
-    Get-Help $MyInvocation.MyCommand.Path -Detailed
-    exit 0
-}
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -75,51 +58,58 @@ $ProjectRoot = Split-Path -Parent $ScriptDir
 $VenvPython = Join-Path $ProjectRoot ".venv" "Scripts" "python.exe"
 if (Test-Path $VenvPython) {
     $PythonExe = $VenvPython
-    $PythonLabel = "venv"
 } else {
     $PythonExe = "python"
-    $PythonLabel = "system"
 }
 
-Write-Host "🧠 Brain-5D wird gestartet ..." -ForegroundColor Cyan
-Write-Host "   Python : $PythonExe ($PythonLabel)" -ForegroundColor Gray
-Write-Host "   Config : $Config" -ForegroundColor Gray
+# Hilfe
+if ($Help) {
+    & $PythonExe (Join-Path $ProjectRoot "scripts" "brain5d_launcher.py") start --help
+    exit 0
+}
 
-# Argumente für den Launcher bauen
+# Launcher-Argumente bauen
 $arguments = @(
     (Join-Path $ProjectRoot "scripts" "brain5d_launcher.py"),
     "start",
     "--config", (Join-Path $ProjectRoot $Config)
 )
 
+# Standard: Dashboard + Browser
+if (-not $NoDashboard) {
+    $arguments += "--dashboard"
+    $arguments += "--open-browser"
+}
+
+# Optionale Flags
 if ($Observe)       { $arguments += "--observe" }
 if ($Benchmark)     { $arguments += "--benchmark" }
 if ($NoLearning)    { $arguments += "--no-learning" }
 if ($NoHomeostasis) { $arguments += "--no-homeostasis" }
 if ($Ticks -gt 0)   { $arguments += "--ticks"; $arguments += "$Ticks" }
 
-# Dashboard: default AUS, es sei denn -Dashboard oder -OpenBrowser
-$useDashboard = $Dashboard -or $OpenBrowser
-if ($NoDashboard)   { $useDashboard = $false }
-if ($useDashboard)  { $arguments += "--dashboard" }
-if ($OpenBrowser)   { $arguments += "--open-browser" }
-if ($Host_ -ne "127.0.0.1") { $arguments += "--host"; $arguments += $Host_ }
-if ($Port -ne 8765) { $arguments += "--port"; $arguments += "$Port" }
+# Nur anzeigen?
+if ($PassThru) {
+    Write-Host ($arguments -join " ")
+    exit 0
+}
 
-Write-Host "   Args  : $($arguments -join ' ')" -ForegroundColor Gray
+# Ausfuehren
+Write-Host "Brain-5D wird gestartet ..." -ForegroundColor Cyan
+Write-Host "  Config: $Config" -ForegroundColor Gray
 
 try {
     & $PythonExe @arguments
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -eq 0) {
-        Write-Host "✅ Brain-5D erfolgreich gestartet (PID: $exitCode)." -ForegroundColor Green
+        Write-Host "`nBrain-5D laeuft. Stoppen mit: .\stop.ps1" -ForegroundColor Green
     } else {
-        Write-Host "⚠️  Brain-5D mit Exit-Code $exitCode beendet." -ForegroundColor Red
+        Write-Host "`nStart fehlgeschlagen (Exit $exitCode)" -ForegroundColor Red
     }
     exit $exitCode
 }
 catch {
-    Write-Host "❌ Fehler beim Starten von Brain-5D: $_" -ForegroundColor Red
+    Write-Host "Fehler: $_" -ForegroundColor Red
     exit 1
 }

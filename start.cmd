@@ -6,10 +6,9 @@
 :: Verwendet bevorzugt die venv-Umgebung, falls vorhanden.
 ::
 :: Usage:
-::   start.cmd                          (Start ohne Dashboard)
-::   start.cmd --dashboard              (Start mit Dashboard)
-::   start.cmd --dashboard --open-browser  (Start + Browser oeffnen)
-::   start.cmd --config configs\stdp_on.yaml  (Eigene Config)
+::   start.cmd                          (Start mit Dashboard + Browser)
+::   start.cmd --no-dashboard           (Start ohne Dashboard)
+::   start.cmd --config configs\...     (Eigene Config)
 ::   start.cmd --help                   (Hilfe anzeigen)
 ::
 :: Parameter werden 1:1 an brain5d_launcher.py start weitergegeben.
@@ -24,39 +23,39 @@ set "PROJECT_ROOT=%CD%"
 set "PYTHON_CMD=python"
 if exist "%PROJECT_ROOT%\.venv\Scripts\python.exe" (
     set "PYTHON_CMD=%PROJECT_ROOT%\.venv\Scripts\python.exe"
-    echo [Brain-5D] Using venv Python
 ) else (
     echo [Brain-5D] Using system Python
 )
 
 :: Hilfe anzeigen
 if "%1"=="--help" (
-    %PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py --help
+    %PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start --help
     endlocal
     exit /b 0
 )
 
-:: Pruefen ob Konfiguration existiert
-set "CONFIG=%PROJECT_ROOT%\configs\poc_config.yaml"
-if not exist "%CONFIG%" (
-    echo [Brain-5D] ERROR: Config not found at %CONFIG%
-    endlocal
-    exit /b 1
-)
-
+:: Banner
 echo ===========================================================================
 echo   Brain-5D v0.5.0-alpha.5
 echo   Project: %PROJECT_ROOT%
 echo ===========================================================================
 
+:: Standard: Dashboard + Browser, es sei denn --no-dashboard wurde uebergeben
+set "EXTRA="
+echo %* | findstr /C:"--no-dashboard" >nul
+if errorlevel 1 set "EXTRA=--dashboard --open-browser"
+
 :: Launcher starten
-%PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start %*
+%PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start %EXTRA% %*
 set "EXIT_CODE=%ERRORLEVEL%"
 
 if %EXIT_CODE% equ 0 (
-    echo [Brain-5D] Successfully started.
+    echo.
+    echo ✅ Brain-5D is running.
+    echo    Stop with: stop.cmd
 ) else (
-    echo [Brain-5D] Start finished with exit code %EXIT_CODE%.
+    echo.
+    echo ❌ Start failed (exit code %EXIT_CODE%^)
 )
 
 endlocal

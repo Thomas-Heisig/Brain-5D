@@ -1,26 +1,25 @@
 """Typed cross-platform launcher for Brain-5D.
 
-The launcher starts exactly one Brain-5D application process.
+Usage:
+    python scripts/brain5d_launcher.py start [options]   # Start simulation
+    python scripts/brain5d_launcher.py stop               # Stop all processes
+    python scripts/brain5d_launcher.py --help             # Show help
+
+The launcher starts exactly one Brain-5D application process (src.main),
+which owns the simulation, runtime controller, OperatorBridge and dashboard.
 
 Important architecture rule:
-    src.main owns the simulation, runtime controller, OperatorBridge and
-    dashboard server. The launcher must therefore NOT start
-    ``python -m src.dashboard`` as a second process.
-
-Starting a separate dashboard process would create a second Python memory
-space without access to the OperatorBridge created by src.main. This caused
-the runtime error:
-
-    Structural operator bridge is not configured.
-
-The launcher is intentionally type-safe and avoids passing loosely typed
-``dict[str, object]`` values through ``subprocess.Popen``.
+    src.main owns the dashboard server. The launcher must therefore NOT start
+    ``python -m src.dashboard`` as a second process. Starting a separate
+    dashboard process would create a second Python memory space without
+    access to the OperatorBridge.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
+import signal
 import subprocess
 import sys
 import webbrowser
@@ -30,6 +29,41 @@ ROOT = Path(__file__).resolve().parents[1]
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
+PID_FILE = ROOT / "artifacts" / "brain5d.pid"
+
+
+# ============================================================================
+# Helpers
+# ============================================================================
+
+def _ensure_artifacts_dir() -> None:
+    """Ensure the artifacts directory exists for PID file."""
+    (ROOT / "artifacts").mkdir(parents=True, exist_ok=True)
+
+
+def _read_pid() -> int | None:
+    """Read the stored PID, or return None if no PID file exists."""
+    pid_path = PID_FILE
+    if not pid_path.exists():
+        return None
+    try:
+        return int(pid_path.read_text(encoding="utf-8").strip())
+    except (ValueError, OSError):
+        return None
+
+
+def _write_pid(pid: int) -> None:
+    """Write the PID file."""
+    _ensure_artifacts_dir()
+    PID_FILE.write_text(str(pid), encoding="utf-8")
+
+
+def _remove_pid() -> None:
+    """Remove the PID file."""
+    try:
+        PID_FILE.unlink(missing_ok=True)
+    except OSError:
+        pass
 
 
 def spawn(
@@ -39,7 +73,6 @@ def spawn(
 ) -> subprocess.Popen[bytes]:
     """Start one Brain-5D child process with concrete Popen argument types."""
     creationflags = 0
-
     if os.name == "nt":
         creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
 
@@ -105,11 +138,18 @@ def dashboard_url(args: argparse.Namespace) -> str:
     return f"http://{args.host}:{args.port}"
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse launcher command-line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Brain-5D application launcher",
+# ============================================================================
+# Subcommand: start
+# ============================================================================
+
+def add_start_parser(subparsers: argparse._SubParsersAction) -> None:
+    """Add the ``start`` subcommand parser."""
+    parser = subparsers.add_parser(
+        "start",
+        help="Start the Brain-5D simulation",
+        description="Start the Brain-5D simulation with optional dashboard.",
     )
+    parser.set_defaults(func=_cmd_start)
 
     parser.add_argument(
         "--dashboard",
@@ -165,36 +205,44 @@ def parse_args() -> argparse.Namespace:
         help="Override the configured simulation tick count.",
     )
 
-    args = parser.parse_args()
 
+def _cmd_start(args: argparse.Namespace) -> int:
+    """Execute the ``start`` subcommand."""
+    # Validate
     if args.port < 1 or args.port > 65535:
-        parser.error("--port must be in the range 1..65535")
+        print("Error: --port must be in the range 1..65535", file=sys.stderr)
+        return 1
 
     if args.ticks is not None and args.ticks < 1:
-        parser.error("--ticks must be greater than zero")
+        print("Error: --ticks must be greater than zero", file=sys.stderr)
+        return 1
 
     if args.open_browser and not args.dashboard:
-        parser.error("--open-browser requires --dashboard")
+        print("Error: --open-browser requires --dashboard", file=sys.stderr)
+        return 1
 
-    # src.main currently owns the dashboard binding and uses
-    # 127.0.0.1:8765 internally. Prevent misleading launcher arguments
-    # until host/port have been moved into the application composition root.
     if args.dashboard:
         if args.host != DEFAULT_HOST:
-            parser.error(
-                f"Integrated dashboard currently requires --host {DEFAULT_HOST}"
+            print(
+                f"Error: Integrated dashboard currently requires --host {DEFAULT_HOST}",
+                file=sys.stderr,
             )
+            return 1
         if args.port != DEFAULT_PORT:
-            parser.error(
-                f"Integrated dashboard currently requires --port {DEFAULT_PORT}"
+            print(
+                f"Error: Integrated dashboard currently requires --port {DEFAULT_PORT}",
+                file=sys.stderr,
             )
+            return 1
 
-    return args
-
-
-def main() -> int:
-    """Start Brain-5D and return immediately after successful process creation."""
-    args = parse_args()
+    # Check if already running
+    existing_pid = _read_pid()
+    if existing_pid is not None:
+        print(
+            f"Warning: Brain-5D may already be running (PID {existing_pid}).",
+            file=sys.stderr,
+        )
+        print("Use 'stop' first or remove the PID file.", file=sys.stderr)
 
     command = build_command(args)
 
@@ -207,21 +255,93 @@ def main() -> int:
         )
         return 1
 
-    print(f"Brain-5D process started: {process.pid}")
-    print(f"Command: {' '.join(command)}")
+    _write_pid(process.pid)
+    print(f"Brain-5D started (PID {process.pid})")
+    print(f"  Command: {' '.join(command)}")
 
     if args.dashboard:
-        print(f"Dashboard: {dashboard_url(args)}")
+        url = dashboard_url(args)
+        print(f"  Dashboard: {url}")
+        if args.open_browser:
+            try:
+                webbrowser.open(url)
+            except webbrowser.Error as exc:
+                print(
+                    f"  Warning: could not open browser: {exc}",
+                    file=sys.stderr,
+                )
 
-    if args.dashboard and args.open_browser:
-        try:
-            webbrowser.open(dashboard_url(args))
-        except webbrowser.Error as exc:
-            print(
-                f"Warning: dashboard started, but browser could not be opened: {exc}",
-                file=sys.stderr,
-            )
+    return 0
 
+
+# ============================================================================
+# Subcommand: stop
+# ============================================================================
+
+def add_stop_parser(subparsers: argparse._SubParsersAction) -> None:
+    """Add the ``stop`` subcommand parser."""
+    parser = subparsers.add_parser(
+        "stop",
+        help="Stop the Brain-5D simulation",
+        description="Stop the running Brain-5D simulation process.",
+    )
+    parser.set_defaults(func=_cmd_stop)
+
+
+def _cmd_stop(_args: argparse.Namespace) -> int:
+    """Execute the ``stop`` subcommand."""
+    pid = _read_pid()
+    if pid is None:
+        print("No Brain-5D process found (no PID file).", file=sys.stderr)
+        return 1
+
+    try:
+        if os.name == "nt":
+            os.kill(pid, signal.CTRL_BREAK_EVENT)  # type: ignore[attr-defined]
+        else:
+            os.kill(pid, signal.SIGTERM)
+
+        print(f"Brain-5D process {pid} stopped.")
+        _remove_pid()
+        return 0
+    except ProcessLookupError:
+        print(f"Brain-5D process {pid} not found (already exited).")
+        _remove_pid()
+        return 0
+    except OSError as exc:
+        print(f"Failed to stop Brain-5D process {pid}: {exc}", file=sys.stderr)
+        return 1
+
+
+# ============================================================================
+# Entry point
+# ============================================================================
+
+def main() -> int:
+    """Parse arguments and dispatch to the appropriate subcommand."""
+    parser = argparse.ArgumentParser(
+        description="Brain-5D application launcher",
+    )
+    subparsers = parser.add_subparsers(
+        dest="command",
+        title="commands",
+        description="Available commands. Use 'start' to run, 'stop' to terminate.",
+    )
+
+    add_start_parser(subparsers)
+    add_stop_parser(subparsers)
+
+    # Default: if no subcommand given, show help
+    if len(sys.argv) < 2:
+        parser.print_help()
+        return 0
+
+    args = parser.parse_args()
+
+    if hasattr(args, "func"):
+        return args.func(args)
+
+    parser.print_help()
     return 0
 
 
