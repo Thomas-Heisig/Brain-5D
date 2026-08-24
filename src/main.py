@@ -623,15 +623,8 @@ def main() -> int:
     so_cfg = config_dict.get("self_organization", {})
     if so_cfg.get("enabled", False) and controller is not None:
         try:
+            from src.manipulation.manipulator import Brain5DManipulator
             from src.self_organization.composition import compose_structural_subsystem
-            from src.self_organization.engine import SelfOrganizationEngine
-
-            _manipulator = Brain5DManipulator(network)
-            _self_org_engine = SelfOrganizationEngine(
-                network, _manipulator, config_dict
-            )
-            if _self_org_engine.params.enabled:
-                _self_org_engine.attach()
 
             _structural_journal_path = _snapshot_dir / "structural.journal"
             _composed = compose_structural_subsystem(
@@ -643,6 +636,14 @@ def main() -> int:
             _self_org_plasticity = _composed["plasticity"]
             _self_org_coordinator = _composed["coordinator"]
             _structural_journal = _composed["journal"]
+            _manipulator = _composed["manipulator"]
+
+            # The legacy SelfOrganizationEngine ran_cycle() mutates the
+            # network directly through its own manipulator, bypassing the
+            # canonical Coordinator -> Approval -> PlasticityEngine path.
+            # For Alpha.5, structural mutation must flow exclusively through
+            # the canonical path. The legacy engine is NOT attached.
+            # It remains available for proposal-generation research only.
 
             # Update self-org telemetry
             _self_org_stats.update(
@@ -654,6 +655,7 @@ def main() -> int:
             )
 
             print("✅ SelfOrganizationCoordinator + PlasticityEngine + Journal created")
+            print("   (canonical path only; legacy SelfOrganizationEngine NOT attached)")
         except Exception as e:
             print(f"⚠️ Self-organization setup failed: {e}")
 

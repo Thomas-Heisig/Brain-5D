@@ -237,49 +237,66 @@ class GateStatusBuilder:
         """Return True if the structural E2E artifact shows all proofs passed
         AND the artifact's tree digest matches the current source tree.
 
-        Staleness binding: if the artifact's ``tested_tree_digest`` does not
-        match the current tree digest, the artifact is STALE and the
-        structural criteria revert to pending.
+        Fail-closed validation:
+        - missing artifact → NOT VERIFIED
+        - status != "verified" → NOT VERIFIED
+        - missing schema_version → NOT VERIFIED
+        - proof count != 10 → NOT VERIFIED
+        - any proof false → NOT VERIFIED
+        - missing tested_tree_digest → NOT VERIFIED
+        - missing current digest → NOT VERIFIED
+        - digest mismatch → NOT VERIFIED (stale)
         """
         artifact = self._read_structural_e2e_artifact()
         if artifact is None:
             return False
         if artifact.get("status") != "verified":
             return False
+        if artifact.get("schema_version") is None:
+            return False
         proofs = artifact.get("proofs", {})
-        if not isinstance(proofs, dict) or not proofs:
+        if not isinstance(proofs, dict) or len(proofs) != 10:
             return False
         if not all(bool(v) for v in proofs.values()):
             return False
-        # Staleness binding: artifact tree digest must match current tree
+        # Staleness binding: artifact tree digest MUST match current tree.
+        # Fail-closed: missing digest → NOT VERIFIED.
         artifact_digest = artifact.get("tested_tree_digest")
-        if artifact_digest is not None:
-            from src.dashboard.verification import compute_source_tree_digest
+        if not artifact_digest:
+            return False
+        from src.dashboard.verification import compute_source_tree_digest
 
-            current_digest = compute_source_tree_digest(self.repo_root)
-            if current_digest is not None and artifact_digest != current_digest:
-                return False  # stale artifact
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return False
+        if artifact_digest != current_digest:
+            return False  # stale artifact
         return True
 
     def _structural_proof_status(self, proof_num: int) -> str:
         """Return the gate status for a specific structural E2E proof.
 
-        Returns G_STALE if the artifact exists but its tree digest does not
-        match the current source tree.
+        Fail-closed: missing artifact, missing digest, or digest mismatch
+        all result in PENDING or STALE — never PASSED.
         """
         artifact = self._read_structural_e2e_artifact()
         if artifact is None:
             return G_PENDING
         if artifact.get("status") != "verified":
             return G_PENDING
-        # Staleness binding
+        if artifact.get("schema_version") is None:
+            return G_PENDING
+        # Staleness binding — fail-closed
         artifact_digest = artifact.get("tested_tree_digest")
-        if artifact_digest is not None:
-            from src.dashboard.verification import compute_source_tree_digest
+        if not artifact_digest:
+            return G_PENDING
+        from src.dashboard.verification import compute_source_tree_digest
 
-            current_digest = compute_source_tree_digest(self.repo_root)
-            if current_digest is not None and artifact_digest != current_digest:
-                return G_STALE
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return G_PENDING
+        if artifact_digest != current_digest:
+            return G_STALE
         proofs = artifact.get("proofs", {})
         if not isinstance(proofs, dict):
             return G_PENDING

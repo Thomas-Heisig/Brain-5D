@@ -31,6 +31,7 @@ import json
 import platform
 import random
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -167,6 +168,10 @@ def _build_real_signal(network: NeuralNetwork, tick: int = 5) -> HomeostasisSign
 
     Uses the canonical ``HomeostasisEngine.build_signal()`` — the same
     method the production runtime uses. NOT a fake signal.
+
+    The signal is built from a network where all neurons are at tick 0
+    with zero firing rate — this naturally produces a low-rate condition
+    that the policy converts into a neurogenesis proposal.
     """
     config_dict: dict[str, Any] = {
         "homeostasis": {
@@ -188,6 +193,11 @@ def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[Poli
     """Generate a neurogenesis proposal from a real HomeostasisSignal.
 
     Returns (report, proposal_id).
+
+    The policy MUST produce the proposal itself — no manual fallback.
+    If the policy does not produce a neurogenesis proposal, this function
+    raises AssertionError so the test fails rather than silently creating
+    a manual proposal.
     """
     signal = _build_real_signal(network, tick=tick)
     policy = SelfOrganizationPolicy(
@@ -198,44 +208,29 @@ def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[Poli
         )
     )
     report = policy.analyze(signal)
-    # If the real signal produced a neurogenesis proposal, ensure it has
-    # a neuron_id so create_neuron_near can find a free neighbour.
     neuro_proposals = [p for p in report.proposals if p.kind == ProposalKind.NEUROGENESIS]
-    if neuro_proposals:
-        # The policy creates proposals with neuron_id=None; set it to an
-        # existing neuron so create_neuron_near can find a free neighbour.
-        existing_neuron = next(iter(network.neurons))
-        from dataclasses import replace
-        fixed_proposals = tuple(
-            replace(p, neuron_id=p.neuron_id if p.neuron_id is not None else existing_neuron)
-            for p in report.proposals
-        )
-        report = PolicyReport(
-            tick=report.tick,
-            proposals=fixed_proposals,
-            neurogenesis_pressure=report.neurogenesis_pressure,
-            pruning_pressure=report.pruning_pressure,
-            synapse_sprouting_pressure=report.synapse_sprouting_pressure,
-            synapse_pruning_pressure=report.synapse_pruning_pressure,
-        )
-        return report, neuro_proposals[0].proposal_id
-    # Fallback: create a proposal from the signal measurement with neuron_id
+    assert neuro_proposals, (
+        f"Policy did not produce a neurogenesis proposal from the real signal. "
+        f"Signal: neuron_count={signal.neuron_count}, mean_rate={signal.mean_rate_hz:.3f}, "
+        f"low_rate_neurons={signal.low_rate_neurons}, neurogenesis_pressure={report.neurogenesis_pressure:.3f}"
+    )
+    # The policy creates proposals with neuron_id=None; set it to an
+    # existing neuron so create_neuron_near can find a free neighbour.
     existing_neuron = next(iter(network.neurons))
-    proposal = StructuralProposal(
-        proposal_id=f"{tick}:neurogenesis",
-        kind=ProposalKind.NEUROGENESIS,
-        neuron_id=existing_neuron,
-        reason=f"signal: mean_rate={signal.mean_rate_hz:.3f}, low_rate={signal.low_rate_neurons}/{signal.neuron_count}",
+    from dataclasses import replace
+    fixed_proposals = tuple(
+        replace(p, neuron_id=p.neuron_id if p.neuron_id is not None else existing_neuron)
+        for p in report.proposals
     )
     report = PolicyReport(
-        tick=tick,
-        proposals=(proposal,),
-        neurogenesis_pressure=1.0,
-        pruning_pressure=0.0,
-        synapse_sprouting_pressure=0.0,
-        synapse_pruning_pressure=0.0,
+        tick=report.tick,
+        proposals=fixed_proposals,
+        neurogenesis_pressure=report.neurogenesis_pressure,
+        pruning_pressure=report.pruning_pressure,
+        synapse_sprouting_pressure=report.synapse_sprouting_pressure,
+        synapse_pruning_pressure=report.synapse_pruning_pressure,
     )
-    return report, proposal.proposal_id
+    return report, neuro_proposals[0].proposal_id
 
 
 # =========================================================================
@@ -565,19 +560,6 @@ def test_complete_canonical_e2e(tmp_path: Path) -> None:
 # Verification artifact writer with provenance
 # =========================================================================
 
-_PROOF_NAMES = {
-    1: "01_coordinator",
-    2: "02_plasticity",
-    3: "03_bridge_identity",
-    4: "04_real_signal_proposal",
-    5: "05_proposal_no_mutation",
-    6: "06_reject_no_mutation",
-    7: "07_approve_exactly_one_mutation",
-    8: "08_exactly_one_change_record",
-    9: "09_undo_restores_topology",
-    10: "10_restart_replay_identity",
-}
-
 
 def _git_head(repo_root: Path) -> str | None:
     try:
@@ -604,68 +586,74 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
     (persistent, not gitignored) so a fresh clone can verify the structural
     E2E status.
 
+    This test runs the structural E2E proofs via a real pytest subprocess
+    (not manual function calls) and collects the results. The complete
+    canonical E2E test is included in the required proof set.
+
     The artifact includes:
     - schema_version, suite, status, timestamp, python_version
     - tested_commit, tested_tree_digest, test_command
-    - proofs (10 bools)
-    - topology digests before/after mutation/undo
+    - proofs (11 bools: 10 proofs + complete canonical E2E)
+    - topology digests before/after mutation/undo (never null)
     - journal_record_count
 
     GateStatusBuilder reads this artifact and rejects/stales it when
     tested_tree_digest != current tree digest.
     """
     repo_root = Path(__file__).resolve().parents[1]
-    proofs_passed: dict[str, bool] = {}
 
-    proof_tests = [
-        (1, test_proof_01_coordinator_instantiated),
-        (2, test_proof_02_plasticity_engine_instantiated),
-        (3, test_proof_03_bridge_identity),
-        (4, test_proof_04_real_signal_proposal),
-        (5, test_proof_05_proposal_no_mutation),
-        (6, test_proof_06_reject_no_mutation),
-        (7, test_proof_07_approve_exactly_one_mutation),
-        (8, test_proof_08_exactly_one_change_record),
-        (9, test_proof_09_undo_restores_topology),
-        (10, test_proof_10_restart_replay_identity),
+    # Run the structural E2E proofs via a real pytest subprocess.
+    # This is genuine pytest result aggregation, not manual function calls.
+    required_tests = [
+        "test_proof_01_coordinator_instantiated",
+        "test_proof_02_plasticity_engine_instantiated",
+        "test_proof_03_bridge_identity",
+        "test_proof_04_real_signal_proposal",
+        "test_proof_05_proposal_no_mutation",
+        "test_proof_06_reject_no_mutation",
+        "test_proof_07_approve_exactly_one_mutation",
+        "test_proof_08_exactly_one_change_record",
+        "test_proof_09_undo_restores_topology",
+        "test_proof_10_restart_replay_identity",
+        "test_complete_canonical_e2e",
     ]
-
-    # Collect topology digests from a representative proof run
-    topology_before: str | None = None
-    topology_after_mutation: str | None = None
-    topology_after_undo: str | None = None
-    journal_record_count: int = 0
-
-    for proof_num, test_func in proof_tests:
-        proof_dir = tmp_path / f"proof_{proof_num:02d}"
-        proof_dir.mkdir(exist_ok=True)
-        try:
-            test_func(proof_dir)
-            proofs_passed[_PROOF_NAMES[proof_num]] = True
-        except Exception:
-            proofs_passed[_PROOF_NAMES[proof_num]] = False
-
-    # Collect topology digests from proof 9 (undo test)
-    try:
-        chain = _build_chain(tmp_path / "digest_capture")
-        net = chain["network"]
-        coord = chain["coordinator"]
-        br = chain["bridge"]
-        plast = chain["plasticity"]
-        jnl = chain["journal"]
-        topology_before = _structural_digest(net)
-        report, pid = _make_neurogenesis_proposal(net, tick=99)
-        coord.publish(report)
-        br.approve_structural(pid)
-        topology_after_mutation = _structural_digest(net)
-        journal_record_count = len(jnl.history(100))
-        plast.undo_last_change(tick=100)
-        topology_after_undo = _structural_digest(net)
-    except Exception:
-        pass
+    proofs_passed: dict[str, bool] = {}
+    for test_name in required_tests:
+        nodeid = f"tests/test_structural_e2e.py::{test_name}"
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", nodeid, "-q", "--tb=line", "--no-header"],
+            capture_output=True, text=True, timeout=60, cwd=str(repo_root),
+        )
+        proofs_passed[test_name] = result.returncode == 0
 
     all_passed = all(proofs_passed.values())
     assert all_passed, f"Some proofs failed: {proofs_passed}"
+
+    # Collect topology digests — these must NOT be null.
+    chain = _build_chain(tmp_path / "digest_capture")
+    net = chain["network"]
+    coord = chain["coordinator"]
+    br = chain["bridge"]
+    plast = chain["plasticity"]
+    jnl = chain["journal"]
+    topology_before = _structural_digest(net)
+    report, pid = _make_neurogenesis_proposal(net, tick=99)
+    coord.publish(report)
+    br.approve_structural(pid)
+    topology_after_mutation = _structural_digest(net)
+    journal_record_count = len(jnl.history(100))
+    plast.undo_last_change(tick=100)
+    topology_after_undo = _structural_digest(net)
+
+    # All digests must be non-null — fail-closed.
+    assert topology_before is not None
+    assert topology_after_mutation is not None
+    assert topology_after_undo is not None
+    assert topology_before != topology_after_mutation
+    assert topology_after_undo == topology_before
+
+    tree_digest = _tree_digest(repo_root)
+    assert tree_digest is not None, "tree digest must be computable"
 
     artifact = {
         "schema_version": 1,
@@ -674,7 +662,7 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
         "tested_commit": _git_head(repo_root),
-        "tested_tree_digest": _tree_digest(repo_root),
+        "tested_tree_digest": tree_digest,
         "test_command": "python -m pytest tests/test_structural_e2e.py -q",
         "proofs": proofs_passed,
         "topology_digest_before": topology_before,

@@ -225,15 +225,16 @@ def test_gate_b_structural_proofs_pass_with_artifact() -> None:
     status = builder.build()
     proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
     assert len(proof_items) == 10
-    # If the artifact exists and is verified, proofs should pass or be stale
-    # (stale when the tree digest changed since the artifact was written).
+    # If the artifact exists and is verified, proofs should pass, be stale,
+    # or be pending (when the tree digest changed since the artifact was
+    # written, fail-closed validation returns pending).
     artifact_path = _repo_root() / "research" / "generated" / "verification" / "structural_e2e.json"
     if artifact_path.exists():
         import json as _json
         artifact = _json.loads(artifact_path.read_text(encoding="utf-8"))
         if artifact.get("status") == "verified":
             for item in proof_items:
-                assert item["status"] in (G_PASSED, G_STALE)
+                assert item["status"] in (G_PASSED, G_STALE, G_PENDING)
 
 
 def test_gate_c_registered_experiment_not_executed() -> None:

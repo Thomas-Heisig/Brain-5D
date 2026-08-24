@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural Evidence Hardening Complete (2026-08-24)
+
+### Fixed
+
+- **Production path regression** (`src/main.py`): restored `Brain5DManipulator` import that was removed during the composition factory refactor; removed the legacy `SelfOrganizationEngine` from the direct mutation path — structural mutation now flows exclusively through the canonical Coordinator -> Approval -> PlasticityEngine path
+- **Manual proposal fallback removed** (`tests/test_structural_e2e.py`): `_make_neurogenesis_proposal()` now raises `AssertionError` if the policy does not produce a proposal from the real signal — no more manual `StructuralProposal` creation as fallback
+- **GateBuilder fail-closed validation** (`src/dashboard/gate_status.py`): missing `schema_version`, `tested_tree_digest`, `current_digest`, or proof count != 10 all result in NOT VERIFIED — no more silent pass on incomplete artifacts
+
+### Changed
+
+- **Artifact writer** (`tests/test_structural_e2e.py`): now runs proofs via real pytest subprocess (not manual function calls); includes `test_complete_canonical_e2e` in the required proof set; topology digests must be non-null (fail-closed)
+- **Persistent verification artifact** committed to `research/generated/verification/structural_e2e.json` — a fresh clone can now verify the structural E2E status
+- `tests/test_baseline.json`: updated to current tree digest (includes `tests/`)
+
+### Test Results (real run, 2026-08-24)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q`
+- **Result**: 274 passed, 2 skipped, 0 failed, 0 collection errors
+- **Structural E2E**: 11/11 proofs verified (10 proofs + complete canonical E2E)
+- **Production path**: single canonical mutation path (legacy engine NOT attached)
+
+---
+
 ## v0.5.0-alpha.5 - Structural Evidence Hardening (2026-08-24)
 
 ### Added
