@@ -230,8 +230,17 @@ def main() -> int:
     if args.ticks is not None:
         config_dict["ticks"] = args.ticks
 
+    # Compute config SHA-256 for provenance
+    import hashlib
+
+    try:
+        _config_bytes = Path(args.config).read_bytes()
+        config_dict["_sha256"] = hashlib.sha256(_config_bytes).hexdigest()
+    except Exception:
+        config_dict["_sha256"] = ""
+
     print("🚀 Brain 5D - v0.5.0-alpha.1 with dashboard")
-    print(f"📄 Config: {args.config}")
+    print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)"
 
     # --- Build network ---
     network, rng = build_network(config_dict)
@@ -342,7 +351,10 @@ def main() -> int:
                 "seed": config_dict.get("seed", 42),
                 "git_commit": git_commit,
                 "git_dirty": git_dirty,
-                "config": str(args.config),
+                "config": {
+                    "path": str(args.config),
+                    "sha256": config_dict.get("_sha256", ""),
+                },
             }
 
             # Write to temp file
@@ -656,6 +668,26 @@ def main() -> int:
 
             print("✅ SelfOrganizationCoordinator + PlasticityEngine + Journal created")
             print("   (canonical path only; legacy SelfOrganizationEngine NOT attached)")
+
+            # Attach the SelfOrganizationRuntimeAdapter as a post-tick hook.
+            # This feeds real HomeostasisSignals through the policy and into
+            # the coordinator — closing the production signal->policy->coordinator
+            # path. The adapter does NOT mutate the network.
+            if homeostasis is not None and controller is not None:
+                try:
+                    from src.self_organization.runtime_adapter import (
+                        SelfOrganizationRuntimeAdapter,
+                    )
+
+                    _so_adapter = SelfOrganizationRuntimeAdapter(
+                        homeostasis_engine=homeostasis,
+                        coordinator=_self_org_coordinator,
+                        interval_ticks=50,
+                    )
+                    controller.add_hook(_so_adapter)
+                    print("   ✅ SelfOrganizationRuntimeAdapter attached (signal->policy->coordinator)")
+                except Exception as adapter_err:
+                    print(f"   ⚠️ SelfOrganizationRuntimeAdapter failed: {adapter_err}")
         except Exception as e:
             print(f"⚠️ Self-organization setup failed: {e}")
 

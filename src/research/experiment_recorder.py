@@ -89,7 +89,13 @@ class ExperimentRecorder:
             "artifacts": {},
             "research_questions": [],
             "hypotheses": [],
+            "config": {},
         }
+
+    def record_config(self, config_path: str, sha256: str = "") -> ExperimentRecorder:
+        """Record the configuration file path and its SHA-256 hash."""
+        self._manifest["config"] = {"path": config_path, "sha256": sha256}
+        return self
 
     def record_simulation_params(
         self: ExperimentRecorder, **kwargs: Any
