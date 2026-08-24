@@ -623,10 +623,8 @@ def main() -> int:
     so_cfg = config_dict.get("self_organization", {})
     if so_cfg.get("enabled", False) and controller is not None:
         try:
-            from src.manipulation.manipulator import Brain5DManipulator
-            from src.self_organization.coordinator import SelfOrganizationCoordinator
+            from src.self_organization.composition import compose_structural_subsystem
             from src.self_organization.engine import SelfOrganizationEngine
-            from src.self_organization.plasticity import StructuralPlasticityEngine
 
             _manipulator = Brain5DManipulator(network)
             _self_org_engine = SelfOrganizationEngine(
@@ -636,40 +634,15 @@ def main() -> int:
                 _self_org_engine.attach()
 
             _structural_journal_path = _snapshot_dir / "structural.journal"
-            from src.storage.structural_journal import StructuralJournal
-
-            _structural_journal = StructuralJournal(_structural_journal_path)
-
-            _self_org_plasticity = StructuralPlasticityEngine(
-                manipulator=_manipulator,
-                journal=_structural_journal,
+            _composed = compose_structural_subsystem(
+                network,
+                _structural_journal_path,
+                coordinator_enabled=True,
+                coordinator_dry_run=False,
             )
-
-            def _plasticity_executor(proposal: Any) -> int:
-                """Adapter: translate LegacyStructuralProposal → apply_proposal call."""
-                from src.self_organization.policy import ProposalKind, StructuralProposal
-
-                kind_map = {
-                    "neurogenesis": ProposalKind.NEUROGENESIS,
-                    "prune": ProposalKind.PRUNING,
-                }
-                sp = StructuralProposal(
-                    proposal_id=f"legacy-{proposal.tick}-{proposal.action.value}",
-                    kind=kind_map.get(
-                        proposal.action.value, ProposalKind.NEUROGENESIS
-                    ),
-                    reason=proposal.reason,
-                )
-                _self_org_plasticity.apply_proposal(
-                    tick=int(network.current_tick),
-                    proposal=sp,
-                    approved=True,
-                )
-                return 0
-
-            _self_org_coordinator = SelfOrganizationCoordinator(
-                executor=_plasticity_executor,
-            )
+            _self_org_plasticity = _composed["plasticity"]
+            _self_org_coordinator = _composed["coordinator"]
+            _structural_journal = _composed["journal"]
 
             # Update self-org telemetry
             _self_org_stats.update(

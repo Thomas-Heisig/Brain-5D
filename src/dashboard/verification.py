@@ -28,7 +28,14 @@ from typing import Any
 # Scientifically relevant source paths
 # ============================================================================
 
+# Source code and config changes must mark the baseline as stale.
 SCIENTIFIC_PATHS: list[str] = ["src/", "configs/", "research/schemas/", "pyproject.toml"]
+
+# Test logic changes must also mark the baseline as stale — a changed test
+# is a changed verification. But the baseline file itself must NOT
+# invalidate itself (a file cannot stably contain its own digest).
+TEST_PATHS: list[str] = ["tests/"]
+_DIGEST_EXCLUDE_FILES: set[str] = {"tests/test_baseline.json"}
 
 # ============================================================================
 # Test baseline evaluation
@@ -52,17 +59,25 @@ def read_test_baseline(repo_root: Path) -> dict[str, Any] | None:
 def compute_source_tree_digest(repo_root: Path) -> str | None:
     """Return a SHA-256 digest of the scientifically relevant source tree.
 
+    The digest covers ``src/``, ``configs/``, ``research/schemas/``,
+    ``pyproject.toml`` and ``tests/`` (excluding ``test_baseline.json``
+    so the baseline file cannot invalidate itself).
+
     The digest is computed from file contents (not git blobs) so it works
     in a dirty working tree and does not require a clean git state.
     Returns ``None`` if no files were found.
     """
+    all_paths = SCIENTIFIC_PATHS + TEST_PATHS
     try:
         hasher = hashlib.sha256()
         found_any = False
-        for rel in SCIENTIFIC_PATHS:
+        for rel in all_paths:
             target = repo_root / rel
             if target.is_file():
-                hasher.update(rel.encode("utf-8"))
+                rel_posix = rel.rstrip("/")
+                if rel_posix in _DIGEST_EXCLUDE_FILES:
+                    continue
+                hasher.update(rel_posix.encode("utf-8"))
                 hasher.update(b"\0")
                 hasher.update(target.read_bytes())
                 hasher.update(b"\0")
@@ -72,6 +87,8 @@ def compute_source_tree_digest(repo_root: Path) -> str | None:
                     if not path.is_file():
                         continue
                     rel_path = path.relative_to(repo_root).as_posix()
+                    if rel_path in _DIGEST_EXCLUDE_FILES:
+                        continue
                     hasher.update(rel_path.encode("utf-8"))
                     hasher.update(b"\0")
                     hasher.update(path.read_bytes())

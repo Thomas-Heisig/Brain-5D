@@ -214,14 +214,18 @@ class GateStatusBuilder:
     # --------------------------------------------------------------------
 
     def _read_structural_e2e_artifact(self) -> dict[str, Any] | None:
-        """Read ``artifacts/structural_e2e_results.json``.
+        """Read the structural E2E verification artifact.
+
+        Reads from the persistent location ``research/generated/verification/
+        structural_e2e.json`` (not gitignored) so a fresh clone can verify
+        the structural E2E status.
 
         Returns ``None`` if the artifact is missing or unparseable.
-        This is the machine-readable evidence that the structural E2E
-        tests actually passed — the gate builder reads it instead of
-        guessing from the mere existence of a test file.
         """
-        artifact_path = self.repo_root / "artifacts" / "structural_e2e_results.json"
+        artifact_path = (
+            self.repo_root / "research" / "generated" / "verification"
+            / "structural_e2e.json"
+        )
         if not artifact_path.exists():
             return None
         try:
@@ -230,7 +234,13 @@ class GateStatusBuilder:
             return None
 
     def _structural_e2e_verified(self) -> bool:
-        """Return True if the structural E2E artifact shows all proofs passed."""
+        """Return True if the structural E2E artifact shows all proofs passed
+        AND the artifact's tree digest matches the current source tree.
+
+        Staleness binding: if the artifact's ``tested_tree_digest`` does not
+        match the current tree digest, the artifact is STALE and the
+        structural criteria revert to pending.
+        """
         artifact = self._read_structural_e2e_artifact()
         if artifact is None:
             return False
@@ -239,18 +249,41 @@ class GateStatusBuilder:
         proofs = artifact.get("proofs", {})
         if not isinstance(proofs, dict) or not proofs:
             return False
-        return all(bool(v) for v in proofs.values())
+        if not all(bool(v) for v in proofs.values()):
+            return False
+        # Staleness binding: artifact tree digest must match current tree
+        artifact_digest = artifact.get("tested_tree_digest")
+        if artifact_digest is not None:
+            from src.dashboard.verification import compute_source_tree_digest
+
+            current_digest = compute_source_tree_digest(self.repo_root)
+            if current_digest is not None and artifact_digest != current_digest:
+                return False  # stale artifact
+        return True
 
     def _structural_proof_status(self, proof_num: int) -> str:
-        """Return the gate status for a specific structural E2E proof."""
+        """Return the gate status for a specific structural E2E proof.
+
+        Returns G_STALE if the artifact exists but its tree digest does not
+        match the current source tree.
+        """
         artifact = self._read_structural_e2e_artifact()
-        if artifact is None or artifact.get("status") != "verified":
+        if artifact is None:
             return G_PENDING
+        if artifact.get("status") != "verified":
+            return G_PENDING
+        # Staleness binding
+        artifact_digest = artifact.get("tested_tree_digest")
+        if artifact_digest is not None:
+            from src.dashboard.verification import compute_source_tree_digest
+
+            current_digest = compute_source_tree_digest(self.repo_root)
+            if current_digest is not None and artifact_digest != current_digest:
+                return G_STALE
         proofs = artifact.get("proofs", {})
         if not isinstance(proofs, dict):
             return G_PENDING
         proof_key = f"{proof_num:02d}"
-        # The artifact uses named keys like "01_coordinator"; match by prefix.
         for key, value in proofs.items():
             if key.startswith(proof_key):
                 return G_PASSED if bool(value) else G_FAILED
@@ -336,10 +369,10 @@ class GateStatusBuilder:
                 label=label,
                 status=G_PASSED if structural_verified else G_PENDING,
                 maturity=VERIFIED if structural_verified else INTEGRATED,
-                source="artifacts/structural_e2e_results.json" if structural_verified else "structural_e2e",
-                message="Verified by structural E2E artifact" if structural_verified else "Pending structural E2E verification proof",
+                source="research/generated/verification/structural_e2e.json" if structural_verified else "structural_e2e",
+                message="Verified by structural E2E artifact (tree digest matches)" if structural_verified else "Pending structural E2E verification proof",
                 live_status=structural_live,
-                evidence={"artifact": "artifacts/structural_e2e_results.json"} if structural_verified else None,
+                evidence={"artifact": "research/generated/verification/structural_e2e.json"} if structural_verified else None,
             ))
 
         return items
