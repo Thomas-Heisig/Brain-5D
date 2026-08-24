@@ -1,6 +1,5 @@
 {
-  "tested_commit": "6b705540ee41967d0462007d2672e749f73997ce",
-  "recorded_in_commit": "6b705540ee41967d0462007d2672e749f73997ce",
+  "tested_commit": "a57026dd0121796b02ef79a6746c79a1ce8b8aac",
   "tested_tree_digest": "5f90946be695f37a8e6370e3cc6e05e1377dda53688bd85930a81ec863f3e6b5",
   "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
   "tree_digest_excludes": ["tests/test_baseline.json"],

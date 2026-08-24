@@ -1,7 +1,9 @@
 # Brain-5D — Consolidated TODO
 
 > Last updated: 2026-08-24
-> Repository HEAD: 6b70554
+> Verification basis:
+>   Test-run commit: a57026d
+>   Source-tree digest: 5f90946b...
 > Status: Alpha.5 integration and verification closure
 > Alpha.6: BLOCKED
 >
@@ -10,10 +12,10 @@
 > error visibility, restore determinism and scientific baseline
 > experiments remain open.
 >
-> Dashboard:
-> /api/integration/status = live runtime truth
-> /api/gate/status        = release/verification truth
-> B5D-SEF                 = scientific evidence truth
+> Dashboard truth sources:
+>   /api/integration/status = live runtime truth
+>   /api/gate/status        = release/verification truth
+>   B5D-SEF                 = scientific evidence truth
 
 ---
 
@@ -29,8 +31,7 @@ Real single-port ownership proof             OPEN
 
 Gate B — Verification
 Recorded full test run                       274 passed / 2 skipped
-Structural mechanism E2E                     11/11 passed
-Structural Gate artifact validation          PASSED (11/11 proof set)
+Structural mechanism E2E                     11/11 VERIFIED
 Error Visibility                             OPEN
 Restore Determinism                          OPEN
 
@@ -47,35 +48,11 @@ ALPHA.6                                      BLOCKED
 
 ---
 
-# Status Model
-
-Fur alle grosseren Funktionen gelten kunftig vier Reifestufen:
-
-```
-IMPLEMENTED
-    |
-INTEGRATED
-    |
-VERIFIED
-    |
-EVIDENCED
-```
-
-Bedeutung:
-
-- `IMPLEMENTED` -- Code existiert.
-- `INTEGRATED` -- Code ist im realen `src.main`-Pfad angeschlossen.
-- `VERIFIED` -- Tests bzw. Laufzeitprufung bestatigen die Funktion.
-- `EVIDENCED` -- wissenschaftliche Experimente liefern dokumentierte Evidenz.
-
----
-
 # Current Recorded Test Baseline
 
 ```
-Repository HEAD:  6b70554
-Test-run HEAD:    6b70554
-Python:           3.13.14
+Test-run commit: a57026d
+Python:          3.13.14
 
 Full suite:
   Passed:             274
@@ -83,8 +60,7 @@ Full suite:
   Skipped:            2
   Collection errors:  0
 
-Freshness authority:
-  tested_tree_digest (SHA-256)
+Freshness authority: tested_tree_digest (SHA-256)
 
 Digest scope:
   src/
@@ -94,7 +70,9 @@ Digest scope:
   tests/
 
 Excluded:
-  tests/test_baseline.json
+  tests/test_baseline.json (cannot invalidate itself)
+  docs/ (documentation changes do not affect verification)
+  research/generated/ (generated reports are derived, not source)
 ```
 
 ---
@@ -104,99 +82,55 @@ Excluded:
 ```
 === GATE A ====================================================
 
- 1. Verify current real HTTP Bridge state .................... ✅
- 2. Fix frontend double initialization ....................... ✅
- 3. Select canonical RuntimeController ....................... ✅
- 4. Remove SimpleController .................................. ✅
- 5. Make RuntimeController sole simulation-clock owner ....... ✅
- 6. Remove automatic startup 1000-tick execution ............. ✅
- 7. Unify /api/control contract ............................. ✅
- 8. Connect snapshot pipeline to RuntimeController .......... ✅
- 9. Verify .b5d -> Heatmap live chain ....................... ✅
-10. Canonical structural production composition ............. ✅
-11. Approval -> mutation -> journal -> undo ................. ✅
-12. Dashboard Completion .................................... ✅
-13. Production signal -> policy -> coordinator adapter ...... 🔴
-14. Real single-listener port ownership test ............... 🔴
+ 1. Process Architecture / Single PID ........................ ✅
+ 2. Canonical RuntimeController ............................... ✅
+ 3. Frontend Lifecycle / Control API ......................... ✅
+ 4. Snapshot / Heatmap / 5D Inspector ........................ ✅
+ 5. Canonical structural production composition .............. ✅
+ 6. Approval -> mutation -> journal -> undo .................. ✅
+ 7. Dashboard Completion ..................................... ✅
+ 8. Production signal -> policy -> coordinator adapter ....... 🔴
+ 9. Real single-listener port ownership test ................ 🔴
 
 === GATE B ====================================================
 
-15. Full pytest collection 274/0/2 ......................... ✅
-16. Structural mechanism E2E 11/11 ......................... ✅*
-17. Error Visibility / scientific integrity ................ 🔴
-18. Restore-and-continue determinism ....................... 🔴
-
-* Verification authoritative when required-proof-set
-  and tree-digest freshness pass.
+10. Full pytest collection 274/0/2 .......................... ✅
+11. Structural mechanism E2E 11/11 .......................... ✅
+12. Error Visibility / scientific integrity ................. 🔴
+13. Restore-and-continue determinism ........................ 🔴
 
 === GATE C ====================================================
 
-19. Correct research registry ID collisions ................ ✅
-20. Add DATA-* object type ................................ ✅
-21. Harden experiment manifests ........................... ✅
-22. Run EXP-DET-0001 (deterministic replay) ............... 🔴
-23. Run EXP-STOR-0001 (snapshot/restore identity) ......... 🔴
-24. Generate evidence from actual runs .................... 🔴
-25. Close ALPHA.5 ......................................... 🎯
-26. Begin alpha.6
+14. Research registry / B5D-SEF framework .................. ✅
+15. EXP-DET-0001 (deterministic replay) .................... 🔴
+16. EXP-STOR-0001 (snapshot/restore identity) .............. 🔴
+17. Generate evidence from actual runs ..................... 🔴
+18. Close ALPHA.5 .......................................... 🎯
+19. Begin alpha.6
 ```
 
 ---
 
 # Structural Safety
 
-```
-[x] Proposal creation alone does not mutate the network
-    Verified by structural E2E proof 5
-
-[x] Reject does not mutate the network
-    Verified by proof 6
-
-[x] Manual approval required for canonical StructuralProposal mutation
-    Verified by canonical E2E
-
-[x] Dry-run mode implemented
-    SelfOrganizationCoordinator(dry_run=True)
-
-[ ] Auto-approval explicitly opt-in verified in production config
-
-[x] Canonical approved mutation produces StructuralChangeRecord
-    Verified by proof 8
-
-[x] Canonical mutation linked to proposal_id
-    Verified by proof 8
-
-[x] Every production proposal attributable to runtime measurement
-    E2E verified, production adapter still missing
-```
+* [x] Proposal creation alone does NOT mutate the network (proof 5)
+* [x] Reject does NOT mutate the network (proof 6)
+* [x] Manual approval required for canonical StructuralProposal mutation (canonical E2E)
+* [x] Dry-run mode implemented (SelfOrganizationCoordinator(dry_run=True))
+* [ ] Auto-approval explicitly opt-in verified in production config
+* [x] Canonical approved mutation produces StructuralChangeRecord (proof 8)
+* [x] Canonical mutation linked to proposal_id (proof 8)
+* [x] E2E proposals attributable to canonical HomeostasisSignal (proof 4)
+* [ ] Production proposals attributable to runtime measurements (blocked by missing adapter)
 
 ---
 
-# Bereits implementiert laut Changelog
+# Structural E2E Proofs (11/11 VERIFIED)
 
-- CRC-protected Structural Journal
-- Commit markers
-- Recovery uncommitted journal tails
-- Deterministic structural replay
-- Persistent inverse-record undo
-- Manual proposal approval
-- Optional policy-based approval
-- Journal-backed structural history
-- Structural heatmaps
-- Typed dashboard structural routes
-- Bounded tick execution routes
-- Worker-boundary manual snapshot mechanism
-- Ordered structural flush before snapshot
-- .b5d snapshot writing capability
-- Runtime checkpoint writing
-- Snapshot completion notification
-- Optional Structural Journal replay during restore
-- Runtime checkpoint overlay after structural replay
-- Single-instance Dashboard regression suite
-- Bridge identity regression tests
-- JSON-404 API isolation regression tests
-
-
+* [x] Proof 1: Coordinator instantiated via production factory
+* [x] Proof 2: PlasticityEngine instantiated
+* [x] Proof 3: Bridge instance identity
+* [x] Proof 4: Real HomeostasisSignal -> policy -> proposal
 * [x] Proof 5: Proposal alone does not mutate
 * [x] Proof 6: Reject does not mutate
 * [x] Proof 7: Approve causes exactly one mutation
@@ -205,103 +139,101 @@ Excluded:
 * [x] Proof 10: Journal reopen/replay restores topology
 * [x] Proof 11: Complete canonical structural E2E
 
----
-
-# Homeostasis — Runtime Status
-
-* [x] Canonical `HomeostasisSignal` added
-* [x] Engine builder added
-* [x] Dashboard bridge added historically
-* [ ] Runtime-active path verified
-* [ ] Convergence experiment
-* [ ] Settling time / Overshoot / Steady-state error
-* [ ] STDP interaction
-* [ ] Structural interaction
-* [ ] Evidence status
+Artifact: research/generated/verification/structural_e2e.json
+Validation: REQUIRED_STRUCTURAL_PROOFS (11 IDs, all true, exact match)
+Freshness: tested_tree_digest matches current source tree
 
 ---
 
-# Scientific Claim Ledger
+# Research Registry
 
-* [x] Create `claims.yaml` (5 Claims)
-* [x] Associate claims with Research Questions
-* [x] Associate claims with literature
-* [ ] Associate claims with experiments
-* [ ] Associate claims with evidence
-* [ ] Record contradicting evidence
-* [ ] Record limitations
+> Canonical source: research/registry/*.yaml
+> Generated reports: research/generated/RESEARCH_CATALOG.md
 
----
+* [x] Research Questions: 28 registered
+* [x] Hypotheses: 27 registered
+* [x] Claims: 5 registered
+* [x] Literature Sources: 8 registered
+* [x] Experiment Methods: 13 defined
 
-# Automatic Research Catalog
-
-* [x] Build generator (`src/research/report_builder.py`)
-* [x] Generate on demand (`research/generate_reports.py`)
-* [ ] Generate on release
-* [ ] Optionally generate through CI
-* [x] Keep generated documents reproducible
+Registered experiments:
+* EXP-2026-0001   template (example)
+* EXP-DET-0001    not_started (deterministic replay)
+* EXP-STOR-0001   not_started (snapshot/restore identity)
 
 ---
 
-# Automatic Evidence Matrix
+# B5D-SEF Infrastructure
 
-* [x] Build evidence aggregation
-* [ ] Separate positive and negative evidence
-* [ ] Track replication count / independent seeds / contradictory evidence
-* [x] Track confidence level
+* [x] Research registry YAML files (questions, hypotheses, claims, sources, methods)
+* [x] JSON schemas for validation
+* [x] Experiment recorder with manifest generation
+* [x] Evidence engine
+* [x] Report builder (RESEARCH_CATALOG, EVIDENCE_MATRIX, etc.)
+* [x] Registry uniqueness validation (8 tests)
+* [x] DATA-* object type in schema
+* [x] evidence_level (E0-E4) in claim schema
+* [x] experiment_status in manifest schema
+* [x] ID correction: RQ-SNN-003 -> RQ-DET-001 for determinism question
+* [ ] Configuration SHA-256 hash (path only, not hash)
+* [ ] Runtime exceptions automatically propagated into manifest
+* [ ] Eligibility / Reward configuration in manifest
+* [ ] Test/environment provenance in manifest
 
 ---
 
-# v0.5.0-alpha.6 — Morphological Self-Regulation
+# Open Items
 
-> **BLOCKED until Alpha.5 Integration Gate passes.**
+## Gate A
+* [ ] Production signal -> policy -> coordinator adapter (SelfOrganizationRuntimeAdapter)
+* [ ] Real single-listener port ownership test (TCP listener assertion)
+
+## Gate B
+* [ ] Structured Runtime Error Events (RuntimeErrorEvent, error buffer, /api/errors)
+* [ ] Research fail-fast mode (invalid experiment runs rejected)
+* [ ] Config SHA-256 in .b5d metadata, experiment manifests, verification artifacts
+* [ ] Full RNG state persistence
+* [ ] Delayed event + learning/homeostasis state persistence
+* [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
+
+## Gate C
+* [ ] EXP-DET-0001 executed
+* [ ] EXP-STOR-0001 executed
+* [ ] First DATA-* artifact produced
+* [ ] First EVID-* record produced
+* [ ] First reproducibly supported/refuted hypothesis
+* [ ] Research Catalog rebuilt from real evidence
+* [ ] Evidence Matrix rebuilt from real evidence
+
+---
+
+# Future Versions
+
+## v0.5.0-alpha.6 — Morphological Self-Regulation
+> BLOCKED until Alpha.5 closes.
 
 Chronic signals, growth budgets, regional pressures, telemetry, scientific evaluation.
 
----
+## v0.6 — Scaling
+Event-driven dirty tracking, chunked storage, domain decomposition, 5k-1M benchmark ladder.
 
-# v0.6 — Scaling
+## v0.7 — Learning Environment
+Episode lifecycle, train/evaluation split, delayed reward tasks, learning curves.
 
-Event-driven dirty tracking, chunked storage, domain decomposition, benchmark ladder 5k-1M.
-
----
-
-# v0.7 — Learning Environment
-
-Episode lifecycle, train/evaluation split, delayed reward tasks, learning curves, statistical replication.
-
----
-
-# v0.8 — Embodiment
-
+## v0.8 — Embodiment
 Text/image/audio sensor adapters, actuator adapters, perception-action-reward loop.
 
----
-
-# v0.9 — Memory and World Model
-
+## v0.9 — Memory and World Model
 Working context, long-term associative memory, goals, multi-step state.
 
----
-
-# v0.10 — Cognitive Evaluation
-
+## v0.10 — Cognitive Evaluation
 Causal tasks, compositional generalization, neuro-symbolic experiments.
 
----
-
-# v0.11 — Controlled Action and HMI
-
+## v0.11 — Controlled Action and HMI
 Permissions, resource limits, audit log, safe stop, sandbox.
 
----
-
-# v0.12 — Release Candidate
-
+## v0.12 — Release Candidate
 Restore/continue soak tests, benchmark freeze, seven-day stability runs.
 
----
-
-# v1.0 — Usable Brain-5D AI
-
+## v1.0 — Usable Brain-5D AI
 Persistent, stable, reproducible, evaluable, multimodal learning system.
