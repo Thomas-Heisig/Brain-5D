@@ -321,9 +321,11 @@ class GateStatusBuilder:
         if not isinstance(proofs_raw, dict):
             return G_PENDING
         proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
-        proof_key = f"{proof_num:02d}"
+        # The artifact uses keys like "test_proof_01_coordinator_instantiated".
+        # Match by the "test_proof_XX" or "01_" prefix pattern.
+        padded = f"{proof_num:02d}"
         for key, value in proofs.items():
-            if key.startswith(proof_key):
+            if key == f"test_proof_{padded}" or key.startswith(f"test_proof_{padded}_") or key.startswith(f"{padded}_"):
                 return G_PASSED if bool(value) else G_FAILED
         return G_PENDING
 
@@ -905,31 +907,18 @@ class GateStatusBuilder:
             counts["claims"] = len(registry.claims)
             counts["sources"] = len(registry.sources)
         except Exception:
-            # Fallback: if the registry cannot be loaded, try line counting
-            # so the dashboard does not crash. This is strictly a fallback.
-            registry_root = self.repo_root / "research" / "registry"
-            mapping = {
-                "questions.yaml": ("questions", "- id:"),
-                "hypotheses.yaml": ("hypotheses", "- id:"),
-                "claims.yaml": ("claims", "- id:"),
-                "sources.yaml": ("sources", "- source_id:"),
-            }
-            for fname, (key, marker) in mapping.items():
-                path = registry_root / fname
-                if not path.exists():
-                    continue
-                try:
-                    text = path.read_text(encoding="utf-8")
-                    counts[key] = text.count(marker)
-                except Exception:
-                    pass
-            # Methods are under a ``methods:`` key with ``- prefix:`` entries
-            methods_path = registry_root / "methods.yaml"
-            if methods_path.exists():
-                try:
-                    counts["methods"] = methods_path.read_text(encoding="utf-8").count("- prefix:")
-                except Exception:
-                    pass
+            pass
+
+        # Methods have a different YAML structure (under ``methods:`` key)
+        # so they are not loaded by ResearchRegistry.load_all(). Count via
+        # the fallback method.
+        methods_path = self.repo_root / "research" / "registry" / "methods.yaml"
+        if methods_path.exists():
+            try:
+                counts["methods"] = methods_path.read_text(encoding="utf-8").count("- prefix:")
+            except Exception:
+                pass
+
         return counts
 
     def _registered_experiments(self) -> set[str]:
