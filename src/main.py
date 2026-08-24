@@ -35,7 +35,6 @@ from src.core.spatial_index import (
 )
 from src.diagnostics.propagation import PropagationAnalyzer
 from src.diagnostics.stimulus import StimulusEngine, StimulusResult
-from src.diagnostics.topology_health import TopologyHealth
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 
@@ -240,7 +239,7 @@ def main() -> int:
         config_dict["_sha256"] = ""
 
     print("🚀 Brain 5D - v0.5.0-alpha.1 with dashboard")
-    print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)"
+    print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)")
 
     # --- Build network ---
     network, rng = build_network(config_dict)
@@ -635,7 +634,6 @@ def main() -> int:
     so_cfg = config_dict.get("self_organization", {})
     if so_cfg.get("enabled", False) and controller is not None:
         try:
-            from src.manipulation.manipulator import Brain5DManipulator
             from src.self_organization.composition import compose_structural_subsystem
 
             _structural_journal_path = _snapshot_dir / "structural.journal"
@@ -673,7 +671,7 @@ def main() -> int:
             # This feeds real HomeostasisSignals through the policy and into
             # the coordinator — closing the production signal->policy->coordinator
             # path. The adapter does NOT mutate the network.
-            if homeostasis is not None and controller is not None:
+            if homeostasis is not None:
                 try:
                     from src.self_organization.runtime_adapter import (
                         SelfOrganizationRuntimeAdapter,
@@ -707,8 +705,12 @@ def main() -> int:
     #   3. Structural Journal          -> gated by self_organization.enabled
     #   4. Runtime Checkpoint          -> gated by storage.checkpoint.enabled
     # ================================================================
-    _storage_cfg = config_dict.get("storage", {})
-    _storage_runtime_cfg = _storage_cfg.get("runtime", {}) if isinstance(_storage_cfg, dict) else {}
+    _storage_cfg_raw = config_dict.get("storage", {})
+    _storage_cfg: dict[str, Any] = cast("dict[str, Any]", _storage_cfg_raw) if isinstance(_storage_cfg_raw, dict) else {}
+    _storage_runtime_cfg_raw = _storage_cfg.get("runtime", {})
+    _storage_runtime_cfg: dict[str, Any] = cast("dict[str, Any]", _storage_runtime_cfg_raw) if isinstance(_storage_runtime_cfg_raw, dict) else {}
+    _journal_cfg_raw = _storage_cfg.get("journal", {})
+    _journal_cfg: dict[str, Any] = cast("dict[str, Any]", _journal_cfg_raw) if isinstance(_journal_cfg_raw, dict) else {}
     _storage_runtime_enabled = bool(_storage_cfg.get("enabled", False)) and bool(
         _storage_runtime_cfg.get("enabled", False)
     )
@@ -724,7 +726,7 @@ def main() -> int:
                 snapshot_path=_snapshot_path,
                 journal_path=_journal_path,
                 commit_interval_ticks=int(
-                    _storage_cfg.get("journal", {}).get("commit_interval_ticks", 10)
+                    _journal_cfg.get("commit_interval_ticks", 10)
                 ),
             )
             _delta_journal = DeltaJournal(str(_journal_path))
