@@ -89,6 +89,22 @@ GATE_A = "A"
 GATE_B = "B"
 GATE_C = "C"
 
+# Required structural E2E proof set — the artifact must contain exactly
+# these proof IDs, all True. No extra or missing fields are tolerated.
+REQUIRED_STRUCTURAL_PROOFS: frozenset[str] = frozenset({
+    "test_proof_01_coordinator_instantiated",
+    "test_proof_02_plasticity_engine_instantiated",
+    "test_proof_03_bridge_identity",
+    "test_proof_04_real_signal_proposal",
+    "test_proof_05_proposal_no_mutation",
+    "test_proof_06_reject_no_mutation",
+    "test_proof_07_approve_exactly_one_mutation",
+    "test_proof_08_exactly_one_change_record",
+    "test_proof_09_undo_restores_topology",
+    "test_proof_10_restart_replay_identity",
+    "test_complete_canonical_e2e",
+})
+
 
 # ============================================================================
 # Gate criterion model
@@ -254,10 +270,14 @@ class GateStatusBuilder:
             return False
         if artifact.get("schema_version") is None:
             return False
-        proofs = artifact.get("proofs", {})
-        if not isinstance(proofs, dict) or len(proofs) != 10:
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
             return False
-        if not all(bool(v) for v in proofs.values()):
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        # The artifact must contain exactly the required proof set.
+        if frozenset(proofs.keys()) != REQUIRED_STRUCTURAL_PROOFS:
+            return False
+        if not all(proofs[name] is True for name in REQUIRED_STRUCTURAL_PROOFS):
             return False
         # Staleness binding: artifact tree digest MUST match current tree.
         # Fail-closed: missing digest → NOT VERIFIED.
@@ -297,14 +317,47 @@ class GateStatusBuilder:
             return G_PENDING
         if artifact_digest != current_digest:
             return G_STALE
-        proofs = artifact.get("proofs", {})
-        if not isinstance(proofs, dict):
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
             return G_PENDING
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
         proof_key = f"{proof_num:02d}"
         for key, value in proofs.items():
             if key.startswith(proof_key):
                 return G_PASSED if bool(value) else G_FAILED
         return G_PENDING
+
+    def _canonical_e2e_status(self) -> str:
+        """Return the gate status for the complete canonical E2E test.
+
+        Reads the ``test_complete_canonical_e2e`` proof from the artifact
+        with the same fail-closed validation as the individual proofs.
+        """
+        artifact = self._read_structural_e2e_artifact()
+        if artifact is None:
+            return G_PENDING
+        if artifact.get("status") != "verified":
+            return G_PENDING
+        if artifact.get("schema_version") is None:
+            return G_PENDING
+        artifact_digest = artifact.get("tested_tree_digest")
+        if not artifact_digest:
+            return G_PENDING
+        from src.dashboard.verification import compute_source_tree_digest
+
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return G_PENDING
+        if artifact_digest != current_digest:
+            return G_STALE
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
+            return G_PENDING
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        value = proofs.get("test_complete_canonical_e2e")
+        if value is None:
+            return G_PENDING
+        return G_PASSED if bool(value) else G_FAILED
 
     # --------------------------------------------------------------------
     # Gate A -- Technical Integration
@@ -492,7 +545,7 @@ class GateStatusBuilder:
         ))
 
         # --- Structural E2E proofs (proof_01 .. proof_10) ---
-        # Evidence-based: read from artifacts/structural_e2e_results.json
+        # Evidence-based: read from research/generated/verification/structural_e2e.json
         structural_live = self._structural_live_status()
         for i in range(1, 11):
             proof_status = self._structural_proof_status(i)
@@ -503,10 +556,24 @@ class GateStatusBuilder:
                 label=f"Structural E2E proof {i}/10",
                 status=proof_status,
                 maturity=VERIFIED if proof_status == G_PASSED else INTEGRATED,
-                source="artifacts/structural_e2e_results.json" if proof_status == G_PASSED else "tests/test_structural_e2e.py",
+                source="research/generated/verification/structural_e2e.json" if proof_status == G_PASSED else "tests/test_structural_e2e.py",
                 message="Verified by structural E2E artifact" if proof_status == G_PASSED else "Pending structural E2E test execution",
                 live_status=structural_live,
             ))
+
+        # --- Complete canonical E2E (full chain without manual proposal) ---
+        canonical_status = self._canonical_e2e_status()
+        items.append(_criterion(
+            gate=GATE_B,
+            id="B-STRUCT-CANONICAL-E2E",
+            category="structural_e2e",
+            label="Complete canonical E2E (signal -> policy -> approval -> mutation -> journal)",
+            status=canonical_status,
+            maturity=VERIFIED if canonical_status == G_PASSED else INTEGRATED,
+            source="research/generated/verification/structural_e2e.json" if canonical_status == G_PASSED else "tests/test_structural_e2e.py",
+            message="Verified by structural E2E artifact" if canonical_status == G_PASSED else "Pending canonical E2E test execution",
+            live_status=structural_live,
+        ))
 
         # --- Error visibility / scientific integrity ---
         error_vis: list[tuple[str, str, str, str]] = [
@@ -734,8 +801,10 @@ class GateStatusBuilder:
                 L_ERROR, "config enabled but journal missing"))
 
         # Delta storage — config-aware: disabled vs error distinction
-        storage_cfg = self.config_dict.get("storage", {})
-        storage_runtime_cfg = storage_cfg.get("runtime", {}) if isinstance(storage_cfg, dict) else {}
+        storage_cfg_raw = self.config_dict.get("storage", {})
+        storage_cfg: dict[str, Any] = cast("dict[str, Any]", storage_cfg_raw) if isinstance(storage_cfg_raw, dict) else {}
+        storage_runtime_cfg_raw = storage_cfg.get("runtime", {})
+        storage_runtime_cfg: dict[str, Any] = cast("dict[str, Any]", storage_runtime_cfg_raw) if isinstance(storage_runtime_cfg_raw, dict) else {}
         storage_enabled = bool(storage_cfg.get("enabled", False)) and bool(
             storage_runtime_cfg.get("enabled", False)
         )

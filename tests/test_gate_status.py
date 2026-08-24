@@ -211,7 +211,7 @@ def test_gate_b_structural_proofs_remain_pending_without_artifact() -> None:
         builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
         status = builder.build()
         proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
-        assert len(proof_items) == 10
+        assert len(proof_items) == 11  # 10 proofs + 1 complete canonical E2E
         for item in proof_items:
             assert item["status"] == G_PENDING
     finally:
@@ -224,7 +224,7 @@ def test_gate_b_structural_proofs_pass_with_artifact() -> None:
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
     status = builder.build()
     proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
-    assert len(proof_items) == 10
+    assert len(proof_items) == 11  # 10 proofs + 1 complete canonical E2E
     # If the artifact exists and is verified, proofs should pass, be stale,
     # or be pending (when the tree digest changed since the artifact was
     # written, fail-closed validation returns pending).

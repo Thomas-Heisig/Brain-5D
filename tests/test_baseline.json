@@ -1,10 +1,10 @@
 {
-  "tested_commit": "81e7a2f127f66fd17a6b99cd95a7b9c22b357c5f",
-  "recorded_in_commit": "81e7a2f127f66fd17a6b99cd95a7b9c22b357c5f",
-  "tested_tree_digest": "d28a720461d98e1fef1892efe5ba7eb9946faf7dd489c04678f311f9734893f9",
+  "tested_commit": "f0441c2259dcea3fb2b0f3990f60131326c8383e",
+  "recorded_in_commit": "f0441c2259dcea3fb2b0f3990f60131326c8383e",
+  "tested_tree_digest": "64a7e7e5e76158007581e4a9127a76ef6ab4e9f252f0ad39bfdbcb110c94dac3",
   "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
   "tree_digest_excludes": ["tests/test_baseline.json"],
-  "timestamp": "2026-08-24T08:00:00+02:00",
+  "timestamp": "2026-08-24T09:00:00+02:00",
   "python": "3.13.14",
 
   "full_collection": {

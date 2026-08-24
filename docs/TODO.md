@@ -412,18 +412,19 @@ Auch hier ist im Changelog deutlich mehr vorhanden als ursprünglich angenommen.
 - Structural heatmap
 - Restore integration support
 
-## Active Composition Still To Verify
+## Active Composition — Verified via Production Factory
 
-* [ ] Verify `src.main` instantiates actual `SelfOrganizationCoordinator`
-* [ ] Verify active `StructuralPlasticityEngine`
-* [ ] Verify `Brain5DManipulator` is actual mutation boundary
-* [ ] Verify approval policy attached
-* [ ] Verify journal attached in normal startup
-* [ ] Verify Undo uses persistent inverse records
-* [ ] Verify bridge receives active coordinator
-* [ ] Verify bridge receives active plasticity engine
-* [ ] Verify proposals generated from actual measurements
-* [ ] Verify mutation requires accepted proposal
+* [x] Verify `src.main` instantiates actual `SelfOrganizationCoordinator` (via `compose_structural_subsystem`)
+* [x] Verify active `StructuralPlasticityEngine` (via `compose_structural_subsystem`)
+* [x] Verify `Brain5DManipulator` is actual mutation boundary (single manipulator from factory)
+* [x] Verify approval policy attached (Coordinator approval gate)
+* [x] Verify journal attached in normal startup (StructuralJournal from factory)
+* [x] Verify Undo uses persistent inverse records (StructuralUndoManager)
+* [x] Verify bridge receives active coordinator (OperatorBridge wired in main.py)
+* [x] Verify bridge receives active plasticity engine (OperatorBridge wired in main.py)
+* [x] Verify proposals generated from actual measurements (E2E proof 4: real HomeostasisSignal)
+* [x] Verify mutation requires accepted proposal (E2E proof 5: no mutation without approval)
+* [ ] Verify production `HomeostasisSignal -> Policy -> Coordinator` adapter wired in `src.main` (currently canonical but structurally inert in automatic operation)
 
 Expected chain:
 
@@ -461,17 +462,19 @@ Independent review reported a non-green test baseline. Reproduce it locally befo
 ## Current Verified Baseline
 
 ```
-Tested commit:  d267b953
+Tested commit:  3cc7a35 (HEAD as of 2026-08-24)
 Python:         3.13.14
 Recorded in:    tests/test_baseline.json
 
 Full collection:    0 collection errors ✅
 Full suite:
   Command:  python -m pytest tests/ -q
-  Passed:   239
+  Passed:   274
   Failed:   0
   Skipped:  2 (large storage tests require env vars)
 ```
+
+**Tree digest** covers `src/`, `configs/`, `research/schemas/`, `pyproject.toml` and `tests/` (excluding `tests/test_baseline.json` so the baseline file cannot invalidate itself).
 
 **Important:** `236 passed` was the **verified runnable subset** with two **ignored** modules. Since then both collection errors have been resolved. The full suite now runs without `--ignore`.
 
@@ -507,7 +510,7 @@ artificially marks the tests as stale.
 * [x] Full test suite runs without ignored core modules
 * [ ] Runtime integration tests
 * [ ] Dashboard integration tests
-* [ ] Structural integration tests
+* [x] Structural integration tests (11/11 proofs verified — see `research/generated/verification/structural_e2e.json`)
 * [ ] Snapshot integration tests
 * [ ] Restore-and-continue tests
 
@@ -1880,8 +1883,8 @@ Dashboard Observability      ██████████  Gate A (Alpha.5 Das
 Integration Status (real)    ██████████  Gate A (/api/integration/status, stale detection)
 Truthful Null/Disabled       ██████████  Gate A (no fake zeros, disabled≠failed)
 Structural Runtime Chain     ███░░░░░░░  Gate A remaining (config-disabled in poc_config)
-Test Baseline                ██████████  Gate B (239 passed, 2 skipped, 0 collection errors — tree digest may be stale)
-Structural E2E Verification  ░░░░░░░░░░  Gate B (separate test config needed)
+Test Baseline                ██████████  Gate B (274 passed, 2 skipped, 0 collection errors)
+Structural E2E Verification  ██████████  Gate B (11/11 proofs verified, production composition, real signal, journal reopen)
 Error Visibility             ████████░░  Gate B (integration endpoint surfaces errors)
 Restore Determinism          ░░░░░░░░░░  Gate B
 Scientific Experiments       ░░░░░░░░░░  Gate C
@@ -1902,7 +1905,7 @@ Dies ist ein sehr sinnvoller Entwicklungsstand: **Wir müssen jetzt nicht mehr d
 - **Phase 8/9 — Real 5D Network Inspector:** Neue Endpunkte `/api/network/summary`, `/api/network/neurons`, `/api/network/synapses`, `/api/network/projection` liefern echte 5D-Koordinaten, v, u, energy, weights, delays. Serverseitige Pagination. Neuer `🔍 Inspect` Tab.
 - **Phase 14 — Real Integration Status:** `/api/integration/status` berechnet real Bridge/Controller/Runtime/Structural/Snapshot/Delta-Storage/Structural-Journal/Research/Tests/Error-Visibility. Disabled-by-config ≠ failed. Tests-STALE-Erkennung liest `test_baseline.json` und vergleicht `tested_commit` mit HEAD.
 - **Phase 16 — Provenance:** Network-Inspector-Daten als `LIVE` badged.
-- **Phase 18 — Tests:** 21 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, tree-digest stale detection, no demo source). **Verified baseline: 239 passed, 2 skipped, 0 collection errors (full suite without `--ignore`).**
+- **Phase 18 — Tests:** 21 neue Tests in `test_dashboard_completion.py` (Tick-0 real size, null serialization, disabled≠failed, canonical commands, 5D coordinates, projection, tree-digest stale detection, no demo source). **Verified baseline: 274 passed, 2 skipped, 0 collection errors (full suite without `--ignore`).**
 - **Phase 19 — Manual E2E:** Fresh start zeigt Tick 0: 5000 Neuronen, 36031 Synapsen, idle, storage disabled. Step (+1), run_ticks (+100), snapshot (neue .b5d) verifiziert via API.
 
 ## Verbleibend (nicht in dieser Aufgabe)
@@ -1946,7 +1949,7 @@ Wenn dieser Baseline-Meilenstein erreicht ist, kann das B5D-SEF zum ersten Mal a
 
 === GATE B — Verification ====================================================
 
-12. Run complete pytest baseline ... 239 passed, 2 skipped, 0 collection errors (full suite without --ignore) ✅
+12. Run complete pytest baseline ... 274 passed, 2 skipped, 0 collection errors (full suite without --ignore) ✅
 13. End-to-end structural chain verification (10 proofs) .... 🔴 Gate B
 14. Eliminate silent hook failures .......................... 🔴 Gate B
 15. Restore-and-continue determinism ........................ 🔴 Gate B
@@ -2037,17 +2040,18 @@ Code fertig ≠ Integration fertig ≠ Wissenschaft fertig.
 * [x] `EXP-DET-0001` and `EXP-STOR-0001` registered
 * [x] ID correction: `RQ-SNN-003` → `RQ-DET-001` for determinism question
 
-### Structural Runtime Chain — Gate A remaining
+### Structural Runtime Chain — Gate A (verified via production factory + E2E)
 
-* [ ] `src.main` instantiates actual `SelfOrganizationCoordinator`
-* [ ] `src.main` instantiates actual `StructuralPlasticityEngine`
-* [ ] `Brain5DManipulator` is actual mutation boundary
-* [ ] Approval policy attached in normal startup
-* [ ] Journal attached in normal startup
-* [ ] Undo uses persistent inverse records
-* [ ] Bridge receives active coordinator and plasticity engine
-* [ ] Proposals generated from actual measurements
-* [ ] Mutation requires accepted proposal
+* [x] `src.main` instantiates actual `SelfOrganizationCoordinator` (via `compose_structural_subsystem`)
+* [x] `src.main` instantiates actual `StructuralPlasticityEngine` (via `compose_structural_subsystem`)
+* [x] `Brain5DManipulator` is actual mutation boundary (single manipulator, legacy engine detached)
+* [x] Approval policy attached in normal startup (Coordinator approval gate)
+* [x] Journal attached in normal startup (StructuralJournal from factory)
+* [x] Undo uses persistent inverse records (StructuralUndoManager)
+* [x] Bridge receives active coordinator and plasticity engine (OperatorBridge wired)
+* [x] Proposals generated from actual measurements (E2E proof 4: real HomeostasisSignal)
+* [x] Mutation requires accepted proposal (E2E proof 5: no mutation without approval)
+* [ ] Production `HomeostasisSignal -> Policy -> Coordinator` adapter wired in `src.main` (canonical but inert in automatic operation)
 
 ---
 
@@ -2058,7 +2062,7 @@ Code fertig ≠ Integration fertig ≠ Wissenschaft fertig.
 ### Test Baseline
 
 * [x] Zero collection errors (resolved: `tests/__init__.py` added)
-* [x] Zero unexplained failures (239 passed, 0 failed)
+* [x] Zero unexplained failures (274 passed, 0 failed)
 * [x] Full test suite runs without ignored core modules (`python -m pytest tests/ -q`)
 * [ ] Tree-digest matches current source tree (re-run baseline after finalizing new tests)
 
