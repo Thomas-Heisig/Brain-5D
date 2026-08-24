@@ -1461,12 +1461,12 @@ function getVersionChecks() {
       { label: 'Docs Browser', icon: '📄', check: async () => { try { const r = await fetch('/api/docs'); return r.ok; } catch { return false; } }},
     ],
     'v0.5α6 (Morphological Self-Reg)': [
-      { label: 'Self-Organization', icon: '🧬', check: async () => { try { const r = await fetch('/api/gate/status'); const d = await r.json(); const struct = (d.live_runtime || []).find(i => i.key === 'structural'); return struct?.live_status === 'active' ? 'passed' : 'disabled'; } catch { return false; } }},
+      { label: 'Self-Organization', icon: '🧬', check: async () => { try { const r = await fetch('/api/gate/status'); const d = await r.json(); const struct = (d.live_runtime || []).find(i => i.key === 'structural'); const s = struct?.live_status; return s === 'active' ? 'passed' : s === 'disabled' ? 'disabled' : s === 'error' ? 'failed' : s === 'unavailable' ? 'unavailable' : 'unknown'; } catch { return false; } }},
       { label: 'Proposals', icon: '📋', check: async () => { try { const r = await fetch('/api/structural/proposals'); return r.ok ? 'passed' : false; } catch { return false; } }},
-      { label: 'Homeostasis', icon: '⚖️', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.homeostasis?.enabled === true ? 'passed' : (d.homeostasis?.enabled === false ? 'disabled' : false); } catch { return false; } }},
+      { label: 'Homeostasis', icon: '⚖️', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); const e = d.homeostasis?.enabled; return e === true ? 'passed' : e === false ? 'disabled' : 'unknown'; } catch { return false; } }},
     ],
     'v0.6 (Skalierung)': [
-      { label: 'Large Network', icon: '🌐', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return (d.system?.neurons || 0) > 100 ? 'passed' : 'disabled'; } catch { return false; } }},
+      { label: 'Large Network', icon: '🌐', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return (d.system?.neurons || 0) > 100 ? 'passed' : 'pending'; } catch { return false; } }},
       { label: 'Performance', icon: '⚡', check: async () => { try { const r = await fetch('/api/status'); return r.ok ? 'passed' : false; } catch { return false; } }},
     ],
     'v0.7 (Learning Env.)': [
@@ -1503,6 +1503,9 @@ async function openIntegrationModal() {
         const ok = await c.check();
         if (ok === 'passed') { status = 'passed'; icon = '✅'; }
         else if (ok === 'disabled') { status = 'disabled'; icon = '⊘'; }
+        else if (ok === 'unavailable') { status = 'unavailable'; icon = '⚠'; }
+        else if (ok === 'pending') { status = 'pending'; icon = '⏳'; }
+        else if (ok === 'unknown') { status = 'unknown'; icon = '？'; }
         else if (ok === true) { status = 'passed'; icon = '✅'; }
         else { status = 'failed'; icon = '❌'; }
       } catch {

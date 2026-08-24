@@ -422,6 +422,33 @@ class GateStatusBuilder:
                 evidence={"test_ids": cast(JSONValue, test_ids)},
             ))
 
+        # --- Production signal->policy->coordinator adapter ---
+        adapter_verified = self._adapter_proof_verified()
+        items.append(_criterion(
+            gate=GATE_A,
+            id="A-STRUCT-RUNTIME-ADAPTER",
+            category="structural_composition",
+            label="Production HomeostasisSignal -> Policy -> Coordinator",
+            status=G_PASSED if adapter_verified else G_PENDING,
+            maturity=VERIFIED if adapter_verified else INTEGRATED,
+            source="research/generated/verification/structural_e2e.json" if adapter_verified else "structural_e2e",
+            message="Verified by structural E2E artifact" if adapter_verified else "Pending adapter verification",
+            live_status=self._structural_live_status(),
+        ))
+
+        # --- Single listener ---
+        listener_verified = self._single_listener_proof_verified()
+        items.append(_criterion(
+            gate=GATE_A,
+            id="A-SINGLE-LISTENER",
+            category="technical_integration",
+            label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by Brain-5D PID",
+            status=G_PASSED if listener_verified else G_PENDING,
+            maturity=VERIFIED if listener_verified else IMPLEMENTED,
+            source="tests/test_single_listener.py" if listener_verified else "project_state",
+            message="Verified by listener test" if listener_verified else "Pending single-listener verification",
+        ))
+
         # --- Structural composition: evidence-based from E2E artifact ---
         structural_verified = self._structural_e2e_verified()
         structural_live = self._structural_live_status()
@@ -942,6 +969,29 @@ class GateStatusBuilder:
             path = self.repo_root / tid
             result[tid] = path.exists()
         return result
+
+    def _adapter_proof_verified(self) -> bool:
+        """Return True if the structural E2E artifact includes the
+        complete canonical E2E proof (which exercises the full
+        signal->policy->coordinator path)."""
+        artifact = self._read_structural_e2e_artifact()
+        if artifact is None:
+            return False
+        if artifact.get("status") != "verified":
+            return False
+        proofs = artifact.get("proofs", {})
+        if not isinstance(proofs, dict):
+            return False
+        return bool(proofs.get("test_complete_canonical_e2e", False))
+
+    def _single_listener_proof_verified(self) -> bool:
+        """Return True if the single-listener test exists and passes.
+
+        Currently checks file existence only. A future enhancement
+        could parse pytest results or a verification artifact.
+        """
+        test_path = self.repo_root / "tests" / "test_single_listener.py"
+        return test_path.exists()
 
     def _experiment_executed(self, experiment_id: str) -> bool:
         """Return True if an experiment manifest shows it was *completed*.

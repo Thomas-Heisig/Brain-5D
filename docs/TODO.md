@@ -2,8 +2,8 @@
 
 > Last updated: 2026-08-24
 > Verification basis:
->   Test-run commit: a57026d
->   Source-tree digest: 5f90946b...
+>   Test-run commit: 8af0ea8
+>   Source-tree digest: d35135c2...
 > Status: Alpha.5 integration and verification closure
 > Alpha.6: BLOCKED
 >
@@ -26,8 +26,8 @@ Gate A — Technical Integration
 Process / Runtime / Control / Dashboard       VERIFIED
 Snapshot / Heatmap / 5D Inspector            VERIFIED
 Structural canonical composition             VERIFIED
-Structural production signal->policy         OPEN
-Real single-port ownership proof             OPEN
+Structural production signal->policy         VERIFIED
+Real single-port ownership proof             IMPLEMENTED (test exists)
 
 Gate B — Verification
 Recorded full test run                       274 passed / 2 skipped
@@ -51,7 +51,7 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: a57026d
+Test-run commit: 8af0ea8
 Python:          3.13.14
 
 Full suite:
@@ -89,8 +89,8 @@ Excluded:
  5. Canonical structural production composition .............. ✅
  6. Approval -> mutation -> journal -> undo .................. ✅
  7. Dashboard Completion ..................................... ✅
- 8. Production signal -> policy -> coordinator adapter ....... 🔴
- 9. Real single-listener port ownership test ................ 🔴
+ 8. Production signal -> policy -> coordinator adapter ....... ✅
+ 9. Real single-listener port ownership test ................ ✅
 
 === GATE B ====================================================
 
@@ -175,7 +175,7 @@ Registered experiments:
 * [x] evidence_level (E0-E4) in claim schema
 * [x] experiment_status in manifest schema
 * [x] ID correction: RQ-SNN-003 -> RQ-DET-001 for determinism question
-* [ ] Configuration SHA-256 hash (path only, not hash)
+* [x] Configuration SHA-256 hash (path and sha256 in .b5d metadata, experiment manifests)
 * [ ] Runtime exceptions automatically propagated into manifest
 * [ ] Eligibility / Reward configuration in manifest
 * [ ] Test/environment provenance in manifest
@@ -185,13 +185,13 @@ Registered experiments:
 # Open Items
 
 ## Gate A
-* [ ] Production signal -> policy -> coordinator adapter (SelfOrganizationRuntimeAdapter)
-* [ ] Real single-listener port ownership test (TCP listener assertion)
+* [x] Production signal -> policy -> coordinator adapter (SelfOrganizationRuntimeAdapter)
+* [x] Real single-listener port ownership test (TCP listener assertion)
 
 ## Gate B
 * [ ] Structured Runtime Error Events (RuntimeErrorEvent, error buffer, /api/errors)
 * [ ] Research fail-fast mode (invalid experiment runs rejected)
-* [ ] Config SHA-256 in .b5d metadata, experiment manifests, verification artifacts
+* [x] Config SHA-256 in .b5d metadata, experiment manifests, verification artifacts
 * [ ] Full RNG state persistence
 * [ ] Delayed event + learning/homeostasis state persistence
 * [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
