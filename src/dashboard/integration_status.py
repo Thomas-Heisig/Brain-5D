@@ -20,7 +20,11 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.dashboard.models import JSONValue
-from src.dashboard.verification import evaluate_test_baseline
+from src.dashboard.verification import (
+    compute_source_tree_digest,
+    current_git_head,
+    evaluate_test_baseline,
+)
 
 # ============================================================================
 # Scientifically relevant source paths
@@ -361,8 +365,6 @@ class IntegrationStatusBuilder:
 
     def _current_git_head(self) -> str | None:
         """Return the current git HEAD SHA, or None if unavailable."""
-        from src.dashboard.verification import current_git_head
-
         return current_git_head(self.repo_root)
 
     def _current_tree_digest(self) -> str | None:
@@ -372,6 +374,4 @@ class IntegrationStatusBuilder:
         ``/api/integration/status`` and ``/api/gate/status`` can never
         disagree about the same source tree.
         """
-        from src.dashboard.verification import compute_source_tree_digest
-
         return compute_source_tree_digest(self.repo_root)

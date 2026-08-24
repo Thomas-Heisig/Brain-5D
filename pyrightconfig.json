@@ -1,7 +1,20 @@
 {
   "include": [
     "src/storage",
-    "src/homeostasis"
+    "src/homeostasis",
+    "src/dashboard",
+    "src/self_organization",
+    "src/controller",
+    "src/manipulation",
+    "src/research",
+    "src/config",
+    "src/core",
+    "src/diagnostics",
+    "src/learning",
+    "src/telemetry",
+    "src/utils",
+    "src/embodiment",
+    "tests"
   ],
   "pythonVersion": "3.13",
   "typeCheckingMode": "strict",
