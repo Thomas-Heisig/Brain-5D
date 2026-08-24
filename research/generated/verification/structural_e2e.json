@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "suite": "structural_e2e",
+  "status": "verified",
+  "timestamp": "2026-08-24T07:32:41.636861",
+  "python_version": "3.13.14",
+  "tested_commit": "4f30acb9cf4b4836d8e68986768d175186b7b229",
+  "tested_tree_digest": "4f19fc43550e280f5d84cc31bf8d8babc3e0f8ce0f7774aaeb0e9cc6180d0591",
+  "test_command": "python -m pytest tests/test_structural_e2e.py -q",
+  "proofs": {
+    "01_coordinator": true,
+    "02_plasticity": true,
+    "03_bridge_identity": true,
+    "04_real_signal_proposal": true,
+    "05_proposal_no_mutation": true,
+    "06_reject_no_mutation": true,
+    "07_approve_exactly_one_mutation": true,
+    "08_exactly_one_change_record": true,
+    "09_undo_restores_topology": true,
+    "10_restart_replay_identity": true
+  },
+  "topology_digest_before": "2d92c14cc2809bc873f4ee3338ee744b03d59cb991cc5ddabaa9f3ba998124a7",
+  "topology_digest_after_mutation": "94851a89638fb557a95d04f60b569157a25366c5273539085fe4ec3f03990c64",
+  "topology_digest_after_undo": "2d92c14cc2809bc873f4ee3338ee744b03d59cb991cc5ddabaa9f3ba998124a7",
+  "journal_record_count": 1
+}

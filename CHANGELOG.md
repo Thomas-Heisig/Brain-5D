@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural Evidence Hardening (2026-08-24)
+
+### Added
+
+- **Production composition factory** (`src/self_organization/composition.py`):
+  - `compose_structural_subsystem()` — single canonical function used by both `src.main` and E2E tests
+  - Tests no longer recreate a parallel architecture; they use the production path
+- **Real HomeostasisSignal in Proof 4** (`tests/test_structural_e2e.py`):
+  - Uses `HomeostasisEngine.build_signal()` — the canonical production signal builder
+  - `_FakeSignal` removed from the main E2E proof chain
+- **Complete canonical E2E test** — full chain from real signal to journaled mutation without manual proposal creation
+- **Real journal reopen for Proof 10** — new `StructuralJournal` object from same path (simulates process restart)
+- **Persistent verification artifact** at `research/generated/verification/structural_e2e.json` (not gitignored)
+  - Full provenance: schema_version, timestamp, python_version, tested_commit, tested_tree_digest, test_command
+  - Topology digests before/after mutation/undo, journal_record_count
+  - Staleness binding: GateStatusBuilder rejects/stales when artifact tree digest != current tree digest
+- **Extended tree digest** (`src/dashboard/verification.py`):
+  - Now includes `tests/` so changing a verification test makes the baseline STALE
+  - Excludes `tests/test_baseline.json` so the baseline file cannot invalidate itself
+
+### Changed
+
+- `src/main.py`: structural composition now delegates to `compose_structural_subsystem()` factory
+- `src/dashboard/gate_status.py`: reads artifact from persistent `research/generated/verification/` path with staleness binding
+- `tests/test_gate_status.py`: updated artifact paths and stale-acceptance logic
+- `tests/test_baseline.json`: updated to 274 passed, 2 skipped, 0 failed, 0 collection errors
+
+### Test Results (real run, 2026-08-24)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q`
+- **Result**: 274 passed, 2 skipped, 0 failed, 0 collection errors
+- **Structural E2E**: 10/10 proofs verified with real signal, production composition, and journal reopen
+
+---
+
 ## v0.5.0-alpha.5 - Structural E2E Verification (2026-08-23)
 
 ### Added

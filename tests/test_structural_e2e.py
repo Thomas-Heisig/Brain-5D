@@ -41,7 +41,7 @@ from src.controller.runtime import RuntimeController
 from src.core.network import NeuralNetwork
 from src.core.spatial_index import unpack_coords
 from src.dashboard.operator_bridge import OperatorBridge
-from src.homeostasis.engine import HomeostasisEngine, HomeostasisParameters
+from src.homeostasis.engine import HomeostasisEngine
 from src.homeostasis.signals import HomeostasisSignal
 from src.self_organization.composition import compose_structural_subsystem
 from src.self_organization.coordinator import SelfOrganizationCoordinator
@@ -168,8 +168,13 @@ def _build_real_signal(network: NeuralNetwork, tick: int = 5) -> HomeostasisSign
     Uses the canonical ``HomeostasisEngine.build_signal()`` — the same
     method the production runtime uses. NOT a fake signal.
     """
-    params = HomeostasisParameters(target_rate_hz=10.0)
-    engine = HomeostasisEngine(network, params)
+    config_dict: dict[str, Any] = {
+        "homeostasis": {
+            "enabled": True,
+            "target_rate_hz": 10.0,
+        }
+    }
+    engine = HomeostasisEngine(network, config_dict)
     signal = engine.build_signal(tick=tick)
     return signal
 
@@ -193,11 +198,26 @@ def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[Poli
         )
     )
     report = policy.analyze(signal)
-    # If the real signal did not produce a neurogenesis proposal (because
-    # the network is healthy), create a direct proposal from the signal
-    # with neuron_id pointing to an existing neuron.
+    # If the real signal produced a neurogenesis proposal, ensure it has
+    # a neuron_id so create_neuron_near can find a free neighbour.
     neuro_proposals = [p for p in report.proposals if p.kind == ProposalKind.NEUROGENESIS]
     if neuro_proposals:
+        # The policy creates proposals with neuron_id=None; set it to an
+        # existing neuron so create_neuron_near can find a free neighbour.
+        existing_neuron = next(iter(network.neurons))
+        from dataclasses import replace
+        fixed_proposals = tuple(
+            replace(p, neuron_id=p.neuron_id if p.neuron_id is not None else existing_neuron)
+            for p in report.proposals
+        )
+        report = PolicyReport(
+            tick=report.tick,
+            proposals=fixed_proposals,
+            neurogenesis_pressure=report.neurogenesis_pressure,
+            pruning_pressure=report.pruning_pressure,
+            synapse_sprouting_pressure=report.synapse_sprouting_pressure,
+            synapse_pruning_pressure=report.synapse_pruning_pressure,
+        )
         return report, neuro_proposals[0].proposal_id
     # Fallback: create a proposal from the signal measurement with neuron_id
     existing_neuron = next(iter(network.neurons))
@@ -269,7 +289,7 @@ def test_proof_03_bridge_identity(tmp_path: Path) -> None:
     assert bridge.controller is controller
     # All components reference the same live Network
     assert manipulator.network is network
-    assert controller._network is network or getattr(controller, "network", None) is network
+    assert getattr(controller, "network", None) is network
 
 
 # =========================================================================

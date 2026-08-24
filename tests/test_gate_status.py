@@ -95,7 +95,7 @@ def test_disabled_structural_does_not_fail_gate() -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must be pending, not failed."""
     repo_root = _repo_root()
-    artifact_path = repo_root / "artifacts" / "structural_e2e_results.json"
+    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
     original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
     try:
         if artifact_path.exists():
@@ -116,7 +116,7 @@ def test_disabled_structural_does_not_pass_gate() -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must not pass."""
     repo_root = _repo_root()
-    artifact_path = repo_root / "artifacts" / "structural_e2e_results.json"
+    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
     original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
     try:
         if artifact_path.exists():
@@ -203,7 +203,7 @@ def test_gate_b_stale_tree_digest_is_stale_not_failed() -> None:
 def test_gate_b_structural_proofs_remain_pending_without_artifact() -> None:
     """Structural E2E proofs must remain pending when no verification artifact exists."""
     repo_root = _repo_root()
-    artifact_path = repo_root / "artifacts" / "structural_e2e_results.json"
+    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
     original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
     try:
         if artifact_path.exists():
@@ -225,14 +225,15 @@ def test_gate_b_structural_proofs_pass_with_artifact() -> None:
     status = builder.build()
     proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
     assert len(proof_items) == 10
-    # If the artifact exists and is verified, all proofs should pass.
-    artifact_path = _repo_root() / "artifacts" / "structural_e2e_results.json"
+    # If the artifact exists and is verified, proofs should pass or be stale
+    # (stale when the tree digest changed since the artifact was written).
+    artifact_path = _repo_root() / "research" / "generated" / "verification" / "structural_e2e.json"
     if artifact_path.exists():
         import json as _json
         artifact = _json.loads(artifact_path.read_text(encoding="utf-8"))
         if artifact.get("status") == "verified":
             for item in proof_items:
-                assert item["status"] == G_PASSED
+                assert item["status"] in (G_PASSED, G_STALE)
 
 
 def test_gate_c_registered_experiment_not_executed() -> None:
