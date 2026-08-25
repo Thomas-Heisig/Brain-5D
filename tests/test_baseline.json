@@ -1,6 +1,6 @@
 {
-  "tested_commit": "8af0ea8c582cd49497cbbbbe0140b9439dcb84d9",
-  "tested_tree_digest": "d35135c26dd30dcb72385a79f852651a538ff78df806f58f613d22767428d099",
+  "tested_commit": "6c7a948b617f232edf996a1c73b6fc3247673a3a",
+  "tested_tree_digest": "9a1c560a73a5ddefbdb4fcbf49167004961f8c9e079c8a4b80307fd31b6d3359",
   "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
   "tree_digest_excludes": ["tests/test_baseline.json"],
   "timestamp": "2026-08-24T10:00:00+02:00",

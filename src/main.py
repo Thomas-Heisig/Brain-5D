@@ -35,6 +35,7 @@ from src.core.spatial_index import (
 )
 from src.diagnostics.propagation import PropagationAnalyzer
 from src.diagnostics.stimulus import StimulusEngine, StimulusResult
+from src.diagnostics.topology_health import TopologyHealth
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 
