@@ -105,6 +105,22 @@ REQUIRED_STRUCTURAL_PROOFS: frozenset[str] = frozenset({
     "test_complete_canonical_e2e",
 })
 
+# Required structural live loop proof set — the live loop artifact must
+# contain exactly these proof IDs, all True.
+REQUIRED_LIVE_LOOP_PROOFS: frozenset[str] = frozenset({
+    "production_adapter_attached",
+    "real_signal_generated",
+    "policy_received_real_signal",
+    "proposal_published",
+    "proposal_non_mutating",
+    "reject_non_mutating",
+    "approve_single_mutation",
+    "journal_linked_to_proposal",
+    "runtime_continues_after_mutation",
+    "undo_restores_topology",
+    "journal_reopen_replay_identity",
+})
+
 
 # ============================================================================
 # Gate criterion model
@@ -970,28 +986,85 @@ class GateStatusBuilder:
             result[tid] = path.exists()
         return result
 
-    def _adapter_proof_verified(self) -> bool:
-        """Return True if the structural E2E artifact includes the
-        complete canonical E2E proof (which exercises the full
-        signal->policy->coordinator path)."""
-        artifact = self._read_structural_e2e_artifact()
+    def _read_live_loop_artifact(self) -> dict[str, Any] | None:
+        """Read the structural live loop verification artifact.
+
+        Reads from ``research/generated/verification/structural_live_loop.json``.
+        Returns ``None`` if the artifact is missing or unparseable.
+        """
+        artifact_path = (
+            self.repo_root / "research" / "generated" / "verification"
+            / "structural_live_loop.json"
+        )
+        if not artifact_path.exists():
+            return None
+        try:
+            return json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _live_loop_verified(self) -> bool:
+        """Return True if the live loop artifact shows all proofs passed
+        AND the artifact's tree digest matches the current source tree.
+
+        Fail-closed validation:
+        - missing artifact -> NOT VERIFIED
+        - status != "verified" -> NOT VERIFIED
+        - missing schema_version -> NOT VERIFIED
+        - proof count != REQUIRED_LIVE_LOOP_PROOFS -> NOT VERIFIED
+        - any proof false -> NOT VERIFIED
+        - missing tested_tree_digest -> NOT VERIFIED
+        - digest mismatch -> NOT VERIFIED (stale)
+        """
+        artifact = self._read_live_loop_artifact()
         if artifact is None:
             return False
         if artifact.get("status") != "verified":
             return False
-        proofs = artifact.get("proofs", {})
-        if not isinstance(proofs, dict):
+        if artifact.get("schema_version") is None:
             return False
-        return bool(proofs.get("test_complete_canonical_e2e", False))
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
+            return False
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        if frozenset(proofs.keys()) != REQUIRED_LIVE_LOOP_PROOFS:
+            return False
+        if not all(proofs[name] is True for name in REQUIRED_LIVE_LOOP_PROOFS):
+            return False
+        artifact_digest = artifact.get("tested_tree_digest")
+        if not artifact_digest:
+            return False
+        from src.dashboard.verification import compute_source_tree_digest
+
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return False
+        if artifact_digest != current_digest:
+            return False
+        return True
+
+    def _adapter_proof_verified(self) -> bool:
+        """Return True if the structural live loop artifact proves the
+        production RuntimeAdapter path."""
+        return self._live_loop_verified()
 
     def _single_listener_proof_verified(self) -> bool:
-        """Return True if the single-listener test exists and passes.
+        """Return True if the single-listener test has actual evidence
+        of passing.
 
-        Currently checks file existence only. A future enhancement
-        could parse pytest results or a verification artifact.
+        Checks for a live loop verification artifact that includes the
+        single-listener proof. File existence alone is not sufficient.
         """
-        test_path = self.repo_root / "tests" / "test_single_listener.py"
-        return test_path.exists()
+        # Check the live loop artifact for listener proof
+        artifact = self._read_live_loop_artifact()
+        if artifact is not None and artifact.get("status") == "verified":
+            proofs = artifact.get("proofs", {})
+            if isinstance(proofs, dict) and proofs.get("single_listener_verified", False):
+                return True
+        # Fallback: check if the test file exists (IMPLEMENTED, not VERIFIED)
+        # But this never returns True for Gate status — it only reaches
+        # IMPLEMENTED maturity, not VERIFIED.
+        return False
 
     def _experiment_executed(self, experiment_id: str) -> bool:
         """Return True if an experiment manifest shows it was *completed*.

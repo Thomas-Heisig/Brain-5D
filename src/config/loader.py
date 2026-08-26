@@ -680,6 +680,30 @@ def load_config(
             raise ValueError("diagnostics section must be a dictionary")
         result["diagnostics"] = raw_dict["diagnostics"]
 
+    # Homeostasis (passthrough, optional)
+    if "homeostasis" in raw_dict:
+        if not isinstance(raw_dict["homeostasis"], dict):
+            raise ValueError("homeostasis section must be a dictionary")
+        result["homeostasis"] = raw_dict["homeostasis"]
+
+    # Self-organization (passthrough, optional)
+    if "self_organization" in raw_dict:
+        if not isinstance(raw_dict["self_organization"], dict):
+            raise ValueError("self_organization section must be a dictionary")
+        result["self_organization"] = raw_dict["self_organization"]
+
+    # Eligibility (passthrough, optional)
+    if "eligibility" in raw_dict:
+        if not isinstance(raw_dict["eligibility"], dict):
+            raise ValueError("eligibility section must be a dictionary")
+        result["eligibility"] = raw_dict["eligibility"]
+
+    # Storage (passthrough, optional)
+    if "storage" in raw_dict:
+        if not isinstance(raw_dict["storage"], dict):
+            raise ValueError("storage section must be a dictionary")
+        result["storage"] = raw_dict["storage"]
+
     # Topology input (backward compatibility)
     if "topology" in raw_dict and "input" in raw_dict["topology"]:
         result["topology_input"] = raw_dict["topology"]["input"]

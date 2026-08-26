@@ -809,7 +809,8 @@ class Brain5DManipulator:
         """Create a new neuron near an existing one (StructuralManipulator protocol).
 
         Args:
-            neuron_id: Optional reference neuron ID. If None, creates at origin.
+            neuron_id: Optional reference neuron ID. If None, scans for the
+                       first free coordinate in the grid.
 
         Returns:
             The ID of the created neuron.
@@ -821,8 +822,15 @@ class Brain5DManipulator:
                 nid = pack_coords(*c)
                 if nid not in self.network.neurons:
                     return self.create_neuron(c)
-        # Fallback: create at origin
-        return self.create_neuron((0, 0, 0, 0, 0))
+        # Scan for any free coordinate in the grid
+        dims = self.network.dimensions
+        from itertools import product
+        ranges = [range(d) for d in dims]
+        for coord in product(*ranges):
+            nid = pack_coords(*coord)
+            if nid not in self.network.neurons:
+                return self.create_neuron(coord)
+        raise RuntimeError("no free coordinate available for neuron creation")
 
     def remove_neuron(self, neuron_id: int) -> bool:
         """Remove a neuron (StructuralManipulator protocol).

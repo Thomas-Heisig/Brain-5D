@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Protocol, TypeAlias
+from typing import TYPE_CHECKING, Protocol, TypeAlias, cast
 
 if TYPE_CHECKING:
     from src.dashboard.models import JSONValue
@@ -124,6 +124,100 @@ class SelfOrganizationPolicyConfig:
     synapse_pruning_threshold: float = 0.5
     max_neurons: int = 10_000
     min_neurons: int = 100
+    # Mechanism enable/disable flags — these gate whether the policy
+    # emits proposals of each kind. When a flag is False, the policy
+    # must NEVER emit that proposal kind, regardless of pressure.
+    neurogenesis_enabled: bool = True
+    pruning_enabled: bool = True
+    synapse_sprouting_enabled: bool = True
+    synapse_pruning_enabled: bool = True
+
+    @classmethod
+    def from_config(cls, config: Mapping[str, object]) -> SelfOrganizationPolicyConfig:
+        """Build a config-authoritative policy config from the YAML
+        ``self_organization`` section.
+
+        Maps canonical YAML fields to policy config fields. When a YAML
+        field is absent, the default value from this dataclass is used.
+
+        Explicit mapping (YAML key → config field):
+            enabled                      → enabled
+            interval_ticks               → (used by RuntimeAdapter, not here)
+            neurogenesis_enabled         → neurogenesis_enabled
+            pruning_enabled              → pruning_enabled
+            sprouting_enabled            → synapse_sprouting_enabled
+            synapse_pruning_enabled      → synapse_pruning_enabled (note: YAML
+                                           uses ``synapse_pruning_enabled`` if
+                                           present, otherwise falls back to the
+                                           general ``pruning_enabled`` semantic)
+            max_neurons                  → max_neurons
+            neurogenesis_max_per_cycle   → (used by plasticity limits, not here)
+
+        Thresholds are kept at their dataclass defaults unless explicitly
+        overridden in config. The ``dry_run`` field is always False for
+        production — it is set by the coordinator, not the policy config.
+
+        Raises:
+            TypeError: If a config value has the wrong type.
+        """
+        section = _string_mapping(config, "self_organization")
+        enabled = _bool_value(section.get("enabled", True), "enabled")
+
+        # Mechanism enable flags: explicit YAML fields.
+        neurogenesis_enabled = _bool_value(
+            section.get("neurogenesis_enabled", True), "neurogenesis_enabled"
+        )
+        pruning_enabled = _bool_value(
+            section.get("pruning_enabled", True), "pruning_enabled"
+        )
+        # YAML uses ``sprouting_enabled`` for synapse sprouting
+        synapse_sprouting_enabled = _bool_value(
+            section.get("sprouting_enabled", True), "sprouting_enabled"
+        )
+        # YAML uses ``synapse_pruning_enabled`` or falls back to pruning_enabled
+        synapse_pruning_enabled = _bool_value(
+            section.get("synapse_pruning_enabled", pruning_enabled),
+            "synapse_pruning_enabled",
+        )
+
+        # Thresholds (optional, with dataclass defaults)
+        neurogenesis_threshold = _float_value(
+            section.get("neurogenesis_threshold", 0.9), "neurogenesis_threshold"
+        )
+        pruning_threshold = _float_value(
+            section.get("pruning_threshold", 0.9), "pruning_threshold"
+        )
+        synapse_sprouting_threshold = _float_value(
+            section.get("synapse_sprouting_threshold", 0.5),
+            "synapse_sprouting_threshold",
+        )
+        synapse_pruning_threshold = _float_value(
+            section.get("synapse_pruning_threshold", 0.5),
+            "synapse_pruning_threshold",
+        )
+
+        # Limits
+        max_neurons = _int_value(
+            section.get("max_neurons", 10_000), "max_neurons"
+        )
+        min_neurons = _int_value(
+            section.get("min_neurons", 100), "min_neurons"
+        )
+
+        return cls(
+            enabled=enabled,
+            dry_run=False,  # production: dry_run is controlled by coordinator
+            neurogenesis_enabled=neurogenesis_enabled,
+            pruning_enabled=pruning_enabled,
+            synapse_sprouting_enabled=synapse_sprouting_enabled,
+            synapse_pruning_enabled=synapse_pruning_enabled,
+            neurogenesis_threshold=neurogenesis_threshold,
+            pruning_threshold=pruning_threshold,
+            synapse_sprouting_threshold=synapse_sprouting_threshold,
+            synapse_pruning_threshold=synapse_pruning_threshold,
+            max_neurons=max_neurons,
+            min_neurons=min_neurons,
+        )
 
 
 class SelfOrganizationPolicy:
@@ -258,8 +352,14 @@ class SelfOrganizationPolicy:
         proposals: list[StructuralProposal] = []
 
         if self.config.enabled:
+            # Config-authoritative mechanism gating:
+            # Each proposal kind is emitted only when the corresponding
+            # enable flag is True in the policy config. These flags are
+            # populated from the YAML self_organization section via
+            # from_config(). A disabled mechanism never produces proposals.
             if (
-                neuro > self.config.neurogenesis_threshold
+                self.config.neurogenesis_enabled
+                and neuro > self.config.neurogenesis_threshold
                 and signal.neuron_count < self.config.max_neurons
             ):
                 proposals.append(
@@ -271,7 +371,8 @@ class SelfOrganizationPolicy:
                     )
                 )
             if (
-                prune > self.config.pruning_threshold
+                self.config.pruning_enabled
+                and prune > self.config.pruning_threshold
                 and signal.neuron_count > self.config.min_neurons
             ):
                 proposals.append(
@@ -282,7 +383,10 @@ class SelfOrganizationPolicy:
                         f"high-rate ratio={high_rate_ratio:.3f}",
                     )
                 )
-            if sprout > self.config.synapse_sprouting_threshold:
+            if (
+                self.config.synapse_sprouting_enabled
+                and sprout > self.config.synapse_sprouting_threshold
+            ):
                 proposals.append(
                     self._proposal(
                         signal.tick,
@@ -291,7 +395,10 @@ class SelfOrganizationPolicy:
                         f"mean-rate={signal.mean_rate_hz:.3f} Hz",
                     )
                 )
-            if syn_prune > self.config.synapse_pruning_threshold:
+            if (
+                self.config.synapse_pruning_enabled
+                and syn_prune > self.config.synapse_pruning_threshold
+            ):
                 proposals.append(
                     self._proposal(
                         signal.tick,
@@ -321,3 +428,44 @@ class SelfOrganizationPolicy:
             reason=reason,
             confidence=confidence,
         )
+
+
+# ============================================================================
+# Config parsing helpers (mirrored from homeostasis/engine.py to avoid
+# circular imports and keep policy.py self-contained)
+# ============================================================================
+
+
+def _string_mapping(value: object, name: str) -> dict[str, object]:
+    """Convert a Mapping to a dict with string keys."""
+    if not isinstance(value, Mapping):
+        raise TypeError(f"{name} config must be a mapping")
+
+    mapping = cast(Mapping[object, object], value)
+    result: dict[str, object] = {}
+    for key, item in mapping.items():
+        if not isinstance(key, str):
+            raise TypeError(f"{name} config keys must be strings")
+        result[key] = item
+    return result
+
+
+def _bool_value(value: object, name: str) -> bool:
+    """Extract a boolean value from a configuration field."""
+    if not isinstance(value, bool):
+        raise TypeError(f"self_organization.{name} must be boolean")
+    return value
+
+
+def _float_value(value: object, name: str) -> float:
+    """Extract a float value from a configuration field."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"self_organization.{name} must be numeric")
+    return float(value)
+
+
+def _int_value(value: object, name: str) -> int:
+    """Extract an int value from a configuration field."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"self_organization.{name} must be numeric")
+    return int(value)

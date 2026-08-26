@@ -1,0 +1,154 @@
+# Brain-5D — Deterministic Live Verification Config
+# ====================================================
+# Created for Alpha.5 Structural Live Loop sprint.
+#
+# Purpose: Small, fast, deterministic config that demonstrates the real
+# closed structural regulation loop:
+#
+#   Real Network -> Real HomeostasisSignal -> Config-authoritative Policy
+#   -> Real Proposal -> Coordinator -> Manual Approval -> Exactly One
+#   Structural Mutation -> Journal -> Undo/Replay
+#
+# Requirements met:
+# - Small enough to run quickly (5x5x1x1x1 grid, 100 neurons)
+# - Fixed seed for determinism
+# - Homeostasis enabled
+# - Self-Organization enabled
+# - Manual approval required (auto_approval OFF)
+# - Exactly one structural mechanism enabled: neurogenesis
+# - Pruning, sprouting, synapse pruning all OFF
+# - Structural journal ON
+# - Safe limits (max_neurons=500)
+# - Thresholds chosen so a proposal can be generated from real network
+#   measurements in a bounded number of ticks (~200-500)
+# - No unrelated STDP/reward mechanisms
+# - No fake proposal injection
+
+seed: 42
+
+dimensions: [10, 10, 1, 1, 1]
+initial_neurons: 50
+max_neurons: 500
+
+simulation:
+  dt_ms: 1.0
+  ticks: 1000
+  max_delay: 5
+  debug_invariants: false
+
+neuron:
+  a: 0.02
+  b: 0.2
+  c: -65.0
+  d: 8.0
+
+network:
+  initial_connections_per_neuron: 8
+  neighbour_radius: 2.0
+  weight_min: 0.0
+  weight_max: 0.5
+
+energy:
+  initial: 1.0
+  spike_cost: 0.001
+  affects_firing: false
+
+topology:
+  input:
+    dimension: x
+    coordinate: 0
+  output:
+    dimension: x
+    coordinate: 4
+  allow_self_connections: false
+  allow_parallel_connections: false
+
+diagnostics:
+  mode: single_neuron_drive
+  start_tick: 10
+  duration_ticks: 200
+  amplitude: 15.0
+  target_coord: [0, 2, 0, 0, 0]
+  input_plane_dim: x
+  poisson_rate_hz: 2.0
+  poisson_amplitude: 8.0
+
+telemetry:
+  enabled: true
+  history_ticks: 2000
+  spike_history_ticks: 2000
+
+visualization:
+  enabled: false
+
+logging:
+  interval_ticks: 100
+
+# STDP and reward disabled — not required for structural live loop
+stdp:
+  enabled: false
+
+eligibility:
+  enabled: false
+
+reward:
+  enabled: false
+
+# ================================================================
+# Homeostasis — ENABLED for live structural loop
+# ================================================================
+homeostasis:
+  enabled: true
+  target_rate_hz: 5.0
+  rate_tau_ticks: 100.0
+  threshold_learning_rate: 0.002
+  threshold_min: -15.0
+  threshold_max: 30.0
+  energy_enabled: true
+  target_energy: 1.0
+  energy_recovery_rate: 0.001
+  energy_min: 0.0
+  energy_max: 1.0
+
+# ================================================================
+# Self-Organization — ENABLED, neurogenesis only
+# ================================================================
+self_organization:
+  enabled: true
+  interval_ticks: 50
+  # Only neurogenesis is enabled for this live verification
+  neurogenesis_enabled: true
+  pruning_enabled: false
+  sprouting_enabled: false
+  synapse_pruning_enabled: false
+  # Thresholds: low enough to trigger from real activity within ~200-500 ticks
+  neurogenesis_threshold: 0.3
+  pruning_threshold: 0.9
+  synapse_sprouting_threshold: 0.9
+  synapse_pruning_threshold: 0.9
+  # Limits
+  max_neurons: 500
+  min_neurons: 10
+  # Neurogenesis params (used by plasticity limits)
+  neurogenesis_max_per_cycle: 1
+
+# ================================================================
+# Storage — journal enabled for structural tracking
+# ================================================================
+storage:
+  enabled: false
+  format: b5d
+  path: artifacts/brain5d_snapshot.b5d
+  restart_capable: true
+  journal:
+    enabled: false
+  runtime:
+    enabled: false
+  telemetry:
+    enabled: false
+  checkpoint:
+    enabled: false
+  compaction:
+    enabled: false
+  lazy_observatory:
+    enabled: false

@@ -637,12 +637,24 @@ def main() -> int:
         try:
             from src.self_organization.composition import compose_structural_subsystem
 
+            # Config-authoritative plasticity limits: derive from YAML
+            _allow_neurogenesis = bool(so_cfg.get("neurogenesis_enabled", True))
+            _allow_neuron_pruning = bool(so_cfg.get("pruning_enabled", False))
+            _allow_synapse_sprouting = bool(so_cfg.get("sprouting_enabled", False))
+            _allow_synapse_pruning = bool(so_cfg.get("synapse_pruning_enabled", False))
+            _max_changes = int(so_cfg.get("neurogenesis_max_per_cycle", 1))
+
             _structural_journal_path = _snapshot_dir / "structural.journal"
             _composed = compose_structural_subsystem(
                 network,
                 _structural_journal_path,
                 coordinator_enabled=True,
                 coordinator_dry_run=False,
+                max_changes_per_tick=_max_changes,
+                allow_neurogenesis=_allow_neurogenesis,
+                allow_neuron_pruning=_allow_neuron_pruning,
+                allow_synapse_sprouting=_allow_synapse_sprouting,
+                allow_synapse_pruning=_allow_synapse_pruning,
             )
             _self_org_plasticity = _composed["plasticity"]
             _self_org_coordinator = _composed["coordinator"]
@@ -672,19 +684,31 @@ def main() -> int:
             # This feeds real HomeostasisSignals through the policy and into
             # the coordinator — closing the production signal->policy->coordinator
             # path. The adapter does NOT mutate the network.
+            #
+            # CONFIG-AUTHORITATIVE: interval_ticks and policy_config are
+            # derived from the YAML self_organization section. Hardcoded
+            # defaults are never used when production config exists.
             if homeostasis is not None:
                 try:
+                    from src.self_organization.policy import (
+                        SelfOrganizationPolicyConfig,
+                    )
                     from src.self_organization.runtime_adapter import (
                         SelfOrganizationRuntimeAdapter,
                     )
 
+                    _so_interval = int(so_cfg.get("interval_ticks", 100))
+                    _so_policy_config = SelfOrganizationPolicyConfig.from_config(
+                        config_dict
+                    )
                     _so_adapter = SelfOrganizationRuntimeAdapter(
                         homeostasis_engine=homeostasis,
                         coordinator=_self_org_coordinator,
-                        interval_ticks=50,
+                        interval_ticks=_so_interval,
+                        policy_config=_so_policy_config,
                     )
                     controller.add_hook(_so_adapter)
-                    print("   ✅ SelfOrganizationRuntimeAdapter attached (signal->policy->coordinator)")
+                    print(f"   ✅ SelfOrganizationRuntimeAdapter attached (interval={_so_interval}, config-authoritative)")
                 except Exception as adapter_err:
                     print(f"   ⚠️ SelfOrganizationRuntimeAdapter failed: {adapter_err}")
         except Exception as e:
