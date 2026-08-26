@@ -1,19 +1,25 @@
 {
-  "tested_commit": "314b6e031bc0b874385282d1b7d08cb0c9b0ce13",
-  "tested_tree_digest": "512d8028c27a7423fb9881c586fae8a46d3f228231fcbbae258dbdc3df9d5852",
-  "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
-  "tree_digest_excludes": ["tests/test_baseline.json"],
-  "timestamp": "2026-08-26T12:30:00+02:00",
+  "tested_commit": "ba61ff90303a6aa0ebd23534ed7e9abba91e043c",
+  "tested_tree_digest": "dcd2d4612e3a4d23a450163aaebfab773da1aff56fa18e55acc6242d585d23db",
+  "tree_digest_paths": [
+    "src/",
+    "configs/",
+    "research/schemas/",
+    "pyproject.toml",
+    "tests/"
+  ],
+  "tree_digest_excludes": [
+    "tests/test_baseline.json"
+  ],
+  "timestamp": "2026-08-26T22:22:49+0200",
   "python": "3.13.14",
-
   "full_collection": {
     "status": "passed",
     "collection_errors": 0
   },
-
   "full_suite": {
     "command": "python -m pytest tests/ -q",
-    "passed": 364,
+    "passed": 367,
     "failed": 0,
     "skipped": 2,
     "skipped_reasons": [

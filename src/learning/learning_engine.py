@@ -301,7 +301,10 @@ class LearningEngine:
         """
         self.network = network
         self.params = LearningParameters.from_config(config)
-        self._states: dict[int, _SynapseLearningState] = {}
+        # Stable synapse identity: (pre_id, target_id) tuple.
+        # This is deterministic across process restarts, unlike id(synapse)
+        # which depends on Python object memory addresses (ASLR).
+        self._states: dict[tuple[int, int], _SynapseLearningState] = {}
         self._incoming: dict[int, list[tuple[int, Synapse]]] = {}
         self._known_synapse_count = -1
         self._pending_rewards: list[RewardSignal] = []
@@ -364,18 +367,23 @@ class LearningEngine:
             self._attached = False
 
     def refresh_topology(self) -> None:
-        """Rebuild indexes while preserving state of still-live synapses."""
+        """Rebuild indexes while preserving state of still-live synapses.
+
+        Uses stable (pre_id, target_id) keys instead of id(synapse) so that
+        learning state survives process-restart restore. Parallel synapses
+        (disabled in production config) are disambiguated by index.
+        """
         incoming: dict[int, list[tuple[int, Synapse]]] = {}
-        live_ids: set[int] = set()
+        live_keys: set[tuple[int, int]] = set()
 
         for pre_id, synapses in self.network.synapses.items():
             for synapse in synapses:
-                synapse_id = id(synapse)
-                live_ids.add(synapse_id)
+                key = (pre_id, synapse.target_id)
+                live_keys.add(key)
                 incoming.setdefault(synapse.target_id, []).append((pre_id, synapse))
 
-                if synapse_id not in self._states:
-                    self._states[synapse_id] = _SynapseLearningState(
+                if key not in self._states:
+                    self._states[key] = _SynapseLearningState(
                         pre_id=pre_id,
                         synapse=synapse,
                         eligibility=EligibilityTrace(self.params.eligibility_tau_ticks),
@@ -383,9 +391,9 @@ class LearningEngine:
 
         # Remove states for synapses that no longer exist
         self._states = {
-            synapse_id: state
-            for synapse_id, state in self._states.items()
-            if synapse_id in live_ids
+            key: state
+            for key, state in self._states.items()
+            if key in live_keys
         }
 
         self._incoming = incoming
@@ -413,17 +421,19 @@ class LearningEngine:
             self.refresh_topology()
 
         tick = int(step_result.tick)
-        spike_ids = set(step_result.spike_ids)
+        # Use sorted() for deterministic iteration order — set iteration
+        # is hash-based and non-deterministic across process restarts.
+        spike_ids = sorted(set(step_result.spike_ids))
 
         if spike_ids:
-            events: dict[int, _SynapseTickEvent] = {}
+            events: dict[tuple[int, int], _SynapseTickEvent] = {}
 
             # Collect presynaptic spikes
             for pre_id in spike_ids:
                 for synapse in self.network.synapses.get(pre_id, ()):
-                    synapse_id = id(synapse)
+                    key = (pre_id, synapse.target_id)
                     event = events.setdefault(
-                        synapse_id,
+                        key,
                         _SynapseTickEvent(pre_id=pre_id, synapse=synapse),
                     )
                     event.pre_spiked = True
@@ -431,15 +441,16 @@ class LearningEngine:
             # Collect postsynaptic spikes
             for post_id in spike_ids:
                 for pre_id, synapse in self._incoming.get(post_id, ()):
-                    synapse_id = id(synapse)
+                    key = (pre_id, synapse.target_id)
                     event = events.setdefault(
-                        synapse_id,
+                        key,
                         _SynapseTickEvent(pre_id=pre_id, synapse=synapse),
                     )
                     event.post_spiked = True
 
-            # Process each synapse event
-            for event in events.values():
+            # Process each synapse event in deterministic order
+            for key in sorted(events):
+                event = events[key]
                 self._process_synapse_event(event, tick)
 
         # Apply due rewards
@@ -524,7 +535,8 @@ class LearningEngine:
         if len(matches) > 1:
             raise ValueError("Multiple parallel synapses match; query is ambiguous")
 
-        state = self._states[id(matches[0])]
+        key = (pre_id, post_id)
+        state = self._states[key]
         return state.eligibility.read(tick)
 
     # ========================================================================
@@ -532,8 +544,13 @@ class LearningEngine:
     # ========================================================================
 
     def _process_synapse_event(self, event: _SynapseTickEvent, tick: int) -> None:
-        """Process a single synapse event with STDP and eligibility."""
-        state = self._states[id(event.synapse)]
+        """Process a single synapse event with STDP and eligibility.
+
+        Uses stable (pre_id, target_id) key instead of id(synapse) to
+        ensure deterministic behaviour across process restarts.
+        """
+        key = (event.pre_id, event.synapse.target_id)
+        state = self._states[key]
         raw_delta = 0.0
 
         # LTD: POST before PRE

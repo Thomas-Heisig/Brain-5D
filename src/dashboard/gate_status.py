@@ -133,6 +133,18 @@ REQUIRED_SINGLE_LISTENER_PROOFS: frozenset[str] = frozenset({
     "process_alive_during_verification",
 })
 
+# Required determinism infrastructure proof set — the artifact must contain
+# exactly these proof IDs, all True. No extra or missing fields are tolerated.
+REQUIRED_DETERMINISM_PROOFS: frozenset[str] = frozenset({
+    "rng_state_persistence",
+    "explicit_iteration_order",
+    "canonical_state_digest",
+    "structural_determinism",
+    "checkpoint_v4_roundtrip",
+    "engine_state_roundtrip",
+    "experiment_validity",
+})
+
 
 # ============================================================================
 # Gate criterion model
@@ -637,11 +649,24 @@ class GateStatusBuilder:
         # that the RuntimeAdapter runs without silent exceptions.
         live_loop_ok = self._live_loop_verified()
 
-        # Check for experiment validity test files
-        experiment_validity_tests = self._verify_test_files_exist(
-            ["tests/test_experiment_validity.py"]
+        # Determinism infrastructure artifact (used for both error visibility
+        # and determinism criteria). Read once to avoid redundant I/O.
+        determinism_verified = self._determinism_infrastructure_verified()
+        determinism_source = (
+            "research/generated/verification/determinism_infrastructure.json"
+            if determinism_verified
+            else "project_state"
         )
-        validity_tested = experiment_validity_tests.get("tests/test_experiment_validity.py", False)
+        determinism_msg = (
+            "Verified by determinism infrastructure artifact (tree digest matches)"
+            if determinism_verified
+            else "Pending verification — file existence is not evidence"
+        )
+
+        # Error visibility criteria use the live loop artifact (hook errors)
+        # and the determinism infrastructure artifact (experiment validity).
+        # File existence alone is NEVER sufficient.
+        validity_tested = determinism_verified
 
         error_vis: list[tuple[str, str, str, str]] = [
             ("B-HOOK-ERROR-VISIBILITY", "Structured hook-error visibility",
@@ -665,44 +690,35 @@ class GateStatusBuilder:
                 label=label,
                 status=status,
                 maturity=maturity,
-                source="tests/test_experiment_validity.py" if validity_tested else "project_state",
-                message="Verified by experiment validity tests" if validity_tested else "Pending verification",
+                source=determinism_source,
+                message=determinism_msg,
+                evidence={"artifact": "research/generated/verification/determinism_infrastructure.json"} if validity_tested else None,
             ))
 
         # --- Restore / determinism ---
-        # Check which determinism test files exist
-        determinism_test_files = self._verify_test_files_exist([
-            "tests/test_rng_persistence.py",
-            "tests/test_iteration_determinism.py",
-            "tests/test_structural_determinism.py",
-            "tests/test_canonical_state.py",
-            "tests/test_checkpoint_v4.py",
-        ])
-        rng_tested = determinism_test_files.get("tests/test_rng_persistence.py", False)
-        iter_tested = determinism_test_files.get("tests/test_iteration_determinism.py", False)
-        struct_det_tested = determinism_test_files.get("tests/test_structural_determinism.py", False)
-        canonical_tested = determinism_test_files.get("tests/test_canonical_state.py", False)
-        checkpoint_v4_tested = determinism_test_files.get("tests/test_checkpoint_v4.py", False)
+        # Evidence-based: read from research/generated/verification/determinism_infrastructure.json
+        # File existence alone is NEVER sufficient — the artifact must prove
+        # actual test execution with matching tree digest.
 
         determinism: list[tuple[str, str, str, str]] = [
             ("B-RESTORE-CONTINUE", "Restore-and-continue identity",
-             VERIFIED if checkpoint_v4_tested else IMPLEMENTED,
-             G_PASSED if checkpoint_v4_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
             ("B-STRUCTURAL-DETERMINISM", "Structural determinism",
-             VERIFIED if struct_det_tested else IMPLEMENTED,
-             G_PASSED if struct_det_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
             ("B-ITERATION-ORDER", "Explicit iteration-order determinism",
-             VERIFIED if iter_tested else IMPLEMENTED,
-             G_PASSED if iter_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
             ("B-RNG-STATE-PERSIST", "Full RNG state persistence",
-             VERIFIED if rng_tested else IMPLEMENTED,
-             G_PASSED if rng_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
             ("B-CANONICAL-STATE-DIGEST", "Canonical full-state digest",
-             VERIFIED if canonical_tested else IMPLEMENTED,
-             G_PASSED if canonical_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
             ("B-HOMEOSTASIS-LEARNING-PERSIST", "Homeostasis + learning state persistence",
-             VERIFIED if checkpoint_v4_tested else IMPLEMENTED,
-             G_PASSED if checkpoint_v4_tested else G_PENDING),
+             VERIFIED if determinism_verified else IMPLEMENTED,
+             G_PASSED if determinism_verified else G_PENDING),
         ]
         for cid, label, maturity, status in determinism:
             items.append(_criterion(
@@ -712,8 +728,9 @@ class GateStatusBuilder:
                 label=label,
                 status=status,
                 maturity=maturity,
-                source="tests/" if status == G_PASSED else "project_state",
-                message="Verified by determinism tests" if status == G_PASSED else "Pending verification",
+                source=determinism_source,
+                message=determinism_msg,
+                evidence={"artifact": "research/generated/verification/determinism_infrastructure.json"} if determinism_verified else None,
             ))
 
         return items
@@ -1122,6 +1139,67 @@ class GateStatusBuilder:
             return json.loads(artifact_path.read_text(encoding="utf-8"))
         except Exception:
             return None
+
+    # --------------------------------------------------------------------
+    # Determinism infrastructure artifact reader
+    # --------------------------------------------------------------------
+
+    def _read_determinism_artifact(self) -> dict[str, Any] | None:
+        """Read the determinism infrastructure verification artifact.
+
+        Reads from ``research/generated/verification/determinism_infrastructure.json``.
+        Returns ``None`` if the artifact is missing or unparseable.
+        """
+        artifact_path = (
+            self.repo_root / "research" / "generated" / "verification"
+            / "determinism_infrastructure.json"
+        )
+        if not artifact_path.exists():
+            return None
+        try:
+            return json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _determinism_infrastructure_verified(self) -> bool:
+        """Return True if the determinism infrastructure artifact shows all
+        proofs passed AND the artifact's tree digest matches the current
+        source tree.
+
+        Fail-closed validation:
+        - missing artifact → NOT VERIFIED
+        - status != "verified" → NOT VERIFIED
+        - missing schema_version → NOT VERIFIED
+        - proof count != REQUIRED_DETERMINISM_PROOFS → NOT VERIFIED
+        - any proof false → NOT VERIFIED
+        - missing tested_tree_digest → NOT VERIFIED
+        - digest mismatch → NOT VERIFIED (stale)
+        """
+        artifact = self._read_determinism_artifact()
+        if artifact is None:
+            return False
+        if artifact.get("status") != "verified":
+            return False
+        if artifact.get("schema_version") is None:
+            return False
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
+            return False
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        if frozenset(proofs.keys()) != REQUIRED_DETERMINISM_PROOFS:
+            return False
+        if not all(proofs[name] is True for name in REQUIRED_DETERMINISM_PROOFS):
+            return False
+        artifact_digest = artifact.get("tested_tree_digest")
+        if not artifact_digest:
+            return False
+        from src.dashboard.verification import compute_source_tree_digest
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return False
+        if artifact_digest != current_digest:
+            return False
+        return True
 
     def _single_listener_verified(self) -> bool:
         """Return True if the single listener artifact shows all proofs passed

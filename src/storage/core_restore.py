@@ -312,18 +312,20 @@ def restore_learning_state(
         return
 
     # Restore per-synapse traces
+    # Uses stable (pre_id, target_id) key matching LearningEngine's
+    # deterministic topology indexing.
     if checkpoint.learning_state:
         states = learning_engine._states
         for record in checkpoint.learning_state:
             pre_id = int(record.pre_id)
             target_id = int(record.target_id)
-            for state_id, state in states.items():
-                if state.pre_id == pre_id and state.synapse.target_id == target_id:
-                    state.last_pre_tick = record.last_pre_tick
-                    state.last_post_tick = record.last_post_tick
-                    if hasattr(state.eligibility, "_trace"):
-                        state.eligibility._trace = record.eligibility_value
-                    break
+            key = (pre_id, target_id)
+            if key in states:
+                state = states[key]
+                state.last_pre_tick = record.last_pre_tick
+                state.last_post_tick = record.last_post_tick
+                # EligibilityTrace uses .value, not ._trace
+                state.eligibility.value = record.eligibility_value
 
     # Restore pending rewards (independent of learning_state presence)
     if checkpoint.pending_rewards and hasattr(learning_engine, "_pending_rewards"):
@@ -332,3 +334,104 @@ def restore_learning_state(
             RewardSignal(value=float(r.value), tick=int(r.tick))
             for r in checkpoint.pending_rewards
         ]
+
+
+# ============================================================================
+# Production Restore Bundle
+# ============================================================================
+
+
+class RestoredBundle:
+    """Complete production restore result: network + optional engines.
+
+    This bundles the restored neural network together with its optional
+    homeostasis and learning engines, providing a single restore-and-continue
+    entry point for production use.
+
+    Attributes:
+        network: The restored RestoredNeuralNetwork instance.
+        homeostasis_engine: Optional restored HomeostasisEngine, or None.
+        learning_engine: Optional restored LearningEngine, or None.
+    """
+
+    def __init__(
+        self,
+        network: RestoredNeuralNetwork,
+        homeostasis_engine: Any | None = None,
+        learning_engine: Any | None = None,
+    ) -> None:
+        self.network = network
+        self.homeostasis_engine = homeostasis_engine
+        self.learning_engine = learning_engine
+
+
+def restore_full(
+    snapshot_path: Path,
+    journal_path: Path,
+    checkpoint_path: Path,
+    config: ConfigDict,
+    recovered_path: Path,
+    *,
+    structural_journal_path: Path | None = None,
+    create_homeostasis_engine: bool = False,
+    create_learning_engine: bool = False,
+) -> RestoredBundle:
+    """Restore network and optionally create and restore engines.
+
+    This is the production entry point that replaces calling
+    ``restore_network()`` followed by manual engine creation and restore.
+    It ensures the full restore chain is executed atomically:
+
+    1. Recover snapshot and restore network (same as restore_network())
+    2. Optionally create HomeostasisEngine and restore its state
+    3. Optionally create LearningEngine and restore its state
+
+    Args:
+        snapshot_path: Path to the base ``.b5d`` snapshot.
+        journal_path: Path to the ``.b5d.journal`` delta journal.
+        checkpoint_path: Path to the runtime checkpoint JSON.
+        config: Network configuration (dict).
+        recovered_path: Path to write the recovered snapshot.
+        structural_journal_path: Optional structural journal path.
+        create_homeostasis_engine: If True, create and restore
+            HomeostasisEngine from checkpoint.
+        create_learning_engine: If True, create and restore
+            LearningEngine from checkpoint.
+
+    Returns:
+        A RestoredBundle containing the network and optionally the engines.
+
+    Raises:
+        RuntimeError: If recovery fails.
+        ValueError: If the snapshot is not restart-capable.
+    """
+    network = restore_network(
+        snapshot_path=snapshot_path,
+        journal_path=journal_path,
+        checkpoint_path=checkpoint_path,
+        config=config,
+        recovered_path=recovered_path,
+        structural_journal_path=structural_journal_path,
+    )
+
+    checkpoint = read_runtime_checkpoint(checkpoint_path)
+    homeostasis_engine: Any = None
+    learning_engine: Any = None
+
+    if create_homeostasis_engine:
+        from src.homeostasis.engine import HomeostasisEngine
+
+        homeostasis_engine = HomeostasisEngine(network, dict(config))
+        restore_homeostasis_state(homeostasis_engine, checkpoint)
+
+    if create_learning_engine:
+        from src.learning.learning_engine import LearningEngine
+
+        learning_engine = LearningEngine(network, dict(config))
+        restore_learning_state(learning_engine, checkpoint)
+
+    return RestoredBundle(
+        network=network,
+        homeostasis_engine=homeostasis_engine,
+        learning_engine=learning_engine,
+    )

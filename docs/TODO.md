@@ -2,14 +2,14 @@
 
 > Last updated: 2026-08-26
 > Verification basis:
->   Test-run commit: 314b6e0
->   Source-tree digest: b3c73779...
+>   Current verification → tests/test_baseline.json (tree-digest authority)
 > Status: Alpha.5 scientific verification closure
 > Alpha.6: BLOCKED
 >
-> Phase 1-8 implemented (error integrity, canonical state, RNG persistence,
-> iteration determinism, structural determinism, checkpoint v4).
-> Phase 9-25: PENDING (restore determinism experiments, DATA/EVID artifacts).
+> Phase 1-9 implemented (error integrity, canonical state, RNG persistence,
+> iteration determinism, structural determinism, checkpoint v4,
+> production restore bundle, deterministic LearningEngine).
+> Phase 10-25: PENDING (restore determinism experiments, DATA/EVID artifacts).
 >
 > Dashboard truth sources:
 >   /api/integration/status = live runtime truth
@@ -32,17 +32,19 @@ Real single-port ownership proof             VERIFIED (hardened test + artifact)
 Structural Live Loop (full E2E path)         VERIFIED
 
 Gate B — Verification
-Recorded full test run                       292+ passed / 0 failed
+Recorded full test run                       367 passed / 0 failed
 Structural mechanism E2E                     11/11 VERIFIED
 Error Visibility (no silent exceptions)      VERIFIED
 Runtime exceptions enter manifest            VERIFIED (Phase 1)
 Invalid run cannot become evidence           VERIFIED (Phase 1)
 Explicit iteration-order determinism         VERIFIED (Phase 6)
 Full RNG state persistence                   VERIFIED (Phase 5)
-Canonical full-state digest                  IMPLEMENTED (Phase 3-4)
+Canonical full-state digest                  VERIFIED (Phase 3-4)
 Structural determinism                       VERIFIED (Phase 7)
 Homeostasis + learning state persistence     VERIFIED (Phase 8)
-Restore-and-continue identity                OPEN (Phase 9-10)
+Restore-and-continue identity                OPEN (Phase 9)
+Production restore bundle                    VERIFIED (Phase 9)
+LearningEngine deterministic keying          VERIFIED (Phase 9)
 
 Gate C — Scientific Baseline
 B5D-SEF                                      IMPLEMENTED
@@ -60,22 +62,23 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: 314b6e0
-Python:          3.13.14
+Current verification: tests/test_baseline.json
+Python:               3.13.14
 
-Full suite (pre-Phase 1-8):
-  Passed:             292
+Full suite:
+  Passed:             367
   Failed:             0
   Skipped:            2
   Collection errors:  0
 
-New Phase 1-8 tests added:
-  test_experiment_validity.py    21 passed
-  test_canonical_state.py        17 passed
-  test_rng_persistence.py         6 passed
-  test_iteration_determinism.py   8 passed
-  test_structural_determinism.py  5 passed
-  test_checkpoint_v4.py           7 passed
+Determinism infrastructure artifact (7/7 proofs):
+  rng_state_persistence       ✓
+  explicit_iteration_order    ✓
+  canonical_state_digest      ✓
+  structural_determinism      ✓
+  checkpoint_v4_roundtrip     ✓
+  engine_state_roundtrip      ✓
+  experiment_validity         ✓
 
 Freshness authority: tested_tree_digest (SHA-256)
 
@@ -114,7 +117,7 @@ Excluded:
 
 === GATE B ====================================================
 
-13. Full pytest collection 292/0/2 .......................... ✅
+13. Full pytest collection 367/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
 15. Error Visibility / scientific integrity ................. ✅
 16. Runtime exceptions enter manifest ....................... ✅
@@ -125,6 +128,9 @@ Excluded:
 21. Structural determinism .................................. ✅
 22. Homeostasis + learning state persistence ............... ✅
 23. Restore-and-continue determinism ........................ 🔴
+24. Production restore bundle (restore_full) ............... ✅
+25. LearningEngine deterministic keying .................... ✅
+26. Gate evidence binding (determinism artifact) ........... ✅
 
 === GATE C ====================================================
 
@@ -230,6 +236,10 @@ Registered experiments:
 * [x] Canonical state digest (canonical_state_digest -> SHA-256)
 * [x] Iteration-order determinism (verified by tests)
 * [x] Structural determinism (verified by tests)
+* [x] Gate evidence binding — determinism criteria use verification artifact, not file existence
+* [x] LearningEngine deterministic keying — stable (pre_id, target_id) instead of id(synapse)
+* [x] LearningEngine deterministic iteration — sorted() instead of set iteration
+* [x] Production restore bundle (restore_full) — network + homeostasis + learning in one call
 * [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
 
 ## Gate C

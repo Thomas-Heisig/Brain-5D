@@ -160,13 +160,13 @@ class TestLearningRestore:
 
         # Capture learning state from engine internals
         learning_states = []
-        for state_id, state in learn._states.items():
+        for key, state in learn._states.items():
             learning_states.append({
                 "pre_id": state.pre_id,
                 "target_id": state.synapse.target_id,
                 "last_pre_tick": state.last_pre_tick,
                 "last_post_tick": state.last_post_tick,
-                "eligibility_value": state.eligibility._trace if hasattr(state.eligibility, "_trace") else 0.0,
+                "eligibility_value": state.eligibility.value,
             })
 
         checkpoint = capture_runtime_checkpoint(
@@ -189,15 +189,11 @@ class TestLearningRestore:
             for orig_state in learning_states:
                 pre_id = orig_state["pre_id"]
                 target_id = orig_state["target_id"]
-                # Find matching state in restored engine
-                found = False
-                for state_id, state in fresh_learn._states.items():
-                    if state.pre_id == pre_id and state.synapse.target_id == target_id:
-                        assert state.last_pre_tick == orig_state["last_pre_tick"]
-                        assert state.last_post_tick == orig_state["last_post_tick"]
-                        found = True
-                        break
-                assert found, f"Synapse {pre_id}->{target_id} not found in restored engine"
+                key = (pre_id, target_id)
+                assert key in fresh_learn._states, f"Synapse {pre_id}->{target_id} not found in restored engine"
+                state = fresh_learn._states[key]
+                assert state.last_pre_tick == orig_state["last_pre_tick"]
+                assert state.last_post_tick == orig_state["last_post_tick"]
         finally:
             tmp_path.unlink(missing_ok=True)
 
