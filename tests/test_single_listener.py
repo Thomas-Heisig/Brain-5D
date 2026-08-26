@@ -1,13 +1,10 @@
 """Test that exactly one TCP listener owns the dashboard port.
 
-This test launches Brain-5D, inspects TCP listeners for port 8765,
+This test launches Brain-5D, inspects TCP listeners for the dashboard port,
 and asserts exactly one LISTEN socket owned by the Brain-5D PID.
 
-Hardened against:
-- Stale pre-existing process on port 8765
-- netstat not being available
-- PID mismatch (listener PID must equal Brain-5D process PID)
-- Process death before test completes
+Uses a dynamically allocated free port so the test never conflicts with
+pre-existing processes on port 8765.
 """
 
 from __future__ import annotations
@@ -17,6 +14,16 @@ import socket
 import subprocess
 import time
 from pathlib import Path
+
+
+def _find_free_port() -> int:
+    """Find a free TCP port on 127.0.0.1."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+    finally:
+        sock.close()
 
 
 def _get_listener_pids(port: int) -> dict[int, list[int]]:
@@ -36,13 +43,9 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
 
     listeners: dict[int, list[int]] = {}
     for line in result.stdout.splitlines():
-        # Match any line containing the port and a PID at the end.
-        # Windows netstat: "  TCP    127.0.0.1:8765    0.0.0.0:0    LISTENING    12345"
-        # On German Windows: "  TCP    127.0.0.1:8765    0.0.0.0:0    ABHÖREN    12345"
         if f":{port}" not in line:
             continue
         parts = line.strip().split()
-        # A listening line has at least 5 parts and the last is a numeric PID
         if len(parts) >= 5:
             try:
                 pid = int(parts[-1])
@@ -53,36 +56,27 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
     return listeners
 
 
-def test_exactly_one_listener_owns_port_8765() -> None:
-    """Launch Brain-5D and verify exactly one TCP listener on port 8765.
+def test_exactly_one_listener_owns_port() -> None:
+    """Launch Brain-5D and verify exactly one TCP listener on the dashboard port.
 
-    A single PID can open multiple sockets — this test proves that
-    only one DashboardServer binds 127.0.0.1:8765.
-
-    If port 8765 is already occupied, the test FAILS clearly with PID
-    information. The test must NOT kill unrelated processes.
+    Uses a dynamically allocated port to avoid conflicts. Verifies:
+    - exactly one LISTEN socket
+    - listener PID == launched Brain-5D PID
+    - process remains alive
+    - no other PID listens on the same port
+    - /healthz answers from the launched runtime
     """
-    # ---- Phase 1: Detect whether port 8765 is already occupied ------------
-    pre_existing = _get_listener_pids(8765)
-    if pre_existing:
-        pids_str = ", ".join(
-            f"PID {pid} ({count} socket(s))"
-            for pid, count in ((p, len(s)) for p, s in pre_existing.items())
-        )
-        raise AssertionError(
-            f"Port 8765 is already occupied: {pids_str}. "
-            f"The test must not kill unrelated processes. "
-            f"Please stop the existing process and retry."
-        )
+    test_port = _find_free_port()
 
     repo_root = Path(__file__).resolve().parents[1]
     config_path = repo_root / "configs" / "poc_config.yaml"
 
-    # ---- Phase 2: Launch Brain-5D in background --------------------------
+    # ---- Phase 1: Launch Brain-5D in background with test port -----------
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
     proc = subprocess.Popen(
-        ["python", "-m", "src.main", "--config", str(config_path)],
+        ["python", "-m", "src.main", "--config", str(config_path),
+         "--dashboard-port", str(test_port)],
         cwd=str(repo_root),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -91,22 +85,20 @@ def test_exactly_one_listener_owns_port_8765() -> None:
     brain_pid = proc.pid
 
     try:
-        # ---- Phase 3: Wait for dashboard to start ------------------------
+        # ---- Phase 2: Wait for dashboard to start ------------------------
         deadline = time.monotonic() + 15.0
         dashboard_ready = False
         while time.monotonic() < deadline:
-            # Check process is still alive
             exit_code = proc.poll()
             if exit_code is not None:
                 raise AssertionError(
                     f"Brain-5D process (PID {brain_pid}) exited prematurely "
                     f"with code {exit_code}"
                 )
-            # Try connecting to port 8765
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
                 sock.settimeout(1)
-                if sock.connect_ex(("127.0.0.1", 8765)) == 0:
+                if sock.connect_ex(("127.0.0.1", test_port)) == 0:
                     dashboard_ready = True
                     break
             finally:
@@ -114,44 +106,41 @@ def test_exactly_one_listener_owns_port_8765() -> None:
             time.sleep(0.5)
 
         assert dashboard_ready, (
-            f"Port 8765 did not become listening within 15 seconds "
+            f"Port {test_port} did not become listening within 15 seconds "
             f"(Brain-5D PID {brain_pid})"
         )
 
-        # ---- Phase 4: Verify exactly one LISTEN socket owned by our PID ---
-        listeners = _get_listener_pids(8765)
+        # ---- Phase 3: Verify exactly one LISTEN socket owned by our PID ---
+        listeners = _get_listener_pids(test_port)
         assert len(listeners) > 0, (
-            "No LISTEN socket found on port 8765 after connection succeeded"
+            f"No LISTEN socket found on port {test_port} after connection succeeded"
         )
 
-        # The listener PID must equal the Brain-5D process PID
         assert brain_pid in listeners, (
             f"Listener PID(s) {list(set(listeners.keys()))} does not include "
-            f"Brain-5D PID {brain_pid}. A stale process may own port 8765."
+            f"Brain-5D PID {brain_pid}"
         )
 
-        # Exactly one socket from our PID
         our_sockets = listeners[brain_pid]
         assert len(our_sockets) == 1, (
-            f"Expected exactly 1 LISTEN socket on port 8765 from PID {brain_pid}, "
+            f"Expected exactly 1 LISTEN socket on port {test_port} from PID {brain_pid}, "
             f"found {len(our_sockets)}"
         )
 
-        # No other PID should be listening on this port
         other_pids = {pid for pid in listeners if pid != brain_pid}
         assert len(other_pids) == 0, (
-            f"Other PIDs also listening on port 8765: {other_pids}"
+            f"Other PIDs also listening on port {test_port}: {other_pids}"
         )
 
-        # ---- Phase 5: Verify process is still alive -----------------------
+        # ---- Phase 4: Verify process is still alive -----------------------
         assert proc.poll() is None, (
             f"Brain-5D process (PID {brain_pid}) died after port check"
         )
 
-        # ---- Phase 6: Verify /healthz belongs to this process -------------
+        # ---- Phase 5: Verify /healthz belongs to this process -------------
         import urllib.request
         try:
-            req = urllib.request.Request("http://127.0.0.1:8765/healthz")
+            req = urllib.request.Request(f"http://127.0.0.1:{test_port}/healthz")
             resp = urllib.request.urlopen(req, timeout=5)
             assert resp.status == 200, f"Health check returned HTTP {resp.status}"
             data = resp.read().decode("utf-8")
