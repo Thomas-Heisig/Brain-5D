@@ -2977,3 +2977,56 @@ footer {
     position: static !important;
   }
 }
+
+/* ============================================================================
+   SOURCE BADGE (LIVE vs SNAPSHOT)
+   ============================================================================ */
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-live {
+  background: rgba(64, 224, 168, 0.2);
+  color: #40e0a8;
+  border: 1px solid rgba(64, 224, 168, 0.3);
+}
+
+.badge-snapshot {
+  background: rgba(255, 200, 80, 0.15);
+  color: #ffc850;
+  border: 1px solid rgba(255, 200, 80, 0.25);
+}
+
+/* ============================================================================
+   PROVENANCE BADGE
+   ============================================================================ */
+
+.provenance-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.provenance-badge[data-src="LIVE"] {
+  background: rgba(64, 224, 168, 0.15);
+  color: #40e0a8;
+  border: 1px solid rgba(64, 224, 168, 0.2);
+}
+
+.provenance-badge[data-src="SNAPSHOT"] {
+  background: rgba(255, 200, 80, 0.12);
+  color: #ffc850;
+  border: 1px solid rgba(255, 200, 80, 0.2);
+}

@@ -209,8 +209,10 @@ function setupTabs() {
 // ================================================================
 
 let heatmapKind = 'activity';
+let liveSource = true;  // true = LIVE_RUNTIME, false = SNAPSHOT
 let refreshInterval = null;
 let heatmapInterval = null;
+let liveProjectionInterval = null;
 
 /**
  * Refresh system status from /api/status
@@ -615,11 +617,50 @@ function drawHeatmap(payload) {
 
   setText(
     'heatmap-meta',
-    `${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.samples || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
+    `${payload.source === 'live_runtime' ? 'LIVE' : 'SNAPSHOT'} · ${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.samples || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
   );
 
   // Also draw the 5D projection if available
   draw5DProjection(payload);
+}
+
+/**
+ * Refresh live projection from /api/live/projection (LIVE_RUNTIME source)
+ */
+async function refreshLiveProjection() {
+  const canvas = $('heatmap');
+  if (!canvas) return;
+  if (!liveSource) return;  // Only when live mode is active
+
+  try {
+    const response = await fetch(
+      `/api/live/projection?kind=${encodeURIComponent(heatmapKind)}&resolution=50`,
+      { cache: 'no-store' }
+    );
+    if (!response.ok) {
+      // Fall back to snapshot heatmap if live unavailable
+      if (liveSource) {
+        liveSource = false;
+        updateSourceBadge();
+      }
+      return;
+    }
+    const data = await response.json();
+    drawHeatmap(data);
+  } catch {
+    // Silently fall back — snapshot will be used on next interval
+  }
+}
+
+/**
+ * Update the source badge in the UI
+ */
+function updateSourceBadge() {
+  const badge = $('source-badge');
+  if (badge) {
+    badge.textContent = liveSource ? 'LIVE' : 'SNAPSHOT';
+    badge.className = liveSource ? 'badge badge-live' : 'badge badge-snapshot';
+  }
 }
 
 /**
@@ -718,6 +759,7 @@ function initDashboard() {
   // Initial loads
   refreshStatus();
   refreshHeatmap();
+  refreshLiveProjection();
   refreshSnapshotInfo();
   refreshLiveLoopStatus();
   refreshErrorVisibility();
@@ -725,9 +767,11 @@ function initDashboard() {
   // Set up intervals
   if (refreshInterval) clearInterval(refreshInterval);
   if (heatmapInterval) clearInterval(heatmapInterval);
+  if (liveProjectionInterval) clearInterval(liveProjectionInterval);
 
   refreshInterval = setInterval(refreshStatus, 1000);
   heatmapInterval = setInterval(refreshHeatmap, 5000);
+  liveProjectionInterval = setInterval(refreshLiveProjection, 500);
   setInterval(refreshSnapshotInfo, 3000);
   setInterval(refreshLiveLoopStatus, 5000);
   setInterval(refreshErrorVisibility, 5000);
@@ -738,9 +782,29 @@ function initDashboard() {
       heatmapKind = button.dataset.kind;
       $$('button[data-kind]').forEach(b => b.classList.remove('active'));
       button.classList.add('active');
-      refreshHeatmap();
+      if (liveSource) {
+        refreshLiveProjection();
+      } else {
+        refreshHeatmap();
+      }
     });
   });
+
+  // Live / Snapshot toggle
+  const liveToggle = $('live-toggle');
+  if (liveToggle) {
+    liveToggle.addEventListener('click', () => {
+      liveSource = !liveSource;
+      updateSourceBadge();
+      if (liveSource) {
+        refreshLiveProjection();
+      } else {
+        refreshHeatmap();
+      }
+    });
+  }
+
+  updateSourceBadge();
 }
 
 // ================================================================

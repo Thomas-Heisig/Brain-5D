@@ -51,6 +51,7 @@ class HeatmapPayload:
         samples: Number of samples used in the projection.
         snapshot: Name of the snapshot file used.
         values: 2D array of heatmap values.
+        source: Always "snapshot" to distinguish from live runtime data.
     """
 
     kind: str
@@ -58,6 +59,7 @@ class HeatmapPayload:
     samples: int
     snapshot: str
     values: list[list[float]]
+    source: str = "snapshot"
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the projection in JSON-compatible form."""
@@ -67,6 +69,7 @@ class HeatmapPayload:
             "samples": self.samples,
             "snapshot": self.snapshot,
             "values": [list(row) for row in self.values],
+            "source": self.source,
         }
 
 

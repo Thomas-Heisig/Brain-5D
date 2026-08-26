@@ -1,8 +1,9 @@
 {
   "schema_version": 1,
   "status": "verified",
-  "tested_tree_digest": "dcd2d4612e3a4d23a450163aaebfab773da1aff56fa18e55acc6242d585d23db",
-  "timestamp": "2026-08-26T22:22:17+0200",
+  "test_run_head": "830df6416c51050112704470e216d3f90fb069a7",
+  "tested_tree_digest": "36423c4ca5a26aaa6ad21b4291d4be03db13bc936b05ae3f913f1d6ea7b2079b",
+  "timestamp": "2026-08-26T23:00:53+0200",
   "python": "3.13.14",
   "test_files": [
     "tests/test_rng_persistence.py",
@@ -32,6 +33,5 @@
     "checkpoint_v4_roundtrip": true,
     "engine_state_roundtrip": true,
     "experiment_validity": true
-  },
-  "tested_commit": "ba61ff90303a6aa0ebd23534ed7e9abba91e043c"
+  }
 }

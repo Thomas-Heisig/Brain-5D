@@ -235,6 +235,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._serve_heatmap(query)
                 return
 
+            if path == "/api/live/projection":
+                self._serve_live_projection(query)
+                return
+
             if path == "/api/snapshots":
                 self._serve_snapshots()
                 return
@@ -829,6 +833,53 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         self._send_json(payload.to_json())
+
+    # ========================================================================
+    # Live Projection (LIVE_RUNTIME source — never from snapshot)
+    # ========================================================================
+
+    def _serve_live_projection(
+        self,
+        query: dict[str, list[str]],
+    ) -> None:
+        """Serve a live runtime projection.
+
+        This endpoint reads directly from the in-memory NeuralNetwork,
+        never from a .b5d snapshot file. The response is tagged as
+        ``live_runtime`` so the frontend can distinguish it from
+        snapshot-based heatmaps.
+        """
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json(
+                {"error": "No live runtime available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        kind = query.get("kind", ["activity"])[0]
+        dim_x = int(query.get("dimension_x", ["0"])[0])
+        dim_y = int(query.get("dimension_y", ["1"])[0])
+        bins = int(query.get("resolution", ["50"])[0])
+        aggregation = query.get("aggregation", ["mean"])[0]
+
+        try:
+            projection = bridge.live_projection.project(
+                kind=kind,
+                dim_x=dim_x,
+                dim_y=dim_y,
+                bins=bins,
+                aggregation=aggregation,
+            )
+        except ValueError as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        self._send_json(projection.to_json())
 
     # ========================================================================
     # Snapshots

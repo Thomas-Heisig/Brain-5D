@@ -510,7 +510,7 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
         "status": "verified" if all_passed else "failed",
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
-        "tested_commit": commit,
+        "test_run_head": commit,
         "tested_tree_digest": tree_digest,
         "test_command": "python -m pytest tests/test_structural_live_loop.py -q",
         "proofs": proofs,

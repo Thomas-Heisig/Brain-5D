@@ -2,9 +2,9 @@
 
 ## v0.5.0-alpha.5 — Scientific Verification Closure
 
-**Status: OPEN** (pre-closure sprint complete)
+**Status: OPEN** (live visualization + verification freshness sprint complete)
 
-### Completed in Pre-Closure Sprint
+### Completed in Pre-Closure Sprint (Part 1)
 
 1. **Gate evidence binding** — Determinism criteria now read from `research/generated/verification/determinism_infrastructure.json` instead of checking file existence. Fail-closed: missing artifact, stale digest, or failed proofs all result in PENDING/STALE, never PASSED.
 
@@ -15,6 +15,18 @@
 4. **Production restore test** — `tests/test_production_restore.py` verifies the full "C path": Process A creates network + engines → runs → captures checkpoint → Process B restores from snapshot → creates fresh engines → restores state → verifies full state digest identity.
 
 5. **Determinism infrastructure artifact** — `scripts/generate_determinism_artifact.py` runs all determinism tests and produces the verification artifact with 7 proofs.
+
+### Completed in Live Visualization Sprint (Part 2)
+
+6. **Verification artifact generation fix** — `scripts/generate_determinism_artifact.py` now uses canonical `compute_source_tree_digest()` instead of a custom hash function. All 5 verification artifacts share the same `tested_tree_digest`.
+
+7. **Verification semantics cleanup** — Artifacts use `test_run_head` (provenance) instead of `tested_commit` (misleading). Tree digest is the sole freshness authority.
+
+8. **Live projection service** — `LiveProjectionService` queries the in-memory `NeuralNetwork` directly. Supports 5 kinds (activity, energy, membrane, spike, weight) with configurable aggregation and resolution. Never reads from `.b5d` snapshots.
+
+9. **LIVE vs SNAPSHOT separation** — Dashboard now has a clear source badge (LIVE in green, SNAPSHOT in amber). `/api/live/projection` is the live endpoint; `/api/heatmap` remains snapshot-based. The user always knows what is being displayed.
+
+10. **Live projection tests** — 12 tests covering energy accuracy, activity timing, weight projection, tick coherence, no-mutation guarantee, snapshot separation, bounded payload, and invalid parameter handling.
 
 ### Remaining for Alpha.5 Closure
 

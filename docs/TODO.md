@@ -3,7 +3,8 @@
 > Last updated: 2026-08-26
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
-> Status: Alpha.5 scientific verification closure
+>   All 5 verification artifacts share the same tested_tree_digest ✅
+> Status: Alpha.5 verification fresh — live visualization added
 > Alpha.6: BLOCKED
 >
 > Phase 1-9 implemented (error integrity, canonical state, RNG persistence,
@@ -14,6 +15,8 @@
 > Dashboard truth sources:
 >   /api/integration/status = live runtime truth
 >   /api/gate/status        = release/verification truth
+>   /api/live/projection    = live runtime visualization (LIVE_RUNTIME)
+>   /api/heatmap            = snapshot visualization (SNAPSHOT)
 >   /api/errors             = canonical runtime-error endpoint
 >   /api/structural/errors  = structural runtime errors
 >   B5D-SEF                 = scientific evidence truth
@@ -32,7 +35,7 @@ Real single-port ownership proof             VERIFIED (hardened test + artifact)
 Structural Live Loop (full E2E path)         VERIFIED
 
 Gate B — Verification
-Recorded full test run                       367 passed / 0 failed
+Recorded full test run                       379 passed / 0 failed
 Structural mechanism E2E                     11/11 VERIFIED
 Error Visibility (no silent exceptions)      VERIFIED
 Runtime exceptions enter manifest            VERIFIED (Phase 1)
@@ -45,6 +48,8 @@ Homeostasis + learning state persistence     VERIFIED (Phase 8)
 Restore-and-continue identity                OPEN (Phase 9)
 Production restore bundle                    VERIFIED (Phase 9)
 LearningEngine deterministic keying          VERIFIED (Phase 9)
+Gate evidence binding                        VERIFIED (Phase 9)
+Live visualization backend                   VERIFIED (Phase 9)
 
 Gate C — Scientific Baseline
 B5D-SEF                                      IMPLEMENTED
@@ -66,10 +71,17 @@ Current verification: tests/test_baseline.json
 Python:               3.13.14
 
 Full suite:
-  Passed:             367
+  Passed:             379
   Failed:             0
   Skipped:            2
   Collection errors:  0
+
+Verification artifacts (all share the same tested_tree_digest):
+  tests/test_baseline.json                    ✅
+  research/generated/verification/structural_e2e.json ✅
+  research/generated/verification/structural_live_loop.json ✅
+  research/generated/verification/single_listener.json ✅
+  research/generated/verification/determinism_infrastructure.json ✅
 
 Determinism infrastructure artifact (7/7 proofs):
   rng_state_persistence       ✓
@@ -117,7 +129,7 @@ Excluded:
 
 === GATE B ====================================================
 
-13. Full pytest collection 367/0/2 .......................... ✅
+13. Full pytest collection 379/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
 15. Error Visibility / scientific integrity ................. ✅
 16. Runtime exceptions enter manifest ....................... ✅
@@ -131,6 +143,8 @@ Excluded:
 24. Production restore bundle (restore_full) ............... ✅
 25. LearningEngine deterministic keying .................... ✅
 26. Gate evidence binding (determinism artifact) ........... ✅
+27. Live visualization backend (LiveProjectionService) ..... ✅
+28. LIVE vs SNAPSHOT separation ............................ ✅
 
 === GATE C ====================================================
 
@@ -240,6 +254,10 @@ Registered experiments:
 * [x] LearningEngine deterministic keying — stable (pre_id, target_id) instead of id(synapse)
 * [x] LearningEngine deterministic iteration — sorted() instead of set iteration
 * [x] Production restore bundle (restore_full) — network + homeostasis + learning in one call
+* [x] Live projection service (LiveProjectionService) — read-only live runtime visualization
+* [x] LIVE vs SNAPSHOT separation — source badge in UI, /api/live/projection vs /api/heatmap
+* [x] Verification artifact generation uses canonical compute_source_tree_digest() everywhere
+* [x] Verification artifacts use test_run_head (provenance) instead of tested_commit (misleading)
 * [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
 
 ## Gate C

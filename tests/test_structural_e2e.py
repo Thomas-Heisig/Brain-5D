@@ -661,7 +661,7 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
         "status": "verified" if all_passed else "failed",
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
-        "tested_commit": _git_head(repo_root),
+        "test_run_head": _git_head(repo_root),
         "tested_tree_digest": tree_digest,
         "test_command": "python -m pytest tests/test_structural_e2e.py -q",
         "proofs": proofs_passed,

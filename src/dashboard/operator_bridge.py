@@ -30,6 +30,7 @@ from .models import (
 )
 from .structural_api import StructuralCommandResult
 from src.self_organization.runtime_adapter import get_error_buffer
+from src.dashboard.live_projection import LiveProjectionService
 
 # Type aliases for JSON responses
 JSONMapping: TypeAlias = dict[str, JSONValue]
@@ -63,6 +64,7 @@ class OperatorBridge:
         plasticity: StructuralPlasticityEngine | None = None,
         approval_policy: ProposalApprovalPolicy | None = None,
         structural_heatmaps: StructuralHeatmapSource | None = None,
+        live_projection: LiveProjectionService | None = None,
     ) -> None:
         """Initialize the operator bridge.
 
@@ -72,6 +74,9 @@ class OperatorBridge:
             plasticity: Optional structural plasticity engine.
             approval_policy: Optional proposal approval policy.
             structural_heatmaps: Optional heatmap source for visualizations.
+            live_projection: Optional live projection service for real-time
+                visualization. Created automatically from the controller's
+                network if not provided.
         """
         # controller is required by type annotation, so no None check needed
         self.controller = controller
@@ -79,6 +84,9 @@ class OperatorBridge:
         self.plasticity = plasticity
         self.approval_policy = approval_policy
         self.structural_heatmaps = structural_heatmaps
+        self.live_projection = live_projection or LiveProjectionService(
+            controller.network
+        )
 
     # =========================================================================
     # Status and Telemetry

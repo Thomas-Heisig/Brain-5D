@@ -122,17 +122,20 @@
       <!-- Heatmap + 5D Projection -->
       <section class="card heatmap-panel">
         <div class="panel-title">
-          <div><h2>5D Netzwerk-Projektion</h2><p>Lazy mmap aus .b5d Snapshot · Isometrische 3D-Ansicht</p></div>
+          <div><h2>5D Netzwerk-Projektion</h2><p><span id="source-badge" class="badge badge-live">LIVE</span> · Live Runtime oder Snapshot</p></div>
           <div class="button-group">
+            <button id="live-toggle" class="active" title="Umschalten zwischen Live Runtime und Snapshot">🔄 LIVE</button>
             <button data-kind="activity" class="active">Aktivität</button>
-            <button data-kind="weights">Gewichte</button>
             <button data-kind="energy">Energie</button>
+            <button data-kind="membrane">Membran</button>
+            <button data-kind="spike">Spikes</button>
+            <button data-kind="weight">Gewichte</button>
           </div>
         </div>
         <div class="heatmap-split">
           <div class="heatmap-wrap">
             <canvas id="heatmap" width="800" height="420"></canvas>
-            <div class="heatmap-meta" id="heatmap-meta">Kein Snapshot verbunden.</div>
+            <div class="heatmap-meta" id="heatmap-meta">Keine Live-Verbindung.</div>
           </div>
           <div class="projection-wrap">
             <canvas id="projection-5d" width="400" height="420"></canvas>

@@ -27,6 +27,22 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 ARTIFACT_DIR = REPO_ROOT / "research" / "generated" / "verification"
 ARTIFACT_PATH = ARTIFACT_DIR / "determinism_infrastructure.json"
 
+# Ensure src/ is importable
+sys.path.insert(0, str(REPO_ROOT))
+
+
+def current_git_head() -> str | None:
+    """Return the current git HEAD commit hash, or None."""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True, text=True, timeout=10,
+            cwd=str(REPO_ROOT),
+        )
+        return result.stdout.strip() if result.returncode == 0 else None
+    except Exception:
+        return None
+
 # Tests that verify determinism infrastructure
 DETERMINISM_TESTS = [
     "tests/test_rng_persistence.py",
@@ -41,30 +57,10 @@ DETERMINISM_TESTS = [
 
 
 def compute_tree_digest() -> str | None:
-    """Compute SHA-256 digest over scientifically relevant source paths."""
-    import hashlib
+    """Compute SHA-256 digest using the canonical implementation."""
+    from src.dashboard.verification import compute_source_tree_digest
 
-    digester = hashlib.sha256()
-    paths = ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"]
-    excludes = {"tests/test_baseline.json"}
-
-    for rel_path in paths:
-        p = REPO_ROOT / rel_path
-        if p.is_file():
-            files = [p]
-        elif p.is_dir():
-            files = sorted(p.rglob("*"))
-        else:
-            continue
-        for f in files:
-            if f.is_file() and f.suffix in {".py", ".toml", ".yaml", ".json", ".cfg", ".md"}:
-                if f.name in excludes or str(f.relative_to(REPO_ROOT)) in excludes:
-                    continue
-                try:
-                    digester.update(f.read_bytes())
-                except Exception:
-                    return None
-    return digester.hexdigest()
+    return compute_source_tree_digest(REPO_ROOT)
 
 
 def run_tests() -> dict[str, bool]:
@@ -137,10 +133,14 @@ def main() -> int:
         "experiment_validity": test_results.get("tests/test_experiment_validity.py", False),
     }
 
+    # Get git HEAD for provenance (not freshness authority)
+    head = current_git_head()
+
     # Build artifact
     artifact = {
         "schema_version": 1,
         "status": "verified" if all_passed else "failed",
+        "test_run_head": head,
         "tested_tree_digest": digest,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
