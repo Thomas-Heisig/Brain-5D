@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "suite": "single_listener",
-  "status": "failed",
-  "timestamp": "2026-08-26T09:47:32.618904",
+  "status": "verified",
+  "timestamp": "2026-08-26T12:13:31.039334",
   "python_version": "3.13.14",
-  "tested_commit": "c4036a2788fe5286850264b8953b2ed6ee3aa3d7",
-  "tested_tree_digest": "744a68f0b46041ba20844ea9f0729bbd25a320e4d833d5c320c1f874b950a6c6",
+  "tested_commit": "365a987eb50a8bb616f348ff87d7bd0d43f863a7",
+  "tested_tree_digest": "5275a5323bbc7b23e6a63b939b4ea05e02ca3fda5c51532e1cf7af5a40b33b06",
   "test_command": "python -m pytest tests/test_single_listener.py -q",
   "proofs": {
-    "port_initially_free_or_explicitly_rejected": false,
-    "brain5d_process_started": false,
-    "listener_pid_matches_process_pid": false,
-    "exactly_one_listener_socket": false,
-    "no_other_listener_pid": false,
-    "healthz_reachable": false,
-    "process_alive_during_verification": false
+    "port_initially_free_or_explicitly_rejected": true,
+    "brain5d_process_started": true,
+    "listener_pid_matches_process_pid": true,
+    "exactly_one_listener_socket": true,
+    "no_other_listener_pid": true,
+    "healthz_reachable": true,
+    "process_alive_during_verification": true
   }
 }

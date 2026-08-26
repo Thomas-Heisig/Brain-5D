@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Structural Evidence Hardening Complete (2026-08-26)
+
+### Fixed
+
+- **Duplicate startup print removed** (`src/main.py`): removed hardcoded `:8765` print that duplicated the dynamic-port print below it
+- **Listener parsing hardened** (`tests/test_single_listener.py`): `_get_listener_pids()` now checks for local address (`127.0.0.1:{port}`), LISTEN state (locale-agnostic), and valid PID — no longer matches remote addresses or non-listening connections
+- **Renamed test reference fixed** (`tests/test_single_listener.py`): artifact writer referenced `test_exactly_one_listener_owns_port_8765` but the actual function is `test_exactly_one_listener_owns_port` (no `_8765` suffix)
+- **Gate status test sources updated** (`tests/test_gate_status.py`): added `research/generated/verification/single_listener.json` to allowed sources; structural-disabled tests now also remove the live loop artifact to avoid false PASSED status
+
+### Test Results (real run, 2026-08-26)
+
+- **Python**: 3.13.14
+- **Command**: `python -m pytest tests/ -q`
+- **Result**: 292 passed, 2 skipped, 0 failed, 0 collection errors
+- **Structural E2E**: 11/11 proofs verified (10 proofs + complete canonical E2E)
+- **Single listener**: 2/2 tests passed (hardened parser + artifact writer)
+- **Gate status**: 23/23 tests passed
+
+---
+
 ## v0.5.0-alpha.5 - Structural Evidence Hardening Complete (2026-08-24)
 
 ### Fixed

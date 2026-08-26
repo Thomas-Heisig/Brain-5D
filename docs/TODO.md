@@ -2,8 +2,8 @@
 
 > Last updated: 2026-08-26
 > Verification basis:
->   Test-run commit: c9a6ae44
->   Source-tree digest: 278813ca...
+>   Test-run commit: 365a987e
+>   Source-tree digest: 5275a532...
 > Status: Alpha.5 integration and verification closure
 > Alpha.6: BLOCKED
 >
@@ -41,7 +41,7 @@ Real single-port ownership proof             VERIFIED (hardened test + artifact)
 Structural Live Loop (full E2E path)         VERIFIED
 
 Gate B — Verification
-Recorded full test run                       277 passed / 2 skipped
+Recorded full test run                       292 passed / 2 skipped
 Structural mechanism E2E                     11/11 VERIFIED
 Error Visibility (no silent exceptions)      VERIFIED (live loop artifact)
 Restore Determinism                          OPEN
@@ -62,11 +62,11 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: c9a6ae44
+Test-run commit: 365a987e
 Python:          3.13.14
 
 Full suite:
-  Passed:             277
+  Passed:             292
   Failed:             0
   Skipped:            2
   Collection errors:  0
@@ -108,7 +108,7 @@ Excluded:
 
 === GATE B ====================================================
 
-13. Full pytest collection 277/0/2 .......................... ✅
+13. Full pytest collection 292/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
 15. Error Visibility / scientific integrity ................. ✅ (PARTIAL)
 16. Restore-and-continue determinism ........................ 🔴
