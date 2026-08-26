@@ -119,6 +119,7 @@ REQUIRED_LIVE_LOOP_PROOFS: frozenset[str] = frozenset({
     "runtime_continues_after_mutation",
     "undo_restores_topology",
     "journal_reopen_replay_identity",
+    "single_listener_verified",
 })
 
 
