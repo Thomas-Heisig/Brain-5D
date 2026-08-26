@@ -1,20 +1,30 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-24
+> Last updated: 2026-08-26
 > Verification basis:
->   Test-run commit: 8af0ea8
->   Source-tree digest: d35135c2...
+>   Test-run commit: c9a6ae44
+>   Source-tree digest: 278813ca...
 > Status: Alpha.5 integration and verification closure
 > Alpha.6: BLOCKED
 >
-> Technical structural mechanisms are implemented and E2E-tested.
-> Automatic production signal->policy->coordinator wiring,
-> error visibility, restore determinism and scientific baseline
-> experiments remain open.
+> First real closed structural loop demonstrated:
+>   Real Network -> Real HomeostasisSignal -> Config-authoritative Policy
+>   -> Real Proposal -> Coordinator -> Manual Approval
+>   -> Exactly One Mutation -> Journal -> Undo -> Replay
+>
+> Config-authoritative: self_organization YAML fields now map to
+> SelfOrganizationPolicyConfig via from_config(). Mechanism enable/disable
+> flags (neurogenesis_enabled, pruning_enabled, sprouting_enabled,
+> synapse_pruning_enabled) are respected. RuntimeAdapter interval comes
+> from config, not hardcoded.
+>
+> Error visibility: RuntimeErrorEvent with structured capture. No silent
+> except:pass in the adapter. Errors observable through /api/structural/errors.
 >
 > Dashboard truth sources:
 >   /api/integration/status = live runtime truth
 >   /api/gate/status        = release/verification truth
+>   /api/structural/errors  = runtime error visibility
 >   B5D-SEF                 = scientific evidence truth
 
 ---
@@ -26,13 +36,14 @@ Gate A — Technical Integration
 Process / Runtime / Control / Dashboard       VERIFIED
 Snapshot / Heatmap / 5D Inspector            VERIFIED
 Structural canonical composition             VERIFIED
-Structural production signal->policy         VERIFIED
-Real single-port ownership proof             IMPLEMENTED (test exists)
+Structural production signal->policy         VERIFIED (live loop artifact)
+Real single-port ownership proof             VERIFIED (hardened test + artifact)
+Structural Live Loop (full E2E path)         VERIFIED
 
 Gate B — Verification
-Recorded full test run                       274 passed / 2 skipped
+Recorded full test run                       277 passed / 2 skipped
 Structural mechanism E2E                     11/11 VERIFIED
-Error Visibility                             OPEN
+Error Visibility (no silent exceptions)      VERIFIED (live loop artifact)
 Restore Determinism                          OPEN
 
 Gate C — Scientific Baseline
@@ -51,11 +62,11 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: 8af0ea8
+Test-run commit: c9a6ae44
 Python:          3.13.14
 
 Full suite:
-  Passed:             274
+  Passed:             277
   Failed:             0
   Skipped:            2
   Collection errors:  0
@@ -91,22 +102,25 @@ Excluded:
  7. Dashboard Completion ..................................... ✅
  8. Production signal -> policy -> coordinator adapter ....... ✅
  9. Real single-listener port ownership test ................ ✅
+10. Config-authoritative policy (from_config) ............... ✅
+11. RuntimeAdapter error visibility ......................... ✅
+12. Structural Live Loop E2E (full production path) ......... ✅
 
 === GATE B ====================================================
 
-10. Full pytest collection 274/0/2 .......................... ✅
-11. Structural mechanism E2E 11/11 .......................... ✅
-12. Error Visibility / scientific integrity ................. 🔴
-13. Restore-and-continue determinism ........................ 🔴
+13. Full pytest collection 277/0/2 .......................... ✅
+14. Structural mechanism E2E 11/11 .......................... ✅
+15. Error Visibility / scientific integrity ................. ✅ (PARTIAL)
+16. Restore-and-continue determinism ........................ 🔴
 
 === GATE C ====================================================
 
-14. Research registry / B5D-SEF framework .................. ✅
-15. EXP-DET-0001 (deterministic replay) .................... 🔴
-16. EXP-STOR-0001 (snapshot/restore identity) .............. 🔴
-17. Generate evidence from actual runs ..................... 🔴
-18. Close ALPHA.5 .......................................... 🎯
-19. Begin alpha.6
+17. Research registry / B5D-SEF framework .................. ✅
+18. EXP-DET-0001 (deterministic replay) .................... 🔴
+19. EXP-STOR-0001 (snapshot/restore identity) .............. 🔴
+20. Generate evidence from actual runs ..................... 🔴
+21. Close ALPHA.5 .......................................... 🎯
+22. Begin alpha.6
 ```
 
 ---
@@ -117,7 +131,9 @@ Excluded:
 * [x] Reject does NOT mutate the network (proof 6)
 * [x] Manual approval required for canonical StructuralProposal mutation (canonical E2E)
 * [x] Dry-run mode implemented (SelfOrganizationCoordinator(dry_run=True))
-* [ ] Auto-approval explicitly opt-in verified in production config
+* [x] Auto-approval explicitly opt-in verified in production config
+* [x] No silent except:pass in RuntimeAdapter (structured RuntimeErrorEvent)
+* [x] Config-authoritative mechanism gating (disabled mechanism never emits proposals)
 * [x] Canonical approved mutation produces StructuralChangeRecord (proof 8)
 * [x] Canonical mutation linked to proposal_id (proof 8)
 * [x] E2E proposals attributable to canonical HomeostasisSignal (proof 4)

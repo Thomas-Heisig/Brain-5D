@@ -167,6 +167,38 @@
         </div>
       </section>
 
+      <!-- Structural Live Loop Status -->
+      <section class="card structural-live-card">
+        <div class="panel-title">
+          <h2>🔄 Structural Live Loop</h2>
+          <span id="live-loop-badge" class="gate-badge pending">checking…</span>
+        </div>
+        <div class="structural-live-grid" id="structural-live-grid">
+          <div class="live-loop-item" id="ll-adapter">⏳ RuntimeAdapter</div>
+          <div class="live-loop-item" id="ll-signal">⏳ HomeostasisSignal</div>
+          <div class="live-loop-item" id="ll-policy">⏳ Policy → Proposal</div>
+          <div class="live-loop-item" id="ll-coordinator">⏳ Coordinator</div>
+          <div class="live-loop-item" id="ll-approval">⏳ Approval Gate</div>
+          <div class="live-loop-item" id="ll-mutation">⏳ Mutation</div>
+          <div class="live-loop-item" id="ll-journal">⏳ Journal</div>
+          <div class="live-loop-item" id="ll-undo">⏳ Undo</div>
+          <div class="live-loop-item" id="ll-replay">⏳ Replay</div>
+        </div>
+        <p class="heatmap-meta" id="live-loop-meta">Requires poc_structural_live.yaml config</p>
+      </section>
+
+      <!-- Error Visibility -->
+      <section class="card error-visibility-card">
+        <div class="panel-title">
+          <h2>⚠️ Runtime Error Visibility</h2>
+          <span id="error-count-badge" class="gate-badge passed">0 errors</span>
+        </div>
+        <div id="error-list" class="error-list">
+          <div class="error-empty">No runtime errors recorded.</div>
+        </div>
+        <p class="heatmap-meta" id="error-meta">Structured RuntimeErrorEvent buffer</p>
+      </section>
+
     </section> <!-- /tab-dashboard -->
 
     <!-- ========================================================== -->

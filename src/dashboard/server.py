@@ -543,6 +543,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         elif path == "/api/structural/config":
             payload = bridge.structural_config()
 
+        elif path == "/api/structural/errors":
+            payload = {
+                "errors": cast(
+                    list[JSONValue],
+                    bridge.runtime_errors(),
+                )
+            }
+
         else:
             self._send_api_not_found(path)
             return

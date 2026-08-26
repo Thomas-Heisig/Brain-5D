@@ -621,11 +621,20 @@ class GateStatusBuilder:
         ))
 
         # --- Error visibility / scientific integrity ---
+        # Evidence from the live loop artifact: the live loop test verifies
+        # that the RuntimeAdapter runs without silent exceptions.
+        live_loop_ok = self._live_loop_verified()
         error_vis: list[tuple[str, str, str, str]] = [
-            ("B-HOOK-ERROR-VISIBILITY", "Structured hook-error visibility", INTEGRATED, G_PENDING),
-            ("B-NO-SILENT-EXCEPTIONS", "No silent scientific-path exceptions", INTEGRATED, G_PENDING),
-            ("B-RUNTIME-EXCEPTIONS-MANIFEST", "Runtime exceptions enter experiment manifest", INTEGRATED, G_PENDING),
-            ("B-INVALID-RUN-NOT-EVIDENCE", "Invalid run cannot become evidence", INTEGRATED, G_PENDING),
+            ("B-HOOK-ERROR-VISIBILITY", "Structured hook-error visibility",
+             VERIFIED if live_loop_ok else INTEGRATED,
+             G_PASSED if live_loop_ok else G_PENDING),
+            ("B-NO-SILENT-EXCEPTIONS", "No silent scientific-path exceptions",
+             VERIFIED if live_loop_ok else INTEGRATED,
+             G_PASSED if live_loop_ok else G_PENDING),
+            ("B-RUNTIME-EXCEPTIONS-MANIFEST", "Runtime exceptions enter experiment manifest",
+             INTEGRATED, G_PENDING),
+            ("B-INVALID-RUN-NOT-EVIDENCE", "Invalid run cannot become evidence",
+             INTEGRATED, G_PENDING),
         ]
         for cid, label, maturity, status in error_vis:
             items.append(_criterion(
@@ -635,8 +644,8 @@ class GateStatusBuilder:
                 label=label,
                 status=status,
                 maturity=maturity,
-                source="project_state",
-                message="Pending verification",
+                source="research/generated/verification/structural_live_loop.json" if live_loop_ok else "project_state",
+                message="Verified by live loop artifact (no silent exceptions)" if live_loop_ok else "Pending verification",
             ))
 
         # --- Restore / determinism ---

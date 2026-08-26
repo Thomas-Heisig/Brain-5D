@@ -327,11 +327,143 @@ async function refreshStatus() {
 
     // Integration status badges (dashboard tab)
     refreshIntegrationStatus();
+
+    // Structural live loop status
+    refreshLiveLoopStatus();
+
+    // Runtime error visibility
+    refreshErrorVisibility();
   } catch (error) {
     const statusEl = $('system-status');
     if (statusEl) {
       statusEl.textContent = '⚠️ offline';
       statusEl.className = 'status-pill error';
+    }
+  }
+}
+
+/**
+ * Refresh the structural live loop status from the gate status endpoint.
+ */
+async function refreshLiveLoopStatus() {
+  const itemIds = ['ll-adapter', 'll-signal', 'll-policy', 'll-coordinator',
+                   'll-approval', 'll-mutation', 'll-journal', 'll-undo', 'll-replay'];
+  try {
+    const r = await fetch('/api/gate/status', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+
+    // Check live loop artifact via the gate status builder
+    const gateA = data.gate_a?.items || [];
+    const adapterItem = gateA.find(i => i.id === 'A-STRUCT-RUNTIME-ADAPTER');
+    const liveLoopVerified = adapterItem?.status === 'passed';
+
+    const badge = $('live-loop-badge');
+    if (badge) {
+      badge.textContent = liveLoopVerified ? '✅ VERIFIED' : '⏳ pending';
+      badge.className = `gate-badge ${liveLoopVerified ? 'passed' : 'pending'}`;
+    }
+
+    const meta = $('live-loop-meta');
+    if (meta) {
+      meta.textContent = liveLoopVerified
+        ? '✅ Structural live loop verified via verification artifact'
+        : '⏳ Run test_structural_live_loop.py to generate verification artifact';
+    }
+
+    // Update individual items
+    const liveItems = data.live_runtime || [];
+    const structuralLive = liveItems.find(i => i.key === 'structural');
+    const soActive = structuralLive?.live_status === 'active';
+
+    // Structural items status
+    const structuralItems = gateA.filter(i => i.category === 'structural_composition');
+    for (const item of structuralItems) {
+      const id = item.id || '';
+      const elId = id.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      // Map known IDs to our element IDs
+      const idMap = {
+        'A-STRUCT-RUNTIME-ADAPTER': 'll-adapter',
+        'A-STRUCT-COORDINATOR': 'll-coordinator',
+        'A-STRUCT-PLASTICITY': 'll-mutation',
+        'A-STRUCT-MANIPULATOR': 'll-mutation',
+        'A-STRUCT-APPROVAL': 'll-approval',
+        'A-STRUCT-JOURNAL': 'll-journal',
+        'A-STRUCT-PROVENANCE': 'll-signal',
+      };
+      const targetId = idMap[id];
+      if (!targetId) continue;
+      const el = $(targetId);
+      if (!el) continue;
+      if (item.status === 'passed') {
+        el.className = 'live-loop-item ll-passed';
+        el.textContent = `✅ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+      } else if (item.status === 'stale') {
+        el.className = 'live-loop-item ll-stale';
+        el.textContent = `🔄 ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+      } else {
+        el.className = 'live-loop-item ll-pending';
+        el.textContent = `⏳ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+      }
+    }
+  } catch {
+    for (const id of itemIds) {
+      const el = $(id);
+      if (el) {
+        el.className = 'live-loop-item ll-pending';
+        el.textContent = `⏳ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+      }
+    }
+    const badge = $('live-loop-badge');
+    if (badge) {
+      badge.textContent = 'offline';
+      badge.className = 'gate-badge failed';
+    }
+  }
+}
+
+/**
+ * Refresh runtime error visibility from /api/structural/errors.
+ */
+async function refreshErrorVisibility() {
+  try {
+    const r = await fetch('/api/structural/errors', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const errors = data.errors || [];
+
+    const badge = $('error-count-badge');
+    if (badge) {
+      badge.textContent = `${errors.length} error${errors.length !== 1 ? 's' : ''}`;
+      badge.className = `gate-badge ${errors.length === 0 ? 'passed' : 'failed'}`;
+    }
+
+    const list = $('error-list');
+    if (!list) return;
+
+    if (errors.length === 0) {
+      list.innerHTML = '<div class="error-empty">✅ No runtime errors recorded.</div>';
+    } else {
+      list.innerHTML = errors.map(e => `
+        <div class="error-item error-${e.fatal ? 'fatal' : 'warning'}">
+          <span class="error-tick">Tick ${e.tick}</span>
+          <span class="error-phase">${e.phase}</span>
+          <span class="error-type">${e.exception_type}</span>
+          <span class="error-msg">${e.message}</span>
+          <span class="error-hash">#${e.traceback_hash || ''}</span>
+        </div>
+      `).join('');
+    }
+
+    const meta = $('error-meta');
+    if (meta) {
+      meta.textContent = `Structured RuntimeErrorEvent buffer · ${errors.length} event(s)`;
+    }
+  } catch {
+    const badge = $('error-count-badge');
+    if (badge) {
+      badge.textContent = 'offline';
+      badge.className = 'gate-badge failed';
     }
   }
 }
@@ -587,6 +719,8 @@ function initDashboard() {
   refreshStatus();
   refreshHeatmap();
   refreshSnapshotInfo();
+  refreshLiveLoopStatus();
+  refreshErrorVisibility();
 
   // Set up intervals
   if (refreshInterval) clearInterval(refreshInterval);
@@ -595,6 +729,8 @@ function initDashboard() {
   refreshInterval = setInterval(refreshStatus, 1000);
   heatmapInterval = setInterval(refreshHeatmap, 5000);
   setInterval(refreshSnapshotInfo, 3000);
+  setInterval(refreshLiveLoopStatus, 5000);
+  setInterval(refreshErrorVisibility, 5000);
 
   // Heatmap kind buttons
   $$('button[data-kind]').forEach(button => {

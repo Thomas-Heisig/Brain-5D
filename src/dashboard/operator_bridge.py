@@ -29,6 +29,7 @@ from .models import (
     to_json_serializable,
 )
 from .structural_api import StructuralCommandResult
+from src.self_organization.runtime_adapter import get_error_buffer
 
 # Type aliases for JSON responses
 JSONMapping: TypeAlias = dict[str, JSONValue]
@@ -615,6 +616,28 @@ class OperatorBridge:
             used_budget=0.0,  # Placeholder - actual value from engine
             structural_changes=len(report.proposals),
         )
+
+    def runtime_errors(self) -> list[dict[str, JSONValue]]:
+        """Return structured runtime error events for dashboard visibility.
+
+        Returns:
+            List of error event dictionaries with timestamp, tick, component,
+            phase, exception_type, message, fatal, and traceback_hash.
+        """
+        buffer = get_error_buffer()
+        return [
+            {
+                "timestamp": e.timestamp,
+                "tick": e.tick,
+                "component": e.component,
+                "phase": e.phase,
+                "exception_type": e.exception_type,
+                "message": e.message,
+                "fatal": e.fatal,
+                "traceback_hash": e.traceback_hash,
+            }
+            for e in buffer.events
+        ]
 
     def to_json(self, obj: Any) -> JSONValue:
         """Convert any object to a JSON-serializable value.
