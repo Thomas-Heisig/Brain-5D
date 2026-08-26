@@ -818,7 +818,9 @@ class NeuralNetwork:
         min_v = float("inf")
         max_v = -float("inf")
 
-        for nid, neuron in self.neurons.items():
+        # Explicit deterministic iteration: sort by neuron_id
+        # This ensures identical tick execution regardless of dict insertion order.
+        for nid, neuron in sorted(self.neurons.items()):
             ext = external_currents.get(nid, 0.0)
             syn = synaptic_currents.get(nid, 0.0)
             neuron.last_external_current = ext

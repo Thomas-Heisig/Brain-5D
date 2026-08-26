@@ -67,6 +67,7 @@ from src.telemetry.history import History
 from src.telemetry.probes import ProbeManager
 from src.telemetry.spike_history import SpikeHistory
 from src.utils.run_artifacts import RunArtifacts
+from src.version import BRAIN5D_VERSION, BRAIN5D_VERSION_DISPLAY
 
 # ================================================================
 # Dashboard Integration – with None‑fallback
@@ -262,7 +263,7 @@ def main() -> int:
     except Exception:
         config_dict["_sha256"] = ""
 
-    print("🚀 Brain 5D - v0.5.0-alpha.5 with dashboard")
+    print(f"🚀 Brain 5D - v{BRAIN5D_VERSION_DISPLAY} with dashboard")
     print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)")
 
     # --- Build network ---
@@ -366,7 +367,7 @@ def main() -> int:
 
             metadata: JSONMapping = {
                 "type": "brain5d-snapshot",
-                "version": "0.5.0-alpha.5",
+                "version": BRAIN5D_VERSION_DISPLAY,
                 "tick": network.current_tick,
                 "neuron_count": len(network.neurons),
                 "synapse_count": network.synapse_count,
@@ -484,7 +485,7 @@ def main() -> int:
 
         snapshot = DashboardSnapshot(
             status=status,
-            version="0.5.0-alpha.5",
+            version=BRAIN5D_VERSION_DISPLAY,
             system=SystemMetrics(
                 tick=result.tick,
                 neurons=len(network.neurons),
@@ -990,7 +991,7 @@ def main() -> int:
 
             final_snapshot = DashboardSnapshot(
                 status="completed",
-                version="0.5.0-alpha.5",
+                version=BRAIN5D_VERSION_DISPLAY,
                 system=SystemMetrics(
                     tick=network.current_tick,
                     neurons=len(network.neurons),

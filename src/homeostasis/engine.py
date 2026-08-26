@@ -226,7 +226,8 @@ class HomeostasisEngine:
             if neuron_id in live_ids
         }
 
-        for neuron_id, neuron in self.network.neurons.items():
+        # Explicit deterministic iteration: sort by neuron_id
+        for neuron_id, neuron in sorted(self.network.neurons.items()):
             previous_rate = self._rates_hz.get(neuron_id, 0.0)
             sample = instantaneous_hz if neuron_id in spike_ids else 0.0
             rate = previous_rate + alpha * (sample - previous_rate)

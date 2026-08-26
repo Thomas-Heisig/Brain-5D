@@ -101,57 +101,28 @@ def test_gate_a_passed_criteria_have_existing_test_files() -> None:
                 assert (_repo_root() / tid).exists(), f"test file {tid} should exist"
 
 
-def test_disabled_structural_does_not_fail_gate() -> None:
+def test_disabled_structural_does_not_fail_gate(tmp_path: Path) -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must be pending, not failed."""
-    repo_root = _repo_root()
-    e2e_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
-    live_loop_path = repo_root / "research" / "generated" / "verification" / "structural_live_loop.json"
-    e2e_original = e2e_path.read_text(encoding="utf-8") if e2e_path.exists() else None
-    ll_original = live_loop_path.read_text(encoding="utf-8") if live_loop_path.exists() else None
-    try:
-        if e2e_path.exists():
-            e2e_path.unlink()
-        if live_loop_path.exists():
-            live_loop_path.unlink()
-        config = {"self_organization": {"enabled": False}}
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root, config_dict=config)
-        status = builder.build()
-        structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]
-        for item in structural_items:
-            assert item["status"] != G_FAILED
-            assert item["status"] == G_PENDING
-    finally:
-        if e2e_original is not None and not e2e_path.exists():
-            e2e_path.write_text(e2e_original, encoding="utf-8")
-        if ll_original is not None and not live_loop_path.exists():
-            live_loop_path.write_text(ll_original, encoding="utf-8")
+    # Use tmp_path as a synthetic repo root — no real artifacts are touched
+    config = {"self_organization": {"enabled": False}}
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config)
+    status = builder.build()
+    structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]
+    for item in structural_items:
+        assert item["status"] != G_FAILED
+        assert item["status"] == G_PENDING
 
 
-def test_disabled_structural_does_not_pass_gate() -> None:
+def test_disabled_structural_does_not_pass_gate(tmp_path: Path) -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must not pass."""
-    repo_root = _repo_root()
-    e2e_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
-    live_loop_path = repo_root / "research" / "generated" / "verification" / "structural_live_loop.json"
-    e2e_original = e2e_path.read_text(encoding="utf-8") if e2e_path.exists() else None
-    ll_original = live_loop_path.read_text(encoding="utf-8") if live_loop_path.exists() else None
-    try:
-        if e2e_path.exists():
-            e2e_path.unlink()
-        if live_loop_path.exists():
-            live_loop_path.unlink()
-        config = {"self_organization": {"enabled": False}}
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root, config_dict=config)
-        status = builder.build()
-        structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]
-        for item in structural_items:
-            assert item["status"] != G_PASSED
-    finally:
-        if e2e_original is not None and not e2e_path.exists():
-            e2e_path.write_text(e2e_original, encoding="utf-8")
-        if ll_original is not None and not live_loop_path.exists():
-            live_loop_path.write_text(ll_original, encoding="utf-8")
+    config = {"self_organization": {"enabled": False}}
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config)
+    status = builder.build()
+    structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]
+    for item in structural_items:
+        assert item["status"] != G_PASSED
 
 
 def test_config_enabled_but_component_missing_is_error() -> None:
@@ -203,42 +174,36 @@ def test_gate_b_pytest_baseline_resolves() -> None:
     assert "collection_errors" in evidence
 
 
-def test_gate_b_stale_tree_digest_is_stale_not_failed() -> None:
+def test_gate_b_stale_tree_digest_is_stale_not_failed(tmp_path: Path) -> None:
     """Stale tree digest = STALE, not FAILED."""
-    repo_root = _repo_root()
-    real_baseline = repo_root / "tests" / "test_baseline.json"
-    original = real_baseline.read_text(encoding="utf-8")
-    try:
-        fake = json.loads(original)
-        fake["tested_tree_digest"] = "0" * 64
-        real_baseline.write_text(json.dumps(fake), encoding="utf-8")
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        status = builder.build()
-        gate_b_items = {i["id"]: i for i in status["gate_b"]["items"]}
-        assert gate_b_items["B-TEST-COLLECTION"]["status"] == G_STALE
-        assert gate_b_items["B-ZERO-FAILURES"]["status"] == G_STALE
-        assert gate_b_items["B-FULL-SUITE"]["status"] == G_STALE
-    finally:
-        real_baseline.write_text(original, encoding="utf-8")
+    # Create a synthetic baseline in tmp_path with a fake digest
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir(parents=True, exist_ok=True)
+    fake_baseline = {
+        "tested_commit": "abc123",
+        "tested_tree_digest": "0" * 64,
+        "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
+        "tree_digest_excludes": ["tests/test_baseline.json"],
+        "full_collection": {"status": "passed", "collection_errors": 0},
+        "full_suite": {"passed": 292, "failed": 0, "skipped": 2},
+    }
+    (tests_dir / "test_baseline.json").write_text(json.dumps(fake_baseline), encoding="utf-8")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    status = builder.build()
+    gate_b_items = {i["id"]: i for i in status["gate_b"]["items"]}
+    assert gate_b_items["B-TEST-COLLECTION"]["status"] == G_STALE
+    assert gate_b_items["B-ZERO-FAILURES"]["status"] == G_STALE
+    assert gate_b_items["B-FULL-SUITE"]["status"] == G_STALE
 
 
-def test_gate_b_structural_proofs_remain_pending_without_artifact() -> None:
+def test_gate_b_structural_proofs_remain_pending_without_artifact(tmp_path: Path) -> None:
     """Structural E2E proofs must remain pending when no verification artifact exists."""
-    repo_root = _repo_root()
-    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
-    original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
-    try:
-        if artifact_path.exists():
-            artifact_path.unlink()
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        status = builder.build()
-        proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
-        assert len(proof_items) == 11  # 10 proofs + 1 complete canonical E2E
-        for item in proof_items:
-            assert item["status"] == G_PENDING
-    finally:
-        if original is not None and not artifact_path.exists():
-            artifact_path.write_text(original, encoding="utf-8")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    status = builder.build()
+    proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]
+    assert len(proof_items) == 11  # 10 proofs + 1 complete canonical E2E
+    for item in proof_items:
+        assert item["status"] == G_PENDING
 
 
 def test_gate_b_structural_proofs_pass_with_artifact() -> None:
@@ -268,67 +233,53 @@ def test_gate_c_registered_experiment_not_executed() -> None:
     assert gate_c_items["C-EXP-DET-EXECUTED"]["status"] == G_PENDING
 
 
-def test_experiment_completed_means_executed() -> None:
+def _create_synthetic_manifest(exp_dir: Path, status: str) -> Path:
+    """Helper: create a synthetic experiment manifest in tmp_path."""
+    exp_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "experiment_id": "EXP-DET-0001",
+        "experiment_status": status,
+        "timestamp": "2026-08-23T12:00:00",
+        "git": {"commit": "abc123", "dirty": False},
+        "software": {"python": "3.13", "brain5d_version": "0.5.0a5"},
+        "simulation": {"seed": 42},
+        "artifacts": {},
+    }
+    path = exp_dir / "manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    return path
+
+
+def test_experiment_completed_means_executed(tmp_path: Path) -> None:
     """experiment_status=completed means executed."""
-    repo_root = _repo_root()
-    manifest_path = repo_root / "research" / "experiments" / "EXP-DET-0001" / "manifest.json"
-    original = manifest_path.read_text(encoding="utf-8")
-    try:
-        manifest = json.loads(original)
-        manifest["experiment_status"] = "completed"
-        manifest["timestamp"] = "2026-08-23T12:00:00"
-        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        assert builder._experiment_executed("EXP-DET-0001") is True
-    finally:
-        manifest_path.write_text(original, encoding="utf-8")
+    exp_dir = tmp_path / "research" / "experiments" / "EXP-DET-0001"
+    _create_synthetic_manifest(exp_dir, "completed")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    assert builder._experiment_executed("EXP-DET-0001") is True
 
 
-def test_experiment_running_means_not_executed() -> None:
+def test_experiment_running_means_not_executed(tmp_path: Path) -> None:
     """experiment_status=running means NOT executed (attempted, not complete)."""
-    repo_root = _repo_root()
-    manifest_path = repo_root / "research" / "experiments" / "EXP-DET-0001" / "manifest.json"
-    original = manifest_path.read_text(encoding="utf-8")
-    try:
-        manifest = json.loads(original)
-        manifest["experiment_status"] = "running"
-        manifest["timestamp"] = "2026-08-23T12:00:00"
-        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        assert builder._experiment_executed("EXP-DET-0001") is False
-    finally:
-        manifest_path.write_text(original, encoding="utf-8")
+    exp_dir = tmp_path / "research" / "experiments" / "EXP-DET-0001"
+    _create_synthetic_manifest(exp_dir, "running")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    assert builder._experiment_executed("EXP-DET-0001") is False
 
 
-def test_experiment_failed_means_not_executed() -> None:
+def test_experiment_failed_means_not_executed(tmp_path: Path) -> None:
     """experiment_status=failed means NOT executed (attempted, invalid)."""
-    repo_root = _repo_root()
-    manifest_path = repo_root / "research" / "experiments" / "EXP-DET-0001" / "manifest.json"
-    original = manifest_path.read_text(encoding="utf-8")
-    try:
-        manifest = json.loads(original)
-        manifest["experiment_status"] = "failed"
-        manifest["timestamp"] = "2026-08-23T12:00:00"
-        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        assert builder._experiment_executed("EXP-DET-0001") is False
-    finally:
-        manifest_path.write_text(original, encoding="utf-8")
+    exp_dir = tmp_path / "research" / "experiments" / "EXP-DET-0001"
+    _create_synthetic_manifest(exp_dir, "failed")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    assert builder._experiment_executed("EXP-DET-0001") is False
 
 
-def test_experiment_template_means_not_executed() -> None:
+def test_experiment_template_means_not_executed(tmp_path: Path) -> None:
     """experiment_status=template means NOT executed (never ran)."""
-    repo_root = _repo_root()
-    manifest_path = repo_root / "research" / "experiments" / "EXP-DET-0001" / "manifest.json"
-    original = manifest_path.read_text(encoding="utf-8")
-    try:
-        manifest = json.loads(original)
-        manifest["experiment_status"] = "template"
-        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-        builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root)
-        assert builder._experiment_executed("EXP-DET-0001") is False
-    finally:
-        manifest_path.write_text(original, encoding="utf-8")
+    exp_dir = tmp_path / "research" / "experiments" / "EXP-DET-0001"
+    _create_synthetic_manifest(exp_dir, "template")
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    assert builder._experiment_executed("EXP-DET-0001") is False
 
 
 def test_overall_alpha5_remains_open() -> None:

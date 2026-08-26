@@ -264,3 +264,71 @@ def _restore_exact_synapse_state(
         synapse.delay = state.delay
         synapse.eligibility = state.eligibility
         synapse.last_pre_spike = state.last_pre_spike
+
+
+def restore_homeostasis_state(
+    homeostasis_engine: Any,
+    checkpoint: RuntimeCheckpoint,
+) -> None:
+    """Restore homeostasis engine state from checkpoint v4.
+
+    Args:
+        homeostasis_engine: A HomeostasisEngine instance (must have _rates_hz dict).
+        checkpoint: The RuntimeCheckpoint with homeostasis_state.
+
+    Raises:
+        ValueError: If a neuron referenced in the checkpoint no longer exists.
+    """
+    if not checkpoint.homeostasis_state:
+        return
+
+    rates = {}
+    for record in checkpoint.homeostasis_state:
+        rates[int(record.neuron_id)] = float(record.rate_hz)
+
+    # Restore the internal rates dict
+    if hasattr(homeostasis_engine, "_rates_hz"):
+        homeostasis_engine._rates_hz = rates
+
+
+def restore_learning_state(
+    learning_engine: Any,
+    checkpoint: RuntimeCheckpoint,
+) -> None:
+    """Restore learning engine state from checkpoint v4.
+
+    Restores per-synapse traces (last_pre_tick, last_post_tick, eligibility)
+    and pending reward signals.
+
+    Args:
+        learning_engine: A LearningEngine instance (must have _states dict
+            and _pending_rewards list).
+        checkpoint: The RuntimeCheckpoint with learning_state and pending_rewards.
+
+    Raises:
+        ValueError: If a synapse referenced in the checkpoint no longer exists.
+    """
+    if not hasattr(learning_engine, "_states"):
+        return
+
+    # Restore per-synapse traces
+    if checkpoint.learning_state:
+        states = learning_engine._states
+        for record in checkpoint.learning_state:
+            pre_id = int(record.pre_id)
+            target_id = int(record.target_id)
+            for state_id, state in states.items():
+                if state.pre_id == pre_id and state.synapse.target_id == target_id:
+                    state.last_pre_tick = record.last_pre_tick
+                    state.last_post_tick = record.last_post_tick
+                    if hasattr(state.eligibility, "_trace"):
+                        state.eligibility._trace = record.eligibility_value
+                    break
+
+    # Restore pending rewards (independent of learning_state presence)
+    if checkpoint.pending_rewards and hasattr(learning_engine, "_pending_rewards"):
+        from src.learning.reward import RewardSignal
+        learning_engine._pending_rewards = [
+            RewardSignal(value=float(r.value), tick=int(r.tick))
+            for r in checkpoint.pending_rewards
+        ]

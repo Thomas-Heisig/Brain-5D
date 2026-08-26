@@ -129,8 +129,20 @@ class HomeostasisRuntimeRecord:
 
 
 @dataclass(frozen=True, slots=True)
+class PendingRewardRecord:
+    """A reward signal pending future application."""
+
+    value: float
+    tick: int
+
+
+@dataclass(frozen=True, slots=True)
 class LearningRuntimeRecord:
-    """Learning engine state for deterministic continuation."""
+    """Learning engine state for deterministic continuation.
+
+    Includes per-synapse traces and pending reward signals that
+    affect future synaptic weight changes.
+    """
 
     pre_id: int
     target_id: int
@@ -163,6 +175,7 @@ class RuntimeCheckpoint:
     synapse_states: tuple[SynapseRuntimeRecord, ...] = ()
     homeostasis_state: tuple[HomeostasisRuntimeRecord, ...] = ()
     learning_state: tuple[LearningRuntimeRecord, ...] = ()
+    pending_rewards: tuple[PendingRewardRecord, ...] = ()
 
 
 def capture_runtime_checkpoint(
@@ -170,6 +183,7 @@ def capture_runtime_checkpoint(
     *,
     homeostasis_rates: dict[int, float] | None = None,
     learning_states: list[dict[str, object]] | None = None,
+    pending_rewards: list[dict[str, object]] | None = None,
 ) -> RuntimeCheckpoint:
     """Capture runtime state and exact core state when available.
 
@@ -180,6 +194,8 @@ def capture_runtime_checkpoint(
         learning_states: Optional list of learning engine state dicts,
             each containing pre_id, target_id, last_pre_tick, last_post_tick,
             and eligibility_value.
+        pending_rewards: Optional list of pending reward signal dicts,
+            each containing value and tick.
 
     Returns:
         A RuntimeCheckpoint with version 4 (includes homeostasis + learning).
@@ -256,6 +272,17 @@ def capture_runtime_checkpoint(
             for s in learning_states
         )
 
+    # Capture pending rewards
+    pending_reward_records: tuple[PendingRewardRecord, ...] = ()
+    if pending_rewards is not None:
+        pending_reward_records = tuple(
+            PendingRewardRecord(
+                value=float(r["value"]),
+                tick=int(r["tick"]),
+            )
+            for r in pending_rewards
+        )
+
     return RuntimeCheckpoint(
         version=4,
         current_tick=int(network.current_tick),
@@ -277,6 +304,7 @@ def capture_runtime_checkpoint(
         synapse_states=synapse_states,
         homeostasis_state=homeostasis_state,
         learning_state=learning_state,
+        pending_rewards=pending_reward_records,
     )
 
 
@@ -350,6 +378,13 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
                 "eligibility_value": state.eligibility_value,
             }
             for state in checkpoint.learning_state
+        ],
+        "pending_rewards": [
+            {
+                "value": r.value,
+                "tick": r.tick,
+            }
+            for r in checkpoint.pending_rewards
         ],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -520,6 +555,17 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
             )
         )
 
+    # Read pending rewards (version 4+)
+    pending_rewards: list[PendingRewardRecord] = []
+    for index, item in enumerate(_list(raw.get("pending_rewards", []), "pending_rewards")):
+        r = _mapping(item, f"pending_rewards[{index}]")
+        pending_rewards.append(
+            PendingRewardRecord(
+                value=_float(r.get("value", 0.0), "pending_reward.value"),
+                tick=_int(r.get("tick", 0), "pending_reward.tick"),
+            )
+        )
+
     return RuntimeCheckpoint(
         version=version,
         current_tick=_int(raw.get("current_tick"), "current_tick"),
@@ -540,4 +586,5 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
         synapse_states=tuple(synapse_states),
         homeostasis_state=tuple(homeostasis_state),
         learning_state=tuple(learning_state),
+        pending_rewards=tuple(pending_rewards),
     )

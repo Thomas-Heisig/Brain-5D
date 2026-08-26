@@ -142,7 +142,8 @@ class DashboardServer(ThreadingHTTPServer):
 class DashboardRequestHandler(BaseHTTPRequestHandler):
     """HTTP request handler for Brain-5D dashboard and operator APIs."""
 
-    server_version = "Brain5DDashboard/0.5.0-alpha.5"
+    from src.version import BRAIN5D_VERSION_DISPLAY
+    server_version = f"Brain5DDashboard/{BRAIN5D_VERSION_DISPLAY}"
 
     @property
     def dashboard_server(self) -> DashboardServer:
