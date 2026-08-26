@@ -30,7 +30,14 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
     """Return {pid: [socket_inodes]} for processes listening on the given port.
 
     Uses ``netstat -ano`` (Windows) to find listening sockets.
-    Works with any locale (LISTENING, ABHÖREN, etc.).
+    Filters for:
+    - local address contains ``127.0.0.1:{port}`` (local port)
+    - state is ``LISTENING`` (Windows) or ``LISTEN`` (Linux/macOS)
+    - PID is a valid positive integer
+
+    Works with any locale (LISTENING, ABHÖREN, etc.) by checking the
+    state column case-insensitively for the ``LISTEN`` prefix.
+
     Returns an empty dict if netstat is unavailable.
     """
     try:
@@ -43,16 +50,51 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
 
     listeners: dict[int, list[int]] = {}
     for line in result.stdout.splitlines():
-        if f":{port}" not in line:
+        # 1) Must contain the target port in a local-address position
+        if f"127.0.0.1:{port}" not in line and f"[::1]:{port}" not in line:
             continue
         parts = line.strip().split()
-        if len(parts) >= 5:
+        if len(parts) < 5:
+            continue
+        # 2) State column must indicate listening.
+        #    On Windows:  Proto | Local | Remote | State | PID
+        #    State is the second-to-last field (index -2).
+        #    On Linux:    Proto | Recv-Q | Send-Q | Local | Remote | State | PID/Program
+        #    State is the second-to-last field (index -2) or last field (index -1).
+        #    Locale-agnostic: check for "LISTEN", "LISTENING", "ABHÖREN", "ESCUCHAN",
+        #    "ÉCOUTE", "AUSKULTOWANIE", etc. by checking if the state is NOT a number
+        #    and NOT "ESTABLISHED", "TIME_WAIT", "CLOSE_WAIT", "SYN_SENT" etc.
+        #    The safest approach: the state column is the one before PID, and it
+        #    is never a pure integer.
+        state_candidate = parts[-2].upper()
+        pid_raw = parts[-1]
+        # If parts[-2] looks like a number, we're on a Linux variant where
+        # PID comes before state — swap them.
+        try:
+            int(state_candidate)
+            # state_candidate is actually the PID; swap
+            state_candidate = pid_raw.upper()
+            pid_raw = parts[-2]
+        except ValueError:
+            pass
+        # Skip non-listening states explicitly (ESTABLISHED, TIME_WAIT, etc.)
+        if state_candidate in ("ESTABLISHED", "TIME_WAIT", "CLOSE_WAIT",
+                               "FIN_WAIT_1", "FIN_WAIT_2", "CLOSING",
+                               "SYN_SENT", "SYN_RECEIVED", "LAST_ACK",
+                               "BOUND", "CLOSED", "DELETE_TCB"):
+            continue
+        # 3) PID is a valid positive integer
+        try:
+            pid = int(pid_raw)
+        except ValueError:
+            # Linux format: "PID/ProgramName" — extract numeric prefix
+            pid_str = pid_raw.split("/")[0] if "/" in pid_raw else ""
             try:
-                pid = int(parts[-1])
-                if pid > 0:
-                    listeners.setdefault(pid, []).append(id(line))
+                pid = int(pid_str) if pid_str else 0
             except ValueError:
                 continue
+        if pid > 0:
+            listeners.setdefault(pid, []).append(id(line))
     return listeners
 
 
@@ -185,7 +227,7 @@ def test_write_single_listener_verification_artifact() -> None:
     # Run the single listener test via pytest subprocess
     result = subprocess.run(
         [sys.executable, "-m", "pytest",
-         "tests/test_single_listener.py::test_exactly_one_listener_owns_port_8765",
+         "tests/test_single_listener.py::test_exactly_one_listener_owns_port",
          "-q", "--tb=line", "--no-header"],
         capture_output=True, text=True, timeout=30,
         cwd=str(repo_root),

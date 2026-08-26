@@ -68,8 +68,14 @@ def test_gate_a_criteria_carry_test_evidence() -> None:
     verified_items = [i for i in status["gate_a"]["items"] if i["category"] == "technical_integration"]
     assert len(verified_items) > 0
     for item in verified_items:
-        # Sources: "verified_baseline" for test-evidenced criteria, or a test file path
-        assert item["source"] in ("verified_baseline", "tests/test_single_listener.py", "project_state")
+        # Sources: "verified_baseline" for test-evidenced criteria, or a test/artifact file path
+        allowed_sources = (
+            "verified_baseline",
+            "tests/test_single_listener.py",
+            "research/generated/verification/single_listener.json",
+            "project_state",
+        )
+        assert item["source"] in allowed_sources, f"Unexpected source: {item['source']!r}"
         if item["source"] == "verified_baseline":
             evidence = item.get("evidence")
             assert evidence is not None
@@ -99,11 +105,15 @@ def test_disabled_structural_does_not_fail_gate() -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must be pending, not failed."""
     repo_root = _repo_root()
-    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
-    original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
+    e2e_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
+    live_loop_path = repo_root / "research" / "generated" / "verification" / "structural_live_loop.json"
+    e2e_original = e2e_path.read_text(encoding="utf-8") if e2e_path.exists() else None
+    ll_original = live_loop_path.read_text(encoding="utf-8") if live_loop_path.exists() else None
     try:
-        if artifact_path.exists():
-            artifact_path.unlink()
+        if e2e_path.exists():
+            e2e_path.unlink()
+        if live_loop_path.exists():
+            live_loop_path.unlink()
         config = {"self_organization": {"enabled": False}}
         builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root, config_dict=config)
         status = builder.build()
@@ -112,19 +122,25 @@ def test_disabled_structural_does_not_fail_gate() -> None:
             assert item["status"] != G_FAILED
             assert item["status"] == G_PENDING
     finally:
-        if original is not None and not artifact_path.exists():
-            artifact_path.write_text(original, encoding="utf-8")
+        if e2e_original is not None and not e2e_path.exists():
+            e2e_path.write_text(e2e_original, encoding="utf-8")
+        if ll_original is not None and not live_loop_path.exists():
+            live_loop_path.write_text(ll_original, encoding="utf-8")
 
 
 def test_disabled_structural_does_not_pass_gate() -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must not pass."""
     repo_root = _repo_root()
-    artifact_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
-    original = artifact_path.read_text(encoding="utf-8") if artifact_path.exists() else None
+    e2e_path = repo_root / "research" / "generated" / "verification" / "structural_e2e.json"
+    live_loop_path = repo_root / "research" / "generated" / "verification" / "structural_live_loop.json"
+    e2e_original = e2e_path.read_text(encoding="utf-8") if e2e_path.exists() else None
+    ll_original = live_loop_path.read_text(encoding="utf-8") if live_loop_path.exists() else None
     try:
-        if artifact_path.exists():
-            artifact_path.unlink()
+        if e2e_path.exists():
+            e2e_path.unlink()
+        if live_loop_path.exists():
+            live_loop_path.unlink()
         config = {"self_organization": {"enabled": False}}
         builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=repo_root, config_dict=config)
         status = builder.build()
@@ -132,8 +148,10 @@ def test_disabled_structural_does_not_pass_gate() -> None:
         for item in structural_items:
             assert item["status"] != G_PASSED
     finally:
-        if original is not None and not artifact_path.exists():
-            artifact_path.write_text(original, encoding="utf-8")
+        if e2e_original is not None and not e2e_path.exists():
+            e2e_path.write_text(e2e_original, encoding="utf-8")
+        if ll_original is not None and not live_loop_path.exists():
+            live_loop_path.write_text(ll_original, encoding="utf-8")
 
 
 def test_config_enabled_but_component_missing_is_error() -> None:

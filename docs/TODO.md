@@ -2,8 +2,8 @@
 
 > Last updated: 2026-08-26
 > Verification basis:
->   Test-run commit: 365a987e
->   Source-tree digest: 5275a532...
+>   Test-run commit: fb93aa73
+>   Source-tree digest: 63c86c49...
 > Status: Alpha.5 integration and verification closure
 > Alpha.6: BLOCKED
 >
@@ -62,7 +62,7 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: 365a987e
+Test-run commit: fb93aa73
 Python:          3.13.14
 
 Full suite:
