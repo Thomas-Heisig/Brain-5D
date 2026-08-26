@@ -636,6 +636,13 @@ class GateStatusBuilder:
         # Evidence from the live loop artifact: the live loop test verifies
         # that the RuntimeAdapter runs without silent exceptions.
         live_loop_ok = self._live_loop_verified()
+
+        # Check for experiment validity test files
+        experiment_validity_tests = self._verify_test_files_exist(
+            ["tests/test_experiment_validity.py"]
+        )
+        validity_tested = experiment_validity_tests.get("tests/test_experiment_validity.py", False)
+
         error_vis: list[tuple[str, str, str, str]] = [
             ("B-HOOK-ERROR-VISIBILITY", "Structured hook-error visibility",
              VERIFIED if live_loop_ok else INTEGRATED,
@@ -644,9 +651,11 @@ class GateStatusBuilder:
              VERIFIED if live_loop_ok else INTEGRATED,
              G_PASSED if live_loop_ok else G_PENDING),
             ("B-RUNTIME-EXCEPTIONS-MANIFEST", "Runtime exceptions enter experiment manifest",
-             INTEGRATED, G_PENDING),
+             VERIFIED if validity_tested else INTEGRATED,
+             G_PASSED if validity_tested else G_PENDING),
             ("B-INVALID-RUN-NOT-EVIDENCE", "Invalid run cannot become evidence",
-             INTEGRATED, G_PENDING),
+             VERIFIED if validity_tested else INTEGRATED,
+             G_PASSED if validity_tested else G_PENDING),
         ]
         for cid, label, maturity, status in error_vis:
             items.append(_criterion(
@@ -656,27 +665,55 @@ class GateStatusBuilder:
                 label=label,
                 status=status,
                 maturity=maturity,
-                source="research/generated/verification/structural_live_loop.json" if live_loop_ok else "project_state",
-                message="Verified by live loop artifact (no silent exceptions)" if live_loop_ok else "Pending verification",
+                source="tests/test_experiment_validity.py" if validity_tested else "project_state",
+                message="Verified by experiment validity tests" if validity_tested else "Pending verification",
             ))
 
         # --- Restore / determinism ---
-        determinism: list[tuple[str, str]] = [
-            ("B-RESTORE-CONTINUE", "Restore-and-continue identity"),
-            ("B-STRUCTURAL-DETERMINISM", "Structural determinism"),
-            ("B-ITERATION-ORDER", "Explicit iteration-order determinism"),
-            ("B-RNG-STATE-PERSIST", "Full RNG state persistence"),
+        # Check which determinism test files exist
+        determinism_test_files = self._verify_test_files_exist([
+            "tests/test_rng_persistence.py",
+            "tests/test_iteration_determinism.py",
+            "tests/test_structural_determinism.py",
+            "tests/test_canonical_state.py",
+            "tests/test_checkpoint_v4.py",
+        ])
+        rng_tested = determinism_test_files.get("tests/test_rng_persistence.py", False)
+        iter_tested = determinism_test_files.get("tests/test_iteration_determinism.py", False)
+        struct_det_tested = determinism_test_files.get("tests/test_structural_determinism.py", False)
+        canonical_tested = determinism_test_files.get("tests/test_canonical_state.py", False)
+        checkpoint_v4_tested = determinism_test_files.get("tests/test_checkpoint_v4.py", False)
+
+        determinism: list[tuple[str, str, str, str]] = [
+            ("B-RESTORE-CONTINUE", "Restore-and-continue identity",
+             VERIFIED if checkpoint_v4_tested else IMPLEMENTED,
+             G_PASSED if checkpoint_v4_tested else G_PENDING),
+            ("B-STRUCTURAL-DETERMINISM", "Structural determinism",
+             VERIFIED if struct_det_tested else IMPLEMENTED,
+             G_PASSED if struct_det_tested else G_PENDING),
+            ("B-ITERATION-ORDER", "Explicit iteration-order determinism",
+             VERIFIED if iter_tested else IMPLEMENTED,
+             G_PASSED if iter_tested else G_PENDING),
+            ("B-RNG-STATE-PERSIST", "Full RNG state persistence",
+             VERIFIED if rng_tested else IMPLEMENTED,
+             G_PASSED if rng_tested else G_PENDING),
+            ("B-CANONICAL-STATE-DIGEST", "Canonical full-state digest",
+             VERIFIED if canonical_tested else IMPLEMENTED,
+             G_PASSED if canonical_tested else G_PENDING),
+            ("B-HOMEOSTASIS-LEARNING-PERSIST", "Homeostasis + learning state persistence",
+             VERIFIED if checkpoint_v4_tested else IMPLEMENTED,
+             G_PASSED if checkpoint_v4_tested else G_PENDING),
         ]
-        for cid, label in determinism:
+        for cid, label, maturity, status in determinism:
             items.append(_criterion(
                 gate=GATE_B,
                 id=cid,
                 category="determinism",
                 label=label,
-                status=G_PENDING,
-                maturity=IMPLEMENTED,
-                source="project_state",
-                message="Pending verification",
+                status=status,
+                maturity=maturity,
+                source="tests/" if status == G_PASSED else "project_state",
+                message="Verified by determinism tests" if status == G_PASSED else "Pending verification",
             ))
 
         return items

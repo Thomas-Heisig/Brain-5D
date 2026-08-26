@@ -262,7 +262,7 @@ def main() -> int:
     except Exception:
         config_dict["_sha256"] = ""
 
-    print("🚀 Brain 5D - v0.5.0-alpha.1 with dashboard")
+    print("🚀 Brain 5D - v0.5.0-alpha.5 with dashboard")
     print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)")
 
     # --- Build network ---

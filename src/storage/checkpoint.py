@@ -121,8 +121,34 @@ class SynapseRuntimeRecord:
 
 
 @dataclass(frozen=True, slots=True)
+class HomeostasisRuntimeRecord:
+    """Homeostasis engine state for deterministic continuation."""
+
+    neuron_id: int
+    rate_hz: float
+
+
+@dataclass(frozen=True, slots=True)
+class LearningRuntimeRecord:
+    """Learning engine state for deterministic continuation."""
+
+    pre_id: int
+    target_id: int
+    last_pre_tick: int | None
+    last_post_tick: int | None
+    eligibility_value: float
+
+
+@dataclass(frozen=True, slots=True)
 class RuntimeCheckpoint:
-    """Runtime state required for deterministic restore-and-continue."""
+    """Runtime state required for deterministic restore-and-continue.
+
+    Version history:
+        1: Initial checkpoint format
+        2: Added neuron_states and synapse_states
+        3: Added pending_currents, input_cells, output_cells
+        4: Added homeostasis_state and learning_state
+    """
 
     version: int
     current_tick: int
@@ -135,10 +161,29 @@ class RuntimeCheckpoint:
     queued_events: tuple[QueuedEventRecord, ...]
     neuron_states: tuple[NeuronRuntimeRecord, ...] = ()
     synapse_states: tuple[SynapseRuntimeRecord, ...] = ()
+    homeostasis_state: tuple[HomeostasisRuntimeRecord, ...] = ()
+    learning_state: tuple[LearningRuntimeRecord, ...] = ()
 
 
-def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpoint:
-    """Capture runtime state and exact core state when available."""
+def capture_runtime_checkpoint(
+    network: CheckpointNetworkLike,
+    *,
+    homeostasis_rates: dict[int, float] | None = None,
+    learning_states: list[dict[str, object]] | None = None,
+) -> RuntimeCheckpoint:
+    """Capture runtime state and exact core state when available.
+
+    Args:
+        network: The network to capture state from.
+        homeostasis_rates: Optional dict of neuron_id -> smoothed firing rate
+            from the homeostasis engine.
+        learning_states: Optional list of learning engine state dicts,
+            each containing pre_id, target_id, last_pre_tick, last_post_tick,
+            and eligibility_value.
+
+    Returns:
+        A RuntimeCheckpoint with version 4 (includes homeostasis + learning).
+    """
     version, raw_state, gauss_next = network.rng.getstate()
     queued = tuple(
         QueuedEventRecord(
@@ -184,8 +229,35 @@ def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpo
             for source_id, synapses in sorted(network.synapses.items())
             for synapse in synapses
         )
+
+    # Capture homeostasis state
+    homeostasis_state: tuple[HomeostasisRuntimeRecord, ...] = ()
+    if homeostasis_rates is not None:
+        homeostasis_state = tuple(
+            HomeostasisRuntimeRecord(neuron_id=int(nid), rate_hz=float(rate))
+            for nid, rate in sorted(homeostasis_rates.items())
+        )
+
+    # Capture learning state
+    learning_state: tuple[LearningRuntimeRecord, ...] = ()
+    if learning_states is not None:
+        learning_state = tuple(
+            LearningRuntimeRecord(
+                pre_id=int(s["pre_id"]),
+                target_id=int(s["target_id"]),
+                last_pre_tick=(
+                    int(s["last_pre_tick"]) if s.get("last_pre_tick") is not None else None
+                ),
+                last_post_tick=(
+                    int(s["last_post_tick"]) if s.get("last_post_tick") is not None else None
+                ),
+                eligibility_value=float(s.get("eligibility_value", 0.0)),
+            )
+            for s in learning_states
+        )
+
     return RuntimeCheckpoint(
-        version=3,
+        version=4,
         current_tick=int(network.current_tick),
         total_spikes=int(network.total_spikes),
         total_events_processed=int(network.total_events_processed),
@@ -203,13 +275,15 @@ def capture_runtime_checkpoint(network: CheckpointNetworkLike) -> RuntimeCheckpo
         queued_events=queued,
         neuron_states=neuron_states,
         synapse_states=synapse_states,
+        homeostasis_state=homeostasis_state,
+        learning_state=learning_state,
     )
 
 
 def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
     """Write a deterministic JSON runtime sidecar."""
     payload: dict[str, object] = {
-        "version": 3,
+        "version": checkpoint.version,
         "current_tick": checkpoint.current_tick,
         "total_spikes": checkpoint.total_spikes,
         "total_events_processed": checkpoint.total_events_processed,
@@ -259,6 +333,23 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
                 "last_pre_spike": state.last_pre_spike,
             }
             for state in checkpoint.synapse_states
+        ],
+        "homeostasis_state": [
+            {
+                "neuron_id": state.neuron_id,
+                "rate_hz": state.rate_hz,
+            }
+            for state in checkpoint.homeostasis_state
+        ],
+        "learning_state": [
+            {
+                "pre_id": state.pre_id,
+                "target_id": state.target_id,
+                "last_pre_tick": state.last_pre_tick,
+                "last_post_tick": state.last_post_tick,
+                "eligibility_value": state.eligibility_value,
+            }
+            for state in checkpoint.learning_state
         ],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -310,11 +401,11 @@ def _optional_float(value: object, name: str) -> float | None:
 
 
 def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
-    """Read and strictly validate checkpoint versions 1 through 3."""
+    """Read and strictly validate checkpoint versions 1 through 4."""
     loaded: object = json.loads(path.read_text(encoding="utf-8"))
     raw = _mapping(loaded, "checkpoint")
     version = _int(raw.get("version", 0), "version")
-    if version not in {1, 2, 3}:
+    if version not in {1, 2, 3, 4}:
         raise ValueError("unsupported runtime checkpoint")
     rng_raw = _mapping(raw.get("rng"), "rng")
     state_raw = _list(rng_raw.get("state"), "rng.state")
@@ -393,6 +484,42 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
 
     input_raw = _list(raw.get("input_cells", []), "input_cells")
     output_raw = _list(raw.get("output_cells", []), "output_cells")
+
+    # Read homeostasis state (version 4+)
+    homeostasis_state: list[HomeostasisRuntimeRecord] = []
+    for index, item in enumerate(_list(raw.get("homeostasis_state", []), "homeostasis")):
+        state = _mapping(item, f"homeostasis_state[{index}]")
+        homeostasis_state.append(
+            HomeostasisRuntimeRecord(
+                neuron_id=_int(state.get("neuron_id"), "homeostasis.neuron_id"),
+                rate_hz=_float(state.get("rate_hz"), "homeostasis.rate_hz"),
+            )
+        )
+
+    # Read learning state (version 4+)
+    learning_state: list[LearningRuntimeRecord] = []
+    for index, item in enumerate(_list(raw.get("learning_state", []), "learning")):
+        state = _mapping(item, f"learning_state[{index}]")
+        learning_state.append(
+            LearningRuntimeRecord(
+                pre_id=_int(state.get("pre_id"), "learning.pre_id"),
+                target_id=_int(state.get("target_id"), "learning.target_id"),
+                last_pre_tick=(
+                    _int(state["last_pre_tick"], "learning.last_pre_tick")
+                    if state.get("last_pre_tick") is not None
+                    else None
+                ),
+                last_post_tick=(
+                    _int(state["last_post_tick"], "learning.last_post_tick")
+                    if state.get("last_post_tick") is not None
+                    else None
+                ),
+                eligibility_value=_float(
+                    state.get("eligibility_value", 0.0), "learning.eligibility_value"
+                ),
+            )
+        )
+
     return RuntimeCheckpoint(
         version=version,
         current_tick=_int(raw.get("current_tick"), "current_tick"),
@@ -411,4 +538,6 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
         queued_events=tuple(events),
         neuron_states=tuple(neuron_states),
         synapse_states=tuple(synapse_states),
+        homeostasis_state=tuple(homeostasis_state),
+        learning_state=tuple(learning_state),
     )

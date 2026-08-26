@@ -1,21 +1,70 @@
 # Changelog
 
-## v0.5.0-alpha.5 - Structural Evidence Hardening Complete (2026-08-26)
+## v0.5.0-alpha.5 - Scientific Verification Infrastructure (2026-08-26)
+
+### Added
+
+- **Scientific error integrity** (Phase 1):
+  - `ExperimentRecorder.record_runtime_error()` — captures structured RuntimeErrorEvents
+  - `ExperimentRecorder.mark_completed()` / `mark_failed()` — explicit status semantics
+  - `validity` field in manifest: `valid`, `reason`, `runtime_error_count`, `fatal_error_count`
+  - `EvidenceEngine` rejects template/not_started/running/failed/invalid experiments
+  - Only `completed` + `valid` experiments can produce `EVID-*` evidence
+  - Tests: `test_experiment_validity.py` (21 tests)
+
+- **Research fail-fast mode** (Phase 2):
+  - `ExperimentRecorder(fail_fast=True)` — auto-invalidates on first runtime error
+  - Default mode (`fail_fast=False`) captures errors without stopping
+
+- **Canonical scientific state definition** (Phase 3-4):
+  - `src/research/canonical_state.py` — defines `State(t)` contract
+  - `canonical_state_digest()` — SHA-256 of full scientific runtime state
+  - Deterministic serialization: sorted neurons, synapses, events
+  - No memory addresses, no repr(), no wall-clock timestamps
+  - Tests: `test_canonical_state.py` (17 tests)
+
+- **Full RNG state persistence** (Phase 5):
+  - Checkpoint captures `rng.getstate()` — complete `random.Random` state
+  - Restore via `rng.setstate()` — exact bitwise equality
+  - Tests: `test_rng_persistence.py` (6 tests)
+
+- **Iteration-order determinism** (Phase 6):
+  - Verified neuron/synapse/event iteration produces identical sequences
+  - Three independent runs produce identical canonical digests
+  - Tests: `test_iteration_determinism.py` (8 tests)
+
+- **Structural determinism** (Phase 7):
+  - Same initial state + config + RNG → same proposals, mutations, topology
+  - N >= 3 independent runs produce identical results
+  - Tests: `test_structural_determinism.py` (5 tests)
+
+- **Checkpoint v4 — homeostasis + learning state** (Phase 8):
+  - `HomeostasisRuntimeRecord` — per-neuron smoothed firing rates
+  - `LearningRuntimeRecord` — STDP traces, eligibility values
+  - Backward compatible with v3 checkpoints
+  - Tests: `test_checkpoint_v4.py` (7 tests)
 
 ### Fixed
 
+- **Version inconsistency** (`src/main.py`): corrected `"v0.5.0-alpha.1"` to `"v0.5.0-alpha.5"` in startup banner
 - **Duplicate startup print removed** (`src/main.py`): removed hardcoded `:8765` print that duplicated the dynamic-port print below it
 - **Listener parsing hardened** (`tests/test_single_listener.py`): `_get_listener_pids()` now checks for local address (`127.0.0.1:{port}`), LISTEN state (locale-agnostic), and valid PID — no longer matches remote addresses or non-listening connections
 - **Renamed test reference fixed** (`tests/test_single_listener.py`): artifact writer referenced `test_exactly_one_listener_owns_port_8765` but the actual function is `test_exactly_one_listener_owns_port` (no `_8765` suffix)
 - **Gate status test sources updated** (`tests/test_gate_status.py`): added `research/generated/verification/single_listener.json` to allowed sources; structural-disabled tests now also remove the live loop artifact to avoid false PASSED status
 
+### Changed
+
+- **Gate status builder** (`src/dashboard/gate_status.py`): Gate B now dynamically checks for experiment validity tests, determinism tests, and checkpoint v4 tests
+- **TODO.md**: updated Gate B/C status, open items, and execution order
+
 ### Test Results (real run, 2026-08-26)
 
 - **Python**: 3.13.14
 - **Command**: `python -m pytest tests/ -q`
-- **Result**: 292 passed, 2 skipped, 0 failed, 0 collection errors
-- **Structural E2E**: 11/11 proofs verified (10 proofs + complete canonical E2E)
-- **Single listener**: 2/2 tests passed (hardened parser + artifact writer)
+- **Result**: 356 passed, 2 skipped, 0 failed, 0 collection errors
+- **New tests**: 64 (experiment validity, canonical state, RNG persistence, iteration determinism, structural determinism, checkpoint v4)
+- **Structural E2E**: 11/11 proofs verified
+- **Single listener**: 2/2 tests passed
 - **Gate status**: 23/23 tests passed
 
 ---

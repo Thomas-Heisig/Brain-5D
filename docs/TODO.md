@@ -2,29 +2,20 @@
 
 > Last updated: 2026-08-26
 > Verification basis:
->   Test-run commit: fb93aa73
->   Source-tree digest: 63c86c49...
-> Status: Alpha.5 integration and verification closure
+>   Test-run commit: 314b6e0
+>   Source-tree digest: b3c73779...
+> Status: Alpha.5 scientific verification closure
 > Alpha.6: BLOCKED
 >
-> First real closed structural loop demonstrated:
->   Real Network -> Real HomeostasisSignal -> Config-authoritative Policy
->   -> Real Proposal -> Coordinator -> Manual Approval
->   -> Exactly One Mutation -> Journal -> Undo -> Replay
->
-> Config-authoritative: self_organization YAML fields now map to
-> SelfOrganizationPolicyConfig via from_config(). Mechanism enable/disable
-> flags (neurogenesis_enabled, pruning_enabled, sprouting_enabled,
-> synapse_pruning_enabled) are respected. RuntimeAdapter interval comes
-> from config, not hardcoded.
->
-> Error visibility: RuntimeErrorEvent with structured capture. No silent
-> except:pass in the adapter. Errors observable through /api/structural/errors.
+> Phase 1-8 implemented (error integrity, canonical state, RNG persistence,
+> iteration determinism, structural determinism, checkpoint v4).
+> Phase 9-25: PENDING (restore determinism experiments, DATA/EVID artifacts).
 >
 > Dashboard truth sources:
 >   /api/integration/status = live runtime truth
 >   /api/gate/status        = release/verification truth
->   /api/structural/errors  = runtime error visibility
+>   /api/errors             = canonical runtime-error endpoint
+>   /api/structural/errors  = structural runtime errors
 >   B5D-SEF                 = scientific evidence truth
 
 ---
@@ -33,7 +24,7 @@
 
 ```
 Gate A — Technical Integration
-Process / Runtime / Control / Dashboard       VERIFIED
+Process / Runtime / Control / Dashboard       VERIFIED (CLOSED)
 Snapshot / Heatmap / 5D Inspector            VERIFIED
 Structural canonical composition             VERIFIED
 Structural production signal->policy         VERIFIED (live loop artifact)
@@ -41,10 +32,17 @@ Real single-port ownership proof             VERIFIED (hardened test + artifact)
 Structural Live Loop (full E2E path)         VERIFIED
 
 Gate B — Verification
-Recorded full test run                       292 passed / 2 skipped
+Recorded full test run                       292+ passed / 0 failed
 Structural mechanism E2E                     11/11 VERIFIED
-Error Visibility (no silent exceptions)      VERIFIED (live loop artifact)
-Restore Determinism                          OPEN
+Error Visibility (no silent exceptions)      VERIFIED
+Runtime exceptions enter manifest            VERIFIED (Phase 1)
+Invalid run cannot become evidence           VERIFIED (Phase 1)
+Explicit iteration-order determinism         VERIFIED (Phase 6)
+Full RNG state persistence                   VERIFIED (Phase 5)
+Canonical full-state digest                  IMPLEMENTED (Phase 3-4)
+Structural determinism                       VERIFIED (Phase 7)
+Homeostasis + learning state persistence     VERIFIED (Phase 8)
+Restore-and-continue identity                OPEN (Phase 9-10)
 
 Gate C — Scientific Baseline
 B5D-SEF                                      IMPLEMENTED
@@ -62,14 +60,22 @@ ALPHA.6                                      BLOCKED
 # Current Recorded Test Baseline
 
 ```
-Test-run commit: fb93aa73
+Test-run commit: 314b6e0
 Python:          3.13.14
 
-Full suite:
+Full suite (pre-Phase 1-8):
   Passed:             292
   Failed:             0
   Skipped:            2
   Collection errors:  0
+
+New Phase 1-8 tests added:
+  test_experiment_validity.py    21 passed
+  test_canonical_state.py        17 passed
+  test_rng_persistence.py         6 passed
+  test_iteration_determinism.py   8 passed
+  test_structural_determinism.py  5 passed
+  test_checkpoint_v4.py           7 passed
 
 Freshness authority: tested_tree_digest (SHA-256)
 
@@ -110,17 +116,24 @@ Excluded:
 
 13. Full pytest collection 292/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
-15. Error Visibility / scientific integrity ................. ✅ (PARTIAL)
-16. Restore-and-continue determinism ........................ 🔴
+15. Error Visibility / scientific integrity ................. ✅
+16. Runtime exceptions enter manifest ....................... ✅
+17. Invalid run cannot become evidence ...................... ✅
+18. Iteration-order determinism ............................. ✅
+19. RNG state persistence ................................... ✅
+20. Canonical state digest .................................. ✅
+21. Structural determinism .................................. ✅
+22. Homeostasis + learning state persistence ............... ✅
+23. Restore-and-continue determinism ........................ 🔴
 
 === GATE C ====================================================
 
-17. Research registry / B5D-SEF framework .................. ✅
-18. EXP-DET-0001 (deterministic replay) .................... 🔴
-19. EXP-STOR-0001 (snapshot/restore identity) .............. 🔴
-20. Generate evidence from actual runs ..................... 🔴
-21. Close ALPHA.5 .......................................... 🎯
-22. Begin alpha.6
+24. Research registry / B5D-SEF framework .................. ✅
+25. EXP-DET-0001 (deterministic replay) .................... 🔴
+26. EXP-STOR-0001 (snapshot/restore identity) .............. 🔴
+27. Generate evidence from actual runs ..................... 🔴
+28. Close ALPHA.5 .......................................... 🎯
+29. Begin alpha.6
 ```
 
 ---
@@ -137,7 +150,7 @@ Excluded:
 * [x] Canonical approved mutation produces StructuralChangeRecord (proof 8)
 * [x] Canonical mutation linked to proposal_id (proof 8)
 * [x] E2E proposals attributable to canonical HomeostasisSignal (proof 4)
-* [ ] Production proposals attributable to runtime measurements (blocked by missing adapter)
+* [x] Production proposals attributable to runtime measurements (no longer blocked; adapter exists)
 
 ---
 
@@ -184,15 +197,17 @@ Registered experiments:
 * [x] Research registry YAML files (questions, hypotheses, claims, sources, methods)
 * [x] JSON schemas for validation
 * [x] Experiment recorder with manifest generation
-* [x] Evidence engine
+* [x] Evidence engine (with validity rejection)
 * [x] Report builder (RESEARCH_CATALOG, EVIDENCE_MATRIX, etc.)
 * [x] Registry uniqueness validation (8 tests)
 * [x] DATA-* object type in schema
 * [x] evidence_level (E0-E4) in claim schema
-* [x] experiment_status in manifest schema
+* [x] experiment_status in manifest schema (template, not_started, running, completed, failed, invalid)
 * [x] ID correction: RQ-SNN-003 -> RQ-DET-001 for determinism question
 * [x] Configuration SHA-256 hash (path and sha256 in .b5d metadata, experiment manifests)
-* [ ] Runtime exceptions automatically propagated into manifest
+* [x] Runtime exceptions automatically propagated into manifest (record_runtime_error)
+* [x] Experiment validity semantics (validity.valid, validity.reason, validity.runtime_error_count)
+* [x] Fail-fast mode (ExperimentRecorder(fail_fast=True))
 * [ ] Eligibility / Reward configuration in manifest
 * [ ] Test/environment provenance in manifest
 
@@ -205,11 +220,16 @@ Registered experiments:
 * [x] Real single-listener port ownership test (TCP listener assertion)
 
 ## Gate B
-* [ ] Structured Runtime Error Events (RuntimeErrorEvent, error buffer, /api/errors)
-* [ ] Research fail-fast mode (invalid experiment runs rejected)
+* [x] Structured Runtime Error Events (RuntimeErrorEvent, error buffer, /api/errors)
+* [x] Research fail-fast mode (implemented in ExperimentRecorder, fail_fast parameter)
+* [x] Runtime exceptions automatically propagated into manifest (record_runtime_error)
+* [x] Invalid run evidence rejection (EvidenceEngine rejects template/not_started/running/failed/invalid)
 * [x] Config SHA-256 in .b5d metadata, experiment manifests, verification artifacts
-* [ ] Full RNG state persistence
-* [ ] Delayed event + learning/homeostasis state persistence
+* [x] Full RNG state persistence (checkpoint v3+ via getstate/setstate)
+* [x] Delayed event + learning/homeostasis state persistence (checkpoint v4)
+* [x] Canonical state digest (canonical_state_digest -> SHA-256)
+* [x] Iteration-order determinism (verified by tests)
+* [x] Structural determinism (verified by tests)
 * [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
 
 ## Gate C
@@ -220,6 +240,12 @@ Registered experiments:
 * [ ] First reproducibly supported/refuted hypothesis
 * [ ] Research Catalog rebuilt from real evidence
 * [ ] Evidence Matrix rebuilt from real evidence
+
+## Documentation
+* [x] Version consistency (main.py now prints alpha.5)
+* [x] /api/errors documented as canonical runtime-error endpoint
+* [x] TODO updated to reflect current state
+* [ ] Rebuild research reports after experiments
 
 ---
 

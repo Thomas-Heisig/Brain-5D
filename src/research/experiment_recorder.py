@@ -74,14 +74,40 @@ def get_hardware_info() -> dict[str, Any]:
 
 
 class ExperimentRecorder:
-    """Records experiment manifests for scientific reproducibility."""
+    """Records experiment manifests for scientific reproducibility.
 
-    def __init__(self, experiment_id: str, output_dir: Path | None = None):
+    The recorder enforces experiment validity semantics:
+
+    - ``experiment_status`` tracks the lifecycle: template -> not_started ->
+      running -> completed | failed | invalid
+    - ``validity`` captures whether the run is scientifically usable
+    - ``runtime_errors`` captures structured RuntimeErrorEvents that
+      occurred during execution
+    - ``fail_fast`` mode stops the experiment on first runtime error
+
+    Validity distinction (Phase 1):
+        completed + negative result = VALID scientific result
+        failed = execution failure (e.g. crash)
+        invalid = scientifically unusable (runtime errors during execution)
+
+    The EvidenceEngine MUST reject template, not_started, running, failed,
+    and invalid experiments as scientific evidence.
+    """
+
+    def __init__(
+        self,
+        experiment_id: str,
+        output_dir: Path | None = None,
+        fail_fast: bool = False,
+    ):
         self.experiment_id = experiment_id
         self.output_dir = output_dir or (EXPERIMENTS_DIR / experiment_id)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.fail_fast = fail_fast
+        self._runtime_errors: list[dict[str, Any]] = []
         self._manifest: dict[str, Any] = {
             "experiment_id": experiment_id,
+            "experiment_status": "not_started",
             "timestamp": datetime.now().isoformat(),
             "git": get_git_info(),
             "software": get_software_info(),
@@ -90,6 +116,13 @@ class ExperimentRecorder:
             "research_questions": [],
             "hypotheses": [],
             "config": {},
+            "validity": {
+                "valid": True,
+                "reason": None,
+                "runtime_error_count": 0,
+                "fatal_error_count": 0,
+            },
+            "runtime_errors": [],
         }
 
     def record_config(self, config_path: str, sha256: str = "") -> ExperimentRecorder:
@@ -133,6 +166,78 @@ class ExperimentRecorder:
         self._manifest["runtime"] = {"duration_seconds": duration_seconds}
         if ram_peak_mb is not None:
             self._manifest["runtime"]["ram_peak_mb"] = ram_peak_mb
+        return self
+
+    def record_runtime_error(
+        self,
+        tick: int,
+        phase: str,
+        exception_type: str,
+        message: str,
+        fatal: bool = False,
+        traceback_hash: str = "",
+    ) -> ExperimentRecorder:
+        """Record a runtime error event in the experiment manifest.
+
+        When ``fail_fast`` is True, the first error automatically sets
+        the experiment status to ``invalid`` and marks the run as
+        scientifically unusable.
+
+        Args:
+            tick: The simulation tick when the error occurred.
+            phase: The phase where the error occurred (e.g. "step", "hook").
+            exception_type: The type name of the exception.
+            message: The exception message.
+            fatal: Whether this error is fatal to the experiment.
+            traceback_hash: Optional hash of the traceback for deduplication.
+
+        Returns:
+            Self for chaining.
+        """
+        error_entry: dict[str, Any] = {
+            "tick": tick,
+            "phase": phase,
+            "exception_type": exception_type,
+            "message": message,
+            "fatal": fatal,
+            "traceback_hash": traceback_hash,
+        }
+        self._runtime_errors.append(error_entry)
+        self._manifest["runtime_errors"] = list(self._runtime_errors)
+
+        # Update validity
+        error_count = len(self._runtime_errors)
+        fatal_count = sum(1 for e in self._runtime_errors if e.get("fatal"))
+        self._manifest["validity"] = {
+            "valid": False,
+            "reason": f"{error_count} runtime error(s), {fatal_count} fatal",
+            "runtime_error_count": error_count,
+            "fatal_error_count": fatal_count,
+        }
+
+        # Fail-fast: mark experiment as invalid
+        if self.fail_fast:
+            self._manifest["experiment_status"] = "invalid"
+
+        return self
+
+    def mark_completed(self) -> ExperimentRecorder:
+        """Mark the experiment as completed if no fatal errors occurred.
+
+        If runtime errors exist, the experiment is marked ``invalid``
+        instead of ``completed``. This enforces the distinction between
+        a failed hypothesis (valid science) and a failed execution
+        (invalid science).
+        """
+        if self._runtime_errors:
+            self._manifest["experiment_status"] = "invalid"
+        elif self._manifest.get("experiment_status") not in ("invalid", "failed"):
+            self._manifest["experiment_status"] = "completed"
+        return self
+
+    def mark_failed(self) -> ExperimentRecorder:
+        """Mark the experiment as failed (execution failure, not invalid)."""
+        self._manifest["experiment_status"] = "failed"
         return self
 
     def save(self) -> Path:
