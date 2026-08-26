@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "suite": "single_listener",
+  "status": "failed",
+  "timestamp": "2026-08-26T09:22:21.121395",
+  "python_version": "3.13.14",
+  "tested_commit": "a72dc9a3ba84400e854f10ba6b80687769178641",
+  "tested_tree_digest": "67bbe4cd8b8cbd356f5dcfc3032caac5f1674a947b7a7ce4bd0988beebebfcb4",
+  "test_command": "python -m pytest tests/test_single_listener.py -q",
+  "proofs": {
+    "port_initially_free_or_explicitly_rejected": false,
+    "brain5d_process_started": false,
+    "listener_pid_matches_process_pid": false,
+    "exactly_one_listener_socket": false,
+    "no_other_listener_pid": false,
+    "healthz_reachable": false,
+    "process_alive_during_verification": false
+  }
+}

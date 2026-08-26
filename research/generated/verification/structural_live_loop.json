@@ -2,10 +2,10 @@
   "schema_version": 1,
   "suite": "structural_live_loop",
   "status": "verified",
-  "timestamp": "2026-08-26T08:31:12.050466",
+  "timestamp": "2026-08-26T09:15:53.120039",
   "python_version": "3.13.14",
-  "tested_commit": "3f95842377199df6b1efbf848efead88f006410b",
-  "tested_tree_digest": "1d524c6f53e8a6e9647f4195f78196b124b37ce2a94652f6783d16f026ca0a94",
+  "tested_commit": "a72dc9a3ba84400e854f10ba6b80687769178641",
+  "tested_tree_digest": "8bb92efec56d47f5aa347a0111e0675e663d266c501e33a9bca9bfa787b1adef",
   "test_command": "python -m pytest tests/test_structural_live_loop.py -q",
   "proofs": {
     "production_adapter_attached": true,
@@ -18,7 +18,6 @@
     "journal_linked_to_proposal": true,
     "runtime_continues_after_mutation": true,
     "undo_restores_topology": true,
-    "journal_reopen_replay_identity": true,
-    "single_listener_verified": true
+    "journal_reopen_replay_identity": true
   }
 }

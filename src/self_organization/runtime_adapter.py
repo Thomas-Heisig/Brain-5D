@@ -75,32 +75,40 @@ class ErrorBuffer:
     """Thread-safe bounded buffer for RuntimeErrorEvents.
 
     The buffer holds the most recent N events and exposes them for
-    dashboard/API visibility.
+    dashboard/API visibility. All public methods are protected by
+    ``threading.RLock`` for genuine thread safety.
     """
 
     def __init__(self, max_size: int = 100) -> None:
+        import threading
+        self._lock = threading.RLock()
         self._max_size = max_size
         self._events: list[RuntimeErrorEvent] = []
 
     def push(self, event: RuntimeErrorEvent) -> None:
-        self._events.append(event)
-        if len(self._events) > self._max_size:
-            self._events.pop(0)
+        with self._lock:
+            self._events.append(event)
+            if len(self._events) > self._max_size:
+                self._events.pop(0)
 
     @property
     def events(self) -> Sequence[RuntimeErrorEvent]:
-        return tuple(self._events)
+        with self._lock:
+            return tuple(self._events)
 
     @property
     def latest(self) -> RuntimeErrorEvent | None:
-        return self._events[-1] if self._events else None
+        with self._lock:
+            return self._events[-1] if self._events else None
 
     @property
     def count(self) -> int:
-        return len(self._events)
+        with self._lock:
+            return len(self._events)
 
     def clear(self) -> None:
-        self._events.clear()
+        with self._lock:
+            self._events.clear()
 
 
 # ============================================================================

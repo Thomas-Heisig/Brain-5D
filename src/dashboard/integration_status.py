@@ -35,7 +35,7 @@ from src.dashboard.verification import (
 # mark the baseline as stale. This is why we digest the tree, not the commit.
 # The canonical list lives in verification.py; this alias is kept for
 # backward compatibility with any code that imported the constant directly.
-_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml"]
+_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"]
 
 # ============================================================================
 # Status constants
@@ -350,14 +350,56 @@ class IntegrationStatusBuilder:
         }
 
     def _check_error_visibility(self) -> dict[str, JSONValue]:
-        """Error visibility is passed once the dashboard surfaces errors
-        through the integration status itself (this endpoint)."""
-        return {
-            "name": "Error Visibility",
-            "status": PASSED,
-            "source": "live_backend",
-            "message": "Integration status endpoint reports component errors",
-        }
+        """Error visibility is passed when the runtime error buffer is
+        accessible and no fatal errors have occurred.
+
+        Probes the OperatorBridge error interface. If the bridge is not
+        configured, error visibility is pending. If errors exist, the
+        status reflects their severity.
+        """
+        bridge = self.bridge
+        if bridge is None:
+            return {
+                "name": "Error Visibility",
+                "status": PENDING,
+                "source": "live_backend",
+                "message": "No bridge — error infrastructure not available",
+            }
+        try:
+            errors = bridge.runtime_errors()
+            error_count = len(errors)
+            fatal_count = sum(1 for e in errors if e.get("fatal", False))
+            if error_count == 0:
+                return {
+                    "name": "Error Visibility",
+                    "status": PASSED,
+                    "source": "live_backend",
+                    "message": "No runtime errors observed",
+                    "error_count": 0,
+                }
+            if fatal_count > 0:
+                return {
+                    "name": "Error Visibility",
+                    "status": FAILED,
+                    "source": "live_backend",
+                    "message": f"{fatal_count} fatal runtime error(s) detected",
+                    "error_count": error_count,
+                    "fatal_count": fatal_count,
+                }
+            return {
+                "name": "Error Visibility",
+                "status": FAILED,
+                "source": "live_backend",
+                "message": f"{error_count} non-fatal runtime error(s) observed",
+                "error_count": error_count,
+            }
+        except Exception as exc:
+            return {
+                "name": "Error Visibility",
+                "status": FAILED,
+                "source": "live_backend",
+                "message": f"Error visibility check failed: {exc}",
+            }
 
     # ------------------------------------------------------------------------
     # Helpers (delegated to verification.py for a single source of truth)

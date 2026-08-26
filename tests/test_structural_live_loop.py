@@ -394,8 +394,8 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     controller.run_ticks(100)
 
     assert len(network.neurons) > 0, "Network has no neurons after mutation + ticks"
-    step_result = network.step()
-    assert step_result is not None, "Network step failed after mutation"
+    # Use RuntimeController — the sole simulation-clock owner
+    controller.run_ticks(1)
 
     # ====================================================================
     # N. Undo restores topology
@@ -482,16 +482,6 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
     )
     live_loop_passed = result.returncode == 0
 
-    # Run the single listener test
-    listener_result = subprocess.run(
-        [sys.executable, "-m", "pytest",
-         "tests/test_single_listener.py",
-         "-q", "--tb=line", "--no-header"],
-        capture_output=True, text=True, timeout=30,
-        cwd=str(repo_root),
-    )
-    single_listener_passed = listener_result.returncode == 0
-
     # Compute tree digest
     from src.dashboard.verification import compute_source_tree_digest, current_git_head
 
@@ -510,7 +500,6 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
         "runtime_continues_after_mutation": live_loop_passed,
         "undo_restores_topology": live_loop_passed,
         "journal_reopen_replay_identity": live_loop_passed,
-        "single_listener_verified": single_listener_passed,
     }
 
     all_passed = all(proofs.values())
@@ -534,5 +523,5 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
 
     assert all_passed, (
         f"Live loop verification failed: "
-        f"live_loop={live_loop_passed}, listener={single_listener_passed}"
+        f"live_loop={live_loop_passed}"
     )

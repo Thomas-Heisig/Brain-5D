@@ -119,7 +119,18 @@ REQUIRED_LIVE_LOOP_PROOFS: frozenset[str] = frozenset({
     "runtime_continues_after_mutation",
     "undo_restores_topology",
     "journal_reopen_replay_identity",
-    "single_listener_verified",
+})
+
+# Required single listener proof set — the artifact must contain exactly
+# these proof IDs, all True.
+REQUIRED_SINGLE_LISTENER_PROOFS: frozenset[str] = frozenset({
+    "port_initially_free_or_explicitly_rejected",
+    "brain5d_process_started",
+    "listener_pid_matches_process_pid",
+    "exactly_one_listener_socket",
+    "no_other_listener_pid",
+    "healthz_reachable",
+    "process_alive_during_verification",
 })
 
 
@@ -462,8 +473,8 @@ class GateStatusBuilder:
             label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by Brain-5D PID",
             status=G_PASSED if listener_verified else G_PENDING,
             maturity=VERIFIED if listener_verified else IMPLEMENTED,
-            source="tests/test_single_listener.py" if listener_verified else "project_state",
-            message="Verified by listener test" if listener_verified else "Pending single-listener verification",
+            source="research/generated/verification/single_listener.json" if listener_verified else "project_state",
+            message="Verified by single listener artifact" if listener_verified else "Pending single-listener verification",
         ))
 
         # --- Structural composition: evidence-based from E2E artifact ---
@@ -1058,23 +1069,59 @@ class GateStatusBuilder:
         production RuntimeAdapter path."""
         return self._live_loop_verified()
 
-    def _single_listener_proof_verified(self) -> bool:
-        """Return True if the single-listener test has actual evidence
-        of passing.
+    def _read_single_listener_artifact(self) -> dict[str, Any] | None:
+        """Read the single listener verification artifact.
 
-        Checks for a live loop verification artifact that includes the
-        single-listener proof. File existence alone is not sufficient.
+        Reads from ``research/generated/verification/single_listener.json``.
+        Returns ``None`` if the artifact is missing or unparseable.
         """
-        # Check the live loop artifact for listener proof
-        artifact = self._read_live_loop_artifact()
-        if artifact is not None and artifact.get("status") == "verified":
-            proofs = artifact.get("proofs", {})
-            if isinstance(proofs, dict) and proofs.get("single_listener_verified", False):
-                return True
-        # Fallback: check if the test file exists (IMPLEMENTED, not VERIFIED)
-        # But this never returns True for Gate status — it only reaches
-        # IMPLEMENTED maturity, not VERIFIED.
-        return False
+        artifact_path = (
+            self.repo_root / "research" / "generated" / "verification"
+            / "single_listener.json"
+        )
+        if not artifact_path.exists():
+            return None
+        try:
+            return json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _single_listener_verified(self) -> bool:
+        """Return True if the single listener artifact shows all proofs passed
+        AND the artifact's tree digest matches the current source tree.
+
+        Fail-closed validation identical to live loop and structural E2E.
+        """
+        artifact = self._read_single_listener_artifact()
+        if artifact is None:
+            return False
+        if artifact.get("status") != "verified":
+            return False
+        if artifact.get("schema_version") is None:
+            return False
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
+            return False
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        if frozenset(proofs.keys()) != REQUIRED_SINGLE_LISTENER_PROOFS:
+            return False
+        if not all(proofs[name] is True for name in REQUIRED_SINGLE_LISTENER_PROOFS):
+            return False
+        artifact_digest = artifact.get("tested_tree_digest")
+        if not artifact_digest:
+            return False
+        from src.dashboard.verification import compute_source_tree_digest
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return False
+        if artifact_digest != current_digest:
+            return False
+        return True
+
+    def _single_listener_proof_verified(self) -> bool:
+        """Return True if the single-listener verification artifact proves
+        actual test passing. File existence alone is not sufficient."""
+        return self._single_listener_verified()
 
     def _experiment_executed(self, experiment_id: str) -> bool:
         """Return True if an experiment manifest shows it was *completed*.

@@ -4,9 +4,29 @@ This module runs the simulation and optionally starts the dashboard in the
 main thread (to handle signals). The simulation runs in a daemon thread
 so that the dashboard can control it via the OperatorBridge.
 
+CLI semantics:
+
+1. Dashboard mode (default):
+
+   python -m src.main --config configs/poc_config.yaml
+
+   -> starts RuntimeController in IDLE
+   -> does NOT automatically advance ticks
+   -> operator controls runtime through dashboard/API
+
+2. Headless mode:
+
+   python -m src.main --config configs/poc_structural_live.yaml --no-dashboard --ticks 500
+
+   -> runs exactly N ticks through RuntimeController.run_ticks(N)
+
+3. --ticks in dashboard mode only overrides the config value;
+   the controller still starts IDLE.
+
 Usage:
     python -m src.main --config configs/poc_config.yaml
     python -m src.main --config configs/poc_config.yaml --no-dashboard
+    python -m src.main --config configs/poc_config.yaml --no-dashboard --ticks 500
     python -m src.main --config configs/poc_config.yaml --observe --benchmark
 """
 
@@ -219,7 +239,10 @@ def main() -> int:
     parser.add_argument("--no-dashboard", action="store_true")
     parser.add_argument("--no-learning", action="store_true")
     parser.add_argument("--no-homeostasis", action="store_true")
-    parser.add_argument("--ticks", type=int, default=None)
+    parser.add_argument("--dashboard-port", type=int, default=8765,
+        help="Dashboard HTTP server port (default: 8765)")
+    parser.add_argument("--ticks", type=int, default=None,
+        help="Override config ticks. In dashboard mode (default) this only updates config;\n                         the controller starts IDLE and must be advanced via API.\n                         Use --no-dashboard for automatic execution.")
     args = parser.parse_args()
 
     # Load configuration

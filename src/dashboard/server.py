@@ -323,6 +323,25 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Runtime Errors (dedicated endpoint, Phase 5)
+            # ----------------------------------------------------------------
+
+            if path == "/api/errors":
+                bridge = server.structural_bridge
+                if bridge is None:
+                    self._send_json({"count": 0, "events": []})
+                    return
+                limit = self._query_int(query, "limit", default=100, maximum=1000)
+                errors = bridge.runtime_errors()
+                if limit > 0 and limit < len(errors):
+                    errors = errors[-limit:]
+                self._send_json({
+                    "count": len(errors),
+                    "events": cast(list[JSONValue], errors),
+                })
+                return
+
+            # ----------------------------------------------------------------
             # Health
             # ----------------------------------------------------------------
 

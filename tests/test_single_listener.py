@@ -53,29 +53,16 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
     return listeners
 
 
-def _cleanup_stale_listeners(port: int) -> None:
-    """Kill any existing processes listening on the given port."""
-    listeners = _get_listener_pids(port)
-    for pid in listeners:
-        try:
-            subprocess.run(
-                ["taskkill", "/F", "/PID", str(pid)],
-                capture_output=True, timeout=5,
-            )
-        except Exception:
-            pass
-
-
 def test_exactly_one_listener_owns_port_8765() -> None:
     """Launch Brain-5D and verify exactly one TCP listener on port 8765.
 
     A single PID can open multiple sockets — this test proves that
     only one DashboardServer binds 127.0.0.1:8765.
-    """
-    # ---- Phase 1: Clean up stale listeners on port 8765 -------------------
-    _cleanup_stale_listeners(8765)
 
-    # Verify port is now free
+    If port 8765 is already occupied, the test FAILS clearly with PID
+    information. The test must NOT kill unrelated processes.
+    """
+    # ---- Phase 1: Detect whether port 8765 is already occupied ------------
     pre_existing = _get_listener_pids(8765)
     if pre_existing:
         pids_str = ", ".join(
@@ -83,7 +70,8 @@ def test_exactly_one_listener_owns_port_8765() -> None:
             for pid, count in ((p, len(s)) for p, s in pre_existing.items())
         )
         raise AssertionError(
-            f"Port 8765 is still occupied after cleanup: {pids_str}. "
+            f"Port 8765 is already occupied: {pids_str}. "
+            f"The test must not kill unrelated processes. "
             f"Please stop the existing process and retry."
         )
 
@@ -180,3 +168,73 @@ def test_exactly_one_listener_owns_port_8765() -> None:
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.wait(timeout=3)
+
+
+# =========================================================================
+# Verification artifact writer for single listener
+# =========================================================================
+
+
+def test_write_single_listener_verification_artifact() -> None:
+    """Write a machine-readable single listener verification artifact.
+
+    The artifact is written to
+    ``research/generated/verification/single_listener.json``
+    (persistent, not gitignored) so GateStatusBuilder can verify the
+    single listener ownership proof independently from the structural
+    live loop.
+
+    Proof IDs match REQUIRED_SINGLE_LISTENER_PROOFS in gate_status.py.
+    """
+    import json
+    import platform
+    import sys
+    from datetime import datetime
+
+    repo_root = Path(__file__).resolve().parents[1]
+
+    # Run the single listener test via pytest subprocess
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest",
+         "tests/test_single_listener.py::test_exactly_one_listener_owns_port_8765",
+         "-q", "--tb=line", "--no-header"],
+        capture_output=True, text=True, timeout=30,
+        cwd=str(repo_root),
+    )
+    listener_passed = result.returncode == 0
+
+    from src.dashboard.verification import compute_source_tree_digest, current_git_head
+
+    tree_digest = compute_source_tree_digest(repo_root)
+    commit = current_git_head(repo_root)
+
+    proofs = {
+        "port_initially_free_or_explicitly_rejected": listener_passed,
+        "brain5d_process_started": listener_passed,
+        "listener_pid_matches_process_pid": listener_passed,
+        "exactly_one_listener_socket": listener_passed,
+        "no_other_listener_pid": listener_passed,
+        "healthz_reachable": listener_passed,
+        "process_alive_during_verification": listener_passed,
+    }
+
+    all_passed = all(proofs.values())
+
+    artifact = {
+        "schema_version": 1,
+        "suite": "single_listener",
+        "status": "verified" if all_passed else "failed",
+        "timestamp": datetime.now().isoformat(),
+        "python_version": platform.python_version(),
+        "tested_commit": commit,
+        "tested_tree_digest": tree_digest,
+        "test_command": "python -m pytest tests/test_single_listener.py -q",
+        "proofs": proofs,
+    }
+
+    verification_dir = repo_root / "research" / "generated" / "verification"
+    verification_dir.mkdir(parents=True, exist_ok=True)
+    artifact_path = verification_dir / "single_listener.json"
+    artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+
+    assert all_passed, f"Single listener verification failed: listener={listener_passed}"
