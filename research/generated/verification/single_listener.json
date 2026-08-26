@@ -2,10 +2,10 @@
   "schema_version": 1,
   "suite": "single_listener",
   "status": "failed",
-  "timestamp": "2026-08-26T09:22:21.121395",
+  "timestamp": "2026-08-26T09:47:32.618904",
   "python_version": "3.13.14",
-  "tested_commit": "a72dc9a3ba84400e854f10ba6b80687769178641",
-  "tested_tree_digest": "67bbe4cd8b8cbd356f5dcfc3032caac5f1674a947b7a7ce4bd0988beebebfcb4",
+  "tested_commit": "c4036a2788fe5286850264b8953b2ed6ee3aa3d7",
+  "tested_tree_digest": "744a68f0b46041ba20844ea9f0729bbd25a320e4d833d5c320c1f874b950a6c6",
   "test_command": "python -m pytest tests/test_single_listener.py -q",
   "proofs": {
     "port_initially_free_or_explicitly_rejected": false,
