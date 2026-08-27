@@ -17,6 +17,7 @@ Key design decisions:
 from __future__ import annotations
 
 import math
+import threading
 import time
 from collections import deque
 from collections.abc import Mapping, Sequence
@@ -228,18 +229,26 @@ class TelemetryFrameStore:
 
     def __init__(
         self,
-        capture_interval_ticks: int = 50,
+        capture_interval_ticks: int = 5,
         activity_window_ticks: int = 20,
     ) -> None:
         if capture_interval_ticks <= 0:
             raise ValueError(f"capture_interval_ticks must be > 0, got {capture_interval_ticks}")
+        if capture_interval_ticks > activity_window_ticks:
+            raise ValueError(
+                f"capture_interval_ticks ({capture_interval_ticks}) must be <= "
+                f"activity_window_ticks ({activity_window_ticks}) — "
+                "otherwise spikes can expire before being captured in a frame"
+            )
         self.capture_interval_ticks = capture_interval_ticks
         self.activity_window_ticks = activity_window_ticks
+        self._lock = threading.RLock()
         self._frame: TelemetryFrame | None = None
         self._accumulator = ActivityWindowAccumulator(window_ticks=activity_window_ticks)
         self._ticks_observed: int = 0
         self._frames_captured: int = 0
         self._last_capture_duration_ms: float = 0.0
+        self._last_observed_tick: int = 0
 
     # ------------------------------------------------------------------
     # Properties
@@ -248,13 +257,30 @@ class TelemetryFrameStore:
     @property
     def latest_frame(self) -> TelemetryFrame | None:
         """Return the most recently captured frame, or None if not yet primed."""
-        return self._frame
+        with self._lock:
+            return self._frame
 
     @property
     def stats(self) -> dict[str, object]:
         """Telemetry statistics for the performance contract."""
+        with self._lock:
+            return self._stats_locked()
+
+    def _stats_locked(self) -> dict[str, object]:
+        """Compute stats dict (caller must hold _lock)."""
+        frame_tick = self._frame.tick if self._frame else None
+        frame_age = (self._last_observed_tick - frame_tick) if (frame_tick is not None and self._last_observed_tick > 0) else 0
+        if frame_tick is None:
+            status = "unavailable"
+        elif frame_age <= 2 * self.capture_interval_ticks:
+            status = "live"
+        else:
+            status = "stale"
         return {
-            "latest_frame_tick": self._frame.tick if self._frame else None,
+            "latest_frame_tick": frame_tick,
+            "last_observed_tick": self._last_observed_tick,
+            "frame_age_ticks": frame_age,
+            "status": status,
             "capture_interval_ticks": self.capture_interval_ticks,
             "activity_window_ticks": self.activity_window_ticks,
             "frames_captured": self._frames_captured,
@@ -271,8 +297,9 @@ class TelemetryFrameStore:
 
         Ensures /api/live/projection can respond before any tick executes.
         """
-        self._frame = capture_frame(network, activity_accumulator=self._accumulator)
-        self._frames_captured = 1
+        with self._lock:
+            self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+            self._frames_captured = 1
 
     # ------------------------------------------------------------------
     # Post-tick hook
@@ -292,19 +319,20 @@ class TelemetryFrameStore:
             network: The live network.
             result: The StepResult from the completed tick.
         """
-        self._ticks_observed += 1
-
-        # Lightweight per-tick: update rolling activity
         tick = network.current_tick
         spike_ids = getattr(result, 'spike_ids', ())
-        self._accumulator.record_tick(tick, spike_ids)
 
-        # Full frame capture only at cadence
-        if self._ticks_observed % self.capture_interval_ticks == 0:
-            start = time.perf_counter()
-            self._frame = capture_frame(network, activity_accumulator=self._accumulator)
-            self._last_capture_duration_ms = (time.perf_counter() - start) * 1000.0
-            self._frames_captured += 1
+        with self._lock:
+            self._ticks_observed += 1
+            self._last_observed_tick = tick
+            self._accumulator.record_tick(tick, spike_ids)
+
+            # Full frame capture only at cadence
+            if self._ticks_observed % self.capture_interval_ticks == 0:
+                start = time.perf_counter()
+                self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+                self._last_capture_duration_ms = (time.perf_counter() - start) * 1000.0
+                self._frames_captured += 1
 
 
 # ============================================================================

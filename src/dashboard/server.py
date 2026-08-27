@@ -334,7 +334,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/errors":
                 bridge = server.structural_bridge
                 if bridge is None:
-                    self._send_json({"count": 0, "events": []})
+                    self._send_json({"available": False, "count": None, "events": []})
                     return
                 limit = self._query_int(query, "limit", default=100, maximum=1000)
                 errors = bridge.runtime_errors()

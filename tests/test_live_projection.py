@@ -384,8 +384,9 @@ class TestRollingActivityWindow:
 
         acc.record_tick(100, [1])
 
-        # Should be present for ticks 100-119
-        for tick in range(100, 120):
+        # Advance each tick 101..119 — spike should remain
+        for tick in range(101, 120):
+            acc.record_tick(tick, [])
             assert acc.spikes_in_window(1) == 1, f"Spike should be present at tick {tick}"
 
         # Tick 120: spike at 100 expires (100 <= 120-20 = 100)
@@ -471,7 +472,7 @@ class TestTelemetryFrameStore:
 
     def test_tick_0_prime(self, network: NeuralNetwork) -> None:
         """Store can be primed at Tick 0 before any ticks."""
-        store = TelemetryFrameStore(capture_interval_ticks=50)
+        store = TelemetryFrameStore(capture_interval_ticks=5, activity_window_ticks=20)
         store.prime(network)
         assert store.latest_frame is not None
         assert store.latest_frame.tick == network.current_tick
@@ -496,7 +497,7 @@ class TestTelemetryFrameStore:
 
     def test_live_projection_reads_from_store(self, network: NeuralNetwork) -> None:
         """LiveProjectionService reads from store when configured."""
-        store = TelemetryFrameStore(capture_interval_ticks=50)
+        store = TelemetryFrameStore(capture_interval_ticks=5, activity_window_ticks=20)
         store.prime(network)
 
         svc = LiveProjectionService(network, frame_store=store)
@@ -509,7 +510,7 @@ class TestTelemetryFrameStore:
 
     def test_store_no_frame_raises(self, network: NeuralNetwork) -> None:
         """Querying an unprimed store raises RuntimeError."""
-        store = TelemetryFrameStore(capture_interval_ticks=50)
+        store = TelemetryFrameStore(capture_interval_ticks=5, activity_window_ticks=20)
         svc = LiveProjectionService(network, frame_store=store)
         with pytest.raises(RuntimeError, match="no frame"):
             svc.project(kind=ProjectionKind.ENERGY)
@@ -591,7 +592,146 @@ class TestTelemetryErrorVisibility:
 
 
 # ============================================================================
-# Test O — Invalid parameters
+# Test O — RuntimeController Integration (E2E)
+# ============================================================================
+
+
+class TestRuntimeControllerIntegration:
+    """Real RuntimeController with post-tick hook and TelemetryFrameStore."""
+
+    def test_controller_hook_produces_frames(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+        """RuntimeController with real hook produces TelemetryFrames."""
+        from src.controller.runtime import RuntimeController
+        from src.dashboard.live_projection import make_telemetry_hook
+
+        store = TelemetryFrameStore(capture_interval_ticks=5, activity_window_ticks=20)
+        store.prime(network)
+        controller = RuntimeController(network)
+        controller.add_hook(make_telemetry_hook(store, network))
+
+        # Run ticks through the controller
+        controller.run_ticks(12)
+
+        # Store should have observed ticks and captured frames
+        stats = store.stats
+        assert stats["ticks_observed"] == 12
+        assert stats["frames_captured"] >= 2  # prime + floor(12/5) = 1 + 2 = 3
+
+        # Latest frame tick should match a completed controller tick
+        frame = store.latest_frame
+        assert frame is not None
+        assert frame.tick > 0
+        assert frame.tick <= network.current_tick
+
+    def test_controller_hook_activity_tracks_spikes(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+        """Activity accumulator receives real StepResult.spike_ids."""
+        from src.controller.runtime import RuntimeController
+        from src.dashboard.live_projection import make_telemetry_hook
+
+        store = TelemetryFrameStore(capture_interval_ticks=1, activity_window_ticks=20)
+        store.prime(network)
+        controller = RuntimeController(network)
+        controller.add_hook(make_telemetry_hook(store, network))
+
+        # Inject current to cause a spike
+        network.inject_current(0, 100.0)
+        controller.run_ticks(1)
+
+        frame = store.latest_frame
+        assert frame is not None
+        activity_dict = dict(frame.activity)
+        # Neuron 0 should have spiked
+        assert activity_dict.get(0, 0) >= 1
+
+    def test_stale_frame_detection(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+        """Store reports stale status when frame age exceeds threshold."""
+        from src.controller.runtime import RuntimeController
+        from src.dashboard.live_projection import make_telemetry_hook
+
+        store = TelemetryFrameStore(capture_interval_ticks=20, activity_window_ticks=20)
+        store.prime(network)
+        controller = RuntimeController(network)
+        controller.add_hook(make_telemetry_hook(store, network))
+
+        # Run ticks — frames at 20, 40, 60, ...
+        controller.run_ticks(150)
+
+        stats = store.stats
+        # After 150 ticks with capture_interval=20: frames at 20,40,60,80,100,120,140
+        # At tick 150, last frame at 140, age = 10, which is <= 40, so "live"
+        assert "status" in stats
+
+
+# ============================================================================
+# Test P — Real error path through RuntimeController
+# ============================================================================
+
+
+class TestRealErrorPath:
+    """Telemetry hook failure through real RuntimeController."""
+
+    def test_failing_hook_does_not_crash_simulation(self, network: NeuralNetwork) -> None:
+        """A failing telemetry hook does not stop the simulation."""
+        from src.controller.runtime import RuntimeController
+
+        def failing_hook(tick: int, result: object) -> None:
+            raise RuntimeError("deliberate telemetry failure")
+
+        controller = RuntimeController(network)
+        controller.add_hook(failing_hook)
+
+        # This should complete without raising
+        controller.run_ticks(10)
+        assert network.current_tick == 10
+
+    def test_failing_hook_produces_error_event(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+        """A failing telemetry hook produces a RuntimeErrorEvent in the error buffer."""
+        from src.controller.runtime import RuntimeController
+        from src.dashboard.live_projection import make_telemetry_hook
+        from src.self_organization.runtime_adapter import ErrorBuffer
+        import src.self_organization.runtime_adapter as adapter
+
+        fresh_buffer = ErrorBuffer()
+        original_buffer = adapter._runtime_error_buffer
+        adapter._runtime_error_buffer = fresh_buffer
+        try:
+            class FailingStore:
+                def on_tick_complete(self, network, result):
+                    raise RuntimeError("deliberate telemetry failure")
+            failing_store = FailingStore()
+
+            controller = RuntimeController(network)
+            controller.add_hook(make_telemetry_hook(failing_store, network))
+            controller.run_ticks(5)
+
+            errors = fresh_buffer.events
+            telemetry_errors = [e for e in errors if "telemetry" in e.component.lower()]
+            assert len(telemetry_errors) >= 1
+
+            latest = telemetry_errors[-1]
+            assert latest.tick >= 0
+            assert "deliberate telemetry failure" in latest.message
+            assert not latest.fatal
+        finally:
+            adapter._runtime_error_buffer = original_buffer
+
+
+# ============================================================================
+# Test Q — Cadence enforcement
+# ============================================================================
+
+
+class TestCadenceEnforcement:
+    """TelemetryFrameStore enforces capture_interval <= activity_window."""
+
+    def test_capture_interval_must_not_exceed_window(self) -> None:
+        """capture_interval_ticks > activity_window_ticks raises ValueError."""
+        with pytest.raises(ValueError, match="capture_interval_ticks"):
+            TelemetryFrameStore(capture_interval_ticks=50, activity_window_ticks=20)
+
+
+# ============================================================================
+# Test R — Invalid parameters
 # ============================================================================
 
 

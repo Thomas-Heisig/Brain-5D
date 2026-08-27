@@ -832,10 +832,16 @@ def main() -> int:
     if not args.no_dashboard and _dashboard_available and controller is not None:
         try:
             # Create TelemetryFrameStore for atomic live visualization
+            # Read telemetry config from config_dict, fall back to defaults
+            _live_telemetry_cfg = config_dict.get("dashboard", {}).get("live_telemetry", {})
+            if not isinstance(_live_telemetry_cfg, dict):
+                _live_telemetry_cfg = {}
+            _lt_capture = int(_live_telemetry_cfg.get("capture_interval_ticks", 5))
+            _lt_window = int(_live_telemetry_cfg.get("activity_window_ticks", 20))
             from src.dashboard.live_projection import TelemetryFrameStore, make_telemetry_hook
             _telemetry_store = TelemetryFrameStore(
-                capture_interval_ticks=50,
-                activity_window_ticks=20,
+                capture_interval_ticks=_lt_capture,
+                activity_window_ticks=_lt_window,
             )
             # Prime Tick-0 frame so dashboard can respond immediately
             _telemetry_store.prime(controller.network)
