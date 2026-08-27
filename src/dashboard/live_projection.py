@@ -270,9 +270,9 @@ class TelemetryFrameStore:
 
     @property
     def stats(self) -> dict[str, object]:
-        """Telemetry statistics for the performance contract."""
+        """Telemetry statistics (uses internal last_observed_tick as fallback)."""
         with self._lock:
-            return self._stats_locked()
+            return self._stats_locked(self._last_observed_tick)
 
     def stats_at(self, runtime_tick: int) -> dict[str, object]:
         """Telemetry statistics relative to an authoritative runtime tick.
@@ -288,12 +288,6 @@ class TelemetryFrameStore:
         """
         with self._lock:
             return self._stats_locked(runtime_tick)
-
-    @property
-    def stats(self) -> dict[str, object]:
-        """Telemetry statistics (uses internal last_observed_tick as fallback)."""
-        with self._lock:
-            return self._stats_locked(self._last_observed_tick)
 
     def _stats_locked(self, runtime_tick: int) -> dict[str, object]:
         """Compute stats dict (caller must hold _lock).
@@ -523,7 +517,7 @@ class LiveProjectionService:
         frame_store: TelemetryFrameStore | None = None,
     ) -> None:
         self.network = network
-        self._frame_store = frame_store
+        self.frame_store = frame_store
         self._current_window_ticks: int = 20
 
     # ========================================================================
@@ -616,7 +610,7 @@ class LiveProjectionService:
         _window_ticks = frame.activity_window_ticks
         _dt_ms = frame.dt_ms
         window_ms = _window_ticks * _dt_ms
-        metric_info = {
+        metric_info: dict[str, object] = {
             "name": kind,
             "window_ticks": _window_ticks,
             "window_ms": window_ms,
@@ -627,8 +621,8 @@ class LiveProjectionService:
 
         # Telemetry stats — use network.current_tick for authoritative staleness
         telemetry_stats: dict[str, object] = {}
-        if self._frame_store is not None:
-            telemetry_stats = dict(self._frame_store.stats_at(self.network.current_tick))
+        if self.frame_store is not None:
+            telemetry_stats = dict(self.frame_store.stats_at(self.network.current_tick))
 
         return LiveProjection(
             source="live_runtime",
@@ -728,8 +722,8 @@ class LiveProjectionService:
         Falls back to direct capture ONLY for isolated unit tests
         (no store configured).
         """
-        if self._frame_store is not None:
-            frame = self._frame_store.latest_frame
+        if self.frame_store is not None:
+            frame = self.frame_store.latest_frame
             if frame is not None:
                 return frame
             raise RuntimeError(

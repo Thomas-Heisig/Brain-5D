@@ -667,7 +667,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         bridge = server.structural_bridge
         # The bridge may carry a config_dict attribute (set by main.py);
         # if absent, the builder uses an empty dict (all subsystems unknown).
-        config_dict = getattr(bridge, "config_dict", None) or {}
+        config_dict: dict[str, object] = cast("dict[str, object]", getattr(bridge, "config_dict", None) or {})
         builder = GateStatusBuilder(
             bridge=bridge,
             research_source=server.research_source,
@@ -860,7 +860,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         # Check if telemetry is available
-        if bridge.live_projection._frame_store is None:
+        if bridge.live_projection.frame_store is None:
             self._send_json(
                 {"error": "Live telemetry is not enabled (no TelemetryFrameStore configured)."},
                 HTTPStatus.SERVICE_UNAVAILABLE,
