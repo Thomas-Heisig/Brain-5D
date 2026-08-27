@@ -18,7 +18,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import Protocol, cast
 
 from src.core.spatial_index import unpack_coords
 from src.dashboard.models import JSONValue
@@ -36,14 +36,14 @@ class NeuronAccess(Protocol):
     def spike_counter(self) -> int: ...
     @property
     def last_spike_tick(self) -> int: ...
-    @property
-    def spike_history(self) -> tuple[int, ...]: ...
 
 
 class SynapseAccess(Protocol):
     """Minimal synapse interface required for live projection."""
     @property
     def weight(self) -> float: ...
+    @property
+    def target_id(self) -> int: ...
 
 
 class NetworkAccess(Protocol):
@@ -71,17 +71,30 @@ class TelemetryFrame:
     so the dashboard never sees a partially-updated network.
     """
     tick: int
-    neurons: tuple[tuple[int, float, float, float, int, int, tuple[int, ...]], ...]
+    neurons: tuple[tuple[int, float, float, float, int, int, int], ...]
     synapses: tuple[tuple[int, int, float], ...]
     dimensions: tuple[int, int, int, int, int]
 
 
-def capture_frame(network: NetworkAccess) -> TelemetryFrame:
-    """Atomically capture a telemetry frame from the live network."""
+def capture_frame(network: NetworkAccess, prev_spike_counters: dict[int, int] | None = None) -> TelemetryFrame:
+    """Capture a telemetry frame from the live network.
+
+    Args:
+        network: The live network to capture from.
+        prev_spike_counters: Previous spike_counter values per neuron ID.
+            When provided, the frame includes spike_delta (spikes since
+            last frame) instead of total spike_counter.
+
+    Returns:
+        A TelemetryFrame with neuron data.
+    """
     tick = network.current_tick
     neurons = tuple(
-        (nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick,
-         n.spike_history if hasattr(n, 'spike_history') else ())
+        (
+            nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick,
+            n.spike_counter - prev_spike_counters.get(nid, 0)
+            if prev_spike_counters is not None else 0,
+        )
         for nid, n in sorted(network.neurons.items())
     )
     syns = tuple(
@@ -93,6 +106,49 @@ def capture_frame(network: NetworkAccess) -> TelemetryFrame:
         tick=tick, neurons=neurons, synapses=syns,
         dimensions=network.dimensions,
     )
+
+
+# ============================================================================
+# Telemetry Frame Store — post-tick hook for atomic frame capture
+# ============================================================================
+
+
+class TelemetryFrameStore:
+    """Holds the latest TelemetryFrame, updated atomically after each tick.
+
+    Designed to be called from a RuntimeController post-tick hook.
+    The store tracks spike_counter deltas so the activity projection
+    can compute firing rates from spikes-per-window without requiring
+    per-neuron spike history in the core Neuron.
+
+    Usage in main.py::
+
+        store = TelemetryFrameStore()
+        controller.add_hook(lambda tick, result: store.on_tick_complete(network))
+    """
+
+    def __init__(self) -> None:
+        self._frame: TelemetryFrame | None = None
+        self._prev_spike_counters: dict[int, int] = {}
+
+    @property
+    def latest_frame(self) -> TelemetryFrame | None:
+        """Return the most recently captured frame, or None."""
+        return self._frame
+
+    def on_tick_complete(self, network: NetworkAccess) -> None:
+        """Called after each network tick to atomically capture a frame.
+
+        This runs in the controller's simulation thread, immediately after
+        ``network.step()`` completes. The frame captures state from a
+        single, just-completed tick.
+        """
+        self._frame = capture_frame(network, self._prev_spike_counters)
+        # Update previous counters for next delta computation
+        self._prev_spike_counters = {
+            nid: n.spike_counter
+            for nid, n in network.neurons.items()
+        }
 
 
 # ============================================================================
@@ -151,24 +207,24 @@ class LiveProjection:
     tick: int = 0
     kind: str = ""
     dimensions: tuple[int, int, int, int, int] = (0, 0, 0, 0, 0)
-    projection: dict[str, object] = field(default_factory=dict)
-    range: dict[str, float] = field(default_factory=dict)
+    projection: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
+    range: dict[str, float] = field(default_factory=dict)  # type: ignore[type-arg]
     sample_count: int = 0
-    values: list[list[float | None]] = field(default_factory=list)
-    mask: list[list[bool]] = field(default_factory=list)
+    values: list[list[float | None]] = field(default_factory=list)  # type: ignore[type-arg]
+    mask: list[list[bool]] = field(default_factory=list)  # type: ignore[type-arg]
 
     def to_json(self) -> dict[str, JSONValue]:
-        return {
+        return cast("dict[str, JSONValue]", {
             "source": self.source,
             "tick": self.tick,
             "kind": self.kind,
             "dimensions": list(self.dimensions),
-            "projection": {k: v for k, v in self.projection.items()},
-            "range": {k: v for k, v in self.range.items()},
+            "projection": dict(self.projection),
+            "range": dict(self.range),
             "sample_count": self.sample_count,
             "values": [list(row) for row in self.values],
             "mask": [list(row) for row in self.mask],
-        }
+        })
 
 
 # ============================================================================
@@ -183,9 +239,11 @@ class LiveProjectionService:
     Never reads from .b5d snapshots.
     """
 
-    def __init__(self, network: NetworkAccess, activity_window_ticks: int = 20) -> None:
+    def __init__(self, network: NetworkAccess, activity_window_ticks: int = 20,
+                 frame_store: TelemetryFrameStore | None = None) -> None:
         self.network = network
         self.activity_window_ticks = activity_window_ticks
+        self._frame_store = frame_store
 
     # ========================================================================
     # Public API
@@ -214,8 +272,8 @@ class LiveProjectionService:
 
         bins = max(5, min(200, bins))
 
-        # Atomically capture a telemetry frame
-        frame = capture_frame(self.network)
+        # Read the latest telemetry frame (from store or direct capture)
+        frame = self._get_frame()
         dims = frame.dimensions
         dim_size_x = dims[dim_x]
         dim_size_y = dims[dim_y]
@@ -226,16 +284,14 @@ class LiveProjectionService:
         counts: list[list[int]] = [[0] * bins for _ in range(bins)]
 
         sample_count = 0
-        global_min = float("inf")
-        global_max = float("-inf")
 
         if kind == ProjectionKind.WEIGHT:
-            sample_count, global_min, global_max = self._project_weights(
+            sample_count, _, _ = self._project_weights(
                 frame, dim_x, dim_y, dim_size_x, dim_size_y,
                 bins, aggregation, sums, max_vals, counts,
             )
         else:
-            sample_count, global_min, global_max = self._project_neurons(
+            sample_count, _, _ = self._project_neurons(
                 frame, kind, dim_x, dim_y, dim_size_x, dim_size_y,
                 bins, aggregation, sums, max_vals, counts,
             )
@@ -322,7 +378,7 @@ class LiveProjectionService:
         global_min = float("inf")
         global_max = float("-inf")
 
-        for nid, v, energy, u, spike_counter, last_spike_tick, spike_history in frame.neurons:
+        for nid, v, energy, u, spike_counter, last_spike_tick, spike_delta in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]
@@ -330,7 +386,8 @@ class LiveProjectionService:
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, spike_history)
+            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, spike_delta)
+            _ = u  # keep linter happy; u is available for future use
             if math.isnan(value) or math.isinf(value):
                 continue
 
@@ -359,12 +416,24 @@ class LiveProjectionService:
 
         return sample_count, global_min, global_max
 
+    def _get_frame(self) -> TelemetryFrame:
+        """Get the current telemetry frame.
+
+        Reads from the TelemetryFrameStore if available, otherwise
+        falls back to direct capture.
+        """
+        if self._frame_store is not None:
+            frame = self._frame_store.latest_frame
+            if frame is not None:
+                return frame
+        return capture_frame(self.network)
+
     def _neuron_value(
         self, kind: str,
         v: float, energy: float,
         spike_counter: int, last_spike_tick: int,
         current_tick: int,
-        spike_history: tuple[int, ...] = (),
+        spike_delta: int = 0,
     ) -> float:
         """Extract the raw value from neuron fields for the given kind."""
         if kind == ProjectionKind.ENERGY:
@@ -374,37 +443,20 @@ class LiveProjectionService:
         if kind == ProjectionKind.SPIKE:
             return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            return self._firing_rate(spike_counter, last_spike_tick, current_tick, spike_history)
+            return self._firing_rate(spike_delta, current_tick)
         return 0.0
 
-    def _firing_rate(
-        self, spike_counter: int, last_spike_tick: int, current_tick: int,
-        spike_history: tuple[int, ...] = (),
-    ) -> float:
-        """Compute firing rate over the activity window.
+    def _firing_rate(self, spike_delta: int, current_tick: int) -> float:
+        """Compute firing rate in spikes/tick over the activity window.
 
-        Uses the per-neuron spike_history ring buffer (tick of each recent
-        spike) to count exactly how many spikes occurred in the window.
-        This distinguishes 1-spike neurons from 50-spike neurons correctly.
-
-        Falls back to a binary estimate when spike_history is unavailable
-        (legacy networks without the ring buffer).
+        Uses spike_delta (spikes since last frame capture) divided by
+        the activity window. This is a rate in spikes/tick.
+        For dt=1ms: 1 spike/tick = 1000 Hz.
         """
         window = self.activity_window_ticks
-
-        if spike_history:
-            # Count spikes within the window
-            cutoff = current_tick - window
-            count = sum(1 for t in spike_history if t >= cutoff)
-            return count / window
-
-        # Fallback: binary activity estimate
-        age = max(0, current_tick - last_spike_tick)
-        if age > window:
+        if spike_delta == 0:
             return 0.0
-        if spike_counter == 0:
-            return 0.0
-        return 1.0 / window
+        return spike_delta / window
 
     # ========================================================================
     # Internal: weight projection
@@ -429,11 +481,11 @@ class LiveProjectionService:
         # Build per-neuron outgoing weight aggregates from frame
         neuron_weight_sum: dict[int, float] = {}
         neuron_weight_count: dict[int, int] = {}
-        for src_id, tgt_id, weight in frame.synapses:
+        for src_id, _tgt_id, weight in frame.synapses:
             neuron_weight_sum[src_id] = neuron_weight_sum.get(src_id, 0.0) + weight
             neuron_weight_count[src_id] = neuron_weight_count.get(src_id, 0) + 1
 
-        for nid, v, energy, u, spike_counter, last_spike_tick, spike_history in frame.neurons:
+        for nid, _v, _energy, _u, _spike_counter, _last_spike_tick, _spike_delta in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]

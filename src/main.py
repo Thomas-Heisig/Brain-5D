@@ -831,11 +831,20 @@ def main() -> int:
     # ================================================================
     if not args.no_dashboard and _dashboard_available and controller is not None:
         try:
+            # Create TelemetryFrameStore for atomic live visualization
+            from src.dashboard.live_projection import TelemetryFrameStore
+            _telemetry_store = TelemetryFrameStore()
+            # Register post-tick hook so the store captures a frame after each tick
+            controller.add_hook(
+                lambda tick, result: _telemetry_store.on_tick_complete(controller.network)
+            )
+
             _OperatorBridge_cls = cast(type, _OperatorBridge)
             operator_bridge = _OperatorBridge_cls(
                 controller=controller,
                 coordinator=_self_org_coordinator,
                 plasticity=_self_org_plasticity,
+                telemetry_store=_telemetry_store,
             )
             # Attach the runtime config so the dashboard gate builder can
             # distinguish "disabled by config" from "config enabled but

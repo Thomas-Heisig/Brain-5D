@@ -713,7 +713,8 @@ function draw5DProjection(payload) {
   // Draw grid points with height based on value
   for (let y = 0; y < rows; y += 2) {
     for (let x = 0; x < cols; x += 2) {
-      const val = (values[y]?.[x] || 0);
+      const val = values[y]?.[x];
+      if (val === null || val === undefined) continue;  // Skip no-data cells
       const normalized = (val - min) / range;
 
       // Isometric projection
@@ -739,14 +740,16 @@ function draw5DProjection(payload) {
     }
   }
 
-  // Draw connecting lines for structure
+  // Draw connecting lines for structure (only between valid cells)
   ctx.strokeStyle = 'rgba(64, 224, 208, 0.08)';
   ctx.lineWidth = 0.5;
   for (let y = 0; y < rows - 2; y += 3) {
     for (let x = 0; x < cols - 2; x += 3) {
-      const v1 = (values[y]?.[x] || 0);
-      const v2 = (values[y]?.[x + 2] || 0);
-      const v3 = (values[y + 2]?.[x] || 0);
+      const v1 = values[y]?.[x];
+      const v2 = values[y]?.[x + 2];
+      const v3 = values[y + 2]?.[x];
+      // Skip if any endpoint is null
+      if (v1 === null || v1 === undefined || v2 === null || v2 === undefined || v3 === null || v3 === undefined) continue;
 
       const n1 = (v1 - min) / range;
       const n2 = (v2 - min) / range;

@@ -164,8 +164,7 @@ class Neuron:
     _enabled: bool = field(default=True, repr=False, init=False)
     _spike_count_window: int = 0
     _last_update_tick: int = 0
-    _spike_history: tuple[int, ...] = field(default=(), repr=False, init=False)
-    _max_history: int = 200
+
 
     # ========================================================================
     # Initialization
@@ -243,14 +242,6 @@ class Neuron:
             self.spike_counter += 1
             self.last_spike_tick = tick
             self._spike_count_window += 1
-
-            # Record spike in ring-buffer history
-            history = list(self._spike_history)
-            history.append(tick)
-            # Keep only the most recent N entries
-            if len(history) > self._max_history:
-                history = history[-self._max_history:]
-            self._spike_history = tuple(history)
 
             # Energy cost
             self.energy = max(0.0, self.energy - self.spike_cost)
@@ -380,16 +371,6 @@ class Neuron:
         """Check if the neuron is enabled."""
         return self._enabled
 
-    @property
-    def spike_history(self) -> tuple[int, ...]:
-        """Return the spike history ring buffer (recent spike ticks).
-
-        The buffer contains the tick of each recent spike, up to
-        ``_max_history`` entries. Used by the live projection service
-        for accurate window-based firing rate computation.
-        """
-        return self._spike_history
-
     def reset_state(self, reset_v: bool = True) -> None:
         """Reset the neuron's dynamic state (membrane potential, recovery)."""
         if reset_v:
@@ -399,7 +380,6 @@ class Neuron:
         self.energy = 1.0
         self.firing_rate_estimate = 0.0
         self._spike_count_window = 0
-        self._spike_history = ()
         self.reset_traces()
 
     def reset_full(self) -> None:
