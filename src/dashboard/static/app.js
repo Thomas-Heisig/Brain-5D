@@ -598,9 +598,10 @@ function drawHeatmap(payload) {
     return;
   }
 
-  const flat = rows.flat();
-  const min = Math.min(...flat);
-  const max = Math.max(...flat);
+  // Filter out null/undefined values for range computation
+  const valid = rows.flat().filter(v => v !== null && v !== undefined && Number.isFinite(v));
+  const min = valid.length > 0 ? Math.min(...valid) : 0;
+  const max = valid.length > 0 ? Math.max(...valid) : 0;
   const width = rows[0].length;
   const height = rows.length;
   const cellW = canvas.width / width;
@@ -610,14 +611,32 @@ function drawHeatmap(payload) {
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      ctx.fillStyle = heatmapColor(rows[y][x], min, max);
-      ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
+      const val = rows[y][x];
+      if (val === null || val === undefined) {
+        // No-data cell: draw a neutral pattern
+        ctx.fillStyle = 'rgba(40, 50, 65, 0.4)';
+        ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
+        // Draw a subtle crosshatch to indicate "no data"
+        ctx.strokeStyle = 'rgba(60, 70, 85, 0.3)';
+        ctx.lineWidth = 0.5;
+        const cx = x * cellW;
+        const cy = y * cellH;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + cellW, cy + cellH);
+        ctx.moveTo(cx + cellW, cy);
+        ctx.lineTo(cx, cy + cellH);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = heatmapColor(val, min, max);
+        ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
+      }
     }
   }
 
   setText(
     'heatmap-meta',
-    `${payload.source === 'live_runtime' ? 'LIVE' : 'SNAPSHOT'} · ${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.samples || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
+    `${payload.source === 'live_runtime' ? 'LIVE' : 'SNAPSHOT'} · ${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.sample_count || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
   );
 
   // Also draw the 5D projection if available
@@ -685,7 +704,8 @@ function draw5DProjection(payload) {
   const cy = canvas.height / 2;
   const scale = Math.min(canvas.width, canvas.height) * 0.35 / Math.max(rows, cols);
 
-  const flat = values.flat();
+  const flat = values.flat().filter(v => v !== null && v !== undefined && Number.isFinite(v));
+  if (flat.length === 0) return;
   const min = Math.min(...flat);
   const max = Math.max(...flat);
   const range = max - min || 1;

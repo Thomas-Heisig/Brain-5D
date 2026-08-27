@@ -36,6 +36,8 @@ class NeuronAccess(Protocol):
     def spike_counter(self) -> int: ...
     @property
     def last_spike_tick(self) -> int: ...
+    @property
+    def spike_history(self) -> tuple[int, ...]: ...
 
 
 class SynapseAccess(Protocol):
@@ -69,7 +71,7 @@ class TelemetryFrame:
     so the dashboard never sees a partially-updated network.
     """
     tick: int
-    neurons: tuple[tuple[int, float, float, float, int, int], ...]
+    neurons: tuple[tuple[int, float, float, float, int, int, tuple[int, ...]], ...]
     synapses: tuple[tuple[int, int, float], ...]
     dimensions: tuple[int, int, int, int, int]
 
@@ -78,7 +80,8 @@ def capture_frame(network: NetworkAccess) -> TelemetryFrame:
     """Atomically capture a telemetry frame from the live network."""
     tick = network.current_tick
     neurons = tuple(
-        (nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick)
+        (nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick,
+         n.spike_history if hasattr(n, 'spike_history') else ())
         for nid, n in sorted(network.neurons.items())
     )
     syns = tuple(
@@ -319,7 +322,7 @@ class LiveProjectionService:
         global_min = float("inf")
         global_max = float("-inf")
 
-        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
+        for nid, v, energy, u, spike_counter, last_spike_tick, spike_history in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]
@@ -327,7 +330,7 @@ class LiveProjectionService:
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick)
+            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, spike_history)
             if math.isnan(value) or math.isinf(value):
                 continue
 
@@ -361,6 +364,7 @@ class LiveProjectionService:
         v: float, energy: float,
         spike_counter: int, last_spike_tick: int,
         current_tick: int,
+        spike_history: tuple[int, ...] = (),
     ) -> float:
         """Extract the raw value from neuron fields for the given kind."""
         if kind == ProjectionKind.ENERGY:
@@ -370,19 +374,31 @@ class LiveProjectionService:
         if kind == ProjectionKind.SPIKE:
             return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            return self._firing_rate(spike_counter, last_spike_tick, current_tick)
+            return self._firing_rate(spike_counter, last_spike_tick, current_tick, spike_history)
         return 0.0
 
-    def _firing_rate(self, spike_counter: int, last_spike_tick: int, current_tick: int) -> float:
+    def _firing_rate(
+        self, spike_counter: int, last_spike_tick: int, current_tick: int,
+        spike_history: tuple[int, ...] = (),
+    ) -> float:
         """Compute firing rate over the activity window.
 
-        Uses a spike-count ring-buffer approximation:
-        rate = spikes_in_window / window_ticks
-        where spikes_in_window is estimated from the total spike counter
-        and the time since the last spike. For a proper ring buffer the
-        network would need to maintain per-neuron spike history.
+        Uses the per-neuron spike_history ring buffer (tick of each recent
+        spike) to count exactly how many spikes occurred in the window.
+        This distinguishes 1-spike neurons from 50-spike neurons correctly.
+
+        Falls back to a binary estimate when spike_history is unavailable
+        (legacy networks without the ring buffer).
         """
         window = self.activity_window_ticks
+
+        if spike_history:
+            # Count spikes within the window
+            cutoff = current_tick - window
+            count = sum(1 for t in spike_history if t >= cutoff)
+            return count / window
+
+        # Fallback: binary activity estimate
         age = max(0, current_tick - last_spike_tick)
         if age > window:
             return 0.0
@@ -417,7 +433,7 @@ class LiveProjectionService:
             neuron_weight_sum[src_id] = neuron_weight_sum.get(src_id, 0.0) + weight
             neuron_weight_count[src_id] = neuron_weight_count.get(src_id, 0) + 1
 
-        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
+        for nid, v, energy, u, spike_counter, last_spike_tick, spike_history in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]

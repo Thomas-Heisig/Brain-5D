@@ -71,7 +71,7 @@ Current verification: tests/test_baseline.json
 Python:               3.13.14
 
 Full suite:
-  Passed:             379
+  Passed:             391
   Failed:             0
   Skipped:            2
   Collection errors:  0
@@ -129,7 +129,7 @@ Excluded:
 
 === GATE B ====================================================
 
-13. Full pytest collection 379/0/2 .......................... ✅
+13. Full pytest collection 391/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
 15. Error Visibility / scientific integrity ................. ✅
 16. Runtime exceptions enter manifest ....................... ✅

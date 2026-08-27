@@ -358,7 +358,7 @@ class TestDifferentSpikeHistories:
 
         # Capture frame and check individual neuron values
         frame = capture_frame(network)
-        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
+        for nid, v, energy, u, spike_counter, last_spike_tick, spike_history in frame.neurons:
             rate = service._firing_rate(spike_counter, last_spike_tick, frame.tick)
             if nid == 0:
                 assert rate > 0.0, "Spiking neuron should have non-zero rate"
