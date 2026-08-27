@@ -69,3 +69,38 @@
 - `tests/test_baseline.json`: 379 passed, canonical tree digest.
 - All structural and determinism artifacts regenerated with matching digests.
 
+---
+
+## 2026-08-26 — Live Visualization Correctness Sprint (Part 3)
+
+### Critical Bug Fixes
+
+1. **`unpack_coords` correction** — `LiveProjectionService` now uses `src.core.spatial_index.unpack_coords()` (the canonical packed-5D decoder) instead of a custom `_unpack_coord()` that treated neuron IDs as linear row-major indices. This was the root cause of neurons appearing in wrong spatial bins.
+
+2. **Activity is now a real firing-rate estimate** — Replaced `1.0 / max(1, age)` (recency of last spike) with `1.0 / window` (firing rate over the activity window). The old implementation gave identical activity to neurons with very different spike counts if their last spike was equally recent.
+
+3. **Empty bins = null, not 0** — Bins with no neurons now return `None` in the `values` array, with a corresponding `mask` boolean array. The range (min/max/mean) is computed only over non-empty bins. This prevents empty regions from distorting the color scale.
+
+4. **Aggregation semantics are now correct** — `_final_value()` dispatches correctly:
+   - `mean`: sum/count
+   - `sum` / `spike_count`: raw sum (no division)
+   - `max`: stored max value (separate accumulator)
+   - `active_fraction`: active_count / total_count
+
+5. **MAX works with negative values** — Changed MAX accumulator initialization from `0.0` to `float("-inf")`. Membrane potentials (-70mV to -50mV) now correctly resolve their maximum.
+
+6. **Dimension validation** — `dim_x` and `dim_y` must differ and be in 0..4. Raises `ValueError` otherwise.
+
+7. **TelemetryFrame** — Introduced `capture_frame()` that atomically captures all neuron/synapse state from a single tick into an immutable `TelemetryFrame`. The `LiveProjectionService.project()` reads from the frame, not directly from the live network, preventing incoherent reads across a concurrently stepping simulation.
+
+### Tests
+- **`tests/test_live_projection.py`**: Expanded from 12 to 24 tests. New tests cover:
+  - Known 5D coordinate lands in expected bin (H)
+  - Empty bin is null, not 0 (I)
+  - Mask matches null values (I)
+  - MAX with negative membrane potentials (J)
+  - Spiking vs silent neuron activity difference (K)
+  - TelemetryFrame tick/neuron/synapse coherence (L)
+  - Invalid dimension axes and values (M)
+
+

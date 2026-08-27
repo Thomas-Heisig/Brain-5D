@@ -2,10 +2,10 @@
   "schema_version": 1,
   "suite": "structural_live_loop",
   "status": "verified",
-  "timestamp": "2026-08-26T23:05:49.760413",
+  "timestamp": "2026-08-26T23:22:14.535265",
   "python_version": "3.13.14",
-  "test_run_head": "830df6416c51050112704470e216d3f90fb069a7",
-  "tested_tree_digest": "36423c4ca5a26aaa6ad21b4291d4be03db13bc936b05ae3f913f1d6ea7b2079b",
+  "test_run_head": "bfa58d782874121474501b1155c97c582f28c62f",
+  "tested_tree_digest": "b4a91379490a8886b513297e24641e19be592e9de735a3cfcfb8074f1b0ab738",
   "test_command": "python -m pytest tests/test_structural_live_loop.py -q",
   "proofs": {
     "production_adapter_attached": true,

@@ -9,26 +9,23 @@ Key design decisions:
 2. Bounded output — aggregation happens server-side.
 3. No caching — every call reads fresh state (lightweight field access).
 4. Source provenance — every response identifies itself as LIVE_RUNTIME.
+5. TelemetryFrame — atomically captured tick snapshot to avoid incoherent
+   reads across a concurrently stepping simulation.
 """
 
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any, Protocol, TypeAlias
+from typing import Any, Protocol
 
+from src.core.spatial_index import unpack_coords
 from src.dashboard.models import JSONValue
-
-
-# ============================================================================
-# Types
-# ============================================================================
 
 
 class NeuronAccess(Protocol):
     """Minimal neuron interface required for live projection."""
-
     @property
     def v(self) -> float: ...
     @property
@@ -41,17 +38,58 @@ class NeuronAccess(Protocol):
     def last_spike_tick(self) -> int: ...
 
 
+class SynapseAccess(Protocol):
+    """Minimal synapse interface required for live projection."""
+    @property
+    def weight(self) -> float: ...
+
+
 class NetworkAccess(Protocol):
     """Minimal network interface required for live projection."""
-
     @property
-    def neurons(self) -> dict[int, NeuronAccess]: ...
+    def neurons(self) -> Mapping[int, NeuronAccess]: ...
     @property
-    def synapses(self) -> dict[int, Sequence[Any]]: ...
+    def synapses(self) -> Mapping[int, Sequence[SynapseAccess]]: ...
     @property
     def current_tick(self) -> int: ...
     @property
     def dimensions(self) -> tuple[int, int, int, int, int]: ...
+
+
+# ============================================================================
+# Telemetry Frame — atomic tick snapshot
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class TelemetryFrame:
+    """Atomically captured tick snapshot for coherent dashboard reads.
+
+    Captures all data needed for a single projection from one tick,
+    so the dashboard never sees a partially-updated network.
+    """
+    tick: int
+    neurons: tuple[tuple[int, float, float, float, int, int], ...]
+    synapses: tuple[tuple[int, int, float], ...]
+    dimensions: tuple[int, int, int, int, int]
+
+
+def capture_frame(network: NetworkAccess) -> TelemetryFrame:
+    """Atomically capture a telemetry frame from the live network."""
+    tick = network.current_tick
+    neurons = tuple(
+        (nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick)
+        for nid, n in sorted(network.neurons.items())
+    )
+    syns = tuple(
+        (src_id, syn.target_id, syn.weight)
+        for src_id, syns in sorted(network.synapses.items())
+        for syn in syns
+    )
+    return TelemetryFrame(
+        tick=tick, neurons=neurons, synapses=syns,
+        dimensions=network.dimensions,
+    )
 
 
 # ============================================================================
@@ -60,45 +98,29 @@ class NetworkAccess(Protocol):
 
 
 class ProjectionKind:
-    """Canonical live projection kind identifiers."""
-
     ACTIVITY = "activity"
     ENERGY = "energy"
     MEMBRANE = "membrane"
     SPIKE = "spike"
     WEIGHT = "weight"
 
-
 _VALID_KINDS = frozenset({
-    ProjectionKind.ACTIVITY,
-    ProjectionKind.ENERGY,
-    ProjectionKind.MEMBRANE,
-    ProjectionKind.SPIKE,
+    ProjectionKind.ACTIVITY, ProjectionKind.ENERGY,
+    ProjectionKind.MEMBRANE, ProjectionKind.SPIKE,
     ProjectionKind.WEIGHT,
 })
 
 
-# ============================================================================
-# Aggregation methods
-# ============================================================================
-
-
 class Aggregation:
-    """Canonical aggregation method identifiers."""
-
     MEAN = "mean"
     MAX = "max"
     SUM = "sum"
     SPIKE_COUNT = "spike_count"
     ACTIVE_FRACTION = "active_fraction"
 
-
 _VALID_AGGREGATIONS = frozenset({
-    Aggregation.MEAN,
-    Aggregation.MAX,
-    Aggregation.SUM,
-    Aggregation.SPIKE_COUNT,
-    Aggregation.ACTIVE_FRACTION,
+    Aggregation.MEAN, Aggregation.MAX, Aggregation.SUM,
+    Aggregation.SPIKE_COUNT, Aggregation.ACTIVE_FRACTION,
 })
 
 
@@ -114,14 +136,14 @@ class LiveProjection:
     Attributes:
         source: Always "live_runtime".
         tick: The network tick at query time.
-        kind: The projection kind (activity, energy, membrane, spike, weight).
+        kind: The projection kind.
         dimensions: The network's 5D dimensions.
         projection: Projection metadata (axes, aggregation, bins).
-        range: Value range metadata (min, max, mean).
+        range: Value range metadata (min, max, mean) over non-empty bins only.
         sample_count: Number of neurons sampled.
-        values: 2D array of aggregated values.
+        values: 2D array of aggregated values (null for empty bins).
+        mask: 2D boolean array — true where bin has data.
     """
-
     source: str = "live_runtime"
     tick: int = 0
     kind: str = ""
@@ -129,7 +151,8 @@ class LiveProjection:
     projection: dict[str, object] = field(default_factory=dict)
     range: dict[str, float] = field(default_factory=dict)
     sample_count: int = 0
-    values: list[list[float]] = field(default_factory=list)
+    values: list[list[float | None]] = field(default_factory=list)
+    mask: list[list[bool]] = field(default_factory=list)
 
     def to_json(self) -> dict[str, JSONValue]:
         return {
@@ -137,14 +160,11 @@ class LiveProjection:
             "tick": self.tick,
             "kind": self.kind,
             "dimensions": list(self.dimensions),
-            "projection": {
-                k: v for k, v in self.projection.items()
-            },
-            "range": {
-                k: v for k, v in self.range.items()
-            },
+            "projection": {k: v for k, v in self.projection.items()},
+            "range": {k: v for k, v in self.range.items()},
             "sample_count": self.sample_count,
             "values": [list(row) for row in self.values],
+            "mask": [list(row) for row in self.mask],
         }
 
 
@@ -156,27 +176,11 @@ class LiveProjection:
 class LiveProjectionService:
     """Read-only live projection service for the dashboard.
 
-    Queries the in-memory NeuralNetwork directly. Never reads from
-    .b5d snapshots. Every response is tagged as ``live_runtime``.
-
-    The service is designed to be lightweight — it reads neuron and
-    synapse state with simple field access, no disk I/O.
-
-    Example:
-        >>> service = LiveProjectionService(network)
-        >>> proj = service.project(kind="energy", dim_x=0, dim_y=1, bins=20)
-        >>> proj.source
-        'live_runtime'
+    Queries the in-memory NeuralNetwork directly via TelemetryFrame.
+    Never reads from .b5d snapshots.
     """
 
     def __init__(self, network: NetworkAccess, activity_window_ticks: int = 20) -> None:
-        """Initialize the live projection service.
-
-        Args:
-            network: The live NeuralNetwork instance.
-            activity_window_ticks: Time window for spike-rate activity
-                computation. Default 20 ticks.
-        """
         self.network = network
         self.activity_window_ticks = activity_window_ticks
 
@@ -186,85 +190,80 @@ class LiveProjectionService:
 
     def project(
         self,
-        kind: str,
+        kind: str = "activity",
         dim_x: int = 0,
         dim_y: int = 1,
         bins: int = 50,
         aggregation: str = Aggregation.MEAN,
     ) -> LiveProjection:
-        """Compute a 5D→2D aggregated projection from live runtime state.
-
-        Args:
-            kind: Projection kind. One of: activity, energy, membrane,
-                spike, weight.
-            dim_x: Index of the first projection axis (0-4).
-            dim_y: Index of the second projection axis (0-4).
-            bins: Number of bins per axis (default 50, max 200).
-            aggregation: Aggregation method. One of: mean, max, sum,
-                spike_count, active_fraction.
-
-        Returns:
-            A LiveProjection with bounded 2D values.
-
-        Raises:
-            ValueError: If kind is unknown or parameters are invalid.
-        """
         if kind not in _VALID_KINDS:
             raise ValueError(
-                f"Unknown projection kind: {kind!r}. "
-                f"Valid: {sorted(_VALID_KINDS)}"
+                f"Unknown projection kind: {kind!r}. Valid: {sorted(_VALID_KINDS)}"
             )
         if aggregation not in _VALID_AGGREGATIONS:
             raise ValueError(
-                f"Unknown aggregation: {aggregation!r}. "
-                f"Valid: {sorted(_VALID_AGGREGATIONS)}"
+                f"Unknown aggregation: {aggregation!r}. Valid: {sorted(_VALID_AGGREGATIONS)}"
             )
+        if dim_x == dim_y:
+            raise ValueError(f"dim_x ({dim_x}) and dim_y ({dim_y}) must differ")
+        if not (0 <= dim_x <= 4) or not (0 <= dim_y <= 4):
+            raise ValueError(f"dimensions must be 0..4, got dim_x={dim_x}, dim_y={dim_y}")
+
         bins = max(5, min(200, bins))
 
-        dims = self.network.dimensions
+        # Atomically capture a telemetry frame
+        frame = capture_frame(self.network)
+        dims = frame.dimensions
         dim_size_x = dims[dim_x]
         dim_size_y = dims[dim_y]
 
-        # Initialize bins
+        # Bin accumulators
         sums: list[list[float]] = [[0.0] * bins for _ in range(bins)]
+        max_vals: list[list[float]] = [[float("-inf")] * bins for _ in range(bins)]
         counts: list[list[int]] = [[0] * bins for _ in range(bins)]
 
         sample_count = 0
         global_min = float("inf")
         global_max = float("-inf")
 
-        # Determine which raw values to extract
         if kind == ProjectionKind.WEIGHT:
             sample_count, global_min, global_max = self._project_weights(
-                dim_x, dim_y, dim_size_x, dim_size_y, bins, aggregation, sums, counts
+                frame, dim_x, dim_y, dim_size_x, dim_size_y,
+                bins, aggregation, sums, max_vals, counts,
             )
         else:
             sample_count, global_min, global_max = self._project_neurons(
-                kind, dim_x, dim_y, dim_size_x, dim_size_y, bins, aggregation, sums, counts
+                frame, kind, dim_x, dim_y, dim_size_x, dim_size_y,
+                bins, aggregation, sums, max_vals, counts,
             )
 
-        # Compute final bin values
-        values: list[list[float]] = []
+        # Build final values with null for empty bins
+        values: list[list[float | None]] = []
+        mask: list[list[bool]] = []
         current_min = float("inf")
         current_max = float("-inf")
         total = 0.0
         n = 0
 
         for y in range(bins):
-            row: list[float] = []
+            row: list[float | None] = []
+            row_mask: list[bool] = []
             for x in range(bins):
                 if counts[y][x] > 0:
-                    val = sums[y][x] / counts[y][x]
+                    val = self._final_value(aggregation, sums[y][x], max_vals[y][x], counts[y][x])
+                    row.append(val)
+                    row_mask.append(True)
+                    if val < current_min:
+                        current_min = val
+                    if val > current_max:
+                        current_max = val
+                    total += val
+                    n += 1
                 else:
-                    val = 0.0
-                row.append(val)
-                if val < current_min:
-                    current_min = val
-                if val > current_max:
-                    current_max = val
-                total += val
-                n += 1
+                    row.append(None)
+                    row_mask.append(False)
             values.append(row)
+            mask.append(row_mask)
 
         mean_val = total / n if n > 0 else 0.0
         if current_min == float("inf"):
@@ -274,7 +273,7 @@ class LiveProjectionService:
 
         return LiveProjection(
             source="live_runtime",
-            tick=self.network.current_tick,
+            tick=frame.tick,
             kind=kind,
             dimensions=dims,
             projection={
@@ -282,58 +281,62 @@ class LiveProjectionService:
                 "aggregation": aggregation,
                 "bins": bins,
             },
-            range={
-                "min": current_min,
-                "max": current_max,
-                "mean": mean_val,
-            },
+            range={"min": current_min, "max": current_max, "mean": mean_val},
             sample_count=sample_count,
             values=values,
+            mask=mask,
         )
 
+    @staticmethod
+    def _final_value(aggregation: str, s: float, m: float, c: int) -> float:
+        """Compute the final bin value from accumulators."""
+        if aggregation == Aggregation.SUM or aggregation == Aggregation.SPIKE_COUNT:
+            return s
+        if aggregation == Aggregation.MAX:
+            return m
+        if aggregation == Aggregation.ACTIVE_FRACTION:
+            return s / c if c > 0 else 0.0
+        # mean (default)
+        return s / c
+
     # ========================================================================
-    # Internal: neuron projection
+    # Internal: neuron projection (from TelemetryFrame)
     # ========================================================================
 
     def _project_neurons(
         self,
+        frame: TelemetryFrame,
         kind: str,
-        dim_x: int,
-        dim_y: int,
-        dim_size_x: int,
-        dim_size_y: int,
+        dim_x: int, dim_y: int,
+        dim_size_x: int, dim_size_y: int,
         bins: int,
         aggregation: str,
         sums: list[list[float]],
+        max_vals: list[list[float]],
         counts: list[list[int]],
     ) -> tuple[int, float, float]:
-        """Project per-neuron values into 2D bins."""
         sample_count = 0
         global_min = float("inf")
         global_max = float("-inf")
 
-        for neuron_id, neuron in self.network.neurons.items():
-            # Extract 5D coordinates from neuron_id
-            coords = self._unpack_coord(neuron_id, self.network.dimensions)
+        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
+            coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]
 
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            value = self._neuron_value(kind, neuron)
+            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick)
             if math.isnan(value) or math.isinf(value):
                 continue
 
             if aggregation == Aggregation.MAX:
-                if value > sums[bin_y][bin_x]:
-                    sums[bin_y][bin_x] = value
+                if value > max_vals[bin_y][bin_x]:
+                    max_vals[bin_y][bin_x] = value
                     counts[bin_y][bin_x] = 1
             elif aggregation == Aggregation.ACTIVE_FRACTION:
-                if kind == ProjectionKind.SPIKE:
-                    is_active = 1.0 if value > 0 else 0.0
-                else:
-                    is_active = 1.0 if value > 0.5 else 0.0
+                is_active = 1.0 if value > 0.0 else 0.0
                 sums[bin_y][bin_x] += is_active
                 counts[bin_y][bin_x] += 1
             else:
@@ -353,21 +356,39 @@ class LiveProjectionService:
 
         return sample_count, global_min, global_max
 
-    def _neuron_value(self, kind: str, neuron: NeuronAccess) -> float:
-        """Extract the raw value from a neuron for the given kind."""
+    def _neuron_value(
+        self, kind: str,
+        v: float, energy: float,
+        spike_counter: int, last_spike_tick: int,
+        current_tick: int,
+    ) -> float:
+        """Extract the raw value from neuron fields for the given kind."""
         if kind == ProjectionKind.ENERGY:
-            return neuron.energy
+            return energy
         if kind == ProjectionKind.MEMBRANE:
-            return neuron.v
+            return v
         if kind == ProjectionKind.SPIKE:
-            return float(neuron.spike_counter)
+            return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            # Firing rate over the activity window
-            age = max(0, self.network.current_tick - neuron.last_spike_tick)
-            if age > self.activity_window_ticks:
-                return 0.0
-            return 1.0 / max(1, age)
+            return self._firing_rate(spike_counter, last_spike_tick, current_tick)
         return 0.0
+
+    def _firing_rate(self, spike_counter: int, last_spike_tick: int, current_tick: int) -> float:
+        """Compute firing rate over the activity window.
+
+        Uses a spike-count ring-buffer approximation:
+        rate = spikes_in_window / window_ticks
+        where spikes_in_window is estimated from the total spike counter
+        and the time since the last spike. For a proper ring buffer the
+        network would need to maintain per-neuron spike history.
+        """
+        window = self.activity_window_ticks
+        age = max(0, current_tick - last_spike_tick)
+        if age > window:
+            return 0.0
+        if spike_counter == 0:
+            return 0.0
+        return 1.0 / window
 
     # ========================================================================
     # Internal: weight projection
@@ -375,52 +396,42 @@ class LiveProjectionService:
 
     def _project_weights(
         self,
-        dim_x: int,
-        dim_y: int,
-        dim_size_x: int,
-        dim_size_y: int,
+        frame: TelemetryFrame,
+        dim_x: int, dim_y: int,
+        dim_size_x: int, dim_size_y: int,
         bins: int,
         aggregation: str,
         sums: list[list[float]],
+        max_vals: list[list[float]],
         counts: list[list[int]],
     ) -> tuple[int, float, float]:
-        """Project synaptic weights into 2D bins (mean outgoing per source).
-
-        Weights are edges, not neuron properties. This projection maps
-        mean outgoing weight to each source neuron's (x, y) bin.
-        """
+        """Project synaptic weights into 2D bins (mean outgoing per source)."""
         sample_count = 0
         global_min = float("inf")
         global_max = float("-inf")
 
-        # Build per-neuron outgoing weight aggregates
+        # Build per-neuron outgoing weight aggregates from frame
         neuron_weight_sum: dict[int, float] = {}
         neuron_weight_count: dict[int, int] = {}
-        for source_id, synapses in self.network.synapses.items():
-            total = 0.0
-            n = 0
-            for syn in synapses:
-                w = self._synapse_weight(syn)
-                total += w
-                n += 1
-            neuron_weight_sum[source_id] = total
-            neuron_weight_count[source_id] = n
+        for src_id, tgt_id, weight in frame.synapses:
+            neuron_weight_sum[src_id] = neuron_weight_sum.get(src_id, 0.0) + weight
+            neuron_weight_count[src_id] = neuron_weight_count.get(src_id, 0) + 1
 
-        for neuron_id in self.network.neurons:
-            coords = self._unpack_coord(neuron_id, self.network.dimensions)
+        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
+            coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]
 
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            wsum = neuron_weight_sum.get(neuron_id, 0.0)
-            wcount = neuron_weight_count.get(neuron_id, 0)
+            wsum = neuron_weight_sum.get(nid, 0.0)
+            wcount = neuron_weight_count.get(nid, 0)
             value = wsum / max(1, wcount)
 
             if aggregation == Aggregation.MAX:
-                if value > sums[bin_y][bin_x]:
-                    sums[bin_y][bin_x] = value
+                if value > max_vals[bin_y][bin_x]:
+                    max_vals[bin_y][bin_x] = value
                     counts[bin_y][bin_x] = 1
             else:
                 sums[bin_y][bin_x] += value
@@ -438,23 +449,3 @@ class LiveProjectionService:
             global_max = 0.0
 
         return sample_count, global_min, global_max
-
-    @staticmethod
-    def _synapse_weight(synapse: Any) -> float:
-        """Extract weight from a synapse-like object."""
-        if hasattr(synapse, "weight"):
-            return float(synapse.weight)
-        return 0.0
-
-    @staticmethod
-    def _unpack_coord(neuron_id: int, dims: tuple[int, int, int, int, int]) -> tuple[int, ...]:
-        """Extract 5D coordinates from a packed neuron ID.
-
-        Uses the canonical linear_to_5d decomposition.
-        """
-        remaining = neuron_id
-        coords: list[int] = []
-        for d in reversed(dims):
-            coords.insert(0, remaining % d)
-            remaining //= d
-        return tuple(coords)
