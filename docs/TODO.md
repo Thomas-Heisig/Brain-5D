@@ -1,10 +1,10 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-26
+> Last updated: 2026-08-27
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   All 5 verification artifacts share the same tested_tree_digest ✅
-> Status: Alpha.5 verification fresh — live visualization added
+> Status: Alpha.5 — LIVE TELEMETRY FROZEN. Gate B open only for Restore A/B/C.
 > Alpha.6: BLOCKED
 >
 > Phase 1-9 implemented (error integrity, canonical state, RNG persistence,
@@ -17,7 +17,7 @@
 >   /api/gate/status        = release/verification truth
 >   /api/live/projection    = live runtime visualization (LIVE_RUNTIME)
 >   /api/heatmap            = snapshot visualization (SNAPSHOT)
->   /api/errors             = canonical runtime-error endpoint
+>   /api/errors             = canonical runtime-error endpoint (available/count/events)
 >   /api/structural/errors  = structural runtime errors
 >   B5D-SEF                 = scientific evidence truth
 
@@ -71,7 +71,7 @@ Current verification: tests/test_baseline.json
 Python:               3.13.14
 
 Full suite:
-  Passed:             391
+  Passed:             412
   Failed:             0
   Skipped:            2
   Collection errors:  0
@@ -129,7 +129,7 @@ Excluded:
 
 === GATE B ====================================================
 
-13. Full pytest collection 391/0/2 .......................... ✅
+13. Full pytest collection 412/0/2 .......................... ✅
 14. Structural mechanism E2E 11/11 .......................... ✅
 15. Error Visibility / scientific integrity ................. ✅
 16. Runtime exceptions enter manifest ....................... ✅

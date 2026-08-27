@@ -274,10 +274,35 @@ class TelemetryFrameStore:
         with self._lock:
             return self._stats_locked()
 
-    def _stats_locked(self) -> dict[str, object]:
-        """Compute stats dict (caller must hold _lock)."""
+    def stats_at(self, runtime_tick: int) -> dict[str, object]:
+        """Telemetry statistics relative to an authoritative runtime tick.
+
+        Args:
+            runtime_tick: The current network/controller tick. This is the
+                authoritative reference for staleness — not the hook's own
+                ``_last_observed_tick``, which would freeze if the hook fails.
+
+        Returns:
+            Stats dict with ``status`` (live/stale/unavailable) and
+            ``frame_age_ticks`` computed against ``runtime_tick``.
+        """
+        with self._lock:
+            return self._stats_locked(runtime_tick)
+
+    @property
+    def stats(self) -> dict[str, object]:
+        """Telemetry statistics (uses internal last_observed_tick as fallback)."""
+        with self._lock:
+            return self._stats_locked(self._last_observed_tick)
+
+    def _stats_locked(self, runtime_tick: int) -> dict[str, object]:
+        """Compute stats dict (caller must hold _lock).
+
+        Args:
+            runtime_tick: Authoritative tick for staleness computation.
+        """
         frame_tick = self._frame.tick if self._frame else None
-        frame_age = (self._last_observed_tick - frame_tick) if (frame_tick is not None and self._last_observed_tick > 0) else 0
+        frame_age = max(0, runtime_tick - frame_tick) if frame_tick is not None else 0
         if frame_tick is None:
             status = "unavailable"
         elif frame_age <= 2 * self.capture_interval_ticks:
@@ -287,6 +312,7 @@ class TelemetryFrameStore:
         return {
             "latest_frame_tick": frame_tick,
             "last_observed_tick": self._last_observed_tick,
+            "runtime_tick": runtime_tick,
             "frame_age_ticks": frame_age,
             "status": status,
             "capture_interval_ticks": self.capture_interval_ticks,
@@ -498,6 +524,7 @@ class LiveProjectionService:
     ) -> None:
         self.network = network
         self._frame_store = frame_store
+        self._current_window_ticks: int = 20
 
     # ========================================================================
     # Public API
@@ -526,8 +553,9 @@ class LiveProjectionService:
 
         bins = max(5, min(200, bins))
 
-        # Read from store or direct capture
+        # Read from store or direct capture — ONE frame per projection
         frame = self._get_frame()
+        self._current_window_ticks = frame.activity_window_ticks
         dims = frame.dimensions
         dim_size_x = dims[dim_x]
         dim_size_y = dims[dim_y]
@@ -597,10 +625,10 @@ class LiveProjectionService:
             metric_info["unit"] = "spikes/tick"
             metric_info["unit_hz"] = f"spikes/tick * 1000/{_dt_ms} Hz"
 
-        # Telemetry stats
+        # Telemetry stats — use network.current_tick for authoritative staleness
         telemetry_stats: dict[str, object] = {}
         if self._frame_store is not None:
-            telemetry_stats = dict(self._frame_store.stats)
+            telemetry_stats = dict(self._frame_store.stats_at(self.network.current_tick))
 
         return LiveProjection(
             source="live_runtime",
@@ -726,9 +754,7 @@ class LiveProjectionService:
         if kind == ProjectionKind.SPIKE:
             return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            # The frame carries the authoritative window size
-            window = getattr(self._get_frame(), 'activity_window_ticks', 20)
-            return spikes_in_window / window
+            return spikes_in_window / self._current_window_ticks
         return 0.0
 
     # ========================================================================

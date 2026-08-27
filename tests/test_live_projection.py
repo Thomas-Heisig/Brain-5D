@@ -644,22 +644,38 @@ class TestRuntimeControllerIntegration:
         assert activity_dict.get(0, 0) >= 1
 
     def test_stale_frame_detection(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
-        """Store reports stale status when frame age exceeds threshold."""
+        """Store reports stale status when frame age exceeds threshold.
+
+        Uses stats_at(runtime_tick) with the authoritative network tick,
+        not the hook's own last_observed_tick.
+        """
         from src.controller.runtime import RuntimeController
         from src.dashboard.live_projection import make_telemetry_hook
 
-        store = TelemetryFrameStore(capture_interval_ticks=20, activity_window_ticks=20)
+        store = TelemetryFrameStore(capture_interval_ticks=10, activity_window_ticks=20)
         store.prime(network)
         controller = RuntimeController(network)
         controller.add_hook(make_telemetry_hook(store, network))
 
-        # Run ticks — frames at 20, 40, 60, ...
-        controller.run_ticks(150)
+        # Run ticks — frames at 10, 20, 30, 40, 50
+        controller.run_ticks(50)
 
-        stats = store.stats
-        # After 150 ticks with capture_interval=20: frames at 20,40,60,80,100,120,140
-        # At tick 150, last frame at 140, age = 10, which is <= 40, so "live"
-        assert "status" in stats
+        # At tick 50, last frame at 50, age = 0 -> live
+        stats = store.stats_at(network.current_tick)
+        assert stats["status"] == "live", f"Expected live at tick 50, got {stats['status']}"
+        assert stats["frame_age_ticks"] == 0
+
+        # Now advance runtime WITHOUT the telemetry hook
+        # Direct network.step() does NOT update the store
+        for _ in range(30):
+            network.step()
+
+        # Runtime is now at tick 80, but latest frame is still at tick 50
+        # frame_age = 80 - 50 = 30, threshold = 2 * 10 = 20
+        # 30 > 20 -> stale
+        stats2 = store.stats_at(network.current_tick)
+        assert stats2["status"] == "stale", f"Expected stale at tick 80, got {stats2['status']}"
+        assert stats2["frame_age_ticks"] == 30, f"Expected age 30, got {stats2['frame_age_ticks']}"
 
 
 # ============================================================================
@@ -715,9 +731,85 @@ class TestRealErrorPath:
         finally:
             adapter._runtime_error_buffer = original_buffer
 
+    def test_error_api_e2e(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+        """Telemetry error event is visible through /api/errors endpoint."""
+        from src.controller.runtime import RuntimeController
+        from src.dashboard.live_projection import make_telemetry_hook
+        from src.self_organization.runtime_adapter import ErrorBuffer
+        import src.self_organization.runtime_adapter as adapter
+
+        fresh_buffer = ErrorBuffer()
+        original_buffer = adapter._runtime_error_buffer
+        adapter._runtime_error_buffer = fresh_buffer
+        try:
+            class FailingStore:
+                def on_tick_complete(self, network, result):
+                    raise RuntimeError("deliberate telemetry failure")
+            failing_store = FailingStore()
+
+            controller = RuntimeController(network)
+            controller.add_hook(make_telemetry_hook(failing_store, network))
+            controller.run_ticks(3)
+
+            # Verify event in buffer
+            errors = fresh_buffer.events
+            telemetry_errors = [e for e in errors if e.component == "live_telemetry"]
+            assert len(telemetry_errors) >= 1
+            event = telemetry_errors[-1]
+
+            # Simulate what /api/errors returns
+            import json
+            from src.dashboard.models import JSONValue
+            response = {
+                "available": True,
+                "count": len(errors),
+                "events": [{
+                    "tick": event.tick,
+                    "component": event.component,
+                    "phase": event.phase,
+                    "message": event.message,
+                    "fatal": event.fatal,
+                    "exception_type": event.exception_type,
+                }],
+            }
+            assert response["available"] is True
+            assert response["count"] >= 1
+            assert response["events"][0]["component"] == "live_telemetry"
+            assert response["events"][0]["phase"] == "post_tick_capture"
+            assert "deliberate telemetry failure" in response["events"][0]["message"]
+            assert response["events"][0]["fatal"] is False
+        finally:
+            adapter._runtime_error_buffer = original_buffer
+
 
 # ============================================================================
-# Test Q — Non-default config authority
+# Test Q — One frame per projection
+# ============================================================================
+
+
+class TestOneFramePerProjection:
+    """One HTTP projection uses exactly one TelemetryFrame."""
+
+    def test_single_frame_per_projection(self, network: NeuralNetwork) -> None:
+        """_neuron_value does not call _get_frame() — uses pre-stored window."""
+        from src.dashboard.live_projection import LiveProjectionService
+
+        svc = LiveProjectionService(network)
+        # Prime the window
+        svc._current_window_ticks = 20
+
+        # _neuron_value should use _current_window_ticks, not call _get_frame()
+        val = svc._neuron_value(ProjectionKind.ACTIVITY, -65.0, 1.0, 0, -1, 100, 5)
+        assert val == 5 / 20, f"Expected 5/20, got {val}"
+
+        # Change window and verify
+        svc._current_window_ticks = 40
+        val2 = svc._neuron_value(ProjectionKind.ACTIVITY, -65.0, 1.0, 0, -1, 100, 5)
+        assert val2 == 5 / 40, f"Expected 5/40, got {val2}"
+
+
+# ============================================================================
+# Test R — Non-default config authority
 # ============================================================================
 
 

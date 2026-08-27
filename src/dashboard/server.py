@@ -341,6 +341,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 if limit > 0 and limit < len(errors):
                     errors = errors[-limit:]
                 self._send_json({
+                    "available": True,
                     "count": len(errors),
                     "events": cast(list[JSONValue], errors),
                 })

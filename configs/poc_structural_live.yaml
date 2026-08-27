@@ -81,6 +81,12 @@ telemetry:
 visualization:
   enabled: false
 
+dashboard:
+  live_telemetry:
+    enabled: true
+    activity_window_ticks: 20
+    capture_interval_ticks: 5
+
 logging:
   interval_ticks: 100
 

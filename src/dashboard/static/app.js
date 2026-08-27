@@ -672,6 +672,7 @@ async function refreshLiveProjection() {
     }
     const data = await response.json();
     drawHeatmap(data);
+    updateSourceBadge(data.telemetry?.status);
   } catch {
     // Silently fall back — snapshot will be used on next interval
   }
@@ -680,7 +681,7 @@ async function refreshLiveProjection() {
 /**
  * Update the source badge in the UI based on telemetry status
  */
-function updateSourceBadge() {
+function updateSourceBadge(telemetryStatus) {
   const badge = $('source-badge');
   if (!badge) return;
 
@@ -690,20 +691,17 @@ function updateSourceBadge() {
     return;
   }
 
-  // Check the last known telemetry status from the heatmap payload
-  const meta = $('heatmap-meta');
-  if (meta && meta.dataset && meta.dataset.telemetryStatus) {
-    const status = meta.dataset.telemetryStatus;
-    if (status === 'stale') {
-      badge.textContent = 'STALE';
-      badge.className = 'badge badge-stale';
-      return;
-    }
-    if (status === 'unavailable') {
-      badge.textContent = 'UNAVAILABLE';
-      badge.className = 'badge badge-unavailable';
-      return;
-    }
+  // Use explicit status parameter, fall back to DOM dataset
+  const status = telemetryStatus || (document.getElementById('heatmap-meta')?.dataset?.telemetryStatus);
+  if (status === 'stale') {
+    badge.textContent = 'STALE';
+    badge.className = 'badge badge-stale';
+    return;
+  }
+  if (status === 'unavailable') {
+    badge.textContent = 'UNAVAILABLE';
+    badge.className = 'badge badge-unavailable';
+    return;
   }
 
   badge.textContent = 'LIVE';
