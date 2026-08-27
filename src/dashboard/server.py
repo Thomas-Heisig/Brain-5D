@@ -858,6 +858,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
+        # Check if telemetry is available
+        if bridge.live_projection._frame_store is None:
+            self._send_json(
+                {"error": "Live telemetry is not enabled (no TelemetryFrameStore configured)."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
         kind = query.get("kind", ["activity"])[0]
         dim_x = int(query.get("dimension_x", ["0"])[0])
         dim_y = int(query.get("dimension_y", ["1"])[0])

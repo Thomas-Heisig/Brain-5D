@@ -836,17 +836,26 @@ def main() -> int:
             _live_telemetry_cfg = config_dict.get("dashboard", {}).get("live_telemetry", {})
             if not isinstance(_live_telemetry_cfg, dict):
                 _live_telemetry_cfg = {}
+            _lt_enabled = bool(_live_telemetry_cfg.get("enabled", True))
             _lt_capture = int(_live_telemetry_cfg.get("capture_interval_ticks", 5))
             _lt_window = int(_live_telemetry_cfg.get("activity_window_ticks", 20))
-            from src.dashboard.live_projection import TelemetryFrameStore, make_telemetry_hook
-            _telemetry_store = TelemetryFrameStore(
-                capture_interval_ticks=_lt_capture,
-                activity_window_ticks=_lt_window,
-            )
-            # Prime Tick-0 frame so dashboard can respond immediately
-            _telemetry_store.prime(controller.network)
-            # Register post-tick hook via safe wrapper (routes errors to error buffer)
-            controller.add_hook(make_telemetry_hook(_telemetry_store, controller.network))
+            _sim_dt_ms = float(config_dict.get("simulation", {}).get("dt_ms", 1.0))
+
+            _telemetry_store: Any = None
+            if _lt_enabled:
+                from src.dashboard.live_projection import TelemetryFrameStore, make_telemetry_hook
+                _telemetry_store = TelemetryFrameStore(
+                    capture_interval_ticks=_lt_capture,
+                    activity_window_ticks=_lt_window,
+                )
+                _telemetry_store.set_dt_ms(_sim_dt_ms)
+                # Prime Tick-0 frame so dashboard can respond immediately
+                _telemetry_store.prime(controller.network)
+                # Register post-tick hook via safe wrapper (routes errors to error buffer)
+                controller.add_hook(make_telemetry_hook(_telemetry_store, controller.network))
+                print(f"✅ Live telemetry enabled (capture={_lt_capture}, window={_lt_window}, dt_ms={_sim_dt_ms})")
+            else:
+                print("⚠️ Live telemetry disabled by config")
 
             _OperatorBridge_cls = cast(type, _OperatorBridge)
             operator_bridge = _OperatorBridge_cls(

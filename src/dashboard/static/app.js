@@ -639,6 +639,12 @@ function drawHeatmap(payload) {
     `${payload.source === 'live_runtime' ? 'LIVE' : 'SNAPSHOT'} · ${payload.kind || heatmapKind} · Tick ${payload.tick || 0} · ${payload.sample_count || 0} Samples · ${formatFloat(min, 4)}…${formatFloat(max, 4)}`
   );
 
+  // Store telemetry status for badge updates
+  const metaEl = $('heatmap-meta');
+  if (metaEl && payload.telemetry && payload.telemetry.status) {
+    metaEl.dataset.telemetryStatus = payload.telemetry.status;
+  }
+
   // Also draw the 5D projection if available
   draw5DProjection(payload);
 }
@@ -672,14 +678,36 @@ async function refreshLiveProjection() {
 }
 
 /**
- * Update the source badge in the UI
+ * Update the source badge in the UI based on telemetry status
  */
 function updateSourceBadge() {
   const badge = $('source-badge');
-  if (badge) {
-    badge.textContent = liveSource ? 'LIVE' : 'SNAPSHOT';
-    badge.className = liveSource ? 'badge badge-live' : 'badge badge-snapshot';
+  if (!badge) return;
+
+  if (!liveSource) {
+    badge.textContent = 'SNAPSHOT';
+    badge.className = 'badge badge-snapshot';
+    return;
   }
+
+  // Check the last known telemetry status from the heatmap payload
+  const meta = $('heatmap-meta');
+  if (meta && meta.dataset && meta.dataset.telemetryStatus) {
+    const status = meta.dataset.telemetryStatus;
+    if (status === 'stale') {
+      badge.textContent = 'STALE';
+      badge.className = 'badge badge-stale';
+      return;
+    }
+    if (status === 'unavailable') {
+      badge.textContent = 'UNAVAILABLE';
+      badge.className = 'badge badge-unavailable';
+      return;
+    }
+  }
+
+  badge.textContent = 'LIVE';
+  badge.className = 'badge badge-live';
 }
 
 /**

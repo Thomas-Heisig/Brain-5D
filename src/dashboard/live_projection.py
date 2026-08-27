@@ -159,6 +159,8 @@ class TelemetryFrame:
     synapses: tuple[tuple[int, int, float], ...]
     activity: tuple[tuple[int, int], ...]
     dimensions: tuple[int, int, int, int, int]
+    activity_window_ticks: int = 20
+    dt_ms: float = 1.0
 
 
 # ============================================================================
@@ -169,6 +171,7 @@ class TelemetryFrame:
 def capture_frame(
     network: NetworkAccess,
     activity_accumulator: ActivityWindowAccumulator | None = None,
+    dt_ms: float = 1.0,
 ) -> TelemetryFrame:
     """Capture a telemetry frame from the live network.
 
@@ -176,6 +179,7 @@ def capture_frame(
         network: The live network to capture from.
         activity_accumulator: Optional rolling activity accumulator.
             When provided, the frame includes per-neuron window spike counts.
+        dt_ms: Simulation time step in milliseconds. Default 1.0.
 
     Returns:
         A TelemetryFrame with neuron data.
@@ -194,9 +198,12 @@ def capture_frame(
         (nid, activity_accumulator.spikes_in_window(nid))
         for nid, _ in sorted(network.neurons.items())
     ) if activity_accumulator is not None else ()
+    window_ticks = activity_accumulator.window_ticks if activity_accumulator is not None else 20
     return TelemetryFrame(
         tick=tick, neurons=neurons, synapses=syns,
         activity=activity, dimensions=network.dimensions,
+        activity_window_ticks=window_ticks,
+        dt_ms=dt_ms,
     )
 
 
@@ -249,6 +256,7 @@ class TelemetryFrameStore:
         self._frames_captured: int = 0
         self._last_capture_duration_ms: float = 0.0
         self._last_observed_tick: int = 0
+        self._dt_ms: float = 1.0
 
     # ------------------------------------------------------------------
     # Properties
@@ -292,13 +300,17 @@ class TelemetryFrameStore:
     # Priming
     # ------------------------------------------------------------------
 
+    def set_dt_ms(self, dt_ms: float) -> None:
+        """Set the simulation dt_ms for Hz conversion."""
+        self._dt_ms = dt_ms
+
     def prime(self, network: NetworkAccess) -> None:
         """Explicitly capture Tick-0 frame before simulation starts.
 
         Ensures /api/live/projection can respond before any tick executes.
         """
         with self._lock:
-            self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+            self._frame = capture_frame(network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms)
             self._frames_captured = 1
 
     # ------------------------------------------------------------------
@@ -330,7 +342,7 @@ class TelemetryFrameStore:
             # Full frame capture only at cadence
             if self._ticks_observed % self.capture_interval_ticks == 0:
                 start = time.perf_counter()
-                self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+                self._frame = capture_frame(network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms)
                 self._last_capture_duration_ms = (time.perf_counter() - start) * 1000.0
                 self._frames_captured += 1
 
@@ -482,14 +494,10 @@ class LiveProjectionService:
     def __init__(
         self,
         network: NetworkAccess,
-        activity_window_ticks: int = 20,
         frame_store: TelemetryFrameStore | None = None,
-        dt_ms: float = 1.0,
     ) -> None:
         self.network = network
-        self.activity_window_ticks = activity_window_ticks
         self._frame_store = frame_store
-        self._dt_ms = dt_ms
 
     # ========================================================================
     # Public API
@@ -576,16 +584,18 @@ class LiveProjectionService:
         if current_max == float("-inf"):
             current_max = 0.0
 
-        # Metric metadata
-        window_ms = self.activity_window_ticks * self._dt_ms
+        # Metric metadata — derived exclusively from the frame/store
+        _window_ticks = frame.activity_window_ticks
+        _dt_ms = frame.dt_ms
+        window_ms = _window_ticks * _dt_ms
         metric_info = {
             "name": kind,
-            "window_ticks": self.activity_window_ticks,
+            "window_ticks": _window_ticks,
             "window_ms": window_ms,
         }
         if kind == ProjectionKind.ACTIVITY:
             metric_info["unit"] = "spikes/tick"
-            metric_info["unit_hz"] = f"spikes/tick * 1000/{self._dt_ms} Hz"
+            metric_info["unit_hz"] = f"spikes/tick * 1000/{_dt_ms} Hz"
 
         # Telemetry stats
         telemetry_stats: dict[str, object] = {}
@@ -716,7 +726,9 @@ class LiveProjectionService:
         if kind == ProjectionKind.SPIKE:
             return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            return spikes_in_window / self.activity_window_ticks
+            # The frame carries the authoritative window size
+            window = getattr(self._get_frame(), 'activity_window_ticks', 20)
+            return spikes_in_window / window
         return 0.0
 
     # ========================================================================

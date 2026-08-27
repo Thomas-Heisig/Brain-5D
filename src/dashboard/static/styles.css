@@ -3004,6 +3004,18 @@ footer {
   border: 1px solid rgba(255, 200, 80, 0.25);
 }
 
+.badge-stale {
+  background: rgba(255, 160, 60, 0.2);
+  color: #ffa03c;
+  border: 1px solid rgba(255, 160, 60, 0.3);
+}
+
+.badge-unavailable {
+  background: rgba(240, 96, 112, 0.15);
+  color: #f06070;
+  border: 1px solid rgba(240, 96, 112, 0.25);
+}
+
 /* ============================================================================
    PROVENANCE BADGE
    ============================================================================ */

@@ -58,6 +58,12 @@ visualization:
   spike_raster_neurons: 250
   projection_4d: d4
   activity_tau_ticks: 50.0
+
+dashboard:
+  live_telemetry:
+    enabled: true
+    activity_window_ticks: 20
+    capture_interval_ticks: 5
   show_heatmap: true
   heatmap_type: activity
 
