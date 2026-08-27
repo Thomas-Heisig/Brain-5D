@@ -2,10 +2,10 @@
   "schema_version": 1,
   "suite": "structural_e2e",
   "status": "verified",
-  "timestamp": "2026-08-27T10:14:21.393376",
+  "timestamp": "2026-08-27T10:30:41.761728",
   "python_version": "3.13.14",
-  "test_run_head": "b9342fb6d78147f86fc21975f7b216250edb7efa",
-  "tested_tree_digest": "cffdfd53e264aebde64204d1207c49afaf2d17b39b1f6a5c3f8c271b297a83a3",
+  "test_run_head": "5f9b624af52fb6a4b14d49324d044e50220714ea",
+  "tested_tree_digest": "38d5f270126524f86ada4315409b6eb4498cc01b8e42b3dd39c57c5c5c09e529",
   "test_command": "python -m pytest tests/test_structural_e2e.py -q",
   "proofs": {
     "test_proof_01_coordinator_instantiated": true,

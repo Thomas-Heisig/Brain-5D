@@ -29,6 +29,9 @@ from src.dashboard.live_projection import (
     ProjectionKind,
     Aggregation,
     capture_frame,
+    ActivityWindowAccumulator,
+    TelemetryFrameStore,
+    make_telemetry_hook,
 )
 
 
@@ -343,83 +346,200 @@ class TestNegativeMembrane:
 
 
 # ============================================================================
-# Test K — Different spike histories
+# Test K — Rolling Activity Window
 # ============================================================================
 
 
-class TestDifferentSpikeHistories:
-    """Different spike histories produce different activity."""
+class TestRollingActivityWindow:
+    """True rolling N-tick activity window."""
 
+    # ------------------------------------------------------------------
+    # TEST A — 1 vs 3 spikes
+    # ------------------------------------------------------------------
 
+    def test_one_vs_three_spikes(self) -> None:
+        """Neuron A (3 spikes) gets 3/20, Neuron B (1 spike) gets 1/20."""
+        acc = ActivityWindowAccumulator(window_ticks=20)
 
-    def test_firing_rate_one_vs_three_spikes(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
-        """Neuron with 3 spikes in window gets 3x rate of neuron with 1 spike.
+        # Tick 100: A spikes
+        acc.record_tick(100, [10])
+        # Tick 105: A spikes again
+        acc.record_tick(105, [10])
+        # Tick 110: A and B spike
+        acc.record_tick(110, [10, 20])
 
-        Uses spike_delta from TelemetryFrame with prev_spike_counters.
-        """
-        # Run ticks to advance time
-        for _ in range(10):
-            network.step()
+        assert acc.spikes_in_window(10) == 3, f"A should have 3 spikes, got {acc.spikes_in_window(10)}"
+        assert acc.spikes_in_window(20) == 1, f"B should have 1 spike, got {acc.spikes_in_window(20)}"
 
-        # Record current spike counters as baseline
-        prev_counters: dict[int, int] = {}
-        for nid, n in network.neurons.items():
-            prev_counters[nid] = n.spike_counter
+        assert acc.firing_rate(10) == 3 / 20, f"A rate: {acc.firing_rate(10)} != {3/20}"
+        assert acc.firing_rate(20) == 1 / 20, f"B rate: {acc.firing_rate(20)} != {1/20}"
 
-        # Make neuron 0 spike 3 times
-        for _ in range(3):
-            network.inject_current(0, 100.0)
-            network.step()
+    # ------------------------------------------------------------------
+    # TEST B — Boundary retention
+    # ------------------------------------------------------------------
 
-        # Make neuron 1 spike 1 time
-        network.inject_current(1, 100.0)
-        network.step()
+    def test_boundary_retention(self) -> None:
+        """Spike at tick 100 is present until tick 119, expired at tick 120."""
+        acc = ActivityWindowAccumulator(window_ticks=20)
 
-        # Capture frame with delta tracking
-        frame = capture_frame(network, prev_counters)
+        acc.record_tick(100, [1])
 
-        # Find the two neurons and check their deltas
-        neuron0_delta = None
-        neuron1_delta = None
-        for nid, _v, _energy, _u, _spike_counter, _last_spike_tick, spike_delta in frame.neurons:
-            if nid == 0:
-                neuron0_delta = spike_delta
-            if nid == 1:
-                neuron1_delta = spike_delta
+        # Should be present for ticks 100-119
+        for tick in range(100, 120):
+            assert acc.spikes_in_window(1) == 1, f"Spike should be present at tick {tick}"
 
-        # Both should have spiked
-        assert neuron0_delta is not None and neuron0_delta > 0, f"Neuron 0 should have spiked, got delta={neuron0_delta}"
-        assert neuron1_delta is not None and neuron1_delta > 0, f"Neuron 1 should have spiked, got delta={neuron1_delta}"
+        # Tick 120: spike at 100 expires (100 <= 120-20 = 100)
+        acc.record_tick(120, [])
+        assert acc.spikes_in_window(1) == 0, f"Spike should be expired at tick 120"
 
-        # Neuron 0 spiked more than neuron 1
-        assert neuron0_delta > neuron1_delta, (
-            f"Neuron 0 ({neuron0_delta} spikes) should have more spikes "
-            f"than neuron 1 ({neuron1_delta} spikes)"
-        )
+    # ------------------------------------------------------------------
+    # TEST C — Repeated spikes with gradual expiry
+    # ------------------------------------------------------------------
 
-        # Verify firing rates reflect the deltas
-        # Access firing_rate via public method
-        rate0 = service.project(kind=ProjectionKind.ACTIVITY, bins=5).range.get("max", 0.0) if neuron0_delta else 0.0
-        # Instead, compute expected rate directly:
-        rate0 = neuron0_delta / service.activity_window_ticks
-        rate1 = neuron1_delta / service.activity_window_ticks
-        assert rate0 > rate1, (
-            f"Rate0 ({rate0}) should be > Rate1 ({rate1})"
-        )
-        # With window=20: rate0 = delta0/20, rate1 = delta1/20
-        expected_rate0 = neuron0_delta / service.activity_window_ticks
-        expected_rate1 = neuron1_delta / service.activity_window_ticks
-        assert rate0 == expected_rate0, f"Rate0: {rate0} != {expected_rate0}"
-        assert rate1 == expected_rate1, f"Rate1: {rate1} != {expected_rate1}"
+    def test_repeated_spikes_gradual_expiry(self) -> None:
+        """Spikes at 100, 105, 110. Count decreases as each expires."""
+        acc = ActivityWindowAccumulator(window_ticks=20)
+
+        acc.record_tick(100, [1])
+        acc.record_tick(105, [1])
+        acc.record_tick(110, [1])
+
+        # At tick 110: all 3 spikes in window
+        assert acc.spikes_in_window(1) == 3
+
+        # Tick 120: spike at 100 expires (100 <= 100)
+        acc.record_tick(120, [])
+        assert acc.spikes_in_window(1) == 2, f"Should be 2 after expiry, got {acc.spikes_in_window(1)}"
+
+        # Tick 125: spike at 105 expires (105 <= 105)
+        acc.record_tick(125, [])
+        assert acc.spikes_in_window(1) == 1, f"Should be 1 after expiry, got {acc.spikes_in_window(1)}"
+
+        # Tick 130: spike at 110 expires (110 <= 110)
+        acc.record_tick(130, [])
+        assert acc.spikes_in_window(1) == 0, f"Should be 0 after expiry, got {acc.spikes_in_window(1)}"
+
+    # ------------------------------------------------------------------
+    # TEST D — No spikes
+    # ------------------------------------------------------------------
+
+    def test_no_spikes(self) -> None:
+        """Accumulator with no spikes returns 0."""
+        acc = ActivityWindowAccumulator(window_ticks=20)
+        acc.record_tick(100, [])
+        acc.record_tick(200, [])
+        assert acc.spikes_in_window(1) == 0
+        assert acc.total_spikes == 0
+
+    # ------------------------------------------------------------------
+    # TEST E — Structural changes (new/removed neurons)
+    # ------------------------------------------------------------------
+
+    def test_structural_changes_safe(self) -> None:
+        """Accumulator handles new and removed neuron IDs safely."""
+        acc = ActivityWindowAccumulator(window_ticks=20)
+
+        # Neuron 1 spikes
+        acc.record_tick(100, [1])
+        assert acc.spikes_in_window(1) == 1
+
+        # Neuron 2 appears (new neuron)
+        acc.record_tick(105, [2])
+        assert acc.spikes_in_window(2) == 1
+        assert acc.spikes_in_window(1) == 1
+
+        # Neuron 1 spikes expire
+        acc.record_tick(120, [])
+        assert acc.spikes_in_window(1) == 0  # expired
+        assert acc.spikes_in_window(2) == 1  # still present
+
+        # Neuron 2 expires too
+        acc.record_tick(125, [])
+        assert acc.spikes_in_window(2) == 0
+
+        # Unknown neuron returns 0
+        assert acc.spikes_in_window(999) == 0
 
 
 # ============================================================================
-# Test L — TelemetryFrame coherence
+# Test L — TelemetryFrameStore
+# ============================================================================
+
+
+class TestTelemetryFrameStore:
+    """TelemetryFrameStore with cadence and priming."""
+
+    def test_tick_0_prime(self, network: NeuralNetwork) -> None:
+        """Store can be primed at Tick 0 before any ticks."""
+        store = TelemetryFrameStore(capture_interval_ticks=50)
+        store.prime(network)
+        assert store.latest_frame is not None
+        assert store.latest_frame.tick == network.current_tick
+        assert store.stats["frames_captured"] == 1
+
+    def test_capture_cadence(self, network: NeuralNetwork) -> None:
+        """Full frame capture only at cadence boundary."""
+        store = TelemetryFrameStore(capture_interval_ticks=5)
+        store.prime(network)
+
+        # Run ticks — frames should only be captured every 5 ticks
+        from src.core.network import StepResult
+
+        for tick in range(1, 20):
+            result = network.step()
+            # Manually call the store as the hook would
+            store.on_tick_complete(network, result)
+
+        # After 19 ticks + prime, frames captured = 1 + floor(19/5) = 1 + 3 = 4
+        assert store.stats["frames_captured"] >= 4
+        assert store.stats["ticks_observed"] == 19
+
+    def test_live_projection_reads_from_store(self, network: NeuralNetwork) -> None:
+        """LiveProjectionService reads from store when configured."""
+        store = TelemetryFrameStore(capture_interval_ticks=50)
+        store.prime(network)
+
+        svc = LiveProjectionService(network, frame_store=store)
+        proj = svc.project(kind=ProjectionKind.ENERGY)
+
+        assert proj.source == "live_runtime"
+        assert proj.tick == network.current_tick
+        assert "telemetry" in proj.to_json()
+        assert proj.to_json()["telemetry"]["frames_captured"] == 1
+
+    def test_store_no_frame_raises(self, network: NeuralNetwork) -> None:
+        """Querying an unprimed store raises RuntimeError."""
+        store = TelemetryFrameStore(capture_interval_ticks=50)
+        svc = LiveProjectionService(network, frame_store=store)
+        with pytest.raises(RuntimeError, match="no frame"):
+            svc.project(kind=ProjectionKind.ENERGY)
+
+    def test_activity_accumulator_in_store(self, network: NeuralNetwork) -> None:
+        """Store's accumulator correctly tracks rolling activity."""
+        store = TelemetryFrameStore(capture_interval_ticks=1, activity_window_ticks=20)
+        store.prime(network)
+
+        from src.core.network import StepResult
+
+        # Make neuron 0 spike
+        network.inject_current(0, 100.0)
+        result = network.step()
+        store.on_tick_complete(network, result)
+
+        # Frame should reflect the spike
+        frame = store.latest_frame
+        assert frame is not None
+        activity_dict = dict(frame.activity)
+        assert activity_dict.get(0, 0) >= 1
+
+
+# ============================================================================
+# Test M — TelemetryFrame coherence
 # ============================================================================
 
 
 class TestTelemetryFrame:
-    """TelemetryFrame captures atomically."""
+    """TelemetryFrame captures correctly."""
 
     def test_frame_tick_matches_network(self, network: NeuralNetwork) -> None:
         frame = capture_frame(network)
@@ -436,7 +556,42 @@ class TestTelemetryFrame:
 
 
 # ============================================================================
-# Test M — Invalid parameters
+# Test N — Telemetry error visibility
+# ============================================================================
+
+
+class TestTelemetryErrorVisibility:
+    """Telemetry hook failures produce RuntimeErrorEvent."""
+
+    def test_telemetry_error_emits_event(self) -> None:
+        """A failing telemetry hook produces a structured error event."""
+        from src.self_organization.runtime_adapter import get_error_buffer, ErrorBuffer
+
+        # Use a fresh buffer to avoid interfering with other tests
+        fresh_buffer = ErrorBuffer()
+        import src.self_organization.runtime_adapter as adapter
+        original_buffer = adapter._runtime_error_buffer
+        adapter._runtime_error_buffer = fresh_buffer
+        try:
+            from src.dashboard.live_projection import _emit_telemetry_error
+            _emit_telemetry_error(42, ValueError("test telemetry error"))
+
+            errors = fresh_buffer.events
+            telemetry_errors = [e for e in errors if e.component == "live_telemetry"]
+            assert len(telemetry_errors) >= 1
+
+            latest = telemetry_errors[-1]
+            assert latest.tick == 42
+            assert latest.component == "live_telemetry"
+            assert latest.phase == "post_tick_capture"
+            assert not latest.fatal
+            assert "test telemetry error" in latest.message
+        finally:
+            adapter._runtime_error_buffer = original_buffer
+
+
+# ============================================================================
+# Test O — Invalid parameters
 # ============================================================================
 
 

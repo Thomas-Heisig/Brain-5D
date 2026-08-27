@@ -7,15 +7,18 @@ It is the authoritative source for the LIVE visualization mode.
 Key design decisions:
 1. Read-only — never mutates network state.
 2. Bounded output — aggregation happens server-side.
-3. No caching — every call reads fresh state (lightweight field access).
-4. Source provenance — every response identifies itself as LIVE_RUNTIME.
-5. TelemetryFrame — atomically captured tick snapshot to avoid incoherent
-   reads across a concurrently stepping simulation.
+3. Source provenance — every response identifies itself as LIVE_RUNTIME.
+4. TelemetryFrameStore — post-tick hook captures immutable frames at a
+   configurable cadence.
+5. ActivityWindowAccumulator — true rolling N-tick spike count with
+   O(spikes_this_tick) per-tick complexity. No per-neuron history in Neuron.
 """
 
 from __future__ import annotations
 
 import math
+import time
+from collections import deque
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Protocol, cast
@@ -59,42 +62,126 @@ class NetworkAccess(Protocol):
 
 
 # ============================================================================
-# Telemetry Frame — atomic tick snapshot
+# Activity Window Accumulator
+# ============================================================================
+
+
+class ActivityWindowAccumulator:
+    """True rolling N-tick spike count accumulator.
+
+    Per-tick complexity: O(spikes_this_tick) — only neurons that actually
+    spiked are touched. No per-neuron history stored in Neuron.
+
+    Maintains a deque of (tick, spike_ids) entries. On each tick:
+    1. Expire entries whose tick <= current_tick - window_ticks
+    2. Decrement their neuron counts
+    3. Record current spike_ids
+    4. Increment current counts
+
+    Example:
+        >>> acc = ActivityWindowAccumulator(window_ticks=20)
+        >>> acc.record_tick(100, [1, 2, 3])
+        >>> acc.spikes_in_window(1)
+        1
+        >>> acc.firing_rate(1)
+        0.05
+    """
+
+    def __init__(self, window_ticks: int = 20) -> None:
+        if window_ticks <= 0:
+            raise ValueError(f"window_ticks must be > 0, got {window_ticks}")
+        self.window_ticks = window_ticks
+        self._window: deque[tuple[int, tuple[int, ...]]] = deque()
+        self._counts: dict[int, int] = {}
+
+    @property
+    def total_spikes(self) -> int:
+        """Total spikes across all neurons in the current window."""
+        return sum(self._counts.values())
+
+    @property
+    def current_window_size(self) -> int:
+        """Number of ticks currently in the window."""
+        return len(self._window)
+
+    def reset(self) -> None:
+        """Clear all accumulated data."""
+        self._window.clear()
+        self._counts.clear()
+
+    def record_tick(self, tick: int, spike_ids: Sequence[int]) -> None:
+        """Record spike_ids for one tick and advance the window.
+
+        Args:
+            tick: Current simulation tick.
+            spike_ids: IDs of neurons that spiked this tick.
+        """
+        # Expire entries outside the window
+        cutoff = tick - self.window_ticks
+        while self._window and self._window[0][0] <= cutoff:
+            _expired_tick, expired_ids = self._window.popleft()
+            for nid in expired_ids:
+                if nid in self._counts:
+                    self._counts[nid] -= 1
+                    if self._counts[nid] <= 0:
+                        del self._counts[nid]
+
+        # Record this tick
+        ids_tuple = tuple(spike_ids)
+        self._window.append((tick, ids_tuple))
+        for nid in ids_tuple:
+            self._counts[nid] = self._counts.get(nid, 0) + 1
+
+    def spikes_in_window(self, neuron_id: int) -> int:
+        """Return the spike count for a neuron in the current window."""
+        return self._counts.get(neuron_id, 0)
+
+    def firing_rate(self, neuron_id: int) -> float:
+        """Return firing rate in spikes/tick for a neuron."""
+        return self.spikes_in_window(neuron_id) / self.window_ticks
+
+
+# ============================================================================
+# Telemetry Frame
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class TelemetryFrame:
-    """Atomically captured tick snapshot for coherent dashboard reads.
+    """Immutable tick snapshot for coherent dashboard reads.
 
-    Captures all data needed for a single projection from one tick,
-    so the dashboard never sees a partially-updated network.
+    Captures all data needed for a single projection from one tick.
+    The activity field contains per-neuron rolling window spike counts.
     """
     tick: int
-    neurons: tuple[tuple[int, float, float, float, int, int, int], ...]
+    neurons: tuple[tuple[int, float, float, float, int, int], ...]
     synapses: tuple[tuple[int, int, float], ...]
+    activity: tuple[tuple[int, int], ...]
     dimensions: tuple[int, int, int, int, int]
 
 
-def capture_frame(network: NetworkAccess, prev_spike_counters: dict[int, int] | None = None) -> TelemetryFrame:
+# ============================================================================
+# Frame capture
+# ============================================================================
+
+
+def capture_frame(
+    network: NetworkAccess,
+    activity_accumulator: ActivityWindowAccumulator | None = None,
+) -> TelemetryFrame:
     """Capture a telemetry frame from the live network.
 
     Args:
         network: The live network to capture from.
-        prev_spike_counters: Previous spike_counter values per neuron ID.
-            When provided, the frame includes spike_delta (spikes since
-            last frame) instead of total spike_counter.
+        activity_accumulator: Optional rolling activity accumulator.
+            When provided, the frame includes per-neuron window spike counts.
 
     Returns:
         A TelemetryFrame with neuron data.
     """
     tick = network.current_tick
     neurons = tuple(
-        (
-            nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick,
-            n.spike_counter - prev_spike_counters.get(nid, 0)
-            if prev_spike_counters is not None else 0,
-        )
+        (nid, n.v, n.energy, n.u, n.spike_counter, n.last_spike_tick)
         for nid, n in sorted(network.neurons.items())
     )
     syns = tuple(
@@ -102,53 +189,171 @@ def capture_frame(network: NetworkAccess, prev_spike_counters: dict[int, int] | 
         for src_id, syns in sorted(network.synapses.items())
         for syn in syns
     )
+    activity = tuple(
+        (nid, activity_accumulator.spikes_in_window(nid))
+        for nid, _ in sorted(network.neurons.items())
+    ) if activity_accumulator is not None else ()
     return TelemetryFrame(
         tick=tick, neurons=neurons, synapses=syns,
-        dimensions=network.dimensions,
+        activity=activity, dimensions=network.dimensions,
     )
 
 
 # ============================================================================
-# Telemetry Frame Store — post-tick hook for atomic frame capture
+# Telemetry Frame Store — post-tick hook with cadence
 # ============================================================================
 
 
 class TelemetryFrameStore:
-    """Holds the latest TelemetryFrame, updated atomically after each tick.
+    """Holds the latest TelemetryFrame, updated at a configurable cadence.
 
-    Designed to be called from a RuntimeController post-tick hook.
-    The store tracks spike_counter deltas so the activity projection
-    can compute firing rates from spikes-per-window without requiring
-    per-neuron spike history in the core Neuron.
+    Architecture::
 
-    Usage in main.py::
+        EVERY TICK:
+            ActivityWindowAccumulator.record_tick() — O(spikes_this_tick)
 
-        store = TelemetryFrameStore()
-        controller.add_hook(lambda tick, result: store.on_tick_complete(network))
+        EVERY capture_interval_ticks:
+            Full neuron/synapse traversal — O(neurons + synapses)
+            → immutable TelemetryFrame
+            → atomically replace latest_frame
+
+    Post-tick hook errors are routed through the structured error buffer
+    as RuntimeErrorEvent(component=\"live_telemetry\", phase=\"post_tick_capture\").
+
+    Usage::
+
+        store = TelemetryFrameStore(capture_interval_ticks=50)
+        controller.add_hook(lambda tick, result: store.on_tick_complete(network, result))
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        capture_interval_ticks: int = 50,
+        activity_window_ticks: int = 20,
+    ) -> None:
+        if capture_interval_ticks <= 0:
+            raise ValueError(f"capture_interval_ticks must be > 0, got {capture_interval_ticks}")
+        self.capture_interval_ticks = capture_interval_ticks
+        self.activity_window_ticks = activity_window_ticks
         self._frame: TelemetryFrame | None = None
-        self._prev_spike_counters: dict[int, int] = {}
+        self._accumulator = ActivityWindowAccumulator(window_ticks=activity_window_ticks)
+        self._ticks_observed: int = 0
+        self._frames_captured: int = 0
+        self._last_capture_duration_ms: float = 0.0
+
+    # ------------------------------------------------------------------
+    # Properties
+    # ------------------------------------------------------------------
 
     @property
     def latest_frame(self) -> TelemetryFrame | None:
-        """Return the most recently captured frame, or None."""
+        """Return the most recently captured frame, or None if not yet primed."""
         return self._frame
 
-    def on_tick_complete(self, network: NetworkAccess) -> None:
-        """Called after each network tick to atomically capture a frame.
-
-        This runs in the controller's simulation thread, immediately after
-        ``network.step()`` completes. The frame captures state from a
-        single, just-completed tick.
-        """
-        self._frame = capture_frame(network, self._prev_spike_counters)
-        # Update previous counters for next delta computation
-        self._prev_spike_counters = {
-            nid: n.spike_counter
-            for nid, n in network.neurons.items()
+    @property
+    def stats(self) -> dict[str, object]:
+        """Telemetry statistics for the performance contract."""
+        return {
+            "latest_frame_tick": self._frame.tick if self._frame else None,
+            "capture_interval_ticks": self.capture_interval_ticks,
+            "activity_window_ticks": self.activity_window_ticks,
+            "frames_captured": self._frames_captured,
+            "ticks_observed": self._ticks_observed,
+            "last_capture_duration_ms": self._last_capture_duration_ms,
         }
+
+    # ------------------------------------------------------------------
+    # Priming
+    # ------------------------------------------------------------------
+
+    def prime(self, network: NetworkAccess) -> None:
+        """Explicitly capture Tick-0 frame before simulation starts.
+
+        Ensures /api/live/projection can respond before any tick executes.
+        """
+        self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+        self._frames_captured = 1
+
+    # ------------------------------------------------------------------
+    # Post-tick hook
+    # ------------------------------------------------------------------
+
+    def on_tick_complete(
+        self,
+        network: NetworkAccess,
+        result: object,
+    ) -> None:
+        """Called after each network tick.
+
+        Lightweight per-tick: updates the rolling activity window.
+        Full frame capture only every capture_interval_ticks.
+
+        Args:
+            network: The live network.
+            result: The StepResult from the completed tick.
+        """
+        self._ticks_observed += 1
+
+        # Lightweight per-tick: update rolling activity
+        tick = network.current_tick
+        spike_ids = getattr(result, 'spike_ids', ())
+        self._accumulator.record_tick(tick, spike_ids)
+
+        # Full frame capture only at cadence
+        if self._ticks_observed % self.capture_interval_ticks == 0:
+            start = time.perf_counter()
+            self._frame = capture_frame(network, activity_accumulator=self._accumulator)
+            self._last_capture_duration_ms = (time.perf_counter() - start) * 1000.0
+            self._frames_captured += 1
+
+
+# ============================================================================
+# Error visibility — route telemetry hook exceptions to error buffer
+# ============================================================================
+
+
+def _emit_telemetry_error(tick: int, exception: Exception) -> None:
+    """Emit a structured RuntimeErrorEvent for a telemetry hook failure.
+
+    The error is non-fatal: scientific simulation continues.
+    """
+    import traceback
+    from src.self_organization.runtime_adapter import RuntimeErrorEvent, get_error_buffer
+
+    tb_text = "".join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+    import hashlib
+    tb_hash = hashlib.sha256(tb_text.encode("utf-8")).hexdigest()
+
+    event = RuntimeErrorEvent(
+        timestamp=time.monotonic_ns(),
+        tick=tick,
+        component="live_telemetry",
+        phase="post_tick_capture",
+        exception_type=f"{type(exception).__module__}.{type(exception).__qualname__}",
+        message=str(exception),
+        fatal=False,
+        traceback_hash=tb_hash,
+    )
+    get_error_buffer().push(event)
+
+
+# ============================================================================
+# Safe hook wrapper
+# ============================================================================
+
+
+def make_telemetry_hook(store: TelemetryFrameStore, network: NetworkAccess):
+    """Create a post-tick hook that safely calls the store.
+
+    Exceptions are routed to the structured error buffer instead of
+    being silently swallowed by RuntimeController's except Exception: pass.
+    """
+    def hook(tick: int, result: object) -> None:
+        try:
+            store.on_tick_complete(network, result)
+        except Exception as exc:
+            _emit_telemetry_error(tick, exc)
+    return hook
 
 
 # ============================================================================
@@ -198,20 +403,24 @@ class LiveProjection:
         kind: The projection kind.
         dimensions: The network's 5D dimensions.
         projection: Projection metadata (axes, aggregation, bins).
+        metric: Metric metadata (name, unit, window_ticks, etc.).
         range: Value range metadata (min, max, mean) over non-empty bins only.
         sample_count: Number of neurons sampled.
         values: 2D array of aggregated values (null for empty bins).
         mask: 2D boolean array — true where bin has data.
+        telemetry: Telemetry statistics (cadence, frames, etc.).
     """
     source: str = "live_runtime"
     tick: int = 0
     kind: str = ""
     dimensions: tuple[int, int, int, int, int] = (0, 0, 0, 0, 0)
     projection: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
+    metric: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
     range: dict[str, float] = field(default_factory=dict)  # type: ignore[type-arg]
     sample_count: int = 0
     values: list[list[float | None]] = field(default_factory=list)  # type: ignore[type-arg]
     mask: list[list[bool]] = field(default_factory=list)  # type: ignore[type-arg]
+    telemetry: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
 
     def to_json(self) -> dict[str, JSONValue]:
         return cast("dict[str, JSONValue]", {
@@ -220,10 +429,12 @@ class LiveProjection:
             "kind": self.kind,
             "dimensions": list(self.dimensions),
             "projection": dict(self.projection),
+            "metric": dict(self.metric),
             "range": dict(self.range),
             "sample_count": self.sample_count,
             "values": [list(row) for row in self.values],
             "mask": [list(row) for row in self.mask],
+            "telemetry": dict(self.telemetry),
         })
 
 
@@ -235,15 +446,22 @@ class LiveProjection:
 class LiveProjectionService:
     """Read-only live projection service for the dashboard.
 
-    Queries the in-memory NeuralNetwork directly via TelemetryFrame.
-    Never reads from .b5d snapshots.
+    Reads from TelemetryFrameStore when available.
+    Falls back to direct capture ONLY when no store is configured
+    (isolated unit tests). Production path always uses the store.
     """
 
-    def __init__(self, network: NetworkAccess, activity_window_ticks: int = 20,
-                 frame_store: TelemetryFrameStore | None = None) -> None:
+    def __init__(
+        self,
+        network: NetworkAccess,
+        activity_window_ticks: int = 20,
+        frame_store: TelemetryFrameStore | None = None,
+        dt_ms: float = 1.0,
+    ) -> None:
         self.network = network
         self.activity_window_ticks = activity_window_ticks
         self._frame_store = frame_store
+        self._dt_ms = dt_ms
 
     # ========================================================================
     # Public API
@@ -272,7 +490,7 @@ class LiveProjectionService:
 
         bins = max(5, min(200, bins))
 
-        # Read the latest telemetry frame (from store or direct capture)
+        # Read from store or direct capture
         frame = self._get_frame()
         dims = frame.dimensions
         dim_size_x = dims[dim_x]
@@ -330,6 +548,22 @@ class LiveProjectionService:
         if current_max == float("-inf"):
             current_max = 0.0
 
+        # Metric metadata
+        window_ms = self.activity_window_ticks * self._dt_ms
+        metric_info = {
+            "name": kind,
+            "window_ticks": self.activity_window_ticks,
+            "window_ms": window_ms,
+        }
+        if kind == ProjectionKind.ACTIVITY:
+            metric_info["unit"] = "spikes/tick"
+            metric_info["unit_hz"] = f"spikes/tick * 1000/{self._dt_ms} Hz"
+
+        # Telemetry stats
+        telemetry_stats: dict[str, object] = {}
+        if self._frame_store is not None:
+            telemetry_stats = dict(self._frame_store.stats)
+
         return LiveProjection(
             source="live_runtime",
             tick=frame.tick,
@@ -340,10 +574,12 @@ class LiveProjectionService:
                 "aggregation": aggregation,
                 "bins": bins,
             },
+            metric=metric_info,
             range={"min": current_min, "max": current_max, "mean": mean_val},
             sample_count=sample_count,
             values=values,
             mask=mask,
+            telemetry=telemetry_stats,
         )
 
     @staticmethod
@@ -378,7 +614,10 @@ class LiveProjectionService:
         global_min = float("inf")
         global_max = float("-inf")
 
-        for nid, v, energy, u, spike_counter, last_spike_tick, spike_delta in frame.neurons:
+        # Build a lookup of neuron_id -> spikes_in_window from frame.activity
+        activity_map: dict[int, int] = dict(frame.activity)
+
+        for nid, v, energy, u, spike_counter, last_spike_tick in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]
@@ -386,8 +625,8 @@ class LiveProjectionService:
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, spike_delta)
-            _ = u  # keep linter happy; u is available for future use
+            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, activity_map.get(nid, 0))
+            _ = u
             if math.isnan(value) or math.isinf(value):
                 continue
 
@@ -419,13 +658,19 @@ class LiveProjectionService:
     def _get_frame(self) -> TelemetryFrame:
         """Get the current telemetry frame.
 
-        Reads from the TelemetryFrameStore if available, otherwise
-        falls back to direct capture.
+        Reads from the TelemetryFrameStore when configured (production).
+        Falls back to direct capture ONLY for isolated unit tests
+        (no store configured).
         """
         if self._frame_store is not None:
             frame = self._frame_store.latest_frame
             if frame is not None:
                 return frame
+            raise RuntimeError(
+                "TelemetryFrameStore configured but has no frame. "
+                "Ensure store.prime() is called before first project()."
+            )
+        # Direct capture fallback — only for unit tests without a store
         return capture_frame(self.network)
 
     def _neuron_value(
@@ -433,7 +678,7 @@ class LiveProjectionService:
         v: float, energy: float,
         spike_counter: int, last_spike_tick: int,
         current_tick: int,
-        spike_delta: int = 0,
+        spikes_in_window: int = 0,
     ) -> float:
         """Extract the raw value from neuron fields for the given kind."""
         if kind == ProjectionKind.ENERGY:
@@ -443,20 +688,8 @@ class LiveProjectionService:
         if kind == ProjectionKind.SPIKE:
             return float(spike_counter)
         if kind == ProjectionKind.ACTIVITY:
-            return self._firing_rate(spike_delta, current_tick)
+            return spikes_in_window / self.activity_window_ticks
         return 0.0
-
-    def _firing_rate(self, spike_delta: int, current_tick: int) -> float:
-        """Compute firing rate in spikes/tick over the activity window.
-
-        Uses spike_delta (spikes since last frame capture) divided by
-        the activity window. This is a rate in spikes/tick.
-        For dt=1ms: 1 spike/tick = 1000 Hz.
-        """
-        window = self.activity_window_ticks
-        if spike_delta == 0:
-            return 0.0
-        return spike_delta / window
 
     # ========================================================================
     # Internal: weight projection
@@ -485,7 +718,7 @@ class LiveProjectionService:
             neuron_weight_sum[src_id] = neuron_weight_sum.get(src_id, 0.0) + weight
             neuron_weight_count[src_id] = neuron_weight_count.get(src_id, 0) + 1
 
-        for nid, _v, _energy, _u, _spike_counter, _last_spike_tick, _spike_delta in frame.neurons:
+        for nid, _v, _energy, _u, _spike_counter, _last_spike_tick in frame.neurons:
             coords = unpack_coords(nid)
             x_coord = coords[dim_x]
             y_coord = coords[dim_y]

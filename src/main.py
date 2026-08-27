@@ -832,12 +832,15 @@ def main() -> int:
     if not args.no_dashboard and _dashboard_available and controller is not None:
         try:
             # Create TelemetryFrameStore for atomic live visualization
-            from src.dashboard.live_projection import TelemetryFrameStore
-            _telemetry_store = TelemetryFrameStore()
-            # Register post-tick hook so the store captures a frame after each tick
-            controller.add_hook(
-                lambda tick, result: _telemetry_store.on_tick_complete(controller.network)
+            from src.dashboard.live_projection import TelemetryFrameStore, make_telemetry_hook
+            _telemetry_store = TelemetryFrameStore(
+                capture_interval_ticks=50,
+                activity_window_ticks=20,
             )
+            # Prime Tick-0 frame so dashboard can respond immediately
+            _telemetry_store.prime(controller.network)
+            # Register post-tick hook via safe wrapper (routes errors to error buffer)
+            controller.add_hook(make_telemetry_hook(_telemetry_store, controller.network))
 
             _OperatorBridge_cls = cast(type, _OperatorBridge)
             operator_bridge = _OperatorBridge_cls(
