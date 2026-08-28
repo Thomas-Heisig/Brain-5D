@@ -49,7 +49,10 @@ Full RNG state persistence                   VERIFIED (Phase 5)
 Canonical full-state digest                  VERIFIED (Phase 3-4)
 Structural determinism                       VERIFIED (Phase 7)
 Homeostasis + learning state persistence     VERIFIED (Phase 8)
-Restore-and-continue identity                OPEN (Phase 9)
+Restore-and-continue identity                OPEN (engine attach fix applied, 
+                                                 C still diverges — synapse 
+                                                 list order after file restore
+                                                 causes STDP weight misalignment)
 Production restore bundle                    VERIFIED (Phase 9)
 LearningEngine deterministic keying          VERIFIED (Phase 9)
 Gate evidence binding                        VERIFIED (Phase 9)
@@ -143,7 +146,9 @@ Excluded:
 20. Canonical state digest .................................. ✅
 21. Structural determinism .................................. ✅
 22. Homeostasis + learning state persistence ............... ✅
-23. Restore-and-continue determinism ........................ 🔴
+23. Restore-and-continue determinism ........................ 🔴 (engine attach fixed, 
+                                                                   C still diverges — 
+                                                                   synapse list order)
 24. Production restore bundle (restore_full) ............... ✅
 25. LearningEngine deterministic keying .................... ✅
 26. Gate evidence binding (determinism artifact) ........... ✅
@@ -263,6 +268,10 @@ Registered experiments:
 * [x] Verification artifact generation uses canonical compute_source_tree_digest() everywhere
 * [x] Verification artifacts use test_run_head (provenance) instead of tested_commit (misleading)
 * [ ] Restore Determinism A/B/C (uninterrupted vs in-process vs process restart)
+  * [x] Engine attach fix — restored engines were passive
+  * [ ] Synapse list order after file restore causes STDP weight misalignment
+  * [ ] Learning engine refresh_topology() iterates in list order
+  * [ ] _incoming dict order depends on iteration order
 
 ## Gate C
 * [ ] EXP-DET-0001 executed

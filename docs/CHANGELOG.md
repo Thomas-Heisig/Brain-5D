@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-28 — Dashboard Hardening + Engine Attach Fix
+
+### Dashboard Disconnect Hardening
+- **`src/dashboard/server.py`**: `_send_json()` now wraps the entire HTTP response emission (send_response, send_header, end_headers, wfile.write) in a single try/except for BrokenPipeError, ConnectionResetError, ConnectionAbortedError. Previously only wfile.write was protected.
+- **`src/dashboard/server.py`**: `_handle_exception()` immediately returns for client disconnect errors at the top of the method, preventing a second write attempt on a dead socket.
+- **`tests/test_dashboard_disconnect_hardening.py`**: 6 new regression tests covering disconnect at every stage of response emission.
+
+### Engine Attach Fix (Restore Determinism)
+- **`src/storage/core_restore.py`**: `restore_full()` now calls `.attach()` on created homeostasis and learning engines. Without attach(), the engines were passive — they existed but were not registered as post-step hooks. This was the root cause of Path C divergence in the A/B/C protocol.
+- After this fix, A and C match at K (restore point), but still diverge during K→N due to synapse list order after file restore affecting learning engine iteration.
+
+---
+
 ## 2026-08-28 — Hugging Face Repository Preparation
 
 ### New Files for Hugging Face
