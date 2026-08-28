@@ -313,14 +313,6 @@ def _run_path_C(config: dict[str, Any], tmp_path: Path) -> str:
         create_learning_engine=True,
     )
 
-    # DEBUG: check state at K after restore
-    d_at_K = _canonical_state_digest(
-        bundle.network,
-        bundle.homeostasis_engine,
-        bundle.learning_engine,
-    )
-    print(f"DEBUG C at K: {d_at_K}")
-
     _run_stimulus_schedule(bundle.network, N - K)
     return _canonical_state_digest(
         bundle.network,
