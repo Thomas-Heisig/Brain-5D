@@ -425,12 +425,14 @@ def restore_full(
 
         homeostasis_engine = HomeostasisEngine(network, dict(config))
         restore_homeostasis_state(homeostasis_engine, checkpoint)
+        homeostasis_engine.attach()
 
     if create_learning_engine:
         from src.learning.learning_engine import LearningEngine
 
         learning_engine = LearningEngine(network, dict(config))
         restore_learning_state(learning_engine, checkpoint)
+        learning_engine.attach()
 
     return RestoredBundle(
         network=network,
