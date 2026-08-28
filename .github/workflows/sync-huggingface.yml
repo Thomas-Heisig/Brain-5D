@@ -1,0 +1,53 @@
+# ============================================================================
+# Brain-5D — GitHub → Hugging Face Sync Workflow
+# ============================================================================
+# Dieses Workflow synchronisiert den main-Branch automatisch von GitHub
+# zum Hugging Face Repository nach jedem Push.
+#
+# Voraussetzungen:
+#   1. HF_TOKEN als Secret in GitHub Settings → Secrets and variables → Actions
+#   2. Hugging Face Repository existiert bereits
+# ============================================================================
+
+name: Sync to Hugging Face
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Manueller Trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - name: Push to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME || 'Thomas-Heisig' }}
+          HF_REPO: Brain-5D
+        run: |
+          set -e
+          # Git-Konfiguration
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          # Hugging Face Remote hinzufügen
+          git remote add huggingface \
+            "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
+
+          # Haupt-README durch HF-README ersetzen (für Hugging Face)
+          # und dann pushen
+          if [ -f HF_README.md ]; then
+            cp HF_README.md README.md
+            git add README.md
+            git commit --allow-empty -m "Sync: Update HF README"
+          fi
+
+          # Push zum Hugging Face Repository
+          git push huggingface main --force

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-08-28 — Hugging Face Repository Preparation
+
+### New Files for Hugging Face
+- **`HF_README.md`**: Hugging Face-spezifische README mit YAML Frontmatter (license, tags, pipeline_tag) und angepasstem Inhalt für die Hugging Face Platform.
+- **`.huggingface/metadata.yaml`**: Repository-Metadaten für huggingface_hub (library_name, tags, card-info).
+- **`.huggingface/space_config.yaml`**: Konfiguration für einen optionalen Hugging Face Space (Docker-basiert, Port 8765).
+- **`.huggingface/README.md`**: Dokumentation zur Nutzung des Hugging Face Repositories.
+- **`.github/workflows/sync-huggingface.yml`**: GitHub Actions Workflow zur automatischen Synchronisation von GitHub → Hugging Face.
+
+### Infrastructure
+- **`.gitattributes`**: Erweitert um Git LFS-Konfiguration für große Dateien (`.b5d`, `.ckpt`, `artifacts/`, Bilder, Model Weights).
+
+---
+
 ## 2026-08-26 — Pre-Experiment Closure Sprint (Part 1)
 
 ### Gate Evidence Binding (Breaking Change)

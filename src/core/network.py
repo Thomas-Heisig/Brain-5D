@@ -785,9 +785,12 @@ class NeuralNetwork:
         external_currents = self.pending_currents.copy()
         self.pending_currents.clear()
 
-        # 2. Deliver queued spike events
+        # 2. Deliver queued spike events in deterministic order
         synaptic_currents: dict[int, float] = {}
-        events = self.event_slots[slot_index]
+        events = sorted(
+            self.event_slots[slot_index],
+            key=lambda e: (e.delivery_tick, e.source_id, e.target_id),
+        )
 
         for ev in events:
             if self.debug_invariants and ev.delivery_tick != tick:
@@ -841,8 +844,11 @@ class NeuralNetwork:
                 if nid in self.output_cells:
                     output_spikes.append(nid)
 
-                # Queue outgoing spikes
-                for connection in self.synapses.get(nid, []):
+                # Queue outgoing spikes in deterministic order (by target_id)
+                for connection in sorted(
+                    self.synapses.get(nid, []),
+                    key=lambda s: s.target_id,
+                ):
                     connection.last_pre_spike = tick
                     delivery_tick = tick + connection.delay
                     slot = delivery_tick % len(self.event_slots)

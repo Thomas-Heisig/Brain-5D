@@ -1,0 +1,41 @@
+# ============================================================================
+# Brain-5D — Hugging Face Space Configuration
+# ============================================================================
+# Diese Konfiguration definiert einen optionalen Hugging Face Space,
+# der den Brain-5D Operator Dashboard als Web-App bereitstellt.
+#
+# Aktivierung (nach Repository-Erstellung):
+#   1. Auf https://huggingface.co/new-space ein neues Space erstellen
+#   2. Docker/Python SDK als SDK wählen
+#   3. Mit diesem Repository verknüpfen
+# ============================================================================
+
+# SDK-Typ (docker, streamlit, gradio, static)
+sdk: docker
+
+# Dockerfile-Pfad (relativ zum Space-Root)
+dockerfile: Dockerfile
+
+# Container Port (muss mit EXPOSE im Dockerfile übereinstimmen)
+port: 8765
+
+# Startup Command
+command: python -m src.main --config configs/poc_config.yaml
+
+# Umgebungsvariablen
+env:
+  - name: BRAIN5D_HEADLESS
+    value: "false"
+  - name: BRAIN5D_DASHBOARD_PORT
+    value: "8765"
+  - name: BRAIN5D_DASHBOARD_HOST
+    value: "0.0.0.0"
+
+# Hardware-Anforderungen
+hardware:
+  cpu: "basic"       # basic, medium, large
+  memory: "8GB"
+  gpu: false
+
+# Ländereinstellung
+country: "us"

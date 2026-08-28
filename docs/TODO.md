@@ -1,6 +1,10 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-27
+> Last updated: 2026-08-28
+>
+> Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
+> .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
+> GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   All 5 verification artifacts share the same tested_tree_digest ✅

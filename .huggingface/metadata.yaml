@@ -1,0 +1,49 @@
+# ============================================================================
+# Brain-5D — Hugging Face Repository Metadata
+# ============================================================================
+# Diese Datei definiert die Metadaten für das Hugging Face Repository.
+# Sie wird von huggingface_hub ausgelesen, wenn vorhanden.
+# ============================================================================
+
+# Lizenz
+license: mit
+
+# Sprachen
+language:
+  - en
+
+# Bibliotheksname (für huggingface_hub Integration)
+library_name: brain5d-core
+
+# Pipeline-Tag (welche Art von ML-Aufgabe)
+pipeline_tag: reinforcement-learning
+
+# Tags für die Auffindbarkeit
+tags:
+  - spiking-neural-networks
+  - STDP
+  - structural-plasticity
+  - homeostasis
+  - neuromorphic
+  - simulation
+  - 5D
+  - neuroscience
+  - brain-inspired
+  - pytorch
+  - numpy
+
+# Karteikasten-Informationen
+card:
+  title: "Brain-5D: Sparse 5D Spiking-Neural Simulation with Observable Plasticity"
+  summary: >
+    An experimental spiking-neural simulation platform operating in a sparse
+    5D coordinate space. Combines spiking dynamics, STDP, homeostatic
+    regulation, structural self-organization, and deterministic persistence.
+  authors:
+    - name: Thomas Heisig
+  base_model: null
+  datasets: null
+  metrics:
+    - accuracy
+    - loss
+  inference: false
