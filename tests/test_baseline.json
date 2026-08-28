@@ -1,6 +1,6 @@
 {
-  "tested_commit": "979f70c87c115ece1da02d3fc6960bb131d254a5",
-  "tested_tree_digest": "92fcaffd41fa7c03f85616d8f4b800e550a4b430d373dcef32c15dfb29a8a5c8",
+  "tested_commit": "39a4b6ef06047ccdad3061535ba26108f2802827",
+  "tested_tree_digest": "e1d95be7eed623ff80cbacf24eb096b3a6d024a984e10e3738127303bce0b794",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -11,7 +11,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-08-28T08:45:27+0200",
+  "timestamp": "2026-08-28T09:54:13+0200",
   "python": "3.13.14",
   "full_collection": {
     "status": "passed",
@@ -19,9 +19,11 @@
   },
   "full_suite": {
     "command": "python -m pytest tests/ -q",
-    "passed": 419,
-    "failed": 0,
+    "passed": 418,
+    "failed": 3,
     "skipped": 2,
+    "xfailed": 0,
+    "xpassed": 0,
     "skipped_reasons": [
       "1] tests\\test_b5d_storage.py:344: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
       "1] tests\\test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable"

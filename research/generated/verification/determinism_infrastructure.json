@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "status": "verified",
-  "test_run_head": "979f70c87c115ece1da02d3fc6960bb131d254a5",
-  "tested_tree_digest": "92fcaffd41fa7c03f85616d8f4b800e550a4b430d373dcef32c15dfb29a8a5c8",
-  "timestamp": "2026-08-28T08:46:01+0200",
+  "test_run_head": "39a4b6ef06047ccdad3061535ba26108f2802827",
+  "tested_tree_digest": "e1d95be7eed623ff80cbacf24eb096b3a6d024a984e10e3738127303bce0b794",
+  "timestamp": "2026-08-28T09:46:39+0200",
   "python": "3.13.14",
   "test_files": [
     "tests/test_rng_persistence.py",

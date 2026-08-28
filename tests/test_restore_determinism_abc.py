@@ -193,9 +193,12 @@ def _canonical_state_digest(
 
 
 def _run_stimulus_schedule(network: NeuralNetwork, max_ticks: int) -> None:
+    """Run a deterministic stimulus schedule using sorted neuron IDs."""
+    # Determine stimulated IDs once from sorted() for determinism
+    stim_ids = tuple(sorted(network.neurons))[:3]
     for tick in range(max_ticks):
         if tick % 50 == 0:
-            for nid in list(network.neurons.keys())[:3]:
+            for nid in stim_ids:
                 network.inject_current(nid, 30.0)
         network.step()
 
@@ -342,14 +345,12 @@ class TestRestoreDeterminismABC:
         dB = _run_path_B(config)
         assert dA == dB, f"A != B\nA: {dA}\nB: {dB}"
 
-    @pytest.mark.xfail(reason="C path has B5D synapse ordering issue — tracked separately")
     def test_A_equals_C(self, tmp_path: Path) -> None:
         config = _config()
         dA = _run_path_A(config)
         dC = _run_path_C(config, tmp_path)
         assert dA == dC, f"A != C\nA: {dA}\nC: {dC}"
 
-    @pytest.mark.xfail(reason="C path has B5D synapse ordering issue — tracked separately")
     def test_B_equals_C(self, tmp_path: Path) -> None:
         config = _config()
         dB = _run_path_B(config)
@@ -368,9 +369,7 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     A_eq_B = dA == dB
     A_eq_C = dA == dC
     B_eq_C = dB == dC
-    # A==B is the primary proof (in-process restore).
-    # C (fresh-process restore) may have remaining B5D ordering issues.
-    all_equal = A_eq_B
+    all_equal = A_eq_B and A_eq_C and B_eq_C
 
     from src.dashboard.verification import compute_source_tree_digest
     repo_root = Path(__file__).resolve().parent.parent
@@ -411,7 +410,9 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     print(f"  digest_C = {dC}")
     print(f"  A==B: {A_eq_B}, A==C: {A_eq_C}, B==C: {B_eq_C}")
 
-    assert A_eq_B, f"A != B\nA: {dA}\nB: {dB}"
+    assert all_equal, (
+        f"Restore determinism FAILED: A==B={A_eq_B}, A==C={A_eq_C}, B==C={B_eq_C}"
+    )
 
 
 def _git_head(repo_root: Path) -> str | None:

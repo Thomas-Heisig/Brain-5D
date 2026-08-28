@@ -66,6 +66,8 @@ def main() -> int:
     passed = 0
     failed = 0
     skipped = 0
+    xfailed = 0
+    xpassed = 0
     collection_errors = 0
 
     match = re.search(r"(\d+) passed", output)
@@ -77,6 +79,12 @@ def main() -> int:
     match = re.search(r"(\d+) skipped", output)
     if match:
         skipped = int(match.group(1))
+    match = re.search(r"(\d+) xfailed", output)
+    if match:
+        xfailed = int(match.group(1))
+    match = re.search(r"(\d+) xpassed", output)
+    if match:
+        xpassed = int(match.group(1))
 
     # Detect collection errors
     if "errors" in output and "collection" in output.lower():
@@ -84,7 +92,7 @@ def main() -> int:
         if match:
             collection_errors = int(match.group(1))
 
-    print(f"  {passed} passed, {failed} failed, {skipped} skipped, {collection_errors} collection errors")
+    print(f"  {passed} passed, {failed} failed, {skipped} skipped, {xfailed} xfailed, {xpassed} xpassed, {collection_errors} collection errors")
     print()
 
     # Build baseline
@@ -104,6 +112,8 @@ def main() -> int:
             "passed": passed,
             "failed": failed,
             "skipped": skipped,
+            "xfailed": xfailed,
+            "xpassed": xpassed,
         },
     }
 
