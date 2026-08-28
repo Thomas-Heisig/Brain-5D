@@ -1384,26 +1384,26 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 separators=(",", ":"),
             ).encode("utf-8")
 
-        self.send_response(status)
-
-        self.send_header(
-            "Content-Type",
-            "application/json; charset=utf-8",
-        )
-
-        self.send_header(
-            "Cache-Control",
-            "no-store, no-cache, must-revalidate",
-        )
-
-        self.send_header(
-            "Content-Length",
-            str(len(encoded)),
-        )
-
-        self.end_headers()
-
         try:
+            self.send_response(status)
+
+            self.send_header(
+                "Content-Type",
+                "application/json; charset=utf-8",
+            )
+
+            self.send_header(
+                "Cache-Control",
+                "no-store, no-cache, must-revalidate",
+            )
+
+            self.send_header(
+                "Content-Length",
+                str(len(encoded)),
+            )
+
+            self.end_headers()
+
             self.wfile.write(encoded)
         except (
             BrokenPipeError,
@@ -1503,6 +1503,17 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         exc: Exception,
     ) -> None:
         """Translate request exceptions into JSON responses."""
+
+        # Client disconnect – socket is dead, do not attempt any write.
+        if isinstance(
+            exc,
+            (
+                BrokenPipeError,
+                ConnectionResetError,
+                ConnectionAbortedError,
+            ),
+        ):
+            return
 
         if isinstance(
             exc,
