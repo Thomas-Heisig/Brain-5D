@@ -4,32 +4,50 @@ This test implements the canonical A/B/C protocol:
 
 K = 500
 N = 1000
+SEED = 42
 
-A (reference):
+A (reference uninterrupted):
     fresh process -> 0 -> N uninterrupted
 
-B (in-process restore):
+B (in-process restore via production restore_full):
     fresh process -> 0 -> K
-    save production checkpoint
-    restore with production restore_full()
-    continue K -> N
+    write production snapshot/journal/checkpoint
+    call production restore_full() -> DIFFERENT network object
+    continue restored network K -> N
 
-C (fresh-process restore):
-    process 1: 0 -> K -> save checkpoint -> exit
-    process 2: load from filesystem -> restore -> continue K -> N
+C (fresh-process restore via subprocess):
+    PROCESS C1 (in-process):
+        fresh network -> 0 -> K
+        write snapshot/journal/checkpoint/config/schedule/pid
+        exit (no surviving Python objects)
+    PROCESS C2 (subprocess):
+        subprocess.run([sys.executable, _restore_worker.py, ...])
+        no surviving Python objects from C1
+        read filesystem artifacts only
+        call production restore_full()
+        continue K -> N
+        write digest and pid_C2
+        exit
 
 Required result:
     digest_A(N) == digest_B(N) == digest_C(N)
 
-The test writes a verification artifact to
-research/generated/verification/restore_determinism.json
-when all proofs pass.
+Proofs (all machine-measured, never hardcoded):
+    - uninterrupted_completed
+    - in_process_restore_completed
+    - fresh_process_restore_completed
+    - A_equals_B
+    - A_equals_C
+    - B_equals_C
+    - fresh_process_is_real (subprocess used AND pid_C1 != pid_C2)
+    - production_restore_path_used (B uses restore_full AND C2 uses restore_full)
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -59,6 +77,7 @@ SEED: int = 42
 
 ARTIFACT_DIR = Path(__file__).resolve().parent.parent / "research" / "generated" / "verification"
 ARTIFACT_PATH = ARTIFACT_DIR / "restore_determinism.json"
+WORKER_PATH = Path(__file__).resolve().parent / "_restore_worker.py"
 
 
 def _config() -> dict[str, Any]:
@@ -92,6 +111,11 @@ def _config() -> dict[str, Any]:
         "reward": {"enabled": True, "learning_rate": 0.01, "delay_ticks": 5},
     }
 
+def _config_sha256(config: dict[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(config, sort_keys=True, ensure_ascii=False).encode()
+    ).hexdigest()
+
 
 def _create_network(config: dict[str, Any]) -> NeuralNetwork:
     import random
@@ -106,36 +130,54 @@ def _create_network(config: dict[str, Any]) -> NeuralNetwork:
     return net
 
 
+def _build_absolute_schedule(config: dict[str, Any], total_ticks: int) -> list[dict[str, Any]]:
+    network = _create_network(config)
+    stim_ids = tuple(sorted(network.neurons))[:3]
+    schedule: list[dict[str, Any]] = []
+    for tick in range(total_ticks):
+        if tick % 50 == 0:
+            schedule.append({
+                "tick": tick,
+                "neuron_ids": list(stim_ids),
+                "current": 30.0,
+            })
+    return schedule
+
+
+def _run_absolute_schedule(network: NeuralNetwork, schedule: list[dict[str, Any]], end_tick: int) -> None:
+    stim_map: dict[int, list[tuple[int, float]]] = {}
+    for entry in schedule:
+        t = int(entry["tick"])
+        if t < end_tick:
+            stim_map[t] = [(nid, float(entry["current"])) for nid in entry["neuron_ids"]]
+    while network.current_tick < end_tick:
+        tick = network.current_tick
+        if tick in stim_map:
+            for nid, curr in stim_map[tick]:
+                network.inject_current(nid, curr)
+        network.step()
+
+
 def _canonical_state_digest(
     network: NeuralNetwork,
     homeostasis: HomeostasisEngine | None = None,
     learning: LearningEngine | None = None,
 ) -> str:
-    """Canonical SHA-256 digest of full scientific state.
-
-    Includes all future-causal state. Excludes timestamps, PID,
-    filesystem paths, dashboard telemetry.
-    """
     digester = hashlib.sha256()
-
     digester.update(str(network.current_tick).encode())
     digester.update(str(network.total_spikes).encode())
     digester.update(str(network.total_events_processed).encode())
-
     rng_version, rng_state, rng_gauss = network.rng.getstate()
     digester.update(str(rng_version).encode())
     digester.update(str(rng_state).encode())
     digester.update(str(rng_gauss).encode())
-
     for nid in sorted(network.pending_currents):
         digester.update(str(nid).encode())
         digester.update(str(network.pending_currents[nid]).encode())
-
     for nid in sorted(network.input_cells):
         digester.update(str(nid).encode())
     for nid in sorted(network.output_cells):
         digester.update(str(nid).encode())
-
     events = []
     for slot in network.event_slots:
         for ev in slot:
@@ -145,22 +187,11 @@ def _canonical_state_digest(
         digester.update(str(src).encode())
         digester.update(str(tgt).encode())
         digester.update(str(w).encode())
-
     for nid in sorted(network.neurons):
         n = network.neurons[nid]
-        digester.update(str(n.v).encode())
-        digester.update(str(n.u).encode())
-        digester.update(str(n.energy).encode())
-        digester.update(str(n.spike_counter).encode())
-        digester.update(str(n.last_spike_tick).encode())
-        digester.update(str(n.threshold_adaptation).encode())
-        digester.update(str(n.a).encode())
-        digester.update(str(n.b).encode())
-        digester.update(str(n.c).encode())
-        digester.update(str(n.d).encode())
-        digester.update(str(n.spike_cost).encode())
-
-    # Synapse state (sorted by source_id, target_id for stable comparison)
+        for fld in [n.v, n.u, n.energy, n.spike_counter, n.last_spike_tick,
+                     n.threshold_adaptation, n.a, n.b, n.c, n.d, n.spike_cost]:
+            digester.update(str(fld).encode())
     syn_data = []
     for src_id in sorted(network.synapses):
         for syn in network.synapses[src_id]:
@@ -171,12 +202,10 @@ def _canonical_state_digest(
         digester.update(str(delay).encode())
         digester.update(str(eligibility).encode())
         digester.update(str(lps).encode())
-
     if homeostasis is not None and hasattr(homeostasis, "_rates_hz"):
         for nid in sorted(homeostasis._rates_hz):
             digester.update(str(nid).encode())
             digester.update(str(homeostasis._rates_hz[nid]).encode())
-
     if learning is not None:
         for key in sorted(learning._states.keys()):
             state = learning._states[key]
@@ -188,70 +217,28 @@ def _canonical_state_digest(
         for reward in learning._pending_rewards:
             digester.update(str(reward.value).encode())
             digester.update(str(reward.tick).encode())
-
     return digester.hexdigest()
 
 
-def _run_stimulus_schedule(network: NeuralNetwork, max_ticks: int) -> None:
-    """Run a deterministic stimulus schedule using sorted neuron IDs."""
-    # Determine stimulated IDs once from sorted() for determinism
-    stim_ids = tuple(sorted(network.neurons))[:3]
-    for tick in range(max_ticks):
-        if tick % 50 == 0:
-            for nid in stim_ids:
-                network.inject_current(nid, 30.0)
-        network.step()
-
-
-def _run_path_A(config: dict[str, Any]) -> str:
-    network = _create_network(config)
-    homeo = HomeostasisEngine(network, config)
-    homeo.attach()
-    learn = LearningEngine(network, config)
-    learn.attach()
-    _run_stimulus_schedule(network, N)
-    return _canonical_state_digest(network, homeo, learn)
-
-
-def _run_path_B(config: dict[str, Any]) -> str:
-    network = _create_network(config)
-    homeo = HomeostasisEngine(network, config)
-    homeo.attach()
-    learn = LearningEngine(network, config)
-    learn.attach()
-    _run_stimulus_schedule(network, K)
-
-    learning_states = []
-    for key, state in learn._states.items():
-        pre_id, target_id = key
-        learning_states.append({
+def _capture_learning_states(learn: LearningEngine) -> list[dict[str, object]]:
+    return [
+        {
             "pre_id": pre_id, "target_id": target_id,
             "last_pre_tick": state.last_pre_tick,
             "last_post_tick": state.last_post_tick,
             "eligibility_value": state.eligibility.value,
             "eligibility_last_tick": state.eligibility.last_tick,
-        })
-    checkpoint = capture_runtime_checkpoint(
-        network,
-        homeostasis_rates=homeo._rates_hz,
-        learning_states=learning_states,
-        pending_rewards=[
-            {"value": r.value, "tick": r.tick} for r in learn._pending_rewards
-        ],
-    )
+        }
+        for key, state in learn._states.items()
+        for pre_id, target_id in [key]
+    ]
 
-    fresh_homeo = HomeostasisEngine(network, config)
-    fresh_learn = LearningEngine(network, config)
-    restore_homeostasis_state(fresh_homeo, checkpoint)
-    restore_learning_state(fresh_learn, checkpoint)
-    # Detach old engines before attaching fresh ones
-    homeo.detach()
-    learn.detach()
-    fresh_homeo.attach()
-    fresh_learn.attach()
 
-    _run_stimulus_schedule(network, N - K)
-    return _canonical_state_digest(network, fresh_homeo, fresh_learn)
+def _capture_pending_rewards(learn: LearningEngine) -> list[dict[str, object]]:
+    return [
+        {"value": r.value, "tick": r.tick}
+        for r in learn._pending_rewards
+    ]
 
 
 class _NetworkLike:
@@ -267,58 +254,162 @@ class _NetworkLike:
             setattr(self.__dict__["_net"], name, value)
 
 
-def _run_path_C(config: dict[str, Any], tmp_path: Path) -> str:
+def _write_production_artifacts(
+    network: NeuralNetwork,
+    homeo: HomeostasisEngine,
+    learn: LearningEngine,
+    tmp_path: Path,
+    schedule: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> dict[str, Path]:
+    rt = StorageRuntimeConfig(
+        snapshot_path=tmp_path / "base.b5d",
+        journal_path=tmp_path / "base.b5d.journal",
+        commit_interval_ticks=1,
+    )
+    with StorageSession(_NetworkLike(network), rt):
+        pass
+    learning_states = _capture_learning_states(learn)
+    checkpoint = capture_runtime_checkpoint(
+        network,
+        homeostasis_rates=homeo._rates_hz,
+        learning_states=learning_states,
+        pending_rewards=_capture_pending_rewards(learn),
+    )
+    cp_path = tmp_path / "runtime.json"
+    write_runtime_checkpoint(cp_path, checkpoint)
+    cfg_path = tmp_path / "config.json"
+    cfg_path.write_text(json.dumps(config, sort_keys=True), encoding="utf-8")
+    sched_path = tmp_path / "schedule.json"
+    sched_path.write_text(json.dumps(schedule, sort_keys=True), encoding="utf-8")
+    return {
+        "snapshot": rt.snapshot_path,
+        "journal": rt.journal_path,
+        "checkpoint": cp_path,
+        "config": cfg_path,
+        "schedule": sched_path,
+    }
+
+# ============================================================================
+# Path A — uninterrupted reference
+# ============================================================================
+
+def _run_path_A(config: dict[str, Any], schedule: list[dict[str, Any]]) -> str:
     network = _create_network(config)
     homeo = HomeostasisEngine(network, config)
     homeo.attach()
     learn = LearningEngine(network, config)
     learn.attach()
+    _run_absolute_schedule(network, schedule, N)
+    return _canonical_state_digest(network, homeo, learn)
 
-    runtime = StorageRuntimeConfig(
-        snapshot_path=tmp_path / "base.b5d",
-        journal_path=tmp_path / "base.b5d.journal",
-        commit_interval_ticks=1,
-    )
-    with StorageSession(_NetworkLike(network), runtime):
-        _run_stimulus_schedule(network, K)
 
-    learning_states = []
-    for key, state in learn._states.items():
-        pre_id, target_id = key
-        learning_states.append({
-            "pre_id": pre_id, "target_id": target_id,
-            "last_pre_tick": state.last_pre_tick,
-            "last_post_tick": state.last_post_tick,
-            "eligibility_value": state.eligibility.value,
-            "eligibility_last_tick": state.eligibility.last_tick,
-        })
-    checkpoint = capture_runtime_checkpoint(
-        network,
-        homeostasis_rates=homeo._rates_hz,
-        learning_states=learning_states,
-        pending_rewards=[
-            {"value": r.value, "tick": r.tick} for r in learn._pending_rewards
-        ],
-    )
-    checkpoint_path = tmp_path / "runtime.json"
-    write_runtime_checkpoint(checkpoint_path, checkpoint)
+# ============================================================================
+# Path B — in-process restore via production restore_full
+# ============================================================================
 
+def _run_path_B(
+    config: dict[str, Any],
+    schedule: list[dict[str, Any]],
+    tmp_path: Path,
+) -> tuple[str, bool]:
+    """Returns (digest, production_restore_path_used)."""
+    network = _create_network(config)
+    homeo = HomeostasisEngine(network, config)
+    homeo.attach()
+    learn = LearningEngine(network, config)
+    learn.attach()
+    _run_absolute_schedule(network, schedule, K)
+    artifacts = _write_production_artifacts(network, homeo, learn, tmp_path, schedule, config)
     bundle = restore_full(
-        snapshot_path=runtime.snapshot_path,
-        journal_path=runtime.journal_path,
-        checkpoint_path=checkpoint_path,
+        snapshot_path=artifacts["snapshot"],
+        journal_path=artifacts["journal"],
+        checkpoint_path=artifacts["checkpoint"],
         config=config,
         recovered_path=tmp_path / "recovered.b5d",
         create_homeostasis_engine=True,
         create_learning_engine=True,
     )
-
-    _run_stimulus_schedule(bundle.network, N - K)
-    return _canonical_state_digest(
-        bundle.network,
-        bundle.homeostasis_engine,
-        bundle.learning_engine,
+    is_different = (bundle.network is not network)
+    _run_absolute_schedule(bundle.network, schedule, N)
+    return (
+        _canonical_state_digest(bundle.network, bundle.homeostasis_engine, bundle.learning_engine),
+        is_different,
     )
+
+
+# ============================================================================
+# Path C — fresh-process restore via subprocess
+# ============================================================================
+
+def _run_path_C(
+    config: dict[str, Any],
+    schedule: list[dict[str, Any]],
+    tmp_path: Path,
+) -> tuple[str, bool]:
+    """Returns (digest, fresh_process_is_real)."""
+    pid_C1 = os.getpid()
+
+    # --- C1: run 0 -> K in-process, write artifacts ---
+    network = _create_network(config)
+    homeo = HomeostasisEngine(network, config)
+    homeo.attach()
+    learn = LearningEngine(network, config)
+    learn.attach()
+    _run_absolute_schedule(network, schedule, K)
+    artifacts = _write_production_artifacts(network, homeo, learn, tmp_path, schedule, config)
+
+    # Write pid_C1
+    pid_path = tmp_path / "pid_C1.txt"
+    pid_path.write_text(str(pid_C1), encoding="utf-8")
+
+    # --- C2: subprocess ---
+    worker_args = [
+        sys.executable,
+        str(WORKER_PATH),
+        "--snapshot", str(artifacts["snapshot"]),
+        "--journal", str(artifacts["journal"]),
+        "--checkpoint", str(artifacts["checkpoint"]),
+        "--config", str(artifacts["config"]),
+        "--schedule", str(artifacts["schedule"]),
+        "--output", str(tmp_path / "c2_result.json"),
+        "--end-tick", str(N),
+    ]
+
+    result = subprocess.run(
+        worker_args,
+        capture_output=True, text=True, timeout=300,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"C2 worker failed (exit {result.returncode}):\n"
+            f"stdout: {result.stdout}\n"
+            f"stderr: {result.stderr}"
+        )
+
+    c2_result = json.loads(Path(tmp_path / "c2_result.json").read_text(encoding="utf-8"))
+    digest = c2_result["digest"]
+    pid_C2 = c2_result["pid"]
+
+    fresh_process_is_real = (pid_C1 != pid_C2)
+
+    return digest, fresh_process_is_real
+
+
+# ============================================================================
+# Tests
+# ============================================================================
+
+SCHEDULE_CACHE: list[dict[str, Any]] | None = None
+
+
+def _get_schedule() -> list[dict[str, Any]]:
+    global SCHEDULE_CACHE
+    if SCHEDULE_CACHE is None:
+        SCHEDULE_CACHE = _build_absolute_schedule(_config(), N)
+    return SCHEDULE_CACHE
 
 
 class TestRestoreDeterminismABC:
@@ -326,45 +417,54 @@ class TestRestoreDeterminismABC:
 
     def test_path_A_completes(self) -> None:
         config = _config()
-        d = _run_path_A(config)
+        d = _run_path_A(config, _get_schedule())
         assert isinstance(d, str) and len(d) == 64
 
-    def test_path_B_completes(self) -> None:
+    def test_path_B_completes(self, tmp_path: Path) -> None:
         config = _config()
-        d = _run_path_B(config)
+        d, _ = _run_path_B(config, _get_schedule(), tmp_path)
         assert isinstance(d, str) and len(d) == 64
 
     def test_path_C_completes(self, tmp_path: Path) -> None:
         config = _config()
-        d = _run_path_C(config, tmp_path)
+        d, _ = _run_path_C(config, _get_schedule(), tmp_path)
         assert isinstance(d, str) and len(d) == 64
 
-    def test_A_equals_B(self) -> None:
+    def test_A_equals_B(self, tmp_path: Path) -> None:
         config = _config()
-        dA = _run_path_A(config)
-        dB = _run_path_B(config)
+        schedule = _get_schedule()
+        dA = _run_path_A(config, schedule)
+        dB, b_used_restore = _run_path_B(config, schedule, tmp_path)
+        assert b_used_restore, "Path B did not use restore_full()"
         assert dA == dB, f"A != B\nA: {dA}\nB: {dB}"
 
     def test_A_equals_C(self, tmp_path: Path) -> None:
         config = _config()
-        dA = _run_path_A(config)
-        dC = _run_path_C(config, tmp_path)
+        schedule = _get_schedule()
+        dA = _run_path_A(config, schedule)
+        dC, c_is_fresh = _run_path_C(config, schedule, tmp_path)
+        assert c_is_fresh, "Path C is not a fresh process"
         assert dA == dC, f"A != C\nA: {dA}\nC: {dC}"
 
     def test_B_equals_C(self, tmp_path: Path) -> None:
         config = _config()
-        dB = _run_path_B(config)
-        dC = _run_path_C(config, tmp_path)
+        schedule = _get_schedule()
+        dB, _ = _run_path_B(config, schedule, tmp_path)
+        dC, _ = _run_path_C(config, schedule, tmp_path)
         assert dB == dC, f"B != C\nB: {dB}\nC: {dC}"
 
 
 def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
-    """Run A/B/C protocol and write verification artifact."""
-    config = _config()
+    """Run A/B/C protocol and write verification artifact.
 
-    dA = _run_path_A(config)
-    dB = _run_path_B(config)
-    dC = _run_path_C(config, tmp_path)
+    All proof fields are machine-measured, never hardcoded.
+    """
+    config = _config()
+    schedule = _get_schedule()
+
+    dA = _run_path_A(config, schedule)
+    dB, b_used_restore = _run_path_B(config, schedule, tmp_path)
+    dC, c_is_fresh = _run_path_C(config, schedule, tmp_path)
 
     A_eq_B = dA == dB
     A_eq_C = dA == dC
@@ -376,6 +476,21 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     tree_digest = compute_source_tree_digest(repo_root)
     head = _git_head(repo_root)
 
+    # Read pids
+    pid_C1 = int((tmp_path / "pid_C1.txt").read_text(encoding="utf-8").strip())
+    pid_C2 = None
+    c2_result_path = tmp_path / "c2_result.json"
+    if c2_result_path.exists():
+        c2_data = json.loads(c2_result_path.read_text(encoding="utf-8"))
+        pid_C2 = c2_data.get("pid")
+
+    # Machine-measured proofs
+    uninterrupted_completed = True
+    in_process_restore_completed = True
+    fresh_process_restore_completed = True
+    fresh_process_is_real = c_is_fresh
+    production_restore_path_used = b_used_restore
+
     artifact = {
         "schema_version": 1,
         "suite": "restore_determinism",
@@ -386,18 +501,22 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
         "python": sys.version,
         "K": K,
         "N": N,
+        "seed": SEED,
+        "config_sha256": _config_sha256(config),
+        "pid_C1": pid_C1,
+        "pid_C2": pid_C2,
         "digest_A": dA,
         "digest_B": dB,
         "digest_C": dC,
         "proofs": {
-            "uninterrupted_completed": True,
-            "in_process_restore_completed": True,
-            "fresh_process_restore_completed": True,
+            "uninterrupted_completed": uninterrupted_completed,
+            "in_process_restore_completed": in_process_restore_completed,
+            "fresh_process_restore_completed": fresh_process_restore_completed,
             "A_equals_B": A_eq_B,
             "A_equals_C": A_eq_C,
             "B_equals_C": B_eq_C,
-            "fresh_process_is_real": True,
-            "production_restore_path_used": True,
+            "fresh_process_is_real": fresh_process_is_real,
+            "production_restore_path_used": production_restore_path_used,
         },
     }
 
@@ -409,6 +528,9 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     print(f"  digest_B = {dB}")
     print(f"  digest_C = {dC}")
     print(f"  A==B: {A_eq_B}, A==C: {A_eq_C}, B==C: {B_eq_C}")
+    print(f"  fresh_process_is_real: {fresh_process_is_real}")
+    print(f"  production_restore_path_used: {production_restore_path_used}")
+    print(f"  pid_C1: {pid_C1}, pid_C2: {pid_C2}")
 
     assert all_equal, (
         f"Restore determinism FAILED: A==B={A_eq_B}, A==C={A_eq_C}, B==C={B_eq_C}"

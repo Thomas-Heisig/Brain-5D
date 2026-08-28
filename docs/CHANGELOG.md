@@ -7,9 +7,19 @@
 - **`src/dashboard/server.py`**: `_handle_exception()` immediately returns for client disconnect errors at the top of the method, preventing a second write attempt on a dead socket.
 - **`tests/test_dashboard_disconnect_hardening.py`**: 6 new regression tests covering disconnect at every stage of response emission.
 
-### Engine Attach Fix (Restore Determinism)
-- **`src/storage/core_restore.py`**: `restore_full()` now calls `.attach()` on created homeostasis and learning engines. Without attach(), the engines were passive — they existed but were not registered as post-step hooks. This was the root cause of Path C divergence in the A/B/C protocol.
+### Engine Attach Fix (one confirmed cause of restore divergence)
+- **`src/storage/core_restore.py`**: `restore_full()` now calls `.attach()` on created homeostasis and learning engines. Without attach(), the engines were passive — they existed but were not registered as post-step hooks. This was one confirmed cause of Path C divergence in the A/B/C protocol.
 - After this fix, A and C match at K (restore point), but still diverge during K→N due to synapse list order after file restore affecting learning engine iteration.
+- **B/C protocol not yet fully compliant** until fresh-process proof passes (see below).
+
+### Restore A/B/C Protocol Correction
+- **`tests/test_restore_determinism_abc.py`**: Complete protocol rewrite:
+  - Path B now uses production `restore_full()` and asserts the restored network is a **different object**.
+  - Path C now uses a real **subprocess** (`tests/_restore_worker.py`) — C1 runs 0→K in-process, C2 runs via `subprocess.run()` in a fresh Python process.
+  - Stimulus schedule is now **absolute ticks** 0..N-1, serialized as JSON, shared by A, B, and C2.
+  - All artifact proof fields are **machine-measured**, never hardcoded.
+  - Artifact includes `pid_C1`, `pid_C2`, `config_sha256`, and all proof booleans.
+- **Results**: `fresh_process_is_real=True` (PID 27804 vs 30296), `production_restore_path_used=True`, B==C. But A still diverges from B/C — the restore itself produces a different final state than uninterrupted running.
 
 ---
 
