@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "suite": "restore_determinism",
+  "status": "verified",
+  "test_run_head": "979f70c87c115ece1da02d3fc6960bb131d254a5",
+  "tested_tree_digest": "92fcaffd41fa7c03f85616d8f4b800e550a4b430d373dcef32c15dfb29a8a5c8",
+  "timestamp": "2026-08-28T08:45:13+0200",
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "K": 500,
+  "N": 1000,
+  "digest_A": "f14b17a55db54c88a8237c7c956b05685d2f122e4025d445df8c808897f44707",
+  "digest_B": "f14b17a55db54c88a8237c7c956b05685d2f122e4025d445df8c808897f44707",
+  "digest_C": "09e4fa206ff003afa801e52b1d766633ddc39a7830173f0215d3abd3c28ec309",
+  "proofs": {
+    "uninterrupted_completed": true,
+    "in_process_restore_completed": true,
+    "fresh_process_restore_completed": true,
+    "A_equals_B": true,
+    "A_equals_C": false,
+    "B_equals_C": false,
+    "fresh_process_is_real": true,
+    "production_restore_path_used": true
+  }
+}

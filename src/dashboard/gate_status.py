@@ -145,6 +145,19 @@ REQUIRED_DETERMINISM_PROOFS: frozenset[str] = frozenset({
     "experiment_validity",
 })
 
+# Required restore determinism proof set — the artifact must contain
+# exactly these proof IDs, all True. No extra or missing fields.
+REQUIRED_RESTORE_DETERMINISM_PROOFS: frozenset[str] = frozenset({
+    "uninterrupted_completed",
+    "in_process_restore_completed",
+    "fresh_process_restore_completed",
+    "A_equals_B",
+    "A_equals_C",
+    "B_equals_C",
+    "fresh_process_is_real",
+    "production_restore_path_used",
+})
+
 
 # ============================================================================
 # Gate criterion model
@@ -700,27 +713,59 @@ class GateStatusBuilder:
         # File existence alone is NEVER sufficient — the artifact must prove
         # actual test execution with matching tree digest.
 
-        determinism: list[tuple[str, str, str, str]] = [
-            ("B-RESTORE-CONTINUE", "Restore-and-continue identity",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+        # B-RESTORE-CONTINUE uses its own dedicated artifact
+        restore_verified = self._restore_determinism_verified()
+        restore_source = (
+            "research/generated/verification/restore_determinism.json"
+            if restore_verified
+            else "project_state"
+        )
+        restore_msg = (
+            "Verified by restore determinism artifact (tree digest matches)"
+            if restore_verified
+            else "Pending verification — A/B/C restore identity not proven"
+        )
+
+        # Other determinism criteria use the shared determinism infrastructure artifact
+        determinism_verified = self._determinism_infrastructure_verified()
+        determinism_source = (
+            "research/generated/verification/determinism_infrastructure.json"
+            if determinism_verified
+            else "project_state"
+        )
+        determinism_msg = (
+            "Verified by determinism infrastructure artifact (tree digest matches)"
+            if determinism_verified
+            else "Pending verification — file existence is not evidence"
+        )
+
+        determinism: list[tuple[str, str, str, str, str, str]] = [
+            ("B-RESTORE-CONTINUE", "Restore-and-continue identity (A/B/C)",
+             VERIFIED if restore_verified else IMPLEMENTED,
+             G_PASSED if restore_verified else G_PENDING,
+             restore_source, restore_msg),
             ("B-STRUCTURAL-DETERMINISM", "Structural determinism",
              VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+             G_PASSED if determinism_verified else G_PENDING,
+             determinism_source, determinism_msg),
             ("B-ITERATION-ORDER", "Explicit iteration-order determinism",
              VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+             G_PASSED if determinism_verified else G_PENDING,
+             determinism_source, determinism_msg),
             ("B-RNG-STATE-PERSIST", "Full RNG state persistence",
              VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+             G_PASSED if determinism_verified else G_PENDING,
+             determinism_source, determinism_msg),
             ("B-CANONICAL-STATE-DIGEST", "Canonical full-state digest",
              VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+             G_PASSED if determinism_verified else G_PENDING,
+             determinism_source, determinism_msg),
             ("B-HOMEOSTASIS-LEARNING-PERSIST", "Homeostasis + learning state persistence",
              VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING),
+             G_PASSED if determinism_verified else G_PENDING,
+             determinism_source, determinism_msg),
         ]
-        for cid, label, maturity, status in determinism:
+        for cid, label, maturity, status, source, msg in determinism:
             items.append(_criterion(
                 gate=GATE_B,
                 id=cid,
@@ -728,9 +773,9 @@ class GateStatusBuilder:
                 label=label,
                 status=status,
                 maturity=maturity,
-                source=determinism_source,
-                message=determinism_msg,
-                evidence={"artifact": "research/generated/verification/determinism_infrastructure.json"} if determinism_verified else None,
+                source=source,
+                message=msg,
+                evidence={"artifact": source} if status == G_PASSED else None,
             ))
 
         return items
@@ -1189,6 +1234,59 @@ class GateStatusBuilder:
         if frozenset(proofs.keys()) != REQUIRED_DETERMINISM_PROOFS:
             return False
         if not all(proofs[name] is True for name in REQUIRED_DETERMINISM_PROOFS):
+            return False
+        artifact_digest = artifact.get("tested_tree_digest")
+        if not artifact_digest:
+            return False
+        from src.dashboard.verification import compute_source_tree_digest
+        current_digest = compute_source_tree_digest(self.repo_root)
+        if current_digest is None:
+            return False
+        if artifact_digest != current_digest:
+            return False
+        return True
+
+    # --------------------------------------------------------------------
+    # Restore determinism artifact reader
+    # --------------------------------------------------------------------
+
+    def _read_restore_determinism_artifact(self) -> dict[str, Any] | None:
+        """Read the restore determinism verification artifact.
+
+        Reads from ``research/generated/verification/restore_determinism.json``.
+        Returns ``None`` if the artifact is missing or unparseable.
+        """
+        artifact_path = (
+            self.repo_root / "research" / "generated" / "verification"
+            / "restore_determinism.json"
+        )
+        if not artifact_path.exists():
+            return None
+        try:
+            return json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _restore_determinism_verified(self) -> bool:
+        """Return True if the restore determinism artifact shows all proofs
+        passed AND the artifact's tree digest matches the current tree.
+
+        Fail-closed validation identical to other artifact verifiers.
+        """
+        artifact = self._read_restore_determinism_artifact()
+        if artifact is None:
+            return False
+        if artifact.get("status") != "verified":
+            return False
+        if artifact.get("schema_version") is None:
+            return False
+        proofs_raw = artifact.get("proofs", {})
+        if not isinstance(proofs_raw, dict):
+            return False
+        proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
+        if frozenset(proofs.keys()) != REQUIRED_RESTORE_DETERMINISM_PROOFS:
+            return False
+        if not all(proofs[name] is True for name in REQUIRED_RESTORE_DETERMINISM_PROOFS):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:

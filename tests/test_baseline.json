@@ -1,6 +1,6 @@
 {
-  "tested_commit": "6c257c86e733d9e2ebe03b60a9fc1b23f2bcedae",
-  "tested_tree_digest": "71d8d680bbcdbf85ebc5e4078fb6d37610e5f6b4c2e9e28253a69991fbe6fcde",
+  "tested_commit": "979f70c87c115ece1da02d3fc6960bb131d254a5",
+  "tested_tree_digest": "92fcaffd41fa7c03f85616d8f4b800e550a4b430d373dcef32c15dfb29a8a5c8",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -11,7 +11,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-08-27T22:49:26+0200",
+  "timestamp": "2026-08-28T08:45:27+0200",
   "python": "3.13.14",
   "full_collection": {
     "status": "passed",
@@ -19,7 +19,7 @@
   },
   "full_suite": {
     "command": "python -m pytest tests/ -q",
-    "passed": 414,
+    "passed": 419,
     "failed": 0,
     "skipped": 2,
     "skipped_reasons": [

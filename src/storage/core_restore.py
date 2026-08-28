@@ -326,6 +326,8 @@ def restore_learning_state(
                 state.last_post_tick = record.last_post_tick
                 # EligibilityTrace uses .value, not ._trace
                 state.eligibility.value = record.eligibility_value
+                # Restore per-trace last_tick so decay is accurate
+                state.eligibility.last_tick = record.eligibility_last_tick
 
     # Restore pending rewards (independent of learning_state presence)
     if checkpoint.pending_rewards and hasattr(learning_engine, "_pending_rewards"):

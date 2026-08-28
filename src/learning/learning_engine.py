@@ -494,7 +494,8 @@ class LearningEngine:
         This is useful for resetting the learning state between episodes
         while preserving the learned weights.
         """
-        for state in self._states.values():
+        for key in sorted(self._states):
+            state = self._states[key]
             state.last_pre_tick = None
             state.last_post_tick = None
             state.eligibility.reset()
@@ -601,7 +602,8 @@ class LearningEngine:
         """Apply a reward to all synapses with non-zero eligibility."""
         changed = False
 
-        for state in self._states.values():
+        for key in sorted(self._states):
+            state = self._states[key]
             eligibility = state.eligibility.read(effective_tick)
 
             # Skip if eligibility is too small

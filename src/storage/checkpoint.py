@@ -149,6 +149,7 @@ class LearningRuntimeRecord:
     last_pre_tick: int | None
     last_post_tick: int | None
     eligibility_value: float
+    eligibility_last_tick: int | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -268,6 +269,9 @@ def capture_runtime_checkpoint(
                     int(s["last_post_tick"]) if s.get("last_post_tick") is not None else None
                 ),
                 eligibility_value=float(s.get("eligibility_value", 0.0)),
+                eligibility_last_tick=(
+                    int(s["eligibility_last_tick"]) if s.get("eligibility_last_tick") is not None else None
+                ),
             )
             for s in learning_states
         )
@@ -376,6 +380,7 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
                 "last_pre_tick": state.last_pre_tick,
                 "last_post_tick": state.last_post_tick,
                 "eligibility_value": state.eligibility_value,
+                "eligibility_last_tick": state.eligibility_last_tick,
             }
             for state in checkpoint.learning_state
         ],
@@ -551,6 +556,11 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
                 ),
                 eligibility_value=_float(
                     state.get("eligibility_value", 0.0), "learning.eligibility_value"
+                ),
+                eligibility_last_tick=(
+                    _int(state["eligibility_last_tick"], "learning.eligibility_last_tick")
+                    if state.get("eligibility_last_tick") is not None
+                    else None
                 ),
             )
         )

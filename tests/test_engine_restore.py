@@ -167,6 +167,7 @@ class TestLearningRestore:
                 "last_pre_tick": state.last_pre_tick,
                 "last_post_tick": state.last_post_tick,
                 "eligibility_value": state.eligibility.value,
+                "eligibility_last_tick": state.eligibility.last_tick,
             })
 
         checkpoint = capture_runtime_checkpoint(
