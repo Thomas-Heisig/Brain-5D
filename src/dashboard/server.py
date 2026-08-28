@@ -1403,7 +1403,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         self.end_headers()
 
-        self.wfile.write(encoded)
+        try:
+            self.wfile.write(encoded)
+        except (
+            BrokenPipeError,
+            ConnectionResetError,
+            ConnectionAbortedError,
+        ):
+            pass
 
     def _send_api_not_found(
         self,
