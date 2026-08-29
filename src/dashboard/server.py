@@ -47,6 +47,7 @@ from .integration_status import IntegrationStatusBuilder
 from .models import JSONValue
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
+from .live_projection import compute_io_flow, compute_population_data
 from .research_source import ResearchSource, create_research_source
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
@@ -237,6 +238,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/live/projection":
                 self._serve_live_projection(query)
+                return
+
+            if path == "/api/live/io-flow":
+                self._serve_live_io_flow()
+                return
+
+            if path == "/api/live/population":
+                self._serve_live_population()
                 return
 
             if path == "/api/snapshots":
@@ -889,6 +898,78 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         self._send_json(projection.to_json())
+
+    # ========================================================================
+    # Live IO Flow
+    # ========================================================================
+
+    def _serve_live_io_flow(self) -> None:
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json(
+                {"error": "No live runtime available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json(
+                {"error": "Live network is not available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        telemetry = bridge.live_projection.frame_store
+        acc = telemetry._accumulator if telemetry is not None else None
+
+        try:
+            data = compute_io_flow(network, acc)
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+            return
+
+        self._send_json(data.to_json())
+
+    # ========================================================================
+    # Live Population Overview
+    # ========================================================================
+
+    def _serve_live_population(self) -> None:
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json(
+                {"error": "No live runtime available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json(
+                {"error": "Live network is not available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        telemetry = bridge.live_projection.frame_store
+        acc = telemetry._accumulator if telemetry is not None else None
+
+        try:
+            data = compute_population_data(network, acc)
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+            return
+
+        self._send_json(data.to_json())
 
     # ========================================================================
     # Snapshots

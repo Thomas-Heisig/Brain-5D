@@ -144,6 +144,46 @@
         </div>
       </section>
 
+      <!-- IO-Fluss Visualisierung -->
+      <section class="card io-flow-panel">
+        <div class="panel-title">
+          <div><h2>🔀 Input-Output Fluss</h2><p>Signalpropagation durch das Netzwerk</p></div>
+          <span id="io-flow-badge" class="gate-badge pending">⏳</span>
+        </div>
+        <div class="io-flow-grid">
+          <div class="io-flow-layer io-input">
+            <div class="io-layer-header">Input <span id="io-input-count">0</span></div>
+            <div class="io-layer-bar"><div class="io-layer-fill" id="io-input-fill"></div></div>
+            <div class="io-layer-rate"><span id="io-input-rate">0.000</span> spikes/tick</div>
+          </div>
+          <div class="io-flow-arrow">→</div>
+          <div class="io-flow-layer io-hidden">
+            <div class="io-layer-header">Hidden <span id="io-hidden-count">0</span></div>
+            <div class="io-layer-bar"><div class="io-layer-fill" id="io-hidden-fill"></div></div>
+            <div class="io-layer-rate"><span id="io-hidden-rate">0.000</span> spikes/tick</div>
+          </div>
+          <div class="io-flow-arrow">→</div>
+          <div class="io-flow-layer io-output">
+            <div class="io-layer-header">Output <span id="io-output-count">0</span></div>
+            <div class="io-layer-bar"><div class="io-layer-fill" id="io-output-fill"></div></div>
+            <div class="io-layer-rate"><span id="io-output-rate">0.000</span> spikes/tick</div>
+          </div>
+        </div>
+        <div class="io-flow-meta" id="io-flow-meta">⏳ Lade Daten...</div>
+      </section>
+
+      <!-- Populationen Übersicht -->
+      <section class="card population-panel">
+        <div class="panel-title">
+          <div><h2>👥 Neuronale Populationen</h2><p>E/I-Ratio, Aktivität pro Typ</p></div>
+          <span id="ei-ratio-badge" class="gate-badge">E/I: —</span>
+        </div>
+        <div class="population-grid" id="population-grid">
+          <div class="population-empty">⏳ Lade Populationsdaten...</div>
+        </div>
+        <div class="population-meta" id="population-meta">Aktualisiert: —</div>
+      </section>
+
       <!-- Roadmap -->
       <section class="grid roadmap-grid">
         <article class="card roadmap"><strong>v0.4</strong><span>Persistenz</span></article>
