@@ -133,6 +133,7 @@ function setupTabs() {
     console: document.getElementById('tab-console'),
     research: document.getElementById('tab-research'),
     docs: document.getElementById('tab-docs'),
+    dynamics: document.getElementById('tab-dynamics'),
     gate: document.getElementById('tab-gate'),
   };
 
@@ -143,6 +144,7 @@ function setupTabs() {
     console: false,
     docs: false,
     research: false,
+    dynamics: false,
     gate: false,
   };
 
@@ -187,6 +189,10 @@ function setupTabs() {
       if (tabName === 'research' && !initialized.research) {
         initResearchBrowser();
         initialized.research = true;
+      }
+      if (tabName === 'dynamics' && !initialized.dynamics) {
+        initDynamicsTab();
+        initialized.dynamics = true;
       }
       if (tabName === 'gate' && !initialized.gate) {
         initGateBoard();
@@ -727,46 +733,68 @@ function draw5DProjection(payload) {
 
   // Create a pseudo-3D isometric projection
   const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
+  const cy = canvas.height / 2 + 20;
   const scale = Math.min(canvas.width, canvas.height) * 0.35 / Math.max(rows, cols);
 
   const flat = values.flat().filter(v => v !== null && v !== undefined && Number.isFinite(v));
-  if (flat.length === 0) return;
+  if (flat.length === 0) {
+    ctx.fillStyle = '#4a6a8a';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Keine Daten', cx, cy);
+    return;
+  }
   const min = Math.min(...flat);
   const max = Math.max(...flat);
   const range = max - min || 1;
+
+  // Draw base grid (isometric floor)
+  ctx.strokeStyle = 'rgba(64, 224, 208, 0.06)';
+  ctx.lineWidth = 0.5;
+  const gridStep = 4;
+  for (let y = 0; y < rows; y += gridStep) {
+    for (let x = 0; x < cols; x += gridStep) {
+      const gx1 = cx + (x - y) * scale * 0.7;
+      const gy1 = cy + (x + y) * scale * 0.35;
+      // Draw small grid cross
+      ctx.beginPath();
+      ctx.arc(gx1, gy1, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(64, 224, 208, 0.15)';
+      ctx.fill();
+    }
+  }
 
   // Draw grid points with height based on value
   for (let y = 0; y < rows; y += 2) {
     for (let x = 0; x < cols; x += 2) {
       const val = values[y]?.[x];
-      if (val === null || val === undefined) continue;  // Skip no-data cells
+      if (val === null || val === undefined) continue;
       const normalized = (val - min) / range;
 
       // Isometric projection
       const isoX = (x - y) * scale * 0.7;
       const isoY = (x + y) * scale * 0.35 - normalized * scale * 2;
 
-      const size = 2 + normalized * 4;
+      const size = 2 + normalized * 5;
       const hue = 210 - normalized * 195;
-      const light = 20 + normalized * 50;
+      const light = 20 + normalized * 55;
 
       ctx.beginPath();
-      ctx.arc(cx + isoX, cy + isoY - 20, size, 0, Math.PI * 2);
+      ctx.arc(cx + isoX, cy + isoY, size, 0, Math.PI * 2);
       ctx.fillStyle = `hsl(${hue}, 85%, ${light}%)`;
       ctx.fill();
 
       // Subtle glow for high values
       if (normalized > 0.6) {
         ctx.beginPath();
-        ctx.arc(cx + isoX, cy + isoY - 20, size * 2.5, 0, Math.PI * 2);
+        ctx.arc(cx + isoX, cy + isoY, size * 2.5, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${hue}, 85%, ${light}%, 0.15)`;
         ctx.fill();
       }
     }
   }
 
-  // Draw connecting lines for structure (only between valid cells)
+  // Draw connecting lines for structure
   ctx.strokeStyle = 'rgba(64, 224, 208, 0.08)';
   ctx.lineWidth = 0.5;
   for (let y = 0; y < rows - 2; y += 3) {
@@ -774,7 +802,6 @@ function draw5DProjection(payload) {
       const v1 = values[y]?.[x];
       const v2 = values[y]?.[x + 2];
       const v3 = values[y + 2]?.[x];
-      // Skip if any endpoint is null
       if (v1 === null || v1 === undefined || v2 === null || v2 === undefined || v3 === null || v3 === undefined) continue;
 
       const n1 = (v1 - min) / range;
@@ -782,11 +809,11 @@ function draw5DProjection(payload) {
       const n3 = (v3 - min) / range;
 
       const x1 = cx + (x - y) * scale * 0.7;
-      const y1 = cy + (x + y) * scale * 0.35 - n1 * scale * 2 - 20;
+      const y1 = cy + (x + y) * scale * 0.35 - n1 * scale * 2;
       const x2 = cx + ((x + 2) - y) * scale * 0.7;
-      const y2 = cy + ((x + 2) + y) * scale * 0.35 - n2 * scale * 2 - 20;
+      const y2 = cy + ((x + 2) + y) * scale * 0.35 - n2 * scale * 2;
       const x3 = cx + (x - (y + 2)) * scale * 0.7;
-      const y3 = cy + (x + (y + 2)) * scale * 0.35 - n3 * scale * 2 - 20;
+      const y3 = cy + (x + (y + 2)) * scale * 0.35 - n3 * scale * 2;
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);
@@ -797,6 +824,162 @@ function draw5DProjection(payload) {
       ctx.moveTo(x1, y1);
       ctx.lineTo(x3, y3);
       ctx.stroke();
+    }
+  }
+
+  // Draw axis labels
+  ctx.fillStyle = 'rgba(142, 178, 193, 0.5)';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  // X axis
+  ctx.fillText('X →', cx + cols * scale * 0.35, cy + cols * scale * 0.17 + 12);
+  // Y axis
+  ctx.fillText('Y →', cx - rows * scale * 0.35, cy + rows * scale * 0.17 + 12);
+  // Z legend (value height)
+  ctx.fillText(`Z: ${min.toFixed(2)} … ${max.toFixed(2)}`, cx, 14);
+
+  // Draw 5D info
+  const dims = payload.dimensions || [];
+  if (dims.length >= 5) {
+    ctx.fillStyle = 'rgba(142, 178, 193, 0.35)';
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`5D: ${dims.join('×')}`, 8, canvas.height - 8);
+  }
+}
+
+// ================================================================
+// IO-FLUSS REFRESH
+// ================================================================
+
+let ioFlowInterval = null;
+
+/**
+ * Refresh IO-Fluss visualization from /api/live/io-flow
+ */
+async function refreshIOFlow() {
+  try {
+    const r = await fetch('/api/live/io-flow', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+
+    // Input layer
+    setText('io-input-count', formatNumber(data.input_count));
+    setText('io-input-rate', formatFloat(data.input_mean_rate, 4));
+    const inputFill = document.getElementById('io-input-fill');
+    if (inputFill) inputFill.style.width = Math.min(100, data.input_mean_rate * 200) + '%';
+
+    // Hidden layer
+    setText('io-hidden-count', formatNumber(data.hidden_count));
+    setText('io-hidden-rate', formatFloat(data.hidden_mean_rate, 4));
+    const hiddenFill = document.getElementById('io-hidden-fill');
+    if (hiddenFill) hiddenFill.style.width = Math.min(100, data.hidden_mean_rate * 200) + '%';
+
+    // Output layer
+    setText('io-output-count', formatNumber(data.output_count));
+    setText('io-output-rate', formatFloat(data.output_mean_rate, 4));
+    const outputFill = document.getElementById('io-output-fill');
+    if (outputFill) outputFill.style.width = Math.min(100, data.output_mean_rate * 200) + '%';
+
+    // Badge
+    const badge = document.getElementById('io-flow-badge');
+    if (badge) {
+      if (data.propagation_active) {
+        badge.textContent = '✅ Signalfluss aktiv';
+        badge.className = 'gate-badge passed';
+      } else {
+        badge.textContent = '⏳ Signal abgebrochen';
+        badge.className = 'gate-badge pending';
+      }
+    }
+
+    // Meta
+    const meta = document.getElementById('io-flow-meta');
+    if (meta) {
+      meta.textContent = `Tick ${data.tick} · Input ${data.input_mean_rate.toFixed(4)} → Hidden ${data.hidden_mean_rate.toFixed(4)} → Output ${data.output_mean_rate.toFixed(4)} · ${data.source}`;
+    }
+  } catch (e) {
+    const badge = document.getElementById('io-flow-badge');
+    if (badge) {
+      badge.textContent = '⚠️ offline';
+      badge.className = 'gate-badge failed';
+    }
+    const meta = document.getElementById('io-flow-meta');
+    if (meta) meta.textContent = '⚠️ IO-Fluss nicht verfügbar';
+  }
+}
+
+// ================================================================
+// POPULATION OVERVIEW REFRESH
+// ================================================================
+
+let populationInterval = null;
+
+/**
+ * Refresh population overview from /api/live/population
+ */
+async function refreshPopulation() {
+  try {
+    const r = await fetch('/api/live/population', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+
+    // E/I ratio badge
+    const badge = document.getElementById('ei-ratio-badge');
+    if (badge) {
+      const ratio = data.ei_ratio;
+      badge.textContent = `E/I: ${ratio.toFixed(2)}`;
+      badge.className = `gate-badge ${ratio > 0.5 && ratio < 3.0 ? 'passed' : 'stale'}`;
+    }
+
+    // Population cards
+    const grid = document.getElementById('population-grid');
+    if (!grid) return;
+
+    if (!data.populations || data.populations.length === 0) {
+      grid.innerHTML = '<div class="population-empty">Keine Populationsdaten verfügbar.</div>';
+    } else {
+      grid.innerHTML = data.populations.map(p => {
+        const activePct = (p.active_fraction * 100).toFixed(1);
+        const barColor = p.name.includes('inhib') ? '#ff5d73'
+          : p.name.includes('excit') ? '#40e0a8'
+          : p.name.includes('sensory') ? '#4a7cf7'
+          : p.name.includes('motor') ? '#f0a840'
+          : '#8899bb';
+        return `
+          <div class="population-card">
+            <div class="population-card-header">
+              <span class="population-name">${escapeHtml(p.name)}</span>
+              <span class="population-count">${formatNumber(p.count)}</span>
+            </div>
+            <div class="population-stats">
+              <div class="population-stat"><dt>Rate</dt><dd>${formatFloat(p.mean_rate, 4)} spikes/tick</dd></div>
+              <div class="population-stat"><dt>Energie</dt><dd>${formatFloat(p.mean_energy, 4)}</dd></div>
+              <div class="population-stat"><dt>Membran V</dt><dd>${formatFloat(p.mean_v, 3)}</dd></div>
+              <div class="population-stat"><dt>Aktiv</dt><dd>${formatNumber(p.active_count)} / ${formatNumber(p.count)} (${activePct}%)</dd></div>
+            </div>
+            <div class="population-bar">
+              <div class="population-bar-fill" style="width:${activePct}%;background:${barColor};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Meta
+    const meta = document.getElementById('population-meta');
+    if (meta) {
+      meta.textContent = `Tick ${data.tick} · E: ${data.total_excitatory} / I: ${data.total_inhibitory} · ${data.source}`;
+    }
+  } catch (e) {
+    const badge = document.getElementById('ei-ratio-badge');
+    if (badge) {
+      badge.textContent = 'E/I: —';
+      badge.className = 'gate-badge';
+    }
+    const grid = document.getElementById('population-grid');
+    if (grid) {
+      grid.innerHTML = '<div class="population-empty">⚠️ Populationsdaten nicht verfügbar.</div>';
     }
   }
 }
@@ -812,11 +995,15 @@ function initDashboard() {
   refreshSnapshotInfo();
   refreshLiveLoopStatus();
   refreshErrorVisibility();
+  refreshIOFlow();
+  refreshPopulation();
 
   // Set up intervals
   if (refreshInterval) clearInterval(refreshInterval);
   if (heatmapInterval) clearInterval(heatmapInterval);
   if (liveProjectionInterval) clearInterval(liveProjectionInterval);
+  if (ioFlowInterval) clearInterval(ioFlowInterval);
+  if (populationInterval) clearInterval(populationInterval);
 
   refreshInterval = setInterval(refreshStatus, 1000);
   heatmapInterval = setInterval(refreshHeatmap, 5000);
@@ -824,6 +1011,8 @@ function initDashboard() {
   setInterval(refreshSnapshotInfo, 3000);
   setInterval(refreshLiveLoopStatus, 5000);
   setInterval(refreshErrorVisibility, 5000);
+  ioFlowInterval = setInterval(refreshIOFlow, 2000);
+  populationInterval = setInterval(refreshPopulation, 2000);
 
   // Heatmap kind buttons
   $$('button[data-kind]').forEach(button => {
@@ -854,6 +1043,306 @@ function initDashboard() {
   }
 
   updateSourceBadge();
+}
+
+// ================================================================
+// DYNAMICS TAB (Spike Raster, Rate Histogram, Layer Explorer)
+// ================================================================
+
+let dynamicsInterval = null;
+let layerExplorerInterval = null;
+
+function initDynamicsTab() {
+  console.log('📈 Dynamics tab initializing...');
+  refreshSpikeRaster();
+  refreshRateHistogram();
+  refreshLayerExplorer();
+
+  // Set up intervals
+  if (dynamicsInterval) clearInterval(dynamicsInterval);
+  if (layerExplorerInterval) clearInterval(layerExplorerInterval);
+  dynamicsInterval = setInterval(refreshSpikeRaster, 2000);
+  dynamicsInterval = setInterval(refreshRateHistogram, 2000);
+  layerExplorerInterval = setInterval(refreshLayerExplorer, 3000);
+
+  // Layer slider controls
+  const slider = document.getElementById('layer-slider');
+  const dimSelect = document.getElementById('layer-dim');
+  const kindSelect = document.getElementById('layer-kind');
+  const layerVal = document.getElementById('layer-value');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      if (layerVal) layerVal.textContent = slider.value;
+    });
+    slider.addEventListener('change', refreshLayerExplorer);
+  }
+  if (dimSelect) dimSelect.addEventListener('change', refreshLayerExplorer);
+  if (kindSelect) kindSelect.addEventListener('change', refreshLayerExplorer);
+
+  console.log('✅ Dynamics tab ready');
+}
+
+// ================================================================
+// SPIKE RASTER
+// ================================================================
+
+async function refreshSpikeRaster() {
+  try {
+    const r = await fetch('/api/live/raster', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    drawSpikeRaster(data);
+    const badge = document.getElementById('raster-badge');
+    if (badge) {
+      badge.textContent = `${data.sample_count}/${data.total_neurons} Neuronen`;
+      badge.className = 'gate-badge passed';
+    }
+    const meta = document.getElementById('raster-meta');
+    if (meta) meta.textContent = `Tick ${data.tick} · Fenster: ${data.window_ticks} Ticks · ${data.sample_count} aktive Neuronen von ${data.total_neurons}`;
+  } catch {
+    const badge = document.getElementById('raster-badge');
+    if (badge) { badge.textContent = 'offline'; badge.className = 'gate-badge failed'; }
+  }
+}
+
+function drawSpikeRaster(data) {
+  const canvas = document.getElementById('spike-raster');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const nids = data.neuron_ids || [];
+  const ticks = data.spike_ticks || [];
+  if (!nids.length || !ticks.length) {
+    ctx.fillStyle = '#4a6a8a';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Keine Spike-Daten im aktuellen Fenster', canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  const windowTicks = data.window_ticks || 100;
+  const tick = data.tick || 0;
+  const tickMin = tick - windowTicks;
+  const tickMax = tick;
+
+  const neuronCount = nids.length;
+  const idToRow = {};
+  nids.forEach((id, i) => { idToRow[id] = i; });
+
+  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+  const plotW = canvas.width - margin.left - margin.right;
+  const plotH = canvas.height - margin.top - margin.bottom;
+
+  // Background
+  ctx.fillStyle = '#050d14';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw grid lines
+  ctx.strokeStyle = 'rgba(142, 178, 193, 0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < 10; i++) {
+    const y = margin.top + (plotH / 10) * i;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, y);
+    ctx.lineTo(margin.left + plotW, y);
+    ctx.stroke();
+  }
+
+  // Draw spikes
+  ctx.fillStyle = 'rgba(64, 224, 208, 0.6)';
+  for (let i = 0; i < ticks.length; i++) {
+    const t = ticks[i];
+    const nid = nids[i % nids.length];
+    const row = idToRow[nid];
+    if (row === undefined) continue;
+    const x = margin.left + ((t - tickMin) / Math.max(1, tickMax - tickMin)) * plotW;
+    const y = margin.top + (row / Math.max(1, neuronCount)) * plotH;
+    ctx.fillRect(x - 0.5, y - 1, 2, 2);
+  }
+
+  // Labels
+  ctx.fillStyle = 'rgba(142, 178, 193, 0.5)';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Tick →', margin.left + plotW/2, canvas.height - 5);
+  ctx.textAlign = 'right';
+  ctx.fillText('Neuron ↑', margin.left - 5, margin.top + 12);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(142, 178, 193, 0.3)';
+  ctx.font = '9px monospace';
+  ctx.fillText(tickMin, margin.left, canvas.height - 8);
+  ctx.textAlign = 'right';
+  ctx.fillText(tickMax, margin.left + plotW, canvas.height - 8);
+}
+
+// ================================================================
+// RATE HISTOGRAM
+// ================================================================
+
+async function refreshRateHistogram() {
+  try {
+    const r = await fetch('/api/live/histogram?bins=30', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    drawRateHistogram(data);
+    const stats = document.getElementById('histogram-stats');
+    if (stats) {
+      stats.textContent = `μ=${data.mean_rate.toFixed(4)} σ=${data.std_rate.toFixed(4)}`;
+      stats.className = 'gate-badge passed';
+    }
+    const meta = document.getElementById('histogram-meta');
+    if (meta) meta.textContent = `Tick ${data.tick} · ${data.active_count} aktiv / ${data.silent_count} stumm · Median ${data.median_rate.toFixed(4)}`;
+  } catch {
+    const stats = document.getElementById('histogram-stats');
+    if (stats) { stats.textContent = 'offline'; stats.className = 'gate-badge failed'; }
+  }
+}
+
+function drawRateHistogram(data) {
+  const canvas = document.getElementById('rate-histogram');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const bins = data.bins || [];
+  const counts = data.counts || [];
+  if (!counts.length) {
+    ctx.fillStyle = '#4a6a8a';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Keine Histogramm-Daten', canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  const margin = { top: 20, right: 20, bottom: 35, left: 60 };
+  const plotW = canvas.width - margin.left - margin.right;
+  const plotH = canvas.height - margin.top - margin.bottom;
+
+  ctx.fillStyle = '#050d14';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const maxCount = Math.max(...counts, 1);
+  const barW = plotW / counts.length;
+
+  // Draw bars
+  for (let i = 0; i < counts.length; i++) {
+    const x = margin.left + i * barW;
+    const h = (counts[i] / maxCount) * plotH;
+    const y = margin.top + plotH - h;
+    const normalized = counts[i] / maxCount;
+    const hue = 210 - normalized * 195;
+    ctx.fillStyle = `hsl(${hue}, 85%, ${30 + normalized * 40}%)`;
+    ctx.fillRect(x + 1, y, barW - 2, h);
+  }
+
+  // Mean line
+  if (data.mean_rate > 0 && bins.length > 1) {
+    const maxRate = bins[bins.length - 1];
+    const meanX = margin.left + (data.mean_rate / maxRate) * plotW;
+    ctx.strokeStyle = 'rgba(255, 159, 28, 0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(meanX, margin.top);
+    ctx.lineTo(meanX, margin.top + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255, 159, 28, 0.7)';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('μ=' + data.mean_rate.toFixed(3), meanX, margin.top - 4);
+  }
+
+  // Labels
+  ctx.fillStyle = 'rgba(142, 178, 193, 0.5)';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Feuerrate (spikes/tick) →', margin.left + plotW/2, canvas.height - 5);
+  ctx.textAlign = 'right';
+  ctx.fillText('Anzahl ↑', margin.left - 5, margin.top + 12);
+}
+
+// ================================================================
+// 5D LAYER EXPLORER
+// ================================================================
+
+async function refreshLayerExplorer() {
+  try {
+    const dimSelect = document.getElementById('layer-dim');
+    const slider = document.getElementById('layer-slider');
+    const kindSelect = document.getElementById('layer-kind');
+    if (!dimSelect || !slider) return;
+
+    const dim = dimSelect.value;
+    const layerVal = parseInt(slider.value, 10);
+    const kind = kindSelect ? kindSelect.value : 'activity';
+
+    const r = await fetch(`/api/live/projection?kind=${encodeURIComponent(kind)}&resolution=40`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    drawLayerSlice(data, dim, layerVal);
+
+    const badge = document.getElementById('layer-badge');
+    if (badge) badge.textContent = dim.toUpperCase();
+
+    const meta = document.getElementById('layer-meta');
+    if (meta) meta.textContent = `Tick ${data.tick} · ${dim.toUpperCase()}=${layerVal} · ${data.kind || kind} · ${data.source}`;
+  } catch {
+    const meta = document.getElementById('layer-meta');
+    if (meta) meta.textContent = '⚠️ Layer-Daten nicht verfügbar';
+  }
+}
+
+function drawLayerSlice(payload, dim, layerValue) {
+  const canvas = document.getElementById('layer-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const values = payload.values || [];
+  if (!values.length) return;
+
+  const rows = values.length;
+  const cols = values[0]?.length || 1;
+  const flat = values.flat().filter(v => v !== null && v !== undefined && Number.isFinite(v));
+  if (!flat.length) {
+    ctx.fillStyle = '#4a6a8a';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Keine Daten', canvas.width/2, canvas.height/2);
+    return;
+  }
+  const min = Math.min(...flat);
+  const max = Math.max(...flat);
+  const range = max - min || 1;
+
+  const cellW = canvas.width / cols;
+  const cellH = canvas.height / rows;
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const val = values[y]?.[x];
+      if (val === null || val === undefined) {
+        ctx.fillStyle = 'rgba(40, 50, 65, 0.4)';
+        ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
+      } else {
+        const normalized = (val - min) / range;
+        const hue = 210 - normalized * 195;
+        const light = 16 + normalized * 50;
+        ctx.fillStyle = `hsl(${hue}, 88%, ${light}%)`;
+        ctx.fillRect(x * cellW, y * cellH, Math.ceil(cellW), Math.ceil(cellH));
+      }
+    }
+  }
+
+  // Overlay
+  ctx.fillStyle = 'rgba(142, 178, 193, 0.4)';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(`${dim.toUpperCase()}=${layerValue}`, 8, 16);
+  ctx.textAlign = 'right';
+  ctx.fillText(`${min.toFixed(2)} … ${max.toFixed(2)}`, canvas.width - 8, 16);
 }
 
 // ================================================================

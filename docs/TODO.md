@@ -1,6 +1,6 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-28
+> Last updated: 2026-08-29
 >
 > Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
 > .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
@@ -19,8 +19,8 @@
 > Dashboard truth sources:
 >   /api/integration/status = live runtime truth
 >   /api/gate/status        = release/verification truth
->   /api/live/projection    = live runtime visualization (LIVE_RUNTIME)
->   /api/heatmap            = snapshot visualization (SNAPSHOT)
+>   /api/live/projection    = live runtime visualization (LIVE_RUNTIME)  /api/live/io-flow       = input-output signal propagation analysis
+  /api/live/population    = neuron population overview (E/I ratio, rates)>   /api/heatmap            = snapshot visualization (SNAPSHOT)
 >   /api/errors             = canonical runtime-error endpoint (available/count/events)
 >   /api/structural/errors  = structural runtime errors
 >   B5D-SEF                 = scientific evidence truth

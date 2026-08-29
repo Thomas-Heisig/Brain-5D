@@ -47,7 +47,12 @@ from .integration_status import IntegrationStatusBuilder
 from .models import JSONValue
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
-from .live_projection import compute_io_flow, compute_population_data
+from .live_projection import (
+    compute_io_flow,
+    compute_population_data,
+    compute_rate_histogram,
+    compute_spike_raster,
+)
 from .research_source import ResearchSource, create_research_source
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
@@ -246,6 +251,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/live/population":
                 self._serve_live_population()
+                return
+
+            if path == "/api/live/histogram":
+                self._serve_live_histogram(query)
+                return
+
+            if path == "/api/live/raster":
+                self._serve_live_raster()
                 return
 
             if path == "/api/snapshots":
@@ -962,6 +975,79 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         try:
             data = compute_population_data(network, acc)
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+            return
+
+        self._send_json(data.to_json())
+
+    # ========================================================================
+    # Live Rate Histogram
+    # ========================================================================
+
+    def _serve_live_histogram(self, query: dict[str, list[str]]) -> None:
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json(
+                {"error": "No live runtime available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json(
+                {"error": "Live network is not available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        telemetry = bridge.live_projection.frame_store
+        acc = telemetry._accumulator if telemetry is not None else None
+        num_bins = int(query.get("bins", ["30"])[0])
+
+        try:
+            data = compute_rate_histogram(network, acc, num_bins=num_bins)
+        except Exception as exc:
+            self._send_json(
+                {"error": str(exc)},
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+            return
+
+        self._send_json(data.to_json())
+
+    # ========================================================================
+    # Live Spike Raster
+    # ========================================================================
+
+    def _serve_live_raster(self) -> None:
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json(
+                {"error": "No live runtime available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json(
+                {"error": "Live network is not available."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        telemetry = bridge.live_projection.frame_store
+        acc = telemetry._accumulator if telemetry is not None else None
+
+        try:
+            data = compute_spike_raster(network, acc)
         except Exception as exc:
             self._send_json(
                 {"error": str(exc)},

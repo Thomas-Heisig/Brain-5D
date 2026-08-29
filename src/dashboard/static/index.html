@@ -29,6 +29,7 @@
     <button class="tab-btn" data-tab="console">📟 Console</button>
     <button class="tab-btn" data-tab="research">🔬 Research</button>
     <button class="tab-btn" data-tab="docs">📄 Docs</button>
+    <button class="tab-btn" data-tab="dynamics">📈 Dynamics</button>
     <button class="tab-btn" data-tab="gate">🚪 Alpha.5 Gate</button>
   </nav>
 
@@ -243,6 +244,63 @@
       </section>
 
     </section> <!-- /tab-dashboard -->
+
+    <!-- ========================================================== -->
+    <!-- TAB: DYNAMICS (Spike Raster, Rate Histogram, 5D Explorer) -->
+    <!-- ========================================================== -->
+    <section class="tab-content" id="tab-dynamics">
+
+      <!-- Spike Raster -->
+      <section class="card raster-panel">
+        <div class="panel-title">
+          <div><h2>⚡ Spike Raster</h2><p>Letzte 100 Ticks · aktivste Neuronen</p></div>
+          <span id="raster-badge" class="gate-badge pending">⏳</span>
+        </div>
+        <canvas id="spike-raster" width="900" height="380"></canvas>
+        <div class="heatmap-meta" id="raster-meta">⏳ Lade Spike-Daten...</div>
+      </section>
+
+      <!-- Firing Rate Histogram -->
+      <section class="card histogram-panel">
+        <div class="panel-title">
+          <div><h2>📊 Feuerraten-Histogramm</h2><p>Verteilung der neuronalen Aktivität</p></div>
+          <span id="histogram-stats" class="gate-badge">—</span>
+        </div>
+        <canvas id="rate-histogram" width="900" height="300"></canvas>
+        <div class="heatmap-meta" id="histogram-meta">⏳ Lade Histogramm-Daten...</div>
+      </section>
+
+      <!-- 5D Layer Explorer -->
+      <section class="card layer-explorer-panel">
+        <div class="panel-title">
+          <div><h2>🧊 5D Layer Explorer</h2><p>Slice durch den 5D-Raum</p></div>
+          <span id="layer-badge" class="gate-badge">d4</span>
+        </div>
+        <div class="layer-controls">
+          <label>Dimension:
+            <select id="layer-dim">
+              <option value="z">Z (räumlich)</option>
+              <option value="d4">d4 (funktional)</option>
+              <option value="d5">d5 (funktional)</option>
+            </select>
+          </label>
+          <label>Layer:
+            <input type="range" id="layer-slider" min="0" max="255" value="128" />
+            <span id="layer-value">128</span>
+          </label>
+          <label>Anzeige:
+            <select id="layer-kind">
+              <option value="activity">Aktivität</option>
+              <option value="energy">Energie</option>
+              <option value="membrane">Membran</option>
+            </select>
+          </label>
+        </div>
+        <canvas id="layer-canvas" width="400" height="400"></canvas>
+        <div class="heatmap-meta" id="layer-meta">Wähle Dimension und Layer</div>
+      </section>
+
+    </section> <!-- /tab-dynamics -->
 
     <!-- ========================================================== -->
     <!-- TAB: INSPECT (real 5D network inspector, Phase 8/9/12) -->

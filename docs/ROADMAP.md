@@ -28,6 +28,16 @@
 
 10. **Live projection tests** — 12 tests covering energy accuracy, activity timing, weight projection, tick coherence, no-mutation guarantee, snapshot separation, bounded payload, and invalid parameter handling.
 
+### Completed in Dashboard Enhancement Sprint (Part 3)
+
+11. **IO-Fluss Visualisierung** — New `/api/live/io-flow` endpoint analyzes signal propagation from input cells through hidden layers to output cells. Frontend shows three-layer flow bars with activity rates, neuron counts, and a propagation badge (✅ Signalfluss aktiv / ⏳ Signal abgebrochen). Threshold: 0.001 spikes/tick per layer.
+
+12. **Populationen-Übersicht** — New `/api/live/population` endpoint groups neurons by type (excitatory, inhibitory, sensory_input, motor_output) with per-population statistics (mean rate, energy, membrane potential, active fraction). E/I ratio badge with color coding. Auto-refresh every 2s.
+
+13. **Verbesserte 5D Isometrische Projektion** — Enhanced `draw5DProjection()` with isometric floor grid, axis labels (X, Y), Z-range legend, 5D dimension info, and glow effects for high-activity regions. Better visual depth perception.
+
+14. **CSS-Styling für neue Panels** — Dedicated styles for IO-Fluss flow bars (color-coded per layer: input=teal, hidden=blue, output=amber), population cards with active-fraction progress bars, responsive layout.
+
 ### Remaining for Alpha.5 Closure
 
 - Restore Determinism A/B/C experiment (uninterrupted vs in-process vs process restart)

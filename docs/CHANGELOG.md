@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-29 — Dynamics Tab + Collapsible Architecture
+
+### Neuer Dynamics Tab (Spike Raster, Rate Histogram, 5D Layer Explorer)
+- **`src/dashboard/static/index.html`**: New "📈 Dynamics" tab with three panels:
+  - **Spike Raster**: Canvas-drawn scatter plot of recent spike times (last 100 ticks) for the most active neurons. Shows spike density and firing patterns over time.
+  - **Feuerraten-Histogramm**: Bar chart showing the distribution of firing rates across all neurons. Includes mean (μ) and standard deviation (σ) overlay, plus silent/active neuron counts.
+  - **5D Layer Explorer**: Interactive slice through the 5D space. User selects dimension (Z, d4, d5), layer value via slider, and display kind (activity, energy, membrane). The heatmap updates in real-time.
+- **`src/dashboard/static/app.js`**: New `initDynamicsTab()`, `refreshSpikeRaster()`, `drawSpikeRaster()`, `refreshRateHistogram()`, `drawRateHistogram()`, `refreshLayerExplorer()`, `drawLayerSlice()` functions. Lazy-initialized when tab is first clicked.
+- **`src/dashboard/static/styles.css`**: New styles for raster, histogram, and layer explorer panels with dark theme canvas backgrounds and slider controls.
+
+### Backend: Rate Histogram & Spike Raster Endpoints
+- **`src/dashboard/live_projection.py`**: New `RateHistogramData`/`compute_rate_histogram()` — computes firing rate distribution with 30 bins, mean/median/std statistics, and silent/active counts.
+- **`src/dashboard/live_projection.py`**: New `SpikeRasterData`/`compute_spike_raster()` — extracts recent spike times from the activity accumulator window for the most active neurons.
+- **`src/dashboard/server.py`**: New `GET /api/live/histogram` and `GET /api/live/raster` endpoints.
+
+### Tab-Architektur: Lazy Loading für Performance
+- Dynamics Tab wird nur initialisiert, wenn der Benutzer ihn das erste Mal anklickt. Keine Canvas-Rendering-Last im Dashboard-Tab.
+- Alle Dynamics-Panels haben eigene Refresh-Intervalle (2s Raster/Histogram, 3s Layer Explorer).
+
+### Documentation
+- `docs/changelog.md`: This entry.
+- `docs/todo.md`: Added new API endpoints to truth sources list.
+
 ## 2026-08-28 — Dashboard Hardening + Engine Attach Fix
 
 ### Dashboard Disconnect Hardening
@@ -97,6 +120,32 @@
 
 ### Tests
 - **`tests/test_live_projection.py`**: 12 tests covering energy accuracy, activity timing, weight projection, tick coherence, no-mutation guarantee, snapshot separation, bounded payload, and invalid parameter handling.
+
+---
+
+## 2026-08-29 — Dashboard Enhancement Sprint (Part 3)
+
+### IO-Fluss Visualisierung (New Feature)
+- **`src/dashboard/live_projection.py`**: New `IOFlowData` dataclass and `compute_io_flow()` function that analyzes signal propagation from input cells through hidden layers to output cells. Returns per-layer activity rates, neuron counts, and propagation status.
+- **`src/dashboard/server.py`**: New `GET /api/live/io-flow` endpoint that reads directly from the live network. Uses the TelemetryFrameStore's ActivityWindowAccumulator for rolling window rates.
+- **`src/dashboard/static/index.html`**: New IO-Fluss panel with three-layer flow visualization (Input → Hidden → Output), activity bars, rate displays, and propagation status badge.
+- **`src/dashboard/static/app.js`**: New `refreshIOFlow()` function polling `/api/live/io-flow` at 2s intervals. Updates flow bars, layer stats, and propagation badge.
+- **`src/dashboard/static/styles.css`**: New `.io-flow-panel`, `.io-flow-grid`, `.io-flow-layer` styles with color-coded layer borders (input=teal, hidden=blue, output=amber).
+
+### Populationen-Übersicht (New Feature)
+- **`src/dashboard/live_projection.py`**: New `PopulationData`/`_PopulationEntry` dataclasses and `compute_population_data()` function that groups neurons by type (excitatory, inhibitory, sensory_input, motor_output) with per-population statistics.
+- **`src/dashboard/server.py`**: New `GET /api/live/population` endpoint returning population metrics including E/I ratio.
+- **`src/dashboard/static/index.html`**: New Population panel with dynamic card grid showing per-type stats and active-fraction progress bars.
+- **`src/dashboard/static/app.js`**: New `refreshPopulation()` function polling `/api/live/population` at 2s intervals. Renders population cards with rate, energy, membrane V, and activity bars.
+- **`src/dashboard/static/styles.css`**: New `.population-panel`, `.population-card`, `.population-bar` styles with color-coded progress bars per population type.
+
+### Verbesserte 5D Isometrische Projektion
+- **`src/dashboard/static/app.js`**: Enhanced `draw5DProjection()` with isometric floor grid, axis labels (X, Y), Z-range legend, and 5D dimension info overlay. Better visual depth perception with grid dots and glow effects.
+
+### Documentation
+- `docs/ROADMAP.md`: Added Dashboard Enhancement Sprint section with 4 completed items.
+- `docs/changelog.md`: This entry.
+- `docs/todo.md`: Added new dashboard API endpoints to truth sources list.
 
 ### Verification Freshness Restored
 - All 5 verification artifacts now share the same `tested_tree_digest`.
