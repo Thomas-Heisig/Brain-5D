@@ -1,0 +1,7 @@
+Start-Process : Dieser Befehl kann aufgrund des folgenden Fehlers nicht ausgefÅhrt werden: Das System kann die angegebene Datei nicht finden.
+In Zeile:1 Zeichen:1
++ Start-Process -Filepath 'C:\Users\corey\OneDrive\Documents\workspace\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException
+    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcessCommand
+ 
