@@ -2,7 +2,7 @@
   "schema_version": 1,
   "suite": "restore_determinism",
   "status": "verified",
-  "test_run_head": "fadf6c96e2a44e93f042339f97f2a4dd8c3a5382",
+  "test_run_head": "4a374624535d8da679005250832b1c8a8a727611",
   "tested_tree_digest": "464c65d43cce71140a0fa582d5977b4fe2629ac17fcbef3bfbff02f31b40ce7c",
   "timestamp": "2026-08-30T23:52:51+0200",
   "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",

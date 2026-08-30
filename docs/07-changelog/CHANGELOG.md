@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-31 — Alpha.5 Evidence Freeze
+
+### Freeze State
+- **HEAD**: `4a37462...`
+- **Full test suite**: 457 passed, 2 skipped, 0 failed.
+- **Pyright**: 0 errors.
+- **Ruff**: 0 errors.
+- **Source tree digest**: `97be590f48cfa0392414a16857cd89092154b36787db8961944fc7f45b36b7ae`.
+
+### Regenerated Evidence
+| Artifact | Status | HEAD |
+|----------|--------|------|
+| `tests/test_baseline.json` | passed | `4a37462...` |
+| `research/generated/verification/determinism_infrastructure.json` | verified | `4a37462...` |
+| `research/generated/verification/restore_determinism.json` | verified (A == B == C) | `4a37462...` |
+| `research/generated/verification/single_listener.json` | verified | `4a37462...` |
+| `research/generated/verification/structural_e2e.json` | verified | `4a37462...` |
+| `research/generated/verification/structural_live_loop.json` | verified | `4a37462...` |
+
+### Notes
+- Evidence provenance aligned to the commit that contains the regenerated artefacts.
+- Temporary provenance alignment script removed from repository tracking.
+
 ## 2026-08-30 — Dashboard Document Viewer: Full-Feature Suite
 
 ### Backend
