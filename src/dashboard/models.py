@@ -475,6 +475,161 @@ class ExperimentMetrics:
 
 
 # ============================================================================
+# Component Status Model (Operator Workbench)
+# ============================================================================
+
+
+VALID_COMPONENT_STATUS = {
+    "enabled",
+    "active",
+    "degraded",
+    "unavailable",
+    "error",
+    "stale",
+    "disabled",
+}
+
+VALID_MATURITY = {
+    "implemented",
+    "integrated",
+    "verified",
+    "evidenced",
+}
+
+
+@dataclass(frozen=True, slots=True)
+class ComponentStatus:
+    """Standardized status for any dashboard-relevant component.
+
+    Attributes:
+        component: Logical component identifier (e.g. "runtime", "storage").
+        status: One of the VALID_COMPONENT_STATUS values.
+        reason: Human-readable explanation of the status.
+        last_update: ISO timestamp of the last update.
+        source: Origin of the status (e.g. "OperatorBridge", "GateStatusBuilder").
+        last_error: Optional last error message.
+        maturity: Maturity level from VALID_MATURITY.
+    """
+
+    component: str
+    status: str = "unavailable"
+    reason: str = ""
+    last_update: str | None = None
+    source: str = ""
+    last_error: str | None = None
+    maturity: str = "implemented"
+
+    def __post_init__(self) -> None:
+        if self.status not in VALID_COMPONENT_STATUS:
+            raise ValueError(f"invalid component status: {self.status!r}")
+        if self.maturity not in VALID_MATURITY:
+            raise ValueError(f"invalid maturity: {self.maturity!r}")
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        result: dict[str, JSONValue] = {
+            "component": self.component,
+            "status": self.status,
+            "reason": self.reason,
+            "last_update": self.last_update,
+            "source": self.source,
+            "maturity": self.maturity,
+        }
+        if self.last_error is not None:
+            result["last_error"] = self.last_error
+        return result
+
+
+# ============================================================================
+# Parameter Schema Model (Operator Workbench)
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class ParameterSchema:
+    """Metadata for a single runtime or configuration parameter.
+
+    Attributes:
+        name: Parameter identifier.
+        value: Current value.
+        default: Factory/default value.
+        min: Optional minimum value.
+        max: Optional maximum value.
+        unit: Optional unit suffix.
+        description: Human-readable description.
+        source: Where the value originates (e.g. "config", "runtime").
+        runtime_mutable: Whether the parameter can be changed at runtime.
+        requires_restart: Whether a restart is required after change.
+        scientific_sensitive: Whether the parameter is scientifically sensitive.
+    """
+
+    name: str
+    value: JSONScalar | list[JSONValue] | dict[str, JSONValue]
+    default: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    min: JSONScalar | None = None
+    max: JSONScalar | None = None
+    unit: str | None = None
+    description: str = ""
+    source: str = ""
+    runtime_mutable: bool = False
+    requires_restart: bool = False
+    scientific_sensitive: bool = False
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "name": self.name,
+            "value": self.value,
+            "default": self.default,
+            "min": self.min,
+            "max": self.max,
+            "unit": self.unit,
+            "description": self.description,
+            "source": self.source,
+            "runtime_mutable": self.runtime_mutable,
+            "requires_restart": self.requires_restart,
+            "scientific_sensitive": self.scientific_sensitive,
+        }
+
+
+# ============================================================================
+# Health Snapshot Model (Operator Workbench)
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class HealthSnapshot:
+    """Aggregated health/problems view for the operator workbench.
+
+    Attributes:
+        overall: Overall health status.
+        problems: List of problems/warnings/errors/unavailable/stale items.
+        errors: Count of error-level items.
+        warnings: Count of warning-level items.
+        stale: Count of stale items.
+        unavailable: Count of unavailable items.
+    """
+
+    overall: str = "unknown"
+    problems: tuple[ComponentStatus, ...] = ()
+    errors: int = 0
+    warnings: int = 0
+    stale: int = 0
+    unavailable: int = 0
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "overall": self.overall,
+            "problems": [p.to_json() for p in self.problems],
+            "errors": self.errors,
+            "warnings": self.warnings,
+            "stale": self.stale,
+            "unavailable": self.unavailable,
+        }
+
+
+# ============================================================================
 # Dashboard Snapshot (Enhanced)
 # ============================================================================
 
@@ -496,11 +651,23 @@ class DashboardSnapshot:
     signal_metrics: SignalMetrics = SignalMetrics()
     experiment: ExperimentMetrics = ExperimentMetrics()
     embodiment: EmbodimentMetrics = EmbodimentMetrics()
+    components: dict[str, ComponentStatus] = None  # type: ignore[assignment]
+    parameters: dict[str, ParameterSchema] = None  # type: ignore[assignment]
+    health: HealthSnapshot = HealthSnapshot()
     status: str = "idle"
     version: str = "0.5.0-alpha.2"
 
+    def __post_init__(self) -> None:
+        # Frozen dataclass with mutable defaults requires object.__setattr__
+        if self.components is None:
+            object.__setattr__(self, "components", {})
+        if self.parameters is None:
+            object.__setattr__(self, "parameters", {})
+
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
+        components = self.components or {}
+        parameters = self.parameters or {}
         return {
             "status": self.status,
             "version": self.version,
@@ -517,6 +684,9 @@ class DashboardSnapshot:
             "signal_metrics": self.signal_metrics.to_json(),
             "experiment": self.experiment.to_json(),
             "embodiment": self.embodiment.to_json(),
+            "components": {k: v.to_json() for k, v in components.items()},
+            "parameters": {k: v.to_json() for k, v in parameters.items()},
+            "health": self.health.to_json(),
         }
 
 

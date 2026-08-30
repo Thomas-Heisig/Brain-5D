@@ -88,6 +88,29 @@ dedizierten BibTeX-Viewer (`bibtex-viewer.js`). Dieser bietet:
 
 Die BibTeX-Dateien liegen unter `research/literature/`.
 
+## Dateiformat-Unterstützung
+
+Der integrierte Datei-Manager erkennt die gängigen Formate in `research/` und
+`docs/` und rendert sie direkt im Browser:
+
+| Format | Erweiterungen | Darstellung |
+|--------|---------------|-------------|
+| Markdown | `.md`, `.markdown` | Gerenderte HTML-Ansicht |
+| Bilder | `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg`, `.bmp` | Inline-Bild |
+| Videos | `.mp4`, `.webm`, `.ogg`, `.mov`, `.avi` | HTML5-Video-Player |
+| Audio | `.mp3`, `.wav`, `.flac`, `.aac`, `.m4a`, `.opus` | HTML5-Audio-Player |
+| PDF | `.pdf` | Eingebetteter PDF-Viewer (`<iframe>`) |
+| Tabellen | `.xlsx`, `.xls`, `.xlsm`, `.ods` | Interaktive Tabelle mit Sheet-Tabs (SheetJS) |
+| Word | `.docx`, `.doc` | HTML-Vorschau (mammoth.js) |
+| CSV | `.csv` | Tabelle mit sortierbarem Header |
+| JSON | `.json`, `.schema.json`, `.ipynb` | Syntax-highlightete Baumansicht |
+| Code | `.py`, `.js`, `.ts`, `.css`, `.html`, `.sh`, `.bat`, `.ps1`, `.toml`, `.xml`, `.cfg`, `.conf`, `.ini`, `.tex`, `.rst`, `.dockerfile` | Syntax-Highlighting |
+| BibTeX | `.bib` | Strukturierter BibTeX-Viewer |
+| Patches | `.patch`, `.diff` | Farblich markierte Diff-Ansicht |
+
+Binäre Dateien werden als solche markiert und bei bekannten Medientypen mit dem
+passenden Player geöffnet. Unbekannte Textdateien werden als Plaintext angezeigt.
+
 ## Sicherheit
 
 Alpha.5 ist standardmaessig nur auf `127.0.0.1` gedacht. Es gibt noch keine

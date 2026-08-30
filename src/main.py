@@ -438,6 +438,7 @@ def main() -> int:
         status: str,
     ) -> None:
         """Build and publish a DashboardSnapshot from live runtime data."""
+        from src.dashboard.health_builder import enrich_snapshot
         from src.dashboard.models import (
             DashboardSnapshot,
             HomeostasisMetrics,
@@ -546,7 +547,7 @@ def main() -> int:
                 mean_path_length=0.0,
             ),
         )
-        state_store.publish(snapshot)
+        state_store.publish(enrich_snapshot(snapshot, config_dict))
 
     try:
         controller = _RuntimeController(

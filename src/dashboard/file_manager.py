@@ -36,6 +36,12 @@ _MEDIA_TYPES: dict[str, str] = {
     ".ogg": "video/ogg",
     ".mov": "video/quicktime",
     ".avi": "video/x-msvideo",
+    ".mp3": "audio/mpeg",
+    ".wav": "audio/wav",
+    ".flac": "audio/flac",
+    ".aac": "audio/aac",
+    ".m4a": "audio/mp4",
+    ".opus": "audio/opus",
     ".pdf": "application/pdf",
     ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -44,6 +50,7 @@ _MEDIA_TYPES: dict[str, str] = {
 _BINARY_EXTENSIONS = frozenset({
     ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg",
     ".mp4", ".webm", ".ogg", ".mov", ".avi",
+    ".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus",
     ".pdf", ".docx", ".xlsx", ".xls",
     ".ico", ".bmp",
 })
@@ -160,6 +167,9 @@ class FileManager:
                             ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp",
                         },
                         "is_video": ext in {".mp4", ".webm", ".ogg", ".mov", ".avi"},
+                        "is_audio": ext in {".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus"},
+                        "is_spreadsheet": ext in {".xlsx", ".xls", ".xlsm", ".ods"},
+                        "is_document": ext in {".docx", ".doc"},
                     })
 
             return {

@@ -2399,6 +2399,144 @@ footer {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Audio viewer */
+.fm-audio-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.fm-audio {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+}
+
+/* PDF viewer */
+.fm-pdf-container {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  min-height: 500px;
+}
+
+.fm-pdf-frame {
+  width: 100%;
+  height: 70vh;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: #fff;
+}
+
+/* Spreadsheet viewer */
+.fm-sheet-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.fm-sheet-tab {
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.fm-sheet-tab.active {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.fm-sheet-viewer {
+  padding: 12px;
+  overflow: auto;
+  max-height: 60vh;
+}
+
+.fm-spreadsheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  background: var(--card-bg);
+}
+
+.fm-spreadsheet-table th,
+.fm-spreadsheet-table td {
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.fm-spreadsheet-table th {
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.fm-spreadsheet-table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* DOCX viewer */
+.fm-docx-viewer {
+  padding: 16px;
+  overflow: auto;
+  max-height: 70vh;
+}
+
+.fm-docx-content {
+  background: #fff;
+  color: #1f2328;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  line-height: 1.6;
+}
+
+.fm-docx-content h1,
+.fm-docx-content h2,
+.fm-docx-content h3,
+.fm-docx-content h4 {
+  color: #1f2328;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.fm-docx-content p {
+  margin: 0.5em 0;
+}
+
+.fm-docx-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.fm-docx-content td,
+.fm-docx-content th {
+  border: 1px solid #d0d7de;
+  padding: 6px 10px;
+}
+
+.fm-docx-messages {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 193, 7, 0.15);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
 /* Code viewer */
 .fm-code {
   background: rgba(0, 0, 0, 0.35);
@@ -2535,6 +2673,9 @@ footer {
 
 /* Builtins / standard library — cyan */
 .fm-tk-builtin { color: #4ec9b0; }
+
+/* Types — teal */
+.fm-tk-type { color: #4ec9b0; font-style: italic; }
 
 /* Strings — orange */
 .fm-tk-string { color: #ce9178; }
@@ -2964,6 +3105,222 @@ footer {
   background: rgba(74, 124, 247, 0.25);
   color: #fff;
 }
+
+/* ============================================================================
+   HEALTH / PROBLEMS DRAWER (Operator Workbench)
+   ============================================================================ */
+
+.health-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: rgba(10, 25, 37, 0.6);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.health-bar:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.health-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #555;
+}
+
+.health-indicator.health-ok { background: var(--color-success); box-shadow: 0 0 6px rgba(36, 180, 110, 0.5); }
+.health-indicator.health-warning { background: var(--color-warning); }
+.health-indicator.health-error { background: var(--color-danger); }
+.health-indicator.health-stale { background: #c586c0; }
+.health-indicator.health-unavailable { background: #8899bb; }
+.health-indicator.health-disabled { background: #555; }
+
+.health-summary {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.health-toggle {
+  background: transparent;
+  border: none;
+  color: var(--accent2);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.health-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(420px, 90vw);
+  height: 100vh;
+  background: rgba(7, 16, 25, 0.98);
+  border-left: 1px solid var(--line);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
+  transform: translateX(100%);
+  transition: transform var(--transition-medium);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.health-drawer.open {
+  transform: translateX(0);
+}
+
+.health-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.health-drawer__header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.health-drawer__close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.health-drawer__close:hover {
+  color: var(--text);
+}
+
+.health-drawer__counts {
+  display: flex;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.health-count {
+  min-width: 36px;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.health-count--error { background: var(--color-danger); }
+.health-count--warning { background: var(--color-warning); }
+.health-count--stale { background: #c586c0; }
+.health-count--unavailable { background: #8899bb; }
+
+.health-drawer__section {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.health-drawer__section h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.health-empty {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.health-problem {
+  padding: 10px 12px;
+  border-radius: var(--radius-small);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 8px;
+}
+
+.health-problem__component {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.health-problem__status {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin: 4px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.health-problem__reason {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.health-problem__error {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 6px;
+  font-family: var(--font-mono);
+}
+
+.health-problem--health-error .health-problem__status { background: rgba(220, 53, 69, 0.15); color: #f06070; }
+.health-problem--health-warning .health-problem__status { background: rgba(230, 170, 40, 0.15); color: #f0c040; }
+.health-problem--health-stale .health-problem__status { background: rgba(197, 134, 192, 0.15); color: #c586c0; }
+.health-problem--health-unavailable .health-problem__status { background: rgba(136, 153, 187, 0.15); color: #8899bb; }
+
+.health-component-list {
+  display: grid;
+  gap: 6px;
+}
+
+.health-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.82rem;
+}
+
+.health-component__name {
+  font-weight: 500;
+}
+
+.health-component__status {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.health-component--health-ok .health-component__status { background: rgba(36, 180, 110, 0.12); color: #4ddb8a; }
+.health-component--health-error .health-component__status { background: rgba(220, 53, 69, 0.12); color: #f06070; }
+.health-component--health-warning .health-component__status { background: rgba(230, 170, 40, 0.12); color: #f0c040; }
+.health-component--health-stale .health-component__status { background: rgba(197, 134, 192, 0.12); color: #c586c0; }
+.health-component--health-unavailable .health-component__status { background: rgba(136, 153, 187, 0.12); color: #8899bb; }
+.health-component--health-disabled .health-component__status { background: rgba(85, 85, 85, 0.2); color: #888; }
 
 .fm-file-copy-btn.copied {
   background: rgba(74, 200, 100, 0.25);
@@ -3699,21 +4056,25 @@ footer {
 .bibtex-table-container {
   overflow-x: auto;
   margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
 .bibtex-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .bibtex-table thead th {
-  background: rgba(74, 124, 247, 0.1);
+  background: rgba(74, 124, 247, 0.12);
   color: #7aabff;
-  padding: 8px 10px;
+  padding: 10px 12px;
   text-align: left;
   font-weight: 600;
-  border: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   white-space: nowrap;
   user-select: none;
   position: sticky;
@@ -3727,20 +4088,24 @@ footer {
 }
 
 .bibtex-sortable:hover {
-  background: rgba(74, 124, 247, 0.18);
+  background: rgba(74, 124, 247, 0.2);
 }
 
 .bibtex-sort-icon {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   color: #555;
   margin-left: 4px;
 }
 
 .bibtex-table tbody td {
-  padding: 6px 10px;
-  border: 1px solid var(--line);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
   color: var(--text);
-  vertical-align: middle;
+  vertical-align: top;
+}
+
+.bibtex-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .bibtex-table tbody tr {
@@ -3748,15 +4113,15 @@ footer {
 }
 
 .bibtex-table tbody tr:hover {
-  background: rgba(74, 124, 247, 0.04);
+  background: rgba(74, 124, 247, 0.05);
 }
 
 .bibtex-table tbody tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .bibtex-table tbody tr:nth-child(even):hover {
-  background: rgba(74, 124, 247, 0.06);
+  background: rgba(74, 124, 247, 0.07);
 }
 
 .bibtex-row-warn {
@@ -3765,28 +4130,33 @@ footer {
 
 .bibtex-cell-key code {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: #ce9178;
 }
 
 .bibtex-cell-author {
-  max-width: 180px;
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .bibtex-cell-title {
-  max-width: 250px;
+  max-width: 320px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 .bibtex-cell-year {
   text-align: center;
   font-family: var(--font-mono);
   color: #b5cea8;
+  white-space: nowrap;
 }
 
 .bibtex-cell-status {

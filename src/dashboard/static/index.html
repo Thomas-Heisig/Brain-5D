@@ -28,9 +28,9 @@
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="overview">📊 OVERVIEW</button>
     <button class="tab-btn" data-tab="network">🧠 NETWORK</button>
-    <button class="tab-btn" data-tab="control">🎮 CONTROL &amp; CONSOLE</button>
-    <button class="tab-btn" data-tab="research">🔬 RESEARCH &amp; DOCS</button>
-    <button class="tab-btn" data-tab="gate">🚪 RELEASE</button>
+    <button class="tab-btn" data-tab="control">🎮 CONTROL</button>
+    <button class="tab-btn" data-tab="research">🔬 RESEARCH</button>
+    <button class="tab-btn" data-tab="gate">✅ VERIFY</button>
   </nav>
 
   <!-- ============================================================ -->
@@ -429,6 +429,24 @@
     </section> <!-- /tab-gate -->
 
   </main>
+
+  <!-- Health / Problems Drawer (Operator Workbench) -->
+  <aside id="health-drawer" class="health-drawer">
+    <div class="health-drawer__header">
+      <h3>Health &amp; Problems</h3>
+      <button class="health-drawer__close" id="health-drawer-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="health-drawer__counts" id="health-counts"></div>
+    <div class="health-drawer__section">
+      <h4>Problems</h4>
+      <div class="health-problem-list" id="health-problem-list"></div>
+    </div>
+    <div class="health-drawer__section">
+      <h4>Components</h4>
+      <div class="health-component-list" id="health-component-list"></div>
+    </div>
+  </aside>
+
   <!-- Integration Status Modal -->
   <div id="integration-modal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
@@ -442,6 +460,8 @@
   <footer>Brain-5D Operator Dashboard &middot; lokal &middot; interaktiv &middot; v0.5.0-alpha.5</footer>
 
   <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="module" src="/app.js"></script>
 </body>
 </html>

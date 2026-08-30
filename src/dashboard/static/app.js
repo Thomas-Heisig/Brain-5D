@@ -41,6 +41,8 @@
 import { ControlPanel } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
 import { initResearchBrowser, initDocumentationBrowser } from './file-viewer.js';
+import { dashboardStore } from './state-store.js';
+import { initHealthDrawer } from './health-drawer.js';
 
 // ================================================================
 // DOM HELPERS
@@ -214,133 +216,124 @@ let heatmapInterval = null;
 let liveProjectionInterval = null;
 
 /**
- * Refresh system status from /api/status
+ * Render system status from the central dashboard store.
+ * @param {object} state
  */
-async function refreshStatus() {
-  try {
-    const response = await fetch('/api/status', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
+function renderStatus(state) {
+  const data = state;
+  const system = data.system || {};
+  const storage = data.storage || {};
+  const learning = data.learning || {};
+  const selfOrg = data.self_organization || {};
+  const homeostasis = data.homeostasis || {};
 
-    const system = data.system || {};
-    const storage = data.storage || {};
-    const learning = data.learning || {};
-    const selfOrg = data.self_organization || {};
-    const homeostasis = data.homeostasis || {};
+  // System metrics (always measured, real values)
+  setText('tick', formatNumber(system.tick));
+  setText('neurons', formatNumber(system.neurons));
+  setText('synapses', formatNumber(system.synapses));
+  setText('spikes', formatNumber(system.spikes_total));
+  setText('core-ms', formatFloat(system.core_step_ms, 3));
+  setText('energy', formatFloat(system.mean_energy, 3));
 
-    // System metrics (always measured, real values)
-    setText('tick', formatNumber(system.tick));
-    setText('neurons', formatNumber(system.neurons));
-    setText('synapses', formatNumber(system.synapses));
-    setText('spikes', formatNumber(system.spikes_total));
-    setText('core-ms', formatFloat(system.core_step_ms, 3));
-    setText('energy', formatFloat(system.mean_energy, 3));
+  // Storage metrics — distinguish disabled/unavailable from measured zero.
+  if (storage.available === false) {
+    setText('deltas', '—');
+    setText('bytes', '—');
+    setText('write-ms', '—');
+    setText('commit-ms', '—');
+    setText('journal-size', '—');
+    setText('drops', '—');
+    setText('queue-badge', 'disabled');
+    const fill = $('queue-fill');
+    if (fill) fill.style.width = '0%';
+  } else {
+    setText('deltas', formatNumber(storage.deltas_written));
+    setText('bytes', formatBytes(storage.bytes_written));
+    setText('write-ms', formatMetricUnit(storage.write_latency_ms, 'ms', 3));
+    setText('commit-ms', formatMetricUnit(storage.commit_latency_ms, 'ms', 3));
+    setText('journal-size', formatBytes(storage.journal_size_bytes));
+    setText('drops', formatNumber(storage.dropped_batches));
 
-    // Storage metrics — distinguish disabled/unavailable from measured zero.
-    // storage.available=false (poc_config) => "disabled by config", all metrics "—".
-    if (storage.available === false) {
-      setText('deltas', '—');
-      setText('bytes', '—');
-      setText('write-ms', '—');
-      setText('commit-ms', '—');
-      setText('journal-size', '—');
-      setText('drops', '—');
-      setText('queue-badge', 'disabled');
+    const depth = storage.queue_depth;
+    const capacity = storage.queue_capacity;
+    if (depth === null || depth === undefined || capacity === null || capacity === undefined) {
+      setText('queue-badge', '—');
       const fill = $('queue-fill');
       if (fill) fill.style.width = '0%';
     } else {
-      setText('deltas', formatNumber(storage.deltas_written));
-      setText('bytes', formatBytes(storage.bytes_written));
-      setText('write-ms', formatMetricUnit(storage.write_latency_ms, 'ms', 3));
-      setText('commit-ms', formatMetricUnit(storage.commit_latency_ms, 'ms', 3));
-      setText('journal-size', formatBytes(storage.journal_size_bytes));
-      setText('drops', formatNumber(storage.dropped_batches));
-
-      // Queue progress
-      const depth = storage.queue_depth;
-      const capacity = storage.queue_capacity;
-      if (depth === null || depth === undefined || capacity === null || capacity === undefined) {
-        setText('queue-badge', '—');
-        const fill = $('queue-fill');
-        if (fill) fill.style.width = '0%';
-      } else {
-        setText('queue-badge', `${depth} / ${capacity}`);
-        const fill = $('queue-fill');
-        if (fill) {
-          const percent = capacity > 0 ? Math.min(100, (depth / capacity) * 100) : 0;
-          fill.style.width = `${percent}%`;
-        }
+      setText('queue-badge', `${depth} / ${capacity}`);
+      const fill = $('queue-fill');
+      if (fill) {
+        const percent = capacity > 0 ? Math.min(100, (depth / capacity) * 100) : 0;
+        fill.style.width = `${percent}%`;
       }
     }
-
-    // Learning metrics — when STDP/Reward disabled by config, show "—" not fake 0.
-    // The backend reports 0 for disabled counters because no updates occur,
-    // but we surface the disabled state via the homeostasis/self-org flags.
-    // Learning counters are real measured zeros when disabled (0 updates happened),
-    // so we keep formatNumber here.
-    setText('stdp', formatNumber(learning.stdp_updates));
-    setText('reward-updates', formatNumber(learning.reward_updates));
-    setText('rewards', `${formatNumber(learning.rewards_applied)} / ${formatNumber(learning.rewards_received)}`);
-    setText('pending', formatNumber(learning.pending_rewards));
-    setText('learning-ms', formatMetricUnit(learning.update_ms, 'ms', 3));
-
-    // Homeostasis — disabled by config => explicit "disabled", not fake zeros.
-    if (homeostasis.enabled === false) {
-      setText('homeostasis-state', 'disabled by config');
-      setText('target-rate', '—');
-      setText('mean-rate', '—');
-      setText('rate-error', '—');
-      setText('threshold-adaptation', '—');
-      setText('energy-error', '—');
-      setText('active-neurons', '—');
-    } else {
-      setText('homeostasis-state', 'aktiv');
-      setText('target-rate', formatMetricUnit(homeostasis.target_rate_hz, 'Hz', 3));
-      setText('mean-rate', formatMetricUnit(homeostasis.mean_rate_hz || homeostasis.actual_rate_hz, 'Hz', 3));
-      setText('rate-error', formatMetricUnit(homeostasis.mean_rate_error_hz || homeostasis.rate_error_hz, 'Hz', 3));
-      setText('threshold-adaptation', formatFloat(homeostasis.mean_threshold_adaptation, 4));
-      setText('energy-error', formatFloat(homeostasis.mean_energy_error, 4));
-      setText('active-neurons', formatNumber(homeostasis.active_neurons));
-    }
-
-    // Self-organization — disabled by config => explicit "—", not fake 0.
-    if (selfOrg.available === false) {
-      setText('neurons-created', '—');
-      setText('neurons-removed', '—');
-      setText('synapses-created', '—');
-      setText('synapses-pruned', '—');
-    } else {
-      setText('neurons-created', formatNumber(selfOrg.neurons_created));
-      setText('neurons-removed', formatNumber(selfOrg.neurons_removed));
-      setText('synapses-created', formatNumber(selfOrg.synapses_created));
-      setText('synapses-pruned', formatNumber(selfOrg.synapses_pruned));
-    }
-
-    // Status badge
-    const statusEl = $('system-status');
-    if (statusEl) {
-      statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
-      const workerFailed = storage.worker_failed;
-      statusEl.className = workerFailed === true
-        ? 'status-pill error'
-        : (workerFailed === false ? 'status-pill online' : 'status-pill');
-    }
-
-    // Integration status badges (dashboard tab)
-    refreshIntegrationStatus();
-
-    // Structural live loop status
-    refreshLiveLoopStatus();
-
-    // Runtime error visibility
-    refreshErrorVisibility();
-  } catch (error) {
-    const statusEl = $('system-status');
-    if (statusEl) {
-      statusEl.textContent = '⚠️ offline';
-      statusEl.className = 'status-pill error';
-    }
   }
+
+  // Learning metrics
+  setText('stdp', formatNumber(learning.stdp_updates));
+  setText('reward-updates', formatNumber(learning.reward_updates));
+  setText('rewards', `${formatNumber(learning.rewards_applied)} / ${formatNumber(learning.rewards_received)}`);
+  setText('pending', formatNumber(learning.pending_rewards));
+  setText('learning-ms', formatMetricUnit(learning.update_ms, 'ms', 3));
+
+  // Homeostasis
+  if (homeostasis.enabled === false) {
+    setText('homeostasis-state', 'disabled by config');
+    setText('target-rate', '—');
+    setText('mean-rate', '—');
+    setText('rate-error', '—');
+    setText('threshold-adaptation', '—');
+    setText('energy-error', '—');
+    setText('active-neurons', '—');
+  } else {
+    setText('homeostasis-state', 'aktiv');
+    setText('target-rate', formatMetricUnit(homeostasis.target_rate_hz, 'Hz', 3));
+    setText('mean-rate', formatMetricUnit(homeostasis.mean_rate_hz || homeostasis.actual_rate_hz, 'Hz', 3));
+    setText('rate-error', formatMetricUnit(homeostasis.mean_rate_error_hz || homeostasis.rate_error_hz, 'Hz', 3));
+    setText('threshold-adaptation', formatFloat(homeostasis.mean_threshold_adaptation, 4));
+    setText('energy-error', formatFloat(homeostasis.mean_energy_error, 4));
+    setText('active-neurons', formatNumber(homeostasis.active_neurons));
+  }
+
+  // Self-organization
+  if (selfOrg.available === false) {
+    setText('neurons-created', '—');
+    setText('neurons-removed', '—');
+    setText('synapses-created', '—');
+    setText('synapses-pruned', '—');
+  } else {
+    setText('neurons-created', formatNumber(selfOrg.neurons_created));
+    setText('neurons-removed', formatNumber(selfOrg.neurons_removed));
+    setText('synapses-created', formatNumber(selfOrg.synapses_created));
+    setText('synapses-pruned', formatNumber(selfOrg.synapses_pruned));
+  }
+
+  // Status badge
+  const statusEl = $('system-status');
+  if (statusEl) {
+    statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
+    const workerFailed = storage.worker_failed;
+    statusEl.className = workerFailed === true
+      ? 'status-pill error'
+      : (workerFailed === false ? 'status-pill online' : 'status-pill');
+  }
+
+  // Integration status badges (dashboard tab)
+  refreshIntegrationStatus();
+
+  // Structural live loop status
+  refreshLiveLoopStatus();
+
+  // Runtime error visibility
+  refreshErrorVisibility();
+}
+
+/**
+ * Compatibility shim: refresh system status via the central store.
+ */
+async function refreshStatus() {
+  await dashboardStore.refresh();
 }
 
 /**
@@ -981,8 +974,14 @@ async function refreshPopulation() {
  * Initialize dashboard refresh cycles
  */
 function initDashboard() {
-  // Initial loads
-  refreshStatus();
+  // Central state store drives the OVERVIEW tab and health drawer.
+  dashboardStore.subscribe(renderStatus);
+  dashboardStore.start();
+
+  // Initialize health / problems drawer
+  initHealthDrawer(dashboardStore);
+
+  // Visualizations still poll their own endpoints (network tab)
   refreshHeatmap();
   refreshLiveProjection();
   refreshSnapshotInfo();
@@ -998,7 +997,6 @@ function initDashboard() {
   if (ioFlowInterval) clearInterval(ioFlowInterval);
   if (populationInterval) clearInterval(populationInterval);
 
-  refreshInterval = setInterval(refreshStatus, 1000);
   heatmapInterval = setInterval(refreshHeatmap, 5000);
   liveProjectionInterval = setInterval(refreshLiveProjection, 500);
   setInterval(refreshSnapshotInfo, 3000);

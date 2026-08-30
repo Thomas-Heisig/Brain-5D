@@ -89,6 +89,10 @@ function renderFMRecent() {
   }
   list.innerHTML = fmRecentFiles.map(r => {
     const icon = /\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i.test(r.name) ? '🖼️' :
+                 /\.(mp4|webm|ogg|mov|avi)$/i.test(r.name) ? '🎬' :
+                 /\.(mp3|wav|flac|aac|m4a|opus)$/i.test(r.name) ? '🎵' :
+                 /\.(xlsx|xls|xlsm|ods)$/i.test(r.name) ? '📊' :
+                 /\.(docx|doc)$/i.test(r.name) ? '📘' :
                  /\.(md|markdown)$/i.test(r.name) ? '📝' :
                  /\.(py)$/i.test(r.name) ? '🐍' :
                  /\.(json)$/i.test(r.name) ? '📋' : '📄';
@@ -391,7 +395,12 @@ function renderFMTree(node, container, depth) {
       li.appendChild(childContainer);
     } else {
       li.className += ' fm-tree-file';
-      const icon = child.is_image ? '🖼️' : child.is_video ? '🎬' : '📄';
+      const icon = child.is_image ? '🖼️' :
+                   child.is_video ? '🎬' :
+                   child.is_audio ? '🎵' :
+                   child.is_spreadsheet ? '📊' :
+                   child.is_document ? '📘' :
+                   child.is_binary ? '📦' : '📄';
       const label = document.createElement('span');
       label.className = 'fm-file-label';
       label.innerHTML = `${icon} ${escapeHtml(child.name)} <span class="fm-file-size">${formatBytes(child.size_bytes)}</span>`;
@@ -461,6 +470,56 @@ async function openFMFile(path) {
       document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
         viewer.classList.add('fm-viewer-hidden');
       });
+    } else if (contentType.startsWith('audio/')) {
+      // Audio file: render with audio player
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      viewer.innerHTML = `
+        <div class="fm-file-header">
+          <span>${escapeHtml(path)}</span>
+          <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+        </div>
+        <div class="fm-audio-container">
+          <audio controls class="fm-audio">
+            <source src="${url}" type="${escapeHtml(contentType)}">
+            Your browser does not support audio playback.
+          </audio>
+        </div>
+      `;
+      document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+        viewer.classList.add('fm-viewer-hidden');
+      });
+    } else if (contentType === 'application/pdf') {
+      // PDF file: render inline with iframe
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      viewer.innerHTML = `
+        <div class="fm-file-header">
+          <span>${escapeHtml(path)}</span>
+          <div class="fm-file-header-actions">
+            <a href="${url}" download="${escapeHtml(path.split('/').pop() || 'document.pdf')}" class="fm-file-copy-btn">⬇️ Download</a>
+            <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+          </div>
+        </div>
+        <div class="fm-pdf-container">
+          <iframe class="fm-pdf-frame" src="${url}" title="${escapeHtml(path)}"></iframe>
+        </div>
+      `;
+      document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+        viewer.classList.add('fm-viewer-hidden');
+      });
+    } else if (/\.(xlsx|xls|xlsm|ods)$/i.test(path)) {
+      // Spreadsheet: parse with SheetJS and render first sheet as table
+      const blob = await res.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      await renderSpreadsheet(path, arrayBuffer, viewer);
+      return;
+    } else if (/\.(docx|doc)$/i.test(path)) {
+      // Word document: convert to HTML with mammoth.js
+      const blob = await res.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      await renderDocx(path, arrayBuffer, viewer);
+      return;
     } else if (path.toLowerCase().endsWith('.bib')) {
       // BibTeX file: use dedicated structured viewer
       const data = await res.json();
@@ -698,6 +757,137 @@ function renderFMCSV(content) {
 }
 
 // ================================================================
+// Spreadsheet renderer (XLSX / XLS / ODS)
+// ================================================================
+
+async function renderSpreadsheet(path, arrayBuffer, viewer) {
+  if (typeof XLSX === 'undefined') {
+    viewer.innerHTML = `<div class="fm-error">⚠️ SheetJS library not loaded.</div>`;
+    return;
+  }
+
+  try {
+    const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+
+    if (!json || json.length === 0) {
+      viewer.innerHTML = `<div class="fm-empty">(empty spreadsheet)</div>`;
+      return;
+    }
+
+    const header = json[0];
+    const body = json.slice(1);
+    const maxCols = Math.max(header.length, ...body.map(r => r.length));
+
+    const sheetTabs = workbook.SheetNames.map((name, idx) =>
+      `<button class="fm-sheet-tab${idx === 0 ? ' active' : ''}" data-sheet="${escapeHtml(name)}">${escapeHtml(name)}</button>`
+    ).join('');
+
+    let html = `
+      <div class="fm-file-header">
+        <span>${escapeHtml(path)}</span>
+        <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+      </div>
+      <div class="fm-sheet-tabs">${sheetTabs}</div>
+      <div class="fm-sheet-viewer">
+        <table class="fm-spreadsheet-table"><thead><tr>`;
+    for (let i = 0; i < maxCols; i++) {
+      html += `<th>${escapeHtml(String(header[i] || `Col ${i + 1}`))}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+    body.slice(0, 500).forEach(row => {
+      html += '<tr>';
+      for (let i = 0; i < maxCols; i++) {
+        html += `<td>${escapeHtml(String(row[i] ?? ''))}</td>`;
+      }
+      html += '</tr>';
+    });
+    if (body.length > 500) {
+      html += `<tr><td colspan="${maxCols}" class="fm-csv-truncated">... (truncated, ${body.length} rows total)</td></tr>`;
+    }
+    html += '</tbody></table></div>';
+
+    viewer.innerHTML = html;
+
+    document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+      viewer.classList.add('fm-viewer-hidden');
+    });
+
+    viewer.querySelectorAll('.fm-sheet-tab').forEach(tab => {
+      tab.addEventListener('click', async () => {
+        viewer.querySelectorAll('.fm-sheet-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const name = tab.dataset.sheet;
+        const ws = workbook.Sheets[name];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+        const h = data[0] || [];
+        const b = data.slice(1);
+        const cols = Math.max(h.length, ...b.map(r => r.length));
+        let t = '<table class="fm-spreadsheet-table"><thead><tr>';
+        for (let i = 0; i < cols; i++) {
+          t += `<th>${escapeHtml(String(h[i] || `Col ${i + 1}`))}</th>`;
+        }
+        t += '</tr></thead><tbody>';
+        b.slice(0, 500).forEach(row => {
+          t += '<tr>';
+          for (let i = 0; i < cols; i++) {
+            t += `<td>${escapeHtml(String(row[i] ?? ''))}</td>`;
+          }
+          t += '</tr>';
+        });
+        if (b.length > 500) {
+          t += `<tr><td colspan="${cols}" class="fm-csv-truncated">... (truncated, ${b.length} rows total)</td></tr>`;
+        }
+        t += '</tbody></table>';
+        viewer.querySelector('.fm-sheet-viewer').innerHTML = t;
+      });
+    });
+  } catch (e) {
+    viewer.innerHTML = `<div class="fm-error">⚠️ Could not render spreadsheet: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+// ================================================================
+// Word document renderer (DOCX / DOC)
+// ================================================================
+
+async function renderDocx(path, arrayBuffer, viewer) {
+  if (typeof mammoth === 'undefined') {
+    viewer.innerHTML = `<div class="fm-error">⚠️ mammoth.js library not loaded.</div>`;
+    return;
+  }
+
+  try {
+    const result = await mammoth.convertToHtml({ arrayBuffer }, {
+      styleMap: [
+        "p[style-name='Heading 1'] => h1:fresh",
+        "p[style-name='Heading 2'] => h2:fresh",
+        "p[style-name='Heading 3'] => h3:fresh",
+      ],
+    });
+
+    viewer.innerHTML = `
+      <div class="fm-file-header">
+        <span>${escapeHtml(path)}</span>
+        <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+      </div>
+      <div class="fm-docx-viewer">
+        <div class="fm-docx-content">${result.value}</div>
+        ${result.messages.length ? `<div class="fm-docx-messages">${escapeHtml(result.messages.map(m => m.message).join('; '))}</div>` : ''}
+      </div>
+    `;
+
+    document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+      viewer.classList.add('fm-viewer-hidden');
+    });
+  } catch (e) {
+    viewer.innerHTML = `<div class="fm-error">⚠️ Could not render Word document: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+// ================================================================
 // Multi-language code syntax highlighting renderer
 // ================================================================
 
@@ -718,6 +908,14 @@ const FM_LANG = {
   js: {
     keywords: /\b(async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|let|new|of|return|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)\b/g,
     builtins: /\b(console|document|window|Array|Object|String|Number|Boolean|Map|Set|Promise|JSON|Math|Date|RegExp|Error|parseInt|parseFloat|isNaN|fetch|setTimeout|setInterval|null|undefined|true|false)\b/g,
+    string: /`([^`\\]|\\.)*`|"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/g,
+    comment: /\/\/[^\n]*|\/\*[\s\S]*?\*\//g,
+    number: /\b(-?\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,
+  },
+  ts: {
+    keywords: /\b(abstract|as|async|await|break|case|catch|class|const|continue|debugger|declare|default|delete|do|else|enum|export|extends|finally|for|function|if|implements|import|in|infer|instanceof|interface|is|keyof|let|module|namespace|new|of|readonly|return|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)\b/g,
+    builtins: /\b(console|document|window|Array|Object|String|Number|Boolean|Map|Set|Promise|JSON|Math|Date|RegExp|Error|parseInt|parseFloat|isNaN|fetch|setTimeout|setInterval|null|undefined|true|false|Record|Partial|Pick|Omit|Required|Readonly|Exclude|Extract|NonNullable|ReturnType|InstanceType|Parameters)\b/g,
+    types: /\b(string|number|boolean|symbol|bigint|any|unknown|never|void|null|undefined|object)\b/g,
     string: /`([^`\\]|\\.)*`|"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/g,
     comment: /\/\/[^\n]*|\/\*[\s\S]*?\*\//g,
     number: /\b(-?\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,
@@ -905,6 +1103,8 @@ function renderFMCode(content, ext) {
       html = html.replace(pattern, '<span class="fm-tk-keyword">$&</span>');
     } else if (key === 'builtin' || key === 'builtins') {
       html = html.replace(pattern, '<span class="fm-tk-builtin">$&</span>');
+    } else if (key === 'types') {
+      html = html.replace(pattern, '<span class="fm-tk-type">$&</span>');
     } else if (key === 'decorator') {
       html = html.replace(pattern, (match, ws, dec) => ws + `<span class="fm-tk-decorator">${dec}</span>`);
     } else if (key === 'fstring') {

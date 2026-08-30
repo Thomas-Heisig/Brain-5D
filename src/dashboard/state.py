@@ -13,7 +13,12 @@ from dataclasses import replace
 from threading import RLock
 from typing import Any, Protocol
 
-from .models import DashboardSnapshot
+from .models import (
+    ComponentStatus,
+    DashboardSnapshot,
+    HealthSnapshot,
+    ParameterSchema,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -191,6 +196,9 @@ class DashboardStateStore:
             "signal_metrics",
             "experiment",
             "embodiment",
+            "components",
+            "parameters",
+            "health",
             "status",
             "version",
         ]
@@ -203,6 +211,47 @@ class DashboardStateStore:
 
         # Update the snapshot using dataclass replace
         return replace(snapshot, **replacements)
+
+    def update_component(self, status: ComponentStatus) -> DashboardSnapshot:
+        """Update or insert a single component status.
+
+        Args:
+            status: The new component status.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            components = dict(current.components or {})
+            components[status.component] = status
+            return self.update(components=components)
+
+    def update_parameter(self, parameter: ParameterSchema) -> DashboardSnapshot:
+        """Update or insert a single parameter schema entry.
+
+        Args:
+            parameter: The new parameter schema entry.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            parameters = dict(current.parameters or {})
+            parameters[parameter.name] = parameter
+            return self.update(parameters=parameters)
+
+    def set_health(self, health: HealthSnapshot) -> DashboardSnapshot:
+        """Set the aggregated health snapshot.
+
+        Args:
+            health: The new health snapshot.
+
+        Returns:
+            The new snapshot.
+        """
+        return self.update(health=health)
 
     # =========================================================================
     # Event System

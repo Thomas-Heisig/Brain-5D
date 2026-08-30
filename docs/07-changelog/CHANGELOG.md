@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-30 — Dashboard File Manager: Media & Office Previews
+
+### Neue Dateiformat-Vorschauen
+- **`src/dashboard/static/file-viewer.js`**:
+  - **Audio-Player**: Dateien mit `audio/*`-MIME-Type (`.mp3`, `.wav`, `.flac`, `.aac`, `.m4a`, `.opus`) werden mit nativem HTML5-Audio-Player abgespielt.
+  - **PDF-Inline-Viewer**: `.pdf`-Dateien werden per `<iframe>` direkt im Dashboard angezeigt, inklusive Download-Button.
+  - **XLSX-Tabellenansicht**: `.xlsx`, `.xls`, `.xlsm`, `.ods` werden mit SheetJS geparst und als interaktive Tabelle mit Sheet-Tabs dargestellt.
+  - **DOCX-HTML-Vorschau**: `.docx`, `.doc` werden client-seitig mit mammoth.js nach HTML konvertiert und als formatierte Vorschau angezeigt.
+  - **TypeScript-Syntax-Highlighting**: `.ts`-Dateien erhalten eigenes Highlighting inklusive TypeScript-Typen (`string`, `number`, `any`, `unknown`, `never`, etc.).
+- **`src/dashboard/file_manager.py`**:
+  - MIME-Typen und `is_audio`-Flag für Audio-Dateien ergänzt.
+  - MIME-Typen für `.pdf`, `.docx`, `.xlsx` ergänzt.
+  - `is_spreadsheet` und `is_document` Flags für Dateibaum-Metadaten ergänzt.
+- **`src/dashboard/static/styles.css`**:
+  - Stile für Audio-Player, PDF-Viewer, Spreadsheet-Tabs, Spreadsheet-Tabelle und DOCX-Vorschau hinzugefügt.
+  - BibTeX-Tabellen-Abstände verbessert: größere Padding-Werte, klarere Zeilenabgrenzung, bessere Lesbarkeit.
+- **`src/dashboard/static/index.html`**: CDN-Abhängigkeiten für SheetJS (`xlsx`) und mammoth.js (`mammoth`) eingebunden.
+
+### Dateibaum-Icons
+- Audio-Dateien erhalten ein 🎵-Icon.
+- Tabellen erhalten ein 📊-Icon.
+- Word-Dokumente erhalten ein 📘-Icon.
+
 ## 2026-08-30 — Dashboard Operator-Workbench Design Decision
 
 ### Design Decision: From Feature Dashboard to Operator Workbench

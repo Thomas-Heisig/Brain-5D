@@ -237,6 +237,30 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Operator Workbench: components, parameters, health
+            # ----------------------------------------------------------------
+
+            if path == "/api/components":
+                self._send_components()
+                return
+
+            if path.startswith("/api/components/"):
+                self._send_component(path[len("/api/components/"):])
+                return
+
+            if path == "/api/parameters":
+                self._send_parameters()
+                return
+
+            if path.startswith("/api/parameters/"):
+                self._send_parameter(path[len("/api/parameters/"):])
+                return
+
+            if path == "/api/health":
+                self._send_health()
+                return
+
+            # ----------------------------------------------------------------
             # Heatmaps / snapshots
             # ----------------------------------------------------------------
 
@@ -1482,6 +1506,61 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "content": "",
             "size_bytes": 0,
         })
+
+    # ========================================================================
+    # Operator Workbench Helpers
+    # ========================================================================
+
+    def _send_components(self) -> None:
+        """Serve all component statuses."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        components = snapshot.components or {}
+        self._send_json({
+            "components": {k: v.to_json() for k, v in components.items()},
+            "count": len(components),
+        })
+
+    def _send_component(self, name: str) -> None:
+        """Serve a single component status."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        components = snapshot.components or {}
+        component = components.get(name)
+        if component is None:
+            self._send_json(
+                {"error": f"Component '{name}' not found"},
+                HTTPStatus.NOT_FOUND,
+            )
+            return
+        self._send_json(component.to_json())
+
+    def _send_parameters(self) -> None:
+        """Serve all parameter schemas."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        parameters = snapshot.parameters or {}
+        self._send_json({
+            "parameters": {k: v.to_json() for k, v in parameters.items()},
+            "count": len(parameters),
+        })
+
+    def _send_parameter(self, name: str) -> None:
+        """Serve a single parameter schema."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        parameters = snapshot.parameters or {}
+        # Support both raw name and URL-encoded dotted names
+        decoded = unquote(name)
+        parameter = parameters.get(decoded) or parameters.get(name)
+        if parameter is None:
+            self._send_json(
+                {"error": f"Parameter '{decoded}' not found"},
+                HTTPStatus.NOT_FOUND,
+            )
+            return
+        self._send_json(parameter.to_json())
+
+    def _send_health(self) -> None:
+        """Serve the aggregated health snapshot."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        self._send_json(snapshot.health.to_json())
 
     # ========================================================================
     # Static / SPA
