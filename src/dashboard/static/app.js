@@ -328,9 +328,6 @@ function renderStatus(state) {
 
   // Structural live loop status
   refreshLiveLoopStatus();
-
-  // Runtime error visibility
-  refreshErrorVisibility();
 }
 
 /**
@@ -413,52 +410,6 @@ async function refreshLiveLoopStatus() {
       }
     }
     const badge = $('live-loop-badge');
-    if (badge) {
-      badge.textContent = 'offline';
-      badge.className = 'gate-badge failed';
-    }
-  }
-}
-
-/**
- * Refresh runtime error visibility from /api/structural/errors.
- */
-async function refreshErrorVisibility() {
-  try {
-    const r = await fetch('/api/structural/errors', { cache: 'no-store' });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    const errors = data.errors || [];
-
-    const badge = $('error-count-badge');
-    if (badge) {
-      badge.textContent = `${errors.length} error${errors.length !== 1 ? 's' : ''}`;
-      badge.className = `gate-badge ${errors.length === 0 ? 'passed' : 'failed'}`;
-    }
-
-    const list = $('error-list');
-    if (!list) return;
-
-    if (errors.length === 0) {
-      list.innerHTML = '<div class="error-empty">✅ No runtime errors recorded.</div>';
-    } else {
-      list.innerHTML = errors.map(e => `
-        <div class="error-item error-${e.fatal ? 'fatal' : 'warning'}">
-          <span class="error-tick">Tick ${e.tick}</span>
-          <span class="error-phase">${e.phase}</span>
-          <span class="error-type">${e.exception_type}</span>
-          <span class="error-msg">${e.message}</span>
-          <span class="error-hash">#${e.traceback_hash || ''}</span>
-        </div>
-      `).join('');
-    }
-
-    const meta = $('error-meta');
-    if (meta) {
-      meta.textContent = `Structured RuntimeErrorEvent buffer · ${errors.length} event(s)`;
-    }
-  } catch {
-    const badge = $('error-count-badge');
     if (badge) {
       badge.textContent = 'offline';
       badge.className = 'gate-badge failed';
@@ -990,7 +941,6 @@ function initDashboard() {
   refreshLiveProjection();
   refreshSnapshotInfo();
   refreshLiveLoopStatus();
-  refreshErrorVisibility();
   refreshIOFlow();
   refreshPopulation();
 
@@ -1005,7 +955,7 @@ function initDashboard() {
   liveProjectionInterval = setInterval(refreshLiveProjection, 500);
   setInterval(refreshSnapshotInfo, 3000);
   setInterval(refreshLiveLoopStatus, 5000);
-  setInterval(refreshErrorVisibility, 5000);
+
   ioFlowInterval = setInterval(refreshIOFlow, 2000);
   populationInterval = setInterval(refreshPopulation, 2000);
 
@@ -2047,6 +1997,65 @@ function setupQuickActions() {
 }
 
 // ================================================================
+// THEME & ACCESSIBILITY HEADER CONTROLS
+// ================================================================
+
+const THEME_KEY = 'b5d-theme';
+const ACCESSIBILITY_KEY = 'b5d-accessibility';
+
+function getSavedTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || 'dark';
+  } catch {
+    return 'dark';
+  }
+}
+
+function setTheme(theme) {
+  document.body.dataset.theme = theme;
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function toggleTheme() {
+  const current = document.body.dataset.theme || getSavedTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  setTheme(next);
+}
+
+function setupThemeToggle() {
+  const btn = $('theme-toggle');
+  if (!btn) return;
+  setTheme(getSavedTheme());
+  btn.addEventListener('click', toggleTheme);
+}
+
+function setupAccessibilityToggle() {
+  const btn = $('accessibility-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const enabled = document.body.classList.toggle('accessibility-mode');
+    try {
+      localStorage.setItem(ACCESSIBILITY_KEY, String(enabled));
+    } catch {
+      // ignore storage errors
+    }
+  });
+
+  try {
+    const saved = localStorage.getItem(ACCESSIBILITY_KEY);
+    if (saved === 'true') {
+      document.body.classList.add('accessibility-mode');
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
+// ================================================================
 // KEYBOARD SHORTCUTS (Global)
 // ================================================================
 
@@ -2101,6 +2110,10 @@ function init() {
 
   // Setup global shortcuts
   setupGlobalShortcuts();
+
+  // Setup header controls
+  setupThemeToggle();
+  setupAccessibilityToggle();
 
   console.log('✅ Dashboard ready');
 }

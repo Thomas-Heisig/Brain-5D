@@ -23,7 +23,6 @@ from src.research.canonical_state import (
     capture_canonical_state,
 )
 
-
 # ============================================================================
 # Mock implementations for protocol testing
 # ============================================================================

@@ -1,5 +1,42 @@
 # Changelog
 
+## 2026-08-30 — Dashboard UI/UX Redesign: Footer-Status, Header-Steuerung, Kompaktes Overview
+
+### Frontend
+- **`src/dashboard/static/index.html`**: Header auf Dark/Light- und Accessibility-Buttons reduziert; Experiment-Mode-Switcher, System-Status und Health-Bar in den always-visible Footer verschoben; separate Runtime-Error-Card aus OVERVIEW entfernt.
+- **`src/dashboard/static/styles.css`**: Footer fixed am unteren Rand (`z-index: 50`); Body-Padding für Footer; kompaktes Overview-Layout (kleinere Cards, engeres Grid, reduzierte Schriften) für 1080p @ 75% Zoom ohne vertikale Scrollbar; Light-Theme-Overrides; Accessibility-Mode-Styles.
+- **`src/dashboard/static/health-drawer.js`**: Health-Bar wird jetzt in `#footer-status` gerendert; Runtime-Error-Count und -Details aus `/api/structural/errors` werden in Health-Bar und Drawer angezeigt.
+- **`src/dashboard/static/overview-panel.js`**: Separate Runtime-Error-Visibility-Card entfernt; Fehlerdaten bleiben für Health-Drawer verfügbar.
+- **`src/dashboard/static/app.js`**: Dark/Light-Toggle und Accessibility-Toggle implementiert (mit `localStorage`-Persistenz); überflüssige `refreshErrorVisibility`-Funktion entfernt.
+- **`src/dashboard/static/state-store.js`**: `/api/structural/errors` wird im State Store geladen und als `structural_errors` veröffentlicht.
+
+### Tests
+- Dashboard-Test-Suite: **108 passed**.
+- Gesamte Test-Suite: **454 passed, 2 skipped**.
+
+## 2026-08-30 — Code Quality Cleanup: Pyright / Ruff / Pytest Green
+
+### Quality Status
+- **Pyright**: 0 errors, 0 warnings, 0 informations across `src/` and `tests/`.
+- **Ruff**: 0 lint/import errors after auto-fix pass.
+- **Pytest**: 454 passed, 2 skipped (large-storage slow tests), 1 external deprecation warning.
+
+### Backend fixes
+- **`src/dashboard/models.py`**: Replaced mutable `None` defaults for `components`, `parameters`, `pending_changes` with typed `field(default_factory=...)` to eliminate unnecessary `is None` comparisons and unknown-type diagnostics.
+- **`src/dashboard/server.py`**: Added explicit casts for `int()` conversions and `_send_json` payloads containing `list[str]` values.
+- **`src/dashboard/health_builder.py`**: Tightened `_is_enabled` / `_nested_get` typing to avoid partially-unknown `dict` diagnostics.
+- **`src/dashboard/file_manager.py`**: Added missing `_root()` helper and typed `history` list; removed unnecessary casts.
+- **`src/research/canonical_state.py`**: Switched protocol `neurons`/`synapses`/`event_slots` properties to covariant `Mapping` / `Sequence` so real network types match the protocol.
+- **`src/storage/checkpoint.py`** / **`src/storage/core_restore.py`**: Added `# pyright: ignore[reportPrivateUsage]` markers for intentional internal field access.
+
+### Test fixes
+- **`tests/conftest.py`**: Renamed `TestConfig` to `Config` to avoid pytest collection warning.
+- **`tests/test_artifacts.py`**: Updated import to `Config`.
+- **`tests/test_dashboard_file_manager.py`**: Fixed undefined `host`/`port` variables by extracting them from `server.server_address`.
+- **`tests/test_dashboard_pending_parameters.py`**: Removed unused model imports; typed fixture as `Iterator[DashboardServer]`.
+- **`tests/dashboard_http.py`**: Simplified `_server_address` cast.
+- **`tests/_restore_helpers.py`**: Added private-usage ignores and removed unused `Path` import.
+
 ## 2026-08-30 — Verification Audit: Restore Verified, Evidence Scopes Required
 
 ### Verification Status

@@ -2,15 +2,14 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
-from tests.conftest import TestConfig, base_config
-
 from src.diagnostics.stimulus import StimulusResult
 from src.utils.run_artifacts import RunArtifacts
+from tests.conftest import Config, base_config
 
 
 def test_run_artifacts(tmp_path: Path) -> None:
     """Test the RunArtifacts context manager with a temporary directory."""
-    cfg: TestConfig = base_config()
+    cfg: Config = base_config()
     # RunArtifacts expects Dict[str, Any]; we cast to satisfy the type checker.
     # The cast does not change runtime behavior; cfg is a plain dict.
     with RunArtifacts(cast(dict[str, Any], cfg), run_id="test", root=tmp_path) as a:

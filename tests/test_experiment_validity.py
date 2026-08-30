@@ -25,7 +25,6 @@ from src.research.evidence_engine import (
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================

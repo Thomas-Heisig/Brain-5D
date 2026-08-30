@@ -32,8 +32,10 @@ from typing import Any
 
 from src.homeostasis.engine import HomeostasisEngine
 from src.self_organization.coordinator import SelfOrganizationCoordinator
-from src.self_organization.policy import SelfOrganizationPolicy, SelfOrganizationPolicyConfig
-
+from src.self_organization.policy import (
+    SelfOrganizationPolicy,
+    SelfOrganizationPolicyConfig,
+)
 
 # ============================================================================
 # Structured error event for scientific integrity

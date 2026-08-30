@@ -62,8 +62,8 @@ from __future__ import annotations
 import hashlib
 import json
 import random
+from collections.abc import Mapping, Sequence
 from typing import Any, Protocol
-
 
 # ============================================================================
 # State Protocols — What the digest function needs to read
@@ -145,11 +145,11 @@ class CanonicalNetworkLike(Protocol):
     @property
     def rng(self) -> random.Random: ...
     @property
-    def neurons(self) -> dict[int, CanonicalNeuronLike]: ...
+    def neurons(self) -> Mapping[int, CanonicalNeuronLike]: ...
     @property
-    def synapses(self) -> dict[int, list[CanonicalSynapseLike]]: ...
+    def synapses(self) -> Mapping[int, Sequence[CanonicalSynapseLike]]: ...
     @property
-    def event_slots(self) -> list[list[CanonicalSpikeEventLike]]: ...
+    def event_slots(self) -> Sequence[Sequence[CanonicalSpikeEventLike]]: ...
     @property
     def pending_currents(self) -> dict[int, float]: ...
     @property
@@ -163,7 +163,7 @@ class CanonicalNetworkLike(Protocol):
 # ============================================================================
 
 
-def _canonical_neuron_state(neurons: dict[int, CanonicalNeuronLike]) -> list[dict[str, Any]]:
+def _canonical_neuron_state(neurons: Mapping[int, CanonicalNeuronLike]) -> list[dict[str, Any]]:
     """Capture neuron state in deterministic order (sorted by neuron_id).
 
     Returns a list of dicts with exact float/int values, no repr().
@@ -190,7 +190,7 @@ def _canonical_neuron_state(neurons: dict[int, CanonicalNeuronLike]) -> list[dic
 
 
 def _canonical_synapse_state(
-    synapses: dict[int, list[CanonicalSynapseLike]],
+    synapses: Mapping[int, Sequence[CanonicalSynapseLike]],
 ) -> list[dict[str, Any]]:
     """Capture synapse state in deterministic order (sorted by source_id, target_id)."""
     result: list[dict[str, Any]] = []
@@ -208,7 +208,7 @@ def _canonical_synapse_state(
 
 
 def _canonical_event_state(
-    event_slots: list[list[CanonicalSpikeEventLike]],
+    event_slots: Sequence[Sequence[CanonicalSpikeEventLike]],
 ) -> list[dict[str, Any]]:
     """Capture queued events in deterministic order (delivery_tick, source_id, target_id).
 

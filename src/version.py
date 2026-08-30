@@ -14,7 +14,8 @@ Usage:
 
 from __future__ import annotations
 
-from importlib.metadata import PackageNotFoundError, version as _pkg_version
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 
 # ============================================================================
 # Canonical version — single source of truth

@@ -45,7 +45,8 @@ from src.config.loader import load_config
 # ================================================================
 # Canonical Runtime Controller
 # ================================================================
-from src.controller.runtime import PostTickHook, RuntimeController as _RuntimeController
+from src.controller.runtime import PostTickHook
+from src.controller.runtime import RuntimeController as _RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import (
     coords_to_linear,
@@ -767,7 +768,10 @@ def main() -> int:
 
     if _storage_runtime_enabled:
         try:
-            from src.storage.async_runtime import AsyncStorageConfig, AsyncStorageSession
+            from src.storage.async_runtime import (
+                AsyncStorageConfig,
+                AsyncStorageSession,
+            )
             from src.storage.delta_journal import DeltaJournal
             from src.storage.runtime import StorageRuntimeConfig
 
@@ -844,7 +848,10 @@ def main() -> int:
 
             _telemetry_store: Any = None
             if _lt_enabled:
-                from src.dashboard.live_projection import TelemetryFrameStore, make_telemetry_hook
+                from src.dashboard.live_projection import (
+                    TelemetryFrameStore,
+                    make_telemetry_hook,
+                )
                 _telemetry_store = TelemetryFrameStore(
                     capture_interval_ticks=_lt_capture,
                     activity_window_ticks=_lt_window,
@@ -853,7 +860,9 @@ def main() -> int:
                 # Prime Tick-0 frame so dashboard can respond immediately
                 _telemetry_store.prime(controller.network)
                 # Register post-tick hook via safe wrapper (routes errors to error buffer)
-                from src.dashboard.live_projection import NetworkAccess as _NetworkAccess
+                from src.dashboard.live_projection import (
+                    NetworkAccess as _NetworkAccess,
+                )
                 _hook: PostTickHook = make_telemetry_hook(_telemetry_store, cast("_NetworkAccess", controller.network))
                 controller.add_hook(_hook)
                 print(f"✅ Live telemetry enabled (capture={_lt_capture}, window={_lt_window}, dt_ms={_sim_dt_ms})")

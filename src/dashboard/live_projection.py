@@ -388,7 +388,11 @@ def _emit_telemetry_error(tick: int, exception: Exception) -> None:
     The error is non-fatal: scientific simulation continues.
     """
     import traceback
-    from src.self_organization.runtime_adapter import RuntimeErrorEvent, get_error_buffer
+
+    from src.self_organization.runtime_adapter import (
+        RuntimeErrorEvent,
+        get_error_buffer,
+    )
 
     tb_text = "".join(traceback.format_exception(type(exception), exception, exception.__traceback__))
     import hashlib

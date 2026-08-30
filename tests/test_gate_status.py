@@ -17,6 +17,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from src.controller.runtime import RuntimeController
+from src.core import Brain5DConfig, NeuralNetwork
 from src.dashboard.gate_status import (
     G_FAILED,
     G_PASSED,
@@ -28,8 +30,6 @@ from src.dashboard.gate_status import (
     GateStatusBuilder,
 )
 from src.dashboard.operator_bridge import OperatorBridge
-from src.controller.runtime import RuntimeController
-from src.core import Brain5DConfig, NeuralNetwork
 
 
 def _build_network(n: int = 50) -> NeuralNetwork:

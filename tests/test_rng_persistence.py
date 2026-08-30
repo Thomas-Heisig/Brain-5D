@@ -14,7 +14,6 @@ import random
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-
 from src.storage.checkpoint import (
     RandomStateRecord,
     RuntimeCheckpoint,
@@ -22,7 +21,6 @@ from src.storage.checkpoint import (
     read_runtime_checkpoint,
     write_runtime_checkpoint,
 )
-
 
 # ============================================================================
 # Mock network with RNG for checkpoint testing

@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 import threading
 import time
+from collections.abc import Iterator
 from http import HTTPStatus
 from http.client import HTTPConnection
+from typing import Any, cast
 
 import pytest
 
@@ -22,7 +24,7 @@ def state() -> DashboardStateStore:
 
 
 @pytest.fixture
-def server(state: DashboardStateStore) -> DashboardServer:
+def server(state: DashboardStateStore) -> Iterator[DashboardServer]:
     """Create a dashboard server on a free port."""
     srv = DashboardServer(("127.0.0.1", 0), state, heatmaps=None)
     thread = threading.Thread(target=srv.serve_forever, daemon=True)
@@ -36,10 +38,11 @@ def _request(
     server: DashboardServer,
     method: str,
     path: str,
-    body: dict | None = None,
-) -> tuple[int, dict]:
+    body: dict[str, Any] | None = None,
+) -> tuple[int, dict[str, Any]]:
     """Send a JSON request and return (status, parsed body)."""
-    host, port = server.server_address
+    address = cast(tuple[str, int], server.server_address)
+    host, port = address
     conn = HTTPConnection(host, port, timeout=5)
     try:
         headers = {"Content-Type": "application/json"} if body is not None else {}
@@ -84,7 +87,7 @@ class TestExperimentMode:
         assert status == HTTPStatus.BAD_REQUEST
         assert "invalid" in payload["error"].lower()
 
-    def test_start_session(self, server: DashboardStateStore) -> None:
+    def test_start_session(self, server: DashboardServer) -> None:
         status, payload = _request(
             server,
             "POST",

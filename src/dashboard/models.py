@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from dataclasses import fields as dataclass_fields
 from typing import Any
 
@@ -809,28 +809,19 @@ class DashboardSnapshot:
     signal_metrics: SignalMetrics = SignalMetrics()
     experiment: ExperimentMetrics = ExperimentMetrics()
     embodiment: EmbodimentMetrics = EmbodimentMetrics()
-    components: dict[str, ComponentStatus] = None  # type: ignore[assignment]
-    parameters: dict[str, ParameterSchema] = None  # type: ignore[assignment]
-    pending_changes: dict[str, PendingParameterChange] = None  # type: ignore[assignment]
+    components: dict[str, ComponentStatus] = field(default_factory=dict[str, ComponentStatus])
+    parameters: dict[str, ParameterSchema] = field(default_factory=dict[str, ParameterSchema])
+    pending_changes: dict[str, PendingParameterChange] = field(default_factory=dict[str, PendingParameterChange])
     change_history: tuple[ParameterChangeRecord, ...] = ()
     experiment_state: ExperimentState = ExperimentState()
     health: HealthSnapshot = HealthSnapshot()
     status: str = "idle"
     version: str = "0.5.0-alpha.2"
 
-    def __post_init__(self) -> None:
-        # Frozen dataclass with mutable defaults requires object.__setattr__
-        if self.components is None:
-            object.__setattr__(self, "components", {})
-        if self.parameters is None:
-            object.__setattr__(self, "parameters", {})
-        if self.pending_changes is None:
-            object.__setattr__(self, "pending_changes", {})
-
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
-        components = self.components or {}
-        parameters = self.parameters or {}
+        components = self.components
+        parameters = self.parameters
         return {
             "status": self.status,
             "version": self.version,

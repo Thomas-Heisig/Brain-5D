@@ -550,6 +550,26 @@ async function openFMFile(path) {
       const arrayBuffer = await blob.arrayBuffer();
       await renderDocx(path, arrayBuffer, viewer);
       return;
+    } else if (/\.(ipynb)$/i.test(path)) {
+      // Jupyter notebook: render structured cells
+      const data = await res.json();
+      renderIPythonNotebook(path, data.content || '', viewer);
+      return;
+    } else if (/\.(log)$/i.test(path)) {
+      // Log file: render with level highlighting
+      const data = await res.json();
+      renderLogFile(path, data.content || '', viewer);
+      return;
+    } else if (/\.(dot)$/i.test(path)) {
+      // Graphviz DOT file
+      const data = await res.json();
+      renderGraphviz(path, data.content || '', viewer);
+      return;
+    } else if (/\.(puml|plantuml)$/i.test(path)) {
+      // PlantUML file
+      const data = await res.json();
+      renderPlantUML(path, data.content || '', viewer);
+      return;
     } else if (path.toLowerCase().endsWith('.bib')) {
       // BibTeX file: use dedicated structured viewer
       const data = await res.json();
@@ -589,12 +609,21 @@ async function openFMFile(path) {
           <h3>${escapeHtml(data.name || path)}</h3>
           <div class="fm-file-header-actions">
             <span class="fm-file-meta">${formatBytes(data.size_bytes || 0)}</span>
+            <button class="fm-file-action-btn" id="fm-file-search" title="Find in document (Ctrl+F)">🔍 Search</button>
+            <button class="fm-file-action-btn" id="fm-file-history" title="Git history">🕰️ History</button>
+            <button class="fm-file-action-btn" id="fm-file-notes" title="File notes / metadata">📝 Notes</button>
+            <button class="fm-file-action-btn" id="fm-file-analyze" title="Analyze document">🤖 Analyze</button>
+            <button class="fm-file-action-btn" id="fm-file-export" title="Export document">⬇️ Export</button>
+            <button class="fm-file-action-btn" id="fm-file-fullscreen" title="Toggle fullscreen">🖥️ Full</button>
             ${editable ? `<button class="fm-file-edit-btn" id="fm-file-edit" title="Edit file">✏️ Edit</button>` : ''}
             <button class="fm-file-copy-btn" id="fm-file-copy-all" data-content="${escapeHtml(content)}">📋 Copy all</button>
             <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
           </div>
         </div>
-        <div class="fm-content">${renderFMContent(content, ext)}</div>
+        <div class="fm-content" id="fm-content">${renderFMContent(content, ext)}</div>
+        <div class="fm-history-panel" id="fm-history-panel" style="display:none;"></div>
+        <div class="fm-meta-panel" id="fm-meta-panel" style="display:none;"></div>
+        <div class="fm-analyze-panel" id="fm-analyze-panel" style="display:none;"></div>
       `;
 
       // Wire up the close button
@@ -637,9 +666,209 @@ async function openFMFile(path) {
           });
         });
       }
+
+      // Wire up search, history, notes, analyze, export and fullscreen buttons
+      const searchBtn = document.getElementById('fm-file-search');
+      const historyBtn = document.getElementById('fm-file-history');
+      const notesBtn = document.getElementById('fm-file-notes');
+      const analyzeBtn = document.getElementById('fm-file-analyze');
+      const exportBtn = document.getElementById('fm-file-export');
+      const fullscreenBtn = document.getElementById('fm-file-fullscreen');
+      const contentContainer = document.getElementById('fm-content');
+      const historyPanel = document.getElementById('fm-history-panel');
+      const metaPanel = document.getElementById('fm-meta-panel');
+      const analyzePanel = document.getElementById('fm-analyze-panel');
+
+      if (searchBtn && contentContainer) {
+        searchBtn.addEventListener('click', () => createFMSearchBox(contentContainer, () => content));
+      }
+      if (historyBtn && historyPanel) {
+        historyBtn.addEventListener('click', () => loadFMHistory(path, source, historyPanel));
+      }
+      if (notesBtn && metaPanel) {
+        notesBtn.addEventListener('click', () => loadFMMeta(path, source, metaPanel));
+      }
+      if (analyzeBtn && analyzePanel) {
+        analyzeBtn.addEventListener('click', () => loadFMAnalyze(path, source, analyzePanel));
+      }
+      if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+          const fmt = prompt('Export format: html, docx, or md', 'html');
+          if (!fmt) return;
+          const encodedPath = encodeURIComponent(path);
+          window.open(`/api/files/export/${encodedPath}?source=${encodeURIComponent(source)}&format=${encodeURIComponent(fmt)}`, '_blank');
+        });
+      }
+      if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => toggleFMFullscreen(viewer));
+      }
+      // Global Ctrl+F shortcut when viewer is active
+      viewer.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+          e.preventDefault();
+          if (contentContainer) createFMSearchBox(contentContainer, () => content);
+        }
+      });
     }
   } catch (e) {
     viewer.innerHTML = `<div class="fm-error">⚠️ ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+async function loadFMHistory(path, source, container) {
+  container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  if (container.style.display === 'none' || container.dataset.loaded) return;
+
+  container.innerHTML = '<div class="fm-history-loading">Loading history…</div>';
+  try {
+    const encodedPath = encodeURIComponent(path);
+    const res = await fetch(`/api/files/history/${encodedPath}?source=${encodeURIComponent(source)}`);
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+
+    if (!data.history || data.history.length === 0) {
+      container.innerHTML = '<div class="fm-history-empty">No Git history found for this file.</div>';
+      container.dataset.loaded = 'true';
+      return;
+    }
+
+    let html = '<div class="fm-history-list">';
+    data.history.forEach(commit => {
+      const shortHash = commit.hash.substring(0, 8);
+      html += `
+        <div class="fm-history-item">
+          <div class="fm-history-meta">
+            <code class="fm-history-hash">${escapeHtml(shortHash)}</code>
+            <span class="fm-history-date">${escapeHtml(commit.date)}</span>
+            <span class="fm-history-author">${escapeHtml(commit.author)}</span>
+          </div>
+          <div class="fm-history-message">${escapeHtml(commit.message)}</div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    container.dataset.loaded = 'true';
+  } catch (e) {
+    container.innerHTML = `<div class="fm-history-empty">⚠️ ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+async function loadFMAnalyze(path, source, container) {
+  container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  if (container.style.display === 'none' || container.dataset.loaded) return;
+
+  container.innerHTML = '<div class="fm-analyze-loading">Analyzing…</div>';
+  try {
+    const encodedPath = encodeURIComponent(path);
+    const res = await fetch(`/api/files/analyze/${encodedPath}?source=${encodeURIComponent(source)}`);
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+
+    const stats = data.stats || {};
+    const readability = data.readability || {};
+    const keywords = data.keywords || [];
+    const sentiment = data.sentiment || {};
+    const summary = data.summary || '';
+    const language = data.language || 'unknown';
+
+    const keywordHtml = keywords.length
+      ? `<div class="fm-analyze-keywords">${keywords.map(k => `<span class="fm-analyze-keyword">${escapeHtml(k.word)} (${k.count})</span>`).join('')}</div>`
+      : '<div class="fm-analyze-empty">No keywords extracted.</div>';
+
+    container.innerHTML = `
+      <div class="fm-analyze-header">
+        <span class="fm-analyze-title">🤖 Document analysis</span>
+        <span class="fm-analyze-lang">Language: ${escapeHtml(language)}</span>
+      </div>
+      <div class="fm-analyze-grid">
+        <div class="fm-analyze-stat"><strong>${stats.words || 0}</strong> words</div>
+        <div class="fm-analyze-stat"><strong>${stats.lines || 0}</strong> lines</div>
+        <div class="fm-analyze-stat"><strong>${stats.sentences || 0}</strong> sentences</div>
+        <div class="fm-analyze-stat"><strong>${stats.chars || 0}</strong> chars</div>
+      </div>
+      <div class="fm-analyze-row">
+        <div class="fm-analyze-block">
+          <h4>Readability</h4>
+          <div class="fm-analyze-readability">${escapeHtml(readability.label || 'n/a')}: <strong>${readability.score !== undefined ? readability.score : 'n/a'}</strong></div>
+        </div>
+        <div class="fm-analyze-block">
+          <h4>Sentiment</h4>
+          <div class="fm-analyze-sentiment fm-analyze-sentiment-${escapeHtml(sentiment.label || 'neutral')}">${escapeHtml(sentiment.label || 'neutral')} (${sentiment.score || 0})</div>
+        </div>
+      </div>
+      <div class="fm-analyze-block">
+        <h4>Keywords</h4>
+        ${keywordHtml}
+      </div>
+      <div class="fm-analyze-block">
+        <h4>Summary</h4>
+        <p class="fm-analyze-summary">${escapeHtml(summary)}</p>
+      </div>
+    `;
+    container.dataset.loaded = 'true';
+  } catch (e) {
+    container.innerHTML = `<div class="fm-analyze-loading">⚠️ ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+async function loadFMMeta(path, source, container) {
+  container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  if (container.style.display === 'none' || container.dataset.loaded) return;
+
+  container.innerHTML = '<div class="fm-meta-loading">Loading notes…</div>';
+  try {
+    const encodedPath = encodeURIComponent(path);
+    const res = await fetch(`/api/files/meta/${encodedPath}?source=${encodeURIComponent(source)}`);
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+
+    const initialContent = data.content || `# File notes for ${path}\nstatus: draft\ntags: []\n`;
+    container.innerHTML = `
+      <div class="fm-meta-header">
+        <span class="fm-meta-title">📝 File notes</span>
+        <span class="fm-meta-path">${escapeHtml(data.meta_path || path + '.meta.yaml')}</span>
+        <button class="fm-meta-save-btn" id="fm-meta-save">💾 Save</button>
+      </div>
+      <textarea class="fm-meta-textarea" id="fm-meta-textarea">${escapeHtml(initialContent)}</textarea>
+      <div class="fm-meta-status" id="fm-meta-status"></div>
+    `;
+    container.dataset.loaded = 'true';
+
+    const saveBtn = document.getElementById('fm-meta-save');
+    const textarea = document.getElementById('fm-meta-textarea');
+    const status = document.getElementById('fm-meta-status');
+
+    async function saveMeta() {
+      saveBtn.disabled = true;
+      status.textContent = 'Saving…';
+      try {
+        const putRes = await fetch(`/api/files/meta/${encodedPath}?source=${encodeURIComponent(source)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: textarea.value, backup: true }),
+        });
+        const putData = await putRes.json();
+        if (!putRes.ok || putData.error) throw new Error(putData.error || `HTTP ${putRes.status}`);
+        status.textContent = `Saved ${new Date().toLocaleTimeString()} — ${formatBytes(putData.size_bytes || 0)}`;
+        status.classList.remove('fm-meta-error');
+      } catch (e) {
+        status.textContent = `Error: ${e.message}`;
+        status.classList.add('fm-meta-error');
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    saveBtn.addEventListener('click', saveMeta);
+    textarea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveMeta();
+      }
+    });
+  } catch (e) {
+    container.innerHTML = `<div class="fm-meta-loading">⚠️ ${escapeHtml(e.message)}</div>`;
   }
 }
 
@@ -1503,6 +1732,188 @@ function activateFMEditor({ path, name, content, ext, source, viewer }) {
       cancelBtn.click();
     }
   });
+}
+
+// ================================================================
+// Jupyter Notebook renderer
+// ================================================================
+
+function renderIPythonNotebook(path, content, viewer) {
+  let notebook;
+  try {
+    notebook = JSON.parse(content);
+  } catch (e) {
+    viewer.innerHTML = `<div class="fm-error">⚠️ Invalid notebook JSON: ${escapeHtml(e.message)}</div>`;
+    return;
+  }
+
+  const cells = notebook.cells || [];
+  let html = `
+    <div class="fm-file-header">
+      <span>${escapeHtml(path)}</span>
+      <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+    </div>
+    <div class="fm-notebook">
+  `;
+
+  cells.forEach((cell, idx) => {
+    const cellType = cell.cell_type || 'code';
+    const source = Array.isArray(cell.source) ? cell.source.join('') : (cell.source || '');
+    html += `<div class="fm-notebook-cell fm-notebook-${cellType}">`;
+    html += `<div class="fm-notebook-cell-label">${cellType} [${idx + 1}]</div>`;
+
+    if (cellType === 'markdown') {
+      html += `<div class="fm-notebook-source fm-markdown">${renderFMMarkdown(source)}</div>`;
+    } else if (cellType === 'code') {
+      html += `<pre class="fm-notebook-source fm-code"><code>${escapeHtml(source)}</code></pre>`;
+      if (cell.outputs && cell.outputs.length > 0) {
+        html += '<div class="fm-notebook-outputs">';
+        cell.outputs.forEach(out => {
+          const outType = out.output_type || 'unknown';
+          html += `<div class="fm-notebook-output fm-notebook-output-${outType}">`;
+          if (out.text) {
+            const text = Array.isArray(out.text) ? out.text.join('') : out.text;
+            html += `<pre>${escapeHtml(text)}</pre>`;
+          }
+          if (out.data) {
+            if (out.data['text/html']) {
+              const htmlOut = Array.isArray(out.data['text/html']) ? out.data['text/html'].join('') : out.data['text/html'];
+              html += `<div class="fm-notebook-output-html">${htmlOut}</div>`;
+            } else if (out.data['image/png']) {
+              html += `<img src="data:image/png;base64,${out.data['image/png']}" class="fm-notebook-output-image" alt="output">`;
+            } else if (out.data['image/jpeg']) {
+              html += `<img src="data:image/jpeg;base64,${out.data['image/jpeg']}" class="fm-notebook-output-image" alt="output">`;
+            } else if (out.data['text/plain']) {
+              const text = Array.isArray(out.data['text/plain']) ? out.data['text/plain'].join('') : out.data['text/plain'];
+              html += `<pre>${escapeHtml(text)}</pre>`;
+            }
+          }
+          if (out.ename) {
+            html += `<div class="fm-notebook-output-error"><strong>${escapeHtml(out.ename)}</strong>: ${escapeHtml(out.evalue || '')}</div>`;
+          }
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+    } else {
+      html += `<pre class="fm-notebook-source fm-code"><code>${escapeHtml(source)}</code></pre>`;
+    }
+    html += '</div>';
+  });
+
+  html += '</div>';
+  viewer.innerHTML = html;
+  document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+    viewer.classList.add('fm-viewer-hidden');
+  });
+}
+
+// ================================================================
+// Log file renderer
+// ================================================================
+
+function renderLogFile(path, content, viewer) {
+  const lines = content.split('\n');
+  let html = `
+    <div class="fm-file-header">
+      <span>${escapeHtml(path)}</span>
+      <div class="fm-file-header-actions">
+        <button class="fm-file-action-btn" id="fm-log-filter-info" title="Toggle INFO">ℹ️ INFO</button>
+        <button class="fm-file-action-btn" id="fm-log-filter-warn" title="Toggle WARNING">⚠️ WARN</button>
+        <button class="fm-file-action-btn" id="fm-log-filter-error" title="Toggle ERROR">🔴 ERROR</button>
+        <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+      </div>
+    </div>
+    <div class="fm-log-viewer">
+  `;
+
+  lines.forEach((line, idx) => {
+    const levelMatch = line.match(/\b(DEBUG|INFO|WARNING|WARN|ERROR|CRITICAL|FATAL)\b/);
+    const level = levelMatch ? levelMatch[1].toLowerCase() : 'default';
+    const displayLevel = level === 'warn' ? 'warning' : level;
+    html += `<div class="fm-log-line fm-log-level-${displayLevel}" data-level="${displayLevel}" data-line="${idx + 1}"><span class="fm-log-line-num">${idx + 1}</span><span class="fm-log-line-text">${escapeHtml(line)}</span></div>`;
+  });
+
+  html += '</div>';
+  viewer.innerHTML = html;
+
+  document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+    viewer.classList.add('fm-viewer-hidden');
+  });
+
+  ['info', 'warning', 'error'].forEach(level => {
+    const btn = document.getElementById(`fm-log-filter-${level}`);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const active = btn.classList.toggle('active');
+      viewer.querySelectorAll(`.fm-log-line[data-level="${level}"]`).forEach(el => {
+        el.style.display = active ? 'none' : '';
+      });
+    });
+  });
+}
+
+// ================================================================
+// Graphviz DOT renderer
+// ================================================================
+
+function renderGraphviz(path, content, viewer) {
+  if (typeof d3 === 'undefined' || typeof d3.graphviz === 'undefined') {
+    viewer.innerHTML = `<div class="fm-error">⚠️ d3-graphviz library not loaded.</div>`;
+    return;
+  }
+
+  const id = 'fm-graphviz-' + Math.random().toString(36).slice(2);
+  viewer.innerHTML = `
+    <div class="fm-file-header">
+      <span>${escapeHtml(path)}</span>
+      <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+    </div>
+    <div class="fm-diagram-viewer">
+      <div id="${id}" class="fm-diagram-container"></div>
+    </div>
+  `;
+
+  try {
+    d3.select(`#${id}`).graphviz().renderDot(content);
+  } catch (e) {
+    document.getElementById(id).innerHTML = `<div class="fm-error">⚠️ Graphviz render error: ${escapeHtml(e.message)}</div>`;
+  }
+
+  document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+    viewer.classList.add('fm-viewer-hidden');
+  });
+}
+
+// ================================================================
+// PlantUML renderer
+// ================================================================
+
+function renderPlantUML(path, content, viewer) {
+  if (typeof plantumlEncoder === 'undefined') {
+    viewer.innerHTML = `<div class="fm-error">⚠️ plantuml-encoder library not loaded.</div>`;
+    return;
+  }
+
+  try {
+    const encoded = plantumlEncoder.encode(content);
+    const url = `https://www.plantuml.com/plantuml/svg/${encoded}`;
+    viewer.innerHTML = `
+      <div class="fm-file-header">
+        <span>${escapeHtml(path)}</span>
+        <a href="${url}" target="_blank" class="fm-file-copy-btn">Open source</a>
+        <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+      </div>
+      <div class="fm-diagram-viewer">
+        <img src="${url}" alt="PlantUML diagram" class="fm-diagram-image">
+      </div>
+    `;
+    document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
+      viewer.classList.add('fm-viewer-hidden');
+    });
+  } catch (e) {
+    viewer.innerHTML = `<div class="fm-error">⚠️ PlantUML encode error: ${escapeHtml(e.message)}</div>`;
+  }
 }
 
 // ================================================================

@@ -18,7 +18,6 @@ import random
 from pathlib import Path
 from typing import Any, cast
 
-
 from src.config.loader import ConfigDict
 from src.core.network import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import linear_to_5d
@@ -30,7 +29,6 @@ from src.storage.checkpoint import (
 )
 from src.storage.core_restore import restore_full
 from src.storage.runtime import RuntimeNetworkLike, StorageRuntimeConfig, StorageSession
-
 
 # ============================================================================
 # Helpers

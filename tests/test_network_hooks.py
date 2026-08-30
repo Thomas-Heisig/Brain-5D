@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import random
 
-from tests.conftest import base_config
-
 from src.core.network import NeuralNetwork, StepResult
+from tests.conftest import base_config
 
 
 def test_post_step_hook_receives_completed_result() -> None:

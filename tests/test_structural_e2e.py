@@ -36,7 +36,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-
 from src.core.network import NeuralNetwork
 from src.core.spatial_index import unpack_coords
 from src.homeostasis.engine import HomeostasisEngine

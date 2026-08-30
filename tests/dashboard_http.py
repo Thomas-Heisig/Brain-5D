@@ -10,9 +10,8 @@ from typing import Any, cast
 
 def _server_address(server: BaseServer) -> tuple[str, int]:
     """Extract and cast the server address to typed host/port."""
-    addr = server.server_address
-    host = cast(str, addr[0])
-    port = int(addr[1])
+    addr = cast(tuple[str, int], server.server_address)
+    host, port = addr
     return host, port
 
 

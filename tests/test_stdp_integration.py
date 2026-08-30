@@ -3,10 +3,10 @@ import random
 from typing import Any, cast
 
 import pytest
-from tests.conftest import base_config
 
 from src.core.network import NeuralNetwork, StepResult
 from src.learning.learning_engine import LearningEngine
+from tests.conftest import base_config
 
 
 def _config(stdp: bool = True, eligibility: bool = True) -> dict[str, Any]:

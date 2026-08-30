@@ -1,9 +1,8 @@
 import random
 
-from tests.conftest import base_config
-
 from src.core.network import NeuralNetwork
 from src.manipulation import Brain5DManipulator
+from tests.conftest import base_config
 
 
 def test_manipulator_create_connect_inspect_and_rollback() -> None:

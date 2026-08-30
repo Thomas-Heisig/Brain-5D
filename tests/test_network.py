@@ -1,8 +1,7 @@
 import random
 
-from tests.conftest import base_config
-
 from src.core.network import NeuralNetwork
+from tests.conftest import base_config
 
 
 def test_exact_event_delivery() -> None:

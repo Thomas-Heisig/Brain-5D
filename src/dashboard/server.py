@@ -32,19 +32,27 @@ import argparse
 import datetime
 import json
 import signal
+from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from collections.abc import Mapping
 from typing import Any, cast
 from urllib.parse import parse_qs, unquote, urlparse
 
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
-from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
+from .file_manager import register_file_manager_routes
 from .gate_status import GateStatusBuilder
+from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .integration_status import IntegrationStatusBuilder
+from .live_projection import (
+    ActivityWindowAccumulator,
+    compute_io_flow,
+    compute_population_data,
+    compute_rate_histogram,
+    compute_spike_raster,
+)
 from .models import (
     ExperimentSession,
     JSONScalar,
@@ -55,16 +63,7 @@ from .models import (
 )
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
-from .live_projection import (
-    ActivityWindowAccumulator,
-
-    compute_io_flow,
-    compute_population_data,
-    compute_rate_histogram,
-    compute_spike_raster,
-)
 from .research_source import ResearchSource, create_research_source
-from .file_manager import register_file_manager_routes
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -1734,7 +1733,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Stop the active experiment/debug session."""
         state = self.dashboard_server.dashboard_state
         snapshot = state.snapshot()
-        end_tick = int(body.get("end_tick", snapshot.system.tick))
+        end_tick = int(cast(Any, body.get("end_tick", snapshot.system.tick)))
         state.stop_experiment_session(end_tick=end_tick)
 
         self._send_json({
@@ -1837,7 +1836,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if requested_names is None:
             names = list(pending.keys())
         elif isinstance(requested_names, list):
-            names = [str(n) for n in requested_names]
+            names = [str(n) for n in cast(list[Any], requested_names)]
         else:
             self._send_json(
                 {"error": "'names' must be a list or omitted"},
@@ -1897,13 +1896,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         state.update(pending_changes=pending)
 
-        self._send_json({
+        self._send_json(cast(dict[str, Any], {
             "ok": True,
             "message": f"Applied {len(applied)} parameter(s)",
             "applied": applied,
             "failed": failed,
             "saved_profile": save_profile,
-        })
+        }))
 
     def _cancel_pending_parameters(
         self,
@@ -1918,7 +1917,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if requested_names is None:
             names = list(pending.keys())
         elif isinstance(requested_names, list):
-            names = [str(n) for n in requested_names]
+            names = [str(n) for n in cast(list[Any], requested_names)]
         else:
             self._send_json(
                 {"error": "'names' must be a list or omitted"},
@@ -1945,11 +1944,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         state.update(pending_changes=pending)
 
-        self._send_json({
+        self._send_json(cast(dict[str, Any], {
             "ok": True,
             "message": f"Cancelled {len(cancelled)} pending change(s)",
             "cancelled": cancelled,
-        })
+        }))
 
     def _coerce_parameter_value(
         self,

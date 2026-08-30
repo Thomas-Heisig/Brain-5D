@@ -21,7 +21,6 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
-
 from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
 from src.dashboard.integration_status import IntegrationStatusBuilder
@@ -451,8 +450,9 @@ def test_tree_digest_match_reports_passed() -> None:
 
 def test_unknown_api_route_returns_json_error_not_spa() -> None:
     """An unknown /api/ route must return a JSON error, never index.html."""
-    from src.dashboard.server import DashboardRequestHandler
     from http import HTTPStatus
+
+    from src.dashboard.server import DashboardRequestHandler
 
     # We test the handler logic directly by simulating the routing decision.
     # The server's do_GET explicitly returns _send_api_not_found for /api/...

@@ -1,6 +1,6 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-30
+> Last updated: 2026-08-31
 >
 > Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
 > .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
@@ -9,8 +9,7 @@
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   **STALE:** Last recorded baseline is 2026-08-28 (418 passed / 3 failed /
 >   2 skipped, commit `39a4b6e...`).
->   Current fast-suite run (2026-08-30, excluding slow+restore): 397 passed /
->   0 failed.
+>   Current full-suite run (2026-08-30): **454 passed / 2 skipped**.
 >   **A/B/C restore artifact is now verified** (`A == B == C`, tested at
 >   commit `93620ecc...`). The actual restore determinism issue is resolved.
 >   However, the global tree-digest freshness model is too coarse: changes
@@ -78,8 +77,7 @@
   - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
   - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
 - [~] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
-  - [x] StateStore vollständig integrieren: Backend publiziert jetzt
-        angereicherte Snapshots; `/api/state` liefert den vollständigen
+  - [x] StateStore vollständig integrieren: Backend publiziert jetzt- [x] UI-Redesign: Status-Elemente (Experiment-Mode, System-Status, Health-Bar) in always-visible Footer verschieben; Header auf Dark/Light + Accessibility reduzieren; Runtime-Errors in Health-Bar integrieren; Overview für 1080p @ 75% Zoom kompaktieren        angereicherte Snapshots; `/api/state` liefert den vollständigen
         Store; globale State- und Health-Daten kommen aus dem Store.
         Wissenschaftliche Daten (heatmap, raster, projection, Tabellen)
         bleiben separat/lazy geladen.

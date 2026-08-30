@@ -44,7 +44,12 @@ def main() -> None:
     )
 
     # ── Compute digest at K (before continuing) ──────────────────────────
-    from tests._restore_helpers import compute_digest, config_sha256, make_config, run_absolute_schedule
+    from tests._restore_helpers import (
+        compute_digest,
+        config_sha256,
+        make_config,
+        run_absolute_schedule,
+    )
 
     config = make_config()
     digest_K = compute_digest(

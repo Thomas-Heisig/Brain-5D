@@ -15,6 +15,7 @@ from typing import Any
 
 import pytest
 
+from src.core.network import Brain5DConfig, NeuralNetwork
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 from src.storage.checkpoint import (
@@ -26,8 +27,6 @@ from src.storage.core_restore import (
     restore_homeostasis_state,
     restore_learning_state,
 )
-from src.core.network import Brain5DConfig, NeuralNetwork
-
 
 # ============================================================================
 # Fixtures

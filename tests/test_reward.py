@@ -5,11 +5,11 @@ import random
 from typing import Any, cast
 
 import pytest
-from tests.conftest import base_config
 
 from src.core.network import NeuralNetwork, StepResult
 from src.learning.learning_engine import LearningEngine
 from src.learning.reward import RewardSignal
+from tests.conftest import base_config
 
 
 def _config(*, delay: int = 0, reset_trace: bool = False) -> dict[str, Any]:

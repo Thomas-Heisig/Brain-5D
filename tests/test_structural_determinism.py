@@ -24,7 +24,6 @@ from src.self_organization.policy import (
 )
 from src.self_organization.runtime_adapter import SelfOrganizationRuntimeAdapter
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================

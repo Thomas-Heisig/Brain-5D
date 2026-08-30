@@ -49,6 +49,7 @@ export class DashboardStateStore {
       components: {},
       parameters: {},
       system: {},
+      structural_errors: { errors: [] },
       status: "idle",
       version: "unknown",
     };
@@ -164,6 +165,17 @@ export class DashboardStateStore {
         } catch (e) {
           // ignore
         }
+      }
+
+      // Fetch runtime structural errors for health drawer visibility
+      try {
+        const errorsRes = await fetch("/api/structural/errors", { cache: "no-store" });
+        if (errorsRes.ok) {
+          const errorsData = await errorsRes.json();
+          this.state.structural_errors = { errors: errorsData.errors || [] };
+        }
+      } catch (e) {
+        // ignore — errors endpoint is optional
       }
 
       this.lastError = null;

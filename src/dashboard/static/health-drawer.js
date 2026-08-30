@@ -55,22 +55,20 @@ export class HealthDrawer {
   }
 
   _initElements() {
-    if (!this.bar) {
-      // Create bar if missing
-      const topbar = document.querySelector(".topbar-right");
-      if (topbar) {
-        const bar = document.createElement("div");
-        bar.id = "health-bar";
-        bar.className = "health-bar";
-        bar.innerHTML = `
-          <span class="health-indicator" id="health-indicator"></span>
-          <span class="health-summary" id="health-summary">—</span>
-          <button class="health-toggle" id="health-toggle" aria-expanded="false">Problems</button>
-        `;
-        topbar.appendChild(bar);
-        this.bar = bar;
-        this.toggleBtn = byId("health-toggle");
-      }
+    // Render health bar into the footer status container
+    const footerStatus = byId("footer-status");
+    if (!this.bar && footerStatus) {
+      const bar = document.createElement("div");
+      bar.id = "health-bar";
+      bar.className = "health-bar";
+      bar.innerHTML = `
+        <span class="health-indicator" id="health-indicator"></span>
+        <span class="health-summary" id="health-summary">—</span>
+        <button class="health-toggle" id="health-toggle" aria-expanded="false">Problems</button>
+      `;
+      footerStatus.appendChild(bar);
+      this.bar = bar;
+      this.toggleBtn = byId("health-toggle");
     }
 
     if (!this.drawer) {
@@ -88,6 +86,10 @@ export class HealthDrawer {
           <div class="health-problem-list" id="health-problem-list"></div>
         </div>
         <div class="health-drawer__section">
+          <h4>Runtime Errors</h4>
+          <div class="health-runtime-list" id="health-runtime-list"></div>
+        </div>
+        <div class="health-drawer__section">
           <h4>Components</h4>
           <div class="health-component-list" id="health-component-list"></div>
         </div>
@@ -96,7 +98,12 @@ export class HealthDrawer {
       this.drawer = drawer;
       this.problemList = byId("health-problem-list");
       this.componentList = byId("health-component-list");
-      byId("health-drawer-close")?.addEventListener("click", () => this.closeDrawer());
+      this.runtimeList = byId("health-runtime-list");
+    }
+
+    const closeBtn = byId("health-drawer-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => this.closeDrawer());
     }
   }
 
@@ -130,6 +137,8 @@ export class HealthDrawer {
     const warnings = health.warnings || 0;
     const stale = health.stale || 0;
     const unavailable = health.unavailable || 0;
+    const runtimeErrors = (state.structural_errors?.errors) || [];
+    const runtimeErrorCount = runtimeErrors.length;
 
     // Update bar
     const indicator = byId("health-indicator");
@@ -141,6 +150,7 @@ export class HealthDrawer {
       if (warnings) parts.push(`${warnings} warning${warnings === 1 ? "" : "s"}`);
       if (stale) parts.push(`${stale} stale`);
       if (unavailable) parts.push(`${unavailable} unavailable`);
+      if (runtimeErrorCount) parts.push(`${runtimeErrorCount} runtime error${runtimeErrorCount === 1 ? "" : "s"}`);
       summary.textContent = parts.length ? parts.join(" · ") : "Healthy";
     }
 
@@ -166,6 +176,22 @@ export class HealthDrawer {
             <div class="health-problem__status">${escapeHtml(p.status)}</div>
             <div class="health-problem__reason">${escapeHtml(p.reason)}</div>
             ${p.last_error ? `<div class="health-problem__error">${escapeHtml(p.last_error)}</div>` : ""}
+          </div>
+        `).join("");
+      }
+    }
+
+    // Update runtime error list
+    if (this.runtimeList) {
+      if (!runtimeErrorCount) {
+        this.runtimeList.innerHTML = `<div class="health-empty">No runtime errors recorded.</div>`;
+      } else {
+        this.runtimeList.innerHTML = runtimeErrors.map((e) => `
+          <div class="health-problem health-problem--${e.fatal ? 'health-error' : 'health-warning'}">
+            <div class="health-problem__component">Tick ${e.tick} · ${escapeHtml(e.phase)}</div>
+            <div class="health-problem__status">${escapeHtml(e.exception_type)}</div>
+            <div class="health-problem__reason">${escapeHtml(e.message)}</div>
+            ${e.traceback_hash ? `<div class="health-problem__error">#${escapeHtml(e.traceback_hash)}</div>` : ""}
           </div>
         `).join("");
       }

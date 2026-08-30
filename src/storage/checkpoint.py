@@ -243,8 +243,8 @@ def capture_runtime_checkpoint(
                 last_external_current=float(neuron.last_external_current),
                 last_synaptic_current=float(neuron.last_synaptic_current),
                 firing_rate_estimate=float(neuron.firing_rate_estimate),
-                spike_count_window=int(neuron._spike_count_window),
-                last_update_tick=int(neuron._last_update_tick),
+                spike_count_window=int(neuron._spike_count_window),  # pyright: ignore[reportPrivateUsage]
+                last_update_tick=int(neuron._last_update_tick),  # pyright: ignore[reportPrivateUsage]
                 pre_trace=float(neuron.pre_trace),
                 post_trace=float(neuron.post_trace),
             )

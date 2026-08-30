@@ -20,7 +20,6 @@ from src.core.network import Brain5DConfig, NeuralNetwork
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================

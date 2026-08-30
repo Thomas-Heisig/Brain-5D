@@ -306,39 +306,6 @@ function renderLiveLoopStatus(state) {
  * Render runtime error visibility from the store.
  * @param {object} state
  */
-function renderErrorVisibility(state) {
-  const data = state.structural_errors || { errors: [] };
-  const errors = data.errors || [];
-
-  const badge = $('error-count-badge');
-  if (badge) {
-    badge.textContent = `${errors.length} error${errors.length !== 1 ? 's' : ''}`;
-    badge.className = `gate-badge ${errors.length === 0 ? 'passed' : 'failed'}`;
-  }
-
-  const list = $('error-list');
-  if (!list) return;
-
-  if (errors.length === 0) {
-    list.innerHTML = '<div class="error-empty">✅ No runtime errors recorded.</div>';
-  } else {
-    list.innerHTML = errors.map(e => `
-      <div class="error-item error-${e.fatal ? 'fatal' : 'warning'}">
-        <span class="error-tick">Tick ${e.tick}</span>
-        <span class="error-phase">${e.phase}</span>
-        <span class="error-type">${e.exception_type}</span>
-        <span class="error-msg">${e.message}</span>
-        <span class="error-hash">#${e.traceback_hash || ''}</span>
-      </div>
-    `).join('');
-  }
-
-  const meta = $('error-meta');
-  if (meta) {
-    meta.textContent = `Structured RuntimeErrorEvent buffer · ${errors.length} event(s)`;
-  }
-}
-
 /**
  * Render the entire overview panel from store state.
  * @param {object} state
@@ -348,5 +315,4 @@ export function renderOverview(state) {
   renderSnapshotInfo(state);
   renderIntegrationStatus(state);
   renderLiveLoopStatus(state);
-  renderErrorVisibility(state);
 }

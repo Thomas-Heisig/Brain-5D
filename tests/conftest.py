@@ -71,7 +71,7 @@ class LoggingConfig(TypedDict, total=False):
     interval_ticks: int
 
 
-class TestConfig(TypedDict, total=False):
+class Config(TypedDict, total=False):
     seed: int
     dimensions: list[int]
     initial_neurons: int
@@ -87,7 +87,7 @@ class TestConfig(TypedDict, total=False):
     logging: LoggingConfig
 
 
-def base_config() -> TestConfig:
+def base_config() -> Config:
     return {
         "seed": 42,
         "dimensions": [5, 5, 5, 5, 5],

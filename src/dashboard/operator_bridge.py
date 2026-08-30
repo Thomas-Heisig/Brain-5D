@@ -11,12 +11,18 @@ from dataclasses import replace
 from typing import Any, TypeAlias, cast
 
 from src.controller.runtime import ControllerCommand, RuntimeController
+from src.dashboard.live_projection import (
+    LiveProjectionService,
+    NetworkAccess,
+    TelemetryFrameStore,
+)
 from src.self_organization.approval import (
     ProposalApprovalPolicy,
     StructuralPlasticityConfig,
 )
 from src.self_organization.coordinator import SelfOrganizationCoordinator
 from src.self_organization.plasticity import StructuralPlasticityEngine
+from src.self_organization.runtime_adapter import get_error_buffer
 from src.visualization.structural_heatmap import (
     StructuralHeatmapKind,
     StructuralHeatmapSource,
@@ -29,8 +35,6 @@ from .models import (
     to_json_serializable,
 )
 from .structural_api import StructuralCommandResult
-from src.self_organization.runtime_adapter import get_error_buffer
-from src.dashboard.live_projection import LiveProjectionService, NetworkAccess, TelemetryFrameStore
 
 # Type aliases for JSON responses
 JSONMapping: TypeAlias = dict[str, JSONValue]

@@ -64,9 +64,9 @@ from src.storage.checkpoint import (
 from src.storage.core_restore import restore_full
 from src.storage.runtime import StorageRuntimeConfig, StorageSession
 from tests._restore_helpers import (
+    SEED,
     K,
     N,
-    SEED,
     build_absolute_schedule,
     compute_digest,
     config_sha256,

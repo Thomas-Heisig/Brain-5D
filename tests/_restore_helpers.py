@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import json
 import random
-from pathlib import Path
 from typing import Any
 
 from src.core.network import Brain5DConfig, NeuralNetwork
@@ -18,7 +17,6 @@ from src.core.spatial_index import linear_to_5d
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 from src.research.canonical_state import canonical_state_digest
-
 
 # ============================================================================
 # Configuration
@@ -121,8 +119,8 @@ def run_absolute_schedule(network: NeuralNetwork, schedule: list[dict[str, Any]]
 def capture_learning_state(learn: LearningEngine) -> dict[str, Any]:
     """Capture learning engine state in the format expected by canonical_state_digest."""
     states_list: list[dict[str, Any]] = []
-    for key in sorted(learn._states.keys()):
-        state = learn._states[key]
+    for key in sorted(learn._states.keys()):  # pyright: ignore[reportPrivateUsage]
+        state = learn._states[key]  # pyright: ignore[reportPrivateUsage]
         states_list.append({
             "pre_id": key[0],
             "target_id": key[1],
@@ -133,7 +131,7 @@ def capture_learning_state(learn: LearningEngine) -> dict[str, Any]:
         })
     pending = [
         {"value": r.value, "tick": r.tick}
-        for r in learn._pending_rewards
+        for r in learn._pending_rewards  # pyright: ignore[reportPrivateUsage]
     ]
     return {
         "states": states_list,
@@ -155,7 +153,7 @@ def compute_digest(
     """
     homeo_rates: dict[int, float] | None = None
     if homeostasis is not None and hasattr(homeostasis, "_rates_hz"):
-        homeo_rates = dict(homeostasis._rates_hz)
+        homeo_rates = dict(homeostasis._rates_hz)  # pyright: ignore[reportPrivateUsage]
 
     learn_state: dict[str, Any] | None = None
     if learning is not None:

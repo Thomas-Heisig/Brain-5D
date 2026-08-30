@@ -1,11 +1,10 @@
 import random
 from typing import Any, cast
 
-from tests.conftest import base_config
-
 from src.core.network import NeuralNetwork
 from src.manipulation import Brain5DManipulator
 from src.self_organization import SelfOrganizationEngine
+from tests.conftest import base_config
 
 
 def test_pruning_removes_old_weak_synapse() -> None:

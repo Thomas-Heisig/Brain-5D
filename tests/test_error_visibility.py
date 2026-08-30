@@ -37,6 +37,7 @@ from src.self_organization.runtime_adapter import (
 def _make_network() -> NeuralNetwork:
     """Create a small network for testing."""
     import random
+
     from src.core.spatial_index import linear_to_5d
 
     config = Brain5DConfig.from_dict({

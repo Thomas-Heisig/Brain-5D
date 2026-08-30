@@ -83,7 +83,6 @@ from src.storage.structural_journal import (
     StructuralJournal,
 )
 
-
 # =========================================================================
 # Structural digest (structural only -- no dynamic state)
 # =========================================================================

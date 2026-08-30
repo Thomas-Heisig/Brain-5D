@@ -9,7 +9,7 @@ health / problems view.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, cast
 
 from .models import (
     ComponentStatus,
@@ -17,7 +17,6 @@ from .models import (
     HealthSnapshot,
     ParameterSchema,
 )
-
 
 # ============================================================================
 # Helpers
@@ -31,26 +30,30 @@ def _utc_now() -> str:
 
 def _is_enabled(cfg: dict[str, Any] | None, *path: str) -> bool:
     """Safely read a nested boolean config flag."""
-    if cfg is None:
+    if cfg is None or not path:
         return False
-    node: Any = cfg
+    node: dict[str, Any] = cfg
     for key in path:
-        if not isinstance(node, dict) or key not in node:
+        if key not in node:
             return False
-        node = node[key]
+        value = node[key]
+        if not isinstance(value, dict):
+            return bool(value) if key == path[-1] else False
+        node = cast(dict[str, Any], value)
     return bool(node)
 
 
 def _nested_get(cfg: dict[str, Any] | None, *path: str, default: Any = None) -> Any:
     """Safely read a nested config value."""
-    if cfg is None:
+    if cfg is None or not path:
         return default
-    node: Any = cfg
-    for key in path:
-        if not isinstance(node, dict) or key not in node:
+    node: dict[str, Any] = cfg
+    for key in path[:-1]:
+        value = node.get(key)
+        if not isinstance(value, dict):
             return default
-        node = node[key]
-    return node
+        node = cast(dict[str, Any], value)
+    return node.get(path[-1], default)
 
 
 # ============================================================================

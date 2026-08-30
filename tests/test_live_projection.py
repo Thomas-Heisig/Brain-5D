@@ -25,14 +25,13 @@ import pytest
 from src.core.network import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import linear_to_5d, pack_coords
 from src.dashboard.live_projection import (
+    ActivityWindowAccumulator,
+    Aggregation,
     LiveProjectionService,
     ProjectionKind,
-    Aggregation,
-    capture_frame,
-    ActivityWindowAccumulator,
     TelemetryFrameStore,
+    capture_frame,
 )
-
 
 # ============================================================================
 # Fixtures
@@ -390,7 +389,7 @@ class TestRollingActivityWindow:
 
         # Tick 120: spike at 100 expires (100 <= 120-20 = 100)
         acc.record_tick(120, [])
-        assert acc.spikes_in_window(1) == 0, f"Spike should be expired at tick 120"
+        assert acc.spikes_in_window(1) == 0, "Spike should be expired at tick 120"
 
     # ------------------------------------------------------------------
     # TEST C — Repeated spikes with gradual expiry
@@ -565,7 +564,9 @@ class TestTelemetryErrorVisibility:
         original_buffer = adapter._runtime_error_buffer  # type: ignore[attr-defined]
         adapter._runtime_error_buffer = fresh_buffer  # type: ignore[attr-defined]
         try:
-            from src.dashboard.live_projection import _emit_telemetry_error  # type: ignore[attr-defined]
+            from src.dashboard.live_projection import (
+                _emit_telemetry_error,  # type: ignore[attr-defined]
+            )
             _emit_telemetry_error(42, ValueError("test telemetry error"))
 
             errors = fresh_buffer.events
@@ -693,10 +694,10 @@ class TestRealErrorPath:
 
     def test_failing_hook_produces_error_event(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
         """A failing telemetry hook produces a RuntimeErrorEvent in the error buffer."""
+        import src.self_organization.runtime_adapter as adapter
         from src.controller.runtime import RuntimeController
         from src.dashboard.live_projection import make_telemetry_hook
         from src.self_organization.runtime_adapter import ErrorBuffer
-        import src.self_organization.runtime_adapter as adapter
 
         fresh_buffer = ErrorBuffer()
         original = adapter._runtime_error_buffer  # type: ignore[attr-defined]
@@ -724,10 +725,10 @@ class TestRealErrorPath:
 
     def test_error_api_e2e(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
         """Telemetry error event is visible through /api/errors endpoint."""
+        import src.self_organization.runtime_adapter as adapter
         from src.controller.runtime import RuntimeController
         from src.dashboard.live_projection import make_telemetry_hook
         from src.self_organization.runtime_adapter import ErrorBuffer
-        import src.self_organization.runtime_adapter as adapter
 
         fresh_buffer = ErrorBuffer()
         original = adapter._runtime_error_buffer  # type: ignore[attr-defined]
