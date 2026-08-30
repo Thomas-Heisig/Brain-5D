@@ -704,6 +704,90 @@ class HealthSnapshot:
 
 
 # ============================================================================
+# Experiment Mode Model (Operator Workbench)
+# ============================================================================
+
+VALID_EXPERIMENT_MODES = {"operator", "experiment", "debug"}
+
+
+@dataclass(frozen=True, slots=True)
+class ExperimentSession:
+    """One recorded experiment or debug session.
+
+    Attributes:
+        session_id: Unique session identifier.
+        mode: One of 'operator', 'experiment', 'debug'.
+        hypothesis: Optional hypothesis or goal for the session.
+        notes: Free-text notes recorded during the session.
+        start_tick: Simulation tick at session start.
+        end_tick: Simulation tick at session end (None if active).
+        start_time: ISO timestamp of session start.
+        end_time: ISO timestamp of session end (None if active).
+        config_snapshot: Optional copy of relevant parameters at start.
+        active: Whether the session is currently running.
+    """
+
+    session_id: str
+    mode: str = "operator"
+    hypothesis: str = ""
+    notes: tuple[str, ...] = ()
+    start_tick: int = 0
+    end_tick: int | None = None
+    start_time: str | None = None
+    end_time: str | None = None
+    config_snapshot: dict[str, JSONValue] | None = None
+    active: bool = True
+
+    def __post_init__(self) -> None:
+        if self.mode not in VALID_EXPERIMENT_MODES:
+            raise ValueError(f"invalid experiment mode: {self.mode!r}")
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "session_id": self.session_id,
+            "mode": self.mode,
+            "hypothesis": self.hypothesis,
+            "notes": list(self.notes),
+            "start_tick": self.start_tick,
+            "end_tick": self.end_tick,
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+            "config_snapshot": self.config_snapshot,
+            "active": self.active,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ExperimentState:
+    """Current experiment mode and active session metadata.
+
+    Attributes:
+        current_mode: One of 'operator', 'experiment', 'debug'.
+        active_session: The currently active session, if any.
+        sessions: Immutable history of all sessions.
+    """
+
+    current_mode: str = "operator"
+    active_session: ExperimentSession | None = None
+    sessions: tuple[ExperimentSession, ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.current_mode not in VALID_EXPERIMENT_MODES:
+            raise ValueError(f"invalid experiment mode: {self.current_mode!r}")
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "current_mode": self.current_mode,
+            "active_session": (
+                self.active_session.to_json() if self.active_session else None
+            ),
+            "sessions": [s.to_json() for s in self.sessions],
+        }
+
+
+# ============================================================================
 # Dashboard Snapshot (Enhanced)
 # ============================================================================
 
@@ -729,6 +813,7 @@ class DashboardSnapshot:
     parameters: dict[str, ParameterSchema] = None  # type: ignore[assignment]
     pending_changes: dict[str, PendingParameterChange] = None  # type: ignore[assignment]
     change_history: tuple[ParameterChangeRecord, ...] = ()
+    experiment_state: ExperimentState = ExperimentState()
     health: HealthSnapshot = HealthSnapshot()
     status: str = "idle"
     version: str = "0.5.0-alpha.2"
@@ -768,6 +853,7 @@ class DashboardSnapshot:
                 k: v.to_json() for k, v in (self.pending_changes or {}).items()
             },
             "change_history": [r.to_json() for r in self.change_history],
+            "experiment_state": self.experiment_state.to_json(),
             "health": self.health.to_json(),
         }
 

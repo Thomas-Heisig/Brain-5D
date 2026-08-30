@@ -16,6 +16,8 @@ from typing import Any, Protocol
 from .models import (
     ComponentStatus,
     DashboardSnapshot,
+    ExperimentSession,
+    ExperimentState,
     HealthSnapshot,
     ParameterChangeRecord,
     ParameterSchema,
@@ -202,6 +204,7 @@ class DashboardStateStore:
             "parameters",
             "pending_changes",
             "change_history",
+            "experiment_state",
             "health",
             "status",
             "version",

@@ -2604,7 +2604,8 @@ footer {
 
 .fm-file-edit-btn,
 .fm-file-save-btn,
-.fm-file-cancel-btn {
+.fm-file-cancel-btn,
+.fm-file-action-btn {
   padding: 4px 10px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -2615,7 +2616,8 @@ footer {
   transition: all var(--transition-fast);
 }
 
-.fm-file-edit-btn:hover {
+.fm-file-edit-btn:hover,
+.fm-file-action-btn:hover {
   background: rgba(74, 124, 247, 0.15);
   color: #7aabff;
 }
@@ -2638,6 +2640,161 @@ footer {
 .fm-file-cancel-btn:hover {
   background: rgba(248, 81, 73, 0.15);
   color: #f85149;
+}
+
+/* Diff viewer */
+.fm-editor-diff {
+  margin: 0 12px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 300px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.fm-diff-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.fm-diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.fm-diff-table td {
+  padding: 2px 8px;
+  white-space: pre-wrap;
+}
+
+.fm-diff-sign {
+  width: 24px;
+  text-align: center;
+  user-select: none;
+}
+
+.fm-diff-add {
+  background: rgba(46, 160, 67, 0.12);
+}
+
+.fm-diff-add .fm-diff-sign {
+  color: #7ee787;
+}
+
+.fm-diff-del {
+  background: rgba(248, 81, 73, 0.12);
+}
+
+.fm-diff-del .fm-diff-sign {
+  color: #f85149;
+}
+
+.fm-diff-ctx {
+  color: var(--text-secondary);
+}
+
+/* BibTeX form editor */
+.bibtex-edit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.bibtex-edit-save-btn {
+  padding: 6px 14px;
+  border: 1px solid rgba(46, 160, 67, 0.4);
+  border-radius: 6px;
+  background: rgba(46, 160, 67, 0.15);
+  color: #7ee787;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.bibtex-edit-save-btn:hover:not(:disabled) {
+  background: rgba(46, 160, 67, 0.25);
+}
+
+.bibtex-edit-save-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.bibtex-edit-status {
+  font-size: 0.85rem;
+}
+
+.bibtex-edit-status.success {
+  color: #7ee787;
+}
+
+.bibtex-edit-status.error {
+  color: #f85149;
+}
+
+.bibtex-edit-form {
+  padding: 12px 16px;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.bibtex-edit-entry {
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.bibtex-edit-entry legend {
+  padding: 0 8px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.bibtex-edit-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.bibtex-edit-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.bibtex-edit-label span {
+  text-transform: capitalize;
+}
+
+.bibtex-edit-label input,
+.bibtex-edit-label select {
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+}
+
+.bibtex-edit-label input:focus,
+.bibtex-edit-label select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.bibtex-edit-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
 /* Code viewer */

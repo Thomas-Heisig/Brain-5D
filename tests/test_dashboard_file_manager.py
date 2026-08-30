@@ -153,3 +153,34 @@ def test_save_content_rejects_binary_extension() -> None:
             server.shutdown()
             server.server_close()
             thread.join(timeout=1.0)
+
+
+def test_save_content_creates_backup() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        docs_root = tmp_path / "docs"
+        docs_root.mkdir()
+        file_path = docs_root / "notes.md"
+        file_path.write_text("original", encoding="utf-8")
+
+        server, thread = _start_server(tmp_path)
+        try:
+            host, port = server.server_address[:2]
+            conn = HTTPConnection(host, port)
+            try:
+                body = json.dumps({"content": "updated", "backup": True})
+                response = _request(
+                    conn,
+                    "PUT",
+                    "/api/files/save/notes.md?source=docs",
+                    body=body,
+                )
+                assert response.status == 200
+                assert (docs_root / "notes.md.bak").read_text(encoding="utf-8") == "original"
+                assert file_path.read_text(encoding="utf-8") == "updated"
+            finally:
+                conn.close()
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=1.0)

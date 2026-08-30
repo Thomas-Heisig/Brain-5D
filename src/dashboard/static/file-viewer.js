@@ -564,7 +564,7 @@ async function openFMFile(path) {
             <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
           </div>
         </div>
-        <div class="fm-content">${initBibTeXViewer(content, data.name || path, path)}</div>
+        <div class="fm-content">${initBibTeXViewer(content, data.name || path, path, source)}</div>
       `;
 
       // Wire up the close button
@@ -1279,51 +1279,126 @@ document.addEventListener('click', async (e) => {
 // In-browser text/code editor
 // ================================================================
 
+function computeFMDiff(oldText, newText) {
+  const oldLines = oldText.split('\n');
+  const newLines = newText.split('\n');
+  const changes = [];
+  let oi = 0, ni = 0;
+  while (oi < oldLines.length || ni < newLines.length) {
+    if (oi >= oldLines.length) {
+      changes.push({ type: 'add', line: newLines[ni], oldLine: ni + 1 });
+      ni++;
+    } else if (ni >= newLines.length) {
+      changes.push({ type: 'del', line: oldLines[oi], oldLine: oi + 1 });
+      oi++;
+    } else if (oldLines[oi] === newLines[ni]) {
+      changes.push({ type: 'ctx', line: oldLines[oi], oldLine: oi + 1 });
+      oi++; ni++;
+    } else {
+      // Simple heuristic: if next new line matches current old line -> deletion
+      // if next old line matches current new line -> addition
+      // otherwise replace
+      const nextNewMatchesOld = ni + 1 < newLines.length && newLines[ni + 1] === oldLines[oi];
+      const nextOldMatchesNew = oi + 1 < oldLines.length && oldLines[oi + 1] === newLines[ni];
+      if (nextNewMatchesOld && !nextOldMatchesNew) {
+        changes.push({ type: 'add', line: newLines[ni], oldLine: ni + 1 });
+        ni++;
+      } else if (nextOldMatchesNew && !nextNewMatchesOld) {
+        changes.push({ type: 'del', line: oldLines[oi], oldLine: oi + 1 });
+        oi++;
+      } else {
+        changes.push({ type: 'del', line: oldLines[oi], oldLine: oi + 1 });
+        changes.push({ type: 'add', line: newLines[ni], oldLine: ni + 1 });
+        oi++; ni++;
+      }
+    }
+  }
+  return changes;
+}
+
+function renderFMDiff(changes) {
+  if (changes.length === 0) return '<div class="fm-diff-empty">No changes</div>';
+  let html = '<div class="fm-diff"><table class="fm-diff-table"><tbody>';
+  changes.forEach(c => {
+    const cls = c.type === 'add' ? 'fm-diff-add' : c.type === 'del' ? 'fm-diff-del' : 'fm-diff-ctx';
+    const sign = c.type === 'add' ? '+' : c.type === 'del' ? '-' : ' ';
+    html += `<tr class="${cls}"><td class="fm-diff-sign">${sign}</td><td class="fm-diff-line">${escapeHtml(c.line)}</td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  return html;
+}
+
 function activateFMEditor({ path, name, content, ext, source, viewer }) {
   const lang = fmLangFromExt(ext);
   const isMarkdown = ext === '.md' || ext === '.markdown';
+  const originalContent = content;
+  let autoSaveTimer = null;
+  const AUTO_SAVE_INTERVAL_MS = 30000; // 30 seconds
 
-  viewer.innerHTML = `
-    <div class="fm-file-header">
-      <h3>✏️ ${escapeHtml(name)}</h3>
-      <div class="fm-file-header-actions">
-        <span class="fm-file-meta">${escapeHtml(lang)}</span>
-        <button class="fm-file-save-btn" id="fm-file-save" title="Save changes">💾 Save</button>
-        <button class="fm-file-cancel-btn" id="fm-file-cancel" title="Cancel editing">❌ Cancel</button>
-      </div>
-    </div>
-    <div class="fm-editor-wrapper">
-      ${isMarkdown ? `
-        <div class="fm-editor-split">
-          <div class="fm-editor-pane">
-            <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
-          </div>
-          <div class="fm-editor-preview fm-markdown" id="fm-editor-preview"></div>
+  function renderEditorUI() {
+    viewer.innerHTML = `
+      <div class="fm-file-header">
+        <h3>✏️ ${escapeHtml(name)}</h3>
+        <div class="fm-file-header-actions">
+          <span class="fm-file-meta" id="fm-editor-changed" style="display:none;">● unsaved</span>
+          <span class="fm-file-meta">${escapeHtml(lang)}</span>
+          <button class="fm-file-action-btn" id="fm-file-diff" title="Show diff">🆚 Diff</button>
+          <button class="fm-file-action-btn" id="fm-file-restore" title="Restore from backup">↩️ Restore</button>
+          <button class="fm-file-save-btn" id="fm-file-save" title="Save changes (Ctrl+S)">💾 Save</button>
+          <button class="fm-file-cancel-btn" id="fm-file-cancel" title="Cancel editing (Esc)">❌ Cancel</button>
         </div>
-      ` : `
-        <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
-      `}
-    </div>
-    <div class="fm-editor-status" id="fm-editor-status"></div>
-  `;
+      </div>
+      <div class="fm-editor-wrapper">
+        ${isMarkdown ? `
+          <div class="fm-editor-split">
+            <div class="fm-editor-pane">
+              <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(originalContent)}</textarea>
+            </div>
+            <div class="fm-editor-preview fm-markdown" id="fm-editor-preview"></div>
+          </div>
+        ` : `
+          <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(originalContent)}</textarea>
+        `}
+      </div>
+      <div class="fm-editor-diff" id="fm-editor-diff" style="display:none;"></div>
+      <div class="fm-editor-status" id="fm-editor-status"></div>
+    `;
+  }
+
+  renderEditorUI();
 
   const textarea = document.getElementById('fm-editor-textarea');
   const statusEl = document.getElementById('fm-editor-status');
   const saveBtn = document.getElementById('fm-file-save');
   const cancelBtn = document.getElementById('fm-file-cancel');
+  const diffBtn = document.getElementById('fm-file-diff');
+  const restoreBtn = document.getElementById('fm-file-restore');
+  const changedIndicator = document.getElementById('fm-editor-changed');
+  const diffContainer = document.getElementById('fm-editor-diff');
 
   if (!textarea || !saveBtn || !cancelBtn) return;
 
-  // Auto-resize textarea to fit content
+  function markChanged() {
+    if (changedIndicator) changedIndicator.style.display = 'inline';
+  }
+
+  function clearChanged() {
+    if (changedIndicator) changedIndicator.style.display = 'none';
+  }
+
   function resizeTextarea() {
     if (!textarea) return;
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.max(300, textarea.scrollHeight + 16)}px`;
   }
   resizeTextarea();
-  textarea.addEventListener('input', resizeTextarea);
+  textarea.addEventListener('input', () => {
+    resizeTextarea();
+    markChanged();
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => performSave(true), AUTO_SAVE_INTERVAL_MS);
+  });
 
-  // Live preview for Markdown
   if (isMarkdown) {
     const preview = document.getElementById('fm-editor-preview');
     const updatePreview = () => {
@@ -1333,11 +1408,12 @@ function activateFMEditor({ path, name, content, ext, source, viewer }) {
     updatePreview();
   }
 
-  // Save handler
-  saveBtn.addEventListener('click', async () => {
+  async function performSave(isAuto = false) {
     const newContent = textarea.value;
-    saveBtn.disabled = true;
-    saveBtn.textContent = '⏳ Saving...';
+    if (!isAuto) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ Saving...';
+    }
     statusEl.textContent = '';
     statusEl.className = 'fm-editor-status';
 
@@ -1352,23 +1428,80 @@ function activateFMEditor({ path, name, content, ext, source, viewer }) {
       if (!res.ok || data.error) {
         throw new Error(data.error || `HTTP ${res.status}`);
       }
-      statusEl.textContent = `✅ Saved (${formatBytes(data.size_bytes || 0)})`;
+      clearChanged();
+      const label = isAuto ? 'Auto-saved' : 'Saved';
+      statusEl.textContent = `✅ ${label} (${formatBytes(data.size_bytes || 0)})`;
       statusEl.classList.add('success');
-      setTimeout(() => {
-        // Reload viewer in read mode with new content
-        openFMFile(path, source);
-      }, 600);
+      if (!isAuto) {
+        setTimeout(() => {
+          openFMFile(path, source);
+        }, 600);
+      }
     } catch (e) {
       statusEl.textContent = `❌ Save failed: ${escapeHtml(e.message)}`;
       statusEl.classList.add('error');
-      saveBtn.disabled = false;
-      saveBtn.textContent = '💾 Save';
+      if (!isAuto) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save';
+      }
+    } finally {
+      if (!isAuto && saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Save';
+      }
+    }
+  }
+
+  saveBtn.addEventListener('click', () => performSave(false));
+
+  cancelBtn.addEventListener('click', () => {
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    openFMFile(path, source);
+  });
+
+  diffBtn?.addEventListener('click', () => {
+    if (!diffContainer) return;
+    const isHidden = diffContainer.style.display === 'none';
+    if (isHidden) {
+      const changes = computeFMDiff(originalContent, textarea.value);
+      diffContainer.innerHTML = renderFMDiff(changes);
+      diffContainer.style.display = 'block';
+      if (diffBtn) diffBtn.textContent = '🆚 Hide diff';
+    } else {
+      diffContainer.style.display = 'none';
+      if (diffBtn) diffBtn.textContent = '🆚 Diff';
     }
   });
 
-  // Cancel handler
-  cancelBtn.addEventListener('click', () => {
-    openFMFile(path, source);
+  restoreBtn?.addEventListener('click', async () => {
+    if (!confirm('Restore content from the latest backup? Unsaved changes will be lost.')) return;
+    try {
+      const encodedPath = encodeURIComponent(path);
+      const backupPath = path + (path.includes('.') ? '.bak' : '.bak');
+      const res = await fetch(`/api/files/content/${encodeURIComponent(backupPath)}?source=${encodeURIComponent(source)}`);
+      if (!res.ok) throw new Error('No backup found');
+      const data = await res.json();
+      textarea.value = data.content || '';
+      resizeTextarea();
+      markChanged();
+      statusEl.textContent = '↩️ Restored from backup';
+      statusEl.classList.add('success');
+    } catch (e) {
+      statusEl.textContent = `❌ Restore failed: ${escapeHtml(e.message)}`;
+      statusEl.classList.add('error');
+    }
+  });
+
+  // Keyboard shortcuts
+  textarea.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      performSave(false);
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelBtn.click();
+    }
   });
 }
 

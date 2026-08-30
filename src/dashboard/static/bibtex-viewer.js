@@ -159,6 +159,7 @@ function renderBibTeXViewer(content, fileName, filePath) {
     <div class="bibtex-toolbar-right">
       <button class="bibtex-view-btn active" data-view="table" title="Table view">📋 Table</button>
       <button class="bibtex-view-btn" data-view="code" title="Code view">💻 Code</button>
+      <button class="bibtex-view-btn" data-view="edit" title="Form editor">✏️ Edit</button>
       <button class="bibtex-copy-all-btn" title="Copy all as BibTeX">📋 Copy all</button>
       <button class="bibtex-export-btn" title="Download .bib file">💾 Download</button>
     </div>
@@ -192,6 +193,10 @@ function renderBibTeXViewer(content, fileName, filePath) {
 
   <div class="bibtex-code-container" style="display:none;">
     <pre class="bibtex-code">${escapeHtml(content)}</pre>
+  </div>
+
+  <div class="bibtex-edit-container" style="display:none;">
+    ${renderBibTeXForm(entries)}
   </div>
 
   <div class="bibtex-footer">
@@ -292,6 +297,8 @@ function sortBibTeXTable(entries, field, asc) {
 let bibtexEntries = [];
 let bibtexContent = '';
 let bibtexFileName = '';
+let bibtexFilePath = '';
+let bibtexSource = 'research';
 
 // ================================================================
 // Initialization
@@ -302,14 +309,97 @@ let bibtexFileName = '';
  * @param {string} content - Raw BibTeX text content
  * @param {string} fileName - Display name
  * @param {string} filePath - File path
+ * @param {string} source - File source ('research' or 'docs')
  */
-function initBibTeXViewer(content, fileName, filePath) {
+function initBibTeXViewer(content, fileName, filePath, source = 'research') {
   bibtexContent = content;
   bibtexFileName = fileName;
+  bibtexFilePath = filePath;
+  bibtexSource = source;
   bibtexEntries = parseBibTeX(content);
 
   // Return the HTML
   return renderBibTeXViewer(content, fileName, filePath);
+}
+
+function renderBibTeXForm(entries) {
+  if (entries.length === 0) {
+    return '<div class="bibtex-edit-empty">No entries to edit.</div>';
+  }
+
+  const commonFields = ['author', 'title', 'journal', 'booktitle', 'year', 'doi', 'url', 'publisher', 'school', 'institution', 'note'];
+
+  let html = `
+    <div class="bibtex-edit-toolbar">
+      <button class="bibtex-edit-save-btn" id="bibtex-edit-save">💾 Save BibTeX</button>
+      <span class="bibtex-edit-status" id="bibtex-edit-status"></span>
+    </div>
+    <form class="bibtex-edit-form" id="bibtex-edit-form">
+  `;
+
+  entries.forEach((entry, idx) => {
+    html += `<fieldset class="bibtex-edit-entry" data-idx="${idx}">
+      <legend>${escapeHtml(entry.key)} <span class="bibtex-type-badge">${escapeHtml(entry.type)}</span></legend>
+      <div class="bibtex-edit-fields">
+        <label class="bibtex-edit-label">
+          <span>Key</span>
+          <input type="text" name="key_${idx}" value="${escapeHtml(entry.key)}" required>
+        </label>
+        <label class="bibtex-edit-label">
+          <span>Type</span>
+          <select name="type_${idx}">
+            ${['article','book','inproceedings','incollection','phdthesis','mastersthesis','misc','techreport','unpublished'].map(t =>
+              `<option value="${t}"${entry.type === t ? ' selected' : ''}>${t}</option>`
+            ).join('')}
+          </select>
+        </label>`;
+
+    commonFields.forEach(field => {
+      const value = entry.fields[field] || '';
+      html += `
+        <label class="bibtex-edit-label">
+          <span>${escapeHtml(field)}</span>
+          <input type="text" name="${field}_${idx}" value="${escapeHtml(value)}">
+        </label>`;
+    });
+
+    // Custom fields not in common list
+    Object.entries(entry.fields).forEach(([field, value]) => {
+      if (commonFields.includes(field)) return;
+      html += `
+        <label class="bibtex-edit-label">
+          <span>${escapeHtml(field)}</span>
+          <input type="text" name="${field}_${idx}" value="${escapeHtml(value)}">
+        </label>`;
+    });
+
+    html += `</div></fieldset>`;
+  });
+
+  html += '</form></div>';
+  return html;
+}
+
+function collectBibTeXFromForm() {
+  const form = document.getElementById('bibtex-edit-form');
+  if (!form) return [];
+  const fieldsets = form.querySelectorAll('.bibtex-edit-entry');
+  const entries = [];
+  fieldsets.forEach(fs => {
+    const idx = fs.dataset.idx;
+    const key = (fs.querySelector(`[name="key_${idx}"]`)?.value || '').trim();
+    const type = (fs.querySelector(`[name="type_${idx}"]`)?.value || 'misc').toLowerCase();
+    const fields = {};
+    fs.querySelectorAll('.bibtex-edit-label input, .bibtex-edit-label select').forEach(input => {
+      const name = input.name;
+      if (!name || name === `key_${idx}` || name === `type_${idx}`) return;
+      const fieldName = name.replace(new RegExp(`_${idx}$`), '');
+      const value = input.value.trim();
+      if (value) fields[fieldName] = value;
+    });
+    entries.push({ type, key, fields, raw: '' });
+  });
+  return entries;
 }
 
 /**
@@ -317,7 +407,7 @@ function initBibTeXViewer(content, fileName, filePath) {
  * Must be called after the HTML is inserted into the DOM.
  */
 function wireBibTeXEvents() {
-  // View toggle (table / code)
+  // View toggle (table / code / edit)
   const viewBtns = document.querySelectorAll('.bibtex-view-btn');
   viewBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -326,10 +416,59 @@ function wireBibTeXEvents() {
       const view = btn.dataset.view;
       const tableContainer = document.querySelector('.bibtex-table-container');
       const codeContainer = document.querySelector('.bibtex-code-container');
+      const editContainer = document.querySelector('.bibtex-edit-container');
       if (tableContainer) tableContainer.style.display = view === 'table' ? 'block' : 'none';
       if (codeContainer) codeContainer.style.display = view === 'code' ? 'block' : 'none';
+      if (editContainer) editContainer.style.display = view === 'edit' ? 'block' : 'none';
     });
   });
+
+  // BibTeX form editor save
+  const editSaveBtn = document.getElementById('bibtex-edit-save');
+  if (editSaveBtn) {
+    editSaveBtn.addEventListener('click', async () => {
+      const newEntries = collectBibTeXFromForm();
+      const newContent = formatBibTeXFull(newEntries);
+      const statusEl = document.getElementById('bibtex-edit-status');
+      editSaveBtn.disabled = true;
+      editSaveBtn.textContent = '⏳ Saving...';
+      if (statusEl) statusEl.textContent = '';
+
+      try {
+        const encodedPath = encodeURIComponent(bibtexFilePath);
+        const res = await fetch(`/api/files/save/${encodedPath}?source=${encodeURIComponent(bibtexSource)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: newContent, backup: true }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          throw new Error(data.error || `HTTP ${res.status}`);
+        }
+        bibtexEntries = newEntries;
+        bibtexContent = newContent;
+        if (statusEl) {
+          statusEl.textContent = '✅ Saved';
+          statusEl.classList.add('success');
+        }
+        // Refresh code view
+        const codePre = document.querySelector('.bibtex-code');
+        if (codePre) codePre.textContent = newContent;
+        // Refresh table
+        const tbody = document.getElementById('bibtex-table-body');
+        if (tbody) tbody.innerHTML = newEntries.map((e, i) => renderBibTeXRow(e, i)).join('');
+        wireBibTeXActions();
+      } catch (e) {
+        if (statusEl) {
+          statusEl.textContent = `❌ Save failed: ${escapeHtml(e.message)}`;
+          statusEl.classList.add('error');
+        }
+      } finally {
+        editSaveBtn.disabled = false;
+        editSaveBtn.textContent = '💾 Save BibTeX';
+      }
+    });
+  }
 
   // Sortable columns
   const sortHeaders = document.querySelectorAll('.bibtex-sortable');
