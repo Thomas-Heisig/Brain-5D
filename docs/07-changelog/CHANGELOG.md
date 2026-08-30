@@ -41,6 +41,19 @@
 ### Tests
 - **`tests/test_dashboard_pending_parameters.py`**: 8 neue Tests für den Pending-Changes-Workflow.
 - Dashboard-Test-Suite: **51 passed**.
+## 2026-08-30 — Dashboard Operator-Workbench: Frontend Modularisierung
+
+### Frontend
+- **`src/dashboard/static/state-store.js`**: Fetching von `/api/gate/status`, `/api/integration/status`, `/api/snapshot-info`, `/api/structural/errors` integriert; Status wird sofort veröffentlicht, Hilfsendpunkte mit 2s-Timeout im Hintergrund nachgeladen.
+- **`src/dashboard/static/app.js`**: Reduziert auf Bootstrap, Tab-Routing, Modul-Lifecycle und globale Health-Integration; keine direkten Requests mehr an Gate/Integration/Snapshot/Error-Endpunkte.
+- **`src/dashboard/static/overview-panel.js`**: Neues Modul für den OVERVIEW-Tab (System-Status, Snapshot-Info, Integration, Live-Loop, Runtime Errors).
+- **`src/dashboard/static/gate-board.js`**: Neues Modul für den VERIFY/Gate-Tab.
+- **`src/dashboard/static/network-tab.js`**: Koordinator für den NETWORK-Tab.
+- **`src/dashboard/static/visualizations/`**: Neue Module für Heatmap/Projection, IO-Flow, Population, Dynamics (Raster/Histogram/Layer) und Network Inspector.
+
+### Tests
+- Dashboard-Test-Suite: **58 passed**.
+
 ## 2026-08-30 — Dashboard Operator-Workbench: Experiment Mode
 
 ### Backend
