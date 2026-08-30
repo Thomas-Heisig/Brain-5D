@@ -35,12 +35,22 @@
 > dokumentieren. Health, Console und Problems werden querschnittlich
 > sichtbar, nicht versteckt.
 
-- [ ] `StatusModel`: Standardisierter Komponenten-Status (enabled/active/degraded/unavailable/error/stale/disabled) mit `reason`, `last_update`, `source`, `last_error`, `maturity`
-- [ ] `StateStore`: Zentraler Dashboard-State (`runtime`, `network`, `learning`, `homeostasis`, `structural`, `storage`, `telemetry`, `health`, `verification`) statt panel-individueller `fetch`-Aufrufe
-- [ ] `ParameterSchema`: Generischer Parameter-Inspector mit Metadaten (`value`, `default`, `min`, `max`, `unit`, `description`, `source`, `runtime_mutable`, `requires_restart`, `scientific_sensitive`)
-- [ ] Health/Problems Drawer: Permanent sichtbare Leiste + einblendbare Drawer für Fehler, Warnungen, Unavailable-Zustände und stale Daten
+- [x] `StatusModel`: Standardisierter Komponenten-Status (enabled/active/degraded/unavailable/error/stale/disabled) mit `reason`, `last_update`, `source`, `last_error`, `maturity`
+  - Implementiert in `src/dashboard/models.py` als `ComponentStatus`
+  - Validierungsmengen `VALID_COMPONENT_STATUS` / `VALID_MATURITY`
+- [x] `StateStore`: Zentraler Dashboard-State (`runtime`, `network`, `learning`, `homeostasis`, `structural`, `storage`, `telemetry`, `health`, `verification`) statt panel-individueller `fetch`-Aufrufe
+  - Frontend-Store `src/dashboard/static/state-store.js`
+  - Backend `DashboardSnapshot` erweitert um `components`, `parameters`, `health`
+- [x] `ParameterSchema`: Generischer Parameter-Inspector mit Metadaten (`value`, `default`, `min`, `max`, `unit`, `description`, `source`, `runtime_mutable`, `requires_restart`, `scientific_sensitive`)
+  - Implementiert in `src/dashboard/models.py` als `ParameterSchema`
+  - API-Endpunkte `/api/parameters` und `/api/parameters/{name}`
+- [x] Health/Problems Drawer: Permanent sichtbare Leiste + einblendbare Drawer für Fehler, Warnungen, Unavailable-Zustände und stale Daten
+  - `src/dashboard/static/health-drawer.js`
+  - `src/dashboard/health_builder.py` baut aggregierte Health aus Komponenten
+  - API-Endpunkt `/api/health`
 - [ ] Control/Console-Entkopplung: Eine einzige Control Plane; Console wird ausschließlich Output-Log; redundante Step/Run/Pause/Stop/Snapshot-Wege entfernen
-- [ ] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
+- [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
+  - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
 - [ ] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History
 - [ ] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
 - [ ] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern

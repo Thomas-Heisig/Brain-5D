@@ -47,12 +47,13 @@ Schwellen-/Ratenregulation isoliert messen.
 
 ### Dashboard Operator-Workbench
 
-- Zentrale Architekturbausteine: `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`, Entkopplung von Control/Console
-- Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
-- Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
-- Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
-- Experiment Mode (Operator / Experiment / Debug)
-- Domain-getriebene Frontend-Modularisierung in `src/dashboard/static/`
+- [x] Zentrale Architekturbausteine: `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`
+- [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
+- [ ] Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
+- [ ] Entkopplung von Control/Console: Console wird Output-Log
+- [ ] Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
+- [ ] Experiment Mode (Operator / Experiment / Debug)
+- [ ] Domain-getriebene Frontend-Modularisierung in `src/dashboard/static/`
 
 ### Morphological Self-Regulation
 

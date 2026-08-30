@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-08-30 — Dashboard Operator-Workbench Foundation
+
+### Backend
+- **`src/dashboard/models.py`**:
+  - `ComponentStatus` mit standardisierten Zuständen `enabled/active/degraded/unavailable/error/stale/disabled` und Metadaten `reason`, `last_update`, `source`, `last_error`, `maturity`.
+  - `ParameterSchema` mit `value`, `default`, `min`, `max`, `unit`, `description`, `source`, `runtime_mutable`, `requires_restart`, `scientific_sensitive`.
+  - `HealthSnapshot` zur Aggregation von Problemen/Warnungen/stale/unavailable.
+  - `DashboardSnapshot` erweitert um `components`, `parameters`, `health`.
+- **`src/dashboard/health_builder.py`**: Neuer Builder, der aus Runtime-Metriken, Config und Bridge die Komponenten-Status und Health-Probleme ableitet.
+- **`src/dashboard/state.py`**: Erweitert um `update_component`, `update_parameter`, `set_health`.
+- **`src/dashboard/server.py`**: Neue API-Endpunkte `/api/components`, `/api/components/{name}`, `/api/parameters`, `/api/parameters/{name}`, `/api/health`.
+- **`src/main.py`**: Jeder veröffentlichte Snapshot wird via `enrich_snapshot()` mit Komponenten-, Parameter- und Health-Daten angereichert.
+
+### Frontend
+- **`src/dashboard/static/state-store.js`**: Zentraler Frontend-State-Store ersetzt panel-individuelle `/api/status`-Aufrufe.
+- **`src/dashboard/static/health-drawer.js`**: Health/Problems Drawer mit permanenter Leiste und einblendbarem Drawer.
+- **`src/dashboard/static/styles.css`**: Stile für Health-Bar, Drawer, Problem-Listen und Komponenten-Status.
+- **`src/dashboard/static/index.html`**: Tabs auf `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` umgestellt; Health-Drawer-Container ergänzt.
+- **`src/dashboard/static/app.js`**: Integriert `dashboardStore` und `HealthDrawer`; `renderStatus` liest aus dem zentralen Store.
+
+### Tests
+- Dashboard-Test-Suite (43 Tests) weiterhin grün.
+- Allgemeine Test-Suite zeigt vorbestehenden Fehler in `src/storage/checkpoint.py` (`Neuron` ohne `firing_rate_estimate`), nicht durch diese Änderungen verursacht.
+
 ## 2026-08-30 — Dashboard File Manager: Media & Office Previews
 
 ### Neue Dateiformat-Vorschauen
