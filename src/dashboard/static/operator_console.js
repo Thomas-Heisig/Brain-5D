@@ -280,7 +280,7 @@ export class OperatorAPI {
 }
 
 // ============================================================================
-// Console Logger
+// Console Logger (delegates to shared console-log.js)
 // ============================================================================
 
 export class ConsoleLogger {
@@ -288,6 +288,20 @@ export class ConsoleLogger {
     this.container = byId(containerId);
     this.entries = [];
     this.maxEntries = 1000;
+    this.sharedLog = null;
+  }
+
+  /**
+   * Bind to the shared console log singleton.
+   */
+  async bindSharedLog() {
+    if (this.sharedLog) return;
+    try {
+      const { consoleLog } = await import('./console-log.js');
+      this.sharedLog = consoleLog;
+    } catch {
+      // Shared log unavailable; fall back to local rendering.
+    }
   }
 
   /**
@@ -301,13 +315,17 @@ export class ConsoleLogger {
       message: String(message),
       type: type,
     };
-    
+
     this.entries.push(entry);
     if (this.entries.length > this.maxEntries) {
       this.entries.shift();
     }
-    
-    this.render(entry);
+
+    if (this.sharedLog) {
+      this.sharedLog.log(entry.message, entry.type);
+    } else {
+      this.render(entry);
+    }
   }
 
   /**
@@ -316,19 +334,19 @@ export class ConsoleLogger {
    */
   render(entry) {
     if (!this.container) return;
-    
+
     const time = formatTime(entry.timestamp);
     const classes = `log-entry log-${entry.type}`;
-    
+
     const div = document.createElement('div');
     div.className = classes;
     div.innerHTML = `<span class="log-time">[${time}]</span> ${escapeHtml(entry.message)}`;
-    
+
     this.container.appendChild(div);
-    
+
     // Auto-scroll
     this.container.scrollTop = this.container.scrollHeight;
-    
+
     // Limit DOM entries
     while (this.container.children.length > this.maxEntries) {
       this.container.removeChild(this.container.firstChild);
@@ -379,19 +397,21 @@ export class OperatorConsole {
    * Initialize the console.
    */
   init() {
-    // Initialize logger
+    // Initialize logger and bind to shared console log
     this.logger = new ConsoleLogger('console-output');
-    this.logger.log('🧠 Brain-5D Operator Console initialized', 'info');
-    this.logger.log(`📡 API endpoint: /api/control`, 'info');
-    
+    this.logger.bindSharedLog().then(() => {
+      this.logger.log('🧠 Brain-5D Operator Console initialized', 'info');
+      this.logger.log(`📡 API endpoint: /api/control`, 'info');
+    });
+
     // Bind event listeners
     this.bindEvents();
     this.bindKeyboardShortcuts();
-    
+
     // Initial load
     this.refreshStatus();
     this.loadProposals();
-    
+
     // Start polling
     this.startPolling();
   }

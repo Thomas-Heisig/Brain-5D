@@ -569,6 +569,42 @@ export class ControlPanel {
       applyBtn.addEventListener('click', () => this._handleConfigure());
     }
 
+    // Runtime command buttons
+    const stepBtn = byId('step-button');
+    if (stepBtn) {
+      stepBtn.addEventListener('click', () => this._handleStep());
+    }
+
+    const runBtn = byId('run-button');
+    if (runBtn) {
+      runBtn.addEventListener('click', () => this._handleRunTicks());
+    }
+
+    const startBtn = byId('start-button');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => this._executeCommand(() => ControlAPI.start(), 'start'));
+    }
+
+    const pauseBtn = byId('pause-button');
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', () => this._executeCommand(() => ControlAPI.pause(), 'pause'));
+    }
+
+    const resumeBtn = byId('resume-button');
+    if (resumeBtn) {
+      resumeBtn.addEventListener('click', () => this._executeCommand(() => ControlAPI.resume(), 'resume'));
+    }
+
+    const stopBtn = byId('stop-button');
+    if (stopBtn) {
+      stopBtn.addEventListener('click', () => this._executeCommand(() => ControlAPI.stop(), 'stop'));
+    }
+
+    const snapshotBtn = byId('snapshot-button');
+    if (snapshotBtn) {
+      snapshotBtn.addEventListener('click', () => this._executeCommand(() => ControlAPI.snapshot(), 'snapshot'));
+    }
+
     // Self-organization toggles
     const selfOrgEnabled = this._elements['self-org-enabled'];
     const selfOrgDryRun = this._elements['self-org-dry-run'];
@@ -578,6 +614,81 @@ export class ControlPanel {
     }
     if (selfOrgDryRun) {
       selfOrgDryRun.addEventListener('change', () => this._handleSelfOrganization());
+    }
+
+    // Structural undo / auto-approval
+    const undoBtn = byId('btn-undo-structural');
+    if (undoBtn) {
+      undoBtn.addEventListener('click', () => this._handleUndoStructural());
+    }
+
+    const autoBtn = byId('btn-auto-approval');
+    if (autoBtn) {
+      autoBtn.addEventListener('click', () => this._handleAutoApproval());
+    }
+  }
+
+  /**
+   * Handle step command.
+   */
+  async _handleStep() {
+    const ticks = getIntegerValue(byId('step-ticks'), 1);
+    await this._executeCommand(() => ControlAPI.step(ticks), 'step');
+  }
+
+  /**
+   * Handle run ticks command.
+   */
+  async _handleRunTicks() {
+    const ticks = getIntegerValue(byId('loop-size'), 100);
+    await this._executeCommand(() => ControlAPI.runTicks(ticks), 'run_ticks');
+  }
+
+  /**
+   * Handle structural undo.
+   */
+  async _handleUndoStructural() {
+    await this._executeCommand(
+      async () => {
+        const response = await fetch('/api/structural/undo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        if (!response.ok || data.ok === false) {
+          throw new Error(data.error || data.message || `HTTP ${response.status}`);
+        }
+        return data;
+      },
+      'undo'
+    );
+  }
+
+  /**
+   * Handle auto-approval toggle.
+   */
+  async _handleAutoApproval() {
+    const btn = byId('btn-auto-approval');
+    const currentlyEnabled = btn?.dataset.enabled === 'true';
+    const nextEnabled = !currentlyEnabled;
+    await this._executeCommand(
+      async () => {
+        const response = await fetch('/api/structural/auto-approval', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled: nextEnabled }),
+        });
+        const data = await response.json();
+        if (!response.ok || data.ok === false) {
+          throw new Error(data.error || data.message || `HTTP ${response.status}`);
+        }
+        return data;
+      },
+      'auto-approval'
+    );
+    if (btn) {
+      btn.dataset.enabled = String(nextEnabled);
+      btn.textContent = nextEnabled ? 'Disable Auto-Approval' : 'Enable Auto-Approval';
     }
   }
 
@@ -598,19 +709,35 @@ export class ControlPanel {
 
     this.commandInFlight = true;
     this._setMessage(`⏳ Executing '${actionName}'...`, 'info');
+    this._log(`▶ Executing: ${actionName}`, 'info');
 
     try {
       const result = await command();
       this._setMessage(`✓ '${actionName}' completed`, 'info');
+      this._log(`✅ ${actionName} completed`, 'success');
       await this._refreshState();
       return result;
     } catch (error) {
       this._setMessage(`✗ ${actionName} failed: ${error.message}`, 'error');
+      this._log(`❌ ${actionName} failed: ${error.message}`, 'error');
       this.state.setError(error.message);
       throw error;
     } finally {
       this.commandInFlight = false;
     }
+  }
+
+  /**
+   * Emit a log entry to the shared console log.
+   * @param {string} message
+   * @param {string} type
+   */
+  _log(message, type = 'info') {
+    // Import is dynamic to avoid a hard dependency cycle; console-log.js
+    // is a leaf module and can be imported lazily.
+    import('./console-log.js').then(({ consoleLog }) => {
+      consoleLog.log(message, type);
+    }).catch(() => {});
   }
 
   /**
@@ -718,9 +845,37 @@ export class ControlPanel {
   // ========================================================================
 
   _initKeyboardShortcuts() {
-    // Runtime control shortcuts are owned by OperatorConsole to avoid
-    // duplicate handlers. ControlPanel only listens to configuration shortcuts.
-    this._keyboardHandler = null;
+    this._keyboardHandler = (e) => {
+      if (!(e.ctrlKey && e.shiftKey)) return;
+
+      switch (e.key) {
+        case 'Enter':
+          e.preventDefault();
+          this._handleStep();
+          break;
+        case 'R':
+          e.preventDefault();
+          this._handleRunTicks();
+          break;
+        case 'S':
+          e.preventDefault();
+          this._executeCommand(() => ControlAPI.start(), 'start');
+          break;
+        case 'P':
+          e.preventDefault();
+          this._executeCommand(() => ControlAPI.pause(), 'pause');
+          break;
+        case ' ':
+          e.preventDefault();
+          this._executeCommand(() => ControlAPI.stop(), 'stop');
+          break;
+        case 'N':
+          e.preventDefault();
+          this._executeCommand(() => ControlAPI.snapshot(), 'snapshot');
+          break;
+      }
+    };
+    document.addEventListener('keydown', this._keyboardHandler);
   }
 
   // ========================================================================

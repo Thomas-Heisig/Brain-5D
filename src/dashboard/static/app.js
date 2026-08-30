@@ -43,6 +43,7 @@ import { OperatorConsole } from './operator_console.js';
 import { initResearchBrowser, initDocumentationBrowser } from './file-viewer.js';
 import { dashboardStore } from './state-store.js';
 import { initHealthDrawer } from './health-drawer.js';
+import { consoleLog } from './console-log.js';
 
 // ================================================================
 // DOM HELPERS
