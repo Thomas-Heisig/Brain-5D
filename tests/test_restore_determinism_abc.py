@@ -81,20 +81,6 @@ ARTIFACT_PATH = ARTIFACT_DIR / "restore_determinism.json"
 WORKER_PATH = Path(__file__).resolve().parent / "_restore_worker.py"
 
 
-# ============================================================================
-# Schedule cache
-# ============================================================================
-
-_SCHEDULE_CACHE: list[dict[str, Any]] | None = None
-
-
-def _get_schedule() -> list[dict[str, Any]]:
-    global _SCHEDULE_CACHE
-    if _SCHEDULE_CACHE is None:
-        _SCHEDULE_CACHE = build_absolute_schedule(make_config(), N)
-    return _SCHEDULE_CACHE
-
-
 def _write_production_artifacts(
     network: NeuralNetwork,
     homeo: HomeostasisEngine,
@@ -193,12 +179,12 @@ def _run_path_C(
     pid_C1 = os.getpid()
 
     # --- C1: run 0 -> K in-process, write artifacts ---
-    network = _create_network(config)
+    network = create_network(config)
     homeo = HomeostasisEngine(network, config)
     homeo.attach()
     learn = LearningEngine(network, config)
     learn.attach()
-    _run_absolute_schedule(network, schedule, K)
+    run_absolute_schedule(network, schedule, K)
     artifacts = _write_production_artifacts(network, homeo, learn, tmp_path, schedule, config)
 
     # Write pid_C1
@@ -244,53 +230,43 @@ def _run_path_C(
 # Tests
 # ============================================================================
 
-SCHEDULE_CACHE: list[dict[str, Any]] | None = None
-
-
-def _get_schedule() -> list[dict[str, Any]]:
-    global SCHEDULE_CACHE
-    if SCHEDULE_CACHE is None:
-        SCHEDULE_CACHE = _build_absolute_schedule(_config(), N)
-    return SCHEDULE_CACHE
-
-
 class TestRestoreDeterminismABC:
     """Full A/B/C restore determinism protocol."""
 
     def test_path_A_completes(self) -> None:
-        config = _config()
-        d = _run_path_A(config, _get_schedule())
+        config = make_config()
+        d = _run_path_A(config, build_absolute_schedule(config, N))
         assert isinstance(d, str) and len(d) == 64
 
     def test_path_B_completes(self, tmp_path: Path) -> None:
-        config = _config()
-        d, _ = _run_path_B(config, _get_schedule(), tmp_path)
+        config = make_config()
+        d, _ = _run_path_B(config, build_absolute_schedule(config, N), tmp_path)
         assert isinstance(d, str) and len(d) == 64
 
     def test_path_C_completes(self, tmp_path: Path) -> None:
-        config = _config()
-        d, _ = _run_path_C(config, _get_schedule(), tmp_path)
+        config = make_config()
+        d, _ = _run_path_C(config, build_absolute_schedule(config, N), tmp_path)
         assert isinstance(d, str) and len(d) == 64
 
     def test_A_equals_B(self, tmp_path: Path) -> None:
-        config = _config()
-        schedule = _get_schedule()
+        config = make_config()
+        schedule = build_absolute_schedule(config, N)
         dA = _run_path_A(config, schedule)
         dB, b_used_restore = _run_path_B(config, schedule, tmp_path)
         assert b_used_restore, "Path B did not use restore_full()"
         assert dA == dB, f"A != B\nA: {dA}\nB: {dB}"
 
     def test_A_equals_C(self, tmp_path: Path) -> None:
-        config = _config()
-        schedule = _get_schedule()
+        config = make_config()
+        schedule = build_absolute_schedule(config, N)
         dA = _run_path_A(config, schedule)
         dC, c_is_fresh = _run_path_C(config, schedule, tmp_path)
         assert c_is_fresh, "Path C is not a fresh process"
         assert dA == dC, f"A != C\nA: {dA}\nC: {dC}"
 
     def test_B_equals_C(self, tmp_path: Path) -> None:
-        config = _config()
-        schedule = _get_schedule()
+        config = make_config()
+        schedule = build_absolute_schedule(config, N)
         dB, _ = _run_path_B(config, schedule, tmp_path)
         dC, _ = _run_path_C(config, schedule, tmp_path)
         assert dB == dC, f"B != C\nB: {dB}\nC: {dC}"
@@ -301,8 +277,8 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
 
     All proof fields are machine-measured, never hardcoded.
     """
-    config = _config()
-    schedule = _get_schedule()
+    config = make_config()
+    schedule = build_absolute_schedule(config, N)
 
     dA = _run_path_A(config, schedule)
     dB, b_used_restore = _run_path_B(config, schedule, tmp_path)
@@ -344,7 +320,7 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
         "K": K,
         "N": N,
         "seed": SEED,
-        "config_sha256": _config_sha256(config),
+        "config_sha256": config_sha256(config),
         "pid_C1": pid_C1,
         "pid_C2": pid_C2,
         "digest_A": dA,

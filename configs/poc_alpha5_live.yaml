@@ -1,0 +1,140 @@
+# Alpha.5 Interactive Operator/Dashboard Profile
+# ===============================================
+# Safe desired state for interactive dashboard operation.
+# All mechanisms are explicitly configured — no silent defaults.
+#
+# Composition: extends poc_config.yaml via production config loading.
+# Do NOT create parallel engines/controllers/storage implementations.
+
+# ── Override seed for interactive sessions ─────────────────────────────────
+seed: 42
+
+# ── Simulation ─────────────────────────────────────────────────────────────
+simulation:
+  ticks: 0  # infinite — controller drives stepping via API
+
+# ── Homeostasis — ENABLED ──────────────────────────────────────────────────
+homeostasis:
+  enabled: true
+  target_rate_hz: 5.0
+  rate_tau_ticks: 200.0
+  threshold_learning_rate: 0.001
+  threshold_min: -15.0
+  threshold_max: 30.0
+  energy_enabled: true
+  target_energy: 1.0
+  energy_recovery_rate: 0.001
+  energy_min: 0.0
+  energy_max: 1.0
+
+# ── STDP — enabled for learning ────────────────────────────────────────────
+stdp:
+  enabled: true
+  a_plus: 0.1
+  a_minus: 0.12
+  tau_plus: 20.0
+  tau_minus: 20.0
+  max_weight: 1.0
+  min_weight: 0.0
+
+eligibility:
+  enabled: true
+  tau_ticks: 200.0
+
+reward:
+  enabled: true
+  learning_rate: 0.01
+  delay_ticks: 5
+  clamp_weights: true
+  reset_trace_after_reward: false
+  trace_epsilon: 1.0e-12
+  reward_source: external
+
+# ── Self-Organization — ENABLED, approval-gated ────────────────────────────
+self_organization:
+  enabled: true
+  interval_ticks: 100
+  pruning_enabled: true
+  pruning_weight_threshold: 0.005
+  pruning_min_age_ticks: 1000
+  sprouting_enabled: true
+  sprouting_max_out_degree: 12
+  sprouting_radius: 2.0
+  sprouting_weight: 0.05
+  sprouting_delay: 1
+  neurogenesis_enabled: true
+  neurogenesis_spike_delta_threshold: 50
+  neurogenesis_radius: 1.0
+  neurogenesis_max_per_cycle: 1
+
+# ── Storage — ENABLED, delta runtime + checkpoints + journal ───────────────
+storage:
+  enabled: true
+  format: b5d
+  path: artifacts/alpha5_live.b5d
+  restart_capable: true
+  journal:
+    enabled: true
+    path: artifacts/alpha5_live.b5d.journal
+    crc: true
+    fsync_on_commit: true
+    commit_interval_ticks: 10
+    max_payload_size: 1048576
+  runtime:
+    enabled: true
+    capture_spike_events: true
+    capture_policy: full_change_scan
+    async_enabled: false
+    async_queue_size: 1000
+    async_workers: 1
+    drop_on_overflow: false
+    enqueue_timeout_s: 0.25
+  telemetry:
+    enabled: true
+    export_interval_ticks: 100
+  checkpoint:
+    enabled: true
+    path: artifacts/alpha5_live_runtime.json
+  compaction:
+    enabled: false
+    manifest_path: artifacts/alpha5_live.manifest.json
+    trigger_journal_size_mb: 100
+    trigger_ticks: 10000
+    keep_generations: 2
+  lazy_observatory:
+    enabled: false
+    heatmap_type: activity
+    activity_tau_ticks: 50.0
+
+# ── Dashboard — live telemetry ENABLED ─────────────────────────────────────
+dashboard:
+  live_telemetry:
+    enabled: true
+    activity_window_ticks: 20
+    capture_interval_ticks: 5
+  show_heatmap: true
+  heatmap_type: activity
+
+# ── Telemetry ──────────────────────────────────────────────────────────────
+telemetry:
+  enabled: true
+  history_ticks: 5000
+  spike_history_ticks: 5000
+
+# ── Diagnostics ────────────────────────────────────────────────────────────
+diagnostics:
+  mode: single_neuron_drive
+  start_tick: 100
+  duration_ticks: 20
+  amplitude: 10.0
+  target_coord: [0, 4, 7, 3, 2]
+  input_plane_dim: x
+  poisson_rate_hz: 0.5
+  poisson_amplitude: 5.0
+
+# ── Structural plasticity — structural journal ENABLED ─────────────────────
+structural:
+  auto_approval: false
+  structural_mutations: approval_gated
+  structural_journal:
+    enabled: true

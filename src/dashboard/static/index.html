@@ -16,21 +16,21 @@
       <p class="eyebrow">Brain-5D</p>
       <h1>Operator Dashboard</h1>
     </div>
-    <div class="status-pill" id="system-status">offline</div>
+    <div class="topbar-right">
+      <span class="config-badge" id="active-profile">—</span>
+      <div class="status-pill" id="system-status">offline</div>
+    </div>
   </header>
 
   <!-- ============================================================ -->
   <!-- TAB NAVIGATION -->
   <!-- ============================================================ -->
   <nav class="tab-nav">
-    <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
-    <button class="tab-btn" data-tab="inspect">🔍 Inspect</button>
-    <button class="tab-btn" data-tab="control">🎮 Control</button>
-    <button class="tab-btn" data-tab="console">📟 Console</button>
-    <button class="tab-btn" data-tab="research">🔬 Research</button>
-    <button class="tab-btn" data-tab="docs">📄 Docs</button>
-    <button class="tab-btn" data-tab="dynamics">📈 Dynamics</button>
-    <button class="tab-btn" data-tab="gate">🚪 Alpha.5 Gate</button>
+    <button class="tab-btn active" data-tab="overview">📊 OVERVIEW</button>
+    <button class="tab-btn" data-tab="network">🧠 NETWORK</button>
+    <button class="tab-btn" data-tab="control">🎮 CONTROL &amp; CONSOLE</button>
+    <button class="tab-btn" data-tab="research">🔬 RESEARCH &amp; DOCS</button>
+    <button class="tab-btn" data-tab="gate">🚪 RELEASE</button>
   </nav>
 
   <!-- ============================================================ -->
@@ -39,9 +39,9 @@
   <main>
 
     <!-- ========================================================== -->
-    <!-- TAB: DASHBOARD -->
+    <!-- TAB: OVERVIEW (high-level runtime state and major KPIs) -->
     <!-- ========================================================== -->
-    <section class="tab-content active" id="tab-dashboard">
+    <section class="tab-content active" id="tab-overview">
 
       <!-- Metrics Grid -->
       <section class="grid metrics-grid">
@@ -120,71 +120,6 @@
         </div>
       </section>
 
-      <!-- Heatmap + 5D Projection -->
-      <section class="card heatmap-panel">
-        <div class="panel-title">
-          <div><h2>5D Netzwerk-Projektion</h2><p><span id="source-badge" class="badge badge-live">LIVE</span> · Live Runtime oder Snapshot</p></div>
-          <div class="button-group">
-            <button id="live-toggle" class="active" title="Umschalten zwischen Live Runtime und Snapshot">🔄 LIVE</button>
-            <button data-kind="activity" class="active">Aktivität</button>
-            <button data-kind="energy">Energie</button>
-            <button data-kind="membrane">Membran</button>
-            <button data-kind="spike">Spikes</button>
-            <button data-kind="weight">Gewichte</button>
-          </div>
-        </div>
-        <div class="heatmap-split">
-          <div class="heatmap-wrap">
-            <canvas id="heatmap" width="800" height="420"></canvas>
-            <div class="heatmap-meta" id="heatmap-meta">Keine Live-Verbindung.</div>
-          </div>
-          <div class="projection-wrap">
-            <canvas id="projection-5d" width="400" height="420"></canvas>
-            <div class="heatmap-meta">5D Isometrische Projektion</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- IO-Fluss Visualisierung -->
-      <section class="card io-flow-panel">
-        <div class="panel-title">
-          <div><h2>🔀 Input-Output Fluss</h2><p>Signalpropagation durch das Netzwerk</p></div>
-          <span id="io-flow-badge" class="gate-badge pending">⏳</span>
-        </div>
-        <div class="io-flow-grid">
-          <div class="io-flow-layer io-input">
-            <div class="io-layer-header">Input <span id="io-input-count">0</span></div>
-            <div class="io-layer-bar"><div class="io-layer-fill" id="io-input-fill"></div></div>
-            <div class="io-layer-rate"><span id="io-input-rate">0.000</span> spikes/tick</div>
-          </div>
-          <div class="io-flow-arrow">→</div>
-          <div class="io-flow-layer io-hidden">
-            <div class="io-layer-header">Hidden <span id="io-hidden-count">0</span></div>
-            <div class="io-layer-bar"><div class="io-layer-fill" id="io-hidden-fill"></div></div>
-            <div class="io-layer-rate"><span id="io-hidden-rate">0.000</span> spikes/tick</div>
-          </div>
-          <div class="io-flow-arrow">→</div>
-          <div class="io-flow-layer io-output">
-            <div class="io-layer-header">Output <span id="io-output-count">0</span></div>
-            <div class="io-layer-bar"><div class="io-layer-fill" id="io-output-fill"></div></div>
-            <div class="io-layer-rate"><span id="io-output-rate">0.000</span> spikes/tick</div>
-          </div>
-        </div>
-        <div class="io-flow-meta" id="io-flow-meta">⏳ Lade Daten...</div>
-      </section>
-
-      <!-- Populationen Übersicht -->
-      <section class="card population-panel">
-        <div class="panel-title">
-          <div><h2>👥 Neuronale Populationen</h2><p>E/I-Ratio, Aktivität pro Typ</p></div>
-          <span id="ei-ratio-badge" class="gate-badge">E/I: —</span>
-        </div>
-        <div class="population-grid" id="population-grid">
-          <div class="population-empty">⏳ Lade Populationsdaten...</div>
-        </div>
-        <div class="population-meta" id="population-meta">Aktualisiert: —</div>
-      </section>
-
       <!-- Roadmap -->
       <section class="grid roadmap-grid">
         <article class="card roadmap"><strong>v0.4</strong><span>Persistenz</span></article>
@@ -211,27 +146,7 @@
         </div>
       </section>
 
-      <!-- Structural Live Loop Status -->
-      <section class="card structural-live-card">
-        <div class="panel-title">
-          <h2>🔄 Structural Live Loop</h2>
-          <span id="live-loop-badge" class="gate-badge pending">checking…</span>
-        </div>
-        <div class="structural-live-grid" id="structural-live-grid">
-          <div class="live-loop-item" id="ll-adapter">⏳ RuntimeAdapter</div>
-          <div class="live-loop-item" id="ll-signal">⏳ HomeostasisSignal</div>
-          <div class="live-loop-item" id="ll-policy">⏳ Policy → Proposal</div>
-          <div class="live-loop-item" id="ll-coordinator">⏳ Coordinator</div>
-          <div class="live-loop-item" id="ll-approval">⏳ Approval Gate</div>
-          <div class="live-loop-item" id="ll-mutation">⏳ Mutation</div>
-          <div class="live-loop-item" id="ll-journal">⏳ Journal</div>
-          <div class="live-loop-item" id="ll-undo">⏳ Undo</div>
-          <div class="live-loop-item" id="ll-replay">⏳ Replay</div>
-        </div>
-        <p class="heatmap-meta" id="live-loop-meta">Requires poc_structural_live.yaml config</p>
-      </section>
-
-      <!-- Error Visibility -->
+      <!-- Runtime Error Visibility -->
       <section class="card error-visibility-card">
         <div class="panel-title">
           <h2>⚠️ Runtime Error Visibility</h2>
@@ -243,112 +158,99 @@
         <p class="heatmap-meta" id="error-meta">Structured RuntimeErrorEvent buffer</p>
       </section>
 
-    </section> <!-- /tab-dashboard -->
-
+    </section> <!-- /tab-overview -->
     <!-- ========================================================== -->
-    <!-- TAB: DYNAMICS (Spike Raster, Rate Histogram, 5D Explorer) -->
+    <!-- TAB: NETWORK (all scientific visualizations) -->
     <!-- ========================================================== -->
-    <section class="tab-content" id="tab-dynamics">
-
-      <!-- Spike Raster -->
-      <section class="card raster-panel">
+    <section class="tab-content" id="tab-network">
+      <!-- Heatmap + 5D Projection -->
+      <section class="card heatmap-panel">
         <div class="panel-title">
-          <div><h2>⚡ Spike Raster</h2><p>Letzte 100 Ticks · aktivste Neuronen</p></div>
-          <span id="raster-badge" class="gate-badge pending">⏳</span>
-        </div>
-        <canvas id="spike-raster" width="900" height="380"></canvas>
-        <div class="heatmap-meta" id="raster-meta">⏳ Lade Spike-Daten...</div>
-      </section>
-
-      <!-- Firing Rate Histogram -->
-      <section class="card histogram-panel">
-        <div class="panel-title">
-          <div><h2>📊 Feuerraten-Histogramm</h2><p>Verteilung der neuronalen Aktivität</p></div>
-          <span id="histogram-stats" class="gate-badge">—</span>
-        </div>
-        <canvas id="rate-histogram" width="900" height="300"></canvas>
-        <div class="heatmap-meta" id="histogram-meta">⏳ Lade Histogramm-Daten...</div>
-      </section>
-
-      <!-- 5D Layer Explorer -->
-      <section class="card layer-explorer-panel">
-        <div class="panel-title">
-          <div><h2>🧊 5D Layer Explorer</h2><p>Slice durch den 5D-Raum</p></div>
-          <span id="layer-badge" class="gate-badge">d4</span>
-        </div>
-        <div class="layer-controls">
-          <label>Dimension:
-            <select id="layer-dim">
-              <option value="z">Z (räumlich)</option>
-              <option value="d4">d4 (funktional)</option>
-              <option value="d5">d5 (funktional)</option>
-            </select>
-          </label>
-          <label>Layer:
-            <input type="range" id="layer-slider" min="0" max="255" value="128" />
-            <span id="layer-value">128</span>
-          </label>
-          <label>Anzeige:
-            <select id="layer-kind">
-              <option value="activity">Aktivität</option>
-              <option value="energy">Energie</option>
-              <option value="membrane">Membran</option>
-            </select>
-          </label>
-        </div>
-        <canvas id="layer-canvas" width="400" height="400"></canvas>
-        <div class="heatmap-meta" id="layer-meta">Wähle Dimension und Layer</div>
-      </section>
-
-    </section> <!-- /tab-dynamics -->
-
-    <!-- ========================================================== -->
-    <!-- TAB: INSPECT (real 5D network inspector, Phase 8/9/12) -->
-    <!-- ========================================================== -->
-    <section class="tab-content" id="tab-inspect">
-
-      <!-- Network Summary -->
-      <section class="card panel">
-        <div class="panel-title">
-          <h2>🧠 Network Summary <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
-          <button id="inspect-refresh" type="button" class="btn-secondary">🔄 Refresh</button>
-        </div>
-        <dl class="kv" id="inspect-network-summary">
-          <div><dt>Dimensions</dt><dd id="inspect-dimensions">—</dd></div>
-          <div><dt>Neurons</dt><dd id="inspect-neuron-count">—</dd></div>
-          <div><dt>Synapses</dt><dd id="inspect-synapse-count">—</dd></div>
-          <div><dt>Input cells</dt><dd id="inspect-input-count">—</dd></div>
-          <div><dt>Output cells</dt><dd id="inspect-output-count">—</dd></div>
-          <div><dt>Active neurons</dt><dd id="inspect-active-neurons">—</dd></div>
-          <div><dt>Silent neurons</dt><dd id="inspect-silent-neurons">—</dd></div>
-          <div><dt>Queue depth</dt><dd id="inspect-queue-depth">—</dd></div>
-          <div><dt>Tick</dt><dd id="inspect-tick">—</dd></div>
-          <div><dt>Total spikes</dt><dd id="inspect-total-spikes">—</dd></div>
-          <div><dt>Mean energy</dt><dd id="inspect-mean-energy">—</dd></div>
-          <div><dt>Mean v</dt><dd id="inspect-mean-v">—</dd></div>
-        </dl>
-      </section>
-
-      <!-- 5D Projection -->
-      <section class="card panel">
-        <div class="panel-title">
-          <h2>🌐 5D Coordinate Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <div><h2>5D Netzwerk-Projektion</h2><p><span id="source-badge" class="badge badge-live">LIVE</span> &middot; Live Runtime oder Snapshot</p></div>
           <div class="button-group">
-            <select id="projection-mode">
-              <option value="activity">Activity (spike count)</option>
-              <option value="energy">Energy</option>
-              <option value="potential">Membrane potential</option>
-            </select>
+            <button id="live-toggle" class="active" title="Umschalten zwischen Live Runtime und Snapshot">&#x1F504; LIVE</button>
+            <button data-kind="activity" class="active">Aktivit&auml;t</button>
+            <button data-kind="energy">Energie</button>
+            <button data-kind="membrane">Membran</button>
+            <button data-kind="spike">Spikes</button>
+            <button data-kind="weight">Gewichte</button>
           </div>
         </div>
-        <p class="heatmap-meta" id="projection-meta">Projection of 5D coordinates into 3D · sampling live network</p>
+        <div class="heatmap-split">
+          <div class="heatmap-wrap"><canvas id="heatmap" width="800" height="420"></canvas><div class="heatmap-meta" id="heatmap-meta">Keine Live-Verbindung.</div></div>
+          <div class="projection-wrap"><canvas id="projection-5d" width="400" height="420"></canvas><div class="heatmap-meta">5D Isometrische Projektion</div></div>
+        </div>
+      </section>
+      <!-- IO-Fluss -->
+      <section class="card io-flow-panel">
+        <div class="panel-title"><div><h2>&#x1F500; Input-Output Fluss</h2><p>Signalpropagation durch das Netzwerk</p></div><span id="io-flow-badge" class="gate-badge pending">&#x23F3;</span></div>
+        <div class="io-flow-grid">
+          <div class="io-flow-layer io-input"><div class="io-layer-header">Input <span id="io-input-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-input-fill"></div></div><div class="io-layer-rate"><span id="io-input-rate">0.000</span> spikes/tick</div></div>
+          <div class="io-flow-arrow">&rarr;</div>
+          <div class="io-flow-layer io-hidden"><div class="io-layer-header">Hidden <span id="io-hidden-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-hidden-fill"></div></div><div class="io-layer-rate"><span id="io-hidden-rate">0.000</span> spikes/tick</div></div>
+          <div class="io-flow-arrow">&rarr;</div>
+          <div class="io-flow-layer io-output"><div class="io-layer-header">Output <span id="io-output-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-output-fill"></div></div><div class="io-layer-rate"><span id="io-output-rate">0.000</span> spikes/tick</div></div>
+        </div>
+        <div class="io-flow-meta" id="io-flow-meta">&#x23F3; Lade Daten...</div>
+      </section>
+      <!-- Populationen -->
+      <section class="card population-panel">
+        <div class="panel-title"><div><h2>&#x1F465; Neuronale Populationen</h2><p>E/I-Ratio, Aktivit&auml;t pro Typ</p></div><span id="ei-ratio-badge" class="gate-badge">E/I: &mdash;</span></div>
+        <div class="population-grid" id="population-grid"><div class="population-empty">&#x23F3; Lade Populationsdaten...</div></div>
+        <div class="population-meta" id="population-meta">Aktualisiert: &mdash;</div>
+      </section>
+      <!-- Spike Raster -->
+      <section class="card raster-panel">
+        <div class="panel-title"><div><h2>&#x26A1; Spike Raster</h2><p>Letzte 100 Ticks &middot; aktivste Neuronen</p></div><span id="raster-badge" class="gate-badge pending">&#x23F3;</span></div>
+        <canvas id="spike-raster" width="900" height="380"></canvas>
+        <div class="heatmap-meta" id="raster-meta">&#x23F3; Lade Spike-Daten...</div>
+      </section>
+      <!-- Firing Rate Histogram -->
+      <section class="card histogram-panel">
+        <div class="panel-title"><div><h2>&#x1F4CA; Feuerraten-Histogramm</h2><p>Verteilung der neuronalen Aktivit&auml;t</p></div><span id="histogram-stats" class="gate-badge">&mdash;</span></div>
+        <canvas id="rate-histogram" width="900" height="300"></canvas>
+        <div class="heatmap-meta" id="histogram-meta">&#x23F3; Lade Histogramm-Daten...</div>
+      </section>
+      <!-- 5D Layer Explorer -->
+      <section class="card layer-explorer-panel">
+        <div class="panel-title"><div><h2>&#x1F90A; 5D Layer Explorer</h2><p>Slice durch den 5D-Raum</p></div><span id="layer-badge" class="gate-badge">d4</span></div>
+        <div class="layer-controls">
+          <label>Dimension: <select id="layer-dim"><option value="z">Z (r&auml;umlich)</option><option value="d4">d4 (funktional)</option><option value="d5">d5 (funktional)</option></select></label>
+          <label>Layer: <input type="range" id="layer-slider" min="0" max="255" value="128" /><span id="layer-value">128</span></label>
+          <label>Anzeige: <select id="layer-kind"><option value="activity">Aktivit&auml;t</option><option value="energy">Energie</option><option value="membrane">Membran</option></select></label>
+        </div>
+        <canvas id="layer-canvas" width="400" height="400"></canvas>
+        <div class="heatmap-meta" id="layer-meta">W&auml;hle Dimension und Layer</div>
+      </section>
+      <!-- Network Inspector -->
+      <section class="card panel">
+        <div class="panel-title"><h2>&#x1F9E0; Network Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2><button id="inspect-refresh" type="button" class="btn-secondary">&#x1F504; Refresh</button></div>
+        <dl class="kv" id="inspect-network-summary">
+          <div><dt>Dimensions</dt><dd id="inspect-dimensions">&mdash;</dd></div>
+          <div><dt>Neurons</dt><dd id="inspect-neuron-count">&mdash;</dd></div>
+          <div><dt>Synapses</dt><dd id="inspect-synapse-count">&mdash;</dd></div>
+          <div><dt>Input cells</dt><dd id="inspect-input-count">&mdash;</dd></div>
+          <div><dt>Output cells</dt><dd id="inspect-output-count">&mdash;</dd></div>
+          <div><dt>Active neurons</dt><dd id="inspect-active-neurons">&mdash;</dd></div>
+          <div><dt>Silent neurons</dt><dd id="inspect-silent-neurons">&mdash;</dd></div>
+          <div><dt>Queue depth</dt><dd id="inspect-queue-depth">&mdash;</dd></div>
+          <div><dt>Tick</dt><dd id="inspect-tick">&mdash;</dd></div>
+          <div><dt>Total spikes</dt><dd id="inspect-total-spikes">&mdash;</dd></div>
+          <div><dt>Mean energy</dt><dd id="inspect-mean-energy">&mdash;</dd></div>
+          <div><dt>Mean v</dt><dd id="inspect-mean-v">&mdash;</dd></div>
+        </dl>
+      </section>
+      <!-- 5D Projection -->
+      <section class="card panel">
+        <div class="panel-title"><h2>&#x1F310; 5D Coordinate Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+          <div class="button-group"><select id="projection-mode"><option value="activity">Activity (spike count)</option><option value="energy">Energy</option><option value="potential">Membrane potential</option></select></div>
+        </div>
+        <p class="heatmap-meta" id="projection-meta">Projection of 5D coordinates into 3D &middot; sampling live network</p>
         <canvas id="inspect-projection" width="900" height="480"></canvas>
       </section>
-
       <!-- Neurons Table -->
       <section class="card panel">
-        <div class="panel-title">
-          <h2>🔬 Neurons <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+        <div class="panel-title"><h2>&#x1F52C; Neurons <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
           <div class="button-group">
             <label class="input-label">Limit <input id="neuron-limit" type="number" min="1" max="5000" value="200" /></label>
             <label class="input-label">Offset <input id="neuron-offset" type="number" min="0" max="10000000" value="0" /></label>
@@ -356,406 +258,183 @@
             <button id="neuron-load" type="button" class="btn-secondary">Load</button>
           </div>
         </div>
-        <div class="table-wrap">
-          <table class="inspect-table">
-            <thead>
-              <tr><th>ID</th><th>x1</th><th>x2</th><th>x3</th><th>x4</th><th>x5</th><th>v</th><th>u</th><th>energy</th><th>last_spike</th><th>spikes</th><th>I/O</th></tr>
-            </thead>
-            <tbody id="neuron-table-body"></tbody>
-          </table>
-        </div>
-        <p class="heatmap-meta" id="neuron-page-meta">—</p>
+        <div class="table-wrap"><table class="inspect-table"><thead><tr><th>ID</th><th>x1</th><th>x2</th><th>x3</th><th>x4</th><th>x5</th><th>v</th><th>u</th><th>energy</th><th>last_spike</th><th>spikes</th><th>I/O</th></tr></thead><tbody id="neuron-table-body"></tbody></table></div>
+        <p class="heatmap-meta" id="neuron-page-meta">&mdash;</p>
       </section>
-
       <!-- Synapses Table -->
       <section class="card panel">
-        <div class="panel-title">
-          <h2>🔗 Synapses <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
+        <div class="panel-title"><h2>&#x1F517; Synapses <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
           <div class="button-group">
             <label class="input-label">Limit <input id="synapse-limit" type="number" min="1" max="5000" value="200" /></label>
             <label class="input-label">Offset <input id="synapse-offset" type="number" min="0" max="10000000" value="0" /></label>
-            <label class="input-label">Source <input id="synapse-source" type="number" placeholder="—" /></label>
-            <label class="input-label">Min weight <input id="synapse-min-weight" type="number" step="0.001" placeholder="—" /></label>
+            <label class="input-label">Source <input id="synapse-source" type="number" placeholder="&mdash;" /></label>
+            <label class="input-label">Min weight <input id="synapse-min-weight" type="number" step="0.001" placeholder="&mdash;" /></label>
             <button id="synapse-load" type="button" class="btn-secondary">Load</button>
           </div>
         </div>
-        <div class="table-wrap">
-          <table class="inspect-table">
-            <thead>
-              <tr><th>source</th><th>target</th><th>weight</th><th>delay</th><th>eligibility</th></tr>
-            </thead>
-            <tbody id="synapse-table-body"></tbody>
-          </table>
-        </div>
-        <p class="heatmap-meta" id="synapse-page-meta">—</p>
+        <div class="table-wrap"><table class="inspect-table"><thead><tr><th>source</th><th>target</th><th>weight</th><th>delay</th><th>eligibility</th></tr></thead><tbody id="synapse-table-body"></tbody></table></div>
+        <p class="heatmap-meta" id="synapse-page-meta">&mdash;</p>
       </section>
-    </section> <!-- /tab-inspect -->
-
+    </section> <!-- /tab-network -->
     <!-- ========================================================== -->
-    <!-- TAB: CONTROL -->
+    <!-- TAB: CONTROL & CONSOLE -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-control">
-      <!-- Control Panel Fragment -->
-      <section class="control-card" id="runtime-control-card" aria-labelledby="runtime-control-title">
-
+      <!-- Runtime Control -->
+      <section class="control-card" id="runtime-control-card">
         <div class="control-card__header">
-          <div class="control-card__title-group">
-            <h2 id="runtime-control-title">Runtime Control</h2>
-            <p class="control-card__subtitle">Step execution, loop control, pacing, snapshots &amp; structural gates</p>
-          </div>
+          <div class="control-card__title-group"><h2 id="runtime-control-title">Runtime Control</h2><p class="control-card__subtitle">Step execution, loop control, pacing, snapshots &amp; structural gates</p></div>
           <span class="runtime-state" id="runtime-state" role="status">unknown</span>
         </div>
-
         <div class="runtime-metrics">
           <div class="metric-item"><span class="metric-label">Tick</span><strong class="metric-value" id="runtime-tick">0</strong></div>
           <div class="metric-item"><span class="metric-label">Queued</span><strong class="metric-value" id="runtime-queued">0</strong></div>
           <div class="metric-item"><span class="metric-label">Batch</span><strong class="metric-value" id="runtime-last-batch">0</strong></div>
           <div class="metric-item"><span class="metric-label">Batch ms</span><strong class="metric-value" id="runtime-last-ms">0.0</strong></div>
         </div>
-
         <div class="control-grid">
-          <!-- Step -->
           <div class="control-group step-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Step</span>
-              <span class="shortcut-hint">Ctrl+Shift+S</span>
-            </div>
-            <div class="control-group__body">
-              <label class="input-label" for="step-ticks">
-                Ticks
-                <input id="step-ticks" type="number" min="1" max="10000000" value="1" title="Number of ticks per step" />
-              </label>
-              <button id="step-button" type="button" class="btn-primary"><span class="icon">▶</span> Step</button>
-            </div>
+            <div class="control-group__header"><span class="control-group__title">Step</span><span class="shortcut-hint">Ctrl+Shift+S</span></div>
+            <div class="control-group__body"><label class="input-label" for="step-ticks">Ticks <input id="step-ticks" type="number" min="1" max="10000000" value="1" /></label><button id="step-button" type="button" class="btn-primary">Step</button></div>
           </div>
-
-          <!-- Run -->
           <div class="control-group run-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Run Loop</span>
-              <span class="shortcut-hint">Ctrl+Shift+R</span>
-            </div>
-            <div class="control-group__body">
-              <label class="input-label" for="loop-size">
-                Loop size
-                <input id="loop-size" type="number" min="1" max="1000000" value="100" title="Number of ticks per loop" />
-              </label>
-              <button id="run-button" type="button" class="btn-success"><span class="icon">⏩</span> Run</button>
-            </div>
+            <div class="control-group__header"><span class="control-group__title">Run Loop</span><span class="shortcut-hint">Ctrl+Shift+R</span></div>
+            <div class="control-group__body"><label class="input-label" for="loop-size">Loop size <input id="loop-size" type="number" min="1" max="1000000" value="100" /></label><button id="run-button" type="button" class="btn-success">Run</button></div>
           </div>
-
-          <!-- Configure -->
           <div class="control-group config-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Configure</span>
-            </div>
-            <div class="control-group__body">
-              <label class="input-label" for="delay-ms">
-                Delay / tick (ms)
-                <input id="delay-ms" type="number" min="0" max="60000" step="0.1" value="0" title="Delay between ticks" />
-              </label>
-              <button id="apply-runtime-config" type="button" class="btn-secondary"><span class="icon">⚙</span> Apply</button>
-            </div>
+            <div class="control-group__header"><span class="control-group__title">Configure</span></div>
+            <div class="control-group__body"><label class="input-label" for="delay-ms">Delay/tick (ms) <input id="delay-ms" type="number" min="0" max="60000" step="0.1" value="0" /></label><button id="apply-runtime-config" type="button" class="btn-secondary">Apply</button></div>
           </div>
-
-          <!-- Actions -->
           <div class="control-group actions-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Control</span>
-            </div>
+            <div class="control-group__header"><span class="control-group__title">Control</span></div>
             <div class="control-group__body actions-row">
-              <button id="pause-button" type="button" class="btn-warning"><span class="icon">⏸</span> Pause <span class="shortcut-hint-inline">Ctrl+Shift+P</span></button>
-              <button id="snapshot-button" type="button" class="btn-info"><span class="icon">💾</span> Snapshot <span class="shortcut-hint-inline">Ctrl+Shift+N</span></button>
-              <button id="stop-button" type="button" class="btn-danger"><span class="icon">⏹</span> Stop <span class="shortcut-hint-inline">Ctrl+Shift+Space</span></button>
+              <button id="pause-button" type="button" class="btn-warning">Pause</button>
+              <button id="snapshot-button" type="button" class="btn-info">Snapshot</button>
+              <button id="stop-button" type="button" class="btn-danger">Stop</button>
             </div>
           </div>
         </div>
-
-        <!-- Self-Organization -->
         <details class="self-org-section" id="self-org-section">
-          <summary class="self-org-summary">
-            <h3>🧠 Self-Organization Gate</h3>
-            <span class="badge" id="self-org-status-badge">checking…</span>
-          </summary>
+          <summary class="self-org-summary"><h3>Self-Organization Gate</h3><span class="badge" id="self-org-status-badge">checking...</span></summary>
           <div class="self-org-controls">
-            <div class="self-org-row">
-              <label class="switch-line" for="self-org-enabled">
-                <input id="self-org-enabled" type="checkbox" checked />
-                <span class="switch-line__label">Policy enabled</span>
-                <span class="switch-line__help">Allow structural changes</span>
-              </label>
-              <label class="switch-line" for="self-org-dry-run">
-                <input id="self-org-dry-run" type="checkbox" checked />
-                <span class="switch-line__label">Dry‑run mode</span>
-                <span class="switch-line__help">Simulate without applying</span>
-              </label>
-            </div>
-            <div class="proposal-line">
-              <span class="proposal-label">Last proposal</span>
-              <strong id="self-org-proposal">none</strong>
-              <span id="self-org-proposal-time" class="proposal-time"></span>
-            </div>
-            <div class="proposal-actions">
-              <button id="btn-undo-structural" type="button" class="btn-small undo">↩ Undo last change</button>
-              <button id="btn-auto-approval" type="button" class="btn-small auto-approval" data-enabled="false">Enable Auto‑Approval</button>
-            </div>
+            <div class="self-org-row"><label class="switch-line" for="self-org-enabled"><input id="self-org-enabled" type="checkbox" checked /><span class="switch-line__label">Policy enabled</span><span class="switch-line__help">Allow structural changes</span></label><label class="switch-line" for="self-org-dry-run"><input id="self-org-dry-run" type="checkbox" checked /><span class="switch-line__label">Dry-run mode</span><span class="switch-line__help">Simulate without applying</span></label></div>
+            <div class="proposal-line"><span class="proposal-label">Last proposal</span><strong id="self-org-proposal">none</strong><span id="self-org-proposal-time" class="proposal-time"></span></div>
+            <div class="proposal-actions"><button id="btn-undo-structural" type="button" class="btn-small undo">Undo last change</button><button id="btn-auto-approval" type="button" class="btn-small auto-approval" data-enabled="false">Enable Auto-Approval</button></div>
           </div>
         </details>
-
-        <output id="control-message" class="control-message" aria-live="polite">✓ Ready</output>
+        <output id="control-message" class="control-message" aria-live="polite">Ready</output>
+      </section>
+      <!-- Operator Console -->
+      <section class="card operator-console" id="operator-console">
+        <div class="console-header">
+          <div class="console-title-group"><h2 id="console-title">Operator Console</h2><p class="console-subtitle">Step execution, loop control, structural proposals &amp; system monitoring</p></div>
+          <div class="console-status-group"><span class="status-badge" id="b5d-state-badge">idle</span><span class="tick-display" id="b5d-tick-display">0</span></div>
+        </div>
+        <div class="console-metrics" id="b5d-metrics" role="group">
+          <span class="metric">Neurons <span id="metric-neurons">0</span></span>
+          <span class="metric">Synapses <span id="metric-synapses">0</span></span>
+          <span class="metric">Spikes <span id="metric-spikes">0</span></span>
+          <span class="metric">Queue <span id="metric-queue">0</span></span>
+        </div>
+        <div class="console-controls">
+          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Step</span><span class="shortcut-hint">Ctrl+Enter</span></div><div class="control-group__body"><button id="b5d-step" class="btn-primary">+1 Tick</button></div></div>
+          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Run N Ticks</span></div><div class="control-group__body"><label class="input-label" for="b5d-tick-count"><input id="b5d-tick-count" type="number" min="1" max="10000000" value="100" /></label><button id="b5d-run-ticks" class="btn-success">Run</button></div></div>
+          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Runtime</span></div><div class="control-group__body actions-row"><button id="b5d-start" class="btn-success">Start</button><button id="b5d-pause" class="btn-warning">Pause</button><button id="b5d-resume" class="btn-primary">Resume</button><button id="b5d-stop" class="btn-danger">Stop</button></div></div>
+          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Utilities</span></div><div class="control-group__body actions-row"><button id="b5d-snapshot" class="btn-info">Snapshot</button><button id="b5d-undo" class="btn-undo">Undo Change</button><button id="b5d-clear-console" class="btn-secondary">Clear</button></div></div>
+        </div>
+        <details class="proposals-section" id="proposals-section">
+          <summary class="proposals-summary"><span class="proposals-title">Structural Proposals</span><span class="badge" id="proposals-count">0 pending</span></summary>
+          <div id="b5d-proposals" class="proposals-list"><div class="proposal-empty">No pending proposals</div></div>
+        </details>
+        <div class="console-output-wrapper">
+          <div class="console-output-header"><span class="console-output-title">Console Log</span><span class="console-output-hint">Auto-scroll &middot; Max 1000 entries</span></div>
+          <div id="console-output" class="console-output" role="log" aria-live="polite"><div class="log-entry log-info"><span class="log-time">[00:00:00]</span> Brain-5D Operator Console ready</div></div>
+        </div>
+        <p class="operator-note">Structural proposals remain approval-gated. No autonomous mutation is enabled by this panel.</p>
+      </section>
+      <!-- Structural Live Loop -->
+      <section class="card structural-live-card">
+        <div class="panel-title"><h2>Structural Live Loop</h2><span id="live-loop-badge" class="gate-badge pending">checking...</span></div>
+        <div class="structural-live-grid" id="structural-live-grid">
+          <div class="live-loop-item" id="ll-adapter">RuntimeAdapter</div>
+          <div class="live-loop-item" id="ll-signal">HomeostasisSignal</div>
+          <div class="live-loop-item" id="ll-policy">Policy Proposal</div>
+          <div class="live-loop-item" id="ll-coordinator">Coordinator</div>
+          <div class="live-loop-item" id="ll-approval">Approval Gate</div>
+          <div class="live-loop-item" id="ll-mutation">Mutation</div>
+          <div class="live-loop-item" id="ll-journal">Journal</div>
+          <div class="live-loop-item" id="ll-undo">Undo</div>
+          <div class="live-loop-item" id="ll-replay">Replay</div>
+        </div>
+        <p class="heatmap-meta" id="live-loop-meta">Requires poc_structural_live.yaml config</p>
       </section>
     </section> <!-- /tab-control -->
 
     <!-- ========================================================== -->
-    <!-- TAB: CONSOLE -->
-    <!-- ========================================================== -->
-    <section class="tab-content" id="tab-console">
-      <!-- Operator Console Fragment -->
-      <section class="card operator-console" id="operator-console" aria-labelledby="console-title">
-
-        <div class="console-header">
-          <div class="console-title-group">
-            <h2 id="console-title">🧠 Operator Console</h2>
-            <p class="console-subtitle">Step execution, loop control, structural proposals &amp; system monitoring</p>
-          </div>
-          <div class="console-status-group">
-            <span class="status-badge" id="b5d-state-badge">idle</span>
-            <span class="tick-display" id="b5d-tick-display">0</span>
-          </div>
-        </div>
-
-        <div class="console-metrics" id="b5d-metrics" role="group">
-          <span class="metric">🧠 <span id="metric-neurons">0</span></span>
-          <span class="metric">🔗 <span id="metric-synapses">0</span></span>
-          <span class="metric">⚡ <span id="metric-spikes">0</span></span>
-          <span class="metric">📦 <span id="metric-queue">0</span></span>
-        </div>
-
-        <div class="console-controls">
-          <!-- Step -->
-          <div class="control-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Step</span>
-              <span class="shortcut-hint">Ctrl+Enter</span>
-            </div>
-            <div class="control-group__body">
-              <button id="b5d-step" class="btn-primary"><span class="icon">▶</span> +1 Tick</button>
-            </div>
-          </div>
-
-          <!-- Run N Ticks -->
-          <div class="control-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Run N Ticks</span>
-            </div>
-            <div class="control-group__body">
-              <label class="input-label" for="b5d-tick-count">
-                <input id="b5d-tick-count" type="number" min="1" max="10000000" value="100" aria-label="Number of ticks to run" title="Number of ticks to execute" />
-              </label>
-              <button id="b5d-run-ticks" class="btn-success"><span class="icon">⏩</span> Run</button>
-            </div>
-          </div>
-
-          <!-- Runtime -->
-          <div class="control-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Runtime</span>
-              <span class="shortcut-hint">Ctrl+Shift+…</span>
-            </div>
-            <div class="control-group__body actions-row">
-              <button id="b5d-start" class="btn-success"><span class="icon">▶</span> Start</button>
-              <button id="b5d-pause" class="btn-warning"><span class="icon">⏸</span> Pause</button>
-              <button id="b5d-resume" class="btn-primary"><span class="icon">⏯</span> Resume</button>
-              <button id="b5d-stop" class="btn-danger"><span class="icon">⏹</span> Stop</button>
-            </div>
-          </div>
-
-          <!-- Utilities -->
-          <div class="control-group">
-            <div class="control-group__header">
-              <span class="control-group__title">Utilities</span>
-              <span class="shortcut-hint">Ctrl+Shift+N</span>
-            </div>
-            <div class="control-group__body actions-row">
-              <button id="b5d-snapshot" class="btn-info"><span class="icon">💾</span> Snapshot</button>
-              <button id="b5d-undo" class="btn-undo"><span class="icon">↩</span> Undo Change</button>
-              <button id="b5d-clear-console" class="btn-secondary"><span class="icon">🗑</span> Clear</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proposals -->
-        <details class="proposals-section" id="proposals-section">
-          <summary class="proposals-summary">
-            <span class="proposals-title">📋 Structural Proposals</span>
-            <span class="badge" id="proposals-count">0 pending</span>
-          </summary>
-          <div id="b5d-proposals" class="proposals-list">
-            <div class="proposal-empty">No pending proposals</div>
-          </div>
-        </details>
-
-        <!-- Console Output -->
-        <div class="console-output-wrapper">
-          <div class="console-output-header">
-            <span class="console-output-title">📝 Console Log</span>
-            <span class="console-output-hint">Auto‑scroll • Max 1000 entries</span>
-          </div>
-          <div id="console-output" class="console-output" role="log" aria-live="polite">
-            <div class="log-entry log-info">
-              <span class="log-time">[00:00:00]</span> 🧠 Brain‑5D Operator Console ready
-            </div>
-          </div>
-        </div>
-
-        <p class="operator-note">⚠️ Structural proposals remain approval‑gated. No autonomous mutation is enabled by this panel.</p>
-      </section>
-    </section> <!-- /tab-console -->
-
-    <!-- ========================================================== -->
-    <!-- TAB: RESEARCH (B5D-SEF) -->
+    <!-- TAB: RESEARCH & DOCS -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-research">
-      <div class="research-browser">
-        <div class="research-sidebar">
-          <div class="research-toolbar">
-            <h3>🔬 B5D Scientific Evidence Framework</h3>
-            <div id="research-summary" class="research-summary"><span class="research-stat">⏳ Initialisiere Research-Quelle…</span></div>
+      <div class="research-docs-split">
+        <!-- Research side -->
+        <div class="research-browser">
+          <div class="research-sidebar">
+            <div class="research-toolbar"><h3>B5D Scientific Evidence Framework</h3><div id="research-summary" class="research-summary"><span class="research-stat">Initialisiere Research-Quelle...</span></div></div>
+            <div class="research-section"><h4>Generated Reports</h4><div id="research-reports" class="research-list"><span class="research-empty">Wird geladen...</span></div></div>
+            <div class="research-section"><h4>Registry</h4><div id="research-documents" class="research-docs"><span class="research-empty">Wird geladen...</span></div></div>
+            <div class="research-section"><h4>Experiments</h4><div id="research-experiments" class="research-list"><span class="research-empty">Wird geladen...</span></div></div>
           </div>
-
-          <div class="research-section">
-            <h4>📊 Generated Reports</h4>
-            <div id="research-reports" class="research-list"><span class="research-empty">⏳ Wird geladen…</span></div>
-          </div>
-
-          <div class="research-section">
-            <h4>📋 Registry</h4>
-            <div id="research-documents" class="research-docs"><span class="research-empty">⏳ Wird geladen…</span></div>
-          </div>
-
-          <div class="research-section">
-            <h4>🧪 Experiments</h4>
-            <div id="research-experiments" class="research-list"><span class="research-empty">⏳ Wird geladen…</span></div>
+          <div id="research-viewer" class="research-viewer">
+            <div class="research-placeholder"><p>Select a research document to view its contents.</p><p class="research-hint">B5D-SEF registry: 27 Research Questions &middot; 27 Hypotheses &middot; 5 Claims &middot; 8 Sources &middot; 13 Methods</p></div>
           </div>
         </div>
-
-        <div id="research-viewer" class="research-viewer">
-          <div class="research-placeholder">
-            <p>Select a research document to view its contents.</p>
-            <p class="research-hint">
-              B5D-SEF registry: 27 Research Questions · 27 Hypotheses · 5 Claims · 8 Sources · 13 Methods
-            </p>
+        <!-- Docs side -->
+        <div class="doc-browser">
+          <div class="doc-sidebar">
+            <div class="doc-toolbar"><input type="text" id="doc-search" placeholder="Search documents..." /><div id="doc-filter-container"></div><button id="doc-refresh">Refresh</button></div>
+            <div id="doc-stats" class="doc-stats">Lade Dokumentation...</div>
+            <div id="doc-tree" class="doc-tree">Lade Verzeichnisstruktur...</div>
+          </div>
+          <div id="doc-viewer" class="doc-viewer">
+            <div class="doc-placeholder"><p>Select a document to view its contents.</p><p style="color: #888; font-size: 13px;">Supported formats: Markdown, Text, DOCX, XLSX, CSV, JSON, PDF (metadata)</p></div>
           </div>
         </div>
       </div>
     </section> <!-- /tab-research -->
 
     <!-- ========================================================== -->
-    <!-- TAB: DOCS -->
-    <!-- ========================================================== -->
-    <section class="tab-content" id="tab-docs">
-      <!-- Documentation Browser Fragment -->
-      <div class="doc-browser">
-        <div class="doc-sidebar">
-          <div class="doc-toolbar">
-            <input type="text" id="doc-search" placeholder="Search documents…" />
-            <div id="doc-filter-container"></div>
-            <button id="doc-refresh">🔄</button>
-          </div>
-          <div id="doc-stats" class="doc-stats">⏳ Lade Dokumentation…</div>
-          <div id="doc-tree" class="doc-tree">⏳ Lade Verzeichnisstruktur…</div>
-        </div>
-        <div id="doc-viewer" class="doc-viewer">
-          <div class="doc-placeholder">
-            <p>Select a document to view its contents.</p>
-            <p style="color: #888; font-size: 13px;">
-              Supported formats: Markdown, Text, DOCX, XLSX, CSV, JSON, PDF (metadata)
-            </p>
-          </div>
-        </div>
-      </div>
-    </section> <!-- /tab-docs -->
-
-    <!-- ========================================================== -->
-    <!-- TAB: ALPHA.5 INTEGRATION GATE -->
+    <!-- TAB: RELEASE (Alpha.5 Gate) -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-gate">
       <div class="gate-board">
         <div class="gate-header">
-          <h2>🚪 Alpha.5 Release Gate</h2>
-          <p class="gate-subtitle">
-            Alpha.5 is complete only when all Gate A, B and C criteria pass.
-            <span class="gate-rule">Do not advance to alpha.6 while this gate is open.</span>
-          </p>
-          <p class="gate-legend">
-            <strong>Live</strong> = current runtime config state ·
-            <strong>Maturity</strong> = IMPLEMENTED → INTEGRATED → VERIFIED → EVIDENCED ·
-            <strong>Gate</strong> = release verification result.
-            Runtime disabled ≠ gate failed. Runtime disabled ≠ gate passed.
-          </p>
-          <button id="gate-refresh" type="button" class="btn-secondary">🔄 Re-check</button>
+          <h2>Alpha.5 Release Gate</h2>
+          <p class="gate-subtitle">Alpha.5 is complete only when all Gate A, B and C criteria pass. <span class="gate-rule">Do not advance to alpha.6 while this gate is open.</span></p>
+          <p class="gate-legend"><strong>Live</strong> = current runtime config state &middot; <strong>Maturity</strong> = IMPLEMENTED &rarr; INTEGRATED &rarr; VERIFIED &rarr; EVIDENCED &middot; <strong>Gate</strong> = release verification result. Runtime disabled &ne; gate failed. Runtime disabled &ne; gate passed.</p>
+          <button id="gate-refresh" type="button" class="btn-secondary">Re-check</button>
         </div>
-
-        <div class="gate-overall-row">
-          <strong>ALPHA.5 Overall:</strong>
-          <span class="gate-badge pending" id="gate-overall">pending</span>
-        </div>
-
-        <!-- Live Runtime Profile (current poc_config, NOT the release gate) -->
-        <div class="gate-section">
-          <h3>📡 Live Runtime Profile <span class="gate-section-hint">(current config — not the release gate)</span></h3>
-          <div id="gate-live-list" class="gate-live-grid"></div>
-        </div>
-
-        <!-- Gate A — Technical Integration -->
-        <div class="gate-section">
-          <h3>Gate A — Technical Integration</h3>
-          <div id="gate-a-list" class="gate-criteria-table"></div>
-        </div>
-
-        <!-- Gate B — Verification -->
-        <div class="gate-section">
-          <h3>Gate B — Verification</h3>
-          <div id="gate-b-list" class="gate-criteria-table"></div>
-        </div>
-
-        <!-- Gate C — Scientific Baseline -->
-        <div class="gate-section">
-          <h3>Gate C — Scientific Baseline</h3>
-          <div id="gate-c-list" class="gate-criteria-table"></div>
-        </div>
+        <div class="gate-overall-row"><strong>ALPHA.5 Overall:</strong><span class="gate-badge pending" id="gate-overall">pending</span></div>
+        <div class="gate-section"><h3>Live Runtime Profile <span class="gate-section-hint">(current config)</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
+        <div class="gate-section"><h3>Gate A &mdash; Technical Integration</h3><div id="gate-a-list" class="gate-criteria-table"></div></div>
+        <div class="gate-section"><h3>Gate B &mdash; Verification</h3><div id="gate-b-list" class="gate-criteria-table"></div></div>
+        <div class="gate-section"><h3>Gate C &mdash; Scientific Baseline</h3><div id="gate-c-list" class="gate-criteria-table"></div></div>
       </div>
     </section> <!-- /tab-gate -->
 
   </main>
-
-  <!-- ============================================================ -->
-  <!-- INTEGRATION STATUS MODAL (Popup) -->
-  <!-- ============================================================ -->
+  <!-- Integration Status Modal -->
   <div id="integration-modal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
-      <div class="modal-header">
-        <h2>🔗 Integration Status – Alle Versionen</h2>
-        <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
-      </div>
-      <div class="modal-body" id="integration-modal-body">
-        <div class="modal-loading">Lade Integrationsdaten…</div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary" id="modal-refresh-btn">🔄 Aktualisieren</button>
-        <button class="btn-primary" id="modal-close-btn2">Schließen</button>
-      </div>
+      <div class="modal-header"><h2>Integration Status &ndash; Alle Versionen</h2><button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button></div>
+      <div class="modal-body" id="integration-modal-body"><div class="modal-loading">Lade Integrationsdaten...</div></div>
+      <div class="modal-footer"><button class="btn-secondary" id="modal-refresh-btn">Aktualisieren</button><button class="btn-primary" id="modal-close-btn2">Schlie&szlig;en</button></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- FOOTER -->
-  <!-- ============================================================ -->
-  <footer>Brain‑5D Operator Dashboard · lokal · interaktiv · v0.5.0-alpha.5</footer>
+  <!-- Footer -->
+  <footer>Brain-5D Operator Dashboard &middot; lokal &middot; interaktiv &middot; v0.5.0-alpha.5</footer>
 
-  <!-- ============================================================ -->
-  <!-- SCRIPTS -->
-  <!-- ============================================================ -->
+  <!-- Scripts -->
   <script type="module" src="/app.js"></script>
 </body>
 </html>
+

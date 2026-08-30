@@ -924,10 +924,11 @@ def compute_io_flow(network, activity_accumulator=None):
 class PopulationData:
     tick: int
     populations: tuple["_PopulationEntry", ...]
-    ei_ratio: float
+    ei_ratio: float | None
     total_excitatory: int
     total_inhibitory: int
     source: str = "live_runtime"
+    status: str = "active"
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -937,6 +938,7 @@ class PopulationData:
             "ei_ratio": self.ei_ratio,
             "total_excitatory": self.total_excitatory,
             "total_inhibitory": self.total_inhibitory,
+            "status": self.status,
         }
 
 
@@ -1015,7 +1017,14 @@ def compute_population_data(network, activity_accumulator=None):
             exc_count += count
         elif "inhib" in name.lower():
             inh_count += count
-    ei_ratio = exc_count / max(1, inh_count)
+    if inh_count == 0:
+        return PopulationData(
+            tick=tick, populations=tuple(populations),
+            ei_ratio=None,
+            total_excitatory=exc_count, total_inhibitory=inh_count,
+            status="unavailable",
+        )
+    ei_ratio = exc_count / inh_count
     return PopulationData(
         tick=tick, populations=tuple(populations),
         ei_ratio=ei_ratio,
@@ -1065,7 +1074,7 @@ def compute_rate_histogram(network, activity_accumulator=None, num_bins=30):
             rate = activity_accumulator.firing_rate(nid)
         elif neuron.last_spike_tick >= 0:
             age = max(0, tick - neuron.last_spike_tick)
-            act = float(__import__('numpy').exp(-age / 50.0))
+            rate = float(__import__('numpy').exp(-age / 50.0))
         else:
             rate = 0.0
         if rate < 0.0001:
@@ -1113,6 +1122,7 @@ class SpikeRasterData:
     sample_count: int
     total_neurons: int
     source: str = "live_runtime"
+    status: str = "unavailable"
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -1123,32 +1133,22 @@ class SpikeRasterData:
             "window_ticks": self.window_ticks,
             "sample_count": self.sample_count,
             "total_neurons": self.total_neurons,
+            "status": self.status,
         }
 
 
 def compute_spike_raster(network, activity_accumulator=None, window_ticks=100, max_neurons=500):
-    """Build a spike raster from the activity accumulator window."""
+    """Return unavailable — real timestamped spike events are not available
+    in the dashboard telemetry pipeline. The ActivityWindowAccumulator only
+    stores per-neuron spike counts, not per-event timestamps.
+
+    Real timestamped spike events exist in SpikeHistory (src/telemetry/spike_history.py)
+    but are not wired into the dashboard OperatorBridge.
+    """
     tick = network.current_tick
-    if activity_accumulator is None:
-        return SpikeRasterData(
-            tick=tick, neuron_ids=(), spike_ticks=(),
-            window_ticks=window_ticks,
-            sample_count=0, total_neurons=len(network.neurons),
-        )
-    active = [(nid, activity_accumulator.spikes_in_window(nid))
-              for nid in network.neurons]
-    active.sort(key=lambda x: x[1], reverse=True)
-    active = active[:max_neurons]
-    neuron_ids = []
-    spike_ticks = []
-    for nid, count in active:
-        if count > 0:
-            neuron_ids.append(nid)
-            for i in range(min(count, window_ticks)):
-                spike_ticks.append(tick - window_ticks + int(window_ticks * i / max(1, count)))
     return SpikeRasterData(
-        tick=tick, neuron_ids=tuple(neuron_ids[:max_neurons]),
-        spike_ticks=tuple(spike_ticks),
+        tick=tick, neuron_ids=(), spike_ticks=(),
         window_ticks=window_ticks,
-        sample_count=len(neuron_ids), total_neurons=len(network.neurons),
+        sample_count=0, total_neurons=len(network.neurons),
+        status="unavailable",
     )

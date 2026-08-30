@@ -127,24 +127,18 @@ function heatmapColor(value, min, max) {
 function setupTabs() {
   const buttons = $$('.tab-btn');
   const contents = {
-    dashboard: document.getElementById('tab-dashboard'),
-    inspect: document.getElementById('tab-inspect'),
+    overview: document.getElementById('tab-overview'),
+    network: document.getElementById('tab-network'),
     control: document.getElementById('tab-control'),
-    console: document.getElementById('tab-console'),
     research: document.getElementById('tab-research'),
-    docs: document.getElementById('tab-docs'),
-    dynamics: document.getElementById('tab-dynamics'),
     gate: document.getElementById('tab-gate'),
   };
 
   // Track initialization state
   const initialized = {
-    inspect: false,
+    network: false,
     control: false,
-    console: false,
-    docs: false,
     research: false,
-    dynamics: false,
     gate: false,
   };
 
@@ -170,29 +164,20 @@ function setupTabs() {
       });
 
       // Lazy initialize components when their tab becomes visible
-      if (tabName === 'inspect' && !initialized.inspect) {
+      if (tabName === 'network' && !initialized.network) {
+        initDynamicsTab();
         initInspectTab();
-        initialized.inspect = true;
+        initialized.network = true;
       }
       if (tabName === 'control' && !initialized.control) {
         instances.control = initControlPanel();
-        initialized.control = true;
-      }
-      if (tabName === 'console' && !initialized.console) {
         instances.console = initOperatorConsole();
-        initialized.console = true;
-      }
-      if (tabName === 'docs' && !initialized.docs) {
-        initDocumentationBrowser();
-        initialized.docs = true;
+        initialized.control = true;
       }
       if (tabName === 'research' && !initialized.research) {
         initResearchBrowser();
+        initDocumentationBrowser();
         initialized.research = true;
-      }
-      if (tabName === 'dynamics' && !initialized.dynamics) {
-        initDynamicsTab();
-        initialized.dynamics = true;
       }
       if (tabName === 'gate' && !initialized.gate) {
         initGateBoard();
