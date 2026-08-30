@@ -77,6 +77,23 @@
 - Dashboard-Test-Suite (43 Tests) weiterhin grün.
 - Allgemeine Test-Suite zeigt vorbestehenden Fehler in `src/storage/checkpoint.py` (`Neuron` ohne `firing_rate_estimate`), nicht durch diese Änderungen verursacht.
 
+## 2026-08-30 — Dashboard Editor Erweiterungen: Shortcuts, Diff, Auto-Save, BibTeX-Editor
+
+### Editor-Erweiterungen
+- **`src/dashboard/static/file-viewer.js`**:
+  - **Tastaturkürzel**: `Ctrl+S` speichert, `Esc` bricht den Editor ab.
+  - **Auto-Save**: Automatisches Speichern alle 30 Sekunden bei aktiven Änderungen.
+  - **Diff-Ansicht**: "Diff"-Button zeigt Änderungen gegenüber der Originaldatei farblich an.
+  - **Restore from backup**: "Restore"-Button lädt den Inhalt der `.bak`-Datei zurück.
+  - Verbesserte Editor-Toolbar mit Diff-, Restore-, Save- und Cancel-Buttons.
+- **`src/dashboard/static/bibtex-viewer.js`**:
+  - Neuer **Formular-Editor** für `.bib`-Dateien mit feldbasierter Bearbeitung.
+  - Auswahl des Entry-Typs (article, book, inproceedings, etc.).
+  - Direktes Speichern der geänderten BibTeX-Einträge über den neuen PUT-Endpunkt.
+- **`src/dashboard/static/styles.css`**:
+  - Stile für Diff-Tabelle (grün/rot), Editor-Action-Buttons, BibTeX-Formular-Editor.
+- **`tests/test_dashboard_file_manager.py`**: Zusätzlicher Test für Backup-Erstellung.
+
 ## 2026-08-30 — Dashboard File Manager: In-Browser Text & Code Editor
 
 ### In-Browser-Editor für Text- und Code-Dateien

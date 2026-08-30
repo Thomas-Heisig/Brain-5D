@@ -125,6 +125,15 @@ verworfen werden.
   automatischer Höhenanpassung.
 - Beim Speichern wird automatisch eine `.bak`-Sicherungskopie der
   Originaldatei erstellt.
+- **Tastaturkürzel**: `Ctrl+S` speichert, `Esc` bricht ab.
+- **Auto-Save**: Alle 30 Sekunden wird automatisch gespeichert, solange
+  der Editor aktiv ist.
+- **Diff-Ansicht**: Über den "Diff"-Button werden Änderungen gegenüber
+  der ursprünglichen Datei als farbige Zeilenübersicht angezeigt.
+- **Wiederherstellen**: Über "Restore" kann der Inhalt der letzten
+  `.bak`-Sicherung zurückgeladen werden.
+- **BibTeX-Formular-Editor**: `.bib`-Dateien bieten eine feldbasierte
+  Bearbeitungsansicht mit Auswahl des Entry-Typs und direktem Speichern.
 - Speicher-Endpunkt: `PUT /api/files/save/{path}?source={research|docs}`
 
 ## Sicherheit
