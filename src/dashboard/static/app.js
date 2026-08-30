@@ -45,6 +45,7 @@ import { dashboardStore } from './state-store.js';
 import { initHealthDrawer } from './health-drawer.js';
 import { consoleLog } from './console-log.js';
 import { ParameterInspector } from './parameter-inspector.js';
+import { ExperimentMode } from './experiment-mode.js';
 
 // ================================================================
 // DOM HELPERS
@@ -158,7 +159,18 @@ function setupTabs() {
   const instances = {
     control: null,
     console: null,
-        parameterInspector: null,
+    parameterInspector: null,
+  };
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tabName = btn.dataset.tab;
+
+      Object.keys(contents).forEach(key => {
+        const el = contents[key];
         if (el) {
           el.classList.toggle('active', key === tabName);
         }

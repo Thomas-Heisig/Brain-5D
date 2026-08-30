@@ -17,6 +17,11 @@
       <h1>Operator Dashboard</h1>
     </div>
     <div class="topbar-right">
+      <div class="experiment-mode-switcher" id="experiment-mode-switcher" title="Experiment mode">
+        <button class="mode-btn active" data-mode="operator" title="Operator mode">🎮</button>
+        <button class="mode-btn" data-mode="experiment" title="Experiment mode">🔬</button>
+        <button class="mode-btn" data-mode="debug" title="Debug mode">🐛</button>
+      </div>
       <span class="config-badge" id="active-profile">—</span>
       <div class="status-pill" id="system-status">offline</div>
     </div>
@@ -346,6 +351,33 @@
         </div>
         <p class="operator-note">Structural proposals remain approval-gated. No autonomous mutation is enabled by this panel.</p>
       </section>
+      <!-- Experiment Mode Panel -->
+      <section class="card experiment-panel" id="experiment-panel">
+        <div class="panel-title">
+          <div>
+            <h2 id="experiment-panel-title">🔬 Experiment Session</h2>
+            <p class="panel-subtitle" id="experiment-panel-subtitle">Log structured experiment metadata</p>
+          </div>
+          <span class="experiment-badge" id="experiment-status-badge">operator</span>
+        </div>
+        <div class="experiment-form" id="experiment-form">
+          <label class="input-label" for="experiment-session-id">Session ID <input id="experiment-session-id" type="text" placeholder="e.g. exp-001" /></label>
+          <label class="input-label" for="experiment-hypothesis">Hypothesis / Goal <input id="experiment-hypothesis" type="text" placeholder="What are you testing?" /></label>
+          <div class="experiment-actions">
+            <button id="experiment-start" type="button" class="btn-success">▶ Start Session</button>
+            <button id="experiment-stop" type="button" class="btn-danger" disabled>⏹ Stop Session</button>
+          </div>
+        </div>
+        <div class="experiment-note-row">
+          <label class="input-label" for="experiment-note">Note <input id="experiment-note" type="text" placeholder="Add observation..." /></label>
+          <button id="experiment-add-note" type="button" class="btn-secondary">Add Note</button>
+        </div>
+        <details class="experiment-sessions" id="experiment-sessions">
+          <summary><h3>Session History</h3></summary>
+          <div id="experiment-session-list" class="experiment-session-list"></div>
+        </details>
+      </section>
+
       <!-- Parameter Inspector -->
       <section class="card parameter-inspector-card" id="parameter-inspector-card">
         <div class="panel-title">

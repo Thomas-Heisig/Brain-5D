@@ -36,6 +36,11 @@ class Neuron:
     last_spike_tick: int
     last_external_current: float
     last_synaptic_current: float
+    firing_rate_estimate: float = 0.0
+    _spike_count_window: int = 0
+    _last_update_tick: int = 0
+    pre_trace: float = 0.0
+    post_trace: float = 0.0
 
 
 @dataclass(slots=True)

@@ -49,6 +49,11 @@ class MockNeuron:
         self.threshold_adaptation = 0.0
         self.last_external_current = 0.0
         self.last_synaptic_current = 0.0
+        self.firing_rate_estimate = 0.0
+        self._spike_count_window = 0
+        self._last_update_tick = 0
+        self.pre_trace = 0.0
+        self.post_trace = 0.0
 
 
 class MockSynapse:

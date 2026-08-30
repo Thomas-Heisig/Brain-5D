@@ -319,6 +319,163 @@ class DashboardStateStore:
             history.append(record)
             return self.update(change_history=tuple(history))
 
+    def set_experiment_mode(
+        self,
+        mode: str,
+    ) -> DashboardSnapshot:
+        """Set the current experiment mode.
+
+        Args:
+            mode: One of 'operator', 'experiment', 'debug'.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            new_state = ExperimentState(
+                current_mode=mode,
+                active_session=current.experiment_state.active_session,
+                sessions=current.experiment_state.sessions,
+            )
+            return self.update(experiment_state=new_state)
+
+    def start_experiment_session(
+        self,
+        session: ExperimentSession,
+    ) -> DashboardSnapshot:
+        """Start a new experiment/debug session.
+
+        Any currently active session is closed automatically.
+
+        Args:
+            session: The session to start.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            old_state = current.experiment_state
+            sessions = list(old_state.sessions)
+
+            # Close any active session first
+            if old_state.active_session is not None:
+                now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+                closed = ExperimentSession(
+                    session_id=old_state.active_session.session_id,
+                    mode=old_state.active_session.mode,
+                    hypothesis=old_state.active_session.hypothesis,
+                    notes=old_state.active_session.notes,
+                    start_tick=old_state.active_session.start_tick,
+                    end_tick=session.start_tick,
+                    start_time=old_state.active_session.start_time,
+                    end_time=now,
+                    config_snapshot=old_state.active_session.config_snapshot,
+                    active=False,
+                )
+                sessions.append(closed)
+
+            sessions.append(session)
+            new_state = ExperimentState(
+                current_mode=session.mode,
+                active_session=session,
+                sessions=tuple(sessions),
+            )
+            return self.update(experiment_state=new_state)
+
+    def stop_experiment_session(
+        self,
+        end_tick: int = 0,
+    ) -> DashboardSnapshot:
+        """Stop the active experiment/debug session.
+
+        Args:
+            end_tick: Simulation tick at session stop.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            old_state = current.experiment_state
+            active = old_state.active_session
+
+            if active is None:
+                return current
+
+            now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+            sessions = [s for s in old_state.sessions if not s.active]
+            closed = ExperimentSession(
+                session_id=active.session_id,
+                mode=active.mode,
+                hypothesis=active.hypothesis,
+                notes=active.notes,
+                start_tick=active.start_tick,
+                end_tick=end_tick,
+                start_time=active.start_time,
+                end_time=now,
+                config_snapshot=active.config_snapshot,
+                active=False,
+            )
+            sessions.append(closed)
+
+            new_state = ExperimentState(
+                current_mode=old_state.current_mode,
+                active_session=None,
+                sessions=tuple(sessions),
+            )
+            return self.update(experiment_state=new_state)
+
+    def add_experiment_note(
+        self,
+        note: str,
+    ) -> DashboardSnapshot:
+        """Append a note to the active experiment session.
+
+        Args:
+            note: Note text to append.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            old_state = current.experiment_state
+            active = old_state.active_session
+
+            if active is None:
+                return current
+
+            now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+            updated = ExperimentSession(
+                session_id=active.session_id,
+                mode=active.mode,
+                hypothesis=active.hypothesis,
+                notes=(*active.notes, f"[{now}] {note}"),
+                start_tick=active.start_tick,
+                end_tick=active.end_tick,
+                start_time=active.start_time,
+                end_time=active.end_time,
+                config_snapshot=active.config_snapshot,
+                active=active.active,
+            )
+
+            sessions = [
+                s if s.session_id != active.session_id else updated
+                for s in old_state.sessions
+            ]
+            # Ensure active session is present in sessions list
+            if not any(s.session_id == active.session_id for s in sessions):
+                sessions.append(updated)
+
+            new_state = ExperimentState(
+                current_mode=old_state.current_mode,
+                active_session=updated,
+                sessions=tuple(sessions),
+            )
+            return self.update(experiment_state=new_state)
+
     # =========================================================================
     # Event System
     # =========================================================================

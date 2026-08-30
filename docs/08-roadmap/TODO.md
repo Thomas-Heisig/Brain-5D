@@ -23,8 +23,13 @@
 - [x] EXP-DET-0001: Determinism A/B/C experiment durchführen
   - Path C `--digest-k` Argument korrigiert (worker startet wieder)
   - A/B/C digests are now equal; artifact status = `verified`
-  - [ ] Härten: Path C1 muss im pytest-Prozess laufen, C2 als neuer
-        Subprozess; „completed“-Proofs dürfen nicht hartkodiert `true` sein
+  - [ ] Härten: Strenger Fresh-Process-Nachweis
+    - P0 pytest orchestrator startet **kein** C1-Netzwerkobjekt im Orchestrator
+    - C1 subprocess: `0 → K`, speichert Dateisystem-Artefakte, schreibt PID, terminiert
+    - C2 subprocess: liest nur Dateisystem, `restore_full()`, `K → N`, schreibt PID + Digest, terminiert
+    - `assert PID_C1 != PID_C2`
+    - `assert A == B == C`
+    - „completed"-Proofs dürfen nicht hartkodiert `true` sein
 - [ ] EXP-STOR-0001: Storage persistence experiment durchführen
 - [ ] Erste DATA-* / EVID-* Artefakte generieren
 - [ ] Research Catalog aus echten Evidenzen neu aufbauen
@@ -52,16 +57,16 @@
   - `src/dashboard/static/health-drawer.js`
   - `src/dashboard/health_builder.py` baut aggregierte Health aus Komponenten
   - API-Endpunkt `/api/health`
-- [~] Control/Console-Entkopplung: Grundstruktur vorhanden, aber
-      Doppel-Shortcut-Bug noch offen
+- [~] Control/Console-Entkopplung: Grundstruktur vorhanden, Command-Duplizierung
+      weitgehend beseitigt
   - `src/dashboard/static/control-panel.js` zentralisiert alle Runtime-Commands
   - `src/dashboard/static/operator_console.js` reiner Output + Proposals
   - `src/dashboard/static/console-log.js` gemeinsames Log
-  - [ ] `ControlPanel` als einziger Command Owner: Runtime-Shortcuts
-        (`Ctrl+Enter`, `Ctrl+Shift+R`, `Ctrl+Shift+P`, `Ctrl+Shift+Space`,
-        `Ctrl+Shift+N`) aus `OperatorConsole` entfernen
-  - [ ] `OperatorConsole` auf reines Output/Proposal-Panel reduzieren oder
-        in `StructuralProposalPanel` überführen
+  - [x] `ControlPanel` ist alleiniger Runtime-Command-Owner
+  - [x] Runtime-Shortcuts aus `OperatorConsole` entfernt (`OperatorConsole.bindKeyboardShortcuts()`
+        verarbeitet nur noch `Ctrl+L` für Console-Clear)
+  - [ ] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
+        zerlegen
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
   - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
 - [x] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History

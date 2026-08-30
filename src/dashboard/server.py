@@ -46,6 +46,7 @@ from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .gate_status import GateStatusBuilder
 from .integration_status import IntegrationStatusBuilder
 from .models import (
+    ExperimentSession,
     JSONValue,
     ParameterChangeRecord,
     ParameterSchema,
@@ -268,6 +269,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/health":
                 self._send_health()
+                return
+
+            if path == "/api/experiment/mode":
+                self._send_experiment_mode()
+                return
+
+            if path == "/api/experiment/sessions":
+                self._send_experiment_sessions()
                 return
 
             # ----------------------------------------------------------------
@@ -514,6 +523,26 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path.startswith("/api/parameters/") and path.endswith("/pending"):
                 name = unquote(path[len("/api/parameters/"):-len("/pending")])
                 self._set_pending_parameter(name, body)
+                return
+
+            # ----------------------------------------------------------------
+            # Experiment mode
+            # ----------------------------------------------------------------
+
+            if path == "/api/experiment/mode":
+                self._set_experiment_mode(body)
+                return
+
+            if path == "/api/experiment/session/start":
+                self._start_experiment_session(body)
+                return
+
+            if path == "/api/experiment/session/stop":
+                self._stop_experiment_session(body)
+                return
+
+            if path == "/api/experiment/note":
+                self._add_experiment_note(body)
                 return
 
             # ----------------------------------------------------------------
@@ -1607,6 +1636,128 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Serve the aggregated health snapshot."""
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         self._send_json(snapshot.health.to_json())
+
+    def _send_experiment_mode(self) -> None:
+        """Serve the current experiment mode and active session."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        self._send_json(snapshot.experiment_state.to_json())
+
+    def _send_experiment_sessions(self) -> None:
+        """Serve the full experiment session history."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        sessions = snapshot.experiment_state.sessions
+        self._send_json({
+            "sessions": [s.to_json() for s in sessions],
+            "count": len(sessions),
+        })
+
+    def _set_experiment_mode(
+        self,
+        body: dict[str, object],
+    ) -> None:
+        """Set the current experiment mode."""
+        mode = self._string_field(body, "mode")
+        if mode not in {"operator", "experiment", "debug"}:
+            self._send_json(
+                {"error": f"Invalid experiment mode: {mode!r}"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        state = self.dashboard_server.dashboard_state
+        state.set_experiment_mode(mode)
+
+        self._send_json({
+            "ok": True,
+            "message": f"Experiment mode set to '{mode}'",
+            "mode": mode,
+        })
+
+    def _start_experiment_session(
+        self,
+        body: dict[str, object],
+    ) -> None:
+        """Start a new experiment or debug session."""
+        mode = self._string_field(body, "mode")
+        if mode not in {"operator", "experiment", "debug"}:
+            self._send_json(
+                {"error": f"Invalid experiment mode: {mode!r}"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        session_id = self._string_field(body, "session_id")
+        hypothesis = str(body.get("hypothesis", ""))
+        note = str(body.get("note", ""))
+
+        state = self.dashboard_server.dashboard_state
+        snapshot = state.snapshot()
+        start_tick = snapshot.system.tick
+
+        # Capture a lightweight config snapshot from current parameters.
+        config_snapshot: dict[str, JSONValue] = {}
+        for name, param in (snapshot.parameters or {}).items():
+            config_snapshot[name] = param.value
+
+        now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+        notes: tuple[str, ...] = ()
+        if note:
+            notes = (f"[{now}] {note}",)
+
+        session = ExperimentSession(
+            session_id=session_id,
+            mode=mode,
+            hypothesis=hypothesis,
+            notes=notes,
+            start_tick=start_tick,
+            start_time=now,
+            config_snapshot=config_snapshot,
+            active=True,
+        )
+        state.start_experiment_session(session)
+
+        self._send_json({
+            "ok": True,
+            "message": f"Started {mode} session '{session_id}'",
+            "session": session.to_json(),
+        })
+
+    def _stop_experiment_session(
+        self,
+        body: dict[str, object],
+    ) -> None:
+        """Stop the active experiment/debug session."""
+        state = self.dashboard_server.dashboard_state
+        snapshot = state.snapshot()
+        end_tick = int(body.get("end_tick", snapshot.system.tick))
+        state.stop_experiment_session(end_tick=end_tick)
+
+        self._send_json({
+            "ok": True,
+            "message": "Experiment session stopped",
+            "end_tick": end_tick,
+        })
+
+    def _add_experiment_note(
+        self,
+        body: dict[str, object],
+    ) -> None:
+        """Add a note to the active experiment session."""
+        note = body.get("note")
+        if note is None or str(note).strip() == "":
+            self._send_json(
+                {"error": "Missing or empty 'note' field"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        state = self.dashboard_server.dashboard_state
+        state.add_experiment_note(str(note).strip())
+
+        self._send_json({
+            "ok": True,
+            "message": "Note added to active session",
+        })
 
     def _send_pending_parameters(self) -> None:
         """Serve all pending parameter changes."""
