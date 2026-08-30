@@ -1,5 +1,36 @@
 # Changelog
 
+## 2026-08-30 — Dashboard Operator-Workbench Design Decision
+
+### Design Decision: From Feature Dashboard to Operator Workbench
+
+- **Information architecture** moves from module-oriented layout to workflow-oriented
+  layout aligned with `observe → understand → modify → verify → document`.
+- **Top-level tabs** become: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`.
+- **OVERVIEW** shrinks to four sections: `SYSTEM`, `NETWORK`, `ADAPTATION`, `HEALTH`.
+  Roadmap and integration status move to `RESEARCH`/`VERIFY`.
+- **NETWORK** gains subtabs `Live`, `Dynamics`, `Structure`, `Inspector` for progressive
+  disclosure from coarse to fine-grained observation.
+- **CONTROL** becomes the single workbench for input. `Runtime Control` and
+  `Operator Console` are unified; Console becomes output-only log.
+- **VERIFY** replaces `RELEASE` and covers `Health`, `Tests`, `Determinism`,
+  `Persistence`, `Integration`, `Evidence Freshness`, `Release Gate`.
+- **Health/Problems** becomes a permanent, cross-cutting concern (top-right status
+  bar + right/bottom drawers) instead of hidden panels.
+- **Parameter system** introduces `current / configured / default` semantics,
+  runtime-mutable flags, restart requirements, and pending-change workflow.
+- **Status model** standardizes component states: `enabled`, `active`, `degraded`,
+  `unavailable`, `error`, `stale`, `disabled`, each with `reason`, `last_update`,
+  `source`, `last_error`, `maturity`.
+- **State store** centralizes dashboard state instead of letting every panel fetch
+  independently.
+- **Experiment Mode** adds `Operator / Experiment / Debug` switch with logged
+  experiment metadata and extra debug instrumentation.
+- **Frontend modularization** target: `app.js` limited to bootstrap, routing,
+  module lifecycle, global health, global state; domain logic split into
+  `overview/`, `network/`, `control/`, `console/`, `research/`, `verify/`,
+  `components/`.
+
 ## 2026-08-30 — Dashboard Cleanup & Alpha.5 Hygiene
 
 ### Dashboard-Informationsarchitektur vereinfacht

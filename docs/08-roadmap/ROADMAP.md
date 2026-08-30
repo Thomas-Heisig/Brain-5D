@@ -41,9 +41,25 @@ Erst nach isolierter STDP-Verifikation.
 
 Schwellen-/Ratenregulation isoliert messen.
 
-## v0.5.0-alpha.6 — Morphological Self-Regulation
+## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation
 
 > Blocked until Alpha.5 Integration Gate passes.
+
+### Dashboard Operator-Workbench
+
+- Zentrale Architekturbausteine: `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`, Entkopplung von Control/Console
+- Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
+- Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
+- Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
+- Experiment Mode (Operator / Experiment / Debug)
+- Domain-getriebene Frontend-Modularisierung in `src/dashboard/static/`
+
+### Morphological Self-Regulation
+
+- Feature-Flag standardmäßig AUS
+- Isolierte STDP-Verifikation (zwei Neuronen: PRE vor POST, POST vor PRE, großes Delta-t)
+- Eligibility Trace
+- Homöostase (Schwellen-/Ratenregulation)
 
 ## Später
 

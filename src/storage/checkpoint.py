@@ -49,6 +49,11 @@ class CheckpointNeuronLike(Protocol):
     threshold_adaptation: float
     last_external_current: float
     last_synaptic_current: float
+    firing_rate_estimate: float
+    pre_trace: float
+    post_trace: float
+    _spike_count_window: int
+    _last_update_tick: int
 
 
 class CheckpointSynapseLike(Protocol):
@@ -106,6 +111,12 @@ class NeuronRuntimeRecord:
     last_spike_tick: int
     last_external_current: float
     last_synaptic_current: float
+    # Internal neuron state required for deterministic continuation
+    firing_rate_estimate: float = 0.0
+    spike_count_window: int = 0
+    last_update_tick: int = 0
+    pre_trace: float = 0.0
+    post_trace: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -231,6 +242,11 @@ def capture_runtime_checkpoint(
                 last_spike_tick=int(neuron.last_spike_tick),
                 last_external_current=float(neuron.last_external_current),
                 last_synaptic_current=float(neuron.last_synaptic_current),
+                firing_rate_estimate=float(neuron.firing_rate_estimate),
+                spike_count_window=int(neuron._spike_count_window),
+                last_update_tick=int(neuron._last_update_tick),
+                pre_trace=float(neuron.pre_trace),
+                post_trace=float(neuron.post_trace),
             )
             for neuron_id, neuron in sorted(network.neurons.items())
         )
@@ -352,6 +368,11 @@ def write_runtime_checkpoint(path: Path, checkpoint: RuntimeCheckpoint) -> None:
                 "last_spike_tick": state.last_spike_tick,
                 "last_external_current": state.last_external_current,
                 "last_synaptic_current": state.last_synaptic_current,
+                "firing_rate_estimate": state.firing_rate_estimate,
+                "spike_count_window": state.spike_count_window,
+                "last_update_tick": state.last_update_tick,
+                "pre_trace": state.pre_trace,
+                "post_trace": state.post_trace,
             }
             for state in checkpoint.neuron_states
         ],
@@ -502,6 +523,26 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
                 last_synaptic_current=_float(
                     state.get("last_synaptic_current", 0.0),
                     "neuron.last_synaptic_current",
+                ),
+                firing_rate_estimate=_float(
+                    state.get("firing_rate_estimate", 0.0),
+                    "neuron.firing_rate_estimate",
+                ),
+                spike_count_window=_int(
+                    state.get("spike_count_window", 0),
+                    "neuron.spike_count_window",
+                ),
+                last_update_tick=_int(
+                    state.get("last_update_tick", 0),
+                    "neuron.last_update_tick",
+                ),
+                pre_trace=_float(
+                    state.get("pre_trace", 0.0),
+                    "neuron.pre_trace",
+                ),
+                post_trace=_float(
+                    state.get("post_trace", 0.0),
+                    "neuron.post_trace",
                 ),
             )
         )

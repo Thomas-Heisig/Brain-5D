@@ -28,6 +28,23 @@
 - [x] Dashboard: Populationen-Übersicht finalisieren
 - [x] Dashboard: 5D Isometrische Projektion verbessern
 
+## Priorität 1b — Dashboard Operator-Workbench Refactoring
+
+> Ziel: Vom funktionsgetriebenen Dashboard zur arbeitsprozess-orientierten
+> Operator-Workbench: beobachten → verstehen → verändern → prüfen →
+> dokumentieren. Health, Console und Problems werden querschnittlich
+> sichtbar, nicht versteckt.
+
+- [ ] `StatusModel`: Standardisierter Komponenten-Status (enabled/active/degraded/unavailable/error/stale/disabled) mit `reason`, `last_update`, `source`, `last_error`, `maturity`
+- [ ] `StateStore`: Zentraler Dashboard-State (`runtime`, `network`, `learning`, `homeostasis`, `structural`, `storage`, `telemetry`, `health`, `verification`) statt panel-individueller `fetch`-Aufrufe
+- [ ] `ParameterSchema`: Generischer Parameter-Inspector mit Metadaten (`value`, `default`, `min`, `max`, `unit`, `description`, `source`, `runtime_mutable`, `requires_restart`, `scientific_sensitive`)
+- [ ] Health/Problems Drawer: Permanent sichtbare Leiste + einblendbare Drawer für Fehler, Warnungen, Unavailable-Zustände und stale Daten
+- [ ] Control/Console-Entkopplung: Eine einzige Control Plane; Console wird ausschließlich Output-Log; redundante Step/Run/Pause/Stop/Snapshot-Wege entfernen
+- [ ] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
+- [ ] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History
+- [ ] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
+- [ ] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
+
 ## Priorität 2 — Code-Qualität
 
 - [x] Research-Registry Tests verstärken (Duplikate, Referenzen, Pflichtfelder)

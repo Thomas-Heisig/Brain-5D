@@ -235,6 +235,11 @@ def _restore_exact_neuron_state(
         neuron.last_spike_tick = state.last_spike_tick
         neuron.last_external_current = state.last_external_current
         neuron.last_synaptic_current = state.last_synaptic_current
+        neuron.firing_rate_estimate = state.firing_rate_estimate
+        neuron._spike_count_window = state.spike_count_window
+        neuron._last_update_tick = state.last_update_tick
+        neuron.pre_trace = state.pre_trace
+        neuron.post_trace = state.post_trace
 
 
 def _restore_exact_synapse_state(

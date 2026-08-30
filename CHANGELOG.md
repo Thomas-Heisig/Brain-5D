@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Dashboard Operator-Workbench Design Decision (2026-08-30)
+
+### Planned
+
+- Dashboard architecture decision recorded in `docs/07-changelog/CHANGELOG.md`:
+  workflow-oriented operator workbench (`OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`)
+  with `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`,
+  unified Control/Console, pending-changes workflow, experiment mode, and
+  domain-driven frontend modularization.
+- See `docs/08-roadmap/TODO.md` and `docs/08-roadmap/ROADMAP.md` for detailed task list
+  and alpha.6 milestone scope.
+
 ## v0.5.0-alpha.5 - Scientific Verification Infrastructure (2026-08-26)
 
 ### Added
