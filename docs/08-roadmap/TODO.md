@@ -48,7 +48,10 @@
   - `src/dashboard/static/health-drawer.js`
   - `src/dashboard/health_builder.py` baut aggregierte Health aus Komponenten
   - API-Endpunkt `/api/health`
-- [ ] Control/Console-Entkopplung: Eine einzige Control Plane; Console wird ausschließlich Output-Log; redundante Step/Run/Pause/Stop/Snapshot-Wege entfernen
+- [x] Control/Console-Entkopplung: Eine einzige Control Plane; Console wird ausschließlich Output-Log; redundante Step/Run/Pause/Stop/Snapshot-Wege entfernt
+  - `src/dashboard/static/control-panel.js` zentralisiert alle Runtime-Commands
+  - `src/dashboard/static/operator_console.js` reiner Output + Proposals
+  - `src/dashboard/static/console-log.js` gemeinsames Log
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
   - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
 - [ ] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History

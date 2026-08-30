@@ -111,6 +111,22 @@ Der integrierte Datei-Manager erkennt die gängigen Formate in `research/` und
 Binäre Dateien werden als solche markiert und bei bekannten Medientypen mit dem
 passenden Player geöffnet. Unbekannte Textdateien werden als Plaintext angezeigt.
 
+### Text- und Code-Editor
+
+Für bearbeitbare Textformate (Markdown, Python, JSON, YAML, TOML, INI, Config,
+BibTeX, Patch, Shell-Skripte, TypeScript, HTML, CSS, C/C++, Rust, Go, Java,
+Kotlin und weitere) zeigt der Viewer einen **✏️ Edit**-Button an. Im
+Editor-Modus kann der Inhalt direkt im Browser geändert, gespeichert oder
+verworfen werden.
+
+- Markdown-Dateien werden mit einer **Split-Ansicht** geöffnet: links der
+  Quelltext, rechts die gerenderte Vorschau.
+- Alle anderen Textdateien verwenden ein responsives `<textarea>` mit
+  automatischer Höhenanpassung.
+- Beim Speichern wird automatisch eine `.bak`-Sicherungskopie der
+  Originaldatei erstellt.
+- Speicher-Endpunkt: `PUT /api/files/save/{path}?source={research|docs}`
+
 ## Sicherheit
 
 Alpha.5 ist standardmaessig nur auf `127.0.0.1` gedacht. Es gibt noch keine

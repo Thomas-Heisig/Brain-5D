@@ -283,6 +283,64 @@ class FileManager:
         content = candidate.read_text(encoding="utf-8", errors="replace")
         return content, None, False
 
+    def _resolve_file(self, source: str, file_path: str) -> Path:
+        """Resolve and validate a file path under a source root."""
+        if not file_path or ".." in file_path:
+            raise PathTraversalError("Path traversal is not allowed.")
+
+        try:
+            _obj, root, _ = self._resolve_source(source)
+        except FileManagerError:
+            raise SourceNotAvailableError(f"Source '{source}' is not available.")
+
+        candidate = (root / file_path).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            raise PathTraversalError("Path traversal detected.")
+        return candidate
+
+    def save_content(
+        self, source: str, file_path: str, content: str, backup: bool = True
+    ) -> dict[str, Any]:
+        """Save text content to a file under the configured source root.
+
+        Args:
+            source: 'research' or 'docs'.
+            file_path: Relative path inside the source root.
+            content: New file content as UTF-8 text.
+            backup: If True, the existing file is renamed to `<name>.bak`
+                before writing.
+
+        Returns:
+            Dict with success status and path information.
+        """
+        candidate = self._resolve_file(source, file_path)
+
+        # Only allow saving to existing files for safety. New files can be
+        # created explicitly later if needed.
+        if not candidate.is_file():
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        ext = candidate.suffix.lower()
+        if ext in _BINARY_EXTENSIONS:
+            raise FileManagerError("Binary files cannot be edited as text.")
+
+        if backup and candidate.exists():
+            backup_path = candidate.with_suffix(candidate.suffix + ".bak")
+            # Remove stale backup to avoid collision
+            if backup_path.exists():
+                backup_path.unlink()
+            candidate.rename(backup_path)
+
+        candidate.write_text(content, encoding="utf-8")
+        return {
+            "success": True,
+            "path": file_path,
+            "size_bytes": candidate.stat().st_size,
+            "backup_created": backup,
+        }
+
 
 # ---------------------------------------------------------------------------
 # HTTP handler integration
@@ -374,6 +432,40 @@ def register_file_manager_routes(
                 "ext": Path(file_path).suffix.lower(),
                 "is_binary": False,
             })
+        return True
+
+    if path.startswith("/api/files/save/") and handler.command == "PUT":
+        prefix = "/api/files/save/"
+        file_path = unquote(path[len(prefix):])
+        source = query.get("source", ["research"])[0]
+        try:
+            body = handler._read_json_body()
+        except Exception:
+            handler._send_json(
+                {"error": "Invalid JSON body"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return True
+
+        content = body.get("content")
+        if content is None or not isinstance(content, str):
+            handler._send_json(
+                {"error": "Missing or invalid 'content' field"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return True
+
+        try:
+            result = fm.save_content(source, file_path, content, backup=body.get("backup", True))
+            handler._send_json(result)
+        except FileNotFoundError as exc:
+            handler._send_json({"error": str(exc)}, HTTPStatus.NOT_FOUND)
+        except PathTraversalError as exc:
+            handler._send_json({"error": str(exc)}, HTTPStatus.FORBIDDEN)
+        except FileManagerError as exc:
+            handler._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
+        except OSError as exc:
+            handler._send_json({"error": str(exc)}, HTTPStatus.INTERNAL_SERVER_ERROR)
         return True
 
     return False

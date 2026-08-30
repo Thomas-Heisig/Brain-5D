@@ -2537,6 +2537,109 @@ footer {
   font-size: 0.8rem;
 }
 
+/* In-place text/code editor */
+.fm-editor-wrapper {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.fm-editor-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-height: 400px;
+}
+
+.fm-editor-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.fm-editor-textarea {
+  width: 100%;
+  min-height: 300px;
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+}
+
+.fm-editor-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(74, 124, 247, 0.2);
+}
+
+.fm-editor-preview {
+  overflow: auto;
+  max-height: 70vh;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+}
+
+.fm-editor-status {
+  padding: 8px 12px;
+  min-height: 32px;
+  font-size: 0.85rem;
+}
+
+.fm-editor-status.success {
+  color: #7ee787;
+}
+
+.fm-editor-status.error {
+  color: #f85149;
+}
+
+.fm-file-edit-btn,
+.fm-file-save-btn,
+.fm-file-cancel-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.fm-file-edit-btn:hover {
+  background: rgba(74, 124, 247, 0.15);
+  color: #7aabff;
+}
+
+.fm-file-save-btn {
+  background: rgba(46, 160, 67, 0.15);
+  color: #7ee787;
+  border-color: rgba(46, 160, 67, 0.3);
+}
+
+.fm-file-save-btn:hover:not(:disabled) {
+  background: rgba(46, 160, 67, 0.25);
+}
+
+.fm-file-save-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.fm-file-cancel-btn:hover {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+}
+
 /* Code viewer */
 .fm-code {
   background: rgba(0, 0, 0, 0.35);

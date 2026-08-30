@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-30 — Dashboard Operator-Workbench: Control/Console Entkopplung
+
+### Frontend
+- **`src/dashboard/static/control-panel.js`**: Zentrale Control Plane für alle Runtime-Commands (Step, Run, Start, Pause, Resume, Stop, Snapshot, Structural Undo, Auto-Approval); Keyboard-Shortcuts konsolidiert.
+- **`src/dashboard/static/console-log.js`**: Gemeinsames, output-only Console-Log-Modul.
+- **`src/dashboard/static/operator_console.js`**: Reiner Output + Structural Proposals; redundante Runtime-Command-Handler entfernt.
+- **`src/dashboard/static/app.js`**: Importiert `consoleLog` für globale Konsolenausgaben.
+
+### Tests
+- Dashboard-Test-Suite (43 Tests) weiterhin grün.
+
 ## 2026-08-30 — Dashboard Operator-Workbench Foundation
 
 ### Backend
@@ -23,6 +34,26 @@
 ### Tests
 - Dashboard-Test-Suite (43 Tests) weiterhin grün.
 - Allgemeine Test-Suite zeigt vorbestehenden Fehler in `src/storage/checkpoint.py` (`Neuron` ohne `firing_rate_estimate`), nicht durch diese Änderungen verursacht.
+
+## 2026-08-30 — Dashboard File Manager: In-Browser Text & Code Editor
+
+### In-Browser-Editor für Text- und Code-Dateien
+- **`src/dashboard/file_manager.py`**:
+  - Neue `save_content()`-Methode zum Speichern von Textdateien innerhalb eines konfigurierten Quellverzeichnisses.
+  - Automatische `.bak`-Sicherungskopie vor dem Überschreiben.
+  - Pfadvalidierung gegen Path-Traversal; Binärdateien werden abgelehnt.
+  - Neuer API-Endpunkt `PUT /api/files/save/{path}?source={research|docs}`.
+- **`src/dashboard/server.py`**:
+  - `do_PUT()` ruft jetzt `register_file_manager_routes()` auf, damit Speicheranfragen erreichbar sind.
+  - Neue Hilfsmethode `_read_json_body()` zum Lesen von JSON-Request-Bodys.
+- **`src/dashboard/static/file-viewer.js`**:
+  - `isFMEditable()` bestimmt, ob eine Datei bearbeitet werden kann.
+  - `activateFMEditor()` öffnet einen Inline-Editor mit Save-/Cancel-Buttons.
+  - Markdown-Dateien erhalten eine Split-Ansicht mit Live-Vorschau.
+  - Speichern erfolgt per `fetch()` gegen den neuen PUT-Endpunkt; bei Erfolg wird die Datei neu geladen.
+- **`src/dashboard/static/styles.css`**:
+  - Stile für Editor-Wrapper, Split-Ansicht, Textarea, Statusmeldungen und Editor-Toolbar-Buttons.
+- **`tests/test_dashboard_file_manager.py`**: Neue Tests für Speichern, Traversal-Schutz, fehlenden Inhalt und Binärdatei-Ablehnung.
 
 ## 2026-08-30 — Dashboard File Manager: Media & Office Previews
 

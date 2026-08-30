@@ -29,6 +29,7 @@ Mutation is possible only through explicit operator endpoints.
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import signal
 from http import HTTPStatus
@@ -44,7 +45,12 @@ from .docs_source import DocumentationSource, create_docs_source
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .gate_status import GateStatusBuilder
 from .integration_status import IntegrationStatusBuilder
-from .models import JSONValue
+from .models import (
+    JSONValue,
+    ParameterChangeRecord,
+    ParameterSchema,
+    PendingParameterChange,
+)
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
 from .live_projection import (
@@ -253,7 +259,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             if path.startswith("/api/parameters/"):
-                self._send_parameter(path[len("/api/parameters/"):])
+                remainder = path[len("/api/parameters/"):]
+                if remainder == "pending":
+                    self._send_pending_parameters()
+                    return
+                self._send_parameter(remainder)
                 return
 
             if path == "/api/health":
@@ -484,6 +494,27 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Parameter pending changes
+            # ----------------------------------------------------------------
+
+            if path == "/api/parameters/pending/apply":
+                self._apply_pending_parameters(body)
+                return
+
+            if path == "/api/parameters/pending/save-profile":
+                self._apply_pending_parameters(body, save_profile=True)
+                return
+
+            if path == "/api/parameters/pending/cancel":
+                self._cancel_pending_parameters(body)
+                return
+
+            if path.startswith("/api/parameters/") and path.endswith("/pending"):
+                name = unquote(path[len("/api/parameters/"):-len("/pending")])
+                self._set_pending_parameter(name, body)
+                return
+
+            # ----------------------------------------------------------------
             # Unknown API
             # ----------------------------------------------------------------
 
@@ -508,8 +539,21 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def do_PUT(self) -> None:
         parsed = urlparse(self.path)
         path = parsed.path
+        query = parse_qs(parsed.query)
 
         try:
+            # ----------------------------------------------------------------
+            # Unified File Manager save endpoint
+            # ----------------------------------------------------------------
+            if register_file_manager_routes(
+                self,
+                path,
+                query,
+                self.dashboard_server.research_source,
+                self.dashboard_server.docs_source,
+            ):
+                return
+
             if path == "/api/structural/config":
                 bridge = self._require_bridge()
                 body = self._read_json_object()
@@ -1562,6 +1606,218 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         self._send_json(snapshot.health.to_json())
 
+    def _send_pending_parameters(self) -> None:
+        """Serve all pending parameter changes."""
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        pending = snapshot.pending_changes or {}
+        self._send_json({
+            "pending": {k: v.to_json() for k, v in pending.items()},
+            "count": len(pending),
+            "history": [r.to_json() for r in snapshot.change_history],
+        })
+
+    def _set_pending_parameter(
+        self,
+        name: str,
+        body: dict[str, object],
+    ) -> None:
+        """Record a proposed value for a parameter without applying it."""
+        state = self.dashboard_server.dashboard_state
+        snapshot = state.snapshot()
+        parameter = (snapshot.parameters or {}).get(name)
+        if parameter is None:
+            self._send_json(
+                {"error": f"Parameter '{name}' not found"},
+                HTTPStatus.NOT_FOUND,
+            )
+            return
+
+        proposed = body.get("value")
+        if proposed is None:
+            self._send_json(
+                {"error": "Missing 'value' field"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        # Coerce numeric strings back to numbers when the schema expects it.
+        coerced = self._coerce_parameter_value(parameter, proposed)
+
+        change = PendingParameterChange(
+            name=name,
+            current_value=parameter.value,
+            proposed_value=coerced,
+            default_value=parameter.default,
+            timestamp=datetime.datetime.now(tz=datetime.timezone.utc).isoformat(),
+            requires_restart=parameter.requires_restart,
+            scientific_sensitive=parameter.scientific_sensitive,
+        )
+        state.set_pending_change(change)
+
+        self._send_json({
+            "ok": True,
+            "message": f"Pending change recorded for '{name}'",
+            "pending": change.to_json(),
+        })
+
+    def _apply_pending_parameters(
+        self,
+        body: dict[str, object],
+        save_profile: bool = False,
+    ) -> None:
+        """Apply selected or all pending parameter changes.
+
+        Args:
+            body: Request body. May contain ``names`` to apply a subset.
+            save_profile: Whether this application should also persist a profile.
+        """
+        state = self.dashboard_server.dashboard_state
+        snapshot = state.snapshot()
+        pending = dict(snapshot.pending_changes or {})
+
+        requested_names = body.get("names")
+        if requested_names is None:
+            names = list(pending.keys())
+        elif isinstance(requested_names, list):
+            names = [str(n) for n in requested_names]
+        else:
+            self._send_json(
+                {"error": "'names' must be a list or omitted"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        if not names:
+            self._send_json({
+                "ok": True,
+                "message": "No pending changes to apply",
+                "applied": [],
+            })
+            return
+
+        applied: list[str] = []
+        failed: list[str] = []
+        now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+
+        for name in names:
+            change = pending.pop(name, None)
+            if change is None:
+                failed.append(name)
+                continue
+
+            parameter = (snapshot.parameters or {}).get(name)
+            if parameter is None:
+                failed.append(name)
+                continue
+
+            old_value = parameter.value
+            new_parameter = ParameterSchema(
+                name=parameter.name,
+                value=change.proposed_value,
+                default=parameter.default,
+                min=parameter.min,
+                max=parameter.max,
+                unit=parameter.unit,
+                description=parameter.description,
+                source="operator" if not save_profile else "profile",
+                runtime_mutable=parameter.runtime_mutable,
+                requires_restart=parameter.requires_restart,
+                scientific_sensitive=parameter.scientific_sensitive,
+            )
+            state.update_parameter(new_parameter)
+
+            record = ParameterChangeRecord(
+                name=name,
+                action="applied",
+                old_value=old_value,
+                new_value=change.proposed_value,
+                timestamp=now,
+                saved_profile=save_profile,
+            )
+            state.append_change_history(record)
+            applied.append(name)
+
+        state.update(pending_changes=pending)
+
+        self._send_json({
+            "ok": True,
+            "message": f"Applied {len(applied)} parameter(s)",
+            "applied": applied,
+            "failed": failed,
+            "saved_profile": save_profile,
+        })
+
+    def _cancel_pending_parameters(
+        self,
+        body: dict[str, object],
+    ) -> None:
+        """Cancel selected or all pending parameter changes."""
+        state = self.dashboard_server.dashboard_state
+        snapshot = state.snapshot()
+        pending = dict(snapshot.pending_changes or {})
+
+        requested_names = body.get("names")
+        if requested_names is None:
+            names = list(pending.keys())
+        elif isinstance(requested_names, list):
+            names = [str(n) for n in requested_names]
+        else:
+            self._send_json(
+                {"error": "'names' must be a list or omitted"},
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+        cancelled: list[str] = []
+
+        for name in names:
+            change = pending.pop(name, None)
+            if change is not None:
+                record = ParameterChangeRecord(
+                    name=name,
+                    action="cancelled",
+                    old_value=change.current_value,
+                    new_value=None,
+                    timestamp=now,
+                    saved_profile=False,
+                )
+                state.append_change_history(record)
+                cancelled.append(name)
+
+        state.update(pending_changes=pending)
+
+        self._send_json({
+            "ok": True,
+            "message": f"Cancelled {len(cancelled)} pending change(s)",
+            "cancelled": cancelled,
+        })
+
+    def _coerce_parameter_value(
+        self,
+        parameter: ParameterSchema,
+        value: object,
+    ) -> JSONScalar | list[JSONValue] | dict[str, JSONValue]:
+        """Coerce a proposed value towards the parameter's expected type."""
+        if isinstance(value, (list, dict)):
+            return value  # type: ignore[return-value]
+
+        current = parameter.value
+        if isinstance(current, bool):
+            if isinstance(value, str):
+                return value.lower() in {"true", "1", "yes", "on"}
+            return bool(value)
+        if isinstance(current, (int, float)):
+            try:
+                if isinstance(current, int):
+                    return int(value)  # type: ignore[arg-type]
+                return float(value)  # type: ignore[arg-type]
+            except (TypeError, ValueError):
+                return value  # type: ignore[return-value]
+        if isinstance(current, str):
+            return str(value)
+        return value  # type: ignore[return-value]
+
     # ========================================================================
     # Static / SPA
     # ========================================================================
@@ -1657,6 +1913,22 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     # ========================================================================
     # JSON response helpers
     # ========================================================================
+
+    def _read_json_body(self, max_size: int = _MAX_BODY_SIZE) -> dict[str, Any]:
+        """Read and parse a JSON request body."""
+        content_length = self.headers.get("Content-Length")
+        if content_length is None:
+            raise ValueError("Missing Content-Length header")
+
+        length = int(content_length)
+        if length > max_size:
+            raise ValueError(f"Request body too large: {length} bytes")
+
+        raw = self.rfile.read(length)
+        if len(raw) != length:
+            raise ValueError("Incomplete request body")
+
+        return cast(dict[str, Any], json.loads(raw.decode("utf-8")))
 
     def _send_json(
         self,

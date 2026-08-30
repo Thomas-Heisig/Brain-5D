@@ -50,7 +50,7 @@ Schwellen-/Ratenregulation isoliert messen.
 - [x] Zentrale Architekturbausteine: `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
 - [ ] Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
-- [ ] Entkopplung von Control/Console: Console wird Output-Log
+- [x] Entkopplung von Control/Console: Console wird Output-Log
 - [ ] Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
 - [ ] Experiment Mode (Operator / Experiment / Debug)
 - [ ] Domain-getriebene Frontend-Modularisierung in `src/dashboard/static/`

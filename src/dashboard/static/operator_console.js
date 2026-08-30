@@ -420,45 +420,32 @@ export class OperatorConsole {
    * Bind DOM event listeners.
    */
   bindEvents() {
-    // Control buttons
-    const controls = [
-      { id: 'b5d-step', action: 'step' },
-      { id: 'b5d-start', action: 'start' },
-      { id: 'b5d-pause', action: 'pause' },
-      { id: 'b5d-resume', action: 'resume' },
-      { id: 'b5d-stop', action: 'stop' },
-      { id: 'b5d-snapshot', action: 'snapshot' },
-    ];
-    
-    for (const { id, action } of controls) {
-      const el = byId(id);
-      if (el) {
-        el.addEventListener('click', () => this.handleCommand(action));
-      }
-    }
-    
-    // Run ticks — uses the shared loop-size input from Runtime Configuration
-    const runBtn = byId('b5d-run-ticks');
-    if (runBtn) {
-      runBtn.addEventListener('click', () => {
-        const input = byId('loop-size');
-        const count = parseInt(input?.value || '100', 10);
-        if (count > 0) {
-          this.handleCommand('run_ticks', { ticks: count });
-        }
-      });
-    }
-    
-    // Undo structural change
-    const undoBtn = byId('b5d-undo');
-    if (undoBtn) {
-      undoBtn.addEventListener('click', () => this.handleUndo());
-    }
-    
+    // Console output only; runtime controls are now owned by ControlPanel.
+    // Remaining responsibilities: proposal approval/rejection and console clear.
+
     // Clear console
     const clearBtn = byId('b5d-clear-console');
     if (clearBtn) {
       clearBtn.addEventListener('click', () => this.logger.clear());
+    }
+
+    // Proposal container uses event delegation for approve/reject buttons.
+    const proposalsContainer = byId('b5d-proposals');
+    if (proposalsContainer) {
+      proposalsContainer.addEventListener('click', (e) => {
+        const approveBtn = e.target.closest('.btn-approve');
+        if (approveBtn) {
+          e.preventDefault();
+          this.handleApprove(approveBtn.dataset.id);
+          return;
+        }
+
+        const rejectBtn = e.target.closest('.btn-reject');
+        if (rejectBtn) {
+          e.preventDefault();
+          this.handleReject(rejectBtn.dataset.id);
+        }
+      });
     }
   }
 
@@ -467,133 +454,28 @@ export class OperatorConsole {
    */
   bindKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
-      // Ctrl+Enter = Step
-      if (e.ctrlKey && e.key === 'Enter') {
-        e.preventDefault();
-        this.handleCommand('step');
-        return;
-      }
-      
-      // Ctrl+Shift+R = Run N ticks
-      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-        e.preventDefault();
-        const input = byId('loop-size');
-        const count = parseInt(input?.value || '100', 10);
-        if (count > 0) {
-          this.handleCommand('run_ticks', { ticks: count });
-        }
-        return;
-      }
-
-      // Ctrl+Shift+P = Pause
-      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-        e.preventDefault();
-        this.handleCommand('pause');
-        return;
-      }
-
-      // Ctrl+Shift+Space = Stop
-      if (e.ctrlKey && e.shiftKey && e.key === ' ') {
-        e.preventDefault();
-        this.handleCommand('stop');
-        return;
-      }
-      
-      // Ctrl+Shift+N = Snapshot
-      if (e.ctrlKey && e.shiftKey && e.key === 'N') {
-        e.preventDefault();
-        this.handleCommand('snapshot');
-        return;
-      }
-      
       // Ctrl+L = Clear console (if focus is on console)
       if (e.ctrlKey && e.key === 'l' && document.activeElement?.id === 'console-output') {
         e.preventDefault();
         this.logger.clear();
-        return;
       }
     });
   }
 
   /**
    * Handle a command.
-   * @param {string} action - Command action
-   * @param {object} params - Command parameters
+   * @deprecated Runtime commands are now owned by ControlPanel.
    */
   async handleCommand(action, params = {}) {
-    if (this.commandInFlight) {
-      this.logger.log(`⏳ Command '${action}' already in progress...`, 'warning');
-      return;
-    }
-    
-    this.commandInFlight = true;
-    this.logger.log(`▶ Executing: ${action}${params.ticks ? ` (${params.ticks} ticks)` : ''}`, 'info');
-    
-    try {
-      let result;
-      switch (action) {
-        case 'start':
-          result = await OperatorAPI.start();
-          break;
-        case 'pause':
-          result = await OperatorAPI.pause();
-          break;
-        case 'resume':
-          result = await OperatorAPI.resume();
-          break;
-        case 'stop':
-          result = await OperatorAPI.stop();
-          break;
-        case 'step':
-          result = await OperatorAPI.step();
-          break;
-        case 'run_ticks':
-          result = await OperatorAPI.runTicks(params.ticks || 1);
-          break;
-        case 'snapshot':
-          result = await OperatorAPI.snapshot();
-          break;
-        default:
-          throw new Error(`Unknown command: ${action}`);
-      }
-      
-      this.logger.log(`✅ ${action} completed successfully`, 'success');
-      await this.refreshStatus();
-      await this.loadProposals();
-      
-    } catch (error) {
-      this.logger.log(`❌ ${action} failed: ${error.message}`, 'error');
-    } finally {
-      this.commandInFlight = false;
-    }
+    this.logger.log(`ℹ️ Runtime commands moved to Runtime Control panel (${action})`, 'info');
   }
 
   /**
    * Handle undo structural change.
+   * @deprecated Structural undo is now owned by ControlPanel.
    */
   async handleUndo() {
-    if (this.commandInFlight) {
-      this.logger.log('⏳ Command in progress...', 'warning');
-      return;
-    }
-    
-    this.commandInFlight = true;
-    this.logger.log('↩ Undoing last structural change...', 'info');
-    
-    try {
-      const result = await OperatorAPI.undoStructural();
-      if (result.ok) {
-        this.logger.log(`✅ ${result.message || 'Change undone'}`, 'success');
-        await this.refreshStatus();
-        await this.loadProposals();
-      } else {
-        this.logger.log(`❌ Undo failed: ${result.message || 'Unknown error'}`, 'error');
-      }
-    } catch (error) {
-      this.logger.log(`❌ Undo failed: ${error.message}`, 'error');
-    } finally {
-      this.commandInFlight = false;
-    }
+    this.logger.log('ℹ️ Structural undo moved to Runtime Control panel', 'info');
   }
 
   /**

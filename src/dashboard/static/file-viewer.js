@@ -47,6 +47,36 @@ function formatBytes(value) {
 }
 
 // ================================================================
+// Editability helpers
+// ================================================================
+
+const FM_EDITABLE_EXTS = new Set([
+  '.md', '.markdown', '.txt', '.text', '.py', '.js', '.ts', '.mjs',
+  '.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.config',
+  '.bib', '.patch', '.diff', '.tex', '.rst', '.dockerfile', '.sh', '.bat', '.ps1',
+  '.xml', '.html', '.css', '.c', '.cpp', '.h', '.hpp', '.rs', '.go', '.java', '.kt',
+]);
+
+function isFMEditable(ext) {
+  if (!ext) return false;
+  const lower = ext.toLowerCase();
+  return FM_EDITABLE_EXTS.has(lower);
+}
+
+function fmLangFromExt(ext) {
+  const map = {
+    '.py': 'python', '.js': 'javascript', '.ts': 'typescript', '.mjs': 'javascript',
+    '.json': 'json', '.yaml': 'yaml', '.yml': 'yaml', '.toml': 'ini', '.ini': 'ini',
+    '.cfg': 'ini', '.conf': 'ini', '.config': 'ini', '.md': 'markdown',
+    '.markdown': 'markdown', '.tex': 'latex', '.sh': 'shell', '.ps1': 'powershell',
+    '.bat': 'bat', '.xml': 'xml', '.html': 'html', '.css': 'css',
+    '.c': 'cpp', '.cpp': 'cpp', '.h': 'cpp', '.hpp': 'cpp',
+    '.rs': 'rust', '.go': 'go', '.java': 'java', '.kt': 'kotlin',
+  };
+  return map[ext.toLowerCase()] || 'plaintext';
+}
+
+// ================================================================
 // Module state
 // ================================================================
 
@@ -553,13 +583,15 @@ async function openFMFile(path) {
       const content = data.content || '';
       const ext = (data.ext || '').toLowerCase();
 
+      const editable = isFMEditable(ext);
       viewer.innerHTML = `
         <div class="fm-file-header">
           <h3>${escapeHtml(data.name || path)}</h3>
           <div class="fm-file-header-actions">
             <span class="fm-file-meta">${formatBytes(data.size_bytes || 0)}</span>
-            <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+            ${editable ? `<button class="fm-file-edit-btn" id="fm-file-edit" title="Edit file">✏️ Edit</button>` : ''}
             <button class="fm-file-copy-btn" id="fm-file-copy-all" data-content="${escapeHtml(content)}">📋 Copy all</button>
+            <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
           </div>
         </div>
         <div class="fm-content">${renderFMContent(content, ext)}</div>
@@ -588,6 +620,21 @@ async function openFMFile(path) {
           } catch {
             copyBtn.textContent = '❌ Failed';
           }
+        });
+      }
+
+      // Wire up the "Edit" button
+      const editBtn = document.getElementById('fm-file-edit');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          activateFMEditor({
+            path,
+            name: data.name || path,
+            content,
+            ext,
+            source: fmCurrentSource,
+            viewer,
+          });
         });
       }
     }
@@ -1227,6 +1274,103 @@ document.addEventListener('click', async (e) => {
     btn.textContent = '❌ Failed';
   }
 });
+
+// ================================================================
+// In-browser text/code editor
+// ================================================================
+
+function activateFMEditor({ path, name, content, ext, source, viewer }) {
+  const lang = fmLangFromExt(ext);
+  const isMarkdown = ext === '.md' || ext === '.markdown';
+
+  viewer.innerHTML = `
+    <div class="fm-file-header">
+      <h3>✏️ ${escapeHtml(name)}</h3>
+      <div class="fm-file-header-actions">
+        <span class="fm-file-meta">${escapeHtml(lang)}</span>
+        <button class="fm-file-save-btn" id="fm-file-save" title="Save changes">💾 Save</button>
+        <button class="fm-file-cancel-btn" id="fm-file-cancel" title="Cancel editing">❌ Cancel</button>
+      </div>
+    </div>
+    <div class="fm-editor-wrapper">
+      ${isMarkdown ? `
+        <div class="fm-editor-split">
+          <div class="fm-editor-pane">
+            <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
+          </div>
+          <div class="fm-editor-preview fm-markdown" id="fm-editor-preview"></div>
+        </div>
+      ` : `
+        <textarea id="fm-editor-textarea" class="fm-editor-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
+      `}
+    </div>
+    <div class="fm-editor-status" id="fm-editor-status"></div>
+  `;
+
+  const textarea = document.getElementById('fm-editor-textarea');
+  const statusEl = document.getElementById('fm-editor-status');
+  const saveBtn = document.getElementById('fm-file-save');
+  const cancelBtn = document.getElementById('fm-file-cancel');
+
+  if (!textarea || !saveBtn || !cancelBtn) return;
+
+  // Auto-resize textarea to fit content
+  function resizeTextarea() {
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.max(300, textarea.scrollHeight + 16)}px`;
+  }
+  resizeTextarea();
+  textarea.addEventListener('input', resizeTextarea);
+
+  // Live preview for Markdown
+  if (isMarkdown) {
+    const preview = document.getElementById('fm-editor-preview');
+    const updatePreview = () => {
+      if (preview) preview.innerHTML = renderFMMarkdown(textarea.value);
+    };
+    textarea.addEventListener('input', updatePreview);
+    updatePreview();
+  }
+
+  // Save handler
+  saveBtn.addEventListener('click', async () => {
+    const newContent = textarea.value;
+    saveBtn.disabled = true;
+    saveBtn.textContent = '⏳ Saving...';
+    statusEl.textContent = '';
+    statusEl.className = 'fm-editor-status';
+
+    try {
+      const encodedPath = encodeURIComponent(path);
+      const res = await fetch(`/api/files/save/${encodedPath}?source=${encodeURIComponent(source)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newContent, backup: true }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      statusEl.textContent = `✅ Saved (${formatBytes(data.size_bytes || 0)})`;
+      statusEl.classList.add('success');
+      setTimeout(() => {
+        // Reload viewer in read mode with new content
+        openFMFile(path, source);
+      }, 600);
+    } catch (e) {
+      statusEl.textContent = `❌ Save failed: ${escapeHtml(e.message)}`;
+      statusEl.classList.add('error');
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 Save';
+    }
+  });
+
+  // Cancel handler
+  cancelBtn.addEventListener('click', () => {
+    openFMFile(path, source);
+  });
+}
 
 // ================================================================
 // EXPORTS

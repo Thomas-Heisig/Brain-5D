@@ -17,7 +17,9 @@ from .models import (
     ComponentStatus,
     DashboardSnapshot,
     HealthSnapshot,
+    ParameterChangeRecord,
     ParameterSchema,
+    PendingParameterChange,
 )
 
 logger = logging.getLogger(__name__)
@@ -252,6 +254,65 @@ class DashboardStateStore:
             The new snapshot.
         """
         return self.update(health=health)
+
+    def set_pending_change(
+        self,
+        change: PendingParameterChange,
+    ) -> DashboardSnapshot:
+        """Record or update a pending parameter change.
+
+        Args:
+            change: The pending change to store.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            pending = dict(current.pending_changes or {})
+            pending[change.name] = change
+            return self.update(pending_changes=pending)
+
+    def remove_pending_change(self, name: str) -> DashboardSnapshot:
+        """Remove a pending parameter change.
+
+        Args:
+            name: Parameter name whose pending change should be removed.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            pending = dict(current.pending_changes or {})
+            pending.pop(name, None)
+            return self.update(pending_changes=pending)
+
+    def clear_pending_changes(self) -> DashboardSnapshot:
+        """Clear all pending parameter changes.
+
+        Returns:
+            The new snapshot.
+        """
+        return self.update(pending_changes={})
+
+    def append_change_history(
+        self,
+        record: ParameterChangeRecord,
+    ) -> DashboardSnapshot:
+        """Append a change record to the history.
+
+        Args:
+            record: The record to append.
+
+        Returns:
+            The new snapshot.
+        """
+        with self._lock:
+            current = self._snapshot
+            history = list(current.change_history)
+            history.append(record)
+            return self.update(change_history=tuple(history))
 
     # =========================================================================
     # Event System

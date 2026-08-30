@@ -592,6 +592,80 @@ class ParameterSchema:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class PendingParameterChange:
+    """One pending parameter change waiting for operator confirmation.
+
+    Attributes:
+        name: Parameter identifier.
+        current_value: Value currently in effect.
+        proposed_value: Value proposed by the operator.
+        default_value: Factory/default value.
+        timestamp: ISO timestamp when the change was proposed.
+        requires_restart: Whether applying this change needs a restart.
+        scientific_sensitive: Whether the parameter is scientifically sensitive.
+        applied: Whether this change has already been applied.
+    """
+
+    name: str
+    current_value: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    proposed_value: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    default_value: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    timestamp: str | None = None
+    requires_restart: bool = False
+    scientific_sensitive: bool = False
+    applied: bool = False
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "name": self.name,
+            "current_value": self.current_value,
+            "proposed_value": self.proposed_value,
+            "default_value": self.default_value,
+            "timestamp": self.timestamp,
+            "requires_restart": self.requires_restart,
+            "scientific_sensitive": self.scientific_sensitive,
+            "applied": self.applied,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ParameterChangeRecord:
+    """Immutable record of one applied or cancelled parameter change.
+
+    Attributes:
+        name: Parameter identifier.
+        action: One of 'applied' or 'cancelled'.
+        old_value: Value before the action.
+        new_value: Value after the action (for applied changes).
+        timestamp: ISO timestamp of the action.
+        saved_profile: Whether the change was also saved as a profile.
+    """
+
+    name: str
+    action: str
+    old_value: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    new_value: JSONScalar | list[JSONValue] | dict[str, JSONValue] | None = None
+    timestamp: str | None = None
+    saved_profile: bool = False
+
+    def __post_init__(self) -> None:
+        if self.action not in {"applied", "cancelled"}:
+            raise ValueError(f"invalid change action: {self.action!r}")
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a JSON-serializable representation."""
+        return {
+            "name": self.name,
+            "action": self.action,
+            "old_value": self.old_value,
+            "new_value": self.new_value,
+            "timestamp": self.timestamp,
+            "saved_profile": self.saved_profile,
+        }
+
+
 # ============================================================================
 # Health Snapshot Model (Operator Workbench)
 # ============================================================================
@@ -653,6 +727,8 @@ class DashboardSnapshot:
     embodiment: EmbodimentMetrics = EmbodimentMetrics()
     components: dict[str, ComponentStatus] = None  # type: ignore[assignment]
     parameters: dict[str, ParameterSchema] = None  # type: ignore[assignment]
+    pending_changes: dict[str, PendingParameterChange] = None  # type: ignore[assignment]
+    change_history: tuple[ParameterChangeRecord, ...] = ()
     health: HealthSnapshot = HealthSnapshot()
     status: str = "idle"
     version: str = "0.5.0-alpha.2"
@@ -663,6 +739,8 @@ class DashboardSnapshot:
             object.__setattr__(self, "components", {})
         if self.parameters is None:
             object.__setattr__(self, "parameters", {})
+        if self.pending_changes is None:
+            object.__setattr__(self, "pending_changes", {})
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
@@ -686,6 +764,10 @@ class DashboardSnapshot:
             "embodiment": self.embodiment.to_json(),
             "components": {k: v.to_json() for k, v in components.items()},
             "parameters": {k: v.to_json() for k, v in parameters.items()},
+            "pending_changes": {
+                k: v.to_json() for k, v in (self.pending_changes or {}).items()
+            },
+            "change_history": [r.to_json() for r in self.change_history],
             "health": self.health.to_json(),
         }
 
