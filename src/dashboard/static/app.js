@@ -1704,8 +1704,7 @@ async function handleProposal(proposalId, action) {
 // ================================================================
 // RESEARCH & DOCUMENTATION BROWSER (delegated to file-viewer.js)
 // ================================================================
-// All file-manager llives in file-viewer.js and is imported above.
-function initDocumentationBrowser() { initFileManager(); }
+// All file-manager logic lives in file-viewer.js and is imported above.
 
 // ================================================================
 // ALPHA.5 INTEGRATION GATE STATUS
