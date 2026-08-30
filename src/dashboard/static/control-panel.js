@@ -4,14 +4,18 @@
  * This module is a pure ES module. It does NOT self-initialize and does NOT
  * register any DOMContentLoaded listeners. The sole lifecycle owner is
  * `app.js`, which imports and instantiates `ControlPanel` exactly once when
- * the Control tab is first activated.
+ * the Control & Console tab is first activated.
+ *
+ * Responsibility: runtime configuration and self-organization policy.
+ * Runtime commands (step/run/pause/resume/stop/snapshot) are handled by
+ * OperatorConsole to keep a single source of truth for operator actions.
  *
  * Canonical command contract (unified with OperatorConsole):
  *   POST /api/control  { "command": "run_ticks", "ticks": 100 }
  *
  * No CommonJS fallbacks. No `module.exports`. No global side effects on import.
  *
- * @version 2.1.0
+ * @version 2.2.0
  * @license MIT
  */
 
@@ -467,8 +471,7 @@ export class ControlPanel {
     setText('runtime-queued', String(state.getQueuedTicks()));
     setText('runtime-last-batch', String(state.getLastBatchTicks()));
     setText('runtime-last-ms', formatNumber(state.getLastBatchMs(), 2));
-
-
+  }
 
   /**
    * Render self-organization state.
@@ -576,7 +579,6 @@ export class ControlPanel {
     if (selfOrgDryRun) {
       selfOrgDryRun.addEventListener('change', () => this._handleSelfOrganization());
     }
-
   }
 
   // ========================================================================
@@ -716,42 +718,9 @@ export class ControlPanel {
   // ========================================================================
 
   _initKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-      // Ctrl+Shift+S = Step
-      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-        e.preventDefault();
-        this._handleStep();
-        return;
-      }
-
-      // Ctrl+Shift+R = Run
-      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-        e.preventDefault();
-        this._handleRun();
-        return;
-      }
-
-      // Ctrl+Shift+P = Pause
-      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-        e.preventDefault();
-        this._handlePause();
-        return;
-      }
-
-      // Ctrl+Shift+Space = Stop
-      if (e.ctrlKey && e.shiftKey && e.key === ' ') {
-        e.preventDefault();
-        this._handleStop();
-        return;
-      }
-
-      // Ctrl+Shift+N = Snapshot
-      if (e.ctrlKey && e.shiftKey && e.key === 'N') {
-        e.preventDefault();
-        this._handleSnapshot();
-        return;
-      }
-    });
+    // Runtime control shortcuts are owned by OperatorConsole to avoid
+    // duplicate handlers. ControlPanel only listens to configuration shortcuts.
+    this._keyboardHandler = null;
   }
 
   // ========================================================================

@@ -8,8 +8,10 @@
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   **STALE:** Last recorded baseline is 2026-08-28 (418 passed / 3 failed /
->   2 skipped, commit `39a4b6e...`). A/B/C restore artifact is still the
->   old failed run (`A == B false`, `A == C false`, `B == C true`).
+>   2 skipped, commit `39a4b6e...`).
+>   Current fast-suite run (2026-08-30, excluding slow+restore): 397 passed /
+>   0 failed. A/B/C restore artifact remains failed (`A == B false`,
+>   `A == C false`, `B == C true`).
 >   The claim "all artifacts share the same tested_tree_digest" is
 >   **not currently true** and will be re-established in the next
 >   verification round.
@@ -17,12 +19,14 @@
 ## Priorität 1 — Alpha.5 Closure (aktuelle Sprint-Arbeiten)
 
 - [ ] EXP-DET-0001: Determinism A/B/C experiment durchführen
+  - Path C `--digest-k` Argument korrigiert (worker startet wieder)
+  - A/B-Divergenz nach Restore bleibt offen (siehe Bekannte Probleme)
 - [ ] EXP-STOR-0001: Storage persistence experiment durchführen
 - [ ] Erste DATA-* / EVID-* Artefakte generieren
 - [ ] Research Catalog aus echten Evidenzen neu aufbauen
-- [ ] Dashboard: IO-Fluss Visualisierung finalisieren
-- [ ] Dashboard: Populationen-Übersicht finalisieren
-- [ ] Dashboard: 5D Isometrische Projektion verbessern
+- [x] Dashboard: IO-Fluss Visualisierung finalisieren
+- [x] Dashboard: Populationen-Übersicht finalisieren
+- [x] Dashboard: 5D Isometrische Projektion verbessern
 
 ## Priorität 2 — Code-Qualität
 
@@ -48,9 +52,17 @@
 - [x] Research-Registry Validierung verstärkt: Duplikate, ID-Formate, Referenzen, Pflichtfelder
 - [x] Fehlende Quellen `SRC-WATTS-STROGATZ-1998` und `SRC-BARABASI-1999` in `research/registry/sources.yaml` ergänzt
 - [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
+- [x] Dashboard-Informationsarchitektur auf 5 Bereiche vereinfacht
+- [x] File-Viewer als eigenständiges Modul `src/dashboard/static/file-viewer.js` ausgekoppelt
+- [x] CONTROL & CONSOLE entdoppelt: Runtime Configuration + Operator Console
+- [x] OVERVIEW entdoppelt: Roadmap/Integration-Status entfernt, Active Profile hinzugefügt
+- [x] Repository-Hygiene: Placeholder-Dateien `tmp_append.py` und
+      `src/dashboard/static/_build_viewer.py` entfernt
 
 ## Bekannte Probleme
 
 - Dashboard State Publishing darf niemals die Simulation blockieren (bereits gelöst)
 - Self-Organization nur über canonical Coordinator->Approval->PlasticityEngine Pfad
 - Storage ist per Konfiguration deaktiviert (poc_config.yaml)
+- Restore A/B/C: Path C worker startet wieder, aber A != B/C bleibt offen
+  (vermutlich Synapsen-Reihenfolge nach Datei-Restore führt zu STDP-Misalignment)

@@ -201,6 +201,7 @@ def _run_path_C(
         "--schedule", str(artifacts["schedule"]),
         "--output", str(tmp_path / "c2_result.json"),
         "--end-tick", str(N),
+        "--digest-k", str(tmp_path / "c2_digest_k.json"),
     ]
 
     result = subprocess.run(

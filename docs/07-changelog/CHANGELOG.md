@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-08-30 — Dashboard Cleanup & Alpha.5 Hygiene
+
+### Dashboard-Informationsarchitektur vereinfacht
+- **`src/dashboard/static/index.html`**:
+  - `OVERVIEW` entdoppelt: Roadmap und Integration-Status entfernt; neue
+    **Active Profile**-Card.
+  - `CONTROL & CONSOLE` entdoppelt: `Runtime Control` umbenannt zu
+    **Runtime Configuration** und auf Loop-Size, Delay und Self-Organization
+    reduziert. Operator Console bleibt die zentrale Bedienfläche für Step,
+    Run, Pause, Resume, Stop, Snapshot, Undo, Console Log und Proposals.
+  - Gemeinsame Loop-Size für `Run N Ticks` aus Runtime Configuration.
+- **`src/dashboard/static/control-panel.js`**: Entfernt redundante
+  Steuerbuttons (Step/Run/Pause/Stop/Snapshot); behält Konfiguration und
+  Self-Organization.
+- **`src/dashboard/static/operator_console.js`**: `Run N Ticks` liest jetzt
+  die gemeinsame `#loop-size`; Shortcuts auf `Ctrl+Shift+R` = Run,
+  `Ctrl+Shift+P` = Pause, `Ctrl+Shift+Space` = Stop harmonisiert.
+- **`src/dashboard/static/styles.css`**: Stil für `loop-size-hint` hinzugefügt.
+- **`src/dashboard/static/app.js`**: Header-Kommentar auf die aktuellen fünf
+  Hauptbereiche aktualisiert.
+
+### Repository-Hygiene
+- **`tmp_append.py`** und **`src/dashboard/static/_build_viewer.py`** entfernt.
+
+### Dokumentation & Evidence
+- **`docs/08-roadmap/TODO.md`**: Verifikationshinweis als **STALE** markiert;
+  aktueller Fast-Suite-Stand (397 passed / 0 failed) und offener A/B/C-Fehler
+  dokumentiert.
+
+### Tests
+- **`tests/test_restore_determinism_abc.py`**: Fehlendes `--digest-k`
+  Argument für Path-C-Worker ergänzt (worker startet wieder). A/B/C bleibt
+  aufgrund der A/B-Divergenz nach Restore offen.
+
 ## 2026-08-30 — BibTeX Viewer für Literaturverwaltung im Dashboard
 
 ### Neues Feature: Dedizierter BibTeX-Viewer
