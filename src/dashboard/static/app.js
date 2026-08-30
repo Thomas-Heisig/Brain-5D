@@ -33,6 +33,7 @@
 
 import { ControlPanel } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
+import { initResearchBrowser, initDocumentationBrowser } from './file-viewer.js';
 
 // ================================================================
 // DOM HELPERS
@@ -1703,11 +1704,7 @@ async function handleProposal(proposalId, action) {
 // ================================================================
 // RESEARCH & DOCUMENTATION BROWSER (delegated to file-viewer.js)
 // ================================================================
-// All file-manager logic (initFileManager, renderFM*, setupFM*,
-// loadFMTree, etc.) has been migrated to file-viewer.js.
-// These thin wrappers preserve the legacy call sites in setupTabs().
-
-function initResearchBrowser() { initFileManager(); }
+// All file-manager llives in file-viewer.js and is imported above.
 function initDocumentationBrowser() { initFileManager(); }
 
 // ================================================================

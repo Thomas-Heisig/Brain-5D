@@ -18,6 +18,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Fehlende Dateitypen ergänzt (`.bib`, `.patch`, `.rst`, `.tex`, `.schema.json`, u.a.)
 - [x] YAML Syntax-Highlighting (renderFMYaml mit farblichen Token-Klassen)
 - [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
+- [x] Research-Registry Validierung verstärkt (Duplikate, Referenzen, Pflichtfelder)
 - [ ] Canonical RuntimeController (remove SimpleController)
 - [ ] .b5d snapshot pipeline → heatmap
 - [ ] Structural plasticity wired through approval-gated manipulator

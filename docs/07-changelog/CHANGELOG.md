@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-30 — Research Registry Validation Hardening
+
+### Tests
+- **`tests/test_research_registry.py`**: Strukturelle Tests für die Research-Registry überarbeitet und erweitert.
+  - Bugfix: `test_no_duplicate_ids_across_files` prüft jetzt tatsächlich auf Duplikate (vorher tautologische Assertion).
+  - Bugfix: `test_no_duplicate_ids_within_each_file` zählt jetzt echte Vorkommen statt `pass`.
+  - Neu: ID-Format-Test für Quellen (`SRC-{AUTHOR}-{YEAR}`).
+  - Neu: Referenz-Tests für Literaturangaben in Fragen, Quellenangaben in Claims und Fragenreferenzen in Quellen.
+  - Neu: Pflichtfeld-Test für alle Registry-Typen.
+
+### Registry-Daten
+- **`research/registry/sources.yaml`**: Fehlende Quellen `SRC-WATTS-STROGATZ-1998` und `SRC-BARABASI-1999` ergänzt, die von `RQ-SNN-003` referenziert wurden.
+
 ## 2026-08-30 — Viewer Improvements: Decoupling + Missing File Types + YAML Highlighting
 
 ### Viewer als eigenständiges Overlay-Element

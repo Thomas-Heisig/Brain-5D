@@ -21,6 +21,7 @@
 
 ## Priorität 2 — Code-Qualität
 
+- [x] Research-Registry Tests verstärken (Duplikate, Referenzen, Pflichtfelder)
 - [ ] Pylance/Pyright clean: alle Typfehler beseitigen
 - [ ] type:ignore-Kommentare auf Minimum reduzieren
 - [ ] Testabdeckung für neue Module erhöhen
@@ -38,6 +39,8 @@
 - [x] Fehlende Dateitypen ergänzt: `.bib`, `.patch`, `.rst`, `.tex`, `.sh`, `.bat`, `.ps1`, `.dockerfile`, `.cmake`, `.makefile`, `.txt`
 - [x] JSON-Erkennung jetzt über `ext.endsWith('.json')` — fängt auch `.schema.json` ab
 - [x] YAML Syntax-Highlighting (renderFMYaml mit farblichen Token-Klassen)
+- [x] Research-Registry Validierung verstärkt: Duplikate, ID-Formate, Referenzen, Pflichtfelder
+- [x] Fehlende Quellen `SRC-WATTS-STROGATZ-1998` und `SRC-BARABASI-1999` in `research/registry/sources.yaml` ergänzt
 - [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
 
 ## Bekannte Probleme

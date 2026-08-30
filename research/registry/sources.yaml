@@ -150,3 +150,39 @@
     - RQ-SNN-004
     - RQ-SELF-001
   brain5d_relevance: "Historische Grundlage aller Hebbschen Plastizitätstheorien."
+
+- source_id: SRC-WATTS-STROGATZ-1998
+  authors:
+    - Duncan J. Watts
+    - Steven H. Strogatz
+  title: "Collective dynamics of 'small-world' networks"
+  year: 1998
+  journal: "Nature"
+  doi: "10.1038/30918"
+  topic:
+    - topology
+    - small_world
+    - networks
+  claims:
+    - "Small-world networks combine high clustering with short path lengths."
+  brain5d_questions:
+    - RQ-SNN-003
+  brain5d_relevance: "Klassische Referenz für Small-World-Topologien in Netzwerken."
+
+- source_id: SRC-BARABASI-1999
+  authors:
+    - Albert-László Barabási
+    - Réka Albert
+  title: "Emergence of Scaling in Random Networks"
+  year: 1999
+  journal: "Science"
+  doi: "10.1126/science.286.5439.509"
+  topic:
+    - topology
+    - scale_free
+    - networks
+  claims:
+    - "Preferential attachment produces scale-free network degree distributions."
+  brain5d_questions:
+    - RQ-SNN-003
+  brain5d_relevance: "Klassische Referenz für skalenfreie Netzwerktopologien."
