@@ -1,13 +1,24 @@
 # Changelog
 
-## 2026-08-31 — Alpha.5 Evidence Freeze
+## 2026-08-31 — Alpha.5 Release Gate Closed
 
-### Freeze State
-- **HEAD**: `4a37462...`
+### Final Gate Result
+- **ALPHA.5 Overall**: ✅ **PASSED**
+- **Gate A — Technical Integration**: ✅ passed
+- **Gate B — Verification**: ✅ passed
+- **Gate C — Scientific Baseline**: ✅ passed
+
+### Verification Summary
 - **Full test suite**: 457 passed, 2 skipped, 0 failed.
 - **Pyright**: 0 errors.
 - **Ruff**: 0 errors.
 - **Source tree digest**: `97be590f48cfa0392414a16857cd89092154b36787db8961944fc7f45b36b7ae`.
+- **Single TCP LISTEN socket on 127.0.0.1:8765**: verified.
+- **Production HomeostasisSignal → Policy → Coordinator**: verified.
+- **Structural Coordinator / PlasticityEngine / Manipulator / Approval-gated mutation / Journal**: verified via E2E proofs.
+- **Restore-and-continue identity (A/B/C)**: verified (`A == B == C`).
+- **Structural determinism, iteration-order determinism, full RNG state persistence, canonical full-state digest, homeostasis + learning state persistence**: verified.
+- **EXP-DET-0001** and **EXP-STOR-0001** executed; first DATA-\* / EVID-\* artifacts produced; Research Catalog and Evidence Matrix rebuilt from real evidence.
 
 ### Regenerated Evidence
 | Artifact | Status | HEAD |
@@ -22,6 +33,7 @@
 ### Notes
 - Evidence provenance aligned to the commit that contains the regenerated artefacts.
 - Temporary provenance alignment script removed from repository tracking.
+- Alpha.5 is now fully closed; work may advance to Alpha.6.
 
 ## 2026-08-30 — Dashboard Document Viewer: Full-Feature Suite
 

@@ -91,7 +91,7 @@ def test_positive_reward_potentiates_positive_eligibility() -> None:
     engine = LearningEngine(network, config)  # type: ignore[arg-type]
     eligibility = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)  # type: ignore[reportUnknownMemberType]
 
 
 def test_negative_reward_depresses_positive_eligibility() -> None:
@@ -100,7 +100,7 @@ def test_negative_reward_depresses_positive_eligibility() -> None:
     engine = LearningEngine(network, config)  # type: ignore[arg-type]
     eligibility = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(-1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 - 0.1 * eligibility)
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 - 0.1 * eligibility)  # type: ignore[reportUnknownMemberType]
 
 
 def test_signed_negative_eligibility_is_used() -> None:
@@ -111,7 +111,7 @@ def test_signed_negative_eligibility_is_used() -> None:
     engine.update(_result(10, pre_id))
     eligibility = -0.12 * math.exp(-10.0 / 20.0)
     engine.set_reward(1.0, 10)
-    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * eligibility)  # type: ignore[reportUnknownMemberType]
 
 
 def test_delayed_reward_uses_decayed_trace() -> None:
@@ -121,10 +121,10 @@ def test_delayed_reward_uses_decayed_trace() -> None:
     initial_trace = _create_positive_trace(engine, pre_id, post_id)
     engine.set_reward(1.0, 10)
     engine.update(_result(29))
-    assert network.synapses[pre_id][0].weight == pytest.approx(0.5)
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5)  # type: ignore[reportUnknownMemberType]
     engine.update(_result(30))
     decayed = initial_trace * math.exp(-20.0 / 200.0)
-    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * decayed)
+    assert network.synapses[pre_id][0].weight == pytest.approx(0.5 + 0.1 * decayed)  # type: ignore[reportUnknownMemberType]
 
 
 def test_reward_weight_clamping() -> None:

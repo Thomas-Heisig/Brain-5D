@@ -6,7 +6,7 @@
 :: Verwendet bevorzugt die venv-Umgebung, falls vorhanden.
 ::
 :: Usage:
-::   start.cmd                          (Start mit Dashboard + Browser)
+::   start.cmd                          (Start mit Dashboard + Browser, Alpha.5 Live Config)
 ::   start.cmd --no-dashboard           (Start ohne Dashboard)
 ::   start.cmd --config configs\...     (Eigene Config)
 ::   start.cmd --help                   (Hilfe anzeigen)
@@ -40,10 +40,10 @@ echo   Brain-5D v0.5.0-alpha.5
 echo   Project: %PROJECT_ROOT%
 echo ===========================================================================
 
-:: Standard: Dashboard + Browser, es sei denn --no-dashboard wurde uebergeben
+:: Standard: Dashboard + Browser, Alpha.5 Live Config, es sei denn --no-dashboard wurde uebergeben
 set "EXTRA="
 echo %* | findstr /C:"--no-dashboard" >nul
-if errorlevel 1 set "EXTRA=--dashboard --open-browser"
+if errorlevel 1 set "EXTRA=--dashboard --open-browser --config configs\poc_alpha5_live.yaml"
 
 :: Launcher starten
 %PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start %EXTRA% %*

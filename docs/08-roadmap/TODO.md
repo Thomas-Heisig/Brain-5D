@@ -7,31 +7,27 @@
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   **STALE:** Last recorded baseline is 2026-08-28 (418 passed / 3 failed /
->   2 skipped, commit `39a4b6e...`).
->   Current full-suite run (2026-08-30): **454 passed / 2 skipped**.
->   **A/B/C restore artifact is now verified** (`A == B == C`, tested at
->   commit `93620ecc...`). The actual restore determinism issue is resolved.
->   However, the global tree-digest freshness model is too coarse: changes
->   under `src/dashboard/` (styles, JS, HTML) currently invalidate
->   restore/structural evidence artifacts even though the scientific proof
->   is unaffected. This must be replaced by scoped evidence digests.
+>   **Current baseline (2026-08-31): 457 passed / 2 skipped / 0 failed**
+>   at commit `4a37462...`.
+>   **A/B/C restore artifact verified** (`A == B == C`).
+>   Evidence scope digests replaced the coarse global tree-digest model; UI
+>   changes no longer invalidate scientific evidence artifacts.
 
-## Priorität 1 — Alpha.5 Closure (aktuelle Sprint-Arbeiten)
+## Priorität 1 — Alpha.5 Closure (abgeschlossen)
 
 - [x] EXP-DET-0001: Determinism A/B/C experiment durchführen
   - Path C `--digest-k` Argument korrigiert (worker startet wieder)
   - A/B/C digests are now equal; artifact status = `verified`
-  - [ ] Härten: Strenger Fresh-Process-Nachweis
+  - [x] Härten: Strenger Fresh-Process-Nachweis
     - P0 pytest orchestrator startet **kein** C1-Netzwerkobjekt im Orchestrator
     - C1 subprocess: `0 → K`, speichert Dateisystem-Artefakte, schreibt PID, terminiert
     - C2 subprocess: liest nur Dateisystem, `restore_full()`, `K → N`, schreibt PID + Digest, terminiert
     - `assert PID_C1 != PID_C2`
     - `assert A == B == C`
-    - „completed"-Proofs dürfen nicht hartkodiert `true` sein
-- [ ] EXP-STOR-0001: Storage persistence experiment durchführen
-- [ ] Erste DATA-* / EVID-* Artefakte generieren
-- [ ] Research Catalog aus echten Evidenzen neu aufbauen
+    - „completed"-Proofs sind nicht mehr hartkodiert `true`
+- [x] EXP-STOR-0001: Storage persistence experiment durchführen
+- [x] Erste DATA-* / EVID-* Artefakte generieren
+- [x] Research Catalog aus echten Evidenzen neu aufgebaut
 - [x] Dashboard: IO-Fluss Visualisierung finalisieren
 - [x] Dashboard: Populationen-Übersicht finalisieren
 - [x] Dashboard: 5D Isometrische Projektion verbessern
@@ -105,7 +101,7 @@
 > Ziel: Dashboard-/UI-Änderungen dürfen wissenschaftliche Nachweise nicht
 > mehr fälschlich als `stale` markieren.
 
-- [ ] Evidence Scopes einführen: jeder Nachweis bekommt seinen eigenen
+- [x] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
       Digest über die relevanten Dateien
   - `restore_determinism`: `core`, `storage`, `learning`, `homeostasis`,
     relevante Config + Restore-Tests
@@ -115,13 +111,13 @@
   - `dashboard`: `src/dashboard/`, HTML/CSS/JS, Dashboard-Tests
   - `research`: Registry, Schemas, Recorder, Research-Tests
   - `release`: gesamter produktiver Source Tree + komplette Tests
-- [ ] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
+- [x] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
       eines globalen Tree-Digests
-- [ ] Gate Builder vergleicht nur den passenden Scope-Digest
-- [ ] Full Test Baseline neu erzeugen (aktuell 2026-08-28, stale)
-  - `xfailed` / `xpassed` in `BaselineEvaluation` auswerten
+- [x] Gate Builder vergleicht nur den passenden Scope-Digest
+- [x] Full Test Baseline neu erzeugt (2026-08-31, 457 passed / 2 skipped / 0 failed)
+  - `xfailed` / `xpassed` in `BaselineEvaluation` ausgewertet
   - Source Freeze → komplette Suite → neue `tests/test_baseline.json`
-  - Alle Evidence-Artefakte sauber regenerieren
+  - Alle Evidence-Artefakte sauber regeneriert
 
 ## Priorität 3 — Infrastruktur
 
@@ -154,13 +150,10 @@
 - Dashboard State Publishing darf niemals die Simulation blockieren (bereits gelöst)
 - Self-Organization nur über canonical Coordinator->Approval->PlasticityEngine Pfad
 - Storage ist per Konfiguration deaktiviert (poc_config.yaml)
-- Evidence-Freshness-Modell ist zu grob: Dashboard-/UI-Änderungen machen
-  wissenschaftliche Nachweise fälschlich `stale` (siehe Priorität 1c)
-- Test-Baseline `tests/test_baseline.json` ist alt (2026-08-28) und muss neu
-  erzeugt werden; `BaselineEvaluation` wertet weder `xfailed` noch `xpassed` aus
+- ~~Evidence-Freshness-Modell ist zu grob~~ (gelöst durch Evidence Scope Digests)
+- ~~Test-Baseline `tests/test_baseline.json` ist alt~~ (neu erzeugt am 2026-08-31)
 - `tmp/restore_diag/` und `tmp/trace_diag/` enthalten eingecheckte State-Dumps
   und müssen entweder `.gitignore`d oder nach `research/generated/diagnostics/`
   verschoben werden
-- Restore A/B/C: A/B/C Digests sind jetzt gleich (`verified`); verbleibender
-  Vorbehalt: Path C führt C1 im pytest-Prozess aus und nur C2 im Subprozess;
-  einige „completed“-Proofs im Artefaktwriter sind hartkodiert `true`
+- Restore A/B/C: A/B/C Digests sind gleich (`verified`); Fresh-Process-Nachweis
+  erfüllt (`PID_C1 != PID_C2`)

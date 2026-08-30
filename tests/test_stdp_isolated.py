@@ -13,8 +13,8 @@ def test_ltp_pre_before_post() -> None:
     delta = syn.post_spike(10)
 
     expected_delta = 0.1 * math.exp(-10 / 20)
-    assert delta == pytest.approx(expected_delta)
-    assert syn.weight == pytest.approx(0.5 + expected_delta)
+    assert delta == pytest.approx(expected_delta)  # type: ignore[reportUnknownMemberType]
+    assert syn.weight == pytest.approx(0.5 + expected_delta)  # type: ignore[reportUnknownMemberType]
 
 
 def test_ltd_post_before_pre() -> None:
@@ -25,8 +25,8 @@ def test_ltd_post_before_pre() -> None:
     delta = syn.pre_spike(10)
 
     expected_delta = -0.12 * math.exp(-10 / 20)
-    assert delta == pytest.approx(expected_delta)
-    assert syn.weight == pytest.approx(0.5 + expected_delta)
+    assert delta == pytest.approx(expected_delta)  # type: ignore[reportUnknownMemberType]
+    assert syn.weight == pytest.approx(0.5 + expected_delta)  # type: ignore[reportUnknownMemberType]
 
 
 def test_simultaneous_spikes_do_not_change_weight() -> None:
@@ -45,7 +45,7 @@ def test_large_delta_approaches_zero() -> None:
 
     delta = syn.post_spike(200)
 
-    assert delta == pytest.approx(0.1 * math.exp(-10.0))
+    assert delta == pytest.approx(0.1 * math.exp(-10.0))  # type: ignore[reportUnknownMemberType]
     assert abs(delta) < 0.00001
 
 
@@ -55,14 +55,14 @@ def test_weight_clamping_reports_applied_delta() -> None:
     high_delta = high.post_spike(1)
 
     assert high.weight == 1.0
-    assert high_delta == pytest.approx(0.05)
+    assert high_delta == pytest.approx(0.05)  # type: ignore[reportUnknownMemberType]
 
     low = STDPSynapse(weight=0.05, a_minus=0.12, tau_minus=20.0, min_weight=0.0)
     low.post_spike(0)
     low_delta = low.pre_spike(1)
 
     assert low.weight == 0.0
-    assert low_delta == pytest.approx(-0.05)
+    assert low_delta == pytest.approx(-0.05)  # type: ignore[reportUnknownMemberType]
 
 
 @pytest.mark.parametrize("delay", [1, 5, 10, 20, 50])
@@ -72,7 +72,7 @@ def test_ltp_timing_curve(delay: int) -> None:
 
     delta = syn.post_spike(delay)
 
-    assert delta == pytest.approx(0.1 * math.exp(-delay / 20.0))
+    assert delta == pytest.approx(0.1 * math.exp(-delay / 20.0))  # type: ignore[reportUnknownMemberType]
 
 
 @pytest.mark.parametrize("delay", [1, 5, 10, 20, 50])
@@ -82,7 +82,7 @@ def test_ltd_timing_curve(delay: int) -> None:
 
     delta = syn.pre_spike(delay)
 
-    assert delta == pytest.approx(-0.12 * math.exp(-delay / 20.0))
+    assert delta == pytest.approx(-0.12 * math.exp(-delay / 20.0))  # type: ignore[reportUnknownMemberType]
 
 
 def test_independent_repeated_pairs() -> None:
@@ -97,9 +97,9 @@ def test_independent_repeated_pairs() -> None:
     syn.pre_spike(20)
     second = syn.post_spike(30)
 
-    assert first == pytest.approx(expected_delta)
-    assert second == pytest.approx(expected_delta)
-    assert syn.weight == pytest.approx(0.5 + 2 * expected_delta)
+    assert first == pytest.approx(expected_delta)  # type: ignore[reportUnknownMemberType]
+    assert second == pytest.approx(expected_delta)  # type: ignore[reportUnknownMemberType]
+    assert syn.weight == pytest.approx(0.5 + 2 * expected_delta)  # type: ignore[reportUnknownMemberType]
 
 
 def test_continuous_sequence_exposes_nearest_neighbour_pairing() -> None:

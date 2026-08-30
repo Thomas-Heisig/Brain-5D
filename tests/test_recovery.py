@@ -87,10 +87,10 @@ def test_recovery_applies_committed_state(tmp_path: Path) -> None:
     with B5DReader(recovered) as reader:
         neuron = reader.get_neuron(1)
         assert neuron is not None
-        assert neuron.optical.membrane_v == pytest.approx(-40.0, abs=0.01)
+        assert neuron.optical.membrane_v == pytest.approx(-40.0, abs=0.01)  # type: ignore[reportUnknownMemberType]
         synapse = list(reader.get_synapses(1))[0]
-        assert synapse.weight == pytest.approx(0.75)
-        assert synapse.eligibility == pytest.approx(0.2)
+        assert synapse.weight == pytest.approx(0.75)  # type: ignore[reportUnknownMemberType]
+        assert synapse.eligibility == pytest.approx(0.2)  # type: ignore[reportUnknownMemberType]
 
 
 def test_recovery_ignores_uncommitted_tail(tmp_path: Path) -> None:
@@ -111,4 +111,4 @@ def test_recovery_ignores_uncommitted_tail(tmp_path: Path) -> None:
     with B5DReader(recovered) as reader:
         neuron = reader.get_neuron(1)
         assert neuron is not None
-        assert neuron.optical.membrane_v == pytest.approx(-50.0, abs=0.01)
+        assert neuron.optical.membrane_v == pytest.approx(-50.0, abs=0.01)  # type: ignore[reportUnknownMemberType]

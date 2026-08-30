@@ -1,6 +1,6 @@
 # Brain-5D Roadmap — v0.5.0-alpha.5 Scientific Verification Closure
 
-**Status: OPEN** (live visualization + verification freshness sprint complete)
+**Status: CLOSED** (2026-08-31 — all Alpha.5 gates passed)
 
 ### Completed in Pre-Closure Sprint (Part 1)
 
@@ -38,14 +38,14 @@
 
 ### Remaining for Alpha.5 Closure
 
-- Restore Determinism A/B/C experiment (uninterrupted vs in-process vs process restart)
-- EXP-DET-0001 executed
-- EXP-STOR-0001 executed
-- First DATA-* / EVID-* artifacts
-- Research Catalog rebuilt from real evidence
+- [x] Restore Determinism A/B/C experiment (uninterrupted vs in-process vs process restart)
+- [x] EXP-DET-0001 executed
+- [x] EXP-STOR-0001 executed
+- [x] First DATA-* / EVID-* artifacts
+- [x] Research Catalog rebuilt from real evidence
 
 ## v0.5.0-alpha.6 — Morphological Self-Regulation
-> BLOCKED until Alpha.5 closes.
+> Alpha.5 closed on 2026-08-31; Alpha.6 work is unblocked.
 
 Chronic signals, growth budgets, regional pressures, telemetry, scientific evaluation.
 

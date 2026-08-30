@@ -2,16 +2,50 @@
 # ===============================================
 # Safe desired state for interactive dashboard operation.
 # All mechanisms are explicitly configured — no silent defaults.
-#
-# Composition: extends poc_config.yaml via production config loading.
-# Do NOT create parallel engines/controllers/storage implementations.
 
-# ── Override seed for interactive sessions ─────────────────────────────────
 seed: 42
+
+dimensions: [10, 10, 10, 10, 10]
+initial_neurons: 5000
+max_neurons: 100000
 
 # ── Simulation ─────────────────────────────────────────────────────────────
 simulation:
+  dt_ms: 1.0
   ticks: 0  # infinite — controller drives stepping via API
+  max_delay: 20
+  debug_invariants: false
+
+# ── Neuron defaults ────────────────────────────────────────────────────────
+neuron:
+  a: 0.02
+  b: 0.2
+  c: -65.0
+  d: 8.0
+
+# ── Network defaults ───────────────────────────────────────────────────────
+network:
+  initial_connections_per_neuron: 10
+  neighbour_radius: 2.0
+  weight_min: 0.0
+  weight_max: 0.5
+
+# ── Energy defaults ────────────────────────────────────────────────────────
+energy:
+  initial: 1.0
+  spike_cost: 0.001
+  affects_firing: false
+
+# ── Topology defaults ───────────────────────────────────────────────────────
+topology:
+  input:
+    dimension: x
+    coordinate: 0
+  output:
+    dimension: x
+    coordinate: 9
+  allow_self_connections: false
+  allow_parallel_connections: false
 
 # ── Homeostasis — ENABLED ──────────────────────────────────────────────────
 homeostasis:
@@ -106,6 +140,14 @@ storage:
     heatmap_type: activity
     activity_tau_ticks: 50.0
 
+# ── Visualization defaults ─────────────────────────────────────────────────
+visualization:
+  enabled: false
+  refresh_interval_ticks: 20
+  spike_raster_neurons: 250
+  projection_4d: d4
+  activity_tau_ticks: 50.0
+
 # ── Dashboard — live telemetry ENABLED ─────────────────────────────────────
 dashboard:
   live_telemetry:
@@ -120,6 +162,10 @@ telemetry:
   enabled: true
   history_ticks: 5000
   spike_history_ticks: 5000
+
+# ── Logging defaults ───────────────────────────────────────────────────────
+logging:
+  interval_ticks: 100
 
 # ── Diagnostics ────────────────────────────────────────────────────────────
 diagnostics:

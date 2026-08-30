@@ -7,15 +7,15 @@ from src.learning.eligibility import EligibilityTrace
 
 def test_trace_add_and_lazy_decay() -> None:
     trace = EligibilityTrace(tau_ticks=20.0)
-    assert trace.add(1.0, tick=0) == pytest.approx(1.0)
-    assert trace.read(10) == pytest.approx(math.exp(-10 / 20.0))
+    assert trace.add(1.0, tick=0) == pytest.approx(1.0)  # type: ignore[reportUnknownMemberType]
+    assert trace.read(10) == pytest.approx(math.exp(-10 / 20.0))  # type: ignore[reportUnknownMemberType]
 
 
 def test_trace_accumulates_after_decay() -> None:
     trace = EligibilityTrace(tau_ticks=10.0)
     trace.add(1.0, 0)
     value = trace.add(0.5, 10)
-    assert value == pytest.approx(math.exp(-1.0) + 0.5)
+    assert value == pytest.approx(math.exp(-1.0) + 0.5)  # type: ignore[reportUnknownMemberType]
 
 
 def test_trace_rejects_time_travel() -> None:

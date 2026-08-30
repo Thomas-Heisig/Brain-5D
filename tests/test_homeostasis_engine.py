@@ -71,8 +71,8 @@ def test_disabled_homeostasis_is_behaviorally_inert() -> None:
     engine = HomeostasisEngine(network, runtime)
     engine.attach()
     network.step()
-    assert neuron.threshold_adaptation == pytest.approx(-0.01, abs=1e-9)
-    assert neuron.energy == pytest.approx(0.5, abs=1e-3)
+    assert neuron.threshold_adaptation == pytest.approx(-0.01, abs=1e-9)  # type: ignore[reportUnknownMemberType]
+    assert neuron.energy == pytest.approx(0.5, abs=1e-3)  # type: ignore[reportUnknownMemberType]
     assert engine.stats.updates == 0
 
 

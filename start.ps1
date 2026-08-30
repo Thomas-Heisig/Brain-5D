@@ -8,7 +8,7 @@
 
     Einfachster Aufruf:  .\start.ps1
 .PARAMETER Config
-    Pfad zur YAML-Konfigurationsdatei (default: configs/poc_config.yaml).
+    Pfad zur YAML-Konfigurationsdatei (default: configs/poc_alpha5_live.yaml).
 .PARAMETER NoDashboard
     Dashboard deaktivieren.
 .PARAMETER Observe
@@ -27,7 +27,7 @@
     Zeigt Hilfe zum Launcher an.
 .EXAMPLE
     .\start.ps1
-    Startet mit poc_config.yaml, Dashboard + Browser.
+    Startet mit poc_alpha5_live.yaml, Dashboard + Browser.
 .EXAMPLE
     .\start.ps1 -NoDashboard
     Startet ohne Dashboard.
@@ -37,7 +37,7 @@
 #>
 
 param(
-    [string]$Config = "configs/poc_config.yaml",
+    [string]$Config = "configs/poc_alpha5_live.yaml",
 
     [switch]$NoDashboard,
     [switch]$Observe,

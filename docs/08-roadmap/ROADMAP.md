@@ -7,7 +7,7 @@
 
 Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Historie, Diagnose, Topologieprüfung und Observatory.
 
-## v0.5.0-alpha.5 — Integration Hardening (in progress)
+## v0.5.0-alpha.5 — Integration Hardening (closed)
 
 - [x] Single-process launcher, single DashboardServer, OperatorBridge attached
 - [x] Frontend lifecycle unified (app.js sole owner, ES modules, no CommonJS)
@@ -22,11 +22,11 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Restore A/B/C determinism verified (`A == B == C`)
 - [x] Structural E2E verified
 - [x] Structural Live Loop verified
-- [ ] Canonical RuntimeController (remove SimpleController)
-- [ ] .b5d snapshot pipeline → heatmap
-- [ ] Structural plasticity wired through approval-gated manipulator
-- [ ] Evidence Scope Digests statt globaler Tree-Digest
-- [ ] Green test baseline (zero collection errors, current baseline is stale)
+- [x] Canonical RuntimeController (SimpleController removed)
+- [x] .b5d snapshot pipeline → heatmap
+- [x] Structural plasticity wired through approval-gated manipulator
+- [x] Evidence Scope Digests statt globaler Tree-Digest
+- [x] Green test baseline (zero collection errors)
 
 ## Sprint 2A – STDP-Labor
 
@@ -47,7 +47,7 @@ Schwellen-/Ratenregulation isoliert messen.
 
 ## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation
 
-> Blocked until Alpha.5 Integration Gate passes.
+> Alpha.5 Integration Gate passed on 2026-08-31; Alpha.6 work is unblocked.
 
 ### Dashboard Operator-Workbench
 

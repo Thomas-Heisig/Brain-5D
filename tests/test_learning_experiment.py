@@ -40,7 +40,7 @@ def test_reward_training_strengthens_weights(
     """Three-factor learning must increase convergent synaptic weights."""
     result = run_learning_experiment(experiment_config)
 
-    assert result.initial_mean_weight == pytest.approx(0.05)
+    assert result.initial_mean_weight == pytest.approx(0.05)  # type: ignore[reportUnknownMemberType]
     assert result.final_mean_weight > 0.8
     assert result.final_mean_weight <= 1.0
     assert result.mean_weight_delta > 0.0

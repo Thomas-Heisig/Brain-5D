@@ -61,7 +61,7 @@ def test_engine_ltp_pre_before_post() -> None:
     engine.update(_result(10, b))
 
     expected = 0.5 + 0.1 * math.exp(-10 / 20.0)
-    assert net.synapses[a][0].weight == pytest.approx(expected)
+    assert net.synapses[a][0].weight == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
 
 
 def test_engine_ltd_post_before_pre() -> None:
@@ -73,7 +73,7 @@ def test_engine_ltd_post_before_pre() -> None:
     engine.update(_result(10, a))
 
     expected = 0.5 - 0.12 * math.exp(-10 / 20.0)
-    assert net.synapses[a][0].weight == pytest.approx(expected)
+    assert net.synapses[a][0].weight == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
 
 
 def test_disabled_learning_preserves_weight() -> None:
@@ -97,7 +97,7 @@ def test_eligibility_records_pair_without_reward_use() -> None:
     engine.update(_result(10, b))
 
     expected = 0.1 * math.exp(-10 / 20.0)
-    assert engine.get_eligibility(a, b) == pytest.approx(expected)
+    assert engine.get_eligibility(a, b) == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
     assert net.synapses[a][0].weight == 0.5
 
 
@@ -115,8 +115,8 @@ def test_multiple_synapses_receive_post_event() -> None:
     engine.update(_result(5, c))
 
     expected = 0.4 + 0.1 * math.exp(-5 / 20.0)
-    assert net.synapses[a][0].weight == pytest.approx(expected)
-    assert net.synapses[b][0].weight == pytest.approx(expected)
+    assert net.synapses[a][0].weight == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
+    assert net.synapses[b][0].weight == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
 
 
 def test_same_tick_pre_post_are_not_paired_with_each_other() -> None:

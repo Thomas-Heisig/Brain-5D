@@ -38,7 +38,7 @@ def test_weight_projection_averages_incoming_weights_per_neuron() -> None:
     values = projector.weights()
     # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
     # no incoming weight (0.0); the second has mean incoming weight 0.6.
-    assert values[1, 2] == pytest.approx(0.3)
+    assert values[1, 2] == pytest.approx(0.3)  # type: ignore[reportUnknownMemberType]
     assert network.in_degree[second] == 2
 
 
@@ -47,7 +47,7 @@ def test_energy_projection_averages_hidden_dimensions() -> None:
     network.neurons[first].energy = 0.4
     network.neurons[second].energy = 0.8
     values = HeatmapProjector(network).energy()
-    assert values[1, 2] == pytest.approx(0.6)
+    assert values[1, 2] == pytest.approx(0.6)  # type: ignore[reportUnknownMemberType]
 
 
 def test_activity_uses_recent_spike_decay() -> None:
@@ -57,7 +57,7 @@ def test_activity_uses_recent_spike_decay() -> None:
     network.neurons[second].last_spike_tick = 10
     values = HeatmapProjector(network, activity_tau_ticks=10.0).activity()
     expected = (1.0 + np.exp(-1.0)) / 2.0
-    assert values[1, 2] == pytest.approx(expected)
+    assert values[1, 2] == pytest.approx(expected)  # type: ignore[reportUnknownMemberType]
 
 
 def test_invalid_heatmap_kind_is_rejected() -> None:

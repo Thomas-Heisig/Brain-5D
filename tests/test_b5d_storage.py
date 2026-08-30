@@ -133,17 +133,17 @@ def test_restartable_snapshot_roundtrip(tmp_path: Path) -> None:
         assert neuron is not None
         assert neuron.neuron_id == 20
         assert neuron.tick == 51
-        assert neuron.a == pytest.approx(0.02)
+        assert neuron.a == pytest.approx(0.02)  # type: ignore[reportUnknownMemberType]
         assert neuron.spike_counter == 9
         assert neuron.last_spike_tick == 50
-        assert neuron.optical.membrane_v == pytest.approx(-55.0, abs=0.01)
+        assert neuron.optical.membrane_v == pytest.approx(-55.0, abs=0.01)  # type: ignore[reportUnknownMemberType]
 
         assert [item.neuron_id for item in reader.iter_neurons()] == [10, 20]
         synapse = list(reader.iter_synapses())[0]
         assert synapse.source_id == 10
         assert synapse.target_id == 20
-        assert synapse.weight == pytest.approx(0.25)
-        assert synapse.eligibility == pytest.approx(-0.4)
+        assert synapse.weight == pytest.approx(0.25)  # type: ignore[reportUnknownMemberType]
+        assert synapse.eligibility == pytest.approx(-0.4)  # type: ignore[reportUnknownMemberType]
         assert synapse.delay == 3
         assert synapse.last_pre_spike == 49
 
@@ -159,7 +159,7 @@ def test_optical_only_snapshot_is_128_bytes_per_neuron(tmp_path: Path) -> None:
         neuron = reader.get_neuron(10)
         assert neuron is not None
         assert neuron.a is None
-        assert neuron.optical.energy == pytest.approx(0.8, abs=2e-5)
+        assert neuron.optical.energy == pytest.approx(0.8, abs=2e-5)  # type: ignore[reportUnknownMemberType]
 
 
 def test_custom_optical_sidecar_is_persisted(tmp_path: Path) -> None:
@@ -171,8 +171,8 @@ def test_custom_optical_sidecar_is_persisted(tmp_path: Path) -> None:
     with B5DReader(path) as reader:
         neuron = reader.get_neuron(10)
         assert neuron is not None
-        assert neuron.optical.brightness == pytest.approx(0.75, abs=2e-5)
-        assert neuron.optical.coherence == pytest.approx(0.5, abs=2e-5)
+        assert neuron.optical.brightness == pytest.approx(0.75, abs=2e-5)  # type: ignore[reportUnknownMemberType]
+        assert neuron.optical.coherence == pytest.approx(0.5, abs=2e-5)  # type: ignore[reportUnknownMemberType]
 
 
 def test_records_are_sorted_and_binary_searchable(tmp_path: Path) -> None:
