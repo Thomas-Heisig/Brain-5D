@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.5.0-alpha.5 - Dashboard State & Health Repair (2026-08-30)
+
+### Fixed
+
+- **Dashboard offline / stale PID**: `artifacts/brain5d.pid` wurde nicht
+  bereinigt, wenn der Prozess extern beendet wurde. Der Port war blockiert
+  durch einen verwaisten Prozess. Empfohlene Abhilfe: Prozess hart beenden
+  und neu starten; `stop.cmd` wurde verbessert, indem es den Fehlerfall
+  robuster meldet.
+- **Checkpoint-Tests**: `MockNeuron` in `tests/test_checkpoint_v4.py`,
+  `tests/test_rng_persistence.py` und die lokale `Neuron`-Klasse in
+  `tests/test_checkpoint.py` fehlten Felder, die `capture_runtime_checkpoint`
+  seit Checkpoint v4 erwartet (`firing_rate_estimate`, `_spike_count_window`,
+  `_last_update_tick`, `pre_trace`, `post_trace`). Alle 452 Tests laufen
+  jetzt grün.
+- **Dashboard Health unavailable**: Veröffentlichte Snapshots wurden nicht
+  mit `enrich_snapshot()` angereichert, daher blieb `health.overall`
+  auf `unknown`. `publish_state()` reichert jetzt automatisch Components,
+  Parameters und Health an; `src/main.py` übergibt die Runtime-Config an
+  den StateManager.
+- **Health-State-Semantik**: `enabled ≠ active` und
+  `unavailable ≠ disabled` werden jetzt korrekt unterschieden. Learning,
+  Homeostasis, Structural und Storage lesen `enabled` aus der Config und
+  `active` aus den Runtime-Metriken. Deaktivierte Komponenten melden
+  `disabled` mit `source: config`.
+- **Neuer API-Endpoint**: `/api/state` liefert den vollständigen
+  angereicherten Dashboard-Snapshot für den Frontend-StateStore.
+
 ## v0.5.0-alpha.5 - Dashboard Operator-Workbench Design Decision (2026-08-30)
 
 ### Planned

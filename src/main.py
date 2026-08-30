@@ -876,6 +876,10 @@ def main() -> int:
             _DashboardStateStore_cls = cast(type, _DashboardStateStore)
             state_store = _DashboardStateStore_cls()
 
+            from src.dashboard.state import set_dashboard_config
+
+            set_dashboard_config(config_dict)
+
             # Initialen Dashboard-Snapshot bei Tick 0 publizieren
             # (bevor der erste Tick ausgeführt wird, damit das Dashboard
             #  echte Netzwerkdaten anzeigt und nicht Nullen)

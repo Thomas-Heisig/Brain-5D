@@ -55,11 +55,11 @@ Schwellen-/Ratenregulation isoliert messen.
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
 - [ ] Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
 - [~] Entkopplung von Control/Console: Console wird Output-Log
-  - [ ] ControlPanel als einziger Command Owner; doppelte Runtime-Shortcuts
-        aus `OperatorConsole` entfernen
-  - [ ] StateStore vollständig integrieren; `app.js` führt keine parallelen
-        Status-/Health-Requests mehr aus
-  - [ ] Health-State-Semantik korrigieren: `enabled ≠ active`,
+  - [x] ControlPanel als einziger Command Owner; doppelte Runtime-Shortcuts
+        aus `OperatorConsole` entfernt (verbleibend: `Ctrl+L` für Clear)
+  - [x] StateStore vollständig integrieren; Backend publiziert angereicherte
+        Snapshots; `/api/state` liefert den vollständigen Store
+  - [x] Health-State-Semantik korrigieren: `enabled ≠ active`,
         `unavailable ≠ disabled`, Verification-Status aus Gate-Zustand
 - [x] Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
 - [ ] Experiment Mode (Operator / Experiment / Debug)

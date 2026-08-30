@@ -4576,6 +4576,243 @@ footer {
 }
 
 /* ============================================================================
+   EXPERIMENT MODE (Operator Workbench)
+   ============================================================================ */
+
+.experiment-mode-switcher {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 25, 37, 0.6);
+  margin-right: 8px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.mode-btn.active {
+  background: rgba(74, 124, 247, 0.25);
+  color: #fff;
+}
+
+.experiment-panel {
+  padding: 18px;
+  margin-top: 14px;
+}
+
+.experiment-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.experiment-badge.mode-operator {
+  background: rgba(74, 124, 247, 0.15);
+  color: #7aabff;
+}
+
+.experiment-badge.mode-experiment {
+  background: rgba(100, 180, 255, 0.15);
+  color: #64b4ff;
+}
+
+.experiment-badge.mode-debug {
+  background: rgba(197, 134, 192, 0.15);
+  color: #c586c0;
+}
+
+.experiment-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.experiment-form input[type="text"] {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-small);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+}
+
+.experiment-form input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.experiment-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.experiment-note-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: flex-end;
+}
+
+.experiment-note-row .input-label {
+  flex: 1;
+}
+
+.experiment-note-row input[type="text"] {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-small);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+}
+
+.experiment-sessions {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  padding: 12px 16px;
+}
+
+.experiment-sessions summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.experiment-sessions summary h3 {
+  display: inline;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.experiment-session-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.experiment-empty {
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.experiment-session-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-small);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.82rem;
+}
+
+.experiment-session-item.active {
+  border-left: 3px solid var(--color-success);
+}
+
+.experiment-session-item.closed {
+  border-left: 3px solid var(--muted);
+  opacity: 0.85;
+}
+
+.experiment-session-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.experiment-session-mode {
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.experiment-session-mode.mode-operator {
+  background: rgba(74, 124, 247, 0.12);
+  color: #7aabff;
+}
+
+.experiment-session-mode.mode-experiment {
+  background: rgba(100, 180, 255, 0.12);
+  color: #64b4ff;
+}
+
+.experiment-session-mode.mode-debug {
+  background: rgba(197, 134, 192, 0.12);
+  color: #c586c0;
+}
+
+.experiment-session-id {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.experiment-session-status {
+  margin-left: auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.experiment-session-hypothesis {
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.experiment-session-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.experiment-session-notes {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.experiment-session-notes li {
+  margin: 2px 0;
+}
+
+/* ============================================================================
    PARAMETER INSPECTOR (Operator Workbench)
    ============================================================================ */
 

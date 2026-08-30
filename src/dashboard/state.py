@@ -7,6 +7,7 @@ for state subscribers.
 
 from __future__ import annotations
 
+import datetime
 import logging
 from collections.abc import Callable
 from dataclasses import replace
@@ -798,8 +799,14 @@ def get_state_store() -> DashboardStateStore:
 
 
 def publish_state(snapshot: DashboardSnapshot) -> None:
-    """Publish a state update to the global store."""
-    _state_manager.publish(snapshot)
+    """Publish a state update to the global store.
+
+    The snapshot is automatically enriched with derived components,
+    parameters and health so that every consumer sees a complete view.
+    """
+    from .health_builder import enrich_snapshot
+
+    _state_manager.publish(enrich_snapshot(snapshot))
 
 
 def get_current_state() -> DashboardSnapshot:

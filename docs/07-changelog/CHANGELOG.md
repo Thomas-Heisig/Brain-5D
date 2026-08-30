@@ -41,7 +41,28 @@
 ### Tests
 - **`tests/test_dashboard_pending_parameters.py`**: 8 neue Tests für den Pending-Changes-Workflow.
 - Dashboard-Test-Suite: **51 passed**.
+## 2026-08-30 — Dashboard Operator-Workbench: Experiment Mode
 
+### Backend
+- **`src/dashboard/models.py`**: Neue Dataclasses `ExperimentState` und `ExperimentSession`; `DashboardSnapshot` um `experiment_state` erweitert.
+- **`src/dashboard/state.py`**: `set_experiment_mode`, `start_experiment_session`, `stop_experiment_session`, `add_experiment_note` hinzugefügt.
+- **`src/dashboard/server.py`**: Neue API-Endpunkte für Experiment Mode:
+  - `GET /api/experiment/mode`
+  - `GET /api/experiment/sessions`
+  - `POST /api/experiment/mode`
+  - `POST /api/experiment/session/start`
+  - `POST /api/experiment/session/stop`
+  - `POST /api/experiment/note`
+
+### Frontend
+- **`src/dashboard/static/experiment-mode.js`**: Neues Modul für Operator/Experiment/Debug-Umschaltung, Session-Management, Notizen und Historie.
+- **`src/dashboard/static/index.html`**: Mode-Switcher in Topbar + Experiment-Panel im CONTROL-Tab.
+- **`src/dashboard/static/styles.css`**: Stile für Mode-Switcher, Experiment-Panel und Session-Liste.
+- **`src/dashboard/static/app.js`**: `ExperimentMode` importiert und initialisiert.
+
+### Tests
+- **`tests/test_dashboard_experiment_mode.py`**: 7 neue Tests für Experiment Mode.
+- Dashboard-Test-Suite: **58 passed**.
 ## 2026-08-30 — Dashboard Operator-Workbench: Control/Console Entkopplung
 
 ### Frontend

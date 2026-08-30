@@ -47,6 +47,7 @@ from .gate_status import GateStatusBuilder
 from .integration_status import IntegrationStatusBuilder
 from .models import (
     ExperimentSession,
+    JSONScalar,
     JSONValue,
     ParameterChangeRecord,
     ParameterSchema,
@@ -240,6 +241,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             # ----------------------------------------------------------------
 
             if path == "/api/status":
+                self._send_json(server.dashboard_state.snapshot().to_json())
+                return
+
+            if path == "/api/state":
                 self._send_json(server.dashboard_state.snapshot().to_json())
                 return
 

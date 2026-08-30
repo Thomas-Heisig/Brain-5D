@@ -73,20 +73,26 @@
   - Backend: `PendingParameterChange`, `ParameterChangeRecord`, API-Endpunkte `/api/parameters/pending/*`
   - Frontend: `parameter-inspector.js` mit Parameter-Tabelle, Pending-Bar und Change-History
   - Tests: `tests/test_dashboard_pending_parameters.py` (8 Tests)
-- [ ] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
-- [ ] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
-  - [ ] StateStore vollständig integrieren: `app.js` darf keine eigenen
-        `/api/gate/status`, `/api/structural/errors`, `/api/integration/status`,
-        `/api/snapshot-info`, `/api/heatmap`-Requests mehr starten; nur
-        globale State- und Health-Daten kommen aus dem Store; große
-        wissenschaftliche Daten (heatmap, raster, projection, Tabellen)
-        bleiben separat/lazy geladen
-  - [ ] Health-State-Semantik korrigieren:
-        - `enabled ≠ active` (z. B. Learning: enabled aus Config, activity
-          aus `stdp_updates` / `reward_updates`)
-        - `unavailable ≠ disabled`
-        - Verification-Status muss Gate-Zustand widerspiegeln
-          (`active/stale/failed/pending`), nicht nur Endpoint-Erreichbarkeit
+- [x] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
+  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
+  - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
+  - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
+- [~] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
+  - [x] StateStore vollständig integrieren: Backend publiziert jetzt
+        angereicherte Snapshots; `/api/state` liefert den vollständigen
+        Store; globale State- und Health-Daten kommen aus dem Store.
+        Wissenschaftliche Daten (heatmap, raster, projection, Tabellen)
+        bleiben separat/lazy geladen.
+  - [x] Health-State-Semantik korrigieren:
+        - `enabled ≠ active`: Learning/Homeostasis/Structural/Storage
+          unterscheiden jetzt `enabled` (Config), `active` (Runtime),
+          `disabled` (Config aus) und `unavailable` (Fehlerzustand).
+        - `unavailable ≠ disabled`: Komponenten, die in der Config
+          deaktiviert sind, melden `disabled` mit `source: config`;
+          fehlende/fehlerhafte Komponenten melden `unavailable`.
+        - Verification-Status spieglt Gate-Zustand wider
+          (`active/stale/failed/pending`), nicht nur Endpoint-Erreichbarkeit.
+          Der Health-Builder leitet den Status aus den Gate-Artefakten ab.
 
 ## Priorität 2 — Code-Qualität
 

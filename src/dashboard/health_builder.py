@@ -89,82 +89,161 @@ def _network_status(snapshot: DashboardSnapshot) -> ComponentStatus:
     )
 
 
-def _learning_status(snapshot: DashboardSnapshot) -> ComponentStatus:
-    """Derive learning component status."""
-    if snapshot.learning.stdp_updates == 0 and snapshot.learning.reward_updates == 0:
-        status = "disabled"
-        reason = "STDP and reward updates are zero (likely disabled by config)"
-    else:
-        status = "active"
-        reason = (
-            f"STDP updates: {snapshot.learning.stdp_updates}, "
-            f"reward updates: {snapshot.learning.reward_updates}"
+def _learning_status(
+    snapshot: DashboardSnapshot,
+    config_dict: dict[str, Any] | None,
+) -> ComponentStatus:
+    """Derive learning component status.
+
+    ``enabled`` reflects configuration; ``active`` reflects runtime activity
+    measured by STDP/reward update counters.
+    """
+    enabled = _is_enabled(config_dict, "stdp", "enabled") or _is_enabled(
+        config_dict, "reward", "enabled"
+    )
+    active = snapshot.learning.stdp_updates > 0 or snapshot.learning.reward_updates > 0
+
+    if not enabled:
+        return ComponentStatus(
+            component="learning",
+            status="disabled",
+            reason="Learning is disabled by config (stdp.enabled / reward.enabled)",
+            last_update=_utc_now(),
+            source="config",
+            maturity="integrated",
+        )
+    if active:
+        return ComponentStatus(
+            component="learning",
+            status="active",
+            reason=(
+                f"STDP updates: {snapshot.learning.stdp_updates}, "
+                f"reward updates: {snapshot.learning.reward_updates}"
+            ),
+            last_update=_utc_now(),
+            source="DashboardStateStore",
+            maturity="integrated",
         )
     return ComponentStatus(
         component="learning",
-        status=status,
-        reason=reason,
+        status="enabled",
+        reason="Learning is enabled by config but has no updates yet",
         last_update=_utc_now(),
         source="DashboardStateStore",
         maturity="integrated",
     )
 
 
-def _homeostasis_status(snapshot: DashboardSnapshot) -> ComponentStatus:
-    """Derive homeostasis component status."""
-    if not snapshot.homeostasis.enabled:
+def _homeostasis_status(
+    snapshot: DashboardSnapshot,
+    config_dict: dict[str, Any] | None,
+) -> ComponentStatus:
+    """Derive homeostasis component status.
+
+    ``enabled`` reflects configuration; ``active`` reflects runtime activity
+    measured by regulator updates.
+    """
+    enabled = _is_enabled(config_dict, "homeostasis", "enabled")
+    active = snapshot.homeostasis.updates > 0
+
+    if not enabled:
         return ComponentStatus(
             component="homeostasis",
             status="disabled",
             reason="Homeostasis is disabled by config",
+            last_update=_utc_now(),
+            source="config",
+            maturity="integrated",
+        )
+    if active:
+        return ComponentStatus(
+            component="homeostasis",
+            status="active",
+            reason=(
+                f"Target rate {snapshot.homeostasis.target_rate_hz:.3f} Hz, "
+                f"updates: {snapshot.homeostasis.updates}"
+            ),
             last_update=_utc_now(),
             source="DashboardStateStore",
             maturity="integrated",
         )
     return ComponentStatus(
         component="homeostasis",
-        status="active",
-        reason=f"Target rate {snapshot.homeostasis.target_rate_hz:.3f} Hz",
+        status="enabled",
+        reason="Homeostasis is enabled by config but has not updated yet",
         last_update=_utc_now(),
         source="DashboardStateStore",
         maturity="integrated",
     )
 
 
-def _structural_status(snapshot: DashboardSnapshot) -> ComponentStatus:
-    """Derive structural plasticity component status."""
-    if snapshot.self_organization.available is False:
+def _structural_status(
+    snapshot: DashboardSnapshot,
+    config_dict: dict[str, Any] | None,
+) -> ComponentStatus:
+    """Derive structural plasticity component status.
+
+    ``enabled`` reflects configuration; ``active`` reflects runtime activity
+    measured by self-organization counters.
+    """
+    enabled = _is_enabled(config_dict, "self_organization", "enabled")
+    active = (
+        (snapshot.self_organization.neurons_created or 0) > 0
+        or (snapshot.self_organization.neurons_removed or 0) > 0
+        or (snapshot.self_organization.synapses_created or 0) > 0
+        or (snapshot.self_organization.synapses_pruned or 0) > 0
+    )
+
+    if not enabled:
         return ComponentStatus(
             component="structural",
             status="disabled",
             reason="Self-organization is disabled by config",
+            last_update=_utc_now(),
+            source="config",
+            maturity="integrated",
+        )
+    if active:
+        return ComponentStatus(
+            component="structural",
+            status="active",
+            reason=(
+                f"Created {snapshot.self_organization.neurons_created or 0} neurons, "
+                f"pruned {snapshot.self_organization.synapses_pruned or 0} synapses"
+            ),
             last_update=_utc_now(),
             source="DashboardStateStore",
             maturity="integrated",
         )
     return ComponentStatus(
         component="structural",
-        status="active",
-        reason=(
-            f"Created {snapshot.self_organization.neurons_created or 0} neurons, "
-            f"pruned {snapshot.self_organization.synapses_pruned or 0} synapses"
-        ),
+        status="enabled",
+        reason="Self-organization is enabled by config but has not changed structure yet",
         last_update=_utc_now(),
         source="DashboardStateStore",
         maturity="integrated",
     )
 
 
-def _storage_status(snapshot: DashboardSnapshot) -> ComponentStatus:
-    """Derive storage component status."""
+def _storage_status(
+    snapshot: DashboardSnapshot,
+    config_dict: dict[str, Any] | None,
+) -> ComponentStatus:
+    """Derive storage component status.
+
+    ``enabled`` reflects configuration; ``active`` reflects runtime activity
+    measured by deltas written.
+    """
     storage = snapshot.storage
-    if not storage.available:
+    enabled = _is_enabled(config_dict, "storage", "enabled")
+
+    if not enabled:
         return ComponentStatus(
             component="storage",
             status="disabled",
             reason="Storage is disabled by config",
             last_update=_utc_now(),
-            source="DashboardStateStore",
+            source="config",
             maturity="integrated",
         )
     if storage.worker_failed:
@@ -186,10 +265,19 @@ def _storage_status(snapshot: DashboardSnapshot) -> ComponentStatus:
             source="DashboardStateStore",
             maturity="integrated",
         )
+    if storage.deltas_written:
+        return ComponentStatus(
+            component="storage",
+            status="active",
+            reason=f"{storage.deltas_written} deltas written",
+            last_update=_utc_now(),
+            source="DashboardStateStore",
+            maturity="integrated",
+        )
     return ComponentStatus(
         component="storage",
-        status="active",
-        reason=f"{storage.deltas_written or 0} deltas written",
+        status="enabled",
+        reason="Storage is enabled by config but has not written deltas yet",
         last_update=_utc_now(),
         source="DashboardStateStore",
         maturity="integrated",
@@ -208,16 +296,49 @@ def _telemetry_status(snapshot: DashboardSnapshot) -> ComponentStatus:
     )
 
 
-def _health_status(snapshot: DashboardSnapshot) -> ComponentStatus:
-    """Derive health subsystem status."""
-    overall = snapshot.health.overall
-    status = "active" if overall in ("ok", "healthy") else overall
-    if status not in {"active", "degraded", "unavailable", "error", "stale", "disabled"}:
+def _health_status(components: dict[str, ComponentStatus]) -> ComponentStatus:
+    """Derive health subsystem status from the other components.
+
+    The health component reflects the aggregate state of all other
+    components.  It must not depend on the snapshot's own health field,
+    because that would create a circular definition during enrichment.
+    """
+    errors = 0
+    warnings = 0
+    unavailable = 0
+    stale_count = 0
+    for comp in components.values():
+        if comp.component == "health":
+            continue
+        if comp.status == "error":
+            errors += 1
+        elif comp.status == "degraded":
+            warnings += 1
+        elif comp.status == "unavailable":
+            unavailable += 1
+        elif comp.status == "stale":
+            stale_count += 1
+
+    if errors:
+        status = "error"
+        reason = f"{errors} component(s) reported error"
+    elif warnings:
+        status = "degraded"
+        reason = f"{warnings} component(s) degraded"
+    elif unavailable:
         status = "unavailable"
+        reason = f"{unavailable} component(s) unavailable"
+    elif stale_count:
+        status = "stale"
+        reason = f"{stale_count} component(s) stale"
+    else:
+        status = "active"
+        reason = "All components healthy"
+
     return ComponentStatus(
         component="health",
         status=status,
-        reason=f"Overall health: {overall}",
+        reason=reason,
         last_update=_utc_now(),
         source="HealthBuilder",
         maturity="integrated",
@@ -469,27 +590,14 @@ def build_component_status(
     components: dict[str, ComponentStatus] = {
         "runtime": _runtime_status(snapshot),
         "network": _network_status(snapshot),
-        "learning": _learning_status(snapshot),
-        "homeostasis": _homeostasis_status(snapshot),
-        "structural": _structural_status(snapshot),
-        "storage": _storage_status(snapshot),
+        "learning": _learning_status(snapshot, config_dict),
+        "homeostasis": _homeostasis_status(snapshot, config_dict),
+        "structural": _structural_status(snapshot, config_dict),
+        "storage": _storage_status(snapshot, config_dict),
         "telemetry": _telemetry_status(snapshot),
-        "health": _health_status(snapshot),
         "verification": _verification_status(snapshot),
     }
-
-    # Override with explicit config knowledge where available.
-    if config_dict is not None:
-        if _is_enabled(config_dict, "storage", "enabled"):
-            if components["storage"].status == "disabled":
-                components["storage"] = ComponentStatus(
-                    component="storage",
-                    status="unavailable",
-                    reason="storage.enabled true but telemetry reports disabled",
-                    last_update=_utc_now(),
-                    source="config+telemetry",
-                    maturity="integrated",
-                )
+    components["health"] = _health_status(components)
 
     return components
 
