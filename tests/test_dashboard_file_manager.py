@@ -48,7 +48,6 @@ def test_save_content_updates_text_file() -> None:
 
         server, thread = _start_server(tmp_path)
         try:
-            host, port = server.server_address[:2]
             conn = HTTPConnection(host, port)
             try:
                 body = json.dumps({"content": "updated", "backup": True})
@@ -80,7 +79,6 @@ def test_save_content_rejects_traversal() -> None:
 
         server, thread = _start_server(tmp_path)
         try:
-            host, port = server.server_address[:2]
             conn = HTTPConnection(host, port)
             try:
                 body = json.dumps({"content": "evil", "backup": True})
@@ -108,7 +106,6 @@ def test_save_content_rejects_missing_content() -> None:
 
         server, thread = _start_server(tmp_path)
         try:
-            host, port = server.server_address[:2]
             conn = HTTPConnection(host, port)
             try:
                 body = json.dumps({"backup": True})
@@ -136,7 +133,6 @@ def test_save_content_rejects_binary_extension() -> None:
 
         server, thread = _start_server(tmp_path)
         try:
-            host, port = server.server_address[:2]
             conn = HTTPConnection(host, port)
             try:
                 body = json.dumps({"content": "not allowed", "backup": True})
@@ -165,7 +161,6 @@ def test_save_content_creates_backup() -> None:
 
         server, thread = _start_server(tmp_path)
         try:
-            host, port = server.server_address[:2]
             conn = HTTPConnection(host, port)
             try:
                 body = json.dumps({"content": "updated", "backup": True})
