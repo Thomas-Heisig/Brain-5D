@@ -107,6 +107,15 @@
         </article>
       </section>
 
+      <!-- Active Profile -->
+      <section class="card active-profile-card">
+        <div class="panel-title">
+          <div><h2>⚙️ Active Profile</h2></div>
+          <span class="config-badge" id="overview-active-profile">—</span>
+        </div>
+        <p class="heatmap-meta" id="profile-meta">Current runtime configuration</p>
+      </section>
+
       <!-- Snapshot Info -->
       <section class="card snapshot-info-card">
         <div class="panel-title">
@@ -117,32 +126,6 @@
           <div class="snapshot-info-item"><span>Tick</span><strong id="snapshot-tick">—</strong></div>
           <div class="snapshot-info-item"><span>Größe</span><strong id="snapshot-size">—</strong></div>
           <div class="snapshot-info-item"><span>Status</span><strong id="snapshot-status">⏳</strong></div>
-        </div>
-      </section>
-
-      <!-- Roadmap -->
-      <section class="grid roadmap-grid">
-        <article class="card roadmap"><strong>v0.4</strong><span>Persistenz</span></article>
-        <article class="card roadmap current"><strong>v0.5</strong><span>Integration Hardening</span></article>
-        <article class="card roadmap"><strong>v0.5α6</strong><span>Morphological Self-Reg</span></article>
-        <article class="card roadmap"><strong>v0.6</strong><span>Skalierung</span></article>
-        <article class="card roadmap"><strong>v0.7</strong><span>Learning Env.</span></article>
-        <article class="card roadmap"><strong>v0.8+</strong><span>Embodiment → HMI → KI</span></article>
-      </section>
-
-      <!-- Integration Status -->
-      <section class="card integration-status">
-        <div class="panel-title">
-          <h2>🔗 Integration Status <span style="font-size:0.7rem;font-weight:400;color:var(--muted);cursor:pointer;" id="integration-version-hint">(klick für Details)</span></h2>
-          <span id="integration-badge">checking…</span>
-        </div>
-        <div class="integration-grid" id="integration-grid">
-          <div class="integration-item clickable" id="int-bridge" data-version="alpha.5">🌉 Bridge</div>
-          <div class="integration-item clickable" id="int-controller" data-version="alpha.5">🎮 Controller</div>
-          <div class="integration-item clickable" id="int-structural" data-version="alpha.5">🧠 Structural</div>
-          <div class="integration-item clickable" id="int-snapshots" data-version="alpha.5">💾 Snapshots</div>
-          <div class="integration-item clickable" id="int-research" data-version="alpha.5">🔬 Research</div>
-          <div class="integration-item clickable" id="int-tests" data-version="alpha.5">🧪 Tests</div>
         </div>
       </section>
 
@@ -280,10 +263,10 @@
     <!-- TAB: CONTROL & CONSOLE -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-control">
-      <!-- Runtime Control -->
+      <!-- Runtime Configuration -->
       <section class="control-card" id="runtime-control-card">
         <div class="control-card__header">
-          <div class="control-card__title-group"><h2 id="runtime-control-title">Runtime Control</h2><p class="control-card__subtitle">Step execution, loop control, pacing, snapshots &amp; structural gates</p></div>
+          <div class="control-card__title-group"><h2 id="runtime-control-title">Runtime Configuration</h2><p class="control-card__subtitle">Loop pacing, delay and self-organization policy</p></div>
           <span class="runtime-state" id="runtime-state" role="status">unknown</span>
         </div>
         <div class="runtime-metrics">
@@ -293,25 +276,13 @@
           <div class="metric-item"><span class="metric-label">Batch ms</span><strong class="metric-value" id="runtime-last-ms">0.0</strong></div>
         </div>
         <div class="control-grid">
-          <div class="control-group step-group">
-            <div class="control-group__header"><span class="control-group__title">Step</span><span class="shortcut-hint">Ctrl+Shift+S</span></div>
-            <div class="control-group__body"><label class="input-label" for="step-ticks">Ticks <input id="step-ticks" type="number" min="1" max="10000000" value="1" /></label><button id="step-button" type="button" class="btn-primary">Step</button></div>
-          </div>
-          <div class="control-group run-group">
-            <div class="control-group__header"><span class="control-group__title">Run Loop</span><span class="shortcut-hint">Ctrl+Shift+R</span></div>
-            <div class="control-group__body"><label class="input-label" for="loop-size">Loop size <input id="loop-size" type="number" min="1" max="1000000" value="100" /></label><button id="run-button" type="button" class="btn-success">Run</button></div>
+          <div class="control-group config-group">
+            <div class="control-group__header"><span class="control-group__title">Loop size</span></div>
+            <div class="control-group__body"><label class="input-label" for="loop-size">Ticks <input id="loop-size" type="number" min="1" max="1000000" value="100" /></label></div>
           </div>
           <div class="control-group config-group">
-            <div class="control-group__header"><span class="control-group__title">Configure</span></div>
-            <div class="control-group__body"><label class="input-label" for="delay-ms">Delay/tick (ms) <input id="delay-ms" type="number" min="0" max="60000" step="0.1" value="0" /></label><button id="apply-runtime-config" type="button" class="btn-secondary">Apply</button></div>
-          </div>
-          <div class="control-group actions-group">
-            <div class="control-group__header"><span class="control-group__title">Control</span></div>
-            <div class="control-group__body actions-row">
-              <button id="pause-button" type="button" class="btn-warning">Pause</button>
-              <button id="snapshot-button" type="button" class="btn-info">Snapshot</button>
-              <button id="stop-button" type="button" class="btn-danger">Stop</button>
-            </div>
+            <div class="control-group__header"><span class="control-group__title">Delay</span></div>
+            <div class="control-group__body"><label class="input-label" for="delay-ms">ms/tick <input id="delay-ms" type="number" min="0" max="60000" step="0.1" value="0" /></label><button id="apply-runtime-config" type="button" class="btn-secondary">Apply</button></div>
           </div>
         </div>
         <details class="self-org-section" id="self-org-section">
@@ -319,7 +290,6 @@
           <div class="self-org-controls">
             <div class="self-org-row"><label class="switch-line" for="self-org-enabled"><input id="self-org-enabled" type="checkbox" checked /><span class="switch-line__label">Policy enabled</span><span class="switch-line__help">Allow structural changes</span></label><label class="switch-line" for="self-org-dry-run"><input id="self-org-dry-run" type="checkbox" checked /><span class="switch-line__label">Dry-run mode</span><span class="switch-line__help">Simulate without applying</span></label></div>
             <div class="proposal-line"><span class="proposal-label">Last proposal</span><strong id="self-org-proposal">none</strong><span id="self-org-proposal-time" class="proposal-time"></span></div>
-            <div class="proposal-actions"><button id="btn-undo-structural" type="button" class="btn-small undo">Undo last change</button><button id="btn-auto-approval" type="button" class="btn-small auto-approval" data-enabled="false">Enable Auto-Approval</button></div>
           </div>
         </details>
         <output id="control-message" class="control-message" aria-live="polite">Ready</output>
@@ -338,7 +308,7 @@
         </div>
         <div class="console-controls">
           <div class="control-group"><div class="control-group__header"><span class="control-group__title">Step</span><span class="shortcut-hint">Ctrl+Enter</span></div><div class="control-group__body"><button id="b5d-step" class="btn-primary">+1 Tick</button></div></div>
-          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Run N Ticks</span></div><div class="control-group__body"><label class="input-label" for="b5d-tick-count"><input id="b5d-tick-count" type="number" min="1" max="10000000" value="100" /></label><button id="b5d-run-ticks" class="btn-success">Run</button></div></div>
+          <div class="control-group"><div class="control-group__header"><span class="control-group__title">Run N Ticks</span><span class="shortcut-hint">Ctrl+Shift+R</span></div><div class="control-group__body"><button id="b5d-run-ticks" class="btn-success">Run</button><span class="loop-size-hint" id="loop-size-hint">loop size from Runtime Configuration</span></div></div>
           <div class="control-group"><div class="control-group__header"><span class="control-group__title">Runtime</span></div><div class="control-group__body actions-row"><button id="b5d-start" class="btn-success">Start</button><button id="b5d-pause" class="btn-warning">Pause</button><button id="b5d-resume" class="btn-primary">Resume</button><button id="b5d-stop" class="btn-danger">Stop</button></div></div>
           <div class="control-group"><div class="control-group__header"><span class="control-group__title">Utilities</span></div><div class="control-group__body actions-row"><button id="b5d-snapshot" class="btn-info">Snapshot</button><button id="b5d-undo" class="btn-undo">Undo Change</button><button id="b5d-clear-console" class="btn-secondary">Clear</button></div></div>
         </div>

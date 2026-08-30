@@ -1248,6 +1248,13 @@ main {
   min-width: 40px;
 }
 
+.loop-size-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-left: 8px;
+  align-self: center;
+}
+
 /* Console Controls */
 .console-controls {
   display: grid;
@@ -3547,6 +3554,331 @@ footer {
     background: #f5f5f5 !important;
     color: black !important;
   }
+
+/* ============================================================================
+   BIBTEX VIEWER
+   ============================================================================ */
+
+.bibtex-viewer {
+  font-family: var(--font-family);
+}
+
+.bibtex-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 0 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+
+.bibtex-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bibtex-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bibtex-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.bibtex-count {
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.bibtex-warning {
+  font-size: 0.78rem;
+  color: var(--color-warning);
+  background: rgba(230, 170, 40, 0.12);
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.bibtex-ok {
+  font-size: 0.78rem;
+  color: var(--color-success);
+  background: rgba(36, 180, 110, 0.12);
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.bibtex-view-btn {
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.bibtex-view-btn:hover {
+  border-color: rgba(74, 124, 247, 0.3);
+  color: var(--text);
+  background: rgba(74, 124, 247, 0.06);
+}
+
+.bibtex-view-btn.active {
+  background: rgba(74, 124, 247, 0.2);
+  border-color: var(--color-primary);
+  color: #7aabff;
+  font-weight: 500;
+}
+
+.bibtex-copy-all-btn,
+.bibtex-export-btn {
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(74, 124, 247, 0.1);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.bibtex-copy-all-btn:hover,
+.bibtex-export-btn:hover {
+  background: rgba(74, 124, 247, 0.25);
+  color: #fff;
+  border-color: rgba(74, 124, 247, 0.3);
+}
+
+/* Validation bar */
+.bibtex-validation-bar {
+  margin-bottom: 10px;
+}
+
+.bibtex-validation-msg {
+  font-size: 0.78rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.bibtex-validation-msg.ok {
+  color: var(--color-success);
+  background: rgba(36, 180, 110, 0.08);
+}
+
+.bibtex-validation-msg.warning {
+  color: var(--color-warning);
+  background: rgba(230, 170, 40, 0.08);
+}
+
+.bibtex-show-issues {
+  color: #7aabff;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(122, 171, 255, 0.3);
+}
+
+.bibtex-show-issues:hover {
+  border-bottom-color: #7aabff;
+}
+
+/* Table */
+.bibtex-table-container {
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+
+.bibtex-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.bibtex-table thead th {
+  background: rgba(74, 124, 247, 0.1);
+  color: #7aabff;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  white-space: nowrap;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.bibtex-sortable {
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.bibtex-sortable:hover {
+  background: rgba(74, 124, 247, 0.18);
+}
+
+.bibtex-sort-icon {
+  font-size: 0.65rem;
+  color: #555;
+  margin-left: 4px;
+}
+
+.bibtex-table tbody td {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.bibtex-table tbody tr {
+  transition: background var(--transition-fast);
+}
+
+.bibtex-table tbody tr:hover {
+  background: rgba(74, 124, 247, 0.04);
+}
+
+.bibtex-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.bibtex-table tbody tr:nth-child(even):hover {
+  background: rgba(74, 124, 247, 0.06);
+}
+
+.bibtex-row-warn {
+  border-left: 3px solid var(--color-warning) !important;
+}
+
+.bibtex-cell-key code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #ce9178;
+}
+
+.bibtex-cell-author {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bibtex-cell-title {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bibtex-cell-year {
+  text-align: center;
+  font-family: var(--font-mono);
+  color: #b5cea8;
+}
+
+.bibtex-cell-status {
+  text-align: center;
+}
+
+.bibtex-type-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: rgba(74, 124, 247, 0.12);
+  color: #7aabff;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.bibtex-status-ok {
+  font-size: 0.85rem;
+  cursor: default;
+}
+
+.bibtex-status-warn {
+  font-size: 0.85rem;
+  cursor: help;
+}
+
+/* Action buttons in table */
+.bibtex-cell-actions {
+  white-space: nowrap;
+}
+
+.bibtex-action-btn {
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 0.68rem;
+  transition: all var(--transition-fast);
+  margin: 0 1px;
+}
+
+.bibtex-action-btn:hover {
+  background: rgba(74, 124, 247, 0.2);
+  color: #fff;
+  border-color: rgba(74, 124, 247, 0.3);
+}
+
+/* Code view */
+.bibtex-code-container {
+  margin-bottom: 12px;
+}
+
+.bibtex-code {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 16px;
+  border-radius: var(--radius-small);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  margin: 0;
+  color: var(--text);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Footer stats */
+.bibtex-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.bibtex-footer-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.bibtex-footer-stats strong {
+  color: var(--text);
+}
   
   .runtime-state.status-running::before {
     animation: none !important;

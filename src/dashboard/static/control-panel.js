@@ -372,21 +372,13 @@ export class ControlPanel {
       'runtime-queued',
       'runtime-last-batch',
       'runtime-last-ms',
-      'step-ticks',
       'loop-size',
       'delay-ms',
-      'step-button',
-      'run-button',
-      'pause-button',
-      'stop-button',
       'apply-runtime-config',
-      'snapshot-button',
       'self-org-enabled',
       'self-org-dry-run',
       'self-org-proposal',
       'self-org-status-badge',
-      'btn-undo-structural',
-      'btn-auto-approval',
       'control-message',
     ];
 
@@ -476,12 +468,7 @@ export class ControlPanel {
     setText('runtime-last-batch', String(state.getLastBatchTicks()));
     setText('runtime-last-ms', formatNumber(state.getLastBatchMs(), 2));
 
-    // Snapshot button
-    const snapshotBtn = this._elements['snapshot-button'];
-    if (snapshotBtn) {
-      snapshotBtn.disabled = !state.canSnapshot();
-    }
-  }
+
 
   /**
    * Render self-organization state.
@@ -498,8 +485,6 @@ export class ControlPanel {
     const enabled = this._elements['self-org-enabled'];
     const dryRun = this._elements['self-org-dry-run'];
     const proposal = this._elements['self-org-proposal'];
-    const undoBtn = this._elements['btn-undo-structural'];
-    const autoBtn = this._elements['btn-auto-approval'];
 
     // Query the real structural config from the backend.
     let configured = false;
@@ -534,8 +519,6 @@ export class ControlPanel {
       if (enabled) { enabled.checked = false; enabled.disabled = true; }
       if (dryRun) { dryRun.checked = false; dryRun.disabled = true; }
       if (proposal) proposal.textContent = 'disabled by config';
-      if (undoBtn) undoBtn.disabled = true;
-      if (autoBtn) autoBtn.disabled = true;
       return;
     }
 
@@ -553,8 +536,6 @@ export class ControlPanel {
         ? `${last.action || 'unknown'} × ${last.count || 0} — ${last.reason || 'no reason'}`
         : 'none';
     }
-    if (undoBtn) undoBtn.disabled = false;
-    if (autoBtn) autoBtn.disabled = false;
   }
 
   /**
@@ -579,40 +560,10 @@ export class ControlPanel {
   // ========================================================================
 
   _initEventListeners() {
-    // Step button
-    const stepBtn = this._elements['step-button'];
-    if (stepBtn) {
-      stepBtn.addEventListener('click', () => this._handleStep());
-    }
-
-    // Run button
-    const runBtn = this._elements['run-button'];
-    if (runBtn) {
-      runBtn.addEventListener('click', () => this._handleRun());
-    }
-
-    // Pause button
-    const pauseBtn = this._elements['pause-button'];
-    if (pauseBtn) {
-      pauseBtn.addEventListener('click', () => this._handlePause());
-    }
-
-    // Stop button
-    const stopBtn = this._elements['stop-button'];
-    if (stopBtn) {
-      stopBtn.addEventListener('click', () => this._handleStop());
-    }
-
     // Configure button
     const applyBtn = this._elements['apply-runtime-config'];
     if (applyBtn) {
       applyBtn.addEventListener('click', () => this._handleConfigure());
-    }
-
-    // Snapshot button
-    const snapshotBtn = this._elements['snapshot-button'];
-    if (snapshotBtn) {
-      snapshotBtn.addEventListener('click', () => this._handleSnapshot());
     }
 
     // Self-organization toggles
@@ -625,6 +576,7 @@ export class ControlPanel {
     if (selfOrgDryRun) {
       selfOrgDryRun.addEventListener('change', () => this._handleSelfOrganization());
     }
+
   }
 
   // ========================================================================
@@ -660,36 +612,6 @@ export class ControlPanel {
   }
 
   /**
-   * Handle step command.
-   */
-  async _handleStep() {
-    const ticks = getIntegerValue(this._elements['step-ticks'], 1);
-    await this._executeCommand(() => ControlAPI.step(ticks), `step ${ticks}`);
-  }
-
-  /**
-   * Handle run command.
-   */
-  async _handleRun() {
-    const loopSize = getIntegerValue(this._elements['loop-size'], 100);
-    await this._executeCommand(() => ControlAPI.runTicks(loopSize), `run ${loopSize}`);
-  }
-
-  /**
-   * Handle pause command.
-   */
-  async _handlePause() {
-    await this._executeCommand(() => ControlAPI.pause(), 'pause');
-  }
-
-  /**
-   * Handle stop command.
-   */
-  async _handleStop() {
-    await this._executeCommand(() => ControlAPI.stop(), 'stop');
-  }
-
-  /**
    * Handle configure command.
    */
   async _handleConfigure() {
@@ -699,13 +621,6 @@ export class ControlPanel {
       () => ControlAPI.configure({ loop_size: loopSize, delay_ms: delayMs }),
       'configure'
     );
-  }
-
-  /**
-   * Handle snapshot command.
-   */
-  async _handleSnapshot() {
-    await this._executeCommand(() => ControlAPI.snapshot(), 'snapshot');
   }
 
   /**

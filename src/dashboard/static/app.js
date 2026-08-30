@@ -4,14 +4,21 @@
  * This module is the ONLY component that initializes dashboard sub-modules.
  * ControlPanel and OperatorConsole are pure ES modules that do NOT
  * self-initialize. app.js imports them statically and instantiates each
- * exactly once, when its tab is first activated. This eliminates the
- * duplicate event-handler / duplicate-log symptom.
+ * exactly once, when the Control & Console tab is first activated.
  *
  * Canonical command contract (unified across Control + Console):
  *   POST /api/control  { "command": "run_ticks", "ticks": 100 }
  *
+ * Tab-based navigation (5 main areas):
+ * - OVERVIEW: high-level runtime KPIs, health/errors, active profile
+ * - NETWORK: all scientific visualizations (projection, IO-flow, populations,
+ *   raster, histogram, layer explorer, inspector, neuron/synapse tables)
+ * - CONTROL & CONSOLE: unified operator workflow, structural live loop,
+ *   console log, proposals
+ * - RESEARCH & DOCS: unified file manager for research artifacts and docs
+ * - RELEASE: Alpha.5 integration gate and verification status
+ *
  * Features:
- * - Tab-based navigation (Dashboard, Control, Console, Research, Docs, Gate)
  * - Real-time system monitoring with auto-refresh
  * - Heatmap visualization
  * - Runtime control (step, run, pause, stop, snapshot)
@@ -21,7 +28,7 @@
  * - Documentation browsing with multi-format support
  * - Keyboard shortcuts for all major actions
  *
- * @version 3.0.0
+ * @version 3.1.0
  * @license MIT
  */
 

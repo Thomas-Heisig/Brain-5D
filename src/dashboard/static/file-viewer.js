@@ -18,6 +18,12 @@
 "use strict";
 
 // ================================================================
+// BibTeX Viewer import (for structured .bib file display)
+// ================================================================
+
+import { initBibTeXViewer, wireBibTeXEvents } from './bibtex-viewer.js';
+
+// ================================================================
 // Local helpers (mirrored from app.js to keep this module standalone)
 // ================================================================
 
@@ -455,6 +461,33 @@ async function openFMFile(path) {
       document.getElementById('fm-close-viewer')?.addEventListener('click', () => {
         viewer.classList.add('fm-viewer-hidden');
       });
+    } else if (path.toLowerCase().endsWith('.bib')) {
+      // BibTeX file: use dedicated structured viewer
+      const data = await res.json();
+      const content = data.content || '';
+      const ext = (data.ext || '').toLowerCase();
+
+      viewer.innerHTML = `
+        <div class="fm-file-header">
+          <h3>${escapeHtml(data.name || path)}</h3>
+          <div class="fm-file-header-actions">
+            <span class="fm-file-meta">${formatBytes(data.size_bytes || 0)}</span>
+            <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
+          </div>
+        </div>
+        <div class="fm-content">${initBibTeXViewer(content, data.name || path, path)}</div>
+      `;
+
+      // Wire up the close button
+      const closeBtn = document.getElementById('fm-close-viewer');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          viewer.classList.add('fm-viewer-hidden');
+        });
+      }
+
+      // Wire up BibTeX-specific event handlers
+      wireBibTeXEvents();
     } else {
       // Text file: render as JSON
       const data = await res.json();

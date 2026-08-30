@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-08-30 — BibTeX Viewer für Literaturverwaltung im Dashboard
+
+### Neues Feature: Dedizierter BibTeX-Viewer
+- **`src/dashboard/static/bibtex-viewer.js`**: Neues ES-Modul für strukturierte BibTeX-Darstellung.
+  - Parser für BibTeX-Entries (`@article`, `@book`, `@inproceedings`, etc.)
+  - **Tabellarische Ansicht**: Sortierbare Tabelle (Autor, Titel, Jahr, Typ, Key) mit Spalten-Kopf-Klick
+  - **Code-Ansicht**: Raw-BibTeX mit Syntax-Highlighting (umschaltbar per Button)
+  - **Zitierfunktion**: "Cite" kopiert `(Autor, Jahr)`, "Bib" kopiert den BibTeX-Eintrag
+  - **Export**: "Copy all" kopiert alle Einträge, "Download" lädt als `.bib`-Datei herunter
+  - **DOI-Link**: Öffnet `doi.org/…` in neuem Tab
+  - **Validierung**: Prüft Pflichtfelder, Jahreszahl (4-stellig), DOI-Format; zeigt Warnungen an
+  - **Footer-Statistiken**: Anzahl Entries, Artikel, Bücher, Inproceedings, mit DOI
+- **`src/dashboard/static/file-viewer.js`**: `.bib`-Dateien werden automatisch mit dem neuen BibTeX-Viewer geöffnet (statt Raw-Code-Ansicht).
+- **`src/dashboard/static/styles.css`**: Umfangreiches BibTeX-Styling (Toolbar, Tabelle, Badges, Action-Buttons, Footer-Statistiken).
+
 ## 2026-08-30 — Research Registry Validation Hardening
 
 ### Tests

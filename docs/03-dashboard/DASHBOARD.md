@@ -73,6 +73,21 @@ Simulation / Storage / Learning
 Der HTTP-Worker liest niemals direkt aus einem mutierenden `NeuralNetwork`.
 Damit bleibt die Synchronisationsgrenze explizit.
 
+## BibTeX-Viewer
+
+Der Dashboard-Viewer erkennt `.bib`-Dateien automatisch und öffnet sie im
+dedizierten BibTeX-Viewer (`bibtex-viewer.js`). Dieser bietet:
+
+- **Tabellarische Ansicht**: Sortierbare Tabelle mit Key, Autor, Titel, Jahr, Typ, Status
+- **Code-Ansicht**: Raw-BibTeX mit Syntax-Highlighting
+- **Zitierfunktion**: Kopieren als `(Autor, Jahr)` oder als BibTeX-Snippet
+- **Export**: Alle Einträge als BibTeX kopieren oder als `.bib`-Datei herunterladen
+- **DOI-Link**: Öffnet `doi.org/…` in neuem Tab
+- **Validierung**: Prüft Pflichtfelder, Jahreszahl und DOI-Format
+- **Footer-Statistiken**: Anzahl Entries, Artikel, Bücher, Inproceedings, mit DOI
+
+Die BibTeX-Dateien liegen unter `research/literature/`.
+
 ## Sicherheit
 
 Alpha.5 ist standardmaessig nur auf `127.0.0.1` gedacht. Es gibt noch keine

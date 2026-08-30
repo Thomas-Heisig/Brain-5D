@@ -417,12 +417,12 @@ export class OperatorConsole {
       }
     }
     
-    // Run ticks
+    // Run ticks — uses the shared loop-size input from Runtime Configuration
     const runBtn = byId('b5d-run-ticks');
     if (runBtn) {
       runBtn.addEventListener('click', () => {
-        const input = byId('b5d-tick-count');
-        const count = parseInt(input?.value || '1', 10);
+        const input = byId('loop-size');
+        const count = parseInt(input?.value || '100', 10);
         if (count > 0) {
           this.handleCommand('run_ticks', { ticks: count });
         }
@@ -454,27 +454,24 @@ export class OperatorConsole {
         return;
       }
       
-      // Ctrl+Shift+S = Start
-      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+      // Ctrl+Shift+R = Run N ticks
+      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
         e.preventDefault();
-        this.handleCommand('start');
+        const input = byId('loop-size');
+        const count = parseInt(input?.value || '100', 10);
+        if (count > 0) {
+          this.handleCommand('run_ticks', { ticks: count });
+        }
         return;
       }
-      
+
       // Ctrl+Shift+P = Pause
       if (e.ctrlKey && e.shiftKey && e.key === 'P') {
         e.preventDefault();
         this.handleCommand('pause');
         return;
       }
-      
-      // Ctrl+Shift+R = Resume
-      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-        e.preventDefault();
-        this.handleCommand('resume');
-        return;
-      }
-      
+
       // Ctrl+Shift+Space = Stop
       if (e.ctrlKey && e.shiftKey && e.key === ' ') {
         e.preventDefault();

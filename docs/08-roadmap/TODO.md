@@ -7,7 +7,12 @@
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   All 5 verification artifacts share the same tested_tree_digest ✅
+>   **STALE:** Last recorded baseline is 2026-08-28 (418 passed / 3 failed /
+>   2 skipped, commit `39a4b6e...`). A/B/C restore artifact is still the
+>   old failed run (`A == B false`, `A == C false`, `B == C true`).
+>   The claim "all artifacts share the same tested_tree_digest" is
+>   **not currently true** and will be re-established in the next
+>   verification round.
 
 ## Priorität 1 — Alpha.5 Closure (aktuelle Sprint-Arbeiten)
 
@@ -30,7 +35,8 @@
 ## Priorität 3 — Infrastruktur
 
 - [ ] Hugging Face Space Deployment testen
-- [ ] CI/CD Pipeline für automatische Tests
+- [x] CI/CD Pipeline für automatische Tests (GitHub Actions: lint, type-check,
+      security, test matrix, build, docker, docs)
 - [ ] Benchmark-Ladder für 5k-1M Neuronen vorbereiten
 
 ## Erledigt
