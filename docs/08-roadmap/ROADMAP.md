@@ -1,6 +1,6 @@
 # Roadmap (Stand 1)
 
-> Last updated: 2026-08-23
+> Last updated: 2026-08-30
 > Detailed task list: `docs/08-roadmap/TODO.md`
 
 ## Stand 1 – abgeschlossenes Zielbild
