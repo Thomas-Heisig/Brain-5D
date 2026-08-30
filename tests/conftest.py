@@ -197,6 +197,9 @@ _CATEGORY_MAP: dict[str, str] = {
     "test_structural_plasticity_journal": "plasticity",
     "test_structural_recovery": "storage",
     "test_structural_undo": "plasticity",
+    "test_research_registry": "core",
+    "test_version_consistency": "core",
+    "test_experiment_validity": "core",
 }
 
 _SLOW: set[str] = {
