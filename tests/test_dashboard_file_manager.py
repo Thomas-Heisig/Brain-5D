@@ -308,3 +308,35 @@ def test_analyze_rejects_binary_file() -> None:
             server.shutdown()
             server.server_close()
             thread.join(timeout=1.0)
+
+
+def test_export_html_and_markdown() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        docs_root = tmp_path / "docs"
+        docs_root.mkdir()
+        file_path = docs_root / "report.md"
+        file_path.write_text("# Report\n\nThis is **important**.", encoding="utf-8")
+
+        server, thread = _start_server(tmp_path)
+        address = cast(tuple[str, int], server.server_address)
+        host, port = address
+        try:
+            conn = HTTPConnection(host, port)
+            try:
+                response = _request(conn, "GET", "/api/files/export/report.md?source=docs&format=html")
+                body = response.read()
+                assert response.status == 200
+                assert b"<h1>Report</h1>" in body
+                assert b"<strong>important</strong>" in body
+
+                response = _request(conn, "GET", "/api/files/export/report.md?source=docs&format=md")
+                body = response.read()
+                assert response.status == 200
+                assert b"# Report" in body
+            finally:
+                conn.close()
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=1.0)

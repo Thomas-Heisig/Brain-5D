@@ -181,17 +181,39 @@ li {{ margin: 0.25rem 0; }}
 
 def _inline_markdown(line: str) -> str:
     """Apply inline Markdown formatting (bold, italic, code links)."""
-    # Code
-    line = re.sub(r"`([^`]+)`", r"<code>\1</code>", line)
-    # Bold
-    line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
-    line = re.sub(r"__(.+?)__", r"<strong>\1</strong>", line)
-    # Italic
-    line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
-    line = re.sub(r"_(.+?)_", r"<em>\1</em>", line)
-    # Links
-    line = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', line)
-    return _escape_html(line).replace("&lt;code&gt;", "<code>").replace("&lt;/code&gt;", "</code>")
+    # Use placeholders to protect markup during escaping
+    placeholders: dict[str, str] = {}
+    counter = 0
+
+    def _protect(pattern: str, text: str) -> str:
+        nonlocal counter
+        out = text
+        for m in re.finditer(pattern, text):
+            key = f"\x00PLACEHOLDER{counter}\x00"
+            counter += 1
+            placeholders[key] = m.group(0)
+            out = out.replace(m.group(0), key, 1)
+        return out
+
+    protected = _protect(r"`[^`]+`", line)
+    protected = _protect(r"\*\*[^*]+\*\*", protected)
+    protected = _protect(r"__[^_]+__", protected)
+    protected = _protect(r"\*[^*]+\*", protected)
+    protected = _protect(r"_[^_]+_", protected)
+    protected = _protect(r"\[[^\]]+\]\([^)]+\)", protected)
+
+    escaped = _escape_html(protected)
+    for key, original in placeholders.items():
+        # Convert protected Markdown to HTML
+        html = original
+        html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+        html = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html)
+        html = re.sub(r"__(.+?)__", r"<strong>\1</strong>", html)
+        html = re.sub(r"\*(.+?)\*", r"<em>\1</em>", html)
+        html = re.sub(r"_(.+?)_", r"<em>\1</em>", html)
+        html = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', html)
+        escaped = escaped.replace(key, html)
+    return escaped
 
 
 def _iter_markdown_blocks(content: str) -> Iterator[dict[str, Any]]:
