@@ -497,6 +497,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             # Parameter pending changes
             # ----------------------------------------------------------------
 
+            body = self._read_json_object()
+
             if path == "/api/parameters/pending/apply":
                 self._apply_pending_parameters(body)
                 return

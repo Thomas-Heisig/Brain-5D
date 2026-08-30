@@ -19,10 +19,14 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] YAML Syntax-Highlighting (renderFMYaml mit farblichen Token-Klassen)
 - [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
 - [x] Research-Registry Validierung verstärkt (Duplikate, Referenzen, Pflichtfelder)
+- [x] Restore A/B/C determinism verified (`A == B == C`)
+- [x] Structural E2E verified
+- [x] Structural Live Loop verified
 - [ ] Canonical RuntimeController (remove SimpleController)
 - [ ] .b5d snapshot pipeline → heatmap
 - [ ] Structural plasticity wired through approval-gated manipulator
-- [ ] Green test baseline (zero collection errors)
+- [ ] Evidence Scope Digests statt globaler Tree-Digest
+- [ ] Green test baseline (zero collection errors, current baseline is stale)
 
 ## Sprint 2A – STDP-Labor
 
@@ -50,8 +54,14 @@ Schwellen-/Ratenregulation isoliert messen.
 - [x] Zentrale Architekturbausteine: `StatusModel`, `StateStore`, `ParameterSchema`, `Health/Problems Drawer`
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY`
 - [ ] Subtabs in NETWORK (`Live`, `Dynamics`, `Structure`, `Inspector`) und VERIFY (`Health`, `Tests`, `Determinism`, `Persistence`, `Integration`, `Evidence`, `Release Gate`)
-- [x] Entkopplung von Control/Console: Console wird Output-Log
-- [ ] Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
+- [~] Entkopplung von Control/Console: Console wird Output-Log
+  - [ ] ControlPanel als einziger Command Owner; doppelte Runtime-Shortcuts
+        aus `OperatorConsole` entfernen
+  - [ ] StateStore vollständig integrieren; `app.js` führt keine parallelen
+        Status-/Health-Requests mehr aus
+  - [ ] Health-State-Semantik korrigieren: `enabled ≠ active`,
+        `unavailable ≠ disabled`, Verification-Status aus Gate-Zustand
+- [x] Pending-Changes-Workflow für wissenschaftlich reversible Parameteränderungen
 - [ ] Experiment Mode (Operator / Experiment / Debug)
 - [ ] Domain-getriebene Frontend-Modularisierung in `src/dashboard/static/`
 

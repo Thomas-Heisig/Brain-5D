@@ -200,6 +200,8 @@ class DashboardStateStore:
             "embodiment",
             "components",
             "parameters",
+            "pending_changes",
+            "change_history",
             "health",
             "status",
             "version",

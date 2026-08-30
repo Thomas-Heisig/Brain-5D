@@ -64,7 +64,10 @@
         in `StructuralProposalPanel` überführen
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
   - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
-- [ ] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History
+- [x] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History
+  - Backend: `PendingParameterChange`, `ParameterChangeRecord`, API-Endpunkte `/api/parameters/pending/*`
+  - Frontend: `parameter-inspector.js` mit Parameter-Tabelle, Pending-Bar und Change-History
+  - Tests: `tests/test_dashboard_pending_parameters.py` (8 Tests)
 - [ ] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
 - [ ] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
   - [ ] StateStore vollständig integrieren: `app.js` darf keine eigenen

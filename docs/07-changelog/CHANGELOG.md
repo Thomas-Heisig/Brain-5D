@@ -1,5 +1,47 @@
 # Changelog
 
+## 2026-08-30 — Verification Audit: Restore Verified, Evidence Scopes Required
+
+### Verification Status
+- **Restore A/B/C determinism** is now verified (`A == B == C`, tested at commit `93620ecc...`).
+- **Structural E2E** and **Structural Live Loop** are verified.
+- **Test baseline** `tests/test_baseline.json` is stale (2026-08-28, 418 passed / 3 failed / 2 skipped, commit `39a4b6e...`); full suite must be re-run and baseline regenerated.
+- **Evidence-freshness model** is too coarse: dashboard/UI changes under `src/dashboard/` currently invalidate restore/structural evidence artifacts. This must be replaced with scoped evidence digests.
+
+### Architecture Findings
+- `StateStore` exists but is not yet the single source of truth: `app.js` still issues parallel requests to `/api/gate/status`, `/api/structural/errors`, `/api/integration/status`, `/api/snapshot-info`, `/api/heatmap`, etc.
+- `ControlPanel` and `OperatorConsole` both register runtime keyboard shortcuts, creating a double-shortcut bug.
+- `HealthBuilder` conflates `enabled` with `active` for Learning and reports Verification as `active` based only on endpoint availability rather than actual gate/evidence state.
+- `tmp/restore_diag/` and `tmp/trace_diag/` contain checked-in diagnostic state dumps that should not live in the normal source tree.
+
+### Next Steps
+1. Make `ControlPanel` the sole command owner; remove runtime shortcuts from `OperatorConsole`.
+2. Introduce evidence scope digests so UI changes do not mark scientific proofs stale.
+3. Fix health-state semantics: `enabled ≠ active`, `unavailable ≠ disabled`, verification status reflects gate state.
+4. Source freeze → full test suite → new baseline → regenerate all evidence artifacts.
+
+## 2026-08-30 — Dashboard Operator-Workbench: Pending-Changes-Workflow
+
+### Backend
+- **`src/dashboard/models.py`**: Neue Dataclasses `PendingParameterChange` und `ParameterChangeRecord`; `DashboardSnapshot` um `pending_changes` und `change_history` erweitert.
+- **`src/dashboard/state.py`**: `set_pending_change`, `remove_pending_change`, `clear_pending_changes`, `append_change_history` hinzugefügt.
+- **`src/dashboard/server.py`**: Neue API-Endpunkte für Pending-Changes:
+  - `GET /api/parameters/pending`
+  - `POST /api/parameters/{name}/pending`
+  - `POST /api/parameters/pending/apply`
+  - `POST /api/parameters/pending/save-profile`
+  - `POST /api/parameters/pending/cancel`
+
+### Frontend
+- **`src/dashboard/static/parameter-inspector.js`**: Neuer Parameter-Inspector mit Filter, Edit/Reset, Pending-Bar (Apply / Apply+Save Profile / Cancel) und Change-History.
+- **`src/dashboard/static/index.html`**: Parameter-Inspector-Card im CONTROL-Tab ergänzt.
+- **`src/dashboard/static/styles.css`**: Stile für Parameter-Tabelle, Pending-Bar und Change-History.
+- **`src/dashboard/static/app.js`**: `ParameterInspector` importiert und initialisiert.
+
+### Tests
+- **`tests/test_dashboard_pending_parameters.py`**: 8 neue Tests für den Pending-Changes-Workflow.
+- Dashboard-Test-Suite: **51 passed**.
+
 ## 2026-08-30 — Dashboard Operator-Workbench: Control/Console Entkopplung
 
 ### Frontend

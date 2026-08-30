@@ -44,6 +44,7 @@ import { initResearchBrowser, initDocumentationBrowser } from './file-viewer.js'
 import { dashboardStore } from './state-store.js';
 import { initHealthDrawer } from './health-drawer.js';
 import { consoleLog } from './console-log.js';
+import { ParameterInspector } from './parameter-inspector.js';
 
 // ================================================================
 // DOM HELPERS
@@ -157,18 +158,7 @@ function setupTabs() {
   const instances = {
     control: null,
     console: null,
-  };
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Update button states
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      // Show corresponding tab
-      const tabName = btn.dataset.tab;
-      Object.keys(contents).forEach(key => {
-        const el = contents[key];
+        parameterInspector: null,
         if (el) {
           el.classList.toggle('active', key === tabName);
         }
@@ -183,6 +173,7 @@ function setupTabs() {
       if (tabName === 'control' && !initialized.control) {
         instances.control = initControlPanel();
         instances.console = initOperatorConsole();
+        instances.parameterInspector = initParameterInspector();
         initialized.control = true;
       }
       if (tabName === 'research' && !initialized.research) {
@@ -1563,6 +1554,18 @@ function initOperatorConsole() {
   console.log('📟 Operator Console initializing...');
   const instance = new OperatorConsole();
   console.log('✅ Operator Console initialized');
+  return instance;
+}
+
+// ================================================================
+// PARAMETER INSPECTOR INITIALIZATION (sole owner)
+// ================================================================
+
+function initParameterInspector() {
+  console.log('🔧 Parameter Inspector initializing...');
+  const instance = new ParameterInspector();
+  instance.refresh();
+  console.log('✅ Parameter Inspector initialized');
   return instance;
 }
 
