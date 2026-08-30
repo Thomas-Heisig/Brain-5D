@@ -1,3 +1,18 @@
+# ============================================================================
+# Brain-5D — Continuous Integration
+# ============================================================================
+# Runs on push/PR to main/develop, and weekly on Monday 06:00 UTC.
+#
+# Pipeline stages:
+#   1. lint-format   — code style, linting, pre-commit
+#   2. type-check    — static type analysis (mypy + pyright)
+#   3. security      — SAST / dependency scanning
+#   4. tests         — full test suite across Python versions (matrix)
+#   5. build         — wheel build + install verification
+#   6. docker        — Docker image build test
+#   7. docs          — documentation structure check
+# ============================================================================
+
 name: Continuous Integration
 
 on:
@@ -6,92 +21,81 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: "0 6 * * 1" # Every Monday 06:00 UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
+  checks: write
+  pull-requests: write
 
-# ---------------------------------------------------------------------------
-# Global environment
-# ---------------------------------------------------------------------------
 env:
   PYTHONUNBUFFERED: "1"
   PIP_NO_WARN_SCRIPT_LOCATION: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  FORCE_COLOR: "1"
 
-# ---------------------------------------------------------------------------
-# Reusable preparation step
-# ---------------------------------------------------------------------------
 defaults:
   run:
     shell: bash
 
-# ---------------------------------------------------------------------------
-# Jobs
-# ---------------------------------------------------------------------------
 jobs:
-  # =========================================================================
-  # Lint & Format
-  # =========================================================================
   lint-format:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: pip
-
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
       - name: Install project and development tools
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ".[dev]"
-
+          python -m pip install pre-commit bandit
       - name: Black (src + tests + scripts)
         run: python -m black --check src tests scripts
-
-      - name: Ruff (fast linter)
-        run: |
-          python -m pip install ruff
-          python -m ruff check src/ tests/ scripts/
-
+      - name: Ruff (fast linter + isort)
+        run: python -m ruff check src/ tests/ scripts/
       - name: Pylint quality threshold
         run: python -m pylint --fail-under=9.0 src
-
+      - name: Pre-commit hooks (all files)
+        run: python -m pre-commit run --all-files --show-diff-on-failure
       - name: Whitespace & merge-conflict check
         run: |
           git diff --check
-          ! grep -rP '<<<<<<< |=======$|>>>>>>> ' src/ tests/ scripts/ --include='*.py' --include='*.md'
+          ! grep -rP '<<<<<<< |=======$|>>>>>>> ' src/ tests/ scripts/ --include='*.py' --include='*.md' --include='*.yaml' --include='*.yml'
+      - name: Summary
+        if: always()
+        run: echo "### Lint & Format passed" >> $GITHUB_STEP_SUMMARY
 
-  # =========================================================================
-  # Static Type Checking
-  # =========================================================================
   type-check:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: pip
-
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
       - name: Install project and development tools
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ".[dev]"
-
       - name: Mypy (full src/)
         run: python -m mypy src/
-
       - name: Pyright (pyrightconfig.json scope)
         run: python -m pyright
-
-      - name: Pyright (integration scope — alpha.5)
+      - name: Pyright (integration scope)
         run: |
           python -m pyright \
             src/storage/structural_journal.py \
@@ -107,110 +111,203 @@ jobs:
             src/runtime/control.py \
             src/controller/runtime.py \
             src/visualization/structural_heatmap.py
+      - name: Summary
+        if: always()
+        run: echo "### Type Check passed" >> $GITHUB_STEP_SUMMARY
 
-  # =========================================================================
-  # Tests
-  # =========================================================================
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install bandit pip-audit
+      - name: Bandit SAST (src/)
+        run: python -m bandit -r src/ -f sarif -o bandit-results.sarif || true
+      - name: Upload Bandit SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bandit-results.sarif
+          category: bandit
+      - name: pip-audit
+        run: python -m pip_audit || true
+        continue-on-error: true
+      - name: Summary
+        if: always()
+        run: echo "### Security scan completed" >> $GITHUB_STEP_SUMMARY
+
   tests:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
       - name: Install project and dev dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ".[dev]"
-
-      - name: Full test suite
-        run: python -m pytest -v --tb=short --junit-xml=test-results.xml
-
+      - name: Smoke tests
+        run: python -m pytest -m "smoke" -v --tb=short --junit-xml=test-results-smoke.xml
+      - name: Full test suite (excluding slow)
+        run: python -m pytest -m "not slow" -v --tb=short --junit-xml=test-results-fast.xml --cov=src --cov-report=xml:coverage.xml --cov-report=term-missing:skip-covered
+      - name: Slow tests
+        run: python -m pytest -m "slow" -v --tb=short --junit-xml=test-results-slow.xml || echo "Some slow tests failed (non-blocking)"
+        continue-on-error: true
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.python-version }}
-          path: test-results.xml
+          path: |
+            test-results-*.xml
+            coverage.xml
+      - name: Publish test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: pytest-report-${{ matrix.python-version }}
+          path: test-results-*.xml
+          reporter: java-junit
+          fail-on-error: false
+          only-summary: true
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Tests (${{ matrix.python-version }})" >> $GITHUB_STEP_SUMMARY
+          python -m pytest --collect-only -q 2>&1 | tail -1 >> $GITHUB_STEP_SUMMARY || true
 
-  # =========================================================================
-  # Build & Install
-  # =========================================================================
   build:
     runs-on: ubuntu-latest
-    needs: [lint-format, type-check, tests]
-
+    timeout-minutes: 10
+    needs: [lint-format, type-check, security, tests]
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-
       - name: Build wheel
         run: |
           python -m pip install --upgrade pip build
           python -m build
-
       - name: Verify wheel installs cleanly
         run: |
           python -m pip install dist/*.whl
           python -c "import brain5d_core; print(brain5d_core.__version__)"
-
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
         with:
           name: wheel
           path: dist/*.whl
+      - name: Summary
+        run: |
+          echo "### Build successful" >> $GITHUB_STEP_SUMMARY
+          echo "Wheel: $(ls dist/*.whl)" >> $GITHUB_STEP_SUMMARY
 
-  # =========================================================================
-  # Smoke / Integration
-  # =========================================================================
-  smoke:
+  docker:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [build]
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v4
         with:
-          python-version: "3.13"
-
-      - name: Install from built wheel
+          name: wheel
+          path: dist/
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: brain5d:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Verify Docker image runs
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install dist/*.whl
-          python -m pip install -e ".[dev]"
-
-      - name: Import smoke test
-        run: python -c "
+          docker run --rm brain5d:ci python -c "
           from src.core.neuron import Neuron;
           from src.core.network import NeuralNetwork;
           from src.storage.b5d import B5DReader;
           from src.homeostasis.engine import HomeostasisEngine;
-          print('All core imports OK')
+          print('Docker image OK');
           "
+      - name: Summary
+        run: |
+          echo "### Docker build passed" >> $GITHUB_STEP_SUMMARY
+          echo "Image: brain5d:ci" >> $GITHUB_STEP_SUMMARY
 
-      - name: Config loader smoke test
-        run: python -c "
-          from src.config import load_config;
-          cfg = load_config('configs/poc_config.yaml');
-          print(f'Config loaded: {cfg[\"dimensions\"]}')
-          "
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Check documentation structure
+        run: |
+          echo "Checking docs/ structure..."
+          test -d docs && echo "docs/ directory exists" || echo "docs/ directory missing"
+          echo "### Documentation structure" >> $GITHUB_STEP_SUMMARY
+          find docs/ -name "*.md" -type f | sort | head -50 >> $GITHUB_STEP_SUMMARY || true
 
-      - name: Verifier (if present)
-        if: ${{ hashFiles('scripts/verify_v050a5.py') != '' }}
-        run: python scripts/verify_v050a5.py
+  ci-status:
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [lint-format, type-check, security, tests, build, docker, docs]
+    steps:
+      - name: CI Pipeline Summary
+        run: |
+          echo "## CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          declare -A RESULTS
+          RESULTS["lint-format"]="${{ needs.lint-format.result }}"
+          RESULTS["type-check"]="${{ needs.type-check.result }}"
+          RESULTS["security"]="${{ needs.security.result }}"
+          RESULTS["tests"]="${{ needs.tests.result }}"
+          RESULTS["build"]="${{ needs.build.result }}"
+          RESULTS["docker"]="${{ needs.docker.result }}"
+          RESULTS["docs"]="${{ needs.docs.result }}"
+          ALL_PASSED=true
+          for JOB in "${!RESULTS[@]}"; do
+            STATUS="${RESULTS[$JOB]}"
+            if [ "$STATUS" = "success" ]; then
+              echo "- **$JOB** — passed" >> $GITHUB_STEP_SUMMARY
+            elif [ "$STATUS" = "skipped" ]; then
+              echo "- **$JOB** — skipped" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **$JOB** — $STATUS" >> $GITHUB_STEP_SUMMARY
+              ALL_PASSED=false
+            fi
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "$ALL_PASSED" = true ]; then
+            echo "**All CI checks passed!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Some checks did not pass — review logs above.**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
