@@ -620,7 +620,7 @@ async function openFMFile(path) {
             <button class="fm-close-viewer-btn" id="fm-close-viewer" title="Close viewer">✕</button>
           </div>
         </div>
-        <div class="fm-content" id="fm-content">${renderFMContent(content, ext)}</div>
+        <div class="fm-content" id="fm-content">${renderFMContent(content, ext, path)}</div>
         <div class="fm-history-panel" id="fm-history-panel" style="display:none;"></div>
         <div class="fm-meta-panel" id="fm-meta-panel" style="display:none;"></div>
         <div class="fm-analyze-panel" id="fm-analyze-panel" style="display:none;"></div>
@@ -872,7 +872,7 @@ async function loadFMMeta(path, source, container) {
   }
 }
 
-function renderFMContent(content, ext) {
+function renderFMContent(content, ext, path = '') {
   if (!content) return '<div class="fm-empty">(empty file)</div>';
 
   // Markdown rendering
@@ -889,6 +889,11 @@ function renderFMContent(content, ext) {
     } catch {
       return `<div class="fm-code-wrapper"><button class="fm-copy-btn" data-content="${escapeHtml(content)}">📋 Copy</button><pre class="fm-code">${escapeHtml(content)}</pre></div>`;
     }
+  }
+
+  // Research registry YAML: structured card view
+  if ((ext === '.yaml' || ext === '.yml') && path.includes('/registry/')) {
+    return renderFMRegistry(content);
   }
 
   // YAML rendering with syntax highlighting
@@ -908,6 +913,119 @@ function renderFMContent(content, ext) {
 
   // Default: plain text
   return `<div class="fm-code-wrapper"><button class="fm-copy-btn" data-content="${escapeHtml(content)}">📋 Copy</button><pre class="fm-text">${escapeHtml(content)}</pre></div>`;
+}
+
+// ================================================================
+// Research registry card renderer
+// ================================================================
+
+function renderFMRegistry(content) {
+  let items = [];
+  try {
+    items = parseFMYamlList(content);
+  } catch (e) {
+    return `<div class="fm-error">⚠️ Could not parse registry YAML: ${escapeHtml(e.message)}</div>`;
+  }
+
+  if (!items.length) {
+    return '<div class="fm-empty">No registry entries found.</div>';
+  }
+
+  let html = '<div class="fm-registry-grid">';
+  items.forEach(item => {
+    const status = (item.status || 'unknown').toString().toLowerCase();
+    const id = item.id || item.ID || '—';
+    const title = item.question || item.claim || item.title || item.hypothesis || item.name || item.description || 'Untitled';
+    const type = inferRegistryType(item, id);
+    const badgeClass = `fm-registry-badge fm-registry-badge-${status}`;
+    const confidence = item.answer && item.answer.confidence ? item.answer.confidence : (item.confidence || '—');
+
+    html += `
+      <div class="fm-registry-card">
+        <div class="fm-registry-card-header">
+          <code class="fm-registry-id">${escapeHtml(id)}</code>
+          <span class="${badgeClass}">${escapeHtml(status)}</span>
+        </div>
+        <div class="fm-registry-type">${escapeHtml(type)}</div>
+        <div class="fm-registry-title">${escapeHtml(title)}</div>
+        ${item.domain ? `<div class="fm-registry-domain">Domain: ${escapeHtml(item.domain)}</div>` : ''}
+        ${item.relevance ? `<div class="fm-registry-relevance">${escapeHtml(item.relevance)}</div>` : ''}
+        ${renderRegistryLinks(item.literature, 'Literature')}
+        ${renderRegistryLinks(item.hypotheses, 'Hypotheses')}
+        ${renderRegistryLinks(item.evidence, 'Evidence')}
+        ${renderRegistryLinks(item.methods, 'Methods')}
+        ${confidence !== '—' ? `<div class="fm-registry-confidence">Confidence: ${escapeHtml(confidence)}</div>` : ''}
+        ${item.created ? `<div class="fm-registry-dates">Created ${escapeHtml(item.created)}${item.updated && item.updated !== item.created ? ` · Updated ${escapeHtml(item.updated)}` : ''}</div>` : ''}
+      </div>
+    `;
+  });
+  html += '</div>';
+  return html;
+}
+
+function inferRegistryType(item, id) {
+  if (id && id.startsWith('RQ-')) return 'Research Question';
+  if (id && id.startsWith('H-')) return 'Hypothesis';
+  if (id && id.startsWith('CLAIM-')) return 'Claim';
+  if (id && id.startsWith('SRC-')) return 'Source';
+  if (id && id.startsWith('EXP-')) return 'Experiment';
+  if (id && id.startsWith('METH-')) return 'Method';
+  if (item.hypothesis) return 'Hypothesis';
+  if (item.question) return 'Research Question';
+  if (item.claim) return 'Claim';
+  if (item.source) return 'Source';
+  return 'Entry';
+}
+
+function renderRegistryLinks(list, label) {
+  if (!Array.isArray(list) || list.length === 0) return '';
+  const links = list.map(ref => `<span class="fm-registry-link">${escapeHtml(ref)}</span>`).join('');
+  return `<div class="fm-registry-links"><span class="fm-registry-link-label">${escapeHtml(label)}:</span>${links}</div>`;
+}
+
+function parseFMYamlList(text) {
+  if (typeof jsyaml !== 'undefined') {
+    const parsed = jsyaml.load(text);
+    return Array.isArray(parsed) ? parsed : [];
+  }
+  // Fallback: minimal parser
+  const items = [];
+  let current = null;
+  let inList = null;
+  const lines = text.split('\n');
+  for (let raw of lines) {
+    const line = raw.replace(/\r$/, '');
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+
+    const matchTop = line.match(/^(\s*)- id:\s*(.+)$/);
+    if (matchTop) {
+      if (current) items.push(current);
+      current = { id: matchTop[2].trim() };
+      inList = null;
+      continue;
+    }
+
+    const matchListItem = line.match(/^(\s*)-\s+(.+)$/);
+    if (matchListItem && current && inList) {
+      current[inList].push(matchListItem[2].trim());
+      continue;
+    }
+
+    const matchKey = line.match(/^(\s*)(\w+):\s*(.*)$/);
+    if (matchKey && current) {
+      const key = matchKey[2];
+      const value = matchKey[3].trim();
+      if (value === '') {
+        current[key] = [];
+        inList = key;
+      } else {
+        current[key] = value.replace(/^["'](.*)["']$/, '$1');
+        inList = null;
+      }
+    }
+  }
+  if (current) items.push(current);
+  return items;
 }
 
 // ================================================================

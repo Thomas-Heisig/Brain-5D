@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-30 — Dashboard Document Viewer: Full-Feature Suite
+
+### Backend
+- **`src/dashboard/file_manager.py`**:
+  - `GET /api/files/history/{path}` — Git-History via `git log --follow`.
+  - `GET/PUT /api/files/meta/{path}` — Sidecar-Metadaten (`.meta.yaml`) für jede Datei.
+  - `GET /api/files/analyze/{path}` — Lokale Dokumentenanalyse (Sprache, Lesbarkeit, Keywords, Sentiment, Zusammenfassung).
+  - `GET /api/files/export/{path}?format={html|docx|md}` — Markdown-Export.
+  - Markdown-to-HTML/DOCX-Generierung mit Inline-Formatierung.
+
+### Frontend
+- **`src/dashboard/static/file-viewer.js`**:
+  - Jupyter Notebook (`.ipynb`), Log-Level-Highlighting, Graphviz DOT & PlantUML Renderer.
+  - In-Document-Suche, Markdown-TOC, Vollbild, Diff, Auto-Save, Backup-Restore.
+  - 🔍 Search, 🕰️ History, 📝 Notes, 🤖 Analyze, ⬇️ Export Buttons im Viewer-Header.
+  - Research-Registry-Kartenansicht für YAML-Dateien unter `research/registry/`.
+- **`src/dashboard/static/bibtex-viewer.js`**: Formular-Editor für `.bib`-Dateien mit Speichern.
+- **`src/dashboard/static/styles.css`**: Stile für alle neuen Viewer, Panels und Karten.
+- **`src/dashboard/static/index.html`**: CDN-Erweiterungen für js-yaml, xlsx, mammoth, d3, graphviz, plantuml-encoder.
+
+### Tests
+- **`tests/test_dashboard_file_manager.py`**: 10 Tests für Save, Meta, Analyze, Export, History.
+
 ## 2026-08-30 — Dashboard UI/UX Redesign: Footer-Status, Header-Steuerung, Kompaktes Overview
 
 ### Frontend

@@ -5281,6 +5281,137 @@ body.accessibility-mode .health-bar {
   padding: 0.5rem 0;
 }
 
+/* Research registry card renderer */
+.fm-registry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.fm-registry-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-medium);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fm-registry-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fm-registry-id {
+  background: var(--panel);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.fm-registry-badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fm-registry-badge-open {
+  background: rgba(230, 170, 40, 0.2);
+  color: var(--color-warning);
+}
+
+.fm-registry-badge-answered,
+.fm-registry-badge-confirmed,
+.fm-registry-badge-done,
+.fm-registry-badge-active {
+  background: rgba(36, 180, 110, 0.2);
+  color: var(--color-success);
+}
+
+.fm-registry-badge-rejected,
+.fm-registry-badge-failed,
+.fm-registry-badge-closed {
+  background: rgba(255, 93, 115, 0.2);
+  color: var(--danger);
+}
+
+.fm-registry-badge-candidate,
+.fm-registry-badge-draft,
+.fm-registry-badge-unknown {
+  background: rgba(142, 178, 193, 0.2);
+  color: var(--muted);
+}
+
+.fm-registry-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent2);
+  font-weight: 600;
+}
+
+.fm-registry-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.fm-registry-domain {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.fm-registry-relevance {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+.fm-registry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.fm-registry-link-label {
+  color: var(--muted);
+  margin-right: 0.25rem;
+}
+
+.fm-registry-link {
+  background: var(--panel);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.fm-registry-confidence {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.fm-registry-dates {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
 .mode-btn:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text);

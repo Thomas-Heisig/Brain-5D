@@ -107,6 +107,9 @@ Der integrierte Datei-Manager erkennt die gängigen Formate in `research/` und
 | Code | `.py`, `.js`, `.ts`, `.css`, `.html`, `.sh`, `.bat`, `.ps1`, `.toml`, `.xml`, `.cfg`, `.conf`, `.ini`, `.tex`, `.rst`, `.dockerfile` | Syntax-Highlighting |
 | BibTeX | `.bib` | Strukturierter BibTeX-Viewer |
 | Patches | `.patch`, `.diff` | Farblich markierte Diff-Ansicht |
+| Jupyter Notebook | `.ipynb` | Gerenderte Zellen-Ansicht mit Code, Markdown und Outputs |
+| Log-Dateien | `.log` | Level-basierte farbliche Hervorhebung |
+| Diagramme | `.dot`, `.gv`, `.puml`, `.plantuml` | Interaktive Graphviz/PlantUML-Darstellung |
 
 Binäre Dateien werden als solche markiert und bei bekannten Medientypen mit dem
 passenden Player geöffnet. Unbekannte Textdateien werden als Plaintext angezeigt.
@@ -135,6 +138,38 @@ verworfen werden.
 - **BibTeX-Formular-Editor**: `.bib`-Dateien bieten eine feldbasierte
   Bearbeitungsansicht mit Auswahl des Entry-Typs und direktem Speichern.
 - Speicher-Endpunkt: `PUT /api/files/save/{path}?source={research|docs}`
+
+## Erweiterte Viewer-Features
+
+Jeder Text-/Code-Viewer bietet zusätzliche Werkzeuge über die
+Datei-Header-Leiste:
+
+| Feature | Button | Beschreibung |
+|---------|--------|--------------|
+| Suche im Dokument | 🔍 Search | In-Document-Suche mit Treffer-Navigation (`Ctrl+F`) |
+| Git-History | 🕰️ History | Zeigt `git log --follow` für die Datei an |
+| Notizen / Metadaten | 📝 Notes | Sidecar-Editor für `.meta.yaml`-Dateien pro Dokument |
+| Dokumentenanalyse | 🤖 Analyze | Lokale Statistik, Keywords, Lesbarkeit, Sentiment, Zusammenfassung |
+| Export | ⬇️ Export | Markdown → HTML/DOCX/MD Download |
+| Vollbild | 🖥️ Full | Vollbildmodus für den Viewer |
+
+### Research-Registry-Kartenansicht
+
+YAML-Dateien unter `research/registry/` (Fragen, Hypothesen, Claims,
+Quellen, Methoden) werden automatisch als strukturierte Karten gerendert.
+Jede Karte zeigt ID, Status, Typ, Titel, Domain, Verlinkungen und
+Zeitstempel übersichtlich an.
+
+### API-Endpunkte des Datei-Managers
+
+- `GET /api/files/tree?source={research|docs}` — Verzeichnisbaum
+- `GET /api/files/content/{path}?source={research|docs}` — Datei-Inhalt
+- `PUT /api/files/save/{path}?source={research|docs}` — Datei speichern
+- `GET /api/files/history/{path}?source={research|docs}` — Git-History
+- `GET /api/files/meta/{path}?source={research|docs}` — Metadaten laden
+- `PUT /api/files/meta/{path}?source={research|docs}` — Metadaten speichern
+- `GET /api/files/analyze/{path}?source={research|docs}` — Dokumentenanalyse
+- `GET /api/files/export/{path}?source={research|docs}&format={html|docx|md}` — Export
 
 ## Sicherheit
 
