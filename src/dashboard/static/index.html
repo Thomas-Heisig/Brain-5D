@@ -346,6 +346,49 @@
         </div>
         <p class="operator-note">Structural proposals remain approval-gated. No autonomous mutation is enabled by this panel.</p>
       </section>
+      <!-- Parameter Inspector -->
+      <section class="card parameter-inspector-card" id="parameter-inspector-card">
+        <div class="panel-title">
+          <div><h2>🔧 Parameter Inspector</h2><p class="panel-subtitle">Current, default and pending parameter values</p></div>
+          <div class="parameter-inspector__toolbar">
+            <input type="search" id="parameter-search" placeholder="Filter parameters…" />
+            <button id="parameter-reload" type="button" class="btn-secondary">🔄 Reload</button>
+          </div>
+        </div>
+        <div class="parameter-table-wrap">
+          <table class="parameter-table" id="parameter-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Current</th>
+                <th>Pending</th>
+                <th>Default</th>
+                <th>Source</th>
+                <th>Mutable</th>
+                <th>Restart</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="parameter-table-body"></tbody>
+          </table>
+        </div>
+        <div class="pending-changes-bar" id="pending-changes-bar">
+          <div class="pending-changes-bar__info">
+            <strong id="pending-count">0</strong> pending change(s)
+            <span id="pending-restart-hint" class="pending-hint" style="display:none;">⚠️ At least one change requires restart</span>
+          </div>
+          <div class="pending-changes-bar__actions">
+            <button id="pending-apply" type="button" class="btn-primary">✓ Apply</button>
+            <button id="pending-save-profile" type="button" class="btn-success">✓ Apply + Save Profile</button>
+            <button id="pending-cancel" type="button" class="btn-secondary">✕ Cancel</button>
+          </div>
+        </div>
+        <details class="change-history" id="change-history">
+          <summary><h3>Change History</h3></summary>
+          <div id="change-history-list" class="change-history-list"></div>
+        </details>
+      </section>
+
       <!-- Structural Live Loop -->
       <section class="card structural-live-card">
         <div class="panel-title"><h2>Structural Live Loop</h2><span id="live-loop-badge" class="gate-badge pending">checking...</span></div>
