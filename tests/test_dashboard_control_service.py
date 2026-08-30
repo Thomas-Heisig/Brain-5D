@@ -9,7 +9,7 @@ from src.runtime.control import RuntimeController
 def test_control_service_rejects_invalid_action() -> None:
     controller = RuntimeController(lambda: None)
     try:
-        service = DashboardControlService(controller)
+        service = DashboardControlService(controller)  # type: ignore[arg-type]
         response = service.execute({"action": "warp-core"})
         assert response.ok is False
         assert response.status == 400
@@ -26,7 +26,7 @@ def test_control_service_steps_runtime() -> None:
 
     controller = RuntimeController(step, initial_loop_size=10)
     try:
-        service = DashboardControlService(controller)
+        service = DashboardControlService(controller)  # type: ignore[arg-type]
         response = service.execute({"action": "step", "ticks": 5})
         assert response.ok is True
         deadline = monotonic() + 1.0

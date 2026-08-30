@@ -2,7 +2,7 @@
 
 ## 1. Version and docs
 
-Set `pyproject.toml` version to `0.5.0a5`. Update README, CHANGELOG and the existing `docs/Roadmap/` file non-destructively.
+Set `pyproject.toml` version to `0.5.0a5`. Update README, CHANGELOG and the existing `docs/08-roadmap/` file non-destructively.
 
 ## 2. StructuralPlasticityEngine
 

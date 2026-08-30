@@ -11,7 +11,7 @@ class ProbeManager:
     """Manage probe neurons and read their live state."""
 
     def __init__(
-        self, network: NeuralNetwork, config: dict[str, Any] | None = None
+        self, network: NeuralNetwork, _config: dict[str, Any] | None = None
     ) -> None:
         self.network = network
         self.probes: list[int] = []

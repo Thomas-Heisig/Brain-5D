@@ -15,11 +15,11 @@ community, security, GitHub template, CI, user-guide and developer-guide files.
 - .github/ISSUE_TEMPLATE/feature_request.md
 - .github/PULL_REQUEST_TEMPLATE.md
 - .github/workflows/ci.yml
-- docs/UserGuide.md
-- docs/DeveloperGuide.md
-- docs/Brain-5D_STORAGE_THEORY_ALPHA5_UPDATE.md
-- docs/Architecture/STRUCTURAL_PLASTICITY_ALPHA5.md
-- docs/Roadmap/ROADMAP_ALPHA5_TO_ALPHA6.md
+- docs/01-guides/UserGuide.md
+- docs/01-guides/DeveloperGuide.md
+- docs/02-architecture/Brain-5D_STORAGE_THEORY_ALPHA5_UPDATE.md
+- docs/02-architecture/STRUCTURAL_PLASTICITY_ALPHA5.md
+- docs/08-roadmap/ROADMAP_ALPHA5_TO_ALPHA6.md
 
 ## Important integration notes
 

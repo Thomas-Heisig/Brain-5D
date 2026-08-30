@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import traceback
 from collections.abc import Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from src.homeostasis.engine import HomeostasisEngine
@@ -168,7 +168,7 @@ class SelfOrganizationRuntimeAdapter:
         self._last_tick: int = 0
         self._error_buffer = error_buffer or _runtime_error_buffer
 
-    def __call__(self, tick: int, _result: Any) -> None:
+    def __call__(self, tick: int, _result: Any) -> None:  # noqa: ARG001
         """Post-tick hook: build signal, run policy, publish to coordinator.
 
         Runs every ``interval_ticks`` ticks to avoid excessive overhead.

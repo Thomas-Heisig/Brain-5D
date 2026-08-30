@@ -10,12 +10,10 @@ Covers:
 
 from __future__ import annotations
 
-import json
 import random
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any
 
-import pytest
 
 from src.storage.checkpoint import (
     RandomStateRecord,
@@ -80,10 +78,10 @@ class MockCheckpointNetwork:
         self.current_tick = 50
         self.total_spikes = 100
         self.total_events_processed = 200
-        self.pending_currents: dict[int, float] = {1: 0.5, 2: 0.3}
+        self.pending_currents: Mapping[int, float] = {1: 0.5, 2: 0.3}
         self.input_cells = {1, 2, 3}
         self.output_cells = {4, 5}
-        self.event_slots: list[list[MockEvent]] = [
+        self.event_slots: Sequence[Sequence[MockEvent]] = [
             [],
             [MockEvent(1, 5, 0.1, 51)],
             [],
@@ -114,7 +112,7 @@ class TestRNGStateCapture:
         # Advance RNG to get non-trivial state
         for _ in range(100):
             net.rng.random()
-        checkpoint = capture_runtime_checkpoint(net)
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]
         assert checkpoint.rng.version >= 3
         assert len(checkpoint.rng.state) > 0
 
@@ -126,7 +124,7 @@ class TestRNGStateCapture:
             net.rng.random()
 
         # Capture checkpoint (getstate returns state BEFORE next random)
-        checkpoint = capture_runtime_checkpoint(net)
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]
 
         # The original RNG produces values from this point
         expected_values = [net.rng.random() for _ in range(50)]
@@ -151,7 +149,7 @@ class TestRNGStateCapture:
             net.rng.random()
 
         # Capture checkpoint (state at position 50)
-        checkpoint = capture_runtime_checkpoint(net)
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]
 
         # Original continues from position 50
         original_values = [net.rng.random() for _ in range(50)]
@@ -174,7 +172,7 @@ class TestRNGStateCapture:
         for _ in range(100):
             net.rng.random()
 
-        checkpoint = capture_runtime_checkpoint(net)
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]
         # Original continues from this point
         expected = [net.rng.random() for _ in range(30)]
 
@@ -239,7 +237,7 @@ class TestRNGStateCapture:
         rng = net.rng
         v1 = rng.random()
         # Capture checkpoint (should not advance RNG)
-        checkpoint = capture_runtime_checkpoint(net)
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]
         v2 = rng.random()
         # The two values should be consecutive — checkpoint didn't consume random
         assert v1 != v2  # Different values (RNG advanced between them)

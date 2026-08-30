@@ -136,7 +136,7 @@ class SelfOrganizationEngine:
             self.manipulator.delete_synapse(source_id, target_id)
             self._pruned += 1
 
-    def _run_sprouting(self, tick: int) -> None:
+    def _run_sprouting(self, _tick: int) -> None:
         for source_id in tuple(self.network.neurons):
             outgoing = self.network.synapses.get(source_id, ())
             if len(outgoing) >= self.params.sprouting_max_out_degree:
@@ -166,7 +166,7 @@ class SelfOrganizationEngine:
             )
             self._created_synapses += 1
 
-    def _run_neurogenesis(self, tick: int) -> None:
+    def _run_neurogenesis(self, _tick: int) -> None:
         if (
             self.params.max_neurons
             and len(self.network.neurons) >= self.params.max_neurons

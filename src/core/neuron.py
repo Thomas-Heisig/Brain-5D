@@ -165,6 +165,11 @@ class Neuron:
     _spike_count_window: int = 0
     _last_update_tick: int = 0
 
+    @property
+    def is_inhibitory(self) -> bool:
+        """Whether this neuron is an inhibitory type (FAST_SPIKING)."""
+        return self.neuron_type is NeuronType.FAST_SPIKING
+
 
     # ========================================================================
     # Initialization

@@ -35,7 +35,7 @@ from src.dashboard.verification import (
 # mark the baseline as stale. This is why we digest the tree, not the commit.
 # The canonical list lives in verification.py; this alias is kept for
 # backward compatibility with any code that imported the constant directly.
-_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"]
+_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"]  # noqa: F841
 
 # ============================================================================
 # Status constants
@@ -47,7 +47,7 @@ PENDING = "pending"
 STALE = "stale"
 FAILED = "failed"
 
-_VALID_STATUSES = {PASSED, DISABLED, PENDING, STALE, FAILED}
+_VALID_STATUSES = {PASSED, DISABLED, PENDING, STALE, FAILED}  # noqa: F841
 
 
 # ============================================================================

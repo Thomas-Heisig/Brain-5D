@@ -27,6 +27,6 @@ python scripts/verify_dashboard.py
 git diff --check
 ```
 
-Die beiden strategischen Dokumente `docs/Analyse_Deepseek.md` und
-`docs/Der_weg_zur_KI.md` werden nach ihrem Push in einem separaten Strategy
+Die beiden strategischen Dokumente `docs/06-research/Analyse_Deepseek.md` und
+`docs/06-research/Der_weg_zur_KI.md` werden nach ihrem Push in einem separaten Strategy
 Review mit der bestehenden Roadmap abgeglichen.

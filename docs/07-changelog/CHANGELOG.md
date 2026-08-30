@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-08-30 — Viewer Improvements: Decoupling + Missing File Types + YAML Highlighting
+
+### Viewer als eigenständiges Overlay-Element
+- **`src/dashboard/static/index.html`**: Viewer (`fm-viewer`) ist jetzt standardmäßig ausgeblendet (`fm-viewer-hidden`) und öffnet sich als Overlay-Panel über der Sidebar, wenn eine Datei angeklickt wird.
+- **`src/dashboard/static/app.js`**: Close-Button (✕) im Datei-Header. Klick schließt den Viewer und die Sidebar nimmt wieder die volle Breite ein.
+- **`src/dashboard/static/styles.css`**: Viewer hat jetzt `z-index: 10`, Akzent-Rahmen und eine Übergangsanimation. Sidebar expandiert auf `flex: 1` wenn Viewer verborgen ist.
+
+### Fehlende Dateitypen ergänzt
+- **`src/dashboard/static/app.js`**: Neue Code-Dateitypen: `.bib` (BibTeX), `.patch`, `.rst`, `.tex`, `.sh`, `.bat`, `.ps1`, `.dockerfile`, `.cmake`, `.makefile`, `.txt`. JSON-Erkennung jetzt über `ext.endsWith('.json')` — fängt auch `.schema.json` und `.ipynb` ab.
+- **`src/dashboard/static/index.html`**: Neue Filter-Chips für BibTeX und Patch.
+- `.bib`-Dateien werden jetzt als Code (Syntax-Highlighting) statt als Plain Text angezeigt.
+- `.patch`-Dateien werden jetzt als Code statt als Plain Text angezeigt.
+- `.schema.json`-Dateien werden jetzt als JSON (mit Formatierung) statt als Plain Text angezeigt.
+
+### YAML Syntax-Highlighting
+- **`src/dashboard/static/app.js`**: Neue `renderFMYaml()` Funktion mit Syntax-Highlighting für YAML-Dateien. Farbliche Unterscheidung von: Keys (blau), Strings (orange), Kommentare (grün), Booleans (blau), Zahlen (hellgrün), Null-Werte (grau), List-Marker (gelb), Anchor/Alias (lila), Dokument-Separatoren (grau).
+- **`src/dashboard/static/styles.css`**: 12 neue CSS-Klassen für YAML-Token-Farben im VS Code Dark Theme-Stil.
+
+### Multi-Language Code Syntax-Highlighting
+- **`src/dashboard/static/app.js`**: Neue `renderFMCode()` Funktion mit Syntax-Highlighting für alle Code-Dateitypen. Unterstützt 17 Sprachen:
+  - **Python** (`.py`): Keywords, Builtins, Dekorateure, f-Strings, Magic Methods
+  - **JavaScript/TypeScript** (`.js`, `.ts`): Keywords, Builtins, Template Literals
+  - **HTML** (`.html`): Tags, Attribute, Entities
+  - **CSS** (`.css`): Selektoren, Properties, Values, !important
+  - **Shell/Batch/PowerShell** (`.sh`, `.bat`, `.ps1`): Keywords, Builtins, Variablen
+  - **TOML/Config** (`.toml`, `.cfg`, `.conf`, `.ini`): Sections, Keys, Booleans, Datum
+  - **XML** (`.xml`): Tags, Attribute, CDATA, Entities
+  - **BibTeX** (`.bib`): Entry-Typen, Felder, Querverweise
+  - **Patch/Diff** (`.patch`): Diff-Marker, Hunks, Add/Delete
+  - **LaTeX** (`.tex`): Commands, Math-Umgebungen, Labels
+  - **reStructuredText** (`.rst`): Directives, Roles, Sections
+  - **Dockerfile**: Instructions, Variablen
+- **`src/dashboard/static/styles.css`**: 25 neue CSS-Klassen für Code-Token-Farben (VS Code Dark+ Palette): Kommentare (grün), Keywords (blau), Builtins (cyan), Strings (orange), Zahlen (hellgrün), Dekorateure (gelb-grün), Tags (blau), Attribute (gelb), Selektoren (gelb), Properties (hellblau), Variablen (cyan), Sections (gelb), Diff-Marker (rot/grün), Hunk-Header (lila).
+
 ## 2026-08-29 — Dynamics Tab + Collapsible Architecture
 
 ### Neuer Dynamics Tab (Spike Raster, Rate Histogram, 5D Layer Explorer)

@@ -9,9 +9,13 @@ These tests enforce structural integrity of the research registry YAML files:
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
+
+# Type alias for a registry entry (a dict with string keys and arbitrary values)
+RegistryEntry = dict[str, Any]
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_DIR = ROOT / "research" / "registry"
@@ -23,9 +27,9 @@ REGISTRY_DIR = ROOT / "research" / "registry"
 
 
 @pytest.fixture(scope="module")
-def registry_data() -> dict[str, list[dict]]:
+def registry_data() -> dict[str, list[dict[str, object]]]:
     """Load all registry YAML files."""
-    data: dict[str, list[dict]] = {}
+    data: dict[str, list[dict[str, object]]] = {}
     for yaml_file in REGISTRY_DIR.glob("*.yaml"):
         key = yaml_file.stem  # e.g. "questions", "hypotheses"
         with open(yaml_file, encoding="utf-8") as f:
@@ -35,7 +39,7 @@ def registry_data() -> dict[str, list[dict]]:
 
 
 @pytest.fixture(scope="module")
-def all_ids(registry_data: dict[str, list[dict]]) -> dict[str, set[str]]:
+def all_ids(registry_data: dict[str, list[dict[str, object]]]) -> dict[str, set[str]]:
     """Extract all IDs from each registry file."""
     result: dict[str, set[str]] = {}
     id_fields = {
@@ -45,13 +49,15 @@ def all_ids(registry_data: dict[str, list[dict]]) -> dict[str, set[str]]:
         "sources": "id",
         "methods": "id",
     }
-    for key, entries in registry_data.items():
-        id_field = id_fields.get(key, "id")
-        ids = set()
+    for _key, entries in registry_data.items():
+        id_field = id_fields.get(_key, "id")
+        ids: set[str] = set()
         for entry in entries:
             if id_field in entry:
-                ids.add(entry[id_field])
-        result[key] = ids
+                val = entry[id_field]
+                if isinstance(val, str):
+                    ids.add(val)
+        result[_key] = ids
     return result
 
 
@@ -68,7 +74,7 @@ class TestRegistryUniqueness:
         self, all_ids: dict[str, set[str]]
     ) -> None:
         """No duplicate IDs within a single registry file."""
-        for file_key, ids in all_ids.items():
+        for _file_key, _ids in all_ids.items():
             # yaml.safe_load already deduplicates keys in a mapping,
             # but a list of objects can have duplicate id values.
             # We count occurrences to detect duplicates.
@@ -83,7 +89,7 @@ class TestRegistryUniqueness:
         """
         # Group by prefix
         prefix_map: dict[str, set[str]] = {}
-        for file_key, ids in all_ids.items():
+        for _file_key, ids in all_ids.items():
             for id_str in ids:
                 prefix = id_str.split("-")[0] if "-" in id_str else id_str
                 if prefix not in prefix_map:
@@ -97,64 +103,70 @@ class TestRegistryUniqueness:
             ), f"Duplicate IDs found with prefix '{prefix}': {ids}"
 
     def test_question_ids_have_correct_format(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """All question IDs must match RQ-{DOMAIN}-{NNN}."""
         import re
 
         pattern = re.compile(r"^RQ-[A-Z0-9]+-[0-9]{3}$")
         for entry in registry_data.get("questions", []):
-            qid = entry.get("id", "")
+            qid: str = entry.get("id", "")  # type: ignore[assignment]
             assert pattern.match(
                 qid
             ), f"Question ID '{qid}' does not match pattern RQ-{{DOMAIN}}-{{NNN}}"
 
     def test_hypothesis_ids_have_correct_format(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """All hypothesis IDs must match H-{DOMAIN}-{NNN}-{VARIANT}."""
         import re
 
         pattern = re.compile(r"^H-[A-Z0-9]+-[0-9]{3}-[A-Z]$")
         for entry in registry_data.get("hypotheses", []):
-            hid = entry.get("id", "")
+            hid: str = entry.get("id", "")  # type: ignore[assignment]
             assert pattern.match(
                 hid
             ), f"Hypothesis ID '{hid}' does not match pattern H-{{DOMAIN}}-{{NNN}}-{{VARIANT}}"
 
     def test_claim_ids_have_correct_format(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """All claim IDs must match CLAIM-{DOMAIN}-{NNN}."""
         import re
 
         pattern = re.compile(r"^CLAIM-[A-Z0-9]+-[0-9]{3}$")
         for entry in registry_data.get("claims", []):
-            cid = entry.get("id", "")
+            cid: str = entry.get("id", "")  # type: ignore[assignment]
             assert pattern.match(
                 cid
             ), f"Claim ID '{cid}' does not match pattern CLAIM-{{DOMAIN}}-{{NNN}}"
 
     def test_hypothesis_references_resolve(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every hypothesis must reference an existing research question."""
-        question_ids = {entry["id"] for entry in registry_data.get("questions", [])}
+        question_ids: set[str] = {
+            str(entry["id"]) for entry in registry_data.get("questions", [])
+        }
         for entry in registry_data.get("hypotheses", []):
-            rq = entry.get("research_question", "")
+            rq: str = entry.get("research_question", "")  # type: ignore[assignment]
             assert (
                 rq in question_ids
             ), f"Hypothesis '{entry.get('id')}' references unknown question '{rq}'"
 
     def test_claim_references_resolve(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every claim must reference existing research question and hypothesis."""
-        question_ids = {entry["id"] for entry in registry_data.get("questions", [])}
-        hypothesis_ids = {entry["id"] for entry in registry_data.get("hypotheses", [])}
+        question_ids: set[str] = {
+            str(entry["id"]) for entry in registry_data.get("questions", [])
+        }
+        hypothesis_ids: set[str] = {
+            str(entry["id"]) for entry in registry_data.get("hypotheses", [])
+        }
         for entry in registry_data.get("claims", []):
-            rq = entry.get("research_question", "")
-            hyp = entry.get("hypothesis", "")
+            rq: str = entry.get("research_question", "")  # type: ignore[assignment]
+            hyp: str = entry.get("hypothesis", "")  # type: ignore[assignment]
             if rq:
                 assert (
                     rq in question_ids
@@ -165,16 +177,22 @@ class TestRegistryUniqueness:
                 ), f"Claim '{entry.get('id')}' references unknown hypothesis '{hyp}'"
 
     def test_no_unreferenced_hypotheses(
-        self, registry_data: dict[str, list[dict]]
+        self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every hypothesis should be referenced by at least one claim or question."""
-        hypothesis_ids = {entry["id"] for entry in registry_data.get("hypotheses", [])}
+        hypothesis_ids: set[str] = {
+            str(entry["id"]) for entry in registry_data.get("hypotheses", [])
+        }
         referenced: set[str] = set()
         for entry in registry_data.get("questions", []):
-            referenced.update(entry.get("hypotheses", []))
+            refs = entry.get("hypotheses", [])
+            if isinstance(refs, list):
+                for ref in refs:  # type: ignore[var-annotated]
+                    if isinstance(ref, str):
+                        referenced.add(ref)
         for entry in registry_data.get("claims", []):
             hyp = entry.get("hypothesis")
-            if hyp:
+            if isinstance(hyp, str):
                 referenced.add(hyp)
         unreferenced = hypothesis_ids - referenced
         if unreferenced:

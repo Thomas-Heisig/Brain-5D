@@ -18,6 +18,7 @@ Important architecture rule:
 from __future__ import annotations
 
 import argparse
+from typing import Any
 import os
 import signal
 import subprocess
@@ -144,9 +145,9 @@ def dashboard_url(args: argparse.Namespace) -> str:
 # ============================================================================
 
 
-def add_start_parser(subparsers: argparse._SubParsersAction) -> None:
+def add_start_parser(subparsers: Any) -> None:
     """Add the ``start`` subcommand parser."""
-    parser = subparsers.add_parser(
+    parser: argparse.ArgumentParser = subparsers.add_parser(
         "start",
         help="Start the Brain-5D simulation",
         description="Start the Brain-5D simulation with optional dashboard.",
@@ -281,9 +282,9 @@ def _cmd_start(args: argparse.Namespace) -> int:
 # ============================================================================
 
 
-def add_stop_parser(subparsers: argparse._SubParsersAction) -> None:
+def add_stop_parser(subparsers: Any) -> None:
     """Add the ``stop`` subcommand parser."""
-    parser = subparsers.add_parser(
+    parser: argparse.ArgumentParser = subparsers.add_parser(
         "stop",
         help="Stop the Brain-5D simulation",
         description="Stop the running Brain-5D simulation process.",

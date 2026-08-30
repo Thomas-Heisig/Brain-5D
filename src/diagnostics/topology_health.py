@@ -4,7 +4,6 @@ from collections import deque
 from typing import Any
 
 from src.core.network import NeuralNetwork
-from src.core.synapse import Synapse
 
 
 class TopologyHealth:

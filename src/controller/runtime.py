@@ -739,7 +739,7 @@ class RuntimeController:
         """
         return self.run_ticks(ticks)
 
-    def run(self, *, loop_size: int | None = None) -> RuntimeTelemetry:
+    def run(self, *, loop_size: int | None = None) -> RuntimeTelemetry:  # noqa: ARG001
         """Start continuous execution (alias for start).
 
         This method provides compatibility with DashboardControlService which

@@ -480,12 +480,12 @@ class TestTelemetryFrameStore:
     def test_capture_cadence(self, network: NeuralNetwork) -> None:
         """Full frame capture only at cadence boundary."""
         store = TelemetryFrameStore(capture_interval_ticks=5)
-        store.prime(network)
+        store.prime(network)  # type: ignore[arg-type]
 
         # Run ticks — frames should only be captured every 5 ticks
         for _tick in range(1, 20):
             result = network.step()
-            store.on_tick_complete(network, result)
+            store.on_tick_complete(network, result)  # type: ignore[arg-type]
 
         stats = store.stats
         assert stats["frames_captured"] >= 4  # type: ignore[operator]
@@ -507,18 +507,18 @@ class TestTelemetryFrameStore:
     def test_store_no_frame_raises(self, network: NeuralNetwork) -> None:
         """Querying an unprimed store raises RuntimeError."""
         store = TelemetryFrameStore(capture_interval_ticks=5, activity_window_ticks=20)
-        svc = LiveProjectionService(network, frame_store=store)
+        svc = LiveProjectionService(network, frame_store=store)  # type: ignore[arg-type]
         with pytest.raises(RuntimeError, match="no frame"):
             svc.project(kind=ProjectionKind.ENERGY)
 
     def test_activity_accumulator_in_store(self, network: NeuralNetwork) -> None:
         """Store's accumulator correctly tracks rolling activity."""
         store = TelemetryFrameStore(capture_interval_ticks=1, activity_window_ticks=20)
-        store.prime(network)
+        store.prime(network)  # type: ignore[arg-type]
 
         network.inject_current(0, 100.0)
         result = network.step()
-        store.on_tick_complete(network, result)
+        store.on_tick_complete(network, result)  # type: ignore[arg-type]
 
         frame = store.latest_frame
         assert frame is not None
@@ -535,15 +535,15 @@ class TestTelemetryFrame:
     """TelemetryFrame captures correctly."""
 
     def test_frame_tick_matches_network(self, network: NeuralNetwork) -> None:
-        frame = capture_frame(network)
+        frame = capture_frame(network)  # type: ignore[arg-type]
         assert frame.tick == network.current_tick
 
     def test_frame_neurons_count(self, network: NeuralNetwork) -> None:
-        frame = capture_frame(network)
+        frame = capture_frame(network)  # type: ignore[arg-type]
         assert len(frame.neurons) == len(network.neurons)
 
     def test_frame_synapses_count(self, network: NeuralNetwork) -> None:
-        frame = capture_frame(network)
+        frame = capture_frame(network)  # type: ignore[arg-type]
         total_syns = sum(len(syns) for syns in network.synapses.values())
         assert len(frame.synapses) == total_syns
 

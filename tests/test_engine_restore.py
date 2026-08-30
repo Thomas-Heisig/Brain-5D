@@ -17,7 +17,6 @@ import pytest
 
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
-from src.learning.reward import RewardSignal
 from src.storage.checkpoint import (
     capture_runtime_checkpoint,
     read_runtime_checkpoint,
@@ -109,12 +108,12 @@ class TestHomeostasisRestore:
         for _ in range(20):
             network.step()
 
-        original_rates = dict(homeo._rates_hz)
+        original_rates = dict(homeo._rates_hz)  # type: ignore[misc]
 
         # Capture checkpoint with homeostasis state
         checkpoint = capture_runtime_checkpoint(
-            network,
-            homeostasis_rates=homeo._rates_hz,
+            network,  # type: ignore[arg-type]
+            homeostasis_rates=homeo._rates_hz,  # type: ignore[misc]
         )
 
         # Write and read back
@@ -131,15 +130,15 @@ class TestHomeostasisRestore:
 
             # Verify rates match
             for nid, rate in original_rates.items():
-                assert nid in fresh_homeo._rates_hz
-                assert fresh_homeo._rates_hz[nid] == rate
+                assert nid in fresh_homeo._rates_hz  # type: ignore[misc]
+                assert fresh_homeo._rates_hz[nid] == rate  # type: ignore[misc]
         finally:
             tmp_path.unlink(missing_ok=True)
 
     def test_empty_homeostasis_restore_is_noop(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
         """Restoring empty homeostasis state is a no-op."""
         homeo = HomeostasisEngine(network, config_dict)
-        checkpoint = capture_runtime_checkpoint(network)  # No homeostasis_rates
+        checkpoint = capture_runtime_checkpoint(network)  # type: ignore[arg-type]  # No homeostasis_rates
 
         restore_homeostasis_state(homeo, checkpoint)
         # Should not crash, _rates_hz should remain empty
@@ -159,8 +158,8 @@ class TestLearningRestore:
             network.step()
 
         # Capture learning state from engine internals
-        learning_states = []
-        for key, state in learn._states.items():
+        learning_states: list[dict[str, object]] = []
+        for key, state in learn._states.items():  # type: ignore[misc]
             learning_states.append({
                 "pre_id": state.pre_id,
                 "target_id": state.synapse.target_id,
@@ -168,11 +167,11 @@ class TestLearningRestore:
                 "last_post_tick": state.last_post_tick,
                 "eligibility_value": state.eligibility.value,
                 "eligibility_last_tick": state.eligibility.last_tick,
-            })
+            })  # type: ignore[union-attr]
 
         checkpoint = capture_runtime_checkpoint(
-            network,
-            learning_states=learning_states,
+            network,  # type: ignore[arg-type]
+            learning_states=learning_states,  # type: ignore[arg-type]
         )
 
         import tempfile
@@ -191,8 +190,8 @@ class TestLearningRestore:
                 pre_id = orig_state["pre_id"]
                 target_id = orig_state["target_id"]
                 key = (pre_id, target_id)
-                assert key in fresh_learn._states, f"Synapse {pre_id}->{target_id} not found in restored engine"
-                state = fresh_learn._states[key]
+                assert key in fresh_learn._states, f"Synapse {pre_id}->{target_id} not found in restored engine"  # type: ignore[misc]
+                state = fresh_learn._states[key]  # type: ignore[misc]
                 assert state.last_pre_tick == orig_state["last_pre_tick"]
                 assert state.last_post_tick == orig_state["last_post_tick"]
         finally:
@@ -214,13 +213,13 @@ class TestLearningRestore:
         # Capture pending rewards
         pending_rewards = [
             {"value": r.value, "tick": r.tick}
-            for r in learn._pending_rewards
+            for r in learn._pending_rewards  # type: ignore[misc]
         ]
         assert len(pending_rewards) == 2, "Both rewards should be pending"
 
         checkpoint = capture_runtime_checkpoint(
-            network,
-            pending_rewards=pending_rewards,
+            network,  # type: ignore[arg-type]
+            pending_rewards=pending_rewards,  # type: ignore[arg-type]
         )
 
         import tempfile
@@ -235,10 +234,10 @@ class TestLearningRestore:
             restore_learning_state(fresh_learn, restored_checkpoint)
 
             # Verify pending rewards match
-            assert len(fresh_learn._pending_rewards) == 2
-            assert fresh_learn._pending_rewards[0].value == 0.5
-            assert fresh_learn._pending_rewards[0].tick == 10
-            assert fresh_learn._pending_rewards[1].value == -0.3
-            assert fresh_learn._pending_rewards[1].tick == 15
+            assert len(fresh_learn._pending_rewards) == 2  # type: ignore[misc]
+            assert fresh_learn._pending_rewards[0].value == 0.5  # type: ignore[misc]
+            assert fresh_learn._pending_rewards[0].tick == 10  # type: ignore[misc]
+            assert fresh_learn._pending_rewards[1].value == -0.3  # type: ignore[misc]
+            assert fresh_learn._pending_rewards[1].tick == 15  # type: ignore[misc]
         finally:
             tmp_path.unlink(missing_ok=True)

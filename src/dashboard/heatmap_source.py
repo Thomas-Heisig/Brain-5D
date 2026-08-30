@@ -311,7 +311,7 @@ class DemoHeatmapSource:
     def build(
         self,
         kind_name: str,
-        snapshot_name: str | None = None,
+        _snapshot_name: str | None = None,
     ) -> HeatmapPayload:
         """Build a synthetic demo heatmap.
 
@@ -350,7 +350,7 @@ class DemoHeatmapSource:
             values=values,
         )
 
-    def has_snapshot(self, snapshot_name: str) -> bool:
+    def has_snapshot(self, _snapshot_name: str) -> bool:
         """Demo source has no real snapshots."""
         return False
 

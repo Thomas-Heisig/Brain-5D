@@ -137,6 +137,10 @@ class ConfigDict(TypedDict, total=False):
     logging: LoggingConfig
     diagnostics: dict[str, Any]
     topology_input: dict[str, Any]  # Backward compatibility
+    homeostasis: dict[str, Any]
+    self_organization: dict[str, Any]
+    eligibility: dict[str, Any]
+    storage: dict[str, Any]
 
 
 # ============================================================================
@@ -533,7 +537,7 @@ def _validate_logging_config(
 
 def load_config(
     path: str | Path,
-    apply_defaults: bool = True,
+    _apply_defaults: bool = True,
 ) -> ConfigDict:
     """
     Load and validate the experiment configuration from a YAML file.

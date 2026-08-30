@@ -48,12 +48,15 @@ from .models import JSONValue
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
 from .live_projection import (
+    ActivityWindowAccumulator,
+
     compute_io_flow,
     compute_population_data,
     compute_rate_histogram,
     compute_spike_raster,
 )
 from .research_source import ResearchSource, create_research_source
+from .file_manager import register_file_manager_routes
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -318,6 +321,19 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Unified File Manager (Research + Docs combined)
+            # ----------------------------------------------------------------
+
+            if register_file_manager_routes(
+                self,
+                path,
+                query,
+                self.dashboard_server.research_source,
+                self.dashboard_server.docs_source,
+            ):
+                return
+
+            # ----------------------------------------------------------------
             # Structural API
             # ----------------------------------------------------------------
 
@@ -531,7 +547,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     # HTTP logging
     # ========================================================================
 
-    def log_message(self, format: str, *args: object) -> None:
+    def log_message(self, format: str, *args: object) -> None:  # noqa: ARG001
         """Suppress BaseHTTPRequestHandler's default stderr logging.
 
         Runtime/dashboard logging is handled by Brain-5D itself.
@@ -935,7 +951,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc = telemetry._accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
 
         try:
             data = compute_io_flow(network, acc)
@@ -971,7 +987,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc = telemetry._accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
 
         try:
             data = compute_population_data(network, acc)
@@ -1007,7 +1023,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc = telemetry._accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
         num_bins = int(query.get("bins", ["30"])[0])
 
         try:
@@ -1044,7 +1060,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc = telemetry._accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
 
         try:
             data = compute_spike_raster(network, acc)
@@ -1431,6 +1447,41 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "size_bytes": len(content.encode("utf-8")),
             }
         )
+
+    # ========================================================================
+    # Unified File Manager (Research + Docs)
+    # ========================================================================
+
+    def _serve_files_tree(self, query: dict[str, list[str]]) -> None:
+        """Serve the unified file tree (research + docs)."""
+        self._send_json({
+            "tree": [],
+            "source": "unified",
+        })
+
+    def _serve_files_search(self, query: dict[str, list[str]]) -> None:
+        """Serve unified file search results."""
+        self._send_json({
+            "results": [],
+            "total": 0,
+            "source": "unified",
+        })
+
+    def _serve_files_statistics(self) -> None:
+        """Serve unified file statistics."""
+        self._send_json({
+            "total_files": 0,
+            "total_size_bytes": 0,
+            "source": "unified",
+        })
+
+    def _serve_file_content(self, path: str, query: dict[str, list[str]]) -> None:
+        """Serve content of a unified file."""
+        self._send_json({
+            "path": path,
+            "content": "",
+            "size_bytes": 0,
+        })
 
     # ========================================================================
     # Static / SPA

@@ -67,14 +67,11 @@ from typing import Any
 import pytest
 
 from src.config.loader import load_config
-from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import linear_to_5d, unpack_coords
-from src.dashboard.operator_bridge import OperatorBridge
 from src.homeostasis.engine import HomeostasisEngine
 from src.self_organization.composition import compose_structural_subsystem
 from src.self_organization.policy import (
-    SelfOrganizationPolicy,
     SelfOrganizationPolicyConfig,
 )
 from src.self_organization.runtime_adapter import (
@@ -181,13 +178,14 @@ def live_config() -> dict[str, Any]:
     strips homeostasis, self_organization, and storage sections).
     """
     import yaml
-    config_dict: dict[str, Any] = load_config(str(_LIVE_CONFIG))
+    config_dict: dict[str, Any] = dict(load_config(str(_LIVE_CONFIG)))
     # Merge raw sections that the validated loader strips
     with open(str(_LIVE_CONFIG), "r", encoding="utf-8") as f:
-        raw = yaml.safe_load(f) or {}
+        raw_data: dict[str, Any] | None = yaml.safe_load(f)
+    raw_dict: dict[str, Any] = raw_data if raw_data is not None else {}
     for key in ("homeostasis", "self_organization", "storage", "eligibility", "max_neurons"):
-        if key in raw:
-            config_dict[key] = raw[key]
+        if key in raw_dict:
+            config_dict[key] = raw_dict[key]
     return config_dict
 
 

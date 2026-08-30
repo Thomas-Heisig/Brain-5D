@@ -18,6 +18,6 @@ def test_homeostasis_metrics_are_json_ready() -> None:
         mean_energy_error=0.1,
         active_neurons=3,
     )
-    metrics = homeostasis_metrics(stats)
+    metrics = homeostasis_metrics(stats)  # type: ignore[arg-type]
     payload = DashboardSnapshot(homeostasis=metrics).to_json()
     assert payload["homeostasis"] == metrics.to_json()

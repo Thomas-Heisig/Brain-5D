@@ -260,17 +260,17 @@ def capture_runtime_checkpoint(
     if learning_states is not None:
         learning_state = tuple(
             LearningRuntimeRecord(
-                pre_id=int(s["pre_id"]),
-                target_id=int(s["target_id"]),
+                pre_id=int(cast("int | str", s["pre_id"])),
+                target_id=int(cast("int | str", s["target_id"])),
                 last_pre_tick=(
-                    int(s["last_pre_tick"]) if s.get("last_pre_tick") is not None else None
+                    int(cast("int | str", s["last_pre_tick"])) if s.get("last_pre_tick") is not None else None
                 ),
                 last_post_tick=(
-                    int(s["last_post_tick"]) if s.get("last_post_tick") is not None else None
+                    int(cast("int | str", s["last_post_tick"])) if s.get("last_post_tick") is not None else None
                 ),
-                eligibility_value=float(s.get("eligibility_value", 0.0)),
+                eligibility_value=float(cast("int | float | str", s.get("eligibility_value", 0.0))),
                 eligibility_last_tick=(
-                    int(s["eligibility_last_tick"]) if s.get("eligibility_last_tick") is not None else None
+                    int(cast("int | str", s["eligibility_last_tick"])) if s.get("eligibility_last_tick") is not None else None
                 ),
             )
             for s in learning_states
@@ -281,8 +281,8 @@ def capture_runtime_checkpoint(
     if pending_rewards is not None:
         pending_reward_records = tuple(
             PendingRewardRecord(
-                value=float(r["value"]),
-                tick=int(r["tick"]),
+                value=float(cast("int | float | str", r["value"])),
+                tick=int(cast("int | str", r["tick"])),
             )
             for r in pending_rewards
         )

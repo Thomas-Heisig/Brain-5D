@@ -111,7 +111,7 @@ def test_restartable_snapshot_roundtrip(tmp_path: Path) -> None:
     path = tmp_path / "snapshot.b5d"
     header = B5DSnapshotWriter(restart_capable=True).write(
         path,
-        _network(),
+        _network(),  # type: ignore[arg-type]
         metadata={"experiment": "unit-test", "seed": 42},
         created_ns=123456789,
     )
@@ -151,7 +151,7 @@ def test_restartable_snapshot_roundtrip(tmp_path: Path) -> None:
 def test_optical_only_snapshot_is_128_bytes_per_neuron(tmp_path: Path) -> None:
     """Optical mode keeps the existing optical codec byte-for-byte."""
     path = tmp_path / "optical-only.b5d"
-    header = B5DSnapshotWriter(restart_capable=False).write(path, _network())
+    header = B5DSnapshotWriter(restart_capable=False).write(path, _network())  # type: ignore[arg-type]
 
     assert not header.restart_capable
     assert header.neuron_record_size == OPTICAL_RECORD_SIZE
@@ -166,7 +166,7 @@ def test_custom_optical_sidecar_is_persisted(tmp_path: Path) -> None:
     """Manipulator sidecar state can override derived optical state."""
     path = tmp_path / "sidecar.b5d"
     state = OpticalPointState(brightness=0.75, coherence=0.5)
-    B5DSnapshotWriter().write(path, _network(), optical_states={10: state})
+    B5DSnapshotWriter().write(path, _network(), optical_states={10: state})  # type: ignore[arg-type]
 
     with B5DReader(path) as reader:
         neuron = reader.get_neuron(10)
@@ -181,7 +181,7 @@ def test_records_are_sorted_and_binary_searchable(tmp_path: Path) -> None:
     network.neurons[5] = FakeNeuron(5)
     network.synapses[5] = []
     path = tmp_path / "sorted.b5d"
-    B5DSnapshotWriter().write(path, network)
+    B5DSnapshotWriter().write(path, network)  # type: ignore[arg-type]
 
     with B5DReader(path) as reader:
         assert [item.neuron_id for item in reader.iter_neurons()] == [5, 10, 20]
@@ -197,7 +197,7 @@ def test_synapse_range_lookup_is_source_scoped(tmp_path: Path) -> None:
     network.synapses[20] = [FakeSynapse(30, 0.7, 2)]
     network.synapses[30] = []
     path = tmp_path / "synapses.b5d"
-    B5DSnapshotWriter().write(path, network)
+    B5DSnapshotWriter().write(path, network)  # type: ignore[arg-type]
 
     with B5DReader(path) as reader:
         ten = list(reader.get_synapses(10))
@@ -211,7 +211,7 @@ def test_synapse_range_lookup_is_source_scoped(tmp_path: Path) -> None:
 def test_duplicate_neuron_ids_in_corrupt_file_are_rejected(tmp_path: Path) -> None:
     """Full validation detects duplicate IDs even if a file was externally altered."""
     path = tmp_path / "duplicate.b5d"
-    B5DSnapshotWriter().write(path, _network())
+    B5DSnapshotWriter().write(path, _network())  # type: ignore[arg-type]
     with B5DReader(path) as reader:
         second_offset = reader.header.neuron_offset + reader.header.neuron_record_size
         first_id = struct.pack("<Q", 10)
@@ -229,7 +229,7 @@ def test_writer_rejects_dangling_synapse_target(tmp_path: Path) -> None:
     network = _network()
     network.synapses[10].append(FakeSynapse(999, 0.2, 1))
     with pytest.raises(ValueError, match="target does not exist"):
-        B5DSnapshotWriter().write(tmp_path / "dangling.b5d", network)
+        B5DSnapshotWriter().write(tmp_path / "dangling.b5d", network)  # type: ignore[arg-type]
 
 
 def test_metadata_limit_and_invalid_json_are_rejected(tmp_path: Path) -> None:
@@ -237,11 +237,11 @@ def test_metadata_limit_and_invalid_json_are_rejected(tmp_path: Path) -> None:
     oversized = {"payload": "x" * MAX_METADATA_SIZE}
     with pytest.raises(ValueError, match="metadata exceeds V1 limit"):
         B5DSnapshotWriter().write(
-            tmp_path / "too-large.b5d", _network(), metadata=oversized
+            tmp_path / "too-large.b5d", _network(), metadata=oversized  # type: ignore[arg-type]
         )
 
     path = tmp_path / "invalid-json.b5d"
-    B5DSnapshotWriter().write(path, _network(), metadata={"a": 1})
+    B5DSnapshotWriter().write(path, _network(), metadata={"a": 1})  # type: ignore[arg-type]
     with B5DReader(path) as reader:
         start = reader.header.metadata_offset
         size = reader.header.metadata_size
@@ -260,7 +260,7 @@ def test_invalid_magic_version_and_short_header_are_rejected(tmp_path: Path) -> 
         B5DReader(short)
 
     bad_magic = tmp_path / "bad-magic.b5d"
-    B5DSnapshotWriter().write(bad_magic, _network())
+    B5DSnapshotWriter().write(bad_magic, _network())  # type: ignore[arg-type]
     raw = _read_mutable(bad_magic)
     raw[:8] = b"INVALID!"
     bad_magic.write_bytes(raw)
@@ -268,7 +268,7 @@ def test_invalid_magic_version_and_short_header_are_rejected(tmp_path: Path) -> 
         B5DReader(bad_magic)
 
     bad_version = tmp_path / "bad-version.b5d"
-    B5DSnapshotWriter().write(bad_version, _network())
+    B5DSnapshotWriter().write(bad_version, _network())  # type: ignore[arg-type]
     raw = _read_mutable(bad_version)
     struct.pack_into("<H", raw, 8, FORMAT_VERSION + 1)
     bad_version.write_bytes(raw)
@@ -279,13 +279,13 @@ def test_invalid_magic_version_and_short_header_are_rejected(tmp_path: Path) -> 
 def test_truncated_neuron_and_synapse_sections_are_rejected(tmp_path: Path) -> None:
     """Header counts cannot silently read beyond a truncated file."""
     neuron_path = tmp_path / "truncated-neuron.b5d"
-    B5DSnapshotWriter().write(neuron_path, _network())
+    B5DSnapshotWriter().write(neuron_path, _network())  # type: ignore[arg-type]
     neuron_path.write_bytes(neuron_path.read_bytes()[:-20])
     with pytest.raises(B5DFormatError, match="file-size mismatch"):
         B5DReader(neuron_path)
 
     synapse_path = tmp_path / "truncated-synapse.b5d"
-    B5DSnapshotWriter().write(synapse_path, _network())
+    B5DSnapshotWriter().write(synapse_path, _network())  # type: ignore[arg-type]
     synapse_path.write_bytes(synapse_path.read_bytes()[:-1])
     with pytest.raises(B5DFormatError, match="file-size mismatch"):
         B5DReader(synapse_path)
@@ -294,7 +294,7 @@ def test_truncated_neuron_and_synapse_sections_are_rejected(tmp_path: Path) -> N
 def test_non_zero_alignment_padding_is_rejected_by_full_scan(tmp_path: Path) -> None:
     """Reserved alignment gaps stay zero in the frozen format."""
     path = tmp_path / "padding.b5d"
-    B5DSnapshotWriter().write(path, _network(), metadata={"x": 1})
+    B5DSnapshotWriter().write(path, _network(), metadata={"x": 1})  # type: ignore[arg-type]
     with B5DReader(path) as reader:
         padding_start = reader.header.metadata_offset + reader.header.metadata_size
         assert padding_start < reader.header.neuron_offset
@@ -309,7 +309,7 @@ def test_non_zero_alignment_padding_is_rejected_by_full_scan(tmp_path: Path) -> 
 def test_context_manager_and_close_are_resource_safe(tmp_path: Path) -> None:
     """Reader handles close deterministically and close() is idempotent."""
     path = tmp_path / "resources.b5d"
-    B5DSnapshotWriter().write(path, _network())
+    B5DSnapshotWriter().write(path, _network())  # type: ignore[arg-type]
     reader = B5DReader(path)
     assert not reader.closed
     with reader:
@@ -327,15 +327,15 @@ def test_fixed_timestamp_produces_byte_deterministic_snapshot(tmp_path: Path) ->
     second = tmp_path / "second.b5d"
     writer = B5DSnapshotWriter()
     kwargs = {"metadata": {"a": 1}, "created_ns": 123456789}
-    writer.write(first, _network(), **kwargs)
-    writer.write(second, _network(), **kwargs)
+    writer.write(first, _network(), **kwargs)  # type: ignore[arg-type]
+    writer.write(second, _network(), **kwargs)  # type: ignore[arg-type]
     assert first.read_bytes() == second.read_bytes()
 
 
 def test_offsets_are_aligned_and_size_is_exact(tmp_path: Path) -> None:
     """Section offsets follow the 64-byte alignment contract."""
     path = tmp_path / "alignment.b5d"
-    header = B5DSnapshotWriter().write(path, _network(), metadata={"abc": "def"})
+    header = B5DSnapshotWriter().write(path, _network(), metadata={"abc": "def"})  # type: ignore[arg-type]
     assert header.neuron_offset % ALIGNMENT == 0
     assert header.synapse_offset % ALIGNMENT == 0
     assert header.file_size == path.stat().st_size
@@ -372,7 +372,7 @@ def test_large_storage_50k_neurons(tmp_path: Path) -> None:
     path = tmp_path / "large.b5d"
 
     started = time.perf_counter()
-    B5DSnapshotWriter(restart_capable=False).write(path, network, created_ns=1)
+    B5DSnapshotWriter(restart_capable=False).write(path, network, created_ns=1)  # type: ignore[arg-type]
     write_seconds = time.perf_counter() - started
 
     started = time.perf_counter()

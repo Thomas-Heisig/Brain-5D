@@ -232,7 +232,7 @@ class TestIterationDeterminism:
                 net.step()
             # Capture canonical state
             from src.research.canonical_state import canonical_state_digest
-            digest = canonical_state_digest(net)
-            results.append(digest)
+            digest = canonical_state_digest(net)  # type: ignore[arg-type]
+            results.append(digest)  # type: ignore[arg-type]
 
         assert results[0] == results[1] == results[2]

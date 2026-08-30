@@ -56,7 +56,7 @@ def _write(path: Path) -> None:
         },
         synapses={a: [FakeSynapse(b, 0.8)], b: []},
     )
-    B5DSnapshotWriter().write(path, net)
+    B5DSnapshotWriter().write(path, net)  # type: ignore[arg-type]
 
 
 def test_lazy_projector_shapes_and_finite_values(tmp_path: Path) -> None:

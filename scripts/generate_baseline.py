@@ -119,7 +119,7 @@ def main() -> int:
 
     # Add skipped reasons if any
     if skipped > 0:
-        reasons = []
+        reasons: list[str] = []
         for line in output.split("\n"):
             if "SKIPPED" in line:
                 reasons.append(line.split("SKIPPED")[-1].strip().lstrip("[").rstrip("]"))

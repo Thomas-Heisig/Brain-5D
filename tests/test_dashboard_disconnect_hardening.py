@@ -18,7 +18,6 @@ Tests
 import json
 import socket
 from http.client import HTTPConnection
-from pathlib import Path
 from threading import Thread
 from typing import Any
 
@@ -68,7 +67,7 @@ def _raw_request(
     return sock
 
 
-def _read_all(sock: socket.socket) -> bytes:
+def _read_all(sock: socket.socket) -> bytes:  # type: ignore[reportUnusedFunction]
     """Read all data from a socket until EOF."""
     data = b""
     while True:
@@ -132,7 +131,7 @@ def test_disconnect_during_send_response() -> None:
     """
     server, thread, host, port = _start_server()
     try:
-        sock = _raw_request(host, port, "/api/status", close_after_bytes=50)
+        _sock = _raw_request(host, port, "/api/status", close_after_bytes=50)  # noqa: unused
         # Give the server a moment to process the disconnect
         import time
 
@@ -286,7 +285,7 @@ def test_disconnect_does_not_enter_error_buffer() -> None:
             errors = payload.get("errors", [])
             # None of the errors should be disconnect-related
             for err in errors:
-                msg = err.get("message", "") if isinstance(err, dict) else str(err)
+                msg: str = err.get("message", "") if isinstance(err, dict) else str(err)  # type: ignore[assignment]
                 assert "BrokenPipe" not in msg, f"Disconnect leaked into error buffer: {msg}"
                 assert "ConnectionReset" not in msg, (
                     f"Disconnect leaked into error buffer: {msg}"

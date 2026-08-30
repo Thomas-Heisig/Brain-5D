@@ -79,9 +79,19 @@ class StructuralPlasticityEngine:
         self._changes_by_tick: dict[int, int] = {}
         self._journal = journal
         self._records: list[StructuralChangeRecord] = []
-        self._undo = (
+        self._undo: StructuralUndoManager | None = (
             StructuralUndoManager(journal, self) if journal is not None else None
         )
+
+    @property
+    def manipulator(self) -> StructuralManipulator:
+        """The underlying structural manipulator instance."""
+        return self._manipulator
+
+    @property
+    def journal(self) -> StructuralJournal | None:
+        """The structural journal instance, if any."""
+        return self._journal
 
     def apply_proposal(
         self, tick: int, proposal: StructuralProposal, *, approved: bool

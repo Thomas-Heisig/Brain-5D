@@ -15,18 +15,10 @@ Covers:
 
 from __future__ import annotations
 
-import hashlib
 import json
 import random
-from typing import Any, cast
-
-import pytest
 
 from src.research.canonical_state import (
-    CanonicalNetworkLike,
-    CanonicalNeuronLike,
-    CanonicalSpikeEventLike,
-    CanonicalSynapseLike,
     canonical_state_digest,
     capture_canonical_state,
 )
@@ -118,24 +110,24 @@ class TestCanonicalStateCapture:
     def test_neuron_ordering(self) -> None:
         """Neurons are sorted by neuron_id."""
         net = MockNetwork()
-        net._neurons = {
+        net._neurons = {  # type: ignore[misc]
             5: MockNeuron(5),
             2: MockNeuron(2),
             8: MockNeuron(8),
             1: MockNeuron(1),
         }
-        state = capture_canonical_state(net)
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         neuron_ids = [n["neuron_id"] for n in state["neurons"]]
         assert neuron_ids == [1, 2, 5, 8]
 
     def test_synapse_ordering(self) -> None:
         """Synapses are sorted by source_id, then target_id."""
         net = MockNetwork()
-        net._synapses = {
+        net._synapses = {  # type: ignore[misc]
             3: [MockSynapse(7), MockSynapse(5)],
             1: [MockSynapse(2)],
         }
-        state = capture_canonical_state(net)
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         syn_list = state["synapses"]
         assert len(syn_list) == 3
         assert syn_list[0]["source_id"] == 1
@@ -153,7 +145,7 @@ class TestCanonicalStateCapture:
             [MockSpikeEvent(3, 5, 0.1, 101), MockSpikeEvent(1, 2, 0.2, 101)],
             [MockSpikeEvent(5, 1, 0.3, 102)],
         ]
-        state = capture_canonical_state(net)
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         events = state["events"]
         assert len(events) == 3
         assert events[0]["delivery_tick"] == 101
@@ -167,8 +159,8 @@ class TestCanonicalStateCapture:
         net = MockNetwork()
         # Advance RNG to get non-trivial state
         for _ in range(10):
-            net._rng.random()
-        state = capture_canonical_state(net)
+            net._rng.random()  # type: ignore[misc]
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         rng_state = state["rng"]
         assert "version" in rng_state
         assert "state" in rng_state
@@ -179,7 +171,7 @@ class TestCanonicalStateCapture:
         """Pending currents are sorted by neuron_id."""
         net = MockNetwork()
         net.pending_currents = {5: 1.0, 2: 2.0, 8: 3.0}
-        state = capture_canonical_state(net)
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         currents = state["pending_currents"]
         assert currents == [(2, 2.0), (5, 1.0), (8, 3.0)]
 
@@ -188,14 +180,14 @@ class TestCanonicalStateCapture:
         net = MockNetwork()
         net.input_cells = {5, 2, 8}
         net.output_cells = {3, 1, 7}
-        state = capture_canonical_state(net)
+        state = capture_canonical_state(net)  # type: ignore[arg-type]
         assert state["input_cells"] == [2, 5, 8]
         assert state["output_cells"] == [1, 3, 7]
 
     def test_no_timestamps_in_state(self) -> None:
         """No wall-clock timestamps appear in canonical state."""
         net = MockNetwork()
-        state_json = json.dumps(capture_canonical_state(net), sort_keys=True)
+        state_json = json.dumps(capture_canonical_state(net), sort_keys=True)  # type: ignore[arg-type]
         # Check that no ISO timestamp or wall-clock time appears
         assert "timestamp" not in state_json
         assert "created_at" not in state_json
@@ -208,8 +200,8 @@ class TestCanonicalStateDigest:
     def test_digest_deterministic(self) -> None:
         """Same input produces same digest."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net)
-        d2 = canonical_state_digest(net)
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 == d2
         assert isinstance(d1, str)
         assert len(d1) == 64  # SHA-256 hex
@@ -217,71 +209,71 @@ class TestCanonicalStateDigest:
     def test_digest_changes_on_tick(self) -> None:
         """Digest changes when current_tick changes."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net)
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
         net.current_tick = 101
-        d2 = canonical_state_digest(net)
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_changes_on_rng(self) -> None:
         """Digest changes when RNG state changes."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net)
-        net._rng.random()
-        d2 = canonical_state_digest(net)
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
+        net._rng.random()  # type: ignore[misc]
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_changes_on_neuron(self) -> None:
         """Digest changes when neuron state changes."""
         net = MockNetwork()
-        net._neurons = {1: MockNeuron(1, v=-65.0)}
-        d1 = canonical_state_digest(net)
-        net._neurons[1].v = -60.0
-        d2 = canonical_state_digest(net)
+        net._neurons = {1: MockNeuron(1, v=-65.0)}  # type: ignore[misc]
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
+        net._neurons[1].v = -60.0  # type: ignore[misc]
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_changes_on_synapse(self) -> None:
         """Digest changes when synapse state changes."""
         net = MockNetwork()
-        net._neurons = {1: MockNeuron(1), 2: MockNeuron(2)}
-        net._synapses = {1: [MockSynapse(2, weight=0.1)]}
-        d1 = canonical_state_digest(net)
-        net._synapses[1][0].weight = 0.5
-        d2 = canonical_state_digest(net)
+        net._neurons = {1: MockNeuron(1), 2: MockNeuron(2)}  # type: ignore[misc]
+        net._synapses = {1: [MockSynapse(2, weight=0.1)]}  # type: ignore[misc]
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
+        net._synapses[1][0].weight = 0.5  # type: ignore[misc]
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_changes_on_events(self) -> None:
         """Digest changes when queued events change."""
         net = MockNetwork()
         net.event_slots = [[MockSpikeEvent(1, 2, 0.1, 101)]]
-        d1 = canonical_state_digest(net)
+        d1 = canonical_state_digest(net)  # type: ignore[arg-type]
         net.event_slots = [[MockSpikeEvent(1, 2, 0.2, 101)]]
-        d2 = canonical_state_digest(net)
+        d2 = canonical_state_digest(net)  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_includes_homeostasis(self) -> None:
         """Homeostasis rates affect the digest."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net, homeostasis_rates={1: 5.0, 2: 3.0})
-        d2 = canonical_state_digest(net, homeostasis_rates={1: 10.0, 2: 3.0})
+        d1 = canonical_state_digest(net, homeostasis_rates={1: 5.0, 2: 3.0})  # type: ignore[arg-type]
+        d2 = canonical_state_digest(net, homeostasis_rates={1: 10.0, 2: 3.0})  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_includes_learning(self) -> None:
         """Learning state affects the digest."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net, learning_state={"stdp_updates": 0})
-        d2 = canonical_state_digest(net, learning_state={"stdp_updates": 10})
+        d1 = canonical_state_digest(net, learning_state={"stdp_updates": 0})  # type: ignore[arg-type]
+        d2 = canonical_state_digest(net, learning_state={"stdp_updates": 10})  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_includes_structural(self) -> None:
         """Structural state affects the digest."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net, structural_state={"topology_digest": "abc"})
-        d2 = canonical_state_digest(net, structural_state={"topology_digest": "def"})
+        d1 = canonical_state_digest(net, structural_state={"topology_digest": "abc"})  # type: ignore[arg-type]
+        d2 = canonical_state_digest(net, structural_state={"topology_digest": "def"})  # type: ignore[arg-type]
         assert d1 != d2
 
     def test_digest_includes_config_sha256(self) -> None:
         """Config SHA-256 affects the digest."""
         net = MockNetwork()
-        d1 = canonical_state_digest(net, config_sha256="config-a")
-        d2 = canonical_state_digest(net, config_sha256="config-b")
+        d1 = canonical_state_digest(net, config_sha256="config-a")  # type: ignore[arg-type]
+        d2 = canonical_state_digest(net, config_sha256="config-b")  # type: ignore[arg-type]
         assert d1 != d2

@@ -21,14 +21,14 @@ Geaendert:
 - src/learning/__init__.py
 - configs/poc_config.yaml
 - configs/poc_config_stdp_on.yaml
-- docs/STDP_LAB.md (Sprint-2A-Datei bleibt enthalten)
+- docs/02-architecture/STDP_LAB.md (Sprint-2A-Datei bleibt enthalten)
 
 Neu:
 - src/learning/eligibility.py
 - src/learning/learning_engine.py
 - tests/test_eligibility.py
 - tests/test_stdp_integration.py
-- docs/SPRINT_2B.md
+- docs/09-sprints/SPRINT_2B.md
 
 Nicht geaendert:
 - src/core/synapse.py

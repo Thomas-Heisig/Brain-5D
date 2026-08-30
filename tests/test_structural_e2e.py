@@ -36,12 +36,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-import pytest
 
-from src.controller.runtime import RuntimeController
 from src.core.network import NeuralNetwork
 from src.core.spatial_index import unpack_coords
-from src.dashboard.operator_bridge import OperatorBridge
 from src.homeostasis.engine import HomeostasisEngine
 from src.homeostasis.signals import HomeostasisSignal
 from src.self_organization.composition import compose_structural_subsystem
@@ -52,7 +49,6 @@ from src.self_organization.policy import (
     ProposalKind,
     SelfOrganizationPolicy,
     SelfOrganizationPolicyConfig,
-    StructuralProposal,
 )
 from src.storage.structural_journal import (
     StructuralChangeKind,
@@ -244,8 +240,9 @@ def test_proof_01_coordinator_instantiated(tmp_path: Path) -> None:
     coordinator = chain["coordinator"]
     assert coordinator is not None
     assert isinstance(coordinator, SelfOrganizationCoordinator)
-    assert coordinator._enabled is True
-    assert coordinator._dry_run is False
+    snap = coordinator.snapshot()
+    assert snap.enabled is True
+    assert snap.dry_run is False
 
 
 # =========================================================================
@@ -259,8 +256,8 @@ def test_proof_02_plasticity_engine_instantiated(tmp_path: Path) -> None:
     plasticity = chain["plasticity"]
     assert plasticity is not None
     assert isinstance(plasticity, StructuralPlasticityEngine)
-    assert plasticity._manipulator is not None
-    assert plasticity._journal is not None
+    assert plasticity.manipulator is not None
+    assert plasticity.journal is not None
 
 
 # =========================================================================

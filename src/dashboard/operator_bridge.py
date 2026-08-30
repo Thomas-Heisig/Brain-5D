@@ -30,7 +30,7 @@ from .models import (
 )
 from .structural_api import StructuralCommandResult
 from src.self_organization.runtime_adapter import get_error_buffer
-from src.dashboard.live_projection import LiveProjectionService, TelemetryFrameStore
+from src.dashboard.live_projection import LiveProjectionService, NetworkAccess, TelemetryFrameStore
 
 # Type aliases for JSON responses
 JSONMapping: TypeAlias = dict[str, JSONValue]
@@ -90,7 +90,7 @@ class OperatorBridge:
         self.structural_heatmaps = structural_heatmaps
         self.telemetry_store = telemetry_store
         self.live_projection = live_projection or LiveProjectionService(
-            controller.network,
+            cast("NetworkAccess", controller.network),
             frame_store=telemetry_store,
         )
 

@@ -14,7 +14,7 @@ Copy the overlay into the repository root.
 - `src/dashboard/static/styles.css`
 - `tests/test_checkpoint.py`
 - `tests/test_restore_continue.py`
-- `docs/ROADMAP_TO_USABLE_AI.md`
+- `docs/08-roadmap/ROADMAP_TO_USABLE_AI.md`
 - `pyproject.toml`
 
 ## Added
@@ -23,10 +23,10 @@ Copy the overlay into the repository root.
 - `src/embodiment/`
 - `tests/test_embodiment.py`
 - `tests/test_dashboard_alpha7.py`
-- `docs/EMBODIMENT_FOUNDATION.md`
-- `docs/DETERMINISTIC_RESTORE_V3.md`
-- `docs/DASHBOARD_ALPHA7.md`
-- `docs/QUALITY_GATE_V040.md`
+- `docs/02-architecture/EMBODIMENT_FOUNDATION.md`
+- `docs/02-architecture/DETERMINISTIC_RESTORE_V3.md`
+- `docs/03-dashboard/DASHBOARD_ALPHA7.md`
+- `docs/05-quality/QUALITY_GATE_V040.md`
 - `scripts/brain5d_launcher.py`
 - `scripts/verify_all.py`
 - `start.ps1`, `stop.ps1`, `start.cmd`, `stop.cmd`

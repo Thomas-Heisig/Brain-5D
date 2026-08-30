@@ -1,4 +1,5 @@
 import random
+from typing import Any, cast
 
 from tests.conftest import base_config
 
@@ -8,7 +9,7 @@ from src.self_organization import SelfOrganizationEngine
 
 
 def test_pruning_removes_old_weak_synapse() -> None:
-    cfg = base_config()
+    cfg: dict[str, Any] = cast(dict[str, Any], base_config())
     cfg["self_organization"] = {
         "enabled": True,
         "interval_ticks": 1,
@@ -28,7 +29,7 @@ def test_pruning_removes_old_weak_synapse() -> None:
 
 
 def test_neurogenesis_can_create_child_near_active_parent() -> None:
-    cfg = base_config()
+    cfg: dict[str, Any] = cast(dict[str, Any], base_config())
     cfg["max_neurons"] = 10
     cfg["self_organization"] = {
         "enabled": True,

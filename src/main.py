@@ -45,7 +45,7 @@ from src.config.loader import load_config
 # ================================================================
 # Canonical Runtime Controller
 # ================================================================
-from src.controller.runtime import RuntimeController as _RuntimeController
+from src.controller.runtime import PostTickHook, RuntimeController as _RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import (
     coords_to_linear,
@@ -67,7 +67,7 @@ from src.telemetry.history import History
 from src.telemetry.probes import ProbeManager
 from src.telemetry.spike_history import SpikeHistory
 from src.utils.run_artifacts import RunArtifacts
-from src.version import BRAIN5D_VERSION, BRAIN5D_VERSION_DISPLAY
+from src.version import BRAIN5D_VERSION_DISPLAY
 
 # ================================================================
 # Dashboard Integration – with None‑fallback
@@ -833,13 +833,13 @@ def main() -> int:
         try:
             # Create TelemetryFrameStore for atomic live visualization
             # Read telemetry config from config_dict, fall back to defaults
-            _live_telemetry_cfg = config_dict.get("dashboard", {}).get("live_telemetry", {})
-            if not isinstance(_live_telemetry_cfg, dict):
-                _live_telemetry_cfg = {}
+            _dashboard_cfg: dict[str, Any] = config_dict.get("dashboard", {})  # type: ignore[type-arg]
+            _live_telemetry_cfg: dict[str, Any] = _dashboard_cfg.get("live_telemetry", {})  # type: ignore[type-arg]
             _lt_enabled = bool(_live_telemetry_cfg.get("enabled", True))
             _lt_capture = int(_live_telemetry_cfg.get("capture_interval_ticks", 5))
             _lt_window = int(_live_telemetry_cfg.get("activity_window_ticks", 20))
-            _sim_dt_ms = float(config_dict.get("simulation", {}).get("dt_ms", 1.0))
+            _sim_cfg: dict[str, Any] = config_dict.get("simulation", {})  # type: ignore[type-arg]
+            _sim_dt_ms = float(_sim_cfg.get("dt_ms", 1.0))
 
             _telemetry_store: Any = None
             if _lt_enabled:
@@ -852,7 +852,9 @@ def main() -> int:
                 # Prime Tick-0 frame so dashboard can respond immediately
                 _telemetry_store.prime(controller.network)
                 # Register post-tick hook via safe wrapper (routes errors to error buffer)
-                controller.add_hook(make_telemetry_hook(_telemetry_store, controller.network))
+                from src.dashboard.live_projection import NetworkAccess as _NetworkAccess
+                _hook: PostTickHook = make_telemetry_hook(_telemetry_store, cast("_NetworkAccess", controller.network))
+                controller.add_hook(_hook)
                 print(f"✅ Live telemetry enabled (capture={_lt_capture}, window={_lt_window}, dt_ms={_sim_dt_ms})")
             else:
                 print("⚠️ Live telemetry disabled by config")

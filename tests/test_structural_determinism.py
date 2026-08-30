@@ -10,7 +10,6 @@ Covers:
 
 from __future__ import annotations
 
-import json
 import random
 from pathlib import Path
 from typing import Any
@@ -18,11 +17,9 @@ from typing import Any
 import pytest
 
 from src.core.network import Brain5DConfig, NeuralNetwork
-from src.core.spatial_index import linear_to_5d, pack_coords, unpack_coords
 from src.homeostasis.engine import HomeostasisEngine
 from src.self_organization.composition import compose_structural_subsystem
 from src.self_organization.policy import (
-    SelfOrganizationPolicy,
     SelfOrganizationPolicyConfig,
 )
 from src.self_organization.runtime_adapter import SelfOrganizationRuntimeAdapter
@@ -128,7 +125,7 @@ class TestStructuralDeterminism:
             allow_synapse_pruning=True,
         )
         coordinator = composed["coordinator"]
-        plasticity = composed["plasticity"]
+        _plasticity = composed["plasticity"]
 
         policy_config = SelfOrganizationPolicyConfig.from_config(config)
         adapter = SelfOrganizationRuntimeAdapter(
@@ -142,9 +139,6 @@ class TestStructuralDeterminism:
 
     def test_identical_proposals_across_runs(self, structural_config: dict[str, Any], tmp_path: Path) -> None:
         """Two independent runs produce identical proposal sequences."""
-        proposals_a: list[dict[str, Any]] = []
-        proposals_b: list[dict[str, Any]] = []
-
         net_a, adapter_a, coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
         net_b, adapter_b, coord_b = self._setup_full_structural(structural_config, tmp_path, 42)
 
@@ -221,8 +215,8 @@ class TestStructuralDeterminism:
         self, structural_config: dict[str, Any], tmp_path: Path
     ) -> None:
         """Different seeds produce different structural outcomes (sanity check)."""
-        net_a, adapter_a, coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
-        net_b, adapter_b, coord_b = self._setup_full_structural(structural_config, tmp_path, 99)
+        net_a, adapter_a, _coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
+        net_b, adapter_b, _coord_b = self._setup_full_structural(structural_config, tmp_path, 99)
 
         for tick in range(100):
             net_a.step()

@@ -29,7 +29,7 @@ Example:
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from src.core.spatial_index import (
     Coord5D,
@@ -829,7 +829,7 @@ class Brain5DManipulator:
         for coord in product(*ranges):
             nid = pack_coords(*coord)
             if nid not in self.network.neurons:
-                return self.create_neuron(coord)
+                return self.create_neuron(cast("Coord5D", coord))
         raise RuntimeError("no free coordinate available for neuron creation")
 
     def remove_neuron(self, neuron_id: int) -> bool:

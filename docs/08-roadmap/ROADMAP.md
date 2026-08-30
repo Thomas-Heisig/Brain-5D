@@ -1,7 +1,7 @@
-# Roadmap
+# Roadmap (Stand 1)
 
 > Last updated: 2026-08-23
-> Detailed task list: `docs/TODO.md`
+> Detailed task list: `docs/08-roadmap/TODO.md`
 
 ## Stand 1 – abgeschlossenes Zielbild
 
@@ -14,6 +14,10 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Canonical command contract `{"command":"run_ticks","ticks":N}`
 - [x] B5D-SEF research API + Research tab in dashboard
 - [x] Alpha.5 Integration Gate tab with live checks
+- [x] Viewer als Overlay-Panel (Close-Button, Sidebar expandiert)
+- [x] Fehlende Dateitypen ergänzt (`.bib`, `.patch`, `.rst`, `.tex`, `.schema.json`, u.a.)
+- [x] YAML Syntax-Highlighting (renderFMYaml mit farblichen Token-Klassen)
+- [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
 - [ ] Canonical RuntimeController (remove SimpleController)
 - [ ] .b5d snapshot pipeline → heatmap
 - [ ] Structural plasticity wired through approval-gated manipulator

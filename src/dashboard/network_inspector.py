@@ -77,7 +77,7 @@ class NetworkSummary:
 class NeuronPage:
     """One paginated page of neuron records."""
 
-    neurons: list[dict[str, JSONValue]]
+    neurons: list[JSONValue]
     total: int
     offset: int
     limit: int
@@ -99,7 +99,7 @@ class NeuronPage:
 class SynapsePage:
     """One paginated page of synapse records."""
 
-    synapses: list[dict[str, JSONValue]]
+    synapses: list[JSONValue]
     total: int
     offset: int
     limit: int
@@ -121,7 +121,7 @@ class SynapsePage:
 class ProjectionPayload:
     """Real 5D→3D projection of neuron coordinates."""
 
-    points: list[dict[str, JSONValue]]
+    points: list[JSONValue]
     sample_count: int
     total_count: int
     sampling_method: str
@@ -164,7 +164,7 @@ class NetworkInspector:
     # Summary
     # ------------------------------------------------------------------------
 
-    def summary(self, last_result: Any | None = None) -> NetworkSummary:
+    def summary(self, _last_result: Any | None = None) -> NetworkSummary:
         """Compute a real network summary from the live network."""
         net = self.network
         dims = tuple(net.dimensions)
@@ -238,7 +238,7 @@ class NetworkInspector:
         total = len(items)
         page = items[offset : offset + limit]
 
-        neurons: list[dict[str, JSONValue]] = []
+        neurons: list[JSONValue] = []
         for nid, n in page:
             x1, x2, x3, x4, x5 = unpack_coords(nid)
             neurons.append(
@@ -323,7 +323,7 @@ class NetworkInspector:
         total = len(flat)
         page = flat[offset : offset + limit]
 
-        synapses: list[dict[str, JSONValue]] = []
+        synapses: list[JSONValue] = []
         for src_id, syn in page:
             synapses.append(
                 {
@@ -381,7 +381,7 @@ class NetworkInspector:
             sampled = items
             method = "full population"
 
-        points: list[dict[str, JSONValue]] = []
+        points: list[JSONValue] = []
         for nid, n in sampled:
             x1, x2, x3, x4, x5 = unpack_coords(nid)
             if mode == "energy":

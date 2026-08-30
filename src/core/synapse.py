@@ -131,7 +131,7 @@ class Synapse:
     # STDP Eligibility Updates
     # ========================================================================
 
-    def update_eligibility(self, tick: int) -> None:
+    def update_eligibility(self, _tick: int) -> None:
         """Decay the eligibility trace at each tick."""
         if self._enabled:
             decay = self.config.eligibility_decay

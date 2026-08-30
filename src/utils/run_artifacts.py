@@ -65,9 +65,7 @@ class RunArtifacts:
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: object,
+        *_args: object,
     ) -> None:
         for handle in (self._metrics_handle, self._spike_handle, self._stimulus_handle):
             if handle:

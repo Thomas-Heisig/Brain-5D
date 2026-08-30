@@ -59,7 +59,7 @@ class _StubController:
             "SnapshotStub",
             (),
             {
-                "to_json": lambda _self=None, tick=tick: {
+                "to_json": lambda _self=None, tick=tick: {  # type: ignore[assignment]
                     "mode": "idle",
                     "tick": tick,
                     "queued_ticks": 0,
@@ -204,7 +204,7 @@ def _post(
 class TestCanonicalContract:
     """Test the canonical { "command": "...", ... } contract."""
 
-    def test_run_ticks_command(self, server_and_client):
+    def test_run_ticks_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(
             host, port, "/api/control", {"command": "run_ticks", "ticks": 10}
@@ -213,7 +213,7 @@ class TestCanonicalContract:
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_step_command(self, server_and_client):
+    def test_step_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(
             host, port, "/api/control", {"command": "step", "ticks": 1}
@@ -222,42 +222,42 @@ class TestCanonicalContract:
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_pause_command(self, server_and_client):
+    def test_pause_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "pause"})
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_stop_command(self, server_and_client):
+    def test_stop_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "stop"})
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_snapshot_command(self, server_and_client):
+    def test_snapshot_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "snapshot"})
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_start_command(self, server_and_client):
+    def test_start_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "start"})
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_resume_command(self, server_and_client):
+    def test_resume_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "resume"})
         assert status == 200
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_configure_command(self, server_and_client):
+    def test_configure_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(
             host,
@@ -269,7 +269,7 @@ class TestCanonicalContract:
         assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_single_step_command(self, server_and_client):
+    def test_single_step_command(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "single_step"})
         assert status == 200
@@ -286,30 +286,34 @@ class TestCanonicalContract:
 class TestLegacyContract:
     """Test the legacy { "action": "...", ... } contract still works."""
 
-    def test_legacy_step_action(self, server_and_client):
+    def test_legacy_step_action(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"action": "step", "ticks": 1})
         assert status == 200
+        assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_legacy_run_ticks_action(self, server_and_client):
+    def test_legacy_run_ticks_action(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(
             host, port, "/api/control", {"action": "run_ticks", "ticks": 10}
         )
         assert status == 200
+        assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_legacy_pause_action(self, server_and_client):
+    def test_legacy_pause_action(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"action": "pause"})
         assert status == 200
+        assert isinstance(body, dict)
         assert body.get("ok") is True
 
-    def test_legacy_stop_action(self, server_and_client):
+    def test_legacy_stop_action(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"action": "stop"})
         assert status == 200
+        assert isinstance(body, dict)
         assert body.get("ok") is True
 
 
@@ -322,28 +326,28 @@ class TestLegacyContract:
 class TestValidation:
     """Test input validation and error responses."""
 
-    def test_missing_command_returns_400(self, server_and_client):
+    def test_missing_command_returns_400(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {})
         assert status == 400
         assert isinstance(body, dict)
         assert "error" in body
 
-    def test_unknown_command_returns_400(self, server_and_client):
+    def test_unknown_command_returns_400(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", {"command": "warp-core"})
         assert status == 400
         assert isinstance(body, dict)
         assert "error" in body
 
-    def test_non_dict_body_returns_400(self, server_and_client):
+    def test_non_dict_body_returns_400(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(host, port, "/api/control", ["not", "a", "dict"])
         assert status == 400
         assert isinstance(body, dict)
         assert "error" in body
 
-    def test_invalid_ticks_type_returns_400(self, server_and_client):
+    def test_invalid_ticks_type_returns_400(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         status, body = _post(
             host,
@@ -355,7 +359,7 @@ class TestValidation:
         assert isinstance(body, dict)
         assert "error" in body
 
-    def test_unsupported_content_type_returns_415(self, server_and_client):
+    def test_unsupported_content_type_returns_415(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         conn = HTTPConnection(host, port)
         try:
@@ -381,7 +385,7 @@ class TestValidation:
 class TestControlStatus:
     """Test the GET /api/control status endpoint."""
 
-    def test_get_control_status_returns_200(self, server_and_client):
+    def test_get_control_status_returns_200(self, server_and_client: tuple[DashboardServer, Thread, str, int]) -> None:
         _, _, host, port = server_and_client
         conn = HTTPConnection(host, port)
         try:

@@ -23,7 +23,7 @@ def test_async_session_writes_and_reports_telemetry(tmp_path: Path) -> None:
         commit_interval_ticks=1,
     )
     session = AsyncStorageSession(
-        network,
+        network,  # type: ignore[arg-type]
         runtime,
         AsyncStorageConfig(queue_size=8),
     )

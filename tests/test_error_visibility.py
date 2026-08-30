@@ -15,12 +15,9 @@ Covers:
 
 from __future__ import annotations
 
-import json
 import threading
 from pathlib import Path
 from typing import Any
-
-import pytest
 
 from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
@@ -29,10 +26,6 @@ from src.dashboard.operator_bridge import OperatorBridge
 from src.dashboard.state import DashboardStateStore
 from src.homeostasis.engine import HomeostasisEngine
 from src.self_organization.coordinator import SelfOrganizationCoordinator
-from src.self_organization.policy import (
-    SelfOrganizationPolicy,
-    SelfOrganizationPolicyConfig,
-)
 from src.self_organization.runtime_adapter import (
     ErrorBuffer,
     RuntimeErrorEvent,
@@ -194,7 +187,7 @@ class TestAdapterErrorCapture:
         # Call the adapter — with no homeostasis signal data yet,
         # build_signal should still work. To force an error, we'd need
         # a broken network. Instead, test the _capture_error method directly.
-        adapter._capture_error(5, "build_signal", ValueError("test build_signal error"))
+        adapter._capture_error(5, "build_signal", ValueError("test build_signal error"))  # type: ignore[misc]
         assert buf.count == 1
         e = buf.latest
         assert e is not None
@@ -217,7 +210,7 @@ class TestAdapterErrorCapture:
             interval_ticks=1,
             error_buffer=buf,
         )
-        adapter._capture_error(10, "analyze", RuntimeError("test analyze error"))
+        adapter._capture_error(10, "analyze", RuntimeError("test analyze error"))  # type: ignore[misc]
         assert buf.count == 1
         e = buf.latest
         assert e is not None
@@ -237,7 +230,7 @@ class TestAdapterErrorCapture:
             interval_ticks=1,
             error_buffer=buf,
         )
-        adapter._capture_error(15, "publish", KeyError("test publish error"))
+        adapter._capture_error(15, "publish", KeyError("test publish error"))  # type: ignore[misc]
         assert buf.count == 1
         e = buf.latest
         assert e is not None
@@ -256,7 +249,7 @@ class TestAdapterErrorCapture:
             interval_ticks=1,
             error_buffer=buf,
         )
-        adapter._capture_error(20, "analyze", TypeError("missing field"))
+        adapter._capture_error(20, "analyze", TypeError("missing field"))  # type: ignore[misc]
         e = buf.latest
         assert e is not None
         assert hasattr(e, "timestamp")
@@ -288,10 +281,10 @@ class TestIntegrationErrorVisibility:
             repo_root=Path(__file__).resolve().parents[1],
         )
         result = builder.build()
-        items = {i["name"]: i for i in result.get("items", [])}
-        ev = items.get("Error Visibility", {})
-        assert ev.get("status") == "passed", (
-            f"Expected passed with no errors, got {ev.get('status')}: {ev.get('message')}"
+        items = {i["name"]: i for i in result.get("items", [])}  # type: ignore[union-attr]
+        ev = items.get("Error Visibility", {})  # type: ignore[union-attr]
+        assert ev.get("status") == "passed", (  # type: ignore[union-attr]
+            f"Expected passed with no errors, got {ev.get('status')}: {ev.get('message')}"  # type: ignore[union-attr]
         )
 
     def test_non_fatal_error_is_failed(self) -> None:
@@ -316,12 +309,12 @@ class TestIntegrationErrorVisibility:
             repo_root=Path(__file__).resolve().parents[1],
         )
         result = builder.build()
-        items = {i["name"]: i for i in result.get("items", [])}
-        ev = items.get("Error Visibility", {})
-        assert ev.get("status") == "failed", (
-            f"Expected failed with non-fatal errors, got {ev.get('status')}: {ev.get('message')}"
+        items = {i["name"]: i for i in result.get("items", [])}  # type: ignore[union-attr]
+        ev = items.get("Error Visibility", {})  # type: ignore[union-attr]
+        assert ev.get("status") == "failed", (  # type: ignore[union-attr]
+            f"Expected failed with non-fatal errors, got {ev.get('status')}: {ev.get('message')}"  # type: ignore[union-attr]
         )
-        assert ev.get("error_count", 0) >= 1
+        assert ev.get("error_count", 0) >= 1  # type: ignore[union-attr]
 
         # Clean up
         buf.clear()
@@ -347,12 +340,12 @@ class TestIntegrationErrorVisibility:
             repo_root=Path(__file__).resolve().parents[1],
         )
         result = builder.build()
-        items = {i["name"]: i for i in result.get("items", [])}
-        ev = items.get("Error Visibility", {})
-        assert ev.get("status") == "failed", (
-            f"Expected failed with fatal error, got {ev.get('status')}: {ev.get('message')}"
+        items = {i["name"]: i for i in result.get("items", [])}  # type: ignore[union-attr]
+        ev = items.get("Error Visibility", {})  # type: ignore[union-attr]
+        assert ev.get("status") == "failed", (  # type: ignore[union-attr]
+            f"Expected failed with fatal error, got {ev.get('status')}: {ev.get('message')}"  # type: ignore[union-attr]
         )
-        assert ev.get("fatal_count", 0) >= 1
+        assert ev.get("fatal_count", 0) >= 1  # type: ignore[union-attr]
 
         # Clean up
         buf.clear()
@@ -373,10 +366,10 @@ class TestIntegrationErrorVisibility:
             repo_root=Path(__file__).resolve().parents[1],
         )
         result = builder.build()
-        items = {i["name"]: i for i in result.get("items", [])}
-        ev = items.get("Error Visibility", {})
-        assert ev.get("status") == "passed", (
-            f"Expected passed after clear, got {ev.get('status')}: {ev.get('message')}"
+        items = {i["name"]: i for i in result.get("items", [])}  # type: ignore[union-attr]
+        ev = items.get("Error Visibility", {})  # type: ignore[union-attr]
+        assert ev.get("status") == "passed", (  # type: ignore[union-attr]
+            f"Expected passed after clear, got {ev.get('status')}: {ev.get('message')}"  # type: ignore[union-attr]
         )
 
     def test_no_bridge_is_pending(self) -> None:
@@ -388,8 +381,8 @@ class TestIntegrationErrorVisibility:
             repo_root=Path(__file__).resolve().parents[1],
         )
         result = builder.build()
-        items = {i["name"]: i for i in result.get("items", [])}
-        ev = items.get("Error Visibility", {})
-        assert ev.get("status") == "pending", (
-            f"Expected pending with no bridge, got {ev.get('status')}: {ev.get('message')}"
+        items = {i["name"]: i for i in result.get("items", [])}  # type: ignore[union-attr]
+        ev = items.get("Error Visibility", {})  # type: ignore[union-attr]
+        assert ev.get("status") == "pending", (  # type: ignore[union-attr]
+            f"Expected pending with no bridge, got {ev.get('status')}: {ev.get('message')}"  # type: ignore[union-attr]
         )

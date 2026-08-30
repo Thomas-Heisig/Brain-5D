@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 import pytest
 
 from src.storage.b5d import B5DReader, B5DSnapshotWriter
+from src.storage.b5d import NetworkSnapshotLike
 from src.storage.delta_codec import (
     NeuronStateDelta,
     SynapseWeightDelta,
@@ -57,7 +59,7 @@ def _snapshot(path: Path) -> None:
         neurons={1: FakeNeuron(), 2: FakeNeuron(v=-55.0)},
         synapses={1: [FakeSynapse(2, 0.2, 2)], 2: []},
     )
-    B5DSnapshotWriter(restart_capable=True).write(path, network)
+    B5DSnapshotWriter(restart_capable=True).write(path, cast("NetworkSnapshotLike", network))
 
 
 def test_recovery_applies_committed_state(tmp_path: Path) -> None:

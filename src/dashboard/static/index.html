@@ -371,31 +371,69 @@
     </section> <!-- /tab-control -->
 
     <!-- ========================================================== -->
-    <!-- TAB: RESEARCH & DOCS -->
+    <!-- TAB: RESEARCH & DOCS (Unified File Manager) -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-research">
-      <div class="research-docs-split">
-        <!-- Research side -->
-        <div class="research-browser">
-          <div class="research-sidebar">
-            <div class="research-toolbar"><h3>B5D Scientific Evidence Framework</h3><div id="research-summary" class="research-summary"><span class="research-stat">Initialisiere Research-Quelle...</span></div></div>
-            <div class="research-section"><h4>Generated Reports</h4><div id="research-reports" class="research-list"><span class="research-empty">Wird geladen...</span></div></div>
-            <div class="research-section"><h4>Registry</h4><div id="research-documents" class="research-docs"><span class="research-empty">Wird geladen...</span></div></div>
-            <div class="research-section"><h4>Experiments</h4><div id="research-experiments" class="research-list"><span class="research-empty">Wird geladen...</span></div></div>
+      <!-- Source selector toolbar -->
+      <div class="fm-toolbar">
+        <div class="fm-source-selector">
+          <button class="fm-source-btn active" data-source="research">🔬 Research</button>
+          <button class="fm-source-btn" data-source="docs">📄 Docs</button>
+        </div>
+        <div class="fm-search-bar">
+          <input type="text" id="fm-search" placeholder="Search files…" />
+          <button id="fm-search-btn" title="Search">🔍</button>
+        </div>
+        <div id="fm-stats" class="fm-stats">—</div>
+        <button id="fm-open-os" class="fm-os-btn" title="Open folder in file explorer">📂</button>
+        <button id="fm-refresh" class="fm-refresh-btn" title="Refresh tree">🔄</button>
+      </div>
+      <!-- Breadcrumb navigation -->
+      <div class="fm-breadcrumb" id="fm-breadcrumb">
+        <span class="fm-bc-item fm-bc-root" data-path="">📁 <span class="fm-bc-source-label">research/</span></span>
+      </div>
+      <!-- File-type filter chips -->
+      <div class="fm-filters" id="fm-filters">
+        <button class="fm-filter-chip active" data-ext="all">All</button>
+        <button class="fm-filter-chip" data-ext=".md">Markdown</button>
+        <button class="fm-filter-chip" data-ext=".py">Python</button>
+        <button class="fm-filter-chip" data-ext=".json">JSON</button>
+        <button class="fm-filter-chip" data-ext=".yaml,.yml">YAML</button>
+        <button class="fm-filter-chip" data-ext=".csv">CSV</button>
+        <button class="fm-filter-chip" data-ext=".txt">Text</button>
+        <button class="fm-filter-chip" data-ext=".bib">BibTeX</button>
+        <button class="fm-filter-chip" data-ext=".patch">Patch</button>
+        <button class="fm-filter-chip" data-ext=".toml,.cfg,.ini">Config</button>
+        <button class="fm-filter-chip" data-ext=".png,.jpg,.svg,.webp">Images</button>
+        <button class="fm-filter-chip" data-ext=".pdf,.docx,.xlsx">Office</button>
+      </div>
+      <!-- Main split layout -->
+      <div class="fm-layout">
+        <!-- Sidebar: file tree + recent files -->
+        <div class="fm-sidebar">
+          <div class="fm-sidebar-header">
+            <span class="fm-sidebar-title" id="fm-sidebar-title">📁 Files</span>
+            <div class="fm-sidebar-actions">
+              <button id="fm-toggle-recent" class="fm-sidebar-action-btn" title="Recent files">🕐</button>
+            </div>
           </div>
-          <div id="research-viewer" class="research-viewer">
-            <div class="research-placeholder"><p>Select a research document to view its contents.</p><p class="research-hint">B5D-SEF registry: 27 Research Questions &middot; 27 Hypotheses &middot; 5 Claims &middot; 8 Sources &middot; 13 Methods</p></div>
+          <div id="fm-tree" class="fm-tree">
+            <span class="fm-loading">Loading directory tree…</span>
+          </div>
+          <!-- Recent files panel (collapsible) -->
+          <div class="fm-recent" id="fm-recent" style="display:none;">
+            <div class="fm-recent-header">
+              <span>🕐 Recent</span>
+              <button id="fm-clear-recent" class="fm-sidebar-action-btn" title="Clear recent">✕</button>
+            </div>
+            <div id="fm-recent-list" class="fm-recent-list"></div>
           </div>
         </div>
-        <!-- Docs side -->
-        <div class="doc-browser">
-          <div class="doc-sidebar">
-            <div class="doc-toolbar"><input type="text" id="doc-search" placeholder="Search documents..." /><div id="doc-filter-container"></div><button id="doc-refresh">Refresh</button></div>
-            <div id="doc-stats" class="doc-stats">Lade Dokumentation...</div>
-            <div id="doc-tree" class="doc-tree">Lade Verzeichnisstruktur...</div>
-          </div>
-          <div id="doc-viewer" class="doc-viewer">
-            <div class="doc-placeholder"><p>Select a document to view its contents.</p><p style="color: #888; font-size: 13px;">Supported formats: Markdown, Text, DOCX, XLSX, CSV, JSON, PDF (metadata)</p></div>
+        <!-- Viewer: Overlay panel that opens on top of sidebar when a file is clicked -->
+        <div class="fm-viewer fm-viewer-hidden" id="fm-viewer">
+          <div class="fm-placeholder">
+            <p>Select a file from the tree to preview.</p>
+            <p class="fm-hint">Supported: Markdown, Text, JSON, CSV, YAML, Python, Images, Videos, DOCX, XLSX, PDF</p>
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ system-level proof that reward learning changes network behaviour.
 - `src/learning/learning_engine.py`
 - `src/visualization/heatmap.py`
 - `tests/test_reward.py`
-- `docs/CHANGELOG.md`
+- `docs/07-changelog/CHANGELOG.md`
 
 ## Files added
 
@@ -31,7 +31,7 @@ system-level proof that reward learning changes network behaviour.
 - `configs/learning_experiment.yaml`
 - `tests/test_learning_experiment.py`
 - `tests/test_network_hooks.py`
-- `docs/SPRINT_2D_FOUNDATION.md`
+- `docs/09-sprints/SPRINT_2D_FOUNDATION.md`
 - `scripts/verify_v031.ps1`
 
 ## Validation performed in the reconstruction workspace

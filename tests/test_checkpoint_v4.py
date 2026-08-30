@@ -12,14 +12,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
-
-import pytest
 
 from src.storage.checkpoint import (
-    HomeostasisRuntimeRecord,
-    LearningRuntimeRecord,
-    RuntimeCheckpoint,
     capture_runtime_checkpoint,
     read_runtime_checkpoint,
     write_runtime_checkpoint,
@@ -93,7 +87,7 @@ class TestCheckpointV4:
         """Homeostasis rates are captured in checkpoint v4."""
         net = MockCheckpointNetwork()
         checkpoint = capture_runtime_checkpoint(
-            net,
+            net,  # type: ignore[arg-type]
             homeostasis_rates={1: 5.0, 2: 3.0, 3: 7.5},
         )
         assert checkpoint.version == 4
@@ -114,8 +108,8 @@ class TestCheckpointV4:
             {"pre_id": 2, "target_id": 3, "last_pre_tick": None, "last_post_tick": None, "eligibility_value": 0.0},
         ]
         checkpoint = capture_runtime_checkpoint(
-            net,
-            learning_states=learning_states,
+            net,  # type: ignore[arg-type]
+            learning_states=learning_states,  # type: ignore[arg-type]
         )
         assert checkpoint.version == 4
         assert len(checkpoint.learning_state) == 2
@@ -130,7 +124,7 @@ class TestCheckpointV4:
         """Homeostasis state survives write/read roundtrip."""
         net = MockCheckpointNetwork()
         checkpoint = capture_runtime_checkpoint(
-            net,
+            net,  # type: ignore[arg-type]
             homeostasis_rates={1: 5.0, 5: 2.5, 10: 8.0},
         )
         chk_path = tmp_path / "v4_checkpoint.json"
@@ -153,8 +147,8 @@ class TestCheckpointV4:
             {"pre_id": 1, "target_id": 2, "last_pre_tick": 10, "last_post_tick": 15, "eligibility_value": 0.03},
         ]
         checkpoint = capture_runtime_checkpoint(
-            net,
-            learning_states=learning_states,
+            net,  # type: ignore[arg-type]
+            learning_states=learning_states,  # type: ignore[arg-type]
         )
         chk_path = tmp_path / "v4_learning.json"
         write_runtime_checkpoint(chk_path, checkpoint)
@@ -196,11 +190,11 @@ class TestCheckpointV4:
     def test_homeostasis_optional(self) -> None:
         """Homeostasis state is optional in checkpoint (defaults to empty)."""
         net = MockCheckpointNetwork()
-        checkpoint = capture_runtime_checkpoint(net)  # No homeostasis_rates
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]  # No homeostasis_rates
         assert checkpoint.homeostasis_state == ()
 
     def test_learning_optional(self) -> None:
         """Learning state is optional in checkpoint (defaults to empty)."""
         net = MockCheckpointNetwork()
-        checkpoint = capture_runtime_checkpoint(net)  # No learning_states
+        checkpoint = capture_runtime_checkpoint(net)  # type: ignore[arg-type]  # No learning_states
         assert checkpoint.learning_state == ()

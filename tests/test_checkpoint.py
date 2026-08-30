@@ -102,7 +102,7 @@ def test_runtime_checkpoint_roundtrip(tmp_path: Path) -> None:
             ]
         },
     )
-    checkpoint = capture_runtime_checkpoint(network)
+    checkpoint = capture_runtime_checkpoint(network)  # type: ignore[arg-type]
     path = tmp_path / "runtime.json"
     write_runtime_checkpoint(path, checkpoint)
     loaded = read_runtime_checkpoint(path)

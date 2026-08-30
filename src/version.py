@@ -27,7 +27,7 @@ from importlib.metadata import PackageNotFoundError, version as _pkg_version
 # The authoritative version is in pyproject.toml. We attempt to read it
 # from the installed package metadata, but fall back to pyproject.toml
 # directly if the package is not installed or the version is stale.
-_PYPROJECT_VERSION: str | None = None
+_pyproject_version: str | None = None
 try:
     import re as _re
     from pathlib import Path as _Path
@@ -38,20 +38,20 @@ try:
         _text = _pyproject_path.read_text(encoding="utf-8")
         _match = _re.search(r'^version\s*=\s*"([^"]+)"', _text, _re.MULTILINE)
         if _match:
-            _PYPROJECT_VERSION = _match.group(1)
+            _pyproject_version = _match.group(1)
 except Exception:
     pass
 
 try:
-    _PKG_VERSION: str = _pkg_version("brain5d-core")
+    _pkg_version_str: str = _pkg_version("brain5d-core")
     # If the installed version is older than the pyproject.toml version,
     # prefer pyproject.toml (likely running from source with stale install)
-    if _PYPROJECT_VERSION is not None and _PKG_VERSION != _PYPROJECT_VERSION:
-        _PKG_VERSION = _PYPROJECT_VERSION
+    if _pyproject_version is not None and _pkg_version_str != _pyproject_version:
+        _pkg_version_str = _pyproject_version
 except PackageNotFoundError:
-    _PKG_VERSION = _PYPROJECT_VERSION or "0.5.0a5"
+    _pkg_version_str = _pyproject_version or "0.5.0a5"
 
-BRAIN5D_VERSION: str = _PKG_VERSION
+BRAIN5D_VERSION: str = _pkg_version_str
 """PEP-440 compatible version string (e.g. '0.5.0a5')."""
 
 # Normalize for human-readable display
@@ -59,10 +59,12 @@ BRAIN5D_VERSION: str = _PKG_VERSION
 _BASE = BRAIN5D_VERSION
 if "a" in _BASE:
     _parts = _BASE.split("a", 1)
-    BRAIN5D_VERSION_DISPLAY: str = f"{_parts[0]}-alpha.{_parts[1]}"
+    _display: str = f"{_parts[0]}-alpha.{_parts[1]}"
 elif "b" in _BASE:
     _parts = _BASE.split("b", 1)
-    BRAIN5D_VERSION_DISPLAY: str = f"{_parts[0]}-beta.{_parts[1]}"
+    _display = f"{_parts[0]}-beta.{_parts[1]}"
 else:
-    BRAIN5D_VERSION_DISPLAY = _BASE
+    _display = _BASE
+
+BRAIN5D_VERSION_DISPLAY: str = _display
 """Human-readable version string (e.g. '0.5.0-alpha.5')."""

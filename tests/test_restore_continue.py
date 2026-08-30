@@ -109,7 +109,7 @@ def test_restore_and_continue_matches_continuous_reference(tmp_path: Path) -> No
         runtime.snapshot_path,
         runtime.journal_path,
         checkpoint_path,
-        config,
+        config,  # type: ignore[arg-type]
         tmp_path / "recovered.b5d",
         structural_journal_path=structural_path,
     )

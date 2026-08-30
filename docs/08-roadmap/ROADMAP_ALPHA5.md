@@ -18,11 +18,11 @@ Subsysteme operativ sichtbar und schliesst die Qualitaetsgrenze vor `v0.4.0`.
 
 Folgende lokale Dokumente sollen als Design-Inputs beruecksichtigt werden:
 
-- `docs/Analyse_Deepseek.md`
-- `docs/Der_weg_zur_KI.md`
-- `docs/ROADMAP_TO_USABLE_AI.md`
-- `docs/B5D_FORMAT.md`
-- `docs/SPRINT_STORAGE_V4.md`
+- `docs/06-research/Analyse_Deepseek.md`
+- `docs/06-research/Der_weg_zur_KI.md`
+- `docs/08-roadmap/ROADMAP_TO_USABLE_AI.md`
+- `docs/02-architecture/B5D_FORMAT.md`
+- `docs/09-sprints/SPRINT_STORAGE_V4.md`
 
 `Analyse_Deepseek.md` und `Der_weg_zur_KI.md` waren bei Erstellung dieses
 Overlays nicht im Remote-Repository verfuegbar. Sie werden daher noch nicht

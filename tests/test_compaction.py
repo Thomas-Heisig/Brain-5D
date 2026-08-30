@@ -20,7 +20,7 @@ def test_compaction_publishes_new_generation(tmp_path: Path) -> None:
     )
     snapshot = tmp_path / "brain5d.g0.b5d"
     journal_path = tmp_path / "brain5d.g0.b5d.journal"
-    B5DSnapshotWriter(restart_capable=True).write(snapshot, network)
+    B5DSnapshotWriter(restart_capable=True).write(snapshot, network)  # type: ignore[arg-type]
     with DeltaJournal(journal_path, base_tick=0) as journal:
         journal.append(
             encode_neuron_state(

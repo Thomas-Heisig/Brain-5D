@@ -48,7 +48,7 @@ work.
 
 ### v0.4.0 final exit
 
-- full quality gate in `docs/QUALITY_GATE_V040.md` passes;
+- full quality gate in `docs/05-quality/QUALITY_GATE_V040.md` passes;
 - persistent state survives restart exactly at the defined tick boundary;
 - dashboard and recovery runbooks are documented;
 - binary `.b5d` V1 remains frozen.

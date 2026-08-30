@@ -14,9 +14,9 @@
 - `tests/test_dashboard_alpha6.py`
 - `scripts/apply_alpha6_quality_fixes.py`
 - `scripts/apply_alpha6_metadata.py`
-- `docs/DETERMINISTIC_RESTORE.md`
-- `docs/RESEARCH_ALIGNMENT.md`
-- `docs/QUALITY_GATE.md`
+- `docs/02-architecture/DETERMINISTIC_RESTORE.md`
+- `docs/06-research/old/RESEARCH_ALIGNMENT.md`
+- `docs/05-quality/QUALITY_GATE.md`
 - `README_ALPHA6.md`
 
 ## In-place migrations performed by scripts
@@ -27,4 +27,4 @@
 - `src/storage/recovery.py`: mutable protocol adapter for mypy
 - `pyproject.toml`: alpha.6 package version
 - `README.md`: deterministic restore and strategy links
-- `docs/ROADMAP_TO_USABLE_AI.md`: research alignment marker
+- `docs/08-roadmap/ROADMAP_TO_USABLE_AI.md`: research alignment marker

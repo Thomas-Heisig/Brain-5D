@@ -1,6 +1,4 @@
-# Brain-5D Roadmap
-
-## v0.5.0-alpha.5 — Scientific Verification Closure
+# Brain-5D Roadmap — v0.5.0-alpha.5 Scientific Verification Closure
 
 **Status: OPEN** (live visualization + verification freshness sprint complete)
 

@@ -50,7 +50,7 @@ class Bridge:
 
 
 def test_structural_get_and_post_routes() -> None:
-    server = DashboardServer(("127.0.0.1", 0), DashboardStateStore(), None, Bridge())
+    server = DashboardServer(("127.0.0.1", 0), DashboardStateStore(), None, Bridge())  # type: ignore[arg-type]
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     host, port = server.server_address[:2]

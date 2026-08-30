@@ -18,8 +18,8 @@ import random
 from pathlib import Path
 from typing import Any, cast
 
-import pytest
 
+from src.config.loader import ConfigDict
 from src.core.network import Brain5DConfig, NeuralNetwork
 from src.core.spatial_index import linear_to_5d
 from src.homeostasis.engine import HomeostasisEngine
@@ -134,12 +134,12 @@ def _state_digest(
 
     if homeostasis is not None:
         digest["homeostasis_rates"] = tuple(
-            sorted(homeostasis._rates_hz.items())
+            sorted(homeostasis._rates_hz.items())  # type: ignore[attr-defined]
         )
 
     if learning is not None:
         learning_traces: list[tuple[int, int, object, object, float]] = []
-        for key, state in learning._states.items():
+        for key, state in learning._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
             learning_traces.append((
                 pre_id,
@@ -150,7 +150,7 @@ def _state_digest(
             ))
         digest["learning_traces"] = tuple(sorted(learning_traces))
         digest["pending_rewards"] = tuple(
-            (r.value, r.tick) for r in learning._pending_rewards
+            (r.value, r.tick) for r in learning._pending_rewards  # type: ignore[attr-defined]
         )
 
     return digest
@@ -207,8 +207,8 @@ class TestProductionRestoreBundle:
                 network.step()
 
         # Capture checkpoint with engine state
-        learning_states = []
-        for key, state in learn._states.items():
+        learning_states: list[dict[str, object]] = []
+        for key, state in learn._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
             learning_states.append({
                 "pre_id": pre_id,
@@ -220,11 +220,11 @@ class TestProductionRestoreBundle:
 
         checkpoint = capture_runtime_checkpoint(
             cast(Any, network),
-            homeostasis_rates=homeo._rates_hz,
+            homeostasis_rates=homeo._rates_hz,  # type: ignore[attr-defined]
             learning_states=learning_states,
             pending_rewards=[
                 {"value": r.value, "tick": r.tick}
-                for r in learn._pending_rewards
+                for r in learn._pending_rewards  # type: ignore[attr-defined]
             ],
         )
         checkpoint_path = tmp_path / "runtime.json"
@@ -238,7 +238,7 @@ class TestProductionRestoreBundle:
             snapshot_path=runtime.snapshot_path,
             journal_path=runtime.journal_path,
             checkpoint_path=checkpoint_path,
-            config=config,
+            config=cast(ConfigDict, config),
             recovered_path=tmp_path / "recovered.b5d",
             create_homeostasis_engine=True,
             create_learning_engine=True,
@@ -300,7 +300,7 @@ class TestProductionRestoreBundle:
             snapshot_path=runtime.snapshot_path,
             journal_path=runtime.journal_path,
             checkpoint_path=checkpoint_path,
-            config=config,
+            config=cast(ConfigDict, config),
             recovered_path=tmp_path / "recovered.b5d",
             create_homeostasis_engine=False,
             create_learning_engine=False,
@@ -336,8 +336,8 @@ class TestProductionRestoreBundle:
             for _ in range(20):
                 network.step()
 
-        learning_states = []
-        for key, state in learn._states.items():
+        learning_states: list[dict[str, object]] = []
+        for key, state in learn._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
             learning_states.append({
                 "pre_id": pre_id,
@@ -349,7 +349,7 @@ class TestProductionRestoreBundle:
 
         checkpoint = capture_runtime_checkpoint(
             cast(Any, network),
-            homeostasis_rates=homeo._rates_hz,
+            homeostasis_rates=homeo._rates_hz,  # type: ignore[attr-defined]
             learning_states=learning_states,
         )
         checkpoint_path = tmp_path / "runtime.json"
@@ -366,7 +366,7 @@ class TestProductionRestoreBundle:
             snapshot_path=runtime.snapshot_path,
             journal_path=runtime.journal_path,
             checkpoint_path=checkpoint_path,
-            config=config,
+            config=cast(ConfigDict, config),
             recovered_path=tmp_path / "recovered2.b5d",
             create_homeostasis_engine=True,
             create_learning_engine=True,
@@ -383,8 +383,10 @@ class TestProductionRestoreBundle:
         assert restored_at_checkpoint["synapse_weights"] == original_continued["synapse_weights"]
 
         # Continue restored for 10 more ticks
-        bundle.homeostasis_engine.attach()
-        bundle.learning_engine.attach()
+        if bundle.homeostasis_engine is not None:
+            bundle.homeostasis_engine.attach()
+        if bundle.learning_engine is not None:
+            bundle.learning_engine.attach()
         for _ in range(10):
             bundle.network.step()
 

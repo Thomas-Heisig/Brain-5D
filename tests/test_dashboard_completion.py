@@ -19,9 +19,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
-import pytest
 
 from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
@@ -29,7 +28,6 @@ from src.dashboard.integration_status import IntegrationStatusBuilder
 from src.dashboard.models import (
     DashboardSnapshot,
     HomeostasisMetrics,
-    LearningMetrics,
     StorageMetrics,
     SystemMetrics,
 )
@@ -91,7 +89,7 @@ def test_tick0_dashboard_shows_real_network_size() -> None:
             spikes_last_tick=0,
         ),
     )
-    payload = snapshot.to_json()
+    payload = cast(dict[str, Any], snapshot.to_json())
     assert payload["system"]["neurons"] == expected_neurons
     assert payload["system"]["synapses"] == expected_synapses
     assert payload["system"]["tick"] == 0
@@ -109,7 +107,7 @@ def test_null_storage_metrics_serialize_as_none() -> None:
     """StorageMetrics with available=False must serialize None fields,
     so the frontend can render '—' instead of fake 0."""
     storage = StorageMetrics()  # available=False, all None
-    payload = storage.to_json()
+    payload = cast(dict[str, Any], storage.to_json())
     assert payload["available"] is False
     assert payload["deltas_written"] is None
     assert payload["bytes_written"] is None
@@ -126,7 +124,7 @@ def test_measured_zero_storage_serializes_as_zero() -> None:
         bytes_written=0,
         write_latency_ms=0.0,
     )
-    payload = storage.to_json()
+    payload = cast(dict[str, Any], storage.to_json())
     assert payload["available"] is True
     assert payload["deltas_written"] == 0
     assert payload["bytes_written"] == 0
@@ -135,7 +133,7 @@ def test_measured_zero_storage_serializes_as_zero() -> None:
 
 def test_disabled_homeostasis_serializes_enabled_false() -> None:
     homeo = HomeostasisMetrics(enabled=False)
-    payload = homeo.to_json()
+    payload = cast(dict[str, Any], homeo.to_json())
     assert payload["enabled"] is False
 
 
@@ -166,7 +164,7 @@ def test_integration_status_reports_disabled_for_structural_when_not_configured(
         research_source=None,
         repo_root=Path(__file__).resolve().parents[1],
     )
-    status = builder.build()
+    status = cast(dict[str, Any], builder.build())
 
     items_by_name = {item["name"]: item for item in status["items"]}
     # Structural has no coordinator => disabled by config
@@ -249,7 +247,7 @@ def test_network_summary_returns_real_counts() -> None:
     network = _build_real_network(n=200)
     inspector = NetworkInspector(network)
     summary = inspector.summary()
-    payload = summary.to_json()
+    payload = cast(dict[str, Any], summary.to_json())
 
     assert payload["neuron_count"] == 200
     assert payload["synapse_count"] == network.synapse_count
@@ -262,7 +260,7 @@ def test_neuron_inspector_returns_real_5d_coordinates() -> None:
     network = _build_real_network(n=100)
     inspector = NetworkInspector(network)
     page = inspector.neurons(limit=10, offset=0)
-    payload = page.to_json()
+    payload = cast(dict[str, Any], page.to_json())
 
     assert payload["returned"] == 10
     assert payload["total"] == 100
@@ -283,8 +281,8 @@ def test_neuron_inspector_pagination_consistent() -> None:
     page1 = inspector.neurons(limit=20, offset=0)
     page2 = inspector.neurons(limit=20, offset=20)
 
-    ids1 = [n["neuron_id"] for n in page1.neurons]
-    ids2 = [n["neuron_id"] for n in page2.neurons]
+    ids1 = [n["neuron_id"] for n in cast(list[dict[str, Any]], page1.neurons)]
+    ids2 = [n["neuron_id"] for n in cast(list[dict[str, Any]], page2.neurons)]
     # Pages must not overlap
     assert set(ids1).isdisjoint(set(ids2))
     assert page1.total == 100
@@ -295,7 +293,7 @@ def test_synapse_inspector_returns_real_weights_and_delays() -> None:
     network = _build_real_network(n=100)
     inspector = NetworkInspector(network)
     page = inspector.synapses(limit=10, offset=0)
-    payload = page.to_json()
+    payload = cast(dict[str, Any], page.to_json())
 
     assert payload["returned"] == 10
     assert payload["total"] == network.synapse_count
@@ -311,7 +309,7 @@ def test_projection_endpoint_contains_real_5d_coordinates() -> None:
     network = _build_real_network(n=300)
     inspector = NetworkInspector(network)
     proj = inspector.projection(limit=200, mode="activity")
-    payload = proj.to_json()
+    payload = cast(dict[str, Any], proj.to_json())
 
     assert payload["sample_count"] == 200
     assert payload["total_count"] == 300
@@ -360,7 +358,7 @@ def test_integration_status_reads_test_baseline() -> None:
             research_source=None,
             repo_root=repo_root,
         )
-        status = builder.build()
+        status = cast(dict[str, Any], builder.build())
         tests_item = {i["name"]: i for i in status["items"]}["Tests"]
         # The fake tree digest won't match the real source tree => STALE
         assert tests_item["status"] == "stale"
@@ -399,7 +397,7 @@ def test_stale_tested_commit_detection() -> None:
             bridge=bridge,
             repo_root=repo_root,
         )
-        status = builder.build()
+        status = cast(dict[str, Any], builder.build())
         tests_item = {i["name"]: i for i in status["items"]}["Tests"]
         # The fake tree digest cannot match the real source tree
         assert tests_item["status"] == "stale"
@@ -423,7 +421,7 @@ def test_tree_digest_match_reports_passed() -> None:
         bridge=bridge,
         repo_root=repo_root,
     )
-    real_digest = builder._current_tree_digest()
+    real_digest = builder._current_tree_digest()  # type: ignore[reportPrivateUsage]
     assert real_digest is not None, "tree digest must be computable"
 
     baseline = {
@@ -436,7 +434,7 @@ def test_tree_digest_match_reports_passed() -> None:
     try:
         real_baseline.write_text(json.dumps(baseline), encoding="utf-8")
 
-        status = builder.build()
+        status = cast(dict[str, Any], builder.build())
         tests_item = {i["name"]: i for i in status["items"]}["Tests"]
         # Digest matches => PASSED, even though commit SHA differs
         assert tests_item["status"] == "passed"
@@ -453,8 +451,8 @@ def test_tree_digest_match_reports_passed() -> None:
 
 def test_unknown_api_route_returns_json_error_not_spa() -> None:
     """An unknown /api/ route must return a JSON error, never index.html."""
-    from src.dashboard.server import DashboardServer, DashboardRequestHandler
-    from http.server import HTTPStatus
+    from src.dashboard.server import DashboardRequestHandler
+    from http import HTTPStatus
 
     # We test the handler logic directly by simulating the routing decision.
     # The server's do_GET explicitly returns _send_api_not_found for /api/...
@@ -471,10 +469,10 @@ def test_unknown_api_route_returns_json_error_not_spa() -> None:
 def test_network_inspector_provenance_is_live() -> None:
     network = _build_real_network(n=50)
     inspector = NetworkInspector(network)
-    assert inspector.summary().to_json()["source"] == "live_runtime"
-    assert inspector.neurons().to_json()["source"] == "live_runtime"
-    assert inspector.synapses().to_json()["source"] == "live_runtime"
-    assert inspector.projection().to_json()["source"] == "live_runtime"
+    assert cast(dict[str, Any], inspector.summary().to_json())["source"] == "live_runtime"
+    assert cast(dict[str, Any], inspector.neurons().to_json())["source"] == "live_runtime"
+    assert cast(dict[str, Any], inspector.synapses().to_json())["source"] == "live_runtime"
+    assert cast(dict[str, Any], inspector.projection().to_json())["source"] == "live_runtime"
 
 
 # ============================================================

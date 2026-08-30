@@ -47,7 +47,7 @@ class SynapseSnapshot:
 class NeuronStructuralSnapshot:
     neuron_id: int
     coord: Coord5D
-    parameters: dict[str, float] = field(default_factory=dict)
+    parameters: dict[str, float] = field(default_factory=lambda: {})
     incoming: tuple[SynapseSnapshot, ...] = ()
     outgoing: tuple[SynapseSnapshot, ...] = ()
 

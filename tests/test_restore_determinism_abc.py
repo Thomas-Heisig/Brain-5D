@@ -51,10 +51,9 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
-import pytest
-
+from src.config.loader import ConfigDict
 from src.core.network import NeuralNetwork
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
@@ -97,10 +96,10 @@ def _write_production_artifacts(
     with StorageSession(network, rt):  # type: ignore[arg-type]
         pass
     from tests._restore_helpers import capture_learning_state
-    learn_state = capture_learning_state(learn) if learn is not None else None
+    learn_state = capture_learning_state(learn)
     checkpoint = capture_runtime_checkpoint(
-        network,
-        homeostasis_rates=homeo._rates_hz if homeo is not None else None,
+        cast(Any, network),
+        homeostasis_rates=homeo._rates_hz,  # type: ignore[attr-defined]
         learning_states=learn_state["states"] if learn_state else None,
         pending_rewards=learn_state["pending_rewards"] if learn_state else None,
     )
@@ -153,7 +152,7 @@ def _run_path_B(
         snapshot_path=artifacts["snapshot"],
         journal_path=artifacts["journal"],
         checkpoint_path=artifacts["checkpoint"],
-        config=config,
+        config=cast(ConfigDict, config),
         recovered_path=tmp_path / "recovered.b5d",
         create_homeostasis_engine=True,
         create_learning_engine=True,

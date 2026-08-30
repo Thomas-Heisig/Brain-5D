@@ -199,7 +199,7 @@
 - `app.js`: `refreshGateStatus` now fetches `/api/gate/status` and renders Gate A/B/C criteria tables with Live/Maturity/Gate columns
 - `styles.css`: added dynamic gate criteria table, live runtime grid, maturity badge colors
 - `src/main.py`: `OperatorBridge` now carries `config_dict` attribute so the gate builder can distinguish disabled-by-config from config-enabled-component-missing
-- `docs/TODO.md`: normalized contradictory baseline numbers (236/2 collection errors → 261/0 collection errors); removed duplicated historical sections
+- `docs/08-roadmap/TODO.md`: normalized contradictory baseline numbers (236/2 collection errors → 261/0 collection errors); removed duplicated historical sections
 - `tests/test_baseline.json`: updated to 261 passed, 2 skipped, 0 failed, 0 collection errors (full suite without `--ignore`)
 
 ### Test Results (real run, 2026-08-23)

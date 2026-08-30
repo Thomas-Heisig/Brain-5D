@@ -1035,6 +1035,8 @@ class GateStatusBuilder:
         Delegates to :func:`verification.evaluate_test_baseline` so that
         the gate and integration status can never disagree.
         """
+        from src.dashboard.verification import evaluate_test_baseline
+
         ev = evaluate_test_baseline(self.repo_root)
         return ev.stale
 

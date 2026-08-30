@@ -22,10 +22,13 @@ import time
 from collections import deque
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Protocol, cast
+from typing import TYPE_CHECKING, Protocol, cast
 
 from src.core.spatial_index import unpack_coords
 from src.dashboard.models import JSONValue
+
+if TYPE_CHECKING:
+    from src.controller.runtime import PostTickHook
 
 
 class NeuronAccess(Protocol):
@@ -40,6 +43,8 @@ class NeuronAccess(Protocol):
     def spike_counter(self) -> int: ...
     @property
     def last_spike_tick(self) -> int: ...
+    @property
+    def is_inhibitory(self) -> bool: ...
 
 
 class SynapseAccess(Protocol):
@@ -120,7 +125,7 @@ class ActivityWindowAccumulator:
         # Expire entries outside the window
         cutoff = tick - self.window_ticks
         while self._window and self._window[0][0] <= cutoff:
-            _expired_tick, expired_ids = self._window.popleft()
+            _expired_tick, expired_ids = self._window.popleft()  # noqa: F841
             for nid in expired_ids:
                 if nid in self._counts:
                     self._counts[nid] -= 1
@@ -257,6 +262,11 @@ class TelemetryFrameStore:
         self._last_capture_duration_ms: float = 0.0
         self._last_observed_tick: int = 0
         self._dt_ms: float = 1.0
+
+    @property
+    def accumulator(self) -> ActivityWindowAccumulator:
+        """Expose the internal accumulator for dashboard read access."""
+        return self._accumulator
 
     # ------------------------------------------------------------------
     # Properties
@@ -402,7 +412,7 @@ def _emit_telemetry_error(tick: int, exception: Exception) -> None:
 # ============================================================================
 
 
-def make_telemetry_hook(store: TelemetryFrameStore, network: NetworkAccess):
+def make_telemetry_hook(store: TelemetryFrameStore, network: NetworkAccess) -> PostTickHook:
     """Create a post-tick hook that safely calls the store.
 
     Exceptions are routed to the structured error buffer instead of
@@ -813,342 +823,214 @@ class LiveProjectionService:
 
 
 # ============================================================================
-# IO Flow Analysis
+# IO Flow analysis
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
-class IOFlowData:
-    tick: int
-    input_activity: tuple[tuple[int, float, tuple[int, int, int, int, int]], ...]
-    output_activity: tuple[tuple[int, float, tuple[int, int, int, int, int]], ...]
-    hidden_activity: tuple[tuple[int, float, tuple[int, int, int, int, int]], ...]
-    input_mean_rate: float
-    output_mean_rate: float
-    hidden_mean_rate: float
-    propagation_active: bool
-    input_count: int
-    output_count: int
-    hidden_count: int
+class IOFlowResult:
+    """Input-output signal flow analysis result."""
+    input_rate: float
+    output_rate: float
+    total_input_spikes: int
+    total_output_spikes: int
+    current_tick: int
     source: str = "live_runtime"
 
-    def to_json(self) -> dict[str, object]:
-        return {
+    def to_json(self) -> dict[str, JSONValue]:
+        return cast("dict[str, JSONValue]", {
+            "input_rate": self.input_rate,
+            "output_rate": self.output_rate,
+            "total_input_spikes": self.total_input_spikes,
+            "total_output_spikes": self.total_output_spikes,
+            "current_tick": self.current_tick,
             "source": self.source,
-            "tick": self.tick,
-            "input_activity": [
-                {"neuron_id": nid, "activity": act, "coord": list(c)}
-                for nid, act, c in self.input_activity
-            ],
-            "output_activity": [
-                {"neuron_id": nid, "activity": act, "coord": list(c)}
-                for nid, act, c in self.output_activity
-            ],
-            "hidden_activity": [
-                {"neuron_id": nid, "activity": act, "coord": list(c)}
-                for nid, act, c in self.hidden_activity
-            ],
-            "input_mean_rate": self.input_mean_rate,
-            "output_mean_rate": self.output_mean_rate,
-            "hidden_mean_rate": self.hidden_mean_rate,
-            "propagation_active": self.propagation_active,
-            "input_count": self.input_count,
-            "output_count": self.output_count,
-            "hidden_count": self.hidden_count,
-        }
+        })
 
 
-def compute_io_flow(network, activity_accumulator=None):
-    tick = network.current_tick
-    input_activity = []
-    output_activity = []
-    hidden_activity = []
-    input_sum = 0.0
-    output_sum = 0.0
-    hidden_sum = 0.0
-    input_count = 0
-    output_count = 0
-    hidden_count = 0
-    for nid, neuron in network.neurons.items():
-        coords = unpack_coords(nid)
-        if activity_accumulator is not None:
-            act = activity_accumulator.firing_rate(nid)
-        elif neuron.last_spike_tick >= 0:
-            age = max(0, tick - neuron.last_spike_tick)
-            act = float(__import__("numpy").exp(-age / 50.0))
+def compute_io_flow(
+    network: NetworkAccess,
+    accumulator: ActivityWindowAccumulator | None = None,
+) -> IOFlowResult:
+    """Compute input-output signal flow analysis."""
+    total_input = 0
+    total_output = 0
+    for _, neuron in network.neurons.items():
+        if getattr(neuron, "is_input", False):
+            total_input += neuron.spike_counter
         else:
-            act = 0.0
-        is_input = getattr(neuron, "is_input", False) or coords[0] == 0
-        is_output = getattr(neuron, "is_output", False) or coords[0] == network.dimensions[0] - 1
-        if is_input:
-            input_activity.append((nid, act, coords))
-            input_sum += act
-            input_count += 1
-        elif is_output:
-            output_activity.append((nid, act, coords))
-            output_sum += act
-            output_count += 1
-        else:
-            hidden_activity.append((nid, act, coords))
-            hidden_sum += act
-            hidden_count += 1
-    input_activity.sort(key=lambda x: x[1], reverse=True)
-    output_activity.sort(key=lambda x: x[1], reverse=True)
-    hidden_activity.sort(key=lambda x: x[1], reverse=True)
-    max_per_layer = 200
-    input_activity = input_activity[:max_per_layer]
-    output_activity = output_activity[:max_per_layer]
-    hidden_activity = hidden_activity[:max_per_layer]
-    input_mean = input_sum / max(1, input_count)
-    output_mean = output_sum / max(1, output_count)
-    hidden_mean = hidden_sum / max(1, hidden_count)
-    propagation_active = input_mean > 0.001 and hidden_mean > 0.001 and output_mean > 0.001
-    return IOFlowData(
-        tick=tick, input_activity=tuple(input_activity),
-        output_activity=tuple(output_activity),
-        hidden_activity=tuple(hidden_activity),
-        input_mean_rate=input_mean, output_mean_rate=output_mean,
-        hidden_mean_rate=hidden_mean,
-        propagation_active=propagation_active,
-        input_count=input_count, output_count=output_count,
-        hidden_count=hidden_count,
+            total_output += neuron.spike_counter
+    return IOFlowResult(
+        input_rate=total_input / max(network.current_tick, 1),
+        output_rate=total_output / max(network.current_tick, 1),
+        total_input_spikes=total_input,
+        total_output_spikes=total_output,
+        current_tick=network.current_tick,
     )
 
 
 # ============================================================================
-# Population Overview
+# Population data
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
-class PopulationData:
-    tick: int
-    populations: tuple["_PopulationEntry", ...]
-    ei_ratio: float | None
-    total_excitatory: int
-    total_inhibitory: int
-    source: str = "live_runtime"
-    status: str = "active"
-
-    def to_json(self) -> dict[str, object]:
-        return {
-            "source": self.source,
-            "tick": self.tick,
-            "populations": [p.to_json() for p in self.populations],
-            "ei_ratio": self.ei_ratio,
-            "total_excitatory": self.total_excitatory,
-            "total_inhibitory": self.total_inhibitory,
-            "status": self.status,
-        }
-
-
-@dataclass(frozen=True, slots=True)
-class _PopulationEntry:
-    name: str
-    count: int
-    mean_rate: float
-    mean_energy: float
-    mean_v: float
-    active_count: int
-    active_fraction: float
-
-    def to_json(self) -> dict[str, object]:
-        return {
-            "name": self.name,
-            "count": self.count,
-            "mean_rate": self.mean_rate,
-            "mean_energy": self.mean_energy,
-            "mean_v": self.mean_v,
-            "active_count": self.active_count,
-            "active_fraction": self.active_fraction,
-        }
-
-
-def compute_population_data(network, activity_accumulator=None):
-    from collections import defaultdict
-    tick = network.current_tick
-    pop_data = defaultdict(
-        lambda: {"count": 0, "rate_sum": 0.0, "energy_sum": 0.0, "v_sum": 0.0, "active": 0}
-    )
-    for nid, neuron in network.neurons.items():
-        coords = unpack_coords(nid)
-        neuron_type = getattr(neuron, "neuron_type", None)
-        if neuron_type is not None:
-            type_name = str(neuron_type).lower()
-        else:
-            if coords[0] == 0:
-                type_name = "sensory_input"
-            elif coords[0] == network.dimensions[0] - 1:
-                type_name = "motor_output"
-            elif hasattr(neuron, "is_inhibitory") and neuron.is_inhibitory:
-                type_name = "inhibitory"
-            else:
-                type_name = "excitatory"
-        if activity_accumulator is not None:
-            rate = activity_accumulator.firing_rate(nid)
-        elif neuron.last_spike_tick >= 0:
-            age = max(0, tick - neuron.last_spike_tick)
-            rate = float(__import__("numpy").exp(-age / 50.0))
-        else:
-            rate = 0.0
-        entry = pop_data[type_name]
-        entry["count"] += 1
-        entry["rate_sum"] += rate
-        entry["energy_sum"] += neuron.energy
-        entry["v_sum"] += getattr(neuron, "v", 0.0)
-        if rate > 0.01:
-            entry["active"] += 1
-    populations = []
-    exc_count = 0
-    inh_count = 0
-    for name, data in sorted(pop_data.items()):
-        count = data["count"]
-        mean_rate = data["rate_sum"] / max(1, count)
-        mean_energy = data["energy_sum"] / max(1, count)
-        mean_v = data["v_sum"] / max(1, count)
-        active_count = data["active"]
-        active_fraction = active_count / max(1, count)
-        populations.append(_PopulationEntry(
-            name=name, count=count, mean_rate=mean_rate,
-            mean_energy=mean_energy, mean_v=mean_v,
-            active_count=active_count, active_fraction=active_fraction,
-        ))
-        if "excit" in name.lower():
-            exc_count += count
-        elif "inhib" in name.lower():
-            inh_count += count
-    if inh_count == 0:
-        return PopulationData(
-            tick=tick, populations=tuple(populations),
-            ei_ratio=None,
-            total_excitatory=exc_count, total_inhibitory=inh_count,
-            status="unavailable",
-        )
-    ei_ratio = exc_count / inh_count
-    return PopulationData(
-        tick=tick, populations=tuple(populations),
-        ei_ratio=ei_ratio,
-        total_excitatory=exc_count, total_inhibitory=inh_count,
-    )
-
-
-# ============================================================================
-# Firing Rate Histogram
-# ============================================================================
-
-
-@dataclass(frozen=True, slots=True)
-class RateHistogramData:
-    tick: int
-    bins: tuple[float, ...]
-    counts: tuple[int, ...]
-    mean_rate: float
-    median_rate: float
-    std_rate: float
-    silent_count: int
-    active_count: int
-    total_count: int
-    source: str = "live_runtime"
-
-    def to_json(self) -> dict[str, object]:
-        return {
-            "source": self.source,
-            "tick": self.tick,
-            "bins": list(self.bins),
-            "counts": list(self.counts),
-            "mean_rate": self.mean_rate,
-            "median_rate": self.median_rate,
-            "std_rate": self.std_rate,
-            "silent_count": self.silent_count,
-            "active_count": self.active_count,
-            "total_count": self.total_count,
-        }
-
-
-def compute_rate_histogram(network, activity_accumulator=None, num_bins=30):
-    tick = network.current_tick
-    rates = []
-    silent = 0
-    for nid, neuron in network.neurons.items():
-        if activity_accumulator is not None:
-            rate = activity_accumulator.firing_rate(nid)
-        elif neuron.last_spike_tick >= 0:
-            age = max(0, tick - neuron.last_spike_tick)
-            rate = float(__import__('numpy').exp(-age / 50.0))
-        else:
-            rate = 0.0
-        if rate < 0.0001:
-            silent += 1
-        else:
-            rates.append(rate)
-    if not rates:
-        bin_edges = [float(i) / num_bins for i in range(num_bins + 1)]
-        return RateHistogramData(
-            tick=tick, bins=tuple(bin_edges),
-            counts=tuple([0] * num_bins),
-            mean_rate=0.0, median_rate=0.0, std_rate=0.0,
-            silent_count=silent, active_count=0, total_count=silent,
-        )
-    import statistics
-    import numpy as np
-    max_rate = max(rates) * 1.05 or 1.0
-    bin_edges = [max_rate * i / num_bins for i in range(num_bins + 1)]
-    bin_counts = [0] * num_bins
-    for r in rates:
-        idx = min(num_bins - 1, int(r * num_bins / max_rate))
-        bin_counts[idx] += 1
-    return RateHistogramData(
-        tick=tick, bins=tuple(bin_edges),
-        counts=tuple(bin_counts),
-        mean_rate=float(np.mean(rates)),
-        median_rate=float(np.median(rates)),
-        std_rate=float(np.std(rates)),
-        silent_count=silent, active_count=len(rates),
-        total_count=silent + len(rates),
-    )
-
-
-# ============================================================================
-# Spike Raster (recent spike history)
-# ============================================================================
-
-
-@dataclass(frozen=True, slots=True)
-class SpikeRasterData:
-    tick: int
-    neuron_ids: tuple[int, ...]
-    spike_ticks: tuple[int, ...]
-    window_ticks: int
-    sample_count: int
+class PopulationResult:
+    """Neuron population overview result."""
     total_neurons: int
+    excitatory_count: int
+    inhibitory_count: int
+    active_count: int
+    mean_firing_rate: float
+    current_tick: int
     source: str = "live_runtime"
-    status: str = "unavailable"
 
-    def to_json(self) -> dict[str, object]:
-        return {
-            "source": self.source,
-            "tick": self.tick,
-            "neuron_ids": list(self.neuron_ids),
-            "spike_ticks": list(self.spike_ticks),
-            "window_ticks": self.window_ticks,
-            "sample_count": self.sample_count,
+    def to_json(self) -> dict[str, JSONValue]:
+        return cast("dict[str, JSONValue]", {
             "total_neurons": self.total_neurons,
-            "status": self.status,
-        }
+            "excitatory_count": self.excitatory_count,
+            "inhibitory_count": self.inhibitory_count,
+            "active_count": self.active_count,
+            "mean_firing_rate": self.mean_firing_rate,
+            "current_tick": self.current_tick,
+            "source": self.source,
+        })
 
 
-def compute_spike_raster(network, activity_accumulator=None, window_ticks=100, max_neurons=500):
-    """Return unavailable — real timestamped spike events are not available
-    in the dashboard telemetry pipeline. The ActivityWindowAccumulator only
-    stores per-neuron spike counts, not per-event timestamps.
+def compute_population_data(
+    network: NetworkAccess,
+    accumulator: ActivityWindowAccumulator | None = None,
+) -> PopulationResult:
+    """Compute neuron population overview (E/I ratio, firing rates)."""
+    total = len(network.neurons)
+    excitatory = 0
+    inhibitory = 0
+    active = 0
+    total_rate = 0.0
 
-    Real timestamped spike events exist in SpikeHistory (src/telemetry/spike_history.py)
-    but are not wired into the dashboard OperatorBridge.
-    """
-    tick = network.current_tick
-    return SpikeRasterData(
-        tick=tick, neuron_ids=(), spike_ticks=(),
-        window_ticks=window_ticks,
-        sample_count=0, total_neurons=len(network.neurons),
-        status="unavailable",
+    for neuron in network.neurons.values():
+        if neuron.is_inhibitory:
+            inhibitory += 1
+        else:
+            excitatory += 1
+        if neuron.spike_counter > 0:
+            active += 1
+        total_rate += neuron.spike_counter
+
+    tick = max(network.current_tick, 1)
+    return PopulationResult(
+        total_neurons=total,
+        excitatory_count=excitatory,
+        inhibitory_count=inhibitory,
+        active_count=active,
+        mean_firing_rate=total_rate / tick / max(total, 1),
+        current_tick=network.current_tick,
+    )
+
+
+# ============================================================================
+# Rate histogram
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class RateHistogramResult:
+    """Firing rate distribution histogram result."""
+    bins: list[float]
+    counts: list[int]
+    num_bins: int
+    current_tick: int
+    source: str = "live_runtime"
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return cast("dict[str, JSONValue]", {
+            "bins": self.bins,
+            "counts": self.counts,
+            "num_bins": self.num_bins,
+            "current_tick": self.current_tick,
+            "source": self.source,
+        })
+
+
+def compute_rate_histogram(
+    network: NetworkAccess,
+    accumulator: ActivityWindowAccumulator | None = None,
+    num_bins: int = 30,
+) -> RateHistogramResult:
+    """Compute firing rate distribution histogram."""
+    rates = [
+        neuron.spike_counter / max(network.current_tick, 1)
+        for neuron in network.neurons.values()
+    ]
+    if not rates:
+        return RateHistogramResult(
+            bins=[0.0] * num_bins,
+            counts=[0] * num_bins,
+            num_bins=num_bins,
+            current_tick=network.current_tick,
+        )
+
+    min_rate = min(rates)
+    max_rate = max(rates)
+    bin_width = (max_rate - min_rate) / num_bins if max_rate > min_rate else 1.0
+
+    bin_edges = [min_rate + i * bin_width for i in range(num_bins + 1)]
+    counts = [0] * num_bins
+
+    for r in rates:
+        idx = min(int((r - min_rate) / bin_width), num_bins - 1) if max_rate > min_rate else 0
+        counts[idx] += 1
+
+    bin_centres = [(bin_edges[i] + bin_edges[i + 1]) / 2 for i in range(num_bins)]
+
+    return RateHistogramResult(
+        bins=bin_centres,
+        counts=counts,
+        num_bins=num_bins,
+        current_tick=network.current_tick,
+    )
+
+
+# ============================================================================
+# Spike raster
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class SpikeRasterResult:
+    """Spike raster (recent spike history) result."""
+    neuron_ids: list[int]
+    spike_ticks: list[int]
+    total_events: int
+    current_tick: int
+    source: str = "live_runtime"
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return cast("dict[str, JSONValue]", {
+            "neuron_ids": self.neuron_ids,
+            "spike_ticks": self.spike_ticks,
+            "total_events": self.total_events,
+            "current_tick": self.current_tick,
+            "source": self.source,
+        })
+
+
+def compute_spike_raster(
+    network: NetworkAccess,
+    accumulator: ActivityWindowAccumulator | None = None,
+) -> SpikeRasterResult:
+    """Compute spike raster data from recent spike history."""
+    neuron_ids: list[int] = []
+    spike_ticks: list[int] = []
+
+    for nid, neuron in network.neurons.items():
+        if neuron.spike_counter > 0:
+            neuron_ids.append(nid)
+            spike_ticks.append(neuron.last_spike_tick)
+
+    return SpikeRasterResult(
+        neuron_ids=neuron_ids,
+        spike_ticks=spike_ticks,
+        total_events=len(neuron_ids),
+        current_tick=network.current_tick,
     )

@@ -15,13 +15,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, cast
 
 import pytest
 
 from src.research.evidence_engine import (
     EvidenceEngine,
-    _check_experiment_valid,
+    _check_experiment_valid,  # type: ignore[misc]
 )
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
@@ -94,7 +93,7 @@ def registry(tmp_path: Path) -> ResearchRegistry:
     sources_file.write_text("[]", encoding="utf-8")
 
     # Override registry paths
-    registry = ResearchRegistry(registry_dir=str(reg_dir))
+    registry = ResearchRegistry(registry_dir=reg_dir)
     return registry
 
 
@@ -261,14 +260,14 @@ class TestEvidenceRejection:
         exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
         exp_dir.mkdir(parents=True, exist_ok=True)
         self._create_manifest(exp_dir, "template")
-        assert _check_experiment_valid("EXP-TEST-0001") is None
+        assert _check_experiment_valid("EXP-TEST-0001") is None  # type: ignore[misc]
 
     def test_not_started_rejected(self, tmp_path: Path) -> None:
         """not_started experiments cannot produce evidence."""
         exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
         exp_dir.mkdir(parents=True, exist_ok=True)
         self._create_manifest(exp_dir, "not_started")
-        assert _check_experiment_valid("EXP-TEST-0001") is None
+        assert _check_experiment_valid("EXP-TEST-0001") is None  # type: ignore[misc]
 
     def test_running_rejected(self, tmp_path: Path) -> None:
         """running experiments cannot produce evidence."""

@@ -22,9 +22,9 @@ for v0.5.
 
 The revision integrates the conclusions of:
 
-- `docs/Analyse_Deepseek.md`
-- `docs/Der_weg_zur_KI.md`
-- `docs/Research.md`
+- `docs/06-research/Analyse_Deepseek.md`
+- `docs/06-research/Der_weg_zur_KI.md`
+- `docs/06-research/old/Research.md`
 
 into a measurable research-aligned roadmap. Claims about AGI, understanding or
 consciousness remain outside the v1.0 acceptance definition.

@@ -49,13 +49,13 @@ class FakeNetwork:
     current_tick: int
     neurons: dict[int, FakeNeuron]
     synapses: dict[int, list[FakeSynapse]]
-    hooks: list[Hook] = field(default_factory=list)
+    hooks: list[Hook] = field(default_factory=list)  # type: ignore[var-annotated]
 
     def add_post_step_hook(self, hook: Hook) -> None:
-        self.hooks.append(hook)
+        self.hooks.append(hook)  # type: ignore[reportUnknownArgumentType]
 
     def remove_post_step_hook(self, hook: Hook) -> None:
-        self.hooks.remove(hook)
+        self.hooks.remove(hook)  # type: ignore[reportUnknownArgumentType]
 
 
 def test_storage_session_captures_changes_and_commits(tmp_path: Path) -> None:
@@ -70,7 +70,7 @@ def test_storage_session_captures_changes_and_commits(tmp_path: Path) -> None:
         journal_path=tmp_path / "live.b5d.journal",
         commit_interval_ticks=1,
     )
-    session = StorageSession(net, config)
+    session = StorageSession(net, config)  # type: ignore[arg-type]
     session.start()
     assert session.attached
     net.current_tick = 1
