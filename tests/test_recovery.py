@@ -8,8 +8,7 @@ from typing import cast
 
 import pytest
 
-from src.storage.b5d import B5DReader, B5DSnapshotWriter
-from src.storage.b5d import NetworkSnapshotLike
+from src.storage.b5d import B5DReader, B5DSnapshotWriter, NetworkSnapshotLike
 from src.storage.delta_codec import (
     NeuronStateDelta,
     SynapseWeightDelta,

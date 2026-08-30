@@ -733,6 +733,7 @@ class StateManager:
 
     _instance: StateManager | None = None
     _store: DashboardStateStore | None = None
+    _config_dict: dict[str, Any] | None = None
 
     def __new__(cls) -> StateManager:
         if cls._instance is None:
@@ -759,6 +760,10 @@ class StateManager:
                 with_history=with_history,
                 history_limit=history_limit,
             )
+
+    def set_config(self, config_dict: dict[str, Any] | None) -> None:
+        """Store the runtime configuration for health derivation."""
+        self._config_dict = config_dict
 
     @property
     def store(self) -> DashboardStateStore:
@@ -806,7 +811,12 @@ def publish_state(snapshot: DashboardSnapshot) -> None:
     """
     from .health_builder import enrich_snapshot
 
-    _state_manager.publish(enrich_snapshot(snapshot))
+    _state_manager.publish(enrich_snapshot(snapshot, _state_manager._config_dict))  # pyright: ignore[reportPrivateUsage]
+
+
+def set_dashboard_config(config_dict: dict[str, Any] | None) -> None:
+    """Store the runtime configuration used for health derivation."""
+    _state_manager.set_config(config_dict)
 
 
 def get_current_state() -> DashboardSnapshot:
