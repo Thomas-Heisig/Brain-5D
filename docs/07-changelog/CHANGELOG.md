@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-31 — v0.5.0-alpha.6 Opened
+
+### Version Transition
+- **Alpha.5**: frozen, tagged `v0.5.0-alpha.5`, gate PASSED.
+- **Alpha.6**: opened as current development version `0.5.0-alpha.6` / PEP-440 `0.5.0a6`.
+- Added immutable release registry under `releases/` with `/api/releases` and `/api/releases/current`.
+- Renamed dashboard `VERIFY` tab to `RELEASE` and added version history tree.
+- Archived legacy v0.4 Alpha.6/Alpha.7 files to prevent version collisions.
+
+### Opening Verification
+- Full test suite: **463 passed, 2 skipped, 0 failed**.
+- Alpha.6 gate: **OPEN** — no morphological self-regulation feature verified yet.
+
 ## 2026-08-31 — Alpha.5 Release Gate Re-Closed After Dashboard Fixes
 
 ### Final Gate Result

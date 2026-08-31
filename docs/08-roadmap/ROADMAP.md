@@ -7,7 +7,9 @@
 
 Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Historie, Diagnose, Topologieprüfung und Observatory.
 
-## v0.5.0-alpha.5 — Integration Hardening (closed)
+## v0.5.0-alpha.5 — Integration Hardening (released)
+
+> Frozen at commit `0503264` and tag `v0.5.0-alpha.5`. Gate A/B/C: PASSED.
 
 - [x] Single-process launcher, single DashboardServer, OperatorBridge attached
 - [x] Frontend lifecycle unified (app.js sole owner, ES modules, no CommonJS)
@@ -27,6 +29,16 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Structural plasticity wired through approval-gated manipulator
 - [x] Evidence Scope Digests statt globaler Tree-Digest
 - [x] Green test baseline (zero collection errors)
+
+## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation (current)
+
+> Opened 2026-08-31. Gate: OPEN.
+
+- [x] Version transition and immutable release registry
+- [ ] Chronic structural signals
+- [ ] Regional 5D pressure
+- [ ] Age / lifetime
+- [ ] Budgets, costs, hysteresis and anti-oscillation
 
 ## Sprint 2A – STDP-Labor
 
