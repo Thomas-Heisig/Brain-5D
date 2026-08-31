@@ -7,9 +7,9 @@ Use ``BRAIN5D_VERSION`` for the PEP-440 compatible version string and
 Usage:
     >>> from src.version import BRAIN5D_VERSION, BRAIN5D_VERSION_DISPLAY
     >>> print(BRAIN5D_VERSION)
-    0.5.0a5
+    0.5.0a6
     >>> print(BRAIN5D_VERSION_DISPLAY)
-    0.5.0-alpha.5
+    0.5.0-alpha.6
 """
 
 from __future__ import annotations
@@ -50,10 +50,10 @@ try:
     if _pyproject_version is not None and _pkg_version_str != _pyproject_version:
         _pkg_version_str = _pyproject_version
 except PackageNotFoundError:
-    _pkg_version_str = _pyproject_version or "0.5.0a5"
+    _pkg_version_str = _pyproject_version or "0.5.0a6"
 
 BRAIN5D_VERSION: str = _pkg_version_str
-"""PEP-440 compatible version string (e.g. '0.5.0a5')."""
+"""PEP-440 compatible version string (e.g. '0.5.0a6')."""
 
 # Normalize for human-readable display
 # PEP-440: 0.5.0a5 -> 0.5.0-alpha.5
@@ -68,4 +68,4 @@ else:
     _display = _BASE
 
 BRAIN5D_VERSION_DISPLAY: str = _display
-"""Human-readable version string (e.g. '0.5.0-alpha.5')."""
+"""Human-readable version string (e.g. '0.5.0-alpha.6')."""

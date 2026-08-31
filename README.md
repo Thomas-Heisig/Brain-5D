@@ -174,7 +174,7 @@ Copyright © 2025-2026 Thomas Heisig and contributors.
   author = {Thomas Heisig},
   title = {Brain-5D: Sparse 5D Spiking-Neural Simulation with Observable Plasticity},
   year = {2026},
-  version = {0.5.0-alpha.5},
+  version = {0.5.0-alpha.6},
   url = {https://huggingface.co/<your-org>/Brain-5D},
   license = {MIT}
 }
