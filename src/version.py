@@ -32,6 +32,7 @@ _pyproject_version: str | None = None
 try:
     import re as _re
     from pathlib import Path as _Path
+
     _src_dir = _Path(__file__).resolve().parent
     _project_root = _src_dir.parent
     _pyproject_path = _project_root / "pyproject.toml"

@@ -106,9 +106,7 @@ class TestRuntimeErrorsInManifest:
 
     def test_recorder_starts_with_no_errors(self, tmp_experiment_dir: Path) -> None:
         """A fresh recorder has zero runtime errors."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         manifest = recorder.manifest
         assert manifest["runtime_errors"] == []
         assert manifest["validity"]["valid"] is True
@@ -116,9 +114,7 @@ class TestRuntimeErrorsInManifest:
 
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_runtime_error(
             tick=42,
             phase="step",
@@ -136,21 +132,29 @@ class TestRuntimeErrorsInManifest:
 
     def test_error_invalidates_validity(self, tmp_experiment_dir: Path) -> None:
         """Any runtime error sets validity.valid = False."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
+        recorder.record_runtime_error(
+            tick=1, phase="hook", exception_type="RuntimeError", message="Fail"
         )
-        recorder.record_runtime_error(tick=1, phase="hook", exception_type="RuntimeError", message="Fail")
         assert recorder.manifest["validity"]["valid"] is False
         assert recorder.manifest["validity"]["runtime_error_count"] == 1
 
     def test_multiple_errors_accumulate(self, tmp_experiment_dir: Path) -> None:
         """Multiple errors are accumulated with correct counts."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
+        recorder.record_runtime_error(
+            tick=1, phase="step", exception_type="TypeError", message="A", fatal=False
         )
-        recorder.record_runtime_error(tick=1, phase="step", exception_type="TypeError", message="A", fatal=False)
-        recorder.record_runtime_error(tick=5, phase="hook", exception_type="ValueError", message="B", fatal=True)
-        recorder.record_runtime_error(tick=10, phase="step", exception_type="RuntimeError", message="C", fatal=False)
+        recorder.record_runtime_error(
+            tick=5, phase="hook", exception_type="ValueError", message="B", fatal=True
+        )
+        recorder.record_runtime_error(
+            tick=10,
+            phase="step",
+            exception_type="RuntimeError",
+            message="C",
+            fatal=False,
+        )
         manifest = recorder.manifest
         assert len(manifest["runtime_errors"]) == 3
         assert manifest["validity"]["runtime_error_count"] == 3
@@ -159,6 +163,7 @@ class TestRuntimeErrorsInManifest:
     def test_save_persists_errors(self, tmp_experiment_dir: Path) -> None:
         """Saved manifest includes runtime errors."""
         import src.research.experiment_recorder as er_module
+
         original_dir = er_module.EXPERIMENTS_DIR
         try:
             # Point the module-level EXPERIMENTS_DIR to our temp dir
@@ -166,7 +171,9 @@ class TestRuntimeErrorsInManifest:
             recorder = ExperimentRecorder(
                 "EXP-TEST-0001", output_dir=tmp_experiment_dir
             )
-            recorder.record_runtime_error(tick=99, phase="step", exception_type="Exception", message="persist")
+            recorder.record_runtime_error(
+                tick=99, phase="step", exception_type="Exception", message="persist"
+            )
             recorder.save()
             loaded = ExperimentRecorder.load("EXP-TEST-0001")
             assert loaded is not None
@@ -187,9 +194,7 @@ class TestExperimentStatusSemantics:
 
     def test_completed_no_errors_is_valid(self, tmp_experiment_dir: Path) -> None:
         """A completed experiment with no errors is valid."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.mark_completed()
         recorder.save()
         assert recorder.manifest["experiment_status"] == "completed"
@@ -197,27 +202,23 @@ class TestExperimentStatusSemantics:
 
     def test_completed_with_errors_is_invalid(self, tmp_experiment_dir: Path) -> None:
         """A completed experiment with runtime errors becomes invalid."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
+        recorder.record_runtime_error(
+            tick=1, phase="step", exception_type="RuntimeError", message="oops"
         )
-        recorder.record_runtime_error(tick=1, phase="step", exception_type="RuntimeError", message="oops")
         recorder.mark_completed()
         assert recorder.manifest["experiment_status"] == "invalid"
         assert recorder.manifest["validity"]["valid"] is False
 
     def test_failed_status(self, tmp_experiment_dir: Path) -> None:
         """Failed status is for execution crashes."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.mark_failed()
         assert recorder.manifest["experiment_status"] == "failed"
 
     def test_completed_negative_result_is_valid(self, tmp_experiment_dir: Path) -> None:
         """A completed experiment with negative result is still valid science."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_results(hypothesis_supported=False, effect_size=0.0)
         recorder.mark_completed()
         assert recorder.manifest["experiment_status"] == "completed"
@@ -248,7 +249,18 @@ class TestEvidenceRejection:
                 "runtime_error_count": 0 if valid else 1,
                 "fatal_error_count": 0,
             },
-            "runtime_errors": [] if valid else [{"tick": 1, "phase": "step", "exception_type": "Error", "message": "test"}],
+            "runtime_errors": (
+                []
+                if valid
+                else [
+                    {
+                        "tick": 1,
+                        "phase": "step",
+                        "exception_type": "Error",
+                        "message": "test",
+                    }
+                ]
+            ),
         }
         (exp_dir / "manifest.json").write_text(
             json.dumps(manifest, indent=2), encoding="utf-8"
@@ -292,6 +304,7 @@ class TestEvidenceRejection:
     def test_completed_valid_accepted(self, tmp_path: Path) -> None:
         """completed + valid experiments CAN produce evidence."""
         import src.research.evidence_engine as ee_module
+
         original_dir = ee_module.EXPERIMENTS_DIR
         try:
             exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
@@ -311,7 +324,9 @@ class TestEvidenceRejection:
         self._create_manifest(exp_dir, "completed", valid=False)
         assert _check_experiment_valid("EXP-TEST-0001") is None
 
-    def test_evidence_engine_raises_for_invalid(self, registry: ResearchRegistry, tmp_path: Path) -> None:
+    def test_evidence_engine_raises_for_invalid(
+        self, registry: ResearchRegistry, tmp_path: Path
+    ) -> None:
         """EvidenceEngine.evaluate_experiment raises ValueError for invalid experiments."""
         engine = EvidenceEngine(registry)
         exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
@@ -320,6 +335,7 @@ class TestEvidenceRejection:
 
         # Override EXPERIMENTS_DIR in evidence_engine to point to tmp_path
         import src.research.evidence_engine as ee_module
+
         original_dir = ee_module.EXPERIMENTS_DIR
         try:
             ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
@@ -333,7 +349,9 @@ class TestEvidenceRejection:
         finally:
             ee_module.EXPERIMENTS_DIR = original_dir
 
-    def test_evidence_engine_accepts_valid(self, registry: ResearchRegistry, tmp_path: Path) -> None:
+    def test_evidence_engine_accepts_valid(
+        self, registry: ResearchRegistry, tmp_path: Path
+    ) -> None:
         """EvidenceEngine accepts completed + valid experiments."""
         engine = EvidenceEngine(registry)
         exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
@@ -341,6 +359,7 @@ class TestEvidenceRejection:
         self._create_manifest(exp_dir, "completed", valid=True)
 
         import src.research.evidence_engine as ee_module
+
         original_dir = ee_module.EXPERIMENTS_DIR
         original_evidence = ee_module.EVIDENCE_DIR
         try:
@@ -369,18 +388,25 @@ class TestEvidenceRejection:
 class TestFailFastMode:
     """Fail-fast mode stops experiment on first runtime error."""
 
-    def test_fail_fast_sets_invalid_on_first_error(self, tmp_experiment_dir: Path) -> None:
+    def test_fail_fast_sets_invalid_on_first_error(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         """With fail_fast=True, first runtime error sets status to invalid."""
         recorder = ExperimentRecorder(
             "EXP-TEST-0001", output_dir=tmp_experiment_dir, fail_fast=True
         )
         recorder.record_runtime_error(
-            tick=1, phase="step", exception_type="RuntimeError", message="fail-fast trigger"
+            tick=1,
+            phase="step",
+            exception_type="RuntimeError",
+            message="fail-fast trigger",
         )
         assert recorder.manifest["experiment_status"] == "invalid"
         assert recorder.manifest["validity"]["valid"] is False
 
-    def test_fail_fast_no_error_allows_completed(self, tmp_experiment_dir: Path) -> None:
+    def test_fail_fast_no_error_allows_completed(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         """With fail_fast=True but no errors, experiment can complete normally."""
         recorder = ExperimentRecorder(
             "EXP-TEST-0001", output_dir=tmp_experiment_dir, fail_fast=True
@@ -391,9 +417,7 @@ class TestFailFastMode:
 
     def test_default_no_fail_fast(self, tmp_experiment_dir: Path) -> None:
         """Default mode (fail_fast=False) does NOT auto-invalidate on error."""
-        recorder = ExperimentRecorder(
-            "EXP-TEST-0001", output_dir=tmp_experiment_dir
-        )
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_runtime_error(
             tick=1, phase="step", exception_type="RuntimeError", message="non-fatal"
         )

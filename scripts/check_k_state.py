@@ -1,4 +1,5 @@
 """Check exact float state at K before and after restore."""
+
 from __future__ import annotations
 
 import sys
@@ -12,7 +13,13 @@ from src.learning.learning_engine import LearningEngine
 from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
 from src.storage.core_restore import restore_full
 from src.storage.runtime import StorageRuntimeConfig, StorageSession
-from tests._restore_helpers import K, build_absolute_schedule, create_network, make_config, run_absolute_schedule
+from tests._restore_helpers import (
+    K,
+    build_absolute_schedule,
+    create_network,
+    make_config,
+    run_absolute_schedule,
+)
 
 
 def main():
@@ -41,6 +48,7 @@ def main():
     with StorageSession(net, rt):
         pass
     from tests._restore_helpers import capture_learning_state
+
     learn_state = capture_learning_state(learn)
     checkpoint = capture_runtime_checkpoint(
         net,
@@ -62,14 +70,20 @@ def main():
     )
 
     print("\nRESTORED at K:")
-    print(f"  neuron 0 threshold_adaptation = {bundle.network.neurons[0].threshold_adaptation!r}")
+    print(
+        f"  neuron 0 threshold_adaptation = {bundle.network.neurons[0].threshold_adaptation!r}"
+    )
     print(f"  neuron 0 v = {bundle.network.neurons[0].v!r}")
     print(f"  homeo rate 0 = {bundle.homeostasis_engine._rates_hz.get(0, 0.0)!r}")
 
     print("\nDIFFERENCES:")
-    print(f"  threshold_adaptation: {net.neurons[0].threshold_adaptation - bundle.network.neurons[0].threshold_adaptation!r}")
+    print(
+        f"  threshold_adaptation: {net.neurons[0].threshold_adaptation - bundle.network.neurons[0].threshold_adaptation!r}"
+    )
     print(f"  v: {net.neurons[0].v - bundle.network.neurons[0].v!r}")
-    print(f"  homeo rate: {homeo._rates_hz.get(0, 0.0) - bundle.homeostasis_engine._rates_hz.get(0, 0.0)!r}")
+    print(
+        f"  homeo rate: {homeo._rates_hz.get(0, 0.0) - bundle.homeostasis_engine._rates_hz.get(0, 0.0)!r}"
+    )
 
 
 if __name__ == "__main__":

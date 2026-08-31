@@ -243,8 +243,12 @@ def capture_runtime_checkpoint(
                 last_external_current=float(neuron.last_external_current),
                 last_synaptic_current=float(neuron.last_synaptic_current),
                 firing_rate_estimate=float(neuron.firing_rate_estimate),
-                spike_count_window=int(neuron._spike_count_window),  # pyright: ignore[reportPrivateUsage]
-                last_update_tick=int(neuron._last_update_tick),  # pyright: ignore[reportPrivateUsage]
+                spike_count_window=int(
+                    neuron._spike_count_window  # pyright: ignore[reportPrivateUsage]
+                ),
+                last_update_tick=int(
+                    neuron._last_update_tick  # pyright: ignore[reportPrivateUsage]
+                ),
                 pre_trace=float(neuron.pre_trace),
                 post_trace=float(neuron.post_trace),
             )
@@ -279,14 +283,22 @@ def capture_runtime_checkpoint(
                 pre_id=int(cast("int | str", s["pre_id"])),
                 target_id=int(cast("int | str", s["target_id"])),
                 last_pre_tick=(
-                    int(cast("int | str", s["last_pre_tick"])) if s.get("last_pre_tick") is not None else None
+                    int(cast("int | str", s["last_pre_tick"]))
+                    if s.get("last_pre_tick") is not None
+                    else None
                 ),
                 last_post_tick=(
-                    int(cast("int | str", s["last_post_tick"])) if s.get("last_post_tick") is not None else None
+                    int(cast("int | str", s["last_post_tick"]))
+                    if s.get("last_post_tick") is not None
+                    else None
                 ),
-                eligibility_value=float(cast("int | float | str", s.get("eligibility_value", 0.0))),
+                eligibility_value=float(
+                    cast("int | float | str", s.get("eligibility_value", 0.0))
+                ),
                 eligibility_last_tick=(
-                    int(cast("int | str", s["eligibility_last_tick"])) if s.get("eligibility_last_tick") is not None else None
+                    int(cast("int | str", s["eligibility_last_tick"]))
+                    if s.get("eligibility_last_tick") is not None
+                    else None
                 ),
             )
             for s in learning_states
@@ -568,7 +580,9 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
 
     # Read homeostasis state (version 4+)
     homeostasis_state: list[HomeostasisRuntimeRecord] = []
-    for index, item in enumerate(_list(raw.get("homeostasis_state", []), "homeostasis")):
+    for index, item in enumerate(
+        _list(raw.get("homeostasis_state", []), "homeostasis")
+    ):
         state = _mapping(item, f"homeostasis_state[{index}]")
         homeostasis_state.append(
             HomeostasisRuntimeRecord(
@@ -599,7 +613,9 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
                     state.get("eligibility_value", 0.0), "learning.eligibility_value"
                 ),
                 eligibility_last_tick=(
-                    _int(state["eligibility_last_tick"], "learning.eligibility_last_tick")
+                    _int(
+                        state["eligibility_last_tick"], "learning.eligibility_last_tick"
+                    )
                     if state.get("eligibility_last_tick") is not None
                     else None
                 ),
@@ -608,7 +624,9 @@ def read_runtime_checkpoint(path: Path) -> RuntimeCheckpoint:
 
     # Read pending rewards (version 4+)
     pending_rewards: list[PendingRewardRecord] = []
-    for index, item in enumerate(_list(raw.get("pending_rewards", []), "pending_rewards")):
+    for index, item in enumerate(
+        _list(raw.get("pending_rewards", []), "pending_rewards")
+    ):
         r = _mapping(item, f"pending_rewards[{index}]")
         pending_rewards.append(
             PendingRewardRecord(

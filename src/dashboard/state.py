@@ -811,7 +811,12 @@ def publish_state(snapshot: DashboardSnapshot) -> None:
     """
     from .health_builder import enrich_snapshot
 
-    _state_manager.publish(enrich_snapshot(snapshot, _state_manager._config_dict))  # pyright: ignore[reportPrivateUsage]
+    _state_manager.publish(
+        enrich_snapshot(
+            snapshot,
+            _state_manager._config_dict,  # pyright: ignore[reportPrivateUsage]
+        )
+    )
 
 
 def set_dashboard_config(config_dict: dict[str, Any] | None) -> None:

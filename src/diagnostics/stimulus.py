@@ -47,11 +47,15 @@ class StimulusEngine:
 
         if mode == "single_pulse":
             if tick == start:
-                target_coord = cast("list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ()))
+                target_coord = cast(
+                    "list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ())
+                )
                 add(pack_coords(*tuple(target_coord)), amp)
         elif mode == "single_neuron_drive":
             if start <= tick < start + duration:
-                target_coord = cast("list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ()))
+                target_coord = cast(
+                    "list[Any] | tuple[Any, ...]", self.diag.get("target_coord", ())
+                )
                 add(pack_coords(*tuple(target_coord)), amp)
         elif mode in ("input_plane_pulse", "input_plane_drive"):
             active = (
@@ -67,10 +71,14 @@ class StimulusEngine:
                         add(nid, amp)
         elif mode == "poisson_noise":
             if tick >= start:
-                rate_hz = float(cast("int | float", self.diag.get("poisson_rate_hz", 0.0)))
+                rate_hz = float(
+                    cast("int | float", self.diag.get("poisson_rate_hz", 0.0))
+                )
                 p = rate_hz * network.dt_ms / 1000.0
                 p = min(max(p, 0.0), 1.0)
-                noise_amp = float(cast("int | float", self.diag.get("poisson_amplitude", amp)))
+                noise_amp = float(
+                    cast("int | float", self.diag.get("poisson_amplitude", amp))
+                )
                 for nid in network.neurons:
                     if self.rng.random() < p:
                         add(nid, noise_amp)

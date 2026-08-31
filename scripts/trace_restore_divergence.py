@@ -9,7 +9,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.config.loader import ConfigDict
-from src.core.network import NeuralNetwork
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
@@ -19,7 +18,6 @@ from tests._restore_helpers import (
     K,
     N,
     build_absolute_schedule,
-    config_sha256,
     create_network,
     make_config,
     run_absolute_schedule,
@@ -38,6 +36,7 @@ def _write_artifacts(network, homeo, learn, tmp_path, schedule, config):
     with StorageSession(network, rt):
         pass
     from tests._restore_helpers import capture_learning_state
+
     learn_state = capture_learning_state(learn)
     checkpoint = capture_runtime_checkpoint(
         network,
@@ -122,7 +121,9 @@ def main():
 
     out = OUT_DIR / "trace_comparison.json"
     out.write_text(
-        json.dumps({"diff_tick_index": diff_tick, "A": trace_a, "B": trace_b}, indent=2),
+        json.dumps(
+            {"diff_tick_index": diff_tick, "A": trace_a, "B": trace_b}, indent=2
+        ),
         encoding="utf-8",
     )
     print(f"Trace written to {out}")

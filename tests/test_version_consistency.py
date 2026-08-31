@@ -44,6 +44,7 @@ class TestVersionConsistency:
     def test_dashboard_server_uses_central_version(self) -> None:
         """Dashboard server version is derived from central source."""
         from src.dashboard.server import DashboardRequestHandler
+
         assert BRAIN5D_VERSION_DISPLAY in DashboardRequestHandler.server_version
 
     def test_main_py_uses_central_version(self) -> None:

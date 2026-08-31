@@ -75,7 +75,9 @@ from tests._restore_helpers import (
     run_absolute_schedule,
 )
 
-ARTIFACT_DIR = Path(__file__).resolve().parent.parent / "research" / "generated" / "verification"
+ARTIFACT_DIR = (
+    Path(__file__).resolve().parent.parent / "research" / "generated" / "verification"
+)
 ARTIFACT_PATH = ARTIFACT_DIR / "restore_determinism.json"
 WORKER_PATH = Path(__file__).resolve().parent / "_restore_worker.py"
 
@@ -96,6 +98,7 @@ def _write_production_artifacts(
     with StorageSession(network, rt):  # type: ignore[arg-type]
         pass
     from tests._restore_helpers import capture_learning_state
+
     learn_state = capture_learning_state(learn)
     checkpoint = capture_runtime_checkpoint(
         cast(Any, network),
@@ -117,9 +120,11 @@ def _write_production_artifacts(
         "schedule": sched_path,
     }
 
+
 # ============================================================================
 # Path A — uninterrupted reference
 # ============================================================================
+
 
 def _run_path_A(config: dict[str, Any], schedule: list[dict[str, Any]]) -> str:
     network = create_network(config)
@@ -128,12 +133,15 @@ def _run_path_A(config: dict[str, Any], schedule: list[dict[str, Any]]) -> str:
     learn = LearningEngine(network, config)
     learn.attach()
     run_absolute_schedule(network, schedule, N)
-    return compute_digest(network, homeo, learn, config_sha256_str=config_sha256(config))
+    return compute_digest(
+        network, homeo, learn, config_sha256_str=config_sha256(config)
+    )
 
 
 # ============================================================================
 # Path B — in-process restore via production restore_full
 # ============================================================================
+
 
 def _run_path_B(
     config: dict[str, Any],
@@ -147,7 +155,9 @@ def _run_path_B(
     learn = LearningEngine(network, config)
     learn.attach()
     run_absolute_schedule(network, schedule, K)
-    artifacts = _write_production_artifacts(network, homeo, learn, tmp_path, schedule, config)
+    artifacts = _write_production_artifacts(
+        network, homeo, learn, tmp_path, schedule, config
+    )
     bundle = restore_full(
         snapshot_path=artifacts["snapshot"],
         journal_path=artifacts["journal"],
@@ -157,10 +167,15 @@ def _run_path_B(
         create_homeostasis_engine=True,
         create_learning_engine=True,
     )
-    is_different = (bundle.network is not network)
+    is_different = bundle.network is not network
     run_absolute_schedule(bundle.network, schedule, N)
     return (
-        compute_digest(bundle.network, bundle.homeostasis_engine, bundle.learning_engine, config_sha256_str=config_sha256(config)),
+        compute_digest(
+            bundle.network,
+            bundle.homeostasis_engine,
+            bundle.learning_engine,
+            config_sha256_str=config_sha256(config),
+        ),
         is_different,
     )
 
@@ -168,6 +183,7 @@ def _run_path_B(
 # ============================================================================
 # Path C — fresh-process restore via subprocess
 # ============================================================================
+
 
 def _run_path_C(
     config: dict[str, Any],
@@ -184,7 +200,9 @@ def _run_path_C(
     learn = LearningEngine(network, config)
     learn.attach()
     run_absolute_schedule(network, schedule, K)
-    artifacts = _write_production_artifacts(network, homeo, learn, tmp_path, schedule, config)
+    artifacts = _write_production_artifacts(
+        network, homeo, learn, tmp_path, schedule, config
+    )
 
     # Write pid_C1
     pid_path = tmp_path / "pid_C1.txt"
@@ -194,19 +212,29 @@ def _run_path_C(
     worker_args = [
         sys.executable,
         str(WORKER_PATH),
-        "--snapshot", str(artifacts["snapshot"]),
-        "--journal", str(artifacts["journal"]),
-        "--checkpoint", str(artifacts["checkpoint"]),
-        "--config", str(artifacts["config"]),
-        "--schedule", str(artifacts["schedule"]),
-        "--output", str(tmp_path / "c2_result.json"),
-        "--end-tick", str(N),
-        "--digest-k", str(tmp_path / "c2_digest_k.json"),
+        "--snapshot",
+        str(artifacts["snapshot"]),
+        "--journal",
+        str(artifacts["journal"]),
+        "--checkpoint",
+        str(artifacts["checkpoint"]),
+        "--config",
+        str(artifacts["config"]),
+        "--schedule",
+        str(artifacts["schedule"]),
+        "--output",
+        str(tmp_path / "c2_result.json"),
+        "--end-tick",
+        str(N),
+        "--digest-k",
+        str(tmp_path / "c2_digest_k.json"),
     ]
 
     result = subprocess.run(
         worker_args,
-        capture_output=True, text=True, timeout=300,
+        capture_output=True,
+        text=True,
+        timeout=300,
         cwd=str(Path(__file__).resolve().parent.parent),
     )
 
@@ -217,11 +245,13 @@ def _run_path_C(
             f"stderr: {result.stderr}"
         )
 
-    c2_result = json.loads(Path(tmp_path / "c2_result.json").read_text(encoding="utf-8"))
+    c2_result = json.loads(
+        Path(tmp_path / "c2_result.json").read_text(encoding="utf-8")
+    )
     digest = c2_result["digest"]
     pid_C2 = c2_result["pid"]
 
-    fresh_process_is_real = (pid_C1 != pid_C2)
+    fresh_process_is_real = pid_C1 != pid_C2
 
     return digest, fresh_process_is_real
 
@@ -229,6 +259,7 @@ def _run_path_C(
 # ============================================================================
 # Tests
 # ============================================================================
+
 
 class TestRestoreDeterminismABC:
     """Full A/B/C restore determinism protocol."""
@@ -290,6 +321,7 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     all_equal = A_eq_B and A_eq_C and B_eq_C
 
     from src.dashboard.verification import compute_source_tree_digest
+
     repo_root = Path(__file__).resolve().parent.parent
     tree_digest = compute_source_tree_digest(repo_root)
     head = _git_head(repo_root)
@@ -350,16 +382,18 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     print(f"  production_restore_path_used: {production_restore_path_used}")
     print(f"  pid_C1: {pid_C1}, pid_C2: {pid_C2}")
 
-    assert all_equal, (
-        f"Restore determinism FAILED: A==B={A_eq_B}, A==C={A_eq_C}, B==C={B_eq_C}"
-    )
+    assert (
+        all_equal
+    ), f"Restore determinism FAILED: A==B={A_eq_B}, A==C={A_eq_C}, B==C={B_eq_C}"
 
 
 def _git_head(repo_root: Path) -> str | None:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
             cwd=str(repo_root),
         )
         return result.stdout.strip() if result.returncode == 0 else None

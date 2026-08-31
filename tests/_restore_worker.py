@@ -27,7 +27,11 @@ def main() -> None:
     parser.add_argument("--schedule", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--end-tick", type=int, required=True)
-    parser.add_argument("--digest-k", required=True, help="Path to write digest at K (before continuation)")
+    parser.add_argument(
+        "--digest-k",
+        required=True,
+        help="Path to write digest at K (before continuation)",
+    )
     args = parser.parse_args()
 
     from src.storage.core_restore import restore_full
@@ -60,7 +64,9 @@ def main() -> None:
     )
 
     digest_K_path = Path(args.digest_k)
-    digest_K_path.write_text(json.dumps({"digest_K": digest_K, "pid": os.getpid()}), encoding="utf-8")
+    digest_K_path.write_text(
+        json.dumps({"digest_K": digest_K, "pid": os.getpid()}), encoding="utf-8"
+    )
 
     # ── Continue K -> N ──────────────────────────────────────────────────
     schedule = json.loads(Path(args.schedule).read_text())
@@ -84,7 +90,9 @@ def main() -> None:
     }
 
     Path(args.output).write_text(json.dumps(result, indent=2), encoding="utf-8")
-    print(f"C2 worker done: digest_K={digest_K}, digest_N={digest_N}, pid={os.getpid()}")
+    print(
+        f"C2 worker done: digest_K={digest_K}, digest_N={digest_N}, pid={os.getpid()}"
+    )
 
 
 if __name__ == "__main__":

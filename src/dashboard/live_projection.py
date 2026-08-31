@@ -33,6 +33,7 @@ if TYPE_CHECKING:
 
 class NeuronAccess(Protocol):
     """Minimal neuron interface required for live projection."""
+
     @property
     def v(self) -> float: ...
     @property
@@ -49,6 +50,7 @@ class NeuronAccess(Protocol):
 
 class SynapseAccess(Protocol):
     """Minimal synapse interface required for live projection."""
+
     @property
     def weight(self) -> float: ...
     @property
@@ -57,6 +59,7 @@ class SynapseAccess(Protocol):
 
 class NetworkAccess(Protocol):
     """Minimal network interface required for live projection."""
+
     @property
     def neurons(self) -> Mapping[int, NeuronAccess]: ...
     @property
@@ -159,6 +162,7 @@ class TelemetryFrame:
     Captures all data needed for a single projection from one tick.
     The activity field contains per-neuron rolling window spike counts.
     """
+
     tick: int
     neurons: tuple[tuple[int, float, float, float, int, int], ...]
     synapses: tuple[tuple[int, int, float], ...]
@@ -199,14 +203,23 @@ def capture_frame(
         for src_id, syns in sorted(network.synapses.items())
         for syn in syns
     )
-    activity = tuple(
-        (nid, activity_accumulator.spikes_in_window(nid))
-        for nid, _ in sorted(network.neurons.items())
-    ) if activity_accumulator is not None else ()
-    window_ticks = activity_accumulator.window_ticks if activity_accumulator is not None else 20
+    activity = (
+        tuple(
+            (nid, activity_accumulator.spikes_in_window(nid))
+            for nid, _ in sorted(network.neurons.items())
+        )
+        if activity_accumulator is not None
+        else ()
+    )
+    window_ticks = (
+        activity_accumulator.window_ticks if activity_accumulator is not None else 20
+    )
     return TelemetryFrame(
-        tick=tick, neurons=neurons, synapses=syns,
-        activity=activity, dimensions=network.dimensions,
+        tick=tick,
+        neurons=neurons,
+        synapses=syns,
+        activity=activity,
+        dimensions=network.dimensions,
         activity_window_ticks=window_ticks,
         dt_ms=dt_ms,
     )
@@ -245,7 +258,9 @@ class TelemetryFrameStore:
         activity_window_ticks: int = 20,
     ) -> None:
         if capture_interval_ticks <= 0:
-            raise ValueError(f"capture_interval_ticks must be > 0, got {capture_interval_ticks}")
+            raise ValueError(
+                f"capture_interval_ticks must be > 0, got {capture_interval_ticks}"
+            )
         if capture_interval_ticks > activity_window_ticks:
             raise ValueError(
                 f"capture_interval_ticks ({capture_interval_ticks}) must be <= "
@@ -256,7 +271,9 @@ class TelemetryFrameStore:
         self.activity_window_ticks = activity_window_ticks
         self._lock = threading.RLock()
         self._frame: TelemetryFrame | None = None
-        self._accumulator = ActivityWindowAccumulator(window_ticks=activity_window_ticks)
+        self._accumulator = ActivityWindowAccumulator(
+            window_ticks=activity_window_ticks
+        )
         self._ticks_observed: int = 0
         self._frames_captured: int = 0
         self._last_capture_duration_ms: float = 0.0
@@ -340,7 +357,9 @@ class TelemetryFrameStore:
         Ensures /api/live/projection can respond before any tick executes.
         """
         with self._lock:
-            self._frame = capture_frame(network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms)
+            self._frame = capture_frame(
+                network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms
+            )
             self._frames_captured = 1
 
     # ------------------------------------------------------------------
@@ -362,7 +381,7 @@ class TelemetryFrameStore:
             result: The StepResult from the completed tick.
         """
         tick = network.current_tick
-        spike_ids = getattr(result, 'spike_ids', ())
+        spike_ids = getattr(result, "spike_ids", ())
 
         with self._lock:
             self._ticks_observed += 1
@@ -372,7 +391,9 @@ class TelemetryFrameStore:
             # Full frame capture only at cadence
             if self._ticks_observed % self.capture_interval_ticks == 0:
                 start = time.perf_counter()
-                self._frame = capture_frame(network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms)
+                self._frame = capture_frame(
+                    network, activity_accumulator=self._accumulator, dt_ms=self._dt_ms
+                )
                 self._last_capture_duration_ms = (time.perf_counter() - start) * 1000.0
                 self._frames_captured += 1
 
@@ -394,8 +415,11 @@ def _emit_telemetry_error(tick: int, exception: Exception) -> None:
         get_error_buffer,
     )
 
-    tb_text = "".join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+    tb_text = "".join(
+        traceback.format_exception(type(exception), exception, exception.__traceback__)
+    )
     import hashlib
+
     tb_hash = hashlib.sha256(tb_text.encode("utf-8")).hexdigest()
 
     event = RuntimeErrorEvent(
@@ -416,17 +440,21 @@ def _emit_telemetry_error(tick: int, exception: Exception) -> None:
 # ============================================================================
 
 
-def make_telemetry_hook(store: TelemetryFrameStore, network: NetworkAccess) -> PostTickHook:
+def make_telemetry_hook(
+    store: TelemetryFrameStore, network: NetworkAccess
+) -> PostTickHook:
     """Create a post-tick hook that safely calls the store.
 
     Exceptions are routed to the structured error buffer instead of
     being silently swallowed by RuntimeController's except Exception: pass.
     """
+
     def hook(tick: int, result: object) -> None:
         try:
             store.on_tick_complete(network, result)
         except Exception as exc:
             _emit_telemetry_error(tick, exc)
+
     return hook
 
 
@@ -442,11 +470,16 @@ class ProjectionKind:
     SPIKE = "spike"
     WEIGHT = "weight"
 
-_VALID_KINDS = frozenset({
-    ProjectionKind.ACTIVITY, ProjectionKind.ENERGY,
-    ProjectionKind.MEMBRANE, ProjectionKind.SPIKE,
-    ProjectionKind.WEIGHT,
-})
+
+_VALID_KINDS = frozenset(
+    {
+        ProjectionKind.ACTIVITY,
+        ProjectionKind.ENERGY,
+        ProjectionKind.MEMBRANE,
+        ProjectionKind.SPIKE,
+        ProjectionKind.WEIGHT,
+    }
+)
 
 
 class Aggregation:
@@ -456,10 +489,16 @@ class Aggregation:
     SPIKE_COUNT = "spike_count"
     ACTIVE_FRACTION = "active_fraction"
 
-_VALID_AGGREGATIONS = frozenset({
-    Aggregation.MEAN, Aggregation.MAX, Aggregation.SUM,
-    Aggregation.SPIKE_COUNT, Aggregation.ACTIVE_FRACTION,
-})
+
+_VALID_AGGREGATIONS = frozenset(
+    {
+        Aggregation.MEAN,
+        Aggregation.MAX,
+        Aggregation.SUM,
+        Aggregation.SPIKE_COUNT,
+        Aggregation.ACTIVE_FRACTION,
+    }
+)
 
 
 # ============================================================================
@@ -484,32 +523,36 @@ class LiveProjection:
         mask: 2D boolean array — true where bin has data.
         telemetry: Telemetry statistics (cadence, frames, etc.).
     """
+
     source: str = "live_runtime"
     tick: int = 0
     kind: str = ""
     dimensions: tuple[int, int, int, int, int] = (0, 0, 0, 0, 0)
-    projection: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
-    metric: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
-    range: dict[str, float] = field(default_factory=dict)  # type: ignore[type-arg]
+    projection: dict[str, object] = field(default_factory=dict[str, object])
+    metric: dict[str, object] = field(default_factory=dict[str, object])
+    range: dict[str, float] = field(default_factory=dict[str, float])
     sample_count: int = 0
-    values: list[list[float | None]] = field(default_factory=list)  # type: ignore[type-arg]
-    mask: list[list[bool]] = field(default_factory=list)  # type: ignore[type-arg]
-    telemetry: dict[str, object] = field(default_factory=dict)  # type: ignore[type-arg]
+    values: list[list[float | None]] = field(default_factory=list[list[float | None]])
+    mask: list[list[bool]] = field(default_factory=list[list[bool]])
+    telemetry: dict[str, object] = field(default_factory=dict[str, object])
 
     def to_json(self) -> dict[str, JSONValue]:
-        return cast("dict[str, JSONValue]", {
-            "source": self.source,
-            "tick": self.tick,
-            "kind": self.kind,
-            "dimensions": list(self.dimensions),
-            "projection": dict(self.projection),
-            "metric": dict(self.metric),
-            "range": dict(self.range),
-            "sample_count": self.sample_count,
-            "values": [list(row) for row in self.values],
-            "mask": [list(row) for row in self.mask],
-            "telemetry": dict(self.telemetry),
-        })
+        return cast(
+            "dict[str, JSONValue]",
+            {
+                "source": self.source,
+                "tick": self.tick,
+                "kind": self.kind,
+                "dimensions": list(self.dimensions),
+                "projection": dict(self.projection),
+                "metric": dict(self.metric),
+                "range": dict(self.range),
+                "sample_count": self.sample_count,
+                "values": [list(row) for row in self.values],
+                "mask": [list(row) for row in self.mask],
+                "telemetry": dict(self.telemetry),
+            },
+        )
 
 
 # ============================================================================
@@ -557,7 +600,9 @@ class LiveProjectionService:
         if dim_x == dim_y:
             raise ValueError(f"dim_x ({dim_x}) and dim_y ({dim_y}) must differ")
         if not (0 <= dim_x <= 4) or not (0 <= dim_y <= 4):
-            raise ValueError(f"dimensions must be 0..4, got dim_x={dim_x}, dim_y={dim_y}")
+            raise ValueError(
+                f"dimensions must be 0..4, got dim_x={dim_x}, dim_y={dim_y}"
+            )
 
         bins = max(5, min(200, bins))
 
@@ -577,13 +622,30 @@ class LiveProjectionService:
 
         if kind == ProjectionKind.WEIGHT:
             sample_count, _, _ = self._project_weights(
-                frame, dim_x, dim_y, dim_size_x, dim_size_y,
-                bins, aggregation, sums, max_vals, counts,
+                frame,
+                dim_x,
+                dim_y,
+                dim_size_x,
+                dim_size_y,
+                bins,
+                aggregation,
+                sums,
+                max_vals,
+                counts,
             )
         else:
             sample_count, _, _ = self._project_neurons(
-                frame, kind, dim_x, dim_y, dim_size_x, dim_size_y,
-                bins, aggregation, sums, max_vals, counts,
+                frame,
+                kind,
+                dim_x,
+                dim_y,
+                dim_size_x,
+                dim_size_y,
+                bins,
+                aggregation,
+                sums,
+                max_vals,
+                counts,
             )
 
         # Build final values with null for empty bins
@@ -599,7 +661,9 @@ class LiveProjectionService:
             row_mask: list[bool] = []
             for x in range(bins):
                 if counts[y][x] > 0:
-                    val = self._final_value(aggregation, sums[y][x], max_vals[y][x], counts[y][x])
+                    val = self._final_value(
+                        aggregation, sums[y][x], max_vals[y][x], counts[y][x]
+                    )
                     row.append(val)
                     row_mask.append(True)
                     if val < current_min:
@@ -676,8 +740,10 @@ class LiveProjectionService:
         self,
         frame: TelemetryFrame,
         kind: str,
-        dim_x: int, dim_y: int,
-        dim_size_x: int, dim_size_y: int,
+        dim_x: int,
+        dim_y: int,
+        dim_size_x: int,
+        dim_size_y: int,
         bins: int,
         aggregation: str,
         sums: list[list[float]],
@@ -699,7 +765,15 @@ class LiveProjectionService:
             bin_x = min(bins - 1, int(x_coord * bins / max(1, dim_size_x)))
             bin_y = min(bins - 1, int(y_coord * bins / max(1, dim_size_y)))
 
-            value = self._neuron_value(kind, v, energy, spike_counter, last_spike_tick, frame.tick, activity_map.get(nid, 0))
+            value = self._neuron_value(
+                kind,
+                v,
+                energy,
+                spike_counter,
+                last_spike_tick,
+                frame.tick,
+                activity_map.get(nid, 0),
+            )
             _ = u
             if math.isnan(value) or math.isinf(value):
                 continue
@@ -748,9 +822,12 @@ class LiveProjectionService:
         return capture_frame(self.network)
 
     def _neuron_value(
-        self, kind: str,
-        v: float, energy: float,
-        spike_counter: int, last_spike_tick: int,
+        self,
+        kind: str,
+        v: float,
+        energy: float,
+        spike_counter: int,
+        last_spike_tick: int,
         current_tick: int,
         spikes_in_window: int = 0,
     ) -> float:
@@ -772,8 +849,10 @@ class LiveProjectionService:
     def _project_weights(
         self,
         frame: TelemetryFrame,
-        dim_x: int, dim_y: int,
-        dim_size_x: int, dim_size_y: int,
+        dim_x: int,
+        dim_y: int,
+        dim_size_x: int,
+        dim_size_y: int,
         bins: int,
         aggregation: str,
         sums: list[list[float]],
@@ -838,6 +917,7 @@ class IOFlowResult:
     Exposes both the canonical input/output totals and the input/hidden/output
     breakdown that the dashboard UI renders.
     """
+
     input_rate: float
     output_rate: float
     total_input_spikes: int
@@ -854,22 +934,25 @@ class IOFlowResult:
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
-        return cast("dict[str, JSONValue]", {
-            "input_rate": self.input_rate,
-            "output_rate": self.output_rate,
-            "total_input_spikes": self.total_input_spikes,
-            "total_output_spikes": self.total_output_spikes,
-            "current_tick": self.current_tick,
-            "input_count": self.input_count,
-            "hidden_count": self.hidden_count,
-            "output_count": self.output_count,
-            "input_mean_rate": self.input_mean_rate,
-            "hidden_mean_rate": self.hidden_mean_rate,
-            "output_mean_rate": self.output_mean_rate,
-            "propagation_active": self.propagation_active,
-            "propagation_criterion": self.propagation_criterion,
-            "source": self.source,
-        })
+        return cast(
+            "dict[str, JSONValue]",
+            {
+                "input_rate": self.input_rate,
+                "output_rate": self.output_rate,
+                "total_input_spikes": self.total_input_spikes,
+                "total_output_spikes": self.total_output_spikes,
+                "current_tick": self.current_tick,
+                "input_count": self.input_count,
+                "hidden_count": self.hidden_count,
+                "output_count": self.output_count,
+                "input_mean_rate": self.input_mean_rate,
+                "hidden_mean_rate": self.hidden_mean_rate,
+                "output_mean_rate": self.output_mean_rate,
+                "propagation_active": self.propagation_active,
+                "propagation_criterion": self.propagation_criterion,
+                "source": self.source,
+            },
+        )
 
 
 def compute_io_flow(
@@ -882,8 +965,8 @@ def compute_io_flow(
     network's ``input_cells`` / ``output_cells`` sets. The hidden population
     is everything that is neither input nor output.
     """
-    input_cells = getattr(network, "input_cells", set())
-    output_cells = getattr(network, "output_cells", set())
+    input_cells: set[int] = getattr(network, "input_cells", set())
+    output_cells: set[int] = getattr(network, "output_cells", set())
 
     total_input = 0
     total_hidden = 0
@@ -928,8 +1011,7 @@ def compute_io_flow(
         recent_input_ticks and recent_hidden_ticks and recent_output_ticks
     )
     propagation_criterion = (
-        "input→hidden→output spikes within last "
-        f"{window_ticks} tick(s)"
+        "input→hidden→output spikes within last " f"{window_ticks} tick(s)"
         if propagation_active
         else "no recent input→hidden→output spike chain"
     )
@@ -963,13 +1045,16 @@ class PopulationResult:
     Provides both aggregate counts and the per-population cards the dashboard
     renders.
     """
+
     total_neurons: int
     excitatory_count: int
     inhibitory_count: int
     active_count: int
     mean_firing_rate: float
     current_tick: int
-    populations: list[dict[str, object]] = field(default_factory=list)
+    populations: list[dict[str, object]] = field(
+        default_factory=list[dict[str, object]]
+    )
     ei_ratio: float | None = None
     ei_status: str = "unavailable"
     ei_reason: str = ""
@@ -978,21 +1063,24 @@ class PopulationResult:
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
-        return cast("dict[str, JSONValue]", {
-            "total_neurons": self.total_neurons,
-            "excitatory_count": self.excitatory_count,
-            "inhibitory_count": self.inhibitory_count,
-            "active_count": self.active_count,
-            "mean_firing_rate": self.mean_firing_rate,
-            "current_tick": self.current_tick,
-            "populations": cast(list[JSONValue], self.populations),
-            "ei_ratio": self.ei_ratio,
-            "ei_status": self.ei_status,
-            "ei_reason": self.ei_reason,
-            "total_excitatory": self.total_excitatory,
-            "total_inhibitory": self.total_inhibitory,
-            "source": self.source,
-        })
+        return cast(
+            "dict[str, JSONValue]",
+            {
+                "total_neurons": self.total_neurons,
+                "excitatory_count": self.excitatory_count,
+                "inhibitory_count": self.inhibitory_count,
+                "active_count": self.active_count,
+                "mean_firing_rate": self.mean_firing_rate,
+                "current_tick": self.current_tick,
+                "populations": cast(list[JSONValue], self.populations),
+                "ei_ratio": self.ei_ratio,
+                "ei_status": self.ei_status,
+                "ei_reason": self.ei_reason,
+                "total_excitatory": self.total_excitatory,
+                "total_inhibitory": self.total_inhibitory,
+                "source": self.source,
+            },
+        )
 
 
 def compute_population_data(
@@ -1041,25 +1129,29 @@ def compute_population_data(
 
     populations: list[dict[str, object]] = []
     if excit_count > 0:
-        populations.append({
-            "name": "excitatory",
-            "count": excit_count,
-            "mean_rate": excit_sum / excit_count,
-            "mean_energy": excit_energy / excit_count,
-            "mean_v": excit_v / excit_count,
-            "active_count": excit_active,
-            "active_fraction": excit_active / excit_count,
-        })
+        populations.append(
+            {
+                "name": "excitatory",
+                "count": excit_count,
+                "mean_rate": excit_sum / excit_count,
+                "mean_energy": excit_energy / excit_count,
+                "mean_v": excit_v / excit_count,
+                "active_count": excit_active,
+                "active_fraction": excit_active / excit_count,
+            }
+        )
     if inhib_count > 0:
-        populations.append({
-            "name": "inhibitory",
-            "count": inhib_count,
-            "mean_rate": inhib_sum / inhib_count,
-            "mean_energy": inhib_energy / inhib_count,
-            "mean_v": inhib_v / inhib_count,
-            "active_count": inhib_active,
-            "active_fraction": inhib_active / inhib_count,
-        })
+        populations.append(
+            {
+                "name": "inhibitory",
+                "count": inhib_count,
+                "mean_rate": inhib_sum / inhib_count,
+                "mean_energy": inhib_energy / inhib_count,
+                "mean_v": inhib_v / inhib_count,
+                "active_count": inhib_active,
+                "active_fraction": inhib_active / inhib_count,
+            }
+        )
 
     # E/I ratio is only meaningful when an explicit inhibitory population
     # exists. With zero inhibitory neurons the ratio is undefined, not a
@@ -1089,6 +1181,8 @@ def compute_population_data(
     )
 
     # ============================================================================
+
+
 # Rate histogram
 # ============================================================================
 
@@ -1096,6 +1190,7 @@ def compute_population_data(
 @dataclass(frozen=True, slots=True)
 class RateHistogramResult:
     """Firing rate distribution histogram result."""
+
     bins: list[float]
     counts: list[int]
     num_bins: int
@@ -1108,18 +1203,21 @@ class RateHistogramResult:
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
-        return cast("dict[str, JSONValue]", {
-            "bins": self.bins,
-            "counts": self.counts,
-            "num_bins": self.num_bins,
-            "current_tick": self.current_tick,
-            "mean_rate": self.mean_rate,
-            "std_rate": self.std_rate,
-            "median_rate": self.median_rate,
-            "active_count": self.active_count,
-            "silent_count": self.silent_count,
-            "source": self.source,
-        })
+        return cast(
+            "dict[str, JSONValue]",
+            {
+                "bins": self.bins,
+                "counts": self.counts,
+                "num_bins": self.num_bins,
+                "current_tick": self.current_tick,
+                "mean_rate": self.mean_rate,
+                "std_rate": self.std_rate,
+                "median_rate": self.median_rate,
+                "active_count": self.active_count,
+                "silent_count": self.silent_count,
+                "source": self.source,
+            },
+        )
 
 
 def compute_rate_histogram(
@@ -1159,7 +1257,11 @@ def compute_rate_histogram(
     counts = [0] * num_bins
 
     for r in rates:
-        idx = min(int((r - min_rate) / bin_width), num_bins - 1) if max_rate > min_rate else 0
+        idx = (
+            min(int((r - min_rate) / bin_width), num_bins - 1)
+            if max_rate > min_rate
+            else 0
+        )
         counts[idx] += 1
 
     bin_centres = [(bin_edges[i] + bin_edges[i + 1]) / 2 for i in range(num_bins)]
@@ -1185,6 +1287,7 @@ def compute_rate_histogram(
 @dataclass(frozen=True, slots=True)
 class SpikeRasterResult:
     """Spike raster (recent spike history) result."""
+
     neuron_ids: list[int]
     spike_ticks: list[int]
     total_events: int
@@ -1196,17 +1299,20 @@ class SpikeRasterResult:
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
-        return cast("dict[str, JSONValue]", {
-            "neuron_ids": self.neuron_ids,
-            "spike_ticks": self.spike_ticks,
-            "total_events": self.total_events,
-            "current_tick": self.current_tick,
-            "total_neurons": self.total_neurons,
-            "sample_count": self.sample_count,
-            "window_ticks": self.window_ticks,
-            "tick": self.tick,
-            "source": self.source,
-        })
+        return cast(
+            "dict[str, JSONValue]",
+            {
+                "neuron_ids": self.neuron_ids,
+                "spike_ticks": self.spike_ticks,
+                "total_events": self.total_events,
+                "current_tick": self.current_tick,
+                "total_neurons": self.total_neurons,
+                "sample_count": self.sample_count,
+                "window_ticks": self.window_ticks,
+                "tick": self.tick,
+                "source": self.source,
+            },
+        )
 
 
 def compute_spike_raster(

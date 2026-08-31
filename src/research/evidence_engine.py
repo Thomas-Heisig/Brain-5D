@@ -35,9 +35,15 @@ def _next_evidence_id() -> str:
     return f"EVID-{year}-{n:02d}"
 
 
-_INVALID_EVIDENCE_STATUSES = frozenset({
-    "template", "not_started", "running", "failed", "invalid",
-})
+_INVALID_EVIDENCE_STATUSES = frozenset(
+    {
+        "template",
+        "not_started",
+        "running",
+        "failed",
+        "invalid",
+    }
+)
 """Experiment statuses that cannot produce scientific evidence."""
 
 

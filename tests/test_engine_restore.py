@@ -82,6 +82,7 @@ def network(config_dict: dict[str, Any]) -> NeuralNetwork:
     b5d_config = Brain5DConfig.from_dict(config_dict)
     net = NeuralNetwork(b5d_config, rng)
     from src.core.spatial_index import linear_to_5d
+
     dims = config_dict["dimensions"]
     for i in range(config_dict.get("initial_neurons", 20)):
         net.add_neuron(linear_to_5d(i, tuple(dims)))
@@ -98,7 +99,9 @@ def network(config_dict: dict[str, Any]) -> NeuralNetwork:
 class TestHomeostasisRestore:
     """Homeostasis engine state is restored from checkpoint v4."""
 
-    def test_rates_hz_restored(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_rates_hz_restored(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Homeostasis _rates_hz is restored after capture -> write -> read -> restore."""
         homeo = HomeostasisEngine(network, config_dict)
         homeo.attach()
@@ -117,6 +120,7 @@ class TestHomeostasisRestore:
 
         # Write and read back
         import tempfile
+
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             tmp_path = Path(f.name)
         try:
@@ -134,7 +138,9 @@ class TestHomeostasisRestore:
         finally:
             tmp_path.unlink(missing_ok=True)
 
-    def test_empty_homeostasis_restore_is_noop(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_empty_homeostasis_restore_is_noop(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Restoring empty homeostasis state is a no-op."""
         homeo = HomeostasisEngine(network, config_dict)
         checkpoint = capture_runtime_checkpoint(network)  # type: ignore[arg-type]  # No homeostasis_rates
@@ -147,7 +153,9 @@ class TestHomeostasisRestore:
 class TestLearningRestore:
     """Learning engine state is restored from checkpoint v4."""
 
-    def test_synapse_traces_restored(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_synapse_traces_restored(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Learning engine per-synapse traces are restored."""
         learn = LearningEngine(network, config_dict)
         learn.attach()
@@ -159,14 +167,16 @@ class TestLearningRestore:
         # Capture learning state from engine internals
         learning_states: list[dict[str, object]] = []
         for key, state in learn._states.items():  # type: ignore[misc]
-            learning_states.append({
-                "pre_id": state.pre_id,
-                "target_id": state.synapse.target_id,
-                "last_pre_tick": state.last_pre_tick,
-                "last_post_tick": state.last_post_tick,
-                "eligibility_value": state.eligibility.value,
-                "eligibility_last_tick": state.eligibility.last_tick,
-            })  # type: ignore[union-attr]
+            learning_states.append(
+                {
+                    "pre_id": state.pre_id,
+                    "target_id": state.synapse.target_id,
+                    "last_pre_tick": state.last_pre_tick,
+                    "last_post_tick": state.last_post_tick,
+                    "eligibility_value": state.eligibility.value,
+                    "eligibility_last_tick": state.eligibility.last_tick,
+                }
+            )  # type: ignore[union-attr]
 
         checkpoint = capture_runtime_checkpoint(
             network,  # type: ignore[arg-type]
@@ -174,6 +184,7 @@ class TestLearningRestore:
         )
 
         import tempfile
+
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             tmp_path = Path(f.name)
         try:
@@ -196,7 +207,9 @@ class TestLearningRestore:
         finally:
             tmp_path.unlink(missing_ok=True)
 
-    def test_pending_rewards_restored(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_pending_rewards_restored(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Learning engine pending rewards are restored."""
         # Use a non-zero delay so rewards go to _pending_rewards instead of being applied immediately
         cfg = dict(config_dict)
@@ -222,6 +235,7 @@ class TestLearningRestore:
         )
 
         import tempfile
+
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             tmp_path = Path(f.name)
         try:

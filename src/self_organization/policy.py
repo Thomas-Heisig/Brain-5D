@@ -197,12 +197,8 @@ class SelfOrganizationPolicyConfig:
         )
 
         # Limits
-        max_neurons = _int_value(
-            section.get("max_neurons", 10_000), "max_neurons"
-        )
-        min_neurons = _int_value(
-            section.get("min_neurons", 100), "min_neurons"
-        )
+        max_neurons = _int_value(section.get("max_neurons", 10_000), "max_neurons")
+        min_neurons = _int_value(section.get("min_neurons", 100), "min_neurons")
 
         return cls(
             enabled=enabled,

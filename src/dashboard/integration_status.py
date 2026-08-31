@@ -35,7 +35,13 @@ from src.dashboard.verification import (
 # mark the baseline as stale. This is why we digest the tree, not the commit.
 # The canonical list lives in verification.py; this alias is kept for
 # backward compatibility with any code that imported the constant directly.
-_SCIENTIFIC_PATHS = ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"]  # noqa: F841
+_SCIENTIFIC_PATHS = [
+    "src/",
+    "configs/",
+    "research/schemas/",
+    "pyproject.toml",
+    "tests/",
+]  # noqa: F841
 
 # ============================================================================
 # Status constants
@@ -134,7 +140,9 @@ class IntegrationStatusBuilder:
             "name": "Bridge",
             "status": PASSED if ok else FAILED,
             "source": "live_runtime",
-            "message": "OperatorBridge connected" if ok else "OperatorBridge not configured",
+            "message": (
+                "OperatorBridge connected" if ok else "OperatorBridge not configured"
+            ),
         }
 
     def _check_controller(self) -> dict[str, JSONValue]:

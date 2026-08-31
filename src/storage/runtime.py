@@ -78,8 +78,10 @@ class RuntimeNetworkLike(NetworkSnapshotLike, Protocol):
     """
 
     # Refined types: these are compatible with the base types but more specific.
-    neurons: Mapping[int, RuntimeNeuronLike]  # type: ignore[reportIncompatibleVariableOverride]
-    synapses: Mapping[int, Sequence[RuntimeSynapseLike]]  # type: ignore[reportIncompatibleVariableOverride]
+    # fmt: off
+    neurons: Mapping[int, RuntimeNeuronLike]  # pyright: ignore[reportIncompatibleVariableOverride]
+    synapses: Mapping[int, Sequence[RuntimeSynapseLike]]  # pyright: ignore[reportIncompatibleVariableOverride]
+    # fmt: on
 
     def add_post_step_hook(self, hook: PostStepHook) -> None:
         """Register a callback after a completed network step."""

@@ -77,8 +77,12 @@
   - Backend: `PendingParameterChange`, `ParameterChangeRecord`, API-Endpunkte `/api/parameters/pending/*`
   - Frontend: `parameter-inspector.js` mit Parameter-Tabelle, Pending-Bar und Change-History
   - Tests: `tests/test_dashboard_pending_parameters.py` (8 Tests)
-- [x] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung
-  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
+- [x] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung  - Frontend wiring in `app.js`; `ExperimentMode` instantiated on CONTROL tab init
+  - Backend API tests: `tests/test_dashboard_experiment_mode.py`
+  - Static asset regression tests: `tests/test_dashboard_experiment_mode_wiring.py`
+- [x] CI recovery: Black, Ruff, Pylint ≥9.0, mypy, pyright all green locally
+- [x] GitHub Actions SARIF permissions and HF sync explicit-failure wiring
+- [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
   - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
   - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
 - [~] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern

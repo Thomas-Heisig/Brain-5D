@@ -16,7 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .registry import REPO_ROOT, ResearchRegistry
+from .registry import REPO_ROOT, ResearchQuestion, ResearchRegistry
 
 GENERATED_DIR = REPO_ROOT / "research" / "generated"
 EVIDENCE_DIR = REPO_ROOT / "research" / "registry" / "evidence"
@@ -148,15 +148,21 @@ class ReportBuilder:
                     lines.append("**Hypothesen:**")
                     for h in hypotheses:
                         h_evidence = sorted(self._evidence_for_hypothesis(h.id))
-                        ev_tag = f" — Evidenz: {', '.join(h_evidence)}" if h_evidence else ""
-                        lines.append(f"- `{h.id}`: {h.hypothesis} *({h.status})*{ev_tag}")
+                        ev_tag = (
+                            f" — Evidenz: {', '.join(h_evidence)}" if h_evidence else ""
+                        )
+                        lines.append(
+                            f"- `{h.id}`: {h.hypothesis} *({h.status})*{ev_tag}"
+                        )
                     lines.append("")
 
                 if claims:
                     lines.append("**Claims:**")
                     for c in claims:
                         c_evidence = sorted(self._evidence_for_claim(c.id))
-                        ev_tag = f" — Evidenz: {', '.join(c_evidence)}" if c_evidence else ""
+                        ev_tag = (
+                            f" — Evidenz: {', '.join(c_evidence)}" if c_evidence else ""
+                        )
                         lines.append(
                             f"- `{c.id}`: {c.claim} *({c.status}, {c.confidence})*{ev_tag}"
                         )
@@ -171,7 +177,9 @@ class ReportBuilder:
                     lines.append("")
 
                 if question_evidence:
-                    lines.append(f"**Evidenzen:** {', '.join(sorted(question_evidence))}")
+                    lines.append(
+                        f"**Evidenzen:** {', '.join(sorted(question_evidence))}"
+                    )
                     lines.append("")
 
                 lines.append("---")
@@ -199,7 +207,11 @@ class ReportBuilder:
             s_text = str(len(sources))
             c_text = ", ".join(f"`{c.id}`" for c in claims) if claims else "—"
             question_evidence = sorted(self._evidence_for_question(q.id))
-            ev_text = ", ".join(f"`{e}`" for e in question_evidence) if question_evidence else "—"
+            ev_text = (
+                ", ".join(f"`{e}`" for e in question_evidence)
+                if question_evidence
+                else "—"
+            )
             answer_text = q.answer.confidence if q.answer.current else "offen"
 
             lines.append(

@@ -188,7 +188,9 @@ class DashboardControlService:
             Self-organization snapshot or None if not configured.
         """
         if self._self_organization is not None:
-            return self._self_organization.snapshot().to_json()  # type: ignore[return-value]
+            return (
+                self._self_organization.snapshot().to_json()
+            )  # pyright: ignore[return-value]
         return None
 
     # =========================================================================

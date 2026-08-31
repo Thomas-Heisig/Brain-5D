@@ -139,7 +139,9 @@ def decode_optical_record(data: bytes) -> tuple[int, int, OpticalPointState]:
         spectrum=tuple(spectrum),
         brightness=brightness,
         phase=phase,
-        stokes=tuple(value / 32_767.0 for value in stokes_raw),  # type: ignore[arg-type]
+        stokes=tuple(
+            value / 32_767.0 for value in stokes_raw
+        ),  # pyright: ignore[arg-type]
         coherence=coherence,
         theta=theta,
         phi=phi,

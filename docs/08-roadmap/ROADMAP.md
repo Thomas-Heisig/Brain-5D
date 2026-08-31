@@ -35,6 +35,9 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 > Opened 2026-08-31. Gate: OPEN.
 
 - [x] Version transition and immutable release registry
+- [x] CI recovery: local lint/type/test gates green (Black, Ruff, Pylint ≥9.0, mypy, pyright)
+- [x] Operator/Experiment/Debug mode switching wired and tested
+- [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately
 - [ ] Chronic structural signals
 - [ ] Regional 5D pressure
 - [ ] Age / lifetime

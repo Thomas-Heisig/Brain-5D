@@ -603,7 +603,8 @@ def load_config(
     if not isinstance(sim_raw, dict):
         raise ValueError("simulation section must be a dictionary")
     result["simulation"] = _validate_simulation_config(
-        cast("dict[str, Any]", sim_raw), cast("SimulationConfig", defaults["simulation"])
+        cast("dict[str, Any]", sim_raw),
+        cast("SimulationConfig", defaults["simulation"]),
     )
 
     # Topology
@@ -659,7 +660,8 @@ def load_config(
     if not isinstance(vis_raw, dict):
         raise ValueError("visualization section must be a dictionary")
     result["visualization"] = _validate_visualization_config(
-        cast("dict[str, Any]", vis_raw), cast("VisualizationConfig", defaults["visualization"])
+        cast("dict[str, Any]", vis_raw),
+        cast("VisualizationConfig", defaults["visualization"]),
     )
 
     # Telemetry
@@ -740,7 +742,8 @@ def validate_config(config: ConfigDict) -> None:
     sim = config.get("simulation")
     if sim:
         _validate_simulation_config(
-            cast("dict[str, Any]", sim), cast("SimulationConfig", defaults["simulation"])
+            cast("dict[str, Any]", sim),
+            cast("SimulationConfig", defaults["simulation"]),
         )
 
     topo = config.get("topology")

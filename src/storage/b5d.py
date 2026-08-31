@@ -561,9 +561,12 @@ def _validate_json_value(value: object) -> JSONValue:
 
     # Lists: recursively validate each item
     if isinstance(value, list):
-        # The type checker cannot infer the type of items in the list,
-        # but we know they are JSON-decodable. We cast the final result.
-        return cast(JSONValue, [_validate_json_value(item) for item in value])  # type: ignore[reportUnknownVariableType, reportUnknownArgumentType]
+        validated: list[JSONValue] = []
+        # fmt: off
+        for item in value:  # pyright: ignore[reportUnknownVariableType, reportUnknownArgumentType]
+            validated.append(_validate_json_value(item))  # pyright: ignore[reportUnknownArgumentType]
+        # fmt: on
+        return cast(JSONValue, validated)
 
     # Dictionaries: ensure keys are strings and recursively validate values
     if isinstance(value, dict):

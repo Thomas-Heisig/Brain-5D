@@ -22,14 +22,19 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # ============================================================================
 # Scientifically relevant source paths
 # ============================================================================
 
 # Source code and config changes must mark the baseline as stale.
-SCIENTIFIC_PATHS: list[str] = ["src/", "configs/", "research/schemas/", "pyproject.toml"]
+SCIENTIFIC_PATHS: list[str] = [
+    "src/",
+    "configs/",
+    "research/schemas/",
+    "pyproject.toml",
+]
 
 # Test logic changes must also mark the baseline as stale — a changed test
 # is a changed verification. But the baseline file itself must NOT
@@ -53,7 +58,9 @@ def read_test_baseline(repo_root: Path) -> dict[str, Any] | None:
     if not baseline_path.exists():
         return None
     try:
-        return json.loads(baseline_path.read_text(encoding="utf-8"))
+        return cast(
+            "dict[str, Any]", json.loads(baseline_path.read_text(encoding="utf-8"))
+        )
     except Exception:
         return None
 
@@ -93,7 +100,10 @@ def compute_source_tree_digest(repo_root: Path) -> str | None:
                         continue
                     if rel_path.endswith(_DIGEST_EXCLUDE_SUFFIXES):
                         continue
-                    if any(part in _DIGEST_EXCLUDE_DIRS for part in path.relative_to(repo_root).parts):
+                    if any(
+                        part in _DIGEST_EXCLUDE_DIRS
+                        for part in path.relative_to(repo_root).parts
+                    ):
                         continue
                     hasher.update(rel_path.encode("utf-8"))
                     hasher.update(b"\0")

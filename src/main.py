@@ -254,10 +254,18 @@ def main() -> int:
     parser.add_argument("--no-dashboard", action="store_true")
     parser.add_argument("--no-learning", action="store_true")
     parser.add_argument("--no-homeostasis", action="store_true")
-    parser.add_argument("--dashboard-port", type=int, default=8765,
-        help="Dashboard HTTP server port (default: 8765)")
-    parser.add_argument("--ticks", type=int, default=None,
-        help="Override config ticks. In dashboard mode (default) this only updates config;\n                         the controller starts IDLE and must be advanced via API.\n                         Use --no-dashboard for automatic execution.")
+    parser.add_argument(
+        "--dashboard-port",
+        type=int,
+        default=8765,
+        help="Dashboard HTTP server port (default: 8765)",
+    )
+    parser.add_argument(
+        "--ticks",
+        type=int,
+        default=None,
+        help="Override config ticks. In dashboard mode (default) this only updates config;\n                         the controller starts IDLE and must be advanced via API.\n                         Use --no-dashboard for automatic execution.",
+    )
     args = parser.parse_args()
 
     # Load configuration
@@ -713,12 +721,22 @@ def main() -> int:
                     enabled=True,
                     dry_run=False,
                     auto_approval=bool(so_cfg.get("auto_approval", False)),
-                    auto_approval_threshold=float(so_cfg.get("auto_approval_threshold", 0.8)),
+                    auto_approval_threshold=float(
+                        so_cfg.get("auto_approval_threshold", 0.8)
+                    ),
                     max_changes_per_tick=int(so_cfg.get("max_changes_per_tick", 5)),
-                    max_neuron_additions_per_tick=int(so_cfg.get("neurogenesis_max_per_cycle", 1)),
-                    max_neuron_removals_per_tick=int(so_cfg.get("max_neuron_removals_per_tick", 0)),
-                    max_synapse_additions_per_tick=int(so_cfg.get("sprouting_max_out_degree", 5)),
-                    max_synapse_removals_per_tick=int(so_cfg.get("max_synapse_removals_per_tick", 5)),
+                    max_neuron_additions_per_tick=int(
+                        so_cfg.get("neurogenesis_max_per_cycle", 1)
+                    ),
+                    max_neuron_removals_per_tick=int(
+                        so_cfg.get("max_neuron_removals_per_tick", 0)
+                    ),
+                    max_synapse_additions_per_tick=int(
+                        so_cfg.get("sprouting_max_out_degree", 5)
+                    ),
+                    max_synapse_removals_per_tick=int(
+                        so_cfg.get("max_synapse_removals_per_tick", 5)
+                    ),
                     min_neurons=int(so_cfg.get("min_neurons", 100)),
                     max_neurons=int(so_cfg.get("max_neurons", 100_000)),
                     allow_neuron_pruning=_allow_neuron_pruning,
@@ -744,7 +762,9 @@ def main() -> int:
             )
 
             print("✅ SelfOrganizationCoordinator + PlasticityEngine + Journal created")
-            print("   (canonical path only; legacy SelfOrganizationEngine NOT attached)")
+            print(
+                "   (canonical path only; legacy SelfOrganizationEngine NOT attached)"
+            )
 
             # Attach the SelfOrganizationRuntimeAdapter as a post-tick hook.
             # This feeds real HomeostasisSignals through the policy and into
@@ -774,7 +794,9 @@ def main() -> int:
                         policy_config=_so_policy_config,
                     )
                     controller.add_hook(_so_adapter)
-                    print(f"   ✅ SelfOrganizationRuntimeAdapter attached (interval={_so_interval}, config-authoritative)")
+                    print(
+                        f"   ✅ SelfOrganizationRuntimeAdapter attached (interval={_so_interval}, config-authoritative)"
+                    )
                 except Exception as adapter_err:
                     print(f"   ⚠️ SelfOrganizationRuntimeAdapter failed: {adapter_err}")
         except Exception as e:
@@ -797,11 +819,23 @@ def main() -> int:
     #   4. Runtime Checkpoint          -> gated by storage.checkpoint.enabled
     # ================================================================
     _storage_cfg_raw = config_dict.get("storage", {})
-    _storage_cfg: dict[str, Any] = cast("dict[str, Any]", _storage_cfg_raw) if isinstance(_storage_cfg_raw, dict) else {}
+    _storage_cfg: dict[str, Any] = (
+        cast("dict[str, Any]", _storage_cfg_raw)
+        if isinstance(_storage_cfg_raw, dict)
+        else {}
+    )
     _storage_runtime_cfg_raw = _storage_cfg.get("runtime", {})
-    _storage_runtime_cfg: dict[str, Any] = cast("dict[str, Any]", _storage_runtime_cfg_raw) if isinstance(_storage_runtime_cfg_raw, dict) else {}
+    _storage_runtime_cfg: dict[str, Any] = (
+        cast("dict[str, Any]", _storage_runtime_cfg_raw)
+        if isinstance(_storage_runtime_cfg_raw, dict)
+        else {}
+    )
     _journal_cfg_raw = _storage_cfg.get("journal", {})
-    _journal_cfg: dict[str, Any] = cast("dict[str, Any]", _journal_cfg_raw) if isinstance(_journal_cfg_raw, dict) else {}
+    _journal_cfg: dict[str, Any] = (
+        cast("dict[str, Any]", _journal_cfg_raw)
+        if isinstance(_journal_cfg_raw, dict)
+        else {}
+    )
     _storage_runtime_enabled = bool(_storage_cfg.get("enabled", False)) and bool(
         _storage_runtime_cfg.get("enabled", False)
     )
@@ -869,7 +903,9 @@ def main() -> int:
                         write_latency_ms=tel.write_latency_ms,
                         commit_latency_ms=tel.commit_latency_ms,
                         journal_size_bytes=(
-                            _delta_journal.path.stat().st_size if _delta_journal.path.exists() else 0
+                            _delta_journal.path.stat().st_size
+                            if _delta_journal.path.exists()
+                            else 0
                         ),
                         worker_failed=tel.worker_failed,
                     )
@@ -887,7 +923,9 @@ def main() -> int:
         # Storage is disabled by config — keep telemetry explicitly unavailable
         # so the dashboard renders "disabled by config" instead of fake zeros.
         _storage_telemetry.update(available=False)
-        print("ℹ️ Runtime Delta Persistence: disabled by config (storage.runtime.enabled=false)")
+        print(
+            "ℹ️ Runtime Delta Persistence: disabled by config (storage.runtime.enabled=false)"
+        )
 
     # ================================================================
     # OperatorBridge & Dashboard Setup
@@ -910,6 +948,7 @@ def main() -> int:
                     TelemetryFrameStore,
                     make_telemetry_hook,
                 )
+
                 _telemetry_store = TelemetryFrameStore(
                     capture_interval_ticks=_lt_capture,
                     activity_window_ticks=_lt_window,
@@ -921,9 +960,14 @@ def main() -> int:
                 from src.dashboard.live_projection import (
                     NetworkAccess as _NetworkAccess,
                 )
-                _hook: PostTickHook = make_telemetry_hook(_telemetry_store, cast("_NetworkAccess", controller.network))
+
+                _hook: PostTickHook = make_telemetry_hook(
+                    _telemetry_store, cast("_NetworkAccess", controller.network)
+                )
                 controller.add_hook(_hook)
-                print(f"✅ Live telemetry enabled (capture={_lt_capture}, window={_lt_window}, dt_ms={_sim_dt_ms})")
+                print(
+                    f"✅ Live telemetry enabled (capture={_lt_capture}, window={_lt_window}, dt_ms={_sim_dt_ms})"
+                )
             else:
                 print("⚠️ Live telemetry disabled by config")
 
@@ -1022,7 +1066,9 @@ def main() -> int:
             research_root = Path("research") if Path("research").exists() else None
 
             _dashboard_port = args.dashboard_port
-            print(f"🧠 Starting Brain-5D dashboard on http://127.0.0.1:{_dashboard_port}")
+            print(
+                f"🧠 Starting Brain-5D dashboard on http://127.0.0.1:{_dashboard_port}"
+            )
             print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
             if _serve_dashboard is not None:
                 _serve_dashboard(host="127.0.0.1", port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]

@@ -30,7 +30,9 @@ from src.storage.checkpoint import (
 class MockEvent:
     """Minimal event for checkpoint testing."""
 
-    def __init__(self, source_id: int, target_id: int, weight: float, delivery_tick: int):
+    def __init__(
+        self, source_id: int, target_id: int, weight: float, delivery_tick: int
+    ):
         self.source_id = source_id
         self.target_id = target_id
         self.weight = weight
@@ -134,11 +136,13 @@ class TestRNGStateCapture:
 
         # Create fresh RNG and restore to same state
         restored_rng = random.Random()
-        restored_rng.setstate((
-            checkpoint.rng.version,
-            tuple(checkpoint.rng.state),
-            checkpoint.rng.gauss_next,
-        ))
+        restored_rng.setstate(
+            (
+                checkpoint.rng.version,
+                tuple(checkpoint.rng.state),
+                checkpoint.rng.gauss_next,
+            )
+        )
 
         # Compare next values — should match
         restored_values = [restored_rng.random() for _ in range(50)]
@@ -159,11 +163,13 @@ class TestRNGStateCapture:
 
         # Restore from checkpoint (should be at position 50 again)
         restored_rng = random.Random()
-        restored_rng.setstate((
-            checkpoint.rng.version,
-            tuple(checkpoint.rng.state),
-            checkpoint.rng.gauss_next,
-        ))
+        restored_rng.setstate(
+            (
+                checkpoint.rng.version,
+                tuple(checkpoint.rng.state),
+                checkpoint.rng.gauss_next,
+            )
+        )
 
         # Should produce same 50 values as original from position 50
         restored_values = [restored_rng.random() for _ in range(50)]
@@ -185,11 +191,13 @@ class TestRNGStateCapture:
         # Read back — should restore to same state as checkpoint capture point
         restored = read_runtime_checkpoint(chk_path)
         restored_rng = random.Random()
-        restored_rng.setstate((
-            restored.rng.version,
-            tuple(restored.rng.state),
-            restored.rng.gauss_next,
-        ))
+        restored_rng.setstate(
+            (
+                restored.rng.version,
+                tuple(restored.rng.state),
+                restored.rng.gauss_next,
+            )
+        )
         actual = [restored_rng.random() for _ in range(30)]
         assert expected == actual
 
@@ -218,17 +226,21 @@ class TestRNGStateCapture:
 
         # Two independent restores
         rng_a = random.Random()
-        rng_a.setstate((
-            checkpoint.rng.version,
-            tuple(checkpoint.rng.state),
-            checkpoint.rng.gauss_next,
-        ))
+        rng_a.setstate(
+            (
+                checkpoint.rng.version,
+                tuple(checkpoint.rng.state),
+                checkpoint.rng.gauss_next,
+            )
+        )
         rng_b = random.Random()
-        rng_b.setstate((
-            checkpoint.rng.version,
-            tuple(checkpoint.rng.state),
-            checkpoint.rng.gauss_next,
-        ))
+        rng_b.setstate(
+            (
+                checkpoint.rng.version,
+                tuple(checkpoint.rng.state),
+                checkpoint.rng.gauss_next,
+            )
+        )
 
         seq_a = [rng_a.random() for _ in range(100)]
         seq_b = [rng_b.random() for _ in range(100)]
@@ -247,10 +259,12 @@ class TestRNGStateCapture:
 
         # Verify checkpoint state matches v1 position
         restored_rng = random.Random()
-        restored_rng.setstate((
-            checkpoint.rng.version,
-            tuple(checkpoint.rng.state),
-            checkpoint.rng.gauss_next,
-        ))
+        restored_rng.setstate(
+            (
+                checkpoint.rng.version,
+                tuple(checkpoint.rng.state),
+                checkpoint.rng.gauss_next,
+            )
+        )
         # Restored RNG should produce v2 (the value after v1)
         assert restored_rng.random() == v2

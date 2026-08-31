@@ -52,8 +52,11 @@ def make_config() -> dict[str, Any]:
             "rate_tau_ticks": 200.0,
         },
         "stdp": {
-            "enabled": True, "a_plus": 0.1, "a_minus": 0.12,
-            "tau_plus": 20.0, "tau_minus": 20.0,
+            "enabled": True,
+            "a_plus": 0.1,
+            "a_minus": 0.12,
+            "tau_plus": 20.0,
+            "tau_minus": 20.0,
         },
         "eligibility": {"enabled": True, "tau_ticks": 200.0},
         "reward": {"enabled": True, "learning_rate": 0.01, "delay_ticks": 5},
@@ -83,26 +86,34 @@ def create_network(config: dict[str, Any]) -> NeuralNetwork:
     return net
 
 
-def build_absolute_schedule(config: dict[str, Any], total_ticks: int) -> list[dict[str, Any]]:
+def build_absolute_schedule(
+    config: dict[str, Any], total_ticks: int
+) -> list[dict[str, Any]]:
     network = create_network(config)
     stim_ids = tuple(sorted(network.neurons))[:3]
     schedule: list[dict[str, Any]] = []
     for tick in range(total_ticks):
         if tick % 50 == 0:
-            schedule.append({
-                "tick": tick,
-                "neuron_ids": list(stim_ids),
-                "current": 30.0,
-            })
+            schedule.append(
+                {
+                    "tick": tick,
+                    "neuron_ids": list(stim_ids),
+                    "current": 30.0,
+                }
+            )
     return schedule
 
 
-def run_absolute_schedule(network: NeuralNetwork, schedule: list[dict[str, Any]], end_tick: int) -> None:
+def run_absolute_schedule(
+    network: NeuralNetwork, schedule: list[dict[str, Any]], end_tick: int
+) -> None:
     stim_map: dict[int, list[tuple[int, float]]] = {}
     for entry in schedule:
         t = int(entry["tick"])
         if t < end_tick:
-            stim_map[t] = [(nid, float(entry["current"])) for nid in entry["neuron_ids"]]
+            stim_map[t] = [
+                (nid, float(entry["current"])) for nid in entry["neuron_ids"]
+            ]
     while network.current_tick < end_tick:
         tick = network.current_tick
         if tick in stim_map:
@@ -121,14 +132,16 @@ def capture_learning_state(learn: LearningEngine) -> dict[str, Any]:
     states_list: list[dict[str, Any]] = []
     for key in sorted(learn._states.keys()):  # pyright: ignore[reportPrivateUsage]
         state = learn._states[key]  # pyright: ignore[reportPrivateUsage]
-        states_list.append({
-            "pre_id": key[0],
-            "target_id": key[1],
-            "last_pre_tick": state.last_pre_tick,
-            "last_post_tick": state.last_post_tick,
-            "eligibility_value": state.eligibility.value,
-            "eligibility_last_tick": state.eligibility.last_tick,
-        })
+        states_list.append(
+            {
+                "pre_id": key[0],
+                "target_id": key[1],
+                "last_pre_tick": state.last_pre_tick,
+                "last_post_tick": state.last_post_tick,
+                "eligibility_value": state.eligibility.value,
+                "eligibility_last_tick": state.eligibility.last_tick,
+            }
+        )
     pending = [
         {"value": r.value, "tick": r.tick}
         for r in learn._pending_rewards  # pyright: ignore[reportPrivateUsage]

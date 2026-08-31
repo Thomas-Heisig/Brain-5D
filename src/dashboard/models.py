@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from dataclasses import fields as dataclass_fields
-from typing import Any
+from typing import Any, cast
 
 from src.embodiment.models import EmbodimentMetrics
 
@@ -809,9 +809,15 @@ class DashboardSnapshot:
     signal_metrics: SignalMetrics = SignalMetrics()
     experiment: ExperimentMetrics = ExperimentMetrics()
     embodiment: EmbodimentMetrics = EmbodimentMetrics()
-    components: dict[str, ComponentStatus] = field(default_factory=dict[str, ComponentStatus])
-    parameters: dict[str, ParameterSchema] = field(default_factory=dict[str, ParameterSchema])
-    pending_changes: dict[str, PendingParameterChange] = field(default_factory=dict[str, PendingParameterChange])
+    components: dict[str, ComponentStatus] = field(
+        default_factory=dict[str, ComponentStatus]
+    )
+    parameters: dict[str, ParameterSchema] = field(
+        default_factory=dict[str, ParameterSchema]
+    )
+    pending_changes: dict[str, PendingParameterChange] = field(
+        default_factory=dict[str, PendingParameterChange]
+    )
     change_history: tuple[ParameterChangeRecord, ...] = ()
     experiment_state: ExperimentState = ExperimentState()
     health: HealthSnapshot = HealthSnapshot()
@@ -862,11 +868,17 @@ def to_json_serializable(obj: Any) -> JSONValue:
     if obj is None or isinstance(obj, (str, int, float, bool)):
         return obj
     if isinstance(obj, (list, tuple)):
-        # Use type: ignore to suppress Pylance warnings about unknown item types
-        return [to_json_serializable(item) for item in obj]  # type: ignore[reportUnknownVariableType, reportUnknownArgumentType]
+        seq = cast(list[Any], obj)
+        result_list: list[JSONValue] = []
+        for item in seq:
+            result_list.append(to_json_serializable(item))
+        return result_list
     if isinstance(obj, dict):
-        # Use type: ignore to suppress Pylance warnings about unknown key/value types
-        return {str(k): to_json_serializable(v) for k, v in obj.items()}  # type: ignore[reportUnknownVariableType, reportUnknownArgumentType]
+        mapping = cast(dict[str, Any], obj)
+        result_dict: dict[str, JSONValue] = {}
+        for k, v in mapping.items():
+            result_dict[str(k)] = to_json_serializable(v)
+        return result_dict
     if hasattr(obj, "to_json"):
         # The object has a to_json method; call it
         result = obj.to_json()

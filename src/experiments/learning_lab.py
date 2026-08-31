@@ -81,7 +81,7 @@ def _validated_dimensions(config: Config) -> Coord5D:
     dims = tuple(int(v) for v in dims_seq)
     if len(dims) != 5 or any(v <= 0 for v in dims):
         raise ValueError("all dimensions must be > 0")
-    return dims  # type: ignore[return-value]
+    return dims  # pyright: ignore[return-value]
 
 
 def _candidate_coords(dims: Coord5D) -> Iterable[Coord5D]:

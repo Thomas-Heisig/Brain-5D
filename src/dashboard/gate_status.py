@@ -92,72 +92,82 @@ GATE_C = "C"
 
 # Required structural E2E proof set — the artifact must contain exactly
 # these proof IDs, all True. No extra or missing fields are tolerated.
-REQUIRED_STRUCTURAL_PROOFS: frozenset[str] = frozenset({
-    "test_proof_01_coordinator_instantiated",
-    "test_proof_02_plasticity_engine_instantiated",
-    "test_proof_03_bridge_identity",
-    "test_proof_04_real_signal_proposal",
-    "test_proof_05_proposal_no_mutation",
-    "test_proof_06_reject_no_mutation",
-    "test_proof_07_approve_exactly_one_mutation",
-    "test_proof_08_exactly_one_change_record",
-    "test_proof_09_undo_restores_topology",
-    "test_proof_10_restart_replay_identity",
-    "test_complete_canonical_e2e",
-})
+REQUIRED_STRUCTURAL_PROOFS: frozenset[str] = frozenset(
+    {
+        "test_proof_01_coordinator_instantiated",
+        "test_proof_02_plasticity_engine_instantiated",
+        "test_proof_03_bridge_identity",
+        "test_proof_04_real_signal_proposal",
+        "test_proof_05_proposal_no_mutation",
+        "test_proof_06_reject_no_mutation",
+        "test_proof_07_approve_exactly_one_mutation",
+        "test_proof_08_exactly_one_change_record",
+        "test_proof_09_undo_restores_topology",
+        "test_proof_10_restart_replay_identity",
+        "test_complete_canonical_e2e",
+    }
+)
 
 # Required structural live loop proof set — the live loop artifact must
 # contain exactly these proof IDs, all True.
-REQUIRED_LIVE_LOOP_PROOFS: frozenset[str] = frozenset({
-    "production_adapter_attached",
-    "real_signal_generated",
-    "policy_received_real_signal",
-    "proposal_published",
-    "proposal_non_mutating",
-    "reject_non_mutating",
-    "approve_single_mutation",
-    "journal_linked_to_proposal",
-    "runtime_continues_after_mutation",
-    "undo_restores_topology",
-    "journal_reopen_replay_identity",
-})
+REQUIRED_LIVE_LOOP_PROOFS: frozenset[str] = frozenset(
+    {
+        "production_adapter_attached",
+        "real_signal_generated",
+        "policy_received_real_signal",
+        "proposal_published",
+        "proposal_non_mutating",
+        "reject_non_mutating",
+        "approve_single_mutation",
+        "journal_linked_to_proposal",
+        "runtime_continues_after_mutation",
+        "undo_restores_topology",
+        "journal_reopen_replay_identity",
+    }
+)
 
 # Required single listener proof set — the artifact must contain exactly
 # these proof IDs, all True.
-REQUIRED_SINGLE_LISTENER_PROOFS: frozenset[str] = frozenset({
-    "port_initially_free_or_explicitly_rejected",
-    "brain5d_process_started",
-    "listener_pid_matches_process_pid",
-    "exactly_one_listener_socket",
-    "no_other_listener_pid",
-    "healthz_reachable",
-    "process_alive_during_verification",
-})
+REQUIRED_SINGLE_LISTENER_PROOFS: frozenset[str] = frozenset(
+    {
+        "port_initially_free_or_explicitly_rejected",
+        "brain5d_process_started",
+        "listener_pid_matches_process_pid",
+        "exactly_one_listener_socket",
+        "no_other_listener_pid",
+        "healthz_reachable",
+        "process_alive_during_verification",
+    }
+)
 
 # Required determinism infrastructure proof set — the artifact must contain
 # exactly these proof IDs, all True. No extra or missing fields are tolerated.
-REQUIRED_DETERMINISM_PROOFS: frozenset[str] = frozenset({
-    "rng_state_persistence",
-    "explicit_iteration_order",
-    "canonical_state_digest",
-    "structural_determinism",
-    "checkpoint_v4_roundtrip",
-    "engine_state_roundtrip",
-    "experiment_validity",
-})
+REQUIRED_DETERMINISM_PROOFS: frozenset[str] = frozenset(
+    {
+        "rng_state_persistence",
+        "explicit_iteration_order",
+        "canonical_state_digest",
+        "structural_determinism",
+        "checkpoint_v4_roundtrip",
+        "engine_state_roundtrip",
+        "experiment_validity",
+    }
+)
 
 # Required restore determinism proof set — the artifact must contain
 # exactly these proof IDs, all True. No extra or missing fields.
-REQUIRED_RESTORE_DETERMINISM_PROOFS: frozenset[str] = frozenset({
-    "uninterrupted_completed",
-    "in_process_restore_completed",
-    "fresh_process_restore_completed",
-    "A_equals_B",
-    "A_equals_C",
-    "B_equals_C",
-    "fresh_process_is_real",
-    "production_restore_path_used",
-})
+REQUIRED_RESTORE_DETERMINISM_PROOFS: frozenset[str] = frozenset(
+    {
+        "uninterrupted_completed",
+        "in_process_restore_completed",
+        "fresh_process_restore_completed",
+        "A_equals_B",
+        "A_equals_C",
+        "B_equals_C",
+        "fresh_process_is_real",
+        "production_restore_path_used",
+    }
+)
 
 
 # ============================================================================
@@ -242,8 +252,28 @@ class GateStatusBuilder:
     # Public API
     # ------------------------------------------------------------------------
 
-    def build(self) -> dict[str, JSONValue]:
-        """Compute the full Alpha.5 gate status."""
+    def build(
+        self,
+        *,
+        ci_status: dict[str, JSONValue] | None = None,
+    ) -> dict[str, JSONValue]:
+        """Compute the full Alpha.5 gate status.
+
+        Returns a response with three independent sections:
+
+        * ``scientific_gate`` — evidence-based scientific/verification status
+          (Gate A/B/C plus live runtime profile). This is the only source of
+          scientific truth and never depends on CI machinery.
+        * ``ci_status`` — optional CI status injected by the caller (e.g. the
+          GitHub Actions workflow). When omitted, the builder reports
+          ``unknown``.
+        * ``release_readiness`` — derived combination of ``scientific_gate``
+          and ``ci_status``. It is ``ready`` only when both the scientific
+          gate is ``passed`` and CI is ``passed``.
+
+        The legacy flat keys (``overall``, ``gate_a``, etc.) are kept for
+        backward compatibility with existing dashboard consumers and tests.
+        """
         gate_a = self._build_gate_a()
         gate_b = self._build_gate_b()
         gate_c = self._build_gate_c()
@@ -251,7 +281,38 @@ class GateStatusBuilder:
 
         overall = self._overall_status(gate_a, gate_b, gate_c)
 
+        scientific_gate: dict[str, JSONValue] = {
+            "overall": overall,
+            "gate_a": {"items": cast(JSONValue, gate_a)},
+            "gate_b": {"items": cast(JSONValue, gate_b)},
+            "gate_c": {"items": cast(JSONValue, gate_c)},
+            "live_runtime": cast(JSONValue, live_runtime),
+        }
+
+        ci: dict[str, JSONValue] = ci_status or {
+            "status": "unknown",
+            "source": "not_reported",
+        }
+        ci_overall = str(ci.get("status", "unknown"))
+
+        release_ready = overall == G_PASSED and ci_overall == "passed"
+        release_readiness: dict[str, JSONValue] = {
+            "ready": release_ready,
+            "overall": "ready" if release_ready else "not_ready",
+            "scientific_gate": overall,
+            "ci_status": ci_overall,
+            "blockers": cast(
+                list[JSONValue],
+                self._release_blockers(overall, ci_overall),
+            ),
+        }
+
         return {
+            # New canonical sections
+            "scientific_gate": scientific_gate,
+            "ci_status": ci,
+            "release_readiness": release_readiness,
+            # Legacy flat keys kept for backward compatibility
             "overall": overall,
             "gate_a": {"items": cast(JSONValue, gate_a)},
             "gate_b": {"items": cast(JSONValue, gate_b)},
@@ -259,6 +320,19 @@ class GateStatusBuilder:
             "live_runtime": cast(JSONValue, live_runtime),
             "source": "live_backend",
         }
+
+    def _release_blockers(
+        self,
+        scientific_overall: str,
+        ci_overall: str,
+    ) -> list[str]:
+        """Return human-readable blockers for release readiness."""
+        blockers: list[str] = []
+        if scientific_overall != G_PASSED:
+            blockers.append(f"scientific_gate is {scientific_overall}")
+        if ci_overall != "passed":
+            blockers.append(f"ci_status is {ci_overall}")
+        return blockers
 
     # ------------------------------------------------------------------------
     # Overall status
@@ -293,13 +367,18 @@ class GateStatusBuilder:
         Returns ``None`` if the artifact is missing or unparseable.
         """
         artifact_path = (
-            self.repo_root / "research" / "generated" / "verification"
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
             / "structural_e2e.json"
         )
         if not artifact_path.exists():
             return None
         try:
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
+            return cast(
+                "dict[str, Any]", json.loads(artifact_path.read_text(encoding="utf-8"))
+            )
         except Exception:
             return None
 
@@ -379,7 +458,11 @@ class GateStatusBuilder:
         # Match by the "test_proof_XX" or "01_" prefix pattern.
         padded = f"{proof_num:02d}"
         for key, value in proofs.items():
-            if key == f"test_proof_{padded}" or key.startswith(f"test_proof_{padded}_") or key.startswith(f"{padded}_"):
+            if (
+                key == f"test_proof_{padded}"
+                or key.startswith(f"test_proof_{padded}_")
+                or key.startswith(f"{padded}_")
+            ):
                 return G_PASSED if bool(value) else G_FAILED
         return G_PENDING
 
@@ -432,101 +515,190 @@ class GateStatusBuilder:
         # Each criterion references the test files that verify it. The
         # builder checks whether those test files exist in the repo.
         verified_a: list[tuple[str, str, list[str]]] = [
-            ("A-PROCESS", "One application process",
-             ["tests/test_brain5d_launcher.py", "tests/test_dashboard_single_instance.py"]),
-            ("A-CONTROLLER", "One canonical RuntimeController",
-             ["tests/test_runtime_controller_alpha4.py", "tests/test_dashboard_control_api.py"]),
-            ("A-CLOCK", "RuntimeController sole simulation-clock owner",
-             ["tests/test_runtime_controller_alpha4.py"]),
-            ("A-SIMPLE-REMOVED", "SimpleController removed",
-             ["tests/test_dashboard_control_service.py"]),
-            ("A-IDLE-START", "Starts IDLE",
-             ["tests/test_runtime_controller_alpha4.py"]),
-            ("A-NO-AUTO-TICKS", "No automatic 1000-tick execution",
-             ["tests/test_runtime_controller_alpha4.py"]),
-            ("A-CONTROL-API", "Canonical /api/control",
-             ["tests/test_dashboard_control_api.py"]),
-            ("A-NO-DUPLICATE-FRONTEND", "No duplicate frontend lifecycle commands",
-             ["tests/test_dashboard_single_instance.py"]),
-            ("A-TICK0", "Real Tick-0 state",
-             ["tests/test_dashboard_completion.py"]),
-            ("A-B5D-SNAPSHOT", "Real .b5d snapshot creation",
-             ["tests/test_b5d_storage.py", "tests/test_dashboard_completion.py"]),
-            ("A-HEATMAP", "Real snapshot heatmaps",
-             ["tests/test_heatmap.py", "tests/test_structural_heatmap.py"]),
-            ("A-INSPECTOR", "Real 5D network inspector",
-             ["tests/test_dashboard_completion.py"]),
-            ("A-RESEARCH-INFRA", "Research infrastructure (B5D-SEF)",
-             ["tests/test_research_registry.py"]),
-            ("A-DASHBOARD-OBSERVABILITY", "Dashboard scientific observability",
-             ["tests/test_dashboard_completion.py"]),
+            (
+                "A-PROCESS",
+                "One application process",
+                [
+                    "tests/test_brain5d_launcher.py",
+                    "tests/test_dashboard_single_instance.py",
+                ],
+            ),
+            (
+                "A-CONTROLLER",
+                "One canonical RuntimeController",
+                [
+                    "tests/test_runtime_controller_alpha4.py",
+                    "tests/test_dashboard_control_api.py",
+                ],
+            ),
+            (
+                "A-CLOCK",
+                "RuntimeController sole simulation-clock owner",
+                ["tests/test_runtime_controller_alpha4.py"],
+            ),
+            (
+                "A-SIMPLE-REMOVED",
+                "SimpleController removed",
+                ["tests/test_dashboard_control_service.py"],
+            ),
+            (
+                "A-IDLE-START",
+                "Starts IDLE",
+                ["tests/test_runtime_controller_alpha4.py"],
+            ),
+            (
+                "A-NO-AUTO-TICKS",
+                "No automatic 1000-tick execution",
+                ["tests/test_runtime_controller_alpha4.py"],
+            ),
+            (
+                "A-CONTROL-API",
+                "Canonical /api/control",
+                ["tests/test_dashboard_control_api.py"],
+            ),
+            (
+                "A-NO-DUPLICATE-FRONTEND",
+                "No duplicate frontend lifecycle commands",
+                ["tests/test_dashboard_single_instance.py"],
+            ),
+            ("A-TICK0", "Real Tick-0 state", ["tests/test_dashboard_completion.py"]),
+            (
+                "A-B5D-SNAPSHOT",
+                "Real .b5d snapshot creation",
+                ["tests/test_b5d_storage.py", "tests/test_dashboard_completion.py"],
+            ),
+            (
+                "A-HEATMAP",
+                "Real snapshot heatmaps",
+                ["tests/test_heatmap.py", "tests/test_structural_heatmap.py"],
+            ),
+            (
+                "A-INSPECTOR",
+                "Real 5D network inspector",
+                ["tests/test_dashboard_completion.py"],
+            ),
+            (
+                "A-RESEARCH-INFRA",
+                "Research infrastructure (B5D-SEF)",
+                ["tests/test_research_registry.py"],
+            ),
+            (
+                "A-DASHBOARD-OBSERVABILITY",
+                "Dashboard scientific observability",
+                ["tests/test_dashboard_completion.py"],
+            ),
         ]
         for cid, label, test_ids in verified_a:
             evidence_files = self._verify_test_files_exist(test_ids)
             all_exist = all(evidence_files.values())
-            items.append(_criterion(
-                gate=GATE_A,
-                id=cid,
-                category="technical_integration",
-                label=label,
-                status=G_PASSED if all_exist else G_PENDING,
-                maturity=VERIFIED if all_exist else INTEGRATED,
-                source="verified_baseline",
-                message="Verified by test baseline" if all_exist else "Test files missing",
-                evidence={"test_ids": cast(JSONValue, test_ids)},
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_A,
+                    id=cid,
+                    category="technical_integration",
+                    label=label,
+                    status=G_PASSED if all_exist else G_PENDING,
+                    maturity=VERIFIED if all_exist else INTEGRATED,
+                    source="verified_baseline",
+                    message=(
+                        "Verified by test baseline"
+                        if all_exist
+                        else "Test files missing"
+                    ),
+                    evidence={"test_ids": cast(JSONValue, test_ids)},
+                )
+            )
 
         # --- Production signal->policy->coordinator adapter ---
         adapter_verified = self._adapter_proof_verified()
-        items.append(_criterion(
-            gate=GATE_A,
-            id="A-STRUCT-RUNTIME-ADAPTER",
-            category="structural_composition",
-            label="Production HomeostasisSignal -> Policy -> Coordinator",
-            status=G_PASSED if adapter_verified else G_PENDING,
-            maturity=VERIFIED if adapter_verified else INTEGRATED,
-            source="research/generated/verification/structural_e2e.json" if adapter_verified else "structural_e2e",
-            message="Verified by structural E2E artifact" if adapter_verified else "Pending adapter verification",
-            live_status=self._structural_live_status(),
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_A,
+                id="A-STRUCT-RUNTIME-ADAPTER",
+                category="structural_composition",
+                label="Production HomeostasisSignal -> Policy -> Coordinator",
+                status=G_PASSED if adapter_verified else G_PENDING,
+                maturity=VERIFIED if adapter_verified else INTEGRATED,
+                source=(
+                    "research/generated/verification/structural_e2e.json"
+                    if adapter_verified
+                    else "structural_e2e"
+                ),
+                message=(
+                    "Verified by structural E2E artifact"
+                    if adapter_verified
+                    else "Pending adapter verification"
+                ),
+                live_status=self._structural_live_status(),
+            )
+        )
 
         # --- Single listener ---
         listener_verified = self._single_listener_proof_verified()
-        items.append(_criterion(
-            gate=GATE_A,
-            id="A-SINGLE-LISTENER",
-            category="technical_integration",
-            label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by Brain-5D PID",
-            status=G_PASSED if listener_verified else G_PENDING,
-            maturity=VERIFIED if listener_verified else IMPLEMENTED,
-            source="research/generated/verification/single_listener.json" if listener_verified else "project_state",
-            message="Verified by single listener artifact" if listener_verified else "Pending single-listener verification",
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_A,
+                id="A-SINGLE-LISTENER",
+                category="technical_integration",
+                label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by Brain-5D PID",
+                status=G_PASSED if listener_verified else G_PENDING,
+                maturity=VERIFIED if listener_verified else IMPLEMENTED,
+                source=(
+                    "research/generated/verification/single_listener.json"
+                    if listener_verified
+                    else "project_state"
+                ),
+                message=(
+                    "Verified by single listener artifact"
+                    if listener_verified
+                    else "Pending single-listener verification"
+                ),
+            )
+        )
 
         # --- Structural composition: evidence-based from E2E artifact ---
         structural_verified = self._structural_e2e_verified()
         structural_live = self._structural_live_status()
         structural_pending: list[tuple[str, str]] = [
             ("A-STRUCT-COORDINATOR", "Structural Coordinator production composition"),
-            ("A-STRUCT-PLASTICITY", "StructuralPlasticityEngine production composition"),
+            (
+                "A-STRUCT-PLASTICITY",
+                "StructuralPlasticityEngine production composition",
+            ),
             ("A-STRUCT-MANIPULATOR", "Manipulator canonical mutation boundary"),
             ("A-STRUCT-APPROVAL", "Approval-gated mutation path"),
             ("A-STRUCT-JOURNAL", "Structural Journal active path"),
             ("A-STRUCT-PROVENANCE", "Proposal provenance (measurement -> proposal)"),
         ]
         for cid, label in structural_pending:
-            items.append(_criterion(
-                gate=GATE_A,
-                id=cid,
-                category="structural_composition",
-                label=label,
-                status=G_PASSED if structural_verified else G_PENDING,
-                maturity=VERIFIED if structural_verified else INTEGRATED,
-                source="research/generated/verification/structural_e2e.json" if structural_verified else "structural_e2e",
-                message="Verified by structural E2E artifact (tree digest matches)" if structural_verified else "Pending structural E2E verification proof",
-                live_status=structural_live,
-                evidence={"artifact": "research/generated/verification/structural_e2e.json"} if structural_verified else None,
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_A,
+                    id=cid,
+                    category="structural_composition",
+                    label=label,
+                    status=G_PASSED if structural_verified else G_PENDING,
+                    maturity=VERIFIED if structural_verified else INTEGRATED,
+                    source=(
+                        "research/generated/verification/structural_e2e.json"
+                        if structural_verified
+                        else "structural_e2e"
+                    ),
+                    message=(
+                        "Verified by structural E2E artifact (tree digest matches)"
+                        if structural_verified
+                        else "Pending structural E2E verification proof"
+                    ),
+                    live_status=structural_live,
+                    evidence=(
+                        {
+                            "artifact": "research/generated/verification/structural_e2e.json"
+                        }
+                        if structural_verified
+                        else None
+                    ),
+                )
+            )
 
         return items
 
@@ -567,17 +739,19 @@ class GateStatusBuilder:
             coll_status = G_FAILED
             coll_maturity = INTEGRATED
             coll_msg = f"{collection_errors} collection errors"
-        items.append(_criterion(
-            gate=GATE_B,
-            id="B-TEST-COLLECTION",
-            category="test_baseline",
-            label="Complete pytest collection succeeds",
-            status=coll_status,
-            maturity=coll_maturity,
-            source="tests/test_baseline.json",
-            message=coll_msg,
-            evidence={"collection_errors": collection_errors},
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_B,
+                id="B-TEST-COLLECTION",
+                category="test_baseline",
+                label="Complete pytest collection succeeds",
+                status=coll_status,
+                maturity=coll_maturity,
+                source="tests/test_baseline.json",
+                message=coll_msg,
+                evidence={"collection_errors": collection_errors},
+            )
+        )
 
         # Zero unexplained failures
         if tree_stale:
@@ -589,17 +763,19 @@ class GateStatusBuilder:
         else:
             fail_status = G_FAILED
             fail_msg = f"{failed_count} failures"
-        items.append(_criterion(
-            gate=GATE_B,
-            id="B-ZERO-FAILURES",
-            category="test_baseline",
-            label="Zero unexplained test failures",
-            status=fail_status,
-            maturity=VERIFIED if failed_count == 0 else INTEGRATED,
-            source="tests/test_baseline.json",
-            message=fail_msg,
-            evidence={"failed": failed_count},
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_B,
+                id="B-ZERO-FAILURES",
+                category="test_baseline",
+                label="Zero unexplained test failures",
+                status=fail_status,
+                maturity=VERIFIED if failed_count == 0 else INTEGRATED,
+                source="tests/test_baseline.json",
+                message=fail_msg,
+                evidence={"failed": failed_count},
+            )
+        )
 
         # Full suite without ignored modules
         if tree_stale:
@@ -611,52 +787,74 @@ class GateStatusBuilder:
         else:
             suite_status = G_FAILED
             suite_msg = "Suite not green without --ignore"
-        items.append(_criterion(
-            gate=GATE_B,
-            id="B-FULL-SUITE",
-            category="test_baseline",
-            label="Full suite without ignored core modules",
-            status=suite_status,
-            maturity=VERIFIED if suite_status == G_PASSED else INTEGRATED,
-            source="tests/test_baseline.json",
-            message=suite_msg,
-            evidence={
-                "passed": passed_count,
-                "failed": failed_count,
-                "skipped": skipped_count,
-            },
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_B,
+                id="B-FULL-SUITE",
+                category="test_baseline",
+                label="Full suite without ignored core modules",
+                status=suite_status,
+                maturity=VERIFIED if suite_status == G_PASSED else INTEGRATED,
+                source="tests/test_baseline.json",
+                message=suite_msg,
+                evidence={
+                    "passed": passed_count,
+                    "failed": failed_count,
+                    "skipped": skipped_count,
+                },
+            )
+        )
 
         # --- Structural E2E proofs (proof_01 .. proof_10) ---
         # Evidence-based: read from research/generated/verification/structural_e2e.json
         structural_live = self._structural_live_status()
         for i in range(1, 11):
             proof_status = self._structural_proof_status(i)
-            items.append(_criterion(
-                gate=GATE_B,
-                id=f"B-STRUCT-PROOF-{i:02d}",
-                category="structural_e2e",
-                label=f"Structural E2E proof {i}/10",
-                status=proof_status,
-                maturity=VERIFIED if proof_status == G_PASSED else INTEGRATED,
-                source="research/generated/verification/structural_e2e.json" if proof_status == G_PASSED else "tests/test_structural_e2e.py",
-                message="Verified by structural E2E artifact" if proof_status == G_PASSED else "Pending structural E2E test execution",
-                live_status=structural_live,
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_B,
+                    id=f"B-STRUCT-PROOF-{i:02d}",
+                    category="structural_e2e",
+                    label=f"Structural E2E proof {i}/10",
+                    status=proof_status,
+                    maturity=VERIFIED if proof_status == G_PASSED else INTEGRATED,
+                    source=(
+                        "research/generated/verification/structural_e2e.json"
+                        if proof_status == G_PASSED
+                        else "tests/test_structural_e2e.py"
+                    ),
+                    message=(
+                        "Verified by structural E2E artifact"
+                        if proof_status == G_PASSED
+                        else "Pending structural E2E test execution"
+                    ),
+                    live_status=structural_live,
+                )
+            )
 
         # --- Complete canonical E2E (full chain without manual proposal) ---
         canonical_status = self._canonical_e2e_status()
-        items.append(_criterion(
-            gate=GATE_B,
-            id="B-STRUCT-CANONICAL-E2E",
-            category="structural_e2e",
-            label="Complete canonical E2E (signal -> policy -> approval -> mutation -> journal)",
-            status=canonical_status,
-            maturity=VERIFIED if canonical_status == G_PASSED else INTEGRATED,
-            source="research/generated/verification/structural_e2e.json" if canonical_status == G_PASSED else "tests/test_structural_e2e.py",
-            message="Verified by structural E2E artifact" if canonical_status == G_PASSED else "Pending canonical E2E test execution",
-            live_status=structural_live,
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_B,
+                id="B-STRUCT-CANONICAL-E2E",
+                category="structural_e2e",
+                label="Complete canonical E2E (signal -> policy -> approval -> mutation -> journal)",
+                status=canonical_status,
+                maturity=VERIFIED if canonical_status == G_PASSED else INTEGRATED,
+                source=(
+                    "research/generated/verification/structural_e2e.json"
+                    if canonical_status == G_PASSED
+                    else "tests/test_structural_e2e.py"
+                ),
+                message=(
+                    "Verified by structural E2E artifact"
+                    if canonical_status == G_PASSED
+                    else "Pending canonical E2E test execution"
+                ),
+                live_status=structural_live,
+            )
+        )
 
         # --- Error visibility / scientific integrity ---
         # Evidence from the live loop artifact: the live loop test verifies
@@ -683,31 +881,51 @@ class GateStatusBuilder:
         validity_tested = determinism_verified
 
         error_vis: list[tuple[str, str, str, str]] = [
-            ("B-HOOK-ERROR-VISIBILITY", "Structured hook-error visibility",
-             VERIFIED if live_loop_ok else INTEGRATED,
-             G_PASSED if live_loop_ok else G_PENDING),
-            ("B-NO-SILENT-EXCEPTIONS", "No silent scientific-path exceptions",
-             VERIFIED if live_loop_ok else INTEGRATED,
-             G_PASSED if live_loop_ok else G_PENDING),
-            ("B-RUNTIME-EXCEPTIONS-MANIFEST", "Runtime exceptions enter experiment manifest",
-             VERIFIED if validity_tested else INTEGRATED,
-             G_PASSED if validity_tested else G_PENDING),
-            ("B-INVALID-RUN-NOT-EVIDENCE", "Invalid run cannot become evidence",
-             VERIFIED if validity_tested else INTEGRATED,
-             G_PASSED if validity_tested else G_PENDING),
+            (
+                "B-HOOK-ERROR-VISIBILITY",
+                "Structured hook-error visibility",
+                VERIFIED if live_loop_ok else INTEGRATED,
+                G_PASSED if live_loop_ok else G_PENDING,
+            ),
+            (
+                "B-NO-SILENT-EXCEPTIONS",
+                "No silent scientific-path exceptions",
+                VERIFIED if live_loop_ok else INTEGRATED,
+                G_PASSED if live_loop_ok else G_PENDING,
+            ),
+            (
+                "B-RUNTIME-EXCEPTIONS-MANIFEST",
+                "Runtime exceptions enter experiment manifest",
+                VERIFIED if validity_tested else INTEGRATED,
+                G_PASSED if validity_tested else G_PENDING,
+            ),
+            (
+                "B-INVALID-RUN-NOT-EVIDENCE",
+                "Invalid run cannot become evidence",
+                VERIFIED if validity_tested else INTEGRATED,
+                G_PASSED if validity_tested else G_PENDING,
+            ),
         ]
         for cid, label, maturity, status in error_vis:
-            items.append(_criterion(
-                gate=GATE_B,
-                id=cid,
-                category="error_visibility",
-                label=label,
-                status=status,
-                maturity=maturity,
-                source=determinism_source,
-                message=determinism_msg,
-                evidence={"artifact": "research/generated/verification/determinism_infrastructure.json"} if validity_tested else None,
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_B,
+                    id=cid,
+                    category="error_visibility",
+                    label=label,
+                    status=status,
+                    maturity=maturity,
+                    source=determinism_source,
+                    message=determinism_msg,
+                    evidence=(
+                        {
+                            "artifact": "research/generated/verification/determinism_infrastructure.json"
+                        }
+                        if validity_tested
+                        else None
+                    ),
+                )
+            )
 
         # --- Restore / determinism ---
         # Evidence-based: read from research/generated/verification/determinism_infrastructure.json
@@ -741,43 +959,69 @@ class GateStatusBuilder:
         )
 
         determinism: list[tuple[str, str, str, str, str, str]] = [
-            ("B-RESTORE-CONTINUE", "Restore-and-continue identity (A/B/C)",
-             VERIFIED if restore_verified else IMPLEMENTED,
-             G_PASSED if restore_verified else G_PENDING,
-             restore_source, restore_msg),
-            ("B-STRUCTURAL-DETERMINISM", "Structural determinism",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING,
-             determinism_source, determinism_msg),
-            ("B-ITERATION-ORDER", "Explicit iteration-order determinism",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING,
-             determinism_source, determinism_msg),
-            ("B-RNG-STATE-PERSIST", "Full RNG state persistence",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING,
-             determinism_source, determinism_msg),
-            ("B-CANONICAL-STATE-DIGEST", "Canonical full-state digest",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING,
-             determinism_source, determinism_msg),
-            ("B-HOMEOSTASIS-LEARNING-PERSIST", "Homeostasis + learning state persistence",
-             VERIFIED if determinism_verified else IMPLEMENTED,
-             G_PASSED if determinism_verified else G_PENDING,
-             determinism_source, determinism_msg),
+            (
+                "B-RESTORE-CONTINUE",
+                "Restore-and-continue identity (A/B/C)",
+                VERIFIED if restore_verified else IMPLEMENTED,
+                G_PASSED if restore_verified else G_PENDING,
+                restore_source,
+                restore_msg,
+            ),
+            (
+                "B-STRUCTURAL-DETERMINISM",
+                "Structural determinism",
+                VERIFIED if determinism_verified else IMPLEMENTED,
+                G_PASSED if determinism_verified else G_PENDING,
+                determinism_source,
+                determinism_msg,
+            ),
+            (
+                "B-ITERATION-ORDER",
+                "Explicit iteration-order determinism",
+                VERIFIED if determinism_verified else IMPLEMENTED,
+                G_PASSED if determinism_verified else G_PENDING,
+                determinism_source,
+                determinism_msg,
+            ),
+            (
+                "B-RNG-STATE-PERSIST",
+                "Full RNG state persistence",
+                VERIFIED if determinism_verified else IMPLEMENTED,
+                G_PASSED if determinism_verified else G_PENDING,
+                determinism_source,
+                determinism_msg,
+            ),
+            (
+                "B-CANONICAL-STATE-DIGEST",
+                "Canonical full-state digest",
+                VERIFIED if determinism_verified else IMPLEMENTED,
+                G_PASSED if determinism_verified else G_PENDING,
+                determinism_source,
+                determinism_msg,
+            ),
+            (
+                "B-HOMEOSTASIS-LEARNING-PERSIST",
+                "Homeostasis + learning state persistence",
+                VERIFIED if determinism_verified else IMPLEMENTED,
+                G_PASSED if determinism_verified else G_PENDING,
+                determinism_source,
+                determinism_msg,
+            ),
         ]
         for cid, label, maturity, status, source, msg in determinism:
-            items.append(_criterion(
-                gate=GATE_B,
-                id=cid,
-                category="determinism",
-                label=label,
-                status=status,
-                maturity=maturity,
-                source=source,
-                message=msg,
-                evidence={"artifact": source} if status == G_PASSED else None,
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_B,
+                    id=cid,
+                    category="determinism",
+                    label=label,
+                    status=status,
+                    maturity=maturity,
+                    source=source,
+                    message=msg,
+                    evidence={"artifact": source} if status == G_PASSED else None,
+                )
+            )
 
         return items
 
@@ -814,66 +1058,84 @@ class GateStatusBuilder:
         ]
         for cid, label, count in framework:
             exists = count > 0
-            items.append(_criterion(
-                gate=GATE_C,
-                id=cid,
-                category="framework",
-                label=label,
-                status=G_PASSED if exists else G_PENDING,
-                maturity=IMPLEMENTED,
-                source="research/registry",
-                message=f"{count} registered" if exists else "Not found",
-                evidence={"count": count},
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_C,
+                    id=cid,
+                    category="framework",
+                    label=label,
+                    status=G_PASSED if exists else G_PENDING,
+                    maturity=IMPLEMENTED,
+                    source="research/registry",
+                    message=f"{count} registered" if exists else "Not found",
+                    evidence={"count": count},
+                )
+            )
 
         # --- Registered experiments ---
         experiments = self._registered_experiments()
         exp_det_registered = "EXP-DET-0001" in experiments
         exp_stor_registered = "EXP-STOR-0001" in experiments
-        items.append(_criterion(
-            gate=GATE_C,
-            id="C-EXP-DET-REGISTERED",
-            category="experiment_registration",
-            label="EXP-DET-0001 registered",
-            status=G_PASSED if exp_det_registered else G_PENDING,
-            maturity=IMPLEMENTED,
-            source="research/experiments",
-            message="Registered" if exp_det_registered else "Not registered",
-        ))
-        items.append(_criterion(
-            gate=GATE_C,
-            id="C-EXP-STOR-REGISTERED",
-            category="experiment_registration",
-            label="EXP-STOR-0001 registered",
-            status=G_PASSED if exp_stor_registered else G_PENDING,
-            maturity=IMPLEMENTED,
-            source="research/experiments",
-            message="Registered" if exp_stor_registered else "Not registered",
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_C,
+                id="C-EXP-DET-REGISTERED",
+                category="experiment_registration",
+                label="EXP-DET-0001 registered",
+                status=G_PASSED if exp_det_registered else G_PENDING,
+                maturity=IMPLEMENTED,
+                source="research/experiments",
+                message="Registered" if exp_det_registered else "Not registered",
+            )
+        )
+        items.append(
+            _criterion(
+                gate=GATE_C,
+                id="C-EXP-STOR-REGISTERED",
+                category="experiment_registration",
+                label="EXP-STOR-0001 registered",
+                status=G_PASSED if exp_stor_registered else G_PENDING,
+                maturity=IMPLEMENTED,
+                source="research/experiments",
+                message="Registered" if exp_stor_registered else "Not registered",
+            )
+        )
 
         # --- Scientific execution (NOT the same as registration) ---
         exp_det_executed = self._experiment_executed("EXP-DET-0001")
         exp_stor_executed = self._experiment_executed("EXP-STOR-0001")
-        items.append(_criterion(
-            gate=GATE_C,
-            id="C-EXP-DET-EXECUTED",
-            category="scientific_execution",
-            label="EXP-DET-0001 executed",
-            status=G_PASSED if exp_det_executed else G_PENDING,
-            maturity=IMPLEMENTED,
-            source="research/experiments/EXP-DET-0001/manifest.json",
-            message="Executed" if exp_det_executed else "Not executed (status=not_started)",
-        ))
-        items.append(_criterion(
-            gate=GATE_C,
-            id="C-EXP-STOR-EXECUTED",
-            category="scientific_execution",
-            label="EXP-STOR-0001 executed",
-            status=G_PASSED if exp_stor_executed else G_PENDING,
-            maturity=IMPLEMENTED,
-            source="research/experiments/EXP-STOR-0001/manifest.json",
-            message="Executed" if exp_stor_executed else "Not executed (status=not_started)",
-        ))
+        items.append(
+            _criterion(
+                gate=GATE_C,
+                id="C-EXP-DET-EXECUTED",
+                category="scientific_execution",
+                label="EXP-DET-0001 executed",
+                status=G_PASSED if exp_det_executed else G_PENDING,
+                maturity=IMPLEMENTED,
+                source="research/experiments/EXP-DET-0001/manifest.json",
+                message=(
+                    "Executed"
+                    if exp_det_executed
+                    else "Not executed (status=not_started)"
+                ),
+            )
+        )
+        items.append(
+            _criterion(
+                gate=GATE_C,
+                id="C-EXP-STOR-EXECUTED",
+                category="scientific_execution",
+                label="EXP-STOR-0001 executed",
+                status=G_PASSED if exp_stor_executed else G_PENDING,
+                maturity=IMPLEMENTED,
+                source="research/experiments/EXP-STOR-0001/manifest.json",
+                message=(
+                    "Executed"
+                    if exp_stor_executed
+                    else "Not executed (status=not_started)"
+                ),
+            )
+        )
 
         # --- First evidence artifacts ---
         data_artifact = self._first_data_artifact()
@@ -883,11 +1145,41 @@ class GateStatusBuilder:
         matrix_rebuilt = self._matrix_rebuilt()
 
         evidence_checks: list[tuple[str, str, bool, str | None, str | None]] = [
-            ("C-FIRST-DATA", "First DATA-* artifact produced", data_artifact is not None, str(data_artifact) if data_artifact else None, None),
-            ("C-FIRST-EVID", "First EVID-* record produced", evidence_record is not None, str(evidence_record) if evidence_record else None, None),
-            ("C-FIRST-HYPOTHESIS-RESULT", "First reproducibly supported/refuted hypothesis", hypothesis_result is not None, None, hypothesis_result),
-            ("C-CATALOG-REBUILT", "Research Catalog rebuilt from real evidence", catalog_rebuilt, None, None),
-            ("C-MATRIX-REBUILT", "Evidence Matrix rebuilt from real evidence", matrix_rebuilt, None, None),
+            (
+                "C-FIRST-DATA",
+                "First DATA-* artifact produced",
+                data_artifact is not None,
+                str(data_artifact) if data_artifact else None,
+                None,
+            ),
+            (
+                "C-FIRST-EVID",
+                "First EVID-* record produced",
+                evidence_record is not None,
+                str(evidence_record) if evidence_record else None,
+                None,
+            ),
+            (
+                "C-FIRST-HYPOTHESIS-RESULT",
+                "First reproducibly supported/refuted hypothesis",
+                hypothesis_result is not None,
+                None,
+                hypothesis_result,
+            ),
+            (
+                "C-CATALOG-REBUILT",
+                "Research Catalog rebuilt from real evidence",
+                catalog_rebuilt,
+                None,
+                None,
+            ),
+            (
+                "C-MATRIX-REBUILT",
+                "Evidence Matrix rebuilt from real evidence",
+                matrix_rebuilt,
+                None,
+                None,
+            ),
         ]
         for cid, label, passed, artifact_path, hypothesis_id in evidence_checks:
             evidence: dict[str, JSONValue] | None = None
@@ -895,17 +1187,19 @@ class GateStatusBuilder:
                 evidence = {"artifact": artifact_path}
             if hypothesis_id:
                 evidence = {"hypothesis_id": hypothesis_id}
-            items.append(_criterion(
-                gate=GATE_C,
-                id=cid,
-                category="scientific_evidence",
-                label=label,
-                status=G_PASSED if passed else G_PENDING,
-                maturity=EVIDENCED if passed else IMPLEMENTED,
-                source="research/generated",
-                message="Evidence produced" if passed else "No real evidence yet",
-                evidence=evidence,
-            ))
+            items.append(
+                _criterion(
+                    gate=GATE_C,
+                    id=cid,
+                    category="scientific_evidence",
+                    label=label,
+                    status=G_PASSED if passed else G_PENDING,
+                    maturity=EVIDENCED if passed else IMPLEMENTED,
+                    source="research/generated",
+                    message="Evidence produced" if passed else "No real evidence yet",
+                    evidence=evidence,
+                )
+            )
 
         return items
 
@@ -932,14 +1226,24 @@ class GateStatusBuilder:
         plasticity = getattr(bridge, "plasticity", None) if bridge else None
 
         # Bridge
-        items.append(self._live_item("bridge", "OperatorBridge",
-            L_ACTIVE if bridge is not None else L_UNAVAILABLE,
-            "connected" if bridge else "not configured"))
+        items.append(
+            self._live_item(
+                "bridge",
+                "OperatorBridge",
+                L_ACTIVE if bridge is not None else L_UNAVAILABLE,
+                "connected" if bridge else "not configured",
+            )
+        )
 
         # Controller
-        items.append(self._live_item("controller", "RuntimeController",
-            L_ACTIVE if controller is not None else L_UNAVAILABLE,
-            "connected" if controller else "missing"))
+        items.append(
+            self._live_item(
+                "controller",
+                "RuntimeController",
+                L_ACTIVE if controller is not None else L_UNAVAILABLE,
+                "connected" if controller else "missing",
+            )
+        )
 
         # Runtime state
         if controller is not None:
@@ -948,65 +1252,147 @@ class GateStatusBuilder:
                 state = getattr(tel, "controller_state", None)
                 state_val = state.value if state is not None else "unknown"
                 tick = getattr(tel, "tick", 0)
-                items.append(self._live_item("runtime", "Runtime",
-                    L_ACTIVE, f"state={state_val}, tick={tick}"))
+                items.append(
+                    self._live_item(
+                        "runtime",
+                        "Runtime",
+                        L_ACTIVE,
+                        f"state={state_val}, tick={tick}",
+                    )
+                )
             except Exception:
-                items.append(self._live_item("runtime", "Runtime", L_ERROR, "telemetry error"))
+                items.append(
+                    self._live_item("runtime", "Runtime", L_ERROR, "telemetry error")
+                )
         else:
-            items.append(self._live_item("runtime", "Runtime", L_UNAVAILABLE, "no controller"))
+            items.append(
+                self._live_item("runtime", "Runtime", L_UNAVAILABLE, "no controller")
+            )
 
         # Structural — config-aware: disabled vs error distinction
-        so_enabled = bool(self.config_dict.get("self_organization", {}).get("enabled", False))
+        so_enabled = bool(
+            self.config_dict.get("self_organization", {}).get("enabled", False)
+        )
         if not so_enabled:
-            items.append(self._live_item("structural", "Structural",
-                L_DISABLED, "disabled by config (self_organization.enabled=false)"))
+            items.append(
+                self._live_item(
+                    "structural",
+                    "Structural",
+                    L_DISABLED,
+                    "disabled by config (self_organization.enabled=false)",
+                )
+            )
         elif coordinator is not None and plasticity is not None:
-            items.append(self._live_item("structural", "Structural",
-                L_ACTIVE, "Coordinator + PlasticityEngine connected"))
+            items.append(
+                self._live_item(
+                    "structural",
+                    "Structural",
+                    L_ACTIVE,
+                    "Coordinator + PlasticityEngine connected",
+                )
+            )
         else:
-            items.append(self._live_item("structural", "Structural",
-                L_ERROR, "config enabled but coordinator/plasticity missing"))
+            items.append(
+                self._live_item(
+                    "structural",
+                    "Structural",
+                    L_ERROR,
+                    "config enabled but coordinator/plasticity missing",
+                )
+            )
 
         # Structural Journal — follows structural config
         if not so_enabled:
-            items.append(self._live_item("structural_journal", "Structural Journal",
-                L_DISABLED, "disabled because structural disabled"))
+            items.append(
+                self._live_item(
+                    "structural_journal",
+                    "Structural Journal",
+                    L_DISABLED,
+                    "disabled because structural disabled",
+                )
+            )
         elif coordinator is not None:
-            items.append(self._live_item("structural_journal", "Structural Journal",
-                L_ACTIVE, "StructuralJournal attached"))
+            items.append(
+                self._live_item(
+                    "structural_journal",
+                    "Structural Journal",
+                    L_ACTIVE,
+                    "StructuralJournal attached",
+                )
+            )
         else:
-            items.append(self._live_item("structural_journal", "Structural Journal",
-                L_ERROR, "config enabled but journal missing"))
+            items.append(
+                self._live_item(
+                    "structural_journal",
+                    "Structural Journal",
+                    L_ERROR,
+                    "config enabled but journal missing",
+                )
+            )
 
         # Delta storage — config-aware: disabled vs error distinction
         storage_cfg_raw = self.config_dict.get("storage", {})
-        storage_cfg: dict[str, Any] = cast("dict[str, Any]", storage_cfg_raw) if isinstance(storage_cfg_raw, dict) else {}
+        storage_cfg: dict[str, Any] = (
+            cast("dict[str, Any]", storage_cfg_raw)
+            if isinstance(storage_cfg_raw, dict)
+            else {}
+        )
         storage_runtime_cfg_raw = storage_cfg.get("runtime", {})
-        storage_runtime_cfg: dict[str, Any] = cast("dict[str, Any]", storage_runtime_cfg_raw) if isinstance(storage_runtime_cfg_raw, dict) else {}
+        storage_runtime_cfg: dict[str, Any] = (
+            cast("dict[str, Any]", storage_runtime_cfg_raw)
+            if isinstance(storage_runtime_cfg_raw, dict)
+            else {}
+        )
         storage_enabled = bool(storage_cfg.get("enabled", False)) and bool(
             storage_runtime_cfg.get("enabled", False)
         )
         if not storage_enabled:
-            items.append(self._live_item("delta_storage", "Delta Storage",
-                L_DISABLED, "disabled by config (storage.runtime.enabled=false)"))
+            items.append(
+                self._live_item(
+                    "delta_storage",
+                    "Delta Storage",
+                    L_DISABLED,
+                    "disabled by config (storage.runtime.enabled=false)",
+                )
+            )
         else:
             # If enabled by config, check whether a storage session is active.
             # The bridge does not currently expose storage state, so we report
             # active when the config says so (the session is started in main.py).
-            items.append(self._live_item("delta_storage", "Delta Storage",
-                L_ACTIVE, "AsyncStorageSession active"))
+            items.append(
+                self._live_item(
+                    "delta_storage",
+                    "Delta Storage",
+                    L_ACTIVE,
+                    "AsyncStorageSession active",
+                )
+            )
 
         # Research source (live availability only; evidence belongs to Gate C)
         if self.research_source is not None and self.research_source.is_available():
-            items.append(self._live_item("research_source", "Research Source",
-                L_ACTIVE, "B5D-SEF registry available"))
+            items.append(
+                self._live_item(
+                    "research_source",
+                    "Research Source",
+                    L_ACTIVE,
+                    "B5D-SEF registry available",
+                )
+            )
         else:
-            items.append(self._live_item("research_source", "Research Source",
-                L_UNAVAILABLE, "B5D-SEF registry not found"))
+            items.append(
+                self._live_item(
+                    "research_source",
+                    "Research Source",
+                    L_UNAVAILABLE,
+                    "B5D-SEF registry not found",
+                )
+            )
 
         return items
 
-    def _live_item(self, key: str, name: str, live_status: str, message: str) -> dict[str, JSONValue]:
+    def _live_item(
+        self, key: str, name: str, live_status: str, message: str
+    ) -> dict[str, JSONValue]:
         return {
             "key": key,
             "name": name,
@@ -1024,7 +1410,9 @@ class GateStatusBuilder:
         Config-aware: distinguishes ``disabled`` (config says off) from
         ``error`` (config says on but components are missing).
         """
-        so_enabled = bool(self.config_dict.get("self_organization", {}).get("enabled", False))
+        so_enabled = bool(
+            self.config_dict.get("self_organization", {}).get("enabled", False)
+        )
         if not so_enabled:
             return L_DISABLED
         coordinator = getattr(self.bridge, "coordinator", None) if self.bridge else None
@@ -1093,7 +1481,9 @@ class GateStatusBuilder:
         methods_path = self.repo_root / "research" / "registry" / "methods.yaml"
         if methods_path.exists():
             try:
-                counts["methods"] = methods_path.read_text(encoding="utf-8").count("- prefix:")
+                counts["methods"] = methods_path.read_text(encoding="utf-8").count(
+                    "- prefix:"
+                )
             except Exception:
                 pass
 
@@ -1128,13 +1518,18 @@ class GateStatusBuilder:
         Returns ``None`` if the artifact is missing or unparseable.
         """
         artifact_path = (
-            self.repo_root / "research" / "generated" / "verification"
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
             / "structural_live_loop.json"
         )
         if not artifact_path.exists():
             return None
         try:
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
+            return cast(
+                "dict[str, Any]", json.loads(artifact_path.read_text(encoding="utf-8"))
+            )
         except Exception:
             return None
 
@@ -1190,13 +1585,18 @@ class GateStatusBuilder:
         Returns ``None`` if the artifact is missing or unparseable.
         """
         artifact_path = (
-            self.repo_root / "research" / "generated" / "verification"
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
             / "single_listener.json"
         )
         if not artifact_path.exists():
             return None
         try:
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
+            return cast(
+                "dict[str, Any]", json.loads(artifact_path.read_text(encoding="utf-8"))
+            )
         except Exception:
             return None
 
@@ -1211,13 +1611,18 @@ class GateStatusBuilder:
         Returns ``None`` if the artifact is missing or unparseable.
         """
         artifact_path = (
-            self.repo_root / "research" / "generated" / "verification"
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
             / "determinism_infrastructure.json"
         )
         if not artifact_path.exists():
             return None
         try:
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
+            return cast(
+                "dict[str, Any]", json.loads(artifact_path.read_text(encoding="utf-8"))
+            )
         except Exception:
             return None
 
@@ -1254,6 +1659,7 @@ class GateStatusBuilder:
         if not artifact_digest:
             return False
         from src.dashboard.verification import compute_source_tree_digest
+
         current_digest = compute_source_tree_digest(self.repo_root)
         if current_digest is None:
             return False
@@ -1272,13 +1678,18 @@ class GateStatusBuilder:
         Returns ``None`` if the artifact is missing or unparseable.
         """
         artifact_path = (
-            self.repo_root / "research" / "generated" / "verification"
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
             / "restore_determinism.json"
         )
         if not artifact_path.exists():
             return None
         try:
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
+            return cast(
+                "dict[str, Any]", json.loads(artifact_path.read_text(encoding="utf-8"))
+            )
         except Exception:
             return None
 
@@ -1301,12 +1712,15 @@ class GateStatusBuilder:
         proofs: dict[str, Any] = cast("dict[str, Any]", proofs_raw)
         if frozenset(proofs.keys()) != REQUIRED_RESTORE_DETERMINISM_PROOFS:
             return False
-        if not all(proofs[name] is True for name in REQUIRED_RESTORE_DETERMINISM_PROOFS):
+        if not all(
+            proofs[name] is True for name in REQUIRED_RESTORE_DETERMINISM_PROOFS
+        ):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
         from src.dashboard.verification import compute_source_tree_digest
+
         current_digest = compute_source_tree_digest(self.repo_root)
         if current_digest is None:
             return False
@@ -1339,6 +1753,7 @@ class GateStatusBuilder:
         if not artifact_digest:
             return False
         from src.dashboard.verification import compute_source_tree_digest
+
         current_digest = compute_source_tree_digest(self.repo_root)
         if current_digest is None:
             return False
@@ -1366,7 +1781,11 @@ class GateStatusBuilder:
         Scientifically, only a completed run can produce evidence.
         """
         manifest_path = (
-            self.repo_root / "research" / "experiments" / experiment_id / "manifest.json"
+            self.repo_root
+            / "research"
+            / "experiments"
+            / experiment_id
+            / "manifest.json"
         )
         if not manifest_path.exists():
             return False
@@ -1374,7 +1793,7 @@ class GateStatusBuilder:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except Exception:
             return False
-        status = manifest.get("experiment_status", "not_started")
+        status = cast("str", manifest.get("experiment_status", "not_started"))
         return status == "completed"
 
     def _first_data_artifact(self) -> Path | None:
@@ -1404,7 +1823,7 @@ class GateStatusBuilder:
             except Exception:
                 continue
             if record.get("status") in ("supports", "refutes"):
-                return record.get("hypothesis_id")
+                return cast("str | None", record.get("hypothesis_id"))
         return None
 
     def _catalog_rebuilt(self) -> bool:

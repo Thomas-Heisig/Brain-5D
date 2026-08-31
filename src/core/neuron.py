@@ -170,7 +170,6 @@ class Neuron:
         """Whether this neuron is an inhibitory type (FAST_SPIKING)."""
         return self.neuron_type is NeuronType.FAST_SPIKING
 
-
     # ========================================================================
     # Initialization
     # ========================================================================

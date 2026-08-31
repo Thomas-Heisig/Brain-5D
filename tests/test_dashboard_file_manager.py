@@ -64,7 +64,9 @@ def test_save_content_updates_text_file() -> None:
                 assert response.status == 200
                 assert data["success"] is True
                 assert file_path.read_text(encoding="utf-8") == "updated"
-                assert (docs_root / "notes.md.bak").read_text(encoding="utf-8") == "original"
+                assert (docs_root / "notes.md.bak").read_text(
+                    encoding="utf-8"
+                ) == "original"
             finally:
                 conn.close()
         finally:
@@ -182,7 +184,9 @@ def test_save_content_creates_backup() -> None:
                     body=body,
                 )
                 assert response.status == 200
-                assert (docs_root / "notes.md.bak").read_text(encoding="utf-8") == "original"
+                assert (docs_root / "notes.md.bak").read_text(
+                    encoding="utf-8"
+                ) == "original"
                 assert file_path.read_text(encoding="utf-8") == "updated"
             finally:
                 conn.close()
@@ -206,7 +210,9 @@ def test_meta_save_and_load() -> None:
         try:
             conn = HTTPConnection(host, port)
             try:
-                body = json.dumps({"content": "status: reviewed\ntags: [dashboard]\n", "backup": True})
+                body = json.dumps(
+                    {"content": "status: reviewed\ntags: [dashboard]\n", "backup": True}
+                )
                 response = _request(
                     conn,
                     "PUT",
@@ -216,7 +222,9 @@ def test_meta_save_and_load() -> None:
                 data = json.loads(response.read())
                 assert response.status == 200
                 assert data["success"] is True
-                assert (docs_root / "notes.md.meta.yaml").read_text(encoding="utf-8") == "status: reviewed\ntags: [dashboard]\n"
+                assert (docs_root / "notes.md.meta.yaml").read_text(
+                    encoding="utf-8"
+                ) == "status: reviewed\ntags: [dashboard]\n"
 
                 response = _request(conn, "GET", "/api/files/meta/notes.md?source=docs")
                 data = json.loads(response.read())
@@ -243,7 +251,9 @@ def test_meta_rejects_missing_file() -> None:
         try:
             conn = HTTPConnection(host, port)
             try:
-                response = _request(conn, "GET", "/api/files/meta/missing.md?source=docs")
+                response = _request(
+                    conn, "GET", "/api/files/meta/missing.md?source=docs"
+                )
                 assert response.status == 404
             finally:
                 conn.close()
@@ -271,7 +281,9 @@ def test_analyze_returns_document_stats() -> None:
         try:
             conn = HTTPConnection(host, port)
             try:
-                response = _request(conn, "GET", "/api/files/analyze/report.md?source=docs")
+                response = _request(
+                    conn, "GET", "/api/files/analyze/report.md?source=docs"
+                )
                 data = json.loads(response.read())
                 assert response.status == 200
                 assert data["language"] == "en"
@@ -300,7 +312,9 @@ def test_analyze_rejects_binary_file() -> None:
         try:
             conn = HTTPConnection(host, port)
             try:
-                response = _request(conn, "GET", "/api/files/analyze/image.png?source=docs")
+                response = _request(
+                    conn, "GET", "/api/files/analyze/image.png?source=docs"
+                )
                 assert response.status == 400
             finally:
                 conn.close()
@@ -324,13 +338,17 @@ def test_export_html_and_markdown() -> None:
         try:
             conn = HTTPConnection(host, port)
             try:
-                response = _request(conn, "GET", "/api/files/export/report.md?source=docs&format=html")
+                response = _request(
+                    conn, "GET", "/api/files/export/report.md?source=docs&format=html"
+                )
                 body = response.read()
                 assert response.status == 200
                 assert b"<h1>Report</h1>" in body
                 assert b"<strong>important</strong>" in body
 
-                response = _request(conn, "GET", "/api/files/export/report.md?source=docs&format=md")
+                response = _request(
+                    conn, "GET", "/api/files/export/report.md?source=docs&format=md"
+                )
                 body = response.read()
                 assert response.status == 200
                 assert b"# Report" in body

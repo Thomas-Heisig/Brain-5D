@@ -30,7 +30,9 @@ def current_git_head() -> str | None:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
             cwd=str(REPO_ROOT),
         )
         return result.stdout.strip() if result.returncode == 0 else None
@@ -57,7 +59,9 @@ def main() -> int:
     print("Running full test suite...")
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "tests/", "-q"],
-        capture_output=True, text=True, timeout=600,
+        capture_output=True,
+        text=True,
+        timeout=600,
         cwd=str(REPO_ROOT),
     )
     output = result.stdout + result.stderr
@@ -92,14 +96,22 @@ def main() -> int:
         if match:
             collection_errors = int(match.group(1))
 
-    print(f"  {passed} passed, {failed} failed, {skipped} skipped, {xfailed} xfailed, {xpassed} xpassed, {collection_errors} collection errors")
+    print(
+        f"  {passed} passed, {failed} failed, {skipped} skipped, {xfailed} xfailed, {xpassed} xpassed, {collection_errors} collection errors"
+    )
     print()
 
     # Build baseline
     baseline: dict[str, object] = {
         "tested_commit": head,
         "tested_tree_digest": digest,
-        "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
+        "tree_digest_paths": [
+            "src/",
+            "configs/",
+            "research/schemas/",
+            "pyproject.toml",
+            "tests/",
+        ],
         "tree_digest_excludes": ["tests/test_baseline.json"],
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
@@ -122,7 +134,9 @@ def main() -> int:
         reasons: list[str] = []
         for line in output.split("\n"):
             if "SKIPPED" in line:
-                reasons.append(line.split("SKIPPED")[-1].strip().lstrip("[").rstrip("]"))
+                reasons.append(
+                    line.split("SKIPPED")[-1].strip().lstrip("[").rstrip("]")
+                )
         if reasons:
             baseline["full_suite"]["skipped_reasons"] = reasons  # type: ignore[typeddict-item]
 

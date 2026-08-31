@@ -152,7 +152,7 @@ class Transaction:
     """
 
     name: str
-    inverse: list[Mutation] = field(default_factory=list)  # type: ignore
+    inverse: list[Mutation] = field(default_factory=list)  # pyright: ignore
 
 
 # ============================================================================
@@ -825,11 +825,13 @@ class Brain5DManipulator:
         # Scan for any free coordinate in the grid
         dims = self.network.dimensions
         from itertools import product
+
         ranges = [range(d) for d in dims]
-        for coord in product(*ranges):
+        for coord_raw in product(*ranges):
+            coord = cast("Coord5D", coord_raw)
             nid = pack_coords(*coord)
             if nid not in self.network.neurons:
-                return self.create_neuron(cast("Coord5D", coord))
+                return self.create_neuron(coord)
         raise RuntimeError("no free coordinate available for neuron creation")
 
     def remove_neuron(self, neuron_id: int) -> bool:
@@ -859,9 +861,7 @@ class Brain5DManipulator:
             Tuple of (source_id, target_id) of the created synapse.
         """
         src: int = (
-            source_id
-            if source_id is not None
-            else next(iter(self.network.neurons), 0)
+            source_id if source_id is not None else next(iter(self.network.neurons), 0)
         )
         tgt: int = target_id if target_id is not None else src
         if target_id is None:

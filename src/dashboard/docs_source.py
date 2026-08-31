@@ -17,29 +17,37 @@ from typing import Any
 from .models import JSONValue
 
 # Optional imports with proper fallbacks – using lower-case names to avoid Pylance constant redefinition warnings.
-try:
-    from docx import Document as DocxDocument  # type: ignore[import-untyped]
+DocxDocument: Any = None
+load_workbook: Any = None
+PyPDF2: Any = None
 
+try:
+    from docx import (
+        Document as _DocxDocument,  # pyright: ignore[reportMissingTypeStubs]
+    )
+
+    DocxDocument = _DocxDocument
     has_docx: bool = True
 except ImportError:
     has_docx = False
-    DocxDocument = None  # type: ignore[assignment]
 
 try:
-    from openpyxl import load_workbook  # type: ignore[import-untyped]
+    from openpyxl import (  # type: ignore[import-untyped]
+        load_workbook as _load_workbook,  # pyright: ignore[reportMissingTypeStubs]
+    )
 
+    load_workbook = _load_workbook
     has_openpyxl: bool = True
 except ImportError:
     has_openpyxl = False
-    load_workbook = None  # type: ignore[assignment]
 
 try:
-    import PyPDF2  # type: ignore[import-untyped]
+    import PyPDF2 as _PyPDF2  # pyright: ignore[reportMissingTypeStubs]
 
+    PyPDF2 = _PyPDF2
     has_pypdf2: bool = True
 except ImportError:
     has_pypdf2 = False
-    PyPDF2 = None  # type: ignore[assignment]
 
 __all__ = [
     "DocumentationEntry",
@@ -286,7 +294,7 @@ class DocumentationSource:
 
             # Skip content extraction for unsupported or large files
             if not supported or size_bytes > self.max_file_size_bytes:
-                return DocumentationEntry(**entry_kwargs)  # type: ignore[arg-type]
+                return DocumentationEntry(**entry_kwargs)  # pyright: ignore[arg-type]
 
             # Extract content preview and metrics
             try:
@@ -316,7 +324,7 @@ class DocumentationSource:
             except Exception:
                 pass
 
-            return DocumentationEntry(**entry_kwargs)  # type: ignore[arg-type]
+            return DocumentationEntry(**entry_kwargs)  # pyright: ignore[arg-type]
 
         except Exception:
             return None
@@ -370,16 +378,18 @@ class DocumentationSource:
             data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
             if not full:
                 if isinstance(data, list):
-                    # Type: ignore - JSON data has arbitrary structure that Pylance cannot infer
-                    preview = data[:2]  # type: ignore[var-annotated]
-                    if len(data) > 2:  # type: ignore[arg-type]
-                        preview.append("...")  # type: ignore[attr-defined]
+                    # JSON data has arbitrary structure that Pylance cannot infer.
+                    preview = data[:2]  # pyright: ignore
+                    if len(data) > 2:  # pyright: ignore
+                        preview.append("...")  # pyright: ignore
                     return json.dumps(preview, indent=2, ensure_ascii=False)
                 elif isinstance(data, dict):
-                    items = list(data.items())  # type: ignore[var-annotated, arg-type]
-                    preview_dict = dict(items[:5])  # type: ignore[var-annotated, arg-type]
-                    if len(items) > 5:  # type: ignore[arg-type]
-                        preview_dict["..."] = f"({len(items) - 5} more keys)"  # type: ignore[index]
+                    items = list(data.items())  # pyright: ignore
+                    preview_dict = dict(items[:5])  # pyright: ignore
+                    if len(items) > 5:  # pyright: ignore
+                        preview_dict["..."] = (
+                            f"({len(items) - 5} more keys)"  # pyright: ignore
+                        )
                     return json.dumps(preview_dict, indent=2, ensure_ascii=False)
             return json.dumps(data, indent=2, ensure_ascii=False)
         except Exception:

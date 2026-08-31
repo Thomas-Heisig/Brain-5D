@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any, cast
 
 from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
@@ -27,20 +28,25 @@ from src.dashboard.gate_status import (
     L_ACTIVE,
     L_DISABLED,
     L_ERROR,
-    GateStatusBuilder,
     VALID_GATE_STATUS,
+    GateStatusBuilder,
 )
 from src.dashboard.operator_bridge import OperatorBridge
 
 
 def _build_network(n: int = 50) -> NeuralNetwork:
     config = Brain5DConfig.from_dict(
-        {"dimensions": [10, 10, 10, 10, 10], "network": {"initial_connections_per_neuron": 5, "neighbour_radius": 2.0}}
+        {
+            "dimensions": [10, 10, 10, 10, 10],
+            "network": {"initial_connections_per_neuron": 5, "neighbour_radius": 2.0},
+        }
     )
     import random
+
     rng = random.Random(42)
     network = NeuralNetwork(config, rng)
     from src.core.spatial_index import linear_to_5d
+
     dims = config.dimensions
     for i in range(n):
         network.add_neuron(linear_to_5d(i, dims))
@@ -59,7 +65,9 @@ def _repo_root() -> Path:
 
 def test_gate_a_criteria_carry_test_evidence() -> None:
     """Gate A criteria must reference test files as evidence."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     verified_items = [i for i in status["gate_a"]["items"] if i["category"] == "technical_integration"]  # type: ignore[index]  # type: ignore[index]  # type: ignore[union-attr]
     assert len(verified_items) > 0  # type: ignore[arg-type]
@@ -83,7 +91,9 @@ def test_gate_a_criteria_carry_test_evidence() -> None:
 
 def test_gate_a_passed_criteria_have_existing_test_files() -> None:
     """Gate A criteria marked passed must have all referenced test files existing."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     for item in status["gate_a"]["items"]:  # type: ignore[index]  # type: ignore[index]
         if item["category"] == "technical_integration" and item["status"] == G_PASSED:  # type: ignore[union-attr]  # type: ignore[union-attr]
@@ -102,7 +112,9 @@ def test_disabled_structural_does_not_fail_gate(tmp_path: Path) -> None:
     structural gate criteria must be pending, not failed."""
     # Use tmp_path as a synthetic repo root — no real artifacts are touched
     config = {"self_organization": {"enabled": False}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config
+    )
     status = builder.build()
     structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]  # type: ignore[index]  # type: ignore[union-attr]
     for item in structural_items:  # type: ignore[var-annotated]
@@ -114,7 +126,9 @@ def test_disabled_structural_does_not_pass_gate(tmp_path: Path) -> None:
     """When self_organization is disabled by config and no E2E artifact exists,
     structural gate criteria must not pass."""
     config = {"self_organization": {"enabled": False}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=tmp_path, config_dict=config
+    )
     status = builder.build()
     structural_items = [i for i in status["gate_a"]["items"] if i["category"] == "structural_composition"]  # type: ignore[index]  # type: ignore[union-attr]
     for item in structural_items:  # type: ignore[var-annotated]
@@ -124,7 +138,9 @@ def test_disabled_structural_does_not_pass_gate(tmp_path: Path) -> None:
 def test_config_enabled_but_component_missing_is_error() -> None:
     """Config enabled + component missing = ERROR, not disabled."""
     config = {"self_organization": {"enabled": True}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config
+    )
     status = builder.build()
     live_items = {i["key"]: i for i in status["live_runtime"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert live_items["structural"]["live_status"] == L_ERROR  # type: ignore[index]
@@ -134,7 +150,9 @@ def test_config_enabled_but_component_missing_is_error() -> None:
 def test_config_disabled_structural_live_is_disabled() -> None:
     """Config disabled = DISABLED, not error or unavailable."""
     config = {"self_organization": {"enabled": False}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config
+    )
     status = builder.build()
     live_items = {i["key"]: i for i in status["live_runtime"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert live_items["structural"]["live_status"] == L_DISABLED  # type: ignore[index]
@@ -143,7 +161,9 @@ def test_config_disabled_structural_live_is_disabled() -> None:
 def test_config_disabled_delta_storage_live_is_disabled() -> None:
     """Config says storage off = DISABLED."""
     config = {"storage": {"enabled": False, "runtime": {"enabled": False}}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config
+    )
     status = builder.build()
     live_items = {i["key"]: i for i in status["live_runtime"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert live_items["delta_storage"]["live_status"] == L_DISABLED  # type: ignore[index]
@@ -152,7 +172,9 @@ def test_config_disabled_delta_storage_live_is_disabled() -> None:
 def test_config_enabled_delta_storage_live_is_active() -> None:
     """Config says storage on = ACTIVE."""
     config = {"storage": {"enabled": True, "runtime": {"enabled": True}}}
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config)
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root(), config_dict=config
+    )
     status = builder.build()
     live_items = {i["key"]: i for i in status["live_runtime"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert live_items["delta_storage"]["live_status"] == L_ACTIVE  # type: ignore[index]
@@ -160,7 +182,9 @@ def test_config_enabled_delta_storage_live_is_active() -> None:
 
 def test_gate_b_pytest_baseline_resolves() -> None:
     """Gate B must read the real test_baseline.json and report correct counts."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     gate_b_items = {i["id"]: i for i in status["gate_b"]["items"]}  # type: ignore[union-attr]  # type: ignore[index]
     coll = gate_b_items["B-TEST-COLLECTION"]  # type: ignore[var-annotated]
@@ -178,12 +202,20 @@ def test_gate_b_stale_tree_digest_is_stale_not_failed(tmp_path: Path) -> None:
     fake_baseline = {
         "tested_commit": "abc123",
         "tested_tree_digest": "0" * 64,
-        "tree_digest_paths": ["src/", "configs/", "research/schemas/", "pyproject.toml", "tests/"],
+        "tree_digest_paths": [
+            "src/",
+            "configs/",
+            "research/schemas/",
+            "pyproject.toml",
+            "tests/",
+        ],
         "tree_digest_excludes": ["tests/test_baseline.json"],
         "full_collection": {"status": "passed", "collection_errors": 0},
         "full_suite": {"passed": 292, "failed": 0, "skipped": 2},
     }
-    (tests_dir / "test_baseline.json").write_text(json.dumps(fake_baseline), encoding="utf-8")
+    (tests_dir / "test_baseline.json").write_text(
+        json.dumps(fake_baseline), encoding="utf-8"
+    )
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
     status = builder.build()
     gate_b_items = {i["id"]: i for i in status["gate_b"]["items"]}  # type: ignore[union-attr]  # type: ignore[index]
@@ -192,7 +224,9 @@ def test_gate_b_stale_tree_digest_is_stale_not_failed(tmp_path: Path) -> None:
     assert gate_b_items["B-FULL-SUITE"]["status"] == G_STALE  # type: ignore[index]
 
 
-def test_gate_b_structural_proofs_remain_pending_without_artifact(tmp_path: Path) -> None:
+def test_gate_b_structural_proofs_remain_pending_without_artifact(
+    tmp_path: Path,
+) -> None:
     """Structural E2E proofs must remain pending when no verification artifact exists."""
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
     status = builder.build()
@@ -204,16 +238,21 @@ def test_gate_b_structural_proofs_remain_pending_without_artifact(tmp_path: Path
 
 def test_gate_b_structural_proofs_pass_with_artifact() -> None:
     """Structural E2E proofs must pass when the verification artifact shows verified."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     proof_items = [i for i in status["gate_b"]["items"] if i["category"] == "structural_e2e"]  # type: ignore[index]  # type: ignore[union-attr]
     assert len(proof_items) == 11  # type: ignore[arg-type]
     # If the artifact exists and is verified, proofs should pass, be stale,
     # or be pending (when the tree digest changed since the artifact was
     # written, fail-closed validation returns pending).
-    artifact_path = _repo_root() / "research" / "generated" / "verification" / "structural_e2e.json"
+    artifact_path = (
+        _repo_root() / "research" / "generated" / "verification" / "structural_e2e.json"
+    )
     if artifact_path.exists():
         import json as _json
+
         artifact = _json.loads(artifact_path.read_text(encoding="utf-8"))
         if artifact.get("status") == "verified":
             for item in proof_items:  # type: ignore[var-annotated]
@@ -222,7 +261,9 @@ def test_gate_b_structural_proofs_pass_with_artifact() -> None:
 
 def test_gate_c_registered_experiment_executed() -> None:
     """Registered Alpha.5 experiments are executed and produce evidence."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     gate_c_items = {i["id"]: i for i in status["gate_c"]["items"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert gate_c_items["C-EXP-DET-REGISTERED"]["status"] == G_PASSED  # type: ignore[index]
@@ -282,7 +323,9 @@ def test_experiment_template_means_not_executed(tmp_path: Path) -> None:
 
 def test_overall_alpha5_status_is_valid() -> None:
     """Overall status must be one of the valid gate states."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     assert status["overall"] in VALID_GATE_STATUS  # type: ignore[index]
 
@@ -300,7 +343,9 @@ def test_no_hardcoded_gate_checklist_in_index_html() -> None:
 
 def test_live_runtime_excludes_tests() -> None:
     """Tests are not a live runtime subsystem."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     live_keys = [i["key"] for i in status["live_runtime"]]  # type: ignore[union-attr]  # type: ignore[index]
     assert "tests" not in live_keys
@@ -308,7 +353,9 @@ def test_live_runtime_excludes_tests() -> None:
 
 def test_live_runtime_uses_research_source_key() -> None:
     """Live runtime must use 'research_source' not 'research'."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     live_keys = [i["key"] for i in status["live_runtime"]]  # type: ignore[union-attr]  # type: ignore[index]
     assert "research_source" in live_keys
@@ -317,7 +364,9 @@ def test_live_runtime_uses_research_source_key() -> None:
 
 def test_research_registry_counts_are_correct() -> None:
     """Registry counts must come from the typed ResearchRegistry API."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     counts = builder._research_registry_counts()  # type: ignore[misc]
     assert counts["questions"] >= 27
     assert counts["hypotheses"] >= 27
@@ -327,12 +376,62 @@ def test_research_registry_counts_are_correct() -> None:
 
 def test_three_separate_gates_exist() -> None:
     """The response must contain gate_a, gate_b, gate_c separately."""
-    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
     status = builder.build()
     assert "gate_a" in status
     assert "gate_b" in status
     assert "gate_c" in status
     assert "live_runtime" in status
-    assert len(status["gate_a"]["items"]) > 0  # type: ignore[index]
-    assert len(status["gate_b"]["items"]) > 0  # type: ignore[index]
-    assert len(status["gate_c"]["items"]) > 0  # type: ignore[index]
+    assert len(status["gate_a"]["items"]) > 0  # type: ignore[index]  # pyright: ignore[reportUnknownArgumentType]
+    assert len(status["gate_b"]["items"]) > 0  # type: ignore[index]  # pyright: ignore[reportUnknownArgumentType]
+    assert len(status["gate_c"]["items"]) > 0  # type: ignore[index]  # pyright: ignore[reportUnknownArgumentType]
+
+
+def test_release_readiness_sections_are_exposed() -> None:
+    """The response exposes scientific_gate, ci_status and release_readiness separately."""
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
+    status = builder.build(ci_status={"status": "passed", "source": "github_actions"})
+    assert "scientific_gate" in status
+    assert "ci_status" in status
+    assert "release_readiness" in status
+
+    scientific_gate = cast(dict[str, Any], status["scientific_gate"])
+    assert scientific_gate["overall"] in VALID_GATE_STATUS
+    assert "gate_a" in scientific_gate
+    assert "gate_b" in scientific_gate
+    assert "gate_c" in scientific_gate
+    assert "live_runtime" in scientific_gate
+
+    ci = cast(dict[str, Any], status["ci_status"])
+    assert ci["status"] == "passed"
+    assert ci["source"] == "github_actions"
+
+    readiness = cast(dict[str, Any], status["release_readiness"])
+    assert readiness["ready"] is False  # scientific gate is not fully passed locally
+    assert readiness["overall"] == "not_ready"
+    assert readiness["scientific_gate"] == scientific_gate["overall"]
+    assert readiness["ci_status"] == "passed"
+    blockers = cast(list[Any], readiness["blockers"])
+    assert isinstance(blockers, list)
+    assert len(blockers) > 0
+
+
+def test_release_readiness_is_ready_when_both_gates_pass() -> None:
+    """When scientific gate and CI both pass, release_readiness reports ready."""
+    builder = GateStatusBuilder(
+        bridge=_bridge(_build_network()), repo_root=_repo_root()
+    )
+    status = builder.build(ci_status={"status": "passed", "source": "github_actions"})
+    readiness = cast(dict[str, Any], status["release_readiness"])
+    scientific_overall = cast(dict[str, Any], status["scientific_gate"])["overall"]
+    if scientific_overall == G_PASSED:
+        assert readiness["ready"] is True
+        assert readiness["overall"] == "ready"
+        assert readiness["blockers"] == []
+    else:
+        assert readiness["ready"] is False
+        assert readiness["overall"] == "not_ready"

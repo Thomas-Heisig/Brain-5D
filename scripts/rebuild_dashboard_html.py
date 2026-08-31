@@ -21,7 +21,9 @@ INDEX_PATH = DASHBOARD_DIR / "index.html"
 def main() -> int:
     """Rebuild index.html from component templates."""
     if not HTML_DIR.is_dir():
-        print(f"Error: HTML components directory not found: {HTML_DIR}", file=sys.stderr)
+        print(
+            f"Error: HTML components directory not found: {HTML_DIR}", file=sys.stderr
+        )
         return 1
 
     parts: list[str] = []

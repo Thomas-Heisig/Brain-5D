@@ -141,7 +141,9 @@ def test_disabled_homeostasis_serializes_enabled_false() -> None:
 # ============================================================
 
 
-def test_integration_status_reports_disabled_for_structural_when_not_configured() -> None:
+def test_integration_status_reports_disabled_for_structural_when_not_configured() -> (
+    None
+):
     """When structural plasticity is disabled by config (no coordinator),
     integration status must report 'disabled', not 'failed'."""
     network = _build_real_network(n=50)
@@ -341,7 +343,9 @@ def test_integration_status_reads_test_baseline() -> None:
     }
     # Write a temporary baseline into the real repo's tests dir, then restore.
     real_baseline = repo_root / "tests" / "test_baseline.json"
-    original = real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    original = (
+        real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    )
     try:
         real_baseline.write_text(json.dumps(baseline), encoding="utf-8")
 
@@ -382,7 +386,9 @@ def test_stale_tested_commit_detection() -> None:
         "verified_subset": {"passed": 10, "failed": 0, "skipped": 0},
     }
     real_baseline = repo_root / "tests" / "test_baseline.json"
-    original = real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    original = (
+        real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    )
     try:
         real_baseline.write_text(json.dumps(baseline), encoding="utf-8")
 
@@ -429,7 +435,9 @@ def test_tree_digest_match_reports_passed() -> None:
         "verified_subset": {"passed": 236, "failed": 0, "skipped": 2},
     }
     real_baseline = repo_root / "tests" / "test_baseline.json"
-    original = real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    original = (
+        real_baseline.read_text(encoding="utf-8") if real_baseline.exists() else None
+    )
     try:
         real_baseline.write_text(json.dumps(baseline), encoding="utf-8")
 
@@ -469,10 +477,19 @@ def test_unknown_api_route_returns_json_error_not_spa() -> None:
 def test_network_inspector_provenance_is_live() -> None:
     network = _build_real_network(n=50)
     inspector = NetworkInspector(network)
-    assert cast(dict[str, Any], inspector.summary().to_json())["source"] == "live_runtime"
-    assert cast(dict[str, Any], inspector.neurons().to_json())["source"] == "live_runtime"
-    assert cast(dict[str, Any], inspector.synapses().to_json())["source"] == "live_runtime"
-    assert cast(dict[str, Any], inspector.projection().to_json())["source"] == "live_runtime"
+    assert (
+        cast(dict[str, Any], inspector.summary().to_json())["source"] == "live_runtime"
+    )
+    assert (
+        cast(dict[str, Any], inspector.neurons().to_json())["source"] == "live_runtime"
+    )
+    assert (
+        cast(dict[str, Any], inspector.synapses().to_json())["source"] == "live_runtime"
+    )
+    assert (
+        cast(dict[str, Any], inspector.projection().to_json())["source"]
+        == "live_runtime"
+    )
 
 
 # ============================================================

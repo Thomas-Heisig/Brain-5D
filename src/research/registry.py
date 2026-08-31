@@ -25,6 +25,7 @@ def _parse_date(d: Any) -> date | None:
             return None
     return None
 
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -245,10 +246,7 @@ class ResearchRegistry:
         with open(path, encoding="utf-8") as f:
             raw: Any = yaml.safe_load(f) or []
         data: list[dict[str, Any]] = cast("list[dict[str, Any]]", raw)
-        return {
-            item.get("id", item.get("source_id", "")): cls(item)
-            for item in data
-        }
+        return {item.get("id", item.get("source_id", "")): cls(item) for item in data}
 
     def save_questions(self) -> None:
         self._save_yaml(

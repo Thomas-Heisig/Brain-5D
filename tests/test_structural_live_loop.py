@@ -100,10 +100,12 @@ def _structural_digest(network: Any) -> str:
     neuron_ids = sorted(network.neurons.keys())
     neurons_canonical: list[dict[str, Any]] = []
     for nid in neuron_ids:
-        neurons_canonical.append({
-            "neuron_id": nid,
-            "coord": list(unpack_coords(nid)),
-        })
+        neurons_canonical.append(
+            {
+                "neuron_id": nid,
+                "coord": list(unpack_coords(nid)),
+            }
+        )
 
     synapses_canonical: list[dict[str, Any]] = []
     for source_id in sorted(network.synapses.keys()):
@@ -112,12 +114,14 @@ def _structural_digest(network: Any) -> str:
             key=lambda s: (int(s.target_id), int(s.delay), float(s.weight)),
         )
         for syn in syn_list:
-            synapses_canonical.append({
-                "source_id": source_id,
-                "target_id": int(syn.target_id),
-                "weight": float(syn.weight),
-                "delay": int(syn.delay),
-            })
+            synapses_canonical.append(
+                {
+                    "source_id": source_id,
+                    "target_id": int(syn.target_id),
+                    "weight": float(syn.weight),
+                    "delay": int(syn.delay),
+                }
+            )
 
     canonical = {
         "neuron_count": len(neuron_ids),
@@ -133,7 +137,9 @@ def _structural_digest(network: Any) -> str:
 # Live config path
 # =========================================================================
 
-_LIVE_CONFIG = Path(__file__).resolve().parents[1] / "configs" / "poc_structural_live.yaml"
+_LIVE_CONFIG = (
+    Path(__file__).resolve().parents[1] / "configs" / "poc_structural_live.yaml"
+)
 
 
 # =========================================================================
@@ -177,12 +183,19 @@ def live_config() -> dict[str, Any]:
     strips homeostasis, self_organization, and storage sections).
     """
     import yaml
+
     config_dict: dict[str, Any] = dict(load_config(str(_LIVE_CONFIG)))
     # Merge raw sections that the validated loader strips
     with open(str(_LIVE_CONFIG), "r", encoding="utf-8") as f:
         raw_data: dict[str, Any] | None = yaml.safe_load(f)
     raw_dict: dict[str, Any] = raw_data if raw_data is not None else {}
-    for key in ("homeostasis", "self_organization", "storage", "eligibility", "max_neurons"):
+    for key in (
+        "homeostasis",
+        "self_organization",
+        "storage",
+        "eligibility",
+        "max_neurons",
+    ):
         if key in raw_dict:
             config_dict[key] = raw_dict[key]
     return config_dict
@@ -283,9 +296,9 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     )
 
     proposal = report.proposals[0]
-    assert proposal.kind.value == "neurogenesis", (
-        f"Expected neurogenesis proposal, got {proposal.kind}"
-    )
+    assert (
+        proposal.kind.value == "neurogenesis"
+    ), f"Expected neurogenesis proposal, got {proposal.kind}"
     assert proposal.reason, "Proposal must have a reason string"
     assert proposal.confidence > 0.0, "Proposal must have positive confidence"
 
@@ -312,18 +325,18 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     # G. Verify topology is unchanged before approval
     # ====================================================================
     digest_still_before = _structural_digest(network)
-    assert digest_before == digest_still_before, (
-        "Topology changed before approval -- unexpected mutation"
-    )
+    assert (
+        digest_before == digest_still_before
+    ), "Topology changed before approval -- unexpected mutation"
 
     # ====================================================================
     # H. Verify proposal observable through OperatorBridge
     # ====================================================================
     bridge_proposals = bridge.structural_proposals()
     bridge_ids = [p["proposal_id"] for p in bridge_proposals]
-    assert proposal_id in bridge_ids, (
-        f"Proposal {proposal_id} not found in OperatorBridge proposals: {bridge_ids}"
-    )
+    assert (
+        proposal_id in bridge_ids
+    ), f"Proposal {proposal_id} not found in OperatorBridge proposals: {bridge_ids}"
 
     # ====================================================================
     # I. Reject one proposal
@@ -335,9 +348,9 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     assert digest_after_reject == digest_before, "Topology changed after rejection"
 
     history_after_reject = journal.history(100)
-    assert len(history_after_reject) == 0, (
-        f"Journal has records after rejection (expected 0): {len(history_after_reject)}"
-    )
+    assert (
+        len(history_after_reject) == 0
+    ), f"Journal has records after rejection (expected 0): {len(history_after_reject)}"
 
     # ====================================================================
     # J. Generate another real proposal (continue running)
@@ -357,9 +370,7 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     # K. Approve exactly one proposal via the bridge
     # ====================================================================
     neuron_count_before_approval = len(network.neurons)
-    approve_result = bridge.apply_proposal(
-        proposal2_id, approved=True
-    )
+    approve_result = bridge.apply_proposal(proposal2_id, approved=True)
     assert approve_result["ok"], f"Approval failed: {approve_result.get('error', '')}"
 
     # ====================================================================
@@ -369,19 +380,19 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     assert digest_after_approval != digest_before, "Topology unchanged after approval"
 
     neuron_count_after = len(network.neurons)
-    assert neuron_count_after == neuron_count_before_approval + 1, (
-        f"Expected exactly 1 new neuron, got {neuron_count_after - neuron_count_before_approval}"
-    )
+    assert (
+        neuron_count_after == neuron_count_before_approval + 1
+    ), f"Expected exactly 1 new neuron, got {neuron_count_after - neuron_count_before_approval}"
 
     history = journal.history(100)
     assert len(history) == 1, f"Expected exactly 1 journal record, got {len(history)}"
     record = history[0]
-    assert record.kind == StructuralChangeKind.NEURON_ADD, (
-        f"Expected NEURON_ADD, got {record.kind}"
-    )
-    assert record.proposal_id == proposal2_id, (
-        f"Journal proposal_id {record.proposal_id} != {proposal2_id}"
-    )
+    assert (
+        record.kind == StructuralChangeKind.NEURON_ADD
+    ), f"Expected NEURON_ADD, got {record.kind}"
+    assert (
+        record.proposal_id == proposal2_id
+    ), f"Journal proposal_id {record.proposal_id} != {proposal2_id}"
     assert record.tick > 0, "Journal record tick must be > 0"
     assert record.neuron_id is not None, "Journal record must have neuron_id"
 
@@ -401,18 +412,18 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
     assert undo_result is True, "Undo failed"
 
     digest_after_undo = _structural_digest(network)
-    assert digest_after_undo == digest_before, (
-        "Topology after undo does not match pre-mutation state"
-    )
+    assert (
+        digest_after_undo == digest_before
+    ), "Topology after undo does not match pre-mutation state"
 
     history_after_undo = journal.history(100)
-    assert len(history_after_undo) >= 2, (
-        f"Expected at least 2 journal records after undo, got {len(history_after_undo)}"
-    )
+    assert (
+        len(history_after_undo) >= 2
+    ), f"Expected at least 2 journal records after undo, got {len(history_after_undo)}"
     last_record = history_after_undo[-1]
-    assert last_record.kind == StructuralChangeKind.NEURON_REMOVE, (
-        f"Expected NEURON_REMOVE for undo, got {last_record.kind}"
-    )
+    assert (
+        last_record.kind == StructuralChangeKind.NEURON_REMOVE
+    ), f"Expected NEURON_REMOVE for undo, got {last_record.kind}"
 
     # ====================================================================
     # O. Re-open journal from disk and replay into fresh network
@@ -430,13 +441,16 @@ def test_structural_live_loop(tmp_path: Path, live_config: dict[str, Any]) -> No
 
     records = journal2.history(100)
     for rec in records:
-        if rec.kind in (StructuralChangeKind.NEURON_ADD, StructuralChangeKind.SYNAPSE_ADD):
+        if rec.kind in (
+            StructuralChangeKind.NEURON_ADD,
+            StructuralChangeKind.SYNAPSE_ADD,
+        ):
             plasticity2.apply_structural_record(rec)
 
     digest_after_replay = _structural_digest(net2)
-    assert digest_after_replay == digest_after_approval, (
-        "Replayed network topology does not match post-mutation state"
-    )
+    assert (
+        digest_after_replay == digest_after_approval
+    ), "Replayed network topology does not match post-mutation state"
 
     # ====================================================================
     # Verify no RuntimeAdapter errors occurred throughout
@@ -471,10 +485,18 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
 
     # Run the live loop test via pytest subprocess
     result = subprocess.run(
-        [sys.executable, "-m", "pytest",
-         "tests/test_structural_live_loop.py::test_structural_live_loop",
-         "-q", "--tb=line", "--no-header"],
-        capture_output=True, text=True, timeout=120,
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/test_structural_live_loop.py::test_structural_live_loop",
+            "-q",
+            "--tb=line",
+            "--no-header",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=120,
         cwd=str(repo_root),
     )
     live_loop_passed = result.returncode == 0
@@ -519,6 +541,5 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
     artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
 
     assert all_passed, (
-        f"Live loop verification failed: "
-        f"live_loop={live_loop_passed}"
+        f"Live loop verification failed: " f"live_loop={live_loop_passed}"
     )

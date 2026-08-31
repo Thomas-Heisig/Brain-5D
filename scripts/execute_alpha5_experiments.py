@@ -21,11 +21,14 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from src.research.experiment_recorder import ExperimentRecorder, get_software_info
-from src.research.evidence_engine import EvidenceEngine
-from src.research.registry import ResearchRegistry
-from src.research.report_builder import ReportBuilder
-from src.dashboard.verification import compute_source_tree_digest
+from src.dashboard.verification import compute_source_tree_digest  # noqa: E402
+from src.research.evidence_engine import EvidenceEngine  # noqa: E402
+from src.research.experiment_recorder import (  # noqa: E402
+    ExperimentRecorder,
+    get_software_info,
+)
+from src.research.registry import ResearchRegistry  # noqa: E402
+from src.research.report_builder import ReportBuilder  # noqa: E402
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
 EVIDENCE_DIR = REPO_ROOT / "research" / "registry" / "evidence"
@@ -104,7 +107,9 @@ def _update_manifest(
 ) -> None:
     """Update experiment manifest with full provenance."""
     config_path = EXPERIMENT_CONFIGS.get(experiment_id)
-    config_sha256 = _sha256_file(config_path) if config_path and config_path.exists() else ""
+    config_sha256 = (
+        _sha256_file(config_path) if config_path and config_path.exists() else ""
+    )
 
     duration_seconds = float(result["duration_seconds"])
     passed = bool(result["passed"])
@@ -130,7 +135,9 @@ def _update_manifest(
         stderr_summary=stderr[:2000],
     )
     recorder.record_runtime(duration_seconds=duration_seconds)
-    recorder.record_artifact("test_output", str(EXPERIMENTS_DIR / experiment_id / "output.log"))
+    recorder.record_artifact(
+        "test_output", str(EXPERIMENTS_DIR / experiment_id / "output.log")
+    )
     recorder.mark_completed()
     recorder.save()
 
@@ -158,7 +165,9 @@ def _generate_data_artifact(experiment_id: str, result: dict[str, Any]) -> Path:
             "stderr": result["stderr"],
         },
     }
-    data_path.write_text(json.dumps(data_record, indent=2, ensure_ascii=False), encoding="utf-8")
+    data_path.write_text(
+        json.dumps(data_record, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     return data_path
 
 
@@ -190,8 +199,12 @@ def _rebuild_reports(refresh_registry: bool = False) -> None:
     builder = ReportBuilder(registry)
     catalog = builder.build_research_catalog()
     matrix = builder.build_evidence_matrix()
-    (REPO_ROOT / "research" / "generated" / "RESEARCH_CATALOG.md").write_text(catalog, encoding="utf-8")
-    (REPO_ROOT / "research" / "generated" / "EVIDENCE_MATRIX.md").write_text(matrix, encoding="utf-8")
+    (REPO_ROOT / "research" / "generated" / "RESEARCH_CATALOG.md").write_text(
+        catalog, encoding="utf-8"
+    )
+    (REPO_ROOT / "research" / "generated" / "EVIDENCE_MATRIX.md").write_text(
+        matrix, encoding="utf-8"
+    )
     print("Rebuilt RESEARCH_CATALOG.md and EVIDENCE_MATRIX.md")
 
 
@@ -203,7 +216,9 @@ def main() -> int:
     # EXP-DET-0001: Determinism A/B/C
     print("\n[EXP-DET-0001] Running determinism A/B/C experiment...")
     det_result = _run_determinism_experiment()
-    print(f"  passed={det_result['passed']}, duration={det_result['duration_seconds']:.1f}s")
+    print(
+        f"  passed={det_result['passed']}, duration={det_result['duration_seconds']:.1f}s"
+    )
     _update_manifest(
         "EXP-DET-0001",
         det_result,
@@ -225,7 +240,9 @@ def main() -> int:
     # EXP-STOR-0001: Storage persistence
     print("\n[EXP-STOR-0001] Running storage persistence experiment...")
     stor_result = _run_storage_experiment()
-    print(f"  passed={stor_result['passed']}, duration={stor_result['duration_seconds']:.1f}s")
+    print(
+        f"  passed={stor_result['passed']}, duration={stor_result['duration_seconds']:.1f}s"
+    )
     _update_manifest(
         "EXP-STOR-0001",
         stor_result,

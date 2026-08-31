@@ -71,10 +71,12 @@ def _structural_digest(network: Any) -> str:
     neuron_ids = sorted(network.neurons.keys())
     neurons_canonical: list[dict[str, Any]] = []
     for nid in neuron_ids:
-        neurons_canonical.append({
-            "neuron_id": nid,
-            "coord": list(unpack_coords(nid)),
-        })
+        neurons_canonical.append(
+            {
+                "neuron_id": nid,
+                "coord": list(unpack_coords(nid)),
+            }
+        )
 
     synapses_canonical: list[dict[str, Any]] = []
     for source_id in sorted(network.synapses.keys()):
@@ -83,12 +85,14 @@ def _structural_digest(network: Any) -> str:
             key=lambda s: (int(s.target_id), int(s.delay), float(s.weight)),
         )
         for syn in syn_list:
-            synapses_canonical.append({
-                "source_id": source_id,
-                "target_id": int(syn.target_id),
-                "weight": float(syn.weight),
-                "delay": int(syn.delay),
-            })
+            synapses_canonical.append(
+                {
+                    "source_id": source_id,
+                    "target_id": int(syn.target_id),
+                    "weight": float(syn.weight),
+                    "delay": int(syn.delay),
+                }
+            )
 
     canonical = {
         "neuron_count": len(neuron_ids),
@@ -109,14 +113,19 @@ def _make_network() -> NeuralNetwork:
     """Create a small deterministic network for structural E2E tests."""
     from src.core import Brain5DConfig
 
-    config = Brain5DConfig.from_dict({
-        "dimensions": [10, 10, 1, 1, 1],
-        "simulation": {"dt_ms": 1.0, "max_delay": 3, "debug_invariants": True},
-        "neuron": {"a": 0.02, "b": 0.2, "c": -65.0, "d": 8.0},
-        "energy": {"initial": 1.0, "spike_cost": 0.001},
-        "topology": {"allow_self_connections": False, "allow_parallel_connections": False},
-        "network": {"weight_min": 0.0, "weight_max": 0.5},
-    })
+    config = Brain5DConfig.from_dict(
+        {
+            "dimensions": [10, 10, 1, 1, 1],
+            "simulation": {"dt_ms": 1.0, "max_delay": 3, "debug_invariants": True},
+            "neuron": {"a": 0.02, "b": 0.2, "c": -65.0, "d": 8.0},
+            "energy": {"initial": 1.0, "spike_cost": 0.001},
+            "topology": {
+                "allow_self_connections": False,
+                "allow_parallel_connections": False,
+            },
+            "network": {"weight_min": 0.0, "weight_max": 0.5},
+        }
+    )
     rng = random.Random(42)
     net = NeuralNetwork(config, rng)
     a = net.add_neuron((0, 0, 0, 0, 0))
@@ -184,7 +193,9 @@ def _build_real_signal(network: NeuralNetwork, tick: int = 5) -> HomeostasisSign
 # =========================================================================
 
 
-def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[PolicyReport, str]:
+def _make_neurogenesis_proposal(
+    network: NeuralNetwork, tick: int
+) -> tuple[PolicyReport, str]:
     """Generate a neurogenesis proposal from a real HomeostasisSignal.
 
     Returns (report, proposal_id).
@@ -203,7 +214,9 @@ def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[Poli
         )
     )
     report = policy.analyze(signal)
-    neuro_proposals = [p for p in report.proposals if p.kind == ProposalKind.NEUROGENESIS]
+    neuro_proposals = [
+        p for p in report.proposals if p.kind == ProposalKind.NEUROGENESIS
+    ]
     assert neuro_proposals, (
         f"Policy did not produce a neurogenesis proposal from the real signal. "
         f"Signal: neuron_count={signal.neuron_count}, mean_rate={signal.mean_rate_hz:.3f}, "
@@ -213,8 +226,11 @@ def _make_neurogenesis_proposal(network: NeuralNetwork, tick: int) -> tuple[Poli
     # existing neuron so create_neuron_near can find a free neighbour.
     existing_neuron = next(iter(network.neurons))
     from dataclasses import replace
+
     fixed_proposals = tuple(
-        replace(p, neuron_id=p.neuron_id if p.neuron_id is not None else existing_neuron)
+        replace(
+            p, neuron_id=p.neuron_id if p.neuron_id is not None else existing_neuron
+        )
         for p in report.proposals
     )
     report = PolicyReport(
@@ -561,7 +577,10 @@ def _git_head(repo_root: Path) -> str | None:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=5, cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=5,
+            cwd=str(repo_root),
         )
         if result.returncode == 0:
             return result.stdout.strip()
@@ -572,6 +591,7 @@ def _git_head(repo_root: Path) -> str | None:
 
 def _tree_digest(repo_root: Path) -> str | None:
     from src.dashboard.verification import compute_source_tree_digest
+
     return compute_source_tree_digest(repo_root)
 
 
@@ -618,7 +638,10 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
         nodeid = f"tests/test_structural_e2e.py::{test_name}"
         result = subprocess.run(
             [sys.executable, "-m", "pytest", nodeid, "-q", "--tb=line", "--no-header"],
-            capture_output=True, text=True, timeout=60, cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=60,
+            cwd=str(repo_root),
         )
         proofs_passed[test_name] = result.returncode == 0
 

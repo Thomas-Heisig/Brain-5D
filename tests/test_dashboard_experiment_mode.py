@@ -162,3 +162,40 @@ class TestExperimentMode:
         assert status == HTTPStatus.OK
         assert payload["count"] == 1
         assert payload["sessions"][0]["session_id"] == "exp-004"
+
+    def test_operator_mode_button(self, server: DashboardServer) -> None:
+        status, payload = _request(
+            server, "POST", "/api/experiment/mode", {"mode": "operator"}
+        )
+        assert status == HTTPStatus.OK
+        assert payload["ok"] is True
+        status, payload = _request(server, "GET", "/api/experiment/mode")
+        assert status == HTTPStatus.OK
+        assert payload["current_mode"] == "operator"
+
+    def test_experiment_mode_button(self, server: DashboardServer) -> None:
+        status, payload = _request(
+            server, "POST", "/api/experiment/mode", {"mode": "experiment"}
+        )
+        assert status == HTTPStatus.OK
+        assert payload["ok"] is True
+        status, payload = _request(server, "GET", "/api/experiment/mode")
+        assert status == HTTPStatus.OK
+        assert payload["current_mode"] == "experiment"
+
+    def test_debug_mode_button(self, server: DashboardServer) -> None:
+        status, payload = _request(
+            server, "POST", "/api/experiment/mode", {"mode": "debug"}
+        )
+        assert status == HTTPStatus.OK
+        assert payload["ok"] is True
+        status, payload = _request(server, "GET", "/api/experiment/mode")
+        assert status == HTTPStatus.OK
+        assert payload["current_mode"] == "debug"
+
+    def test_invalid_mode_still_rejected(self, server: DashboardServer) -> None:
+        status, payload = _request(
+            server, "POST", "/api/experiment/mode", {"mode": "dev"}
+        )
+        assert status == HTTPStatus.BAD_REQUEST
+        assert "dev" in payload["error"].lower()

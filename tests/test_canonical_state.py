@@ -62,7 +62,9 @@ class MockSynapse:
 class MockSpikeEvent:
     """Minimal mock implementing CanonicalSpikeEventLike."""
 
-    def __init__(self, source_id: int, target_id: int, weight: float, delivery_tick: int):
+    def __init__(
+        self, source_id: int, target_id: int, weight: float, delivery_tick: int
+    ):
         self.source_id = source_id
         self.target_id = target_id
         self.weight = weight

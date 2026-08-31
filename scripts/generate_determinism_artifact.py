@@ -36,12 +36,15 @@ def current_git_head() -> str | None:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
             cwd=str(REPO_ROOT),
         )
         return result.stdout.strip() if result.returncode == 0 else None
     except Exception:
         return None
+
 
 # Tests that verify determinism infrastructure
 DETERMINISM_TESTS = [
@@ -121,16 +124,28 @@ def main() -> int:
     # Build proof map
     all_passed = all(test_results.values())
     proofs = {
-        "rng_state_persistence": test_results.get("tests/test_rng_persistence.py", False),
-        "explicit_iteration_order": test_results.get("tests/test_iteration_determinism.py", False),
-        "canonical_state_digest": test_results.get("tests/test_canonical_state.py", False),
-        "structural_determinism": test_results.get("tests/test_structural_determinism.py", False),
-        "checkpoint_v4_roundtrip": test_results.get("tests/test_checkpoint_v4.py", False),
+        "rng_state_persistence": test_results.get(
+            "tests/test_rng_persistence.py", False
+        ),
+        "explicit_iteration_order": test_results.get(
+            "tests/test_iteration_determinism.py", False
+        ),
+        "canonical_state_digest": test_results.get(
+            "tests/test_canonical_state.py", False
+        ),
+        "structural_determinism": test_results.get(
+            "tests/test_structural_determinism.py", False
+        ),
+        "checkpoint_v4_roundtrip": test_results.get(
+            "tests/test_checkpoint_v4.py", False
+        ),
         "engine_state_roundtrip": (
             test_results.get("tests/test_engine_restore.py", False)
             and test_results.get("tests/test_production_restore.py", False)
         ),
-        "experiment_validity": test_results.get("tests/test_experiment_validity.py", False),
+        "experiment_validity": test_results.get(
+            "tests/test_experiment_validity.py", False
+        ),
     }
 
     # Get git HEAD for provenance (not freshness authority)
@@ -145,7 +160,9 @@ def main() -> int:
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "test_files": DETERMINISM_TESTS,
-        "test_results": {k: "passed" if v else "failed" for k, v in test_results.items()},
+        "test_results": {
+            k: "passed" if v else "failed" for k, v in test_results.items()
+        },
         "proofs": proofs,
     }
 

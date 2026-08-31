@@ -43,7 +43,9 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
     try:
         result = subprocess.run(
             ["netstat", "-ano"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired):
         return {}
@@ -78,10 +80,20 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
         except ValueError:
             pass
         # Skip non-listening states explicitly (ESTABLISHED, TIME_WAIT, etc.)
-        if state_candidate in ("ESTABLISHED", "TIME_WAIT", "CLOSE_WAIT",
-                               "FIN_WAIT_1", "FIN_WAIT_2", "CLOSING",
-                               "SYN_SENT", "SYN_RECEIVED", "LAST_ACK",
-                               "BOUND", "CLOSED", "DELETE_TCB"):
+        if state_candidate in (
+            "ESTABLISHED",
+            "TIME_WAIT",
+            "CLOSE_WAIT",
+            "FIN_WAIT_1",
+            "FIN_WAIT_2",
+            "CLOSING",
+            "SYN_SENT",
+            "SYN_RECEIVED",
+            "LAST_ACK",
+            "BOUND",
+            "CLOSED",
+            "DELETE_TCB",
+        ):
             continue
         # 3) PID is a valid positive integer
         try:
@@ -117,8 +129,15 @@ def test_exactly_one_listener_owns_port() -> None:
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
     proc = subprocess.Popen(
-        ["python", "-m", "src.main", "--config", str(config_path),
-         "--dashboard-port", str(test_port)],
+        [
+            "python",
+            "-m",
+            "src.main",
+            "--config",
+            str(config_path),
+            "--dashboard-port",
+            str(test_port),
+        ],
         cwd=str(repo_root),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -154,9 +173,9 @@ def test_exactly_one_listener_owns_port() -> None:
 
         # ---- Phase 3: Verify exactly one LISTEN socket owned by our PID ---
         listeners = _get_listener_pids(test_port)
-        assert len(listeners) > 0, (
-            f"No LISTEN socket found on port {test_port} after connection succeeded"
-        )
+        assert (
+            len(listeners) > 0
+        ), f"No LISTEN socket found on port {test_port} after connection succeeded"
 
         assert brain_pid in listeners, (
             f"Listener PID(s) {list(set(listeners.keys()))} does not include "
@@ -170,25 +189,26 @@ def test_exactly_one_listener_owns_port() -> None:
         )
 
         other_pids = {pid for pid in listeners if pid != brain_pid}
-        assert len(other_pids) == 0, (
-            f"Other PIDs also listening on port {test_port}: {other_pids}"
-        )
+        assert (
+            len(other_pids) == 0
+        ), f"Other PIDs also listening on port {test_port}: {other_pids}"
 
         # ---- Phase 4: Verify process is still alive -----------------------
-        assert proc.poll() is None, (
-            f"Brain-5D process (PID {brain_pid}) died after port check"
-        )
+        assert (
+            proc.poll() is None
+        ), f"Brain-5D process (PID {brain_pid}) died after port check"
 
         # ---- Phase 5: Verify /healthz belongs to this process -------------
         import urllib.request
+
         try:
             req = urllib.request.Request(f"http://127.0.0.1:{test_port}/healthz")
             resp = urllib.request.urlopen(req, timeout=5)
             assert resp.status == 200, f"Health check returned HTTP {resp.status}"
             data = resp.read().decode("utf-8")
-            assert "bridge_configured" in data, (
-                f"Health response missing 'bridge_configured': {data[:200]}"
-            )
+            assert (
+                "bridge_configured" in data
+            ), f"Health response missing 'bridge_configured': {data[:200]}"
         except Exception as e:
             raise AssertionError(f"Dashboard health check failed: {e}")
 
@@ -226,10 +246,18 @@ def test_write_single_listener_verification_artifact() -> None:
 
     # Run the single listener test via pytest subprocess
     result = subprocess.run(
-        [sys.executable, "-m", "pytest",
-         "tests/test_single_listener.py::test_exactly_one_listener_owns_port",
-         "-q", "--tb=line", "--no-header"],
-        capture_output=True, text=True, timeout=30,
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/test_single_listener.py::test_exactly_one_listener_owns_port",
+            "-q",
+            "--tb=line",
+            "--no-header",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
         cwd=str(repo_root),
     )
     listener_passed = result.returncode == 0
@@ -268,4 +296,6 @@ def test_write_single_listener_verification_artifact() -> None:
     artifact_path = verification_dir / "single_listener.json"
     artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
 
-    assert all_passed, f"Single listener verification failed: listener={listener_passed}"
+    assert (
+        all_passed
+    ), f"Single listener verification failed: listener={listener_passed}"

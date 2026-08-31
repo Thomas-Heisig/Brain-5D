@@ -131,7 +131,9 @@ def test_disconnect_during_send_response() -> None:
     """
     server, thread, host, port = _start_server()
     try:
-        _sock = _raw_request(host, port, "/api/status", close_after_bytes=50)  # noqa: unused
+        _sock = _raw_request(
+            host, port, "/api/status", close_after_bytes=50
+        )  # noqa: unused
         # Give the server a moment to process the disconnect
         import time
 
@@ -242,9 +244,9 @@ def test_genuine_exception_still_returns_500() -> None:
             body = json.loads(resp.read())
             # Without a bridge this is 503, which proves the exception
             # handler still works correctly (not silenced by disconnect guard).
-            assert resp.status == 503, (
-                f"Expected 503 for no-bridge control, got {resp.status}"
-            )
+            assert (
+                resp.status == 503
+            ), f"Expected 503 for no-bridge control, got {resp.status}"
             assert "error" in body
         finally:
             conn.close()
@@ -286,19 +288,17 @@ def test_disconnect_does_not_enter_error_buffer() -> None:
             # None of the errors should be disconnect-related
             for err in errors:
                 msg: str = err.get("message", "") if isinstance(err, dict) else str(err)  # type: ignore[assignment]
-                assert "BrokenPipe" not in msg, f"Disconnect leaked into error buffer: {msg}"
-                assert "ConnectionReset" not in msg, (
-                    f"Disconnect leaked into error buffer: {msg}"
-                )
-                assert "ConnectionAborted" not in msg, (
-                    f"Disconnect leaked into error buffer: {msg}"
-                )
-                assert "10053" not in msg, (
-                    f"Disconnect leaked into error buffer: {msg}"
-                )
-                assert "10054" not in msg, (
-                    f"Disconnect leaked into error buffer: {msg}"
-                )
+                assert (
+                    "BrokenPipe" not in msg
+                ), f"Disconnect leaked into error buffer: {msg}"
+                assert (
+                    "ConnectionReset" not in msg
+                ), f"Disconnect leaked into error buffer: {msg}"
+                assert (
+                    "ConnectionAborted" not in msg
+                ), f"Disconnect leaked into error buffer: {msg}"
+                assert "10053" not in msg, f"Disconnect leaked into error buffer: {msg}"
+                assert "10054" not in msg, f"Disconnect leaked into error buffer: {msg}"
         finally:
             conn.close()
     finally:

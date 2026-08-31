@@ -18,7 +18,7 @@ L. TelemetryFrame is atomically coherent
 from __future__ import annotations
 
 import random
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
@@ -28,9 +28,7 @@ from src.core.spatial_index import linear_to_5d, pack_coords
 from src.dashboard.live_projection import (
     ActivityWindowAccumulator,
     Aggregation,
-    IOFlowResult,
     LiveProjectionService,
-    PopulationResult,
     ProjectionKind,
     TelemetryFrameStore,
     capture_frame,
@@ -91,7 +89,9 @@ def service(network: NeuralNetwork) -> LiveProjectionService:
 class TestEnergyProjection:
     """Energy projection returns exact neuron.energy values."""
 
-    def test_energy_matches_neuron_state(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_energy_matches_neuron_state(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """Set known energy, query projection, verify exact match."""
         for nid, neuron in network.neurons.items():
             neuron.energy = 0.5 + (nid % 10) * 0.05
@@ -113,14 +113,18 @@ class TestEnergyProjection:
 class TestActivityProjection:
     """Activity projection reflects spike timing."""
 
-    def test_activity_after_spike(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_activity_after_spike(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         initial = service.project(kind=ProjectionKind.ACTIVITY, bins=10)
         network.inject_current(0, 100.0)
         network.step()
         after = service.project(kind=ProjectionKind.ACTIVITY, bins=10)
         assert after.tick > initial.tick
 
-    def test_different_spike_histories(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_different_spike_histories(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """Two neurons with different spike counts produce different activity."""
         # Neuron 0: spike at tick 1
         network.inject_current(0, 100.0)
@@ -141,7 +145,9 @@ class TestActivityProjection:
 class TestWeightProjection:
     """Weight projection reflects mean outgoing synapse weight."""
 
-    def test_weight_projection_matches_synapses(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_weight_projection_matches_synapses(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         for _source_id, synapses in network.synapses.items():
             for i, syn in enumerate(synapses):
                 syn.weight = 0.1 + (i % 5) * 0.1
@@ -159,7 +165,9 @@ class TestWeightProjection:
 class TestTickCoherence:
     """Response tick matches network tick."""
 
-    def test_tick_matches_network(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_tick_matches_network(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         proj = service.project(kind=ProjectionKind.ENERGY)
         assert proj.tick == network.current_tick
         network.step()
@@ -176,7 +184,9 @@ class TestTickCoherence:
 class TestNoMutation:
     """Querying the projection does not change network state."""
 
-    def test_projection_does_not_mutate(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_projection_does_not_mutate(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         ids = tuple(sorted(network.neurons))
         v_before = tuple(network.neurons[nid].v for nid in ids)
         energy_before = tuple(network.neurons[nid].energy for nid in ids)
@@ -185,7 +195,12 @@ class TestNoMutation:
             for src in sorted(network.synapses)
             for syn in network.synapses[src]
         )
-        for kind in [ProjectionKind.ENERGY, ProjectionKind.ACTIVITY, ProjectionKind.MEMBRANE, ProjectionKind.WEIGHT]:
+        for kind in [
+            ProjectionKind.ENERGY,
+            ProjectionKind.ACTIVITY,
+            ProjectionKind.MEMBRANE,
+            ProjectionKind.WEIGHT,
+        ]:
             service.project(kind=kind, bins=10)
         v_after = tuple(network.neurons[nid].v for nid in ids)
         energy_after = tuple(network.neurons[nid].energy for nid in ids)
@@ -207,11 +222,15 @@ class TestNoMutation:
 class TestSnapshotSeparation:
     """Live endpoint never returns snapshot data."""
 
-    def test_live_source_tag(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_live_source_tag(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         proj = service.project(kind=ProjectionKind.ENERGY)
         assert proj.source == "live_runtime"
 
-    def test_live_tick_differs_from_snapshot(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_live_tick_differs_from_snapshot(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         network.step()
         network.step()
         proj = service.project(kind=ProjectionKind.ENERGY)
@@ -227,18 +246,24 @@ class TestSnapshotSeparation:
 class TestBoundedPayload:
     """Projection stays within configured resolution."""
 
-    def test_bins_are_bounded(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_bins_are_bounded(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         proj = service.project(kind=ProjectionKind.ENERGY, bins=200)
         assert len(proj.values) == 200
         assert len(proj.values[0]) == 200
 
-    def test_large_network_fits_bins(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_large_network_fits_bins(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         proj = service.project(kind=ProjectionKind.ENERGY, bins=50)
         assert len(proj.values) == 50
         assert len(proj.values[0]) == 50
         assert proj.sample_count == len(network.neurons)
 
-    def test_min_bins(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_min_bins(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         proj = service.project(kind=ProjectionKind.ENERGY, bins=1)
         assert len(proj.values) == 5  # clamped to min 5
         assert len(proj.values[0]) == 5
@@ -252,11 +277,15 @@ class TestBoundedPayload:
 class TestKnownCoordinate:
     """A neuron at a known 5D coordinate lands in the expected bin."""
 
-    def test_known_coordinate_bin(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_known_coordinate_bin(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """A neuron at a known 5D coordinate lands in the expected bin."""
         dims = network.dimensions
         # Find a coordinate that doesn't exist yet
-        existing = {pack_coords(*linear_to_5d(i, dims)) for i in range(len(network.neurons))}
+        existing = {
+            pack_coords(*linear_to_5d(i, dims)) for i in range(len(network.neurons))
+        }
         for x in range(dims[0]):
             for y in range(dims[1]):
                 nid = pack_coords(x, y, 0, 0, 0)
@@ -293,24 +322,24 @@ class TestKnownCoordinate:
 class TestEmptyBin:
     """Bins with no neurons are null, not 0."""
 
-    def test_empty_bin_is_null(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_empty_bin_is_null(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """With a small network and many bins, some bins must be empty."""
         bins = 50
         proj = service.project(kind=ProjectionKind.ENERGY, bins=bins)
         has_null = any(
-            proj.values[y][x] is None
-            for y in range(bins)
-            for x in range(bins)
+            proj.values[y][x] is None for y in range(bins) for x in range(bins)
         )
         has_data = any(
-            proj.values[y][x] is not None
-            for y in range(bins)
-            for x in range(bins)
+            proj.values[y][x] is not None for y in range(bins) for x in range(bins)
         )
         assert has_null, "With 50 neurons and 2500 bins, some must be empty"
         assert has_data, "Some bins must contain neurons"
 
-    def test_mask_matches_null(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_mask_matches_null(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """Mask is True exactly where values are not None."""
         bins = 20
         proj = service.project(kind=ProjectionKind.ENERGY, bins=bins)
@@ -327,12 +356,16 @@ class TestEmptyBin:
 class TestNegativeMembrane:
     """MAX aggregation works correctly with negative membrane potentials."""
 
-    def test_max_with_negative_values(self, network: NeuralNetwork, service: LiveProjectionService) -> None:
+    def test_max_with_negative_values(
+        self, network: NeuralNetwork, service: LiveProjectionService
+    ) -> None:
         """Set all membrane potentials to negative values, MAX should find the largest (closest to 0)."""
         for nid, neuron in network.neurons.items():
             neuron.v = -70.0 + (nid % 10) * 2.0  # range: -70 to -52
 
-        proj = service.project(kind=ProjectionKind.MEMBRANE, aggregation=Aggregation.MAX, bins=10)
+        proj = service.project(
+            kind=ProjectionKind.MEMBRANE, aggregation=Aggregation.MAX, bins=10
+        )
 
         # The maximum membrane potential should be > -70 (the highest is -52)
         assert proj.range["max"] > -70.0
@@ -371,8 +404,12 @@ class TestRollingActivityWindow:
         # Tick 110: A and B spike
         acc.record_tick(110, [10, 20])
 
-        assert acc.spikes_in_window(10) == 3, f"A should have 3 spikes, got {acc.spikes_in_window(10)}"
-        assert acc.spikes_in_window(20) == 1, f"B should have 1 spike, got {acc.spikes_in_window(20)}"
+        assert (
+            acc.spikes_in_window(10) == 3
+        ), f"A should have 3 spikes, got {acc.spikes_in_window(10)}"
+        assert (
+            acc.spikes_in_window(20) == 1
+        ), f"B should have 1 spike, got {acc.spikes_in_window(20)}"
 
         assert acc.firing_rate(10) == 3 / 20, f"A rate: {acc.firing_rate(10)} != {3/20}"
         assert acc.firing_rate(20) == 1 / 20, f"B rate: {acc.firing_rate(20)} != {1/20}"
@@ -390,7 +427,9 @@ class TestRollingActivityWindow:
         # Advance each tick 101..119 — spike should remain
         for tick in range(101, 120):
             acc.record_tick(tick, [])
-            assert acc.spikes_in_window(1) == 1, f"Spike should be present at tick {tick}"
+            assert (
+                acc.spikes_in_window(1) == 1
+            ), f"Spike should be present at tick {tick}"
 
         # Tick 120: spike at 100 expires (100 <= 120-20 = 100)
         acc.record_tick(120, [])
@@ -413,15 +452,21 @@ class TestRollingActivityWindow:
 
         # Tick 120: spike at 100 expires (100 <= 100)
         acc.record_tick(120, [])
-        assert acc.spikes_in_window(1) == 2, f"Should be 2 after expiry, got {acc.spikes_in_window(1)}"
+        assert (
+            acc.spikes_in_window(1) == 2
+        ), f"Should be 2 after expiry, got {acc.spikes_in_window(1)}"
 
         # Tick 125: spike at 105 expires (105 <= 105)
         acc.record_tick(125, [])
-        assert acc.spikes_in_window(1) == 1, f"Should be 1 after expiry, got {acc.spikes_in_window(1)}"
+        assert (
+            acc.spikes_in_window(1) == 1
+        ), f"Should be 1 after expiry, got {acc.spikes_in_window(1)}"
 
         # Tick 130: spike at 110 expires (110 <= 110)
         acc.record_tick(130, [])
-        assert acc.spikes_in_window(1) == 0, f"Should be 0 after expiry, got {acc.spikes_in_window(1)}"
+        assert (
+            acc.spikes_in_window(1) == 0
+        ), f"Should be 0 after expiry, got {acc.spikes_in_window(1)}"
 
     # ------------------------------------------------------------------
     # TEST D — No spikes
@@ -566,12 +611,14 @@ class TestTelemetryErrorVisibility:
 
         fresh_buffer = ErrorBuffer()
         import src.self_organization.runtime_adapter as adapter
+
         original_buffer = adapter._runtime_error_buffer  # type: ignore[attr-defined]
         adapter._runtime_error_buffer = fresh_buffer  # type: ignore[attr-defined]
         try:
             from src.dashboard.live_projection import (
                 _emit_telemetry_error,  # type: ignore[attr-defined]
             )
+
             _emit_telemetry_error(42, ValueError("test telemetry error"))
 
             errors = fresh_buffer.events
@@ -596,7 +643,9 @@ class TestTelemetryErrorVisibility:
 class TestRuntimeControllerIntegration:
     """Real RuntimeController with post-tick hook and TelemetryFrameStore."""
 
-    def test_controller_hook_produces_frames(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_controller_hook_produces_frames(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """RuntimeController with real hook produces TelemetryFrames."""
         from src.controller.runtime import RuntimeController
         from src.dashboard.live_projection import make_telemetry_hook
@@ -640,15 +689,30 @@ class TestIOFlowSemantics:
 
         io = compute_io_flow(network)
         expected = io.total_input_spikes / network.current_tick / io.input_count
-        assert io.input_mean_rate == pytest.approx(expected, rel=1e-9)
-        assert io.input_mean_rate == pytest.approx(io.total_input_spikes / 5 / io.input_count, rel=1e-9)
+        assert (
+            io.input_mean_rate
+            == pytest.approx(  # pyright: ignore[reportUnknownMemberType]
+                expected, rel=1e-9
+            )
+        )
+        assert (
+            io.input_mean_rate
+            == pytest.approx(  # pyright: ignore[reportUnknownMemberType]
+                io.total_input_spikes / 5 / io.input_count, rel=1e-9
+            )
+        )
 
-    def test_propagation_requires_all_three_populations(self, network: NeuralNetwork) -> None:
+    def test_propagation_requires_all_three_populations(
+        self, network: NeuralNetwork
+    ) -> None:
         """propagation_active is false unless input, hidden and output spiked recently."""
         network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
         io = compute_io_flow(network)
         assert io.propagation_active is False
-        assert "input→hidden→output" in io.propagation_criterion or "no recent" in io.propagation_criterion
+        assert (
+            "input→hidden→output" in io.propagation_criterion
+            or "no recent" in io.propagation_criterion
+        )
 
     def test_propagation_true_with_recent_spikes(self, network: NeuralNetwork) -> None:
         """Recent spikes in input, hidden and output populations mark propagation active."""
@@ -686,7 +750,9 @@ class TestIOFlowSemantics:
 class TestPopulationSemantics:
     """Population-level metrics are scientifically meaningful."""
 
-    def test_mean_firing_rate_no_double_tick_division(self, network: NeuralNetwork) -> None:
+    def test_mean_firing_rate_no_double_tick_division(
+        self, network: NeuralNetwork
+    ) -> None:
         """mean_firing_rate is already a per-tick rate; no extra tick division."""
         network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
         # Spike every neuron once over 4 ticks.
@@ -697,9 +763,11 @@ class TestPopulationSemantics:
 
         pop = compute_population_data(network)
         # Average per-neuron rate is ~1 spike / 4 ticks = 0.25 spikes/tick.
-        assert pop.mean_firing_rate == pytest.approx(0.25, abs=0.05)
+        assert pop.mean_firing_rate == pytest.approx(0.25, abs=0.05)  # pyright: ignore
 
-    def test_ei_ratio_unavailable_without_inhibitory(self, network: NeuralNetwork) -> None:
+    def test_ei_ratio_unavailable_without_inhibitory(
+        self, network: NeuralNetwork
+    ) -> None:
         """With zero inhibitory neurons, E/I ratio is null and status unavailable."""
         network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
         pop = compute_population_data(network)
@@ -713,6 +781,7 @@ class TestPopulationSemantics:
     def test_ei_ratio_defined_with_inhibitory(self) -> None:
         """With both E and I populations, E/I ratio equals E_count / I_count."""
         from src.core.network import Brain5DConfig
+
         cfg = {
             "seed": 42,
             "dimensions": [5, 5, 1, 1, 1],
@@ -734,19 +803,30 @@ class TestPopulationSemantics:
         rng = random.Random(42)
         b5d_config = Brain5DConfig.from_dict(cfg)
         net = NeuralNetwork(b5d_config, rng)
-        for i in range(cfg["initial_neurons"]):
-            net.add_neuron(linear_to_5d(i, tuple(cfg["dimensions"])))
-        net.set_input_output_cells("x", 0, "x", cfg["dimensions"][0] - 1)
+        dimensions = cast(
+            tuple[int, int, int, int, int],
+            tuple(
+                cast(list[int], cfg["dimensions"])
+            ),  # pyright: ignore[reportUnknownArgumentType]
+        )
+        for i in range(cast(int, cfg["initial_neurons"])):
+            net.add_neuron(linear_to_5d(i, dimensions))
+        net.set_input_output_cells("x", 0, "x", dimensions[0] - 1)
         # Force some inhibitory neurons by toggling the flag on half of them.
         ids = list(net.neurons)
         for nid in ids[::2]:
             net.neurons[nid].neuron_type = NeuronType.FAST_SPIKING
         pop = compute_population_data(net)
         assert pop.inhibitory_count > 0
-        assert pop.ei_ratio == pytest.approx(pop.excitatory_count / pop.inhibitory_count, rel=1e-9)
+        assert pop.ei_ratio == pytest.approx(  # pyright: ignore
+            pop.excitatory_count / pop.inhibitory_count, rel=1e-9
+        )
+        assert pop.ei_status == "available"
         assert pop.ei_status == "available"
 
-    def test_controller_hook_activity_tracks_spikes(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_controller_hook_activity_tracks_spikes(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Activity accumulator receives real StepResult.spike_ids."""
         from src.controller.runtime import RuntimeController
         from src.dashboard.live_projection import make_telemetry_hook
@@ -766,7 +846,9 @@ class TestPopulationSemantics:
         # Neuron 0 should have spiked
         assert activity_dict.get(0, 0) >= 1
 
-    def test_stale_frame_detection(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_stale_frame_detection(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Store reports stale status when frame age exceeds threshold.
 
         Uses stats_at(runtime_tick) with the authoritative network tick,
@@ -785,7 +867,9 @@ class TestPopulationSemantics:
 
         # At tick 50, last frame at 50, age = 0 -> live
         stats = store.stats_at(network.current_tick)
-        assert stats["status"] == "live", f"Expected live at tick 50, got {stats['status']}"
+        assert (
+            stats["status"] == "live"
+        ), f"Expected live at tick 50, got {stats['status']}"
         assert stats["frame_age_ticks"] == 0
 
         # Now advance runtime WITHOUT the telemetry hook
@@ -797,8 +881,12 @@ class TestPopulationSemantics:
         # frame_age = 80 - 50 = 30, threshold = 2 * 10 = 20
         # 30 > 20 -> stale
         stats2 = store.stats_at(network.current_tick)
-        assert stats2["status"] == "stale", f"Expected stale at tick 80, got {stats2['status']}"
-        assert stats2["frame_age_ticks"] == 30, f"Expected age 30, got {stats2['frame_age_ticks']}"
+        assert (
+            stats2["status"] == "stale"
+        ), f"Expected stale at tick 80, got {stats2['status']}"
+        assert (
+            stats2["frame_age_ticks"] == 30
+        ), f"Expected age 30, got {stats2['frame_age_ticks']}"
 
 
 # ============================================================================
@@ -809,7 +897,9 @@ class TestPopulationSemantics:
 class TestRealErrorPath:
     """Telemetry hook failure through real RuntimeController."""
 
-    def test_failing_hook_does_not_crash_simulation(self, network: NeuralNetwork) -> None:
+    def test_failing_hook_does_not_crash_simulation(
+        self, network: NeuralNetwork
+    ) -> None:
         """A failing telemetry hook does not stop the simulation."""
         from src.controller.runtime import RuntimeController
 
@@ -823,7 +913,9 @@ class TestRealErrorPath:
         controller.run_ticks(10)
         assert network.current_tick == 10
 
-    def test_failing_hook_produces_error_event(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_failing_hook_produces_error_event(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """A failing telemetry hook produces a RuntimeErrorEvent in the error buffer."""
         import src.self_organization.runtime_adapter as adapter
         from src.controller.runtime import RuntimeController
@@ -834,9 +926,11 @@ class TestRealErrorPath:
         original = adapter._runtime_error_buffer  # type: ignore[attr-defined]
         adapter._runtime_error_buffer = fresh_buffer  # type: ignore[attr-defined]
         try:
+
             class FailingStore:
                 def on_tick_complete(self, network, result):  # type: ignore[no-untyped-def]
                     raise RuntimeError("deliberate telemetry failure")
+
             failing_store: TelemetryFrameStore = FailingStore()  # type: ignore[assignment]
 
             controller = RuntimeController(network)
@@ -854,7 +948,9 @@ class TestRealErrorPath:
         finally:
             adapter._runtime_error_buffer = original  # type: ignore[attr-defined]
 
-    def test_error_api_e2e(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
+    def test_error_api_e2e(
+        self, network: NeuralNetwork, config_dict: dict[str, Any]
+    ) -> None:
         """Telemetry error event is visible through /api/errors endpoint."""
         import src.self_organization.runtime_adapter as adapter
         from src.controller.runtime import RuntimeController
@@ -865,9 +961,11 @@ class TestRealErrorPath:
         original = adapter._runtime_error_buffer  # type: ignore[attr-defined]
         adapter._runtime_error_buffer = fresh_buffer  # type: ignore[attr-defined]
         try:
+
             class FailingStore:
                 def on_tick_complete(self, network, result):  # type: ignore[no-untyped-def]
                     raise RuntimeError("deliberate telemetry failure")
+
             failing_store: TelemetryFrameStore = FailingStore()  # type: ignore[assignment]
 
             controller = RuntimeController(network)
@@ -882,14 +980,16 @@ class TestRealErrorPath:
             response: dict[str, object] = {
                 "available": True,
                 "count": len(errors),
-                "events": [{
-                    "tick": event.tick,
-                    "component": event.component,
-                    "phase": event.phase,
-                    "message": event.message,
-                    "fatal": event.fatal,
-                    "exception_type": event.exception_type,
-                }],
+                "events": [
+                    {
+                        "tick": event.tick,
+                        "component": event.component,
+                        "phase": event.phase,
+                        "message": event.message,
+                        "fatal": event.fatal,
+                        "exception_type": event.exception_type,
+                    }
+                ],
             }
             assert response["available"] is True
             assert response["count"] >= 1  # type: ignore[operator]
@@ -999,7 +1099,9 @@ class TestCadenceEnforcement:
 class TestRobustFrameAge:
     """Frame age is computed against authoritative runtime tick."""
 
-    def test_frame_age_grows_when_runtime_advances(self, network: NeuralNetwork) -> None:
+    def test_frame_age_grows_when_runtime_advances(
+        self, network: NeuralNetwork
+    ) -> None:
         """When runtime advances but frame stays fixed, age increases."""
         store = TelemetryFrameStore(capture_interval_ticks=20, activity_window_ticks=20)
         store.prime(network)

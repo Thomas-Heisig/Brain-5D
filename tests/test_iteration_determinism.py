@@ -92,7 +92,9 @@ def build_network(config: dict[str, Any], seed: int = 42) -> NeuralNetwork:
 class TestIterationDeterminism:
     """Scientific execution paths use deterministic iteration order."""
 
-    def test_identical_runs_produce_identical_spike_sequence(self, config_dict: dict[str, Any]) -> None:
+    def test_identical_runs_produce_identical_spike_sequence(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Two identical runs produce identical spike sequences."""
         network_a = build_network(config_dict)
         network_b = build_network(config_dict)
@@ -108,7 +110,9 @@ class TestIterationDeterminism:
 
         assert spikes_a == spikes_b
 
-    def test_identical_runs_produce_identical_neuron_state(self, config_dict: dict[str, Any]) -> None:
+    def test_identical_runs_produce_identical_neuron_state(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Two identical runs produce identical neuron states at each tick."""
         network_a = build_network(config_dict)
         network_b = build_network(config_dict)
@@ -123,9 +127,13 @@ class TestIterationDeterminism:
                 nb = network_b.neurons[nid]
                 assert na.v == nb.v, f"Tick {tick}, neuron {nid}: v mismatch"
                 assert na.u == nb.u, f"Tick {tick}, neuron {nid}: u mismatch"
-                assert na.energy == nb.energy, f"Tick {tick}, neuron {nid}: energy mismatch"
+                assert (
+                    na.energy == nb.energy
+                ), f"Tick {tick}, neuron {nid}: energy mismatch"
 
-    def test_identical_runs_produce_identical_synapse_state(self, config_dict: dict[str, Any]) -> None:
+    def test_identical_runs_produce_identical_synapse_state(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Two identical runs produce identical synapse weights."""
         network_a = build_network(config_dict)
         network_b = build_network(config_dict)
@@ -144,7 +152,9 @@ class TestIterationDeterminism:
                 assert sa.weight == sb.weight
                 assert sa.eligibility == sb.eligibility
 
-    def test_identical_runs_produce_identical_event_queue(self, config_dict: dict[str, Any]) -> None:
+    def test_identical_runs_produce_identical_event_queue(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Two identical runs produce identical event queues."""
         network_a = build_network(config_dict)
         network_b = build_network(config_dict)
@@ -157,7 +167,9 @@ class TestIterationDeterminism:
             assert network_a.queued_event_count == network_b.queued_event_count
 
         # Compare event slot contents
-        for slot_idx, (slot_a, slot_b) in enumerate(zip(network_a.event_slots, network_b.event_slots)):
+        for slot_idx, (slot_a, slot_b) in enumerate(
+            zip(network_a.event_slots, network_b.event_slots)
+        ):
             assert len(slot_a) == len(slot_b), f"Slot {slot_idx} length mismatch"
             for ea, eb in zip(slot_a, slot_b):
                 assert ea.source_id == eb.source_id
@@ -165,7 +177,9 @@ class TestIterationDeterminism:
                 assert ea.weight == eb.weight
                 assert ea.delivery_tick == eb.delivery_tick
 
-    def test_identical_runs_produce_identical_rng_state(self, config_dict: dict[str, Any]) -> None:
+    def test_identical_runs_produce_identical_rng_state(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Two identical runs produce identical RNG states."""
         network_a = build_network(config_dict)
         network_b = build_network(config_dict)
@@ -178,7 +192,9 @@ class TestIterationDeterminism:
         state_b = network_b.rng.getstate()
         assert state_a == state_b
 
-    def test_homeostasis_iteration_deterministic(self, config_dict: dict[str, Any]) -> None:
+    def test_homeostasis_iteration_deterministic(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Homeostasis engine iteration is deterministic."""
         # Enable homeostasis
         config_dict["homeostasis"]["enabled"] = True
@@ -200,7 +216,9 @@ class TestIterationDeterminism:
         assert stats_a.mean_rate_hz == stats_b.mean_rate_hz
         assert stats_a.mean_threshold_adaptation == stats_b.mean_threshold_adaptation
 
-    def test_learning_iteration_deterministic(self, config_dict: dict[str, Any]) -> None:
+    def test_learning_iteration_deterministic(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Learning engine iteration is deterministic."""
         # Enable STDP
         config_dict["stdp"]["enabled"] = True
@@ -221,7 +239,9 @@ class TestIterationDeterminism:
         stats_b = learn_b.stats
         assert stats_a.stdp_weight_updates == stats_b.stdp_weight_updates
 
-    def test_three_independent_runs_identical(self, config_dict: dict[str, Any]) -> None:
+    def test_three_independent_runs_identical(
+        self, config_dict: dict[str, Any]
+    ) -> None:
         """Three independent runs produce identical final state."""
         networks = [build_network(config_dict) for _ in range(3)]
         results = []
@@ -231,6 +251,7 @@ class TestIterationDeterminism:
                 net.step()
             # Capture canonical state
             from src.research.canonical_state import canonical_state_digest
+
             digest = canonical_state_digest(net)  # type: ignore[arg-type]
             results.append(digest)  # type: ignore[arg-type]
 

@@ -487,7 +487,9 @@ def build_parameters(config_dict: dict[str, Any] | None) -> dict[str, ParameterS
     # Network
     params["network.initial_connections_per_neuron"] = _param(
         "network.initial_connections_per_neuron",
-        _nested_get(config_dict, "network", "initial_connections_per_neuron", default=10),
+        _nested_get(
+            config_dict, "network", "initial_connections_per_neuron", default=10
+        ),
         default=10,
         min=0,
         max=10000,

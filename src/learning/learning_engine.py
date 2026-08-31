@@ -391,9 +391,7 @@ class LearningEngine:
 
         # Remove states for synapses that no longer exist
         self._states = {
-            key: state
-            for key, state in self._states.items()
-            if key in live_keys
+            key: state for key, state in self._states.items() if key in live_keys
         }
 
         self._incoming = incoming

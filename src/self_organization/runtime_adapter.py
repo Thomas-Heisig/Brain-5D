@@ -83,6 +83,7 @@ class ErrorBuffer:
 
     def __init__(self, max_size: int = 100) -> None:
         import threading
+
         self._lock = threading.RLock()
         self._max_size = max_size
         self._events: list[RuntimeErrorEvent] = []

@@ -49,13 +49,33 @@ _MEDIA_TYPES: dict[str, str] = {
     ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 }
 
-_BINARY_EXTENSIONS = frozenset({
-    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg",
-    ".mp4", ".webm", ".ogg", ".mov", ".avi",
-    ".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus",
-    ".pdf", ".docx", ".xlsx", ".xls",
-    ".ico", ".bmp",
-})
+_BINARY_EXTENSIONS = frozenset(
+    {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".webp",
+        ".svg",
+        ".mp4",
+        ".webm",
+        ".ogg",
+        ".mov",
+        ".avi",
+        ".mp3",
+        ".wav",
+        ".flac",
+        ".aac",
+        ".m4a",
+        ".opus",
+        ".pdf",
+        ".docx",
+        ".xlsx",
+        ".xls",
+        ".ico",
+        ".bmp",
+    }
+)
 
 
 def _mime_type(ext: str) -> str:
@@ -108,7 +128,11 @@ def _markdown_to_html(content: str, title: str = "Document") -> str:
         line = raw_line.rstrip()
         if line.startswith("```"):
             if in_code:
-                html_parts.append("<pre><code>" + _escape_html("\n".join(code_lines)) + "</code></pre>")
+                html_parts.append(
+                    "<pre><code>"
+                    + _escape_html("\n".join(code_lines))
+                    + "</code></pre>"
+                )
                 code_lines = []
             in_code = not in_code
             continue
@@ -235,7 +259,11 @@ def _iter_markdown_blocks(content: str) -> Iterator[dict[str, Any]]:
 
         match = re.match(r"^(#{1,6})\s+(.*)$", line)
         if match:
-            yield {"type": "heading", "level": len(match.group(1)), "text": match.group(2)}
+            yield {
+                "type": "heading",
+                "level": len(match.group(1)),
+                "text": match.group(2),
+            }
             continue
 
         if re.match(r"^\s*[-*+\d]\.\s+", line):
@@ -283,8 +311,8 @@ class FileManager:
             return s, s.root(), "research"
 
         if source == "docs":
-            s = self._docs or create_docs_source(self._default_docs_root)
-            return s, s.docs_root, "docs"
+            docs = self._docs or create_docs_source(self._default_docs_root)
+            return docs, docs.docs_root, "docs"
 
         raise InvalidSourceError(f"Unknown source: {source}")
 
@@ -322,27 +350,36 @@ class FileManager:
                     continue
 
                 if child.is_dir():
-                    child_rel = (
-                        str(child.relative_to(root)) if child != root else ""
-                    )
+                    child_rel = str(child.relative_to(root)) if child != root else ""
                     children.append(_build(child, child_rel))
                 elif child.is_file():
                     ext = child.suffix.lower()
-                    children.append({
-                        "name": child.name,
-                        "path": str(child.relative_to(root)),
-                        "type": "file",
-                        "size_bytes": child.stat().st_size,
-                        "ext": ext,
-                        "is_binary": ext in _BINARY_EXTENSIONS,
-                        "is_image": ext in {
-                            ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp",
-                        },
-                        "is_video": ext in {".mp4", ".webm", ".ogg", ".mov", ".avi"},
-                        "is_audio": ext in {".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus"},
-                        "is_spreadsheet": ext in {".xlsx", ".xls", ".xlsm", ".ods"},
-                        "is_document": ext in {".docx", ".doc"},
-                    })
+                    children.append(
+                        {
+                            "name": child.name,
+                            "path": str(child.relative_to(root)),
+                            "type": "file",
+                            "size_bytes": child.stat().st_size,
+                            "ext": ext,
+                            "is_binary": ext in _BINARY_EXTENSIONS,
+                            "is_image": ext
+                            in {
+                                ".png",
+                                ".jpg",
+                                ".jpeg",
+                                ".gif",
+                                ".webp",
+                                ".svg",
+                                ".bmp",
+                            },
+                            "is_video": ext
+                            in {".mp4", ".webm", ".ogg", ".mov", ".avi"},
+                            "is_audio": ext
+                            in {".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus"},
+                            "is_spreadsheet": ext in {".xlsx", ".xls", ".xlsm", ".ods"},
+                            "is_document": ext in {".docx", ".doc"},
+                        }
+                    )
 
             return {
                 "name": root.name if rel_prefix == "" else path.name,
@@ -377,13 +414,15 @@ class FileManager:
             rel = str(f.relative_to(root))
             if q in f.name.lower() or q in rel.lower():
                 ext = f.suffix.lower()
-                results.append({
-                    "name": f.name,
-                    "path": rel,
-                    "size_bytes": f.stat().st_size,
-                    "ext": ext,
-                    "is_binary": ext in _BINARY_EXTENSIONS,
-                })
+                results.append(
+                    {
+                        "name": f.name,
+                        "path": rel,
+                        "size_bytes": f.stat().st_size,
+                        "ext": ext,
+                        "is_binary": ext in _BINARY_EXTENSIONS,
+                    }
+                )
         return results
 
     # ------------------------------------------------------------------
@@ -615,14 +654,107 @@ class FileManager:
         sentences = [s for s in sentences if s.strip()]
 
         # Language guess
-        de_markers = sum(1 for w in ["der", "die", "das", "und", "ist", "von", "mit", "für", "den", "dem"] if w in words)
-        en_markers = sum(1 for w in ["the", "and", "is", "of", "to", "a", "in", "for", "that", "with"] if w in words)
+        de_markers = sum(
+            1
+            for w in [
+                "der",
+                "die",
+                "das",
+                "und",
+                "ist",
+                "von",
+                "mit",
+                "für",
+                "den",
+                "dem",
+            ]
+            if w in words
+        )
+        en_markers = sum(
+            1
+            for w in ["the", "and", "is", "of", "to", "a", "in", "for", "that", "with"]
+            if w in words
+        )
         language = "de" if de_markers > en_markers else "en"
 
         # Stopwords
         stopwords = {
-            "en": {"the", "and", "is", "of", "to", "a", "in", "for", "that", "with", "as", "on", "by", "this", "from", "it", "be", "are", "was", "were", "been", "have", "has", "had", "do", "does", "did", "will", "would", "could", "should", "may", "might", "can", "shall"},
-            "de": {"der", "die", "das", "und", "ist", "von", "mit", "für", "den", "dem", "ein", "eine", "einer", "eines", "einem", "einen", "zu", "auf", "an", "in", "bei", "nach", "aus", "durch", "wie", "so", "wenn", "dann", "als", "auch", "noch", "nur", "oder", "aber", "sondern", "weil", "dass"},
+            "en": {
+                "the",
+                "and",
+                "is",
+                "of",
+                "to",
+                "a",
+                "in",
+                "for",
+                "that",
+                "with",
+                "as",
+                "on",
+                "by",
+                "this",
+                "from",
+                "it",
+                "be",
+                "are",
+                "was",
+                "were",
+                "been",
+                "have",
+                "has",
+                "had",
+                "do",
+                "does",
+                "did",
+                "will",
+                "would",
+                "could",
+                "should",
+                "may",
+                "might",
+                "can",
+                "shall",
+            },
+            "de": {
+                "der",
+                "die",
+                "das",
+                "und",
+                "ist",
+                "von",
+                "mit",
+                "für",
+                "den",
+                "dem",
+                "ein",
+                "eine",
+                "einer",
+                "eines",
+                "einem",
+                "einen",
+                "zu",
+                "auf",
+                "an",
+                "in",
+                "bei",
+                "nach",
+                "aus",
+                "durch",
+                "wie",
+                "so",
+                "wenn",
+                "dann",
+                "als",
+                "auch",
+                "noch",
+                "nur",
+                "oder",
+                "aber",
+                "sondern",
+                "weil",
+                "dass",
+            },
         }[language]
 
         # Keywords by frequency
@@ -644,11 +776,62 @@ class FileManager:
             flesch = 206.835 - (1.015 * asl) - (84.6 * asw)
             readability = {"score": round(flesch, 2), "label": "flesch_reading_ease"}
         else:
-            readability = {"score": round(avg_sentence_length, 2), "label": "avg_words_per_sentence"}
+            readability = {
+                "score": round(avg_sentence_length, 2),
+                "label": "avg_words_per_sentence",
+            }
 
         # Sentiment
-        positive = {"good", "great", "excellent", "positive", "success", "improve", "benefit", "best", "happy", "love", "nice", "easy", "strong", "gut", "grossartig", "ausgezeichnet", "positiv", "erfolg", "verbessern", "vorteil", "beste", "glücklich", "liebe", "schön", "einfach", "stark"}
-        negative = {"bad", "error", "fail", "problem", "bug", "issue", "wrong", "poor", "negative", "difficult", "schlecht", "fehler", "scheitern", "problem", "bug", "problem", "falsch", "arm", "negativ", "schwierig"}
+        positive = {
+            "good",
+            "great",
+            "excellent",
+            "positive",
+            "success",
+            "improve",
+            "benefit",
+            "best",
+            "happy",
+            "love",
+            "nice",
+            "easy",
+            "strong",
+            "gut",
+            "grossartig",
+            "ausgezeichnet",
+            "positiv",
+            "erfolg",
+            "verbessern",
+            "vorteil",
+            "beste",
+            "glücklich",
+            "liebe",
+            "schön",
+            "einfach",
+            "stark",
+        }
+        negative = {
+            "bad",
+            "error",
+            "fail",
+            "problem",
+            "bug",
+            "issue",
+            "wrong",
+            "poor",
+            "negative",
+            "difficult",
+            "schlecht",
+            "fehler",
+            "scheitern",
+            "problem",
+            "bug",
+            "problem",
+            "falsch",
+            "arm",
+            "negativ",
+            "schwierig",
+        }
         pos_count = sum(1 for w in words if w in positive)
         neg_count = sum(1 for w in words if w in negative)
         sentiment_score = pos_count - neg_count
@@ -747,7 +930,9 @@ class FileManager:
 
         raise FileManagerError(f"Unsupported export format: {fmt}")
 
-    def get_history(self, source: str, file_path: str, limit: int = 20) -> list[dict[str, Any]]:
+    def get_history(
+        self, source: str, file_path: str, limit: int = 20
+    ) -> list[dict[str, Any]]:
         """Return git history for a file under the configured source root.
 
         Args:
@@ -777,8 +962,15 @@ class FileManager:
         try:
             result = subprocess.run(
                 [
-                    "git", "log", f"-n{limit}", "--follow", "--oneline",
-                    "--format=%H|%ad|%an|%s", "--date=iso-strict", "--", str(rel)
+                    "git",
+                    "log",
+                    f"-n{limit}",
+                    "--follow",
+                    "--oneline",
+                    "--format=%H|%ad|%an|%s",
+                    "--date=iso-strict",
+                    "--",
+                    str(rel),
                 ],
                 cwd=str(root),
                 capture_output=True,
@@ -798,12 +990,14 @@ class FileManager:
             parts = line.split("|", 3)
             if len(parts) < 4:
                 continue
-            history.append({
-                "hash": parts[0],
-                "date": parts[1],
-                "author": parts[2],
-                "message": parts[3],
-            })
+            history.append(
+                {
+                    "hash": parts[0],
+                    "date": parts[1],
+                    "author": parts[2],
+                    "message": parts[3],
+                }
+            )
         return history
 
 
@@ -842,9 +1036,12 @@ def register_file_manager_routes(
     if path == "/api/files/open":
         source = query.get("source", ["research"])[0]
         try:
+            # fmt: off
             _obj, root, _name = fm._resolve_source(source)  # pyright: ignore[reportPrivateUsage]
+            # fmt: on
             import os
             import subprocess
+
             if os.name == "nt":
                 subprocess.Popen(["explorer", str(root.resolve())])
             else:
@@ -856,7 +1053,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/content/"):
         prefix = "/api/files/content/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
 
         try:
@@ -868,7 +1065,11 @@ def register_file_manager_routes(
             )
             return True
         except (SourceNotAvailableError, PathTraversalError) as exc:
-            status = HTTPStatus.NOT_FOUND if isinstance(exc, SourceNotAvailableError) else HTTPStatus.FORBIDDEN
+            status = (
+                HTTPStatus.NOT_FOUND
+                if isinstance(exc, SourceNotAvailableError)
+                else HTTPStatus.FORBIDDEN
+            )
             handler._send_json({"error": str(exc)}, status)
             return True
         except OSError as exc:
@@ -889,19 +1090,21 @@ def register_file_manager_routes(
             handler.wfile.write(data)
         else:
             text_content = cast(str, content)
-            handler._send_json({
-                "path": file_path,
-                "name": Path(file_path).name,
-                "content": text_content,
-                "size_bytes": len(text_content.encode("utf-8")),
-                "ext": Path(file_path).suffix.lower(),
-                "is_binary": False,
-            })
+            handler._send_json(
+                {
+                    "path": file_path,
+                    "name": Path(file_path).name,
+                    "content": text_content,
+                    "size_bytes": len(text_content.encode("utf-8")),
+                    "ext": Path(file_path).suffix.lower(),
+                    "is_binary": False,
+                }
+            )
         return True
 
     if path.startswith("/api/files/save/") and handler.command == "PUT":
         prefix = "/api/files/save/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
         try:
             body = handler._read_json_body()
@@ -921,7 +1124,9 @@ def register_file_manager_routes(
             return True
 
         try:
-            result = fm.save_content(source, file_path, content, backup=body.get("backup", True))
+            result = fm.save_content(
+                source, file_path, content, backup=body.get("backup", True)
+            )
             handler._send_json(result)
         except FileNotFoundError as exc:
             handler._send_json({"error": str(exc)}, HTTPStatus.NOT_FOUND)
@@ -935,7 +1140,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/history/"):
         prefix = "/api/files/history/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
         limit = int(query.get("limit", ["20"])[0])
 
@@ -950,7 +1155,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/meta/") and handler.command == "GET":
         prefix = "/api/files/meta/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
 
         try:
@@ -964,7 +1169,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/meta/") and handler.command == "PUT":
         prefix = "/api/files/meta/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
         try:
             body = handler._read_json_body()
@@ -984,7 +1189,9 @@ def register_file_manager_routes(
             return True
 
         try:
-            result = fm.save_meta(source, file_path, content, backup=body.get("backup", True))
+            result = fm.save_meta(
+                source, file_path, content, backup=body.get("backup", True)
+            )
             handler._send_json(result)
         except FileNotFoundError as exc:
             handler._send_json({"error": str(exc)}, HTTPStatus.NOT_FOUND)
@@ -998,7 +1205,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/analyze/"):
         prefix = "/api/files/analyze/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
 
         try:
@@ -1014,7 +1221,7 @@ def register_file_manager_routes(
 
     if path.startswith("/api/files/export/"):
         prefix = "/api/files/export/"
-        file_path = unquote(path[len(prefix):])
+        file_path = unquote(path[len(prefix) :])
         source = query.get("source", ["research"])[0]
         fmt = query.get("format", ["html"])[0]
 
@@ -1022,7 +1229,9 @@ def register_file_manager_routes(
             filename, data, mime = fm.export_content(source, file_path, fmt)
             handler.send_response(HTTPStatus.OK)
             handler.send_header("Content-Type", mime)
-            handler.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+            handler.send_header(
+                "Content-Disposition", f'attachment; filename="{filename}"'
+            )
             handler.send_header("Content-Length", str(len(data)))
             handler.send_header("Cache-Control", "no-cache")
             handler.send_header("Access-Control-Allow-Origin", "*")

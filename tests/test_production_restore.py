@@ -119,14 +119,14 @@ def _state_digest(
         "neuron_v": tuple(network.neurons[nid].v for nid in ids),
         "neuron_u": tuple(network.neurons[nid].u for nid in ids),
         "neuron_energy": tuple(network.neurons[nid].energy for nid in ids),
-        "neuron_spike_counter": tuple(network.neurons[nid].spike_counter for nid in ids),
+        "neuron_spike_counter": tuple(
+            network.neurons[nid].spike_counter for nid in ids
+        ),
         "synapse_weights": tuple(
-            synapse_weights[key]
-            for key in sorted(synapse_weights)
+            synapse_weights[key] for key in sorted(synapse_weights)
         ),
         "synapse_eligibility": tuple(
-            synapse_eligibility[key]
-            for key in sorted(synapse_eligibility)
+            synapse_eligibility[key] for key in sorted(synapse_eligibility)
         ),
     }
 
@@ -139,13 +139,15 @@ def _state_digest(
         learning_traces: list[tuple[int, int, object, object, float]] = []
         for key, state in learning._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
-            learning_traces.append((
-                pre_id,
-                target_id,
-                state.last_pre_tick,
-                state.last_post_tick,
-                state.eligibility.value,
-            ))
+            learning_traces.append(
+                (
+                    pre_id,
+                    target_id,
+                    state.last_pre_tick,
+                    state.last_post_tick,
+                    state.eligibility.value,
+                )
+            )
         digest["learning_traces"] = tuple(sorted(learning_traces))
         digest["pending_rewards"] = tuple(
             (r.value, r.tick) for r in learning._pending_rewards  # type: ignore[attr-defined]
@@ -208,13 +210,15 @@ class TestProductionRestoreBundle:
         learning_states: list[dict[str, object]] = []
         for key, state in learn._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
-            learning_states.append({
-                "pre_id": pre_id,
-                "target_id": target_id,
-                "last_pre_tick": state.last_pre_tick,
-                "last_post_tick": state.last_post_tick,
-                "eligibility_value": state.eligibility.value,
-            })
+            learning_states.append(
+                {
+                    "pre_id": pre_id,
+                    "target_id": target_id,
+                    "last_pre_tick": state.last_pre_tick,
+                    "last_post_tick": state.last_post_tick,
+                    "eligibility_value": state.eligibility.value,
+                }
+            )
 
         checkpoint = capture_runtime_checkpoint(
             cast(Any, network),
@@ -251,19 +255,34 @@ class TestProductionRestoreBundle:
         # ── Verify full state identity ───────────────────────────────────
         assert restored_digest["tick"] == reference_digest["tick"]
         assert restored_digest["total_spikes"] == reference_digest["total_spikes"]
-        assert restored_digest["total_events_processed"] == reference_digest["total_events_processed"]
-        assert restored_digest["queued_event_count"] == reference_digest["queued_event_count"]
+        assert (
+            restored_digest["total_events_processed"]
+            == reference_digest["total_events_processed"]
+        )
+        assert (
+            restored_digest["queued_event_count"]
+            == reference_digest["queued_event_count"]
+        )
         assert restored_digest["neuron_v"] == reference_digest["neuron_v"]
         assert restored_digest["neuron_u"] == reference_digest["neuron_u"]
         assert restored_digest["neuron_energy"] == reference_digest["neuron_energy"]
-        assert restored_digest["neuron_spike_counter"] == reference_digest["neuron_spike_counter"]
+        assert (
+            restored_digest["neuron_spike_counter"]
+            == reference_digest["neuron_spike_counter"]
+        )
         assert restored_digest["synapse_weights"] == reference_digest["synapse_weights"]
-        assert restored_digest["synapse_eligibility"] == reference_digest["synapse_eligibility"]
+        assert (
+            restored_digest["synapse_eligibility"]
+            == reference_digest["synapse_eligibility"]
+        )
 
         # Homeostasis state
         assert "homeostasis_rates" in restored_digest
         assert "homeostasis_rates" in reference_digest
-        assert restored_digest["homeostasis_rates"] == reference_digest["homeostasis_rates"]
+        assert (
+            restored_digest["homeostasis_rates"]
+            == reference_digest["homeostasis_rates"]
+        )
 
         # Learning state
         assert "learning_traces" in restored_digest
@@ -337,13 +356,15 @@ class TestProductionRestoreBundle:
         learning_states: list[dict[str, object]] = []
         for key, state in learn._states.items():  # type: ignore[attr-defined]
             pre_id, target_id = key
-            learning_states.append({
-                "pre_id": pre_id,
-                "target_id": target_id,
-                "last_pre_tick": state.last_pre_tick,
-                "last_post_tick": state.last_post_tick,
-                "eligibility_value": state.eligibility.value,
-            })
+            learning_states.append(
+                {
+                    "pre_id": pre_id,
+                    "target_id": target_id,
+                    "last_pre_tick": state.last_pre_tick,
+                    "last_post_tick": state.last_post_tick,
+                    "eligibility_value": state.eligibility.value,
+                }
+            )
 
         checkpoint = capture_runtime_checkpoint(
             cast(Any, network),
@@ -378,7 +399,10 @@ class TestProductionRestoreBundle:
         )
         assert restored_at_checkpoint["tick"] == original_continued["tick"]
         assert restored_at_checkpoint["neuron_v"] == original_continued["neuron_v"]
-        assert restored_at_checkpoint["synapse_weights"] == original_continued["synapse_weights"]
+        assert (
+            restored_at_checkpoint["synapse_weights"]
+            == original_continued["synapse_weights"]
+        )
 
         # Continue restored for 10 more ticks
         if bundle.homeostasis_engine is not None:
@@ -400,5 +424,7 @@ class TestProductionRestoreBundle:
         assert restored_final["neuron_u"] == original_final["neuron_u"]
         assert restored_final["neuron_energy"] == original_final["neuron_energy"]
         assert restored_final["synapse_weights"] == original_final["synapse_weights"]
-        assert restored_final["homeostasis_rates"] == original_final["homeostasis_rates"]
+        assert (
+            restored_final["homeostasis_rates"] == original_final["homeostasis_rates"]
+        )
         assert restored_final["learning_traces"] == original_final["learning_traces"]

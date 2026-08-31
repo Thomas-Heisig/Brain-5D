@@ -40,10 +40,12 @@ def _make_network() -> NeuralNetwork:
 
     from src.core.spatial_index import linear_to_5d
 
-    config = Brain5DConfig.from_dict({
-        "dimensions": [10, 10, 1, 1, 1],
-        "network": {"initial_connections_per_neuron": 3, "neighbour_radius": 2.0},
-    })
+    config = Brain5DConfig.from_dict(
+        {
+            "dimensions": [10, 10, 1, 1, 1],
+            "network": {"initial_connections_per_neuron": 3, "neighbour_radius": 2.0},
+        }
+    )
     rng = random.Random(42)
     net = NeuralNetwork(config, rng)
     for i in range(20):
@@ -65,8 +67,12 @@ class TestErrorBuffer:
         assert buf.latest is None
 
         e1 = RuntimeErrorEvent(
-            timestamp=100, tick=1, component="test", phase="build_signal",
-            exception_type="ValueError", message="test error",
+            timestamp=100,
+            tick=1,
+            component="test",
+            phase="build_signal",
+            exception_type="ValueError",
+            message="test error",
         )
         buf.push(e1)
         assert buf.count == 1
@@ -76,10 +82,16 @@ class TestErrorBuffer:
     def test_bounded(self) -> None:
         buf = ErrorBuffer(max_size=3)
         for i in range(5):
-            buf.push(RuntimeErrorEvent(
-                timestamp=i, tick=i, component="test", phase="publish",
-                exception_type="RuntimeError", message=f"error {i}",
-            ))
+            buf.push(
+                RuntimeErrorEvent(
+                    timestamp=i,
+                    tick=i,
+                    component="test",
+                    phase="publish",
+                    exception_type="RuntimeError",
+                    message=f"error {i}",
+                )
+            )
         assert buf.count == 3
         # Oldest events should be evicted
         ticks = [e.tick for e in buf.events]
@@ -87,10 +99,16 @@ class TestErrorBuffer:
 
     def test_clear(self) -> None:
         buf = ErrorBuffer(max_size=10)
-        buf.push(RuntimeErrorEvent(
-            timestamp=0, tick=0, component="test", phase="test",
-            exception_type="E", message="m",
-        ))
+        buf.push(
+            RuntimeErrorEvent(
+                timestamp=0,
+                tick=0,
+                component="test",
+                phase="test",
+                exception_type="E",
+                message="m",
+            )
+        )
         assert buf.count == 1
         buf.clear()
         assert buf.count == 0
@@ -133,10 +151,16 @@ class TestErrorBuffer:
         def pusher(start: int, count: int) -> None:
             for i in range(start, start + count):
                 try:
-                    buf.push(RuntimeErrorEvent(
-                        timestamp=i, tick=i, component="t", phase="p",
-                        exception_type="E", message=str(i),
-                    ))
+                    buf.push(
+                        RuntimeErrorEvent(
+                            timestamp=i,
+                            tick=i,
+                            component="t",
+                            phase="p",
+                            exception_type="E",
+                            message=str(i),
+                        )
+                    )
                 except Exception as e:
                     errors.append(e)
 
@@ -298,11 +322,17 @@ class TestIntegrationErrorVisibility:
         # Inject an error into the global error buffer
         buf = get_error_buffer()
         buf.clear()
-        buf.push(RuntimeErrorEvent(
-            timestamp=0, tick=1, component="test", phase="analyze",
-            exception_type="ValueError", message="non-fatal test error",
-            fatal=False,
-        ))
+        buf.push(
+            RuntimeErrorEvent(
+                timestamp=0,
+                tick=1,
+                component="test",
+                phase="analyze",
+                exception_type="ValueError",
+                message="non-fatal test error",
+                fatal=False,
+            )
+        )
 
         builder = IntegrationStatusBuilder(
             state.snapshot(),
@@ -329,11 +359,17 @@ class TestIntegrationErrorVisibility:
 
         buf = get_error_buffer()
         buf.clear()
-        buf.push(RuntimeErrorEvent(
-            timestamp=0, tick=5, component="test", phase="publish",
-            exception_type="RuntimeError", message="fatal test error",
-            fatal=True,
-        ))
+        buf.push(
+            RuntimeErrorEvent(
+                timestamp=0,
+                tick=5,
+                component="test",
+                phase="publish",
+                exception_type="RuntimeError",
+                message="fatal test error",
+                fatal=True,
+            )
+        )
 
         builder = IntegrationStatusBuilder(
             state.snapshot(),

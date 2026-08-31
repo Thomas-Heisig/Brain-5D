@@ -9,7 +9,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.config.loader import ConfigDict
-from src.core.network import NeuralNetwork
 from src.homeostasis.engine import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
 from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
@@ -38,6 +37,7 @@ def _write_artifacts(network, homeo, learn, tmp_path, schedule, config):
     with StorageSession(network, rt):
         pass
     from tests._restore_helpers import capture_learning_state
+
     learn_state = capture_learning_state(learn)
     checkpoint = capture_runtime_checkpoint(
         network,
@@ -102,7 +102,12 @@ def main():
         create_homeostasis_engine=True,
         create_learning_engine=True,
     )
-    path_bk_restored = _dump_state(bundle.network, bundle.homeostasis_engine, bundle.learning_engine, "B_K_restored")
+    path_bk_restored = _dump_state(
+        bundle.network,
+        bundle.homeostasis_engine,
+        bundle.learning_engine,
+        "B_K_restored",
+    )
 
     print(f"State B_K original: {path_bk_orig}")
     print(f"State B_K restored: {path_bk_restored}")
@@ -115,13 +120,26 @@ def main():
             print(f"DIFFERS at K: {key}")
             detail = OUT_DIR / f"diff_at_K_{key}.json"
             detail.write_text(
-                json.dumps({"original": state_orig[key], "restored": state_restored[key]}, indent=2, sort_keys=True),
+                json.dumps(
+                    {"original": state_orig[key], "restored": state_restored[key]},
+                    indent=2,
+                    sort_keys=True,
+                ),
                 encoding="utf-8",
             )
             print(f"  detail: {detail}")
 
     # Continue to N and compare A vs B
+    run_absolute_schedule(net_b, schedule, N)
+    path_b = _dump_state(net_b, homeo_b, learn_b, "B_N")
 
+    net_a = create_network(config)
+    homeo_a = HomeostasisEngine(net_a, config)
+    homeo_a.attach()
+    learn_a = LearningEngine(net_a, config)
+    learn_a.attach()
+    run_absolute_schedule(net_a, schedule, N)
+    path_a = _dump_state(net_a, homeo_a, learn_a, "A_N")
 
     print(f"State A_N: {path_a}")
     print(f"State B_N: {path_b}")
@@ -135,7 +153,9 @@ def main():
             print(f"DIFFERS at N: {key}")
             detail = OUT_DIR / f"diff_N_{key}.json"
             detail.write_text(
-                json.dumps({"A": state_a[key], "B": state_b[key]}, indent=2, sort_keys=True),
+                json.dumps(
+                    {"A": state_a[key], "B": state_b[key]}, indent=2, sort_keys=True
+                ),
                 encoding="utf-8",
             )
             print(f"  detail: {detail}")
@@ -151,7 +171,11 @@ def main():
         if first_diff is not None:
             detail = OUT_DIR / "diff_N_first_neuron.json"
             detail.write_text(
-                json.dumps({"A": a_neurons[first_diff], "B": b_neurons.get(first_diff)}, indent=2, sort_keys=True),
+                json.dumps(
+                    {"A": a_neurons[first_diff], "B": b_neurons.get(first_diff)},
+                    indent=2,
+                    sort_keys=True,
+                ),
                 encoding="utf-8",
             )
             print(f"First diverging neuron at N: {first_diff} -> {detail}")

@@ -159,6 +159,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     """HTTP request handler for Brain-5D dashboard and operator APIs."""
 
     from src.version import BRAIN5D_VERSION_DISPLAY
+
     server_version = f"Brain5DDashboard/{BRAIN5D_VERSION_DISPLAY}"
 
     @property
@@ -256,7 +257,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             if path.startswith("/api/components/"):
-                self._send_component(path[len("/api/components/"):])
+                self._send_component(path[len("/api/components/") :])
                 return
 
             if path == "/api/parameters":
@@ -264,7 +265,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             if path.startswith("/api/parameters/"):
-                remainder = path[len("/api/parameters/"):]
+                remainder = path[len("/api/parameters/") :]
                 if remainder == "pending":
                     self._send_pending_parameters()
                     return
@@ -437,11 +438,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 errors = bridge.runtime_errors()
                 if limit > 0 and limit < len(errors):
                     errors = errors[-limit:]
-                self._send_json({
-                    "available": True,
-                    "count": len(errors),
-                    "events": cast(list[JSONValue], errors),
-                })
+                self._send_json(
+                    {
+                        "available": True,
+                        "count": len(errors),
+                        "events": cast(list[JSONValue], errors),
+                    }
+                )
                 return
 
             # ----------------------------------------------------------------
@@ -537,7 +540,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             if path.startswith("/api/parameters/") and path.endswith("/pending"):
-                name = unquote(path[len("/api/parameters/"):-len("/pending")])
+                name = unquote(path[len("/api/parameters/") : -len("/pending")])
                 self._set_pending_parameter(name, body)
                 return
 
@@ -813,7 +816,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             offset = self._query_offset(query, "offset", default=0, maximum=10_000_000)
             active_only = query.get("active_only", ["false"])[0].lower() == "true"
             self._send_json(
-                inspector.neurons(limit=limit, offset=offset, active_only=active_only).to_json()
+                inspector.neurons(
+                    limit=limit, offset=offset, active_only=active_only
+                ).to_json()
             )
             return
 
@@ -869,7 +874,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         bridge = server.structural_bridge
         # The bridge may carry a config_dict attribute (set by main.py);
         # if absent, the builder uses an empty dict (all subsystems unknown).
-        config_dict: dict[str, object] = cast("dict[str, object]", getattr(bridge, "config_dict", None) or {})
+        config_dict: dict[str, object] = cast(
+            "dict[str, object]", getattr(bridge, "config_dict", None) or {}
+        )
         builder = GateStatusBuilder(
             bridge=bridge,
             research_source=server.research_source,
@@ -903,38 +910,47 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         current_path = releases_dir / "current.json"
         if current_path.exists():
             try:
-                current = cast("dict[str, object]", json.loads(current_path.read_text(encoding="utf-8")))
+                current = cast(
+                    "dict[str, object]",
+                    json.loads(current_path.read_text(encoding="utf-8")),
+                )
             except Exception:
                 current = None
 
-        self._send_json({
-            "releases": cast(list[JSONValue], records),
-            "current": cast(JSONValue, current),
-            "source": "releases/",
-        })
+        self._send_json(
+            {
+                "releases": cast(list[JSONValue], records),
+                "current": cast(JSONValue, current),
+                "source": "releases/",
+            }
+        )
 
     def _serve_release_current(self) -> None:
         """Serve the current development release record only."""
         repo_root = Path(__file__).resolve().parents[2]
         current_path = repo_root / "releases" / "current.json"
         if not current_path.exists():
-            self._send_json({
-                "version": "unknown",
-                "status": "unknown",
-                "source": "releases/current.json",
-                "error": "releases/current.json not found",
-            })
+            self._send_json(
+                {
+                    "version": "unknown",
+                    "status": "unknown",
+                    "source": "releases/current.json",
+                    "error": "releases/current.json not found",
+                }
+            )
             return
         try:
             data = json.loads(current_path.read_text(encoding="utf-8"))
             self._send_json(cast("dict[str, JSONValue]", data))
         except Exception as exc:
-            self._send_json({
-                "version": "unknown",
-                "status": "unknown",
-                "source": "releases/current.json",
-                "error": str(exc),
-            })
+            self._send_json(
+                {
+                    "version": "unknown",
+                    "status": "unknown",
+                    "source": "releases/current.json",
+                    "error": str(exc),
+                }
+            )
 
     # ========================================================================
     # Structural / runtime POST dispatch
@@ -1122,7 +1138,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         # Check if telemetry is available
         if bridge.live_projection.frame_store is None:
             self._send_json(
-                {"error": "Live telemetry is not enabled (no TelemetryFrameStore configured)."},
+                {
+                    "error": "Live telemetry is not enabled (no TelemetryFrameStore configured)."
+                },
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
             return
@@ -1173,7 +1191,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = (
+            telemetry.accumulator if telemetry is not None else None
+        )
 
         try:
             data = compute_io_flow(network, acc)
@@ -1209,7 +1229,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = (
+            telemetry.accumulator if telemetry is not None else None
+        )
 
         try:
             data = compute_population_data(network, acc)
@@ -1245,7 +1267,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = (
+            telemetry.accumulator if telemetry is not None else None
+        )
         num_bins = int(query.get("bins", ["30"])[0])
 
         try:
@@ -1282,7 +1306,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         telemetry = bridge.live_projection.frame_store
-        acc: ActivityWindowAccumulator | None = telemetry.accumulator if telemetry is not None else None
+        acc: ActivityWindowAccumulator | None = (
+            telemetry.accumulator if telemetry is not None else None
+        )
 
         try:
             data = compute_spike_raster(network, acc)
@@ -1676,34 +1702,42 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
     def _serve_files_tree(self, query: dict[str, list[str]]) -> None:
         """Serve the unified file tree (research + docs)."""
-        self._send_json({
-            "tree": [],
-            "source": "unified",
-        })
+        self._send_json(
+            {
+                "tree": [],
+                "source": "unified",
+            }
+        )
 
     def _serve_files_search(self, query: dict[str, list[str]]) -> None:
         """Serve unified file search results."""
-        self._send_json({
-            "results": [],
-            "total": 0,
-            "source": "unified",
-        })
+        self._send_json(
+            {
+                "results": [],
+                "total": 0,
+                "source": "unified",
+            }
+        )
 
     def _serve_files_statistics(self) -> None:
         """Serve unified file statistics."""
-        self._send_json({
-            "total_files": 0,
-            "total_size_bytes": 0,
-            "source": "unified",
-        })
+        self._send_json(
+            {
+                "total_files": 0,
+                "total_size_bytes": 0,
+                "source": "unified",
+            }
+        )
 
     def _serve_file_content(self, path: str, query: dict[str, list[str]]) -> None:
         """Serve content of a unified file."""
-        self._send_json({
-            "path": path,
-            "content": "",
-            "size_bytes": 0,
-        })
+        self._send_json(
+            {
+                "path": path,
+                "content": "",
+                "size_bytes": 0,
+            }
+        )
 
     # ========================================================================
     # Operator Workbench Helpers
@@ -1713,10 +1747,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Serve all component statuses."""
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         components = snapshot.components or {}
-        self._send_json({
-            "components": {k: v.to_json() for k, v in components.items()},
-            "count": len(components),
-        })
+        self._send_json(
+            {
+                "components": {k: v.to_json() for k, v in components.items()},
+                "count": len(components),
+            }
+        )
 
     def _send_component(self, name: str) -> None:
         """Serve a single component status."""
@@ -1735,10 +1771,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Serve all parameter schemas."""
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         parameters = snapshot.parameters or {}
-        self._send_json({
-            "parameters": {k: v.to_json() for k, v in parameters.items()},
-            "count": len(parameters),
-        })
+        self._send_json(
+            {
+                "parameters": {k: v.to_json() for k, v in parameters.items()},
+                "count": len(parameters),
+            }
+        )
 
     def _send_parameter(self, name: str) -> None:
         """Serve a single parameter schema."""
@@ -1769,10 +1807,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Serve the full experiment session history."""
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         sessions = snapshot.experiment_state.sessions
-        self._send_json({
-            "sessions": [s.to_json() for s in sessions],
-            "count": len(sessions),
-        })
+        self._send_json(
+            {
+                "sessions": [s.to_json() for s in sessions],
+                "count": len(sessions),
+            }
+        )
 
     def _set_experiment_mode(
         self,
@@ -1790,11 +1830,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         state = self.dashboard_server.dashboard_state
         state.set_experiment_mode(mode)
 
-        self._send_json({
-            "ok": True,
-            "message": f"Experiment mode set to '{mode}'",
-            "mode": mode,
-        })
+        self._send_json(
+            {
+                "ok": True,
+                "message": f"Experiment mode set to '{mode}'",
+                "mode": mode,
+            }
+        )
 
     def _start_experiment_session(
         self,
@@ -1839,11 +1881,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         )
         state.start_experiment_session(session)
 
-        self._send_json({
-            "ok": True,
-            "message": f"Started {mode} session '{session_id}'",
-            "session": session.to_json(),
-        })
+        self._send_json(
+            {
+                "ok": True,
+                "message": f"Started {mode} session '{session_id}'",
+                "session": session.to_json(),
+            }
+        )
 
     def _stop_experiment_session(
         self,
@@ -1855,11 +1899,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         end_tick = int(cast(Any, body.get("end_tick", snapshot.system.tick)))
         state.stop_experiment_session(end_tick=end_tick)
 
-        self._send_json({
-            "ok": True,
-            "message": "Experiment session stopped",
-            "end_tick": end_tick,
-        })
+        self._send_json(
+            {
+                "ok": True,
+                "message": "Experiment session stopped",
+                "end_tick": end_tick,
+            }
+        )
 
     def _add_experiment_note(
         self,
@@ -1877,20 +1923,24 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         state = self.dashboard_server.dashboard_state
         state.add_experiment_note(str(note).strip())
 
-        self._send_json({
-            "ok": True,
-            "message": "Note added to active session",
-        })
+        self._send_json(
+            {
+                "ok": True,
+                "message": "Note added to active session",
+            }
+        )
 
     def _send_pending_parameters(self) -> None:
         """Serve all pending parameter changes."""
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         pending = snapshot.pending_changes or {}
-        self._send_json({
-            "pending": {k: v.to_json() for k, v in pending.items()},
-            "count": len(pending),
-            "history": [r.to_json() for r in snapshot.change_history],
-        })
+        self._send_json(
+            {
+                "pending": {k: v.to_json() for k, v in pending.items()},
+                "count": len(pending),
+                "history": [r.to_json() for r in snapshot.change_history],
+            }
+        )
 
     def _set_pending_parameter(
         self,
@@ -1930,11 +1980,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         )
         state.set_pending_change(change)
 
-        self._send_json({
-            "ok": True,
-            "message": f"Pending change recorded for '{name}'",
-            "pending": change.to_json(),
-        })
+        self._send_json(
+            {
+                "ok": True,
+                "message": f"Pending change recorded for '{name}'",
+                "pending": change.to_json(),
+            }
+        )
 
     def _apply_pending_parameters(
         self,
@@ -1955,7 +2007,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if requested_names is None:
             names = list(pending.keys())
         elif isinstance(requested_names, list):
-            names = [str(n) for n in cast(list[Any], requested_names)]
+            names = [str(n) for n in cast(list[object], requested_names)]
         else:
             self._send_json(
                 {"error": "'names' must be a list or omitted"},
@@ -1964,11 +2016,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         if not names:
-            self._send_json({
-                "ok": True,
-                "message": "No pending changes to apply",
-                "applied": [],
-            })
+            self._send_json(
+                {
+                    "ok": True,
+                    "message": "No pending changes to apply",
+                    "applied": [],
+                }
+            )
             return
 
         applied: list[str] = []
@@ -2015,13 +2069,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         state.update(pending_changes=pending)
 
-        self._send_json(cast(dict[str, Any], {
-            "ok": True,
-            "message": f"Applied {len(applied)} parameter(s)",
-            "applied": applied,
-            "failed": failed,
-            "saved_profile": save_profile,
-        }))
+        self._send_json(
+            cast(
+                dict[str, Any],
+                {
+                    "ok": True,
+                    "message": f"Applied {len(applied)} parameter(s)",
+                    "applied": applied,
+                    "failed": failed,
+                    "saved_profile": save_profile,
+                },
+            )
+        )
 
     def _cancel_pending_parameters(
         self,
@@ -2036,7 +2095,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if requested_names is None:
             names = list(pending.keys())
         elif isinstance(requested_names, list):
-            names = [str(n) for n in cast(list[Any], requested_names)]
+            names = [str(n) for n in cast(list[object], requested_names)]
         else:
             self._send_json(
                 {"error": "'names' must be a list or omitted"},
@@ -2063,11 +2122,16 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         state.update(pending_changes=pending)
 
-        self._send_json(cast(dict[str, Any], {
-            "ok": True,
-            "message": f"Cancelled {len(cancelled)} pending change(s)",
-            "cancelled": cancelled,
-        }))
+        self._send_json(
+            cast(
+                dict[str, Any],
+                {
+                    "ok": True,
+                    "message": f"Cancelled {len(cancelled)} pending change(s)",
+                    "cancelled": cancelled,
+                },
+            )
+        )
 
     def _coerce_parameter_value(
         self,
@@ -2076,7 +2140,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     ) -> JSONScalar | list[JSONValue] | dict[str, JSONValue]:
         """Coerce a proposed value towards the parameter's expected type."""
         if isinstance(value, (list, dict)):
-            return value  # type: ignore[return-value]
+            return cast("JSONScalar | list[JSONValue] | dict[str, JSONValue]", value)
 
         current = parameter.value
         if isinstance(current, bool):
@@ -2086,13 +2150,15 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if isinstance(current, (int, float)):
             try:
                 if isinstance(current, int):
-                    return int(value)  # type: ignore[arg-type]
-                return float(value)  # type: ignore[arg-type]
+                    return int(cast("Any", value))
+                return float(cast("Any", value))
             except (TypeError, ValueError):
-                return value  # type: ignore[return-value]
+                return cast(
+                    "JSONScalar | list[JSONValue] | dict[str, JSONValue]", value
+                )
         if isinstance(current, str):
             return str(value)
-        return value  # type: ignore[return-value]
+        return cast("JSONScalar | list[JSONValue] | dict[str, JSONValue]", value)
 
     # ========================================================================
     # Static / SPA

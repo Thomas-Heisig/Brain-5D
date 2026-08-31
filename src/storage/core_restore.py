@@ -236,8 +236,12 @@ def _restore_exact_neuron_state(
         neuron.last_external_current = state.last_external_current
         neuron.last_synaptic_current = state.last_synaptic_current
         neuron.firing_rate_estimate = state.firing_rate_estimate
-        neuron._spike_count_window = state.spike_count_window  # pyright: ignore[reportPrivateUsage]
-        neuron._last_update_tick = state.last_update_tick  # pyright: ignore[reportPrivateUsage]
+        neuron._spike_count_window = (  # pyright: ignore[reportPrivateUsage]
+            state.spike_count_window
+        )
+        neuron._last_update_tick = (  # pyright: ignore[reportPrivateUsage]
+            state.last_update_tick
+        )
         neuron.pre_trace = state.pre_trace
         neuron.post_trace = state.post_trace
 
@@ -337,6 +341,7 @@ def restore_learning_state(
     # Restore pending rewards (independent of learning_state presence)
     if checkpoint.pending_rewards and hasattr(learning_engine, "_pending_rewards"):
         from src.learning.reward import RewardSignal
+
         learning_engine._pending_rewards = [
             RewardSignal(value=float(r.value), tick=int(r.tick))
             for r in checkpoint.pending_rewards

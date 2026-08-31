@@ -99,9 +99,7 @@ def compose_structural_subsystem(
         }
         sp = StructuralProposal(
             proposal_id=f"legacy-{proposal.tick}-{proposal.action.value}",
-            kind=kind_map.get(
-                proposal.action.value, ProposalKind.NEUROGENESIS
-            ),
+            kind=kind_map.get(proposal.action.value, ProposalKind.NEUROGENESIS),
             reason=proposal.reason,
         )
         change = plasticity.apply_proposal(

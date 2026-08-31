@@ -29,10 +29,17 @@ jobs:
       - name: Push to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_USERNAME: ${{ secrets.HF_USERNAME || 'Thomas-Heisig' }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
           HF_REPO: Brain-5D
         run: |
           set -e
+
+          # HF_USERNAME is mandatory; fail explicitly rather than falling back.
+          if [ -z "${HF_USERNAME}" ]; then
+            echo "::error::HF_USERNAME secret is required for Hugging Face sync."
+            exit 1
+          fi
+
           # Git-Konfiguration
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"

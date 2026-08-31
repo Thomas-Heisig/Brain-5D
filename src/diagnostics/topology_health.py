@@ -26,9 +26,7 @@ class TopologyHealth:
         reachable = False
         shortest: int | None = None
         if n.input_cells and n.output_cells:
-            q: deque[tuple[int, int]] = deque(
-                (nid, 0) for nid in n.input_cells
-            )
+            q: deque[tuple[int, int]] = deque((nid, 0) for nid in n.input_cells)
             visited: set[int] = set(n.input_cells)
             while q:
                 node, depth = q.popleft()
@@ -53,8 +51,7 @@ class TopologyHealth:
             "zero_incoming": sum(v == 0 for v in in_vals),
             "zero_outgoing": sum(v == 0 for v in out_vals),
             "isolated": sum(
-                in_vals_map[nid] == 0 and out_vals_map[nid] == 0
-                for nid in neuron_ids
+                in_vals_map[nid] == 0 and out_vals_map[nid] == 0 for nid in neuron_ids
             ),
             "input_cells": len(n.input_cells),
             "output_cells": len(n.output_cells),

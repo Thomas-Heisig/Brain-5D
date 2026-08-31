@@ -160,6 +160,7 @@ function setupTabs() {
     control: null,
     console: null,
     parameterInspector: null,
+    experimentMode: null,
   };
 
   buttons.forEach(btn => {
@@ -186,6 +187,8 @@ function setupTabs() {
         instances.control = initControlPanel();
         instances.console = initOperatorConsole();
         instances.parameterInspector = initParameterInspector();
+        instances.experimentMode = new ExperimentMode();
+        instances.experimentMode.refresh();
         initialized.control = true;
       }
       if (tabName === 'research' && !initialized.research) {

@@ -136,10 +136,16 @@ class TestStructuralDeterminism:
 
         return network, adapter, coordinator
 
-    def test_identical_proposals_across_runs(self, structural_config: dict[str, Any], tmp_path: Path) -> None:
+    def test_identical_proposals_across_runs(
+        self, structural_config: dict[str, Any], tmp_path: Path
+    ) -> None:
         """Two independent runs produce identical proposal sequences."""
-        net_a, adapter_a, coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
-        net_b, adapter_b, coord_b = self._setup_full_structural(structural_config, tmp_path, 42)
+        net_a, adapter_a, coord_a = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
+        net_b, adapter_b, coord_b = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
 
         for tick in range(50):
             net_a.step()
@@ -153,10 +159,16 @@ class TestStructuralDeterminism:
         # Compare proposals seen (should be identical)
         assert coord_a._proposals_seen == coord_b._proposals_seen
 
-    def test_identical_mutations_across_runs(self, structural_config: dict[str, Any], tmp_path: Path) -> None:
+    def test_identical_mutations_across_runs(
+        self, structural_config: dict[str, Any], tmp_path: Path
+    ) -> None:
         """Two independent runs produce identical mutation counts."""
-        net_a, adapter_a, coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
-        net_b, adapter_b, coord_b = self._setup_full_structural(structural_config, tmp_path, 42)
+        net_a, adapter_a, coord_a = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
+        net_b, adapter_b, coord_b = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
 
         for tick in range(50):
             net_a.step()
@@ -168,10 +180,16 @@ class TestStructuralDeterminism:
 
         assert coord_a._mutations_applied == coord_b._mutations_applied
 
-    def test_identical_topology_across_runs(self, structural_config: dict[str, Any], tmp_path: Path) -> None:
+    def test_identical_topology_across_runs(
+        self, structural_config: dict[str, Any], tmp_path: Path
+    ) -> None:
         """Two independent runs produce identical final topology."""
-        net_a, adapter_a, _ = self._setup_full_structural(structural_config, tmp_path, 42)
-        net_b, adapter_b, _ = self._setup_full_structural(structural_config, tmp_path, 42)
+        net_a, adapter_a, _ = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
+        net_b, adapter_b, _ = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
 
         for tick in range(50):
             net_a.step()
@@ -195,18 +213,22 @@ class TestStructuralDeterminism:
         results: list[dict[str, Any]] = []
 
         for seed in [42, 42, 42]:  # Same seed for all
-            net, adapter, coord = self._setup_full_structural(structural_config, tmp_path, seed)
+            net, adapter, coord = self._setup_full_structural(
+                structural_config, tmp_path, seed
+            )
             for tick in range(50):
                 net.step()
                 if (tick + 1) % 10 == 0:
                     adapter(net.current_tick, None)
 
-            results.append({
-                "neuron_count": len(net.neurons),
-                "synapse_count": net.synapse_count,
-                "proposals_seen": coord._proposals_seen,
-                "mutations_applied": coord._mutations_applied,
-            })
+            results.append(
+                {
+                    "neuron_count": len(net.neurons),
+                    "synapse_count": net.synapse_count,
+                    "proposals_seen": coord._proposals_seen,
+                    "mutations_applied": coord._mutations_applied,
+                }
+            )
 
         assert results[0] == results[1] == results[2]
 
@@ -214,8 +236,12 @@ class TestStructuralDeterminism:
         self, structural_config: dict[str, Any], tmp_path: Path
     ) -> None:
         """Different seeds produce different structural outcomes (sanity check)."""
-        net_a, adapter_a, _coord_a = self._setup_full_structural(structural_config, tmp_path, 42)
-        net_b, adapter_b, _coord_b = self._setup_full_structural(structural_config, tmp_path, 99)
+        net_a, adapter_a, _coord_a = self._setup_full_structural(
+            structural_config, tmp_path, 42
+        )
+        net_b, adapter_b, _coord_b = self._setup_full_structural(
+            structural_config, tmp_path, 99
+        )
 
         for tick in range(100):
             net_a.step()

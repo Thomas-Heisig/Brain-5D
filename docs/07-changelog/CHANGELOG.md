@@ -9,6 +9,15 @@
 - Renamed dashboard `VERIFY` tab to `RELEASE` and added version history tree.
 - Archived legacy v0.4 Alpha.6/Alpha.7 files to prevent version collisions.
 
+### Alpha.6 CI Recovery (no scientific dynamics changed)
+- Wired Operator/Experiment/Debug mode switching in dashboard (`app.js` + `ExperimentMode`).
+- Added backend API tests and static asset regression tests for experiment mode.
+- Restored local CI green: Black, Ruff, Pylint ≥9.0, mypy strict, pyright strict.
+- Fixed pyright/mypy ignore syntax separation; cleaned redundant casts and unreachable returns.
+- GitHub Actions: added `security-events: write` permission for SARIF upload; removed Python setup from docs job.
+- Hugging Face sync workflow now fails explicitly if `HF_USERNAME` secret is missing; no GitHub username fallback.
+- Updated `GateStatusBuilder` to expose `scientific_gate`, `ci_status`, and `release_readiness` as independent sections.
+
 ### Opening Verification
 - Full test suite: **463 passed, 2 skipped, 0 failed**.
 - Alpha.6 gate: **OPEN** — no morphological self-regulation feature verified yet.

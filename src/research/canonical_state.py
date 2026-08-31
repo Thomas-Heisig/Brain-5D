@@ -163,7 +163,9 @@ class CanonicalNetworkLike(Protocol):
 # ============================================================================
 
 
-def _canonical_neuron_state(neurons: Mapping[int, CanonicalNeuronLike]) -> list[dict[str, Any]]:
+def _canonical_neuron_state(
+    neurons: Mapping[int, CanonicalNeuronLike],
+) -> list[dict[str, Any]]:
     """Capture neuron state in deterministic order (sorted by neuron_id).
 
     Returns a list of dicts with exact float/int values, no repr().
@@ -196,14 +198,16 @@ def _canonical_synapse_state(
     result: list[dict[str, Any]] = []
     for source_id in sorted(synapses):
         for synapse in sorted(synapses[source_id], key=lambda s: s.target_id):
-            result.append({
-                "source_id": source_id,
-                "target_id": synapse.target_id,
-                "weight": synapse.weight,
-                "delay": synapse.delay,
-                "eligibility": synapse.eligibility,
-                "last_pre_spike": synapse.last_pre_spike,
-            })
+            result.append(
+                {
+                    "source_id": source_id,
+                    "target_id": synapse.target_id,
+                    "weight": synapse.weight,
+                    "delay": synapse.delay,
+                    "eligibility": synapse.eligibility,
+                    "last_pre_spike": synapse.last_pre_spike,
+                }
+            )
     return result
 
 
@@ -217,12 +221,14 @@ def _canonical_event_state(
     all_events: list[dict[str, Any]] = []
     for slot in event_slots:
         for event in slot:
-            all_events.append({
-                "source_id": event.source_id,
-                "target_id": event.target_id,
-                "weight": event.weight,
-                "delivery_tick": event.delivery_tick,
-            })
+            all_events.append(
+                {
+                    "source_id": event.source_id,
+                    "target_id": event.target_id,
+                    "weight": event.weight,
+                    "delivery_tick": event.delivery_tick,
+                }
+            )
     all_events.sort(key=lambda e: (e["delivery_tick"], e["source_id"], e["target_id"]))
     return all_events
 

@@ -25,7 +25,9 @@ from src.storage.checkpoint import (
 
 
 class MockEvent:
-    def __init__(self, source_id: int, target_id: int, weight: float, delivery_tick: int):
+    def __init__(
+        self, source_id: int, target_id: int, weight: float, delivery_tick: int
+    ):
         self.source_id = source_id
         self.target_id = target_id
         self.weight = weight
@@ -67,6 +69,7 @@ class MockSynapse:
 class MockCheckpointNetwork:
     def __init__(self):
         import random
+
         self.rng = random.Random(42)
         self.current_tick = 50
         self.total_spikes = 100
@@ -108,8 +111,20 @@ class TestCheckpointV4:
         """Learning state is captured in checkpoint v4."""
         net = MockCheckpointNetwork()
         learning_states = [
-            {"pre_id": 1, "target_id": 2, "last_pre_tick": 10, "last_post_tick": 12, "eligibility_value": 0.05},
-            {"pre_id": 2, "target_id": 3, "last_pre_tick": None, "last_post_tick": None, "eligibility_value": 0.0},
+            {
+                "pre_id": 1,
+                "target_id": 2,
+                "last_pre_tick": 10,
+                "last_post_tick": 12,
+                "eligibility_value": 0.05,
+            },
+            {
+                "pre_id": 2,
+                "target_id": 3,
+                "last_pre_tick": None,
+                "last_post_tick": None,
+                "eligibility_value": 0.0,
+            },
         ]
         checkpoint = capture_runtime_checkpoint(
             net,  # type: ignore[arg-type]
@@ -148,7 +163,13 @@ class TestCheckpointV4:
         """Learning state survives write/read roundtrip."""
         net = MockCheckpointNetwork()
         learning_states = [
-            {"pre_id": 1, "target_id": 2, "last_pre_tick": 10, "last_post_tick": 15, "eligibility_value": 0.03},
+            {
+                "pre_id": 1,
+                "target_id": 2,
+                "last_pre_tick": 10,
+                "last_post_tick": 15,
+                "eligibility_value": 0.03,
+            },
         ]
         checkpoint = capture_runtime_checkpoint(
             net,  # type: ignore[arg-type]

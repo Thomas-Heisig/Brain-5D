@@ -125,7 +125,9 @@ class TestRegistryUniqueness:
                     )
                 else:
                     seen[id_str] = key
-        assert not duplicates, "Duplicate IDs across registry files:\n" + "\n".join(duplicates)
+        assert not duplicates, "Duplicate IDs across registry files:\n" + "\n".join(
+            duplicates
+        )
 
 
 # ============================================================================
@@ -144,9 +146,9 @@ class TestRegistryIdFormat:
         pattern = ID_PATTERNS["questions"]
         for entry in registry_data.get("questions", []):
             qid: str = entry.get("id", "")  # type: ignore[assignment]
-            assert pattern.match(qid), (
-                f"Question ID '{qid}' does not match pattern RQ-{{DOMAIN}}-{{NNN}}"
-            )
+            assert pattern.match(
+                qid
+            ), f"Question ID '{qid}' does not match pattern RQ-{{DOMAIN}}-{{NNN}}"
 
     def test_hypothesis_ids_have_correct_format(
         self, registry_data: dict[str, list[RegistryEntry]]
@@ -155,9 +157,9 @@ class TestRegistryIdFormat:
         pattern = ID_PATTERNS["hypotheses"]
         for entry in registry_data.get("hypotheses", []):
             hid: str = entry.get("id", "")  # type: ignore[assignment]
-            assert pattern.match(hid), (
-                f"Hypothesis ID '{hid}' does not match pattern H-{{DOMAIN}}-{{NNN}}-{{VARIANT}}"
-            )
+            assert pattern.match(
+                hid
+            ), f"Hypothesis ID '{hid}' does not match pattern H-{{DOMAIN}}-{{NNN}}-{{VARIANT}}"
 
     def test_claim_ids_have_correct_format(
         self, registry_data: dict[str, list[RegistryEntry]]
@@ -166,9 +168,9 @@ class TestRegistryIdFormat:
         pattern = ID_PATTERNS["claims"]
         for entry in registry_data.get("claims", []):
             cid: str = entry.get("id", "")  # type: ignore[assignment]
-            assert pattern.match(cid), (
-                f"Claim ID '{cid}' does not match pattern CLAIM-{{DOMAIN}}-{{NNN}}"
-            )
+            assert pattern.match(
+                cid
+            ), f"Claim ID '{cid}' does not match pattern CLAIM-{{DOMAIN}}-{{NNN}}"
 
     def test_source_ids_have_correct_format(
         self, registry_data: dict[str, list[RegistryEntry]]
@@ -177,9 +179,9 @@ class TestRegistryIdFormat:
         pattern = ID_PATTERNS["sources"]
         for entry in registry_data.get("sources", []):
             sid: str = entry.get("source_id", "")  # type: ignore[assignment]
-            assert pattern.match(sid), (
-                f"Source ID '{sid}' does not match pattern SRC-{{AUTHOR}}-{{YEAR}}"
-            )
+            assert pattern.match(
+                sid
+            ), f"Source ID '{sid}' does not match pattern SRC-{{AUTHOR}}-{{YEAR}}"
 
 
 # ============================================================================
@@ -196,41 +198,49 @@ class TestRegistryReferences:
     ) -> None:
         """Every hypothesis must reference an existing research question."""
         question_ids: set[str] = {
-            str(entry["id"]) for entry in registry_data.get("questions", []) if "id" in entry
+            str(entry["id"])
+            for entry in registry_data.get("questions", [])
+            if "id" in entry
         }
         for entry in registry_data.get("hypotheses", []):
             rq: str = entry.get("research_question", "")  # type: ignore[assignment]
-            assert rq in question_ids, (
-                f"Hypothesis '{entry.get('id')}' references unknown question '{rq}'"
-            )
+            assert (
+                rq in question_ids
+            ), f"Hypothesis '{entry.get('id')}' references unknown question '{rq}'"
 
     def test_claim_references_resolve(
         self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every claim must reference an existing research question and hypothesis."""
         question_ids: set[str] = {
-            str(entry["id"]) for entry in registry_data.get("questions", []) if "id" in entry
+            str(entry["id"])
+            for entry in registry_data.get("questions", [])
+            if "id" in entry
         }
         hypothesis_ids: set[str] = {
-            str(entry["id"]) for entry in registry_data.get("hypotheses", []) if "id" in entry
+            str(entry["id"])
+            for entry in registry_data.get("hypotheses", [])
+            if "id" in entry
         }
         for entry in registry_data.get("claims", []):
             cid = entry.get("id", "<unknown>")
             rq: str = entry.get("research_question", "")  # type: ignore[assignment]
             hyp: str = entry.get("hypothesis", "")  # type: ignore[assignment]
-            assert rq in question_ids, (
-                f"Claim '{cid}' references unknown question '{rq}'"
-            )
-            assert hyp in hypothesis_ids, (
-                f"Claim '{cid}' references unknown hypothesis '{hyp}'"
-            )
+            assert (
+                rq in question_ids
+            ), f"Claim '{cid}' references unknown question '{rq}'"
+            assert (
+                hyp in hypothesis_ids
+            ), f"Claim '{cid}' references unknown hypothesis '{hyp}'"
 
     def test_question_literature_references_resolve(
         self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every literature reference on a question must exist in sources."""
         source_ids: set[str] = {
-            str(entry["source_id"]) for entry in registry_data.get("sources", []) if "source_id" in entry
+            str(entry["source_id"])
+            for entry in registry_data.get("sources", [])
+            if "source_id" in entry
         }
         for entry in registry_data.get("questions", []):
             qid = entry.get("id", "<unknown>")
@@ -238,16 +248,18 @@ class TestRegistryReferences:
             if isinstance(refs, list):
                 for ref in refs:  # type: ignore[var-annotated]
                     if isinstance(ref, str):
-                        assert ref in source_ids, (
-                            f"Question '{qid}' references unknown source '{ref}'"
-                        )
+                        assert (
+                            ref in source_ids
+                        ), f"Question '{qid}' references unknown source '{ref}'"
 
     def test_claim_source_references_resolve(
         self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every source reference on a claim must exist in sources."""
         source_ids: set[str] = {
-            str(entry["source_id"]) for entry in registry_data.get("sources", []) if "source_id" in entry
+            str(entry["source_id"])
+            for entry in registry_data.get("sources", [])
+            if "source_id" in entry
         }
         for entry in registry_data.get("claims", []):
             cid = entry.get("id", "<unknown>")
@@ -255,16 +267,18 @@ class TestRegistryReferences:
             if isinstance(refs, list):
                 for ref in refs:  # type: ignore[var-annotated]
                     if isinstance(ref, str):
-                        assert ref in source_ids, (
-                            f"Claim '{cid}' references unknown source '{ref}'"
-                        )
+                        assert (
+                            ref in source_ids
+                        ), f"Claim '{cid}' references unknown source '{ref}'"
 
     def test_source_question_references_resolve(
         self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
         """Every Brain-5D question reference on a source must exist."""
         question_ids: set[str] = {
-            str(entry["id"]) for entry in registry_data.get("questions", []) if "id" in entry
+            str(entry["id"])
+            for entry in registry_data.get("questions", [])
+            if "id" in entry
         }
         for entry in registry_data.get("sources", []):
             sid = entry.get("source_id", "<unknown>")
@@ -272,9 +286,9 @@ class TestRegistryReferences:
             if isinstance(refs, list):
                 for ref in refs:  # type: ignore[var-annotated]
                     if isinstance(ref, str):
-                        assert ref in question_ids, (
-                            f"Source '{sid}' references unknown question '{ref}'"
-                        )
+                        assert (
+                            ref in question_ids
+                        ), f"Source '{sid}' references unknown question '{ref}'"
 
 
 # ============================================================================
@@ -304,9 +318,9 @@ class TestRegistryRequiredFields:
             for entry in entries:
                 missing = required - set(entry.keys())
                 identifier = entry.get(id_field, "<unknown>")
-                assert not missing, (
-                    f"Entry '{identifier}' in '{key}.yaml' missing fields: {sorted(missing)}"
-                )
+                assert (
+                    not missing
+                ), f"Entry '{identifier}' in '{key}.yaml' missing fields: {sorted(missing)}"
 
 
 # ============================================================================
@@ -323,7 +337,9 @@ class TestRegistryOrphans:
     ) -> None:
         """Every hypothesis should be referenced by at least one claim or question."""
         hypothesis_ids: set[str] = {
-            str(entry["id"]) for entry in registry_data.get("hypotheses", []) if "id" in entry
+            str(entry["id"])
+            for entry in registry_data.get("hypotheses", [])
+            if "id" in entry
         }
         referenced: set[str] = set()
         for entry in registry_data.get("questions", []):

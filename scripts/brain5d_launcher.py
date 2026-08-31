@@ -18,13 +18,13 @@ Important architecture rule:
 from __future__ import annotations
 
 import argparse
-from typing import Any
 import os
 import signal
 import subprocess
 import sys
 import webbrowser
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 
