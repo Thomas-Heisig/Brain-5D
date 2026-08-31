@@ -1,6 +1,6 @@
 {
-  "tested_commit": "ad7db569ad39acc1af1b4d7ec3e464a9b81cf082",
-  "tested_tree_digest": "51f6662ee5bc42a285fb77cb979db4a7926d3bcebc162c2b37dffb4232c51919",
+  "tested_commit": "64475e1395512c739830f3a1144720fa2713ef27",
+  "tested_tree_digest": "c5fd258afca17f404d76822538012263e536edd9f9751fb439614fffc440d685",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -11,7 +11,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-08-31T00:24:37+0200",
+  "timestamp": "2026-08-31T08:04:24+0200",
   "python": "3.13.14",
   "full_collection": {
     "status": "passed",

@@ -36,6 +36,8 @@ SCIENTIFIC_PATHS: list[str] = ["src/", "configs/", "research/schemas/", "pyproje
 # invalidate itself (a file cannot stably contain its own digest).
 TEST_PATHS: list[str] = ["tests/"]
 _DIGEST_EXCLUDE_FILES: set[str] = {"tests/test_baseline.json"}
+_DIGEST_EXCLUDE_SUFFIXES: tuple[str, ...] = (".pyc", ".pyo")
+_DIGEST_EXCLUDE_DIRS: tuple[str, ...] = ("__pycache__",)
 
 # ============================================================================
 # Test baseline evaluation
@@ -88,6 +90,10 @@ def compute_source_tree_digest(repo_root: Path) -> str | None:
                         continue
                     rel_path = path.relative_to(repo_root).as_posix()
                     if rel_path in _DIGEST_EXCLUDE_FILES:
+                        continue
+                    if rel_path.endswith(_DIGEST_EXCLUDE_SUFFIXES):
+                        continue
+                    if any(part in _DIGEST_EXCLUDE_DIRS for part in path.relative_to(repo_root).parts):
                         continue
                     hasher.update(rel_path.encode("utf-8"))
                     hasher.update(b"\0")
