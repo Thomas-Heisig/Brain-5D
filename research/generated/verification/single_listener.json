@@ -2,10 +2,10 @@
   "schema_version": 1,
   "suite": "single_listener",
   "status": "verified",
-  "timestamp": "2026-08-31T14:21:25.759993",
+  "timestamp": "2026-08-31T14:32:44.338692",
   "python_version": "3.13.14",
-  "test_run_head": "c46ff9c44aed70372ace8d70877ee086bbe9405c",
-  "tested_tree_digest": "4f6620dea133d29a49b1bad6567d2739256892fc3e425bb60793a99b03448e94",
+  "test_run_head": "331a022fb73c151fce0dac173aeba1ce2c220259",
+  "tested_tree_digest": "5ab5fb272a769e35aa6088f74137abca70390782c170d3b65bb7137a91bac186",
   "test_command": "python -m pytest tests/test_single_listener.py -q",
   "proofs": {
     "port_initially_free_or_explicitly_rejected": true,
