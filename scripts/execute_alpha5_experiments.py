@@ -16,6 +16,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
@@ -62,7 +63,7 @@ def _brain5d_version() -> str:
     return get_software_info().get("brain5d_version", "unknown")
 
 
-def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, object]:
+def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, Any]:
     """Run a pytest file and return pass/fail with output."""
     start = time.time()
     result = subprocess.run(
@@ -82,13 +83,13 @@ def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, object]:
     }
 
 
-def _run_determinism_experiment() -> dict[str, object]:
+def _run_determinism_experiment() -> dict[str, Any]:
     """Run EXP-DET-0001: A/B/C restore determinism."""
     result = _run_pytest("tests/test_restore_determinism_abc.py", timeout=300)
     return result
 
 
-def _run_storage_experiment() -> dict[str, object]:
+def _run_storage_experiment() -> dict[str, Any]:
     """Run EXP-STOR-0001: B5D storage roundtrip persistence."""
     result = _run_pytest("tests/test_b5d_storage.py", timeout=300)
     return result
@@ -96,7 +97,7 @@ def _run_storage_experiment() -> dict[str, object]:
 
 def _update_manifest(
     experiment_id: str,
-    result: dict[str, object],
+    result: dict[str, Any],
     claim_id: str,
     hypothesis_id: str,
     research_question_id: str,
@@ -134,7 +135,7 @@ def _update_manifest(
     recorder.save()
 
 
-def _generate_data_artifact(experiment_id: str, result: dict[str, object]) -> Path:
+def _generate_data_artifact(experiment_id: str, result: dict[str, Any]) -> Path:
     """Generate a DATA-* artifact for an experiment."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     year = time.localtime().tm_year
