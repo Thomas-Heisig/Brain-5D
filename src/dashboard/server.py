@@ -413,6 +413,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
 
             # ----------------------------------------------------------------
+            # Release history (immutable release records + current development)
+            # ----------------------------------------------------------------
+
+            if path == "/api/releases":
+                self._serve_releases()
+                return
+
+            if path == "/api/releases/current":
+                self._serve_release_current()
+                return
+
+            # ----------------------------------------------------------------
             # Runtime Errors (dedicated endpoint, Phase 5)
             # ----------------------------------------------------------------
 
@@ -865,6 +877,64 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             config_dict=config_dict,
         )
         self._send_json(builder.build())
+
+    def _serve_releases(self) -> None:
+        """Serve the immutable release history plus the current development node.
+
+        Historical releases are read from ``releases/*.json`` and are never
+        re-evaluated against the current source tree. The current node is read
+        from ``releases/current.json``.
+        """
+        repo_root = Path(__file__).resolve().parents[2]
+        releases_dir = repo_root / "releases"
+        records: list[dict[str, object]] = []
+        current: dict[str, object] | None = None
+
+        if releases_dir.is_dir():
+            for path in sorted(releases_dir.glob("*.json")):
+                if path.name == "current.json":
+                    continue
+                try:
+                    data = json.loads(path.read_text(encoding="utf-8"))
+                    records.append(cast("dict[str, object]", data))
+                except Exception:
+                    pass
+
+        current_path = releases_dir / "current.json"
+        if current_path.exists():
+            try:
+                current = cast("dict[str, object]", json.loads(current_path.read_text(encoding="utf-8")))
+            except Exception:
+                current = None
+
+        self._send_json({
+            "releases": cast(list[JSONValue], records),
+            "current": cast(JSONValue, current),
+            "source": "releases/",
+        })
+
+    def _serve_release_current(self) -> None:
+        """Serve the current development release record only."""
+        repo_root = Path(__file__).resolve().parents[2]
+        current_path = repo_root / "releases" / "current.json"
+        if not current_path.exists():
+            self._send_json({
+                "version": "unknown",
+                "status": "unknown",
+                "source": "releases/current.json",
+                "error": "releases/current.json not found",
+            })
+            return
+        try:
+            data = json.loads(current_path.read_text(encoding="utf-8"))
+            self._send_json(cast("dict[str, JSONValue]", data))
+        except Exception as exc:
+            self._send_json({
+                "version": "unknown",
+                "status": "unknown",
+                "source": "releases/current.json",
+                "error": str(exc),
+            })
 
     # ========================================================================
     # Structural / runtime POST dispatch

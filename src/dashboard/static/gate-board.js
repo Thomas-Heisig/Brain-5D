@@ -84,8 +84,68 @@ function renderGateCriteria(containerId, items) {
   }
 }
 
+function renderReleaseTree(releases, current) {
+  const container = $('release-tree');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const tree = document.createElement('div');
+  tree.className = 'release-tree-list';
+
+  const all = [...releases];
+  if (current) {
+    all.push(current);
+  }
+
+  // Sort by PEP440 version string roughly matching the release order.
+  all.sort((a, b) => (a.pep440 || '').localeCompare(b.pep440 || ''));
+
+  for (const rel of all) {
+    const status = rel.status || 'unknown';
+    const isCurrent = status === 'development';
+    const isReleased = status === 'released';
+    const statusClass = isReleased ? 'released' : isCurrent ? 'current' : status;
+    const statusIcon = isReleased ? '✅' : isCurrent ? '🚧' : '❓';
+    const gate = rel.gate || '—';
+    const gateIcon = gate === 'passed' ? '✅' : gate === 'open' ? '🔓' : '—';
+
+    const row = document.createElement('div');
+    row.className = `release-tree-node release-${statusClass}`;
+    row.innerHTML = `
+      <div class="release-node-header">
+        <span class="release-node-icon">${statusIcon}</span>
+        <span class="release-node-version">${rel.version || 'unknown'}</span>
+        <span class="release-node-status release-status-${statusClass}">${status}</span>
+        ${isReleased ? `<span class="release-node-gate" title="gate: ${gate}">${gateIcon}</span>` : ''}
+      </div>
+      <div class="release-node-body">
+        <strong>${rel.title || ''}</strong>
+        ${rel.subtitle ? `<p>${rel.subtitle}</p>` : ''}
+        ${isReleased && rel.baseline ? `<p>Tests: ${rel.baseline.passed} / ${rel.baseline.failed} / ${rel.baseline.skipped}</p>` : ''}
+        ${isReleased && rel.tag ? `<p class="release-node-meta">tag: ${rel.tag} · commit: ${(rel.commit || '').slice(0, 9)} · ${rel.date || ''}</p>` : ''}
+        ${isCurrent && rel.note ? `<p class="release-node-note">${rel.note}</p>` : ''}
+      </div>
+    `;
+    tree.appendChild(row);
+  }
+
+  container.appendChild(tree);
+}
+
+async function loadReleaseTree() {
+  try {
+    const r = await fetch('/api/releases', { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+    renderReleaseTree(data.releases || [], data.current || null);
+  } catch (err) {
+    const container = $('release-tree');
+    if (container) container.textContent = 'Release history unavailable.';
+  }
+}
+
 /**
- * Render the Alpha.5 release gate board from store state.
+ * Render the release board from store state.
  * @param {object} state
  */
 export function renderGateBoard(state) {
@@ -117,4 +177,7 @@ export function renderGateBoard(state) {
   if (data.gate_c && data.gate_c.items) {
     renderGateCriteria('gate-c-list', data.gate_c.items);
   }
+
+  // Load immutable release history once per render cycle.
+  loadReleaseTree();
 }

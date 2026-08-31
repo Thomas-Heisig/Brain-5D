@@ -6240,3 +6240,108 @@ body.accessibility-mode .health-bar {
   min-width: 30px;
   text-align: center;
 }
+
+
+/* ============================================================================
+   RELEASE TREE
+   ============================================================================ */
+
+.release-board {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.release-header h2 {
+  margin: 0 0 0.25rem 0;
+}
+
+.release-subtitle {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.release-tree {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-medium);
+  padding: 1rem;
+}
+
+.release-tree-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.release-tree-node {
+  border-left: 3px solid var(--line);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0 var(--radius-small) var(--radius-small) 0;
+}
+
+.release-tree-node.release-released {
+  border-left-color: var(--color-success);
+}
+
+.release-tree-node.release-current {
+  border-left-color: var(--color-primary);
+  background: rgba(74, 124, 247, 0.08);
+}
+
+.release-node-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.release-node-version {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.release-node-status {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.release-status-released {
+  background: rgba(36, 180, 110, 0.15) !important;
+  color: var(--color-success) !important;
+}
+
+.release-status-current {
+  background: rgba(74, 124, 247, 0.2) !important;
+  color: var(--color-primary) !important;
+}
+
+.release-node-body {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.release-node-body p {
+  margin: 0.25rem 0 0 0;
+}
+
+.release-node-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+.release-node-note {
+  font-style: italic;
+  color: var(--color-warning);
+}

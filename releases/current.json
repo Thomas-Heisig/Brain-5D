@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "version": "0.5.0-alpha.6",
+  "pep440": "0.5.0a6",
+  "status": "development",
+  "title": "Operator Workbench & Morphological Self-Regulation",
+  "parent": "v0.5.0-alpha.5",
+  "gate": "open",
+  "note": "No morphological self-regulation feature may be marked verified merely because this version exists."
+}

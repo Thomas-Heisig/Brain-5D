@@ -30,7 +30,7 @@
     <button class="tab-btn" data-tab="network">🧠 NETWORK</button>
     <button class="tab-btn" data-tab="control">🎮 CONTROL</button>
     <button class="tab-btn" data-tab="research">🔬 RESEARCH</button>
-    <button class="tab-btn" data-tab="gate">✅ VERIFY</button>
+    <button class="tab-btn" data-tab="gate">🚀 RELEASE</button>
   </nav>
 
   <!-- ============================================================ -->
@@ -514,21 +514,29 @@
     </section> <!-- /tab-research -->
 
     <!-- ========================================================== -->
-    <!-- TAB: RELEASE (Alpha.5 Gate) -->
+    <!-- TAB: RELEASE -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-gate">
-      <div class="gate-board">
-        <div class="gate-header">
-          <h2>Alpha.5 Release Gate</h2>
-          <p class="gate-subtitle">Alpha.5 is complete only when all Gate A, B and C criteria pass. <span class="gate-rule">Do not advance to alpha.6 while this gate is open.</span></p>
-          <p class="gate-legend"><strong>Live</strong> = current runtime config state &middot; <strong>Maturity</strong> = IMPLEMENTED &rarr; INTEGRATED &rarr; VERIFIED &rarr; EVIDENCED &middot; <strong>Gate</strong> = release verification result. Runtime disabled &ne; gate failed. Runtime disabled &ne; gate passed.</p>
-          <button id="gate-refresh" type="button" class="btn-secondary">Re-check</button>
+      <div class="release-board">
+        <div class="release-header">
+          <h2>Release History</h2>
+          <p class="release-subtitle">Immutable release records and current development gate. Historical releases are never re-evaluated against newer source trees.</p>
         </div>
-        <div class="gate-overall-row"><strong>ALPHA.5 Overall:</strong><span class="gate-badge pending" id="gate-overall">pending</span></div>
-        <div class="gate-section"><h3>Live Runtime Profile <span class="gate-section-hint">(current config)</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
-        <div class="gate-section"><h3>Gate A &mdash; Technical Integration</h3><div id="gate-a-list" class="gate-criteria-table"></div></div>
-        <div class="gate-section"><h3>Gate B &mdash; Verification</h3><div id="gate-b-list" class="gate-criteria-table"></div></div>
-        <div class="gate-section"><h3>Gate C &mdash; Scientific Baseline</h3><div id="gate-c-list" class="gate-criteria-table"></div></div>
+        <div class="release-tree" id="release-tree"></div>
+
+        <div class="gate-board">
+          <div class="gate-header">
+            <h2>Current Gate</h2>
+            <p class="gate-subtitle">Current development gate is open until all criteria pass. <span class="gate-rule">Do not advance versions while the current gate is open.</span></p>
+            <p class="gate-legend"><strong>Live</strong> = current runtime config state &middot; <strong>Maturity</strong> = IMPLEMENTED &rarr; INTEGRATED &rarr; VERIFIED &rarr; EVIDENCED &middot; <strong>Gate</strong> = release verification result. Runtime disabled &ne; gate failed. Runtime disabled &ne; gate passed.</p>
+            <button id="gate-refresh" type="button" class="btn-secondary">Re-check</button>
+          </div>
+          <div class="gate-overall-row"><strong>Current Overall:</strong><span class="gate-badge pending" id="gate-overall">pending</span></div>
+          <div class="gate-section"><h3>Live Runtime Profile <span class="gate-section-hint">(current config)</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
+          <div class="gate-section"><h3>Gate A &mdash; Technical Integration</h3><div id="gate-a-list" class="gate-criteria-table"></div></div>
+          <div class="gate-section"><h3>Gate B &mdash; Verification</h3><div id="gate-b-list" class="gate-criteria-table"></div></div>
+          <div class="gate-section"><h3>Gate C &mdash; Scientific Baseline</h3><div id="gate-c-list" class="gate-criteria-table"></div></div>
+        </div>
       </div>
     </section> <!-- /tab-gate -->
 

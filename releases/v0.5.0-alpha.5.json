@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "version": "0.5.0-alpha.5",
+  "pep440": "0.5.0a5",
+  "status": "released",
+  "title": "Integration Hardening",
+  "subtitle": "Structural Journal + Persistent Undo + Recovery",
+  "gate": "passed",
+  "tag": "v0.5.0-alpha.5",
+  "commit": "0503264a9f46738d2927efa38957c9c98192bdf9",
+  "date": "2026-08-31",
+  "baseline": {
+    "passed": 463,
+    "failed": 0,
+    "skipped": 2,
+    "collection_errors": 0,
+    "command": "python -m pytest tests/ -q"
+  },
+  "evidence_artifacts": [
+    "research/generated/verification/determinism_infrastructure.json",
+    "research/generated/verification/restore_determinism.json",
+    "research/generated/verification/single_listener.json",
+    "research/generated/verification/structural_e2e.json",
+    "research/generated/verification/structural_live_loop.json"
+  ],
+  "gate_summary": {
+    "gate_a": "passed",
+    "gate_b": "passed",
+    "gate_c": "passed"
+  }
+}
