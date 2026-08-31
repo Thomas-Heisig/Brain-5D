@@ -8,6 +8,10 @@ They validate the hex parsing, state filtering, and port matching logic.
 
 from __future__ import annotations
 
+import platform as _platform
+
+import pytest as _pytest
+
 from tests.test_single_listener import (
     _parse_proc_net_tcp,
     _resolve_inode_to_pid,
@@ -97,9 +101,6 @@ def test_parse_proc_net_tcp_only_tcp6() -> None:
 # =========================================================================
 # Test resolve_inode_to_pid (basic contract — Linux only)
 # =========================================================================
-
-import platform as _platform
-import pytest as _pytest
 
 
 def _linux_only():

@@ -181,6 +181,7 @@ def _resolve_inode_to_pid(inode: int, brain_pid: int | None = None) -> int | Non
     If ``brain_pid`` is provided, it is checked first (fast path).
     Returns the matching PID, or ``None`` if no process owns the inode.
     """
+    import os
     import pathlib
 
     proc = pathlib.Path("/proc")
@@ -203,7 +204,7 @@ def _resolve_inode_to_pid(inode: int, brain_pid: int | None = None) -> int | Non
         try:
             for fd_entry in fd_dir.iterdir():
                 try:
-                    link: str = fd_entry.readlink()  # type: ignore[assignment]
+                    link = os.readlink(fd_entry)
                 except OSError:
                     continue
                 # socket:[INODE]

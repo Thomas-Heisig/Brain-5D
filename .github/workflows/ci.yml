@@ -133,16 +133,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install bandit pip-audit
       - name: Bandit SAST (src/)
-        run: python -m bandit -r src/ -f sarif -o bandit-results.sarif || true
-      - name: Upload Bandit SARIF
+        run: python -m bandit -r src/ -f json -o bandit-results.json
+      - name: Upload Bandit report
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: bandit-results.sarif
-          category: bandit
+          name: bandit-results
+          path: bandit-results.json
       - name: pip-audit
-        run: python -m pip_audit || true
-        continue-on-error: true
+        run: python -m pip_audit
       - name: Summary
         if: always()
         run: echo "### Security scan completed" >> $GITHUB_STEP_SUMMARY
