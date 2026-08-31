@@ -17,6 +17,7 @@
 - GitHub Actions: added `security-events: write` permission for SARIF upload; removed Python setup from docs job.
 - Hugging Face sync workflow now fails explicitly if `HF_USERNAME` secret is missing; no GitHub username fallback.
 - Updated `GateStatusBuilder` to expose `scientific_gate`, `ci_status`, and `release_readiness` as independent sections.
+- **Bandit SAST fix**: now reads `pyproject.toml` config (`-c pyproject.toml`) and gates on Medium/High only (`-ll`); Low findings remain visible in JSON artifact. `pip-audit` stays hard-blocking.
 
 ### Opening Verification
 - Full test suite: **463 passed, 2 skipped, 0 failed**.
