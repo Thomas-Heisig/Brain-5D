@@ -850,6 +850,7 @@ class IOFlowResult:
     hidden_mean_rate: float = 0.0
     output_mean_rate: float = 0.0
     propagation_active: bool = False
+    propagation_criterion: str = ""
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -866,6 +867,7 @@ class IOFlowResult:
             "hidden_mean_rate": self.hidden_mean_rate,
             "output_mean_rate": self.output_mean_rate,
             "propagation_active": self.propagation_active,
+            "propagation_criterion": self.propagation_criterion,
             "source": self.source,
         })
 
@@ -889,21 +891,48 @@ def compute_io_flow(
     input_count = 0
     hidden_count = 0
     output_count = 0
+    input_spike_tick_set: set[int] = set()
+    hidden_spike_tick_set: set[int] = set()
+    output_spike_tick_set: set[int] = set()
 
     for nid, neuron in network.neurons.items():
         spike_count = int(neuron.spike_counter)
+        last_spike_tick = int(neuron.last_spike_tick)
         if nid in input_cells:
             total_input += spike_count
             input_count += 1
+            if spike_count > 0:
+                input_spike_tick_set.add(last_spike_tick)
         elif nid in output_cells:
             total_output += spike_count
             output_count += 1
+            if spike_count > 0:
+                output_spike_tick_set.add(last_spike_tick)
         else:
             total_hidden += spike_count
             hidden_count += 1
+            if spike_count > 0:
+                hidden_spike_tick_set.add(last_spike_tick)
 
     tick = max(network.current_tick, 1)
-    propagation_active = total_input > 0 or total_output > 0
+    window_ticks = accumulator.window_ticks if accumulator is not None else tick
+    recent_cutoff = max(0, tick - window_ticks)
+
+    # Explicit propagation criterion: within the last ``window_ticks`` there
+    # must have been at least one spike in input, hidden AND output
+    # populations. This is a measurable, conservative signal-flow proxy.
+    recent_input_ticks = {t for t in input_spike_tick_set if t >= recent_cutoff}
+    recent_hidden_ticks = {t for t in hidden_spike_tick_set if t >= recent_cutoff}
+    recent_output_ticks = {t for t in output_spike_tick_set if t >= recent_cutoff}
+    propagation_active = bool(
+        recent_input_ticks and recent_hidden_ticks and recent_output_ticks
+    )
+    propagation_criterion = (
+        "input→hidden→output spikes within last "
+        f"{window_ticks} tick(s)"
+        if propagation_active
+        else "no recent input→hidden→output spike chain"
+    )
 
     return IOFlowResult(
         input_rate=total_input / tick,
@@ -914,10 +943,11 @@ def compute_io_flow(
         input_count=input_count,
         hidden_count=hidden_count,
         output_count=output_count,
-        input_mean_rate=total_input / max(input_count, 1),
-        hidden_mean_rate=total_hidden / max(hidden_count, 1),
-        output_mean_rate=total_output / max(output_count, 1),
+        input_mean_rate=total_input / tick / max(input_count, 1),
+        hidden_mean_rate=total_hidden / tick / max(hidden_count, 1),
+        output_mean_rate=total_output / tick / max(output_count, 1),
         propagation_active=propagation_active,
+        propagation_criterion=propagation_criterion,
     )
 
 
@@ -940,7 +970,9 @@ class PopulationResult:
     mean_firing_rate: float
     current_tick: int
     populations: list[dict[str, object]] = field(default_factory=list)
-    ei_ratio: float = 0.0
+    ei_ratio: float | None = None
+    ei_status: str = "unavailable"
+    ei_reason: str = ""
     total_excitatory: int = 0
     total_inhibitory: int = 0
     source: str = "live_runtime"
@@ -955,6 +987,8 @@ class PopulationResult:
             "current_tick": self.current_tick,
             "populations": cast(list[JSONValue], self.populations),
             "ei_ratio": self.ei_ratio,
+            "ei_status": self.ei_status,
+            "ei_reason": self.ei_reason,
             "total_excitatory": self.total_excitatory,
             "total_inhibitory": self.total_inhibitory,
             "source": self.source,
@@ -1027,23 +1061,34 @@ def compute_population_data(
             "active_fraction": inhib_active / inhib_count,
         })
 
-    tick = max(network.current_tick, 1)
-    ei_ratio = excitatory / max(inhibitory, 1)
+    # E/I ratio is only meaningful when an explicit inhibitory population
+    # exists. With zero inhibitory neurons the ratio is undefined, not a
+    # fabricated large number.
+    if inhibitory == 0:
+        ei_ratio: float | None = None
+        ei_status = "unavailable"
+        ei_reason = "no explicit inhibitory population"
+    else:
+        ei_ratio = excitatory / inhibitory
+        ei_status = "available"
+        ei_reason = ""
+
     return PopulationResult(
         total_neurons=total,
         excitatory_count=excitatory,
         inhibitory_count=inhibitory,
         active_count=active,
-        mean_firing_rate=total_rate / tick / max(total, 1),
+        mean_firing_rate=total_rate / max(total, 1),
         current_tick=network.current_tick,
         populations=populations,
         ei_ratio=ei_ratio,
+        ei_status=ei_status,
+        ei_reason=ei_reason,
         total_excitatory=excitatory,
         total_inhibitory=inhibitory,
     )
 
-
-# ============================================================================
+    # ============================================================================
 # Rate histogram
 # ============================================================================
 

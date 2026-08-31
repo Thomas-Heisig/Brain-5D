@@ -23,14 +23,19 @@ from typing import Any
 import pytest
 
 from src.core.network import Brain5DConfig, NeuralNetwork
+from src.core.neuron import NeuronType
 from src.core.spatial_index import linear_to_5d, pack_coords
 from src.dashboard.live_projection import (
     ActivityWindowAccumulator,
     Aggregation,
+    IOFlowResult,
     LiveProjectionService,
+    PopulationResult,
     ProjectionKind,
     TelemetryFrameStore,
     capture_frame,
+    compute_io_flow,
+    compute_population_data,
 )
 
 # ============================================================================
@@ -614,6 +619,132 @@ class TestRuntimeControllerIntegration:
         assert frame is not None
         assert frame.tick > 0
         assert frame.tick <= network.current_tick
+
+
+# ============================================================================
+# Test P — IO flow semantics
+# ============================================================================
+
+
+class TestIOFlowSemantics:
+    """IO flow rates and propagation criterion are scientifically correct."""
+
+    def test_mean_rates_are_per_tick_per_neuron(self, network: NeuralNetwork) -> None:
+        """input_mean_rate equals total_input_spikes / tick / input_count."""
+        network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
+        # Trigger exactly 1 spike in an input cell across 5 ticks.
+        input_cells = list(network.input_cells)
+        network.inject_current(input_cells[0], 1000.0)
+        for _ in range(5):
+            network.step()
+
+        io = compute_io_flow(network)
+        expected = io.total_input_spikes / network.current_tick / io.input_count
+        assert io.input_mean_rate == pytest.approx(expected, rel=1e-9)
+        assert io.input_mean_rate == pytest.approx(io.total_input_spikes / 5 / io.input_count, rel=1e-9)
+
+    def test_propagation_requires_all_three_populations(self, network: NeuralNetwork) -> None:
+        """propagation_active is false unless input, hidden and output spiked recently."""
+        network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
+        io = compute_io_flow(network)
+        assert io.propagation_active is False
+        assert "input→hidden→output" in io.propagation_criterion or "no recent" in io.propagation_criterion
+
+    def test_propagation_true_with_recent_spikes(self, network: NeuralNetwork) -> None:
+        """Recent spikes in input, hidden and output populations mark propagation active."""
+        dims = network.dimensions
+        # Ensure there is exactly one input cell, one hidden cell and one output cell.
+        input_coord = (0, 0, 0, 0, 0)
+        hidden_coord = (1, 0, 0, 0, 0)
+        output_coord = (dims[0] - 1, 0, 0, 0, 0)
+        input_id = pack_coords(*input_coord)
+        hidden_id = pack_coords(*hidden_coord)
+        output_id = pack_coords(*output_coord)
+        for coord in [input_coord, hidden_coord, output_coord]:
+            nid = pack_coords(*coord)
+            if nid not in network.neurons:
+                network.add_neuron(coord)
+        network.set_input_output_cells("x", 0, "x", dims[0] - 1)
+
+        # Force at least one spike in each population.
+        network.inject_current(input_id, 1000.0)
+        network.inject_current(hidden_id, 1000.0)
+        network.inject_current(output_id, 1000.0)
+        for _ in range(3):
+            network.step()
+
+        io = compute_io_flow(network)
+        assert io.propagation_active is True
+        assert "input→hidden→output" in io.propagation_criterion
+
+
+# ============================================================================
+# Test Q — Population E/I semantics
+# ============================================================================
+
+
+class TestPopulationSemantics:
+    """Population-level metrics are scientifically meaningful."""
+
+    def test_mean_firing_rate_no_double_tick_division(self, network: NeuralNetwork) -> None:
+        """mean_firing_rate is already a per-tick rate; no extra tick division."""
+        network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
+        # Spike every neuron once over 4 ticks.
+        for nid in list(network.neurons):
+            network.inject_current(nid, 1000.0)
+        for _ in range(4):
+            network.step()
+
+        pop = compute_population_data(network)
+        # Average per-neuron rate is ~1 spike / 4 ticks = 0.25 spikes/tick.
+        assert pop.mean_firing_rate == pytest.approx(0.25, abs=0.05)
+
+    def test_ei_ratio_unavailable_without_inhibitory(self, network: NeuralNetwork) -> None:
+        """With zero inhibitory neurons, E/I ratio is null and status unavailable."""
+        network.set_input_output_cells("x", 0, "x", network.dimensions[0] - 1)
+        pop = compute_population_data(network)
+        if pop.inhibitory_count == 0:
+            assert pop.ei_ratio is None
+            assert pop.ei_status == "unavailable"
+            assert "no explicit inhibitory population" in pop.ei_reason
+        else:
+            pytest.skip("network has inhibitory neurons")
+
+    def test_ei_ratio_defined_with_inhibitory(self) -> None:
+        """With both E and I populations, E/I ratio equals E_count / I_count."""
+        from src.core.network import Brain5DConfig
+        cfg = {
+            "seed": 42,
+            "dimensions": [5, 5, 1, 1, 1],
+            "initial_neurons": 10,
+            "simulation": {"dt_ms": 1.0, "max_delay": 5, "debug_invariants": True},
+            "network": {
+                "initial_connections_per_neuron": 2,
+                "neighbour_radius": 3.0,
+                "weight_min": 0.0,
+                "weight_max": 0.5,
+            },
+            "neuron": {"a": 0.02, "b": 0.2, "c": -65.0, "d": 8.0},
+            "energy": {"initial": 1.0, "spike_cost": 0.001},
+            "topology": {
+                "input": {"dimension": "x", "coordinate": 0},
+                "output": {"dimension": "x", "coordinate": 4},
+            },
+        }
+        rng = random.Random(42)
+        b5d_config = Brain5DConfig.from_dict(cfg)
+        net = NeuralNetwork(b5d_config, rng)
+        for i in range(cfg["initial_neurons"]):
+            net.add_neuron(linear_to_5d(i, tuple(cfg["dimensions"])))
+        net.set_input_output_cells("x", 0, "x", cfg["dimensions"][0] - 1)
+        # Force some inhibitory neurons by toggling the flag on half of them.
+        ids = list(net.neurons)
+        for nid in ids[::2]:
+            net.neurons[nid].neuron_type = NeuronType.FAST_SPIKING
+        pop = compute_population_data(net)
+        assert pop.inhibitory_count > 0
+        assert pop.ei_ratio == pytest.approx(pop.excitatory_count / pop.inhibitory_count, rel=1e-9)
+        assert pop.ei_status == "available"
 
     def test_controller_hook_activity_tracks_spikes(self, network: NeuralNetwork, config_dict: dict[str, Any]) -> None:
         """Activity accumulator receives real StepResult.spike_ids."""
