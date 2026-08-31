@@ -399,15 +399,46 @@
       <section class="card structural-live-card">
         <div class="panel-title"><h2>Structural Live Loop</h2><span id="live-loop-badge" class="gate-badge pending">checking...</span></div>
         <div class="structural-live-grid" id="structural-live-grid">
-          <div class="live-loop-item" id="ll-adapter">RuntimeAdapter</div>
-          <div class="live-loop-item" id="ll-signal">HomeostasisSignal</div>
-          <div class="live-loop-item" id="ll-policy">Policy Proposal</div>
-          <div class="live-loop-item" id="ll-coordinator">Coordinator</div>
-          <div class="live-loop-item" id="ll-approval">Approval Gate</div>
-          <div class="live-loop-item" id="ll-mutation">Mutation</div>
-          <div class="live-loop-item" id="ll-journal">Journal</div>
-          <div class="live-loop-item" id="ll-undo">Undo</div>
-          <div class="live-loop-item" id="ll-replay">Replay</div>
+          <div class="live-loop-step" id="ll-adapter">
+            <span class="live-loop-label">RuntimeAdapter</span>
+            <span class="live-loop-status" data-proof="production_adapter_attached">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-signal">
+            <span class="live-loop-label">HomeostasisSignal</span>
+            <span class="live-loop-status" data-proof="real_signal_generated">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-policy">
+            <span class="live-loop-label">Policy</span>
+            <span class="live-loop-status" data-proof="policy_received_real_signal">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-proposal">
+            <span class="live-loop-label">Proposal</span>
+            <span class="live-loop-status" data-proof="proposal_published proposal_non_mutating">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-coordinator">
+            <span class="live-loop-label">Coordinator</span>
+            <span class="live-loop-status" data-proof="">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-approval">
+            <span class="live-loop-label">Approval Gate</span>
+            <span class="live-loop-status" data-proof="reject_non_mutating approve_single_mutation">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-mutation">
+            <span class="live-loop-label">Mutation</span>
+            <span class="live-loop-status" data-proof="journal_linked_to_proposal runtime_continues_after_mutation">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-journal">
+            <span class="live-loop-label">Journal</span>
+            <span class="live-loop-status" data-proof="">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-undo">
+            <span class="live-loop-label">Undo</span>
+            <span class="live-loop-status" data-proof="undo_restores_topology">—</span>
+          </div>
+          <div class="live-loop-step" id="ll-replay">
+            <span class="live-loop-label">Replay</span>
+            <span class="live-loop-status" data-proof="journal_reopen_replay_identity">—</span>
+          </div>
         </div>
         <p class="heatmap-meta" id="live-loop-meta">Requires poc_structural_live.yaml config</p>
       </section>

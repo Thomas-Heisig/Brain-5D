@@ -833,12 +833,23 @@ class LiveProjectionService:
 
 @dataclass(frozen=True, slots=True)
 class IOFlowResult:
-    """Input-output signal flow analysis result."""
+    """Input-output signal flow analysis result.
+
+    Exposes both the canonical input/output totals and the input/hidden/output
+    breakdown that the dashboard UI renders.
+    """
     input_rate: float
     output_rate: float
     total_input_spikes: int
     total_output_spikes: int
     current_tick: int
+    input_count: int = 0
+    hidden_count: int = 0
+    output_count: int = 0
+    input_mean_rate: float = 0.0
+    hidden_mean_rate: float = 0.0
+    output_mean_rate: float = 0.0
+    propagation_active: bool = False
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -848,6 +859,13 @@ class IOFlowResult:
             "total_input_spikes": self.total_input_spikes,
             "total_output_spikes": self.total_output_spikes,
             "current_tick": self.current_tick,
+            "input_count": self.input_count,
+            "hidden_count": self.hidden_count,
+            "output_count": self.output_count,
+            "input_mean_rate": self.input_mean_rate,
+            "hidden_mean_rate": self.hidden_mean_rate,
+            "output_mean_rate": self.output_mean_rate,
+            "propagation_active": self.propagation_active,
             "source": self.source,
         })
 
@@ -856,20 +874,50 @@ def compute_io_flow(
     network: NetworkAccess,
     accumulator: ActivityWindowAccumulator | None = None,
 ) -> IOFlowResult:
-    """Compute input-output signal flow analysis."""
+    """Compute input-output signal flow analysis.
+
+    Splits neurons into input / hidden / output populations based on the
+    network's ``input_cells`` / ``output_cells`` sets. The hidden population
+    is everything that is neither input nor output.
+    """
+    input_cells = getattr(network, "input_cells", set())
+    output_cells = getattr(network, "output_cells", set())
+
     total_input = 0
+    total_hidden = 0
     total_output = 0
-    for _, neuron in network.neurons.items():
-        if getattr(neuron, "is_input", False):
-            total_input += neuron.spike_counter
+    input_count = 0
+    hidden_count = 0
+    output_count = 0
+
+    for nid, neuron in network.neurons.items():
+        spike_count = int(neuron.spike_counter)
+        if nid in input_cells:
+            total_input += spike_count
+            input_count += 1
+        elif nid in output_cells:
+            total_output += spike_count
+            output_count += 1
         else:
-            total_output += neuron.spike_counter
+            total_hidden += spike_count
+            hidden_count += 1
+
+    tick = max(network.current_tick, 1)
+    propagation_active = total_input > 0 or total_output > 0
+
     return IOFlowResult(
-        input_rate=total_input / max(network.current_tick, 1),
-        output_rate=total_output / max(network.current_tick, 1),
+        input_rate=total_input / tick,
+        output_rate=total_output / tick,
         total_input_spikes=total_input,
         total_output_spikes=total_output,
         current_tick=network.current_tick,
+        input_count=input_count,
+        hidden_count=hidden_count,
+        output_count=output_count,
+        input_mean_rate=total_input / max(input_count, 1),
+        hidden_mean_rate=total_hidden / max(hidden_count, 1),
+        output_mean_rate=total_output / max(output_count, 1),
+        propagation_active=propagation_active,
     )
 
 
@@ -880,13 +928,21 @@ def compute_io_flow(
 
 @dataclass(frozen=True, slots=True)
 class PopulationResult:
-    """Neuron population overview result."""
+    """Neuron population overview result.
+
+    Provides both aggregate counts and the per-population cards the dashboard
+    renders.
+    """
     total_neurons: int
     excitatory_count: int
     inhibitory_count: int
     active_count: int
     mean_firing_rate: float
     current_tick: int
+    populations: list[dict[str, object]] = field(default_factory=list)
+    ei_ratio: float = 0.0
+    total_excitatory: int = 0
+    total_inhibitory: int = 0
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -897,6 +953,10 @@ class PopulationResult:
             "active_count": self.active_count,
             "mean_firing_rate": self.mean_firing_rate,
             "current_tick": self.current_tick,
+            "populations": cast(list[JSONValue], self.populations),
+            "ei_ratio": self.ei_ratio,
+            "total_excitatory": self.total_excitatory,
+            "total_inhibitory": self.total_inhibitory,
             "source": self.source,
         })
 
@@ -912,16 +972,63 @@ def compute_population_data(
     active = 0
     total_rate = 0.0
 
+    excit_sum = 0.0
+    excit_energy = 0.0
+    excit_v = 0.0
+    excit_active = 0
+    excit_count = 0
+    inhib_sum = 0.0
+    inhib_energy = 0.0
+    inhib_v = 0.0
+    inhib_active = 0
+    inhib_count = 0
+
     for neuron in network.neurons.values():
+        rate = neuron.spike_counter / max(network.current_tick, 1)
         if neuron.is_inhibitory:
             inhibitory += 1
+            inhib_count += 1
+            inhib_sum += rate
+            inhib_energy += neuron.energy
+            inhib_v += neuron.v
+            if neuron.spike_counter > 0:
+                inhib_active += 1
+                active += 1
         else:
             excitatory += 1
-        if neuron.spike_counter > 0:
-            active += 1
-        total_rate += neuron.spike_counter
+            excit_count += 1
+            excit_sum += rate
+            excit_energy += neuron.energy
+            excit_v += neuron.v
+            if neuron.spike_counter > 0:
+                excit_active += 1
+                active += 1
+        total_rate += rate
+
+    populations: list[dict[str, object]] = []
+    if excit_count > 0:
+        populations.append({
+            "name": "excitatory",
+            "count": excit_count,
+            "mean_rate": excit_sum / excit_count,
+            "mean_energy": excit_energy / excit_count,
+            "mean_v": excit_v / excit_count,
+            "active_count": excit_active,
+            "active_fraction": excit_active / excit_count,
+        })
+    if inhib_count > 0:
+        populations.append({
+            "name": "inhibitory",
+            "count": inhib_count,
+            "mean_rate": inhib_sum / inhib_count,
+            "mean_energy": inhib_energy / inhib_count,
+            "mean_v": inhib_v / inhib_count,
+            "active_count": inhib_active,
+            "active_fraction": inhib_active / inhib_count,
+        })
 
     tick = max(network.current_tick, 1)
+    ei_ratio = excitatory / max(inhibitory, 1)
     return PopulationResult(
         total_neurons=total,
         excitatory_count=excitatory,
@@ -929,6 +1036,10 @@ def compute_population_data(
         active_count=active,
         mean_firing_rate=total_rate / tick / max(total, 1),
         current_tick=network.current_tick,
+        populations=populations,
+        ei_ratio=ei_ratio,
+        total_excitatory=excitatory,
+        total_inhibitory=inhibitory,
     )
 
 
@@ -944,6 +1055,11 @@ class RateHistogramResult:
     counts: list[int]
     num_bins: int
     current_tick: int
+    mean_rate: float = 0.0
+    std_rate: float = 0.0
+    median_rate: float = 0.0
+    active_count: int = 0
+    silent_count: int = 0
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -952,6 +1068,11 @@ class RateHistogramResult:
             "counts": self.counts,
             "num_bins": self.num_bins,
             "current_tick": self.current_tick,
+            "mean_rate": self.mean_rate,
+            "std_rate": self.std_rate,
+            "median_rate": self.median_rate,
+            "active_count": self.active_count,
+            "silent_count": self.silent_count,
             "source": self.source,
         })
 
@@ -966,13 +1087,24 @@ def compute_rate_histogram(
         neuron.spike_counter / max(network.current_tick, 1)
         for neuron in network.neurons.values()
     ]
+    active_count = sum(1 for r in rates if r > 0)
+    silent_count = len(rates) - active_count
+
     if not rates:
         return RateHistogramResult(
             bins=[0.0] * num_bins,
             counts=[0] * num_bins,
             num_bins=num_bins,
             current_tick=network.current_tick,
+            active_count=active_count,
+            silent_count=silent_count,
         )
+
+    mean_rate = sum(rates) / len(rates)
+    variance = sum((r - mean_rate) ** 2 for r in rates) / len(rates)
+    std_rate = math.sqrt(variance)
+    sorted_rates = sorted(rates)
+    median_rate = sorted_rates[len(sorted_rates) // 2] if sorted_rates else 0.0
 
     min_rate = min(rates)
     max_rate = max(rates)
@@ -992,6 +1124,11 @@ def compute_rate_histogram(
         counts=counts,
         num_bins=num_bins,
         current_tick=network.current_tick,
+        mean_rate=mean_rate,
+        std_rate=std_rate,
+        median_rate=median_rate,
+        active_count=active_count,
+        silent_count=silent_count,
     )
 
 
@@ -1007,6 +1144,10 @@ class SpikeRasterResult:
     spike_ticks: list[int]
     total_events: int
     current_tick: int
+    total_neurons: int = 0
+    sample_count: int = 0
+    window_ticks: int = 100
+    tick: int = 0
     source: str = "live_runtime"
 
     def to_json(self) -> dict[str, JSONValue]:
@@ -1015,6 +1156,10 @@ class SpikeRasterResult:
             "spike_ticks": self.spike_ticks,
             "total_events": self.total_events,
             "current_tick": self.current_tick,
+            "total_neurons": self.total_neurons,
+            "sample_count": self.sample_count,
+            "window_ticks": self.window_ticks,
+            "tick": self.tick,
             "source": self.source,
         })
 
@@ -1032,9 +1177,14 @@ def compute_spike_raster(
             neuron_ids.append(nid)
             spike_ticks.append(neuron.last_spike_tick)
 
+    window_ticks = accumulator.window_ticks if accumulator is not None else 100
     return SpikeRasterResult(
         neuron_ids=neuron_ids,
         spike_ticks=spike_ticks,
         total_events=len(neuron_ids),
         current_tick=network.current_tick,
+        total_neurons=len(network.neurons),
+        sample_count=len(neuron_ids),
+        window_ticks=window_ticks,
+        tick=network.current_tick,
     )

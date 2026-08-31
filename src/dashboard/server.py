@@ -717,11 +717,60 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 )
             }
 
+        elif path == "/api/structural/live-loop":
+            payload = self._read_structural_live_loop_artifact()
+
         else:
             self._send_api_not_found(path)
             return
 
         self._send_json(payload)
+
+    # ========================================================================
+    # Structural live loop artifact reader
+    # ========================================================================
+
+    def _read_structural_live_loop_artifact(self) -> dict[str, Any]:
+        """Read the structural live loop verification artifact.
+
+        Returns a dict with the artifact content, or a minimal error payload
+        if the artifact is missing or unparseable.
+        """
+        artifact_path = (
+            _DEFAULT_RESEARCH_ROOT.parent
+            / "research"
+            / "generated"
+            / "verification"
+            / "structural_live_loop.json"
+        )
+        if not artifact_path.exists():
+            return {
+                "available": False,
+                "status": "missing",
+                "proofs": {},
+                "message": "Artifact not found",
+            }
+        try:
+            data = json.loads(artifact_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            return {
+                "available": False,
+                "status": "unparseable",
+                "proofs": {},
+                "message": str(exc),
+            }
+
+        proofs = data.get("proofs", {})
+        if not isinstance(proofs, dict):
+            proofs = {}
+
+        return {
+            "available": True,
+            "status": data.get("status", "unknown"),
+            "proofs": proofs,
+            "tested_tree_digest": data.get("tested_tree_digest"),
+            "message": data.get("message", ""),
+        }
 
     # ========================================================================
     # Network Inspector (real 5D coordinates, Phase 8/9)

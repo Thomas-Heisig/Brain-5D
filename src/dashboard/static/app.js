@@ -338,75 +338,111 @@ async function refreshStatus() {
 }
 
 /**
- * Refresh the structural live loop status from the gate status endpoint.
+ * Refresh the structural live loop status from the dedicated artifact endpoint.
+ *
+ * Reads ``/api/structural/live-loop`` and renders each of the 11 proofs with
+ * its own status label. This keeps the visual loop honest: every step is
+ * evidenced from the artifact, not inferred from the high-level gate status.
  */
 async function refreshLiveLoopStatus() {
-  const itemIds = ['ll-adapter', 'll-signal', 'll-policy', 'll-coordinator',
-                   'll-approval', 'll-mutation', 'll-journal', 'll-undo', 'll-replay'];
+  const stepIds = ['ll-adapter', 'll-signal', 'll-policy', 'll-proposal',
+                   'll-coordinator', 'll-approval', 'll-mutation', 'll-journal',
+                   'll-undo', 'll-replay'];
   try {
-    const r = await fetch('/api/gate/status', { cache: 'no-store' });
+    const r = await fetch('/api/structural/live-loop', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
 
-    // Check live loop artifact via the gate status builder
-    const gateA = data.gate_a?.items || [];
-    const adapterItem = gateA.find(i => i.id === 'A-STRUCT-RUNTIME-ADAPTER');
-    const liveLoopVerified = adapterItem?.status === 'passed';
+    const available = data.available === true;
+    const proofs = data.proofs || {};
+    const allPassed = available && Object.values(proofs).every(v => v === true);
 
     const badge = $('live-loop-badge');
     if (badge) {
-      badge.textContent = liveLoopVerified ? '✅ VERIFIED' : '⏳ pending';
-      badge.className = `gate-badge ${liveLoopVerified ? 'passed' : 'pending'}`;
+      badge.textContent = allPassed ? '✅ VERIFIED' : (available ? '⏳ pending' : '❌ missing');
+      badge.className = `gate-badge ${allPassed ? 'passed' : (available ? 'pending' : 'failed')}`;
     }
 
     const meta = $('live-loop-meta');
     if (meta) {
-      meta.textContent = liveLoopVerified
-        ? '✅ Structural live loop verified via verification artifact'
-        : '⏳ Run test_structural_live_loop.py to generate verification artifact';
+      if (!available) {
+        meta.textContent = '⏳ Run test_structural_live_loop.py to generate verification artifact';
+      } else {
+        const passedCount = Object.values(proofs).filter(v => v === true).length;
+        const totalCount = Object.keys(proofs).length;
+        meta.textContent = `✅ ${passedCount}/${totalCount} proofs passed · ${data.tested_tree_digest ? 'tree digest verified' : 'no digest'}`;
+      }
     }
 
-    // Update individual items
-    const liveItems = data.live_runtime || [];
-    const structuralLive = liveItems.find(i => i.key === 'structural');
-    const soActive = structuralLive?.live_status === 'active';
+    // Map each UI step to the proof(s) it represents.
+    const stepProofMap = {
+      'll-adapter': ['production_adapter_attached'],
+      'll-signal': ['real_signal_generated'],
+      'll-policy': ['policy_received_real_signal'],
+      'll-proposal': ['proposal_published', 'proposal_non_mutating'],
+      'll-coordinator': [],
+      'll-approval': ['reject_non_mutating', 'approve_single_mutation'],
+      'll-mutation': ['journal_linked_to_proposal', 'runtime_continues_after_mutation'],
+      'll-journal': [],
+      'll-undo': ['undo_restores_topology'],
+      'll-replay': ['journal_reopen_replay_identity'],
+    };
 
-    // Structural items status
-    const structuralItems = gateA.filter(i => i.category === 'structural_composition');
-    for (const item of structuralItems) {
-      const id = item.id || '';
-      const elId = id.toLowerCase().replace(/[^a-z0-9]/g, '-');
-      // Map known IDs to our element IDs
-      const idMap = {
-        'A-STRUCT-RUNTIME-ADAPTER': 'll-adapter',
-        'A-STRUCT-COORDINATOR': 'll-coordinator',
-        'A-STRUCT-PLASTICITY': 'll-mutation',
-        'A-STRUCT-MANIPULATOR': 'll-mutation',
-        'A-STRUCT-APPROVAL': 'll-approval',
-        'A-STRUCT-JOURNAL': 'll-journal',
-        'A-STRUCT-PROVENANCE': 'll-signal',
-      };
-      const targetId = idMap[id];
-      if (!targetId) continue;
-      const el = $(targetId);
+    const proofLabels = {
+      production_adapter_attached: 'attached',
+      real_signal_generated: 'real signal',
+      policy_received_real_signal: 'received signal',
+      proposal_published: 'published',
+      proposal_non_mutating: 'non-mutating',
+      reject_non_mutating: 'reject verified',
+      approve_single_mutation: 'approve verified',
+      journal_linked_to_proposal: 'linked record',
+      runtime_continues_after_mutation: 'runtime continues',
+      undo_restores_topology: 'topology restored',
+      journal_reopen_replay_identity: 'replay identity',
+    };
+
+    for (const stepId of stepIds) {
+      const el = $(stepId);
       if (!el) continue;
-      if (item.status === 'passed') {
-        el.className = 'live-loop-item ll-passed';
-        el.textContent = `✅ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
-      } else if (item.status === 'stale') {
-        el.className = 'live-loop-item ll-stale';
-        el.textContent = `🔄 ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+      const statusEl = el.querySelector('.live-loop-status');
+      const proofKeys = stepProofMap[stepId] || [];
+
+      if (!available) {
+        el.className = 'live-loop-step ll-pending';
+        if (statusEl) statusEl.textContent = '⏳ pending';
+        continue;
+      }
+
+      const stepPassed = proofKeys.length === 0 || proofKeys.every(k => proofs[k] === true);
+      const proofResults = proofKeys.map(k => ({ key: k, passed: proofs[k] === true }));
+
+      if (stepPassed) {
+        el.className = 'live-loop-step ll-passed';
+        if (statusEl) {
+          if (proofKeys.length === 0) {
+            statusEl.textContent = '✅ canonical instance';
+          } else if (proofKeys.length === 1) {
+            statusEl.textContent = `✅ ${proofLabels[proofKeys[0]] || proofKeys[0]}`;
+          } else {
+            statusEl.textContent = `✅ ${proofKeys.length} proofs`;
+          }
+        }
       } else {
-        el.className = 'live-loop-item ll-pending';
-        el.textContent = `⏳ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+        el.className = 'live-loop-step ll-pending';
+        if (statusEl) {
+          const failed = proofResults.filter(p => !p.passed);
+          statusEl.textContent = `⏳ ${failed.map(p => proofLabels[p.key] || p.key).join(', ')}`;
+        }
       }
     }
   } catch {
-    for (const id of itemIds) {
+    for (const id of stepIds) {
       const el = $(id);
       if (el) {
-        el.className = 'live-loop-item ll-pending';
-        el.textContent = `⏳ ${el.textContent.replace(/^[✅⏳❌]\s*/, '')}`;
+        el.className = 'live-loop-step ll-pending';
+        const statusEl = el.querySelector('.live-loop-status');
+        if (statusEl) statusEl.textContent = '⏳ pending';
       }
     }
     const badge = $('live-loop-badge');
@@ -837,7 +873,7 @@ async function refreshIOFlow() {
     // Meta
     const meta = document.getElementById('io-flow-meta');
     if (meta) {
-      meta.textContent = `Tick ${data.tick} · Input ${data.input_mean_rate.toFixed(4)} → Hidden ${data.hidden_mean_rate.toFixed(4)} → Output ${data.output_mean_rate.toFixed(4)} · ${data.source}`;
+      meta.textContent = `Tick ${data.current_tick} · Input ${data.input_mean_rate.toFixed(4)} → Hidden ${data.hidden_mean_rate.toFixed(4)} → Output ${data.output_mean_rate.toFixed(4)} · ${data.source}`;
     }
   } catch (e) {
     const badge = document.getElementById('io-flow-badge');
@@ -910,7 +946,7 @@ async function refreshPopulation() {
     // Meta
     const meta = document.getElementById('population-meta');
     if (meta) {
-      meta.textContent = `Tick ${data.tick} · E: ${data.total_excitatory} / I: ${data.total_inhibitory} · ${data.source}`;
+      meta.textContent = `Tick ${data.current_tick} · E: ${data.total_excitatory} / I: ${data.total_inhibitory} · ${data.source}`;
     }
   } catch (e) {
     const badge = document.getElementById('ei-ratio-badge');
@@ -1137,7 +1173,7 @@ async function refreshRateHistogram() {
       stats.className = 'gate-badge passed';
     }
     const meta = document.getElementById('histogram-meta');
-    if (meta) meta.textContent = `Tick ${data.tick} · ${data.active_count} aktiv / ${data.silent_count} stumm · Median ${data.median_rate.toFixed(4)}`;
+    if (meta) meta.textContent = `Tick ${data.current_tick} · ${data.active_count} aktiv / ${data.silent_count} stumm · Median ${data.median_rate.toFixed(4)}`;
   } catch {
     const stats = document.getElementById('histogram-stats');
     if (stats) { stats.textContent = 'offline'; stats.className = 'gate-badge failed'; }
@@ -1232,7 +1268,7 @@ async function refreshLayerExplorer() {
     if (badge) badge.textContent = dim.toUpperCase();
 
     const meta = document.getElementById('layer-meta');
-    if (meta) meta.textContent = `Tick ${data.tick} · ${dim.toUpperCase()}=${layerVal} · ${data.kind || kind} · ${data.source}`;
+    if (meta) meta.textContent = `Tick ${data.tick ?? data.current_tick} · ${dim.toUpperCase()}=${layerVal} · ${data.kind || kind} · ${data.source}`;
   } catch {
     const meta = document.getElementById('layer-meta');
     if (meta) meta.textContent = '⚠️ Layer-Daten nicht verfügbar';

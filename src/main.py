@@ -669,6 +669,7 @@ def main() -> int:
     # ================================================================
     _self_org_coordinator = None
     _self_org_plasticity = None
+    _self_org_approval_policy = None
     _structural_journal = None
 
     so_cfg = config_dict.get("self_organization", {})
@@ -699,6 +700,32 @@ def main() -> int:
             _self_org_coordinator = _composed["coordinator"]
             _structural_journal = _composed["journal"]
             _manipulator = _composed["manipulator"]
+
+            # Build the canonical approval policy from config so the dashboard
+            # can read the real self-organization gate state.
+            from src.self_organization.approval import (
+                ProposalApprovalPolicy,
+                StructuralPlasticityConfig,
+            )
+
+            _self_org_approval_policy = ProposalApprovalPolicy(
+                StructuralPlasticityConfig(
+                    enabled=True,
+                    dry_run=False,
+                    auto_approval=bool(so_cfg.get("auto_approval", False)),
+                    auto_approval_threshold=float(so_cfg.get("auto_approval_threshold", 0.8)),
+                    max_changes_per_tick=int(so_cfg.get("max_changes_per_tick", 5)),
+                    max_neuron_additions_per_tick=int(so_cfg.get("neurogenesis_max_per_cycle", 1)),
+                    max_neuron_removals_per_tick=int(so_cfg.get("max_neuron_removals_per_tick", 0)),
+                    max_synapse_additions_per_tick=int(so_cfg.get("sprouting_max_out_degree", 5)),
+                    max_synapse_removals_per_tick=int(so_cfg.get("max_synapse_removals_per_tick", 5)),
+                    min_neurons=int(so_cfg.get("min_neurons", 100)),
+                    max_neurons=int(so_cfg.get("max_neurons", 100_000)),
+                    allow_neuron_pruning=_allow_neuron_pruning,
+                    allow_synapse_pruning=_allow_synapse_pruning,
+                    cooldown_ticks=int(so_cfg.get("cooldown_ticks", 100)),
+                )
+            )
 
             # The legacy SelfOrganizationEngine ran_cycle() mutates the
             # network directly through its own manipulator, bypassing the
@@ -905,6 +932,7 @@ def main() -> int:
                 controller=controller,
                 coordinator=_self_org_coordinator,
                 plasticity=_self_org_plasticity,
+                approval_policy=_self_org_approval_policy,
                 telemetry_store=_telemetry_store,
             )
             # Attach the runtime config so the dashboard gate builder can
