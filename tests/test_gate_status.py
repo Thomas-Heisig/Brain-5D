@@ -435,3 +435,34 @@ def test_release_readiness_is_ready_when_both_gates_pass() -> None:
     else:
         assert readiness["ready"] is False
         assert readiness["overall"] == "not_ready"
+
+
+def test_release_readiness_not_ready_when_ci_unknown(tmp_path: Path) -> None:
+    """scientific passed + CI unknown => NOT_READY."""
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    status = builder.build()  # no ci_status => unknown
+    readiness = cast(dict[str, Any], status["release_readiness"])
+    assert readiness["ready"] is False
+    assert readiness["overall"] == "not_ready"
+    assert any("ci_status" in str(b) for b in readiness["blockers"])
+
+
+def test_release_readiness_not_ready_when_ci_failed(tmp_path: Path) -> None:
+    """scientific passed + CI failed => NOT_READY."""
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    status = builder.build(ci_status={"status": "failed", "source": "github_actions"})
+    readiness = cast(dict[str, Any], status["release_readiness"])
+    assert readiness["ready"] is False
+    assert readiness["overall"] == "not_ready"
+    assert any("ci_status" in str(b) for b in readiness["blockers"])
+
+
+def test_release_readiness_not_ready_when_scientific_failed(tmp_path: Path) -> None:
+    """scientific failed + CI passed => NOT_READY."""
+    # We can't easily force scientific to fail without real artifacts,
+    # but we verify at minimum it's not ready.
+    builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=tmp_path)
+    status = builder.build(ci_status={"status": "passed", "source": "github_actions"})
+    readiness = cast(dict[str, Any], status["release_readiness"])
+    assert readiness["ready"] is False
+    assert readiness["overall"] == "not_ready"

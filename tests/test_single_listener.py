@@ -29,17 +29,32 @@ def _find_free_port() -> int:
 def _get_listener_pids(port: int) -> dict[int, list[int]]:
     """Return {pid: [socket_inodes]} for processes listening on the given port.
 
-    Uses ``netstat -ano`` (Windows) to find listening sockets.
-    Filters for:
-    - local address contains ``127.0.0.1:{port}`` (local port)
-    - state is ``LISTENING`` (Windows) or ``LISTEN`` (Linux/macOS)
-    - PID is a valid positive integer
+    Platform-specific implementation:
+    - **Windows**: Uses ``netstat -ano`` and parses the output.
+    - **Linux**: Parses ``/proc/net/tcp`` and ``/proc/net/tcp6``, then
+      resolves socket inodes to PIDs via ``/proc/<pid>/fd``.
+    - **Other platforms**: Returns an empty dict (unavailable).
 
-    Works with any locale (LISTENING, ABHÖREN, etc.) by checking the
-    state column case-insensitively for the ``LISTEN`` prefix.
-
-    Returns an empty dict if netstat is unavailable.
+    Returns an empty dict if the platform is unsupported or the required
+    infrastructure is unavailable.
     """
+    import platform as _platform
+
+    system = _platform.system()
+    if system == "Windows":
+        return _get_listener_pids_windows(port)
+    if system == "Linux":
+        return _get_listener_pids_linux(port)
+    return {}
+
+
+# ---------------------------------------------------------------------------
+# Windows implementation (netstat -ano)
+# ---------------------------------------------------------------------------
+
+
+def _get_listener_pids_windows(port: int) -> dict[int, list[int]]:
+    """Windows: parse ``netstat -ano`` for listening sockets on ``port``."""
     try:
         result = subprocess.run(
             ["netstat", "-ano"],
@@ -52,34 +67,19 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
 
     listeners: dict[int, list[int]] = {}
     for line in result.stdout.splitlines():
-        # 1) Must contain the target port in a local-address position
         if f"127.0.0.1:{port}" not in line and f"[::1]:{port}" not in line:
             continue
         parts = line.strip().split()
         if len(parts) < 5:
             continue
-        # 2) State column must indicate listening.
-        #    On Windows:  Proto | Local | Remote | State | PID
-        #    State is the second-to-last field (index -2).
-        #    On Linux:    Proto | Recv-Q | Send-Q | Local | Remote | State | PID/Program
-        #    State is the second-to-last field (index -2) or last field (index -1).
-        #    Locale-agnostic: check for "LISTEN", "LISTENING", "ABHÖREN", "ESCUCHAN",
-        #    "ÉCOUTE", "AUSKULTOWANIE", etc. by checking if the state is NOT a number
-        #    and NOT "ESTABLISHED", "TIME_WAIT", "CLOSE_WAIT", "SYN_SENT" etc.
-        #    The safest approach: the state column is the one before PID, and it
-        #    is never a pure integer.
         state_candidate = parts[-2].upper()
         pid_raw = parts[-1]
-        # If parts[-2] looks like a number, we're on a Linux variant where
-        # PID comes before state — swap them.
         try:
             int(state_candidate)
-            # state_candidate is actually the PID; swap
             state_candidate = pid_raw.upper()
             pid_raw = parts[-2]
         except ValueError:
             pass
-        # Skip non-listening states explicitly (ESTABLISHED, TIME_WAIT, etc.)
         if state_candidate in (
             "ESTABLISHED",
             "TIME_WAIT",
@@ -95,11 +95,9 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
             "DELETE_TCB",
         ):
             continue
-        # 3) PID is a valid positive integer
         try:
             pid = int(pid_raw)
         except ValueError:
-            # Linux format: "PID/ProgramName" — extract numeric prefix
             pid_str = pid_raw.split("/")[0] if "/" in pid_raw else ""
             try:
                 pid = int(pid_str) if pid_str else 0
@@ -108,6 +106,128 @@ def _get_listener_pids(port: int) -> dict[int, list[int]]:
         if pid > 0:
             listeners.setdefault(pid, []).append(id(line))
     return listeners
+
+
+# ---------------------------------------------------------------------------
+# Linux implementation (/proc/net/tcp + /proc/<pid>/fd)
+# ---------------------------------------------------------------------------
+
+_TCP_STATE_LISTEN = "0A"
+
+
+def _parse_proc_net_tcp(
+    port: int,
+    tcp_text: str | None = None,
+    tcp6_text: str | None = None,
+) -> dict[int, list[str]]:
+    """Parse ``/proc/net/tcp`` and ``/proc/net/tcp6`` for listening sockets.
+
+    Returns ``{inode: [local_addresses]}`` for sockets in LISTEN state
+    on the requested ``port``.
+
+    For testing, pass ``tcp_text`` and/or ``tcp6_text`` directly instead of
+    reading from ``/proc``.
+    """
+    import pathlib
+
+    sources: list[tuple[str | None, str]] = [
+        (tcp_text, str(pathlib.Path("/proc/net/tcp"))),
+        (tcp6_text, str(pathlib.Path("/proc/net/tcp6"))),
+    ]
+    result: dict[int, list[str]] = {}
+    for content_override, proc_path_str in sources:
+        proc_path = pathlib.Path(proc_path_str)
+        if content_override is not None:
+            text = content_override
+        elif proc_path.exists():
+            text = proc_path.read_text(encoding="ascii", errors="replace")
+        else:
+            continue
+        for line in text.splitlines()[1:]:  # skip header
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split()
+            if len(parts) < 10:
+                continue
+            # parts[1] = local_address in hex format "XXXXXX:PORT"
+            local_addr = parts[1]
+            # parts[3] = state (hex)
+            state = parts[3]
+            # parts[9] = inode
+            inode_str = parts[9]
+            if state != _TCP_STATE_LISTEN:
+                continue
+            try:
+                inode = int(inode_str)
+            except ValueError:
+                continue
+            # local port is after the colon in hex
+            if ":" not in local_addr:
+                continue
+            hex_port = local_addr.split(":")[1]
+            try:
+                line_port = int(hex_port, 16)
+            except ValueError:
+                continue
+            if line_port == port:
+                result.setdefault(inode, []).append(local_addr)
+    return result
+
+
+def _resolve_inode_to_pid(inode: int, brain_pid: int | None = None) -> int | None:
+    """Resolve a socket inode to a PID by scanning ``/proc/<pid>/fd``.
+
+    If ``brain_pid`` is provided, it is checked first (fast path).
+    Returns the matching PID, or ``None`` if no process owns the inode.
+    """
+    import pathlib
+
+    proc = pathlib.Path("/proc")
+    candidates: list[int] = []
+    if brain_pid is not None:
+        candidates.append(brain_pid)
+    # Only scan other PIDs if brain_pid didn't match
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        pid_candidate = int(entry.name)
+        if pid_candidate == brain_pid:
+            continue
+        if pid_candidate not in candidates:
+            candidates.append(pid_candidate)
+    for pid in candidates:
+        fd_dir = proc / str(pid) / "fd"
+        if not fd_dir.is_dir():
+            continue
+        try:
+            for fd_entry in fd_dir.iterdir():
+                try:
+                    link: str = fd_entry.readlink()  # type: ignore[assignment]
+                except OSError:
+                    continue
+                # socket:[INODE]
+                if link == f"socket:[{inode}]":
+                    return pid
+        except PermissionError:
+            continue
+    return None
+
+
+def _get_listener_pids_linux(port: int) -> dict[int, list[int]]:
+    """Linux: parse ``/proc/net/tcp`` and resolve inodes to PIDs.
+
+    Returns ``{pid: [inode]}`` for all processes listening on ``port``.
+    """
+    inode_map = _parse_proc_net_tcp(port)
+    if not inode_map:
+        return {}
+    result: dict[int, list[int]] = {}
+    for inode in inode_map:
+        pid = _resolve_inode_to_pid(inode)
+        if pid is not None:
+            result.setdefault(pid, []).append(inode)
+    return result
 
 
 def test_exactly_one_listener_owns_port() -> None:

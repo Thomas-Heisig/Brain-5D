@@ -30,6 +30,10 @@ repos:
         pass_filenames: false
         additional_dependencies:
           - types-PyYAML
+          - numpy>=1.26
+          - matplotlib>=3.8
+          - python-docx>=1.2.0
+          - PyPDF2>=3.0.1
 
   # Trailing whitespace, EOF newline, merge conflicts
   - repo: https://github.com/pre-commit/pre-commit-hooks

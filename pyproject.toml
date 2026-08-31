@@ -45,6 +45,11 @@ Changelog = "https://github.com/Thomas-Heisig/Brain-5D/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Thomas-Heisig/Brain-5D/issues"
 
 [project.optional-dependencies]
+docs = [
+  "python-docx>=1.2.0",
+  "openpyxl>=3.1.5",
+  "PyPDF2>=3.0.1",
+]
 dev = [
   "black>=24.0",
   "mypy>=1.10",

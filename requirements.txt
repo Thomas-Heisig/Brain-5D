@@ -18,11 +18,11 @@ numpy>=1.26
 # Development dependencies (from pyproject.toml [project.optional-dependencies] dev)
 pytest>=8.0
 
-# Optional: DOCX-Unterstützung
-python-docx>=0.8.11
+# Optional: DOCX-Unterstützung  (docs extra in pyproject.toml)
+python-docx>=1.2.0
 
-# Optional: XLSX-Unterstützung
-openpyxl>=3.1.0
+# Optional: XLSX-Unterstützung  (docs extra in pyproject.toml)
+openpyxl>=3.1.5
 
-# Optional: PDF-Unterstützung
-PyPDF2>=3.0.0
+# Optional: PDF-Unterstützung  (docs extra in pyproject.toml)
+PyPDF2>=3.0.1
