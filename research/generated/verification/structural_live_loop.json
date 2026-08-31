@@ -2,9 +2,9 @@
   "schema_version": 1,
   "suite": "structural_live_loop",
   "status": "verified",
-  "timestamp": "2026-08-31T15:14:47.990292",
+  "timestamp": "2026-08-31T17:49:42.544933",
   "python_version": "3.13.14",
-  "test_run_head": "4501e2f26430ebc1f0681ae5a048fec8436242fb",
+  "test_run_head": "48145589e07aa0271205f7986129a1e267653306",
   "tested_tree_digest": "063bc485695bc63c149344bcd9dfcffc6264814edaec120e51e7bf44d7e80107",
   "test_command": "python -m pytest tests/test_structural_live_loop.py -q",
   "proofs": {
