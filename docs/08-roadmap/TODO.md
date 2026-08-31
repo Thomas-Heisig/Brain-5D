@@ -8,10 +8,12 @@
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   **Current baseline (2026-08-31): 457 passed / 2 skipped / 0 failed**
->   at commit `4a37462...`.
+>   at commit `5f583a6...`.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests replaced the coarse global tree-digest model; UI
 >   changes no longer invalidate scientific evidence artifacts.
+>   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
+>   delta-journal recovery in `src/main.py`.
 
 ## Priorität 1 — Alpha.5 Closure (abgeschlossen)
 

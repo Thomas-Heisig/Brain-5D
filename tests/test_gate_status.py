@@ -28,7 +28,7 @@ from src.dashboard.gate_status import (
     L_DISABLED,
     L_ERROR,
     GateStatusBuilder,
-    _VALID_GATE_STATUS,
+    VALID_GATE_STATUS,
 )
 from src.dashboard.operator_bridge import OperatorBridge
 
@@ -284,7 +284,7 @@ def test_overall_alpha5_status_is_valid() -> None:
     """Overall status must be one of the valid gate states."""
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
     status = builder.build()
-    assert status["overall"] in _VALID_GATE_STATUS  # type: ignore[index]
+    assert status["overall"] in VALID_GATE_STATUS  # type: ignore[index]
 
 
 def test_no_hardcoded_gate_checklist_in_index_html() -> None:

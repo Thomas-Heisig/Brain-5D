@@ -75,6 +75,7 @@ G_STALE = "stale"
 G_FAILED = "failed"
 
 _VALID_GATE_STATUS = {G_PASSED, G_PENDING, G_BLOCKED, G_STALE, G_FAILED}
+VALID_GATE_STATUS = _VALID_GATE_STATUS
 
 # Live runtime state of a component in the *currently running* config.
 L_ACTIVE = "active"

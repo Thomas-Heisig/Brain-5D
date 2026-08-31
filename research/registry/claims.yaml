@@ -58,7 +58,9 @@
   - EVID-2026-06
   - EVID-2026-08
   - EVID-2026-10
+  - EVID-2026-12
   experiments:
+  - EXP-STOR-0001
   - EXP-STOR-0001
   - EXP-STOR-0001
   - EXP-STOR-0001
@@ -81,7 +83,9 @@
   - EVID-2026-05
   - EVID-2026-07
   - EVID-2026-09
+  - EVID-2026-11
   experiments:
+  - EXP-DET-0001
   - EXP-DET-0001
   - EXP-DET-0001
   - EXP-DET-0001

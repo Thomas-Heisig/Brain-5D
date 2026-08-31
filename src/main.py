@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import random
 import statistics
+import sys
 import threading
 from dataclasses import asdict
 from pathlib import Path
@@ -231,7 +232,19 @@ def setup_observatory(
 # ================================================================
 
 
+def _configure_utf8_streams() -> None:
+    """Ensure stdout/stderr can emit Unicode even on cp1252 consoles."""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name)
+        if stream is not None and hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def main() -> int:
+    _configure_utf8_streams()
     parser = argparse.ArgumentParser(
         description="Brain 5D v0.5 - homeostatic self-regulation with dashboard"
     )
@@ -772,7 +785,7 @@ def main() -> int:
                 AsyncStorageConfig,
                 AsyncStorageSession,
             )
-            from src.storage.delta_journal import DeltaJournal
+            from src.storage.delta_journal import DeltaJournal, JournalCorruptionError
             from src.storage.runtime import StorageRuntimeConfig
 
             _journal_path = _snapshot_dir / "latest.b5d.journal"
@@ -784,7 +797,25 @@ def main() -> int:
                 ),
             )
             _delta_journal = DeltaJournal(str(_journal_path))
-            _delta_journal.open()
+            try:
+                _delta_journal.open()
+            except JournalCorruptionError as _journal_err:
+                # A corrupt journal from a previous run would prevent startup.
+                # Alpha.5 uses the journal as runtime delta persistence; losing
+                # the tail is acceptable because the canonical .b5d snapshot is
+                # the source of truth.  Rename the corrupt file and start fresh.
+                _corrupt_path = _journal_path.with_suffix(".b5d.journal.corrupt")
+                try:
+                    _corrupt_path.unlink(missing_ok=True)
+                    _journal_path.rename(_corrupt_path)
+                except Exception:
+                    pass
+                _delta_journal = DeltaJournal(str(_journal_path))
+                _delta_journal.open()
+                print(
+                    f"⚠️  Reset corrupt delta journal ({_journal_err}); "
+                    f"old file preserved at {_corrupt_path.name}"
+                )
             from src.storage.runtime import RuntimeNetworkLike
 
             _async_config = AsyncStorageConfig()
