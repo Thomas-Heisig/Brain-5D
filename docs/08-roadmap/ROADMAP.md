@@ -47,7 +47,7 @@ Schwellen-/Ratenregulation isoliert messen.
 
 ## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation
 
-> Alpha.5 Integration Gate passed on 2026-08-31; Alpha.6 work is unblocked.
+> Alpha.5 Integration Gate re-closed on 2026-08-31 after dashboard fixes; Alpha.6 work is unblocked.
 
 ### Dashboard Operator-Workbench
 

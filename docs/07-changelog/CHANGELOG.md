@@ -1,5 +1,41 @@
 # Changelog
 
+## 2026-08-31 — Alpha.5 Release Gate Re-Closed After Dashboard Fixes
+
+### Final Gate Result
+- **ALPHA.5 Overall**: ✅ **PASSED**
+- **Gate A — Technical Integration**: ✅ passed
+- **Gate B — Verification**: ✅ passed
+- **Gate C — Scientific Baseline**: ✅ passed
+
+### Verification Summary
+- **Full test suite**: 457 passed, 2 skipped, 0 failed.
+- **Pyright**: 0 errors.
+- **Ruff**: 0 errors.
+- **Source tree digest**: `063bc485695bc63c149344bcd9dfcffc6264814edaec120e51e7bf44d7e80107`.
+- **Single TCP LISTEN socket on 127.0.0.1:8765**: verified.
+- **Production HomeostasisSignal → Policy → Coordinator**: verified.
+- **Structural Coordinator / PlasticityEngine / Manipulator / Approval-gated mutation / Journal**: verified via E2E proofs.
+- **Restore-and-continue identity (A/B/C)**: verified (`A == B == C`).
+- **Structural determinism, iteration-order determinism, full RNG state persistence, canonical full-state digest, homeostasis + learning state persistence**: verified.
+- **EXP-DET-0001** and **EXP-STOR-0001** executed; first DATA-\* / EVID-\* artifacts produced; Research Catalog and Evidence Matrix rebuilt from real evidence.
+
+### Dashboard Fixes
+- Structural Live Loop renderer now shows Policy/Proposal/Undo/Replay as verified.
+- Network tab populated with IO flow, population, spike raster and histogram values.
+- Self-Organization gate correctly reports ACTIVE instead of disabled.
+- Added `/api/structural/live-loop` endpoint and enriched network telemetry DTOs.
+
+### Regenerated Evidence
+| Artifact | Status | HEAD |
+|----------|--------|------|
+| `tests/test_baseline.json` | passed | `b3c13e2...` |
+| `research/generated/verification/determinism_infrastructure.json` | verified | `b3c13e2...` |
+| `research/generated/verification/restore_determinism.json` | verified (A == B == C) | `b3c13e2...` |
+| `research/generated/verification/single_listener.json` | verified | `b3c13e2...` |
+| `research/generated/verification/structural_e2e.json` | verified | `b3c13e2...` |
+| `research/generated/verification/structural_live_loop.json` | verified | `b3c13e2...` |
+
 ## 2026-08-31 — Alpha.5 Release Gate Closed
 
 ### Final Gate Result

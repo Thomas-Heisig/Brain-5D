@@ -8,7 +8,7 @@
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
 >   **Current baseline (2026-08-31): 457 passed / 2 skipped / 0 failed**
->   at commit `5f583a6...`.
+>   at commit `b3c13e2...`.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests are planned but **not yet implemented**; the Gate
 >   Builder still uses the global source-tree digest, so UI changes can still
