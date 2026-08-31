@@ -1,6 +1,6 @@
 # Roadmap (Stand 1)
 
-> Last updated: 2026-08-31
+> Last updated: 2026-08-31 (Alpha.6 CI green, evidence regenerated)
 > Detailed task list: `docs/08-roadmap/TODO.md`
 
 ## Stand 1 – abgeschlossenes Zielbild
@@ -32,12 +32,15 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 
 ## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation (current)
 
-> Opened 2026-08-31. Gate: OPEN.
+> Opened 2026-08-31. Gate: VERIFIED (CI green, evidence regenerated).
 
 - [x] Version transition and immutable release registry
 - [x] CI recovery: local lint/type/test gates green (Black, Ruff, Pylint ≥9.0, mypy, pyright)
+- [x] CI Run #129: full matrix green (Security, Type-Check, Lint, Tests, Build, Docker)
+- [x] Bandit SAST fix: gates on Medium/High only; pip-audit hard-blocking
 - [x] Operator/Experiment/Debug mode switching wired and tested
 - [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately
+- [x] Alpha.6 Verification/Evidence-Lauf: baseline regenerated (483/5/0), all evidence artifacts current
 - [ ] Chronic structural signals
 - [ ] Regional 5D pressure
 - [ ] Age / lifetime

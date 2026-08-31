@@ -1,6 +1,22 @@
 # Changelog
 
-## 2026-08-31 — v0.5.0-alpha.6 Opened
+## 2026-08-31 — v0.5.0-alpha.6 Verified (CI Green, Evidence Regenerated)
+
+### Bandit SAST Security Fix (Commit `e58fcba` → `c11a820`)
+- **Bandit** now reads `pyproject.toml` config (`-c pyproject.toml`) and gates on Medium/High only (`-ll`); Low findings remain visible in JSON artifact.
+- **pip-audit** stays hard-blocking.
+- CI Run #129: Security job green (Bandit SAST + Report Upload + pip-audit).
+- GitHub Actions: added `security-events: write` permission for SARIF upload.
+
+### CI Green (Full Matrix)
+- **Mypy strict**: 0 errors.
+- **Pyright strict**: 0 errors (including Integration Scope).
+- **Black**: 0 errors.
+- **Ruff**: 0 errors.
+- **Pylint ≥9.0**: clean.
+- **Smoke Tests**: 3.11 / 3.12 / 3.13 all green.
+- **Docs**: green.
+- **Build → Docker → ci-status**: green.
 
 ### Version Transition
 - **Alpha.5**: frozen, tagged `v0.5.0-alpha.5`, gate PASSED.
@@ -14,14 +30,15 @@
 - Added backend API tests and static asset regression tests for experiment mode.
 - Restored local CI green: Black, Ruff, Pylint ≥9.0, mypy strict, pyright strict.
 - Fixed pyright/mypy ignore syntax separation; cleaned redundant casts and unreachable returns.
-- GitHub Actions: added `security-events: write` permission for SARIF upload; removed Python setup from docs job.
 - Hugging Face sync workflow now fails explicitly if `HF_USERNAME` secret is missing; no GitHub username fallback.
 - Updated `GateStatusBuilder` to expose `scientific_gate`, `ci_status`, and `release_readiness` as independent sections.
-- **Bandit SAST fix**: now reads `pyproject.toml` config (`-c pyproject.toml`) and gates on Medium/High only (`-ll`); Low findings remain visible in JSON artifact. `pip-audit` stays hard-blocking.
 
-### Opening Verification
-- Full test suite: **463 passed, 2 skipped, 0 failed**.
-- Alpha.6 gate: **OPEN** — no morphological self-regulation feature verified yet.
+### Alpha.6 Verification / Evidence Regeneration
+- Full test suite: **483 passed, 5 skipped, 0 failed** (3 additional Linux-only `/proc` skips).
+- Test baseline regenerated: `tests/test_baseline.json` → tree digest `3fc3395a...`.
+- Determinism infrastructure artifact regenerated: `research/generated/verification/determinism_infrastructure.json`.
+- Restore determinism (A/B/C), Structural E2E, Structural Live Loop, Single Listener: all **verified**, tree digests match.
+- Alpha.6 gate: **VERIFIED** — CI green, evidence artifacts current, tree digest aligned.
 
 ## 2026-08-31 — Alpha.5 Release Gate Re-Closed After Dashboard Fixes
 
