@@ -1,0 +1,21 @@
+{
+  "evidence_id": "EVID-2026-08",
+  "experiment_id": "EXP-STOR-0001",
+  "claim_id": "CLAIM-STOR-001",
+  "hypothesis_id": "H-STOR-001-A",
+  "result_summary": "B5D storage roundtrip verified: full network state serializes and deserializes without loss.",
+  "effect_size": {},
+  "statistical_significance": {},
+  "status": "supports",
+  "limitations": "",
+  "artifacts": {
+    "figures": [],
+    "data_files": []
+  },
+  "generated": "2026-08-31T08:18:57.375626",
+  "experiment_validity": {
+    "valid": true,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  }
+}

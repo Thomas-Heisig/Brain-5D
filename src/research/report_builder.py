@@ -79,17 +79,26 @@ class ReportBuilder:
                         ]
                     )
 
+                # Collect evidence IDs from hypotheses and claims linked to this question
+                question_evidence: set[str] = set(q.evidence)
+                for h in hypotheses:
+                    question_evidence.update(h.evidence)
+                for c in claims:
+                    question_evidence.update(c.evidence)
+
                 if hypotheses:
                     lines.append("**Hypothesen:**")
                     for h in hypotheses:
-                        lines.append(f"- `{h.id}`: {h.hypothesis} *({h.status})*")
+                        ev_tag = f" — Evidenz: {', '.join(h.evidence)}" if h.evidence else ""
+                        lines.append(f"- `{h.id}`: {h.hypothesis} *({h.status})*{ev_tag}")
                     lines.append("")
 
                 if claims:
                     lines.append("**Claims:**")
                     for c in claims:
+                        ev_tag = f" — Evidenz: {', '.join(c.evidence)}" if c.evidence else ""
                         lines.append(
-                            f"- `{c.id}`: {c.claim} *({c.status}, {c.confidence})*"
+                            f"- `{c.id}`: {c.claim} *({c.status}, {c.confidence})*{ev_tag}"
                         )
                     lines.append("")
 
@@ -101,8 +110,8 @@ class ReportBuilder:
                         )
                     lines.append("")
 
-                if q.evidence:
-                    lines.append(f"**Evidenzen:** {', '.join(q.evidence)}")
+                if question_evidence:
+                    lines.append(f"**Evidenzen:** {', '.join(sorted(question_evidence))}")
                     lines.append("")
 
                 lines.append("---")

@@ -875,23 +875,35 @@ class GateStatusBuilder:
         ))
 
         # --- First evidence artifacts ---
-        evidence_artifacts: list[tuple[str, str]] = [
-            ("C-FIRST-DATA", "First DATA-* artifact produced"),
-            ("C-FIRST-EVID", "First EVID-* record produced"),
-            ("C-FIRST-HYPOTHESIS-RESULT", "First reproducibly supported/refuted hypothesis"),
-            ("C-CATALOG-REBUILT", "Research Catalog rebuilt from real evidence"),
-            ("C-MATRIX-REBUILT", "Evidence Matrix rebuilt from real evidence"),
+        data_artifact = self._first_data_artifact()
+        evidence_record = self._first_evidence_record()
+        hypothesis_result = self._hypothesis_with_result()
+        catalog_rebuilt = self._catalog_rebuilt()
+        matrix_rebuilt = self._matrix_rebuilt()
+
+        evidence_checks: list[tuple[str, str, bool, str | None, str | None]] = [
+            ("C-FIRST-DATA", "First DATA-* artifact produced", data_artifact is not None, str(data_artifact) if data_artifact else None, None),
+            ("C-FIRST-EVID", "First EVID-* record produced", evidence_record is not None, str(evidence_record) if evidence_record else None, None),
+            ("C-FIRST-HYPOTHESIS-RESULT", "First reproducibly supported/refuted hypothesis", hypothesis_result is not None, None, hypothesis_result),
+            ("C-CATALOG-REBUILT", "Research Catalog rebuilt from real evidence", catalog_rebuilt, None, None),
+            ("C-MATRIX-REBUILT", "Evidence Matrix rebuilt from real evidence", matrix_rebuilt, None, None),
         ]
-        for cid, label in evidence_artifacts:
+        for cid, label, passed, artifact_path, hypothesis_id in evidence_checks:
+            evidence: dict[str, JSONValue] | None = None
+            if artifact_path:
+                evidence = {"artifact": artifact_path}
+            if hypothesis_id:
+                evidence = {"hypothesis_id": hypothesis_id}
             items.append(_criterion(
                 gate=GATE_C,
                 id=cid,
                 category="scientific_evidence",
                 label=label,
-                status=G_PENDING,
-                maturity=IMPLEMENTED,
+                status=G_PASSED if passed else G_PENDING,
+                maturity=EVIDENCED if passed else IMPLEMENTED,
                 source="research/generated",
-                message="No real evidence yet",
+                message="Evidence produced" if passed else "No real evidence yet",
+                evidence=evidence,
             ))
 
         return items
@@ -1363,3 +1375,49 @@ class GateStatusBuilder:
             return False
         status = manifest.get("experiment_status", "not_started")
         return status == "completed"
+
+    def _first_data_artifact(self) -> Path | None:
+        """Return the first DATA-* artifact path, or None."""
+        data_dir = self.repo_root / "research" / "generated" / "data"
+        if not data_dir.exists():
+            return None
+        artifacts = sorted(p for p in data_dir.glob("DATA-*.json") if p.is_file())
+        return artifacts[0] if artifacts else None
+
+    def _first_evidence_record(self) -> Path | None:
+        """Return the first EVID-* record path, or None."""
+        evidence_dir = self.repo_root / "research" / "registry" / "evidence"
+        if not evidence_dir.exists():
+            return None
+        records = sorted(p for p in evidence_dir.glob("EVID-*.json") if p.is_file())
+        return records[0] if records else None
+
+    def _hypothesis_with_result(self) -> str | None:
+        """Return the first hypothesis ID with supporting/refuting evidence, or None."""
+        evidence_dir = self.repo_root / "research" / "registry" / "evidence"
+        if not evidence_dir.exists():
+            return None
+        for path in sorted(evidence_dir.glob("EVID-*.json")):
+            try:
+                record = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if record.get("status") in ("supports", "refutes"):
+                return record.get("hypothesis_id")
+        return None
+
+    def _catalog_rebuilt(self) -> bool:
+        """Return True if Research Catalog was rebuilt from real evidence."""
+        catalog_path = self.repo_root / "research" / "generated" / "RESEARCH_CATALOG.md"
+        if not catalog_path.exists():
+            return False
+        text = catalog_path.read_text(encoding="utf-8")
+        return "EVID-" in text or "DATA-" in text
+
+    def _matrix_rebuilt(self) -> bool:
+        """Return True if Evidence Matrix was rebuilt from real evidence."""
+        matrix_path = self.repo_root / "research" / "generated" / "EVIDENCE_MATRIX.md"
+        if not matrix_path.exists():
+            return False
+        text = matrix_path.read_text(encoding="utf-8")
+        return "EVID-" in text or "DATA-" in text

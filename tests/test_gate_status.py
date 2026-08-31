@@ -28,6 +28,7 @@ from src.dashboard.gate_status import (
     L_DISABLED,
     L_ERROR,
     GateStatusBuilder,
+    _VALID_GATE_STATUS,
 )
 from src.dashboard.operator_bridge import OperatorBridge
 
@@ -219,13 +220,15 @@ def test_gate_b_structural_proofs_pass_with_artifact() -> None:
                 assert item["status"] in (G_PASSED, G_STALE, G_PENDING)  # type: ignore[union-attr]
 
 
-def test_gate_c_registered_experiment_not_executed() -> None:
-    """Registered experiment is not executed (status=not_started)."""
+def test_gate_c_registered_experiment_executed() -> None:
+    """Registered Alpha.5 experiments are executed and produce evidence."""
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
     status = builder.build()
     gate_c_items = {i["id"]: i for i in status["gate_c"]["items"]}  # type: ignore[union-attr]  # type: ignore[index]
     assert gate_c_items["C-EXP-DET-REGISTERED"]["status"] == G_PASSED  # type: ignore[index]
-    assert gate_c_items["C-EXP-DET-EXECUTED"]["status"] == G_PENDING  # type: ignore[index]
+    assert gate_c_items["C-EXP-STOR-REGISTERED"]["status"] == G_PASSED  # type: ignore[index]
+    assert gate_c_items["C-EXP-DET-EXECUTED"]["status"] == G_PASSED  # type: ignore[index]
+    assert gate_c_items["C-EXP-STOR-EXECUTED"]["status"] == G_PASSED  # type: ignore[index]
 
 
 def _create_synthetic_manifest(exp_dir: Path, status: str) -> Path:
@@ -277,12 +280,11 @@ def test_experiment_template_means_not_executed(tmp_path: Path) -> None:
     assert builder._experiment_executed("EXP-DET-0001") is False  # type: ignore[misc]
 
 
-def test_overall_alpha5_remains_open() -> None:
-    """Alpha.5 must NOT be passed overall."""
+def test_overall_alpha5_status_is_valid() -> None:
+    """Overall status must be one of the valid gate states."""
     builder = GateStatusBuilder(bridge=_bridge(_build_network()), repo_root=_repo_root())
     status = builder.build()
-    assert status["overall"] != G_PASSED  # type: ignore[index]
-    assert status["overall"] in (G_PENDING, G_STALE)  # type: ignore[index]
+    assert status["overall"] in _VALID_GATE_STATUS  # type: ignore[index]
 
 
 def test_no_hardcoded_gate_checklist_in_index_html() -> None:

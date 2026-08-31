@@ -1,30 +1,22 @@
-# =============================================================================
-# Brain-5D Scientific Evidence Framework — Claim Registry
-# =============================================================================
-# A claim is a strong scientific statement that requires evidence.
-# Claims must not be promoted to "supported" without sufficient experimental
-# backing. This protects Brain-5D from overstated conclusions.
-#
-# ID convention: CLAIM-{DOMAIN}-{NNN}
-# Status: untested → inconclusive → supported | refuted
-
 - id: CLAIM-SNN-001
-  claim: "Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung."
+  claim: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische
+    Gewichtsanpassung.
   research_question: RQ-SNN-004
   hypothesis: H-SNN-004-A
   evidence: []
   experiments: []
   sources:
-    - SRC-SONG-ABBOTT-2000
-    - SRC-BI-POO-1998
+  - SRC-SONG-ABBOTT-2000
+  - SRC-BI-POO-1998
   status: untested
   confidence: none
-  evidence_level: E0
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  required_evidence: []
+  minimum_runs: 10
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: CLAIM-5D-001
-  claim: "Die fünfdimensionale Organisation verbessert die Robustheit gegenüber lokalen Strukturverlusten."
+  claim: Die fünfdimensionale Organisation verbessert die Robustheit gegenüber lokalen
+    Strukturverlusten.
   research_question: RQ-5D-001
   hypothesis: H-5D-001-A
   evidence: []
@@ -32,17 +24,16 @@
   sources: []
   status: untested
   confidence: none
-  evidence_level: E0
   required_evidence:
-    - dimensional_ablation
-    - damage_experiment
-    - statistical_replication
+  - dimensional_ablation
+  - damage_experiment
+  - statistical_replication
   minimum_runs: 30
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: CLAIM-5D-002
-  claim: "5D-Netzwerke zeigen eine höhere Informationskapazität als niedrigdimensionale Netzwerke gleicher Neuronenzahl."
+  claim: 5D-Netzwerke zeigen eine höhere Informationskapazität als niedrigdimensionale
+    Netzwerke gleicher Neuronenzahl.
   research_question: RQ-5D-004
   hypothesis: H-5D-004-A
   evidence: []
@@ -50,46 +41,58 @@
   sources: []
   status: untested
   confidence: none
-  evidence_level: E0
   required_evidence:
-    - information_capacity_measurement
-    - dimensional_ablation
-    - statistical_replication
+  - information_capacity_measurement
+  - dimensional_ablation
+  - statistical_replication
   minimum_runs: 20
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: CLAIM-STOR-001
-  claim: "Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des vollständigen Netzwerkzustands."
+  claim: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung
+    des vollständigen Netzwerkzustands.
   research_question: RQ-STORAGE-001
   hypothesis: H-STOR-001-A
-  evidence: []
-  experiments: []
+  evidence:
+  - EVID-2026-04
+  - EVID-2026-06
+  - EVID-2026-08
+  - EVID-2026-10
+  experiments:
+  - EXP-STOR-0001
+  - EXP-STOR-0001
+  - EXP-STOR-0001
+  - EXP-STOR-0001
   sources: []
-  status: untested
-  confidence: none
-  evidence_level: E0
+  status: inconclusive
+  confidence: low
   required_evidence:
-    - serialize_deserialize_roundtrip
-    - state_equality_check
+  - serialize_deserialize_roundtrip
+  - state_equality_check
   minimum_runs: 10
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: CLAIM-SELF-001
-  claim: "In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung."
+  claim: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung.
   research_question: RQ-SELF-001
   hypothesis: H-SELF-001-A
-  evidence: []
-  experiments: []
+  evidence:
+  - EVID-2026-03
+  - EVID-2026-05
+  - EVID-2026-07
+  - EVID-2026-09
+  experiments:
+  - EXP-DET-0001
+  - EXP-DET-0001
+  - EXP-DET-0001
+  - EXP-DET-0001
   sources: []
-  status: untested
-  confidence: none
-  evidence_level: E0
+  status: inconclusive
+  confidence: low
   required_evidence:
-    - module_detection
-    - control_comparison
-    - statistical_replication
+  - module_detection
+  - control_comparison
+  - statistical_replication
   minimum_runs: 30
-  created: "2026-08-23"
-  updated: "2026-08-23"
+  created: '2026-08-23'
+  updated: '2026-08-23'

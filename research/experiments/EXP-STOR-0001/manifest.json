@@ -1,17 +1,44 @@
 {
   "experiment_id": "EXP-STOR-0001",
-  "experiment_status": "not_started",
-  "timestamp": "",
-  "research_questions": [
-    "RQ-STOR-001",
-    "RQ-STOR-002"
-  ],
-  "hypotheses": [],
-  "git": {},
-  "software": {},
+  "experiment_status": "completed",
+  "timestamp": "2026-08-31T08:23:33.172780",
+  "git": {
+    "commit": "fb44a0514b9249f44a6d8e429f30ff17eb2dc384",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
   "simulation": {},
-  "results": {},
-  "artifacts": {},
-  "runtime": {},
-  "evidence": []
+  "artifacts": {
+    "test_output": "F:\\Brain-5D\\research\\experiments\\EXP-STOR-0001\\output.log"
+  },
+  "research_questions": [],
+  "hypotheses": [
+    "H-STOR-001-A"
+  ],
+  "config": {
+    "path": "F:\\Brain-5D\\research\\experiments\\EXP-STOR-0001\\manifest.json",
+    "sha256": ""
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "results": {
+    "passed": true,
+    "returncode": 0,
+    "duration_seconds": 0.6139571666717529,
+    "stdout_summary": "...............s                                                         [100%]\n=========================== short test summary info ===========================\nSKIPPED [1] tests\\test_b5d_storage.py:344: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test\n15 passed, 1 skipped in 0.24s\n",
+    "stderr_summary": ""
+  },
+  "runtime": {
+    "duration_seconds": 0.6139571666717529
+  }
 }

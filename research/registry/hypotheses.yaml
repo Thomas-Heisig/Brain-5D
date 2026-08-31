@@ -1,224 +1,221 @@
-# =============================================================================
-# Brain-5D Scientific Evidence Framework — Hypotheses Registry
-# =============================================================================
-# Each hypothesis is derived from a research question and must be testable
-# through experiments. Status tracks whether evidence supports or refutes it.
-#
-# ID convention: H-{DOMAIN}-{NNN}-{VARIANT}
-# Variants: A = primary, B = alternative, C = null
-
 - id: H-SNN-001-A
   research_question: RQ-SNN-001
-  hypothesis: "Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken ohne numerische Drift."
+  hypothesis: Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken
+    ohne numerische Drift.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SNN-002-A
   research_question: RQ-SNN-002
-  hypothesis: "Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare Spikefolgen."
+  hypothesis: Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare
+    Spikefolgen.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SNN-003-A
   research_question: RQ-DET-001
-  hypothesis: "Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch."
-  status: untested
-  evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  hypothesis: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch
+    identisch.
+  status: supported
+  evidence:
+  - EVID-2026-03
+  - EVID-2026-05
+  - EVID-2026-07
+  - EVID-2026-09
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SNN-004-A
   research_question: RQ-SNN-004
-  hypothesis: "STDP führt zu einer meßbaren asymmetrischen Verschiebung der synaptischen Gewichtsverteilung."
+  hypothesis: STDP führt zu einer meßbaren asymmetrischen Verschiebung der synaptischen
+    Gewichtsverteilung.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SNN-005-A
   research_question: RQ-SNN-005
-  hypothesis: "Ein Netzwerk mit STDP zeigt signifikant bessere Lernleistung als ein Netzwerk ohne STDP."
+  hypothesis: Ein Netzwerk mit STDP zeigt signifikant bessere Lernleistung als ein
+    Netzwerk ohne STDP.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STDP-001-A
   research_question: RQ-STDP-001
-  hypothesis: "Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0)."
+  hypothesis: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine
+    asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0).
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STDP-002-A
   research_question: RQ-STDP-002
-  hypothesis: "STDP-getriebene Gewichte konvergieren unter Dauerstimulation zu einer stabilen Verteilung."
+  hypothesis: STDP-getriebene Gewichte konvergieren unter Dauerstimulation zu einer
+    stabilen Verteilung.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-HOM-001-A
   research_question: RQ-HOM-001
-  hypothesis: "Synaptische Homeostase hält die mittlere Feuerrate eines SNN innerhalb eines definierten Sollbereichs."
+  hypothesis: Synaptische Homeostase hält die mittlere Feuerrate eines SNN innerhalb
+    eines definierten Sollbereichs.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-HOM-002-A
   research_question: RQ-HOM-002
-  hypothesis: "Homeostase und STDP wirken synergistisch: Homeostase verhindert STDP-induzierte Drift."
+  hypothesis: 'Homeostase und STDP wirken synergistisch: Homeostase verhindert STDP-induzierte
+    Drift.'
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-5D-001-A
   research_question: RQ-5D-001
-  hypothesis: "Ein 5D-angeordnetes Netzwerk zeigt signifikant andere Dynamik als ein 2D/3D-Netzwerk gleicher Neuronenzahl."
+  hypothesis: Ein 5D-angeordnetes Netzwerk zeigt signifikant andere Dynamik als ein
+    2D/3D-Netzwerk gleicher Neuronenzahl.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-5D-002-A
   research_question: RQ-5D-002
-  hypothesis: "Die Signalpropagationszeit und -reichweite skaliert mit der Dimensionalität des Netzwerks."
+  hypothesis: Die Signalpropagationszeit und -reichweite skaliert mit der Dimensionalität
+    des Netzwerks.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-5D-003-A
   research_question: RQ-5D-003
-  hypothesis: "5D-Netzwerke entwickeln eine höhere Modularität als niedrigdimensionale Netzwerke."
+  hypothesis: 5D-Netzwerke entwickeln eine höhere Modularität als niedrigdimensionale
+    Netzwerke.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-5D-004-A
   research_question: RQ-5D-004
-  hypothesis: "Die zusätzlichen Dimensionen in 5D sind informationstragend und nicht redundant."
+  hypothesis: Die zusätzlichen Dimensionen in 5D sind informationstragend und nicht
+    redundant.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STOR-001-A
   research_question: RQ-STORAGE-001
-  hypothesis: "Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden."
-  status: untested
-  evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  hypothesis: Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format
+    gespeichert und zurückgeladen werden.
+  status: supported
+  evidence:
+  - EVID-2026-04
+  - EVID-2026-06
+  - EVID-2026-08
+  - EVID-2026-10
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STOR-002-A
   research_question: RQ-STORAGE-002
-  hypothesis: "Für kausale Fortsetzung eines Laufs müssen Neuron-State, Synapsen-State, Eligibility-Traces, RNG-State und Event-Queue gespeichert werden."
+  hypothesis: Für kausale Fortsetzung eines Laufs müssen Neuron-State, Synapsen-State,
+    Eligibility-Traces, RNG-State und Event-Queue gespeichert werden.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STOR-003-A
   research_question: RQ-STORAGE-003
-  hypothesis: "Die Speicherdichte des .b5d-Formats skaliert sublinear mit der Neuronenzahl."
+  hypothesis: Die Speicherdichte des .b5d-Formats skaliert sublinear mit der Neuronenzahl.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STOR-004-A
   research_question: RQ-STORAGE-004
-  hypothesis: "Das .b5d-Format skaliert auf mindestens 50 Millionen Neuronen ohne Leistungseinbruch."
+  hypothesis: Das .b5d-Format skaliert auf mindestens 50 Millionen Neuronen ohne Leistungseinbruch.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SCALE-001-A
   research_question: RQ-SCALE-001
-  hypothesis: "Brain-5D skaliert von 5.000 auf 1.000.000 Neuronen ohne qualitative Änderung der Spikedynamik."
+  hypothesis: Brain-5D skaliert von 5.000 auf 1.000.000 Neuronen ohne qualitative
+    Änderung der Spikedynamik.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SELF-001-A
   research_question: RQ-SELF-001
-  hypothesis: "In Brain-5D entstehen spontan funktionale Cluster durch lokale STDP-Regeln."
+  hypothesis: In Brain-5D entstehen spontan funktionale Cluster durch lokale STDP-Regeln.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-SELF-002-A
   research_question: RQ-SELF-002
-  hypothesis: "Die beobachtete Selbstorganisation ist emergent und nicht durch die Architektur vorgegeben."
+  hypothesis: Die beobachtete Selbstorganisation ist emergent und nicht durch die
+    Architektur vorgegeben.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-STRUCT-001-A
   research_question: RQ-STRUCT-001
-  hypothesis: "Strukturelle Plastizität (Pruning/Sprouting) führt zu messbar verbesserter Netzwerkeffizienz."
+  hypothesis: Strukturelle Plastizität (Pruning/Sprouting) führt zu messbar verbesserter
+    Netzwerkeffizienz.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-MEM-001-A
   research_question: RQ-MEM-001
-  hypothesis: "Brain-5D kann Informationen über synaptische Gewichte speichern und auf Input-Muster abrufen."
+  hypothesis: Brain-5D kann Informationen über synaptische Gewichte speichern und
+    auf Input-Muster abrufen.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-EMB-001-A
   research_question: RQ-EMB-001
-  hypothesis: "Brain-5D kann in einer geschlossenen Sensor-Aktor-Schleife zielgerichtet agieren."
+  hypothesis: Brain-5D kann in einer geschlossenen Sensor-Aktor-Schleife zielgerichtet
+    agieren.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-LLM-001-A
   research_question: RQ-LLM-001
-  hypothesis: "Ein Language Organ kann SNN-Zustände in sinnvolle natürliche Sprache übersetzen."
+  hypothesis: Ein Language Organ kann SNN-Zustände in sinnvolle natürliche Sprache
+    übersetzen.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-ETH-001-A
   research_question: RQ-ETH-001
-  hypothesis: "Die Autorenschaft von Brain-5D-Erkenntnissen ist ein verteiltes Phänomen zwischen Mensch, Modell und System."
+  hypothesis: Die Autorenschaft von Brain-5D-Erkenntnissen ist ein verteiltes Phänomen
+    zwischen Mensch, Modell und System.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-ETH-002-A
   research_question: RQ-ETH-002
-  hypothesis: "Die Kontrolle über Brain-5D-Experimente liegt primär beim Entwickler, nicht beim automatisierten System."
+  hypothesis: Die Kontrolle über Brain-5D-Experimente liegt primär beim Entwickler,
+    nicht beim automatisierten System.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: H-EPIST-001-A
   research_question: RQ-EPIST-001
-  hypothesis: "Systemerkenntnis und Forschererkenntnis sind in Brain-5D kategorial unterscheidbar."
+  hypothesis: Systemerkenntnis und Forschererkenntnis sind in Brain-5D kategorial
+    unterscheidbar.
   status: untested
   evidence: []
-  created: "2026-08-23"
-  updated: "2026-08-23"
+  created: '2026-08-23'
+  updated: '2026-08-23'

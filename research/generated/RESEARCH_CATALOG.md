@@ -1,13 +1,13 @@
 # Brain-5D Research Catalog
 
-*Generiert am 2026-08-23*
+*Generiert am 2026-08-31*
 
 ## Übersicht
 
 - **Forschungsfragen:** 28
 - **Hypothesen:** 27
 - **Claims:** 5
-- **Literaturquellen:** 8
+- **Literaturquellen:** 10
 
 ---
 
@@ -80,10 +80,12 @@
 **Relevanz:** Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung.
 
 **Hypothesen:**
-- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(untested)*
+- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(supported)* — Evidenz: EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09
 
 **Literatur:**
 - `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
+
+**Evidenzen:** EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09
 
 ---
 
@@ -261,10 +263,12 @@
 - `H-SELF-001-A`: In Brain-5D entstehen spontan funktionale Cluster durch lokale STDP-Regeln. *(untested)*
 
 **Claims:**
-- `CLAIM-SELF-001`: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung. *(untested, none)*
+- `CLAIM-SELF-001`: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung. *(inconclusive, low)* — Evidenz: EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09
 
 **Literatur:**
 - `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
+
+**Evidenzen:** EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09
 
 ---
 
@@ -321,6 +325,10 @@
 **Status:** open
 **Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
 
+**Literatur:**
+- `SRC-WATTS-STROGATZ-1998`: Duncan J. Watts et al. (1998)
+- `SRC-BARABASI-1999`: Albert-László Barabási et al. (1999)
+
 ---
 
 ### RQ-SNN-004
@@ -368,10 +376,12 @@
 **Relevanz:** Grundlage für Persistenz und Checkpointing.
 
 **Hypothesen:**
-- `H-STOR-001-A`: Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden. *(untested)*
+- `H-STOR-001-A`: Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden. *(supported)* — Evidenz: EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10
 
 **Claims:**
-- `CLAIM-STOR-001`: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des vollständigen Netzwerkzustands. *(untested, none)*
+- `CLAIM-STOR-001`: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des vollständigen Netzwerkzustands. *(inconclusive, low)* — Evidenz: EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10
+
+**Evidenzen:** EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10
 
 ---
 
