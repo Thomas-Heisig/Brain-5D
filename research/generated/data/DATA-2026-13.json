@@ -1,0 +1,16 @@
+{
+  "data_id": "DATA-2026-13",
+  "experiment_id": "EXP-DET-0001",
+  "generated": "2026-08-31T14:16:07+0200",
+  "tree_digest": "de13c5b5f2295340d002d0f49eb5b51225c35ebcc73dfa17cab4e0c4b7c50f11",
+  "test_command": "",
+  "results": {
+    "passed": true,
+    "returncode": 0,
+    "duration_seconds": 2.5092105865478516
+  },
+  "raw_outputs": {
+    "stdout": ".......                                                                  [100%]\n============================== warnings summary ===============================\ntests/test_restore_determinism_abc.py::test_write_restore_determinism_artifact\n  C:\\Users\\T_hei\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python313\\site-packages\\PyPDF2\\__init__.py:21: DeprecationWarning: PyPDF2 is deprecated. Please move to the pypdf library instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n7 passed, 1 warning in 1.92s\n",
+    "stderr": ""
+  }
+}

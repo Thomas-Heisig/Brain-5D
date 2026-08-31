@@ -59,7 +59,9 @@
   - EVID-2026-08
   - EVID-2026-10
   - EVID-2026-12
+  - EVID-2026-14
   experiments:
+  - EXP-STOR-0001
   - EXP-STOR-0001
   - EXP-STOR-0001
   - EXP-STOR-0001
@@ -74,17 +76,20 @@
   minimum_runs: 10
   created: '2026-08-23'
   updated: '2026-08-23'
-- id: CLAIM-SELF-001
-  claim: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung.
-  research_question: RQ-SELF-001
-  hypothesis: H-SELF-001-A
+- id: CLAIM-DET-001
+  claim: Brain-5D erzeugt bei identischem Seed, Input und Anfangszustand deterministisch
+    identische Spike-Abfolgen und Netzwerkzustände.
+  research_question: RQ-DET-001
+  hypothesis: H-SNN-003-A
   evidence:
   - EVID-2026-03
   - EVID-2026-05
   - EVID-2026-07
   - EVID-2026-09
   - EVID-2026-11
+  - EVID-2026-13
   experiments:
+  - EXP-DET-0001
   - EXP-DET-0001
   - EXP-DET-0001
   - EXP-DET-0001
@@ -93,6 +98,22 @@
   sources: []
   status: inconclusive
   confidence: low
+  required_evidence:
+  - ab_restore_identity
+  - fresh_process_restore_identity
+  - rng_state_persistence
+  minimum_runs: 10
+  created: '2026-08-23'
+  updated: '2026-08-31'
+- id: CLAIM-SELF-001
+  claim: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung.
+  research_question: RQ-SELF-001
+  hypothesis: H-SELF-001-A
+  evidence: []
+  experiments: []
+  sources: []
+  status: untested
+  confidence: none
   required_evidence:
   - module_detection
   - control_comparison

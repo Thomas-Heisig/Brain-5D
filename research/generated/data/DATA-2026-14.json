@@ -1,0 +1,16 @@
+{
+  "data_id": "DATA-2026-14",
+  "experiment_id": "EXP-STOR-0001",
+  "generated": "2026-08-31T14:16:08+0200",
+  "tree_digest": "de13c5b5f2295340d002d0f49eb5b51225c35ebcc73dfa17cab4e0c4b7c50f11",
+  "test_command": "",
+  "results": {
+    "passed": true,
+    "returncode": 0,
+    "duration_seconds": 0.6766636371612549
+  },
+  "raw_outputs": {
+    "stdout": "...............s                                                         [100%]\n=========================== short test summary info ===========================\nSKIPPED [1] tests\\test_b5d_storage.py:344: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test\n15 passed, 1 skipped in 0.26s\n",
+    "stderr": ""
+  }
+}

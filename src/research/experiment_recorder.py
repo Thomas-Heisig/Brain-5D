@@ -130,6 +130,11 @@ class ExperimentRecorder:
         self._manifest["config"] = {"path": config_path, "sha256": sha256}
         return self
 
+    def record_software_version(self, key: str, value: str) -> ExperimentRecorder:
+        """Record or override a software version entry (e.g. brain5d_version)."""
+        self._manifest["software"][key] = value
+        return self
+
     def record_simulation_params(
         self: ExperimentRecorder, **kwargs: Any
     ) -> ExperimentRecorder:

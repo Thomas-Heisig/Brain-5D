@@ -1,6 +1,6 @@
 # Brain-5D Open Questions
 
-*Generiert am 2026-08-23*
+*Generiert am 2026-08-31*
 
 Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evidenz.
 
@@ -61,6 +61,10 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 **Frage:** Wie variiert die Propagation mit der Topologie?
 
 **Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
+
+**Literatur:**
+- `SRC-WATTS-STROGATZ-1998`: Duncan J. Watts et al. (1998)
+- `SRC-BARABASI-1999`: Albert-László Barabási et al. (1999)
 
 ---
 

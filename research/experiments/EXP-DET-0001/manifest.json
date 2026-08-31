@@ -1,28 +1,30 @@
 {
   "experiment_id": "EXP-DET-0001",
   "experiment_status": "completed",
-  "timestamp": "2026-08-31T14:04:23.258319",
+  "timestamp": "2026-08-31T14:16:07.528639",
   "git": {
-    "commit": "5f583a657b9bc10e31c439b28605d40375c6e709",
+    "commit": "c46ff9c44aed70372ace8d70877ee086bbe9405c",
     "dirty": true,
     "branch": "main"
   },
   "software": {
     "python": "3.13.14",
     "os": "Windows 11",
-    "brain5d_version": "unknown"
+    "brain5d_version": "0.5.0a5"
   },
   "simulation": {},
   "artifacts": {
     "test_output": "F:\\Brain-5D\\research\\experiments\\EXP-DET-0001\\output.log"
   },
-  "research_questions": [],
+  "research_questions": [
+    "RQ-DET-001"
+  ],
   "hypotheses": [
     "H-SNN-003-A"
   ],
   "config": {
-    "path": "F:\\Brain-5D\\research\\experiments\\EXP-DET-0001\\manifest.json",
-    "sha256": ""
+    "path": "F:\\Brain-5D\\configs\\poc_alpha5_live.yaml",
+    "sha256": "6e8a9ff2c02199eace1fcb4c1cb1a882222fc153d3c90652fd59a57a06d32398"
   },
   "validity": {
     "valid": true,
@@ -34,11 +36,11 @@
   "results": {
     "passed": true,
     "returncode": 0,
-    "duration_seconds": 2.3605592250823975,
-    "stdout_summary": ".......                                                                  [100%]\n============================== warnings summary ===============================\ntests/test_restore_determinism_abc.py::test_write_restore_determinism_artifact\n  C:\\Users\\T_hei\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python313\\site-packages\\PyPDF2\\__init__.py:21: DeprecationWarning: PyPDF2 is deprecated. Please move to the pypdf library instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n7 passed, 1 warning in 1.87s\n",
+    "duration_seconds": 2.5092105865478516,
+    "stdout_summary": ".......                                                                  [100%]\n============================== warnings summary ===============================\ntests/test_restore_determinism_abc.py::test_write_restore_determinism_artifact\n  C:\\Users\\T_hei\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python313\\site-packages\\PyPDF2\\__init__.py:21: DeprecationWarning: PyPDF2 is deprecated. Please move to the pypdf library instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n7 passed, 1 warning in 1.92s\n",
     "stderr_summary": ""
   },
   "runtime": {
-    "duration_seconds": 2.3605592250823975
+    "duration_seconds": 2.5092105865478516
   }
 }

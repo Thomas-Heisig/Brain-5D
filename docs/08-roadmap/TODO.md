@@ -10,23 +10,29 @@
 >   **Current baseline (2026-08-31): 457 passed / 2 skipped / 0 failed**
 >   at commit `5f583a6...`.
 >   **A/B/C restore artifact verified** (`A == B == C`).
->   Evidence scope digests replaced the coarse global tree-digest model; UI
->   changes no longer invalidate scientific evidence artifacts.
+>   Evidence scope digests are planned but **not yet implemented**; the Gate
+>   Builder still uses the global source-tree digest, so UI changes can still
+>   mark scientific evidence as `stale`.
 >   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
 >   delta-journal recovery in `src/main.py`.
 
-## Priorität 1 — Alpha.5 Closure (abgeschlossen)
+## Priorität 1 — Alpha.5 Closure (teilweise offen)
 
-- [x] EXP-DET-0001: Determinism A/B/C experiment durchführen
+- [x] EXP-DET-0001: Determinismus A/B/C experiment durchführen
   - Path C `--digest-k` Argument korrigiert (worker startet wieder)
   - A/B/C digests are now equal; artifact status = `verified`
-  - [x] Härten: Strenger Fresh-Process-Nachweis
+  - [ ] Härten: Strenger Fresh-Process-Nachweis
     - P0 pytest orchestrator startet **kein** C1-Netzwerkobjekt im Orchestrator
     - C1 subprocess: `0 → K`, speichert Dateisystem-Artefakte, schreibt PID, terminiert
     - C2 subprocess: liest nur Dateisystem, `restore_full()`, `K → N`, schreibt PID + Digest, terminiert
     - `assert PID_C1 != PID_C2`
     - `assert A == B == C`
     - „completed"-Proofs sind nicht mehr hartkodiert `true`
+
+    > **Status:** Noch nicht vollständig umgesetzt. C1 läuft aktuell noch im
+    > Pytest-Prozess; nur C2 wird als Subprozess gestartet. Die
+    > `completed`-Proofs im Artifact Writer sind weiterhin hartkodiert `true`.
+    > A=B=C ist bewiesen, der maximale strenge C1→exit→C2 Nachweis noch nicht.
 - [x] EXP-STOR-0001: Storage persistence experiment durchführen
 - [x] Erste DATA-* / EVID-* Artefakte generieren
 - [x] Research Catalog aus echten Evidenzen neu aufgebaut
@@ -103,7 +109,7 @@
 > Ziel: Dashboard-/UI-Änderungen dürfen wissenschaftliche Nachweise nicht
 > mehr fälschlich als `stale` markieren.
 
-- [x] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
+- [ ] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
       Digest über die relevanten Dateien
   - `restore_determinism`: `core`, `storage`, `learning`, `homeostasis`,
     relevante Config + Restore-Tests
@@ -113,13 +119,19 @@
   - `dashboard`: `src/dashboard/`, HTML/CSS/JS, Dashboard-Tests
   - `research`: Registry, Schemas, Recorder, Research-Tests
   - `release`: gesamter produktiver Source Tree + komplette Tests
-- [x] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
+- [ ] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
       eines globalen Tree-Digests
-- [x] Gate Builder vergleicht nur den passenden Scope-Digest
+- [ ] Gate Builder vergleicht nur den passenden Scope-Digest
 - [x] Full Test Baseline neu erzeugt (2026-08-31, 457 passed / 2 skipped / 0 failed)
   - `xfailed` / `xpassed` in `BaselineEvaluation` ausgewertet
   - Source Freeze → komplette Suite → neue `tests/test_baseline.json`
   - Alle Evidence-Artefakte sauber regeneriert
+
+> **Hinweis:** Evidence Scopes sind aktuell noch nicht implementiert. Die
+> Artefakte verwenden weiterhin `tested_tree_digest` und der Gate Builder
+> nutzt weiterhin `compute_source_tree_digest()` über den gesamten Source
+> Tree. Siehe auch `src/dashboard/verification.py` und
+> `src/dashboard/gate_status.py`.
 
 ## Priorität 3 — Infrastruktur
 
@@ -152,10 +164,12 @@
 - Dashboard State Publishing darf niemals die Simulation blockieren (bereits gelöst)
 - Self-Organization nur über canonical Coordinator->Approval->PlasticityEngine Pfad
 - Storage ist per Konfiguration deaktiviert (poc_config.yaml)
-- ~~Evidence-Freshness-Modell ist zu grob~~ (gelöst durch Evidence Scope Digests)
+- Evidence-Freshness-Modell ist zu grob (Evidence Scope Digests noch nicht implementiert)
 - ~~Test-Baseline `tests/test_baseline.json` ist alt~~ (neu erzeugt am 2026-08-31)
 - `tmp/restore_diag/` und `tmp/trace_diag/` enthalten eingecheckte State-Dumps
   und müssen entweder `.gitignore`d oder nach `research/generated/diagnostics/`
   verschoben werden
 - Restore A/B/C: A/B/C Digests sind gleich (`verified`); Fresh-Process-Nachweis
-  erfüllt (`PID_C1 != PID_C2`)
+  noch nicht vollständig erfüllt (C1 läuft aktuell im Pytest-Prozess)
+- Evidence Scopes sind noch nicht implementiert; Gate Builder nutzt weiterhin
+  den globalen Source Tree Digest

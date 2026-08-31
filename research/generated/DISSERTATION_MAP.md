@@ -1,6 +1,6 @@
 # Brain-5D Dissertation Map
 
-*Generiert am 2026-08-23*
+*Generiert am 2026-08-31*
 
 Diese Karte zeigt, wie die Forschungsergebnisse von Brain-5D in eine
 Dissertationsstruktur eingeordnet werden können.

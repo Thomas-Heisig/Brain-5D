@@ -11,20 +11,82 @@ Produces:
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .registry import REPO_ROOT, ResearchQuestion, ResearchRegistry
+from .registry import REPO_ROOT, ResearchRegistry
 
 GENERATED_DIR = REPO_ROOT / "research" / "generated"
+EVIDENCE_DIR = REPO_ROOT / "research" / "registry" / "evidence"
+
+
+class EvidenceRecord:
+    """Typed wrapper for an EVID-*.json record."""
+
+    def __init__(self, data: dict[str, Any]) -> None:
+        self.evidence_id = data.get("evidence_id", "")
+        self.experiment_id = data.get("experiment_id")
+        self.claim_id = data.get("claim_id")
+        self.hypothesis_id = data.get("hypothesis_id")
+        self.status = data.get("status", "untested")
+        self.result_summary = data.get("result_summary", "")
 
 
 class ReportBuilder:
-    """Generates markdown reports from the research registry."""
+    """Generates markdown reports from the research registry and evidence records."""
 
     def __init__(self, registry: ResearchRegistry):
         self.registry = registry
+        self._evidence_records: dict[str, EvidenceRecord] = {}
+        self._load_evidence_records()
+
+    def _load_evidence_records(self) -> None:
+        """Load all EVID-*.json files from the evidence directory."""
+        self._evidence_records = {}
+        if not EVIDENCE_DIR.exists():
+            return
+        for path in sorted(EVIDENCE_DIR.glob("EVID-*.json")):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                ev = EvidenceRecord(data)
+                if ev.evidence_id:
+                    self._evidence_records[ev.evidence_id] = ev
+            except Exception:
+                continue
+
+    def _evidence_for_question(self, question_id: str) -> set[str]:
+        """Return all evidence IDs linked to a research question.
+
+        Links are followed via hypothesis_id and claim_id in the evidence
+        records, matching the canonical B5D-SEF data model.
+        """
+        result: set[str] = set()
+        hypotheses = self.registry.hypotheses_for_question(question_id)
+        hypothesis_ids = {h.id for h in hypotheses}
+        claims = self.registry.claims_for_question(question_id)
+        claim_ids = {c.id for c in claims}
+        for ev in self._evidence_records.values():
+            if ev.hypothesis_id in hypothesis_ids:
+                result.add(ev.evidence_id)
+            if ev.claim_id in claim_ids:
+                result.add(ev.evidence_id)
+        return result
+
+    def _evidence_for_hypothesis(self, hypothesis_id: str) -> set[str]:
+        return {
+            ev.evidence_id
+            for ev in self._evidence_records.values()
+            if ev.hypothesis_id == hypothesis_id
+        }
+
+    def _evidence_for_claim(self, claim_id: str) -> set[str]:
+        return {
+            ev.evidence_id
+            for ev in self._evidence_records.values()
+            if ev.claim_id == claim_id
+        }
 
     def build_research_catalog(self) -> str:
         """Generate a complete research catalog."""
@@ -80,23 +142,21 @@ class ReportBuilder:
                     )
 
                 # Collect evidence IDs from hypotheses and claims linked to this question
-                question_evidence: set[str] = set(q.evidence)
-                for h in hypotheses:
-                    question_evidence.update(h.evidence)
-                for c in claims:
-                    question_evidence.update(c.evidence)
+                question_evidence = self._evidence_for_question(q.id)
 
                 if hypotheses:
                     lines.append("**Hypothesen:**")
                     for h in hypotheses:
-                        ev_tag = f" — Evidenz: {', '.join(h.evidence)}" if h.evidence else ""
+                        h_evidence = sorted(self._evidence_for_hypothesis(h.id))
+                        ev_tag = f" — Evidenz: {', '.join(h_evidence)}" if h_evidence else ""
                         lines.append(f"- `{h.id}`: {h.hypothesis} *({h.status})*{ev_tag}")
                     lines.append("")
 
                 if claims:
                     lines.append("**Claims:**")
                     for c in claims:
-                        ev_tag = f" — Evidenz: {', '.join(c.evidence)}" if c.evidence else ""
+                        c_evidence = sorted(self._evidence_for_claim(c.id))
+                        ev_tag = f" — Evidenz: {', '.join(c_evidence)}" if c_evidence else ""
                         lines.append(
                             f"- `{c.id}`: {c.claim} *({c.status}, {c.confidence})*{ev_tag}"
                         )
@@ -138,7 +198,8 @@ class ReportBuilder:
             h_text = ", ".join(f"`{h.id}`" for h in hypotheses) or "—"
             s_text = str(len(sources))
             c_text = ", ".join(f"`{c.id}`" for c in claims) if claims else "—"
-            ev_text = str(len(q.evidence))
+            question_evidence = sorted(self._evidence_for_question(q.id))
+            ev_text = ", ".join(f"`{e}`" for e in question_evidence) if question_evidence else "—"
             answer_text = q.answer.confidence if q.answer.current else "offen"
 
             lines.append(
@@ -238,9 +299,10 @@ class ReportBuilder:
                 "inconclusive": "🔄",
                 "untested": "⬜",
             }.get(c.status, "⬜")
+            evidence_count = len(self._evidence_for_claim(c.id))
             lines.append(
                 f"| `{c.id}`: {c.claim[:80]}... | {icon} {c.status} | "
-                f"{c.confidence} | {len(c.evidence)} | {len(c.experiments)} |"
+                f"{c.confidence} | {evidence_count} | {len(c.experiments)} |"
             )
 
         lines.append("")

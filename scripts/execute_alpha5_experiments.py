@@ -10,6 +10,7 @@ This script:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -19,7 +20,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from src.research.experiment_recorder import ExperimentRecorder
+from src.research.experiment_recorder import ExperimentRecorder, get_software_info
 from src.research.evidence_engine import EvidenceEngine
 from src.research.registry import ResearchRegistry
 from src.research.report_builder import ReportBuilder
@@ -28,6 +29,37 @@ from src.dashboard.verification import compute_source_tree_digest
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
 EVIDENCE_DIR = REPO_ROOT / "research" / "registry" / "evidence"
 DATA_DIR = REPO_ROOT / "research" / "generated" / "data"
+
+
+# Map experiments to their canonical runtime configuration files.
+EXPERIMENT_CONFIGS: dict[str, Path] = {
+    "EXP-DET-0001": REPO_ROOT / "configs" / "poc_alpha5_live.yaml",
+    "EXP-STOR-0001": REPO_ROOT / "configs" / "poc_alpha5_live.yaml",
+}
+
+
+def _sha256_file(path: Path) -> str:
+    """Return the SHA-256 hex digest of a file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _brain5d_version() -> str:
+    """Read Brain-5D version from pyproject.toml, fallback to import."""
+    pyproject = REPO_ROOT / "pyproject.toml"
+    if pyproject.exists():
+        try:
+            text = pyproject.read_text(encoding="utf-8")
+            for line in text.splitlines():
+                if line.strip().startswith("version"):
+                    _, _, value = line.partition("=")
+                    return value.strip().strip('"').strip("'")
+        except Exception:
+            pass
+    return get_software_info().get("brain5d_version", "unknown")
 
 
 def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, object]:
@@ -67,25 +99,36 @@ def _update_manifest(
     result: dict[str, object],
     claim_id: str,
     hypothesis_id: str,
+    research_question_id: str,
 ) -> None:
-    """Update experiment manifest with results."""
+    """Update experiment manifest with full provenance."""
+    config_path = EXPERIMENT_CONFIGS.get(experiment_id)
+    config_sha256 = _sha256_file(config_path) if config_path and config_path.exists() else ""
+
+    duration_seconds = float(result["duration_seconds"])
+    passed = bool(result["passed"])
+    returncode = int(result["returncode"])
+    stdout = str(result["stdout"])
+    stderr = str(result["stderr"])
+
     recorder = ExperimentRecorder(experiment_id)
+    recorder.record_software_version("brain5d_version", _brain5d_version())
     recorder.record_config(
-        config_path=str(EXPERIMENTS_DIR / experiment_id / "manifest.json"),
-        sha256="",
+        config_path=str(config_path) if config_path else "",
+        sha256=config_sha256,
     )
     recorder.record_research_links(
-        research_questions=[],
+        research_questions=[research_question_id],
         hypotheses=[hypothesis_id],
     )
     recorder.record_results(
-        passed=result["passed"],
-        returncode=result["returncode"],
-        duration_seconds=result["duration_seconds"],
-        stdout_summary=result["stdout"][:2000],
-        stderr_summary=result["stderr"][:2000],
+        passed=passed,
+        returncode=returncode,
+        duration_seconds=duration_seconds,
+        stdout_summary=stdout[:2000],
+        stderr_summary=stderr[:2000],
     )
-    recorder.record_runtime(duration_seconds=result["duration_seconds"])
+    recorder.record_runtime(duration_seconds=duration_seconds)
     recorder.record_artifact("test_output", str(EXPERIMENTS_DIR / experiment_id / "output.log"))
     recorder.mark_completed()
     recorder.save()
@@ -163,14 +206,15 @@ def main() -> int:
     _update_manifest(
         "EXP-DET-0001",
         det_result,
-        claim_id="CLAIM-SELF-001",
+        claim_id="CLAIM-DET-001",
         hypothesis_id="H-SNN-003-A",
+        research_question_id="RQ-DET-001",
     )
     det_data = _generate_data_artifact("EXP-DET-0001", det_result)
     print(f"  DATA artifact: {det_data.name}")
     det_evid = _create_evidence(
         "EXP-DET-0001",
-        claim_id="CLAIM-SELF-001",
+        claim_id="CLAIM-DET-001",
         hypothesis_id="H-SNN-003-A",
         summary="A/B/C restore determinism verified: process-restart restore produces identical structural and dynamic state.",
         status="supports" if det_result["passed"] else "inconclusive",
@@ -186,6 +230,7 @@ def main() -> int:
         stor_result,
         claim_id="CLAIM-STOR-001",
         hypothesis_id="H-STOR-001-A",
+        research_question_id="RQ-STORAGE-001",
     )
     stor_data = _generate_data_artifact("EXP-STOR-0001", stor_result)
     print(f"  DATA artifact: {stor_data.name}")

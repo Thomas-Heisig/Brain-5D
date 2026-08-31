@@ -1,5 +1,5 @@
 {
-  "evidence_id": "EVID-2026-01",
+  "evidence_id": "EVID-2026-13",
   "experiment_id": "EXP-DET-0001",
   "claim_id": "CLAIM-DET-001",
   "hypothesis_id": "H-SNN-003-A",
@@ -12,7 +12,7 @@
     "figures": [],
     "data_files": []
   },
-  "generated": "2026-08-31T08:12:52.200745",
+  "generated": "2026-08-31T14:16:07.717520",
   "experiment_validity": {
     "valid": true,
     "runtime_error_count": 0,
