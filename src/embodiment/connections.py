@@ -116,21 +116,116 @@ def _descriptor(
 def default_connection_catalog() -> tuple[ConnectionDescriptor, ...]:
     """Return the stable open-ended catalog; entries are inactive by default."""
     return (
-        _descriptor("resource.compute", "Compute", ConnectionKind.RESOURCE, ("cpu", "memory", "runtime")),
-        _descriptor("resource.storage", "Storage", ConnectionKind.RESOURCE, ("files", "snapshots", "journals")),
-        _descriptor("network.local", "Local network", ConnectionKind.DATA, ("tcp", "local_services"), modalities=("network",)),
-        _descriptor("network.internet", "Internet", ConnectionKind.DATA, ("web", "api", "feeds"), modalities=("network",), hazard_level="medium"),
-        _descriptor("sensor.camera", "Camera", ConnectionKind.SENSOR, ("frames", "video"), modalities=("vision",), hazard_level="medium"),
-        _descriptor("sensor.microphone", "Microphone", ConnectionKind.SENSOR, ("samples", "audio_stream"), modalities=("audio",), hazard_level="medium"),
-        _descriptor("sensor.location", "Location", ConnectionKind.SENSOR, ("position", "time"), modalities=("location",)),
-        _descriptor("sensor.environment", "Environment sensors", ConnectionKind.SENSOR, ("temperature", "humidity", "motion", "force"), modalities=("environment",)),
-        _descriptor("data.web_api", "Web and APIs", ConnectionKind.DATA, ("http_read", "structured_data"), modalities=("text", "data"), hazard_level="medium"),
-        _descriptor("data.database", "Databases", ConnectionKind.DATA, ("query", "records"), modalities=("data",), hazard_level="medium"),
-        _descriptor("service.messaging", "Communication services", ConnectionKind.SERVICE, ("receive", "send"), modalities=("text", "audio"), hazard_level="high"),
-        _descriptor("actuator.display", "Display", ConnectionKind.ACTUATOR, ("visual_output",), hazard_level="low"),
-        _descriptor("actuator.audio", "Audio output", ConnectionKind.ACTUATOR, ("play_audio", "speech"), hazard_level="low"),
-        _descriptor("actuator.printer", "Printer", ConnectionKind.ACTUATOR, ("print_document", "fabricate"), hazard_level="medium"),
-        _descriptor("actuator.robotics", "Robotics", ConnectionKind.ACTUATOR, ("move", "grip", "stop"), modalities=("proprioception",), hazard_level="critical"),
+        _descriptor(
+            "resource.compute",
+            "Compute",
+            ConnectionKind.RESOURCE,
+            ("cpu", "memory", "runtime"),
+        ),
+        _descriptor(
+            "resource.storage",
+            "Storage",
+            ConnectionKind.RESOURCE,
+            ("files", "snapshots", "journals"),
+        ),
+        _descriptor(
+            "network.local",
+            "Local network",
+            ConnectionKind.DATA,
+            ("tcp", "local_services"),
+            modalities=("network",),
+        ),
+        _descriptor(
+            "network.internet",
+            "Internet",
+            ConnectionKind.DATA,
+            ("web", "api", "feeds"),
+            modalities=("network",),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "sensor.camera",
+            "Camera",
+            ConnectionKind.SENSOR,
+            ("frames", "video"),
+            modalities=("vision",),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "sensor.microphone",
+            "Microphone",
+            ConnectionKind.SENSOR,
+            ("samples", "audio_stream"),
+            modalities=("audio",),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "sensor.location",
+            "Location",
+            ConnectionKind.SENSOR,
+            ("position", "time"),
+            modalities=("location",),
+        ),
+        _descriptor(
+            "sensor.environment",
+            "Environment sensors",
+            ConnectionKind.SENSOR,
+            ("temperature", "humidity", "motion", "force"),
+            modalities=("environment",),
+        ),
+        _descriptor(
+            "data.web_api",
+            "Web and APIs",
+            ConnectionKind.DATA,
+            ("http_read", "structured_data"),
+            modalities=("text", "data"),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "data.database",
+            "Databases",
+            ConnectionKind.DATA,
+            ("query", "records"),
+            modalities=("data",),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "service.messaging",
+            "Communication services",
+            ConnectionKind.SERVICE,
+            ("receive", "send"),
+            modalities=("text", "audio"),
+            hazard_level="high",
+        ),
+        _descriptor(
+            "actuator.display",
+            "Display",
+            ConnectionKind.ACTUATOR,
+            ("visual_output",),
+            hazard_level="low",
+        ),
+        _descriptor(
+            "actuator.audio",
+            "Audio output",
+            ConnectionKind.ACTUATOR,
+            ("play_audio", "speech"),
+            hazard_level="low",
+        ),
+        _descriptor(
+            "actuator.printer",
+            "Printer",
+            ConnectionKind.ACTUATOR,
+            ("print_document", "fabricate"),
+            hazard_level="medium",
+        ),
+        _descriptor(
+            "actuator.robotics",
+            "Robotics",
+            ConnectionKind.ACTUATOR,
+            ("move", "grip", "stop"),
+            modalities=("proprioception",),
+            hazard_level="critical",
+        ),
     )
 
 
@@ -159,9 +254,7 @@ class ConnectionManager:
             if refresh or now - self._last_discovery >= self._cache_seconds:
                 self._discover_local_resources()
                 self._last_discovery = now
-            return tuple(
-                self._connections[key] for key in sorted(self._connections)
-            )
+            return tuple(self._connections[key] for key in sorted(self._connections))
 
     def to_json(self, *, refresh: bool = False) -> dict[str, JSONValue]:
         """Return catalog entries and summary counts for the dashboard."""
@@ -174,7 +267,9 @@ class ConnectionManager:
             "connections": [item.to_json() for item in connections],
         }
 
-    def _update_detected(self, connection_id: str, detected: bool, message: str) -> None:
+    def _update_detected(
+        self, connection_id: str, detected: bool, message: str
+    ) -> None:
         current = self._connections[connection_id]
         self._connections[connection_id] = replace(
             current,
@@ -183,7 +278,9 @@ class ConnectionManager:
                 if detected
                 else RelationshipClass.PERCEIVABLE
             ),
-            status=(ConnectionStatus.AVAILABLE if detected else ConnectionStatus.UNAVAILABLE),
+            status=(
+                ConnectionStatus.AVAILABLE if detected else ConnectionStatus.UNAVAILABLE
+            ),
             available=detected,
             authorized=False,
             active=False,
@@ -192,7 +289,9 @@ class ConnectionManager:
         )
 
     def _discover_local_resources(self) -> None:
-        self._update_detected("resource.compute", True, "Runtime compute resource detected.")
+        self._update_detected(
+            "resource.compute", True, "Runtime compute resource detected."
+        )
         self._update_detected("resource.storage", True, "Local filesystem detected.")
 
         addresses = self._local_addresses()
@@ -200,23 +299,65 @@ class ConnectionManager:
         self._update_detected(
             "network.local",
             local_network,
-            f"Local addresses: {', '.join(addresses)}" if addresses else "No non-loopback address detected.",
+            (
+                f"Local addresses: {', '.join(addresses)}"
+                if addresses
+                else "No non-loopback address detected."
+            ),
         )
         internet_route = self._has_internet_route()
         self._update_detected(
             "network.internet",
             internet_route,
-            "Outbound IP route detected; external reachability is not asserted."
-            if internet_route
-            else "No outbound IP route detected.",
+            (
+                "Outbound IP route detected; external reachability is not asserted."
+                if internet_route
+                else "No outbound IP route detected."
+            ),
         )
 
         camera, microphone, audio_output, printer, display = self._discover_devices()
-        self._update_detected("sensor.camera", camera, "Camera device detected." if camera else "No camera device detected.")
-        self._update_detected("sensor.microphone", microphone, "Microphone endpoint detected." if microphone else "No microphone endpoint detected.")
-        self._update_detected("actuator.audio", audio_output, "Audio output endpoint detected." if audio_output else "No audio output endpoint detected.")
-        self._update_detected("actuator.printer", printer, "Print queue detected; it may represent a physical or virtual printer." if printer else "No print queue detected.")
-        self._update_detected("actuator.display", display, "Display endpoint detected." if display else "No display endpoint detected.")
+        self._update_detected(
+            "sensor.camera",
+            camera,
+            "Camera device detected." if camera else "No camera device detected.",
+        )
+        self._update_detected(
+            "sensor.microphone",
+            microphone,
+            (
+                "Microphone endpoint detected."
+                if microphone
+                else "No microphone endpoint detected."
+            ),
+        )
+        self._update_detected(
+            "actuator.audio",
+            audio_output,
+            (
+                "Audio output endpoint detected."
+                if audio_output
+                else "No audio output endpoint detected."
+            ),
+        )
+        self._update_detected(
+            "actuator.printer",
+            printer,
+            (
+                "Print queue detected; it may represent a physical or virtual printer."
+                if printer
+                else "No print queue detected."
+            ),
+        )
+        self._update_detected(
+            "actuator.display",
+            display,
+            (
+                "Display endpoint detected."
+                if display
+                else "No display endpoint detected."
+            ),
+        )
 
     @staticmethod
     def _local_addresses() -> tuple[str, ...]:
@@ -291,8 +432,15 @@ class ConnectionManager:
                 if item.get("Status") == "OK"
             ]
             camera = any("camera" in name or "image" in name for name in names)
-            microphone = any("microphone" in name or "mikrofon" in name for name in names)
-            audio_output = any("audioendpoint" in name and "microphone" not in name and "mikrofon" not in name for name in names)
+            microphone = any(
+                "microphone" in name or "mikrofon" in name for name in names
+            )
+            audio_output = any(
+                "audioendpoint" in name
+                and "microphone" not in name
+                and "mikrofon" not in name
+                for name in names
+            )
             display = any("monitor" in name or "display" in name for name in names)
             return camera, microphone, audio_output, bool(printers), display
         except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError):
