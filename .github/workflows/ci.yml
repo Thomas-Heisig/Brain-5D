@@ -136,7 +136,7 @@ jobs:
         run: python -m bandit -c pyproject.toml -r src/ -ll -f json -o bandit-results.json
       - name: Upload Bandit report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bandit-results
           path: bandit-results.json
@@ -176,7 +176,7 @@ jobs:
         continue-on-error: true
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.python-version }}
           path: |
@@ -216,7 +216,7 @@ jobs:
           python -m pip install dist/*.whl
           python -c "from src.version import BRAIN5D_VERSION; print(BRAIN5D_VERSION)"
       - name: Upload wheel artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheel
           path: dist/*.whl
