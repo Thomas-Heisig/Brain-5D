@@ -20,6 +20,13 @@ def test_brain5d_being_is_a_valid_svg_asset() -> None:
     assert root.attrib["viewBox"] == "0 0 1000 620"
 
 
+def test_frontend_svg_assets_are_not_stored_as_lfs_pointers() -> None:
+    attributes = (STATIC_DIR.parents[2] / ".gitattributes").read_text(encoding="utf-8")
+
+    assert "*.svg text eol=lf" in attributes
+    assert "*.svg filter=lfs" not in attributes
+
+
 def test_embodiment_map_exposes_all_published_system_organs() -> None:
     html = _read("index.html")
 

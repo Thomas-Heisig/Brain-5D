@@ -41,6 +41,7 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+        exclude: ^research/generated/verification/(restore_determinism|single_listener|structural_e2e|structural_live_loop)\.json$
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml

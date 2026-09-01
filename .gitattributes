@@ -10,6 +10,7 @@
 *.ps1 text eol=crlf
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.svg text eol=lf
 *.b5d binary
 # ============================================================================
 # Git LFS — required for Hugging Face repository
@@ -27,7 +28,6 @@ artifacts/** filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
 *.gif filter=lfs diff=lfs merge=lfs -text
-*.svg filter=lfs diff=lfs merge=lfs -text
 *.ico filter=lfs diff=lfs merge=lfs -text
 # Archives and containers
 *.zip filter=lfs diff=lfs merge=lfs -text
