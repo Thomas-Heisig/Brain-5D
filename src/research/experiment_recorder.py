@@ -67,7 +67,9 @@ def get_hardware_info() -> dict[str, Any]:
     try:
         import psutil  # type: ignore[import-untyped]
 
-        info["ram_gb"] = round(psutil.virtual_memory().total / (1024**3), 1)
+        mem = psutil.virtual_memory()
+        total: float = mem.total  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+        info["ram_gb"] = round(total / (1024**3), 1)  # pyright: ignore[reportUnknownArgumentType]
     except ImportError:
         pass
     return info

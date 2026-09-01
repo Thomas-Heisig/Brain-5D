@@ -33,10 +33,10 @@ except ImportError:
 
 try:
     from openpyxl import (  # type: ignore[import-untyped]
-        load_workbook as _load_workbook,  # pyright: ignore[reportMissingTypeStubs]
+        load_workbook as _load_workbook,  # pyright: ignore[reportMissingTypeStubs, reportUnknownVariableType]
     )
 
-    load_workbook = _load_workbook
+    load_workbook = _load_workbook  # pyright: ignore[reportUnknownVariableType]
     has_openpyxl: bool = True
 except ImportError:
     has_openpyxl = False
