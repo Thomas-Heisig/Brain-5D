@@ -48,6 +48,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] All 101 public runtime-config parameters exposed conservatively
 - [x] Launcher process tree and storage restart hardened
 - [x] CI and Hugging Face workflows use Node 24-compatible action majors
+- [x] Experiment DATA/EVID provenance generated automatically and fail-closed
 - [x] Local source candidate: 489 passed, 5 skipped, no failures or warnings
 - [ ] Regenerate baseline and Phase B evidence for the new source candidate
 - [ ] Run CI over the evidence commit

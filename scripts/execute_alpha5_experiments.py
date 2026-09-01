@@ -16,7 +16,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
@@ -68,9 +68,10 @@ def _brain5d_version() -> str:
 
 def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, Any]:
     """Run a pytest file and return pass/fail with output."""
+    command = [sys.executable, "-m", "pytest", test_path, "-q", "--tb=short"]
     start = time.time()
     result = subprocess.run(
-        [sys.executable, "-m", "pytest", test_path, "-q", "--tb=short"],
+        command,
         capture_output=True,
         text=True,
         timeout=timeout,
@@ -78,6 +79,7 @@ def _run_pytest(test_path: str, timeout: int = 120) -> dict[str, Any]:
     )
     duration = time.time() - start
     return {
+        "command": f"python -m pytest {test_path} -q --tb=short",
         "returncode": result.returncode,
         "passed": result.returncode == 0,
         "stdout": result.stdout,
@@ -101,6 +103,7 @@ def _run_storage_experiment() -> dict[str, Any]:
 def _update_manifest(
     experiment_id: str,
     result: dict[str, Any],
+    data_path: Path,
     claim_id: str,
     hypothesis_id: str,
     research_question_id: str,
@@ -135,9 +138,7 @@ def _update_manifest(
         stderr_summary=stderr[:2000],
     )
     recorder.record_runtime(duration_seconds=duration_seconds)
-    recorder.record_artifact(
-        "test_output", str(EXPERIMENTS_DIR / experiment_id / "output.log")
-    )
+    recorder.record_artifact("test_output", data_path.relative_to(REPO_ROOT).as_posix())
     recorder.mark_completed()
     recorder.save()
 
@@ -175,6 +176,7 @@ def _create_evidence(
     experiment_id: str,
     claim_id: str,
     hypothesis_id: str,
+    data_path: Path,
     summary: str,
     status: str,
 ) -> str:
@@ -188,6 +190,21 @@ def _create_evidence(
         hypothesis_id=hypothesis_id,
         result_summary=summary,
         status=status,
+    )
+    evidence_path = EVIDENCE_DIR / f"{evidence_id}.json"
+    evidence: Any = json.loads(evidence_path.read_text(encoding="utf-8"))
+    if not isinstance(evidence, dict):
+        raise TypeError(f"invalid evidence record: {evidence_path}")
+    evidence_record = cast(dict[str, Any], evidence)
+    raw_artifacts = evidence_record.get("artifacts")
+    if not isinstance(raw_artifacts, dict):
+        artifacts = {}
+    else:
+        artifacts = cast(dict[str, Any], raw_artifacts)
+    artifacts["data_files"] = [data_path.relative_to(REPO_ROOT).as_posix()]
+    evidence_record["artifacts"] = artifacts
+    evidence_path.write_text(
+        json.dumps(evidence_record, indent=2, ensure_ascii=False), encoding="utf-8"
     )
     return evidence_id
 
@@ -219,19 +236,21 @@ def main() -> int:
     print(
         f"  passed={det_result['passed']}, duration={det_result['duration_seconds']:.1f}s"
     )
+    det_data = _generate_data_artifact("EXP-DET-0001", det_result)
     _update_manifest(
         "EXP-DET-0001",
         det_result,
+        det_data,
         claim_id="CLAIM-DET-001",
         hypothesis_id="H-SNN-003-A",
         research_question_id="RQ-DET-001",
     )
-    det_data = _generate_data_artifact("EXP-DET-0001", det_result)
     print(f"  DATA artifact: {det_data.name}")
     det_evid = _create_evidence(
         "EXP-DET-0001",
         claim_id="CLAIM-DET-001",
         hypothesis_id="H-SNN-003-A",
+        data_path=det_data,
         summary="A/B/C restore determinism verified: process-restart restore produces identical structural and dynamic state.",
         status="supports" if det_result["passed"] else "inconclusive",
     )
@@ -243,19 +262,21 @@ def main() -> int:
     print(
         f"  passed={stor_result['passed']}, duration={stor_result['duration_seconds']:.1f}s"
     )
+    stor_data = _generate_data_artifact("EXP-STOR-0001", stor_result)
     _update_manifest(
         "EXP-STOR-0001",
         stor_result,
+        stor_data,
         claim_id="CLAIM-STOR-001",
         hypothesis_id="H-STOR-001-A",
         research_question_id="RQ-STORAGE-001",
     )
-    stor_data = _generate_data_artifact("EXP-STOR-0001", stor_result)
     print(f"  DATA artifact: {stor_data.name}")
     stor_evid = _create_evidence(
         "EXP-STOR-0001",
         claim_id="CLAIM-STOR-001",
         hypothesis_id="H-STOR-001-A",
+        data_path=stor_data,
         summary="B5D storage roundtrip verified: full network state serializes and deserializes without loss.",
         status="supports" if stor_result["passed"] else "inconclusive",
     )
@@ -265,10 +286,15 @@ def main() -> int:
     print("\n[Reports] Rebuilding Research Catalog and Evidence Matrix...")
     _rebuild_reports(refresh_registry=True)
 
+    all_passed = bool(det_result["passed"]) and bool(stor_result["passed"])
     print("\n" + "=" * 60)
-    print("Alpha.5 experiments executed successfully.")
+    print(
+        "Alpha.5 experiments executed successfully."
+        if all_passed
+        else "Alpha.5 experiment execution failed."
+    )
     print("=" * 60)
-    return 0
+    return 0 if all_passed else 1
 
 
 if __name__ == "__main__":
