@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, TypedDict, cast
+from typing import Any, TypedDict, TypeGuard, cast
 
 import yaml
 
@@ -205,17 +205,22 @@ DEFAULT_CONFIG: ConfigDict = {
 # ============================================================================
 
 
+def _is_dimension_sequence(
+    value: object,
+) -> TypeGuard[list[object] | tuple[object, ...]]:
+    return isinstance(value, (list, tuple))
+
+
 def _validate_dimensions(value: Any) -> tuple[int, int, int, int, int]:
     """Validate dimensions parameter."""
-    if not isinstance(value, (list, tuple)):
+    if not _is_dimension_sequence(value):
         raise ValueError("dimensions must be a list or tuple")
 
-    value_seq = cast("list[Any] | tuple[Any, ...]", value)
-    if len(value_seq) != 5:
-        raise ValueError(f"dimensions must have exactly 5 values, got {len(value_seq)}")
+    if len(value) != 5:
+        raise ValueError(f"dimensions must have exactly 5 values, got {len(value)}")
 
     dims: list[int] = []
-    for i, d in enumerate(value_seq):
+    for i, d in enumerate(value):
         if not isinstance(d, (int, float)):
             raise ValueError(f"dimension {i} must be numeric, got {type(d).__name__}")
         dim = int(d)

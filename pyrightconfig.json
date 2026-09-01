@@ -19,8 +19,8 @@
   "pythonVersion": "3.13",
   "typeCheckingMode": "strict",
   "reportMissingTypeStubs": "warning",
-  "reportUnknownArgumentType": "warning",
-  "reportUnknownMemberType": "warning",
-  "reportUnknownParameterType": "warning",
-  "reportUnknownVariableType": "warning"
+  "reportUnknownArgumentType": "error",
+  "reportUnknownMemberType": "error",
+  "reportUnknownParameterType": "error",
+  "reportUnknownVariableType": "error"
 }

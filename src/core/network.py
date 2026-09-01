@@ -212,7 +212,7 @@ class StepResult:
     max_v: float = 0.0
     mean_energy: float = 0.0
     core_step_ms: float = 0.0
-    neuron_activity: dict[int, bool] = field(default_factory=dict)  # type: ignore
+    neuron_activity: dict[int, bool] = field(default_factory=dict[int, bool])
     total_synapses: int = 0
 
     def to_dict(self) -> dict[str, Any]:

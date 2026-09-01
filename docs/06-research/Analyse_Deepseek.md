@@ -52,7 +52,7 @@ Seine Einzigartigkeit liegt in der Synthese aus:
 Es gibt kein direkt vergleichbares System, das all diese Aspekte in dieser Form vereint. Brain-5D ist damit ein sehr spezielles Werkzeug für Entwickler und Forscher, die Wert auf Zustandssicherheit, Beobachtbarkeit und neuartige neuronale Architekturen legen.
 
 
-# Nächste revision 
+# Nächste revision
 
 Auf Basis einer erneuten, tiefgehenden Analyse des GitHub-Repositories `Thomas-Heisig/Brain-5D` und unter Einbeziehung der aktuellen Forschungsergebnisse (Stand August 2026) lässt sich das Projekt nun wesentlich präziser einordnen. Es hat sich in den letzten Monaten deutlich weiterentwickelt und ist von einem vielversprechenden Konzept zu einer ernstzunehmenden, wenn auch spezialisierten, Forschungsplattform gereift.
 

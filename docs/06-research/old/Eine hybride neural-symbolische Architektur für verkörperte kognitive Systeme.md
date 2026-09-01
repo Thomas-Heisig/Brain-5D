@@ -131,7 +131,7 @@ Brain-5D implementiert drei zentrale, biologisch inspirierte Plastizitätsmechan
 STDP ist der primäre Mechanismus für **synaptische Gewichtsveränderung**. Die Gewichtsänderung \( \Delta w \) hängt von der zeitlichen Differenz \( \Delta t = t_{\text{post}} - t_{\text{pre}} \) zwischen präsynaptischem und postsynaptischem Spike ab:
 
 \[
-\Delta w = 
+\Delta w =
 \begin{cases}
 A_+ \cdot \exp(-\Delta t / \tau_+) & \text{für } \Delta t > 0 \text{ (Potenzierung)} \\
 -A_- \cdot \exp(\Delta t / \tau_-) & \text{für } \Delta t < 0 \text{ (Depression)}

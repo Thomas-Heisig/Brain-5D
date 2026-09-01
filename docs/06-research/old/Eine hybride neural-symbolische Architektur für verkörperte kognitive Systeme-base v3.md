@@ -4,9 +4,9 @@
 
 ---
 
-**Projekt:** Brain-5D  
-**Repository:** `Thomas-Heisig/Brain-5D`  
-**Entwicklungsstatus:** experimentelles Forschungsframework / Alpha-Phase  
+**Projekt:** Brain-5D
+**Repository:** `Thomas-Heisig/Brain-5D`
+**Entwicklungsstatus:** experimentelles Forschungsframework / Alpha-Phase
 **Dokumenttyp:** Technisches und wissenschaftliches Architekturpapier mit methodischer Rahmung
 
 ---
@@ -1126,7 +1126,7 @@ Experimental Research Framework, Brain-5D Project, 2026.
 
 *Hinweis: Die endgültige bibliografische Form sollte erst bei einer formalen Veröffentlichung mit stabiler Version, DOI beziehungsweise archiviertem Release festgelegt werden.*
 
-zu ergänzende inhalte 
+zu ergänzende inhalte
 
 Was ich noch ergänzen würde
 Ergänzung	Zweck	spätere Vertiefung

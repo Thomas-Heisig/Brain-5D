@@ -20,9 +20,9 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from research.literature_registry import LiteratureRegistry
 from research.registry import ResearchRegistry
 from research.report_builder import ReportBuilder
-from research.literature_registry import LiteratureRegistry
 
 
 def main():
@@ -48,7 +48,9 @@ def main():
         print(f"  {name:30s} → {path.relative_to(Path.cwd())} ({size} bytes)")
 
     size = lit_path.stat().st_size
-    print(f"  {'LITERATURE_MATRIX.md':30s} → {lit_path.relative_to(Path.cwd())} ({size} bytes)")
+    print(
+        f"  {'LITERATURE_MATRIX.md':30s} → {lit_path.relative_to(Path.cwd())} ({size} bytes)"
+    )
 
     print("\nDone.")
 

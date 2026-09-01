@@ -124,19 +124,19 @@ export class OperatorAPI {
         ...(options.headers || {}),
       },
     });
-    
+
     let data;
     try {
       data = await response.json();
     } catch {
       throw new Error(`Invalid JSON response from ${url}`);
     }
-    
+
     if (!response.ok) {
       const message = data.error || data.message || `HTTP ${response.status}`;
       throw new Error(message);
     }
-    
+
     return data;
   }
 
@@ -384,12 +384,12 @@ export class OperatorConsole {
     this.commandInFlight = false;
     this.status = null;
     this.proposals = [];
-    
+
     // Bind methods
     this.handleCommand = this.handleCommand.bind(this);
     this.refreshStatus = this.refreshStatus.bind(this);
     this.renderProposals = this.renderProposals.bind(this);
-    
+
     this.init();
   }
 
@@ -516,13 +516,13 @@ export class OperatorConsole {
       badge.textContent = state;
       badge.className = `status-badge status-${state}`;
     }
-    
+
     // Update tick count
     const tickEl = byId('b5d-tick-display');
     if (tickEl) {
       tickEl.textContent = String(data.tick || 0);
     }
-    
+
     // Update metrics
     const metrics = byId('b5d-metrics');
     if (metrics && data.system) {
@@ -542,12 +542,12 @@ export class OperatorConsole {
   renderProposals(proposals) {
     const container = byId('b5d-proposals');
     if (!container) return;
-    
+
     if (!proposals || proposals.length === 0) {
       container.innerHTML = '<div class="proposal-empty">No pending proposals</div>';
       return;
     }
-    
+
     let html = '';
     for (const p of proposals) {
       const confidence = (p.confidence || 0) * 100;
@@ -568,9 +568,9 @@ export class OperatorConsole {
         </div>
       `;
     }
-    
+
     container.innerHTML = html;
-    
+
     // Bind approve/reject events
     container.querySelectorAll('.btn-approve').forEach(btn => {
       btn.addEventListener('click', () => this.handleApprove(btn.dataset.id));
@@ -589,10 +589,10 @@ export class OperatorConsole {
       this.logger.log('⏳ Command in progress...', 'warning');
       return;
     }
-    
+
     this.commandInFlight = true;
     this.logger.log(`✓ Approving proposal ${proposalId}...`, 'info');
-    
+
     try {
       const result = await OperatorAPI.approveProposal(proposalId);
       if (result.ok) {
@@ -618,10 +618,10 @@ export class OperatorConsole {
       this.logger.log('⏳ Command in progress...', 'warning');
       return;
     }
-    
+
     this.commandInFlight = true;
     this.logger.log(`✗ Rejecting proposal ${proposalId}...`, 'info');
-    
+
     try {
       const result = await OperatorAPI.rejectProposal(proposalId);
       if (result.ok) {
@@ -645,7 +645,7 @@ export class OperatorConsole {
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
     }
-    
+
     this.pollingInterval = setInterval(() => {
       if (!this.commandInFlight) {
         this.refreshStatus().catch(() => {});

@@ -13,11 +13,15 @@ import platform
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Protocol, cast
 
 from .registry import REPO_ROOT
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
+
+
+class _VirtualMemoryLike(Protocol):
+    total: int
 
 
 def get_git_info() -> dict[str, Any]:
@@ -67,9 +71,8 @@ def get_hardware_info() -> dict[str, Any]:
     try:
         import psutil  # type: ignore[import-untyped]
 
-        mem = psutil.virtual_memory()
-        total: float = mem.total
-        info["ram_gb"] = round(total / (1024**3), 1)
+        mem = cast(_VirtualMemoryLike, psutil.virtual_memory())
+        info["ram_gb"] = round(mem.total / (1024**3), 1)
     except ImportError:
         pass
     return info

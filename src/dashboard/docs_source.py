@@ -12,13 +12,13 @@ from datetime import datetime
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, cast
 
 from .models import JSONValue
 
 # Optional imports with proper fallbacks – using lower-case names to avoid Pylance constant redefinition warnings.
 DocxDocument: Any = None
-load_workbook: Any = None
+load_workbook: Callable[..., Any] | None = None
 PyPDF2: Any = None
 
 try:
@@ -36,7 +36,7 @@ try:
         load_workbook as _load_workbook,  # pyright: ignore[reportMissingTypeStubs, reportUnknownVariableType]
     )
 
-    load_workbook = _load_workbook  # pyright: ignore[reportUnknownVariableType]
+    load_workbook = cast(Callable[..., Any], _load_workbook)
     has_openpyxl: bool = True
 except ImportError:
     has_openpyxl = False

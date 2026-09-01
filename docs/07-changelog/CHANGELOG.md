@@ -644,5 +644,3 @@
   - Spiking vs silent neuron activity difference (K)
   - TelemetryFrame tick/neuron/synapse coherence (L)
   - Invalid dimension axes and values (M)
-
-

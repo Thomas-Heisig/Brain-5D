@@ -25,10 +25,10 @@ pipeline_tag: reinforcement-learning
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Brain‑5D** is an experimental **spiking‑neural simulation platform** operating in a sparse 5D coordinate space.  
+**Brain‑5D** is an experimental **spiking‑neural simulation platform** operating in a sparse 5D coordinate space.
 It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), homeostatic regulation, structural self‑organization, deterministic persistence, and an operator‑facing dashboard.
 
-> **Research status**  
+> **Research status**
 > Brain‑5D is an engineering and research project. The current implementation does **not** claim AGI, consciousness, sentience or biological equivalence.
 
 ---

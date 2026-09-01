@@ -399,7 +399,7 @@ class DashboardControlService:
             raise TypeError(f"'{name}' must be an integer.")
         if value < minimum:
             raise ValueError(f"'{name}' must be >= {minimum}.")
-        return value
+        return int(value)
 
     @staticmethod
     def _optional_int_field(
@@ -429,7 +429,7 @@ class DashboardControlService:
             raise TypeError(f"'{name}' must be an integer.")
         if value < minimum:
             raise ValueError(f"'{name}' must be >= {minimum}.")
-        return value
+        return int(value)
 
     @staticmethod
     def _optional_float_field(
