@@ -40,7 +40,7 @@
 - [ ] Extend evidence freshness authority: generated research evidence currently changes gate-test behavior without changing the canonical source digest
 - [x] Commit final source candidate and verify Continuous Integration #145
 - [x] Regenerate baseline, Phase B evidence and gate status for `3025e68...`
-- [ ] Evidence-only commit and CI verification over that commit
+- [x] Evidence commit `70a4ee2...` and Continuous Integration #147 verified
 - [ ] Resolve Sync to Hugging Face #66 if Hugging Face publication is required
 
 ## Priorität 1 — Alpha.5 Closure (teilweise offen)

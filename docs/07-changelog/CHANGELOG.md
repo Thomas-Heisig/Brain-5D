@@ -27,6 +27,7 @@
 - Final source freeze `3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1`: Continuous Integration #145 passed all jobs, including Python 3.11/3.12/3.13, build, Docker, and `ci-status`, without Node-runtime annotations.
 - Final Phase B baseline: **489 passed, 5 skipped, 0 failed**, digest `90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9`.
 - Final GateStatusBuilder result: Gate A `22/22`, Gate B `24/24`, Gate C `17/17`; Scientific Gate PASSED and Release Readiness READY.
+- Evidence commit `70a4ee253a5fc30716d0ffe0058f146a1ad59cde` passed Continuous Integration #147 (run `33515361366`) across all jobs.
 
 ### Boundaries
 - Sync to Hugging Face #66 remains failed and is explicitly outside CI #141 and this scientific gate.

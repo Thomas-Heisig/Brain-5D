@@ -52,7 +52,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Local source candidate: 489 passed, 5 skipped, no failures or warnings
 - [x] Regenerate baseline and Phase B evidence for the final source candidate
 - [x] Source CI #145 green for exact SHA `3025e68`
-- [ ] Commit final evidence and run CI over the evidence commit
+- [x] Evidence commit `70a4ee2` passed Continuous Integration #147
 - [ ] Resolve Sync to Hugging Face #66 before a release that includes Hugging Face publication
 - [ ] Chronic structural signals
 - [ ] Regional 5D pressure
