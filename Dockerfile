@@ -17,11 +17,12 @@ WORKDIR /build
 # Install build dependencies
 RUN pip install --no-cache-dir build
 
-# Copy only build metadata
-COPY pyproject.toml setup.py ./
+# Copy package metadata and sources
+COPY pyproject.toml setup.py README.md ./
+COPY src/ src/
 
 # Build wheel
-RUN python -m build --wheel --no-isolation 2>/dev/null || true
+RUN python -m build --wheel --no-isolation
 
 # ---- Runtime stage ---------------------------------------------------------
 FROM python:3.13-slim
