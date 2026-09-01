@@ -318,6 +318,7 @@ function renderStatus(state) {
 
   // Status badge
   const statusEl = $('system-status');
+  setText('footer-version', data.version || 'unknown');
   if (statusEl) {
     statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
     const workerFailed = storage.worker_failed;
@@ -1756,27 +1757,48 @@ async function refreshGateStatus() {
     return;
   }
 
-  // Overall badge
+  const scientificGate = data.scientific_gate || {};
+  const scientificStatus = scientificGate.overall || data.overall || 'pending';
+  const ciStatus = data.ci_status?.status || 'unknown';
+  const readiness = data.release_readiness?.overall || 'not_ready';
+
+  const scientificEl = $('gate-scientific');
+  if (scientificEl) {
+    scientificEl.textContent = scientificStatus;
+    scientificEl.className = `gate-badge gate-${scientificStatus}`;
+  }
+
+  const ciEl = $('gate-ci');
+  if (ciEl) {
+    ciEl.textContent = ciStatus;
+    ciEl.className = `gate-badge gate-${ciStatus}`;
+  }
+
+  // Overall release-readiness badge
   const overallEl = $('gate-overall');
   if (overallEl) {
-    overallEl.textContent = data.overall || 'pending';
-    overallEl.className = `gate-badge gate-${data.overall || 'pending'}`;
+    overallEl.textContent = readiness;
+    overallEl.className = `gate-badge gate-${readiness === 'ready' ? 'passed' : 'pending'}`;
   }
 
   // Live Runtime Profile
-  if (data.live_runtime) {
-    renderLiveRuntime(data.live_runtime);
+  const liveRuntime = scientificGate.live_runtime || data.live_runtime;
+  if (liveRuntime) {
+    renderLiveRuntime(liveRuntime);
   }
 
   // Gate A / B / C criteria tables
-  if (data.gate_a && data.gate_a.items) {
-    renderGateCriteria('gate-a-list', data.gate_a.items);
+  const gateA = scientificGate.gate_a || data.gate_a;
+  const gateB = scientificGate.gate_b || data.gate_b;
+  const gateC = scientificGate.gate_c || data.gate_c;
+  if (gateA?.items) {
+    renderGateCriteria('gate-a-list', gateA.items);
   }
-  if (data.gate_b && data.gate_b.items) {
-    renderGateCriteria('gate-b-list', data.gate_b.items);
+  if (gateB?.items) {
+    renderGateCriteria('gate-b-list', gateB.items);
   }
-  if (data.gate_c && data.gate_c.items) {
-    renderGateCriteria('gate-c-list', data.gate_c.items);
+  if (gateC?.items) {
+    renderGateCriteria('gate-c-list', gateC.items);
   }
 }
 

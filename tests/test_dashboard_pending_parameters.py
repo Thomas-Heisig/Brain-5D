@@ -12,6 +12,7 @@ from typing import Any, cast
 
 import pytest
 
+from src.dashboard.health_builder import build_parameters
 from src.dashboard.models import DashboardSnapshot, ParameterSchema
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
@@ -97,6 +98,24 @@ def _request(
         return status, cast(dict[str, Any], payload)
     finally:
         conn.close()
+
+
+def test_build_parameters_exposes_all_public_config_leaves() -> None:
+    parameters = build_parameters(
+        {
+            "seed": 42,
+            "dimensions": [10, 10, 10, 10, 10],
+            "homeostasis": {"target_rate_hz": 7.5, "rate_tau_ticks": 200.0},
+            "_sha256": "internal",
+        }
+    )
+
+    assert parameters["seed"].value == 42
+    assert parameters["dimensions"].value == [10, 10, 10, 10, 10]
+    assert parameters["homeostasis.rate_tau_ticks"].runtime_mutable is False
+    assert parameters["homeostasis.rate_tau_ticks"].requires_restart is True
+    assert parameters["homeostasis.target_rate_hz"].runtime_mutable is True
+    assert "_sha256" not in parameters
 
 
 class TestPendingParameters:

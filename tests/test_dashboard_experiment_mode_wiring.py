@@ -34,3 +34,18 @@ class TestExperimentModeFrontendWiring:
         assert "new ExperimentMode()" not in experiment_js
         assert "document.addEventListener" not in experiment_js
         assert "DOMContentLoaded" not in experiment_js
+
+    def test_release_summary_uses_canonical_status_sections(self) -> None:
+        html = _read_static("index.html")
+        app_js = _read_static("app.js")
+        assert 'id="gate-scientific"' in html
+        assert 'id="gate-ci"' in html
+        assert 'id="gate-overall"' in html
+        assert "data.scientific_gate" in app_js
+        assert "data.ci_status?.status" in app_js
+        assert "data.release_readiness?.overall" in app_js
+
+    def test_plantuml_encoder_uses_existing_distribution(self) -> None:
+        html = _read_static("index.html")
+        assert "cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0" in html
+        assert "cdnjs.cloudflare.com/ajax/libs/plantuml-encoder" not in html

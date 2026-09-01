@@ -25,6 +25,8 @@ from __future__ import annotations
 
 import logging
 
+from src.version import BRAIN5D_VERSION_DISPLAY
+
 from .docs_source import DocumentationSource, create_docs_source
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
 from .models import (
@@ -53,7 +55,7 @@ from .state import (
 )
 
 # Package version
-__version__ = "0.5.0-alpha.2"
+__version__ = BRAIN5D_VERSION_DISPLAY
 
 # Module logger
 logger = logging.getLogger(__name__)

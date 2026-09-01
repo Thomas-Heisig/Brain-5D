@@ -52,7 +52,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Split-Path -Parent $ScriptDir
+$ProjectRoot = $ScriptDir
 
 # Python finden (bevorzugt venv)
 $VenvPython = Join-Path $ProjectRoot ".venv" "Scripts" "python.exe"

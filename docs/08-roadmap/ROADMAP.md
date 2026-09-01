@@ -1,6 +1,6 @@
 # Roadmap (Stand 1)
 
-> Last updated: 2026-08-31
+> Last updated: 2026-09-01
 > Detailed task list: `docs/08-roadmap/TODO.md`
 
 ## Stand 1 – abgeschlossenes Zielbild
@@ -32,12 +32,25 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 
 ## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation (current)
 
-> Opened 2026-08-31. Gate: OPEN.
+> Source freeze `f1c4df8` was reopened for requested dashboard/runtime hardening. New source candidate is locally green; Phase B regeneration and external CI are pending. Release readiness: NOT_READY.
 
 - [x] Version transition and immutable release registry
 - [x] CI recovery: local lint/type/test gates green (Black, Ruff, Pylint ≥9.0, mypy, pyright)
 - [x] Operator/Experiment/Debug mode switching wired and tested
 - [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately
+- [x] Source baseline: 483 passed, 5 skipped, zero failures/collection errors
+- [x] Restore A/B/C, Structural E2E, Structural Live Loop, Single Listener, Determinism Infrastructure verified
+- [x] EXP-DET-0001 / EXP-STOR-0001 rerun with complete DATA/EVID provenance links
+- [x] Gate A 22/22, Gate B 24/24, Gate C 17/17
+- [x] Resolve frozen release-readiness test expectation before evidence-only commit
+- [x] Dashboard version, Health/Storage, real Network values and all major tabs verified
+- [x] Operator/Experiment/Debug mode selector verified end-to-end
+- [x] All 101 public runtime-config parameters exposed conservatively
+- [x] Launcher process tree and storage restart hardened
+- [x] Local source candidate: 489 passed, 5 skipped, no failures or warnings
+- [ ] Regenerate baseline and Phase B evidence for the new source candidate
+- [ ] Run CI over the evidence commit
+- [ ] Resolve Sync to Hugging Face #66 before a release that includes Hugging Face publication
 - [ ] Chronic structural signals
 - [ ] Regional 5D pressure
 - [ ] Age / lifetime

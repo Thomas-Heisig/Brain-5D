@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from functools import lru_cache
+from importlib import import_module
 from pathlib import Path
 from typing import Any, Callable, cast
 
@@ -19,7 +20,7 @@ from .models import JSONValue
 # Optional imports with proper fallbacks – using lower-case names to avoid Pylance constant redefinition warnings.
 DocxDocument: Any = None
 load_workbook: Callable[..., Any] | None = None
-PyPDF2: Any = None
+pypdf: Any = None
 
 try:
     from docx import (
@@ -42,12 +43,10 @@ except ImportError:
     has_openpyxl = False
 
 try:
-    import PyPDF2 as _PyPDF2  # pyright: ignore[reportMissingTypeStubs]
-
-    PyPDF2 = _PyPDF2
-    has_pypdf2: bool = True
+    pypdf = import_module("pypdf")
+    has_pypdf: bool = True
 except ImportError:
-    has_pypdf2 = False
+    has_pypdf = False
 
 __all__ = [
     "DocumentationEntry",
@@ -348,7 +347,7 @@ class DocumentationSource:
         if file_type == FileType.XLSX and has_openpyxl and load_workbook is not None:
             return self._extract_xlsx_content(path, full)
 
-        if file_type == FileType.PDF and has_pypdf2 and PyPDF2 is not None:
+        if file_type == FileType.PDF and has_pypdf and pypdf is not None:
             return self._extract_pdf_content(path, full)
 
         return f"Content extraction not available for {file_type.value} files."
@@ -448,12 +447,12 @@ class DocumentationSource:
     def _extract_pdf_content(self, path: Path, full: bool) -> str:
         """Extract text from PDF file."""
         try:
-            if PyPDF2 is None:
-                return "[PyPDF2 not available]"
+            if pypdf is None:
+                return "[pypdf not available]"
 
             text_parts: list[str] = []
             with open(path, "rb") as f:
-                pdf = PyPDF2.PdfReader(f)
+                pdf = pypdf.PdfReader(f)
                 max_pages = 5 if not full else len(pdf.pages)
                 for i in range(min(max_pages, len(pdf.pages))):
                     page = pdf.pages[i]
@@ -503,7 +502,7 @@ class DocumentationSource:
         if file_type == FileType.XLSX:
             return has_openpyxl
         if file_type == FileType.PDF:
-            return has_pypdf2
+            return has_pypdf
         return False
 
     @lru_cache(maxsize=128)

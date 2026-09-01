@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-09-01 — Alpha.6 Phase B Evidence Run
+
+### Source Freeze and Verification
+- Scientific source frozen at `f1c4df8adbe8009c2483a72e4f962a6dad9fad83`; Phase B changed evidence and documentation only.
+- Continuous Integration #141 passed for the exact source-freeze SHA, including Python 3.11/3.12/3.13, build, Docker, security, docs, lint, and strict type gates.
+- Canonical baseline regenerated: **483 passed, 5 skipped, 0 failed, 0 collection errors**; source digest `7da20251408617c09ac040455131e33ff4e196ff9a59b419950bfc6c2b4a97e0`.
+- Restore A/B/C, Structural E2E, Structural Live Loop, Single Listener, and Determinism Infrastructure artifacts regenerated and verified.
+- EXP-DET-0001 and EXP-STOR-0001 rerun as `DATA-2026-15/16` and `EVID-2026-15/16`, with claims, hypotheses, manifests, and data links validated.
+- Productive GateStatusBuilder result with source-freeze CI #141: Gate A `22/22`, Gate B `24/24`, Gate C `17/17`; `scientific_gate: passed`.
+- Final full evidence-tree validation: 482 passed, 5 skipped, 1 failed. The frozen `test_release_readiness_sections_are_exposed` test hard-codes the pre-evidence expectation `ready is False`, while the now-passed scientific gate correctly produces `True`.
+- The source freeze was explicitly reopened for dashboard/runtime hardening; the readiness test now asserts the real gate formula. New local suite: **489 passed, 5 skipped, 0 failed, no warnings**.
+
+### Dashboard and Runtime Closure
+- Removed orphaned multi-process runtime state and hardened the launcher against duplicate PIDs and occupied dashboard ports; Windows stop now terminates the complete managed process tree.
+- Fixed `start.ps1` / `stop.ps1` repository-root resolution.
+- Runtime storage archives a valid journal whose last tick is ahead of a new Tick-0 runtime; restart verification keeps `worker_failed=false`, Health `ok`, and Problems empty.
+- Dashboard version defaults and footer now use the canonical `0.5.0-alpha.6` source.
+- RELEASE separates Scientific Gate, exact-SHA CI, and Release Readiness; CI evidence is accepted only when its SHA matches HEAD.
+- Operator/Experiment/Debug switching and Network/Control/Research/Release tabs verified in-browser with no console or HTTP errors.
+- Parameter Inspector now exposes all 101 public runtime-config leaves; uncurated values remain fixed and restart-required.
+- Replaced the broken PlantUML CDN asset and deprecated PyPDF2 dependency; dependency audit reports no known vulnerabilities and package build is warning-free.
+- Black, Ruff, Mypy, Pyright (`0 errors, 0 warnings`), Pylint (`9.37/10`), Pre-commit, Bandit, tests, and package build pass locally.
+- Scientific artifacts are intentionally stale until Phase B is regenerated for the new source candidate; release readiness remains NOT_READY meanwhile.
+
+### Boundaries
+- Sync to Hugging Face #66 remains failed and is explicitly outside CI #141 and this scientific gate.
+- The stricter C1-exit-C2 restore orchestration remains a separate hardening task; current path C proves a fresh C2 restore process.
+- The source-tree digest excludes generated research evidence although one gate test changes outcome based on that evidence.
+
 ## 2026-08-31 — v0.5.0-alpha.6 Opened
 
 ### Version Transition

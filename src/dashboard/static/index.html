@@ -527,11 +527,13 @@
         <div class="gate-board">
           <div class="gate-header">
             <h2>Current Gate</h2>
-            <p class="gate-subtitle">Current development gate is open until all criteria pass. <span class="gate-rule">Do not advance versions while the current gate is open.</span></p>
+            <p class="gate-subtitle">Scientific evidence, exact-SHA CI and release readiness are evaluated independently.</p>
             <p class="gate-legend"><strong>Live</strong> = current runtime config state &middot; <strong>Maturity</strong> = IMPLEMENTED &rarr; INTEGRATED &rarr; VERIFIED &rarr; EVIDENCED &middot; <strong>Gate</strong> = release verification result. Runtime disabled &ne; gate failed. Runtime disabled &ne; gate passed.</p>
             <button id="gate-refresh" type="button" class="btn-secondary">Re-check</button>
           </div>
-          <div class="gate-overall-row"><strong>Current Overall:</strong><span class="gate-badge pending" id="gate-overall">pending</span></div>
+          <div class="gate-overall-row"><strong>Scientific Gate:</strong><span class="gate-badge pending" id="gate-scientific">pending</span></div>
+          <div class="gate-overall-row"><strong>Continuous Integration:</strong><span class="gate-badge pending" id="gate-ci">unknown</span></div>
+          <div class="gate-overall-row"><strong>Release Readiness:</strong><span class="gate-badge pending" id="gate-overall">not_ready</span></div>
           <div class="gate-section"><h3>Live Runtime Profile <span class="gate-section-hint">(current config)</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
           <div class="gate-section"><h3>Gate A &mdash; Technical Integration</h3><div id="gate-a-list" class="gate-criteria-table"></div></div>
           <div class="gate-section"><h3>Gate B &mdash; Verification</h3><div id="gate-b-list" class="gate-criteria-table"></div></div>
@@ -571,7 +573,7 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-left">
-      <span class="footer-brand">Brain-5D Operator Dashboard &middot; v0.5.0-alpha.6</span>
+      <span class="footer-brand">Brain-5D Operator Dashboard &middot; v<span id="footer-version">loading</span></span>
     </div>
     <div class="footer-center">
       <div class="experiment-mode-switcher" id="experiment-mode-switcher" title="Experiment mode">
@@ -592,7 +594,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-graphviz/5.0.2/d3-graphviz.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/plantuml-encoder/1.2.5/plantuml-encoder.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="module" src="/app.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.brain5d_launcher import build_command
+from scripts.brain5d_launcher import build_command, pid_is_running, port_is_available
 
 ROOT = Path(__file__).resolve().parents[1]
 PID_FILE = ROOT / "artifacts" / "brain5d.pid"
@@ -45,6 +45,17 @@ def test_launcher_keeps_dashboard_arguments_out_of_simulation_command() -> None:
     assert "--open-browser" not in simulation_command
     assert "--host" not in simulation_command
     assert "--port" not in simulation_command
+
+
+def test_launcher_detects_live_pid_and_occupied_port() -> None:
+    import socket
+
+    assert pid_is_running(os.getpid())
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+        listener.bind(("127.0.0.1", 0))
+        host, port = listener.getsockname()
+        assert isinstance(host, str)
+        assert port_is_available(host, port) is False
 
 
 # ============================================================================
@@ -140,11 +151,8 @@ def test_launcher_starts_exactly_one_process() -> None:
         except OSError as exc:
             pytest.fail(f"Process {pid_from_file} is not running: {exc}")
 
-        # Assert: the PID matches the launcher's child PID
-        # (The launcher spawns one child; the PID file stores that child's PID)
-        assert (
-            proc.returncode is None
-        ), f"Launcher process exited prematurely with code {proc.returncode}"
+        # The launcher is intentionally short-lived after spawning the app.
+        assert proc.wait(timeout=5) == 0
 
     finally:
         # Stop the process via the launcher's stop command
@@ -156,7 +164,7 @@ def test_launcher_starts_exactly_one_process() -> None:
         )
 
         # Also terminate the launcher itself if still running
-        if proc.returncode is None:
+        if proc.poll() is None:
             if os.name == "nt":
                 proc.send_signal(signal.CTRL_BREAK_EVENT)  # type: ignore[attr-defined]
             else:

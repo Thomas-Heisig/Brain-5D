@@ -13,29 +13,29 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Projekt-Root ermitteln
-$ProjectRoot = Split-Path -Parent $ScriptDir
+$ProjectRoot = $ScriptDir
 
-# Prüfen ob venv existiert
-$VenvPython = Join-Path $ProjectRoot ".venv" "Scripts" "python.exe"
-if (Test-Path $VenvPython) {
-    $PythonExe = $VenvPython
-} else {
-    $PythonExe = "python"
-}
-
-Write-Host "🛑 Brain-5D wird gestoppt ..." -ForegroundColor Yellow
+Write-Host "Brain-5D wird gestoppt ..." -ForegroundColor Yellow
 
 try {
-    & $PythonExe (Join-Path $ProjectRoot "scripts" "brain5d_launcher.py") stop
-    $exitCode = $LASTEXITCODE
-    if ($exitCode -eq 0) {
-        Write-Host "✅ Brain-5D erfolgreich gestoppt." -ForegroundColor Green
-    } else {
-        Write-Host "⚠️  Brain-5D-Stop mit Exit-Code $exitCode beendet." -ForegroundColor Red
+    $PidFile = Join-Path $ProjectRoot "artifacts" "brain5d.pid"
+    if (-not (Test-Path $PidFile)) {
+        Write-Host "Brain-5D ist bereits gestoppt." -ForegroundColor Green
+        return
     }
-    exit $exitCode
+
+    $Brain5DPid = [int](Get-Content $PidFile -Raw).Trim()
+    & taskkill /PID $Brain5DPid /T /F | Out-Host
+    $exitCode = $LASTEXITCODE
+    if ($exitCode -ne 0 -and (Get-Process -Id $Brain5DPid -ErrorAction SilentlyContinue)) {
+        throw "Prozessbaum $Brain5DPid konnte nicht beendet werden."
+    }
+
+    Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
+    Write-Host "Brain-5D erfolgreich gestoppt." -ForegroundColor Green
+    return
 }
 catch {
-    Write-Host "❌ Fehler beim Stoppen: $_" -ForegroundColor Red
-    exit 1
+    Write-Error "Fehler beim Stoppen: $_"
+    throw
 }

@@ -7,6 +7,7 @@ from dataclasses import fields as dataclass_fields
 from typing import Any, cast
 
 from src.embodiment.models import EmbodimentMetrics
+from src.version import BRAIN5D_VERSION_DISPLAY
 
 JSONScalar = str | int | float | bool | None
 JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
@@ -822,7 +823,7 @@ class DashboardSnapshot:
     experiment_state: ExperimentState = ExperimentState()
     health: HealthSnapshot = HealthSnapshot()
     status: str = "idle"
-    version: str = "0.5.0-alpha.2"
+    version: str = BRAIN5D_VERSION_DISPLAY
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the complete snapshot as a JSON object."""
@@ -921,7 +922,7 @@ class MetricAggregator:
         self._experiment = ExperimentMetrics()
         self._embodiment = EmbodimentMetrics()
         self._status: str = "idle"
-        self._version: str = "0.5.0-alpha.2"
+        self._version: str = BRAIN5D_VERSION_DISPLAY
 
     def update_system(self, **kwargs: Any) -> MetricAggregator:
         """Update SystemMetrics fields."""

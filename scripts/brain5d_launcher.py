@@ -18,8 +18,10 @@ Important architecture rule:
 from __future__ import annotations
 
 import argparse
+import csv
 import os
 import signal
+import socket
 import subprocess
 import sys
 import webbrowser
@@ -66,6 +68,38 @@ def _remove_pid() -> None:
         PID_FILE.unlink(missing_ok=True)
     except OSError:
         pass
+
+
+def pid_is_running(pid: int) -> bool:
+    """Return whether a process with *pid* is currently alive."""
+    if os.name == "nt":
+        result = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode != 0:
+            return False
+        return any(
+            len(row) > 1 and row[1].strip() == str(pid)
+            for row in csv.reader(result.stdout.splitlines())
+        )
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def port_is_available(host: str, port: int) -> bool:
+    """Return whether a TCP listener can bind to the requested address."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        try:
+            probe.bind((host, port))
+        except OSError:
+            return False
+    return True
 
 
 def spawn(
@@ -241,11 +275,20 @@ def _cmd_start(args: argparse.Namespace) -> int:
     # Check if already running
     existing_pid = _read_pid()
     if existing_pid is not None:
+        if pid_is_running(existing_pid):
+            print(
+                f"Error: Brain-5D is already running (PID {existing_pid}).",
+                file=sys.stderr,
+            )
+            return 1
+        _remove_pid()
+
+    if args.dashboard and not port_is_available(args.host, args.port):
         print(
-            f"Warning: Brain-5D may already be running (PID {existing_pid}).",
+            f"Error: dashboard address {args.host}:{args.port} is already in use.",
             file=sys.stderr,
         )
-        print("Use 'stop' first or remove the PID file.", file=sys.stderr)
+        return 1
 
     command = build_command(args)
 
@@ -299,9 +342,21 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
         print("No Brain-5D process found (no PID file).", file=sys.stderr)
         return 1
 
+    if not pid_is_running(pid):
+        print(f"Brain-5D process {pid} not found (already exited).")
+        _remove_pid()
+        return 0
+
     try:
         if os.name == "nt":
-            os.kill(pid, signal.CTRL_BREAK_EVENT)  # type: ignore[attr-defined]
+            result = subprocess.run(
+                ["taskkill", "/PID", str(pid), "/T", "/F"],
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+            if result.returncode != 0:
+                raise OSError(result.stderr.strip() or result.stdout.strip())
         else:
             os.kill(pid, signal.SIGTERM)
 

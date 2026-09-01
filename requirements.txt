@@ -25,4 +25,4 @@ python-docx>=1.2.0
 openpyxl>=3.1.5
 
 # Optional: PDF-Unterstützung  (docs extra in pyproject.toml)
-PyPDF2>=3.0.1
+pypdf>=6.0.0

@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any, cast
+from unittest.mock import patch
 
 from src.controller.runtime import RuntimeController
 from src.core import Brain5DConfig, NeuralNetwork
@@ -411,13 +412,14 @@ def test_release_readiness_sections_are_exposed() -> None:
     assert ci["source"] == "github_actions"
 
     readiness = cast(dict[str, Any], status["release_readiness"])
-    assert readiness["ready"] is False  # scientific gate is not fully passed locally
-    assert readiness["overall"] == "not_ready"
+    expected_ready = scientific_gate["overall"] == G_PASSED
+    assert readiness["ready"] is expected_ready
+    assert readiness["overall"] == ("ready" if expected_ready else "not_ready")
     assert readiness["scientific_gate"] == scientific_gate["overall"]
     assert readiness["ci_status"] == "passed"
     blockers = cast(list[Any], readiness["blockers"])
     assert isinstance(blockers, list)
-    assert len(blockers) > 0
+    assert bool(blockers) is not expected_ready
 
 
 def test_release_readiness_is_ready_when_both_gates_pass() -> None:
@@ -445,6 +447,44 @@ def test_release_readiness_not_ready_when_ci_unknown(tmp_path: Path) -> None:
     assert readiness["ready"] is False
     assert readiness["overall"] == "not_ready"
     assert any("ci_status" in str(b) for b in readiness["blockers"])
+
+
+def test_ci_evidence_must_match_current_head(tmp_path: Path) -> None:
+    artifact = (
+        tmp_path
+        / "research"
+        / "generated"
+        / "verification"
+        / "phase_b_gate_status.json"
+    )
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text(
+        json.dumps(
+            {
+                "continuous_integration": {
+                    "workflow": "Continuous Integration #141",
+                    "run_id": 33507240508,
+                    "head_sha": "verified-head",
+                    "conclusion": "success",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    builder = GateStatusBuilder(repo_root=tmp_path)
+
+    with patch(
+        "src.dashboard.gate_status.current_git_head", return_value="verified-head"
+    ):
+        matching = cast(dict[str, Any], builder.build()["ci_status"])
+    with patch(
+        "src.dashboard.gate_status.current_git_head", return_value="different-head"
+    ):
+        stale = cast(dict[str, Any], builder.build()["ci_status"])
+
+    assert matching["status"] == "passed"
+    assert matching["source"] == "phase_b_gate_status"
+    assert stale["status"] == "unknown"
 
 
 def test_release_readiness_not_ready_when_ci_failed(tmp_path: Path) -> None:

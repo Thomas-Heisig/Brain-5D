@@ -53,7 +53,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.dashboard.models import JSONValue
-from src.dashboard.verification import evaluate_test_baseline
+from src.dashboard.verification import current_git_head, evaluate_test_baseline
 
 # ============================================================================
 # Status vocabularies (deliberately disjoint)
@@ -289,10 +289,14 @@ class GateStatusBuilder:
             "live_runtime": cast(JSONValue, live_runtime),
         }
 
-        ci: dict[str, JSONValue] = ci_status or {
-            "status": "unknown",
-            "source": "not_reported",
-        }
+        ci: dict[str, JSONValue] = (
+            ci_status
+            or self._load_ci_status()
+            or {
+                "status": "unknown",
+                "source": "not_reported",
+            }
+        )
         ci_overall = str(ci.get("status", "unknown"))
 
         release_ready = overall == G_PASSED and ci_overall == "passed"
@@ -320,6 +324,41 @@ class GateStatusBuilder:
             "live_runtime": cast(JSONValue, live_runtime),
             "source": "live_backend",
         }
+
+    def _load_ci_status(self) -> dict[str, JSONValue] | None:
+        """Load CI provenance only when its tested SHA matches current HEAD."""
+        artifact_path = (
+            self.repo_root
+            / "research"
+            / "generated"
+            / "verification"
+            / "phase_b_gate_status.json"
+        )
+        try:
+            raw_data: Any = json.loads(artifact_path.read_text(encoding="utf-8"))
+            if not isinstance(raw_data, dict):
+                return None
+            data = cast(dict[str, Any], raw_data)
+            raw_ci = data.get("continuous_integration")
+            if not isinstance(raw_ci, dict):
+                return None
+            ci = cast(dict[str, Any], raw_ci)
+            head_sha = ci.get("head_sha")
+            if not isinstance(head_sha, str) or head_sha != current_git_head(
+                self.repo_root
+            ):
+                return None
+            conclusion = ci.get("conclusion")
+            status = "passed" if conclusion == "success" else "failed"
+            return {
+                "status": status,
+                "source": "phase_b_gate_status",
+                "workflow": str(ci.get("workflow", "")),
+                "run_id": str(ci.get("run_id", "")),
+                "head_sha": head_sha,
+            }
+        except (OSError, json.JSONDecodeError):
+            return None
 
     def _release_blockers(
         self,

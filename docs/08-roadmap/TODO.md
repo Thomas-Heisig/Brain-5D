@@ -1,21 +1,48 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-31
+> Last updated: 2026-09-01
 >
 > Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
 > .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   **Current baseline (2026-08-31): 463 passed / 2 skipped / 0 failed**
->   at commit `0503264...` (Alpha.5 freeze).
->   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6. Gate: OPEN.
+>   **Current baseline (2026-09-01): 483 passed / 5 skipped / 0 failed**
+>   at source-freeze commit `f1c4df8...`, digest `7da20251...`.
+>   New dashboard/runtime source candidate: 489 passed / 5 skipped / 0 failed,
+>   no test warnings; baseline regeneration pending.
+>   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6.
+>   Previous source scientific gate and CI #141: PASSED.
+>   Current scientific gate: STALE pending regenerated evidence;
+>   release readiness: NOT_READY.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests are planned but **not yet implemented**; the Gate
 >   Builder still uses the global source-tree digest, so UI changes can still
 >   mark scientific evidence as `stale`.
 >   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
 >   delta-journal recovery in `src/main.py`.
+
+## Priorität 0 — Alpha.6 Phase B Evidence Freeze
+
+- [x] Source freeze `f1c4df8...` against successful Continuous Integration #141
+- [x] Canonical baseline regenerated without production-source changes
+- [x] Restore Determinism A/B/C regenerated and verified
+- [x] Structural E2E and Structural Live Loop regenerated and verified
+- [x] Single-Listener / Runtime integration regenerated and verified
+- [x] Determinism Infrastructure regenerated: 7/7 proofs
+- [x] EXP-DET-0001 / EXP-STOR-0001 rerun as DATA-2026-15/16 and EVID-2026-15/16
+- [x] Claims, hypotheses, evidence links, manifests, registry, and research routes validated
+- [x] Gate status regenerated: A 22/22, B 24/24, C 17/17; scientific gate PASSED
+- [x] Freeze reopened for dashboard/runtime fixes; release-readiness test now follows the actual scientific-gate result
+- [x] Dashboard browser acceptance: version alpha.6, real network values, Health ok, Problems empty, Storage healthy
+- [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
+- [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
+- [x] Local quality gates: 489 tests, Black, Ruff, Mypy, Pyright, Pylint, Pre-commit, Bandit, pip-audit and build pass
+- [ ] Extend evidence freshness authority: generated research evidence currently changes gate-test behavior without changing the canonical source digest
+- [ ] Commit source candidate and verify external CI
+- [ ] Regenerate baseline, Phase B evidence and gate status for the new source SHA
+- [ ] Evidence-only commit and CI verification over that commit
+- [ ] Resolve Sync to Hugging Face #66 if Hugging Face publication is required
 
 ## Priorität 1 — Alpha.5 Closure (teilweise offen)
 

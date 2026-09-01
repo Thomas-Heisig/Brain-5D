@@ -454,7 +454,8 @@ def _param(
 def build_parameters(config_dict: dict[str, Any] | None) -> dict[str, ParameterSchema]:
     """Build parameter schema entries from the runtime configuration.
 
-    Only a curated set of scientifically relevant parameters is exposed.
+    Curated parameters receive precise metadata. Remaining public config
+    leaves are exposed conservatively as fixed, restart-required values.
     """
     if config_dict is None:
         return {}
@@ -570,6 +571,25 @@ def build_parameters(config_dict: dict[str, Any] | None) -> dict[str, ParameterS
         runtime_mutable=False,
         requires_restart=True,
     )
+
+    def expose_remaining(values: dict[str, Any], prefix: str = "") -> None:
+        for key, value in values.items():
+            if key.startswith("_"):
+                continue
+            name = f"{prefix}.{key}" if prefix else key
+            if isinstance(value, dict):
+                expose_remaining(cast(dict[str, Any], value), name)
+            elif name not in params:
+                params[name] = _param(
+                    name,
+                    value,
+                    description=f"Runtime configuration value for {name}.",
+                    runtime_mutable=False,
+                    requires_restart=True,
+                    scientific_sensitive=True,
+                )
+
+    expose_remaining(config_dict)
 
     return params
 

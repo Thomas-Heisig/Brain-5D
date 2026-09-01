@@ -47,6 +47,14 @@ class TestVersionConsistency:
 
         assert BRAIN5D_VERSION_DISPLAY in DashboardRequestHandler.server_version
 
+    def test_dashboard_defaults_use_central_version(self) -> None:
+        """Dashboard package and empty snapshots use the canonical version."""
+        from src.dashboard import __version__
+        from src.dashboard.models import DashboardSnapshot
+
+        assert __version__ == BRAIN5D_VERSION_DISPLAY
+        assert DashboardSnapshot().version == BRAIN5D_VERSION_DISPLAY
+
     def test_main_py_uses_central_version(self) -> None:
         """main.py imports and uses BRAIN5D_VERSION_DISPLAY."""
         text = Path("src/main.py").read_text(encoding="utf-8")

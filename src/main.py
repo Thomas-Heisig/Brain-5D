@@ -877,6 +877,25 @@ def main() -> int:
                     f"⚠️  Reset corrupt delta journal ({_journal_err}); "
                     f"old file preserved at {_corrupt_path.name}"
                 )
+            if _delta_journal.last_tick > network.current_tick:
+                import time as _time
+
+                previous_last_tick = _delta_journal.last_tick
+                _delta_journal.close()
+                _restart_archive = _journal_path.with_name(
+                    f"{_journal_path.name}.restart-{previous_last_tick}-"
+                    f"{_time.time_ns()}"
+                )
+                _journal_path.replace(_restart_archive)
+                _delta_journal = DeltaJournal(str(_journal_path))
+                _delta_journal.open()
+                print(
+                    "ℹ️ Archived delta journal from a later runtime "
+                    f"(last_tick={previous_last_tick}, "
+                    f"current_tick={network.current_tick}) as "
+                    f"{_restart_archive.name}"
+                )
+            _delta_journal.close()
             from src.storage.runtime import RuntimeNetworkLike
 
             _async_config = AsyncStorageConfig()
