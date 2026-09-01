@@ -64,3 +64,18 @@ def test_embodiment_animation_is_store_driven_and_accessible() -> None:
     assert 'livingMap.style.setProperty("--synchrony"' in workspace_js
     assert "@media (prefers-reduced-motion: reduce)" in styles
     assert ".brain5d-being," in styles
+
+
+def test_connection_manager_is_store_driven_and_has_no_control_actions() -> None:
+    html = _read("index.html")
+    store_js = _read("state-store.js")
+    workspace_js = _read("workspace-panels.js")
+
+    assert 'id="connection-manager-title"' in html
+    assert 'id="connection-graph"' in html
+    assert 'fetch("/api/embodiment/connections"' in store_js
+    assert "embodiment_connections" in store_js
+    assert "renderConnections(embodimentConnections)" in workspace_js
+    assert "connection.authorized" in workspace_js
+    assert "connect-button" not in html
+    assert "activate-connection" not in workspace_js

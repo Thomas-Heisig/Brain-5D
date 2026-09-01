@@ -10,6 +10,13 @@ from typing import Any, cast
 from src.dashboard.models import DashboardSnapshot, SystemMetrics
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
+from src.embodiment import (
+    ConnectionDescriptor,
+    ConnectionKind,
+    ConnectionManager,
+    ConnectionStatus,
+    RelationshipClass,
+)
 from src.embodiment.models import EmbodimentMetrics
 
 
@@ -104,5 +111,47 @@ def test_embodiment_history_contains_only_published_snapshots() -> None:
         assert payload["count"] == 2
         assert payload["history"][0]["tick"] == 2
         assert payload["history"][0]["metrics"]["last_action"] == "move"
+    finally:
+        _stop(server, thread)
+
+
+def test_embodiment_connections_are_read_only_and_explicitly_authorized() -> None:
+    state = DashboardStateStore()
+    manager = ConnectionManager(cache_seconds=60)
+    manager.register(
+        ConnectionDescriptor(
+            connection_id="sensor.test-camera",
+            name="Test camera",
+            kind=ConnectionKind.SENSOR,
+            relationship=RelationshipClass.USABLE,
+            status=ConnectionStatus.CONNECTED,
+            capabilities=("frames",),
+            permissions=("capture",),
+            available=True,
+            authorized=True,
+            active=True,
+            source="test_adapter",
+        )
+    )
+    server = DashboardServer(
+        ("127.0.0.1", 0),
+        state,
+        heatmaps=None,
+        connection_manager=manager,
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    host, port = server.server_address[:2]
+    assert isinstance(host, str)
+    try:
+        payload = _get(host, port, "/api/embodiment/connections")
+        camera = next(
+            item
+            for item in payload["connections"]
+            if item["connection_id"] == "sensor.test-camera"
+        )
+        assert camera["available"] is True
+        assert camera["authorized"] is True
+        assert camera["permissions"] == ["capture"]
     finally:
         _stop(server, thread)

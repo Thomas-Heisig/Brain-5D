@@ -31,6 +31,35 @@ unbounded browser, operating-system, network, or physical-device control.
    physical or digital environments.
 5. Dashboard embodiment metrics are read-only in alpha.7.
 
+## Dynamic body boundary
+
+Brain-5D does not equate network reachability with body ownership. Its body is
+the changing graph of resources whose state can be perceived, whose use is
+authorized, whose effects can be observed, and whose causal model has been
+integrated. `src/embodiment/connections.py` represents this boundary.
+
+Every `ConnectionDescriptor` records:
+
+- stable identity, kind, modalities and capabilities;
+- relationship class: `perceivable`, `reachable`, `usable`, `controllable`,
+  `integrated`, or `embodied`;
+- observed status independently from `authorized` and `active`;
+- explicit permissions, latency, energy demand and hazard level;
+- provenance and a human-readable discovery or adapter message.
+
+The default catalog contains compute, storage, LAN, internet route, camera,
+microphone, location/environment sensing, Web/API and database data sources,
+messaging, display, audio output, printing and robotics. It is open-ended:
+configured adapters can register additional descriptors without changing the
+neural core.
+
+Read-only system discovery currently detects local compute/filesystem, local
+network addresses, an outbound IP route, and platform camera, microphone,
+audio-output and printer devices. Detection never opens a media stream, sends
+data, prints, or moves hardware. Discovered entries are `reachable`, but remain
+`authorized=false` and `active=false` until a permission-bounded adapter is
+explicitly composed.
+
 ## Dashboard contract
 
 The dashboard exposes the published state without creating an environment or
@@ -42,6 +71,8 @@ inventing sensor, actuator, latency, gain, or history values:
 - `GET /api/embodiment/metrics`: the latest measured `EmbodimentMetrics`;
 - `GET /api/embodiment/history?limit=N`: snapshots already retained by the
    thread-safe `DashboardStateStore`.
+- `GET /api/embodiment/connections`: discovered and configured body
+   connections, capabilities, relationship class, health and authorization.
 
 When no adapter is configured, `available` is false, the loop reports
 `unconfigured` / `unavailable` / `not_reported`, history is empty, and detail

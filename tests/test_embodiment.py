@@ -5,10 +5,15 @@ from dataclasses import dataclass
 from src.embodiment import (
     ActionCommand,
     ActuatorResult,
+    ConnectionDescriptor,
+    ConnectionKind,
+    ConnectionManager,
+    ConnectionStatus,
     EmbodimentAgent,
     EmbodimentRegistry,
     EnvironmentKind,
     EnvironmentObservation,
+    RelationshipClass,
     SensorFrame,
 )
 
@@ -74,3 +79,47 @@ def test_agent_tracks_episode_feedback_without_autonomous_actions() -> None:
     assert metrics.episode == 1
     assert metrics.episode_reward == 0.5
     assert metrics.last_action == "advance"
+
+
+def test_connection_manager_discovers_without_authorizing_devices() -> None:
+    manager = ConnectionManager(cache_seconds=60)
+    connections = {item.connection_id: item for item in manager.snapshot(refresh=True)}
+
+    assert connections["resource.compute"].available is True
+    assert connections["resource.compute"].authorized is False
+    assert connections["sensor.camera"].active is False
+    assert connections["sensor.microphone"].active is False
+    assert connections["network.internet"].relationship in {
+        RelationshipClass.PERCEIVABLE,
+        RelationshipClass.REACHABLE,
+    }
+
+
+def test_connection_manager_accepts_explicit_adapter_metadata() -> None:
+    manager = ConnectionManager(cache_seconds=60)
+    manager.register(
+        ConnectionDescriptor(
+            connection_id="sensor.lab-camera",
+            name="Lab camera",
+            kind=ConnectionKind.SENSOR,
+            relationship=RelationshipClass.USABLE,
+            status=ConnectionStatus.CONNECTED,
+            capabilities=("frames",),
+            permissions=("capture",),
+            modalities=("vision",),
+            available=True,
+            authorized=True,
+            active=True,
+            latency_ms=12.5,
+            hazard_level="medium",
+            source="configured_adapter",
+        )
+    )
+
+    item = next(
+        entry
+        for entry in manager.snapshot()
+        if entry.connection_id == "sensor.lab-camera"
+    )
+    assert item.active is True
+    assert item.permissions == ("capture",)

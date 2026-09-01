@@ -39,6 +39,8 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import parse_qs, unquote, urlparse
 
+from src.embodiment import ConnectionManager
+
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
@@ -140,6 +142,7 @@ class DashboardServer(ThreadingHTTPServer):
         structural_bridge: OperatorBridge | None = None,
         docs_source: DocumentationSource | None = None,
         research_source: ResearchSource | None = None,
+        connection_manager: ConnectionManager | None = None,
     ) -> None:
         super().__init__(address, DashboardRequestHandler)
 
@@ -148,6 +151,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.structural_bridge = structural_bridge
         self.docs_source = docs_source
         self.research_source = research_source
+        self.connection_manager = connection_manager or ConnectionManager()
 
 
 # ============================================================================
@@ -295,6 +299,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/embodiment/history":
                 limit = self._query_int(query, "limit", default=100, maximum=1000)
                 self._send_embodiment_history(limit)
+                return
+
+            if path == "/api/embodiment/connections":
+                self._send_embodiment_connections()
                 return
 
             # ----------------------------------------------------------------
@@ -896,6 +904,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "history": history,
             }
         )
+
+    def _send_embodiment_connections(self) -> None:
+        """Serve discovered and configured body connections without activating them."""
+        self._send_json(self.dashboard_server.connection_manager.to_json())
 
     def _serve_network_get(
         self,

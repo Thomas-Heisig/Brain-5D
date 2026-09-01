@@ -56,7 +56,9 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Read-only Embodiment state/metrics/history API and closed perception-action loop visualization
 - [x] Animated Brain-5D living-system map connecting all published system sources to one embodied creature
 - [x] Configurable local/intranet dashboard binding and authenticated TLS reverse-proxy template for internet operation
+- [x] Fail-closed Connection Manager with real local resource/device discovery and dynamic body graph
 - [ ] Compose the first permission-bounded deterministic EnvironmentAdapter and publish sensor/actuator details
+- [ ] Add audited permission grants, adapter-specific limits, emergency stop and human override before activating discovered devices
 - [x] Operator/Experiment/Debug mode selector verified end-to-end
 - [x] All 101 public runtime-config parameters exposed conservatively
 - [x] Launcher process tree and storage restart hardened

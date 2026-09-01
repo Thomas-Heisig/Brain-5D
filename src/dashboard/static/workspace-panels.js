@@ -33,6 +33,55 @@ function clamp(value, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, Number(value) || 0));
 }
 
+function renderConnections(payload) {
+  const graph = byId("connection-graph");
+  if (!graph) return;
+  const connections = Array.isArray(payload.connections) ? payload.connections : [];
+  setText("connection-available", payload.available || 0);
+  setText("connection-authorized", payload.authorized || 0);
+  setText("connection-active", payload.active || 0);
+  graph.replaceChildren();
+  if (!connections.length) {
+    const empty = document.createElement("p");
+    empty.className = "connection-empty";
+    empty.textContent = "Keine Verbindungsdeskriptoren publiziert.";
+    graph.append(empty);
+    return;
+  }
+  for (const connection of connections) {
+    const card = document.createElement("article");
+    card.className = "connection-node";
+    card.dataset.status = connection.status || "unavailable";
+    card.dataset.kind = connection.kind || "data";
+    card.setAttribute("role", "listitem");
+
+    const heading = document.createElement("div");
+    const indicator = document.createElement("i");
+    indicator.setAttribute("aria-hidden", "true");
+    const name = document.createElement("strong");
+    name.textContent = connection.name || connection.connection_id;
+    const kind = document.createElement("small");
+    kind.textContent = connection.kind || "unknown";
+    heading.append(indicator, name, kind);
+
+    const relation = document.createElement("p");
+    relation.textContent = `${connection.relationship || "perceivable"} · ${connection.status || "unavailable"}`;
+    const capabilities = document.createElement("p");
+    capabilities.className = "connection-capabilities";
+    capabilities.textContent = Array.isArray(connection.capabilities) && connection.capabilities.length
+      ? connection.capabilities.join(" · ")
+      : "keine Fähigkeiten publiziert";
+    const trust = document.createElement("span");
+    trust.className = "connection-trust";
+    trust.textContent = connection.authorized
+      ? `autorisiert${connection.active ? " · aktiv" : ""}`
+      : "nicht autorisiert";
+    trust.title = connection.message || "";
+    card.append(heading, relation, capabilities, trust);
+    graph.append(card);
+  }
+}
+
 export function renderWorkspaceSummaries(state) {
   const system = state.system || {};
   const network = state.network || {};
@@ -44,6 +93,7 @@ export function renderWorkspaceSummaries(state) {
   const embodiment = state.embodiment || {};
   const embodimentDetail = state.embodiment_detail || {};
   const embodimentHistory = state.embodiment_history || {};
+  const embodimentConnections = state.embodiment_connections || {};
   const learning = state.learning || {};
   const storage = state.storage || {};
   const homeostasis = state.homeostasis || {};
@@ -182,4 +232,5 @@ export function renderWorkspaceSummaries(state) {
     livingMap.style.setProperty("--energy", String(clamp(homeostasis.mean_energy ?? network.mean_energy ?? system.mean_energy)));
     livingMap.style.setProperty("--synchrony", String(clamp(spikes.synchrony ?? network.synchrony)));
   }
+  renderConnections(embodimentConnections);
 }

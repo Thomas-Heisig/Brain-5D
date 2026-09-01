@@ -44,8 +44,10 @@
 - [x] Embodiment Read API (`state`, `metrics`, `history`) und geschlossene Kausalschleife visualisieren
 - [x] Animiertes Brain-5D-Wesen als Living-System-Karte mit allen publizierten Quellen und Funktionen integrieren
 - [x] Dashboard fuer Localhost/Intranet konfigurierbar machen und sicheren Internetzugriff ueber TLS/Auth-Proxy vorbereiten
+- [x] Verbindungsmanager mit realer Compute-, Storage-, Netzwerk-, Internet-, Kamera-, Mikrofon-, Audio- und Drucker-Erkennung samt dynamischem Körpergraph integrieren
 - [x] Windows-Launcher gegen lokalisierte tasklist/taskkill-Codepages härten
 - [ ] Ersten deterministischen EnvironmentAdapter samt Sensor-/Aktor-Detailpublikation integrieren; erst danach manuelle Aktionen freigeben
+- [ ] Rechtevergabe, Audit, Grenzwerte, Not-Aus und Human Override pro realem Adapter implementieren
 - [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
 - [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
 - [x] GitHub/Docker actions migrated to Node 24-compatible majors

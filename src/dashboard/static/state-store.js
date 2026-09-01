@@ -52,6 +52,7 @@ export class DashboardStateStore {
       embodiment: {},
       embodiment_detail: {},
       embodiment_history: {},
+      embodiment_connections: {},
       components: {},
       parameters: {},
       pending_changes: {},
@@ -129,6 +130,7 @@ export class DashboardStateStore {
       embodiment: payload.embodiment || {},
       embodiment_detail: this.state.embodiment_detail || {},
       embodiment_history: this.state.embodiment_history || {},
+      embodiment_connections: this.state.embodiment_connections || {},
       components: payload.components || {},
       parameters: payload.parameters || {},
       pending_changes: payload.pending_changes || {},
@@ -185,12 +187,13 @@ export class DashboardStateStore {
       }
 
       if (Date.now() - this.lastSupplementalFetch >= 15000) {
-        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult] = await Promise.allSettled([
+        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult, connectionResult] = await Promise.allSettled([
           fetch("/api/gate/status", { cache: "no-store" }),
           fetch("/api/experiment/mode", { cache: "no-store" }),
           fetch("/api/research", { cache: "no-store" }),
           fetch("/api/embodiment/state", { cache: "no-store" }),
           fetch("/api/embodiment/history?limit=100", { cache: "no-store" }),
+          fetch("/api/embodiment/connections", { cache: "no-store" }),
         ]);
         if (gateResult.status === "fulfilled" && gateResult.value.ok) {
           this.state.gate = await gateResult.value.json();
@@ -210,6 +213,9 @@ export class DashboardStateStore {
         }
         if (embodimentHistoryResult.status === "fulfilled" && embodimentHistoryResult.value.ok) {
           this.state.embodiment_history = await embodimentHistoryResult.value.json();
+        }
+        if (connectionResult.status === "fulfilled" && connectionResult.value.ok) {
+          this.state.embodiment_connections = await connectionResult.value.json();
         }
         this.lastSupplementalFetch = Date.now();
       }
