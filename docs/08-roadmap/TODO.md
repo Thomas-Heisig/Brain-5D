@@ -1,22 +1,21 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-08-31 (Alpha.6 verified)
+> Last updated: 2026-08-31
 >
 > Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
 > .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   **Current baseline (2026-08-31): 483 passed / 5 skipped / 0 failed**
->   at commit `c11a820...` (Alpha.6 HEAD, CI Run #129 green).
->   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6. Gate: VERIFIED.
+>   **Current baseline (2026-08-31): 463 passed / 2 skipped / 0 failed**
+>   at commit `0503264...` (Alpha.5 freeze).
+>   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6. Gate: OPEN.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests are planned but **not yet implemented**; the Gate
 >   Builder still uses the global source-tree digest, so UI changes can still
 >   mark scientific evidence as `stale`.
 >   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
 >   delta-journal recovery in `src/main.py`.
->   **CI Run #129**: full matrix green (Security, Type-Check, Lint, Tests, Build, Docker).
 
 ## Priorität 1 — Alpha.5 Closure (teilweise offen)
 
@@ -83,9 +82,6 @@
   - Static asset regression tests: `tests/test_dashboard_experiment_mode_wiring.py`
 - [x] CI recovery: Black, Ruff, Pylint ≥9.0, mypy, pyright all green locally
 - [x] GitHub Actions SARIF permissions and HF sync explicit-failure wiring
-- [x] CI Run #129: full matrix green (Security, Type-Check, Lint, Tests, Build, Docker)
-- [x] Bandit SAST fix: gates on Medium/High only; pip-audit hard-blocking
-- [x] Alpha.6 Verification/Evidence-Lauf: baseline regenerated (483/5/0), all evidence artifacts current
 - [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
   - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
   - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
