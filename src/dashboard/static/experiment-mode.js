@@ -241,6 +241,14 @@ export class ExperimentMode {
     }
 
     const hasActive = this.activeSession !== null;
+    const footer = byId("footer-experiment");
+    if (footer) footer.dataset.active = String(hasActive);
+    if (byId("footer-experiment-state")) {
+      byId("footer-experiment-state").textContent = hasActive ? "running" : "inactive";
+    }
+    if (byId("footer-experiment-id")) {
+      byId("footer-experiment-id").textContent = this.activeSession?.session_id || "no session";
+    }
     if (this._elements.startBtn) {
       this._elements.startBtn.disabled = hasActive;
     }

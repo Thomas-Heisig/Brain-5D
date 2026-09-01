@@ -46,6 +46,9 @@ import { initHealthDrawer } from './health-drawer.js';
 import { consoleLog } from './console-log.js';
 import { ParameterInspector } from './parameter-inspector.js';
 import { ExperimentMode } from './experiment-mode.js';
+import { renderOverviewCommandCenter, setupOverviewActions } from './overview-panel.js';
+import { SettingsPanel } from './settings-panel.js';
+import { renderWorkspaceSummaries } from './workspace-panels.js';
 
 // ================================================================
 // DOM HELPERS
@@ -145,6 +148,8 @@ function setupTabs() {
     control: document.getElementById('tab-control'),
     research: document.getElementById('tab-research'),
     gate: document.getElementById('tab-gate'),
+    settings: document.getElementById('tab-settings'),
+    embodiment: document.getElementById('tab-embodiment'),
   };
 
   // Track initialization state
@@ -153,6 +158,7 @@ function setupTabs() {
     control: false,
     research: false,
     gate: false,
+    settings: false,
   };
 
   // Component instances
@@ -161,6 +167,7 @@ function setupTabs() {
     console: null,
     parameterInspector: null,
     experimentMode: null,
+    settings: null,
   };
 
   buttons.forEach(btn => {
@@ -169,6 +176,12 @@ function setupTabs() {
       btn.classList.add('active');
 
       const tabName = btn.dataset.tab;
+      const currentTab = document.body.dataset.currentTab;
+      if (currentTab && currentTab !== tabName) {
+        document.body.dataset.previousTab = currentTab;
+      }
+      document.body.dataset.currentTab = tabName;
+      setText('header-context', tabName === 'gate' ? 'Release' : `${tabName.charAt(0).toUpperCase()}${tabName.slice(1)}`);
 
       Object.keys(contents).forEach(key => {
         const el = contents[key];
@@ -186,7 +199,6 @@ function setupTabs() {
       if (tabName === 'control' && !initialized.control) {
         instances.control = initControlPanel();
         instances.console = initOperatorConsole();
-        instances.parameterInspector = initParameterInspector();
         instances.experimentMode = new ExperimentMode();
         instances.experimentMode.refresh();
         initialized.control = true;
@@ -200,6 +212,11 @@ function setupTabs() {
         initGateBoard();
         initialized.gate = true;
       }
+      if (tabName === 'settings' && !initialized.settings) {
+        instances.parameterInspector = initParameterInspector();
+        instances.settings = new SettingsPanel(instances.parameterInspector);
+        initialized.settings = true;
+      }
     });
   });
 
@@ -210,6 +227,49 @@ function setupTabs() {
   }
 
   return instances;
+}
+
+function setupWorkspaceViews() {
+  document.querySelectorAll('[data-workspace-views]').forEach((navigation) => {
+    const workspace = navigation.dataset.workspaceViews;
+    navigation.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-workspace-view]');
+      if (!button) return;
+      const view = button.dataset.workspaceView;
+      navigation.querySelectorAll('[data-workspace-view]').forEach((item) => {
+        item.classList.toggle('active', item === button);
+      });
+      document.querySelectorAll(`[data-${workspace}-view]`).forEach((panel) => {
+        panel.hidden = panel.dataset[`${workspace}View`] !== view;
+      });
+    });
+  });
+}
+
+function setupResearchLanes() {
+  const lanes = $('research-lanes');
+  lanes?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-research-source]');
+    if (!button) return;
+    lanes.querySelectorAll('[data-research-source]').forEach((item) => {
+      item.classList.toggle('active', item === button);
+    });
+    const source = button.dataset.researchSource;
+    const sourceButton = document.querySelector(`.fm-source-btn[data-source="${source}"]`);
+    const sourceChanged = sourceButton && !sourceButton.classList.contains('active');
+    if (sourceChanged) sourceButton.click();
+    const search = $('fm-search');
+    if (!search) return;
+    const runLane = () => {
+      search.value = button.dataset.researchQuery || '';
+      $('fm-search-btn')?.click();
+    };
+    if (sourceChanged) {
+      setTimeout(runLane, 150);
+    } else {
+      runLane();
+    }
+  });
 }
 
 // ================================================================
@@ -233,6 +293,9 @@ function renderStatus(state) {
   const learning = data.learning || {};
   const selfOrg = data.self_organization || {};
   const homeostasis = data.homeostasis || {};
+
+  renderOverviewCommandCenter(state);
+  renderWorkspaceSummaries(state);
 
   // System metrics (always measured, real values)
   setText('tick', formatNumber(system.tick));
@@ -646,7 +709,7 @@ async function refreshLiveProjection() {
 
   try {
     const response = await fetch(
-      `/api/live/projection?kind=${encodeURIComponent(heatmapKind)}&resolution=50`,
+      `/api/live/projection?kind=${encodeURIComponent(heatmapKind)}&resolution=${encodeURIComponent($('projection-resolution')?.value || '50')}`,
       { cache: 'no-store' }
     );
     if (!response.ok) {
@@ -1064,6 +1127,18 @@ function initDynamicsTab() {
   if (dimSelect) dimSelect.addEventListener('change', refreshLayerExplorer);
   if (kindSelect) kindSelect.addEventListener('change', refreshLayerExplorer);
 
+  const projectionResolution = $('projection-resolution');
+  const histogramBins = $('histogram-bins');
+  const projectionSamples = $('projection-samples');
+  const bindRange = (input, outputId, refresh) => {
+    if (!input) return;
+    input.addEventListener('input', () => setText(outputId, input.value));
+    input.addEventListener('change', refresh);
+  };
+  bindRange(projectionResolution, 'projection-resolution-value', refreshLiveProjection);
+  bindRange(histogramBins, 'histogram-bins-value', refreshRateHistogram);
+  bindRange(projectionSamples, 'projection-samples-value', loadProjection);
+
   console.log('✅ Dynamics tab ready');
 }
 
@@ -1167,7 +1242,8 @@ function drawSpikeRaster(data) {
 
 async function refreshRateHistogram() {
   try {
-    const r = await fetch('/api/live/histogram?bins=30', { cache: 'no-store' });
+    const bins = $('histogram-bins')?.value || '30';
+    const r = await fetch(`/api/live/histogram?bins=${encodeURIComponent(bins)}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     drawRateHistogram(data);
@@ -1460,8 +1536,9 @@ async function loadProjection() {
   const canvas = $('inspect-projection');
   if (!canvas) return;
   const mode = $('projection-mode')?.value || 'activity';
+  const limit = $('projection-samples')?.value || '2000';
   try {
-    const r = await fetch(`/api/network/projection?limit=2000&mode=${encodeURIComponent(mode)}`, { cache: 'no-store' });
+    const r = await fetch(`/api/network/projection?limit=${encodeURIComponent(limit)}&mode=${encodeURIComponent(mode)}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
     drawInspectProjection(canvas, d);
@@ -2063,6 +2140,7 @@ function setupQuickActions() {
 
 const THEME_KEY = 'b5d-theme';
 const ACCESSIBILITY_KEY = 'b5d-accessibility';
+const CONTRAST_KEY = 'b5d-contrast';
 
 function getSavedTheme() {
   try {
@@ -2116,6 +2194,41 @@ function setupAccessibilityToggle() {
   }
 }
 
+function setupGlobalChrome() {
+  const home = $('nav-home');
+  const back = $('nav-back');
+  const contrast = $('contrast-toggle');
+  const help = $('help-toggle');
+  const helpDialog = $('context-help');
+  const helpCopy = {
+    overview: ['System Overview', 'Verdichtet Runtime, Health, wissenschaftlichen Status und die wichtigsten Messwerte.'],
+    network: ['Network Workbench', 'Untersucht reale Live-Dynamik, Projektionen, Populationen, Neuronen und Synapsen. Auflösungsregler steuern die Backend-Aggregation.'],
+    control: ['Control Workbench', 'Steuert Ticks, Loop, Snapshot, Experiment-Sessions und freigabepflichtige Strukturänderungen.'],
+    research: ['Research Workspace', 'Durchsucht Registry, Experimente, Evidenz, Reports und Dokumentation aus dem Repository.'],
+    gate: ['Release Workspace', 'Trennt Scientific Gate, Source-CI und Release Readiness. Stale bedeutet: Source wurde seit der Evidenz verändert.'],
+    settings: ['Scientific Settings', 'Änderungen werden zunächst als Pending Change vorgemerkt. S markiert wissenschaftlich sensitive Werte, R einen notwendigen Neustart.'],
+    embodiment: ['Embodiment Workspace', 'Zeigt ausschließlich publizierte Sensor-, Aktuator-, Episoden- und Reward-Metriken. Unconfigured ist kein simulierter Zustand.'],
+  };
+
+  home?.addEventListener('click', () => document.querySelector('.tab-btn[data-tab="overview"]')?.click());
+  back?.addEventListener('click', () => {
+    const target = document.body.dataset.previousTab || 'overview';
+    document.querySelector(`.tab-btn[data-tab="${target}"]`)?.click();
+  });
+  contrast?.addEventListener('click', () => {
+    const enabled = document.body.classList.toggle('contrast-mode');
+    localStorage.setItem(CONTRAST_KEY, String(enabled));
+  });
+  if (localStorage.getItem(CONTRAST_KEY) === 'true') document.body.classList.add('contrast-mode');
+  help?.addEventListener('click', () => {
+    const [title, text] = helpCopy[document.body.dataset.currentTab || 'overview'];
+    setText('context-help-title', title);
+    setText('context-help-text', text);
+    helpDialog?.showModal();
+  });
+  $('context-help-close')?.addEventListener('click', () => helpDialog?.close());
+}
+
 // ================================================================
 // KEYBOARD SHORTCUTS (Global)
 // ================================================================
@@ -2137,8 +2250,8 @@ function setupGlobalShortcuts() {
       return;
     }
 
-    // Ctrl+1-6 = Tab switching
-    if (e.ctrlKey && e.key >= '1' && e.key <= '6') {
+    // Ctrl+1-8 = Tab switching
+    if (e.ctrlKey && e.key >= '1' && e.key <= '8') {
       e.preventDefault();
       const index = parseInt(e.key) - 1;
       const tabs = $$('.tab-btn');
@@ -2159,6 +2272,9 @@ function init() {
 
   // Setup tab navigation (also initializes components lazily)
   setupTabs();
+  setupOverviewActions();
+  setupWorkspaceViews();
+  setupResearchLanes();
 
   // Initialize dashboard (status & heatmap)
   initDashboard();
@@ -2175,6 +2291,7 @@ function init() {
   // Setup header controls
   setupThemeToggle();
   setupAccessibilityToggle();
+  setupGlobalChrome();
 
   console.log('✅ Dashboard ready');
 }

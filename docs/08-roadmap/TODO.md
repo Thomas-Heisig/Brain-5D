@@ -32,6 +32,20 @@
 - [x] Gate status regenerated: A 22/22, B 24/24, C 17/17; scientific gate PASSED
 - [x] Freeze reopened for dashboard/runtime fixes; release-readiness test now follows the actual scientific-gate result
 - [x] Dashboard browser acceptance: version alpha.6, real network values, Health ok, Problems empty, Storage healthy
+- [x] OVERVIEW als responsive Operator-Zentrale: Status-Rail, Live-Dynamik, Komponenten, Problems und Bereichsnavigation
+- [x] NETWORK, CONTROL, RESEARCH und RELEASE als konsistente Workbenches mit realen Bereichsstatus ausbauen
+- [x] CONTROL kausal ordnen: Experimentziel → Ursache → Ausführung → Wirkung → Nachweis; aktuelle RuntimeTelemetry anzeigen
+- [x] CONTROL auf 1080p verdichten: Console priorisieren, Structural Live Loop als Leiste, Footer mit aktivem Experiment
+- [x] Alle Tabs auf stabile Control-Größe bringen; Network/Release in Unteransichten und Research in logische Schnellzugriffe gliedern
+- [x] SCIENTIFIC SETTINGS als eigene Seite: Parameterdomänen, Sensitivität, Mutability, Restart/Pending und Experimentmodus
+- [x] Einheitliches 1080p-Design für alle Seiten mit Back/Home/Help, Dark/Light/Kontrast und kompaktem Footer
+- [x] Network-Projektionen mit echten Resolution-/Bins-/Sample-Reglern und kompakter Kachelansicht
+- [x] Embodiment-Tab auf realem Metrics-Vertrag vorbereiten; unconfigured statt Demo-Daten
+- [x] Embodiment Read API (`state`, `metrics`, `history`) und geschlossene Kausalschleife visualisieren
+- [x] Animiertes Brain-5D-Wesen als Living-System-Karte mit allen publizierten Quellen und Funktionen integrieren
+- [x] Dashboard fuer Localhost/Intranet konfigurierbar machen und sicheren Internetzugriff ueber TLS/Auth-Proxy vorbereiten
+- [x] Windows-Launcher gegen lokalisierte tasklist/taskkill-Codepages härten
+- [ ] Ersten deterministischen EnvironmentAdapter samt Sensor-/Aktor-Detailpublikation integrieren; erst danach manuelle Aktionen freigeben
 - [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
 - [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
 - [x] GitHub/Docker actions migrated to Node 24-compatible majors

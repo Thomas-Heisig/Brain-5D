@@ -13,6 +13,29 @@
 - The source freeze was explicitly reopened for dashboard/runtime hardening; the readiness test now asserts the real gate formula. New local suite: **489 passed, 5 skipped, 0 failed, no warnings**.
 
 ### Dashboard and Runtime Closure
+- Rebuilt OVERVIEW as a responsive operator command center with runtime/health/scientific/CI/release/mode status, live network dynamics, component matrix, current problems, and direct workspace navigation.
+- OVERVIEW remains store-driven: gate and experiment mode are loaded through the central state store with throttled supplemental refresh; no panel-specific polling loop was added.
+- Added consistent workbench headers and real status summaries to NETWORK, CONTROL, RESEARCH and RELEASE, plus in-page navigation for dense Network/Control workflows.
+- Added SCIENTIFIC SETTINGS as a dedicated sixth workspace. It owns the canonical 101-parameter inspector, domain filters, sensitivity/mutability/restart counts, pending-change safeguards, active-session context and synchronized Operator/Experiment/Debug selection.
+- CONTROL now focuses on runtime, console, experiment sessions and structural approvals; scientific parameter configuration is no longer mixed into the runtime control flow.
+- Reorganized CONTROL around an explicit causal chain: experiment goal → bounded cause → RuntimeController execution → measured effect → log/snapshot/structural evidence. Step, batch and timing inputs now explain their scientific effect directly.
+- Corrected Control frontend telemetry mapping to the current `state.runtime` DTO (`controller_state`, `tick`, `queue_depth`, `completed_ticks`, `batch_duration_ms`), so command effects update coherently instead of showing legacy zeros.
+- Compacted CONTROL to 1029px at 1920×1080: Runtime and the enlarged Operator Console share the primary row, while the console keeps a 295px evidence log.
+- Reduced Structural Live Loop to a quiet 38px disclosure strip; all 10 proof steps remain available on demand.
+- Rebuilt the footer as an operational status grid for product/version, runtime, experiment activity/session ID, execution mode and Health. Active experiments are globally visible with a live indicator.
+- Standardized every desktop tab to the same viewport-bounded workspace canvas (720–1029px), eliminating layout jumps, page scrolling and fixed-footer overlap between Overview, Network, Control, Research, Release, Settings and Embodiment.
+- Split Network into Visual, Dynamics, Inspect and Data subviews and Release into Summary/Gate A/B/C views, keeping every tool reachable without a multi-thousand-pixel page.
+- Upgraded Research with reliable quick lanes for all research, evidence, experiments, matrices and documentation; long trees/viewers scroll only inside the fixed workspace.
+- All seven workspaces were verified at desktop and 390px mobile widths; wide projection and release criteria remain inspectable without page-level horizontal overflow.
+- Unified all dashboard pages on the Overview visual language: full-width 1080p layout, compact workbench headers, flatter tiles, consistent status strips, sticky section jumps and denser Control/Network composition.
+- Header now provides Back, Overview, context Help, Dark/Light, explicit Contrast and accessibility controls; the compact footer keeps version, execution mode, runtime and Health visible.
+- Network now uses a two-column compact tile layout and real backend controls for live projection resolution, histogram bins and 5D inspector sample count.
+- Parameter Inspector exposes a focusable Help marker for every parameter using its real schema description.
+- Added an Embodiment workspace backed by the existing `EmbodimentMetrics` dashboard contract. It reports environment, sensors, actuators, episode and rewards, and honestly stays `unconfigured` until an adapter publishes metrics.
+- Added read-only `/api/embodiment/state`, `/metrics` and `/history` endpoints plus a six-stage Environment→Sensor→Encoder→SNN→Decoder→Actuator visualization. Missing adapter details remain null/not-reported; no demo state or manual action path is introduced.
+- Rebuilt Embodiment as an animated Brain-5D living-system map with a dedicated creature asset. Network, spikes, homeostasis, learning, signal bridge, language organ, knowledge intake, structural growth, storage and embodiment I/O are displayed as body systems from the central state store; activity, energy and synchrony drive only visual intensity, and reduced-motion disables animation.
+- Added configurable integrated-dashboard host/port forwarding through `src.main`, the Python launcher and `start.ps1`. Loopback remains the default, trusted-LAN binding is explicit, and the supplied Caddy template provides TLS plus authentication for internet access without exposing operator APIs directly.
+- Hardened Windows launcher process detection/termination against localized `tasklist`/`taskkill` output by decoding subprocess bytes with replacement instead of the active console code page.
 - Removed orphaned multi-process runtime state and hardened the launcher against duplicate PIDs and occupied dashboard ports; Windows stop now terminates the complete managed process tree.
 - Fixed `start.ps1` / `stop.ps1` repository-root resolution.
 - Runtime storage archives a valid journal whose last tick is ahead of a new Tick-0 runtime; restart verification keeps `worker_failed=false`, Health `ok`, and Problems empty.

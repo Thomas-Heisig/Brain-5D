@@ -23,7 +23,7 @@ PID_FILE = ROOT / "artifacts" / "brain5d.pid"
 # ============================================================================
 
 
-def test_launcher_keeps_dashboard_arguments_out_of_simulation_command() -> None:
+def test_launcher_forwards_integrated_dashboard_bind_arguments() -> None:
     args = Namespace(
         config=Path("configs/poc_config.yaml"),
         observe=True,
@@ -40,11 +40,15 @@ def test_launcher_keeps_dashboard_arguments_out_of_simulation_command() -> None:
     simulation_command = build_command(args)
 
     assert simulation_command[1:4] == ["-m", "src.main", "--config"]
-    assert simulation_command[-1] == "--observe"
+    assert simulation_command[-5:] == [
+        "--observe",
+        "--dashboard-host",
+        "0.0.0.0",
+        "--dashboard-port",
+        "9000",
+    ]
     assert "--dashboard" not in simulation_command
     assert "--open-browser" not in simulation_command
-    assert "--host" not in simulation_command
-    assert "--port" not in simulation_command
 
 
 def test_launcher_detects_live_pid_and_occupied_port() -> None:

@@ -76,14 +76,14 @@ def pid_is_running(pid: int) -> bool:
         result = subprocess.run(
             ["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"],
             capture_output=True,
-            text=True,
             timeout=10,
         )
         if result.returncode != 0:
             return False
+        output = result.stdout.decode(errors="replace")
         return any(
             len(row) > 1 and row[1].strip() == str(pid)
-            for row in csv.reader(result.stdout.splitlines())
+            for row in csv.reader(output.splitlines())
         )
     try:
         os.kill(pid, 0)
@@ -165,6 +165,9 @@ def build_command(args: argparse.Namespace) -> list[str]:
     # Only explicitly disable it when --dashboard was not requested.
     if not args.dashboard:
         command.append("--no-dashboard")
+    else:
+        command.extend(["--dashboard-host", str(args.host)])
+        command.extend(["--dashboard-port", str(args.port)])
 
     return command
 
@@ -201,7 +204,7 @@ def add_start_parser(subparsers: Any) -> None:
     parser.add_argument(
         "--host",
         default=DEFAULT_HOST,
-        help=f"Dashboard host for browser URL (default: {DEFAULT_HOST}).",
+        help=f"Dashboard bind host (default: {DEFAULT_HOST}; use 0.0.0.0 for LAN).",
     )
     parser.add_argument(
         "--port",
@@ -259,17 +262,8 @@ def _cmd_start(args: argparse.Namespace) -> int:
         return 1
 
     if args.dashboard:
-        if args.host != DEFAULT_HOST:
-            print(
-                f"Error: Integrated dashboard currently requires --host {DEFAULT_HOST}",
-                file=sys.stderr,
-            )
-            return 1
-        if args.port != DEFAULT_PORT:
-            print(
-                f"Error: Integrated dashboard currently requires --port {DEFAULT_PORT}",
-                file=sys.stderr,
-            )
+        if not args.host.strip():
+            print("Error: --host must not be empty", file=sys.stderr)
             return 1
 
     # Check if already running
@@ -307,10 +301,16 @@ def _cmd_start(args: argparse.Namespace) -> int:
 
     if args.dashboard:
         url = dashboard_url(args)
-        print(f"  Dashboard: {url}")
+        print(f"  Dashboard bind: {url}")
+        browser_url = (
+            f"http://{DEFAULT_HOST}:{args.port}"
+            if args.host in {"0.0.0.0", "::"}
+            else url
+        )
+        print(f"  Dashboard local: {browser_url}")
         if args.open_browser:
             try:
-                webbrowser.open(url)
+                webbrowser.open(browser_url)
             except webbrowser.Error as exc:
                 print(
                     f"  Warning: could not open browser: {exc}",
@@ -351,12 +351,13 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
         if os.name == "nt":
             result = subprocess.run(
                 ["taskkill", "/PID", str(pid), "/T", "/F"],
-                capture_output=True,
-                text=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
                 timeout=15,
             )
             if result.returncode != 0:
-                raise OSError(result.stderr.strip() or result.stdout.strip())
+                message = result.stderr.decode(errors="replace").strip()
+                raise OSError(message or f"taskkill exited with {result.returncode}")
         else:
             os.kill(pid, signal.SIGTERM)
 

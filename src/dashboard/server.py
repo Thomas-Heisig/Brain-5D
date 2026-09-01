@@ -284,6 +284,19 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._send_experiment_sessions()
                 return
 
+            if path == "/api/embodiment/state":
+                self._send_embodiment_state()
+                return
+
+            if path == "/api/embodiment/metrics":
+                self._send_embodiment_metrics()
+                return
+
+            if path == "/api/embodiment/history":
+                limit = self._query_int(query, "limit", default=100, maximum=1000)
+                self._send_embodiment_history(limit)
+                return
+
             # ----------------------------------------------------------------
             # Heatmaps / snapshots
             # ----------------------------------------------------------------
@@ -790,6 +803,99 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     # ========================================================================
     # Network Inspector (real 5D coordinates, Phase 8/9)
     # ========================================================================
+
+    def _embodiment_payload(self) -> dict[str, JSONValue]:
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        embodiment = snapshot.embodiment
+        metrics = embodiment.to_json()
+        environment_kind = embodiment.environment_kind
+        configured = environment_kind != "unconfigured"
+        return {
+            "available": configured,
+            "configured": configured,
+            "tick": snapshot.system.tick,
+            "loop_status": "active" if configured else "unconfigured",
+            "loop": [
+                {
+                    "id": "environment",
+                    "label": "Environment",
+                    "status": environment_kind,
+                },
+                {
+                    "id": "sensor",
+                    "label": "Sensor",
+                    "status": (
+                        "active" if embodiment.active_sensors > 0 else "unavailable"
+                    ),
+                },
+                {"id": "encoder", "label": "Encoder", "status": "not_reported"},
+                {"id": "snn", "label": "SNN", "status": snapshot.status},
+                {"id": "decoder", "label": "Decoder", "status": "not_reported"},
+                {
+                    "id": "actuator",
+                    "label": "Actuator",
+                    "status": (
+                        "active" if embodiment.active_actuators > 0 else "unavailable"
+                    ),
+                },
+            ],
+            "metrics": metrics,
+            "details": {
+                "sensor_values": None,
+                "actuator_values": None,
+                "environment_state": None,
+                "message": "Adapter detail values are not published by the current embodiment contract.",
+            },
+        }
+
+    def _send_embodiment_state(self) -> None:
+        """Serve the current closed-loop embodiment contract."""
+        self._send_json(self._embodiment_payload())
+
+    def _send_embodiment_metrics(self) -> None:
+        """Serve only measured embodiment metrics from the latest snapshot."""
+        payload = self._embodiment_payload()
+        self._send_json(
+            {
+                "available": payload["available"],
+                "tick": payload["tick"],
+                "metrics": payload["metrics"],
+            }
+        )
+
+    def _send_embodiment_history(self, limit: int) -> None:
+        """Serve measured embodiment history without synthesizing samples."""
+        history: list[JSONValue] = []
+        seen: set[tuple[int, str, int, float, str]] = set()
+        for snapshot in self.dashboard_server.dashboard_state.get_history(limit):
+            metrics = snapshot.embodiment
+            key = (
+                snapshot.system.tick,
+                metrics.environment_kind,
+                metrics.episode,
+                metrics.episode_reward,
+                metrics.last_action,
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            history.append(
+                {
+                    "tick": snapshot.system.tick,
+                    "metrics": metrics.to_json(),
+                }
+            )
+        configured = any(
+            snapshot.embodiment.environment_kind != "unconfigured"
+            for snapshot in self.dashboard_server.dashboard_state.get_history(limit)
+        )
+        self._send_json(
+            {
+                "available": configured and bool(history),
+                "count": len(history),
+                "history": history,
+            }
+        )
 
     def _serve_network_get(
         self,

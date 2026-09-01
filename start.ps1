@@ -21,6 +21,10 @@
     Homeostasis-Engine deaktivieren.
 .PARAMETER Ticks
     Simulations-Ticks ueberschreiben.
+.PARAMETER DashboardHost
+    Dashboard-Bind-Adresse (default: 127.0.0.1; 0.0.0.0 fuer Intranet).
+.PARAMETER DashboardPort
+    Dashboard-Port (default: 8765).
 .PARAMETER PassThru
     Nur die Launcher-Argumente ausgeben, nicht ausfuehren.
 .PARAMETER Help
@@ -34,6 +38,9 @@
 .EXAMPLE
     .\start.ps1 -Config configs\stdp_on.yaml -Observe
     Startet mit STDP-Konfiguration und Observatory.
+.EXAMPLE
+    .\start.ps1 -DashboardHost 0.0.0.0
+    Startet fuer Zugriffe aus einem vertrauenswuerdigen Intranet.
 #>
 
 param(
@@ -45,6 +52,8 @@ param(
     [switch]$NoLearning,
     [switch]$NoHomeostasis,
     [int]$Ticks = 0,
+    [string]$DashboardHost = "127.0.0.1",
+    [int]$DashboardPort = 8765,
 
     [switch]$PassThru,
     [switch]$Help
@@ -79,6 +88,10 @@ $arguments = @(
 if (-not $NoDashboard) {
     $arguments += "--dashboard"
     $arguments += "--open-browser"
+    $arguments += "--host"
+    $arguments += $DashboardHost
+    $arguments += "--port"
+    $arguments += "$DashboardPort"
 }
 
 # Optionale Flags

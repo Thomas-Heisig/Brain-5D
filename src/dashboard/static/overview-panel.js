@@ -316,3 +316,106 @@ export function renderOverview(state) {
   renderIntegrationStatus(state);
   renderLiveLoopStatus(state);
 }
+
+const PROBLEM_STATES = new Set(['error', 'degraded', 'stale', 'unavailable']);
+
+function setOverviewStatus(id, value, status) {
+  const element = $(id);
+  if (!element) return;
+  element.textContent = value;
+  element.dataset.status = status;
+}
+
+function renderComponentGrid(components) {
+  const container = $('overview-component-grid');
+  if (!container) return;
+  const entries = Object.entries(components || {}).sort(([left], [right]) => left.localeCompare(right));
+  const healthy = entries.filter(([, component]) => !PROBLEM_STATES.has(component.status)).length;
+  setText('overview-component-count', `${healthy} / ${entries.length}`);
+  container.replaceChildren();
+  if (!entries.length) {
+    const empty = document.createElement('span');
+    empty.className = 'overview-empty';
+    empty.textContent = 'Waiting for component state';
+    container.appendChild(empty);
+    return;
+  }
+  for (const [name, component] of entries) {
+    const item = document.createElement('div');
+    item.className = 'overview-component';
+    item.dataset.status = component.status || 'unknown';
+    const label = document.createElement('span');
+    label.textContent = name;
+    const status = document.createElement('strong');
+    status.textContent = component.status || 'unknown';
+    item.append(label, status);
+    container.appendChild(item);
+  }
+}
+
+function renderProblems(health) {
+  const container = $('overview-problem-list');
+  if (!container) return;
+  const problems = Array.isArray(health?.problems) ? health.problems : [];
+  setText('overview-problem-count', problems.length);
+  container.replaceChildren();
+  if (!problems.length) {
+    const empty = document.createElement('span');
+    empty.className = 'overview-empty overview-clear';
+    empty.textContent = 'No problems detected';
+    container.appendChild(empty);
+    return;
+  }
+  for (const problem of problems.slice(0, 4)) {
+    const item = document.createElement('div');
+    item.className = 'overview-problem';
+    item.dataset.status = problem.status || 'error';
+    const name = document.createElement('strong');
+    name.textContent = problem.component || 'system';
+    const reason = document.createElement('span');
+    reason.textContent = problem.reason || problem.last_error || problem.status || 'Attention required';
+    item.append(name, reason);
+    container.appendChild(item);
+  }
+}
+
+export function renderOverviewCommandCenter(state) {
+  const system = state.system || {};
+  const network = state.network || {};
+  const health = state.health || {};
+  const gate = state.gate || {};
+  const scientific = gate.scientific_gate?.overall || gate.overall || 'unknown';
+  const ci = gate.ci_status?.status || 'unknown';
+  const release = gate.release_readiness?.overall || 'not_ready';
+  const runtimeStatus = state.status || 'unknown';
+  const healthStatus = health.overall || 'unknown';
+  const mode = state.experiment_state?.current_mode || state.experiment_state?.mode || 'operator';
+
+  setOverviewStatus('overview-runtime-status', runtimeStatus, runtimeStatus);
+  setOverviewStatus('overview-health-status', healthStatus, healthStatus === 'ok' ? 'passed' : healthStatus);
+  setOverviewStatus('overview-scientific-status', scientific, scientific);
+  setOverviewStatus('overview-ci-status', ci, ci);
+  setOverviewStatus('overview-release-status', release, release === 'ready' ? 'passed' : 'pending');
+  setOverviewStatus('overview-mode-status', mode, mode);
+  setText('overview-context', `Tick ${formatNumber(system.tick)} · ${state.version || 'unknown'} · ${network.source || 'live runtime'}`);
+
+  setText('overview-network-source', String(network.source || 'live').replaceAll('_', ' ').toUpperCase());
+  setText('overview-active-neurons', formatNumber(network.active_neurons));
+  setText('overview-silent-neurons', formatNumber(network.silent_neurons));
+  setText('overview-mean-rate', formatMetricUnit(network.mean_firing_rate_hz, 'Hz', 3));
+  setText('overview-burst-index', formatFloat(network.burst_index, 3));
+  setText('overview-synchrony', formatFloat(network.synchrony, 3));
+  setText('overview-ei-ratio', formatFloat(network.e_i_ratio, 3));
+
+  renderComponentGrid(state.components);
+  renderProblems(health);
+}
+
+export function setupOverviewActions() {
+  document.querySelectorAll('[data-overview-tab]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.overviewTab;
+      document.querySelector(`.tab-btn[data-tab="${target}"]`)?.click();
+    });
+  });
+}

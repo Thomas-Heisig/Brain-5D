@@ -46,8 +46,16 @@ export class DashboardStateStore {
       telemetry: {},
       health: {},
       verification: {},
+      gate: {},
+      research: {},
+      experiment_state: {},
+      embodiment: {},
+      embodiment_detail: {},
+      embodiment_history: {},
       components: {},
       parameters: {},
+      pending_changes: {},
+      change_history: [],
       system: {},
       structural_errors: { errors: [] },
       status: "idle",
@@ -57,6 +65,7 @@ export class DashboardStateStore {
     this.pollTimer = null;
     this.lastError = null;
     this.fetching = false;
+    this.lastSupplementalFetch = 0;
   }
 
   /**
@@ -114,8 +123,16 @@ export class DashboardStateStore {
       },
       health: payload.health || {},
       verification: payload.verification || {},
+      gate: this.state.gate || {},
+      research: this.state.research || {},
+      experiment_state: payload.experiment_state || this.state.experiment_state || {},
+      embodiment: payload.embodiment || {},
+      embodiment_detail: this.state.embodiment_detail || {},
+      embodiment_history: this.state.embodiment_history || {},
       components: payload.components || {},
       parameters: payload.parameters || {},
+      pending_changes: payload.pending_changes || {},
+      change_history: payload.change_history || [],
     };
     this.state = next;
   }
@@ -165,6 +182,36 @@ export class DashboardStateStore {
         } catch (e) {
           // ignore
         }
+      }
+
+      if (Date.now() - this.lastSupplementalFetch >= 15000) {
+        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult] = await Promise.allSettled([
+          fetch("/api/gate/status", { cache: "no-store" }),
+          fetch("/api/experiment/mode", { cache: "no-store" }),
+          fetch("/api/research", { cache: "no-store" }),
+          fetch("/api/embodiment/state", { cache: "no-store" }),
+          fetch("/api/embodiment/history?limit=100", { cache: "no-store" }),
+        ]);
+        if (gateResult.status === "fulfilled" && gateResult.value.ok) {
+          this.state.gate = await gateResult.value.json();
+        }
+        if (modeResult.status === "fulfilled" && modeResult.value.ok) {
+          const modeData = await modeResult.value.json();
+          this.state.experiment_state = {
+            ...this.state.experiment_state,
+            ...modeData,
+          };
+        }
+        if (researchResult.status === "fulfilled" && researchResult.value.ok) {
+          this.state.research = await researchResult.value.json();
+        }
+        if (embodimentResult.status === "fulfilled" && embodimentResult.value.ok) {
+          this.state.embodiment_detail = await embodimentResult.value.json();
+        }
+        if (embodimentHistoryResult.status === "fulfilled" && embodimentHistoryResult.value.ok) {
+          this.state.embodiment_history = await embodimentHistoryResult.value.json();
+        }
+        this.lastSupplementalFetch = Date.now();
       }
 
       // Fetch runtime structural errors for health drawer visibility

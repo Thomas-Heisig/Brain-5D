@@ -44,6 +44,19 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Gate A 22/22, Gate B 24/24, Gate C 17/17
 - [x] Resolve frozen release-readiness test expectation before evidence-only commit
 - [x] Dashboard version, Health/Storage, real Network values and all major tabs verified
+- [x] Store-driven responsive Overview command center with readiness, dynamics, components, problems and workspace actions
+- [x] Network, Control, Research and Release workbench headers with live summaries and section navigation
+- [x] Control cause→execution→effect→evidence workflow with current RuntimeTelemetry mapping
+- [x] Single-screen 1080p Control composition, prioritized console, compact Structural proof strip and experiment-aware footer
+- [x] Stable viewport-bounded canvas for every desktop tab; Network/Release subviews and Research quick lanes remove page-length layout jumps and footer overlap
+- [x] Dedicated Scientific Settings workspace with 101 parameters, domain filters, guardrails and synchronized execution mode
+- [x] Unified full-width 1080p design, global Back/Home/Help, Dark/Light/Contrast and compact footer
+- [x] Network resolution/bin/sample controls wired to real APIs and compact two-column visualization tiles
+- [x] Embodiment workspace prepared against real dashboard metrics without synthetic fallback
+- [x] Read-only Embodiment state/metrics/history API and closed perception-action loop visualization
+- [x] Animated Brain-5D living-system map connecting all published system sources to one embodied creature
+- [x] Configurable local/intranet dashboard binding and authenticated TLS reverse-proxy template for internet operation
+- [ ] Compose the first permission-bounded deterministic EnvironmentAdapter and publish sensor/actuator details
 - [x] Operator/Experiment/Debug mode selector verified end-to-end
 - [x] All 101 public runtime-config parameters exposed conservatively
 - [x] Launcher process tree and storage restart hardened

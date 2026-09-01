@@ -255,6 +255,11 @@ def main() -> int:
     parser.add_argument("--no-learning", action="store_true")
     parser.add_argument("--no-homeostasis", action="store_true")
     parser.add_argument(
+        "--dashboard-host",
+        default="127.0.0.1",
+        help="Dashboard bind host (default: 127.0.0.1; use 0.0.0.0 for LAN)",
+    )
+    parser.add_argument(
         "--dashboard-port",
         type=int,
         default=8765,
@@ -1084,13 +1089,14 @@ def main() -> int:
             docs_root = Path("docs") if Path("docs").exists() else None
             research_root = Path("research") if Path("research").exists() else None
 
+            _dashboard_host = args.dashboard_host
             _dashboard_port = args.dashboard_port
             print(
-                f"🧠 Starting Brain-5D dashboard on http://127.0.0.1:{_dashboard_port}"
+                f"🧠 Starting Brain-5D dashboard on http://{_dashboard_host}:{_dashboard_port}"
             )
             print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
             if _serve_dashboard is not None:
-                _serve_dashboard(host="127.0.0.1", port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
+                _serve_dashboard(host=_dashboard_host, port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
 
         except KeyboardInterrupt:
             print("\n⏹️ Dashboard interrupted, stopping simulation...")

@@ -103,6 +103,14 @@ python -m src.main --config configs/poc_structural_live.yaml --no-dashboard --ti
 
 Navigate to [http://127.0.0.1:8765](http://127.0.0.1:8765)
 
+### Intranet and Internet Access
+
+Trusted LAN access is available with
+`.\start.ps1 -DashboardHost 0.0.0.0`. Internet access must keep Brain-5D on
+loopback and use the supplied Caddy TLS/authentication proxy; never forward
+port `8765` directly. See
+[Dashboard network access](docs/03-dashboard/DASHBOARD.md#netzwerkzugriff).
+
 ---
 
 ## 📦 Repository Structure

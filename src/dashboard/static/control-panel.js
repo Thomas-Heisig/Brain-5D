@@ -278,8 +278,9 @@ export class ControlState {
    * @param {Object} payload - State payload
    */
   update(payload) {
-    this.runtime = payload.runtime || payload;
-    this.selfOrganization = payload.self_organization || null;
+    const state = payload.state || payload;
+    this.runtime = state.runtime || state;
+    this.selfOrganization = state.self_organization || payload.self_organization || null;
     this.lastUpdate = Date.now();
     this.lastError = null;
     this.notify();
@@ -299,7 +300,7 @@ export class ControlState {
    * @returns {string} Runtime mode
    */
   getMode() {
-    return this.runtime?.mode || 'unknown';
+    return this.runtime?.controller_state || this.runtime?.mode || 'unknown';
   }
 
   /**
@@ -307,7 +308,7 @@ export class ControlState {
    * @returns {number} Ticks executed
    */
   getTicks() {
-    return this.runtime?.ticks_executed || 0;
+    return this.runtime?.tick ?? this.runtime?.completed_ticks ?? this.runtime?.ticks_executed ?? 0;
   }
 
   /**
@@ -315,7 +316,7 @@ export class ControlState {
    * @returns {number} Queued ticks
    */
   getQueuedTicks() {
-    return this.runtime?.queued_ticks || 0;
+    return this.runtime?.queue_depth ?? this.runtime?.queued_ticks ?? 0;
   }
 
   /**
@@ -323,7 +324,7 @@ export class ControlState {
    * @returns {number} Last batch ticks
    */
   getLastBatchTicks() {
-    return this.runtime?.last_batch_ticks || 0;
+    return this.runtime?.completed_ticks ?? this.runtime?.last_batch_ticks ?? 0;
   }
 
   /**
@@ -331,7 +332,7 @@ export class ControlState {
    * @returns {number} Last batch time in ms
    */
   getLastBatchMs() {
-    return this.runtime?.last_batch_ms || 0;
+    return this.runtime?.batch_duration_ms ?? this.runtime?.last_batch_ms ?? 0;
   }
 
   /**

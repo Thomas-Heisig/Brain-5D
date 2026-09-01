@@ -9,6 +9,7 @@
 ::   start.cmd                          (Start mit Dashboard + Browser, Alpha.5 Live Config)
 ::   start.cmd --no-dashboard           (Start ohne Dashboard)
 ::   start.cmd --config configs\...     (Eigene Config)
+::   start.cmd --host 0.0.0.0            (Dashboard im vertrauenswuerdigen LAN)
 ::   start.cmd --help                   (Hilfe anzeigen)
 ::
 :: Parameter werden 1:1 an brain5d_launcher.py start weitergegeben.

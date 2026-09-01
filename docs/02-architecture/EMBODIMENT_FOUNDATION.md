@@ -31,6 +31,45 @@ unbounded browser, operating-system, network, or physical-device control.
    physical or digital environments.
 5. Dashboard embodiment metrics are read-only in alpha.7.
 
+## Dashboard contract
+
+The dashboard exposes the published state without creating an environment or
+inventing sensor, actuator, latency, gain, or history values:
+
+- `GET /api/embodiment/state`: current metrics, configuration status and the
+   six closed-loop phases Environment → Sensor → Encoder → SNN → Decoder →
+   Actuator;
+- `GET /api/embodiment/metrics`: the latest measured `EmbodimentMetrics`;
+- `GET /api/embodiment/history?limit=N`: snapshots already retained by the
+   thread-safe `DashboardStateStore`.
+
+When no adapter is configured, `available` is false, the loop reports
+`unconfigured` / `unavailable` / `not_reported`, history is empty, and detail
+payloads are null. This is a scientific boundary, not a visual fallback.
+
+The Embodiment workspace visualizes the causal loop and current episode,
+reward, action, text-input and history state. Its central living-system map
+uses the Brain-5D creature asset to place every currently published dashboard
+source into one body:
+
+- neural body: `system`, `network`, `spikes`;
+- regulation and metabolism: `homeostasis`;
+- plasticity and reward processing: `learning` and `embodiment`;
+- perception and action boundaries: `embodiment` state/details/history;
+- signal transformation, language and intake: `signal_metrics`,
+  `language_organ`, `knowledge_intake`;
+- growth and persistence: `structural`, `storage`;
+- vital state: runtime status and component integration state.
+
+Breathing, signal particles, synchrony rings and glow intensity are visual
+encodings driven by published activity, energy and synchrony values. They are
+not additional measurements. Missing values remain `unavailable`,
+`not published`, or `—`; the image never supplies telemetry. Animation stops
+under `prefers-reduced-motion`.
+
+Manual actions remain disabled until a concrete, permission-bounded
+`EnvironmentAdapter` is composed into the runtime.
+
 ## Roadmap role
 
 The interfaces are introduced in v0.4.0-alpha.7 so v0.5-v0.7 can design

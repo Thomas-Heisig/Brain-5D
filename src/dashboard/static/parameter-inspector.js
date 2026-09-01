@@ -329,6 +329,7 @@ export class ParameterInspector {
           <td class="param-name" title="${escapeHtml(param.description || "")}">
             ${escapeHtml(name)}
             ${sensitiveBadge}
+            <span class="parameter-help" tabindex="0" title="${escapeHtml(param.description || `Configuration value ${name}`)}">?</span>
           </td>
           <td class="param-current">${escapeHtml(currentValue)}</td>
           <td class="param-pending">${pendingValue ? escapeHtml(pendingValue) : "—"}</td>

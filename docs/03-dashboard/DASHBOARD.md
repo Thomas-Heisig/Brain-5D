@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Das Dashboard ist eine lokale, read-only Operator-Konsole fuer Brain-5D. Es soll
+Das Dashboard ist eine Operator-Konsole fuer Brain-5D. Es soll
 nicht die Simulationslogik ersetzen, sondern deren Zustand nachvollziehbar machen.
 Die erste Version ist absichtlich ohne zusaetzliche Web-Framework-Abhaengigkeit
 implementiert und verwendet nur die Python-Standardbibliothek plus die bereits
@@ -28,6 +28,67 @@ Danach:
 ```text
 http://127.0.0.1:8765
 ```
+
+## Netzwerkzugriff
+
+### Lokal (Standard)
+
+`127.0.0.1` bleibt der sichere Standard. Nur Prozesse auf demselben Rechner
+koennen das Dashboard erreichen:
+
+```powershell
+.\start.ps1
+```
+
+### Intranet / LAN
+
+Fuer ein vertrauenswuerdiges privates Netzwerk bindet Brain-5D explizit an
+alle Interfaces:
+
+```powershell
+.\start.ps1 -DashboardHost 0.0.0.0 -DashboardPort 8765
+# alternativ:
+.\start.cmd --host 0.0.0.0 --port 8765
+```
+
+Andere Rechner verwenden die private IPv4-Adresse des Brain-5D-Rechners,
+beispielsweise `http://192.168.1.20:8765`. Die Adresse kann unter Windows mit
+`Get-NetIPAddress -AddressFamily IPv4` ermittelt werden.
+
+Eine eingehende Windows-Firewall-Regel muss auf das private Profil und das
+lokale Subnetz beschraenkt werden. Dieser Befehl ist einmalig in einer
+administrativen PowerShell auszufuehren:
+
+```powershell
+New-NetFirewallRule -DisplayName "Brain-5D Intranet" `
+  -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8765 `
+  -RemoteAddress LocalSubnet -Profile Private
+```
+
+### Internet (HTTPS + Authentifizierung)
+
+Port `8765` darf **nicht** direkt ins Internet weitergeleitet werden. Das
+Dashboard besitzt schreibende Runtime-, Datei- und Struktur-APIs. Fuer einen
+oeffentlichen Zugriff bleibt Brain-5D deshalb auf `127.0.0.1:8765`; Caddy
+terminiert TLS und schuetzt den gesamten Dienst mit Basic Auth.
+
+Voraussetzungen: eigene Domain, DNS-Eintrag auf den Server, freigegebene Ports
+80/443 und installiertes Caddy. Das Passwort-Hash wird interaktiv erzeugt, damit
+das Klartextpasswort nicht in der Shell-History landet:
+
+```powershell
+caddy hash-password
+$env:BRAIN5D_DOMAIN = "brain5d.example.org"
+$env:BRAIN5D_TLS_EMAIL = "admin@example.org"
+$env:BRAIN5D_AUTH_USER = "operator"
+$env:BRAIN5D_AUTH_PASSWORD_HASH = '<aus caddy hash-password>'
+.\start.ps1 -DashboardHost 127.0.0.1 -DashboardPort 8765
+caddy run --config deploy/Caddyfile.internet.example
+```
+
+Danach ist der Dienst unter `https://brain5d.example.org` erreichbar. Fuer
+produktiven Mehrbenutzerbetrieb soll Basic Auth spaeter durch einen
+Identity-Aware Proxy mit MFA und getrennten Rollen ersetzt werden.
 
 Ohne `--snapshot` funktioniert die Operator-Oberflaeche weiterhin; lediglich die
 Lazy-Heatmap ist dann nicht verfuegbar.
@@ -173,8 +234,9 @@ Zeitstempel übersichtlich an.
 
 ## Sicherheit
 
-Alpha.5 ist standardmaessig nur auf `127.0.0.1` gedacht. Es gibt noch keine
-Authentifizierung. Der Server ist read-only und darf deshalb in dieser Phase
-keine Manipulator-, Reward- oder Self-Organization-Schreiboperationen anbieten.
-Vor einer extern erreichbaren API muessen Authentifizierung, Rechte und Audit-Log
-implementiert werden.
+Brain-5D bindet standardmaessig nur an `127.0.0.1`. Die Applikation selbst hat
+noch keine Authentifizierung und stellt neben Telemetrie auch schreibende
+Runtime-, Datei- und Struktur-APIs bereit. `0.0.0.0` ist deshalb nur fuer ein
+vertrauenswuerdiges, per Firewall begrenztes Intranet vorgesehen. Jeder
+Internet-Zugriff muss alle Pfade durch einen authentifizierenden TLS-Reverse-
+Proxy fuehren; direkte Portweiterleitung auf `8765` ist nicht unterstuetzt.
