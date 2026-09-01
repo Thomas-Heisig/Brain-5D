@@ -15,7 +15,7 @@ FROM python:3.13-slim AS builder
 WORKDIR /build
 
 # Install build dependencies
-RUN pip install --no-cache-dir build
+RUN pip install --no-cache-dir build "setuptools>=68" wheel
 
 # Copy package metadata and sources
 COPY pyproject.toml setup.py README.md ./
