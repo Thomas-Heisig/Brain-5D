@@ -69,7 +69,7 @@ jobs:
       - name: Whitespace & merge-conflict check
         run: |
           git diff --check
-          ! grep -rP '<<<<<<< |=======$|>>>>>>> ' src/ tests/ scripts/ --include='*.py' --include='*.md' --include='*.yaml' --include='*.yml'
+          ! grep -rP '^(<<<<<<< |>>>>>>> )|^=======$' src/ tests/ scripts/ --include='*.py' --include='*.md' --include='*.yaml' --include='*.yml'
       - name: Summary
         if: always()
         run: echo "### Lint & Format passed" >> $GITHUB_STEP_SUMMARY
