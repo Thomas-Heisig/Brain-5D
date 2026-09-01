@@ -7,14 +7,11 @@
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   **Current baseline (2026-09-01): 483 passed / 5 skipped / 0 failed**
->   at source-freeze commit `f1c4df8...`, digest `7da20251...`.
->   New dashboard/runtime source candidate: 489 passed / 5 skipped / 0 failed,
->   no test warnings; baseline regeneration pending.
+>   **Current baseline (2026-09-01): 489 passed / 5 skipped / 0 failed**
+>   at final source-freeze commit `3025e68...`, digest `90439f88...`.
 >   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6.
->   Previous source scientific gate and CI #141: PASSED.
->   Current scientific gate: STALE pending regenerated evidence;
->   release readiness: NOT_READY.
+>   Scientific gate: PASSED; Continuous Integration #145: PASSED;
+>   release readiness: READY.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests are planned but **not yet implemented**; the Gate
 >   Builder still uses the global source-tree digest, so UI changes can still
@@ -41,8 +38,8 @@
 - [x] Experiment generator records commands/DATA links automatically and fails closed
 - [x] Local quality gates: 489 tests, Black, Ruff, Mypy, Pyright, Pylint, Pre-commit, Bandit, pip-audit and build pass
 - [ ] Extend evidence freshness authority: generated research evidence currently changes gate-test behavior without changing the canonical source digest
-- [ ] Commit source candidate and verify external CI
-- [ ] Regenerate baseline, Phase B evidence and gate status for the new source SHA
+- [x] Commit final source candidate and verify Continuous Integration #145
+- [x] Regenerate baseline, Phase B evidence and gate status for `3025e68...`
 - [ ] Evidence-only commit and CI verification over that commit
 - [ ] Resolve Sync to Hugging Face #66 if Hugging Face publication is required
 

@@ -17,14 +17,16 @@
 - Fixed `start.ps1` / `stop.ps1` repository-root resolution.
 - Runtime storage archives a valid journal whose last tick is ahead of a new Tick-0 runtime; restart verification keeps `worker_failed=false`, Health `ok`, and Problems empty.
 - Dashboard version defaults and footer now use the canonical `0.5.0-alpha.6` source.
-- RELEASE separates Scientific Gate, exact-SHA CI, and Release Readiness; CI evidence is accepted only when its SHA matches HEAD.
+- RELEASE separates Scientific Gate, source-freeze CI, and Release Readiness; CI evidence is accepted only when its SHA and tested source digest match the recorded freeze.
 - Operator/Experiment/Debug switching and Network/Control/Research/Release tabs verified in-browser with no console or HTTP errors.
 - Parameter Inspector now exposes all 101 public runtime-config leaves; uncurated values remain fixed and restart-required.
 - Replaced the broken PlantUML CDN asset and deprecated PyPDF2 dependency; dependency audit reports no known vulnerabilities and package build is warning-free.
 - Upgraded GitHub/Docker workflow actions to Node 24-compatible majors, removing Node 20 deprecation annotations.
 - Experiment execution now records the exact pytest command, links DATA files from manifests/EVID records automatically, and exits nonzero when either experiment fails.
 - Black, Ruff, Mypy, Pyright (`0 errors, 0 warnings`), Pylint (`9.37/10`), Pre-commit, Bandit, tests, and package build pass locally.
-- Scientific artifacts are intentionally stale until Phase B is regenerated for the new source candidate; release readiness remains NOT_READY meanwhile.
+- Final source freeze `3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1`: Continuous Integration #145 passed all jobs, including Python 3.11/3.12/3.13, build, Docker, and `ci-status`, without Node-runtime annotations.
+- Final Phase B baseline: **489 passed, 5 skipped, 0 failed**, digest `90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9`.
+- Final GateStatusBuilder result: Gate A `22/22`, Gate B `24/24`, Gate C `17/17`; Scientific Gate PASSED and Release Readiness READY.
 
 ### Boundaries
 - Sync to Hugging Face #66 remains failed and is explicitly outside CI #141 and this scientific gate.

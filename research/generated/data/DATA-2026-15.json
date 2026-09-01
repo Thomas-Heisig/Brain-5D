@@ -1,0 +1,16 @@
+{
+  "data_id": "DATA-2026-15",
+  "experiment_id": "EXP-DET-0001",
+  "generated": "2026-09-01T15:36:08+0200",
+  "tree_digest": "90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9",
+  "test_command": "python -m pytest tests/test_restore_determinism_abc.py -q --tb=short",
+  "results": {
+    "passed": true,
+    "returncode": 0,
+    "duration_seconds": 2.3497252464294434
+  },
+  "raw_outputs": {
+    "stdout": ".......                                                                  [100%]\n7 passed in 1.98s\n",
+    "stderr": ""
+  }
+}

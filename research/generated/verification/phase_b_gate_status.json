@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "verified",
+  "generated": "2026-09-01T15:31:10+02:00",
+  "source_freeze": {
+    "commit": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
+    "tested_tree_digest": "90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9"
+  },
+  "baseline": {
+    "python": "3.13.14",
+    "passed": 489,
+    "failed": 0,
+    "skipped": 5,
+    "collection_errors": 0,
+    "artifact": "tests/test_baseline.json"
+  },
+  "continuous_integration": {
+    "workflow": "Continuous Integration #145",
+    "run_id": 33514118085,
+    "head_sha": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
+    "conclusion": "success"
+  },
+  "scientific_gate": {
+    "overall": "passed",
+    "gate_a": {
+      "passed": 22,
+      "total": 22
+    },
+    "gate_b": {
+      "passed": 24,
+      "total": 24
+    },
+    "gate_c": {
+      "passed": 17,
+      "total": 17
+    }
+  },
+  "release_readiness": "ready",
+  "final_validation": {
+    "command": "python -m pytest tests/ -q --tb=short",
+    "passed": 489,
+    "failed": 0,
+    "skipped": 5
+  },
+  "verification_artifacts": [
+    "research/generated/verification/restore_determinism.json",
+    "research/generated/verification/structural_e2e.json",
+    "research/generated/verification/structural_live_loop.json",
+    "research/generated/verification/single_listener.json",
+    "research/generated/verification/determinism_infrastructure.json"
+  ],
+  "experiment_evidence": [
+    "research/generated/data/DATA-2026-15.json",
+    "research/generated/data/DATA-2026-16.json",
+    "research/registry/evidence/EVID-2026-15.json",
+    "research/registry/evidence/EVID-2026-16.json"
+  ],
+  "limitations": [
+    "Sync to Hugging Face is outside the Continuous Integration gate and remains failed.",
+    "Restore path C proves a fresh C2 process; the stricter C1-exit-C2 orchestration remains a separate hardening task."
+  ]
+}

@@ -32,7 +32,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 
 ## v0.5.0-alpha.6 — Operator Workbench & Morphological Self-Regulation (current)
 
-> Source freeze `f1c4df8` was reopened for requested dashboard/runtime hardening. New source candidate is locally green; Phase B regeneration and external CI are pending. Release readiness: NOT_READY.
+> Final source freeze `3025e68`; Continuous Integration #145 and regenerated Phase B evidence PASSED. Release readiness: READY.
 
 - [x] Version transition and immutable release registry
 - [x] CI recovery: local lint/type/test gates green (Black, Ruff, Pylint ≥9.0, mypy, pyright)
@@ -50,8 +50,9 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] CI and Hugging Face workflows use Node 24-compatible action majors
 - [x] Experiment DATA/EVID provenance generated automatically and fail-closed
 - [x] Local source candidate: 489 passed, 5 skipped, no failures or warnings
-- [ ] Regenerate baseline and Phase B evidence for the new source candidate
-- [ ] Run CI over the evidence commit
+- [x] Regenerate baseline and Phase B evidence for the final source candidate
+- [x] Source CI #145 green for exact SHA `3025e68`
+- [ ] Commit final evidence and run CI over the evidence commit
 - [ ] Resolve Sync to Hugging Face #66 before a release that includes Hugging Face publication
 - [ ] Chronic structural signals
 - [ ] Regional 5D pressure

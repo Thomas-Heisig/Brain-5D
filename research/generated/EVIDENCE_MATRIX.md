@@ -1,12 +1,12 @@
 # Brain-5D Evidence Matrix
 
-*Generiert am 2026-08-31*
+*Generiert am 2026-09-01*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
 | `RQ-SNN-001` | `H-SNN-001-A` | 2 | — | — | offen |
 | `RQ-SNN-002` | `H-SNN-002-A` | 2 | — | — | offen |
-| `RQ-DET-001` | `H-SNN-003-A` | 1 | `CLAIM-DET-001` | `EVID-2026-01`, `EVID-2026-03`, `EVID-2026-05`, `EVID-2026-07`, `EVID-2026-09`, `EVID-2026-11`, `EVID-2026-13` | offen |
+| `RQ-DET-001` | `H-SNN-003-A` | 1 | `CLAIM-DET-001` | `EVID-2026-01`, `EVID-2026-03`, `EVID-2026-05`, `EVID-2026-07`, `EVID-2026-09`, `EVID-2026-11`, `EVID-2026-13`, `EVID-2026-15` | offen |
 | `RQ-SNN-003` | — | 2 | — | — | offen |
 | `RQ-SNN-004` | `H-SNN-004-A` | 2 | `CLAIM-SNN-001` | — | offen |
 | `RQ-SNN-005` | `H-SNN-005-A` | 2 | — | — | offen |
@@ -18,7 +18,7 @@
 | `RQ-5D-002` | `H-5D-002-A` | 0 | — | — | offen |
 | `RQ-5D-003` | `H-5D-003-A` | 0 | — | — | offen |
 | `RQ-5D-004` | `H-5D-004-A` | 0 | `CLAIM-5D-002` | — | offen |
-| `RQ-STORAGE-001` | `H-STOR-001-A` | 0 | `CLAIM-STOR-001` | `EVID-2026-02`, `EVID-2026-04`, `EVID-2026-06`, `EVID-2026-08`, `EVID-2026-10`, `EVID-2026-12`, `EVID-2026-14` | offen |
+| `RQ-STORAGE-001` | `H-STOR-001-A` | 0 | `CLAIM-STOR-001` | `EVID-2026-02`, `EVID-2026-04`, `EVID-2026-06`, `EVID-2026-08`, `EVID-2026-10`, `EVID-2026-12`, `EVID-2026-14`, `EVID-2026-16` | offen |
 | `RQ-STORAGE-002` | `H-STOR-002-A` | 0 | — | — | offen |
 | `RQ-STORAGE-003` | `H-STOR-003-A` | 0 | — | — | offen |
 | `RQ-STORAGE-004` | `H-STOR-004-A` | 0 | — | — | offen |

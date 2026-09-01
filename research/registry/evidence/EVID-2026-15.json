@@ -1,0 +1,23 @@
+{
+  "evidence_id": "EVID-2026-15",
+  "experiment_id": "EXP-DET-0001",
+  "claim_id": "CLAIM-DET-001",
+  "hypothesis_id": "H-SNN-003-A",
+  "result_summary": "A/B/C restore determinism verified: process-restart restore produces identical structural and dynamic state.",
+  "effect_size": {},
+  "statistical_significance": {},
+  "status": "supports",
+  "limitations": "",
+  "artifacts": {
+    "figures": [],
+    "data_files": [
+      "research/generated/data/DATA-2026-15.json"
+    ]
+  },
+  "generated": "2026-09-01T15:36:08.839529",
+  "experiment_validity": {
+    "valid": true,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  }
+}

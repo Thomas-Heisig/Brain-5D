@@ -1,6 +1,6 @@
 # Brain-5D Research Catalog
 
-*Generiert am 2026-08-31*
+*Generiert am 2026-09-01*
 
 ## Übersicht
 
@@ -80,15 +80,15 @@
 **Relevanz:** Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung.
 
 **Hypothesen:**
-- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(supported)* — Evidenz: EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13
+- `H-SNN-003-A`: Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch. *(supported)* — Evidenz: EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13, EVID-2026-15
 
 **Claims:**
-- `CLAIM-DET-001`: Brain-5D erzeugt bei identischem Seed, Input und Anfangszustand deterministisch identische Spike-Abfolgen und Netzwerkzustände. *(inconclusive, low)* — Evidenz: EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13
+- `CLAIM-DET-001`: Brain-5D erzeugt bei identischem Seed, Input und Anfangszustand deterministisch identische Spike-Abfolgen und Netzwerkzustände. *(inconclusive, low)* — Evidenz: EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13, EVID-2026-15
 
 **Literatur:**
 - `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
 
-**Evidenzen:** EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13
+**Evidenzen:** EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13, EVID-2026-15
 
 ---
 
@@ -377,12 +377,12 @@
 **Relevanz:** Grundlage für Persistenz und Checkpointing.
 
 **Hypothesen:**
-- `H-STOR-001-A`: Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden. *(supported)* — Evidenz: EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14
+- `H-STOR-001-A`: Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden. *(supported)* — Evidenz: EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14, EVID-2026-16
 
 **Claims:**
-- `CLAIM-STOR-001`: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des vollständigen Netzwerkzustands. *(inconclusive, low)* — Evidenz: EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14
+- `CLAIM-STOR-001`: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des vollständigen Netzwerkzustands. *(inconclusive, low)* — Evidenz: EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14, EVID-2026-16
 
-**Evidenzen:** EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14
+**Evidenzen:** EVID-2026-02, EVID-2026-04, EVID-2026-06, EVID-2026-08, EVID-2026-10, EVID-2026-12, EVID-2026-14, EVID-2026-16
 
 ---
 
