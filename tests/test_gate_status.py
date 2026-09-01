@@ -449,7 +449,7 @@ def test_release_readiness_not_ready_when_ci_unknown(tmp_path: Path) -> None:
     assert any("ci_status" in str(b) for b in readiness["blockers"])
 
 
-def test_ci_evidence_must_match_current_head(tmp_path: Path) -> None:
+def test_ci_evidence_must_match_current_source_digest(tmp_path: Path) -> None:
     artifact = (
         tmp_path
         / "research"
@@ -461,12 +461,16 @@ def test_ci_evidence_must_match_current_head(tmp_path: Path) -> None:
     artifact.write_text(
         json.dumps(
             {
+                "source_freeze": {
+                    "commit": "verified-head",
+                    "tested_tree_digest": "verified-digest",
+                },
                 "continuous_integration": {
                     "workflow": "Continuous Integration #141",
                     "run_id": 33507240508,
                     "head_sha": "verified-head",
                     "conclusion": "success",
-                }
+                },
             }
         ),
         encoding="utf-8",
@@ -474,11 +478,13 @@ def test_ci_evidence_must_match_current_head(tmp_path: Path) -> None:
     builder = GateStatusBuilder(repo_root=tmp_path)
 
     with patch(
-        "src.dashboard.gate_status.current_git_head", return_value="verified-head"
+        "src.dashboard.gate_status.compute_source_tree_digest",
+        return_value="verified-digest",
     ):
         matching = cast(dict[str, Any], builder.build()["ci_status"])
     with patch(
-        "src.dashboard.gate_status.current_git_head", return_value="different-head"
+        "src.dashboard.gate_status.compute_source_tree_digest",
+        return_value="different-digest",
     ):
         stale = cast(dict[str, Any], builder.build()["ci_status"])
 

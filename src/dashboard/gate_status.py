@@ -53,7 +53,10 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.dashboard.models import JSONValue
-from src.dashboard.verification import current_git_head, evaluate_test_baseline
+from src.dashboard.verification import (
+    compute_source_tree_digest,
+    evaluate_test_baseline,
+)
 
 # ============================================================================
 # Status vocabularies (deliberately disjoint)
@@ -326,7 +329,7 @@ class GateStatusBuilder:
         }
 
     def _load_ci_status(self) -> dict[str, JSONValue] | None:
-        """Load CI provenance only when its tested SHA matches current HEAD."""
+        """Load CI provenance only for the currently tested source digest."""
         artifact_path = (
             self.repo_root
             / "research"
@@ -339,14 +342,22 @@ class GateStatusBuilder:
             if not isinstance(raw_data, dict):
                 return None
             data = cast(dict[str, Any], raw_data)
+            raw_freeze = data.get("source_freeze")
+            if not isinstance(raw_freeze, dict):
+                return None
+            source_freeze = cast(dict[str, Any], raw_freeze)
+            tested_digest = source_freeze.get("tested_tree_digest")
+            if not isinstance(
+                tested_digest, str
+            ) or tested_digest != compute_source_tree_digest(self.repo_root):
+                return None
             raw_ci = data.get("continuous_integration")
             if not isinstance(raw_ci, dict):
                 return None
             ci = cast(dict[str, Any], raw_ci)
             head_sha = ci.get("head_sha")
-            if not isinstance(head_sha, str) or head_sha != current_git_head(
-                self.repo_root
-            ):
+            source_commit = source_freeze.get("commit")
+            if not isinstance(head_sha, str) or head_sha != source_commit:
                 return None
             conclusion = ci.get("conclusion")
             status = "passed" if conclusion == "success" else "failed"
