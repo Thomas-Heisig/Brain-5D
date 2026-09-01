@@ -21,6 +21,7 @@
 - Operator/Experiment/Debug switching and Network/Control/Research/Release tabs verified in-browser with no console or HTTP errors.
 - Parameter Inspector now exposes all 101 public runtime-config leaves; uncurated values remain fixed and restart-required.
 - Replaced the broken PlantUML CDN asset and deprecated PyPDF2 dependency; dependency audit reports no known vulnerabilities and package build is warning-free.
+- Upgraded GitHub/Docker workflow actions to Node 24-compatible majors, removing Node 20 deprecation annotations.
 - Black, Ruff, Mypy, Pyright (`0 errors, 0 warnings`), Pylint (`9.37/10`), Pre-commit, Bandit, tests, and package build pass locally.
 - Scientific artifacts are intentionally stale until Phase B is regenerated for the new source candidate; release readiness remains NOT_READY meanwhile.
 

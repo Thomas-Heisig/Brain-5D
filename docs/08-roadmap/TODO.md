@@ -37,6 +37,7 @@
 - [x] Dashboard browser acceptance: version alpha.6, real network values, Health ok, Problems empty, Storage healthy
 - [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
 - [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
+- [x] GitHub/Docker actions migrated to Node 24-compatible majors
 - [x] Local quality gates: 489 tests, Black, Ruff, Mypy, Pyright, Pylint, Pre-commit, Bandit, pip-audit and build pass
 - [ ] Extend evidence freshness authority: generated research evidence currently changes gate-test behavior without changing the canonical source digest
 - [ ] Commit source candidate and verify external CI
