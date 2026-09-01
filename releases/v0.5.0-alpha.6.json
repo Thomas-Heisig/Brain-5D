@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "version": "0.5.0-alpha.6",
+  "pep440": "0.5.0a6",
+  "status": "released",
+  "title": "Operator Workbench & Observable Runtime",
+  "subtitle": "Release and Evidence Closure",
+  "parent": "v0.5.0-alpha.5",
+  "gate": "passed",
+  "tag": "v0.5.0-alpha.6",
+  "commit": "8fac75da723b4b9d28383dd4ec49497771f4572f",
+  "source_freeze": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
+  "evidence_commit": "70a4ee253a5fc30716d0ffe0058f146a1ad59cde",
+  "closure_commit": "8fac75da723b4b9d28383dd4ec49497771f4572f",
+  "date": "2026-09-01",
+  "tested_tree_digest": "90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9",
+  "baseline": {
+    "python": "3.13.14",
+    "passed": 489,
+    "failed": 0,
+    "skipped": 5,
+    "collection_errors": 0,
+    "command": "python -m pytest tests/ -q --tb=short",
+    "artifact": "tests/test_baseline.json"
+  },
+  "continuous_integration": [
+    {
+      "run": 145,
+      "run_id": 33514118085,
+      "commit": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
+      "conclusion": "success"
+    },
+    {
+      "run": 147,
+      "run_id": 33515361366,
+      "commit": "70a4ee253a5fc30716d0ffe0058f146a1ad59cde",
+      "conclusion": "success"
+    },
+    {
+      "run": 148,
+      "run_id": 33515977047,
+      "commit": "8fac75da723b4b9d28383dd4ec49497771f4572f",
+      "conclusion": "success"
+    }
+  ],
+  "gate_summary": {
+    "scientific_gate": "passed",
+    "release_readiness": "ready",
+    "gate_a": { "passed": 22, "total": 22 },
+    "gate_b": { "passed": 24, "total": 24 },
+    "gate_c": { "passed": 17, "total": 17 }
+  },
+  "evidence_artifacts": [
+    "research/generated/verification/phase_b_gate_status.json",
+    "research/generated/verification/determinism_infrastructure.json",
+    "research/generated/verification/restore_determinism.json",
+    "research/generated/verification/single_listener.json",
+    "research/generated/verification/structural_e2e.json",
+    "research/generated/verification/structural_live_loop.json",
+    "research/generated/data/DATA-2026-15.json",
+    "research/generated/data/DATA-2026-16.json",
+    "research/registry/evidence/EVID-2026-15.json",
+    "research/registry/evidence/EVID-2026-16.json"
+  ],
+  "limitations": [
+    "Evidence is authoritative for the historical source freeze, not for later Alpha.7 development commits.",
+    "Evidence freshness still uses the global source-tree digest; evidence scope digests are not implemented.",
+    "Sync to Hugging Face is outside the Continuous Integration gate."
+  ]
+}

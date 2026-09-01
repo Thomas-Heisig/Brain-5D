@@ -6,7 +6,7 @@ authors:
     given-names: Thomas
     affiliation: "Independent Research"
     orcid: ""
-version: 0.5.0-alpha.6
+version: 0.5.0-alpha.7
 date-released: 2026-08-23
 repository-code: "https://github.com/Thomas-Heisig/Brain-5D"
 license: "MIT"

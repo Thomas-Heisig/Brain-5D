@@ -7,11 +7,11 @@
 > GitHub→HF Sync Workflow).
 > Verification basis:
 >   Current verification → tests/test_baseline.json (tree-digest authority)
->   **Current baseline (2026-09-01): 489 passed / 5 skipped / 0 failed**
+>   **Historical Alpha.6 baseline (2026-09-01): 489 passed / 5 skipped / 0 failed**
 >   at final source-freeze commit `3025e68...`, digest `90439f88...`.
->   **Current development version**: v0.5.0-alpha.6 / 0.5.0a6.
->   Scientific gate: PASSED; Continuous Integration #145: PASSED;
->   release readiness: READY.
+>   **Current development version**: v0.5.0-alpha.7 / 0.5.0a7.
+>   Alpha.6 scientific gate: PASSED; Continuous Integration #145/#147/#148:
+>   PASSED; release readiness: READY.
 >   **A/B/C restore artifact verified** (`A == B == C`).
 >   Evidence scope digests are planned but **not yet implemented**; the Gate
 >   Builder still uses the global source-tree digest, so UI changes can still
@@ -19,7 +19,19 @@
 >   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
 >   delta-journal recovery in `src/main.py`.
 
-## Priorität 0 — Alpha.6 Phase B Evidence Freeze
+## Priorität 0 — Alpha.7 Embodiment Foundation & Safe Environment I/O
+
+- [x] Alpha.6 historical boundary fixed at closure commit `8fac75d` and tag `v0.5.0-alpha.6`
+- [x] Alpha.6 immutable release manifest with source/evidence/closure provenance
+- [x] Alpha.7 version line and release registry opened
+- [x] Read-only Embodiment and connection discovery foundation
+- [ ] First deterministic EnvironmentAdapter integrated end-to-end
+- [ ] Explicit sensor/actuator authorization enforced
+- [ ] Per-adapter capability and rate limits enforced
+- [ ] Immutable action audit trail implemented
+- [ ] Emergency stop and human override enforced below policy execution
+
+## Alpha.6 Phase B Evidence Freeze (released)
 
 - [x] Source freeze `f1c4df8...` against successful Continuous Integration #141
 - [x] Canonical baseline regenerated without production-source changes

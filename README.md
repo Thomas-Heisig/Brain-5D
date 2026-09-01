@@ -182,7 +182,7 @@ Copyright © 2025-2026 Thomas Heisig and contributors.
   author = {Thomas Heisig},
   title = {Brain-5D: Sparse 5D Spiking-Neural Simulation with Observable Plasticity},
   year = {2026},
-  version = {0.5.0-alpha.6},
+  version = {0.5.0-alpha.7},
   url = {https://huggingface.co/<your-org>/Brain-5D},
   license = {MIT}
 }
@@ -194,7 +194,7 @@ Copyright © 2025-2026 Thomas Heisig and contributors.
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-**Current focus:** Alpha.5 closure (restore determinism experiments) → Alpha.6 (morphological self-regulation).
+**Current focus:** Alpha.7 — Embodiment Foundation & Safe Environment I/O.
 
 ---
 

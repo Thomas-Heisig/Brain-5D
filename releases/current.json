@@ -1,10 +1,17 @@
 {
   "schema_version": 1,
-  "version": "0.5.0-alpha.6",
-  "pep440": "0.5.0a6",
+  "version": "0.5.0-alpha.7",
+  "pep440": "0.5.0a7",
   "status": "development",
-  "title": "Operator Workbench & Morphological Self-Regulation",
-  "parent": "v0.5.0-alpha.5",
+  "title": "Embodiment Foundation & Safe Environment I/O",
+  "parent": "v0.5.0-alpha.6",
   "gate": "open",
-  "note": "No morphological self-regulation feature may be marked verified merely because this version exists."
+  "scope": [
+    "typed environment, sensor and actuator boundaries",
+    "fail-closed connection discovery and explicit authorization",
+    "capability and rate limits",
+    "auditable actions",
+    "enforced emergency stop and human override"
+  ],
+  "note": "Read-only discovery is foundation work, not completion. Alpha.7 remains open until one deterministic EnvironmentAdapter and the complete bounded action path are verified."
 }

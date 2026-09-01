@@ -1,6 +1,15 @@
 # Changelog
 
-## 2026-09-01 — Alpha.6 Phase B Evidence Run
+## 2026-09-01 — v0.5.0-alpha.7 Opened
+
+- Closed Alpha.6 historically at `8fac75da723b4b9d28383dd4ec49497771f4572f`; the release manifest records source freeze `3025e68`, evidence commit `70a4ee2`, baseline 489/5/0, Gate A/B/C PASSED and successful Continuous Integration #145/#147/#148.
+- Advanced the canonical package and display version to `0.5.0a7` / `0.5.0-alpha.7`.
+- Defined Alpha.7 as Embodiment Foundation & Safe Environment I/O. Read-only discovery is not an exit criterion: deterministic environment I/O, explicit authorization, capability/rate limits, audit, emergency stop and human override remain required.
+- Moved Morphological Self-Regulation to Alpha.8 and Memory / World Model / embodied learning to Alpha.9.
+- Corrected the roadmap claim for Evidence Scope Digests: global source-tree digest remains authoritative, so scoped digests are still open.
+- Restored the post-closure development branch to green with formatting and Git-attribute hygiene; Continuous Integration #152 passed before the Alpha.7 version commit.
+
+## 2026-09-01 — Alpha.6 Phase B Evidence Run (released)
 
 ### Source Freeze and Verification
 - Scientific source frozen at `f1c4df8adbe8009c2483a72e4f962a6dad9fad83`; Phase B changed evidence and documentation only.
@@ -53,6 +62,7 @@
 - Final Phase B baseline: **489 passed, 5 skipped, 0 failed**, digest `90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9`.
 - Final GateStatusBuilder result: Gate A `22/22`, Gate B `24/24`, Gate C `17/17`; Scientific Gate PASSED and Release Readiness READY.
 - Evidence commit `70a4ee253a5fc30716d0ffe0058f146a1ad59cde` passed Continuous Integration #147 (run `33515361366`) across all jobs.
+- Final closure commit `8fac75da723b4b9d28383dd4ec49497771f4572f` passed Continuous Integration #148 (run `33515977047`) across all jobs.
 
 ### Boundaries
 - Sync to Hugging Face #66 remains failed and is explicitly outside CI #141 and this scientific gate.
