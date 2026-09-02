@@ -1,0 +1,40 @@
+{
+  "experiment_id": "EXP-AIR-0001",
+  "status": "pre_registered_not_executed",
+  "research_question": "RQ-AIR-001",
+  "hypothesis": "H-AIR-001-A",
+  "design": {
+    "comparison": "same_model_same_cases_same_scientific_task",
+    "condition_a": "unstructured_experiment_report",
+    "condition_b": "research_packet_v1",
+    "gold_standard": "AIR-METHODOLOGY-GOLD-V1",
+    "assistant_access_to_gold_labels": "denied",
+    "model_repetitions_per_case_and_condition": 3
+  },
+  "metrics": [
+    "precision",
+    "recall",
+    "f1",
+    "specificity",
+    "false_positive_rate",
+    "per_defect_class_recall",
+    "hallucinated_concerns",
+    "confidence_calibration"
+  ],
+  "required_provenance": [
+    "frozen_git_commit",
+    "green_external_ci",
+    "model_digest",
+    "quantization",
+    "context_length",
+    "temperature",
+    "top_p",
+    "seed",
+    "backend_version"
+  ],
+  "execution_gate": {
+    "requires_clean_worktree": true,
+    "requires_remote_ci_success": true,
+    "requires_exact_frozen_sha": true
+  }
+}

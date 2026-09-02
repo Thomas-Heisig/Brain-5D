@@ -14,6 +14,10 @@
   `CLAIM-AIR-001` now define a structured-versus-unstructured methodological
   review study. `AIR-METHODOLOGY-GOLD-V1` provides 30 held-out, labelled cases;
   no model has received the labels and no benchmark evidence has been created.
+- **AIR benchmark safeguards**: The pre-registered `EXP-AIR-0001` protocol
+  denies assistant access to gold labels, includes 21 defective and 9 negative
+  control cases, and requires three repetitions per case/condition with frozen
+  SHA, external CI success, and full model/sampling provenance before execution.
 
 - **Research Experiment Runner**: The RESEARCH workspace now provides the
   traceable workflow Forschungsfrage -> Bedingungen -> Experiment ->

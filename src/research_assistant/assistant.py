@@ -184,6 +184,8 @@ class ResearchAssistant:
         ]
 
     def _safe_path(self, relative_path: str) -> Path:
+        if Path(relative_path).parts and Path(relative_path).parts[0] == "benchmarks":
+            raise PermissionError("Research assistants cannot access benchmark labels.")
         path = (self._root / relative_path).resolve()
         if (
             ".." in Path(relative_path).parts

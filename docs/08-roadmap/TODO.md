@@ -31,6 +31,8 @@
 - [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
 - [ ] Evaluate `RQ-AIR-001`: benchmark the Scientific Research Assistant on controlled methodological defects before relying on its review proposals
 - [x] Register `RQ-AIR-001`, `H-AIR-001-A` and `CLAIM-AIR-001`; add the held-out 30-case `AIR-METHODOLOGY-GOLD-V1` dataset
+- [x] Pre-register `EXP-AIR-0001`: structured vs. unstructured input, blinded scoring, 3 repetitions per case/condition, precision/recall/F1/specificity/FPR/calibration metrics
+- [ ] Do not execute `EXP-AIR-0001` until this development tree is committed, pushed, externally CI-green and frozen to an exact SHA
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced
