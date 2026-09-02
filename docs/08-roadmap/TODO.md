@@ -31,7 +31,7 @@
 - [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
 - [x] Re-run currently executable research checks on 2026-09-02: focused protocols `35 passed, 1 skipped`; full suite with large storage checks `544 passed, 3 skipped`
 - [x] Run the maximum current runtime stability slice: `1000` ticks with STDP and homeostasis completed without runtime errors; propagation recorded 1 direct spike, 0 secondary recruits and no output reach
-- [ ] Extend `RuntimeController.run_ticks()` beyond the current 1000-tick guard before treating the registered 100000-tick stability experiment as executable
+- [x] Extend `RuntimeController.run_ticks()` beyond the current 1000-tick guard before treating the registered 100000-tick stability experiment as executable
 - [ ] Re-run Alpha.5 evidence publication on a clean source tree; the test itself passed but the runner rejected EVID creation because `git.dirty == true`
 - [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
 - [ ] Evaluate `RQ-AIR-001`: benchmark the Scientific Research Assistant on controlled methodological defects before relying on its review proposals

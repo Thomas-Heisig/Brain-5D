@@ -109,3 +109,11 @@ def test_alpha5_manual_tick_api_is_bounded() -> None:
             controller.run_ticks(101)
     finally:
         controller.close()
+
+
+def test_manual_tick_api_default_supports_stability_run_length() -> None:
+    controller = RuntimeController(lambda: None)
+    try:
+        controller.run_ticks(1_001)
+    finally:
+        controller.close()

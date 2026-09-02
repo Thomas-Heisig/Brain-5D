@@ -242,7 +242,7 @@ class RuntimeController:
         loop_delay_ms: float = 0.0,
         telemetry_interval_ticks: int = 10,
         snapshot_callback: SnapshotCallback | None = None,
-        max_manual_ticks: int = 1_000,
+        max_manual_ticks: int = 100_000,
     ) -> None:
         """Initialize the runtime controller.
 

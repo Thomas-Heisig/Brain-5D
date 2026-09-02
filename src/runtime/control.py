@@ -92,7 +92,7 @@ class RuntimeController:
         stop_callback: OptionalCallback | None = None,
         initial_loop_size: int = 100,
         initial_delay_ms: float = 0.0,
-        max_manual_ticks: int = 1_000,
+        max_manual_ticks: int = 100_000,
     ) -> None:
         self._step_callback = step_callback
         self._snapshot_callback = snapshot_callback
