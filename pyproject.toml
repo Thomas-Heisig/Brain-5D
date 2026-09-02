@@ -35,6 +35,7 @@ dependencies = [
   "PyYAML>=6.0",
   "matplotlib>=3.8",
   "numpy>=1.26",
+  "psutil>=5.9",
 ]
 
 [project.urls]

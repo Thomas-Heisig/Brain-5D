@@ -37,14 +37,16 @@ akzeptierten `EnvironmentObservation` übernommen.
    `SensorFrame`-Werte.
 6. **Verifiziert am 2026-09-02:**
    `python -m pytest tests/test_experience_engine.py
-   tests/test_embodiment_safety.py -q` → **13 passed**.
+  tests/test_embodiment_safety.py -q` → **14 passed**.
+7. **Runtime-Integration:** `prepare()` und `complete()` wurden als
+  Pre-/Post-Hook registrierbar gemacht. Der Regressionstest bestätigt einen
+  vorhandenen Netzwerktick ohne zweiten `network.step()`-Aufruf.
+8. **Präregistrierung:** `EXP-EMB-0001` definiert Bedingungen, Kontrollen,
+  Wiederholungen und Messgrößen. Es ist noch keine Evidenz.
 
 ## Offene nächste Schritte
 
-- `ExperienceEngine` an den kanonischen Runtime-Hook anbinden, ohne den
-  Diagnose-Stimulus als wissenschaftliche Eingabe umzudeuten.
-- Systemmetriken wie CPU/RAM/Temperatur über explizite, plattformabhängige
-  Provider ergänzen und deren Messunsicherheit dokumentieren.
 - Ein registriertes, unabhängiges Experiment mit Source-Freeze durchführen,
   bevor Aussagen über synaptisches Lernen aus realen Systemdaten entstehen.
+- Für `EXP-EMB-0001` die Messanalyse und Datenartefakte erzeugen.
 - Danach erst Kamera-, Audio- oder Knowledge-Intake-Adapter prüfen.

@@ -24,7 +24,11 @@ from .models import (
 from .pipeline import EmbodimentPipeline
 from .registry import EmbodimentRegistry
 from .sensor import SensorAdapter
-from .system_sensor import SystemSensorAdapter, wall_clock_readings
+from .system_sensor import (
+    SystemSensorAdapter,
+    host_system_readings,
+    wall_clock_readings,
+)
 
 __all__ = [
     "ActionCommand",
@@ -50,5 +54,6 @@ __all__ = [
     "SensorAdapter",
     "SensorFrame",
     "SystemSensorAdapter",
+    "host_system_readings",
     "wall_clock_readings",
 ]

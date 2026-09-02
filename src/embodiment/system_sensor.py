@@ -6,6 +6,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from time import time
 
+import psutil
+
 from .models import JSONValue, SensorFrame
 
 SystemReadings = Callable[[int], Mapping[str, JSONValue]]
@@ -46,4 +48,32 @@ def wall_clock_readings(tick: int) -> Mapping[str, JSONValue]:
     return {"tick": tick, "unix_time": time()}
 
 
-__all__ = ["SystemReadings", "SystemSensorAdapter", "wall_clock_readings"]
+def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
+    """Read opt-in host state without contacting external services."""
+
+    temperature_reader = getattr(psutil, "sensors_temperatures", None)
+    temperatures = temperature_reader() if callable(temperature_reader) else {}
+    temperature: float | None = None
+    for entries in temperatures.values():
+        if entries:
+            temperature = entries[0].current
+            break
+
+    network_up = any(status.isup for status in psutil.net_if_stats().values())
+    return {
+        "tick": tick,
+        "cpu_percent": psutil.cpu_percent(interval=None),
+        "memory_percent": psutil.virtual_memory().percent,
+        "temperature_c": temperature,
+        "network_up": network_up,
+        "process_count": len(psutil.pids()),
+        "unix_time": time(),
+    }
+
+
+__all__ = [
+    "SystemReadings",
+    "SystemSensorAdapter",
+    "host_system_readings",
+    "wall_clock_readings",
+]

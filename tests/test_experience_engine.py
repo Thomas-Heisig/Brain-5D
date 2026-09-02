@@ -12,6 +12,7 @@ from src.embodiment import (
     DeterministicTargetEnvironment,
     RelationshipClass,
     SystemSensorAdapter,
+    host_system_readings,
 )
 from src.experience import ExperienceEngine
 
@@ -83,6 +84,16 @@ def test_system_sensor_provider_is_reproducible() -> None:
     second = SystemSensorAdapter(readings)
 
     assert first.sample(4) == second.sample(4)
+
+
+def test_host_system_provider_exposes_explicit_live_metrics() -> None:
+    readings = host_system_readings(4)
+
+    assert readings["tick"] == 4
+    assert isinstance(readings["cpu_percent"], float)
+    assert isinstance(readings["memory_percent"], float)
+    assert isinstance(readings["network_up"], bool)
+    assert isinstance(readings["process_count"], int)
 
 
 def test_experience_engine_routes_environment_reward_to_learning() -> None:

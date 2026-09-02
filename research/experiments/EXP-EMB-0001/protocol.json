@@ -1,0 +1,30 @@
+{
+  "experiment_id": "EXP-EMB-0001",
+  "title": "Experience Engine v0: deterministic sensor-action-reward loop",
+  "status": "preregistered",
+  "research_question": "RQ-EMB-001",
+  "hypothesis": "H-EMB-001-A",
+  "objective": "Test whether the controlled Experience Engine completes a reproducible target task and routes only environment feedback as reward.",
+  "environment": "deterministic-target-v1",
+  "sensor": "system-state-v1 with deterministic injected provider",
+  "conditions": [
+    "authorized target actuator",
+    "unauthorized target actuator control",
+    "sensor trace reproducibility"
+  ],
+  "independent_runs": 20,
+  "repetitions_per_condition": 3,
+  "primary_metrics": [
+    "target_reached",
+    "environment_reward_received",
+    "reward_provenance",
+    "action_audit_valid"
+  ],
+  "controls": [
+    "unauthorized action must produce no observation and no reward",
+    "same deterministic sensor trace must produce identical frames",
+    "runtime hook must execute one existing network tick only"
+  ],
+  "analysis": "Report per-condition success rate, reward count, audit validity, and any runtime errors. Do not infer biological life, consciousness, or general intelligence.",
+  "evidence_policy": "No EVID artifact before clean source freeze, independent runs, complete provenance, and validated analysis."
+}

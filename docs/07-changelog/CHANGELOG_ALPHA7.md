@@ -5,7 +5,11 @@
 - Added `SystemSensorAdapter` with an injected provider so live system data is
   opt-in and deterministic research traces remain possible.
 - Added focused tests for reproducibility, reward provenance, and fail-closed
-  action authorization (`13 passed`).
+  action authorization, including runtime-hook single-tick behavior.
+- Added opt-in `host_system_readings` for CPU, RAM, temperature when available,
+  network state, process count and time; deterministic providers remain the
+  research path.
+- Preregistered `EXP-EMB-0001`; no evidence is claimed or generated.
 - No camera, microphone, internet, or scientific learning claim is enabled by
   this change.
 

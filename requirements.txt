@@ -14,6 +14,7 @@
 PyYAML>=6.0
 matplotlib>=3.8
 numpy>=1.26
+psutil>=5.9
 
 # Development dependencies (from pyproject.toml [project.optional-dependencies] dev)
 pytest>=8.0
