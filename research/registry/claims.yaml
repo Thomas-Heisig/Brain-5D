@@ -14,6 +14,26 @@
   minimum_runs: 10
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: CLAIM-STDP-001
+  claim: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische
+    Gewichtsanpassung.
+  research_question: RQ-STDP-001
+  hypothesis: H-STDP-001-A
+  evidence:
+  - EVID-2026-17
+  experiments:
+  - EXP-STDP-0001
+  sources:
+  - SRC-SONG-ABBOTT-2000
+  - SRC-BI-POO-1998
+  status: inconclusive
+  confidence: low
+  required_evidence:
+  - pair_timing_curve
+  - statistical_replication
+  minimum_runs: 10
+  created: '2026-09-02'
+  updated: '2026-09-02'
 - id: CLAIM-5D-001
   claim: Die fünfdimensionale Organisation verbessert die Robustheit gegenüber lokalen
     Strukturverlusten.

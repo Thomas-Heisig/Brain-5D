@@ -1950,6 +1950,15 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _run_experiment_workflow(self, body: dict[str, object]) -> None:
         """Run bounded controller ticks and publish reproducible artifacts."""
         source = self._require_research_source()
+        protocol = body.get("protocol")
+        if protocol == "stdp_pair_timing_v1":
+            from src.research.stdp_pair_experiment import execute_stdp_pair_experiment
+
+            result = execute_stdp_pair_experiment()
+            self._send_json({"ok": True, **result})
+            return
+        if protocol not in {None, "runtime_ticks_v1"}:
+            raise InvalidRequestError(f"Unknown experiment protocol: {protocol!r}")
         bridge = self._require_bridge()
         step = getattr(bridge.controller, "step", None)
         if not callable(step):

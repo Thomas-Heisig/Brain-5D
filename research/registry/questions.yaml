@@ -1,445 +1,455 @@
-# =============================================================================
-# Brain-5D Scientific Evidence Framework — Research Questions Registry
-# =============================================================================
-# Every research question gets a unique ID and tracks its lifecycle from
-# "open" through "answered" with explicit evidence links.
-#
-# ID convention: RQ-{DOMAIN}-{NNN}
-# Domains: SNN, STDP, HOM, STRUCT, 5D, STOR, SCALE, ROB, MEM, EMB, LLM, ETH, SELF, GEN
-
 - id: RQ-SNN-001
   domain: Spiking Neural Networks
-  question: "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?"
-  relevance: "Grundvoraussetzung für alle weiteren Lern- und Selbstorganisationsexperimente."
+  question: Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume
+    erzeugen?
+  relevance: Grundvoraussetzung für alle weiteren Lern- und Selbstorganisationsexperimente.
   literature:
-    - SRC-IZHIKEVICH-2003
-    - SRC-GERSTNER-2014
+  - SRC-IZHIKEVICH-2003
+  - SRC-GERSTNER-2014
   hypotheses:
-    - H-SNN-001-A
+  - H-SNN-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SNN-002
   domain: Spiking Neural Networks
-  question: "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?"
-  relevance: "Basis für deterministische Reproduzierbarkeit aller Experimente."
+  question: Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare
+    Spikefolgen erzeugen?
+  relevance: Basis für deterministische Reproduzierbarkeit aller Experimente.
   literature:
-    - SRC-IZHIKEVICH-2003
-    - SRC-GERSTNER-2014
+  - SRC-IZHIKEVICH-2003
+  - SRC-GERSTNER-2014
   hypotheses:
-    - H-SNN-002-A
+  - H-SNN-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-DET-001
   domain: Determinism
-  question: "Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?"
-  relevance: "Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare Forschung."
+  question: Bleibt die Spikefolge bei gleichem Seed, Input und Zustand deterministisch?
+  relevance: Determinismus ist Voraussetzung für kausale Analyse und reproduzierbare
+    Forschung.
   literature:
-    - SRC-IZHIKEVICH-2003
+  - SRC-IZHIKEVICH-2003
   hypotheses:
-    - H-SNN-003-A
+  - H-SNN-003-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SNN-003
   domain: Spiking Neural Networks
-  question: "Wie variiert die Propagation mit der Topologie?"
-  relevance: "Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs."
+  question: Wie variiert die Propagation mit der Topologie?
+  relevance: Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
   literature:
-    - SRC-WATTS-STROGATZ-1998
-    - SRC-BARABASI-1999
+  - SRC-WATTS-STROGATZ-1998
+  - SRC-BARABASI-1999
   hypotheses: []
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SNN-004
   domain: Spiking Neural Networks
-  question: "Wie verändert STDP die synaptische Gewichtsmatrix?"
-  relevance: "Zentrale Fragestellung für plastische Netzwerke."
+  question: Wie verändert STDP die synaptische Gewichtsmatrix?
+  relevance: Zentrale Fragestellung für plastische Netzwerke.
   literature:
-    - SRC-SONG-ABBOTT-2000
-    - SRC-BI-POO-1998
+  - SRC-SONG-ABBOTT-2000
+  - SRC-BI-POO-1998
   hypotheses:
-    - H-SNN-004-A
+  - H-SNN-004-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SNN-005
   domain: Spiking Neural Networks
-  question: "Verbessert STDP tatsächlich eine definierte Lernleistung?"
-  relevance: "Wissenschaftlich wesentlich stärker als reine Gewichtsänderung — benötigt Kontrollgruppe ohne STDP."
+  question: Verbessert STDP tatsächlich eine definierte Lernleistung?
+  relevance: Wissenschaftlich wesentlich stärker als reine Gewichtsänderung — benötigt
+    Kontrollgruppe ohne STDP.
   literature:
-    - SRC-SONG-ABBOTT-2000
-    - SRC-BI-POO-1998
+  - SRC-SONG-ABBOTT-2000
+  - SRC-BI-POO-1998
   hypotheses:
-    - H-SNN-005-A
+  - H-SNN-005-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STDP-001
   domain: STDP
-  question: "Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung?"
-  relevance: "Fundamentale STDP-Eigenschaft, die in Brain-5D verifiziert werden muss."
+  question: Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine
+    asymmetrische Gewichtsanpassung?
+  relevance: Fundamentale STDP-Eigenschaft, die in Brain-5D verifiziert werden muss.
   literature:
-    - SRC-SONG-ABBOTT-2000
-    - SRC-BI-POO-1998
+  - SRC-SONG-ABBOTT-2000
+  - SRC-BI-POO-1998
   hypotheses:
-    - H-STDP-001-A
-  evidence: []
-  status: open
+  - H-STDP-001-A
+  evidence:
+  - EVID-2026-17
+  status: inconclusive
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STDP-002
   domain: STDP
-  question: "Bleiben STDP-getriebene Gewichte unter Dauerstimulation stabil oder oszillieren/explodieren sie?"
-  relevance: "Stabilität ist Voraussetzung für längerfristiges Lernen."
+  question: Bleiben STDP-getriebene Gewichte unter Dauerstimulation stabil oder oszillieren/explodieren
+    sie?
+  relevance: Stabilität ist Voraussetzung für längerfristiges Lernen.
   literature:
-    - SRC-SONG-ABBOTT-2000
+  - SRC-SONG-ABBOTT-2000
   hypotheses:
-    - H-STDP-002-A
+  - H-STDP-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-HOM-001
   domain: Homeostasis
-  question: "Kann synaptische Homeostase die Feuerrate in einem SNN stabilisieren?"
-  relevance: "Homeostase ist ein zentraler biologischer Regulationsmechanismus."
+  question: Kann synaptische Homeostase die Feuerrate in einem SNN stabilisieren?
+  relevance: Homeostase ist ein zentraler biologischer Regulationsmechanismus.
   literature:
-    - SRC-TURRIGIANO-2008
+  - SRC-TURRIGIANO-2008
   hypotheses:
-    - H-HOM-001-A
+  - H-HOM-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-HOM-002
   domain: Homeostasis
-  question: "Wie interagiert Homeostase mit STDP? Wirken sie synergistisch oder antagonistisch?"
-  relevance: "Das Zusammenspiel beider Mechanismen ist entscheidend für stabile Plastizität."
+  question: Wie interagiert Homeostase mit STDP? Wirken sie synergistisch oder antagonistisch?
+  relevance: Das Zusammenspiel beider Mechanismen ist entscheidend für stabile Plastizität.
   literature:
-    - SRC-TURRIGIANO-2008
+  - SRC-TURRIGIANO-2008
   hypotheses:
-    - H-HOM-002-A
+  - H-HOM-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-5D-001
   domain: 5D Topology
-  question: "Hat die fünfdimensionale Anordnung einen messbaren Effekt auf die Netzwerkdynamik?"
-  relevance: "Kernfrage des gesamten Brain-5D-Projekts."
+  question: Hat die fünfdimensionale Anordnung einen messbaren Effekt auf die Netzwerkdynamik?
+  relevance: Kernfrage des gesamten Brain-5D-Projekts.
   literature:
-    - SRC-IZHIKEVICH-2003
+  - SRC-IZHIKEVICH-2003
   hypotheses:
-    - H-5D-001-A
+  - H-5D-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-5D-002
   domain: 5D Topology
-  question: "Wie verändert Dimensionalität die Signalpropagation im Netzwerk?"
-  relevance: "Verständnis der Informationsausbreitung in höherdimensionalen SNNs."
+  question: Wie verändert Dimensionalität die Signalpropagation im Netzwerk?
+  relevance: Verständnis der Informationsausbreitung in höherdimensionalen SNNs.
   literature: []
   hypotheses:
-    - H-5D-002-A
+  - H-5D-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-5D-003
   domain: 5D Topology
-  question: "Entsteht in 5D eine andere Modularität als in niedrigeren Dimensionen?"
-  relevance: "Modularität ist ein Schlüsselkonzept für funktionale Spezialisierung."
+  question: Entsteht in 5D eine andere Modularität als in niedrigeren Dimensionen?
+  relevance: Modularität ist ein Schlüsselkonzept für funktionale Spezialisierung.
   literature: []
   hypotheses:
-    - H-5D-003-A
+  - H-5D-003-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-5D-004
   domain: 5D Topology
-  question: "Sind zusätzliche Dimensionen informationstragend oder lediglich zusätzliche Koordinaten?"
-  relevance: "Eine der wichtigsten Fragen des gesamten Projekts — betrifft fundamentale Natur der 5D-Repräsentation."
+  question: Sind zusätzliche Dimensionen informationstragend oder lediglich zusätzliche
+    Koordinaten?
+  relevance: Eine der wichtigsten Fragen des gesamten Projekts — betrifft fundamentale
+    Natur der 5D-Repräsentation.
   literature: []
   hypotheses:
-    - H-5D-004-A
+  - H-5D-004-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STORAGE-001
   domain: Storage
-  question: "Kann ein vollständiger neuronaler Zustand verlustfrei im .b5d-Modell gespeichert werden?"
-  relevance: "Grundlage für Persistenz und Checkpointing."
+  question: Kann ein vollständiger neuronaler Zustand verlustfrei im .b5d-Modell gespeichert
+    werden?
+  relevance: Grundlage für Persistenz und Checkpointing.
   literature: []
   hypotheses:
-    - H-STOR-001-A
+  - H-STOR-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STORAGE-002
   domain: Storage
-  question: "Welche Informationen müssen gespeichert werden, damit ein Lauf kausal fortgesetzt werden kann?"
-  relevance: "Vollständige Zustandsspeicherung für deterministische Reproduktion."
+  question: Welche Informationen müssen gespeichert werden, damit ein Lauf kausal
+    fortgesetzt werden kann?
+  relevance: Vollständige Zustandsspeicherung für deterministische Reproduktion.
   literature: []
   hypotheses:
-    - H-STOR-002-A
+  - H-STOR-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STORAGE-003
   domain: Storage
-  question: "Welche Speicherdichte erreicht das multidimensionale Modell?"
-  relevance: "Skalierbarkeit des Speicherformats."
+  question: Welche Speicherdichte erreicht das multidimensionale Modell?
+  relevance: Skalierbarkeit des Speicherformats.
   literature: []
   hypotheses:
-    - H-STOR-003-A
+  - H-STOR-003-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STORAGE-004
   domain: Storage
-  question: "Wie verhält sich das .b5d-Format bei 5.000, 50.000, 500.000, 5 Mio., 50 Mio. und 312,5 Mio. Neuronen?"
-  relevance: "Extrapolation der theoretischen Skalierbarkeit."
+  question: Wie verhält sich das .b5d-Format bei 5.000, 50.000, 500.000, 5 Mio., 50
+    Mio. und 312,5 Mio. Neuronen?
+  relevance: Extrapolation der theoretischen Skalierbarkeit.
   literature: []
   hypotheses:
-    - H-STOR-004-A
+  - H-STOR-004-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SCALE-001
   domain: Scaling
-  question: "Skaliert Brain-5D von 5.000 auf Millionen Neuronen ohne qualitative Dynamikveränderung?"
-  relevance: "Nachweis der Architekturskalierbarkeit."
+  question: Skaliert Brain-5D von 5.000 auf Millionen Neuronen ohne qualitative Dynamikveränderung?
+  relevance: Nachweis der Architekturskalierbarkeit.
   literature: []
   hypotheses:
-    - H-SCALE-001-A
+  - H-SCALE-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SELF-001
   domain: Self-Organization
-  question: "Entstehen in Brain-5D spontan funktionale Cluster oder Module?"
-  relevance: "Selbstorganisation ist ein Schlüsselmerkmal biologischer neuronaler Systeme."
+  question: Entstehen in Brain-5D spontan funktionale Cluster oder Module?
+  relevance: Selbstorganisation ist ein Schlüsselmerkmal biologischer neuronaler Systeme.
   literature:
-    - SRC-IZHIKEVICH-2003
+  - SRC-IZHIKEVICH-2003
   hypotheses:
-    - H-SELF-001-A
+  - H-SELF-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-SELF-002
   domain: Self-Organization
-  question: "Ist die beobachtete Selbstorganistion emergenter Natur oder durch die Architektur programmiert?"
-  relevance: "Unterscheidung zwischen echter Emergenz und deterministischer Architekturfolge."
+  question: Ist die beobachtete Selbstorganistion emergenter Natur oder durch die
+    Architektur programmiert?
+  relevance: Unterscheidung zwischen echter Emergenz und deterministischer Architekturfolge.
   literature: []
   hypotheses:
-    - H-SELF-002-A
+  - H-SELF-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-STRUCT-001
   domain: Structural Plasticity
-  question: "Führt strukturelle Plastizität (Pruning/Sprouting) zu funktional verbesserten Netzwerken?"
-  relevance: "Strukturelle Anpassung ist ein mächtiger Mechanismus biologischer Gehirne."
+  question: Führt strukturelle Plastizität (Pruning/Sprouting) zu funktional verbesserten
+    Netzwerken?
+  relevance: Strukturelle Anpassung ist ein mächtiger Mechanismus biologischer Gehirne.
   literature: []
   hypotheses:
-    - H-STRUCT-001-A
+  - H-STRUCT-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-MEM-001
   domain: Memory
-  question: "Kann Brain-5D Informationen über synaptische Gewichte speichern und zuverlässig abrufen?"
-  relevance: "Gedächtnis ist eine Kernfunktion neuronaler Systeme."
+  question: Kann Brain-5D Informationen über synaptische Gewichte speichern und zuverlässig
+    abrufen?
+  relevance: Gedächtnis ist eine Kernfunktion neuronaler Systeme.
   literature: []
   hypotheses:
-    - H-MEM-001-A
+  - H-MEM-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-EMB-001
   domain: Embodiment
-  question: "Kann Brain-5D in einer Sensor-Aktor-Schleife (Embodiment) sinnvoll agieren?"
-  relevance: "Embodiment erweitert Brain-5D von einer reinen Simulation zu einem interaktiven System."
+  question: Kann Brain-5D in einer Sensor-Aktor-Schleife (Embodiment) sinnvoll agieren?
+  relevance: Embodiment erweitert Brain-5D von einer reinen Simulation zu einem interaktiven
+    System.
   literature: []
   hypotheses:
-    - H-EMB-001-A
+  - H-EMB-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-LLM-001
   domain: Language Organ
-  question: "Kann ein Language Organ (SNM ↔ LLM) sinnvolle Kommunikation ermöglichen?"
-  relevance: "Schnittstelle zwischen neuronaler Simulation und natürlicher Sprache."
+  question: Kann ein Language Organ (SNM ↔ LLM) sinnvolle Kommunikation ermöglichen?
+  relevance: Schnittstelle zwischen neuronaler Simulation und natürlicher Sprache.
   literature: []
   hypotheses:
-    - H-LLM-001-A
+  - H-LLM-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-ETH-001
   domain: Ethics
-  question: "Wer ist der Autor von Brain-5D-Erkenntnissen — Mensch, Modell oder System?"
-  relevance: "Grundsatzfrage zur Autorenschaft und Verantwortung in KI-gestützter Forschung."
+  question: Wer ist der Autor von Brain-5D-Erkenntnissen — Mensch, Modell oder System?
+  relevance: Grundsatzfrage zur Autorenschaft und Verantwortung in KI-gestützter Forschung.
   literature: []
   hypotheses:
-    - H-ETH-001-A
+  - H-ETH-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-ETH-002
   domain: Ethics
-  question: "Wo liegt die Kontrolle und Verantwortung bei Brain-5D-Experimenten?"
-  relevance: "Verantwortungsverteilung zwischen Entwickler, Modell und automatisiertem System."
+  question: Wo liegt die Kontrolle und Verantwortung bei Brain-5D-Experimenten?
+  relevance: Verantwortungsverteilung zwischen Entwickler, Modell und automatisiertem
+    System.
   literature: []
   hypotheses:
-    - H-ETH-002-A
+  - H-ETH-002-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
-
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'
 - id: RQ-EPIST-001
   domain: Epistemology
-  question: "Was gilt als Erkenntnis des Systems Brain-5D im Unterschied zur Erkenntnis des Forschers?"
-  relevance: "Epistemologische Grundlagen für maschinelle Wissensproduktion."
+  question: Was gilt als Erkenntnis des Systems Brain-5D im Unterschied zur Erkenntnis
+    des Forschers?
+  relevance: Epistemologische Grundlagen für maschinelle Wissensproduktion.
   literature: []
   hypotheses:
-    - H-EPIST-001-A
+  - H-EPIST-001-A
   evidence: []
   status: open
   answer:
     current: null
     confidence: none
-  created: "2026-08-23"
-  updated: "2026-08-23"
+    limitations: null
+  created: '2026-08-23'
+  updated: '2026-08-23'

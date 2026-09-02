@@ -1,6 +1,6 @@
 # Brain-5D Open Questions
 
-*Generiert am 2026-08-31*
+*Generiert am 2026-09-02*
 
 Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evidenz.
 
@@ -99,23 +99,6 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 **Hypothesen:**
 - `H-SNN-005-A`: Ein Netzwerk mit STDP zeigt signifikant bessere Lernleistung als ein Netzwerk ohne STDP.
-
----
-
-## RQ-STDP-001
-
-**Domäne:** STDP
-
-**Frage:** Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung?
-
-**Relevanz:** Fundamentale STDP-Eigenschaft, die in Brain-5D verifiziert werden muss.
-
-**Literatur:**
-- `SRC-SONG-ABBOTT-2000`: Sen Song et al. (2000)
-- `SRC-BI-POO-1998`: Guo-Qiang Bi et al. (1998)
-
-**Hypothesen:**
-- `H-STDP-001-A`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0).
 
 ---
 
@@ -407,4 +390,4 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 28 offene Fragen.*
+*Insgesamt 27 offene Fragen.*

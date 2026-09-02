@@ -177,6 +177,8 @@ class EvidenceEngine:
             self._update_hypothesis_status(hypothesis)
             self.registry.save_hypotheses()
 
+        self._update_research_question(claim_id, evidence_id)
+
         return evidence_id
 
     def _update_claim_status(self, claim: Claim) -> None:
@@ -247,6 +249,33 @@ class EvidenceEngine:
             hypothesis.status = "refuted"
         else:
             hypothesis.status = "inconclusive"
+
+    def _update_research_question(self, claim_id: str, evidence_id: str) -> None:
+        """Reflect claim maturity in its question without authoring an answer.
+
+        ``ready_for_answer`` is deliberately a review state. A human researcher
+        must still evaluate methods and limitations before setting an answer to
+        ``provisionally_answered`` or ``answered``.
+        """
+        claim = self.registry.claims.get(claim_id)
+        if claim is None:
+            return
+        question = self.registry.questions.get(claim.research_question)
+        if question is None or question.status in {"answered", "superseded"}:
+            return
+
+        if evidence_id not in question.evidence:
+            question.evidence.append(evidence_id)
+        related_claims = self.registry.claims_for_question(question.id)
+        if related_claims and all(
+            item.status in {"supported", "refuted"} for item in related_claims
+        ):
+            question.status = "ready_for_answer"
+        elif any(item.status == "inconclusive" for item in related_claims):
+            question.status = "inconclusive"
+        else:
+            question.status = "in_progress"
+        self.registry.save_questions()
 
     def _load_evidence(self, evidence_id: str) -> dict[str, Any] | None:
         path = EVIDENCE_DIR / f"{evidence_id}.json"

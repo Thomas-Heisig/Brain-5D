@@ -1650,7 +1650,8 @@ body .footer-segment {
     height: calc(100vh - 241px);
     min-height: 720px;
     max-height: 1029px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
@@ -1792,7 +1793,7 @@ body .footer-segment {
 
   #tab-gate .release-board {
     max-height: 885px;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   #tab-gate .gate-criteria-table {

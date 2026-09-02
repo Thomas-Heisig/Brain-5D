@@ -26,6 +26,7 @@ export class ExperimentWorkflowPanel {
       experimentId: byId("workflow-experiment-id"),
       title: byId("workflow-title"),
       conditions: byId("workflow-conditions"),
+      protocol: byId("workflow-protocol"),
       ticks: byId("workflow-ticks"),
       notes: byId("workflow-notes"),
       run: byId("workflow-run"),
@@ -33,6 +34,7 @@ export class ExperimentWorkflowPanel {
       result: byId("workflow-result"),
     };
     this.elements.question?.addEventListener("change", () => this._renderHypotheses());
+    this.elements.protocol?.addEventListener("change", () => this._applyProtocol());
     this.elements.run?.addEventListener("click", () => this._run());
   }
 
@@ -79,6 +81,7 @@ export class ExperimentWorkflowPanel {
       conditions: this.elements.conditions?.value.trim() || "",
       ticks: Number(this.elements.ticks?.value),
       notes: this.elements.notes?.value.trim() || "",
+      protocol: this.elements.protocol?.value || "runtime_ticks_v1",
     };
     this.elements.run.disabled = true;
     this._setStatus("Ausfuehrung laeuft", "running");
@@ -89,17 +92,32 @@ export class ExperimentWorkflowPanel {
         body: JSON.stringify(payload),
       });
       this._setStatus("Bericht eingetragen", "completed");
-      this.elements.result.textContent = [
+      const lines = [
         `Experiment: ${result.experiment_id}`,
         `Manifest: research/${result.manifest}`,
         `Bericht: research/${result.report}`,
-        `Tick: ${result.result.start.tick} -> ${result.result.end.tick}`,
-      ].join("\n");
+      ];
+      if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`, `Daten: ${result.data_id}`);
+      if (result.result) lines.push(`Tick: ${result.result.start.tick} -> ${result.result.end.tick}`);
+      this.elements.result.textContent = lines.join("\n");
     } catch (error) {
       this._setStatus(`Ausfuehrung abgebrochen: ${error.message}`, "error");
     } finally {
       this.elements.run.disabled = false;
     }
+  }
+
+  _applyProtocol() {
+    if (this.elements.protocol?.value !== "stdp_pair_timing_v1") return;
+    const question = this.elements.question;
+    const hypothesis = this.elements.hypothesis;
+    if (question) question.value = "RQ-STDP-001";
+    this._renderHypotheses();
+    if (hypothesis) hypothesis.value = "H-STDP-001-A";
+    if (this.elements.experimentId) this.elements.experimentId.value = "EXP-STDP-0001";
+    if (this.elements.title) this.elements.title.value = "Pair-Timing STDP";
+    if (this.elements.conditions) this.elements.conditions.value = "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; Δt -50 bis +50 ms; 10 Replikationen pro Δt.";
+    if (this.elements.ticks) this.elements.ticks.value = "11";
   }
 
   _setStatus(message, state) {

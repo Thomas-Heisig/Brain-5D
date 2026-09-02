@@ -1,0 +1,52 @@
+{
+  "experiment_id": "EXP-GEN-0001",
+  "experiment_status": "completed",
+  "timestamp": "2026-09-02T09:42:08.972601",
+  "git": {
+    "commit": "795f79bcb56796d316e544fa594e947e88f5a30d",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "ticks": 1000
+  },
+  "artifacts": {
+    "workflow": "experiments/EXP-GEN-0001/workflow.json"
+  },
+  "research_questions": [
+    "RQ-SNN-001"
+  ],
+  "hypotheses": [
+    "H-SNN-001-A"
+  ],
+  "config": {},
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "results": {
+    "passed": true,
+    "start": {
+      "tick": 0,
+      "neurons": 5000,
+      "synapses": 36031
+    },
+    "end": {
+      "tick": 999,
+      "neurons": 5000,
+      "synapses": 36031
+    },
+    "observed_ticks": 999
+  },
+  "runtime": {
+    "duration_seconds": 193.51001949998317
+  }
+}

@@ -49,8 +49,9 @@
   research_question: RQ-STDP-001
   hypothesis: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine
     asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0).
-  status: untested
-  evidence: []
+  status: inconclusive
+  evidence:
+  - EVID-2026-17
   created: '2026-08-23'
   updated: '2026-08-23'
 - id: H-STDP-002-A

@@ -1,0 +1,105 @@
+{
+  "data_id": "DATA-2026-17",
+  "experiment_id": "EXP-STDP-0001",
+  "generated": "2026-09-02T07:57:15.693523+00:00",
+  "protocol": "stdp_pair_timing_v1",
+  "seed": 42,
+  "conditions": {
+    "initial_weight": 0.5,
+    "parameters": {
+      "a_plus": 0.1,
+      "a_minus": 0.12,
+      "tau_plus": 20.0,
+      "tau_minus": 20.0,
+      "min_weight": 0.0,
+      "max_weight": 1.0
+    },
+    "replications_per_delta_t": 10
+  },
+  "measurements": [
+    {
+      "delta_t_ms": -50,
+      "replications": 10,
+      "mean_delta_weight": -0.009850199834867845,
+      "min_delta_weight": -0.009850199834867845,
+      "max_delta_weight": -0.009850199834867845
+    },
+    {
+      "delta_t_ms": -20,
+      "replications": 10,
+      "mean_delta_weight": -0.04414553294057311,
+      "min_delta_weight": -0.04414553294057311,
+      "max_delta_weight": -0.04414553294057311
+    },
+    {
+      "delta_t_ms": -10,
+      "replications": 10,
+      "mean_delta_weight": -0.07278367916551598,
+      "min_delta_weight": -0.07278367916551598,
+      "max_delta_weight": -0.07278367916551598
+    },
+    {
+      "delta_t_ms": -5,
+      "replications": 10,
+      "mean_delta_weight": -0.09345609396856858,
+      "min_delta_weight": -0.09345609396856858,
+      "max_delta_weight": -0.09345609396856858
+    },
+    {
+      "delta_t_ms": -1,
+      "replications": 10,
+      "mean_delta_weight": -0.11414753094008567,
+      "min_delta_weight": -0.11414753094008567,
+      "max_delta_weight": -0.11414753094008567
+    },
+    {
+      "delta_t_ms": 0,
+      "replications": 10,
+      "mean_delta_weight": 0.0,
+      "min_delta_weight": 0.0,
+      "max_delta_weight": 0.0
+    },
+    {
+      "delta_t_ms": 1,
+      "replications": 10,
+      "mean_delta_weight": 0.09512294245007147,
+      "min_delta_weight": 0.09512294245007147,
+      "max_delta_weight": 0.09512294245007147
+    },
+    {
+      "delta_t_ms": 5,
+      "replications": 10,
+      "mean_delta_weight": 0.0778800783071405,
+      "min_delta_weight": 0.0778800783071405,
+      "max_delta_weight": 0.0778800783071405
+    },
+    {
+      "delta_t_ms": 10,
+      "replications": 10,
+      "mean_delta_weight": 0.0606530659712633,
+      "min_delta_weight": 0.0606530659712633,
+      "max_delta_weight": 0.0606530659712633
+    },
+    {
+      "delta_t_ms": 20,
+      "replications": 10,
+      "mean_delta_weight": 0.036787944117144256,
+      "min_delta_weight": 0.036787944117144256,
+      "max_delta_weight": 0.036787944117144256
+    },
+    {
+      "delta_t_ms": 50,
+      "replications": 10,
+      "mean_delta_weight": 0.008208499862389917,
+      "min_delta_weight": 0.008208499862389917,
+      "max_delta_weight": 0.008208499862389917
+    }
+  ],
+  "summary": {
+    "total_replications": 110,
+    "mean_ltp": 0.05573050614160189,
+    "mean_ltd": -0.06687660736992224,
+    "zero_delta_weight": 0.0,
+    "hypothesis_supported": true
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "experiment_id": "EXP-STDP-0001",
+  "experiment_status": "completed",
+  "timestamp": "2026-09-02T09:57:15.694297",
+  "git": {
+    "commit": "1164a1d48a6eff8b751bb1fbbbe19c8f92925cdc",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "0.5.0-alpha.7"
+  },
+  "simulation": {
+    "seed": 42,
+    "ticks": 11,
+    "learning": true,
+    "input_pattern": "isolated pre/post spike pair timing sweep",
+    "protocol": "stdp_pair_timing_v1"
+  },
+  "artifacts": {
+    "data": "research/generated/data/DATA-2026-17.json",
+    "protocol": "research/experiments/EXP-STDP-0001/protocol.json"
+  },
+  "research_questions": [
+    "RQ-STDP-001"
+  ],
+  "hypotheses": [
+    "H-STDP-001-A"
+  ],
+  "config": {
+    "path": "research/experiments/EXP-STDP-0001/protocol.json",
+    "sha256": "e0ad3ba1de5d5123cce2b5c776ab7a95310995949c4c165c528cf41f118ee5aa"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "results": {
+    "metrics_summary": {
+      "total_replications": 110,
+      "mean_ltp": 0.05573050614160189,
+      "mean_ltd": -0.06687660736992224,
+      "zero_delta_weight": 0.0,
+      "hypothesis_supported": true
+    },
+    "hypothesis_supported": true
+  },
+  "runtime": {
+    "duration_seconds": 0.0001311999512836337
+  },
+  "data_ids": [
+    "DATA-2026-17"
+  ]
+}

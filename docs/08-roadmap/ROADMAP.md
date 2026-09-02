@@ -66,6 +66,8 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 ## v0.5.0-alpha.7 — Embodiment Foundation & Safe Environment I/O (current)
 - [x] Research Experiment Runner: Forschungsfrage -> Bedingungen -> Experiment -> Ausfuehren -> Bericht -> Ergebnis; validiert Registry-Links und legt `manifest.json`, `workflow.json` und `report.md` unter `research/experiments/EXP-*/` ab
 - [x] Experiment execution is limited to bounded `controller.step(ticks)` calls; optional Ollama assistance has no execution, configuration, or evidence authority
+- [x] First scientific end-to-end run: `EXP-STDP-0001` produced `DATA-2026-17` and `EVID-2026-17` for `RQ-STDP-001`; the isolated pair-timing result supports its local claim but remains `inconclusive` for full-runtime inference
+- [x] Evidence feedback updates question maturity (`in_progress` / `inconclusive` / `ready_for_answer`) while final answers remain human-reviewed
 
 > Development began after the Alpha.6 closure commit `8fac75d`. Alpha.6 evidence remains historical and is not evidence for this changed source tree.
 

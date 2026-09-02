@@ -1,6 +1,6 @@
 # Brain-5D Evidence Matrix
 
-*Generiert am 2026-09-01*
+*Generiert am 2026-09-02*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
@@ -10,7 +10,7 @@
 | `RQ-SNN-003` | — | 2 | — | — | offen |
 | `RQ-SNN-004` | `H-SNN-004-A` | 2 | `CLAIM-SNN-001` | — | offen |
 | `RQ-SNN-005` | `H-SNN-005-A` | 2 | — | — | offen |
-| `RQ-STDP-001` | `H-STDP-001-A` | 2 | — | — | offen |
+| `RQ-STDP-001` | `H-STDP-001-A` | 2 | `CLAIM-STDP-001` | `EVID-2026-17` | offen |
 | `RQ-STDP-002` | `H-STDP-002-A` | 1 | — | — | offen |
 | `RQ-HOM-001` | `H-HOM-001-A` | 1 | — | — | offen |
 | `RQ-HOM-002` | `H-HOM-002-A` | 1 | — | — | offen |
@@ -39,9 +39,9 @@
 |--------|--------|
 | ✅ Supported | 0 |
 | ❌ Refuted | 0 |
-| 🔄 Inconclusive | 2 |
+| 🔄 Inconclusive | 3 |
 | ⬜ Untested | 4 |
-| **Gesamt** | **6** |
+| **Gesamt** | **7** |
 
 ---
 *Automatisch generiert — Theorie, Beobachtung und Interpretation sind strikt getrennt.*
