@@ -38,6 +38,8 @@ class FakeSynapse:
 class FakeStep:
     tick: int
     spike_ids: tuple[int, ...]
+    dirty_neuron_ids: tuple[int, ...] = ()
+    dirty_synapse_ids: tuple[tuple[int, int], ...] = ()
 
 
 Hook = Callable[[FakeStep], None]
@@ -91,3 +93,33 @@ def test_storage_session_captures_changes_and_commits(tmp_path: Path) -> None:
     assert DeltaType.SPIKE_EVENT in kinds
     assert session.stats.commits == 1
     assert not session.attached
+
+
+def test_dirty_tracking_matches_full_scan_for_emitted_ids(tmp_path: Path) -> None:
+    def collect(policy: str) -> tuple[DeltaType, ...]:
+        network = FakeNetwork(
+            dimensions=(10, 10, 10, 10, 10),
+            current_tick=0,
+            neurons={1: FakeNeuron(), 2: FakeNeuron()},
+            synapses={1: [FakeSynapse(2, 0.2, 1)], 2: []},
+        )
+        config = StorageRuntimeConfig(
+            snapshot_path=tmp_path / f"{policy}.b5d",
+            journal_path=tmp_path / f"{policy}.journal",
+            commit_interval_ticks=1,
+            capture_policy=policy,  # type: ignore[arg-type]
+        )
+        session = StorageSession(network, config)  # type: ignore[arg-type]
+        session.start()
+        network.current_tick = 1
+        network.neurons[1].v = -40.0
+        network.neurons[1].spike_counter = 1
+        network.synapses[1][0].weight = 0.7
+        result = FakeStep(1, (1,), (1,), ((1, 2),))
+        for hook in tuple(network.hooks):
+            hook(result)
+        session.close()
+        with DeltaJournal(config.journal_path) as journal:
+            return tuple(entry.delta_type for entry in journal.iter_committed_entries())
+
+    assert collect("dirty_tracking") == collect("full_change_scan")

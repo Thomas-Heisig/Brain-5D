@@ -214,6 +214,8 @@ class StepResult:
     core_step_ms: float = 0.0
     neuron_activity: dict[int, bool] = field(default_factory=dict[int, bool])
     total_synapses: int = 0
+    dirty_neuron_ids: tuple[int, ...] = ()
+    dirty_synapse_ids: tuple[tuple[int, int], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -234,6 +236,8 @@ class StepResult:
             "mean_energy": self.mean_energy,
             "core_step_ms": self.core_step_ms,
             "total_synapses": self.total_synapses,
+            "dirty_neuron_ids": list(self.dirty_neuron_ids),
+            "dirty_synapse_ids": [list(value) for value in self.dirty_synapse_ids],
         }
 
 
@@ -330,6 +334,8 @@ class NeuralNetwork:
 
         # Performance tracking
         self._step_count = 0
+        self._dirty_neuron_ids: set[int] = set()
+        self._dirty_synapse_ids: set[tuple[int, int]] = set()
 
     # ========================================================================
     # Configuration Access
@@ -389,6 +395,7 @@ class NeuralNetwork:
         )
 
         self.neurons[nid] = neuron
+        neuron.set_dirty_callback(lambda nid=nid: self._dirty_neuron_ids.add(nid))
         self.synapses[nid] = []
         self.in_degree[nid] = 0
 
@@ -524,6 +531,11 @@ class NeuralNetwork:
         # Create synapse
         synapse = create_synapse(post_id, weight, delay, config or self.synapse_config)
         self.synapses[pre_id].append(synapse)
+        synapse.set_dirty_callback(
+            lambda pre_id=pre_id, post_id=post_id: self._dirty_synapse_ids.add(
+                (pre_id, post_id)
+            )
+        )
         self._synapse_count += 1
         self.in_degree[post_id] = self.in_degree.get(post_id, 0) + 1
 
@@ -850,6 +862,7 @@ class NeuralNetwork:
                     key=lambda s: s.target_id,
                 ):
                     connection.last_pre_spike = tick
+                    connection.mark_dirty()
                     delivery_tick = tick + connection.delay
                     slot = delivery_tick % len(self.event_slots)
                     self.event_slots[slot].append(
@@ -902,6 +915,8 @@ class NeuralNetwork:
             core_step_ms=elapsed,
             neuron_activity=neuron_activity,
             total_synapses=self._synapse_count,
+            dirty_neuron_ids=tuple(sorted(self._dirty_neuron_ids)),
+            dirty_synapse_ids=tuple(sorted(self._dirty_synapse_ids)),
         )
 
         # 8. Run post-step hooks

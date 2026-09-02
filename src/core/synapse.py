@@ -12,7 +12,7 @@ two neurons in the Brain-5D network. It supports:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 # ============================================================================
 # STDP Constants (Default values from Song & Abbott 2000)
@@ -96,6 +96,16 @@ class Synapse:
     # === Internal state ===
     _config: SynapseConfig | None = field(default=None, repr=False, init=False)
     _enabled: bool = field(default=True, repr=False, init=False)
+    _dirty_callback: Callable[[], None] | None = field(default=None, repr=False, init=False)
+
+    def set_dirty_callback(self, callback: Callable[[], None] | None) -> None:
+        """Attach the runtime callback used to publish state mutations."""
+        self._dirty_callback = callback
+
+    def mark_dirty(self) -> None:
+        """Publish a mutation to an attached runtime observer."""
+        if self._dirty_callback is not None:
+            self._dirty_callback()
 
     def __post_init__(self) -> None:
         """Validate synapse parameters after initialization."""
@@ -136,6 +146,7 @@ class Synapse:
         if self._enabled:
             decay = self.config.eligibility_decay
             self.eligibility *= decay
+            self.mark_dirty()
 
     def record_pre_spike(self, tick: int) -> None:
         """Record a presynaptic spike for STDP."""
@@ -143,6 +154,7 @@ class Synapse:
         # For triplet STDP: update pre_trace
         if self.config.enable_triplet:
             self.pre_trace = 1.0
+        self.mark_dirty()
 
     def record_post_spike(self, tick: int) -> None:
         """Record a postsynaptic spike for STDP."""
@@ -150,6 +162,7 @@ class Synapse:
         # For triplet STDP: update post_trace
         if self.config.enable_triplet:
             self.post_trace = 1.0
+        self.mark_dirty()
 
     def decay_traces(self) -> None:
         """Decay triplet STDP traces."""
@@ -269,6 +282,7 @@ class Synapse:
         new_weight = max(self.config.w_min, min(self.config.w_max, new_weight))
         delta = new_weight - self.weight
         self.weight = new_weight
+        self.mark_dirty()
 
         if delta != 0.0:
             self.update_count += 1

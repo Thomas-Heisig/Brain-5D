@@ -28,6 +28,10 @@
 - [x] Controlled Research Experiment Runner with registry validation and per-run reports in `research/experiments/EXP-*/`
 - [x] Keep optional Ollama assistance outside the experimental causal path and prohibit it as execution input or evidence
 - [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
+- [x] Re-run currently executable research checks on 2026-09-02: focused protocols `35 passed, 1 skipped`; full suite with large storage checks `544 passed, 3 skipped`
+- [x] Run the maximum current runtime stability slice: `1000` ticks with STDP and homeostasis completed without runtime errors; propagation recorded 1 direct spike, 0 secondary recruits and no output reach
+- [ ] Extend `RuntimeController.run_ticks()` beyond the current 1000-tick guard before treating the registered 100000-tick stability experiment as executable
+- [ ] Re-run Alpha.5 evidence publication on a clean source tree; the test itself passed but the runner rejected EVID creation because `git.dirty == true`
 - [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
 - [ ] Evaluate `RQ-AIR-001`: benchmark the Scientific Research Assistant on controlled methodological defects before relying on its review proposals
 - [x] Register `RQ-AIR-001`, `H-AIR-001-A` and `CLAIM-AIR-001`; add the held-out 30-case `AIR-METHODOLOGY-GOLD-V1` dataset
@@ -38,6 +42,9 @@
 - [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
 - [x] Define and validate orthogonal state identity (`operator` / `experiment` / `dev`) and observability (`full` / `scientific` / `minimal` / `compute`) axes
 - [ ] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
+  - Core-Emitter und `StepResult`-Dirty-IDs sind implementiert; Storage nutzt sie
+    für emittierte Zustände mit sicherem Scan-Fallback. Lern-/Homeostasis-
+    Direktmutationen müssen vor dem Aktivieren noch vollständig emittieren.
 - [x] First deterministic EnvironmentAdapter integrated end-to-end (`DeterministicTargetEnvironment`)
 - [x] Explicit actuator authorization enforced before adapter execution
 - [x] Per-adapter capability and rate limits enforced
@@ -50,6 +57,9 @@
 - [x] Full-stack embodiment pipeline connects SensorFrame -> encoder -> SNN -> decoder -> controlled actuator -> EnvironmentObservation feedback
 - [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
 - [x] Embodiment pipeline stages expose validated in-element enable switches through the dashboard API
+- [x] Apply Embodiment stage switches inside the runtime pipeline with fail-closed execution
+- [x] Redraw the Wesen visual as a bilateral-symmetric body: paired senses, central neural database, paired extremities
+- [x] Give every visible Embodiment node an explicit visible label and honest hover description
 
 ## Alpha.6 Phase B Evidence Freeze (released)
 

@@ -64,6 +64,8 @@ class StepResultLike(Protocol):
 
     tick: int
     spike_ids: Sequence[int]
+    dirty_neuron_ids: Sequence[int]
+    dirty_synapse_ids: Sequence[tuple[int, int]]
 
 
 PostStepHook = Callable[[StepResultLike], None]
@@ -307,7 +309,18 @@ class StorageSession:
             )
             self._topology_deltas += 1
 
-        for neuron_id, neuron in self.network.neurons.items():
+        dirty_neuron_ids = getattr(result, "dirty_neuron_ids", None)
+        neuron_items = (
+            self.network.neurons.items()
+            if self.config.capture_policy == "full_change_scan"
+            or dirty_neuron_ids is None
+            else (
+                (neuron_id, self.network.neurons[neuron_id])
+                for neuron_id in dirty_neuron_ids
+                if neuron_id in self.network.neurons
+            )
+        )
+        for neuron_id, neuron in neuron_items:
             numeric_id = int(neuron_id)
             neuron_fingerprint = self._neuron_fingerprint(neuron)
             previous_neuron = self._neurons.get(numeric_id)
@@ -369,7 +382,16 @@ class StorageSession:
             self._synapses[(source_id, target_id)] = synapse_fingerprint
             self._topology_deltas += 1
 
-        for key in sorted(current_synapse_keys & previous_synapse_keys):
+        dirty_synapse_ids = getattr(result, "dirty_synapse_ids", None)
+        changed_synapse_keys = (
+            current_synapse_keys & previous_synapse_keys
+            if self.config.capture_policy == "full_change_scan"
+            or dirty_synapse_ids is None
+            else current_synapse_keys
+            & previous_synapse_keys
+            & {tuple(value) for value in dirty_synapse_ids}
+        )
+        for key in sorted(changed_synapse_keys):
             _, synapse_fingerprint = current_synapses[key]
             previous_synapse = self._synapses[key]
             if synapse_fingerprint != previous_synapse:

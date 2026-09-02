@@ -1,11 +1,21 @@
 # Changelog
 
+## 2026-09-02 — Executable experiment sweep
+
+- Re-ran the focused determinism, B5D storage, STDP protocol and structural E2E checks: `35 passed, 1 skipped`.
+- Ran the complete suite with optional large storage/journal checks enabled: `544 passed, 3 skipped`.
+- Completed the maximum current `1000`-tick STDP + homeostasis runtime slice without runtime errors; it recorded 1 direct spike, no secondary recruitment and no output propagation.
+- The historical `100000`-tick stability config is not executable with the current loader/runtime contract: its schema is outdated and `RuntimeController.run_ticks()` caps one call at 1000 ticks.
+- Alpha.5 test execution passed, but evidence publication remained fail-closed because the development tree is dirty; no new EVID record was claimed.
+
 ## 2026-09-02 — Scaling benchmark ladder
 
 - Added `scripts/benchmark_ladder.py` for bounded 5k-to-1M neuron scaling
   runs with recorded platform/provenance data and an explicit non-scientific
   claim marker.
 - Added fail-closed validation for both Hugging Face sync secrets.
+- Added core dirty-state emission and a storage equality regression test;
+  capture policy remains scan-default until all external mutation paths emit.
 
 ## 2026-09-02 — Embodiment anatomy visualization
 
@@ -29,6 +39,11 @@
   configuration-dependent and is not claimed as implemented.
 - Added validated in-element pipeline switches for sensor, encoder, SNN,
   decoder, actuator and feedback stages through `/api/embodiment/pipeline`.
+- Connected stage configuration to `EmbodimentPipeline` fail-closed execution
+  and redrew `brain5d-being.svg` around a bilateral-symmetric organism with a
+  central neural database, paired senses and paired extremities.
+- Added visible names and honest hover descriptions for all Embodiment pipeline,
+  sensor, actuator and feedback nodes.
 
 ## 2026-09-02 — Evidence scope digests
 

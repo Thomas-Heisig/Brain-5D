@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Any
+from typing import Any, Callable
 
 # ============================================================================
 # Neuron Types
@@ -164,6 +164,16 @@ class Neuron:
     _enabled: bool = field(default=True, repr=False, init=False)
     _spike_count_window: int = 0
     _last_update_tick: int = 0
+    _dirty_callback: Callable[[], None] | None = field(default=None, repr=False, init=False)
+
+    def set_dirty_callback(self, callback: Callable[[], None] | None) -> None:
+        """Attach the runtime callback used to publish state mutations."""
+        self._dirty_callback = callback
+
+    def mark_dirty(self) -> None:
+        """Publish a mutation to an attached runtime observer."""
+        if self._dirty_callback is not None:
+            self._dirty_callback()
 
     @property
     def is_inhibitory(self) -> bool:
@@ -278,6 +288,7 @@ class Neuron:
         # Update tick tracking
         self._last_update_tick = tick
 
+        self.mark_dirty()
         return spiked
 
     # ========================================================================
