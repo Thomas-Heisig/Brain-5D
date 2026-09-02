@@ -85,11 +85,11 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Animated living-system and dynamic body graph without synthetic telemetry
 - [x] Fail-closed discovery for compute, storage, network, camera, microphone, display, audio and print queues
 - [x] Local/intranet binding and authenticated TLS reverse-proxy template
-- [ ] First deterministic `EnvironmentAdapter` integrated end-to-end
-- [ ] Explicit authorization before sensor sampling or actuator execution
-- [ ] Capability and rate limits enforced per adapter
-- [ ] Every external action recorded in an immutable audit trail
-- [ ] Emergency stop and human override enforced below the policy layer
+- [x] First deterministic `EnvironmentAdapter` integrated end-to-end (`DeterministicTargetEnvironment` + safety proof)
+- [x] Explicit authorization before actuator execution; unauthorized calls fail closed
+- [x] Capability and rate limits enforced per adapter
+- [x] Every actuator attempt recorded in a hash-linked immutable audit trail
+- [x] Emergency stop and human override enforced below the policy layer
 
 ### Alpha.7 exit criteria
 

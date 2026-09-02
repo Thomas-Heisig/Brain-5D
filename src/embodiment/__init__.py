@@ -2,6 +2,8 @@
 
 from .actuator import ActuatorAdapter
 from .agent import EmbodimentAgent
+from .audit import ActionAuditRecord, ActionAuditTrail
+from .controlled import ControlledEmbodimentAgent, ControlledSensorAdapter
 from .connections import (
     ConnectionDescriptor,
     ConnectionKind,
@@ -10,6 +12,7 @@ from .connections import (
     RelationshipClass,
 )
 from .environment import EnvironmentAdapter
+from .deterministic import DeterministicTargetEnvironment
 from .models import (
     ActionCommand,
     ActuatorResult,
@@ -25,11 +28,16 @@ __all__ = [
     "ActionCommand",
     "ActuatorAdapter",
     "ActuatorResult",
+    "ActionAuditRecord",
+    "ActionAuditTrail",
     "ConnectionDescriptor",
     "ConnectionKind",
     "ConnectionManager",
     "ConnectionStatus",
     "EmbodimentAgent",
+    "ControlledEmbodimentAgent",
+    "ControlledSensorAdapter",
+    "DeterministicTargetEnvironment",
     "EmbodimentMetrics",
     "EmbodimentRegistry",
     "EnvironmentAdapter",

@@ -4,6 +4,7 @@
 
 - Added validated `operator` / `experiment` / `dev` state modes and independent `full` / `scientific` / `minimal` / `compute` observability profiles.
 - Made storage `capture_policy` explicit while retaining `full_change_scan` as the correctness baseline; dirty tracking is not enabled before the core emits complete dirty sets.
+- Added the deterministic Alpha.7 target environment and a fail-closed embodiment controller with authorization, capability checks, per-tick rate limits, emergency stop, human override and hash-linked action audit records.
 
 ## 2026-09-01 — v0.5.0-alpha.7 Opened
 

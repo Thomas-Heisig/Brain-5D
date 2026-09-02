@@ -38,11 +38,11 @@
 - [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
 - [x] Define and validate orthogonal state identity (`operator` / `experiment` / `dev`) and observability (`full` / `scientific` / `minimal` / `compute`) axes
 - [ ] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
-- [ ] First deterministic EnvironmentAdapter integrated end-to-end
-- [ ] Explicit sensor/actuator authorization enforced
-- [ ] Per-adapter capability and rate limits enforced
-- [ ] Immutable action audit trail implemented
-- [ ] Emergency stop and human override enforced below policy execution
+- [x] First deterministic EnvironmentAdapter integrated end-to-end (`DeterministicTargetEnvironment`)
+- [x] Explicit actuator authorization enforced before adapter execution
+- [x] Per-adapter capability and rate limits enforced
+- [x] Hash-linked immutable action audit trail implemented
+- [x] Emergency stop and human override enforced below policy execution
 
 ## Alpha.6 Phase B Evidence Freeze (released)
 
@@ -71,8 +71,8 @@
 - [x] Dashboard fuer Localhost/Intranet konfigurierbar machen und sicheren Internetzugriff ueber TLS/Auth-Proxy vorbereiten
 - [x] Verbindungsmanager mit realer Compute-, Storage-, Netzwerk-, Internet-, Kamera-, Mikrofon-, Audio- und Drucker-Erkennung samt dynamischem Körpergraph integrieren
 - [x] Windows-Launcher gegen lokalisierte tasklist/taskkill-Codepages härten
-- [ ] Ersten deterministischen EnvironmentAdapter samt Sensor-/Aktor-Detailpublikation integrieren; erst danach manuelle Aktionen freigeben
-- [ ] Rechtevergabe, Audit, Grenzwerte, Not-Aus und Human Override pro realem Adapter implementieren
+- [x] Ersten deterministischen EnvironmentAdapter samt kontrolliertem Aktorpfad integrieren; manuelle Aktionen bleiben safety-gated
+- [x] Rechtevergabe, Audit, Grenzwerte, Not-Aus und Human Override pro Adapter implementieren
 - [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
 - [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
 - [x] GitHub/Docker actions migrated to Node 24-compatible majors
