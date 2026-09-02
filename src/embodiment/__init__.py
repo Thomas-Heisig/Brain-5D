@@ -3,7 +3,6 @@
 from .actuator import ActuatorAdapter
 from .agent import EmbodimentAgent
 from .audit import ActionAuditRecord, ActionAuditTrail
-from .controlled import ControlledEmbodimentAgent, ControlledSensorAdapter
 from .connections import (
     ConnectionDescriptor,
     ConnectionKind,
@@ -11,8 +10,9 @@ from .connections import (
     ConnectionStatus,
     RelationshipClass,
 )
-from .environment import EnvironmentAdapter
+from .controlled import ControlledEmbodimentAgent, ControlledSensorAdapter
 from .deterministic import DeterministicTargetEnvironment
+from .environment import EnvironmentAdapter
 from .models import (
     ActionCommand,
     ActuatorResult,
