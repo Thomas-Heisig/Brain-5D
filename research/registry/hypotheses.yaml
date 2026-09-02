@@ -225,3 +225,10 @@
   evidence: []
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: H-AIR-001-A
+  research_question: RQ-AIR-001
+  hypothesis: Ein Scientific Research Assistant mit strukturiertem ResearchPacket erkennt vorab definierte methodische Defekte mit höherem F1-Score als dasselbe Modell mit einem unstrukturierten Experimentbericht.
+  status: untested
+  evidence: []
+  created: '2026-09-02'
+  updated: '2026-09-02'

@@ -30,6 +30,7 @@
 - [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
 - [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
 - [ ] Evaluate `RQ-AIR-001`: benchmark the Scientific Research Assistant on controlled methodological defects before relying on its review proposals
+- [x] Register `RQ-AIR-001`, `H-AIR-001-A` and `CLAIM-AIR-001`; add the held-out 30-case `AIR-METHODOLOGY-GOLD-V1` dataset
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced

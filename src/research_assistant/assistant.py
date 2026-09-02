@@ -29,6 +29,9 @@ class ResearchAssistant:
         question = _by_id(questions, question_id)
         hypothesis_ids = _string_list(manifest, "hypotheses")
         data = self._data_for_manifest(manifest)
+        evidence = self._evidence_for_experiment(experiment_id)
+        protocol = self._protocol_for_manifest(manifest)
+        previous_analyses = self._previous_analyses(experiment_id)
         return ResearchPacket(
             experiment_id=experiment_id,
             research_question=question,
@@ -40,6 +43,20 @@ class ResearchAssistant:
             ],
             manifest=manifest,
             data=data,
+            evidence=evidence,
+            literature_sources=self._literature_for_question(question),
+            protocol=protocol,
+            known_limitations=self._limitations(manifest, evidence),
+            previous_analyses=previous_analyses,
+            provenance={
+                "git_commit": str(
+                    cast(dict[str, Any], manifest.get("git", {})).get(
+                        "commit", "unknown"
+                    )
+                ),
+                "experiment_status": str(manifest.get("experiment_status", "unknown")),
+                "evidence_mode": str(manifest.get("evidence_mode", "not_reported")),
+            },
         )
 
     def analyze(
@@ -81,12 +98,78 @@ class ResearchAssistant:
             return None
         return self._read_json(path.removeprefix("research/"))
 
+    def _protocol_for_manifest(self, manifest: dict[str, Any]) -> dict[str, Any] | None:
+        config = manifest.get("config", {})
+        if not isinstance(config, dict):
+            return None
+        path = cast(dict[str, Any], config).get("path")
+        if not isinstance(path, str) or not path.startswith("research/"):
+            return None
+        try:
+            return self._read_json(path.removeprefix("research/"))
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            return None
+
+    def _evidence_for_experiment(self, experiment_id: str) -> list[dict[str, Any]]:
+        directory = self._root / "registry" / "evidence"
+        if not directory.is_dir():
+            return []
+        records: list[dict[str, Any]] = []
+        for path in sorted(directory.glob("EVID-*.json")):
+            record = self._read_json(str(path.relative_to(self._root)))
+            if record.get("experiment_id") == experiment_id:
+                records.append(record)
+        return records
+
+    def _literature_for_question(
+        self, question: dict[str, Any]
+    ) -> list[dict[str, Any]]:
+        source_ids = _string_list(question, "literature")
+        try:
+            sources = self._read_yaml("registry/sources.yaml")
+        except FileNotFoundError:
+            return []
+        return [source for source in sources if source.get("source_id") in source_ids]
+
+    def _previous_analyses(self, experiment_id: str) -> list[dict[str, Any]]:
+        directory = self._root / "analysis"
+        if not directory.is_dir():
+            return []
+        return [
+            record
+            for path in sorted(directory.glob("AIAR-*.json"))
+            for record in [self._read_json(str(path.relative_to(self._root)))]
+            if cast(dict[str, Any], record.get("inputs", {})).get("experiment_id")
+            == experiment_id
+        ]
+
+    @staticmethod
+    def _limitations(
+        manifest: dict[str, Any], evidence: list[dict[str, Any]]
+    ) -> list[str]:
+        limitations: list[str] = []
+        git = manifest.get("git", {})
+        if (
+            not isinstance(git, dict)
+            or cast(dict[str, Any], git).get("dirty") is not False
+        ):
+            limitations.append("Git provenance is dirty or unavailable.")
+        if manifest.get("experiment_status") != "completed":
+            limitations.append("Experiment is not a completed valid scientific run.")
+        if not evidence:
+            limitations.append(
+                "No registered scientific evidence is linked to this experiment."
+            )
+        return limitations
+
     def _read_json(self, relative_path: str) -> dict[str, Any]:
         raw_data: Any = json.loads(
             self._safe_path(relative_path).read_text(encoding="utf-8")
         )
         if not isinstance(raw_data, dict):
-            raise ValueError(f"Research artifact must be a JSON object: {relative_path}")
+            raise ValueError(
+                f"Research artifact must be a JSON object: {relative_path}"
+            )
         return cast(dict[str, Any], raw_data)
 
     def _read_yaml(self, relative_path: str) -> list[dict[str, Any]]:

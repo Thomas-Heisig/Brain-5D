@@ -19,6 +19,12 @@ class ResearchPacket:
     claims: list[dict[str, Any]]
     manifest: dict[str, Any]
     data: dict[str, Any] | None
+    evidence: list[dict[str, Any]]
+    literature_sources: list[dict[str, Any]]
+    protocol: dict[str, Any] | None
+    known_limitations: list[str]
+    previous_analyses: list[dict[str, Any]]
+    provenance: dict[str, str]
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), sort_keys=True, ensure_ascii=True)
@@ -39,6 +45,7 @@ class AIAnalysisRecord:
     output: dict[str, Any]
     provenance: dict[str, str]
     epistemic_status: dict[str, bool]
+    review: dict[str, str | None]
     generated_at: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -60,7 +67,17 @@ class AIAnalysisRecord:
         return cls(
             analysis_id=analysis_id,
             role=role,
-            model=model,
+            model={
+                "provider": str(model.get("provider", "unknown")),
+                "model_name": str(model.get("model", "unknown")),
+                "model_digest": str(model.get("model_digest", "unknown")),
+                "quantization": str(model.get("quantization", "unknown")),
+                "context_length": str(model.get("context_length", "unknown")),
+                "temperature": float(model.get("temperature", 0.0)),
+                "top_p": float(model.get("top_p", 1.0)),
+                "seed": str(model.get("seed", "not_reported")),
+                "backend_version": str(model.get("backend_version", "unknown")),
+            },
             inputs={
                 "experiment_id": packet.experiment_id,
                 "packet_digest": packet.digest,
@@ -68,7 +85,16 @@ class AIAnalysisRecord:
             output=output,
             provenance={
                 "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
-                "input_digest": packet.digest,
+                "research_packet_digest": packet.digest,
+                "prompt_protocol_version": "research_assistant_v1",
+                "assistant_schema_version": "1",
+                "git_commit": packet.provenance.get("git_commit", "unknown"),
+            },
+            review={
+                "status": "pending",
+                "reviewer": None,
+                "reviewed_at": None,
+                "disposition": None,
             },
             epistemic_status={
                 "evidence": False,

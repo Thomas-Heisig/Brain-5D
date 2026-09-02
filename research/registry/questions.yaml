@@ -452,3 +452,18 @@
     limitations: null
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: RQ-AIR-001
+  domain: AI-Assisted Research
+  question: Kann ein LLM-basierter Scientific Research Assistant methodische Fehler in Brain-5D-Experimenten anhand eines standardisierten ResearchPacket zuverlässig identifizieren?
+  relevance: Prüft den wissenschaftlichen Nutzen der Research-Assistant-Architektur, ohne ihr wissenschaftliche Entscheidungsgewalt zu geben.
+  literature: []
+  hypotheses:
+  - H-AIR-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-02'
+  updated: '2026-09-02'

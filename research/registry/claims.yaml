@@ -149,3 +149,19 @@
   minimum_runs: 30
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: CLAIM-AIR-001
+  claim: Ein standardisiertes ResearchPacket verbessert die Identifikation vorab definierter methodischer Fehler gegenüber einem unstrukturierten Experimentbericht.
+  research_question: RQ-AIR-001
+  hypothesis: H-AIR-001-A
+  evidence: []
+  experiments: []
+  sources: []
+  status: untested
+  confidence: none
+  required_evidence:
+  - structured_vs_unstructured_comparison
+  - held_out_goldstandard
+  - per_defect_class_metrics
+  minimum_runs: 30
+  created: '2026-09-02'
+  updated: '2026-09-02'

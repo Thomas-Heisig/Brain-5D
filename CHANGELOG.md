@@ -10,6 +10,10 @@
   interpretation JSON only; it cannot execute experiments, alter runtime or
   registry state, create evidence, or answer research questions. Every record
   carries prompt and input digests and requires human review.
+- **AI-assisted research foundation**: `RQ-AIR-001`, `H-AIR-001-A`, and
+  `CLAIM-AIR-001` now define a structured-versus-unstructured methodological
+  review study. `AIR-METHODOLOGY-GOLD-V1` provides 30 held-out, labelled cases;
+  no model has received the labels and no benchmark evidence has been created.
 
 - **Research Experiment Runner**: The RESEARCH workspace now provides the
   traceable workflow Forschungsfrage -> Bedingungen -> Experiment ->

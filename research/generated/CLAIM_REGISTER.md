@@ -11,3 +11,4 @@
 | `CLAIM-STOR-001`: Das .b5d-Format ermöglicht verlustfreie Serialisierung und Deserialisierung des ... | 🔄 inconclusive | low | 8 | 10 |
 | `CLAIM-DET-001`: Brain-5D erzeugt bei identischem Seed, Input und Anfangszustand deterministisch ... | 🔄 inconclusive | low | 8 | 10 |
 | `CLAIM-SELF-001`: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung.... | ⬜ untested | none | 0 | 0 |
+| `CLAIM-AIR-001`: Ein standardisiertes ResearchPacket verbessert die Identifikation vorab definier... | ⬜ untested | none | 0 | 0 |

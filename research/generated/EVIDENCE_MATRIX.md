@@ -32,6 +32,7 @@
 | `RQ-ETH-001` | `H-ETH-001-A` | 0 | — | — | offen |
 | `RQ-ETH-002` | `H-ETH-002-A` | 0 | — | — | offen |
 | `RQ-EPIST-001` | `H-EPIST-001-A` | 0 | — | — | offen |
+| `RQ-AIR-001` | `H-AIR-001-A` | 0 | `CLAIM-AIR-001` | — | offen |
 
 ## Zusammenfassung
 
@@ -40,8 +41,8 @@
 | ✅ Supported | 0 |
 | ❌ Refuted | 0 |
 | 🔄 Inconclusive | 2 |
-| ⬜ Untested | 5 |
-| **Gesamt** | **7** |
+| ⬜ Untested | 6 |
+| **Gesamt** | **8** |
 
 ---
 *Automatisch generiert — Theorie, Beobachtung und Interpretation sind strikt getrennt.*

@@ -1,6 +1,6 @@
 {
   "experiment_id": "EXP-STDP-0001a",
-  "experiment_status": "completed",
+  "experiment_status": "invalid",
   "timestamp": "2026-09-02T10:31:41.021187",
   "git": {
     "commit": "98452255c5645e8f14f777e2b9e73ef4c99e6f5b",
@@ -26,13 +26,14 @@
   ],
   "config": {},
   "validity": {
-    "valid": true,
-    "reason": null,
+    "valid": false,
+    "reason": "development UI smoke artifact: STDP title is mislinked to RQ-SNN-001/H-SNN-001-A; dirty tree and incomplete provenance",
     "runtime_error_count": 0,
     "fatal_error_count": 0
   },
   "runtime_errors": [],
   "results": {
+    "classification": "development_ui_smoke",
     "passed": true,
     "start": {
       "tick": 1299,
@@ -48,5 +49,9 @@
   },
   "runtime": {
     "duration_seconds": 1.6980726000037976
+  },
+  "evidence_eligibility": {
+    "eligible": false,
+    "reason": "Development UI smoke artifact; never eligible for scientific evidence."
   }
 }

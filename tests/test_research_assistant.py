@@ -65,11 +65,16 @@ def test_critical_reviewer_persists_interpretation_only_record(tmp_path: Path) -
     saved = json.loads(
         (tmp_path / "analysis" / f"{record.analysis_id}.json").read_text()
     )
-    assert packet.digest == assistant.build_packet("EXP-STDP-0001").digest
     assert saved["epistemic_status"] == {
         "evidence": False,
         "interpretation_only": True,
         "human_review_required": True,
     }
     assert saved["inputs"]["packet_digest"] == packet.digest
+    assert saved["provenance"]["research_packet_digest"] == packet.digest
+    assert saved["review"]["status"] == "pending"
     assert saved["output"]["methodological_concerns"] == ["Dirty provenance."]
+    assert (
+        assistant.build_packet("EXP-STDP-0001").previous_analyses[0]["analysis_id"]
+        == record.analysis_id
+    )

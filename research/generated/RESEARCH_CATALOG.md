@@ -4,9 +4,9 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 28
-- **Hypothesen:** 27
-- **Claims:** 7
+- **Forschungsfragen:** 29
+- **Hypothesen:** 28
+- **Claims:** 8
 - **Literaturquellen:** 10
 
 ---
@@ -67,6 +67,23 @@
 
 **Claims:**
 - `CLAIM-5D-002`: 5D-Netzwerke zeigen eine höhere Informationskapazität als niedrigdimensionale Netzwerke gleicher Neuronenzahl. *(untested, none)*
+
+---
+
+## AI-Assisted Research
+
+### RQ-AIR-001
+
+**Frage:** Kann ein LLM-basierter Scientific Research Assistant methodische Fehler in Brain-5D-Experimenten anhand eines standardisierten ResearchPacket zuverlässig identifizieren?
+
+**Status:** open
+**Relevanz:** Prüft den wissenschaftlichen Nutzen der Research-Assistant-Architektur, ohne ihr wissenschaftliche Entscheidungsgewalt zu geben.
+
+**Hypothesen:**
+- `H-AIR-001-A`: Ein Scientific Research Assistant mit strukturiertem ResearchPacket erkennt vorab definierte methodische Defekte mit höherem F1-Score als dasselbe Modell mit einem unstrukturierten Experimentbericht. *(untested)*
+
+**Claims:**
+- `CLAIM-AIR-001`: Ein standardisiertes ResearchPacket verbessert die Identifikation vorab definierter methodischer Fehler gegenüber einem unstrukturierten Experimentbericht. *(untested, none)*
 
 ---
 

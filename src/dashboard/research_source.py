@@ -42,6 +42,8 @@ class ResearchSource:
         "registry",
         "generated",
         "experiments",
+        "analysis",
+        "benchmarks",
         "literature",
         "schemas",
     )

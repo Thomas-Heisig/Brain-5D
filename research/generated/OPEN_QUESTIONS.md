@@ -407,4 +407,17 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 28 offene Fragen.*
+## RQ-AIR-001
+
+**Domäne:** AI-Assisted Research
+
+**Frage:** Kann ein LLM-basierter Scientific Research Assistant methodische Fehler in Brain-5D-Experimenten anhand eines standardisierten ResearchPacket zuverlässig identifizieren?
+
+**Relevanz:** Prüft den wissenschaftlichen Nutzen der Research-Assistant-Architektur, ohne ihr wissenschaftliche Entscheidungsgewalt zu geben.
+
+**Hypothesen:**
+- `H-AIR-001-A`: Ein Scientific Research Assistant mit strukturiertem ResearchPacket erkennt vorab definierte methodische Defekte mit höherem F1-Score als dasselbe Modell mit einem unstrukturierten Experimentbericht.
+
+---
+
+*Insgesamt 29 offene Fragen.*
