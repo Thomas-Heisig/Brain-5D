@@ -40,8 +40,13 @@ export async function refreshPopulation() {
     const badge = $('ei-ratio-badge');
     if (badge) {
       const ratio = data.ei_ratio;
-      badge.textContent = `E/I: ${ratio.toFixed(2)}`;
-      badge.className = `gate-badge ${ratio > 0.5 && ratio < 3.0 ? 'passed' : 'stale'}`;
+      if (typeof ratio === 'number') {
+        badge.textContent = `E/I: ${ratio.toFixed(2)}`;
+        badge.className = `gate-badge ${ratio > 0.5 && ratio < 3.0 ? 'passed' : 'stale'}`;
+      } else {
+        badge.textContent = 'E/I: unavailable';
+        badge.className = 'gate-badge pending';
+      }
     }
 
     const grid = $('population-grid');

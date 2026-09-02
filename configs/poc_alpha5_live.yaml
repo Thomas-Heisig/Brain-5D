@@ -153,7 +153,8 @@ dashboard:
   live_telemetry:
     enabled: true
     activity_window_ticks: 20
-    capture_interval_ticks: 5
+    capture_interval_ticks: 20
+  state_publish_interval_ticks: 10
   show_heatmap: true
   heatmap_type: activity
 

@@ -101,8 +101,10 @@ def _learning_status(
     ``enabled`` reflects configuration; ``active`` reflects runtime activity
     measured by STDP/reward update counters.
     """
-    enabled = _is_enabled(config_dict, "stdp", "enabled") or _is_enabled(
-        config_dict, "reward", "enabled"
+    enabled = (
+        _is_enabled(config_dict, "stdp", "enabled")
+        or _is_enabled(config_dict, "eligibility", "enabled")
+        or _is_enabled(config_dict, "reward", "enabled")
     )
     active = snapshot.learning.stdp_updates > 0 or snapshot.learning.reward_updates > 0
 
@@ -110,7 +112,7 @@ def _learning_status(
         return ComponentStatus(
             component="learning",
             status="disabled",
-            reason="Learning is disabled by config (stdp.enabled / reward.enabled)",
+            reason="All learning mechanisms are disabled by config",
             last_update=_utc_now(),
             source="config",
             maturity="integrated",
@@ -130,9 +132,45 @@ def _learning_status(
     return ComponentStatus(
         component="learning",
         status="enabled",
-        reason="Learning is enabled by config but has no updates yet",
+        reason="Learning engine is attached but no weight updates were observed yet",
         last_update=_utc_now(),
         source="DashboardStateStore",
+        maturity="integrated",
+    )
+
+
+def _learning_mechanism_status(
+    snapshot: DashboardSnapshot,
+    config_dict: dict[str, Any] | None,
+    *,
+    component: str,
+    enabled_path: tuple[str, str],
+    update_count: int | None = None,
+) -> ComponentStatus:
+    """Report a learning mechanism without conflating readiness and effect."""
+    enabled = _is_enabled(config_dict, *enabled_path)
+    if not enabled:
+        status = "disabled"
+        reason = "Disabled by effective runtime configuration"
+        source = "config"
+    elif update_count is not None and update_count > 0:
+        status = "active"
+        reason = f"{update_count} measured weight updates"
+        source = "DashboardStateStore"
+    elif component == "reward":
+        status = "enabled"
+        reason = "Armed; external reward signal has not arrived"
+        source = "config"
+    else:
+        status = "enabled"
+        reason = "Enabled; no measured weight updates yet"
+        source = "config"
+    return ComponentStatus(
+        component=component,
+        status=status,
+        reason=reason,
+        last_update=_utc_now(),
+        source=source,
         maturity="integrated",
     )
 
@@ -616,6 +654,26 @@ def build_component_status(
         "runtime": _runtime_status(snapshot),
         "network": _network_status(snapshot),
         "learning": _learning_status(snapshot, config_dict),
+        "stdp": _learning_mechanism_status(
+            snapshot,
+            config_dict,
+            component="stdp",
+            enabled_path=("stdp", "enabled"),
+            update_count=snapshot.learning.stdp_updates,
+        ),
+        "eligibility": _learning_mechanism_status(
+            snapshot,
+            config_dict,
+            component="eligibility",
+            enabled_path=("eligibility", "enabled"),
+        ),
+        "reward": _learning_mechanism_status(
+            snapshot,
+            config_dict,
+            component="reward",
+            enabled_path=("reward", "enabled"),
+            update_count=snapshot.learning.reward_updates,
+        ),
         "homeostasis": _homeostasis_status(snapshot, config_dict),
         "structural": _structural_status(snapshot, config_dict),
         "storage": _storage_status(snapshot, config_dict),

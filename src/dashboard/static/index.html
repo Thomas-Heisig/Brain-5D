@@ -128,8 +128,12 @@
 
         <!-- Lernen -->
         <article class="card panel">
-          <div class="panel-title"><h2>Lernen</h2><span>STDP + Reward</span></div>
+          <div class="panel-title"><h2>Lernen</h2><span id="learning-engine-state">unavailable</span></div>
           <dl class="kv">
+            <div><dt>Engine</dt><dd id="learning-engine">—</dd></div>
+            <div><dt>STDP</dt><dd id="learning-stdp-state">—</dd></div>
+            <div><dt>Eligibility</dt><dd id="learning-eligibility-state">—</dd></div>
+            <div><dt>Reward</dt><dd id="learning-reward-state">—</dd></div>
             <div><dt>STDP Updates</dt><dd id="stdp">0</dd></div>
             <div><dt>Reward Updates</dt><dd id="reward-updates">0</dd></div>
             <div><dt>Rewards</dt><dd id="rewards">0</dd></div>

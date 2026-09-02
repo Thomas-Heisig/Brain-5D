@@ -201,6 +201,7 @@ class DashboardStateStore:
             "signal_metrics",
             "experiment",
             "embodiment",
+            "runtime",
             "components",
             "parameters",
             "pending_changes",

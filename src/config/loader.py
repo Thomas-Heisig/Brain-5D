@@ -82,6 +82,9 @@ class STDPConfig(TypedDict, total=False):
     a_minus: float
     tau_plus: float
     tau_minus: float
+    enabled: bool
+    min_weight: float
+    max_weight: float
     enable_triplet: bool
     enable_metaplasticity: bool
 
@@ -91,6 +94,12 @@ class RewardConfig(TypedDict, total=False):
 
     reward_source: str
     output_spike_value: float
+    enabled: bool
+    learning_rate: float
+    delay_ticks: int
+    clamp_weights: bool
+    reset_trace_after_reward: bool
+    trace_epsilon: float
 
 
 class VisualizationConfig(TypedDict, total=False):
@@ -141,6 +150,7 @@ class ConfigDict(TypedDict, total=False):
     self_organization: dict[str, Any]
     eligibility: dict[str, Any]
     storage: dict[str, Any]
+    dashboard: dict[str, Any]
 
 
 # ============================================================================
@@ -174,16 +184,25 @@ DEFAULT_CONFIG: ConfigDict = {
         "spike_cost": 0.001,
     },
     "stdp": {
+        "enabled": False,
         "a_plus": 0.1,
         "a_minus": 0.12,
         "tau_plus": 20.0,
         "tau_minus": 20.0,
         "enable_triplet": False,
         "enable_metaplasticity": False,
+        "min_weight": 0.0,
+        "max_weight": 1.0,
     },
     "reward": {
+        "enabled": False,
         "reward_source": "external",
         "output_spike_value": 1.0,
+        "learning_rate": 0.01,
+        "delay_ticks": 0,
+        "clamp_weights": True,
+        "reset_trace_after_reward": False,
+        "trace_epsilon": 1.0e-12,
     },
     "visualization": {
         "enabled": False,
@@ -421,7 +440,14 @@ def _validate_stdp_config(
     """Validate and merge STDP configuration."""
     result: STDPConfig = {}
 
-    for key in ["a_plus", "a_minus", "tau_plus", "tau_minus"]:
+    for key in [
+        "a_plus",
+        "a_minus",
+        "tau_plus",
+        "tau_minus",
+        "min_weight",
+        "max_weight",
+    ]:
         value = raw.get(key, defaults.get(key))
         if value is None:
             continue
@@ -430,6 +456,7 @@ def _validate_stdp_config(
         result[key] = float(value)  # type: ignore[literal-required]
 
     # Booleans
+    result["enabled"] = bool(raw.get("enabled", defaults.get("enabled", False)))
     result["enable_triplet"] = bool(
         raw.get("enable_triplet", defaults.get("enable_triplet", False))
     )
@@ -446,6 +473,8 @@ def _validate_reward_config(
 ) -> RewardConfig:
     """Validate and merge reward configuration."""
     result: RewardConfig = {}
+
+    result["enabled"] = bool(raw.get("enabled", defaults.get("enabled", False)))
 
     # reward_source
     source = raw.get("reward_source", defaults.get("reward_source", "external"))
@@ -464,6 +493,37 @@ def _validate_reward_config(
             f"output_spike_value must be numeric, got {type(val_raw).__name__}"
         )
     result["output_spike_value"] = float(val_raw)
+
+    rate_raw = raw.get("learning_rate", defaults.get("learning_rate", 0.01))
+    if not isinstance(rate_raw, (int, float)):
+        raise ValueError(
+            f"reward.learning_rate must be numeric, got {type(rate_raw).__name__}"
+        )
+    result["learning_rate"] = float(rate_raw)
+
+    delay_raw = raw.get("delay_ticks", defaults.get("delay_ticks", 0))
+    if not isinstance(delay_raw, (int, float)):
+        raise ValueError(
+            f"reward.delay_ticks must be numeric, got {type(delay_raw).__name__}"
+        )
+    result["delay_ticks"] = int(delay_raw)
+    if result["delay_ticks"] < 0:
+        raise ValueError("reward.delay_ticks must be >= 0")
+
+    result["clamp_weights"] = bool(
+        raw.get("clamp_weights", defaults.get("clamp_weights", True))
+    )
+    result["reset_trace_after_reward"] = bool(
+        raw.get(
+            "reset_trace_after_reward", defaults.get("reset_trace_after_reward", False)
+        )
+    )
+    epsilon_raw = raw.get("trace_epsilon", defaults.get("trace_epsilon", 1.0e-12))
+    if not isinstance(epsilon_raw, (int, float)):
+        raise ValueError(
+            f"reward.trace_epsilon must be numeric, got {type(epsilon_raw).__name__}"
+        )
+    result["trace_epsilon"] = float(epsilon_raw)
 
     return result
 
@@ -714,6 +774,13 @@ def load_config(
         if not isinstance(raw_dict["storage"], dict):
             raise ValueError("storage section must be a dictionary")
         result["storage"] = raw_dict["storage"]
+
+    # Dashboard (passthrough, optional). This is runtime configuration:
+    # telemetry capture and state publication must match the loaded profile.
+    if "dashboard" in raw_dict:
+        if not isinstance(raw_dict["dashboard"], dict):
+            raise ValueError("dashboard section must be a dictionary")
+        result["dashboard"] = raw_dict["dashboard"]
 
     # Topology input (backward compatibility)
     if "topology" in raw_dict and "input" in raw_dict["topology"]:

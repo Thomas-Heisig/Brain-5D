@@ -398,6 +398,11 @@ export function renderOverviewCommandCenter(state) {
   setOverviewStatus('overview-release-status', release, release === 'ready' ? 'passed' : 'pending');
   setOverviewStatus('overview-mode-status', mode, mode);
   setText('overview-context', `Tick ${formatNumber(system.tick)} · ${state.version || 'unknown'} · ${network.source || 'live runtime'}`);
+  const runtime = state.runtime || {};
+  const configPath = runtime.config_path || 'config unavailable';
+  const configDigest = runtime.config_sha256 ? String(runtime.config_sha256).slice(0, 12) : 'no digest';
+  const context = $('overview-context');
+  if (context) context.title = `${configPath}\nSHA-256: ${configDigest}`;
 
   setText('overview-network-source', String(network.source || 'live').replaceAll('_', ' ').toUpperCase());
   setText('overview-active-neurons', formatNumber(network.active_neurons));

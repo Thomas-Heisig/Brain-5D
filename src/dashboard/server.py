@@ -253,6 +253,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._send_json(server.dashboard_state.snapshot().to_json())
                 return
 
+            if path == "/api/config":
+                snapshot = server.dashboard_state.snapshot()
+                self._send_json({"runtime": snapshot.runtime})
+                return
+
             # ----------------------------------------------------------------
             # Operator Workbench: components, parameters, health
             # ----------------------------------------------------------------

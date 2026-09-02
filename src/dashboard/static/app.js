@@ -350,6 +350,11 @@ function renderStatus(state) {
   setText('rewards', `${formatNumber(learning.rewards_applied)} / ${formatNumber(learning.rewards_received)}`);
   setText('pending', formatNumber(learning.pending_rewards));
   setText('learning-ms', formatMetricUnit(learning.update_ms, 'ms', 3));
+  setText('learning-engine-state', learning.engine_attached ? 'attached' : 'unavailable');
+  setText('learning-engine', learning.engine_attached ? 'ACTIVE' : 'UNAVAILABLE');
+  setText('learning-stdp-state', learning.stdp_enabled ? (learning.stdp_updates > 0 ? 'ACTIVE' : 'ARMED') : 'DISABLED');
+  setText('learning-eligibility-state', learning.eligibility_enabled ? 'ACTIVE' : 'DISABLED');
+  setText('learning-reward-state', learning.reward_enabled ? (learning.reward_updates > 0 ? 'ACTIVE' : 'ARMED') : 'DISABLED');
 
   // Homeostasis
   if (homeostasis.enabled === false) {
@@ -976,8 +981,13 @@ async function refreshPopulation() {
     const badge = document.getElementById('ei-ratio-badge');
     if (badge) {
       const ratio = data.ei_ratio;
-      badge.textContent = `E/I: ${ratio.toFixed(2)}`;
-      badge.className = `gate-badge ${ratio > 0.5 && ratio < 3.0 ? 'passed' : 'stale'}`;
+      if (typeof ratio === 'number') {
+        badge.textContent = `E/I: ${ratio.toFixed(2)}`;
+        badge.className = `gate-badge ${ratio > 0.5 && ratio < 3.0 ? 'passed' : 'stale'}`;
+      } else {
+        badge.textContent = 'E/I: unavailable';
+        badge.className = 'gate-badge pending';
+      }
     }
 
     // Population cards

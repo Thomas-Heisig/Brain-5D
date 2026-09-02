@@ -108,6 +108,7 @@ export class DashboardStateStore {
       version: payload.version || this.state.version,
       system: payload.system || {},
       runtime: {
+        ...(payload.runtime || {}),
         tick: payload.system?.tick ?? this.state.runtime.tick,
         neurons: payload.system?.neurons ?? this.state.runtime.neurons,
         synapses: payload.system?.synapses ?? this.state.runtime.synapses,

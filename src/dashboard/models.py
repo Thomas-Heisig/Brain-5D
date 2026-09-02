@@ -53,6 +53,10 @@ class LearningMetrics:
     rewards_applied: int = 0
     pending_rewards: int = 0
     update_ms: float = 0.0
+    engine_attached: bool = False
+    stdp_enabled: bool = False
+    eligibility_enabled: bool = False
+    reward_enabled: bool = False
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-serializable representation."""
@@ -63,6 +67,10 @@ class LearningMetrics:
             "rewards_applied": self.rewards_applied,
             "pending_rewards": self.pending_rewards,
             "update_ms": self.update_ms,
+            "engine_attached": self.engine_attached,
+            "stdp_enabled": self.stdp_enabled,
+            "eligibility_enabled": self.eligibility_enabled,
+            "reward_enabled": self.reward_enabled,
         }
 
 
@@ -810,6 +818,7 @@ class DashboardSnapshot:
     signal_metrics: SignalMetrics = SignalMetrics()
     experiment: ExperimentMetrics = ExperimentMetrics()
     embodiment: EmbodimentMetrics = EmbodimentMetrics()
+    runtime: dict[str, JSONValue] = field(default_factory=dict[str, JSONValue])
     components: dict[str, ComponentStatus] = field(
         default_factory=dict[str, ComponentStatus]
     )
@@ -845,6 +854,7 @@ class DashboardSnapshot:
             "signal_metrics": self.signal_metrics.to_json(),
             "experiment": self.experiment.to_json(),
             "embodiment": self.embodiment.to_json(),
+            "runtime": dict(self.runtime),
             "components": {k: v.to_json() for k, v in components.items()},
             "parameters": {k: v.to_json() for k, v in parameters.items()},
             "pending_changes": {

@@ -285,10 +285,13 @@ def main() -> int:
     import hashlib
 
     try:
-        _config_bytes = Path(args.config).read_bytes()
+        _effective_config_path = Path(args.config).resolve()
+        _config_bytes = _effective_config_path.read_bytes()
         config_dict["_sha256"] = hashlib.sha256(_config_bytes).hexdigest()
+        config_dict["_path"] = str(_effective_config_path)
     except Exception:
         config_dict["_sha256"] = ""
+        config_dict["_path"] = str(args.config)
 
     print(f"🚀 Brain 5D - v{BRAIN5D_VERSION_DISPLAY} with dashboard")
     print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)")
@@ -530,6 +533,14 @@ def main() -> int:
                 rewards_applied=getattr(learning_stats, "rewards_applied", 0),
                 pending_rewards=getattr(learning_stats, "pending_rewards", 0),
                 update_ms=getattr(learning_stats, "last_update_ms", 0.0),
+                engine_attached=learning is not None,
+                stdp_enabled=bool(config_dict.get("stdp", {}).get("enabled", False)),
+                eligibility_enabled=bool(
+                    config_dict.get("eligibility", {}).get("enabled", False)
+                ),
+                reward_enabled=bool(
+                    config_dict.get("reward", {}).get("enabled", False)
+                ),
             ),
             storage=storage,
             self_organization=self_org,
@@ -573,6 +584,15 @@ def main() -> int:
                 clustering_coefficient=0.0,
                 mean_path_length=0.0,
             ),
+            runtime={
+                "config_path": str(config_dict.get("_path", "")),
+                "config_sha256": str(config_dict.get("_sha256", "")),
+                "state_publish_interval_ticks": int(
+                    config_dict.get("dashboard", {}).get(
+                        "state_publish_interval_ticks", 10
+                    )
+                ),
+            },
         )
         state_store.publish(enrich_snapshot(snapshot, config_dict))
 
@@ -645,8 +665,13 @@ def main() -> int:
                     f"| {result.core_step_ms:.3f} ms"
                 )
 
-            # Dashboard state publishing (every tick for live updates)
-            if state_store is not None:
+            # Snapshot enrichment traverses all dashboard components/parameters;
+            # publish at a bounded cadence instead of taxing every simulation tick.
+            _dashboard_cfg = config_dict.get("dashboard", {})
+            _publish_interval = max(
+                1, int(_dashboard_cfg.get("state_publish_interval_ticks", 10))
+            )
+            if state_store is not None and (result.tick + 1) % _publish_interval == 0:
                 try:
                     _publish_dashboard_state(
                         state_store=state_store,
