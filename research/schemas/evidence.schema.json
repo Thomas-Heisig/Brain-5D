@@ -57,6 +57,24 @@
         "n_runs": { "type": "integer" }
       }
     },
+    "evidence_mode": {
+      "type": "string",
+      "enum": [
+        "deterministic_verification",
+        "stochastic_experiment",
+        "observational_experiment"
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "conditions": { "type": "integer", "minimum": 1 },
+        "repeated_evaluations_per_condition": { "type": "integer", "minimum": 1 },
+        "independent_runs": { "type": "integer", "minimum": 0 },
+        "sign_compliance": { "type": "number", "minimum": 0, "maximum": 1 },
+        "deterministic_identity": { "type": "boolean" }
+      }
+    },
     "status": {
       "type": "string",
       "enum": ["supports", "refutes", "inconclusive", "pending"],

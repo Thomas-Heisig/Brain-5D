@@ -6,10 +6,12 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
-from typing import Any, Callable
+from typing import Callable, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
+
+from .models import JSONValue
 
 
 class WorkflowValidationError(ValueError):
@@ -40,22 +42,29 @@ class ExperimentWorkflowService:
     def __init__(self, research_root: Path) -> None:
         self._research_root = research_root
 
-    def catalog(self) -> dict[str, list[dict[str, str]]]:
+    def catalog(self) -> dict[str, JSONValue]:
         """Return registry entries suitable for workflow selection."""
         registry = ResearchRegistry(self._research_root / "registry").load_all()
         return {
-            "questions": [
-                {"id": question.id, "label": question.question}
-                for question in registry.questions.values()
-            ],
-            "hypotheses": [
-                {
-                    "id": hypothesis.id,
-                    "question_id": hypothesis.research_question,
-                    "label": hypothesis.hypothesis,
-                }
-                for hypothesis in registry.hypotheses.values()
-            ],
+            "questions": cast(
+                JSONValue,
+                [
+                    {"id": question.id, "label": question.question}
+                    for question in registry.questions.values()
+                ],
+            ),
+            "hypotheses": cast(
+                JSONValue,
+                [
+                    {
+                        "id": hypothesis.id,
+                        "question_id": hypothesis.research_question,
+                        "label": hypothesis.hypothesis,
+                    }
+                    for hypothesis in registry.hypotheses.values()
+                ],
+            ),
+            "next_experiment_id": self._next_experiment_id(),
         }
 
     def run(
@@ -149,10 +158,18 @@ class ExperimentWorkflowService:
             raise WorkflowValidationError("Experiment ID must be text.")
         experiment_id = experiment_id_value.strip() or self._next_experiment_id()
         if not experiment_id.startswith("EXP-") or len(experiment_id) > 64:
-            raise WorkflowValidationError("Experiment ID must use the EXP-* convention.")
+            raise WorkflowValidationError(
+                "Experiment ID must use the EXP-* convention."
+            )
         ticks = body.get("ticks")
-        if not isinstance(ticks, int) or isinstance(ticks, bool) or not 1 <= ticks <= 100_000:
-            raise WorkflowValidationError("Ticks must be an integer between 1 and 100000.")
+        if (
+            not isinstance(ticks, int)
+            or isinstance(ticks, bool)
+            or not 1 <= ticks <= 100_000
+        ):
+            raise WorkflowValidationError(
+                "Ticks must be an integer between 1 and 100000."
+            )
 
         question_id = required("question_id")
         hypothesis_id = required("hypothesis_id")
@@ -207,19 +224,26 @@ class ExperimentWorkflowService:
                 "",
                 "## Ausfuehrung",
                 f"Controller: `step({workflow.ticks})`",
+                "Ausfuehrungsmodus: kontrollierter Runtime-Lauf",
                 f"Dauer: {duration:.6f} s",
                 "",
                 "## Ergebnis",
                 f"Tick: {before['tick']} -> {after['tick']}",
                 f"Neuronen: {before['neurons']} -> {after['neurons']}",
                 f"Synapsen: {before['synapses']} -> {after['synapses']}",
+                f"Beobachtete Ticks: {after['tick'] - before['tick']}",
+                "",
+                "## Reproduzierbarkeit",
+                "Git-Commit, Laufzeitumgebung und Runtime-Parameter stehen im Manifest.",
+                "Dieser allgemeine Runner schreibt keinen kontrollierten Seed oder eingefrorenen Konfigurations-Snapshot; daher ist der Lauf ein Betriebsprotokoll, keine evidenzfaehige Messstudie.",
+                "",
+                "## Evidenzstatus",
+                "Keine EVID erzeugt. Fuer wissenschaftliche Evidenz sind ein sauberer Source-Freeze, ein registriertes Protokoll, kontrollierte unabhängige Variablen und definierte Messgroessen erforderlich.",
                 "",
                 "## Hinweise",
                 workflow.notes or "Keine.",
                 "",
-                "Der Bericht ist ein Laufprotokoll. Die wissenschaftliche Bewertung"
-                " erfolgt erst durch registrierte Evidenzregeln; KI-Ausgaben sind"
-                " weder Ausfuehrungseingabe noch Evidenz.",
+                "KI-Ausgaben sind weder Ausfuehrungseingabe noch Evidenz. Eine finale Antwort auf die Forschungsfrage bleibt einer menschlichen wissenschaftlichen Bewertung vorbehalten.",
                 "",
             ]
         )

@@ -324,6 +324,25 @@ class TestEvidenceRejection:
         self._create_manifest(exp_dir, "completed", valid=False)
         assert _check_experiment_valid("EXP-TEST-0001") is None
 
+    def test_dirty_worktree_rejected(self, tmp_path: Path) -> None:
+        """A dirty source tree cannot produce scientific evidence."""
+        import src.research.evidence_engine as ee_module
+
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["git"]["dirty"] = True
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        original_dir = ee_module.EXPERIMENTS_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            assert _check_experiment_valid("EXP-TEST-0001") is None
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+
     def test_evidence_engine_raises_for_invalid(
         self, registry: ResearchRegistry, tmp_path: Path
     ) -> None:

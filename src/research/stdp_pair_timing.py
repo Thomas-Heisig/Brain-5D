@@ -32,7 +32,8 @@ def run_pair_timing_protocol() -> dict[str, Any]:
         rows.append(
             {
                 "delta_t_ms": delta_t,
-                "replications": REPLICATIONS,
+                "repeated_evaluations": REPLICATIONS,
+                "independent_runs": 0,
                 "mean_delta_weight": fmean(changes),
                 "min_delta_weight": min(changes),
                 "max_delta_weight": max(changes),
@@ -42,24 +43,33 @@ def run_pair_timing_protocol() -> dict[str, Any]:
     positive = [row["mean_delta_weight"] for row in rows if row["delta_t_ms"] > 0]
     negative = [row["mean_delta_weight"] for row in rows if row["delta_t_ms"] < 0]
     zero = next(row["mean_delta_weight"] for row in rows if row["delta_t_ms"] == 0)
-    supported = all(change > 0 for change in positive) and all(
-        change < 0 for change in negative
-    ) and zero == 0.0
+    supported = (
+        all(change > 0 for change in positive)
+        and all(change < 0 for change in negative)
+        and zero == 0.0
+    )
     return {
         "protocol": PROTOCOL_ID,
         "seed": 42,
         "conditions": {
             "initial_weight": INITIAL_WEIGHT,
             "parameters": PARAMETERS.to_dict(),
-            "replications_per_delta_t": REPLICATIONS,
+            "repeated_evaluations_per_condition": REPLICATIONS,
+            "independent_runs_per_condition": 0,
         },
         "measurements": rows,
         "summary": {
             "total_replications": len(DELTA_T_MS) * REPLICATIONS,
+            "conditions": len(DELTA_T_MS),
+            "repeated_evaluations": len(DELTA_T_MS) * REPLICATIONS,
+            "independent_runs": 0,
             "mean_ltp": fmean(positive),
             "mean_ltd": fmean(negative),
             "zero_delta_weight": zero,
             "hypothesis_supported": supported,
+            "deterministic_identity": all(
+                row["min_delta_weight"] == row["max_delta_weight"] for row in rows
+            ),
         },
     }
 

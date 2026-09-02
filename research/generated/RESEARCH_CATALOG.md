@@ -212,20 +212,18 @@
 
 **Frage:** Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung?
 
-**Status:** inconclusive
+**Status:** open
 **Relevanz:** Fundamentale STDP-Eigenschaft, die in Brain-5D verifiziert werden muss.
 
 **Hypothesen:**
-- `H-STDP-001-A`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0). *(inconclusive)* — Evidenz: EVID-2026-17
+- `H-STDP-001-A`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0). *(untested)*
 
 **Claims:**
-- `CLAIM-STDP-001`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung. *(inconclusive, low)* — Evidenz: EVID-2026-17
+- `CLAIM-STDP-001`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung. *(untested, none)*
 
 **Literatur:**
 - `SRC-SONG-ABBOTT-2000`: Sen Song et al. (2000)
 - `SRC-BI-POO-1998`: Guo-Qiang Bi et al. (1998)
-
-**Evidenzen:** EVID-2026-17
 
 ---
 

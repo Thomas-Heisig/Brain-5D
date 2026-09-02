@@ -19,15 +19,13 @@
     Gewichtsanpassung.
   research_question: RQ-STDP-001
   hypothesis: H-STDP-001-A
-  evidence:
-  - EVID-2026-17
-  experiments:
-  - EXP-STDP-0001
+  evidence: []
+  experiments: []
   sources:
   - SRC-SONG-ABBOTT-2000
   - SRC-BI-POO-1998
-  status: inconclusive
-  confidence: low
+  status: untested
+  confidence: none
   required_evidence:
   - pair_timing_curve
   - statistical_replication

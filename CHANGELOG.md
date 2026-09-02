@@ -12,12 +12,13 @@
   `manifest.json`, and `report.md` under `research/experiments/EXP-*/`.
   Optional Ollama assistance has no execution, configuration, or evidence
   authority.
-- **First registered STDP experiment**: `EXP-STDP-0001` ran the deterministic
-  `stdp_pair_timing_v1` protocol with 11 timing offsets and 10 replications
-  each. It produced `DATA-2026-17`, `EVID-2026-17`, `CLAIM-STDP-001`, and the
-  corresponding report. The evidence supports the isolated STDP rule, while
-  `RQ-STDP-001` remains `inconclusive` pending runtime-level replication and
-  human review.
+- **First registered STDP pilot**: `EXP-STDP-0001` ran the deterministic
+  `stdp_pair_timing_v1` protocol with 11 timing conditions and 10 identical
+  repeated evaluations each. It produced `DATA-2026-17` and a detailed pilot
+  report, but no EVID: the source tree was dirty and the evaluations were not
+  independent runs. Evidence generation now fails closed for dirty Git trees
+  and distinguishes deterministic verification from stochastic and
+  observational experiments.
 
 ## v0.5.0-alpha.5 - Dashboard State & Health Repair (2026-08-30)
 

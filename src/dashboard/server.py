@@ -1954,15 +1954,17 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if protocol == "stdp_pair_timing_v1":
             from src.research.stdp_pair_experiment import execute_stdp_pair_experiment
 
-            result = execute_stdp_pair_experiment()
-            self._send_json({"ok": True, **result})
+            protocol_result = execute_stdp_pair_experiment()
+            self._send_json(cast(dict[str, JSONValue], {"ok": True, **protocol_result}))
             return
         if protocol not in {None, "runtime_ticks_v1"}:
             raise InvalidRequestError(f"Unknown experiment protocol: {protocol!r}")
         bridge = self._require_bridge()
         step = getattr(bridge.controller, "step", None)
         if not callable(step):
-            raise BridgeNotConfiguredError("Runtime controller does not support step().")
+            raise BridgeNotConfiguredError(
+                "Runtime controller does not support step()."
+            )
 
         state = self.dashboard_server.dashboard_state
 
@@ -1974,13 +1976,13 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "synapses": snapshot.synapses,
             }
 
-        result = ExperimentWorkflowService(source.root()).run(
+        runtime_result = ExperimentWorkflowService(source.root()).run(
             body,
             step,
             metrics(),
             metrics,
         )
-        self._send_json({"ok": True, **result})
+        self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
 
     def _set_experiment_mode(
         self,

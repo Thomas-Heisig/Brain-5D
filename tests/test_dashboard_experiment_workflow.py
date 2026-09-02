@@ -51,7 +51,9 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     )
 
     experiment_dir = tmp_path / "experiments" / "EXP-SNN-0001"
-    manifest = json.loads((experiment_dir / "manifest.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (experiment_dir / "manifest.json").read_text(encoding="utf-8")
+    )
     report = (experiment_dir / "report.md").read_text(encoding="utf-8")
     assert result["report"] == "experiments/EXP-SNN-0001/report.md"
     assert manifest["experiment_status"] == "completed"
@@ -59,6 +61,8 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     assert manifest["hypotheses"] == ["H-SNN-001-A"]
     assert manifest["results"]["observed_ticks"] == 25
     assert "## Ergebnis" in report
+    assert "## Reproduzierbarkeit" in report
+    assert "## Evidenzstatus" in report
     assert "KI-Ausgaben" in report
 
 
@@ -102,3 +106,11 @@ def test_run_generates_an_id_when_the_ui_field_is_empty(tmp_path: Path) -> None:
 
     assert result["experiment_id"] == "EXP-GEN-0001"
     assert (tmp_path / "experiments" / "EXP-GEN-0001" / "report.md").is_file()
+
+
+def test_catalog_publishes_the_next_generated_experiment_id(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+
+    catalog = ExperimentWorkflowService(tmp_path).catalog()
+
+    assert catalog["next_experiment_id"] == "EXP-GEN-0001"

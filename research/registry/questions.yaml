@@ -112,9 +112,8 @@
   - SRC-BI-POO-1998
   hypotheses:
   - H-STDP-001-A
-  evidence:
-  - EVID-2026-17
-  status: inconclusive
+  evidence: []
+  status: open
   answer:
     current: null
     confidence: none

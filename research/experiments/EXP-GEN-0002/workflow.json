@@ -1,0 +1,10 @@
+{
+  "title": "Test mit 300 ticks",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "conditions": "Keine",
+  "ticks": 300,
+  "notes": "Keine",
+  "execution": "controller.step",
+  "assistant_policy": "No AI-generated input is executed or used as evidence."
+}

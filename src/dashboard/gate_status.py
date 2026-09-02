@@ -250,6 +250,8 @@ class GateStatusBuilder:
         self.research_source = research_source
         self.repo_root = repo_root or Path.cwd()
         self.config_dict = config_dict or {}
+        self._tree_digest: str | None = None
+        self._tree_digest_loaded = False
 
     # ------------------------------------------------------------------------
     # Public API
@@ -277,6 +279,8 @@ class GateStatusBuilder:
         The legacy flat keys (``overall``, ``gate_a``, etc.) are kept for
         backward compatibility with existing dashboard consumers and tests.
         """
+        self._tree_digest = None
+        self._tree_digest_loaded = False
         gate_a = self._build_gate_a()
         gate_b = self._build_gate_b()
         gate_c = self._build_gate_c()
@@ -347,9 +351,10 @@ class GateStatusBuilder:
                 return None
             source_freeze = cast(dict[str, Any], raw_freeze)
             tested_digest = source_freeze.get("tested_tree_digest")
-            if not isinstance(
-                tested_digest, str
-            ) or tested_digest != compute_source_tree_digest(self.repo_root):
+            if (
+                not isinstance(tested_digest, str)
+                or tested_digest != self._current_tree_digest()
+            ):
                 return None
             raw_ci = data.get("continuous_integration")
             if not isinstance(raw_ci, dict):
@@ -467,9 +472,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
         if artifact_digest != current_digest:
@@ -493,9 +497,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return G_PENDING
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return G_PENDING
         if artifact_digest != current_digest:
@@ -532,9 +535,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return G_PENDING
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return G_PENDING
         if artifact_digest != current_digest:
@@ -1496,9 +1498,10 @@ class GateStatusBuilder:
 
         Delegates to :func:`verification.compute_source_tree_digest`.
         """
-        from src.dashboard.verification import compute_source_tree_digest
-
-        return compute_source_tree_digest(self.repo_root)
+        if not self._tree_digest_loaded:
+            self._tree_digest = compute_source_tree_digest(self.repo_root)
+            self._tree_digest_loaded = True
+        return self._tree_digest
 
     def _research_registry_counts(self) -> dict[str, int]:
         """Count registry entries using the canonical ResearchRegistry API.
@@ -1614,9 +1617,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
         if artifact_digest != current_digest:
@@ -1708,9 +1710,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
         if artifact_digest != current_digest:
@@ -1769,9 +1770,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
         if artifact_digest != current_digest:
@@ -1802,9 +1802,8 @@ class GateStatusBuilder:
         artifact_digest = artifact.get("tested_tree_digest")
         if not artifact_digest:
             return False
-        from src.dashboard.verification import compute_source_tree_digest
 
-        current_digest = compute_source_tree_digest(self.repo_root)
+        current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
         if artifact_digest != current_digest:

@@ -46,6 +46,14 @@ _INVALID_EVIDENCE_STATUSES = frozenset(
 )
 """Experiment statuses that cannot produce scientific evidence."""
 
+_VALID_EVIDENCE_MODES = frozenset(
+    {
+        "deterministic_verification",
+        "stochastic_experiment",
+        "observational_experiment",
+    }
+)
+
 
 def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
     """Check whether an experiment manifest is valid scientific evidence.
@@ -78,6 +86,12 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
     validity = manifest.get("validity", {})
     if not validity.get("valid", True):
         return None
+    git_raw = manifest.get("git", {})
+    if not isinstance(git_raw, dict):
+        return None
+    git = cast(dict[str, Any], git_raw)
+    if git.get("dirty") is not False:
+        return None
 
     return manifest
 
@@ -102,6 +116,8 @@ class EvidenceEngine:
         result_summary: str,
         effect_size: dict[str, Any] | None = None,
         statistical_significance: dict[str, Any] | None = None,
+        evidence_mode: str = "observational_experiment",
+        verification: dict[str, Any] | None = None,
         status: str = "inconclusive",
         limitations: str | None = None,
     ) -> str:
@@ -125,6 +141,13 @@ class EvidenceEngine:
             ValueError: If the experiment is not scientifically valid
                 (template, not_started, running, failed, or invalid).
         """
+        if evidence_mode not in _VALID_EVIDENCE_MODES:
+            raise ValueError(f"Unknown evidence mode: {evidence_mode!r}")
+        if evidence_mode == "deterministic_verification" and statistical_significance:
+            raise ValueError(
+                "Deterministic verification must not claim statistical significance."
+            )
+
         # Phase 1: Reject scientifically invalid experiments
         manifest = _check_experiment_valid(experiment_id)
         if manifest is None:
@@ -146,6 +169,8 @@ class EvidenceEngine:
             "result_summary": result_summary,
             "effect_size": effect_size or {},
             "statistical_significance": statistical_significance or {},
+            "evidence_mode": evidence_mode,
+            "verification": verification or {},
             "status": status,  # supports | refutes | inconclusive | pending
             "limitations": limitations or "",
             "artifacts": {"figures": [], "data_files": []},
@@ -177,7 +202,7 @@ class EvidenceEngine:
             self._update_hypothesis_status(hypothesis)
             self.registry.save_hypotheses()
 
-        self._update_research_question(claim_id, evidence_id)
+        self.update_research_question(claim_id, evidence_id)
 
         return evidence_id
 
@@ -250,7 +275,7 @@ class EvidenceEngine:
         else:
             hypothesis.status = "inconclusive"
 
-    def _update_research_question(self, claim_id: str, evidence_id: str) -> None:
+    def update_research_question(self, claim_id: str, evidence_id: str) -> None:
         """Reflect claim maturity in its question without authoring an answer.
 
         ``ready_for_answer`` is deliberately a review state. A human researcher

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pytest import MonkeyPatch
+
 from src.research.evidence_engine import EvidenceEngine
 from src.research.registry import Claim, Hypothesis, ResearchQuestion, ResearchRegistry
 
@@ -41,21 +43,25 @@ def _registry(claim_status: str) -> ResearchRegistry:
     return registry
 
 
-def test_inconclusive_claim_marks_question_inconclusive(monkeypatch) -> None:
+def test_inconclusive_claim_marks_question_inconclusive(
+    monkeypatch: MonkeyPatch,
+) -> None:
     registry = _registry("inconclusive")
     monkeypatch.setattr(registry, "save_questions", lambda: None)
 
-    EvidenceEngine(registry)._update_research_question("CLAIM-TEST-001", "EVID-2026-99")
+    EvidenceEngine(registry).update_research_question("CLAIM-TEST-001", "EVID-2026-99")
 
     assert registry.questions["RQ-TEST-001"].status == "inconclusive"
     assert registry.questions["RQ-TEST-001"].evidence == ["EVID-2026-99"]
 
 
-def test_resolved_claim_marks_question_ready_for_human_answer(monkeypatch) -> None:
+def test_resolved_claim_marks_question_ready_for_human_answer(
+    monkeypatch: MonkeyPatch,
+) -> None:
     registry = _registry("supported")
     monkeypatch.setattr(registry, "save_questions", lambda: None)
 
-    EvidenceEngine(registry)._update_research_question("CLAIM-TEST-001", "EVID-2026-99")
+    EvidenceEngine(registry).update_research_question("CLAIM-TEST-001", "EVID-2026-99")
 
     question = registry.questions["RQ-TEST-001"]
     assert question.status == "ready_for_answer"

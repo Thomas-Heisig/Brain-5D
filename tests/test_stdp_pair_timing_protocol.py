@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from src.research.stdp_pair_timing import DELTA_T_MS, REPLICATIONS, run_pair_timing_protocol
+from src.research.stdp_pair_timing import (
+    DELTA_T_MS,
+    REPLICATIONS,
+    run_pair_timing_protocol,
+)
 
 
 def test_pair_timing_protocol_measures_expected_asymmetry() -> None:

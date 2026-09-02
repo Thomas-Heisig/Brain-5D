@@ -1,9 +1,9 @@
 {
-  "experiment_id": "EXP-GEN-0001",
+  "experiment_id": "EXP-GEN-0002",
   "experiment_status": "completed",
-  "timestamp": "2026-09-02T09:42:08.972601",
+  "timestamp": "2026-09-02T10:00:48.751379",
   "git": {
-    "commit": "795f79bcb56796d316e544fa594e947e88f5a30d",
+    "commit": "781266c51ad772c8402c2250e5b58d9705f913d0",
     "dirty": true,
     "branch": "main"
   },
@@ -13,10 +13,10 @@
     "brain5d_version": "unknown"
   },
   "simulation": {
-    "ticks": 1000
+    "ticks": 300
   },
   "artifacts": {
-    "workflow": "experiments/EXP-GEN-0001/workflow.json"
+    "workflow": "experiments/EXP-GEN-0002/workflow.json"
   },
   "research_questions": [
     "RQ-SNN-001"
@@ -35,18 +35,18 @@
   "results": {
     "passed": true,
     "start": {
-      "tick": 0,
-      "neurons": 5000,
-      "synapses": 36031
-    },
-    "end": {
       "tick": 999,
       "neurons": 5000,
       "synapses": 36031
     },
-    "observed_ticks": 999
+    "end": {
+      "tick": 1299,
+      "neurons": 5000,
+      "synapses": 36031
+    },
+    "observed_ticks": 300
   },
   "runtime": {
-    "duration_seconds": 193.51001949998317
+    "duration_seconds": 55.96398110000882
   }
 }

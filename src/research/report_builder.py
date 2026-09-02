@@ -260,7 +260,12 @@ class ReportBuilder:
             "",
         ]
 
-        for q in self.registry.open_questions():
+        unresolved = [
+            question
+            for question in self.registry.questions.values()
+            if question.status in {"open", "in_progress", "inconclusive"}
+        ]
+        for q in unresolved:
             lines.extend(
                 [
                     f"## {q.id}",
@@ -288,9 +293,7 @@ class ReportBuilder:
             lines.append("---")
             lines.append("")
 
-        lines.append(
-            f"*Insgesamt {len(self.registry.open_questions())} offene Fragen.*"
-        )
+        lines.append(f"*Insgesamt {len(unresolved)} offene Fragen.*")
         return "\n".join(lines)
 
     def build_claim_register(self) -> str:

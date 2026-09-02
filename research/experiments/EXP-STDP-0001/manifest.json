@@ -34,19 +34,23 @@
     "sha256": "e0ad3ba1de5d5123cce2b5c776ab7a95310995949c4c165c528cf41f118ee5aa"
   },
   "validity": {
-    "valid": true,
-    "reason": null,
+    "valid": false,
+    "reason": "pilot method validation on a dirty source tree; not eligible for scientific evidence",
     "runtime_error_count": 0,
     "fatal_error_count": 0
   },
   "runtime_errors": [],
   "results": {
+    "classification": "pilot_method_validation",
     "metrics_summary": {
-      "total_replications": 110,
+      "conditions": 11,
+      "repeated_evaluations": 110,
+      "independent_runs": 0,
       "mean_ltp": 0.05573050614160189,
       "mean_ltd": -0.06687660736992224,
       "zero_delta_weight": 0.0,
-      "hypothesis_supported": true
+      "hypothesis_supported": true,
+      "deterministic_identity": true
     },
     "hypothesis_supported": true
   },
@@ -55,5 +59,9 @@
   },
   "data_ids": [
     "DATA-2026-17"
-  ]
+  ],
+  "evidence_eligibility": {
+    "eligible": false,
+    "reason": "pilot method validation; dirty source tree; isolated laboratory path"
+  }
 }

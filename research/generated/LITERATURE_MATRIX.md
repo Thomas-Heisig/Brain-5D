@@ -10,6 +10,8 @@
 | Markram (2015) | Large-scale SNN simulations can reproduce microcircuit dynamics. | RQ-SCALE-001 | open |
 | Maass (1997) | Spiking neurons are computationally more powerful than sigmoidal neurons. | RQ-SNN-001 | open |
 | Hebb (1949) | Neurons that fire together, wire together. | RQ-SNN-004, RQ-SELF-001 | open |
+| Watts (1998) | Small-world networks combine high clustering with short path lengths. | RQ-SNN-003 | open |
+| Barabási (1999) | Preferential attachment produces scale-free network degree distributions. | RQ-SNN-003 | open |
 
 ---
-*Automatisch generiert am 2026-08-23*
+*Automatisch generiert am 2026-09-02*

@@ -27,8 +27,8 @@
 - [x] Read-only Embodiment and connection discovery foundation
 - [x] Controlled Research Experiment Runner with registry validation and per-run reports in `research/experiments/EXP-*/`
 - [x] Keep optional Ollama assistance outside the experimental causal path and prohibit it as execution input or evidence
-- [x] Run `EXP-STDP-0001`: registered pair-timing protocol -> `DATA-2026-17` -> `EVID-2026-17` -> `CLAIM-STDP-001` -> `RQ-STDP-001`
-- [ ] Replicate `EXP-STDP-0001` with independent protocol variants and validate the timing curve in the full Brain-5D runtime before promoting the RQ beyond `inconclusive`
+- [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
+- [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced

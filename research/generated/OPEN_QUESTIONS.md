@@ -102,6 +102,23 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
+## RQ-STDP-001
+
+**Domäne:** STDP
+
+**Frage:** Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung?
+
+**Relevanz:** Fundamentale STDP-Eigenschaft, die in Brain-5D verifiziert werden muss.
+
+**Literatur:**
+- `SRC-SONG-ABBOTT-2000`: Sen Song et al. (2000)
+- `SRC-BI-POO-1998`: Guo-Qiang Bi et al. (1998)
+
+**Hypothesen:**
+- `H-STDP-001-A`: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine asymmetrische Gewichtsanpassung (LTP bei Δt > 0, LTD bei Δt < 0).
+
+---
+
 ## RQ-STDP-002
 
 **Domäne:** STDP
@@ -390,4 +407,4 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 27 offene Fragen.*
+*Insgesamt 28 offene Fragen.*

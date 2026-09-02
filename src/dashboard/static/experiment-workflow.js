@@ -20,6 +20,7 @@ export class ExperimentWorkflowPanel {
   constructor() {
     this.questions = [];
     this.hypotheses = [];
+    this.nextExperimentId = "";
     this.elements = {
       question: byId("workflow-question"),
       hypothesis: byId("workflow-hypothesis"),
@@ -43,6 +44,10 @@ export class ExperimentWorkflowPanel {
       const catalog = await fetchJson("/api/experiment/workflow/catalog");
       this.questions = catalog.questions || [];
       this.hypotheses = catalog.hypotheses || [];
+      this.nextExperimentId = catalog.next_experiment_id || "";
+      if (this.elements.experimentId && !this.elements.experimentId.value) {
+        this.elements.experimentId.placeholder = this.nextExperimentId || "automatisch";
+      }
       this._renderQuestions();
       this._setStatus("Bereit", "ready");
     } catch (error) {
@@ -76,7 +81,7 @@ export class ExperimentWorkflowPanel {
     const payload = {
       question_id: this.elements.question?.value || "",
       hypothesis_id: this.elements.hypothesis?.value || "",
-      experiment_id: this.elements.experimentId?.value.trim() || "",
+      experiment_id: this.elements.experimentId?.value.trim() || this.nextExperimentId,
       title: this.elements.title?.value.trim() || "",
       conditions: this.elements.conditions?.value.trim() || "",
       ticks: Number(this.elements.ticks?.value),
