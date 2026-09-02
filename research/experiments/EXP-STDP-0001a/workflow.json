@@ -1,0 +1,10 @@
+{
+  "title": "Pair-Timing STDP",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "conditions": "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; \u0394t -50 bis +50 ms; 10 Replikationen pro \u0394t.",
+  "ticks": 11,
+  "notes": "Keine",
+  "execution": "controller.step",
+  "assistant_policy": "No AI-generated input is executed or used as evidence."
+}

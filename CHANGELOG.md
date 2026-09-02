@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Scientific Research Assistant v0**: A separate read-only assistant builds
+  deterministic `ResearchPacket` inputs and stores schema-validated `AIAR-*`
+  records under `research/analysis/`. Its optional local Ollama adapter returns
+  interpretation JSON only; it cannot execute experiments, alter runtime or
+  registry state, create evidence, or answer research questions. Every record
+  carries prompt and input digests and requires human review.
+
 - **Research Experiment Runner**: The RESEARCH workspace now provides the
   traceable workflow Forschungsfrage -> Bedingungen -> Experiment ->
   Ausfuehren -> Bericht -> Ergebnis. A run validates research-question and

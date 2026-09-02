@@ -68,6 +68,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Experiment execution is limited to bounded `controller.step(ticks)` calls; optional Ollama assistance has no execution, configuration, or evidence authority
 - [x] First STDP pilot: `EXP-STDP-0001` produced `DATA-2026-17` for the isolated pair-timing mechanism; dirty-tree provenance and non-independent repeats exclude it from EVID/Claim/RQ evidence counting
 - [x] Research evidence is fail-closed for a dirty Git tree; deterministic verification, stochastic experiments and observational experiments have separate evidence modes
+- [x] Scientific Research Assistant v0: deterministic ResearchPacket -> schema-validated `AIAR-*` interpretation record; optional local Ollama is read-only and has no runtime, evidence, claim or RQ authority
 - [x] Evidence feedback updates question maturity (`in_progress` / `inconclusive` / `ready_for_answer`) while final answers remain human-reviewed
 
 > Development began after the Alpha.6 closure commit `8fac75d`. Alpha.6 evidence remains historical and is not evidence for this changed source tree.
