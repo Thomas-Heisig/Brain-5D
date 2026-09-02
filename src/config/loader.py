@@ -27,7 +27,7 @@ from typing import Any, TypedDict, TypeGuard, cast
 
 import yaml
 
-from src.runtime.modes import validate_modes
+from .modes import validate_modes
 
 logger = logging.getLogger(__name__)
 
@@ -670,10 +670,13 @@ def load_config(
     result["seed"] = _validate_seed(raw_dict.get("seed", defaults.get("seed", 42)))
 
     # Orthogonal runtime axes
-    state_mode = raw_dict.get("state_mode", defaults["state_mode"])
-    observability = raw_dict.get("observability", defaults["observability"])
-    if not isinstance(state_mode, str) or not isinstance(observability, str):
-        raise ValueError("state_mode and observability must be strings")
+    state_mode = cast(
+        "str", raw_dict.get("state_mode", defaults.get("state_mode", "operator"))
+    )
+    observability = cast(
+        "str",
+        raw_dict.get("observability", defaults.get("observability", "minimal")),
+    )
     validate_modes(state_mode, observability)
     result["state_mode"] = state_mode
     result["observability"] = observability
@@ -823,10 +826,8 @@ def validate_config(config: ConfigDict) -> None:
     dims = _validate_dimensions(config.get("dimensions"))
     _validate_initial_neurons(config.get("initial_neurons"), dims)
 
-    state_mode = config.get("state_mode", DEFAULT_CONFIG["state_mode"])
-    observability = config.get("observability", DEFAULT_CONFIG["observability"])
-    if not isinstance(state_mode, str) or not isinstance(observability, str):
-        raise ValueError("state_mode and observability must be strings")
+    state_mode = config.get("state_mode", "operator")
+    observability = config.get("observability", "minimal")
     validate_modes(state_mode, observability)
 
     # Validate each section (will raise on errors)

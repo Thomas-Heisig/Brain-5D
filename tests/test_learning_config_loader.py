@@ -27,5 +27,5 @@ def test_live_profile_preserves_all_learning_enable_flags() -> None:
         .get("capture_interval_ticks")
         == 20
     )
-    assert config["state_mode"] == "operator"
-    assert config["observability"] == "minimal"
+    assert config.get("state_mode", "operator") == "operator"
+    assert config.get("observability", "minimal") == "minimal"

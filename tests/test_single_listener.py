@@ -249,19 +249,23 @@ def test_exactly_one_listener_owns_port() -> None:
     # ---- Phase 1: Launch Brain-5D in background with test port -----------
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
+    command = [
+        "python",
+        "-m",
+        "src.main",
+        "--config",
+        str(config_path),
+        "--dashboard-port",
+        str(test_port),
+    ]
     proc = subprocess.Popen(
-        [
-            "python",
-            "-m",
-            "src.main",
-            "--config",
-            str(config_path),
-            "--dashboard-port",
-            str(test_port),
-        ],
+        command,
         cwd=str(repo_root),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
         env=env,
     )
     brain_pid = proc.pid
@@ -275,7 +279,10 @@ def test_exactly_one_listener_owns_port() -> None:
             if exit_code is not None:
                 raise AssertionError(
                     f"Brain-5D process (PID {brain_pid}) exited prematurely "
-                    f"with code {exit_code}"
+                    f"with code {exit_code}; command={command!r}; cwd={repo_root}; "
+                    f"config={config_path}; port={test_port}; pid={brain_pid}; "
+                    f"stdout={proc.stdout.read() if proc.stdout else ''!r}; "
+                    f"stderr={proc.stderr.read() if proc.stderr else ''!r}"
                 )
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
