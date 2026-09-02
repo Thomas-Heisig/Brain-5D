@@ -90,7 +90,7 @@
 - [x] EXP-DET-0001: Determinismus A/B/C experiment durchführen
   - Path C `--digest-k` Argument korrigiert (worker startet wieder)
   - A/B/C digests are now equal; artifact status = `verified`
-  - [ ] Härten: Strenger Fresh-Process-Nachweis
+  - [x] Härten: Strenger Fresh-Process-Nachweis
     - P0 pytest orchestrator startet **kein** C1-Netzwerkobjekt im Orchestrator
     - C1 subprocess: `0 → K`, speichert Dateisystem-Artefakte, schreibt PID, terminiert
     - C2 subprocess: liest nur Dateisystem, `restore_full()`, `K → N`, schreibt PID + Digest, terminiert
@@ -98,10 +98,9 @@
     - `assert A == B == C`
     - „completed"-Proofs sind nicht mehr hartkodiert `true`
 
-    > **Status:** Noch nicht vollständig umgesetzt. C1 läuft aktuell noch im
-    > Pytest-Prozess; nur C2 wird als Subprozess gestartet. Die
-    > `completed`-Proofs im Artifact Writer sind weiterhin hartkodiert `true`.
-    > A=B=C ist bewiesen, der maximale strenge C1→exit→C2 Nachweis noch nicht.
+    > **Status:** C1 und C2 laufen als getrennte Worker-Prozesse; PIDs und
+    > Dateisystem-Manifest werden geprüft. A=B=C und der Fresh-Process-
+    > Nachweis sind automatisiert validiert.
 - [x] EXP-STOR-0001: Storage persistence experiment durchführen
 - [x] Erste DATA-* / EVID-* Artefakte generieren
 - [x] Research Catalog aus echten Evidenzen neu aufgebaut
@@ -137,7 +136,7 @@
   - [x] `ControlPanel` ist alleiniger Runtime-Command-Owner
   - [x] Runtime-Shortcuts aus `OperatorConsole` entfernt (`OperatorConsole.bindKeyboardShortcuts()`
         verarbeitet nur noch `Ctrl+L` für Console-Clear)
-  - [ ] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
+  - [~] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
         zerlegen
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
   - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
@@ -182,7 +181,7 @@
 > Ziel: Dashboard-/UI-Änderungen dürfen wissenschaftliche Nachweise nicht
 > mehr fälschlich als `stale` markieren.
 
-- [ ] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
+- [x] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
       Digest über die relevanten Dateien
   - `restore_determinism`: `core`, `storage`, `learning`, `homeostasis`,
     relevante Config + Restore-Tests
@@ -192,19 +191,16 @@
   - `dashboard`: `src/dashboard/`, HTML/CSS/JS, Dashboard-Tests
   - `research`: Registry, Schemas, Recorder, Research-Tests
   - `release`: gesamter produktiver Source Tree + komplette Tests
-- [ ] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
+- [x] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
       eines globalen Tree-Digests
-- [ ] Gate Builder vergleicht nur den passenden Scope-Digest
+- [x] Gate Builder vergleicht nur den passenden Scope-Digest
 - [x] Full Test Baseline neu erzeugt (2026-08-31, 457 passed / 2 skipped / 0 failed)
   - `xfailed` / `xpassed` in `BaselineEvaluation` ausgewertet
   - Source Freeze → komplette Suite → neue `tests/test_baseline.json`
   - Alle Evidence-Artefakte sauber regeneriert
 
-> **Hinweis:** Evidence Scopes sind aktuell noch nicht implementiert. Die
-> Artefakte verwenden weiterhin `tested_tree_digest` und der Gate Builder
-> nutzt weiterhin `compute_source_tree_digest()` über den gesamten Source
-> Tree. Siehe auch `src/dashboard/verification.py` und
-> `src/dashboard/gate_status.py`.
+> Neue Artefakte verwenden den passenden Scope-Digest. `tested_tree_digest`
+> bleibt als Legacy-Fallback für historische Artefakte erhalten.
 
 ## Priorität 3 — Infrastruktur
 
@@ -212,7 +208,7 @@
 - [x] CI/CD Pipeline für automatische Tests (GitHub Actions: lint, type-check,
       security, test matrix, build, docker, docs)
 - [ ] Benchmark-Ladder für 5k-1M Neuronen vorbereiten
-- [ ] Repository-Hygiene: Diagnoseartefakte unter `tmp/restore_diag/` und
+- [x] Repository-Hygiene: Diagnoseartefakte unter `tmp/restore_diag/` und
       `tmp/trace_diag/` aus Source Tree entfernen oder nach
       `research/generated/diagnostics/` mit Provenance verschieben
 
@@ -239,10 +235,9 @@
 - Storage ist per Konfiguration deaktiviert (poc_config.yaml)
 - Evidence-Freshness-Modell nutzt explizite Evidence Scopes mit Legacy-Fallback
 - ~~Test-Baseline `tests/test_baseline.json` ist alt~~ (neu erzeugt am 2026-08-31)
-- `tmp/restore_diag/` und `tmp/trace_diag/` enthalten eingecheckte State-Dumps
-  und müssen entweder `.gitignore`d oder nach `research/generated/diagnostics/`
-  verschoben werden
-- Restore A/B/C: A/B/C Digests sind gleich (`verified`); Fresh-Process-Nachweis
-  noch nicht vollständig erfüllt (C1 läuft aktuell im Pytest-Prozess)
-- Evidence Scopes sind noch nicht implementiert; Gate Builder nutzt weiterhin
-  den globalen Source Tree Digest
+- Neue Diagnose-Dumps unter `tmp/restore_diag/` und `tmp/trace_diag/` werden
+  ignoriert; die zuvor eingecheckten Dumps wurden entfernt
+- Restore A/B/C: A/B/C-Digests und der strenge Fresh-Process-Nachweis sind
+  automatisiert verifiziert
+- Historische Artefakte ohne Scope-Metadaten nutzen weiterhin den globalen
+  Source-Tree-Digest als Legacy-Fallback

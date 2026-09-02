@@ -17,6 +17,8 @@
 
 "use strict";
 
+import { StructuralProposalPanel } from './structural-proposal-panel.js';
+
 // ============================================================================
 // DOM Helpers
 // ============================================================================
@@ -383,13 +385,11 @@ export class OperatorConsole {
     this.pollingRate = 1000;
     this.commandInFlight = false;
     this.status = null;
-    this.proposals = [];
+    this.proposalPanel = null;
 
     // Bind methods
     this.handleCommand = this.handleCommand.bind(this);
     this.refreshStatus = this.refreshStatus.bind(this);
-    this.renderProposals = this.renderProposals.bind(this);
-
     this.init();
   }
 
@@ -402,6 +402,12 @@ export class OperatorConsole {
     this.logger.bindSharedLog().then(() => {
       this.logger.log('🧠 Brain-5D Operator Console initialized', 'info');
       this.logger.log(`📡 API endpoint: /api/control`, 'info');
+      this.proposalPanel = new StructuralProposalPanel({
+        api: OperatorAPI,
+        logger: this.logger,
+        onChanged: this.refreshStatus,
+      });
+      this.proposalPanel.load();
     });
 
     // Bind event listeners
@@ -429,24 +435,6 @@ export class OperatorConsole {
       clearBtn.addEventListener('click', () => this.logger.clear());
     }
 
-    // Proposal container uses event delegation for approve/reject buttons.
-    const proposalsContainer = byId('b5d-proposals');
-    if (proposalsContainer) {
-      proposalsContainer.addEventListener('click', (e) => {
-        const approveBtn = e.target.closest('.btn-approve');
-        if (approveBtn) {
-          e.preventDefault();
-          this.handleApprove(approveBtn.dataset.id);
-          return;
-        }
-
-        const rejectBtn = e.target.closest('.btn-reject');
-        if (rejectBtn) {
-          e.preventDefault();
-          this.handleReject(rejectBtn.dataset.id);
-        }
-      });
-    }
   }
 
   /**

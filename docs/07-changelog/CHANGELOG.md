@@ -3,6 +3,12 @@
 ## 2026-09-02 — Evidence scope digests
 
 - Added explicit evidence scopes and scope-specific source digests.
+- Verification writers now emit scoped provenance for restore determinism,
+  structural E2E/live-loop and runtime integration artifacts.
+- Restore determinism Path C now runs both C1 and C2 in separate worker
+  processes and records their PIDs through a filesystem manifest.
+- Extracted structural proposal rendering and actions into
+  `structural-proposal-panel.js`; removed tracked diagnostic dumps from `tmp/`.
 - Gate artifact validation now prefers matching `scope`/`scope_digest` pairs;
   legacy `tested_tree_digest` artifacts remain supported.
 

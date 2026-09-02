@@ -390,7 +390,11 @@ def test_write_single_listener_verification_artifact() -> None:
     )
     listener_passed = result.returncode == 0
 
-    from src.dashboard.verification import compute_source_tree_digest, current_git_head
+    from src.dashboard.verification import (
+        compute_scope_digest,
+        compute_source_tree_digest,
+        current_git_head,
+    )
 
     tree_digest = compute_source_tree_digest(repo_root)
     commit = current_git_head(repo_root)
@@ -414,7 +418,10 @@ def test_write_single_listener_verification_artifact() -> None:
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
         "test_run_head": commit,
+        "tested_commit": commit,
         "tested_tree_digest": tree_digest,
+        "scope": "runtime_integration",
+        "scope_digest": compute_scope_digest(repo_root, "runtime_integration"),
         "test_command": "python -m pytest tests/test_single_listener.py -q",
         "proofs": proofs,
     }

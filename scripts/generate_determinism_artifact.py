@@ -66,6 +66,13 @@ def compute_tree_digest() -> str | None:
     return compute_source_tree_digest(REPO_ROOT)
 
 
+def compute_scope_tree_digest() -> str | None:
+    """Compute the digest for the determinism evidence boundary."""
+    from src.dashboard.verification import compute_scope_digest
+
+    return compute_scope_digest(REPO_ROOT, "restore_determinism")
+
+
 def run_tests() -> dict[str, bool]:
     """Run each determinism test file and return pass/fail per file."""
     results: dict[str, bool] = {}
@@ -113,6 +120,11 @@ def main() -> int:
         print("ERROR: Failed to compute tree digest")
         return 1
     print(f"  tested_tree_digest = {digest}")
+    scope_digest = compute_scope_tree_digest()
+    if scope_digest is None:
+        print("ERROR: Failed to compute restore_determinism scope digest")
+        return 1
+    print(f"  scope_digest = {scope_digest}")
     print()
 
     # Run tests
@@ -156,7 +168,10 @@ def main() -> int:
         "schema_version": 1,
         "status": "verified" if all_passed else "failed",
         "test_run_head": head,
+        "tested_commit": head,
         "tested_tree_digest": digest,
+        "scope": "restore_determinism",
+        "scope_digest": scope_digest,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "test_files": DETERMINISM_TESTS,

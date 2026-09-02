@@ -191,37 +191,58 @@ def _run_path_C(
     tmp_path: Path,
 ) -> tuple[str, bool]:
     """Returns (digest, fresh_process_is_real)."""
-    pid_C1 = os.getpid()
+    config_path = tmp_path / "config.json"
+    config_path.write_text(json.dumps(config, sort_keys=True), encoding="utf-8")
+    schedule_path = tmp_path / "schedule.json"
+    schedule_path.write_text(json.dumps(schedule, sort_keys=True), encoding="utf-8")
 
-    # --- C1: run 0 -> K in-process, write artifacts ---
-    network = create_network(config)
-    homeo = HomeostasisEngine(network, config)
-    homeo.attach()
-    learn = LearningEngine(network, config)
-    learn.attach()
-    run_absolute_schedule(network, schedule, K)
-    artifacts = _write_production_artifacts(
-        network, homeo, learn, tmp_path, schedule, config
+    # --- C1: independent process runs 0 -> K and writes artifacts ---
+    c1_manifest_path = tmp_path / "c1_result.json"
+    c1_result = subprocess.run(
+        [
+            sys.executable,
+            str(WORKER_PATH),
+            "--phase",
+            "c1",
+            "--config",
+            str(config_path),
+            "--schedule",
+            str(schedule_path),
+            "--output",
+            str(c1_manifest_path),
+            "--end-tick",
+            str(N),
+            "--digest-k",
+            str(tmp_path / "c1_digest_k.json"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=300,
+        cwd=str(Path(__file__).resolve().parent.parent),
     )
-
-    # Write pid_C1
-    pid_path = tmp_path / "pid_C1.txt"
-    pid_path.write_text(str(pid_C1), encoding="utf-8")
+    if c1_result.returncode != 0:
+        raise RuntimeError(
+            f"C1 worker failed (exit {c1_result.returncode}):\n"
+            f"stdout: {c1_result.stdout}\n"
+            f"stderr: {c1_result.stderr}"
+        )
+    c1_data = json.loads(c1_manifest_path.read_text(encoding="utf-8"))
+    pid_C1 = c1_data["pid"]
 
     # --- C2: subprocess ---
     worker_args = [
         sys.executable,
         str(WORKER_PATH),
         "--snapshot",
-        str(artifacts["snapshot"]),
+        str(c1_data["snapshot"]),
         "--journal",
-        str(artifacts["journal"]),
+        str(c1_data["journal"]),
         "--checkpoint",
-        str(artifacts["checkpoint"]),
+        str(c1_data["checkpoint"]),
         "--config",
-        str(artifacts["config"]),
+        str(config_path),
         "--schedule",
-        str(artifacts["schedule"]),
+        str(schedule_path),
         "--output",
         str(tmp_path / "c2_result.json"),
         "--end-tick",
@@ -320,7 +341,7 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     B_eq_C = dB == dC
     all_equal = A_eq_B and A_eq_C and B_eq_C
 
-    from src.dashboard.verification import compute_source_tree_digest
+    from src.dashboard.verification import compute_scope_digest, compute_source_tree_digest
 
     repo_root = Path(__file__).resolve().parent.parent
     tree_digest = compute_source_tree_digest(repo_root)
@@ -346,7 +367,10 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
         "suite": "restore_determinism",
         "status": "verified" if all_equal else "failed",
         "test_run_head": head,
+        "tested_commit": head,
         "tested_tree_digest": tree_digest,
+        "scope": "restore_determinism",
+        "scope_digest": compute_scope_digest(repo_root, "restore_determinism"),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "python": sys.version,
         "K": K,

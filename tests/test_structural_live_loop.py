@@ -502,7 +502,11 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
     live_loop_passed = result.returncode == 0
 
     # Compute tree digest
-    from src.dashboard.verification import compute_source_tree_digest, current_git_head
+    from src.dashboard.verification import (
+        compute_scope_digest,
+        compute_source_tree_digest,
+        current_git_head,
+    )
 
     tree_digest = compute_source_tree_digest(repo_root)
     commit = current_git_head(repo_root)
@@ -530,7 +534,10 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
         "test_run_head": commit,
+        "tested_commit": commit,
         "tested_tree_digest": tree_digest,
+        "scope": "structural_live_loop",
+        "scope_digest": compute_scope_digest(repo_root, "structural_live_loop"),
         "test_command": "python -m pytest tests/test_structural_live_loop.py -q",
         "proofs": proofs,
     }

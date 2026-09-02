@@ -41,6 +41,8 @@ artifacts/
 *.b5d
 *.b5d.journal
 *.tmp
+tmp/restore_diag/
+tmp/trace_diag/
 
 # OS noise
 .DS_Store

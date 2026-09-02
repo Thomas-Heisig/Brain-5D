@@ -62,6 +62,13 @@ EVIDENCE_SCOPES: dict[str, tuple[str, ...]] = {
         "src/storage/",
         "tests/test_structural_e2e.py",
     ),
+    "structural_live_loop": (
+        "src/self_organization/",
+        "src/manipulation/",
+        "src/storage/",
+        "src/controller/",
+        "tests/test_structural_live_loop.py",
+    ),
     "runtime_integration": (
         "src/controller/",
         "src/dashboard/operator_bridge.py",

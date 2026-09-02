@@ -20,9 +20,10 @@ def main() -> None:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--snapshot", required=True)
-    parser.add_argument("--journal", required=True)
-    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--phase", choices=("c1", "c2"), default="c2")
+    parser.add_argument("--snapshot")
+    parser.add_argument("--journal")
+    parser.add_argument("--checkpoint")
     parser.add_argument("--config", required=True)
     parser.add_argument("--schedule", required=True)
     parser.add_argument("--output", required=True)
@@ -33,6 +34,51 @@ def main() -> None:
         help="Path to write digest at K (before continuation)",
     )
     args = parser.parse_args()
+
+    if args.phase == "c1":
+        from src.homeostasis.engine import HomeostasisEngine
+        from src.learning.learning_engine import LearningEngine
+        from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
+        from src.storage.runtime import StorageRuntimeConfig, StorageSession
+        from tests._restore_helpers import K, create_network, run_absolute_schedule
+
+        config = json.loads(Path(args.config).read_text(encoding="utf-8"))
+        schedule = json.loads(Path(args.schedule).read_text(encoding="utf-8"))
+        network = create_network(config)
+        homeo = HomeostasisEngine(network, config)
+        homeo.attach()
+        learn = LearningEngine(network, config)
+        learn.attach()
+        run_absolute_schedule(network, schedule, K)
+
+        artifact_dir = Path(args.output).parent
+        runtime = StorageRuntimeConfig(
+            snapshot_path=artifact_dir / "base.b5d",
+            journal_path=artifact_dir / "base.b5d.journal",
+            commit_interval_ticks=1,
+        )
+        with StorageSession(network, runtime):
+            pass
+        from tests._restore_helpers import capture_learning_state
+
+        checkpoint = capture_runtime_checkpoint(
+            network,
+            homeostasis_rates=homeo._rates_hz,
+            learning_states=capture_learning_state(learn)["states"],
+            pending_rewards=capture_learning_state(learn)["pending_rewards"],
+        )
+        checkpoint_path = artifact_dir / "runtime.json"
+        write_runtime_checkpoint(checkpoint_path, checkpoint)
+        manifest = {
+            "snapshot": str(runtime.snapshot_path),
+            "journal": str(runtime.journal_path),
+            "checkpoint": str(checkpoint_path),
+            "pid": os.getpid(),
+        }
+        (artifact_dir / "pid_C1.txt").write_text(str(os.getpid()), encoding="utf-8")
+        Path(args.output).write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        print(f"C1 worker done: pid={os.getpid()}")
+        return
 
     from src.storage.core_restore import restore_full
 

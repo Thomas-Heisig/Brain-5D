@@ -27,7 +27,8 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Canonical RuntimeController (SimpleController removed)
 - [x] .b5d snapshot pipeline → heatmap
 - [x] Structural plasticity wired through approval-gated manipulator
-- [x] Evidence Scope Digests statt globaler Tree-Digest (new artifacts; legacy fallback retained)
+- [x] Evidence Scope Digests statt globaler Tree-Digest für neue Artefakte
+	(Restore, Structural E2E/Live Loop, Runtime Integration; Legacy-Fallback erhalten)
 - [x] Green test baseline (zero collection errors)
 
 ## v0.5.0-alpha.6 — Operator Workbench & Observable Runtime (released)

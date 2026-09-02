@@ -590,7 +590,7 @@ def _git_head(repo_root: Path) -> str | None:
 
 
 def _tree_digest(repo_root: Path) -> str | None:
-    from src.dashboard.verification import compute_source_tree_digest
+    from src.dashboard.verification import compute_scope_digest, compute_source_tree_digest
 
     return compute_source_tree_digest(repo_root)
 
@@ -616,6 +616,8 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
     GateStatusBuilder reads this artifact and rejects/stales it when
     tested_tree_digest != current tree digest.
     """
+    from src.dashboard.verification import compute_scope_digest
+
     repo_root = Path(__file__).resolve().parents[1]
 
     # Run the structural E2E proofs via a real pytest subprocess.
@@ -681,7 +683,10 @@ def test_write_verification_artifact(tmp_path: Path) -> None:
         "timestamp": datetime.now().isoformat(),
         "python_version": platform.python_version(),
         "test_run_head": _git_head(repo_root),
+        "tested_commit": _git_head(repo_root),
         "tested_tree_digest": tree_digest,
+        "scope": "structural_e2e",
+        "scope_digest": compute_scope_digest(repo_root, "structural_e2e"),
         "test_command": "python -m pytest tests/test_structural_e2e.py -q",
         "proofs": proofs_passed,
         "topology_digest_before": topology_before,
