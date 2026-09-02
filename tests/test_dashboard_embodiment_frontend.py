@@ -51,6 +51,21 @@ def test_embodiment_map_exposes_all_published_system_organs() -> None:
         assert f'id="{element_id}"' in html
 
 
+def test_embodiment_nodes_have_honest_visible_and_hoverable_names() -> None:
+    html = _read("index.html")
+
+    for stage in ("SENSOR", "ENCODER", "SNN", "DECODER", "ACTUATOR", "FEEDBACK"):
+        assert f">{stage}</span>" in html
+    for label in (
+        "Visuelles Eingangssignal",
+        "Akustisches Eingangssignal",
+        "Textuelles Eingangssignal",
+        "EnvironmentObservation",
+        "Actuator: autorisierter Ausgang",
+    ):
+        assert f'title="{label}"' in html
+
+
 def test_embodiment_animation_is_store_driven_and_accessible() -> None:
     workspace_js = _read("workspace-panels.js")
     styles = _read("styles.css")

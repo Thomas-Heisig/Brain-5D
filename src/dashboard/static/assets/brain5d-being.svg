@@ -1,122 +1,84 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title description">
-  <title id="title">Brain-5D living system organism</title>
-  <desc id="description">A luminous many-limbed neural creature connecting perception, cognition, energy and action.</desc>
+  <title id="title">Brain-5D symmetrical living system organism</title>
+  <desc id="description">A bilateral organism with paired sensory inputs, a central neural database and paired actionable extremities.</desc>
   <defs>
-    <radialGradient id="body" cx="48%" cy="42%" r="58%">
-      <stop offset="0" stop-color="#ff8859" stop-opacity=".94"/>
-      <stop offset=".34" stop-color="#934dff" stop-opacity=".82"/>
-      <stop offset=".68" stop-color="#26d7ca" stop-opacity=".55"/>
-      <stop offset="1" stop-color="#031727" stop-opacity=".18"/>
+    <radialGradient id="core" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#f7f6d4" stop-opacity=".98"/>
+      <stop offset=".24" stop-color="#5de4d0" stop-opacity=".9"/>
+      <stop offset=".66" stop-color="#247b9b" stop-opacity=".72"/>
+      <stop offset="1" stop-color="#061923" stop-opacity=".18"/>
     </radialGradient>
-    <radialGradient id="sensor" cx="45%" cy="45%" r="55%">
-      <stop offset="0" stop-color="#ecfaff"/>
-      <stop offset=".14" stop-color="#58d9ff"/>
-      <stop offset=".52" stop-color="#544dff" stop-opacity=".88"/>
-      <stop offset="1" stop-color="#171352" stop-opacity=".15"/>
+    <radialGradient id="sense" cx="42%" cy="38%" r="65%">
+      <stop offset="0" stop-color="#fffbd2"/>
+      <stop offset=".18" stop-color="#7ff4dc"/>
+      <stop offset=".62" stop-color="#2e9eb7" stop-opacity=".86"/>
+      <stop offset="1" stop-color="#112b42" stop-opacity=".2"/>
     </radialGradient>
     <linearGradient id="limb" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#5fffd2"/>
-      <stop offset=".43" stop-color="#338ccf"/>
-      <stop offset="1" stop-color="#bb54ff"/>
-    </linearGradient>
-    <linearGradient id="action" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#ff3e8f"/>
-      <stop offset=".5" stop-color="#ff9b42"/>
-      <stop offset="1" stop-color="#ffe66a"/>
+      <stop stop-color="#75f4d9"/>
+      <stop offset=".52" stop-color="#e4b35f"/>
+      <stop offset="1" stop-color="#e87558"/>
     </linearGradient>
     <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feGaussianBlur stdDeviation="8" result="blur"/>
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="3"/>
-    </filter>
-    <clipPath id="bodyClip"><ellipse cx="484" cy="312" rx="190" ry="126"/></clipPath>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+    <clipPath id="bodyClip"><ellipse cx="500" cy="284" rx="190" ry="132"/></clipPath>
   </defs>
-
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <g opacity=".35" stroke="#56dfff">
-      <path d="M95 354C28 315 24 245 79 209c47-31 86 7 49 40-31 28-84 6-58-39"/>
-      <path d="M119 370C56 399 51 469 113 493"/>
-      <path d="M150 198C109 140 132 91 188 79"/>
+    <g class="sensory-branches" stroke="#67e5d1" stroke-width="4" opacity=".72">
+      <path d="M320 260C245 214 184 203 116 228M320 302C239 300 178 326 112 370"/>
+      <path d="M680 260C755 214 816 203 884 228M680 302C761 300 822 326 888 370"/>
     </g>
-
-    <g class="tail" stroke="url(#limb)" filter="url(#glow)">
-      <path d="M342 315C249 348 215 304 169 265 107 213 67 275 116 306 160 333 212 300 186 251" stroke-width="17" opacity=".48"/>
-      <path d="M341 315C251 348 216 305 168 266 108 218 72 270 117 304" stroke-width="3"/>
+    <g class="antennae" stroke="#e3b65f" stroke-width="4" opacity=".8">
+      <path d="M434 166C397 107 354 75 305 67M566 166C603 107 646 75 695 67"/>
+      <circle cx="305" cy="67" r="7" fill="#f7d98c" stroke="none"/><circle cx="695" cy="67" r="7" fill="#f7d98c" stroke="none"/>
     </g>
-
-    <g class="crown" stroke="#b868ff" filter="url(#glow)">
-      <path d="M365 222C335 163 292 147 274 101M389 202C378 139 398 109 424 72M423 194C432 137 471 120 506 91M453 190C482 134 534 135 564 104" stroke-width="4" opacity=".72"/>
-      <g fill="#f0bcff" stroke="none">
-        <circle cx="274" cy="101" r="5"/><circle cx="424" cy="72" r="5"/><circle cx="506" cy="91" r="5"/><circle cx="564" cy="104" r="5"/>
+    <g class="extremities" stroke="url(#limb)" filter="url(#glow)">
+      <path d="M360 370C309 417 268 472 232 535M640 370C691 417 732 472 768 535" stroke-width="24" opacity=".68"/>
+      <path d="M420 398C397 459 391 508 398 565M580 398C603 459 609 508 602 565" stroke-width="25" opacity=".68"/>
+      <path d="M360 370C309 417 268 472 232 535M640 370C691 417 732 472 768 535M420 398C397 459 391 508 398 565M580 398C603 459 609 508 602 565" stroke-width="3"/>
+      <path d="M214 535h36M750 535h36M379 568h38M583 568h38" stroke-width="8"/>
+    </g>
+    <ellipse class="body-aura" cx="500" cy="284" rx="198" ry="140" fill="url(#core)" stroke="#8af5df" stroke-width="2" filter="url(#glow)"/>
+    <g clip-path="url(#bodyClip)" opacity=".84">
+      <g stroke-width="1.4">
+        <path d="M320 285L381 215 451 333 500 190 549 333 619 215 680 285" stroke="#d9b76b"/>
+        <path d="M332 343L410 238 500 366 590 238 668 343" stroke="#65e5d3"/>
+        <path d="M365 190L421 371M445 170L477 390M555 170L523 390M635 190L579 371" stroke="#f0eee0" opacity=".52"/>
+      </g>
+      <g class="neurons" fill="#fffbd8" filter="url(#soft)">
+        <circle cx="381" cy="215" r="6"/><circle cx="451" cy="333" r="7"/><circle cx="500" cy="190" r="6"/><circle cx="549" cy="333" r="7"/><circle cx="619" cy="215" r="6"/>
+        <circle cx="410" cy="238" r="5"/><circle cx="500" cy="366" r="7"/><circle cx="590" cy="238" r="5"/>
       </g>
     </g>
-
-    <g class="legs" stroke="url(#limb)" filter="url(#glow)">
-      <path d="M390 386C368 433 340 469 313 524 296 558 317 575 339 545 365 510 387 473 420 430" stroke-width="25" opacity=".62"/>
-      <path d="M460 407C451 461 442 513 451 558 458 588 486 584 491 556 498 510 493 465 500 423" stroke-width="27" opacity=".62"/>
-      <path d="M530 409C555 456 582 504 597 551 606 580 637 578 634 547 628 494 609 451 589 396" stroke-width="28" opacity=".62"/>
-      <path d="M582 375C635 401 679 447 704 504 720 539 751 526 742 493 726 434 678 382 615 348" stroke-width="23" opacity=".62"/>
-      <path d="M392 386C367 445 333 499 315 540M460 407C449 472 457 522 468 559M530 409C567 470 600 526 615 555M582 375C654 407 708 467 724 511" stroke-width="3"/>
-    </g>
-
-    <g class="neck" filter="url(#glow)">
-      <path d="M605 276C658 236 690 181 745 167C789 156 820 186 804 219" stroke="url(#action)" stroke-width="37" opacity=".55"/>
-      <path d="M605 276C661 234 692 184 746 169 787 158 813 183 800 213" stroke="url(#action)" stroke-width="4"/>
-      <path d="M798 211C827 202 850 213 859 235" stroke="#ff9d4e" stroke-width="18" opacity=".48"/>
-    </g>
-
-    <ellipse class="body-aura" cx="484" cy="312" rx="198" ry="134" fill="url(#body)" stroke="#77f8ef" stroke-width="2" filter="url(#glow)"/>
-    <g clip-path="url(#bodyClip)" opacity=".82">
-      <g stroke-width="1.2">
-        <path d="M300 320L374 251 439 339 512 219 582 332 651 276" stroke="#5cfff0"/>
-        <path d="M326 264L409 382 487 270 561 395 628 247" stroke="#ff8b54"/>
-        <path d="M313 366L392 208 471 375 554 239 641 350" stroke="#c66bff"/>
-        <path d="M348 222L365 388M420 198L438 425M500 188L513 433M579 211L588 397" stroke="#7db7ff" opacity=".65"/>
+    <g class="paired-senses" filter="url(#glow)">
+      <g>
+        <circle cx="170" cy="226" r="42" fill="url(#sense)" stroke="#8af5df" stroke-width="3"/><circle cx="170" cy="226" r="16" stroke="#fffbd8" stroke-width="3"/>
+        <circle cx="830" cy="226" r="42" fill="url(#sense)" stroke="#8af5df" stroke-width="3"/><circle cx="830" cy="226" r="16" stroke="#fffbd8" stroke-width="3"/>
       </g>
-      <g class="neurons" fill="#e7fbff" filter="url(#soft)">
-        <circle cx="374" cy="251" r="5"/><circle cx="439" cy="339" r="7"/><circle cx="512" cy="219" r="5"/><circle cx="582" cy="332" r="6"/>
-        <circle cx="409" cy="382" r="5"/><circle cx="487" cy="270" r="8"/><circle cx="561" cy="395" r="4"/><circle cx="392" cy="208" r="4"/>
-        <circle cx="471" cy="375" r="6"/><circle cx="554" cy="239" r="5"/><circle cx="628" cy="247" r="4"/>
+      <g>
+        <circle cx="150" cy="370" r="31" fill="url(#sense)" stroke="#8af5df" stroke-width="2"/><circle cx="150" cy="370" r="9" fill="#fffbd8" stroke="none"/>
+        <circle cx="850" cy="370" r="31" fill="url(#sense)" stroke="#8af5df" stroke-width="2"/><circle cx="850" cy="370" r="9" fill="#fffbd8" stroke="none"/>
       </g>
     </g>
-
-    <g class="sensor-head" filter="url(#glow)">
-      <ellipse cx="825" cy="246" rx="67" ry="51" fill="url(#sensor)" stroke="#64eaff" stroke-width="3"/>
-      <circle cx="844" cy="231" r="13" fill="#041525" stroke="#c7fbff" stroke-width="3"/>
-      <circle cx="848" cy="228" r="4" fill="#fff" stroke="none"/>
-      <path d="M874 260C906 262 921 275 932 293" stroke="#62e7ff" stroke-width="5"/>
-      <path d="M811 199C820 168 840 154 859 145M837 201C856 177 877 173 896 173" stroke="#b369ff" stroke-width="3"/>
+    <g class="signal-points" fill="#fffbd8" stroke="none" filter="url(#glow)">
+      <circle cx="255" cy="250" r="4"/><circle cx="312" cy="270" r="4"/><circle cx="374" cy="287" r="4"/><circle cx="438" cy="300" r="4"/>
+      <circle cx="745" cy="250" r="4"/><circle cx="688" cy="270" r="4"/><circle cx="626" cy="287" r="4"/><circle cx="562" cy="300" r="4"/>
     </g>
-
-    <g class="satellites" filter="url(#glow)">
-      <circle cx="274" cy="330" r="43" fill="url(#sensor)" stroke="#8aeaff" stroke-width="2"/>
-      <circle cx="274" cy="330" r="19" stroke="#fff" stroke-width="2" opacity=".7"/>
-      <circle cx="656" cy="356" r="31" fill="url(#sensor)" stroke="#8aeaff" stroke-width="2"/>
-      <circle cx="656" cy="356" r="10" fill="#dffaff" stroke="none"/>
-      <path d="M236 359C197 396 173 438 153 480" stroke="#5fffd2" stroke-width="8" opacity=".65"/>
-      <path d="M681 375C746 397 798 405 846 393" stroke="#e45eff" stroke-width="5" opacity=".65"/>
-    </g>
-
-    <g class="signal-points" fill="#fff" stroke="none" filter="url(#glow)">
-      <circle cx="322" cy="304" r="4"/><circle cx="358" cy="280" r="4"/><circle cx="403" cy="318" r="5"/><circle cx="457" cy="289" r="4"/>
-      <circle cx="515" cy="315" r="5"/><circle cx="567" cy="286" r="4"/><circle cx="614" cy="302" r="4"/><circle cx="675" cy="247" r="4"/>
-      <circle cx="735" cy="178" r="4"/><circle cx="790" cy="207" r="5"/><circle cx="850" cy="251" r="4"/>
-    </g>
+    <path class="symmetry-axis" d="M500 115V442" stroke="#fffbd8" stroke-width="1" stroke-dasharray="4 9" opacity=".3"/>
   </g>
-
   <style>
     .body-aura { transform-box: fill-box; transform-origin: center; animation: breathe 4.8s ease-in-out infinite; }
-    .sensor-head { transform-box: fill-box; transform-origin: 20% 80%; animation: observe 5.4s ease-in-out infinite; }
-    .tail { animation: shimmer 3.4s ease-in-out infinite alternate; }
-    .crown { animation: shimmer 2.6s ease-in-out infinite alternate-reverse; }
+    .paired-senses { transform-box: fill-box; transform-origin: center; animation: sense 5.4s ease-in-out infinite; }
+    .extremities { animation: reach 4.2s ease-in-out infinite alternate; }
     .neurons circle, .signal-points circle { animation: fire 1.8s ease-in-out infinite; }
     .neurons circle:nth-child(3n), .signal-points circle:nth-child(3n) { animation-delay: -.6s; }
     .neurons circle:nth-child(3n+1), .signal-points circle:nth-child(3n+1) { animation-delay: -1.2s; }
     @keyframes breathe { 50% { transform: scale(1.025); opacity: .92; } }
-    @keyframes observe { 50% { transform: rotate(-2.5deg) translateY(-3px); } }
-    @keyframes shimmer { to { opacity: .58; } }
+    @keyframes sense { 50% { transform: scale(1.018); opacity: .84; } }
+    @keyframes reach { to { opacity: .74; } }
     @keyframes fire { 0%, 100% { opacity: .3; } 45% { opacity: 1; } 60% { opacity: .48; } }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   </style>

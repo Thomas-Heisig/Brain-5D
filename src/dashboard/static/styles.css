@@ -1900,6 +1900,30 @@ body .footer-segment {
 .limb-stack i:nth-child(4) { width: 90%; }
 .brain-database { grid-row: 1; }
 .brain-database .brain5d-being { width: min(100%, 660px); opacity: .8; }
+.organism-node-key {
+  z-index: 4;
+  position: absolute;
+  right: 7%;
+  bottom: 8%;
+  left: 7%;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  pointer-events: none;
+}
+.organism-node-key span {
+  min-width: 0;
+  padding: 4px 2px;
+  border: 1px solid rgba(125, 232, 213, .36);
+  background: rgba(3, 24, 31, .82);
+  color: #b7f8e8;
+  font: 700 7px var(--font-mono);
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.organism-node-key span:nth-child(3n) { border-color: rgba(228, 179, 95, .5); color: #ffe1a6; }
 .brain-core-mark { z-index: 4; position: absolute; top: 37%; left: 50%; display: grid; place-items: center; gap: 4px; transform: translate(-50%, -50%); text-align: center; }
 .core-pulse { width: 38px; aspect-ratio: 1; border: 1px solid #ff9c66; border-radius: 50%; box-shadow: 0 0 22px rgba(255, 134, 83, .65), inset 0 0 12px rgba(255, 184, 100, .52); animation: core-beat 1.8s ease-in-out infinite; }
 .core-label { color: #ffc28f; font: 700 8px var(--font-mono); letter-spacing: .16em; }
@@ -2484,6 +2508,8 @@ body .footer-segment {
   }
 
   .brain5d-being { width: 100%; max-width: none; }
+  .organism-node-key { right: 3%; bottom: 4%; left: 3%; }
+  .organism-node-key span { font-size: 6px; }
   .organism-vital { width: 66px; height: 66px; }
 
   .embodiment-loop {

@@ -27,6 +27,7 @@
 - [x] Read-only Embodiment and connection discovery foundation
 - [x] Controlled Research Experiment Runner with registry validation and per-run reports in `research/experiments/EXP-*/`
 - [x] Keep optional Ollama assistance outside the experimental causal path and prohibit it as execution input or evidence
+- [x] Connect `OllamaBackend` to the read-only `LanguageModelBackend` contract; immutable request data only, no runtime/configuration/mutation/execution/evidence authority
 - [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
 - [x] Re-run currently executable research checks on 2026-09-02: focused protocols `35 passed, 1 skipped`; full suite with large storage checks `544 passed, 3 skipped`
 - [x] Run the maximum current runtime stability slice: `1000` ticks with STDP and homeostasis completed without runtime errors; propagation recorded 1 direct spike, 0 secondary recruits and no output reach

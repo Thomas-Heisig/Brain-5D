@@ -72,8 +72,11 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Research Experiment Runner: Forschungsfrage -> Bedingungen -> Experiment -> Ausfuehren -> Bericht -> Ergebnis; validiert Registry-Links und legt `manifest.json`, `workflow.json` und `report.md` unter `research/experiments/EXP-*/` ab
 - [x] Experiment execution is limited to bounded `controller.step(ticks)` calls; optional Ollama assistance has no execution, configuration, or evidence authority
 - [x] First STDP pilot: `EXP-STDP-0001` produced `DATA-2026-17` for the isolated pair-timing mechanism; dirty-tree provenance and non-independent repeats exclude it from EVID/Claim/RQ evidence counting
+- [x] Current executable experiment sweep completed 2026-09-02: focused protocols and full test suite passed; large storage checks enabled
+- [x] Maximum bounded runtime slice completed: 1000 ticks with STDP and homeostasis; long-run evidence remains open because the runtime guard caps a single call at 1000 ticks
 - [x] Research evidence is fail-closed for a dirty Git tree; deterministic verification, stochastic experiments and observational experiments have separate evidence modes
 - [x] Scientific Research Assistant v0: deterministic ResearchPacket -> schema-validated `AIAR-*` interpretation record; optional local Ollama is read-only and has no runtime, evidence, claim or RQ authority
+- [x] OllamaBackend is usable through LanguageOrgan for read-only signal descriptions and monitoring; failures are returned as data
 - [x] ResearchPacket/AIAR v1 provenance and `RQ-AIR-001` foundation: packet includes evidence, literature, protocol, limitations and prior AIARs; the 30-case methodology gold standard is registered but not yet executed
 - [x] `EXP-AIR-0001` pre-registered: benchmark labels are technically excluded from ResearchPacket, 21 defective plus 9 negative-control cases are fixed, and three model repetitions with exact model/sampling provenance are required
 - [x] Effective live-profile verification: `/api/config` publishes the absolute config path and SHA-256; `poc_alpha5_live.yaml` reaches the active runtime with STDP, Eligibility and Reward enabled
@@ -93,6 +96,8 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Explicit Full-Stack `EmbodimentPipeline` proves SensorFrame -> SNN -> safe actuator -> EnvironmentObservation feedback with deterministic integration coverage
 - [ ] Add configured audio self-hearing and visual self-reflection adapters with measured echo/reflection data
 - [x] Pipeline stages can be enabled or disabled from Embodiment elements; configuration intent remains separate from adapter implementation
+- [x] Runtime pipeline honors stage configuration and the Embodiment appearance exposes bilateral symmetry as a structural cue
+- [x] Embodiment nodes expose their names and concrete data meaning on hover; unavailable capabilities remain marked unavailable
 - [x] Fail-closed discovery for compute, storage, network, camera, microphone, display, audio and print queues
 - [x] Local/intranet binding and authenticated TLS reverse-proxy template
 - [x] First deterministic `EnvironmentAdapter` integrated end-to-end (`DeterministicTargetEnvironment` + safety proof)

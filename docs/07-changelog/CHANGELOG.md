@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-02 — Ollama language-organ bridge
+
+- Connected `OllamaBackend` to the existing `LanguageModelBackend` contract;
+  it can now serve `LanguageOrgan` read-only descriptions and monitoring.
+- Ollama receives only serialized immutable request data and returns text data;
+  it has no runtime, configuration, mutation, execution or evidence authority.
+- Network failures and malformed Ollama responses are returned as failed
+  `LanguageResponse` values instead of escaping into the simulation.
+- Existing `ResearchAssistant` callable usage remains compatible.
+
 ## 2026-09-02 — Executable experiment sweep
 
 - Re-ran the focused determinism, B5D storage, STDP protocol and structural E2E checks: `35 passed, 1 skipped`.

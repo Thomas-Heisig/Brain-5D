@@ -124,6 +124,41 @@ def test_full_stack_pipeline_connects_sensor_snn_actuator_and_feedback() -> None
     assert agent.audit.verify()
 
 
+def test_pipeline_stage_configuration_blocks_disabled_encoder() -> None:
+    agent, _ = _agent()
+    network = PipelineNetwork([])
+    pipeline = EmbodimentPipeline(
+        sensor=FakeSensor(),
+        network=network,
+        encoder=lambda frame: {0: float(frame.tick)},
+        decoder=lambda result, frame: ActionCommand("target-actuator", frame.tick, "right"),
+        controller=agent,
+    )
+    pipeline.set_stage_enabled("encoder", False)
+
+    frame, result, action = pipeline.step(1)
+
+    assert frame is not None
+    assert result is None
+    assert action is None
+    assert network.injected == []
+    assert agent.audit.records == ()
+
+
+def test_pipeline_stage_configuration_rejects_unknown_stage() -> None:
+    agent, _ = _agent()
+    pipeline = EmbodimentPipeline(
+        sensor=FakeSensor(),
+        network=PipelineNetwork([]),
+        encoder=lambda frame: {0: float(frame.tick)},
+        decoder=lambda result, frame: None,
+        controller=agent,
+    )
+
+    with pytest.raises(ValueError, match="unknown embodiment pipeline stage"):
+        pipeline.set_stage_enabled("camera", True)
+
+
 def test_unauthorized_action_is_blocked_and_audited() -> None:
     agent, actuator = _agent(authorized=False)
     assert agent.step(ActionCommand("target-actuator", 1, "right")) is None

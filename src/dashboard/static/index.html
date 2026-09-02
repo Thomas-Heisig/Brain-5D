@@ -565,7 +565,7 @@
       <section class="embodiment-living-map embodiment-anatomy" id="embodiment-living-map" data-system-state="idle" aria-label="Dynamische Embodiment-Anatomie">
         <div class="anatomy-zone anatomy-senses" data-detail-key="senses" tabindex="0" role="button">
           <header><span class="zone-index">01</span><div><span class="zone-kicker">EINGÄNGE</span><h3>Sinne</h3><p>Alles, was die Umwelt meldet</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></header>
-          <div class="sense-orbit"><i class="sense-node">VIS</i><i class="sense-node">AUD</i><i class="sense-node">TXT</i><i class="sense-node">ENV</i><span class="orbit-line"></span></div>
+          <div class="sense-orbit"><i class="sense-node" title="Visuelles Eingangssignal">VIS</i><i class="sense-node" title="Akustisches Eingangssignal">AUD</i><i class="sense-node" title="Textuelles Eingangssignal">TXT</i><i class="sense-node" title="EnvironmentObservation">ENV</i><span class="orbit-line"></span></div>
           <dl class="anatomy-stats"><div><dt>verbundene Sinne</dt><dd id="being-sensors">0</dd></div><div><dt>letztes Signal</dt><dd id="embodiment-last-text">—</dd></div><div><dt>Umgebung</dt><dd id="being-environment">unconfigured</dd></div><div><dt>Werte</dt><dd id="embodiment-sensor-detail">not published</dd></div><div><dt>Rückkopplung</dt><dd id="embodiment-feedback-state">not implemented</dd></div></dl>
           <strong class="zone-state" id="embodiment-sensor-state">Not connected</strong>
         </div>
@@ -573,6 +573,14 @@
         <figure class="organism-core brain-database" data-detail-key="brain" tabindex="0" role="button" aria-labelledby="organism-caption">
           <div class="organism-field" aria-hidden="true"><i></i><i></i><i></i></div>
           <img class="brain5d-being" src="/assets/brain5d-being.svg" alt="">
+          <div class="organism-node-key" aria-label="Sichtbare Pipeline-Elemente">
+            <span title="Sensor: Eingang aus einem Adapter">SENSOR</span>
+            <span title="Encoder: SensorFrame zu neuronalen Strömen">ENCODER</span>
+            <span title="Brain-5D SNN: neuronaler Zustand">SNN</span>
+            <span title="Decoder: neuronales Ergebnis zu ActionCommand">DECODER</span>
+            <span title="Actuator: autorisierter Ausgang">ACTUATOR</span>
+            <span title="Feedback: EnvironmentObservation nach einer Aktion">FEEDBACK</span>
+          </div>
           <div class="brain-core-mark"><span class="core-pulse"></span><span class="core-label">BRAIN-5D</span><strong>NEURONALE<br>DATENBANK</strong><small id="being-core-state">idle</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="snn"><span>AKTIV</span></label></div>
           <div class="brain-core-metrics"><span><b id="being-neurons">0</b> Neuronen</span><span><b id="being-synapses">0</b> Synapsen</span><span>Tick <b id="being-tick">0</b></span></div>
           <div class="organism-vital"><span class="vital-ring"></span><strong id="being-system-status">IDLE</strong><small id="being-vital-caption">live telemetry</small></div>
@@ -581,7 +589,7 @@
 
         <div class="anatomy-zone anatomy-actuators" data-detail-key="actuators" tabindex="0" role="button">
           <header><span class="zone-index">03</span><div><span class="zone-kicker">AUSGÄNGE</span><h3>Extremitäten</h3><p>Alles, was das Wesen verändern kann</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="actuator"><span>OUT</span></label></header>
-          <div class="limb-stack"><i>MOVE</i><i>GRIP</i><i>SPEAK</i><i>WRITE</i></div>
+          <div class="limb-stack"><i title="Bewegungsausgang">MOVE</i><i title="Greifausgang">GRIP</i><i title="Sprachausgang; nur bei vorhandenem Adapter">SPEAK</i><i title="Schreibausgang; nur bei vorhandenem Adapter">WRITE</i></div>
           <dl class="anatomy-stats"><div><dt>veränderbare Aktoren</dt><dd id="being-actuators">0</dd></div><div><dt>letzte Aktion</dt><dd id="embodiment-action-detail">—</dd></div><div><dt>Aktionwerte</dt><dd id="embodiment-actuator-detail">not published</dd></div><div><dt>Reward</dt><dd id="embodiment-last-reward">0.000</dd></div></dl>
           <strong class="zone-state" id="embodiment-actuator-state">Not connected</strong>
         </div>
@@ -617,13 +625,13 @@
       </section>
 
       <section class="embodiment-loop" data-detail-key="adapter-loop" tabindex="0" role="button" aria-label="Closed perception action loop">
-        <div class="embodiment-loop-node" data-loop-node="environment"><span>1</span><strong>Environment</strong><small id="embodiment-loop-environment">unconfigured</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="encoder"><span>ON</span></label></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="snn"><span>4</span><strong>Brain-5D SNN</strong><small id="embodiment-loop-snn">idle</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="decoder"><span>ON</span></label></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="actuator"><span>6</span><strong>Actuator</strong><small id="embodiment-loop-actuator">unavailable</small></div>
-        <i>↻</i>
+        <div class="embodiment-loop-node" data-loop-node="environment" title="Environment: Quelle der EnvironmentObservation"><span>1</span><strong>Environment</strong><small id="embodiment-loop-environment">unconfigured</small></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor" title="Sensor: Eingang aus einem realen oder digitalen Adapter"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder" title="Encoder: SensorFrame wird zu neuronalen Strömen"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="encoder"><span>ON</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="snn" title="Brain-5D SNN: neuronaler Datenbankzustand verarbeitet den Strom"><span>4</span><strong>Brain-5D SNN</strong><small id="embodiment-loop-snn">idle</small></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder" title="Decoder: neuronales Ergebnis wird zu ActionCommand"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="decoder"><span>ON</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="actuator" title="Actuator: autorisierter Ausgang mit Sicherheitsgrenze"><span>6</span><strong>Actuator</strong><small id="embodiment-loop-actuator">unavailable</small></div>
+        <i title="Feedback-Schleife: EnvironmentObservation zurück zum System">↻</i>
         <p class="embodiment-contract-note" id="embodiment-contract-note">Sensor, actuator and environment detail payloads are intentionally unavailable until adapters publish them.</p>
       </section>
       <span id="embodiment-last-action" hidden>—</span>
