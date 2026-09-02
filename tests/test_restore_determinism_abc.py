@@ -46,7 +46,6 @@ Proofs (all machine-measured, never hardcoded):
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 import time
@@ -341,7 +340,10 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     B_eq_C = dB == dC
     all_equal = A_eq_B and A_eq_C and B_eq_C
 
-    from src.dashboard.verification import compute_scope_digest, compute_source_tree_digest
+    from src.dashboard.verification import (
+        compute_scope_digest,
+        compute_source_tree_digest,
+    )
 
     repo_root = Path(__file__).resolve().parent.parent
     tree_digest = compute_source_tree_digest(repo_root)

@@ -162,7 +162,7 @@ class DashboardServer(ThreadingHTTPServer):
             "actuator": False,
             "feedback": False,
         }
-        self._embodiment_pipeline_lock = threading.Lock()
+        self.embodiment_pipeline_lock = threading.Lock()
 
 
 # ============================================================================
@@ -952,7 +952,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_embodiment_pipeline(self) -> None:
         """Serve pipeline switches separately from hardware availability."""
         metrics = self.dashboard_server.dashboard_state.snapshot().embodiment
-        with self.dashboard_server._embodiment_pipeline_lock:
+        with self.dashboard_server.embodiment_pipeline_lock:
             enabled = dict(self.dashboard_server.embodiment_pipeline_config)
         implemented = {
             "sensor": metrics.active_sensors > 0,
@@ -965,25 +965,32 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         self._send_json(
             {
                 "stages": {
-                    stage: {"enabled": enabled[stage], "implemented": implemented[stage]}
+                    stage: {
+                        "enabled": enabled[stage],
+                        "implemented": implemented[stage],
+                    }
                     for stage in enabled
                 },
                 "message": "Enabled stages are configuration intent; unavailable adapters remain inactive.",
             }
         )
 
-    def _set_embodiment_pipeline(self, body: dict[str, JSONValue]) -> None:
+    def _set_embodiment_pipeline(self, body: dict[str, object]) -> None:
         """Set one pipeline switch without activating an adapter or device."""
         stage = body.get("stage")
         enabled = body.get("enabled")
         valid_stages = {"sensor", "encoder", "snn", "decoder", "actuator", "feedback"}
         if not isinstance(stage, str) or stage not in valid_stages:
-            self._send_json({"error": "Unknown embodiment pipeline stage."}, HTTPStatus.BAD_REQUEST)
+            self._send_json(
+                {"error": "Unknown embodiment pipeline stage."}, HTTPStatus.BAD_REQUEST
+            )
             return
         if not isinstance(enabled, bool):
-            self._send_json({"error": "Pipeline enabled must be boolean."}, HTTPStatus.BAD_REQUEST)
+            self._send_json(
+                {"error": "Pipeline enabled must be boolean."}, HTTPStatus.BAD_REQUEST
+            )
             return
-        with self.dashboard_server._embodiment_pipeline_lock:
+        with self.dashboard_server.embodiment_pipeline_lock:
             self.dashboard_server.embodiment_pipeline_config[stage] = enabled
         self._send_json({"ok": True, "stage": stage, "enabled": enabled})
 

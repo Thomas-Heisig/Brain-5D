@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from src.language_organ.bridge import LanguageOrgan
 from src.language_organ.null_backend import NullLanguageBackend
@@ -18,20 +19,25 @@ def test_language_organ_is_disabled_by_default() -> None:
     assert response.backend_name == "null"
 
 
-def test_ollama_backend_implements_read_only_language_contract(monkeypatch) -> None:
+def test_ollama_backend_implements_read_only_language_contract(
+    monkeypatch: Any,
+) -> None:
     class _Response:
         def __enter__(self):
             return self
 
-        def __exit__(self, *_args):
+        def __exit__(self, *_args: Any) -> None:
             return None
 
         def read(self):
             return json.dumps({"response": '{"assessment":"ok"}'}).encode()
 
+    def _urlopen(*_args: Any, **_kwargs: Any) -> _Response:
+        return _Response()
+
     monkeypatch.setattr(
         "src.research_assistant.ollama_backend.urlopen",
-        lambda *_args, **_kwargs: _Response(),
+        _urlopen,
     )
     response = OllamaBackend("qwen").infer(
         LanguageRequest(request_id="req-1", purpose="monitor", text="status")

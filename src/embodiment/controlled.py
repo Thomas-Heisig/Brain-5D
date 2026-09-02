@@ -120,8 +120,12 @@ class ControlledEmbodimentAgent:
             last_action="" if self.last_action is None else self.last_action.action,
             last_observation_state=None if observation is None else observation.state,
             last_observation_tick=None if observation is None else observation.tick,
-            last_observation_terminated=None if observation is None else observation.terminated,
-            last_observation_truncated=None if observation is None else observation.truncated,
+            last_observation_terminated=(
+                None if observation is None else observation.terminated
+            ),
+            last_observation_truncated=(
+                None if observation is None else observation.truncated
+            ),
         )
 
     def _authorize(self, command: ActionCommand) -> tuple[ActuatorResult | None, str]:

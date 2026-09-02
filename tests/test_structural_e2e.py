@@ -590,7 +590,9 @@ def _git_head(repo_root: Path) -> str | None:
 
 
 def _tree_digest(repo_root: Path) -> str | None:
-    from src.dashboard.verification import compute_scope_digest, compute_source_tree_digest
+    from src.dashboard.verification import (
+        compute_source_tree_digest,
+    )
 
     return compute_source_tree_digest(repo_root)
 

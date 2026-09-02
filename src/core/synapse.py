@@ -96,7 +96,9 @@ class Synapse:
     # === Internal state ===
     _config: SynapseConfig | None = field(default=None, repr=False, init=False)
     _enabled: bool = field(default=True, repr=False, init=False)
-    _dirty_callback: Callable[[], None] | None = field(default=None, repr=False, init=False)
+    _dirty_callback: Callable[[], None] | None = field(
+        default=None, repr=False, init=False
+    )
 
     def set_dirty_callback(self, callback: Callable[[], None] | None) -> None:
         """Attach the runtime callback used to publish state mutations."""

@@ -395,7 +395,11 @@ class NeuralNetwork:
         )
 
         self.neurons[nid] = neuron
-        neuron.set_dirty_callback(lambda nid=nid: self._dirty_neuron_ids.add(nid))
+
+        def mark_neuron_dirty(neuron_id: int = nid) -> None:
+            self._dirty_neuron_ids.add(neuron_id)
+
+        neuron.set_dirty_callback(mark_neuron_dirty)
         self.synapses[nid] = []
         self.in_degree[nid] = 0
 
@@ -531,11 +535,14 @@ class NeuralNetwork:
         # Create synapse
         synapse = create_synapse(post_id, weight, delay, config or self.synapse_config)
         self.synapses[pre_id].append(synapse)
-        synapse.set_dirty_callback(
-            lambda pre_id=pre_id, post_id=post_id: self._dirty_synapse_ids.add(
-                (pre_id, post_id)
-            )
-        )
+
+        def mark_synapse_dirty(
+            source_id: int = pre_id,
+            target_id: int = post_id,
+        ) -> None:
+            self._dirty_synapse_ids.add((source_id, target_id))
+
+        synapse.set_dirty_callback(mark_synapse_dirty)
         self._synapse_count += 1
         self.in_degree[post_id] = self.in_degree.get(post_id, 0) + 1
 

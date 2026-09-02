@@ -66,12 +66,10 @@ def run_tier(neuron_count: int, ticks: int, seed: int) -> dict[str, Any]:
         "ticks": ticks,
         "construction_seconds": round(construction_seconds, 6),
         "step_seconds": round(step_seconds, 6),
-        "ticks_per_second": round(ticks / step_seconds, 3)
-        if step_seconds
-        else None,
-        "neurons_per_second": round(neuron_count * ticks / step_seconds, 3)
-        if step_seconds
-        else None,
+        "ticks_per_second": round(ticks / step_seconds, 3) if step_seconds else None,
+        "neurons_per_second": (
+            round(neuron_count * ticks / step_seconds, 3) if step_seconds else None
+        ),
     }
 
 

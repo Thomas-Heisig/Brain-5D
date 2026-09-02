@@ -7,9 +7,8 @@ from dataclasses import dataclass, field, replace
 from typing import Any
 
 from .controlled import ControlledEmbodimentAgent
-from .models import ActionCommand, SensorFrame
+from .models import ActionCommand, EmbodimentMetrics, SensorFrame
 from .sensor import SensorAdapter
-
 
 Encoder = Callable[[SensorFrame], Mapping[int, float]]
 Decoder = Callable[[Any, SensorFrame], ActionCommand | None]
@@ -74,7 +73,7 @@ class EmbodimentPipeline:
             self.controller.step(action)
         return frame, result, action
 
-    def metrics(self):
+    def metrics(self) -> EmbodimentMetrics:
         """Return metrics backed by the controlled environment observation."""
         metrics = self.controller.metrics()
         return replace(
@@ -82,7 +81,8 @@ class EmbodimentPipeline:
             active_sensors=1 if self.sensor.active else 0,
             last_text_input=(
                 self.last_frame.payload
-                if self.last_frame is not None and isinstance(self.last_frame.payload, str)
+                if self.last_frame is not None
+                and isinstance(self.last_frame.payload, str)
                 else metrics.last_text_input
             ),
         )

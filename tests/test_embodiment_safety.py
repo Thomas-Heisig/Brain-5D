@@ -107,7 +107,9 @@ def test_full_stack_pipeline_connects_sensor_snn_actuator_and_feedback() -> None
         sensor=FakeSensor(),
         network=network,
         encoder=lambda frame: {0: float(frame.tick)},
-        decoder=lambda result, frame: ActionCommand("target-actuator", frame.tick, "right"),
+        decoder=lambda result, frame: ActionCommand(
+            "target-actuator", frame.tick, "right"
+        ),
         controller=agent,
     )
     pipeline.reset(seed=42)
@@ -131,7 +133,9 @@ def test_pipeline_stage_configuration_blocks_disabled_encoder() -> None:
         sensor=FakeSensor(),
         network=network,
         encoder=lambda frame: {0: float(frame.tick)},
-        decoder=lambda result, frame: ActionCommand("target-actuator", frame.tick, "right"),
+        decoder=lambda result, frame: ActionCommand(
+            "target-actuator", frame.tick, "right"
+        ),
         controller=agent,
     )
     pipeline.set_stage_enabled("encoder", False)

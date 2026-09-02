@@ -164,7 +164,9 @@ class Neuron:
     _enabled: bool = field(default=True, repr=False, init=False)
     _spike_count_window: int = 0
     _last_update_tick: int = 0
-    _dirty_callback: Callable[[], None] | None = field(default=None, repr=False, init=False)
+    _dirty_callback: Callable[[], None] | None = field(
+        default=None, repr=False, init=False
+    )
 
     def set_dirty_callback(self, callback: Callable[[], None] | None) -> None:
         """Attach the runtime callback used to publish state mutations."""

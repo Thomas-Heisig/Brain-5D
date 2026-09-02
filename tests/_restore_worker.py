@@ -14,6 +14,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 
 def main() -> None:
@@ -38,8 +39,16 @@ def main() -> None:
     if args.phase == "c1":
         from src.homeostasis.engine import HomeostasisEngine
         from src.learning.learning_engine import LearningEngine
-        from src.storage.checkpoint import capture_runtime_checkpoint, write_runtime_checkpoint
-        from src.storage.runtime import StorageRuntimeConfig, StorageSession
+        from src.storage.checkpoint import (
+            CheckpointNetworkLike,
+            capture_runtime_checkpoint,
+            write_runtime_checkpoint,
+        )
+        from src.storage.runtime import (
+            RuntimeNetworkLike,
+            StorageRuntimeConfig,
+            StorageSession,
+        )
         from tests._restore_helpers import K, create_network, run_absolute_schedule
 
         config = json.loads(Path(args.config).read_text(encoding="utf-8"))
@@ -57,13 +66,13 @@ def main() -> None:
             journal_path=artifact_dir / "base.b5d.journal",
             commit_interval_ticks=1,
         )
-        with StorageSession(network, runtime):
+        with StorageSession(cast("RuntimeNetworkLike", network), runtime):
             pass
         from tests._restore_helpers import capture_learning_state
 
         checkpoint = capture_runtime_checkpoint(
-            network,
-            homeostasis_rates=homeo._rates_hz,
+            cast("CheckpointNetworkLike", network),
+            homeostasis_rates=cast(Any, homeo)._rates_hz,
             learning_states=capture_learning_state(learn)["states"],
             pending_rewards=capture_learning_state(learn)["pending_rewards"],
         )
