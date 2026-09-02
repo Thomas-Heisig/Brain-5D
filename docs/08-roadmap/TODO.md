@@ -49,6 +49,7 @@
 - [x] MetricAggregator accepts published embodiment observations for runtime snapshot integration
 - [x] Full-stack embodiment pipeline connects SensorFrame -> encoder -> SNN -> decoder -> controlled actuator -> EnvironmentObservation feedback
 - [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
+- [x] Embodiment pipeline stages expose validated in-element enable switches through the dashboard API
 
 ## Alpha.6 Phase B Evidence Freeze (released)
 
@@ -213,7 +214,10 @@
 - [ ] Hugging Face Space Deployment testen
 - [x] CI/CD Pipeline für automatische Tests (GitHub Actions: lint, type-check,
       security, test matrix, build, docker, docs)
-- [ ] Benchmark-Ladder für 5k-1M Neuronen vorbereiten
+- [x] Benchmark-Ladder für 5k-1M Neuronen vorbereiten
+  - `scripts/benchmark_ladder.py` misst reproduzierbar Konstruktion und
+    Schritt-Durchsatz; große Stufen benötigen `--allow-large` und erzeugen
+    keinen wissenschaftlichen Performance-Claim
 - [x] Repository-Hygiene: Diagnoseartefakte unter `tmp/restore_diag/` und
       `tmp/trace_diag/` aus Source Tree entfernen oder nach
       `research/generated/diagnostics/` mit Provenance verschieben

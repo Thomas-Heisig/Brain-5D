@@ -66,6 +66,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Source CI #145 green for exact SHA `3025e68`
 - [x] Evidence commit `70a4ee2` passed Continuous Integration #147
 - [ ] Resolve Sync to Hugging Face #66 before a release that includes Hugging Face publication
+- [x] Reproducible 5k-1M benchmark ladder prepared with explicit large-run guard
 
 ## v0.5.0-alpha.7 — Embodiment Foundation & Safe Environment I/O (current)
 - [x] Research Experiment Runner: Forschungsfrage -> Bedingungen -> Experiment -> Ausfuehren -> Bericht -> Ergebnis; validiert Registry-Links und legt `manifest.json`, `workflow.json` und `report.md` unter `research/experiments/EXP-*/` ab
@@ -91,6 +92,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Dashboard metric aggregation can receive real embodiment feedback without treating adapter discovery as active I/O
 - [x] Explicit Full-Stack `EmbodimentPipeline` proves SensorFrame -> SNN -> safe actuator -> EnvironmentObservation feedback with deterministic integration coverage
 - [ ] Add configured audio self-hearing and visual self-reflection adapters with measured echo/reflection data
+- [x] Pipeline stages can be enabled or disabled from Embodiment elements; configuration intent remains separate from adapter implementation
 - [x] Fail-closed discovery for compute, storage, network, camera, microphone, display, audio and print queues
 - [x] Local/intranet binding and authenticated TLS reverse-proxy template
 - [x] First deterministic `EnvironmentAdapter` integrated end-to-end (`DeterministicTargetEnvironment` + safety proof)

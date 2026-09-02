@@ -40,6 +40,17 @@ def _get(host: str, port: int, path: str) -> dict[str, Any]:
         connection.close()
 
 
+def _post(host: str, port: int, path: str, body: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    connection = HTTPConnection(host, port, timeout=5)
+    try:
+        raw = json.dumps(body).encode("utf-8")
+        connection.request("POST", path, body=raw, headers={"Content-Type": "application/json"})
+        response = connection.getresponse()
+        return response.status, cast(dict[str, Any], json.loads(response.read()))
+    finally:
+        connection.close()
+
+
 def _stop(server: DashboardServer, thread: Thread) -> None:
     server.shutdown()
     server.server_close()
@@ -81,6 +92,22 @@ def test_embodiment_metrics_expose_published_values() -> None:
         assert payload["tick"] == 12
         assert payload["metrics"]["episode_reward"] == 1.25
         assert payload["metrics"]["last_action"] == "advance"
+    finally:
+        _stop(server, thread)
+
+
+def test_embodiment_pipeline_switches_are_validated_and_persisted() -> None:
+    server, thread, host, port = _start(DashboardStateStore())
+    try:
+        status, result = _post(host, port, "/api/embodiment/pipeline", {"stage": "sensor", "enabled": True})
+        assert status == 200
+        assert result == {"ok": True, "stage": "sensor", "enabled": True}
+        pipeline = _get(host, port, "/api/embodiment/pipeline")
+        assert pipeline["stages"]["sensor"]["enabled"] is True
+
+        status, result = _post(host, port, "/api/embodiment/pipeline", {"stage": "unknown", "enabled": True})
+        assert status == 400
+        assert "error" in result
     finally:
         _stop(server, thread)
 

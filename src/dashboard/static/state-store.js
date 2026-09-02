@@ -188,13 +188,14 @@ export class DashboardStateStore {
       }
 
       if (Date.now() - this.lastSupplementalFetch >= 15000) {
-        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult, connectionResult] = await Promise.allSettled([
+        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult, connectionResult, pipelineResult] = await Promise.allSettled([
           fetch("/api/gate/status", { cache: "no-store" }),
           fetch("/api/experiment/mode", { cache: "no-store" }),
           fetch("/api/research", { cache: "no-store" }),
           fetch("/api/embodiment/state", { cache: "no-store" }),
           fetch("/api/embodiment/history?limit=100", { cache: "no-store" }),
           fetch("/api/embodiment/connections", { cache: "no-store" }),
+          fetch("/api/embodiment/pipeline", { cache: "no-store" }),
         ]);
         if (gateResult.status === "fulfilled" && gateResult.value.ok) {
           this.state.gate = await gateResult.value.json();
@@ -217,6 +218,12 @@ export class DashboardStateStore {
         }
         if (connectionResult.status === "fulfilled" && connectionResult.value.ok) {
           this.state.embodiment_connections = await connectionResult.value.json();
+        }
+        if (pipelineResult.status === "fulfilled" && pipelineResult.value.ok) {
+          this.state.embodiment_detail = {
+            ...this.state.embodiment_detail,
+            pipeline: await pipelineResult.value.json(),
+          };
         }
         this.lastSupplementalFetch = Date.now();
       }

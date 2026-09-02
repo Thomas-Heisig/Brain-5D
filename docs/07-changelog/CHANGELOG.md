@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-02 — Scaling benchmark ladder
+
+- Added `scripts/benchmark_ladder.py` for bounded 5k-to-1M neuron scaling
+  runs with recorded platform/provenance data and an explicit non-scientific
+  claim marker.
+- Added fail-closed validation for both Hugging Face sync secrets.
+
 ## 2026-09-02 — Embodiment anatomy visualization
 
 - Reworked the Embodiment view into a meaningful anatomy: sensory inputs at
@@ -20,6 +27,8 @@
   decoder -> controlled actuator -> EnvironmentObservation feedback, with a
   deterministic full-stack test; physical audio/vision self-feedback remains
   configuration-dependent and is not claimed as implemented.
+- Added validated in-element pipeline switches for sensor, encoder, SNN,
+  decoder, actuator and feedback stages through `/api/embodiment/pipeline`.
 
 ## 2026-09-02 — Evidence scope digests
 
