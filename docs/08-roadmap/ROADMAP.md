@@ -1,6 +1,6 @@
 # Roadmap (Stand 1)
 
-> Last updated: 2026-09-01
+> Last updated: 2026-09-02
 > Detailed task list: `docs/08-roadmap/TODO.md`
 
 ## Stand 1 – abgeschlossenes Zielbild
@@ -38,7 +38,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] CI recovery: local lint/type/test gates green (Black, Ruff, Pylint ≥9.0, mypy, pyright)
 - [x] Operator/Experiment/Debug mode switching wired and tested
 - [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately
-- [x] Source baseline: 483 passed, 5 skipped, zero failures/collection errors
+- [x] Source baseline: 489 passed, 5 skipped, 0 failed, 0 collection errors
 - [x] Restore A/B/C, Structural E2E, Structural Live Loop, Single Listener, Determinism Infrastructure verified
 - [x] EXP-DET-0001 / EXP-STOR-0001 rerun with complete DATA/EVID provenance links
 - [x] Gate A 22/22, Gate B 24/24, Gate C 17/17
@@ -64,6 +64,8 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [ ] Resolve Sync to Hugging Face #66 before a release that includes Hugging Face publication
 
 ## v0.5.0-alpha.7 — Embodiment Foundation & Safe Environment I/O (current)
+- [x] Research Experiment Runner: Forschungsfrage -> Bedingungen -> Experiment -> Ausfuehren -> Bericht -> Ergebnis; validiert Registry-Links und legt `manifest.json`, `workflow.json` und `report.md` unter `research/experiments/EXP-*/` ab
+- [x] Experiment execution is limited to bounded `controller.step(ticks)` calls; optional Ollama assistance has no execution, configuration, or evidence authority
 
 > Development began after the Alpha.6 closure commit `8fac75d`. Alpha.6 evidence remains historical and is not evidence for this changed source tree.
 

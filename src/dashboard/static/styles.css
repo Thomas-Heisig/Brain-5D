@@ -1688,6 +1688,71 @@ body .footer-segment {
   background: rgba(64, 224, 208, .07);
 }
 
+.experiment-workflow {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(7, 20, 30, .72);
+}
+
+.experiment-workflow-header,
+.workflow-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.experiment-workflow h3 { margin: 2px 0 0; font-size: 1rem; }
+.experiment-workflow output { color: var(--muted); font-size: .78rem; }
+.experiment-workflow output[data-state="completed"] { color: var(--color-success); }
+.experiment-workflow output[data-state="error"] { color: var(--color-danger); }
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: workflow;
+}
+
+.workflow-steps li {
+  min-width: 0;
+  padding: 5px 6px;
+  border-left: 2px solid var(--accent2);
+  background: rgba(64, 224, 208, .05);
+  color: var(--muted);
+  font-size: .7rem;
+  overflow-wrap: anywhere;
+}
+
+.workflow-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.workflow-form-grid label { display: grid; gap: 4px; color: var(--muted); font-size: .72rem; }
+.workflow-form-grid input, .workflow-form-grid select, .workflow-form-grid textarea {
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: rgba(0, 0, 0, .2);
+  color: var(--text);
+  font: inherit;
+}
+.workflow-wide { grid-column: 1 / -1; }
+.workflow-actions { align-items: flex-start; }
+.workflow-actions pre { flex: 1; min-width: 0; margin: 0; color: var(--muted); font: .72rem/1.4 var(--font-mono); white-space: pre-wrap; }
+
+@media (max-width: 680px) {
+  .workflow-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .workflow-form-grid { grid-template-columns: 1fr; }
+  .workflow-wide { grid-column: auto; }
+  .workflow-actions { align-items: stretch; flex-direction: column; }
+}
+
 #tab-network [hidden],
 #tab-gate [hidden] {
   display: none;

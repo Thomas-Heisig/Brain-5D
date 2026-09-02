@@ -46,6 +46,7 @@ import { initHealthDrawer } from './health-drawer.js';
 import { consoleLog } from './console-log.js';
 import { ParameterInspector } from './parameter-inspector.js';
 import { ExperimentMode } from './experiment-mode.js';
+import { ExperimentWorkflowPanel } from './experiment-workflow.js';
 import { renderOverviewCommandCenter, setupOverviewActions } from './overview-panel.js';
 import { SettingsPanel } from './settings-panel.js';
 import { renderWorkspaceSummaries } from './workspace-panels.js';
@@ -167,6 +168,7 @@ function setupTabs() {
     console: null,
     parameterInspector: null,
     experimentMode: null,
+    experimentWorkflow: null,
     settings: null,
   };
 
@@ -206,6 +208,8 @@ function setupTabs() {
       if (tabName === 'research' && !initialized.research) {
         initResearchBrowser();
         initDocumentationBrowser();
+        instances.experimentWorkflow = new ExperimentWorkflowPanel();
+        instances.experimentWorkflow.refresh();
         initialized.research = true;
       }
       if (tabName === 'gate' && !initialized.gate) {

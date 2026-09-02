@@ -44,6 +44,7 @@ from src.embodiment import ConnectionManager
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
+from .experiment_workflow import ExperimentWorkflowService
 from .file_manager import register_file_manager_routes
 from .gate_status import GateStatusBuilder
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
@@ -286,6 +287,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/experiment/sessions":
                 self._send_experiment_sessions()
+                return
+
+            if path == "/api/experiment/workflow/catalog":
+                self._send_experiment_workflow_catalog()
                 return
 
             if path == "/api/embodiment/state":
@@ -583,6 +588,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/experiment/note":
                 self._add_experiment_note(body)
+                return
+
+            if path == "/api/experiment/workflow/run":
+                self._run_experiment_workflow(body)
                 return
 
             # ----------------------------------------------------------------
@@ -1931,6 +1940,38 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "count": len(sessions),
             }
         )
+
+    def _send_experiment_workflow_catalog(self) -> None:
+        """Serve valid registry links for a new controlled experiment."""
+        source = self._require_research_source()
+        service = ExperimentWorkflowService(source.root())
+        self._send_json(service.catalog())
+
+    def _run_experiment_workflow(self, body: dict[str, object]) -> None:
+        """Run bounded controller ticks and publish reproducible artifacts."""
+        source = self._require_research_source()
+        bridge = self._require_bridge()
+        step = getattr(bridge.controller, "step", None)
+        if not callable(step):
+            raise BridgeNotConfiguredError("Runtime controller does not support step().")
+
+        state = self.dashboard_server.dashboard_state
+
+        def metrics() -> dict[str, int]:
+            snapshot = state.snapshot().system
+            return {
+                "tick": snapshot.tick,
+                "neurons": snapshot.neurons,
+                "synapses": snapshot.synapses,
+            }
+
+        result = ExperimentWorkflowService(source.root()).run(
+            body,
+            step,
+            metrics(),
+            metrics,
+        )
+        self._send_json({"ok": True, **result})
 
     def _set_experiment_mode(
         self,

@@ -633,12 +633,32 @@
         </div>
       </header>
       <nav class="research-lanes" id="research-lanes" aria-label="Research quick access">
+        <button type="button" data-research-workflow>Experiment Runner</button>
         <button type="button" class="active" data-research-source="research" data-research-query="">All Research</button>
         <button type="button" data-research-source="research" data-research-query="EVID">Evidence</button>
         <button type="button" data-research-source="research" data-research-query="EXP">Experiments</button>
         <button type="button" data-research-source="research" data-research-query="MATRIX">Matrices</button>
         <button type="button" data-research-source="docs" data-research-query="">Documentation</button>
       </nav>
+      <section class="experiment-workflow" id="experiment-workflow" aria-label="Experiment Runner">
+        <header class="experiment-workflow-header">
+          <div><span class="workspace-kicker">CONTROLLED RUN</span><h3>Experiment Runner</h3></div>
+          <output id="workflow-status" data-state="loading" aria-live="polite">Lade Registry</output>
+        </header>
+        <ol class="workflow-steps" aria-label="Experiment workflow">
+          <li>Forschungsfrage</li><li>Bedingungen</li><li>Experiment</li><li>Ausfuehren</li><li>Bericht</li><li>Ergebnis</li>
+        </ol>
+        <div class="workflow-form-grid">
+          <label>Forschungsfrage<select id="workflow-question"></select></label>
+          <label>Hypothese<select id="workflow-hypothesis"></select></label>
+          <label>Experiment-ID (optional)<input id="workflow-experiment-id" type="text" placeholder="automatisch: EXP-GEN-0001"></label>
+          <label>Titel<input id="workflow-title" type="text" placeholder="Kurzer, reproduzierbarer Versuchstitel"></label>
+          <label>Ticks<input id="workflow-ticks" type="number" min="1" max="100000" value="100"></label>
+          <label class="workflow-wide">Bedingungen<textarea id="workflow-conditions" rows="3" placeholder="Seed, Konfiguration, Replikate und Abbruchkriterien"></textarea></label>
+          <label class="workflow-wide">Beobachtung / Hinweise<textarea id="workflow-notes" rows="2" placeholder="Optionale Beobachtungen; keine KI-Ausgabe wird als Evidenz verwendet"></textarea></label>
+        </div>
+        <div class="workflow-actions"><button id="workflow-run" type="button" class="btn-success">Ausfuehren und Bericht eintragen</button><pre id="workflow-result" aria-live="polite"></pre></div>
+      </section>
       <!-- Source selector toolbar -->
       <div class="fm-toolbar">
         <div class="fm-source-selector">

@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Research Experiment Runner**: The RESEARCH workspace now provides the
+  traceable workflow Forschungsfrage -> Bedingungen -> Experiment ->
+  Ausfuehren -> Bericht -> Ergebnis. A run validates research-question and
+  hypothesis links against the registry, permits only bounded
+  `controller.step(ticks)` execution, and writes `workflow.json`,
+  `manifest.json`, and `report.md` under `research/experiments/EXP-*/`.
+  Optional Ollama assistance has no execution, configuration, or evidence
+  authority.
+
 ## v0.5.0-alpha.5 - Dashboard State & Health Repair (2026-08-30)
 
 ### Fixed

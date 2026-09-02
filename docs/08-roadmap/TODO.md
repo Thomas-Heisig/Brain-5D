@@ -1,6 +1,6 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-09-01
+> Last updated: 2026-09-02
 >
 > Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
 > .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
@@ -25,6 +25,8 @@
 - [x] Alpha.6 immutable release manifest with source/evidence/closure provenance
 - [x] Alpha.7 version line and release registry opened
 - [x] Read-only Embodiment and connection discovery foundation
+- [x] Controlled Research Experiment Runner with registry validation and per-run reports in `research/experiments/EXP-*/`
+- [x] Keep optional Ollama assistance outside the experimental causal path and prohibit it as execution input or evidence
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced
@@ -70,6 +72,7 @@
 - [x] Regenerate baseline, Phase B evidence and gate status for `3025e68...`
 - [x] Evidence commit `70a4ee2...` and Continuous Integration #147 verified
 - [ ] Resolve Sync to Hugging Face #66 if Hugging Face publication is required
+  - ⚠️ GitHub Actions Secrets `HF_USERNAME` und `HF_TOKEN` fehlen → in Settings → Secrets and variables → Actions anlegen
 
 ## Priorität 1 — Alpha.5 Closure (teilweise offen)
 
