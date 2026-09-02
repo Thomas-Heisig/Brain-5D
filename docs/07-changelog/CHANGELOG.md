@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-02 — Evidence scope digests
+
+- Added explicit evidence scopes and scope-specific source digests.
+- Gate artifact validation now prefers matching `scope`/`scope_digest` pairs;
+  legacy `tested_tree_digest` artifacts remain supported.
+
 ## 2026-09-02 — Orthogonal runtime mode contract
 
 - Added validated `operator` / `experiment` / `dev` state modes and independent `full` / `scientific` / `minimal` / `compute` observability profiles.

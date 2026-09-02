@@ -13,9 +13,9 @@
 >   Alpha.6 scientific gate: PASSED; Continuous Integration #145/#147/#148:
 >   PASSED; release readiness: READY.
 >   **A/B/C restore artifact verified** (`A == B == C`).
->   Evidence scope digests are planned but **not yet implemented**; the Gate
->   Builder still uses the global source-tree digest, so UI changes can still
->   mark scientific evidence as `stale`.
+>   Evidence scope digests are implemented for new scoped artifacts; legacy
+>   artifacts continue to use the global source-tree digest as a compatibility
+>   fallback. The Gate Builder validates matching scopes independently.
 >   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
 >   delta-journal recovery in `src/main.py`.
 
@@ -78,7 +78,7 @@
 - [x] GitHub/Docker actions migrated to Node 24-compatible majors
 - [x] Experiment generator records commands/DATA links automatically and fails closed
 - [x] Local quality gates: 489 tests, Black, Ruff, Mypy, Pyright, Pylint, Pre-commit, Bandit, pip-audit and build pass
-- [ ] Extend evidence freshness authority: generated research evidence currently changes gate-test behavior without changing the canonical source digest
+- [x] Extend evidence freshness authority with explicit scope digests and matching-scope Gate Builder validation; legacy artifacts retain global-digest fallback
 - [x] Commit final source candidate and verify Continuous Integration #145
 - [x] Regenerate baseline, Phase B evidence and gate status for `3025e68...`
 - [x] Evidence commit `70a4ee2...` and Continuous Integration #147 verified
@@ -237,7 +237,7 @@
 - Dashboard State Publishing darf niemals die Simulation blockieren (bereits gelöst)
 - Self-Organization nur über canonical Coordinator->Approval->PlasticityEngine Pfad
 - Storage ist per Konfiguration deaktiviert (poc_config.yaml)
-- Evidence-Freshness-Modell ist zu grob (Evidence Scope Digests noch nicht implementiert)
+- Evidence-Freshness-Modell nutzt explizite Evidence Scopes mit Legacy-Fallback
 - ~~Test-Baseline `tests/test_baseline.json` ist alt~~ (neu erzeugt am 2026-08-31)
 - `tmp/restore_diag/` und `tmp/trace_diag/` enthalten eingecheckte State-Dumps
   und müssen entweder `.gitignore`d oder nach `research/generated/diagnostics/`

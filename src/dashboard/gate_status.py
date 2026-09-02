@@ -54,6 +54,7 @@ from typing import Any, cast
 
 from src.dashboard.models import JSONValue
 from src.dashboard.verification import (
+    artifact_digest_matches,
     compute_source_tree_digest,
     evaluate_test_baseline,
 )
@@ -470,13 +471,16 @@ class GateStatusBuilder:
         # Staleness binding: artifact tree digest MUST match current tree.
         # Fail-closed: missing digest → NOT VERIFIED.
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return False
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return False  # stale artifact
         return True
 
@@ -495,13 +499,16 @@ class GateStatusBuilder:
             return G_PENDING
         # Staleness binding — fail-closed
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return G_PENDING
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return G_PENDING
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return G_STALE
         proofs_raw = artifact.get("proofs", {})
         if not isinstance(proofs_raw, dict):
@@ -533,13 +540,16 @@ class GateStatusBuilder:
         if artifact.get("schema_version") is None:
             return G_PENDING
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return G_PENDING
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return G_PENDING
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return G_STALE
         proofs_raw = artifact.get("proofs", {})
         if not isinstance(proofs_raw, dict):
@@ -1615,13 +1625,16 @@ class GateStatusBuilder:
         if not all(proofs[name] is True for name in REQUIRED_LIVE_LOOP_PROOFS):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return False
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return False
         return True
 
@@ -1708,13 +1721,16 @@ class GateStatusBuilder:
         if not all(proofs[name] is True for name in REQUIRED_DETERMINISM_PROOFS):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return False
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return False
         return True
 
@@ -1768,13 +1784,16 @@ class GateStatusBuilder:
         ):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return False
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return False
         return True
 
@@ -1800,13 +1819,16 @@ class GateStatusBuilder:
         if not all(proofs[name] is True for name in REQUIRED_SINGLE_LISTENER_PROOFS):
             return False
         artifact_digest = artifact.get("tested_tree_digest")
-        if not artifact_digest:
+        if not artifact_digest and not (
+            isinstance(artifact.get("scope"), str)
+            and isinstance(artifact.get("scope_digest"), str)
+        ):
             return False
 
         current_digest = self._current_tree_digest()
         if current_digest is None:
             return False
-        if artifact_digest != current_digest:
+        if not artifact_digest_matches(self.repo_root, artifact):
             return False
         return True
 

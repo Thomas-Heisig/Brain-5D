@@ -33,6 +33,35 @@ from src.dashboard.models import (
 from src.dashboard.network_inspector import NetworkInspector
 from src.dashboard.operator_bridge import OperatorBridge
 from src.dashboard.state import DashboardStateStore
+from src.dashboard.verification import (
+    EVIDENCE_SCOPES,
+    artifact_digest_matches,
+    compute_scope_digest,
+)
+
+
+def test_evidence_scope_digest_ignores_unrelated_dashboard_file(tmp_path: Path) -> None:
+    (tmp_path / "src" / "core").mkdir(parents=True)
+    (tmp_path / "src" / "dashboard").mkdir(parents=True)
+    (tmp_path / "src" / "core" / "state.py").write_text("state", encoding="utf-8")
+    (tmp_path / "src" / "dashboard" / "ui.js").write_text("one", encoding="utf-8")
+    first = compute_scope_digest(tmp_path, "restore_determinism")
+    (tmp_path / "src" / "dashboard" / "ui.js").write_text("two", encoding="utf-8")
+    assert compute_scope_digest(tmp_path, "restore_determinism") == first
+
+
+def test_scoped_artifact_digest_is_preferred_and_legacy_fallback_remains(
+    tmp_path: Path,
+) -> None:
+    assert "dashboard" in EVIDENCE_SCOPES
+    (tmp_path / "src" / "dashboard").mkdir(parents=True)
+    (tmp_path / "src" / "dashboard" / "state.py").write_text("state", encoding="utf-8")
+    digest = compute_scope_digest(tmp_path, "dashboard")
+    assert digest is not None
+    assert artifact_digest_matches(
+        tmp_path, {"scope": "dashboard", "scope_digest": digest}
+    )
+
 
 # ============================================================
 # Helpers

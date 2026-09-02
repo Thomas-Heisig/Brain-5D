@@ -44,6 +44,44 @@ _DIGEST_EXCLUDE_FILES: set[str] = {"tests/test_baseline.json"}
 _DIGEST_EXCLUDE_SUFFIXES: tuple[str, ...] = (".pyc", ".pyo")
 _DIGEST_EXCLUDE_DIRS: tuple[str, ...] = ("__pycache__",)
 
+# Stable evidence boundaries.  Paths are repository-relative and deliberately
+# explicit so a dashboard-only change does not stale storage evidence.
+EVIDENCE_SCOPES: dict[str, tuple[str, ...]] = {
+    "restore_determinism": (
+        "src/core/",
+        "src/storage/",
+        "src/learning/",
+        "src/homeostasis/",
+        "configs/",
+        "tests/test_restore_determinism_abc.py",
+        "tests/test_production_restore.py",
+    ),
+    "structural_e2e": (
+        "src/self_organization/",
+        "src/manipulation/",
+        "src/storage/",
+        "tests/test_structural_e2e.py",
+    ),
+    "runtime_integration": (
+        "src/controller/",
+        "src/dashboard/operator_bridge.py",
+        "src/main.py",
+        "tests/test_single_listener.py",
+    ),
+    "dashboard": (
+        "src/dashboard/",
+        "tests/test_dashboard.py",
+        "tests/test_dashboard_completion.py",
+    ),
+    "research": (
+        "src/research/",
+        "research/schemas/",
+        "tests/test_research_registry.py",
+        "tests/test_experiment_validity.py",
+    ),
+    "release": ("src/", "configs/", "research/schemas/", "tests/"),
+}
+
 # ============================================================================
 # Test baseline evaluation
 # ============================================================================
@@ -65,7 +103,10 @@ def read_test_baseline(repo_root: Path) -> dict[str, Any] | None:
         return None
 
 
-def compute_source_tree_digest(repo_root: Path) -> str | None:
+def compute_source_tree_digest(
+    repo_root: Path,
+    paths: list[str] | None = None,
+) -> str | None:
     """Return a SHA-256 digest of the scientifically relevant source tree.
 
     The digest covers ``src/``, ``configs/``, ``research/schemas/``,
@@ -76,7 +117,7 @@ def compute_source_tree_digest(repo_root: Path) -> str | None:
     in a dirty working tree and does not require a clean git state.
     Returns ``None`` if no files were found.
     """
-    all_paths = SCIENTIFIC_PATHS + TEST_PATHS
+    all_paths = paths if paths is not None else SCIENTIFIC_PATHS + TEST_PATHS
     try:
         hasher = hashlib.sha256()
         found_any = False
@@ -115,6 +156,29 @@ def compute_source_tree_digest(repo_root: Path) -> str | None:
         return hasher.hexdigest()
     except Exception:
         return None
+
+
+def compute_scope_digest(repo_root: Path, scope: str) -> str | None:
+    """Return the content digest for one named evidence scope."""
+    paths = EVIDENCE_SCOPES.get(scope)
+    if paths is None:
+        raise ValueError(f"unknown evidence scope: {scope}")
+    return compute_source_tree_digest(repo_root, list(paths))
+
+
+def artifact_digest_matches(repo_root: Path, artifact: dict[str, Any]) -> bool:
+    """Validate scoped artifact digests, falling back to legacy digests."""
+    scope = artifact.get("scope")
+    scope_digest = artifact.get("scope_digest")
+    if isinstance(scope, str) and isinstance(scope_digest, str):
+        try:
+            return scope_digest == compute_scope_digest(repo_root, scope)
+        except ValueError:
+            return False
+    legacy_digest = artifact.get("tested_tree_digest")
+    return isinstance(
+        legacy_digest, str
+    ) and legacy_digest == compute_source_tree_digest(repo_root)
 
 
 def current_git_head(repo_root: Path) -> str | None:
