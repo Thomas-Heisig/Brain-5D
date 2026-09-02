@@ -33,6 +33,9 @@
 - [x] Register `RQ-AIR-001`, `H-AIR-001-A` and `CLAIM-AIR-001`; add the held-out 30-case `AIR-METHODOLOGY-GOLD-V1` dataset
 - [x] Pre-register `EXP-AIR-0001`: structured vs. unstructured input, blinded scoring, 3 repetitions per case/condition, precision/recall/F1/specificity/FPR/calibration metrics
 - [ ] Do not execute `EXP-AIR-0001` until this development tree is committed, pushed, externally CI-green and frozen to an exact SHA
+- [x] Verify effective `poc_alpha5_live.yaml` after restart: STDP, Eligibility and Reward reach LearningEngine; `/api/config` exposes absolute path and SHA-256
+- [x] Expose Learning Engine, STDP, Eligibility, Reward and measured STDP/Reward weight-update counters separately; `enabled` or `armed` is not displayed as proof of learning
+- [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced

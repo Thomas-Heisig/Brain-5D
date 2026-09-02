@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Effective runtime provenance and learning observability**: `/api/config`
+  now exposes the loaded absolute config path and SHA-256. Dashboard state
+  distinguishes attached Learning Engine, enabled STDP/Eligibility/Reward, and
+  measured STDP/Reward weight updates. A missing inhibitory population is
+  displayed as unavailable E/I rather than clearing the live population view.
+
+### Fixed
+
+- **Learning profile loader**: validated configuration now preserves
+  `stdp.enabled`, weight bounds, and all `reward` fields, so the effective
+  LearningEngine configuration matches `poc_alpha5_live.yaml` after restart.
+
 - **Scientific Research Assistant v0**: A separate read-only assistant builds
   deterministic `ResearchPacket` inputs and stores schema-validated `AIAR-*`
   records under `research/analysis/`. Its optional local Ollama adapter returns
