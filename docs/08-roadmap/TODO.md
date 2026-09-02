@@ -56,7 +56,10 @@
 - [x] EnvironmentObservation feedback fields are available in EmbodimentMetrics; publishing live self-sensing remains open until real sensor/actuator adapters provide it
 - [x] MetricAggregator accepts published embodiment observations for runtime snapshot integration
 - [x] Full-stack embodiment pipeline connects SensorFrame -> encoder -> SNN -> decoder -> controlled actuator -> EnvironmentObservation feedback
+- [x] Experience Engine v0 routes accepted environment feedback to LearningEngine; deterministic provider and safety-boundary tests documented in `docs/06-research/ExperienceEngine_v0.md`
+- [x] SystemSensorAdapter contract added with injectable provider; live host metrics remain opt-in and are not scientific evidence
 - [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
+- [ ] Integrate Experience Engine with the canonical runtime hook and register the first reproducible sensor-to-reward experiment
 - [x] Embodiment pipeline stages expose validated in-element enable switches through the dashboard API
 - [x] Apply Embodiment stage switches inside the runtime pipeline with fail-closed execution
 - [x] Redraw the Wesen visual as a bilateral-symmetric body: paired senses, central neural database, paired extremities

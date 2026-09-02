@@ -1,0 +1,47 @@
+{
+  "experiment_id": "EXP-GEN-0003",
+  "experiment_status": "failed",
+  "timestamp": "2026-09-02T23:45:55.996900",
+  "git": {
+    "commit": "337d36c0303e61378306b36ed26ba23dca8abd6d",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "ticks": 100
+  },
+  "artifacts": {
+    "workflow": "experiments/EXP-GEN-0003/workflow.json"
+  },
+  "research_questions": [
+    "RQ-SNN-002"
+  ],
+  "hypotheses": [
+    "H-SNN-002-A"
+  ],
+  "config": {},
+  "validity": {
+    "valid": false,
+    "reason": "1 runtime error(s), 1 fatal",
+    "runtime_error_count": 1,
+    "fatal_error_count": 1
+  },
+  "runtime_errors": [
+    {
+      "tick": 60079,
+      "phase": "controller.step",
+      "exception_type": "RuntimeError",
+      "message": "run_ticks is unavailable while running",
+      "fatal": true,
+      "traceback_hash": ""
+    }
+  ],
+  "runtime": {
+    "duration_seconds": 1.7600017599761486e-05
+  }
+}

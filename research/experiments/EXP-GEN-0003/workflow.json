@@ -1,0 +1,10 @@
+{
+  "title": "reprpduzierberae spikes",
+  "research_question": "RQ-SNN-002",
+  "hypothesis": "H-SNN-002-A",
+  "conditions": "keine",
+  "ticks": 100,
+  "notes": "keine",
+  "execution": "controller.step",
+  "assistant_policy": "No AI-generated input is executed or used as evidence."
+}

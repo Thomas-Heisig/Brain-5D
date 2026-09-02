@@ -1,3 +1,14 @@
+# Experience Engine v0 (2026-09-02)
+
+- Added `ExperienceEngine` for controlled sensor -> SNN -> action ->
+  environment-feedback -> reward orchestration.
+- Added `SystemSensorAdapter` with an injected provider so live system data is
+  opt-in and deterministic research traces remain possible.
+- Added focused tests for reproducibility, reward provenance, and fail-closed
+  action authorization (`13 passed`).
+- No camera, microphone, internet, or scientific learning claim is enabled by
+  this change.
+
 # Brain-5D v0.4.0-alpha.7
 
 ## Fixed
