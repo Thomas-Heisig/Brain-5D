@@ -175,7 +175,7 @@
 - [ ] Pylance/Pyright clean: alle Typfehler beseitigen
 - [ ] type:ignore-Kommentare auf Minimum reduzieren
 - [ ] Testabdeckung für neue Module erhöhen
-- [ ] Dokumentation zu den neuen API-Endpunkten schreiben
+- [x] Dokumentation zu den neuen API-Endpunkten schreiben (`docs/03-dashboard/API_REFERENCE.md`)
 
 ## Priorität 1c — Evidence-Freshness & Verification Architecture
 

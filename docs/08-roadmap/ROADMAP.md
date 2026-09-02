@@ -59,6 +59,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Experiment DATA/EVID provenance generated automatically and fail-closed
 - [x] Orthogonal state modes (`operator` / `experiment` / `dev`) and observability profiles (`full` / `scientific` / `minimal` / `compute`) defined and config-validated
 - [x] Storage capture policy is explicit; `full_change_scan` remains the correctness baseline until dirty-state emission is complete
+- [x] Dashboard API reference documents runtime, experiment, parameter, health and embodiment endpoints
 - [x] Local source candidate: 489 passed, 5 skipped, no failures or warnings
 - [x] Regenerate baseline and Phase B evidence for the final source candidate
 - [x] Source CI #145 green for exact SHA `3025e68`
