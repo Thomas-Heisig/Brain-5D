@@ -29,8 +29,110 @@ function formatBytes(value) {
   return `${(bytes / 1024 ** 2).toFixed(1)} MiB`;
 }
 
+function detailValue(value) {
+  if (value === null || value === undefined || value === "" || value === "not_reported" || value === "unavailable") {
+    return "nicht implementiert / nicht geliefert";
+  }
+  if (Array.isArray(value)) return value.length ? value.join(" · ") : "keine Daten geliefert";
+  if (typeof value === "boolean") return value ? "ja" : "nein";
+  return String(value);
+}
+
+function openEmbodimentDetail(title, summary, fields, source = "aktueller Dashboard-Snapshot") {
+  const modal = byId("embodiment-detail-modal");
+  const list = byId("embodiment-detail-fields");
+  if (!modal || !list) return;
+  byId("embodiment-detail-title").textContent = title;
+  byId("embodiment-detail-summary").textContent = summary;
+  list.replaceChildren();
+  for (const [label, value] of fields) {
+    const term = document.createElement("dt");
+    term.textContent = label;
+    const description = document.createElement("dd");
+    description.textContent = detailValue(value);
+    list.append(term, description);
+  }
+  byId("embodiment-detail-source").textContent = `Quelle: ${source}`;
+  modal.hidden = false;
+}
+
+function readElement(id) {
+  return byId(id)?.textContent || null;
+}
+
+function showEmbodimentGroup(key) {
+  const groups = {
+    senses: ["Sinne / Eingänge", "Nur aktuell publizierte Wahrnehmungsdaten.", [["Verbundene Sinne", readElement("being-sensors")], ["Letztes Signal", readElement("embodiment-last-text")], ["Umgebung", readElement("being-environment")], ["Sensorwerte", readElement("embodiment-sensor-detail")], ["Rückkopplung", readElement("embodiment-feedback-state")], ["Status", readElement("embodiment-sensor-state")]]],
+    brain: ["Gehirn / neuronale Datenbank", "Der zentrale neuronale Zustand des aktuellen Snapshots.", [["Tick", readElement("being-tick")], ["Neuronen", readElement("being-neurons")], ["Synapsen", readElement("being-synapses")], ["Aktive Neuronen", readElement("being-active")], ["E/I-Ratio", readElement("being-ei-ratio")], ["Systemstatus", readElement("being-system-status")]]],
+    inner: ["Innere Zustände", "Gemessene Dynamik und Regulation; keine psychischen Zustände werden behauptet.", [["Homöostase", readElement("being-homeostasis")], ["Energie", readElement("being-energy")], ["Feuerrate", readElement("being-rate")], ["Synchronität", readElement("being-synchrony")], ["Burst-Index", readElement("being-burst")], ["STDP-Updates", readElement("being-stdp")], ["Rate-Fehler", readElement("being-rate-error")], ["Threshold", readElement("being-threshold")]]],
+    actuators: ["Extremitäten / Ausgänge", "Nur tatsächlich publizierte Aktions- und Aktorinformationen.", [["Verbundene Aktoren", readElement("being-actuators")], ["Letzte Aktion", readElement("embodiment-action-detail")], ["Aktorwerte", readElement("embodiment-actuator-detail")], ["Reward", readElement("embodiment-last-reward")], ["Status", readElement("embodiment-actuator-state")]]],
+    signal: ["Signal-Brücke", "Interne Signalverarbeitung aus dem aktuellen Snapshot.", [["Frames", readElement("being-signal-frames")], ["Regionen", readElement("being-signal-regions")], ["Rohdaten", null]]],
+    language: ["Sprachorgan", "Ein Sprachadapter ist nur vorhanden, wenn sein Status dies meldet.", [["Status", readElement("being-language-state")], ["Modell / Backend", readElement("being-language-model")], ["Ausgabeprotokoll", null]]],
+    knowledge: ["Wissensaufnahme", "Publizierte Intake-Metriken ohne nicht belegte Inhalte.", [["Verarbeitete Elemente", readElement("being-knowledge-items")], ["Quellen", readElement("being-knowledge-sources")], ["Inhaltsdetails", null]]],
+    structure: ["Struktur", "Gemeldete strukturelle Veränderungen und Budgetwerte.", [["Änderungen", readElement("being-structural-changes")], ["Budget", readElement("being-growth-budget")], ["Vorschlagsdetails", null]]],
+    storage: ["Speicher", "Nur der gemeldete Speicherstatus und seine Laufzeitwerte.", [["Status", readElement("being-storage-state")], ["Details", readElement("being-storage-detail")], ["Inhaltliche Daten", null]]],
+    history: ["Loop-Evidenz", "Nur aufgezeichnete Verlaufssamples des Embodiment-Vertrags.", [["Status", readElement("embodiment-history-state")], ["Samples", readElement("embodiment-history-count")], ["Letzter Tick", readElement("embodiment-history-tick")]]],
+    "adapter-loop": ["Adaptergruppe / geschlossener Loop", "Die Environment-Beobachtung ist die Rückkopplung nach der Aktion; Eigenhören und Eigenbild benötigen noch reale Sensoradapter.", [["Environment", readElement("embodiment-loop-environment")], ["Sensor", readElement("embodiment-loop-sensor")], ["Encoder", readElement("embodiment-loop-encoder")], ["SNN", readElement("embodiment-loop-snn")], ["Decoder", readElement("embodiment-loop-decoder")], ["Actuator", readElement("embodiment-loop-actuator")], ["Vertragsnotiz", readElement("embodiment-contract-note")]]],
+  };
+  const group = groups[key];
+  if (group) openEmbodimentDetail(group[0], group[1], group[2]);
+}
+
+export function initEmbodimentDetails() {
+  const modal = byId("embodiment-detail-modal");
+  if (!modal || modal.dataset.initialized) return;
+  modal.dataset.initialized = "true";
+  const close = () => { modal.hidden = true; };
+  byId("embodiment-detail-close")?.addEventListener("click", close);
+  byId("embodiment-detail-close-footer")?.addEventListener("click", close);
+  modal.addEventListener("click", (event) => { if (event.target === modal) close(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+  document.querySelectorAll("[data-detail-key]").forEach((element) => {
+    element.addEventListener("click", () => showEmbodimentGroup(element.dataset.detailKey));
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); showEmbodimentGroup(element.dataset.detailKey); }
+    });
+  });
+}
+
 function clamp(value, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, Number(value) || 0));
+}
+
+async function setPipelineStage(stage, enabled, input) {
+  try {
+    const response = await fetch("/api/embodiment/pipeline", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stage, enabled }),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    input.title = enabled ? "Pipeline-Stufe freigegeben" : "Pipeline-Stufe deaktiviert";
+  } catch (error) {
+    input.checked = !enabled;
+    input.title = `Konfiguration nicht übernommen: ${error.message}`;
+  }
+}
+
+function renderPipelineToggles(pipeline) {
+  for (const input of document.querySelectorAll("[data-pipeline-toggle]")) {
+    const stage = input.dataset.pipelineToggle;
+    const state = pipeline?.stages?.[stage];
+    if (!state) continue;
+    input.checked = Boolean(state.enabled);
+    input.dataset.implemented = String(Boolean(state.implemented));
+    input.title = state.implemented ? "Implementierte Pipeline-Stufe" : "Noch nicht implementiert; Häkchen speichert nur Konfigurationsabsicht";
+  }
+}
+
+export function initEmbodimentPipelineControls() {
+  document.querySelectorAll("[data-pipeline-toggle]").forEach((input) => {
+    input.addEventListener("click", (event) => event.stopPropagation());
+    input.addEventListener("change", (event) => {
+      event.stopPropagation();
+      setPipelineStage(input.dataset.pipelineToggle, input.checked, input);
+    });
+  });
 }
 
 function renderConnections(payload) {
@@ -78,6 +180,16 @@ function renderConnections(payload) {
       : "nicht autorisiert";
     trust.title = connection.message || "";
     card.append(heading, relation, capabilities, trust);
+    card.tabIndex = 0;
+    card.setAttribute("aria-label", `Details für ${connection.name || connection.connection_id}`);
+    const showConnection = () => openEmbodimentDetail(
+      connection.name || connection.connection_id,
+      "Echter Verbindungsdeskriptor aus der Adapter-Erkennung.",
+      [["ID", connection.connection_id], ["Typ", connection.kind], ["Beziehung", connection.relationship], ["Status", connection.status], ["Fähigkeiten", connection.capabilities], ["Berechtigungen", connection.permissions], ["Modalitäten", connection.modalities], ["Verfügbar", connection.available], ["Autorisiert", connection.authorized], ["Aktiv", connection.active], ["Latenz (ms)", connection.latency_ms], ["Energiebedarf", connection.energy_demand], ["Gefahrenstufe", connection.hazard_level], ["Quelle", connection.source], ["Meldung", connection.message]],
+      connection.source || "Embodiment connection API",
+    );
+    card.addEventListener("click", showConnection);
+    card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); showConnection(); } });
     graph.append(card);
   }
 }
@@ -102,6 +214,8 @@ export function renderWorkspaceSummaries(state) {
   const languageOrgan = state.language_organ || {};
   const knowledge = state.knowledge_intake || {};
   const signals = state.signal_metrics || {};
+
+  renderPipelineToggles(embodimentDetail.pipeline);
 
   setText("network-workspace-source", String(network.source || "live").replaceAll("_", " "));
   setText("network-workspace-tick", formatNumber(network.tick ?? system.tick));
@@ -172,6 +286,7 @@ export function renderWorkspaceSummaries(state) {
   }
   setText("embodiment-sensor-detail", embodimentDetail.details?.sensor_values === null ? "not published" : "available");
   setText("embodiment-actuator-detail", embodimentDetail.details?.actuator_values === null ? "not published" : "available");
+  setText("embodiment-feedback-state", embodiment.last_observation_state ? "observation received" : "not implemented");
   setText("embodiment-contract-note", embodimentDetail.details?.message || "Adapter detail contract not reported.");
   const history = Array.isArray(embodimentHistory.history) ? embodimentHistory.history : [];
   setText("embodiment-history-count", embodimentHistory.count || 0);

@@ -43,6 +43,12 @@
 - [x] Per-adapter capability and rate limits enforced
 - [x] Hash-linked immutable action audit trail implemented
 - [x] Emergency stop and human override enforced below policy execution
+- [x] Embodiment anatomy separates sensory inputs, neural database, inner states and actionable extremities; rendering remains telemetry-driven
+- [x] Read-only detail popups expose the actual fields of anatomy groups, system sources, loop adapters and connection descriptors; missing fields stay explicitly unimplemented
+- [x] EnvironmentObservation feedback fields are available in EmbodimentMetrics; publishing live self-sensing remains open until real sensor/actuator adapters provide it
+- [x] MetricAggregator accepts published embodiment observations for runtime snapshot integration
+- [x] Full-stack embodiment pipeline connects SensorFrame -> encoder -> SNN -> decoder -> controlled actuator -> EnvironmentObservation feedback
+- [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
 
 ## Alpha.6 Phase B Evidence Freeze (released)
 
@@ -128,7 +134,7 @@
   - `src/dashboard/static/health-drawer.js`
   - `src/dashboard/health_builder.py` baut aggregierte Health aus Komponenten
   - API-Endpunkt `/api/health`
-- [~] Control/Console-Entkopplung: Grundstruktur vorhanden, Command-Duplizierung
+  - [x] Control/Console-Entkopplung: Grundstruktur vorhanden, Command-Duplizierung
       weitgehend beseitigt
   - `src/dashboard/static/control-panel.js` zentralisiert alle Runtime-Commands
   - `src/dashboard/static/operator_console.js` reiner Output + Proposals
@@ -136,7 +142,7 @@
   - [x] `ControlPanel` ist alleiniger Runtime-Command-Owner
   - [x] Runtime-Shortcuts aus `OperatorConsole` entfernt (`OperatorConsole.bindKeyboardShortcuts()`
         verarbeitet nur noch `Ctrl+L` für Console-Clear)
-  - [~] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
+  - [x] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
         zerlegen
 - [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
   - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
@@ -152,7 +158,7 @@
 - [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
   - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
   - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
-- [~] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
+  - [x] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
   - [x] StateStore vollständig integrieren: Backend publiziert jetzt- [x] UI-Redesign: Status-Elemente (Experiment-Mode, System-Status, Health-Bar) in always-visible Footer verschieben; Header auf Dark/Light + Accessibility reduzieren; Runtime-Errors in Health-Bar integrieren; Overview für 1080p @ 75% Zoom kompaktieren        angereicherte Snapshots; `/api/state` liefert den vollständigen
         Store; globale State- und Health-Daten kommen aus dem Store.
         Wissenschaftliche Daten (heatmap, raster, projection, Tabellen)

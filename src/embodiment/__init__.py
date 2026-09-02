@@ -21,6 +21,7 @@ from .models import (
     EnvironmentObservation,
     SensorFrame,
 )
+from .pipeline import EmbodimentPipeline
 from .registry import EmbodimentRegistry
 from .sensor import SensorAdapter
 
@@ -43,6 +44,7 @@ __all__ = [
     "EnvironmentAdapter",
     "EnvironmentKind",
     "EnvironmentObservation",
+    "EmbodimentPipeline",
     "RelationshipClass",
     "SensorAdapter",
     "SensorFrame",

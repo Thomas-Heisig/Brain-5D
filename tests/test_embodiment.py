@@ -79,6 +79,9 @@ def test_agent_tracks_episode_feedback_without_autonomous_actions() -> None:
     assert metrics.episode == 1
     assert metrics.episode_reward == 0.5
     assert metrics.last_action == "advance"
+    assert metrics.last_observation_state == {"action": "advance"}
+    assert metrics.last_observation_tick == 1
+    assert metrics.last_observation_terminated is False
 
 
 def test_connection_manager_discovers_without_authorizing_devices() -> None:

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-02 — Embodiment anatomy visualization
+
+- Reworked the Embodiment view into a meaningful anatomy: sensory inputs at
+  the head boundary, the neural state as the central database, inner states
+  and regulation below it, and actuators as the changeable extremities.
+- Preserved the existing telemetry IDs and responsive ordering; unavailable
+  adapter data remains explicitly unavailable.
+- Added read-only detail popups for each anatomy group, system source, loop
+  adapter and discovered connection, populated only from current dashboard
+  snapshot/API fields.
+- Extended `EmbodimentMetrics` with the real post-action observation state,
+  observation tick and termination flags; audio self-hearing, visual
+  reflection and other proprioceptive adapters remain explicitly unimplemented
+  until real adapters publish them.
+- Added the `MetricAggregator.update_embodiment` handoff and regression coverage
+  for observation feedback.
+- Added the explicit `EmbodimentPipeline` for SensorFrame -> encoder -> SNN ->
+  decoder -> controlled actuator -> EnvironmentObservation feedback, with a
+  deterministic full-stack test; physical audio/vision self-feedback remains
+  configuration-dependent and is not claimed as implemented.
+
 ## 2026-09-02 — Evidence scope digests
 
 - Added explicit evidence scopes and scope-specific source digests.
@@ -9,6 +30,8 @@
   processes and records their PIDs through a filesystem manifest.
 - Extracted structural proposal rendering and actions into
   `structural-proposal-panel.js`; removed tracked diagnostic dumps from `tmp/`.
+- Completed the console split: `OperatorConsole` now owns only status, logging
+  and lifecycle concerns; proposal actions are exclusively panel-owned.
 - Gate artifact validation now prefers matching `scope`/`scope_digest` pairs;
   legacy `tested_tree_digest` artifacts remain supported.
 

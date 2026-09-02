@@ -85,6 +85,12 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Typed sensor, actuator, environment and connection descriptors
 - [x] Read-only Embodiment state/metrics/history/connections APIs
 - [x] Animated living-system and dynamic body graph without synthetic telemetry
+- [x] Embodiment anatomy maps senses near the brain data core, inner regulation states and changeable extremities without inventing unavailable values
+- [x] Clickable read-only detail view exposes published adapter and system fields while marking absent future data as not implemented
+- [x] Embodiment contract retains post-action EnvironmentObservation state, reward and termination feedback without inventing self-sensing data
+- [x] Dashboard metric aggregation can receive real embodiment feedback without treating adapter discovery as active I/O
+- [x] Explicit Full-Stack `EmbodimentPipeline` proves SensorFrame -> SNN -> safe actuator -> EnvironmentObservation feedback with deterministic integration coverage
+- [ ] Add configured audio self-hearing and visual self-reflection adapters with measured echo/reflection data
 - [x] Fail-closed discovery for compute, storage, network, camera, microphone, display, audio and print queues
 - [x] Local/intranet binding and authenticated TLS reverse-proxy template
 - [x] First deterministic `EnvironmentAdapter` integrated end-to-end (`DeterministicTargetEnvironment` + safety proof)

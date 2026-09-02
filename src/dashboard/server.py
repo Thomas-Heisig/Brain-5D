@@ -153,6 +153,15 @@ class DashboardServer(ThreadingHTTPServer):
         self.docs_source = docs_source
         self.research_source = research_source
         self.connection_manager = connection_manager or ConnectionManager()
+        self.embodiment_pipeline_config: dict[str, bool] = {
+            "sensor": False,
+            "encoder": False,
+            "snn": False,
+            "decoder": False,
+            "actuator": False,
+            "feedback": False,
+        }
+        self._embodiment_pipeline_lock = threading.Lock()
 
 
 # ============================================================================
@@ -313,6 +322,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/embodiment/connections":
                 self._send_embodiment_connections()
+                return
+
+            if path == "/api/embodiment/pipeline":
+                self._send_embodiment_pipeline()
                 return
 
             # ----------------------------------------------------------------
@@ -568,6 +581,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/parameters/pending/cancel":
                 self._cancel_pending_parameters(body)
+                return
+
+            if path == "/api/embodiment/pipeline":
+                self._set_embodiment_pipeline(body)
                 return
 
             if path.startswith("/api/parameters/") and path.endswith("/pending"):
@@ -865,8 +882,16 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "details": {
                 "sensor_values": None,
                 "actuator_values": None,
-                "environment_state": None,
-                "message": "Adapter detail values are not published by the current embodiment contract.",
+                "environment_state": metrics.get("last_observation_state"),
+                "observation_tick": metrics.get("last_observation_tick"),
+                "observation_terminated": metrics.get("last_observation_terminated"),
+                "observation_truncated": metrics.get("last_observation_truncated"),
+                "message": (
+                    "Environment observation is published; sensor and actuator "
+                    "self-feedback values are not published by the current adapters."
+                    if metrics.get("last_observation_state") is not None
+                    else "No environment observation is published by the current embodiment runtime."
+                ),
             },
         }
 
@@ -922,6 +947,44 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_embodiment_connections(self) -> None:
         """Serve discovered and configured body connections without activating them."""
         self._send_json(self.dashboard_server.connection_manager.to_json())
+
+    def _send_embodiment_pipeline(self) -> None:
+        """Serve pipeline switches separately from hardware availability."""
+        metrics = self.dashboard_server.dashboard_state.snapshot().embodiment
+        with self.dashboard_server._embodiment_pipeline_lock:
+            enabled = dict(self.dashboard_server.embodiment_pipeline_config)
+        implemented = {
+            "sensor": metrics.active_sensors > 0,
+            "encoder": False,
+            "snn": True,
+            "decoder": False,
+            "actuator": metrics.active_actuators > 0,
+            "feedback": metrics.last_observation_state is not None,
+        }
+        self._send_json(
+            {
+                "stages": {
+                    stage: {"enabled": enabled[stage], "implemented": implemented[stage]}
+                    for stage in enabled
+                },
+                "message": "Enabled stages are configuration intent; unavailable adapters remain inactive.",
+            }
+        )
+
+    def _set_embodiment_pipeline(self, body: dict[str, JSONValue]) -> None:
+        """Set one pipeline switch without activating an adapter or device."""
+        stage = body.get("stage")
+        enabled = body.get("enabled")
+        valid_stages = {"sensor", "encoder", "snn", "decoder", "actuator", "feedback"}
+        if not isinstance(stage, str) or stage not in valid_stages:
+            self._send_json({"error": "Unknown embodiment pipeline stage."}, HTTPStatus.BAD_REQUEST)
+            return
+        if not isinstance(enabled, bool):
+            self._send_json({"error": "Pipeline enabled must be boolean."}, HTTPStatus.BAD_REQUEST)
+            return
+        with self.dashboard_server._embodiment_pipeline_lock:
+            self.dashboard_server.embodiment_pipeline_config[stage] = enabled
+        self._send_json({"ok": True, "stage": stage, "enabled": enabled})
 
     def _serve_network_get(
         self,

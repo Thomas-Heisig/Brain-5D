@@ -49,7 +49,7 @@ import { ExperimentMode } from './experiment-mode.js';
 import { ExperimentWorkflowPanel } from './experiment-workflow.js';
 import { renderOverviewCommandCenter, setupOverviewActions } from './overview-panel.js';
 import { SettingsPanel } from './settings-panel.js';
-import { renderWorkspaceSummaries } from './workspace-panels.js';
+import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
 
 // ================================================================
 // DOM HELPERS
@@ -2289,6 +2289,8 @@ function init() {
   setupOverviewActions();
   setupWorkspaceViews();
   setupResearchLanes();
+  initEmbodimentDetails();
+  initEmbodimentPipelineControls();
 
   // Initialize dashboard (status & heatmap)
   initDashboard();

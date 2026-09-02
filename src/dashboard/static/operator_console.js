@@ -383,7 +383,6 @@ export class OperatorConsole {
     this.logger = null;
     this.pollingInterval = null;
     this.pollingRate = 1000;
-    this.commandInFlight = false;
     this.status = null;
     this.proposalPanel = null;
 
@@ -416,8 +415,6 @@ export class OperatorConsole {
 
     // Initial load
     this.refreshStatus();
-    this.loadProposals();
-
     // Start polling
     this.startPolling();
   }
@@ -426,8 +423,7 @@ export class OperatorConsole {
    * Bind DOM event listeners.
    */
   bindEvents() {
-    // Console output only; runtime controls are now owned by ControlPanel.
-    // Remaining responsibilities: proposal approval/rejection and console clear.
+    // Runtime controls and structural proposals are owned by their panels.
 
     // Clear console
     const clearBtn = byId('b5d-clear-console');
@@ -480,19 +476,6 @@ export class OperatorConsole {
   }
 
   /**
-   * Load structural proposals.
-   */
-  async loadProposals() {
-    try {
-      const data = await OperatorAPI.getProposals();
-      this.proposals = data.proposals || [];
-      this.renderProposals(this.proposals);
-    } catch (error) {
-      this.logger.log(`⚠️ Failed to load proposals: ${error.message}`, 'warning');
-    }
-  }
-
-  /**
    * Render system status.
    * @param {object} data - Status data
    */
@@ -524,109 +507,6 @@ export class OperatorConsole {
   }
 
   /**
-   * Render structural proposals.
-   * @param {Array} proposals - Proposals list
-   */
-  renderProposals(proposals) {
-    const container = byId('b5d-proposals');
-    if (!container) return;
-
-    if (!proposals || proposals.length === 0) {
-      container.innerHTML = '<div class="proposal-empty">No pending proposals</div>';
-      return;
-    }
-
-    let html = '';
-    for (const p of proposals) {
-      const confidence = (p.confidence || 0) * 100;
-      html += `
-        <div class="proposal-item" data-id="${escapeHtml(p.proposal_id)}">
-          <span class="proposal-kind">${escapeHtml(p.kind || 'unknown')}</span>
-          <span class="proposal-desc">
-            Neuron ${p.neuron_id || '?'} → ${p.target_id || '?'}
-          </span>
-          <span class="proposal-conf" style="--conf: ${confidence}%">
-            ${confidence.toFixed(0)}%
-          </span>
-          <span class="proposal-reason">${escapeHtml(p.reason || '')}</span>
-          <div class="proposal-actions">
-            <button class="btn-approve" data-id="${escapeHtml(p.proposal_id)}">✓ Approve</button>
-            <button class="btn-reject" data-id="${escapeHtml(p.proposal_id)}">✗ Reject</button>
-          </div>
-        </div>
-      `;
-    }
-
-    container.innerHTML = html;
-
-    // Bind approve/reject events
-    container.querySelectorAll('.btn-approve').forEach(btn => {
-      btn.addEventListener('click', () => this.handleApprove(btn.dataset.id));
-    });
-    container.querySelectorAll('.btn-reject').forEach(btn => {
-      btn.addEventListener('click', () => this.handleReject(btn.dataset.id));
-    });
-  }
-
-  /**
-   * Handle approve proposal.
-   * @param {string} proposalId - Proposal ID
-   */
-  async handleApprove(proposalId) {
-    if (this.commandInFlight) {
-      this.logger.log('⏳ Command in progress...', 'warning');
-      return;
-    }
-
-    this.commandInFlight = true;
-    this.logger.log(`✓ Approving proposal ${proposalId}...`, 'info');
-
-    try {
-      const result = await OperatorAPI.approveProposal(proposalId);
-      if (result.ok) {
-        this.logger.log(`✅ Proposal ${proposalId} approved and applied`, 'success');
-        await this.loadProposals();
-        await this.refreshStatus();
-      } else {
-        this.logger.log(`❌ Failed to approve: ${result.message || 'Unknown error'}`, 'error');
-      }
-    } catch (error) {
-      this.logger.log(`❌ Failed to approve: ${error.message}`, 'error');
-    } finally {
-      this.commandInFlight = false;
-    }
-  }
-
-  /**
-   * Handle reject proposal.
-   * @param {string} proposalId - Proposal ID
-   */
-  async handleReject(proposalId) {
-    if (this.commandInFlight) {
-      this.logger.log('⏳ Command in progress...', 'warning');
-      return;
-    }
-
-    this.commandInFlight = true;
-    this.logger.log(`✗ Rejecting proposal ${proposalId}...`, 'info');
-
-    try {
-      const result = await OperatorAPI.rejectProposal(proposalId);
-      if (result.ok) {
-        this.logger.log(`✅ Proposal ${proposalId} rejected`, 'success');
-        await this.loadProposals();
-        await this.refreshStatus();
-      } else {
-        this.logger.log(`❌ Failed to reject: ${result.message || 'Unknown error'}`, 'error');
-      }
-    } catch (error) {
-      this.logger.log(`❌ Failed to reject: ${error.message}`, 'error');
-    } finally {
-      this.commandInFlight = false;
-    }
-  }
-
-  /**
    * Start polling for status updates.
    */
   startPolling() {
@@ -635,9 +515,7 @@ export class OperatorConsole {
     }
 
     this.pollingInterval = setInterval(() => {
-      if (!this.commandInFlight) {
-        this.refreshStatus().catch(() => {});
-      }
+      this.refreshStatus().catch(() => {});
     }, this.pollingRate);
   }
 

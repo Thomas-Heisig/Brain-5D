@@ -972,6 +972,12 @@ class MetricAggregator:
         self._network = NetworkMetrics(**{**self._network.__dict__, **fields})
         return self
 
+    def update_embodiment(self, **kwargs: Any) -> MetricAggregator:
+        """Update only fields published by the embodiment contract."""
+        fields = {k: v for k, v in kwargs.items() if hasattr(self._embodiment, k)}
+        self._embodiment = EmbodimentMetrics(**{**self._embodiment.__dict__, **fields})
+        return self
+
     def set_status(self, status: str) -> MetricAggregator:
         """Set the dashboard status."""
         self._status = status

@@ -15,6 +15,7 @@ from src.embodiment import (
     ControlledEmbodimentAgent,
     ControlledSensorAdapter,
     DeterministicTargetEnvironment,
+    EmbodimentPipeline,
     RelationshipClass,
     SensorFrame,
 )
@@ -86,6 +87,41 @@ def test_deterministic_environment_completes_feedback_loop() -> None:
     assert actuator.calls == 3
     assert agent.audit.verify()
     assert all(record.accepted for record in agent.audit.records)
+
+
+@dataclass
+class PipelineNetwork:
+    injected: list[dict[int, float]]
+
+    def inject_current_batch(self, currents: dict[int, float]) -> None:
+        self.injected.append(currents)
+
+    def step(self) -> dict[str, tuple[int, ...]]:
+        return {"output_spike_ids": (1,)}
+
+
+def test_full_stack_pipeline_connects_sensor_snn_actuator_and_feedback() -> None:
+    agent, _ = _agent()
+    network = PipelineNetwork([])
+    pipeline = EmbodimentPipeline(
+        sensor=FakeSensor(),
+        network=network,
+        encoder=lambda frame: {0: float(frame.tick)},
+        decoder=lambda result, frame: ActionCommand("target-actuator", frame.tick, "right"),
+        controller=agent,
+    )
+    pipeline.reset(seed=42)
+
+    for tick in range(1, 4):
+        pipeline.step(tick)
+
+    metrics = pipeline.metrics()
+    assert len(network.injected) == 3
+    assert network.injected[-1] == {0: 3.0}
+    assert metrics.last_observation_state == {"position": 3, "target": 3}
+    assert metrics.last_reward == 1.0
+    assert metrics.last_observation_terminated is True
+    assert agent.audit.verify()
 
 
 def test_unauthorized_action_is_blocked_and_audited() -> None:

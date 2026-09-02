@@ -69,6 +69,10 @@ class EmbodimentMetrics:
     last_reward: float = 0.0
     last_action: str = ""
     last_text_input: str = ""
+    last_observation_state: dict[str, JSONValue] | None = None
+    last_observation_tick: int | None = None
+    last_observation_terminated: bool | None = None
+    last_observation_truncated: bool | None = None
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return a JSON-ready representation."""
@@ -82,4 +86,8 @@ class EmbodimentMetrics:
             "last_reward": self.last_reward,
             "last_action": self.last_action,
             "last_text_input": self.last_text_input,
+            "last_observation_state": self.last_observation_state,
+            "last_observation_tick": self.last_observation_tick,
+            "last_observation_terminated": self.last_observation_terminated,
+            "last_observation_truncated": self.last_observation_truncated,
         }

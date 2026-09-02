@@ -562,29 +562,35 @@
           <span>Episode<strong id="embodiment-episode">0</strong></span>
         </div>
       </header>
-      <section class="embodiment-living-map" id="embodiment-living-map" data-system-state="idle" aria-label="Brain-5D living system map">
-        <div class="organism-rail organism-rail-left">
-          <article class="organ-panel" data-organ="network"><span>NETZWERK</span><h3>Neuronaler Körper</h3><dl><div><dt>Tick</dt><dd id="being-tick">0</dd></div><div><dt>Neuronen</dt><dd id="being-neurons">0</dd></div><div><dt>Synapsen</dt><dd id="being-synapses">0</dd></div><div><dt>Aktiv</dt><dd id="being-active">0</dd></div><div><dt>E/I-Ratio</dt><dd id="being-ei-ratio">0.00</dd></div></dl></article>
-          <article class="organ-panel" data-organ="dynamics"><span>DYNAMIK</span><h3>Neuronaler Puls</h3><dl><div><dt>Spikes / Tick</dt><dd id="being-spikes">0</dd></div><div><dt>Feuerrate</dt><dd id="being-rate">0.00 Hz</dd></div><div><dt>Burst-Index</dt><dd id="being-burst">0.000</dd></div><div><dt>Synchronität</dt><dd id="being-synchrony">0.000</dd></div></dl></article>
-          <article class="organ-panel" data-organ="homeostasis"><span>HOMÖOSTASE</span><h3>Inneres Gleichgewicht</h3><dl><div><dt>Status</dt><dd id="being-homeostasis">disabled</dd></div><div><dt>Energie</dt><dd id="being-energy">0.000</dd></div><div><dt>Rate-Fehler</dt><dd id="being-rate-error">0.000 Hz</dd></div><div><dt>Threshold</dt><dd id="being-threshold">0.000</dd></div></dl></article>
+      <section class="embodiment-living-map embodiment-anatomy" id="embodiment-living-map" data-system-state="idle" aria-label="Dynamische Embodiment-Anatomie">
+        <div class="anatomy-zone anatomy-senses" data-detail-key="senses" tabindex="0" role="button">
+          <header><span class="zone-index">01</span><div><span class="zone-kicker">EINGÄNGE</span><h3>Sinne</h3><p>Alles, was die Umwelt meldet</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></header>
+          <div class="sense-orbit"><i class="sense-node">VIS</i><i class="sense-node">AUD</i><i class="sense-node">TXT</i><i class="sense-node">ENV</i><span class="orbit-line"></span></div>
+          <dl class="anatomy-stats"><div><dt>verbundene Sinne</dt><dd id="being-sensors">0</dd></div><div><dt>letztes Signal</dt><dd id="embodiment-last-text">—</dd></div><div><dt>Umgebung</dt><dd id="being-environment">unconfigured</dd></div><div><dt>Werte</dt><dd id="embodiment-sensor-detail">not published</dd></div><div><dt>Rückkopplung</dt><dd id="embodiment-feedback-state">not implemented</dd></div></dl>
+          <strong class="zone-state" id="embodiment-sensor-state">Not connected</strong>
         </div>
 
-        <figure class="organism-core" aria-labelledby="organism-caption">
+        <figure class="organism-core brain-database" data-detail-key="brain" tabindex="0" role="button" aria-labelledby="organism-caption">
           <div class="organism-field" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="organism-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <img class="brain5d-being" src="/assets/brain5d-being.svg" alt="Leuchtendes mehrgliedriges Brain-5D-Wesen als Verkörperung aller Systemfunktionen">
-          <span class="organ-label organ-label-sense">SENSE<small id="embodiment-sensor-state">Not connected</small></span>
-          <span class="organ-label organ-label-think">SNN<small id="being-core-state">idle</small></span>
-          <span class="organ-label organ-label-act">ACT<small id="embodiment-actuator-state">Not connected</small></span>
+          <img class="brain5d-being" src="/assets/brain5d-being.svg" alt="">
+          <div class="brain-core-mark"><span class="core-pulse"></span><span class="core-label">BRAIN-5D</span><strong>NEURONALE<br>DATENBANK</strong><small id="being-core-state">idle</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="snn"><span>AKTIV</span></label></div>
+          <div class="brain-core-metrics"><span><b id="being-neurons">0</b> Neuronen</span><span><b id="being-synapses">0</b> Synapsen</span><span>Tick <b id="being-tick">0</b></span></div>
           <div class="organism-vital"><span class="vital-ring"></span><strong id="being-system-status">IDLE</strong><small id="being-vital-caption">live telemetry</small></div>
-          <figcaption id="organism-caption"><strong>BRAIN-5D LIVING SYSTEM</strong><span id="embodiment-readiness">No environment adapter is configured.</span></figcaption>
+          <figcaption id="organism-caption"><strong>VERARBEITUNG</strong><span id="embodiment-readiness">No environment adapter is configured.</span></figcaption>
         </figure>
 
-        <div class="organism-rail organism-rail-right">
-          <article class="organ-panel" data-organ="perception"><span>UMGEBUNG / SINNE</span><h3>Perception Gateway</h3><dl><div><dt>Sensoren</dt><dd id="being-sensors">0</dd></div><div><dt>Text-Input</dt><dd id="embodiment-last-text">—</dd></div><div><dt>Sensorwerte</dt><dd id="embodiment-sensor-detail">not published</dd></div><div><dt>Umgebung</dt><dd id="being-environment">unconfigured</dd></div></dl></article>
-          <article class="organ-panel" data-organ="action"><span>AKTION / REWARD</span><h3>Actuator Gateway</h3><dl><div><dt>Aktoren</dt><dd id="being-actuators">0</dd></div><div><dt>Letzte Aktion</dt><dd id="embodiment-action-detail">—</dd></div><div><dt>Aktorwerte</dt><dd id="embodiment-actuator-detail">not published</dd></div><div><dt>Reward</dt><dd id="embodiment-last-reward">0.000</dd></div></dl></article>
-          <article class="organ-panel" data-organ="learning"><span>LERNEN</span><h3>Plastizität</h3><dl><div><dt>STDP-Updates</dt><dd id="being-stdp">0</dd></div><div><dt>Reward-Updates</dt><dd id="being-reward-updates">0</dd></div><div><dt>Pending Rewards</dt><dd id="being-pending-rewards">0</dd></div><div><dt>Episode Reward</dt><dd id="embodiment-episode-reward">0.000</dd></div></dl></article>
+        <div class="anatomy-zone anatomy-actuators" data-detail-key="actuators" tabindex="0" role="button">
+          <header><span class="zone-index">03</span><div><span class="zone-kicker">AUSGÄNGE</span><h3>Extremitäten</h3><p>Alles, was das Wesen verändern kann</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="actuator"><span>OUT</span></label></header>
+          <div class="limb-stack"><i>MOVE</i><i>GRIP</i><i>SPEAK</i><i>WRITE</i></div>
+          <dl class="anatomy-stats"><div><dt>veränderbare Aktoren</dt><dd id="being-actuators">0</dd></div><div><dt>letzte Aktion</dt><dd id="embodiment-action-detail">—</dd></div><div><dt>Aktionwerte</dt><dd id="embodiment-actuator-detail">not published</dd></div><div><dt>Reward</dt><dd id="embodiment-last-reward">0.000</dd></div></dl>
+          <strong class="zone-state" id="embodiment-actuator-state">Not connected</strong>
         </div>
+
+        <section class="anatomy-inner" data-detail-key="inner" tabindex="0" role="button" aria-label="Innere Zustände und Regulation">
+          <header><span class="zone-index">02</span><div><span class="zone-kicker">INNERES ERLEBEN</span><h3>Innere Zustände</h3></div><span id="being-homeostasis" class="inner-status">disabled</span><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="feedback"><span>LOOP</span></label></header>
+          <div class="inner-state-grid"><span><b id="being-energy">0.000</b><small>ENERGIE</small></span><span><b id="being-rate">0.00 Hz</b><small>AKTIVITÄT</small></span><span><b id="being-synchrony">0.000</b><small>SYNCHRONITÄT</small></span><span><b id="being-burst">0.000</b><small>BURST</small></span><span><b id="being-active">0</b><small>AKTIVE NEURONEN</small></span><span><b id="being-stdp">0</b><small>PLASTIZITÄT</small></span></div>
+          <div class="inner-detail"><span>Rate-Fehler <b id="being-rate-error">0.000 Hz</b></span><span>Schwellenanpassung <b id="being-threshold">0.000</b></span><span>Spikes / Tick <b id="being-spikes">0</b></span><span>Episode Reward <b id="embodiment-episode-reward">0.000</b></span></div>
+        </section>
       </section>
 
       <section class="connection-manager" aria-labelledby="connection-manager-title">
@@ -602,26 +608,35 @@
       </section>
 
       <section class="embodiment-system-strip" aria-label="Weitere Systemquellen und Funktionen">
-        <article><span>SIGNAL-BRÜCKE</span><strong id="being-signal-frames">0 frames</strong><small id="being-signal-regions">0 Regionen</small></article>
-        <article><span>SPRACHORGAN</span><strong id="being-language-state">disabled</strong><small id="being-language-model">kein Modell</small></article>
-        <article><span>WISSENSAUFNAHME</span><strong id="being-knowledge-items">0 verarbeitet</strong><small id="being-knowledge-sources">0 Quellen</small></article>
-        <article><span>STRUKTUR</span><strong id="being-structural-changes">0 Änderungen</strong><small id="being-growth-budget">0 / 0 Budget</small></article>
-        <article><span>SPEICHER</span><strong id="being-storage-state">unavailable</strong><small id="being-storage-detail">—</small></article>
-        <article><span>LOOP-EVIDENZ</span><strong id="embodiment-history-state">unavailable</strong><small><b id="embodiment-history-count">0</b> Samples · Tick <b id="embodiment-history-tick">—</b></small></article>
+        <article data-detail-key="signal" tabindex="0" role="button"><span>SIGNAL-BRÜCKE</span><strong id="being-signal-frames">0 frames</strong><small id="being-signal-regions">0 Regionen</small></article>
+        <article data-detail-key="language" tabindex="0" role="button"><span>SPRACHORGAN</span><strong id="being-language-state">disabled</strong><small id="being-language-model">kein Modell</small></article>
+        <article data-detail-key="knowledge" tabindex="0" role="button"><span>WISSENSAUFNAHME</span><strong id="being-knowledge-items">0 verarbeitet</strong><small id="being-knowledge-sources">0 Quellen</small></article>
+        <article data-detail-key="structure" tabindex="0" role="button"><span>STRUKTUR</span><strong id="being-structural-changes">0 Änderungen</strong><small id="being-growth-budget">0 / 0 Budget</small></article>
+        <article data-detail-key="storage" tabindex="0" role="button"><span>SPEICHER</span><strong id="being-storage-state">unavailable</strong><small id="being-storage-detail">—</small></article>
+        <article data-detail-key="history" tabindex="0" role="button"><span>LOOP-EVIDENZ</span><strong id="embodiment-history-state">unavailable</strong><small><b id="embodiment-history-count">0</b> Samples · Tick <b id="embodiment-history-tick">—</b></small></article>
       </section>
 
-      <section class="embodiment-loop" aria-label="Closed perception action loop">
+      <section class="embodiment-loop" data-detail-key="adapter-loop" tabindex="0" role="button" aria-label="Closed perception action loop">
         <div class="embodiment-loop-node" data-loop-node="environment"><span>1</span><strong>Environment</strong><small id="embodiment-loop-environment">unconfigured</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="encoder"><span>ON</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="snn"><span>4</span><strong>Brain-5D SNN</strong><small id="embodiment-loop-snn">idle</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="decoder"><span>ON</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="actuator"><span>6</span><strong>Actuator</strong><small id="embodiment-loop-actuator">unavailable</small></div>
         <i>↻</i>
         <p class="embodiment-contract-note" id="embodiment-contract-note">Sensor, actuator and environment detail payloads are intentionally unavailable until adapters publish them.</p>
       </section>
       <span id="embodiment-last-action" hidden>—</span>
     </section>
+
+    <div class="embodiment-detail-modal" id="embodiment-detail-modal" hidden>
+      <div class="embodiment-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="embodiment-detail-title">
+        <header><div><span class="workspace-kicker">LIVE DATEN / READ ONLY</span><h2 id="embodiment-detail-title">Elementdetails</h2></div><button type="button" class="modal-close" id="embodiment-detail-close" aria-label="Details schließen">&times;</button></header>
+        <p id="embodiment-detail-summary"></p>
+        <dl id="embodiment-detail-fields" class="embodiment-detail-fields"></dl>
+        <footer><span id="embodiment-detail-source">Quelle: aktueller Dashboard-Snapshot</span><button type="button" class="btn-secondary" id="embodiment-detail-close-footer">Schließen</button></footer>
+      </div>
+    </div>
 
     <!-- ========================================================== -->
     <!-- TAB: RESEARCH & DOCS (Unified File Manager) -->

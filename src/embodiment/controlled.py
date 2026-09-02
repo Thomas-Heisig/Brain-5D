@@ -8,7 +8,13 @@ from .actuator import ActuatorAdapter
 from .audit import ActionAuditTrail
 from .connections import ConnectionDescriptor
 from .environment import EnvironmentAdapter
-from .models import ActionCommand, ActuatorResult, EnvironmentObservation, SensorFrame
+from .models import (
+    ActionCommand,
+    ActuatorResult,
+    EmbodimentMetrics,
+    EnvironmentObservation,
+    SensorFrame,
+)
 from .sensor import SensorAdapter
 
 
@@ -43,6 +49,10 @@ class ControlledEmbodimentAgent:
     max_actions_per_tick: int = 1
     require_human_override: bool = False
     _emergency_stopped: bool = False
+    episode: int = 0
+    episode_reward: float = 0.0
+    last_observation: EnvironmentObservation | None = None
+    last_action: ActionCommand | None = None
     _approved_override_ticks: set[int] = field(default_factory=set[int])
     _calls_by_tick: dict[int, int] = field(default_factory=dict[int, int])
 
@@ -51,7 +61,11 @@ class ControlledEmbodimentAgent:
             raise ValueError("max_actions_per_tick must be positive")
 
     def reset(self, seed: int | None = None) -> EnvironmentObservation:
-        return self.environment.reset(seed)
+        self.episode += 1
+        self.episode_reward = 0.0
+        self.last_action = None
+        self.last_observation = self.environment.reset(seed)
+        return self.last_observation
 
     def emergency_stop(self) -> None:
         self._emergency_stopped = True
@@ -88,7 +102,27 @@ class ControlledEmbodimentAgent:
         if not actuator_result.accepted:
             return None
         self._calls_by_tick[command.tick] = self._calls_by_tick.get(command.tick, 0) + 1
-        return self.environment.step(command)
+        observation = self.environment.step(command)
+        self.last_action = command
+        self.last_observation = observation
+        self.episode_reward += observation.reward
+        return observation
+
+    def metrics(self) -> EmbodimentMetrics:
+        """Expose only feedback returned by the controlled environment."""
+        observation = self.last_observation
+        return EmbodimentMetrics(
+            environment_kind=self.environment.kind.value,
+            active_actuators=1 if self.actuator.active else 0,
+            episode=self.episode,
+            episode_reward=self.episode_reward,
+            last_reward=0.0 if observation is None else observation.reward,
+            last_action="" if self.last_action is None else self.last_action.action,
+            last_observation_state=None if observation is None else observation.state,
+            last_observation_tick=None if observation is None else observation.tick,
+            last_observation_terminated=None if observation is None else observation.terminated,
+            last_observation_truncated=None if observation is None else observation.truncated,
+        )
 
     def _authorize(self, command: ActionCommand) -> tuple[ActuatorResult | None, str]:
         if self._emergency_stopped:
