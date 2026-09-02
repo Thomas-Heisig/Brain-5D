@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Literal, Protocol
 
 from .b5d import (
     B5DSnapshotWriter,
@@ -67,6 +67,7 @@ class StepResultLike(Protocol):
 
 
 PostStepHook = Callable[[StepResultLike], None]
+CapturePolicy = Literal["full_change_scan", "dirty_tracking"]
 
 
 class RuntimeNetworkLike(NetworkSnapshotLike, Protocol):
@@ -99,10 +100,15 @@ class StorageRuntimeConfig:
     commit_interval_ticks: int = 10
     capture_spike_events: bool = True
     restart_capable: bool = True
+    capture_policy: CapturePolicy = "full_change_scan"
 
     def __post_init__(self) -> None:
         if self.commit_interval_ticks <= 0:
             raise ValueError("commit_interval_ticks must be positive")
+        if self.capture_policy not in ("full_change_scan", "dirty_tracking"):
+            raise ValueError(
+                "capture_policy must be 'full_change_scan' or 'dirty_tracking'"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,7 +201,7 @@ class StorageSession:
             self.network,
             metadata={
                 "storage_runtime": "alpha.4",
-                "capture_policy": "full_change_scan",
+                "capture_policy": self.config.capture_policy,
             },
         )
 

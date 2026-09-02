@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-02 — Orthogonal runtime mode contract
+
+- Added validated `operator` / `experiment` / `dev` state modes and independent `full` / `scientific` / `minimal` / `compute` observability profiles.
+- Made storage `capture_policy` explicit while retaining `full_change_scan` as the correctness baseline; dirty tracking is not enabled before the core emits complete dirty sets.
+
 ## 2026-09-01 — v0.5.0-alpha.7 Opened
 
 - Closed Alpha.6 historically at `8fac75da723b4b9d28383dd4ec49497771f4572f`; the release manifest records source freeze `3025e68`, evidence commit `70a4ee2`, baseline 489/5/0, Gate A/B/C PASSED and successful Continuous Integration #145/#147/#148.

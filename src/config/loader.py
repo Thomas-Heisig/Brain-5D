@@ -27,6 +27,8 @@ from typing import Any, TypedDict, TypeGuard, cast
 
 import yaml
 
+from src.runtime.modes import validate_modes
+
 logger = logging.getLogger(__name__)
 
 
@@ -151,6 +153,8 @@ class ConfigDict(TypedDict, total=False):
     eligibility: dict[str, Any]
     storage: dict[str, Any]
     dashboard: dict[str, Any]
+    state_mode: str
+    observability: str
 
 
 # ============================================================================
@@ -158,6 +162,8 @@ class ConfigDict(TypedDict, total=False):
 # ============================================================================
 
 DEFAULT_CONFIG: ConfigDict = {
+    "state_mode": "operator",
+    "observability": "minimal",
     "simulation": {
         "dt_ms": 1.0,
         "max_delay": 5,
@@ -663,6 +669,15 @@ def load_config(
     # Seed
     result["seed"] = _validate_seed(raw_dict.get("seed", defaults.get("seed", 42)))
 
+    # Orthogonal runtime axes
+    state_mode = raw_dict.get("state_mode", defaults["state_mode"])
+    observability = raw_dict.get("observability", defaults["observability"])
+    if not isinstance(state_mode, str) or not isinstance(observability, str):
+        raise ValueError("state_mode and observability must be strings")
+    validate_modes(state_mode, observability)
+    result["state_mode"] = state_mode
+    result["observability"] = observability
+
     # Simulation
     sim_raw = raw_dict.get("simulation", {})
     if not isinstance(sim_raw, dict):
@@ -807,6 +822,12 @@ def validate_config(config: ConfigDict) -> None:
     # Re-validate dimensions
     dims = _validate_dimensions(config.get("dimensions"))
     _validate_initial_neurons(config.get("initial_neurons"), dims)
+
+    state_mode = config.get("state_mode", DEFAULT_CONFIG["state_mode"])
+    observability = config.get("observability", DEFAULT_CONFIG["observability"])
+    if not isinstance(state_mode, str) or not isinstance(observability, str):
+        raise ValueError("state_mode and observability must be strings")
+    validate_modes(state_mode, observability)
 
     # Validate each section (will raise on errors)
     defaults = cast("dict[str, Any]", DEFAULT_CONFIG)

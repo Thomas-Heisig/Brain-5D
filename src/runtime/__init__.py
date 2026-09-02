@@ -6,10 +6,14 @@ from .control import (
     ControlSnapshot,
     RuntimeController,
 )
+from .modes import ObservabilityProfile, StateMode, validate_modes
 
 __all__ = [
     "ControlCommand",
     "ControlMode",
     "ControlSnapshot",
     "RuntimeController",
+    "ObservabilityProfile",
+    "StateMode",
+    "validate_modes",
 ]

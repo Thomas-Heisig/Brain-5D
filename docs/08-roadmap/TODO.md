@@ -36,6 +36,8 @@
 - [x] Verify effective `poc_alpha5_live.yaml` after restart: STDP, Eligibility and Reward reach LearningEngine; `/api/config` exposes absolute path and SHA-256
 - [x] Expose Learning Engine, STDP, Eligibility, Reward and measured STDP/Reward weight-update counters separately; `enabled` or `armed` is not displayed as proof of learning
 - [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
+- [x] Define and validate orthogonal state identity (`operator` / `experiment` / `dev`) and observability (`full` / `scientific` / `minimal` / `compute`) axes
+- [ ] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
 - [ ] First deterministic EnvironmentAdapter integrated end-to-end
 - [ ] Explicit sensor/actuator authorization enforced
 - [ ] Per-adapter capability and rate limits enforced

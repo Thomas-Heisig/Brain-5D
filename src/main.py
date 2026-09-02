@@ -39,7 +39,7 @@ import sys
 import threading
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 from src.config.loader import load_config
 
@@ -885,6 +885,10 @@ def main() -> int:
                 journal_path=_journal_path,
                 commit_interval_ticks=int(
                     _journal_cfg.get("commit_interval_ticks", 10)
+                ),
+                capture_policy=cast(
+                    "Literal['full_change_scan', 'dirty_tracking']",
+                    _storage_runtime_cfg.get("capture_policy", "full_change_scan"),
                 ),
             )
             _delta_journal = DeltaJournal(str(_journal_path))

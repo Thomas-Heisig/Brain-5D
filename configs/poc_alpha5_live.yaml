@@ -5,6 +5,10 @@
 
 seed: 42
 
+# Orthogonal state identity and observability intensity.
+state_mode: operator
+observability: minimal
+
 dimensions: [10, 10, 10, 10, 10]
 initial_neurons: 5000
 max_neurons: 100000
@@ -117,6 +121,7 @@ storage:
   runtime:
     enabled: true
     capture_spike_events: true
+    # Keep the correctness baseline until dirty sets are emitted by the core.
     capture_policy: full_change_scan
     async_enabled: false
     async_queue_size: 1000
