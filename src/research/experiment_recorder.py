@@ -69,7 +69,7 @@ def get_hardware_info() -> dict[str, Any]:
     """Basic hardware information."""
     info: dict[str, Any] = {"cpu": platform.processor() or "unknown"}
     try:
-        import psutil  # type: ignore[import-untyped]
+        import psutil
 
         mem = cast(_VirtualMemoryLike, psutil.virtual_memory())
         info["ram_gb"] = round(mem.total / (1024**3), 1)

@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from time import time
+from typing import Any, cast
 
 import psutil
 
@@ -52,14 +53,17 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     """Read opt-in host state without contacting external services."""
 
     temperature_reader = getattr(psutil, "sensors_temperatures", None)
-    temperatures = temperature_reader() if callable(temperature_reader) else {}
+    temperatures = cast(
+        dict[str, list[Any]],
+        temperature_reader() if callable(temperature_reader) else {},
+    )
     temperature: float | None = None
     for entries in temperatures.values():
         if entries:
             temperature = entries[0].current
             break
 
-    network_up = any(status.isup for status in psutil.net_if_stats().values())
+    network_up = any(bool(status.isup) for status in psutil.net_if_stats().values())
     return {
         "tick": tick,
         "cpu_percent": psutil.cpu_percent(interval=None),

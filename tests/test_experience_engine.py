@@ -1,6 +1,7 @@
 """Scientific boundary tests for Experience Engine v0."""
 
 from dataclasses import dataclass, field
+from typing import Any, Callable, cast
 
 from src.embodiment import (
     ActionCommand,
@@ -28,7 +29,9 @@ class Actuator:
 
 @dataclass
 class Network:
-    injected: list[dict[int, float]] = field(default_factory=list)
+    injected: list[dict[int, float]] = field(
+        default_factory=lambda: list[dict[int, float]]()
+    )
 
     def inject_current_batch(self, currents: dict[int, float]) -> None:
         self.injected.append(currents)
@@ -39,7 +42,9 @@ class Network:
 
 @dataclass
 class LearningSpy:
-    rewards: list[tuple[float, int]] = field(default_factory=list)
+    rewards: list[tuple[float, int]] = field(
+        default_factory=lambda: list[tuple[float, int]]()
+    )
 
     def set_reward(self, value: float, tick: int) -> None:
         self.rewards.append((value, tick))
@@ -47,13 +52,17 @@ class LearningSpy:
 
 @dataclass
 class RuntimeSpy:
-    pre_hooks: list[object] = field(default_factory=list)
-    post_hooks: list[object] = field(default_factory=list)
+    pre_hooks: list[Callable[[int], Any]] = field(
+        default_factory=lambda: list[Callable[[int], Any]]()
+    )
+    post_hooks: list[Callable[[int, Any], Any]] = field(
+        default_factory=lambda: list[Callable[[int, Any], Any]]()
+    )
 
-    def add_pre_hook(self, hook: object) -> None:
+    def add_pre_hook(self, hook: Callable[..., Any]) -> None:
         self.pre_hooks.append(hook)
 
-    def add_hook(self, hook: object) -> None:
+    def add_hook(self, hook: Callable[..., Any]) -> None:
         self.post_hooks.append(hook)
 
 
@@ -101,7 +110,7 @@ def test_experience_engine_routes_environment_reward_to_learning() -> None:
     engine = ExperienceEngine(
         sensor=SystemSensorAdapter(lambda tick: {"signal": tick}),
         network=Network(),
-        encoder=lambda frame: {0: float(frame.payload["signal"])},
+        encoder=lambda frame: {0: float(cast(dict[str, int], frame.payload)["signal"])},
         decoder=lambda result, frame: ActionCommand(
             "target-actuator", frame.tick, "right"
         ),
@@ -164,4 +173,5 @@ def test_runtime_hooks_use_one_existing_network_tick() -> None:
 
     assert len(network.injected) == 1
     assert record.observation is not None
-    assert record.observation.state["position"] == 1
+    state = cast(dict[str, Any], record.observation.state)
+    assert state["position"] == 1
