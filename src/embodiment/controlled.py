@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from .actuator import ActuatorAdapter
@@ -44,8 +43,8 @@ class ControlledEmbodimentAgent:
     max_actions_per_tick: int = 1
     require_human_override: bool = False
     _emergency_stopped: bool = False
-    _approved_override_ticks: set[int] = field(default_factory=set)
-    _calls_by_tick: dict[int, int] = field(default_factory=dict)
+    _approved_override_ticks: set[int] = field(default_factory=set[int])
+    _calls_by_tick: dict[int, int] = field(default_factory=dict[int, int])
 
     def __post_init__(self) -> None:
         if self.max_actions_per_tick <= 0:
@@ -99,8 +98,14 @@ class ControlledEmbodimentAgent:
         if not self.descriptor.active or not self.actuator.active:
             return ActuatorResult(False, "actuator is inactive"), "inactive"
         if command.action not in self.descriptor.capabilities:
-            return ActuatorResult(False, "capability is not granted"), "capability_denied"
-        if self.require_human_override and command.tick not in self._approved_override_ticks:
+            return (
+                ActuatorResult(False, "capability is not granted"),
+                "capability_denied",
+            )
+        if (
+            self.require_human_override
+            and command.tick not in self._approved_override_ticks
+        ):
             return ActuatorResult(False, "human override required"), "override_required"
         if self._calls_by_tick.get(command.tick, 0) >= self.max_actions_per_tick:
             return ActuatorResult(False, "rate limit exceeded"), "rate_limited"

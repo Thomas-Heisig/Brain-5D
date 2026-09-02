@@ -56,13 +56,19 @@ def _descriptor(*, authorized: bool = True) -> ConnectionDescriptor:
     )
 
 
-def _agent(*, authorized: bool = True, **kwargs: object) -> tuple[ControlledEmbodimentAgent, FakeActuator]:
+def _agent(
+    *,
+    authorized: bool = True,
+    max_actions_per_tick: int = 1,
+    require_human_override: bool = False,
+) -> tuple[ControlledEmbodimentAgent, FakeActuator]:
     actuator = FakeActuator()
     agent = ControlledEmbodimentAgent(
         DeterministicTargetEnvironment(),
         actuator,
         _descriptor(authorized=authorized),
-        **kwargs,
+        max_actions_per_tick=max_actions_per_tick,
+        require_human_override=require_human_override,
     )
     agent.reset(seed=42)
     return agent, actuator
@@ -149,7 +155,9 @@ def test_sensor_sampling_is_authorized_and_capability_bound() -> None:
         active=True,
     )
     controlled = ControlledSensorAdapter(sensor, descriptor)
-    assert controlled.sample(4) == SensorFrame("target-sensor", 4, "position", {"tick": 4})
+    assert controlled.sample(4) == SensorFrame(
+        "target-sensor", 4, "position", {"tick": 4}
+    )
     denied = ConnectionDescriptor(
         connection_id=descriptor.connection_id,
         name=descriptor.name,
