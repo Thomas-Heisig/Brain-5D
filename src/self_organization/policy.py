@@ -122,6 +122,8 @@ class SelfOrganizationPolicyConfig:
     pruning_threshold: float = 0.9
     synapse_sprouting_threshold: float = 0.5
     synapse_pruning_threshold: float = 0.5
+    hysteresis_release_ratio: float = 0.8
+    hysteresis_rearm_ticks: int = 100
     max_neurons: int = 10_000
     min_neurons: int = 100
     # Mechanism enable/disable flags — these gate whether the policy
@@ -131,6 +133,12 @@ class SelfOrganizationPolicyConfig:
     pruning_enabled: bool = True
     synapse_sprouting_enabled: bool = True
     synapse_pruning_enabled: bool = True
+
+    def __post_init__(self) -> None:
+        if not 0.0 < self.hysteresis_release_ratio < 1.0:
+            raise ValueError("hysteresis_release_ratio must be between 0 and 1")
+        if self.hysteresis_rearm_ticks < 1:
+            raise ValueError("hysteresis_rearm_ticks must be >= 1")
 
     @classmethod
     def from_config(cls, config: Mapping[str, object]) -> SelfOrganizationPolicyConfig:
@@ -195,6 +203,13 @@ class SelfOrganizationPolicyConfig:
             section.get("synapse_pruning_threshold", 0.5),
             "synapse_pruning_threshold",
         )
+        hysteresis_release_ratio = _float_value(
+            section.get("hysteresis_release_ratio", 0.8),
+            "hysteresis_release_ratio",
+        )
+        hysteresis_rearm_ticks = _int_value(
+            section.get("hysteresis_rearm_ticks", 100), "hysteresis_rearm_ticks"
+        )
 
         # Limits
         max_neurons = _int_value(section.get("max_neurons", 10_000), "max_neurons")
@@ -211,6 +226,8 @@ class SelfOrganizationPolicyConfig:
             pruning_threshold=pruning_threshold,
             synapse_sprouting_threshold=synapse_sprouting_threshold,
             synapse_pruning_threshold=synapse_pruning_threshold,
+            hysteresis_release_ratio=hysteresis_release_ratio,
+            hysteresis_rearm_ticks=hysteresis_rearm_ticks,
             max_neurons=max_neurons,
             min_neurons=min_neurons,
         )
@@ -237,6 +254,7 @@ class SelfOrganizationPolicy:
         self._high_pressure_streak = 0
         self._last_neurogenesis_tick = -(10**18)
         self._last_pruning_tick = -(10**18)
+        self._latched_kinds: dict[ProposalKind, int] = {}
         self._last_proposal = LegacyStructuralProposal(
             tick=0,
             action=StructuralAction.NONE,
@@ -347,6 +365,22 @@ class SelfOrganizationPolicy:
         syn_prune = max(0.0, (low_energy_ratio - 0.10) * 3.0)
         proposals: list[StructuralProposal] = []
 
+        thresholds = {
+            ProposalKind.NEUROGENESIS: self.config.neurogenesis_threshold,
+            ProposalKind.PRUNING: self.config.pruning_threshold,
+            ProposalKind.SYNAPSE_SPROUTING: self.config.synapse_sprouting_threshold,
+            ProposalKind.SYNAPSE_PRUNING: self.config.synapse_pruning_threshold,
+        }
+        pressures = {
+            ProposalKind.NEUROGENESIS: neuro,
+            ProposalKind.PRUNING: prune,
+            ProposalKind.SYNAPSE_SPROUTING: sprout,
+            ProposalKind.SYNAPSE_PRUNING: syn_prune,
+        }
+        for kind, pressure in pressures.items():
+            if pressure <= thresholds[kind] * self.config.hysteresis_release_ratio:
+                self._latched_kinds.pop(kind, None)
+
         if self.config.enabled:
             # Config-authoritative mechanism gating:
             # Each proposal kind is emitted only when the corresponding
@@ -355,8 +389,14 @@ class SelfOrganizationPolicy:
             # from_config(). A disabled mechanism never produces proposals.
             if (
                 self.config.neurogenesis_enabled
-                and neuro > self.config.neurogenesis_threshold
                 and signal.neuron_count < self.config.max_neurons
+                and self._ready_for_proposal(
+                    ProposalKind.NEUROGENESIS,
+                    neuro,
+                    thresholds[ProposalKind.NEUROGENESIS],
+                    signal.tick,
+                )
+                and neuro > self.config.neurogenesis_threshold
             ):
                 proposals.append(
                     self._proposal(
@@ -368,8 +408,14 @@ class SelfOrganizationPolicy:
                 )
             if (
                 self.config.pruning_enabled
-                and prune > self.config.pruning_threshold
                 and signal.neuron_count > self.config.min_neurons
+                and self._ready_for_proposal(
+                    ProposalKind.PRUNING,
+                    prune,
+                    thresholds[ProposalKind.PRUNING],
+                    signal.tick,
+                )
+                and prune > self.config.pruning_threshold
             ):
                 proposals.append(
                     self._proposal(
@@ -381,6 +427,12 @@ class SelfOrganizationPolicy:
                 )
             if (
                 self.config.synapse_sprouting_enabled
+                and self._ready_for_proposal(
+                    ProposalKind.SYNAPSE_SPROUTING,
+                    sprout,
+                    thresholds[ProposalKind.SYNAPSE_SPROUTING],
+                    signal.tick,
+                )
                 and sprout > self.config.synapse_sprouting_threshold
             ):
                 proposals.append(
@@ -393,6 +445,12 @@ class SelfOrganizationPolicy:
                 )
             if (
                 self.config.synapse_pruning_enabled
+                and self._ready_for_proposal(
+                    ProposalKind.SYNAPSE_PRUNING,
+                    syn_prune,
+                    thresholds[ProposalKind.SYNAPSE_PRUNING],
+                    signal.tick,
+                )
                 and syn_prune > self.config.synapse_pruning_threshold
             ):
                 proposals.append(
@@ -412,6 +470,18 @@ class SelfOrganizationPolicy:
             synapse_sprouting_pressure=sprout,
             synapse_pruning_pressure=syn_prune,
         )
+
+    def _ready_for_proposal(
+        self, kind: ProposalKind, pressure: float, threshold: float, tick: int
+    ) -> bool:
+        """Require a release below threshold before re-emitting a proposal."""
+        if pressure <= threshold:
+            return False
+        latched_tick = self._latched_kinds.get(kind)
+        if latched_tick is not None and tick - latched_tick < self.config.hysteresis_rearm_ticks:
+            return False
+        self._latched_kinds[kind] = tick
+        return True
 
     @staticmethod
     def _proposal(

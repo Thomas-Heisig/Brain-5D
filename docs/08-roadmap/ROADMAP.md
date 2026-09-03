@@ -56,10 +56,14 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	Uncertainty ableiten, ohne daraus menschliche Emotionen oder Bewusstsein abzuleiten
 - [x] Deterministisches Morphology-Ledger für Geburts-Ticks, Strukturkosten und
 	getrennte Growth-/Pruning-Budgets ergänzen
+- [x] Strukturvorschläge mit per-Mechanismus-Hysterese gegen Druck-Oszillation
+	absichern; Release-Schwelle und deterministisches Re-Arm-Intervall bleiben
+	konfigurierbar
 - [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
 	mit DATA/EVID-Provenienz ausführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
-- [ ] Chronic Signals, Regional 5D Pressure, Neuron-/Synapsenalter und Growth Budgets integrieren
+- [ ] Chronic Signals und Regional 5D Pressure integrieren; Neuron-/Synapsenalter
+	und Growth Budgets sind technisch vorhanden
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen
 - [ ] Stabilität unter Sensorausfall und chronischem Ressourcendruck nachweisen
 

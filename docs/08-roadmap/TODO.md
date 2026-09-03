@@ -164,7 +164,8 @@
   nachgelagerte Interpretation zulassen
 - [x] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und getrennte
   Neurogenese-/Pruning-Budgets über ein deterministisches Morphology-Ledger ergänzen
-- [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
+- [x] Proposal-Druck mit konfigurierbarer Hysterese und Anti-Oszillation pro
+  Strukturmechanismus absichern; Kapazitätsgrenzen setzen keinen falschen Latch
 - [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
 - [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen
 - [ ] `BodySchemaManager` über dem `ConnectionManager` mit Integrations- und

@@ -60,6 +60,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 | **⏱️ Temporal Comparison** | Bounded FAST/MEDIUM/SLOW state references without rewinding runtime state |
 | **🧭 Functional Regulation** | Bounded safety, activation, valence and uncertainty values derived from observable state |
 | **🧱 Morphology Ledger** | Deterministic neuron/synapse ages with separate growth and pruning budgets |
+| **〽️ Structural Hysteresis** | Per-mechanism release thresholds prevent proposal oscillation under changing pressure |
 
 ---
 

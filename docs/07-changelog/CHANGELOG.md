@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Structural pressure hysteresis
+
+- Added per-mechanism release hysteresis to self-organization proposals.
+- Repeated proposals now require pressure to leave the dead-band first, or a
+  deterministic re-arm interval to elapse during sustained pressure;
+  capacity limits do not create hidden latches.
+
 ## 2026-09-03 — Deterministic morphology ledger
 
 - Added typed neuron/synapse birth-tick tracking and deterministic age queries.
