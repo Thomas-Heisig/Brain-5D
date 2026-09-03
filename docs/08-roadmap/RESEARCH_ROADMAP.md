@@ -3,6 +3,21 @@
 > Last updated: 2026-09-03
 > Diese Datei beschreibt Forschungsfragen, nicht den Implementierungsstatus.
 
+## Status-Snapshot
+
+Die technische Forschungs- und Governance-Basis ist auf `main` bei Commit
+`b8d5025` lokal verifiziert: **618 passed, 5 skipped**. Implementiert sind
+unter anderem AI-Provenienz und Causal-Taint, Shadow-/Frozen-Replay,
+deterministische Statistik, der Scientific Integrity Gate und getrennte
+Storage-Scope-Verträge. Das sind Voraussetzungen für Forschung, aber keine
+EVID-Artefakte und keine bestätigten wissenschaftlichen Claims.
+
+Der nächste wissenschaftliche Engpass ist die unabhängige Clean-Freeze-
+Ausführung von `EXP-STDP-0002` und `EXP-EMB-0001`. Parallel bleibt Alpha.7.1
+mit Dirty-Tracking-/Restore-Gleichheit und reproduzierbaren Laufzeitprofilen
+offen. `EXP-AIR-0001` wird erst nach Clean Freeze, Push und externer CI
+ausgeführt.
+
 ## Research Questions
 
 | ID | Frage | Experiment |

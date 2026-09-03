@@ -8,7 +8,16 @@ Die Infrastruktur ist weitgehend gebaut. Die Roadmap trennt deshalb bewusst
 zwischen technischer Produktreife, wissenschaftlichem Nachweis und Betrieb.
 Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
-## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (current)
+## Verifizierter Repository-Stand
+
+`main` ist lokal sauber und mit `origin/main` synchron (`b8d5025`). Die lokale
+Vollsuite meldet **618 passed, 5 skipped**. Die zuletzt abgeschlossene
+Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
+`StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
+AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Externe CI und
+wissenschaftliche EVID bleiben separate offene Nachweise.
+
+## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
 
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:
@@ -25,7 +34,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
 - [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 
-## v0.5.0-alpha.7.1 — Performance & Persistent Operator
+## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)
 
 - [ ] `full_change_scan` gegen causally complete `dirty_tracking` per A/B-Test validieren
 - [ ] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen

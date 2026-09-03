@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-03 — Documentation and research status synchronization
+
+- README, Forschungs-README und Roadmaps synchronisieren den verifizierten
+  Repository-Stand auf `main` / `b8d5025`.
+- Die lokale Regression ist mit `618 passed, 5 skipped` dokumentiert; veraltete
+  `379 passing`-Angaben wurden entfernt.
+- Technische Implementierung, externe CI und wissenschaftliche EVID werden nun
+  ausdrücklich getrennt ausgewiesen. Alpha.7.1 ist der aktuelle Engineering-
+  Fokus; unabhängige STDP-/Embodiment-Nachweise und Performancevergleiche
+  bleiben offen.
+
 ## 2026-09-03 — Controlled storage layout
 
 - Ein zentraler `StorageLayout`-Vertrag kapselt Operator-State, Journals,

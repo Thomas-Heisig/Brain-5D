@@ -4,6 +4,8 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
+> Verifiziert am 2026-09-03: `main` / `b8d5025`, lokale Vollsuite `618 passed, 5 skipped`.
+> Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
 ## ENGINEERING
 
@@ -154,7 +156,7 @@
 - [x] Forschungsfrage, Hypothesen, Bedingungen, Kontrollen und Wiederholungszahl registrieren
 - [x] Effektive Inputs, Outputs, Rewards, Audit-Status und Laufmetriken für EXP-EMB-0001 speichern
 - [ ] DATA/EVID-Provenienz, Limitationen und unabhängige Wiederholungen prüfen
-- [ ] Claims erst nach menschlicher Review aktualisieren
+- [ ] Claims erst nach menschlicher Review aktualisieren als option
 
 ### AI Research Reports (AIRR)
 
@@ -168,7 +170,7 @@
 - [x] Chat-Ausführung strikt vom Freitext trennen; Experimente bleiben registrierte Workflows
 - [x] Lokales Ollama-Backend, Markdown-Ausgabe und Chat-Einstellungen konfigurieren
 - [ ] Azure-Backend explizit konfigurieren und `EXP-AIR-0001` ausführen
-- [ ] AIRR gegen menschliche Referenzauswertung und mehrere Modelle evaluieren
+- [ ] AIRR gegen menschliche Referenzauswertung und mehrere Modelle evaluieren als option
 
 ## OPERATION
 

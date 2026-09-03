@@ -2,6 +2,43 @@
 
 Ein automatisch geführtes wissenschaftliches Evidenzsystem für Brain-5D.
 
+## Aktueller Stand
+
+Die technische Forschungsinfrastruktur ist weitgehend implementiert und lokal
+verifiziert: Scientific Integrity Gate, AI-Provenienz und Causal-Taint,
+Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischer
+Provenienzgraph sowie getrennte Operator-/Experiment-/Dev-Storage-Scope sind
+vorhanden. Die lokale Regression am 2026-09-03 ergab **618 passed, 5 skipped**.
+
+## Verifikation
+
+```bash
+python -m pytest -q
+python research/generate_reports.py
+```
+
+Die Report-Generierung verändert keine wissenschaftlichen Claims automatisch.
+Claims und Reviews bleiben versionierte, append-only Artefakte mit expliziter
+Provenienz.
+Das ist kein wissenschaftlicher Wirksamkeitsnachweis. Noch offen sind vor allem
+unabhängige Clean-Freeze-Runs für `EXP-STDP-0002` und `EXP-EMB-0001`, die
+Alpha.7.1-Performance-/Restore-Vergleiche und die unabhängige menschliche
+Bewertung von AIRR. Implementierungstests, Dashboard-Status, AI-Konsens und
+Causal-Attribution-Reports bleiben technische bzw. interpretative Artefakte und
+werden nicht zu `EVID` hochgestuft.
+
+## Empfohlener Forschungsablauf
+
+1. Forschungsfrage, Hypothesen, Bedingungen, Seeds, Metriken und Ausschlussregeln registrieren.
+2. Source Freeze und sauberen Git-Baum herstellen; Netzwerkmodus und AI-Exposure explizit festlegen.
+3. Experiment unter `experiment/EXP-*/` ausführen und DATA-Artefakte mit Digest-Provenienz speichern.
+4. Deterministische Statistik aus der Statistics Engine erzeugen und Limitationen dokumentieren.
+5. EVID erst nach unabhängiger Wiederholung und Human Review registrieren.
+
+Technische Reports dürfen den Status `implemented`, `integrated` oder `verified`
+tragen. `evidenced` ist ausschließlich für reproduzierbare, protokollierte und
+reviewte Forschungsergebnisse zulässig.
+
 ## Kernidee
 
 Jede wissenschaftliche Aussage in Brain-5D bekommt eine **rückverfolgbare Identität**:

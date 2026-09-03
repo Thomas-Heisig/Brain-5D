@@ -21,7 +21,7 @@ pipeline_tag: reinforcement-learning
 **Sparse 5D Spiking‑Neural Simulation with Observable Plasticity**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-379%20passing-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
+[![Tests](https://img.shields.io/badge/tests-618%20passing-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -30,6 +30,15 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 
 > **Research status**
 > Brain‑5D is an engineering and research project. The current implementation does **not** claim AGI, consciousness, sentience or biological equivalence.
+
+> **Current status (2026-09-03)**
+> The repository is on `main` at `b8d5025` (`0.5.0a7`). The local full test
+> suite passes with **618 passed, 5 skipped**. Scientific AI contracts,
+> provenance, read-only boundaries, replay/shadow controls, deterministic
+> statistics and storage-scope enforcement are implemented and tested.
+> Scientific claims are still pending: productive STDP, independent
+> embodiment evidence, long-horizon performance measurements and human-reviewed
+> AI research reports remain open research work.
 
 ---
 
@@ -130,7 +139,7 @@ Brain-5D/
 ├── tests/                    # Test suite (379+ tests)
 ├── configs/                  # YAML configuration files
 ├── docs/                     # Documentation and roadmap
-├── research/                 # Scientific evidence framework
+├── research/                 # Registry, protocols, schemas and AI research artifacts
 ├── artifacts/                # Simulation snapshots and journals
 └── scripts/                  # Utility and verification scripts
 ```
@@ -144,9 +153,9 @@ Brain-5D/
 | [docs/08-roadmap/ROADMAP.md](docs/08-roadmap/ROADMAP.md) | Development roadmap and milestones |
 | [docs/07-changelog/CHANGELOG.md](docs/07-changelog/CHANGELOG.md) | Detailed changelog |
 | [docs/08-roadmap/TODO.md](docs/08-roadmap/TODO.md) | Current TODO and gate status |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture documentation |
+| [docs/02-architecture/](docs/02-architecture/) | Architecture documentation |
 | [docs/B5D_FORMAT.md](docs/B5D_FORMAT.md) | `.b5d` snapshot format specification |
-| [research/README.md](research/README.md) | Scientific evidence framework |
+| [research/README.md](research/README.md) | Scientific evidence framework and evidence boundary |
 
 ---
 
@@ -163,7 +172,11 @@ pytest -v
 pytest --cov=src --cov-report=term-missing
 ```
 
-Current baseline: **379 passed, 0 failed** ✅
+Current local baseline: **618 passed, 5 skipped, 0 failed** ✅
+
+The skipped tests are platform- or opt-in large-storage checks. Run the full
+suite with `python -m pytest -q`; scientific experiments additionally require
+a clean tree, a registered protocol and DATA/EVID provenance.
 
 ---
 
@@ -194,7 +207,8 @@ Copyright © 2025-2026 Thomas Heisig and contributors.
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-**Current focus:** Alpha.7 — Embodiment Foundation & Safe Environment I/O.
+**Current focus:** Alpha.7.1 — persistent operator storage, dirty-tracking
+equivalence and runtime performance measurement.
 
 ---
 
