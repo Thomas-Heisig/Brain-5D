@@ -7,6 +7,7 @@ from src.embodiment import (
     SystemSensorAdapter,
     VitalSignal,
     derive_drives,
+    derive_regulatory_state,
     normalize_vital_signals,
 )
 from src.embodiment.system_sensor import host_system_readings
@@ -91,3 +92,38 @@ def test_host_readings_expose_optional_metrics_without_external_services() -> No
     assert readings["tick"] == 2
     assert isinstance(readings["memory_available_bytes"], int)
     assert isinstance(readings["disk_free_bytes"], int)
+
+
+def test_regulatory_state_is_bounded_and_fail_closed() -> None:
+    frame = InteroceptionFrame(
+        12,
+        normalize_vital_signals(
+            {
+                "cpu_percent": 90.0,
+                "memory_percent": 40.0,
+                "temperature_c": 85.0,
+                "network_up": False,
+                "task_progress": 1.4,
+            }
+        ),
+    )
+
+    state = derive_regulatory_state(frame)
+
+    assert state.values["thermal_margin"] == pytest.approx(2 / 3)
+    assert state.values["energy_reserve"] == pytest.approx(2 / 3)
+    assert state.values["continuity_risk"] == 1.0
+    assert state.values["sensory_integrity"] == 1.0
+    assert state.values["resource_pressure"] == pytest.approx(1 / 3)
+    assert state.values["task_progress"] == 1.0
+    assert all(0.0 <= value <= 1.0 for value in state.values.values() if value is not None)
+
+
+def test_regulatory_state_keeps_unknown_sources_unknown() -> None:
+    state = derive_regulatory_state(
+        InteroceptionFrame(1, normalize_vital_signals({}))
+    )
+
+    assert state.values["thermal_margin"] is None
+    assert state.values["energy_reserve"] is None
+    assert state.uncertainty["thermal_margin"] == 1.0

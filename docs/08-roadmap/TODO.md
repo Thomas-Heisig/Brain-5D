@@ -150,8 +150,9 @@
   Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
   Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern
 - [ ] Fehlende oder veraltete Sensorsignale fail-closed behandeln und niemals als sicher interpretieren
-- [ ] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
-  Sensory Integrity, Resource Pressure und Task Progress definieren
+- [x] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
+  Sensory Integrity, Resource Pressure und Task Progress deterministisch und
+  mit expliziter Unsicherheit definieren
 - [x] Erste Drives deterministisch aus Interoception ableiten: thermal_threat,
   resource_pressure und continuity_risk; nicht beobachtbare Drives bleiben
   explizit `None` mit Unsicherheit

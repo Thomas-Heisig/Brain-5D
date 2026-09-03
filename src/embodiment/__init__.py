@@ -16,8 +16,10 @@ from .environment import EnvironmentAdapter
 from .interoception import (
     DriveState,
     InteroceptionFrame,
+    RegulatoryState,
     VitalSignal,
     derive_drives,
+    derive_regulatory_state,
     normalize_vital_signals,
 )
 from .models import (
@@ -58,6 +60,7 @@ __all__ = [
     "EnvironmentObservation",
     "DriveState",
     "InteroceptionFrame",
+    "RegulatoryState",
     "EmbodimentPipeline",
     "RelationshipClass",
     "SensorAdapter",
@@ -65,6 +68,7 @@ __all__ = [
     "SystemSensorAdapter",
     "VitalSignal",
     "derive_drives",
+    "derive_regulatory_state",
     "host_system_readings",
     "wall_clock_readings",
     "normalize_vital_signals",

@@ -49,6 +49,9 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	`NetworkResponseSignature` für beobachtbare Impulsantworten einführen
 - [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
 	Referenzzustände ohne Zurückspulen des Runtime-Zustands einführen
+- [x] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
+	Sensory Integrity, Resource Pressure und optional Task Progress deterministisch
+	ableiten; unbekannte Quellen bleiben unsicher
 - [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
 	mit DATA/EVID-Provenienz ausführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten

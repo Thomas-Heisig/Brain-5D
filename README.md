@@ -50,7 +50,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 |---------|-------------|
 | **🧬 Spiking Core** | Izhikevich regular‑spiking neurons in a sparse 5D coordinate space |
 | **📐 STDP Learning** | Spike‑timing‑dependent plasticity with signed eligibility traces |
-| **⚖️ Homeostasis** | Target firing‑rate regulation, adaptive thresholds, energy homeostasis |
+| **⚖️ Homeostasis** | Target firing‑rate regulation, adaptive thresholds, energy homeostasis and bounded regulatory state |
 | **🔄 Structural Plasticity** | Controlled neuron/synapse creation, pruning, and persistent undo |
 | **🧠 Self‑Organization** | Policy‑driven structural proposals with safety validation |
 | **💾 Deterministic Persistence** | `.b5d` snapshots, state delta journal, structural journal, runtime checkpoints |

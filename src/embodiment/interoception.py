@@ -89,8 +89,24 @@ class DriveState:
     def to_json(self) -> dict[str, JSONValue]:
         return {
             "tick": self.tick,
-            "drives": self.drives,
-            "uncertainty": self.uncertainty,
+            "drives": cast(dict[str, JSONValue], self.drives),
+            "uncertainty": cast(dict[str, JSONValue], self.uncertainty),
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RegulatoryState:
+    """Bounded internal regulation variables, distinct from interpretation."""
+
+    tick: int
+    values: dict[str, float | None]
+    uncertainty: dict[str, float]
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return {
+            "tick": self.tick,
+            "values": cast(dict[str, JSONValue], self.values),
+            "uncertainty": cast(dict[str, JSONValue], self.uncertainty),
         }
 
 
@@ -108,6 +124,9 @@ _SIGNAL_METADATA: dict[str, dict[str, JSONValue]] = {
     "battery_percent": {"unit": "%", "warning_range": [20.0, 100.0], "critical_range": [5.0, 100.0], "causal_criticality": "continuity"},
     "battery_plugged": {"unit": "bool", "causal_criticality": "continuity"},
     "fan_rpm": {"unit": "rpm", "causal_criticality": "thermal"},
+    "task_progress": {"unit": "ratio", "causal_criticality": "task"},
+    "novelty": {"unit": "ratio", "causal_criticality": "informational"},
+    "actuator_confidence": {"unit": "ratio", "causal_criticality": "continuity"},
 }
 
 
@@ -149,26 +168,53 @@ def derive_drives(frame: InteroceptionFrame) -> DriveState:
     continuity_risk = _continuity_risk(network)
     known_count = sum(value is not None for value in (cpu, memory, temperature, network))
     sensory_integrity = known_count / 4.0
+    task_progress = _bounded_signal(signals.get("task_progress"))
+    novelty = _bounded_signal(signals.get("novelty"))
+    actuator_confidence = _bounded_signal(signals.get("actuator_confidence"))
 
     drives: dict[str, float | None] = {
         "thermal_threat": thermal_threat,
         "resource_pressure": resource_pressure,
         "sensory_integrity": sensory_integrity,
         "continuity_risk": continuity_risk,
-        "task_progress": None,
-        "novelty": None,
-        "actuator_confidence": None,
+        "task_progress": task_progress,
+        "novelty": novelty,
+        "actuator_confidence": actuator_confidence,
     }
     uncertainty = {
         "thermal_threat": _uncertainty(temperature),
         "resource_pressure": 1.0 if not known_pressures else 0.0,
         "sensory_integrity": 1.0 - sensory_integrity,
         "continuity_risk": _uncertainty(network),
-        "task_progress": 1.0,
-        "novelty": 1.0,
-        "actuator_confidence": 1.0,
+        "task_progress": _uncertainty(task_progress),
+        "novelty": _uncertainty(novelty),
+        "actuator_confidence": _uncertainty(actuator_confidence),
     }
     return DriveState(tick=frame.tick, drives=drives, uncertainty=uncertainty)
+
+
+def derive_regulatory_state(frame: InteroceptionFrame) -> RegulatoryState:
+    """Derive bounded control variables without inventing unavailable telemetry."""
+    drives = derive_drives(frame)
+    resource_pressure = drives.drives["resource_pressure"]
+    thermal_threat = drives.drives["thermal_threat"]
+    values = {
+        "thermal_margin": None if thermal_threat is None else 1.0 - thermal_threat,
+        "energy_reserve": None if resource_pressure is None else 1.0 - resource_pressure,
+        "continuity_risk": drives.drives["continuity_risk"],
+        "sensory_integrity": drives.drives["sensory_integrity"],
+        "resource_pressure": resource_pressure,
+        "task_progress": drives.drives["task_progress"],
+    }
+    uncertainty = {
+        "thermal_margin": drives.uncertainty["thermal_threat"],
+        "energy_reserve": drives.uncertainty["resource_pressure"],
+        "continuity_risk": drives.uncertainty["continuity_risk"],
+        "sensory_integrity": drives.uncertainty["sensory_integrity"],
+        "resource_pressure": drives.uncertainty["resource_pressure"],
+        "task_progress": drives.uncertainty["task_progress"],
+    }
+    return RegulatoryState(tick=frame.tick, values=values, uncertainty=uncertainty)
 
 
 def _numeric_signal(signal: VitalSignal | None) -> float | None:
@@ -177,6 +223,11 @@ def _numeric_signal(signal: VitalSignal | None) -> float | None:
     if isinstance(signal.value, bool) or not isinstance(signal.value, (int, float)):
         return None
     return float(signal.value)
+
+
+def _bounded_signal(signal: VitalSignal | None) -> float | None:
+    value = _numeric_signal(signal)
+    return None if value is None else max(0.0, min(1.0, value))
 
 
 def _pressure(value: float | None, warning: float, critical: float = 100.0) -> float | None:
@@ -198,15 +249,20 @@ def _uncertainty(value: object) -> float:
 def _range(value: JSONValue) -> tuple[float, float] | None:
     if not isinstance(value, list) or len(value) != 2:
         return None
-    if not all(isinstance(item, (int, float)) for item in value):
+    lower, upper = value
+    if not isinstance(lower, (int, float)) or isinstance(lower, bool):
         return None
-    return float(value[0]), float(value[1])
+    if not isinstance(upper, (int, float)) or isinstance(upper, bool):
+        return None
+    return float(lower), float(upper)
 
 
 __all__ = [
     "DriveState",
     "InteroceptionFrame",
+    "RegulatoryState",
     "VitalSignal",
     "derive_drives",
+    "derive_regulatory_state",
     "normalize_vital_signals",
 ]

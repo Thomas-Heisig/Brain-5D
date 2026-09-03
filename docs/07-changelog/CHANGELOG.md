@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Deterministic regulatory state
+
+- Added bounded internal regulation variables derived from interoception:
+  thermal margin, energy reserve, continuity risk, sensory integrity, resource
+  pressure and optional task progress.
+- Missing source signals remain `None` with explicit uncertainty; values are
+  not interpreted as emotions or evidence of self-reflection.
+
 ## 2026-09-03 — Impulse response and temporal comparison foundations
 
 - Added bounded `NetworkImpulseProbe` and serializable `NetworkResponseSignature`
