@@ -216,6 +216,46 @@ class TestRuntimeErrorsInManifest:
         with pytest.raises(ValueError, match="Unsupported control group"):
             recorder.record_control_group("UNKNOWN")
 
+    def test_ai_protocol_requires_version_and_reason(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-PROTOCOL-0001", output_dir=tmp_experiment_dir)
+        recorder.record_ai_protocol(2, "prompt template revision")
+        assert recorder.manifest["ai_protocol"] == {
+            "version": 2,
+            "bump_reason": "prompt template revision",
+        }
+        with pytest.raises(ValueError, match="must be positive"):
+            recorder.record_ai_protocol(0, "invalid")
+        with pytest.raises(ValueError, match="must not be empty"):
+            recorder.record_ai_protocol(3, "")
+
+    def test_execute_twin_run_uses_identical_inputs_for_both_conditions(
+        self, tmp_experiment_dir: Path
+    ) -> None:
+        calls: list[dict[str, object]] = []
+
+        def runner(**kwargs: object) -> object:
+            calls.append(kwargs)
+            return {"ai_enabled": kwargs["ai_enabled"]}
+
+        recorder = ExperimentRecorder("EXP-TWIN-EXEC-0001", output_dir=tmp_experiment_dir)
+        off_result, on_result = recorder.execute_twin_run(
+            runner,
+            snapshot_digest="snapshot-sha256",
+            seed=7,
+            inputs={"stimulus": [1]},
+            reward={"target": 1},
+            tick_plan=[0, 1],
+            ai_off_experiment_id="EXP-TWIN-EXEC-0001-OFF",
+            ai_on_experiment_id="EXP-TWIN-EXEC-0001-ON",
+        )
+        assert off_result == {"ai_enabled": False}
+        assert on_result == {"ai_enabled": True}
+        assert calls[0]["seed"] == calls[1]["seed"] == 7
+        assert calls[0]["inputs"] == calls[1]["inputs"]
+        assert calls[0]["reward"] == calls[1]["reward"]
+        assert calls[0]["tick_plan"] == calls[1]["tick_plan"]
+        assert recorder.manifest["twin_run"]["executed"] is True
+
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)

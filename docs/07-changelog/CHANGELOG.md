@@ -18,6 +18,9 @@
   Quantisierung, Präzision, Engine, Hardware sowie Tokenizer-, Prompt-,
   Toolset- und Retrieval-Digests aus; nicht gelieferte Providerdaten bleiben
   als `not_reported` sichtbar.
+- Twin Runs können nun denselben Runner mit identischem Seed, Input, Reward und
+  Tickplan für AI-off und AI-on ausführen und beide Ergebnis-Digests registrieren.
+- AI-Protokollversion und Bump-Grund werden im Experimentmanifest validiert.
 
 ## 2026-09-03 — Language Organ sham controls
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import datetime, timezone
 from time import perf_counter_ns
 from typing import Any, cast
 from urllib.request import Request, urlopen
@@ -39,6 +40,8 @@ class OllamaBackend:
         system_prompt_digest: str | None = None,
         toolset_digest: str | None = None,
         retrieval_snapshot_digest: str | None = None,
+        provider_revision: str | None = None,
+        knowledge_origin: str = "UNKNOWN",
     ) -> None:
         self.model = model
         self.endpoint = endpoint
@@ -61,6 +64,8 @@ class OllamaBackend:
         self.system_prompt_digest = system_prompt_digest or "not_reported"
         self.toolset_digest = toolset_digest or "not_reported"
         self.retrieval_snapshot_digest = retrieval_snapshot_digest or "not_reported"
+        self.provider_revision = provider_revision or "not_reported"
+        self.knowledge_origin = knowledge_origin.strip() or "UNKNOWN"
         self._last_failure_event: AIInferenceFailureEvent | None = None
 
     @property
@@ -158,6 +163,7 @@ class OllamaBackend:
             method="POST",
         )
         request_digest = hashlib.sha256(request.data or b"").hexdigest()
+        request_timestamp = datetime.now(timezone.utc).isoformat()
         with urlopen(
             request, timeout=self.timeout
         ) as response:  # nosec B310: local, explicit endpoint
@@ -167,6 +173,9 @@ class OllamaBackend:
             raise ValueError("Ollama returned no analysis text.")
         return text, {
             "provider": "ollama",
+            "provider_revision": self.provider_revision,
+            "request_timestamp": request_timestamp,
+            "knowledge_origin": self.knowledge_origin,
             "model": self.model,
             "model_id": str(payload.get("model", self.model)),
             "model_digest": self.model_digest,
@@ -187,6 +196,9 @@ class OllamaBackend:
             "retry_policy": "disabled",
             "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "response_fingerprint": hashlib.sha256(
+                json.dumps(payload, sort_keys=True, ensure_ascii=True).encode("utf-8")
+            ).hexdigest(),
             "tokenizer_digest": self.tokenizer_digest,
             "prompt_template_digest": self.prompt_template_digest,
             "system_prompt_digest": self.system_prompt_digest,

@@ -14,7 +14,7 @@ import platform
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Protocol, cast
+from typing import Any, Callable, Protocol, cast
 
 from src.research_assistant.contracts import (
     AIExposure,
@@ -136,6 +136,7 @@ class ExperimentRecorder:
             "experiment_status": "not_started",
             "ai_exposure": AIExposure.NONE.value,
             "ai_reproducibility": AIReproducibility.R0.value,
+            "ai_protocol": {"version": 1, "bump_reason": "initial registration"},
             "causal_taint": CausalTaint.PURE.value,
             "ai_interactions": [],
             "causal_card": {
@@ -168,6 +169,18 @@ class ExperimentRecorder:
     def record_software_version(self, key: str, value: str) -> ExperimentRecorder:
         """Record or override a software version entry (e.g. brain5d_version)."""
         self._manifest["software"][key] = value
+        return self
+
+    def record_ai_protocol(self, version: int, bump_reason: str) -> ExperimentRecorder:
+        """Register the version and reason for the AI protocol used by a run."""
+        if version < 1:
+            raise ValueError("AI protocol version must be positive")
+        if not bump_reason.strip():
+            raise ValueError("AI protocol bump_reason must not be empty")
+        self._manifest["ai_protocol"] = {
+            "version": version,
+            "bump_reason": bump_reason.strip(),
+        }
         return self
 
     def record_simulation_params(
@@ -283,6 +296,41 @@ class ExperimentRecorder:
         twin_run["results_recorded"] = True
         twin_run["executed"] = True
         return self
+
+    def execute_twin_run(
+        self,
+        runner: Callable[..., object],
+        *,
+        snapshot_digest: str,
+        seed: int,
+        inputs: object,
+        reward: object,
+        tick_plan: list[int],
+        ai_off_experiment_id: str,
+        ai_on_experiment_id: str,
+    ) -> tuple[object, object]:
+        """Run the same protocol once with AI disabled and once enabled."""
+        self.record_twin_run(
+            snapshot_digest=snapshot_digest,
+            seed=seed,
+            inputs=inputs,
+            reward=reward,
+            tick_plan=tick_plan,
+            ai_off_experiment_id=ai_off_experiment_id,
+            ai_on_experiment_id=ai_on_experiment_id,
+        )
+        common = {
+            "seed": seed,
+            "inputs": inputs,
+            "reward": reward,
+            "tick_plan": list(tick_plan),
+        }
+        ai_off_result = runner(ai_enabled=False, **common)
+        ai_on_result = runner(ai_enabled=True, **common)
+        self.record_twin_results(
+            ai_off_result=ai_off_result, ai_on_result=ai_on_result
+        )
+        return ai_off_result, ai_on_result
 
     def record_control_group(self, control_group: str) -> ExperimentRecorder:
         """Register one predefined control-group condition for this experiment."""

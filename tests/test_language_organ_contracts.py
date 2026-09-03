@@ -116,6 +116,10 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert metadata["model_id"] == "qwen"
     assert metadata["model_digest"] == "not_reported"
     assert metadata["tokenizer_digest"] == "not_reported"
+    assert metadata["provider_revision"] == "not_reported"
+    assert metadata["knowledge_origin"] == "UNKNOWN"
+    assert isinstance(metadata["request_timestamp"], str)
+    assert len(metadata["response_fingerprint"]) == 64
     assert metadata["done_reason"] == "stop"
     assert metadata["prompt_eval_count"] == 4
     assert metadata["eval_count"] == 2

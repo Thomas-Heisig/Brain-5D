@@ -122,6 +122,9 @@ als unverified markiert.
 	Tokenizer-, Prompt-, Toolset- und Retrieval-Felder. Automatisches Befüllen
 	dieser Felder aus jeder Providerinstallation bleibt offen, wenn der Provider
 	die Daten nicht liefert.
+- Der Recorder orchestriert nun kontrollierte AI-off/AI-on-Twin Runs mit
+	identischen Protokollparametern und speichert beide Ergebnis-Digests. Die
+	nachgelagerte statistische Auswertung bleibt Bestandteil des Experiments.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

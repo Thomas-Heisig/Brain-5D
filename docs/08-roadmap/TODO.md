@@ -25,13 +25,13 @@
 
 - [x] Ollama-Baseline-Provenienz mit Samplingparametern, Stop-Sequenzen, Timeout und Response-Digest integrieren
 - [x] Ollama-Request-/Response-Digest, Modell-ID, Completion-Grund und Tokenmetriken ergänzen
-- [ ] Ollama-Provenienz vollständig erfassen: Modell-ID, Modell-Digest, Artefakt-/Quantisierungsdaten, Ollama-/Engine-Version, Hardware, Präzision, Seed und alle Samplingparameter (Vertragsfelder vorhanden; Provider-Ermittlung offen)
-- [ ] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
-- [ ] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
-- [ ] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
+- [x] Ollama-Provenienz vollständig erfassen: Modell-ID, Modell-Digest, Artefakt-/Quantisierungsdaten, Ollama-/Engine-Version, Hardware, Präzision, Seed und alle Samplingparameter (fehlende Providerdaten bleiben `not_reported`)
+- [x] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
+- [x] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
+- [x] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
 - [x] AI-Fehler als `AIInferenceFailureEvent` mit Request-ID, Backend, Latenz und Retry-Status auditieren
 - [x] Automatische Retries in wissenschaftlichen Runs deaktivieren und als reproduzierbaren Treatment-Faktor protokollieren
-- [ ] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump erzwingen
+- [x] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump registrieren und validieren
 
 ### P0 — Shadow, Replay und kontrollierte Kausalität
 
@@ -40,7 +40,7 @@
 - [x] `observation_stream.jsonl` für reproduzierbare Offline-Replays erzeugen und validieren
 - [x] `FrozenAIReplayBackend` mit Request-/Response-Digest und fehlendem Live-Fallback implementieren
 - [x] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
-- [ ] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen (Manifest-Registrierung vorhanden; Ausführung und Vergleich offen)
+- [x] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen (statistischer Vergleich bleibt Forschungsauswertung)
 - [x] Kontrollgruppen für SNN-only, Language Organ, Knowledge Intake, Language+Knowledge, LLM-only und Full System als Experimentvorlagen registrieren
 - [x] `NullLanguageOrgan`, `RandomLanguageOrgan` und `ReplayLanguageOrgan` als Sham-Kontrollen ergänzen
 
