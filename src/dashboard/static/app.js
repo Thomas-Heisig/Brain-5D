@@ -146,7 +146,6 @@ function setupTabs() {
   const buttons = $$('.tab-btn');
   const contents = {
     overview: document.getElementById('tab-overview'),
-    network: document.getElementById('tab-network'),
     control: document.getElementById('tab-control'),
     research: document.getElementById('tab-research'),
     gate: document.getElementById('tab-gate'),
@@ -194,11 +193,6 @@ function setupTabs() {
       });
 
       // Lazy initialize components when their tab becomes visible
-      if (tabName === 'network' && !initialized.network) {
-        initDynamicsTab();
-        initInspectTab();
-        initialized.network = true;
-      }
       if (tabName === 'control' && !initialized.control) {
         instances.control = initControlPanel();
         instances.console = initOperatorConsole();
@@ -393,6 +387,25 @@ function renderStatus(state) {
   // Status badge
   const statusEl = $('system-status');
   setText('footer-version', data.version || 'unknown');
+  const network = data.network || {};
+  const activity = network.active_neurons != null && network.neuron_count
+    ? Number(network.active_neurons) / Number(network.neuron_count)
+    : null;
+  const spikesPerTick = network.spikes_per_tick != null ? Number(network.spikes_per_tick) : null;
+  const spikes = spikesPerTick != null ? spikesPerTick : (system.spikes_total != null ? Number(system.spikes_total) : null);
+  const pressureInputs = [system.cpu_percent, system.memory_percent]
+    .filter((value) => value != null)
+    .map(Number);
+  const pressure = pressureInputs.length ? Math.max(...pressureInputs) / 100 : null;
+  setText('footer-activity-value', activity == null ? '—' : `${(activity * 100).toFixed(1)}%`);
+  setText('footer-spikes-value', spikes == null ? '—' : formatNumber(spikes));
+  setText('footer-pressure-value', pressure == null ? '—' : `${Math.min(100, pressure * 100).toFixed(1)}%`);
+  const activityBar = $('footer-activity-bar');
+  const spikesBar = $('footer-spikes-bar');
+  const pressureBar = $('footer-pressure-bar');
+  if (activityBar) activityBar.style.width = `${Math.min(100, Math.max(0, (activity || 0) * 100))}%`;
+  if (spikesBar) spikesBar.style.width = `${Math.min(100, Math.max(0, spikes || 0))}%`;
+  if (pressureBar) pressureBar.style.width = `${pressure == null ? 0 : Math.min(100, Math.max(0, pressure * 100))}%`;
   if (statusEl) {
     statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
     const workerFailed = storage.worker_failed;

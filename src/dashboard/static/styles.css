@@ -8651,3 +8651,51 @@ body.accessibility-mode .health-bar {
   .research-focus-rail { grid-template-columns: 1fr; }
   #tab-network #heatmap { height: 52vh; }
 }
+
+/* Network is retired from the operator surface; its key signals live in the footer. */
+#tab-network { display: none !important; }
+
+.footer-vitals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(118px, 1fr));
+  gap: 12px;
+  min-width: min(430px, 42vw);
+}
+
+.footer-vital {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 8px;
+  min-width: 0;
+  color: #8298a6;
+  font: 8px var(--font-mono);
+  text-transform: uppercase;
+}
+
+.footer-vital strong { color: #dffaff; font-size: 9px; font-weight: 700; }
+.footer-vital i {
+  grid-column: 1 / -1;
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(103, 211, 225, .12);
+}
+
+.footer-vital b {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4fe4d5, #ffad60);
+  transition: width .35s ease;
+}
+
+@media (max-width: 900px) {
+  .footer-vitals { min-width: 0; width: 100%; order: 5; }
+}
+
+@media (max-width: 560px) {
+  .footer-vitals { grid-template-columns: 1fr; gap: 6px; }
+  .footer-vital { grid-template-columns: 1fr auto; }
+}

@@ -1,12 +1,13 @@
 # Changelog
 
-## 2026-09-03 — Dashboard anatomy and focused Network view
+## 2026-09-03 — Dashboard anatomy and footer telemetry
 
 - Added Research focus entries for Alpha.8, recursive causal loopbacks and the
   functional self-model documents.
 - Applied the Embodiment visual language to shared dashboard surfaces.
-- Reduced Network initialization to the essential live projection and removed
-  secondary visualization polling from the default path.
+- Removed the Network workspace and its navigation/deep links from the dashboard.
+- Added compact footer bars for measured activity, spikes and resource pressure;
+  unavailable resource telemetry remains explicitly unavailable.
 
 ## 2026-09-03 — Alpha.8 digital interoception foundation
 

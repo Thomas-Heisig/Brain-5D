@@ -35,7 +35,6 @@
   <!-- ============================================================ -->
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="overview">📊 OVERVIEW</button>
-    <button class="tab-btn" data-tab="network">🧠 NETWORK</button>
     <button class="tab-btn" data-tab="control">🎮 CONTROL</button>
     <button class="tab-btn" data-tab="research">🔬 RESEARCH</button>
     <button class="tab-btn" data-tab="gate">🚀 RELEASE</button>
@@ -43,278 +42,11 @@
     <button class="tab-btn" data-tab="embodiment">◈ EMBODIMENT</button>
   </nav>
 
-  <!-- ============================================================ -->
-  <!-- MAIN CONTENT -->
-  <!-- ============================================================ -->
-  <main>
-
-    <!-- ========================================================== -->
-    <!-- TAB: OVERVIEW (high-level runtime state and major KPIs) -->
-    <!-- ========================================================== -->
-    <section class="tab-content active" id="tab-overview">
-
-      <section class="overview-command-bar" aria-label="Operational status">
-        <div class="overview-command-copy">
-          <span class="overview-kicker">OPERATIONS</span>
-          <h2>System Overview</h2>
-          <p id="overview-context">Live runtime · scientific evidence · release state</p>
-        </div>
-        <div class="overview-actions" aria-label="Open workspace area">
-          <button type="button" class="overview-action" data-overview-tab="network">Network</button>
-          <button type="button" class="overview-action" data-overview-tab="control">Control</button>
-          <button type="button" class="overview-action" data-overview-tab="research">Research</button>
-          <button type="button" class="overview-action" data-overview-tab="gate">Release</button>
-        </div>
-      </section>
-
-      <section class="overview-status-rail" aria-label="Readiness summary">
-        <div class="overview-status-item"><span>Runtime</span><strong id="overview-runtime-status">unknown</strong></div>
-        <div class="overview-status-item"><span>Health</span><strong id="overview-health-status">unknown</strong></div>
-        <div class="overview-status-item"><span>Scientific</span><strong id="overview-scientific-status">unknown</strong></div>
-        <div class="overview-status-item"><span>CI</span><strong id="overview-ci-status">unknown</strong></div>
-        <div class="overview-status-item overview-readiness"><span>Release</span><strong id="overview-release-status">not_ready</strong></div>
-        <div class="overview-status-item"><span>Mode</span><strong id="overview-mode-status">operator</strong></div>
-      </section>
-
-      <!-- Metrics Grid -->
-      <section class="grid metrics-grid">
-        <article class="card metric"><span>Tick</span><strong id="tick">0</strong></article>
-        <article class="card metric"><span>Neuronen</span><strong id="neurons">0</strong></article>
-        <article class="card metric"><span>Synapsen</span><strong id="synapses">0</strong></article>
-        <article class="card metric"><span>Spikes</span><strong id="spikes">0</strong></article>
-        <article class="card metric"><span>Core ms</span><strong id="core-ms">0.000</strong></article>
-        <article class="card metric"><span>Energie</span><strong id="energy">0.000</strong></article>
-      </section>
-
-      <section class="overview-operations-grid">
-        <article class="overview-surface overview-dynamics">
-          <div class="overview-surface-title"><div><span>NETWORK</span><h3>Live Dynamics</h3></div><strong id="overview-network-source">LIVE</strong></div>
-          <div class="overview-dynamics-grid">
-            <div><span>Active</span><strong id="overview-active-neurons">0</strong></div>
-            <div><span>Silent</span><strong id="overview-silent-neurons">0</strong></div>
-            <div><span>Mean rate</span><strong id="overview-mean-rate">0.000 Hz</strong></div>
-            <div><span>Burst index</span><strong id="overview-burst-index">0.000</strong></div>
-            <div><span>Synchrony</span><strong id="overview-synchrony">0.000</strong></div>
-            <div><span>E / I</span><strong id="overview-ei-ratio">0.000</strong></div>
-          </div>
-        </article>
-
-        <article class="overview-surface overview-components">
-          <div class="overview-surface-title"><div><span>SYSTEM</span><h3>Components</h3></div><strong id="overview-component-count">0 / 0</strong></div>
-          <div class="overview-component-grid" id="overview-component-grid"><span class="overview-empty">Waiting for component state</span></div>
-        </article>
-
-        <article class="overview-surface overview-problems">
-          <div class="overview-surface-title"><div><span>HEALTH</span><h3>Attention</h3></div><strong id="overview-problem-count">0</strong></div>
-          <div class="overview-problem-list" id="overview-problem-list"><span class="overview-empty">No problems detected</span></div>
-        </article>
-      </section>
-
-      <!-- Detail Grid -->
-      <section class="grid detail-grid">
-
-        <!-- Persistenz -->
-        <article class="card panel">
-          <div class="panel-title"><h2>Persistenz</h2><span id="queue-badge">0 / 0</span></div>
-          <div class="bar"><div class="bar-fill" id="queue-fill"></div></div>
-          <dl class="kv">
-            <div><dt>Deltas</dt><dd id="deltas">0</dd></div>
-            <div><dt>Bytes</dt><dd id="bytes">0 B</dd></div>
-            <div><dt>Write</dt><dd id="write-ms">0.000 ms</dd></div>
-            <div><dt>Commit</dt><dd id="commit-ms">0.000 ms</dd></div>
-            <div><dt>Journal</dt><dd id="journal-size">0 B</dd></div>
-            <div><dt>Drops</dt><dd id="drops">0</dd></div>
-          </dl>
-        </article>
-
-        <!-- Lernen -->
-        <article class="card panel">
-          <div class="panel-title"><h2>Lernen</h2><span id="learning-engine-state">unavailable</span></div>
-          <dl class="kv">
-            <div><dt>Engine</dt><dd id="learning-engine">—</dd></div>
-            <div><dt>STDP</dt><dd id="learning-stdp-state">—</dd></div>
-            <div><dt>Eligibility</dt><dd id="learning-eligibility-state">—</dd></div>
-            <div><dt>Reward</dt><dd id="learning-reward-state">—</dd></div>
-            <div><dt>STDP Updates</dt><dd id="stdp">0</dd></div>
-            <div><dt>Reward Updates</dt><dd id="reward-updates">0</dd></div>
-            <div><dt>Rewards</dt><dd id="rewards">0</dd></div>
-            <div><dt>Pending</dt><dd id="pending">0</dd></div>
-            <div><dt>Updatezeit</dt><dd id="learning-ms">0.000 ms</dd></div>
-          </dl>
-        </article>
-
-        <!-- Homöostase -->
-        <article class="card panel">
-          <div class="panel-title"><h2>Homöostase</h2><span id="homeostasis-state">aus</span></div>
-          <dl class="kv">
-            <div><dt>Zielrate</dt><dd id="target-rate">0.000 Hz</dd></div>
-            <div><dt>Istrate</dt><dd id="mean-rate">0.000 Hz</dd></div>
-            <div><dt>Rate Error</dt><dd id="rate-error">0.000 Hz</dd></div>
-            <div><dt>Threshold Δ</dt><dd id="threshold-adaptation">0.000</dd></div>
-            <div><dt>Energie Error</dt><dd id="energy-error">0.000</dd></div>
-            <div><dt>Aktiv</dt><dd id="active-neurons">0</dd></div>
-          </dl>
-        </article>
-
-        <!-- Selbstorganisation -->
-        <article class="card panel">
-          <div class="panel-title"><h2>Selbstorganisation</h2><span>Struktur</span></div>
-          <dl class="kv">
-            <div><dt>Neuronen +</dt><dd id="neurons-created">0</dd></div>
-            <div><dt>Neuronen -</dt><dd id="neurons-removed">0</dd></div>
-            <div><dt>Synapsen +</dt><dd id="synapses-created">0</dd></div>
-            <div><dt>Pruning</dt><dd id="synapses-pruned">0</dd></div>
-          </dl>
-        </article>
-      </section>
-
-      <!-- Snapshot Info -->
-      <section class="card snapshot-info-card">
-        <div class="panel-title">
-          <div><h2>💾 Snapshot</h2></div>
-        </div>
-        <div class="snapshot-info-grid">
-          <div class="snapshot-info-item"><span>Datei</span><strong id="snapshot-file">—</strong></div>
-          <div class="snapshot-info-item"><span>Tick</span><strong id="snapshot-tick">—</strong></div>
-          <div class="snapshot-info-item"><span>Größe</span><strong id="snapshot-size">—</strong></div>
           <div class="snapshot-info-item"><span>Status</span><strong id="snapshot-status">⏳</strong></div>
         </div>
       </section>
 
     </section> <!-- /tab-overview -->
-    <!-- ========================================================== -->
-    <!-- TAB: NETWORK (all scientific visualizations) -->
-    <!-- ========================================================== -->
-    <section class="tab-content" id="tab-network">
-      <header class="workspace-header" data-workspace="network">
-        <div><span class="workspace-kicker">OBSERVE</span><h2>Network Workbench</h2><p>Live dynamics, topology, populations and 5D inspection</p></div>
-        <div class="workspace-status-strip">
-          <span>Source<strong id="network-workspace-source">live</strong></span>
-          <span>Tick<strong id="network-workspace-tick">0</strong></span>
-          <span>Active<strong id="network-workspace-active">0</strong></span>
-          <span>Spikes<strong id="network-workspace-spikes">0</strong></span>
-        </div>
-      </header>
-      <nav class="workspace-view-tabs" data-workspace-views="network" aria-label="Network views">
-        <button type="button" class="active" data-workspace-view="visual">Visual</button>
-        <button type="button" data-workspace-view="dynamics">Dynamics</button>
-        <button type="button" data-workspace-view="inspect">Inspect</button>
-        <button type="button" data-workspace-view="data">Data</button>
-      </nav>
-      <!-- Heatmap + 5D Projection -->
-      <section class="card heatmap-panel" id="network-projection" data-network-view="visual">
-        <div class="panel-title">
-          <div><h2>5D Netzwerk-Projektion</h2><p><span id="source-badge" class="badge badge-live">LIVE</span> &middot; Live Runtime oder Snapshot</p></div>
-          <div class="button-group">
-            <button id="live-toggle" class="active" title="Umschalten zwischen Live Runtime und Snapshot">&#x1F504; LIVE</button>
-            <button data-kind="activity" class="active">Aktivit&auml;t</button>
-            <button data-kind="energy">Energie</button>
-            <button data-kind="membrane">Membran</button>
-            <button data-kind="spike">Spikes</button>
-            <button data-kind="weight">Gewichte</button>
-            <label class="compact-slider" title="Anzahl der Projektionszellen pro Achse. Höher zeigt mehr Details, benötigt aber mehr Rechenzeit.">Auflösung <input id="projection-resolution" type="range" min="10" max="120" step="10" value="50"><output id="projection-resolution-value">50</output></label>
-          </div>
-        </div>
-        <div class="heatmap-split">
-          <div class="heatmap-wrap"><canvas id="heatmap" width="800" height="420"></canvas><div class="heatmap-meta" id="heatmap-meta">Keine Live-Verbindung.</div></div>
-          <div class="projection-wrap"><canvas id="projection-5d" width="400" height="420"></canvas><div class="heatmap-meta">5D Isometrische Projektion</div></div>
-        </div>
-      </section>
-      <!-- IO-Fluss -->
-      <section class="card io-flow-panel" id="network-flow" data-network-view="visual">
-        <div class="panel-title"><div><h2>&#x1F500; Input-Output Fluss</h2><p>Signalpropagation durch das Netzwerk</p></div><span id="io-flow-badge" class="gate-badge pending">&#x23F3;</span></div>
-        <div class="io-flow-grid">
-          <div class="io-flow-layer io-input"><div class="io-layer-header">Input <span id="io-input-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-input-fill"></div></div><div class="io-layer-rate"><span id="io-input-rate">0.000</span> spikes/tick</div></div>
-          <div class="io-flow-arrow">&rarr;</div>
-          <div class="io-flow-layer io-hidden"><div class="io-layer-header">Hidden <span id="io-hidden-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-hidden-fill"></div></div><div class="io-layer-rate"><span id="io-hidden-rate">0.000</span> spikes/tick</div></div>
-          <div class="io-flow-arrow">&rarr;</div>
-          <div class="io-flow-layer io-output"><div class="io-layer-header">Output <span id="io-output-count">0</span></div><div class="io-layer-bar"><div class="io-layer-fill" id="io-output-fill"></div></div><div class="io-layer-rate"><span id="io-output-rate">0.000</span> spikes/tick</div></div>
-        </div>
-        <div class="io-flow-meta" id="io-flow-meta">&#x23F3; Lade Daten...</div>
-      </section>
-      <!-- Populationen -->
-      <section class="card population-panel" id="network-populations" data-network-view="visual">
-        <div class="panel-title"><div><h2>&#x1F465; Neuronale Populationen</h2><p>E/I-Ratio, Aktivit&auml;t pro Typ</p></div><span id="ei-ratio-badge" class="gate-badge">E/I: &mdash;</span></div>
-        <div class="population-grid" id="population-grid"><div class="population-empty">&#x23F3; Lade Populationsdaten...</div></div>
-        <div class="population-meta" id="population-meta">Aktualisiert: &mdash;</div>
-      </section>
-      <!-- Spike Raster -->
-      <section class="card raster-panel" id="network-dynamics" data-network-view="dynamics" hidden>
-        <div class="panel-title"><div><h2>&#x26A1; Spike Raster</h2><p>Letzte 100 Ticks &middot; aktivste Neuronen</p></div><span id="raster-badge" class="gate-badge pending">&#x23F3;</span></div>
-        <canvas id="spike-raster" width="900" height="380"></canvas>
-        <div class="heatmap-meta" id="raster-meta">&#x23F3; Lade Spike-Daten...</div>
-      </section>
-      <!-- Firing Rate Histogram -->
-      <section class="card histogram-panel" id="network-histogram" data-network-view="dynamics" hidden>
-        <div class="panel-title"><div><h2>&#x1F4CA; Feuerraten-Histogramm</h2><p>Verteilung der neuronalen Aktivit&auml;t</p></div><label class="compact-slider" title="Anzahl der Histogrammklassen"><span>Bins</span><input id="histogram-bins" type="range" min="10" max="80" step="5" value="30"><output id="histogram-bins-value">30</output></label><span id="histogram-stats" class="gate-badge">&mdash;</span></div>
-        <canvas id="rate-histogram" width="900" height="300"></canvas>
-        <div class="heatmap-meta" id="histogram-meta">&#x23F3; Lade Histogramm-Daten...</div>
-      </section>
-      <!-- 5D Layer Explorer -->
-      <section class="card layer-explorer-panel" id="network-layers" data-network-view="dynamics" hidden>
-        <div class="panel-title"><div><h2>&#x1F90A; 5D Layer Explorer</h2><p>Slice durch den 5D-Raum</p></div><span id="layer-badge" class="gate-badge">d4</span></div>
-        <div class="layer-controls">
-          <label>Dimension: <select id="layer-dim"><option value="z">Z (r&auml;umlich)</option><option value="d4">d4 (funktional)</option><option value="d5">d5 (funktional)</option></select></label>
-          <label>Layer: <input type="range" id="layer-slider" min="0" max="255" value="128" /><span id="layer-value">128</span></label>
-          <label>Anzeige: <select id="layer-kind"><option value="activity">Aktivit&auml;t</option><option value="energy">Energie</option><option value="membrane">Membran</option></select></label>
-        </div>
-        <canvas id="layer-canvas" width="400" height="400"></canvas>
-        <div class="heatmap-meta" id="layer-meta">W&auml;hle Dimension und Layer</div>
-      </section>
-      <!-- Network Inspector -->
-      <section class="card panel" id="network-inspector" data-network-view="inspect" hidden>
-        <div class="panel-title"><h2>&#x1F9E0; Network Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2><button id="inspect-refresh" type="button" class="btn-secondary">&#x1F504; Refresh</button></div>
-        <dl class="kv" id="inspect-network-summary">
-          <div><dt>Dimensions</dt><dd id="inspect-dimensions">&mdash;</dd></div>
-          <div><dt>Neurons</dt><dd id="inspect-neuron-count">&mdash;</dd></div>
-          <div><dt>Synapses</dt><dd id="inspect-synapse-count">&mdash;</dd></div>
-          <div><dt>Input cells</dt><dd id="inspect-input-count">&mdash;</dd></div>
-          <div><dt>Output cells</dt><dd id="inspect-output-count">&mdash;</dd></div>
-          <div><dt>Active neurons</dt><dd id="inspect-active-neurons">&mdash;</dd></div>
-          <div><dt>Silent neurons</dt><dd id="inspect-silent-neurons">&mdash;</dd></div>
-          <div><dt>Queue depth</dt><dd id="inspect-queue-depth">&mdash;</dd></div>
-          <div><dt>Tick</dt><dd id="inspect-tick">&mdash;</dd></div>
-          <div><dt>Total spikes</dt><dd id="inspect-total-spikes">&mdash;</dd></div>
-          <div><dt>Mean energy</dt><dd id="inspect-mean-energy">&mdash;</dd></div>
-          <div><dt>Mean v</dt><dd id="inspect-mean-v">&mdash;</dd></div>
-        </dl>
-      </section>
-      <!-- 5D Projection -->
-      <section class="card panel" id="network-coordinate-inspector" data-network-view="inspect" hidden>
-        <div class="panel-title"><h2>&#x1F310; 5D Coordinate Inspector <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
-          <div class="button-group"><select id="projection-mode"><option value="activity">Activity (spike count)</option><option value="energy">Energy</option><option value="potential">Membrane potential</option></select><label class="compact-slider" title="Maximale Anzahl realer Neuronenpunkte in der 5D-zu-3D-Projektion">Samples <input id="projection-samples" type="range" min="250" max="2000" step="250" value="2000"><output id="projection-samples-value">2000</output></label></div>
-        </div>
-        <p class="heatmap-meta" id="projection-meta">Projection of 5D coordinates into 3D &middot; sampling live network</p>
-        <canvas id="inspect-projection" width="900" height="480"></canvas>
-      </section>
-      <!-- Neurons Table -->
-      <section class="card panel" id="network-neurons" data-network-view="data" hidden>
-        <div class="panel-title"><h2>&#x1F52C; Neurons <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
-          <div class="button-group">
-            <label class="input-label">Limit <input id="neuron-limit" type="number" min="1" max="5000" value="200" /></label>
-            <label class="input-label">Offset <input id="neuron-offset" type="number" min="0" max="10000000" value="0" /></label>
-            <label class="input-label"><input id="neuron-active-only" type="checkbox" /> Active only</label>
-            <button id="neuron-load" type="button" class="btn-secondary">Load</button>
-          </div>
-        </div>
-        <div class="table-wrap"><table class="inspect-table"><thead><tr><th>ID</th><th>x1</th><th>x2</th><th>x3</th><th>x4</th><th>x5</th><th>v</th><th>u</th><th>energy</th><th>last_spike</th><th>spikes</th><th>I/O</th></tr></thead><tbody id="neuron-table-body"></tbody></table></div>
-        <p class="heatmap-meta" id="neuron-page-meta">&mdash;</p>
-      </section>
-      <!-- Synapses Table -->
-      <section class="card panel" id="network-synapses" data-network-view="data" hidden>
-        <div class="panel-title"><h2>&#x1F517; Synapses <span class="provenance-badge" data-src="LIVE">LIVE</span></h2>
-          <div class="button-group">
-            <label class="input-label">Limit <input id="synapse-limit" type="number" min="1" max="5000" value="200" /></label>
-            <label class="input-label">Offset <input id="synapse-offset" type="number" min="0" max="10000000" value="0" /></label>
-            <label class="input-label">Source <input id="synapse-source" type="number" placeholder="&mdash;" /></label>
-            <label class="input-label">Min weight <input id="synapse-min-weight" type="number" step="0.001" placeholder="&mdash;" /></label>
-            <button id="synapse-load" type="button" class="btn-secondary">Load</button>
-          </div>
-        </div>
-        <div class="table-wrap"><table class="inspect-table"><thead><tr><th>source</th><th>target</th><th>weight</th><th>delay</th><th>eligibility</th></tr></thead><tbody id="synapse-table-body"></tbody></table></div>
-        <p class="heatmap-meta" id="synapse-page-meta">&mdash;</p>
-      </section>
-    </section> <!-- /tab-network -->
     <!-- ========================================================== -->
     <!-- TAB: CONTROL -->
     <!-- ========================================================== -->
@@ -397,7 +129,7 @@
               <div class="metric-item"><span class="metric-label">Batchdauer</span><strong class="metric-value" id="runtime-last-ms">0.0</strong></div>
             </div>
             <output id="control-message" class="control-message" aria-live="polite">Bereit für eine Ursache</output>
-            <p class="control-effect-route">Vertiefung: <button type="button" data-overview-tab="network">Wirkung im Network untersuchen</button><button type="button" data-overview-tab="settings">Ursachenparameter prüfen</button></p>
+            <p class="control-effect-route">Vertiefung: <button type="button" data-overview-tab="settings">Ursachenparameter prüfen</button></p>
           </section>
         </div>
       </section>
@@ -845,6 +577,11 @@
     </div>
     <div class="footer-segment footer-runtime">
       <span>Runtime</span><strong class="status-pill" id="system-status">offline</strong>
+    </div>
+    <div class="footer-vitals" aria-label="Live Aktivität und Ressourcen">
+      <div class="footer-vital"><span>Aktivität</span><strong id="footer-activity-value">—</strong><i><b id="footer-activity-bar"></b></i></div>
+      <div class="footer-vital"><span>Spikes</span><strong id="footer-spikes-value">—</strong><i><b id="footer-spikes-bar"></b></i></div>
+      <div class="footer-vital"><span>Ressourcendruck</span><strong id="footer-pressure-value">—</strong><i><b id="footer-pressure-bar"></b></i></div>
     </div>
     <div class="footer-segment footer-experiment" id="footer-experiment" data-active="false">
       <span class="footer-experiment-dot"></span>
