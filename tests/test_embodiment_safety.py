@@ -168,6 +168,9 @@ def test_unauthorized_action_is_blocked_and_audited() -> None:
     assert agent.step(ActionCommand("target-actuator", 1, "right")) is None
     assert actuator.calls == 0
     assert agent.audit.records[-1].reason == "unauthorized"
+    assert agent.last_receipt is not None
+    assert agent.last_receipt.accepted is False
+    assert agent.last_receipt.effect_observed is False
 
 
 def test_capability_and_rate_limit_are_enforced() -> None:
@@ -214,6 +217,22 @@ def test_audit_chain_is_append_only_and_verifiable() -> None:
     )
     assert trail.verify()
     assert len(trail.records) == 1
+
+
+def test_action_receipt_separates_acceptance_from_observed_effect() -> None:
+    agent, _ = _agent()
+
+    observation = agent.step(ActionCommand("target-actuator", 1, "right"))
+
+    assert observation is not None
+    assert agent.last_receipt is not None
+    assert agent.last_receipt.accepted is True
+    assert agent.last_receipt.started is True
+    assert agent.last_receipt.completed is True
+    assert agent.last_receipt.failed is False
+    assert agent.last_receipt.effect_observed is True
+    assert agent.last_receipt.latency == 0
+    assert agent.last_receipt.to_json()["command_id"] == "target-actuator:1"
 
 
 def test_sensor_sampling_is_authorized_and_capability_bound() -> None:

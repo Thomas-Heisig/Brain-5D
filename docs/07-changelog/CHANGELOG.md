@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Action receipts
+
+- Added typed receipts for controlled embodiment actions with deterministic
+  command IDs, lifecycle state, latency, errors, safety clamp and effect status.
+- Acceptance is explicitly distinct from observed environment feedback.
+
 ## 2026-09-03 — Structural pressure hysteresis
 
 - Added per-mechanism release hysteresis to self-organization proposals.

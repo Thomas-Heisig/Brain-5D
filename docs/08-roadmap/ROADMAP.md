@@ -66,6 +66,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	und Growth Budgets sind technisch vorhanden
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen
 - [ ] Stabilität unter Sensorausfall und chronischem Ressourcendruck nachweisen
+- [x] Typisierten `ActionReceipt` einführen und Befehlsannahme strikt von
+	beobachtetem Environment-Effekt trennen
 
 ## v0.5.0-alpha.9 — Memory & World Model
 

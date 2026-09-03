@@ -10,6 +10,7 @@ from .connections import ConnectionDescriptor
 from .environment import EnvironmentAdapter
 from .models import (
     ActionCommand,
+    ActionReceipt,
     ActuatorResult,
     EmbodimentMetrics,
     EnvironmentObservation,
@@ -55,6 +56,8 @@ class ControlledEmbodimentAgent:
     last_action: ActionCommand | None = None
     _approved_override_ticks: set[int] = field(default_factory=set[int])
     _calls_by_tick: dict[int, int] = field(default_factory=dict[int, int])
+    last_receipt: ActionReceipt | None = None
+    _command_sequence: int = 0
 
     def __post_init__(self) -> None:
         if self.max_actions_per_tick <= 0:
@@ -81,8 +84,13 @@ class ControlledEmbodimentAgent:
         self._approved_override_ticks.add(tick)
 
     def step(self, command: ActionCommand) -> EnvironmentObservation | None:
+        self._command_sequence += 1
+        command_id = f"{self.descriptor.connection_id}:{self._command_sequence}"
         result, reason = self._authorize(command)
         if result is not None:
+            self.last_receipt = ActionReceipt(
+                command_id, False, False, False, True, error=reason, effect_observed=False
+            )
             self.audit.append(
                 self.descriptor.connection_id,
                 command,
@@ -92,6 +100,20 @@ class ControlledEmbodimentAgent:
             )
             return None
         actuator_result = self.actuator.apply(command)
+        if not actuator_result.accepted:
+            self.last_receipt = ActionReceipt(
+                command_id,
+                False,
+                True,
+                False,
+                True,
+                error=actuator_result.message or "actuator rejected command",
+                effect_observed=False,
+            )
+        else:
+            self.last_receipt = ActionReceipt(
+                command_id, True, True, False, False
+            )
         self.audit.append(
             self.descriptor.connection_id,
             command,
@@ -103,6 +125,15 @@ class ControlledEmbodimentAgent:
             return None
         self._calls_by_tick[command.tick] = self._calls_by_tick.get(command.tick, 0) + 1
         observation = self.environment.step(command)
+        self.last_receipt = ActionReceipt(
+            command_id,
+            True,
+            True,
+            True,
+            False,
+            latency=max(0, observation.tick - command.tick),
+            effect_observed=True,
+        )
         self.last_action = command
         self.last_observation = observation
         self.episode_reward += observation.reward

@@ -47,6 +47,34 @@ class ActuatorResult:
 
 
 @dataclass(frozen=True, slots=True)
+class ActionReceipt:
+    """Execution receipt separating acceptance from observed environment effect."""
+
+    command_id: str
+    accepted: bool
+    started: bool
+    completed: bool
+    failed: bool
+    latency: int | None = None
+    error: str | None = None
+    safety_clamp: str | None = None
+    effect_observed: bool | None = None
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return {
+            "command_id": self.command_id,
+            "accepted": self.accepted,
+            "started": self.started,
+            "completed": self.completed,
+            "failed": self.failed,
+            "latency": self.latency,
+            "error": self.error,
+            "safety_clamp": self.safety_clamp,
+            "effect_observed": self.effect_observed,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class EnvironmentObservation:
     """Observation returned by an environment after reset or action."""
 

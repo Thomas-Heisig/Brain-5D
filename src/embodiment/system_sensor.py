@@ -69,7 +69,7 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     temperature: float | None = None
     for entries in temperatures.values():
         if entries:
-            temperature = entries[0].current
+            temperature = float(entries[0].current)
             break
 
     network_up = any(bool(status.isup) for status in psutil.net_if_stats().values())
@@ -78,9 +78,12 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     disk_io = psutil.disk_io_counters()
     network_io = psutil.net_io_counters()
     battery_reader = getattr(psutil, "sensors_battery", None)
-    battery = battery_reader() if callable(battery_reader) else None
+    battery = cast(Any, battery_reader() if callable(battery_reader) else None)
     fan_reader = getattr(psutil, "sensors_fans", None)
-    fans = fan_reader() if callable(fan_reader) else {}
+    fans = cast(
+        Mapping[str, list[Any]],
+        fan_reader() if callable(fan_reader) else {},
+    )
     fan_rpm: float | None = None
     for entries in fans.values():
         if entries:

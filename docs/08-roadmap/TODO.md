@@ -172,9 +172,9 @@
   Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
 - [ ] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
   Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
-- [ ] `ActionReceipt` mit command_id, accepted, started, completed, failed,
+- [x] `ActionReceipt` mit command_id, accepted, started, completed, failed,
   latency, error, safety_clamp und effect_observed einführen
-- [ ] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
+- [x] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
 - [ ] Hashverkettetes Aktionsjournal dauerhaft in Operator-/Experiment-Storage persistieren
 - [ ] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden
 

@@ -61,6 +61,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 | **🧭 Functional Regulation** | Bounded safety, activation, valence and uncertainty values derived from observable state |
 | **🧱 Morphology Ledger** | Deterministic neuron/synapse ages with separate growth and pruning budgets |
 | **〽️ Structural Hysteresis** | Per-mechanism release thresholds prevent proposal oscillation under changing pressure |
+| **🧾 Action Receipts** | Typed execution receipts separate command acceptance from observed environment effects |
 
 ---
 

@@ -26,6 +26,7 @@ from .interoception import (
 )
 from .models import (
     ActionCommand,
+    ActionReceipt,
     ActuatorResult,
     EmbodimentMetrics,
     EnvironmentKind,
@@ -43,6 +44,7 @@ from .system_sensor import (
 
 __all__ = [
     "ActionCommand",
+    "ActionReceipt",
     "ActuatorAdapter",
     "ActuatorResult",
     "ActionAuditRecord",
