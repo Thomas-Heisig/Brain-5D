@@ -70,6 +70,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	beobachtetem Environment-Effekt trennen
 - [x] Hashverkettete Action-Audit-Records dauerhaft als JSONL speichern und
 	beim Wiederöffnen auf Kettenintegrität prüfen
+- [x] Deterministischen `TaskOutcomeVerifier` als alleinige technische Quelle
+	für Task-Erfolg und Reward anbinden; fehlende Beobachtungen bleiben UNKNOWN
 
 ## v0.5.0-alpha.9 — Memory & World Model
 

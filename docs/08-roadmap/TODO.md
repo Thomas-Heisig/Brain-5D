@@ -177,7 +177,8 @@
 - [x] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
 - [x] Hashverkettetes Aktionsjournal als JSONL dauerhaft an kontrollierte
   Operator-/Experiment-Storage-Pfade persistieren und beim Reopen verifizieren
-- [ ] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden
+- [x] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden;
+  unbekannte Ergebnisse bleiben bei fehlender Environment-Beobachtung explizit
 
 ### Alpha.9 bis v1.0
 

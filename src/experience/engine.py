@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from src.embodiment.controlled import ControlledEmbodimentAgent
 from src.embodiment.models import ActionCommand, EnvironmentObservation, SensorFrame
 from src.embodiment.sensor import SensorAdapter
+from src.embodiment.task_outcome import TaskOutcome, TaskOutcomeVerifier
 from src.learning.learning_engine import LearningEngine
 
 Encoder = Callable[[SensorFrame], Mapping[int, float]]
@@ -24,6 +25,7 @@ class ExperienceStep:
     action: ActionCommand | None
     observation: EnvironmentObservation | None
     reward: float
+    outcome: TaskOutcome | None = None
 
 
 @dataclass(slots=True)
@@ -40,6 +42,7 @@ class ExperienceEngine:
     decoder: Decoder
     embodiment: ControlledEmbodimentAgent
     learning: LearningEngine | None = None
+    outcome_verifier: TaskOutcomeVerifier = field(default_factory=TaskOutcomeVerifier)
     last_step: ExperienceStep | None = None
     _pending_frame: SensorFrame | None = None
 
@@ -77,10 +80,15 @@ class ExperienceEngine:
         action = self.decoder(result, frame)
         if action is not None:
             observation = self.embodiment.step(action)
-        reward = 0.0 if observation is None else observation.reward
+        outcome = (
+            TaskOutcome(False, False, 0.0, "no environment observation")
+            if observation is None
+            else self.outcome_verifier.verify(observation)
+        )
+        reward = outcome.reward
         if self.learning is not None and observation is not None:
             self.learning.set_reward(reward, tick)
-        record = ExperienceStep(tick, frame, action, observation, reward)
+        record = ExperienceStep(tick, frame, action, observation, reward, outcome)
         self.last_step = record
         self._pending_frame = None
         return record

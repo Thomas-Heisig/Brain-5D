@@ -41,6 +41,7 @@ from .system_sensor import (
     host_system_readings,
     wall_clock_readings,
 )
+from .task_outcome import TaskOutcome, TaskOutcomeVerifier
 
 __all__ = [
     "ActionCommand",
@@ -70,6 +71,8 @@ __all__ = [
     "RelationshipClass",
     "SensorAdapter",
     "SensorFrame",
+    "TaskOutcome",
+    "TaskOutcomeVerifier",
     "SystemSensorAdapter",
     "VitalSignal",
     "derive_drives",

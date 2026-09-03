@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Deterministic task outcome verification
+
+- Added typed `TaskOutcome` and `TaskOutcomeVerifier` contracts that derive
+  task success from observed terminal environment state.
+- Routed experience rewards through the verifier; decoder output and supplied
+  reward values cannot independently create task success.
+- Missing environment observations remain explicitly unknown and unrewarded.
+
 ## 2026-09-03 — Action receipts
 
 - Added typed receipts for controlled embodiment actions with deterministic

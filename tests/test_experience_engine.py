@@ -13,8 +13,10 @@ from src.embodiment import (
     DeterministicTargetEnvironment,
     RelationshipClass,
     SystemSensorAdapter,
+    TaskOutcomeVerifier,
     host_system_readings,
 )
+from src.embodiment.models import EnvironmentObservation
 from src.experience import ExperienceEngine, build_experience_subsystem
 
 
@@ -145,6 +147,38 @@ def test_unauthorized_action_cannot_create_experience_reward() -> None:
     assert record.observation is None
     assert record.reward == 0.0
     assert learning.rewards == []
+    assert record.outcome is not None
+    assert not record.outcome.known
+
+
+def test_task_outcome_verifier_uses_observed_terminal_state() -> None:
+    verifier = TaskOutcomeVerifier(expected_state={"position": 3}, success_reward=2.0)
+
+    outcome = verifier.verify(
+        EnvironmentObservation(3, {"position": 3}, reward=99.0, terminated=True)
+    )
+
+    assert outcome.known
+    assert outcome.success
+    assert outcome.reward == 2.0
+    assert outcome.to_json() == {
+        "known": True,
+        "success": True,
+        "reward": 2.0,
+        "reason": "terminated state matched",
+    }
+
+
+def test_task_outcome_verifier_fails_closed_for_nonmatching_observation() -> None:
+    verifier = TaskOutcomeVerifier(expected_state={"position": 3}, failure_reward=-1.0)
+
+    outcome = verifier.verify(
+        EnvironmentObservation(2, {"position": 2}, reward=99.0, terminated=True)
+    )
+
+    assert outcome.known
+    assert not outcome.success
+    assert outcome.reward == -1.0
 
 
 def test_runtime_hooks_use_one_existing_network_tick() -> None:
