@@ -8,6 +8,7 @@ import yaml
 from src.research.experiment_suite import (
     run_learning_repeat,
     run_ping,
+    run_ping_v2,
     run_regulation,
     run_stdp,
     run_temporal,
@@ -25,6 +26,16 @@ def test_ping_is_reproducible_for_identical_seed() -> None:
     second = run_ping(_config(), seeds=(42,))
     assert first == second
     assert {run.condition for run in first} == {"recurrence_off", "recurrence_on"}
+
+
+def test_ping_v2_repeats_identical_initial_states_and_responses() -> None:
+    runs = run_ping_v2(_config(), seeds=(42,))
+
+    assert len(runs) == 4
+    for recurrence in ("recurrence_off", "recurrence_on"):
+        replicas = [run for run in runs if run.condition.startswith(recurrence)]
+        assert len({run.state_digest_before for run in replicas}) == 1
+        assert len({str(run.metrics) for run in replicas}) == 1
 
 
 def test_temporal_runner_keeps_explicit_unknown_metrics() -> None:

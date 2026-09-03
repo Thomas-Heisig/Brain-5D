@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — Versioned PING experiment
+
+- Preserved the existing `EXP-PING-0001` run as v1 and added
+  `EXP-PING-0001-v2` instead of overwriting its artifacts.
+- Published 12 Dashboard DATA runs as six identical replica pairs across three
+  seeds and two recurrence treatments.
+- Verified identical initial state digests and response signatures per pair;
+  EVID remains gated by clean freeze and independent review.
+
 ## 2026-09-03 — Complete science experiment artifact publication
 
 - Science-suite runs now publish and register `DATA/runs.json`, `workflow.json`

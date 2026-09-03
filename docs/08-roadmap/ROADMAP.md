@@ -46,6 +46,9 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
 - [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
 - [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
+- [x] `EXP-PING-0001-v2` versioniert ausgeführt: sechs identische Replikatpaare
+	bestätigen pro Seed und Rekurrenzbedingung denselben Vorher-Digest und dieselbe
+	Response-Signatur; EVID bleibt Clean-Freeze-gated
 - [x] TIME und 5D über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
 - [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
 - [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen

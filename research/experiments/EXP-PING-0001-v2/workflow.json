@@ -1,0 +1,17 @@
+{
+  "protocol": "science_suite_v1",
+  "experiment_id": "EXP-PING-0001-v2",
+  "research_question": "RQ-PING-001",
+  "hypothesis": "H-PING-001-A",
+  "title": "Network impulse response v2",
+  "conditions": "recurrence off/on with two identical replicas per seed",
+  "ticks": 8,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

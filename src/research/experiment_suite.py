@@ -123,6 +123,36 @@ def run_ping(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[Scie
     return runs
 
 
+def run_ping_v2(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
+    """Run recurrence treatments as identical replica pairs per seed."""
+    runs: list[ScientificRun] = []
+    for seed in seeds:
+        for recurrence in (False, True):
+            for replica in ("replica_a", "replica_b"):
+                network = _network(config, seed, recurrence=recurrence)
+                before = _digest(network)
+                source = min(network.input_cells)
+                signature = NetworkImpulseProbe(
+                    source_neuron=source,
+                    current=100.0,
+                    max_ticks=8,
+                    state_digest=lambda: _digest(network),
+                ).run(_ProbeRuntime(network))
+                runs.append(
+                    ScientificRun(
+                        "EXP-PING-0001-v2",
+                        f"{'recurrence_on' if recurrence else 'recurrence_off'}_{replica}",
+                        seed,
+                        signature.to_dict(),
+                        before,
+                        _digest(network),
+                    )
+                )
+    return runs
+
+
 def run_time(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),

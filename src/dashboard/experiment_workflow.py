@@ -92,6 +92,7 @@ class ExperimentWorkflowService:
         workflow = self._validate(body)
         runners = {
             "EXP-PING-0001": "run_ping",
+            "EXP-PING-0001-v2": "run_ping_v2",
             "EXP-TEMP-0001": "run_temporal",
             "EXP-STDP-0002": "run_stdp",
             "EXP-EMB-0001": "run_learning_repeat",
@@ -105,7 +106,7 @@ class ExperimentWorkflowService:
         if runner_name is None:
             raise WorkflowValidationError(
                 "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
-                "EXP-STDP-0002, EXP-TIME-0001, EXP-5D-0001, and "
+                "EXP-PING-0001-v2, EXP-STDP-0002, EXP-TIME-0001, EXP-5D-0001, and "
                 "EXP-REG-0001."
             )
         output_dir = self._research_root / "experiments" / workflow.experiment_id

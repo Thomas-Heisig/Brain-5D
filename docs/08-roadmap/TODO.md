@@ -234,8 +234,10 @@
 
 ## SCIENCE
 
-- [ ] `EXP-PING-0001`: Network Impulse Response mit identischem Zustand, Seed,
-  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen (Dashboard-DATA-Lauf erfolgt; Clean-Freeze-EVID noch offen)
+- [x] `EXP-PING-0001`: Network Impulse Response mit identischem Zustand, Seed,
+  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen
+  (v1 archiviert; v2 mit 12 Dashboard-DATA-Runs und identischen Replikatpaaren;
+  Clean-Freeze-EVID noch offen)
 - [ ] `EXP-TEMP-0001`: Multi-Timescale State Comparison für Persistenz, Drift,
   Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen (Dashboard-DATA-Lauf erfolgt; Novelty/Prediction Error noch nicht implementiert)
 - [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs (Runner ergänzt, DATA-Lauf noch ausstehend)
