@@ -85,6 +85,8 @@ Evidenz für Lernwirkung.
 	wissenschaftliche Evidenz.
 - Experimentlisten zeigen nun einen getrennten wissenschaftlichen Betriebsstatus
 	von PURE über Beobachtung und Vorschlag bis kausal aktiv.
+- Der StorageLayout-Vertrag trennt Operator-State, Journals, Checkpoints,
+	Experimentpfade und disposable Dev-Artefakte.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

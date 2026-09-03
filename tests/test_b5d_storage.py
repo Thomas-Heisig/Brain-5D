@@ -27,7 +27,20 @@ from src.storage.b5d import (
     B5DSnapshotWriter,
     assert_format_invariants,
 )
+from src.storage.layout import StorageLayout
 from src.storage.optical_codec import OpticalPointState
+
+
+def test_storage_layout_separates_controlled_roots(tmp_path: Path) -> None:
+    layout = StorageLayout(tmp_path)
+    assert layout.operator_state == tmp_path / "operator" / "state.b5d"
+    assert layout.experiment("EXP-0001") == tmp_path / "experiment" / "EXP-0001"
+    layout.ensure_directories()
+    assert layout.operator_journal.is_dir()
+    assert layout.operator_checkpoints.is_dir()
+    assert layout.dev_disposable.is_dir()
+    with pytest.raises(ValueError, match="safe EXP"):
+        layout.experiment("../outside")
 
 
 @dataclass(slots=True)

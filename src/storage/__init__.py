@@ -35,6 +35,7 @@ from .delta_journal import (
     UncommittedTailError,
     assert_journal_format_invariants,
 )
+from .layout import StorageLayout
 from .lazy_view import B5DLazyProjector, StorageHeatmap, StorageHeatmapKind
 from .optical_codec import (
     RECORD_SIZE,
@@ -92,6 +93,7 @@ __all__ = [
     "SpikeEventDelta",
     "StorageHeatmap",
     "StorageHeatmapKind",
+    "StorageLayout",
     "StorageRuntimeConfig",
     "StorageRuntimeStats",
     "StorageSession",

@@ -113,7 +113,7 @@
 
 ### Alpha.7.1 — Performance & Persistent Operator
 
-- [ ] Storage unter `operator/state.b5d`, `operator/journal/`, `operator/checkpoints/` kapseln
+- [x] Storage unter `operator/state.b5d`, `operator/journal/`, `operator/checkpoints/` kapseln
 - [ ] Experimente unter `experiment/EXP-*/state/`, `DATA/` und `EVID/` kapseln
 - [ ] Dev-Artefakte ausschließlich unter `dev/disposable/` ablegen
 - [ ] Harte Grenzen erzwingen: DEV -> OPERATOR verboten, EXPERIMENT -> OPERATOR kein Merge, OPERATOR -> EXPERIMENT nur Snapshot/Fork

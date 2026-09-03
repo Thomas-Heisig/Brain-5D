@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — Controlled storage layout
+
+- Ein zentraler `StorageLayout`-Vertrag kapselt Operator-State, Journals,
+  Checkpoints, Experimentpfade und disposable Dev-Artefakte.
+
 ## 2026-09-03 — Dashboard research operation status
 
 - Experimentlisten zeigen nun neben der technischen AI-Betriebsart den
