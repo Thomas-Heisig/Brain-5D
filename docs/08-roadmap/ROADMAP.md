@@ -10,7 +10,7 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 ## Verifizierter Repository-Stand
 
-`main` ist lokal mit `origin/main` synchron (`d55cf0e`). Die deterministische
+`main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
 Vollsuite meldet **640 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
 Die zuletzt abgeschlossene
