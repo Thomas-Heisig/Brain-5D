@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 STATIC_ROOT = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "static"
 
 
@@ -38,10 +37,12 @@ def test_learning_studio_ai_is_visibly_proposal_only_and_non_executing() -> None
     assert "never provide synaptic weights" in studio
     assert "reward values" in studio
 
-    # The Learning Studio must not expose a learning-run or mutation endpoint.
+    # AI preparation must not expose a mutation endpoint or execution action.
     assert "/api/learning/execute" not in studio
     assert "/api/learning/apply" not in studio
     assert "execute_registered_experiment" not in studio
+    assert 'fetch("/api/learning/run"' in studio
+    assert "operator_confirmed: true" in studio
 
 
 def test_learning_studio_exposes_pre_post_and_holdout_diagnostics() -> None:
@@ -69,5 +70,7 @@ def test_learning_studio_prepare_form_and_reset_are_wired() -> None:
     ):
         assert f'id="{field_id}"' in studio
         assert f'byId("{field_id}")' in studio
+    assert 'id="learning-context-length"' in studio
     assert 'id="learning-ai-prepare"' in studio
+    assert 'id="learning-run"' in studio
     assert 'id="learning-clear-proposal"' in studio

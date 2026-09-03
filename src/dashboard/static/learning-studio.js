@@ -88,8 +88,12 @@ function createLearningWorkspace() {
         <label class="input-label" for="learning-constraints">Randbedingungen / Kontrollen
           <textarea id="learning-constraints" rows="3" placeholder="z. B. gleicher Seed, learning-off control, getrenntes Holdout, feste Episodenzahl"></textarea>
         </label>
+        <label class="input-label" for="learning-context-length">KI-Kontextlänge
+          <select id="learning-context-length"><option value="8000">8.000 Zeichen</option><option value="16000">16.000 Zeichen</option><option value="24000" selected>24.000 Zeichen</option><option value="48000">48.000 Zeichen</option></select>
+        </label>
         <div class="overview-actions">
           <button id="learning-ai-prepare" class="overview-action" type="button">✦ KI-Vorbereitung erstellen</button>
+          <button id="learning-run" class="overview-action" type="button">Lernlauf starten</button>
           <button id="learning-clear-proposal" class="overview-action" type="button">Zurücksetzen</button>
         </div>
         <small>Die Schaltfläche ruft den bestehenden read-only Research Assistant auf. Sie startet keinen Lauf und ändert keine Lernparameter.</small>
@@ -122,6 +126,7 @@ function createLearningWorkspace() {
   else main.append(section);
 
   byId("learning-ai-prepare")?.addEventListener("click", prepareWithAI);
+  byId("learning-run")?.addEventListener("click", runLearning);
   byId("learning-clear-proposal")?.addEventListener("click", () => {
     ["learning-goal", "learning-success-metric", "learning-source-notes", "learning-constraints"].forEach((id) => {
       const field = byId(id);
@@ -137,10 +142,11 @@ function learningPrompt() {
   const metric = byId("learning-success-metric")?.value?.trim() || "not specified";
   const sources = byId("learning-source-notes")?.value?.trim() || "not specified";
   const controls = byId("learning-constraints")?.value?.trim() || "not specified";
+  const contextLength = Number(byId("learning-context-length")?.value || 24000);
   const learning = currentState.learning || {};
   const mode = currentState.experiment_state?.current_mode || currentState.experiment_state?.mode || "operator";
 
-  return `You are preparing a Brain-5D learning experiment. Produce a proposal only; do not execute anything.\n\nLearning goal: ${goal}\nSuccess metric: ${metric}\nSources/environment/provenance: ${sources}\nControls/constraints: ${controls}\nCurrent mode: ${mode}\nCurrent learning status: STDP enabled=${Boolean(learning.stdp_enabled)}, eligibility enabled=${Boolean(learning.eligibility_enabled)}, reward enabled=${Boolean(learning.reward_enabled)}.\n\nReturn a concise preparation proposal with exactly these sections: Objective, Source and partition plan, Pre-learning baseline, Exposure plan at task/environment level, Controls, Evaluation and holdout, Stopping rule, Confounds and safety, Required human decisions.\n\nHard boundary: never provide synaptic weights, a weight matrix, target spike trains/patterns, injected-current values/arrays, eligibility traces, direct plasticity updates, or reward values. Do not propose that the LLM writes a neural representation. The SNN must form its own representation through the registered environment and LearningEngine. Label the result AI PROPOSAL — NOT APPLIED.`;
+  return `You are preparing a Brain-5D learning experiment. Produce a proposal only; do not execute anything.\n\nLearning goal: ${goal}\nSuccess metric: ${metric}\nSources/environment/provenance: ${sources}\nControls/constraints: ${controls}\nRequested context length: ${contextLength} characters\nCurrent mode: ${mode}\nCurrent learning status: STDP enabled=${Boolean(learning.stdp_enabled)}, eligibility enabled=${Boolean(learning.eligibility_enabled)}, reward enabled=${Boolean(learning.reward_enabled)}.\n\nReturn a concise preparation proposal with exactly these sections: Objective, Source and partition plan, Pre-learning baseline, Exposure plan at task/environment level, Controls, Evaluation and holdout, Stopping rule, Confounds and safety, Required human decisions.\n\nHard boundary: never provide synaptic weights, a weight matrix, target spike trains/patterns, injected-current values/arrays, eligibility traces, direct plasticity updates, or reward values. Do not propose that the LLM writes a neural representation. The SNN must form its own representation through the registered environment and LearningEngine. Label the result AI PROPOSAL — NOT APPLIED.`;
 }
 
 async function prepareWithAI() {
@@ -157,7 +163,7 @@ async function prepareWithAI() {
   setText("learning-ai-proposal", "KI erstellt einen proposal-only Vorbereitungsentwurf …");
 
   try {
-    const response = await fetch("/api/research/chat", {
+    const response = await fetch("/api/learning/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -165,6 +171,7 @@ async function prepareWithAI() {
         message: learningPrompt(),
         response_mode: "scientific",
         web_search: false,
+        max_context_chars: Number(byId("learning-context-length")?.value || 24000),
       }),
     });
     const payload = await response.json();
@@ -174,6 +181,46 @@ async function prepareWithAI() {
   } catch (error) {
     setText("learning-ai-status", "unavailable");
     setText("learning-ai-proposal", `KI-Vorbereitung nicht verfügbar: ${error.message}`);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function runLearning() {
+  const goal = byId("learning-goal")?.value?.trim();
+  const metric = byId("learning-success-metric")?.value?.trim();
+  if (!goal || !metric) {
+    setText("learning-ai-status", "goal and metric required");
+    setText("learning-ai-proposal", "Lernziel und Erfolgskriterium sind vor dem Lernlauf erforderlich.");
+    return;
+  }
+  const button = byId("learning-run");
+  if (button) button.disabled = true;
+  setText("learning-ai-status", "running registered learning workflow");
+  setText("learning-ai-proposal", "Lernlauf wird ausgeführt; KI-Ausgabe und Freitext werden nicht als Lernparameter verwendet.");
+  const suffix = `${Date.now()}`.slice(-10);
+  try {
+    const response = await fetch("/api/research/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        operator_confirmed: true,
+        experiment_id: `EXP-LEARN-${suffix}`,
+        question_id: "RQ-SNN-005",
+        hypothesis_id: "H-SNN-005-A",
+        title: goal,
+        conditions: `success_metric=${metric}; ${byId("learning-constraints")?.value?.trim() || "operator-defined controls"}`,
+        ticks: 100,
+        notes: `Sources/provenance: ${byId("learning-source-notes")?.value?.trim() || "not specified"}`,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+    setText("learning-ai-status", "learning completed · data recorded");
+    setText("learning-ai-proposal", JSON.stringify(payload, null, 2));
+  } catch (error) {
+    setText("learning-ai-status", "learning unavailable");
+    setText("learning-ai-proposal", `Lernlauf nicht verfügbar: ${error.message}`);
   } finally {
     if (button) button.disabled = false;
   }

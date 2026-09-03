@@ -686,6 +686,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._research_chat(body)
                 return
 
+            if path == "/api/learning/run":
+                self._run_learning_workflow(body)
+                return
+
             if path == "/api/research/chat/settings":
                 self._update_research_chat_settings(body)
                 return
@@ -2008,6 +2012,17 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         images = cast(list[str], raw_images)
         if images and not self.dashboard_server.research_chat_vision_enabled:
             raise InvalidRequestError("Vision is disabled in chat settings.")
+        context_chars = self.dashboard_server.research_chat_context_chars
+        requested_context_chars = body.get("max_context_chars")
+        if requested_context_chars is not None:
+            if (
+                not isinstance(requested_context_chars, int)
+                or not 4_000 <= requested_context_chars <= 120_000
+            ):
+                raise InvalidRequestError(
+                    "max_context_chars must be between 4000 and 120000."
+                )
+            context_chars = requested_context_chars
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         system_context = json.dumps(
             {
@@ -2033,7 +2048,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             cast(Any, source),
             cast(Any, docs),
             request_backend,
-            max_context_chars=self.dashboard_server.research_chat_context_chars,
+            max_context_chars=context_chars,
             system_context=system_context,
             system_prompt=self.dashboard_server.research_chat_system_prompt,
             conversation_context=conversation_context,
@@ -2044,6 +2059,15 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         self._send_json(
             {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
         )
+
+    def _run_learning_workflow(self, body: dict[str, object]) -> None:
+        """Run only the fixed, explicitly operator-triggered learning workflow."""
+        if body.get("operator_confirmed") is not True:
+            raise InvalidRequestError("operator_confirmed must be true to start learning.")
+        workflow = dict(body)
+        workflow.pop("operator_confirmed", None)
+        workflow["protocol"] = "science_suite_v1"
+        self._run_experiment_workflow(workflow)
 
     def _update_research_chat_settings(self, body: dict[str, object]) -> None:
         """Update bounded runtime chat preferences from the settings panel."""

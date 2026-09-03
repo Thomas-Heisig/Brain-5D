@@ -10,6 +10,14 @@
 
 ## ENGINEERING
 
+### P0 — Learning Studio Full-Stack
+
+- [x] Kontextlänge im Learning Studio bounded validieren und an den AI-Chat weitergeben
+- [x] Proposal-only KI-Vorbereitung von explizitem Operator-Lernstart trennen
+- [x] Registrierten LearningEngine-Runner mit DATA, Manifest und Report anbinden
+- [x] Fail-closed-Bestätigung und UI-/Route-Regressionstests ergänzen
+- [ ] Wissenschaftliche EVID des Lernlaufs nach Clean Freeze und Review erzeugen
+
 ### P0 — Scientific AI Boundary & Provenance
 
 - [x] Erste Contract-Layer-Basis mit `AIExposure`, `CausalTaint` und digest-only `AIInteractionRecord` in Research Assistant und Chat-UI integrieren

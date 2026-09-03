@@ -51,8 +51,10 @@ The science suite also provides a deterministic regulation DATA runner for
 nominal, chronic-pressure and unknown telemetry conditions; EVID remains
 separate from engineering execution.
 
-Learning Preparation Studio supports proposal-only experiment planning and
-clears all planning inputs without executing a run.
+Learning Preparation Studio supports proposal-only experiment planning,
+bounded AI context length, and a separate explicitly operator-confirmed
+LearningEngine run that publishes DATA, Manifest and Report artifacts. AI
+proposals remain non-executable and all planning inputs can be cleared together.
 
 ---
 

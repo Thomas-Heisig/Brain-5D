@@ -277,6 +277,26 @@ def run_learning_repeat(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -
     return runs
 
 
+def run_learning(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+    """Run the registered full-stack LearningEngine experiment from the operator workflow."""
+    runs: list[ScientificRun] = []
+    for seed in seeds:
+        values = dict(config)
+        values["seed"] = seed
+        result = run_learning_experiment(values)
+        runs.append(
+            ScientificRun(
+                "EXP-LEARN-0001",
+                "operator_learning_run",
+                seed,
+                asdict(result),
+                "",
+                "",
+            )
+        )
+    return runs
+
+
 def write_data(path: Path, runs: list[ScientificRun]) -> None:
     """Write deterministic run records as one JSON document."""
     path.parent.mkdir(parents=True, exist_ok=True)

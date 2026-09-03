@@ -190,3 +190,23 @@ def test_research_chat_requires_explicit_backend(tmp_path: Path) -> None:
         conn.close()
     finally:
         _stop(server, thread)
+
+
+def test_learning_run_requires_explicit_operator_confirmation(tmp_path: Path) -> None:
+    root = tmp_path / "research"
+    root.mkdir()
+    server, thread, host, port = _start_server(root)
+    try:
+        conn = HTTPConnection(host, port)
+        conn.request(
+            "POST",
+            "/api/learning/run",
+            body=json.dumps({"protocol": "science_suite_v1"}),
+            headers={"Content-Type": "application/json"},
+        )
+        response = conn.getresponse()
+        assert response.status == 400
+        assert "operator_confirmed" in response.read().decode()
+        conn.close()
+    finally:
+        _stop(server, thread)

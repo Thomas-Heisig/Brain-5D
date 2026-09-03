@@ -24,6 +24,9 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 
 - [x] Learning-Preparation-Formular für Lernziel, Erfolgskriterium,
   Provenienz und Kontrollen mit proposal-only KI-Vorbereitung und vollständigem Reset
+- [x] Expliziten Operator-Lernstart über einen getrennten, validierten
+	LearningEngine-Workflow mit DATA/Manifest/Report und sichtbarem Ergebnis ergänzen
+- [x] Begrenzte KI-Kontextlänge im Learning Studio bis zum Chat-Backend durchreichen
 
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:
@@ -41,6 +44,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
 - [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
+- [ ] Wissenschaftliche EVID für den operator-ausgelösten Learning-Studio-Lauf nach
+	Clean Freeze und unabhängiger Review erzeugen
 - [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 
 ## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)

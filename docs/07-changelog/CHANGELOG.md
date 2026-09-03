@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Full-stack Learning Studio run
+
+- Added a bounded AI context-length control to Learning Preparation requests.
+- Added a separate, explicit `/api/learning/run` operator action that invokes
+  only the registered LearningEngine workflow and persists DATA/Manifest/Report.
+- Kept AI preparation proposal-only; missing operator confirmation fails closed.
+- Added route and UI regression coverage for the execution boundary.
+
 ## 2026-09-03 — Learning preparation reset
 
 - The non-executing Learning Preparation Studio now resets all preparation

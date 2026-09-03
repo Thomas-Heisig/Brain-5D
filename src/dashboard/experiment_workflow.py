@@ -70,6 +70,7 @@ class ExperimentWorkflowService:
                     {"id": "science_suite_v1", "label": "Science Suite v1 (DATA + Manifest)"},
                     {"id": "science_time_v1", "label": "Science TIME v1 (DATA + Manifest)"},
                     {"id": "science_5d_v1", "label": "Science 5D v1 (DATA + Manifest)"},
+                    {"id": "learning_operator_v1", "label": "Operator Learning v1 (DATA + Manifest + Report)"},
                     {"id": "runtime_ticks_v1", "label": "Runtime-Ticks (Laufprotokoll)"},
                     {"id": "stdp_pair_timing_v1", "label": "STDP Pair-Timing v1 (registriert)"},
                 ],
@@ -92,6 +93,8 @@ class ExperimentWorkflowService:
             "EXP-REG-0001": "run_regulation",
         }
         runner_name = runners.get(workflow.experiment_id)
+        if workflow.experiment_id.startswith("EXP-LEARN-"):
+            runner_name = "run_learning"
         if runner_name is None:
             raise WorkflowValidationError(
                 "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
