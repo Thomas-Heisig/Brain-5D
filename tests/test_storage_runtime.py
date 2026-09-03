@@ -96,7 +96,7 @@ def test_storage_session_captures_changes_and_commits(tmp_path: Path) -> None:
 
 
 def test_dirty_tracking_matches_full_scan_for_emitted_ids(tmp_path: Path) -> None:
-    def collect(policy: str) -> tuple[DeltaType, ...]:
+    def collect(policy: str) -> tuple[tuple[DeltaType, int, bytes], ...]:
         network = FakeNetwork(
             dimensions=(10, 10, 10, 10, 10),
             current_tick=0,
@@ -120,6 +120,9 @@ def test_dirty_tracking_matches_full_scan_for_emitted_ids(tmp_path: Path) -> Non
             hook(result)
         session.close()
         with DeltaJournal(config.journal_path) as journal:
-            return tuple(entry.delta_type for entry in journal.iter_committed_entries())
+            return tuple(
+                (entry.delta_type, entry.tick, entry.payload)
+                for entry in journal.iter_committed_entries()
+            )
 
     assert collect("dirty_tracking") == collect("full_change_scan")

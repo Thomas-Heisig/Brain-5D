@@ -8,6 +8,8 @@
 - Scope-Übergänge werden fail-closed begrenzt: DEV darf nicht nach OPERATOR,
   Experimente dürfen nicht gemergt werden, und OPERATOR liefert Experimente
   nur per Snapshot oder Fork.
+- Der Runtime-Test vergleicht nun die vollständigen Delta-Payloads von
+  `full_change_scan` und `dirty_tracking` bei identischen Eingaben.
 
 ## 2026-09-03 — Dashboard research operation status
 

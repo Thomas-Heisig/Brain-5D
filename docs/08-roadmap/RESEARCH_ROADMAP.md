@@ -89,6 +89,8 @@ Evidenz für Lernwirkung.
 	Experimentpfade (`state/`, `DATA/`, `EVID/`) und disposable Dev-Artefakte.
 - Die Storage-Scope-Grenzen verbieten unkontrollierte DEV-/Experiment-Merges
 	und erlauben Operator-Zustand in Experimenten nur über Snapshot oder Fork.
+- `full_change_scan` und `dirty_tracking` werden für identische Eingaben bis
+	auf Delta-Payload-Ebene verglichen.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

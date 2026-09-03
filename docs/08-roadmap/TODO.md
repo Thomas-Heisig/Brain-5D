@@ -117,7 +117,7 @@
 - [x] Experimente unter `experiment/EXP-*/state/`, `DATA/` und `EVID/` kapseln
 - [x] Dev-Artefakte ausschließlich unter `dev/disposable/` ablegen
 - [x] Harte Grenzen erzwingen: DEV -> OPERATOR verboten, EXPERIMENT -> OPERATOR kein Merge, OPERATOR -> EXPERIMENT nur Snapshot/Fork
-- [ ] `full_change_scan` und `dirty_tracking` mit identischem Seed, Input und Tickzahl vergleichen
+- [x] `full_change_scan` und `dirty_tracking` mit identischem Seed, Input und Tickzahl vergleichen
 - [ ] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen
 - [ ] Laufzeitprofil für 1k / 10k / 100k / 1M Ticks erfassen: ticks/s, ms/tick, Storage, Telemetrie, Bytes, Dirty-Counts, RAM
 
