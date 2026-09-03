@@ -58,6 +58,8 @@ Evidenz für Lernwirkung.
 	Vertrag registriert.
 - Multi-Model-Vergleich, Blindanalyse, Reviewer-Metriken und AIR-Fragen sind als
 	interpretation-only Forschungsobjekte verfügbar.
+- Development-, Validation- und Scientific-Holdout-Digests können fail-closed
+	auf Überschneidungen sowie AI-/Gold-Label-Leakage geprüft werden.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

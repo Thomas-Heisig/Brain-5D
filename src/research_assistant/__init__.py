@@ -50,6 +50,7 @@ from .governance import (
     ResearchRunMode,
     RetrievalRecord,
     VersionedPrompt,
+    validate_data_leakage,
     validate_data_partition,
     validate_network_mode,
 )
@@ -95,6 +96,7 @@ __all__ = [
     "VersionedPrompt",
     "ResearchRunMode",
     "validate_data_partition",
+    "validate_data_leakage",
     "validate_network_mode",
     "AIExposure",
     "AIClockMode",

@@ -17,6 +17,7 @@ from src.research_assistant.governance import (
     PromptRegistry,
     RetrievalRecord,
     VersionedPrompt,
+    validate_data_leakage,
     validate_data_partition,
     validate_network_mode,
 )
@@ -193,3 +194,18 @@ def test_quantitative_results_require_statistics_engine_provenance() -> None:
     require_statistics_engine_artifact(summary)
     with pytest.raises(ValueError, match="Statistics Engine"):
         require_statistics_engine_artifact({"mean": 2.0})
+
+
+def test_data_leakage_validator_rejects_overlap_and_holdout_labels() -> None:
+    with pytest.raises(ValueError, match="leakage"):
+        validate_data_leakage(
+            {
+                DataPartition.DEVELOPMENT: {"sample-1"},
+                DataPartition.SCIENTIFIC_HOLDOUT: {"sample-1"},
+            }
+        )
+    with pytest.raises(ValueError, match="holdout"):
+        validate_data_leakage(
+            {DataPartition.SCIENTIFIC_HOLDOUT: {"sample-2"}},
+            gold_label_digests={"sample-2"},
+        )

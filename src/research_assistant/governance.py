@@ -205,6 +205,25 @@ def validate_data_partition(partition: DataPartition, *, scientific_run: bool) -
         raise ValueError("Scientific runs cannot use DEVELOPMENT data")
 
 
+def validate_data_leakage(
+    partition_digests: Mapping[DataPartition, set[str]],
+    *,
+    ai_label_digests: set[str] | None = None,
+    gold_label_digests: set[str] | None = None,
+) -> None:
+    """Reject partition overlap and labels present in the scientific holdout."""
+    seen: dict[str, DataPartition] = {}
+    for partition, digests in partition_digests.items():
+        for digest in digests:
+            previous = seen.get(digest)
+            if previous is not None and previous is not partition:
+                raise ValueError("Data leakage detected across research partitions")
+            seen[digest] = partition
+    holdout = partition_digests.get(DataPartition.SCIENTIFIC_HOLDOUT, set())
+    if holdout & (ai_label_digests or set()) or holdout & (gold_label_digests or set()):
+        raise ValueError("Scientific holdout must not contain AI or gold-label records")
+
+
 @dataclass(frozen=True, slots=True)
 class RetrievalRecord:
     """Visible, versioned retrieval provenance; no hidden RAG is implied."""
