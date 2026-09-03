@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Language Organ sham controls
+
+- Deterministisches `RandomLanguageOrgan` als pseudozufällige Kontrollbedingung ergänzt.
+- Digest-adressiertes `ReplayLanguageOrgan` ohne Live-Fallback ergänzt.
+- Beide Kontrollen erfüllen den read-only `LanguageModelBackend`-Vertrag; fehlende Replay-Daten schlagen kontrolliert fehl.
+
 ## 2026-09-03 — Registered AI reproducibility levels
 
 - Experimentmanifeste enthalten nun standardmäßig `ai_reproducibility: R0`.

@@ -4,6 +4,7 @@ from typing import Any
 from src.language_organ.bridge import LanguageOrgan
 from src.language_organ.null_backend import NullLanguageBackend
 from src.language_organ.protocols import LanguageRequest
+from src.language_organ.sham_backends import RandomLanguageOrgan, ReplayLanguageOrgan
 from src.research_assistant.ollama_backend import OllamaBackend
 from src.signal_processing.models import SignalFrame
 
@@ -17,6 +18,27 @@ def test_language_organ_is_disabled_by_default() -> None:
     assert response.success is False
     assert organ.status.enabled is False
     assert response.backend_name == "null"
+
+
+def test_random_language_sham_is_deterministic() -> None:
+    request = LanguageRequest("req-sham", "monitor", "state")
+    first = RandomLanguageOrgan(seed=7).infer(request)
+    second = RandomLanguageOrgan(seed=7).infer(request)
+    assert first.success is True
+    assert first.backend_name == "random_sham"
+    assert first.text == second.text
+
+
+def test_replay_language_sham_fails_closed_without_live_fallback() -> None:
+    request = LanguageRequest("req-replay", "monitor", "state")
+    digest = ReplayLanguageOrgan.request_digest(request)
+    backend = ReplayLanguageOrgan({digest: "replayed"})
+    response = backend.infer(request)
+    missing = backend.infer(LanguageRequest("other", "monitor", "state"))
+    assert response.success is True
+    assert response.text == "replayed"
+    assert missing.success is False
+    assert "No replay response" in (missing.error or "")
 
 
 def test_ollama_backend_implements_read_only_language_contract(
@@ -95,8 +117,10 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert metadata["done_reason"] == "stop"
     assert metadata["prompt_eval_count"] == 4
     assert metadata["eval_count"] == 2
-    assert len(metadata["request_digest"]) == 64
-    assert len(metadata["response_digest"]) == 64
+    request_digest = metadata["request_digest"]
+    response_digest = metadata["response_digest"]
+    assert isinstance(request_digest, str) and len(request_digest) == 64
+    assert isinstance(response_digest, str) and len(response_digest) == 64
 
 
 def test_ollama_inference_failure_is_audited(monkeypatch: Any) -> None:

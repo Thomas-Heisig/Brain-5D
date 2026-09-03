@@ -100,6 +100,9 @@ als unverified markiert.
 - AI-Beteiligung kann im Experimentmanifest mit einer validierten Stufe `R0` bis
 	`R3` registriert werden; die Stufe ist eine Klassifikation und ersetzt keinen
 	Twin-Run- oder Kontrollgruppen-Nachweis.
+- Für Language-Organ-Kontrollgruppen stehen nun ein deterministisches Random-Sham
+	und ein digestgebundenes Replay-Sham ohne Live-Fallback bereit; der bestehende
+	Null-Backend bleibt als deaktivierte Baseline erhalten.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
