@@ -30,6 +30,13 @@ from src.research_assistant.contracts import (
     AIReproducibility,
     CausalTaint,
 )
+from src.research_assistant.governance import (
+    DataPartition,
+    KnowledgeOrigin,
+    NetworkMode,
+    ResearchRunMode,
+    RetrievalRecord,
+)
 
 # ============================================================================
 # Fixtures
@@ -119,6 +126,33 @@ class TestRuntimeErrorsInManifest:
         assert manifest["validity"]["runtime_error_count"] == 0
         assert manifest["ai_exposure"] == "none"
         assert manifest["ai_reproducibility"] == "R0"
+
+    def test_recorder_separates_run_mode_and_data_partitions(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-MODE-0001", output_dir=tmp_experiment_dir)
+        recorder.record_research_run_mode(ResearchRunMode.CONFIRMATORY)
+        recorder.record_data_partition(DataPartition.SCIENTIFIC_HOLDOUT)
+        recorder.lock_confirmatory_run(
+            protocol={"hypothesis": "H1"},
+            prompt_digest="prompt-sha",
+            analysis_digest="analysis-sha",
+        )
+        assert recorder.manifest["research_run_mode"] == "CONFIRMATORY"
+        assert recorder.manifest["data_partitions"] == ["SCIENTIFIC_HOLDOUT"]
+        assert recorder.manifest["confirmatory_lock"]["locked"] is True
+
+    def test_recorder_makes_retrieval_provenance_visible(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-RETRIEVAL-0001", output_dir=tmp_experiment_dir)
+        recorder.record_retrieval(
+            RetrievalRecord(
+                enabled=True,
+                mode=NetworkMode.FROZEN_CORPUS,
+                snapshot_digest="corpus-sha",
+                source_count=1,
+                knowledge_origin=KnowledgeOrigin.EXTERNAL_RETRIEVAL,
+            )
+        )
+        assert recorder.manifest["retrieval"]["enabled"] is True
+        assert recorder.manifest["retrieval"]["snapshot_digest"] == "corpus-sha"
 
     def test_recorder_registers_ai_reproducibility_level(self, tmp_experiment_dir: Path) -> None:
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)

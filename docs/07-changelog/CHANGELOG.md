@@ -19,6 +19,9 @@
   Quellenversion, Trust-Klassifikation und Extraktionsmethode.
 - AI-Interaction-Records unterscheiden nun `LOGICAL_TIME` und `WALL_CLOCK` und
   können den Response-Anwendungstic explizit protokollieren.
+- Experiment-Manifeste unterscheiden `EXPLORATORY` und `CONFIRMATORY`, können
+  Confirmatory-Locks für Protocol-, Prompt- und Analyse-Digests speichern und
+  Retrieval-Provenienz sichtbar registrieren.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

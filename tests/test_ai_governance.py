@@ -8,15 +8,22 @@ from src.research_assistant.advisor import CognitiveAdvisor
 from src.research_assistant.contracts import AIClockMode, AIInteractionRecord
 from src.research_assistant.gateways import InterventionGateway, MemoryWriteGateway
 from src.research_assistant.governance import (
+    ConfirmatoryRunLock,
+    DataPartition,
     KnowledgeOrigin,
     NetworkMode,
     PreregistrationLock,
     PromptRegistry,
     RetrievalRecord,
     VersionedPrompt,
+    validate_data_partition,
     validate_network_mode,
 )
 from src.research_assistant.models import AIAnalysisRecord, ResearchPacket
+from src.research_assistant.statistics import (
+    require_statistics_engine_artifact,
+    summarize,
+)
 
 
 def test_prompt_registry_rejects_changed_content_at_same_version() -> None:
@@ -148,3 +155,35 @@ def test_ai_interaction_records_clock_mode_and_application_tick() -> None:
     )
     assert record.to_dict()["clock_mode"] == "WALL_CLOCK"
     assert record.to_dict()["response_application_tick"] == 4
+
+
+def test_confirmatory_lock_rejects_protocol_prompt_or_analysis_changes() -> None:
+    lock = ConfirmatoryRunLock.create(
+        protocol={"hypothesis": "H1"},
+        prompt_digest="prompt-sha",
+        analysis_digest="analysis-sha",
+    )
+    lock.validate(
+        protocol={"hypothesis": "H1"},
+        prompt_digest="prompt-sha",
+        analysis_digest="analysis-sha",
+    )
+    with pytest.raises(ValueError, match="rejects"):
+        lock.validate(
+            protocol={"hypothesis": "H2"},
+            prompt_digest="prompt-sha",
+            analysis_digest="analysis-sha",
+        )
+
+
+def test_scientific_runs_reject_development_partition() -> None:
+    validate_data_partition(DataPartition.SCIENTIFIC_HOLDOUT, scientific_run=True)
+    with pytest.raises(ValueError, match="DEVELOPMENT"):
+        validate_data_partition(DataPartition.DEVELOPMENT, scientific_run=True)
+
+
+def test_quantitative_results_require_statistics_engine_provenance() -> None:
+    summary = summarize([1.0, 2.0, 3.0])
+    require_statistics_engine_artifact(summary)
+    with pytest.raises(ValueError, match="Statistics Engine"):
+        require_statistics_engine_artifact({"mean": 2.0})

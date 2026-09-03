@@ -22,6 +22,12 @@ from src.research_assistant.contracts import (
     AIReproducibility,
     CausalTaint,
 )
+from src.research_assistant.governance import (
+    ConfirmatoryRunLock,
+    DataPartition,
+    ResearchRunMode,
+    RetrievalRecord,
+)
 
 from .registry import REPO_ROOT
 
@@ -159,6 +165,8 @@ class ExperimentRecorder:
                 "fatal_error_count": 0,
             },
             "runtime_errors": [],
+            "research_run_mode": ResearchRunMode.EXPLORATORY.value,
+            "data_partitions": [],
         }
 
     def record_config(self, config_path: str, sha256: str = "") -> ExperimentRecorder:
@@ -248,6 +256,46 @@ class ExperimentRecorder:
             "protocol_id": protocol_id,
             "registered": registered,
             "mode": mode,
+        }
+        return self
+
+    def record_research_run_mode(self, mode: ResearchRunMode | str) -> ExperimentRecorder:
+        """Declare exploratory or confirmatory protocol handling."""
+        self._manifest["research_run_mode"] = ResearchRunMode(mode).value
+        return self
+
+    def record_data_partition(self, partition: DataPartition | str) -> ExperimentRecorder:
+        """Record a data partition used by this run."""
+        normalized = DataPartition(partition).value
+        partitions = cast(list[str], self._manifest["data_partitions"])
+        if normalized not in partitions:
+            partitions.append(normalized)
+        return self
+
+    def record_retrieval(self, retrieval: RetrievalRecord) -> ExperimentRecorder:
+        """Record explicit retrieval state so knowledge use is never implicit."""
+        self._manifest["retrieval"] = retrieval.to_dict()
+        return self
+
+    def lock_confirmatory_run(
+        self,
+        *,
+        protocol: dict[str, object],
+        prompt_digest: str,
+        analysis_digest: str,
+    ) -> ExperimentRecorder:
+        """Attach an immutable lock and switch this manifest to confirmatory mode."""
+        lock = ConfirmatoryRunLock.create(
+            protocol=protocol,
+            prompt_digest=prompt_digest,
+            analysis_digest=analysis_digest,
+        )
+        self._manifest["research_run_mode"] = ResearchRunMode.CONFIRMATORY.value
+        self._manifest["confirmatory_lock"] = {
+            "protocol_digest": lock.protocol_digest,
+            "prompt_digest": lock.prompt_digest,
+            "analysis_digest": lock.analysis_digest,
+            "locked": lock.locked,
         }
         return self
 

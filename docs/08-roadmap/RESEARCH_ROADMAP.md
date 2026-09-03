@@ -52,6 +52,8 @@ Evidenz für Lernwirkung.
 	tragen erweiterte zeitliche und quellenbezogene Provenienz.
 - Asynchrone AI-Interaktionen tragen nun explizite Zeitsemantik und einen
 	Anwendungstic für reproduzierbare Laufprotokolle.
+- Experiment-Manifesten stehen nun getrennte Exploratory-/Confirmatory-Modi,
+	Confirmatory-Digest-Locks und sichtbare Retrieval-Provenienz zur Verfügung.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
