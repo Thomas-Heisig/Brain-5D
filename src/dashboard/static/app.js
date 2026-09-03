@@ -208,7 +208,6 @@ function setupTabs() {
       }
       if (tabName === 'research' && !initialized.research) {
         initResearchBrowser();
-        initResearchChat();
         initDocumentationBrowser();
         instances.experimentWorkflow = new ExperimentWorkflowPanel();
         instances.experimentWorkflow.refresh();
@@ -231,6 +230,7 @@ function setupTabs() {
   if (firstTab) {
     firstTab.click();
   }
+  initResearchChat();
 
   return instances;
 }

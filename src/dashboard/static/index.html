@@ -26,6 +26,7 @@
       <button id="theme-toggle" class="icon-btn" title="Dark / Light" aria-label="Dark oder Light Mode">◐</button>
       <button id="contrast-toggle" class="icon-btn" title="Kontrastmodus" aria-label="Kontrastmodus">◩</button>
       <button id="accessibility-toggle" class="icon-btn" title="Größere Bedienelemente" aria-label="Barrierearme Darstellung">A+</button>
+      <button id="chat-toggle" class="multifunction-btn" title="Research Chat öffnen" aria-label="Research Chat öffnen">✦ CHAT</button>
     </div>
   </header>
 
@@ -668,12 +669,6 @@
         <button type="button" data-research-source="research" data-research-query="MATRIX">Matrices</button>
         <button type="button" data-research-source="docs" data-research-query="">Documentation</button>
       </nav>
-      <section class="research-chat" id="research-chat" aria-label="Research AI chat">
-        <header><div><span class="workspace-kicker">SELF-KNOWLEDGE</span><h3>Research Assistant</h3><p>Research und Dokumentation als lesender Kontext</p></div><span class="ai-badge">AI GENERATED</span></header>
-        <div class="research-chat-log" id="research-chat-log" aria-live="polite"><p class="chat-empty">Stelle eine Frage zu Research, Dokumentation oder registrierten Experimenten.</p></div>
-        <form class="research-chat-form" id="research-chat-form"><label for="research-chat-input">Frage</label><textarea id="research-chat-input" rows="2" maxlength="4000" placeholder="Was ist der aktuelle Evidenzstatus von EXP-EMB-0001?"></textarea><button type="submit" class="btn-primary">Frage senden</button></form>
-        <p class="research-chat-note">Der Chat liest Research und Docs. Experimente werden nur über einen bestätigten, strukturierten Workflow ausgeführt.</p>
-      </section>
       <section class="experiment-workflow" id="experiment-workflow" aria-label="Experiment Runner">
         <header class="experiment-workflow-header">
           <div><span class="workspace-kicker">CONTROLLED RUN</span><h3>Experiment Runner</h3></div>
@@ -861,6 +856,21 @@
       <!-- Health bar is rendered here by health-drawer.js -->
     </div>
   </footer>
+
+  <section class="research-chat-modal" id="research-chat" hidden aria-label="Research AI chat" role="dialog" aria-modal="true" aria-labelledby="research-chat-title">
+    <div class="research-chat-dialog">
+      <aside class="chat-rooms">
+        <div class="chat-rooms-header"><span>CHAT ROOMS</span><button id="chat-room-new" class="icon-btn" type="button" title="Neuen Chatraum erstellen" aria-label="Neuen Chatraum erstellen">+</button></div>
+        <div id="chat-room-list" class="chat-room-list"></div>
+      </aside>
+      <div class="research-chat-panel">
+        <header class="research-chat-header"><div><span class="workspace-kicker">SELF-KNOWLEDGE</span><h2 id="research-chat-title">Research Assistant</h2><p>Research und Dokumentation als lesender Kontext</p></div><div class="chat-header-actions"><span class="ai-badge">AI GENERATED</span><button id="chat-close" class="modal-close" type="button" title="Chat schließen" aria-label="Chat schließen">&times;</button></div></header>
+        <div class="research-chat-log" id="research-chat-log" aria-live="polite"></div>
+        <form class="research-chat-form" id="research-chat-form"><label for="research-chat-input">Frage</label><textarea id="research-chat-input" rows="2" maxlength="4000" placeholder="Was ist der aktuelle Evidenzstatus von EXP-EMB-0001?"></textarea><button type="submit" class="btn-primary">Frage senden</button></form>
+        <p class="research-chat-note">Der Chat liest Research und Docs. Experimente werden nur über einen bestätigten, strukturierten Workflow ausgeführt.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
