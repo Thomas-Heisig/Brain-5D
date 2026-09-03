@@ -46,12 +46,12 @@
 
 ### P1 — Prompt-, Daten- und Netzwerkdisziplin
 
-- [ ] Versionierte Prompt Registry unter `research/prompts/` mit eingefrorenen Prompt-Dateien und Protocol-Digests einführen
-- [ ] Preregistration Lock für Forschungsfrage, Hypothesen, Metriken, Stichprobe, Seeds, Stopping Rule, Analyse und Ausschlussregeln implementieren
+- [x] Versionierte Prompt Registry unter `research/prompts/` mit eingefrorenen Prompt-Dateien und Protocol-Digests einführen
+- [x] Preregistration Lock für Forschungsfrage, Hypothesen, Metriken, Stichprobe, Seeds, Stopping Rule, Analyse und Ausschlussregeln implementieren
 - [ ] Exploratory und Confirmatory AI-Modus technisch und im Dashboard trennen
 - [ ] Confirmatory Runs gegen nachträgliche Hypothesen-, Prompt- und Analyseänderungen sperren
 - [ ] Development-, Validation- und Scientific-Holdout-Daten strikt trennen und AI-/Gold-Label-Leakage testen
-- [ ] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
+- [x] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
 - [ ] Quantitative Statistik ausschließlich durch die deterministische Statistics Engine erzeugen; LLM darf Zahlen nur interpretieren
 - [ ] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
 - [ ] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern

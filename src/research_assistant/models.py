@@ -89,6 +89,7 @@ class AIAnalysisRecord:
                 "prompt_protocol_version": "research_assistant_v1",
                 "assistant_schema_version": "1",
                 "git_commit": packet.provenance.get("git_commit", "unknown"),
+                "model_self_confidence": str(float(output["confidence"])),
             },
             review={
                 "status": "pending",

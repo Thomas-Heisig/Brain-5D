@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — P1 AI governance contracts
+
+- Eingefrorene Prompt-Dateien unter `research/prompts/` werden per
+  Protocol-Digest geladen und gegen Änderungen geschützt.
+- `PreregistrationLock` sperrt Hypothesen-, Metrik-, Seed- und Analyseinhalte
+  nach der Registrierung gegen stille Änderungen.
+- AI-Selbstvertrauen wird als `model_self_confidence` separat von empirischer
+  Kalibrierung und Brier/ECE-Metriken protokolliert.
+
 ## 2026-09-03 — Non-executing AI shadow mode
 
 - `ShadowMode` erzeugt digest-basierte Observation-, Interpretation- und Proposal-Contracts.

@@ -22,6 +22,15 @@ from .contracts import (
     Proposal,
 )
 from .firewall import AIAuthority, AIFirewallViolation, AIResource, ScientificAIFirewall
+from .governance import (
+    KnowledgeOrigin,
+    NetworkMode,
+    PreregistrationLock,
+    PromptRegistry,
+    RetrievalRecord,
+    VersionedPrompt,
+    validate_network_mode,
+)
 from .models import AIAnalysisRecord, ResearchPacket
 from .observation_stream import (
     ObservationStream,
@@ -42,6 +51,13 @@ __all__ = [
     "AIAuthority",
     "AIFirewallViolation",
     "AIResource",
+    "KnowledgeOrigin",
+    "NetworkMode",
+    "PreregistrationLock",
+    "PromptRegistry",
+    "RetrievalRecord",
+    "VersionedPrompt",
+    "validate_network_mode",
     "AIExposure",
         "AIInferenceFailureEvent",
     "AIInteractionRecord",

@@ -38,6 +38,11 @@ Evidenz für Lernwirkung.
 
 ## AI Research Track
 
+- P1-Governance-Verträge sichern nun eingefrorene Prompt-Digests,
+  Preregistration-Locks und die getrennte Kennzeichnung von
+  `model_self_confidence`. Diese technischen Sicherungen sind keine
+  wissenschaftlichen Ergebnisse.
+
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
 
