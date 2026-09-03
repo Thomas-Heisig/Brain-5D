@@ -20,6 +20,7 @@ from src.research_assistant.governance import (
     validate_data_leakage,
     validate_data_partition,
     validate_network_mode,
+    validate_version_bump_contract,
 )
 from src.research_assistant.models import AIAnalysisRecord, ResearchPacket
 from src.research_assistant.statistics import (
@@ -209,6 +210,28 @@ def test_quantitative_results_require_statistics_engine_provenance() -> None:
     require_statistics_engine_artifact(summary)
     with pytest.raises(ValueError, match="Statistics Engine"):
         require_statistics_engine_artifact({"mean": 2.0})
+
+
+def test_version_bump_contract_requires_reason_for_changed_components() -> None:
+    manifest = {
+        "version_bumps": {
+            "prompt": {"version": 2, "bump_reason": "revise analysis instructions"},
+            "model": {"version": 3, "bump_reason": "upgrade frozen model"},
+            "treatment": {"version": 2, "bump_reason": "add sham control"},
+            "statistics": {"version": 4, "bump_reason": "change estimator"},
+        }
+    }
+    validate_version_bump_contract(manifest, {"prompt", "model", "treatment", "statistics"})
+    with pytest.raises(ValueError, match="Missing version bump for model"):
+        validate_version_bump_contract(
+            {"version_bumps": {"prompt": manifest["version_bumps"]["prompt"]}},
+            {"prompt", "model"},
+        )
+    with pytest.raises(ValueError, match="reason.*must not be empty"):
+        validate_version_bump_contract(
+            {"version_bumps": {"statistics": {"version": 2, "bump_reason": ""}}},
+            {"statistics"},
+        )
 
 
 def test_data_leakage_validator_rejects_overlap_and_holdout_labels() -> None:

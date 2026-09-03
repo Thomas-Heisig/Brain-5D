@@ -76,6 +76,8 @@ Evidenz für Lernwirkung.
 - Quantitative AIRR-Ergebnisse stammen nun ausschließlich aus validierten
 	deterministischen Statistics-Engine-Artefakten; reservierte Statistikfelder
 	in Modellantworten werden fail-closed abgewiesen.
+- Der Scientific Integrity Gate erzwingt für geänderte Prompt-, Modell-,
+	Treatment- und Statistikkomponenten positive Versionen mit Änderungsgrund.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

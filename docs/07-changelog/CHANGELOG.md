@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Version bump contract in CI
+
+- Der Scientific Integrity Gate validiert nun positive Versionen und
+  nichtleere Änderungsgründe für geänderte Prompt-, Modell-, Treatment- und
+  Statistikkomponenten in Experimentmanifesten.
+
 ## 2026-09-03 — Deterministic statistics boundary
 
 - AIRR-Modelle dürfen keine reservierten quantitativen Ergebnisfelder mehr

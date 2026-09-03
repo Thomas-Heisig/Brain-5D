@@ -53,6 +53,33 @@ class KnowledgeOrigin(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
+VERSIONED_AI_COMPONENTS = frozenset({"prompt", "model", "treatment", "statistics"})
+
+
+def validate_version_bump_contract(
+    manifest: Mapping[str, object], changed_components: set[str]
+) -> None:
+    """Require version and rationale for every changed AI research component."""
+    unknown = changed_components - VERSIONED_AI_COMPONENTS
+    if unknown:
+        raise ValueError(f"Unsupported versioned AI components: {sorted(unknown)}")
+    if not changed_components:
+        return
+    raw_bumps = manifest.get("version_bumps")
+    if not isinstance(raw_bumps, Mapping):
+        raise ValueError("Manifest requires version_bumps for changed AI components")
+    for component in sorted(changed_components):
+        bump = raw_bumps.get(component)
+        if not isinstance(bump, Mapping):
+            raise ValueError(f"Missing version bump for {component}")
+        version = bump.get("version")
+        reason = bump.get("bump_reason")
+        if not isinstance(version, int) or isinstance(version, bool) or version < 1:
+            raise ValueError(f"Version bump for {component} must be positive")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f"Version bump reason for {component} must not be empty")
+
+
 @dataclass(frozen=True, slots=True)
 class VersionedPrompt:
     """An immutable prompt with a protocol version and canonical digest."""
