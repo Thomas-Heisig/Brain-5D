@@ -1894,6 +1894,8 @@ body .footer-segment {
 }
 
 .runtime-clock-panel { margin: 9px 0 0; padding: 8px 10px; border: 1px solid rgba(102, 170, 181, .25); background: rgba(5, 22, 32, .48); }
+.organism-core > .runtime-clock-panel { z-index: 5; position: relative; flex: 0 0 auto; width: min(84%, 560px); margin: 16px 0 0; }
+.organism-core > .brain5d-being { flex: 0 1 auto; max-height: min(62%, 360px); }
 .runtime-clock-panel > header, .runtime-clock-readout { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .runtime-clock-panel > header > div { min-width: 0; }
 .runtime-clock-panel h3 { margin: 2px 0 0; font-size: 10px; }
@@ -2125,8 +2127,11 @@ body .footer-segment {
 
 .organism-core {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 28px;
   min-width: 0;
   min-height: 0;
   margin: 0;
@@ -2241,12 +2246,11 @@ body .footer-segment {
 
 .organism-core figcaption {
   z-index: 3;
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
+  position: relative;
   display: grid;
   width: min(82%, 560px);
-  transform: translateX(-50%);
+  flex: 0 0 auto;
+  margin: 12px 0 0;
   color: #8199a7;
   font-family: var(--font-mono);
   font-size: 8px;

@@ -965,6 +965,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "compute_saturation": runtime.compute_saturation,
                 "runtime_mode": runtime.runtime_mode,
                 "tick_profile": runtime.tick_profile,
+                "max_possible_hz": runtime.max_possible_hz,
             })
         environment_kind = embodiment.environment_kind
         configured = environment_kind != "unconfigured"

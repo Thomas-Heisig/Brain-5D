@@ -30,16 +30,29 @@ function initRuntimeClockControl() {
   if (!control || control.dataset.bound === "true") return;
   control.dataset.bound = "true";
   control.addEventListener("click", (event) => event.stopPropagation());
-  control.addEventListener("input", async () => {
+  control.addEventListener("input", () => {
     const target = CLOCK_TARGETS[Number(control.value)];
     setText("runtime-clock-target-value", target === "MAX" ? "MAX" : `${target.toLocaleString()} Hz`);
+    control.dataset.pendingTarget = target === "MAX" ? "MAX" : String(target);
+  });
+  control.addEventListener("change", async () => {
+    const target = CLOCK_TARGETS[Number(control.value)];
+    control.dataset.pendingTarget = target === "MAX" ? "MAX" : String(target);
     try {
-      await fetch("/api/control", {
+      const response = await fetch("/api/control", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ command: "configure", target_hz: target }),
       });
-    } catch { /* the next state refresh reports the current value */ }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (control.dataset.pendingTarget === (target === "MAX" ? "MAX" : String(target))) {
+        delete control.dataset.pendingTarget;
+      }
+    } catch {
+      if (control.dataset.pendingTarget === (target === "MAX" ? "MAX" : String(target))) {
+        delete control.dataset.pendingTarget;
+      }
+    }
   });
 }
 
@@ -300,14 +313,28 @@ export function renderWorkspaceSummaries(state) {
   const targetHz = runtimeClock.target_hz;
   const targetIndex = targetHz == null ? CLOCK_TARGETS.length - 1 : CLOCK_TARGETS.indexOf(Number(targetHz));
   const clockControl = byId("runtime-clock-target");
-  if (clockControl && targetIndex >= 0) clockControl.value = String(targetIndex);
-  setText("runtime-clock-target-value", targetHz == null ? "MAX" : `${formatNumber(targetHz)} Hz`);
+  const pendingTarget = clockControl?.dataset.pendingTarget;
+  const pendingIndex = pendingTarget === "MAX"
+    ? CLOCK_TARGETS.length - 1
+    : CLOCK_TARGETS.indexOf(Number(pendingTarget));
+  if (clockControl && pendingIndex >= 0) {
+    clockControl.value = String(pendingIndex);
+    setText("runtime-clock-target-value", pendingTarget === "MAX" ? "MAX" : `${formatNumber(pendingTarget)} Hz`);
+  } else {
+    if (clockControl && targetIndex >= 0) clockControl.value = String(targetIndex);
+    setText("runtime-clock-target-value", targetHz == null ? "MAX" : `${formatNumber(targetHz)} Hz`);
+  }
   setText("runtime-clock-achieved", formatFixed(runtimeClock.achieved_hz, 1, " Hz"));
   setText("runtime-clock-ratio", formatFixed(runtimeClock.simulation_speed_ratio, 3, " × realtime"));
   setText("runtime-clock-latency", formatFixed(runtimeClock.tick_latency_ms, 2, " ms"));
+  setText("runtime-clock-max", formatFixed(runtimeClock.max_possible_hz, 1, " Hz"));
+  setText("runtime-clock-load", formatFixed(Number(runtimeClock.compute_saturation) * 100, 0, " %"));
   setText("runtime-clock-jitter", formatFixed(runtimeClock.jitter_ms, 2, " ms"));
   setText("runtime-clock-status", runtimeClock.runtime_mode || "—");
   setText("runtime-clock-mode", runtimeClock.runtime_mode || "MAX");
+  const profile = runtimeClock.tick_profile || {};
+  const topPhase = Object.entries(profile).sort((left, right) => Number(right[1]) - Number(left[1]))[0];
+  setText("runtime-clock-phase", topPhase ? `${topPhase[0]} ${Number(topPhase[1]).toFixed(2)} ms` : "—");
   setText("embodiment-action-detail", embodiment.last_action || "—");
   setText("embodiment-sensor-state", sensors > 0 ? `${sensors} active` : "Not connected");
   setText("embodiment-actuator-state", actuators > 0 ? `${actuators} active` : "Not connected");

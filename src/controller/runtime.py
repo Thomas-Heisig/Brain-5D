@@ -164,6 +164,7 @@ class RuntimeTelemetry:
     compute_saturation: float = 0.0
     runtime_mode: str = "MAX"
     tick_profile: dict[str, float] | None = None
+    max_possible_hz: float | None = None
 
     def to_dict(self) -> dict[str, int | float | str | None]:
         """Convert to dictionary for JSON serialization."""
@@ -186,6 +187,7 @@ class RuntimeTelemetry:
             "compute_saturation": self.compute_saturation,
             "runtime_mode": self.runtime_mode,
             "tick_profile": self.tick_profile,
+            "max_possible_hz": self.max_possible_hz,
         }
 
     def to_json(self) -> dict[str, int | float | str | None]:
@@ -651,6 +653,7 @@ class RuntimeController:
                     compute_saturation=old.compute_saturation,
                     runtime_mode=old.runtime_mode,
                     tick_profile=old.tick_profile,
+                    max_possible_hz=old.max_possible_hz,
                 )
 
             # Notify error callbacks
@@ -756,6 +759,7 @@ class RuntimeController:
             else min(1.0, target / max(tps, 0.001))
         )
         mode = "MAX" if target is None else ("COMPUTE LIMITED" if tps < target * 0.98 else "TARGETED")
+        max_possible_hz = 1000.0 / latency if latency > 0 else None
 
         return RuntimeTelemetry(
             tick=self.network.current_tick,
@@ -775,6 +779,7 @@ class RuntimeController:
             compute_saturation=saturation,
             runtime_mode=mode,
             tick_profile=dict(self._phase_totals_ms),
+            max_possible_hz=max_possible_hz,
         )
 
     # ========================================================================
