@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Learning report recovery
+
+- Regenerated the missing AIRR and AIAR outputs for `EXP-LEARN-20260903-2330`.
+- Updated its experiment-local `summary.md` with all stored artifacts and the post-hoc assessment.
+- Ollama confidence values are normalized conservatively when a local model returns them as invalid text.
+
 ## 2026-09-03 — Ten-seed learning loop replication
 
 - Published `EXP-LEARN-20260903-2330` through the Dashboard workflow with

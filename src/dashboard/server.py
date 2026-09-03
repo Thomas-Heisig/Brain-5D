@@ -1989,7 +1989,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             )
             return
         report = AIRRPipeline(source.root()).analyze(experiment_id, backend)
-        self._send_json(report.to_dict(), HTTPStatus.CREATED)
+        ai_result: dict[str, object] = {
+            "status": "generated",
+            "report_id": report.report_id,
+            "json": f"experiments/{experiment_id}/reports/{report.report_id}.json",
+            "markdown": f"experiments/{experiment_id}/reports/{report.report_id}.md",
+            "human_review": "PENDING",
+            "scientific_evidence": False,
+        }
+        summary_path = write_experiment_summary(source.root(), experiment_id, ai_result)
+        response = report.to_dict()
+        response["summary"] = summary_path
+        self._send_json(response, HTTPStatus.CREATED)
 
     def _research_chat(self, body: dict[str, object]) -> None:
         source = self._require_research_source()

@@ -233,7 +233,7 @@ def _parse_json_object(text: str) -> dict[str, Any]:
         except json.JSONDecodeError:
             output_raw = None
         if isinstance(output_raw, dict):
-            return cast(dict[str, Any], output_raw)
+            return _normalize_analysis_output(cast(dict[str, Any], output_raw))
         for index, character in enumerate(candidate):
             if character != "{":
                 continue
@@ -242,8 +242,21 @@ def _parse_json_object(text: str) -> dict[str, Any]:
             except json.JSONDecodeError:
                 continue
             if isinstance(output_raw, dict):
-                return cast(dict[str, Any], output_raw)
+                return _normalize_analysis_output(cast(dict[str, Any], output_raw))
     raise ValueError("Ollama output must contain a JSON object.")
+
+
+def _normalize_analysis_output(output: dict[str, Any]) -> dict[str, Any]:
+    """Normalize numeric fields that local models occasionally quote as text."""
+    confidence = output.get("confidence")
+    if isinstance(confidence, str):
+        try:
+            output["confidence"] = float(confidence.strip())
+        except ValueError:
+            output["confidence"] = 0.0
+    elif not isinstance(confidence, (int, float)):
+        output["confidence"] = 0.0
+    return output
 
 
 def _request_prompt(request: LanguageRequest) -> str:
