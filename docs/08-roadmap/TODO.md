@@ -134,9 +134,11 @@
 ### Alpha.8 — Adaptive Self-Regulation & Morphology
 
 - [x] `NetworkImpulseProbe` und `NetworkResponseSignature` als kontrollierte,
-  beobachtbare Impulsantwort-Messung implementieren
+  beobachtbare Impulsantwort-Messung implementieren; Rekurrenz und
+  Selbstreflexion daraus nicht ableiten
 - [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
-  Referenzzustände ohne Runtime-Zurückspulen implementieren
+  Referenzzustände ohne Runtime-Zurückspulen implementieren; Digest- und
+  Metrikänderungen bleiben getrennte Beobachtungen
 - [x] Neue Loopback-, Self-Model- und Alpha.8-Foki im Research-Dashboard sichtbar machen
 - [x] Dashboard-Grundlayout an die Embodiment-Anatomie angleichen, Network vollständig
   aus der sichtbaren Oberfläche entfernen und Aktivität/Spikes als Footer-Balken zeigen
