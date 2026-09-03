@@ -141,9 +141,9 @@ Brain-5D/
 
 | Resource | Description |
 |----------|-------------|
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Development roadmap and milestones |
-| [docs/changelog.md](docs/changelog.md) | Detailed changelog |
-| [docs/todo.md](docs/todo.md) | Current TODO and gate status |
+| [docs/08-roadmap/ROADMAP.md](docs/08-roadmap/ROADMAP.md) | Development roadmap and milestones |
+| [docs/07-changelog/CHANGELOG.md](docs/07-changelog/CHANGELOG.md) | Detailed changelog |
+| [docs/08-roadmap/TODO.md](docs/08-roadmap/TODO.md) | Current TODO and gate status |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture documentation |
 | [docs/B5D_FORMAT.md](docs/B5D_FORMAT.md) | `.b5d` snapshot format specification |
 | [research/README.md](research/README.md) | Scientific evidence framework |

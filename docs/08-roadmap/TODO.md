@@ -1,268 +1,77 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-09-02
->
-> Infrastructure: Hugging Face Repository vorbereitet (HF_README.md,
-> .gitattributes LFS, .huggingface/ metadata, Space-Konfiguration,
-> GitHub→HF Sync Workflow).
-> Verification basis:
->   Current verification → tests/test_baseline.json (tree-digest authority)
->   **Historical Alpha.6 baseline (2026-09-01): 489 passed / 5 skipped / 0 failed**
->   at final source-freeze commit `3025e68...`, digest `90439f88...`.
->   **Current development version**: v0.5.0-alpha.7 / 0.5.0a7.
->   Alpha.6 scientific gate: PASSED; Continuous Integration #145/#147/#148:
->   PASSED; release readiness: READY.
->   **A/B/C restore artifact verified** (`A == B == C`).
->   Evidence scope digests are implemented for new scoped artifacts; legacy
->   artifacts continue to use the global source-tree digest as a compatibility
->   fallback. The Gate Builder validates matching scopes independently.
->   Runtime start stabilized: UTF-8 console reconfiguration and corrupt
->   delta-journal recovery in `src/main.py`.
+> Last updated: 2026-09-03
+> Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
+> Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
+> reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
 
-## Priorität 0 — Alpha.7 Embodiment Foundation & Safe Environment I/O
+## ENGINEERING
 
-- [x] Alpha.6 historical boundary fixed at closure commit `8fac75d` and tag `v0.5.0-alpha.6`
-- [x] Alpha.6 immutable release manifest with source/evidence/closure provenance
-- [x] Alpha.7 version line and release registry opened
-- [x] Read-only Embodiment and connection discovery foundation
-- [x] Controlled Research Experiment Runner with registry validation and per-run reports in `research/experiments/EXP-*/`
-- [x] Keep optional Ollama assistance outside the experimental causal path and prohibit it as execution input or evidence
-- [x] Connect `OllamaBackend` to the read-only `LanguageModelBackend` contract; immutable request data only, no runtime/configuration/mutation/execution/evidence authority
-- [x] Run `EXP-STDP-0001` as pilot: registered pair-timing protocol -> `DATA-2026-17`; no EVID created because its source tree was dirty and repeats were deterministic checks, not independent runs
-- [x] Re-run currently executable research checks on 2026-09-02: focused protocols `35 passed, 1 skipped`; full suite with large storage checks `544 passed, 3 skipped`
-- [x] Run the maximum current runtime stability slice: `1000` ticks with STDP and homeostasis completed without runtime errors; propagation recorded 1 direct spike, 0 secondary recruits and no output reach
-- [x] Extend `RuntimeController.run_ticks()` beyond the current 1000-tick guard before treating the registered 100000-tick stability experiment as executable
-- [ ] Re-run Alpha.5 evidence publication on a clean source tree; the test itself passed but the runner rejected EVID creation because `git.dirty == true`
-- [ ] Implement `EXP-STDP-0002` on the productive `NeuralNetwork -> LearningEngine -> real Synapse` path with clean source freeze and independent runs before evaluating `RQ-STDP-001`
-- [ ] Evaluate `RQ-AIR-001`: benchmark the Scientific Research Assistant on controlled methodological defects before relying on its review proposals
-- [x] Register `RQ-AIR-001`, `H-AIR-001-A` and `CLAIM-AIR-001`; add the held-out 30-case `AIR-METHODOLOGY-GOLD-V1` dataset
-- [x] Pre-register `EXP-AIR-0001`: structured vs. unstructured input, blinded scoring, 3 repetitions per case/condition, precision/recall/F1/specificity/FPR/calibration metrics
-- [ ] Do not execute `EXP-AIR-0001` until this development tree is committed, pushed, externally CI-green and frozen to an exact SHA
-- [x] Verify effective `poc_alpha5_live.yaml` after restart: STDP, Eligibility and Reward reach LearningEngine; `/api/config` exposes absolute path and SHA-256
-- [x] Expose Learning Engine, STDP, Eligibility, Reward and measured STDP/Reward weight-update counters separately; `enabled` or `armed` is not displayed as proof of learning
-- [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
-- [x] Define and validate orthogonal state identity (`operator` / `experiment` / `dev`) and observability (`full` / `scientific` / `minimal` / `compute`) axes
-- [x] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
-  - Core-Emitter, Strukturmutationen, STDP/Reward-Gewichte und Homeostasis-
-    Direktmutationen emittieren Dirty-IDs; Storage nutzt sie mit sicherem Scan-
-    Fallback. Die Performance-Umstellung bleibt separat offen.
-- [x] First deterministic EnvironmentAdapter integrated end-to-end (`DeterministicTargetEnvironment`)
-- [x] Explicit actuator authorization enforced before adapter execution
-- [x] Per-adapter capability and rate limits enforced
-- [x] Hash-linked immutable action audit trail implemented
-- [x] Emergency stop and human override enforced below policy execution
-- [x] Embodiment anatomy separates sensory inputs, neural database, inner states and actionable extremities; rendering remains telemetry-driven
-- [x] Read-only detail popups expose the actual fields of anatomy groups, system sources, loop adapters and connection descriptors; missing fields stay explicitly unimplemented
-- [x] EnvironmentObservation feedback fields are available in EmbodimentMetrics; publishing live self-sensing remains open until real sensor/actuator adapters provide it
-- [x] MetricAggregator accepts published embodiment observations for runtime snapshot integration
-- [x] Full-stack embodiment pipeline connects SensorFrame -> encoder -> SNN -> decoder -> controlled actuator -> EnvironmentObservation feedback
-- [x] Experience Engine v0 routes accepted environment feedback to LearningEngine; deterministic provider and safety-boundary tests documented in `docs/06-research/ExperienceEngine_v0.md`
-- [x] SystemSensorAdapter contract added with injectable provider; live host metrics remain opt-in and are not scientific evidence
-- [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
-- [x] Integrate Experience Engine with the canonical runtime hook and preregister `EXP-EMB-0001`; execution remains gated by clean source freeze
-- [x] Add explicit fail-closed Experience composition for the canonical runtime; default operator profile remains disabled and deterministic traces are supported
-- [x] Embodiment pipeline stages expose validated in-element enable switches through the dashboard API
-- [x] Apply Embodiment stage switches inside the runtime pipeline with fail-closed execution
-- [x] Redraw the Wesen visual as a bilateral-symmetric body: paired senses, central neural database, paired extremities
-- [x] Give every visible Embodiment node an explicit visible label and honest hover description
+### Alpha.7 — Controlled Experience & Learning Loop
 
-## Alpha.6 Phase B Evidence Freeze (released)
+- [ ] Produktiven Lernpfad instrumentieren: Input, Pre/Post, LearningEngine, reale Synapse
+- [ ] Gewicht `weight_before` / `weight_after` und Lernstatistiken pro Lauf erfassen
+- [ ] Deterministisches Environment für wiederholbare Wahrnehmungs-Handlungs-Zyklen verwenden
+- [ ] Audio/Vision nicht als Alpha.7-Kernabhängigkeit behandeln
 
-- [x] Source freeze `f1c4df8...` against successful Continuous Integration #141
-- [x] Canonical baseline regenerated without production-source changes
-- [x] Restore Determinism A/B/C regenerated and verified
-- [x] Structural E2E and Structural Live Loop regenerated and verified
-- [x] Single-Listener / Runtime integration regenerated and verified
-- [x] Determinism Infrastructure regenerated: 7/7 proofs
-- [x] EXP-DET-0001 / EXP-STOR-0001 rerun as DATA-2026-15/16 and EVID-2026-15/16
-- [x] Claims, hypotheses, evidence links, manifests, registry, and research routes validated
-- [x] Gate status regenerated: A 22/22, B 24/24, C 17/17; scientific gate PASSED
-- [x] Freeze reopened for dashboard/runtime fixes; release-readiness test now follows the actual scientific-gate result
-- [x] Dashboard browser acceptance: version alpha.6, real network values, Health ok, Problems empty, Storage healthy
-- [x] OVERVIEW als responsive Operator-Zentrale: Status-Rail, Live-Dynamik, Komponenten, Problems und Bereichsnavigation
-- [x] NETWORK, CONTROL, RESEARCH und RELEASE als konsistente Workbenches mit realen Bereichsstatus ausbauen
-- [x] CONTROL kausal ordnen: Experimentziel → Ursache → Ausführung → Wirkung → Nachweis; aktuelle RuntimeTelemetry anzeigen
-- [x] CONTROL auf 1080p verdichten: Console priorisieren, Structural Live Loop als Leiste, Footer mit aktivem Experiment
-- [x] Alle Tabs auf stabile Control-Größe bringen; Network/Release in Unteransichten und Research in logische Schnellzugriffe gliedern
-- [x] SCIENTIFIC SETTINGS als eigene Seite: Parameterdomänen, Sensitivität, Mutability, Restart/Pending und Experimentmodus
-- [x] Einheitliches 1080p-Design für alle Seiten mit Back/Home/Help, Dark/Light/Kontrast und kompaktem Footer
-- [x] Network-Projektionen mit echten Resolution-/Bins-/Sample-Reglern und kompakter Kachelansicht
-- [x] Embodiment-Tab auf realem Metrics-Vertrag vorbereiten; unconfigured statt Demo-Daten
-- [x] Embodiment Read API (`state`, `metrics`, `history`) und geschlossene Kausalschleife visualisieren
-- [x] Animiertes Brain-5D-Wesen als Living-System-Karte mit allen publizierten Quellen und Funktionen integrieren
-- [x] Dashboard fuer Localhost/Intranet konfigurierbar machen und sicheren Internetzugriff ueber TLS/Auth-Proxy vorbereiten
-- [x] Verbindungsmanager mit realer Compute-, Storage-, Netzwerk-, Internet-, Kamera-, Mikrofon-, Audio- und Drucker-Erkennung samt dynamischem Körpergraph integrieren
-- [x] Windows-Launcher gegen lokalisierte tasklist/taskkill-Codepages härten
-- [x] Ersten deterministischen EnvironmentAdapter samt kontrolliertem Aktorpfad integrieren; manuelle Aktionen bleiben safety-gated
-- [x] Rechtevergabe, Audit, Grenzwerte, Not-Aus und Human Override pro Adapter implementieren
-- [x] NETWORK, CONTROL, RESEARCH, RELEASE and Operator/Experiment/Debug switching verified without browser errors
-- [x] All 101 public runtime-config leaves exposed; uncurated values remain fixed/restart-required
-- [x] GitHub/Docker actions migrated to Node 24-compatible majors
-- [x] Experiment generator records commands/DATA links automatically and fails closed
-- [x] Local quality gates: 489 tests, Black, Ruff, Mypy, Pyright, Pylint, Pre-commit, Bandit, pip-audit and build pass
-- [x] Extend evidence freshness authority with explicit scope digests and matching-scope Gate Builder validation; legacy artifacts retain global-digest fallback
-- [x] Commit final source candidate and verify Continuous Integration #145
-- [x] Regenerate baseline, Phase B evidence and gate status for `3025e68...`
-- [x] Evidence commit `70a4ee2...` and Continuous Integration #147 verified
-- [ ] Resolve Sync to Hugging Face #66 if Hugging Face publication is required
-  - ⚠️ GitHub Actions Secrets `HF_USERNAME` und `HF_TOKEN` fehlen → in Settings → Secrets and variables → Actions anlegen
+### Alpha.7.1 — Performance & Persistent Operator
 
-## Priorität 1 — Alpha.5 Closure (teilweise offen)
+- [ ] Storage unter `operator/state.b5d`, `operator/journal/`, `operator/checkpoints/` kapseln
+- [ ] Experimente unter `experiment/EXP-*/state/`, `DATA/` und `EVID/` kapseln
+- [ ] Dev-Artefakte ausschließlich unter `dev/disposable/` ablegen
+- [ ] Harte Grenzen erzwingen: DEV -> OPERATOR verboten, EXPERIMENT -> OPERATOR kein Merge, OPERATOR -> EXPERIMENT nur Snapshot/Fork
+- [ ] `full_change_scan` und `dirty_tracking` mit identischem Seed, Input und Tickzahl vergleichen
+- [ ] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen
+- [ ] Laufzeitprofil für 1k / 10k / 100k / 1M Ticks erfassen: ticks/s, ms/tick, Storage, Telemetrie, Bytes, Dirty-Counts, RAM
 
-- [x] EXP-DET-0001: Determinismus A/B/C experiment durchführen
-  - Path C `--digest-k` Argument korrigiert (worker startet wieder)
-  - A/B/C digests are now equal; artifact status = `verified`
-  - [x] Härten: Strenger Fresh-Process-Nachweis
-    - P0 pytest orchestrator startet **kein** C1-Netzwerkobjekt im Orchestrator
-    - C1 subprocess: `0 → K`, speichert Dateisystem-Artefakte, schreibt PID, terminiert
-    - C2 subprocess: liest nur Dateisystem, `restore_full()`, `K → N`, schreibt PID + Digest, terminiert
-    - `assert PID_C1 != PID_C2`
-    - `assert A == B == C`
-    - „completed"-Proofs sind nicht mehr hartkodiert `true`
+### Alpha.8 — Adaptive Self-Regulation & Morphology
 
-    > **Status:** C1 und C2 laufen als getrennte Worker-Prozesse; PIDs und
-    > Dateisystem-Manifest werden geprüft. A=B=C und der Fresh-Process-
-    > Nachweis sind automatisiert validiert.
-- [x] EXP-STOR-0001: Storage persistence experiment durchführen
-- [x] Erste DATA-* / EVID-* Artefakte generieren
-- [x] Research Catalog aus echten Evidenzen neu aufgebaut
-- [x] Dashboard: IO-Fluss Visualisierung finalisieren
-- [x] Dashboard: Populationen-Übersicht finalisieren
-- [x] Dashboard: 5D Isometrische Projektion verbessern
+- [ ] Interne Regelgrößen und daraus abgeleitete Drives definieren
+- [ ] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und Neurogenese-Budgets ergänzen
+- [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
+- [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
 
-## Priorität 1b — Dashboard Operator-Workbench Refactoring
+### Alpha.9 bis v1.0
 
-> Ziel: Vom funktionsgetriebenen Dashboard zur arbeitsprozess-orientierten
-> Operator-Workbench: beobachten → verstehen → verändern → prüfen →
-> dokumentieren. Health, Console und Problems werden querschnittlich
-> sichtbar, nicht versteckt.
+- [ ] Memory-/World-Model-Schnittstellen implementieren
+- [ ] Multimodale Audio-/Vision-Adapter als echte, opt-in Datenquellen anbinden
+- [ ] Provenance-gebundenen Knowledge Intake implementieren
+- [ ] Language Organ auf lesende Zustandsbeschreibung begrenzen
+- [ ] Release- und Installationspfad für die integrierte Forschungsplattform härten
 
-- [x] `StatusModel`: Standardisierter Komponenten-Status (enabled/active/degraded/unavailable/error/stale/disabled) mit `reason`, `last_update`, `source`, `last_error`, `maturity`
-  - Implementiert in `src/dashboard/models.py` als `ComponentStatus`
-  - Validierungsmengen `VALID_COMPONENT_STATUS` / `VALID_MATURITY`
-- [x] `StateStore`: Zentraler Dashboard-State (`runtime`, `network`, `learning`, `homeostasis`, `structural`, `storage`, `telemetry`, `health`, `verification`) statt panel-individueller `fetch`-Aufrufe
-  - Frontend-Store `src/dashboard/static/state-store.js`
-  - Backend `DashboardSnapshot` erweitert um `components`, `parameters`, `health`
-- [x] `ParameterSchema`: Generischer Parameter-Inspector mit Metadaten (`value`, `default`, `min`, `max`, `unit`, `description`, `source`, `runtime_mutable`, `requires_restart`, `scientific_sensitive`)
-  - Implementiert in `src/dashboard/models.py` als `ParameterSchema`
-  - API-Endpunkte `/api/parameters` und `/api/parameters/{name}`
-- [x] Health/Problems Drawer: Permanent sichtbare Leiste + einblendbare Drawer für Fehler, Warnungen, Unavailable-Zustände und stale Daten
-  - `src/dashboard/static/health-drawer.js`
-  - `src/dashboard/health_builder.py` baut aggregierte Health aus Komponenten
-  - API-Endpunkt `/api/health`
-  - [x] Control/Console-Entkopplung: Grundstruktur vorhanden, Command-Duplizierung
-      weitgehend beseitigt
-  - `src/dashboard/static/control-panel.js` zentralisiert alle Runtime-Commands
-  - `src/dashboard/static/operator_console.js` reiner Output + Proposals
-  - `src/dashboard/static/console-log.js` gemeinsames Log
-  - [x] `ControlPanel` ist alleiniger Runtime-Command-Owner
-  - [x] Runtime-Shortcuts aus `OperatorConsole` entfernt (`OperatorConsole.bindKeyboardShortcuts()`
-        verarbeitet nur noch `Ctrl+L` für Console-Clear)
-  - [x] `OperatorConsole` vollständig in `ConsoleLog` + `StructuralProposalPanel`
-        zerlegen
-- [x] Tab-Restrukturierung: `OVERVIEW | NETWORK | CONTROL | RESEARCH | VERIFY` mit Subtabs
-  - `index.html` Tabs umbenannt; VERIFY ersetzt RELEASE
-- [x] Pending-Changes-Workflow: Jede Parameteränderung wird als pending dargestellt (`APPLY`, `APPLY + SAVE PROFILE`, `CANCEL`) mit reversibler Change-History
-  - Backend: `PendingParameterChange`, `ParameterChangeRecord`, API-Endpunkte `/api/parameters/pending/*`
-  - Frontend: `parameter-inspector.js` mit Parameter-Tabelle, Pending-Bar und Change-History
-  - Tests: `tests/test_dashboard_pending_parameters.py` (8 Tests)
-- [x] Experiment Mode: Umschaltung Operator / Experiment / Debug mit protokollierter Experiment-Metadaten-Erfassung  - Frontend wiring in `app.js`; `ExperimentMode` instantiated on CONTROL tab init
-  - Backend API tests: `tests/test_dashboard_experiment_mode.py`
-  - Static asset regression tests: `tests/test_dashboard_experiment_mode_wiring.py`
-- [x] CI recovery: Black, Ruff, Pylint ≥9.0, mypy, pyright all green locally
-- [x] GitHub Actions SARIF permissions and HF sync explicit-failure wiring
-- [x] Release readiness model exposes `scientific_gate`, `ci_status`, `release_readiness` separately  - Backend: `ExperimentState`, `ExperimentSession`, API-Endpunkte `/api/experiment/*`
-  - Frontend: `experiment-mode.js` mit Mode-Switcher, Session-Start/Stop, Notizen, Historie
-  - Tests: `tests/test_dashboard_experiment_mode.py` (7 Tests)
-  - [x] Frontend-Modularisierung: `app.js` reduzieren auf Bootstrap/Routing/Module-Lifecycle/Global Health; Fachlogik in domain-getriebene ES-Module auslagern
-  - [x] StateStore vollständig integrieren: Backend publiziert jetzt- [x] UI-Redesign: Status-Elemente (Experiment-Mode, System-Status, Health-Bar) in always-visible Footer verschieben; Header auf Dark/Light + Accessibility reduzieren; Runtime-Errors in Health-Bar integrieren; Overview für 1080p @ 75% Zoom kompaktieren        angereicherte Snapshots; `/api/state` liefert den vollständigen
-        Store; globale State- und Health-Daten kommen aus dem Store.
-        Wissenschaftliche Daten (heatmap, raster, projection, Tabellen)
-        bleiben separat/lazy geladen.
-  - [x] Health-State-Semantik korrigieren:
-        - `enabled ≠ active`: Learning/Homeostasis/Structural/Storage
-          unterscheiden jetzt `enabled` (Config), `active` (Runtime),
-          `disabled` (Config aus) und `unavailable` (Fehlerzustand).
-        - `unavailable ≠ disabled`: Komponenten, die in der Config
-          deaktiviert sind, melden `disabled` mit `source: config`;
-          fehlende/fehlerhafte Komponenten melden `unavailable`.
-        - Verification-Status spieglt Gate-Zustand wider
-          (`active/stale/failed/pending`), nicht nur Endpoint-Erreichbarkeit.
-          Der Health-Builder leitet den Status aus den Gate-Artefakten ab.
+## SCIENCE
 
-## Priorität 2 — Code-Qualität
+- [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs
+- [ ] `EXP-EMB-0001`: vollständige Sensor-to-Reward-to-Learning-Kette mit DATA/EVID-Artefakten
+- [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen
+- [ ] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks
+- [ ] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung
+- [ ] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck
+- [ ] `EXP-BODY-0001`: Sensorverlust, Aktivitätsänderung, Rekonfiguration und Kompensation messen
+- [ ] `EXP-MEM-0001`: Retention, Interferenz, Relearning, Transfer und Recall messen
+- [ ] `EXP-AIR-0001`: Scientific Research Assistant erst nach Clean Freeze, Push und externer CI ausführen
 
-- [x] Research-Registry Tests verstärken (Duplikate, Referenzen, Pflichtfelder)
-- [x] Pylance/Pyright clean: alle Typfehler beseitigen
-- [ ] type:ignore-Kommentare auf Minimum reduzieren
-- [x] Testabdeckung für neue Module erhöhen
-- [x] Dokumentation zu den neuen API-Endpunkten schreiben (`docs/03-dashboard/API_REFERENCE.md`)
+### Forschungsprotokoll für jeden Lauf
 
-## Priorität 1c — Evidence-Freshness & Verification Architecture
+- [ ] Forschungsfrage, Hypothesen, Bedingungen, Kontrollen und Seeds registrieren
+- [ ] Effektive Konfiguration, Input, Output, Gewichte, Struktur und Laufmetriken speichern
+- [ ] DATA/EVID-Provenienz, Limitationen und unabhängige Wiederholungen prüfen
+- [ ] Claims erst nach menschlicher Review aktualisieren
 
-> Ziel: Dashboard-/UI-Änderungen dürfen wissenschaftliche Nachweise nicht
-> mehr fälschlich als `stale` markieren.
+## OPERATION
 
-- [x] Evidence Scopes eingeführt: jeder Nachweis bekommt seinen eigenen
-      Digest über die relevanten Dateien
-  - `restore_determinism`: `core`, `storage`, `learning`, `homeostasis`,
-    relevante Config + Restore-Tests
-  - `structural_e2e`: Structural Engine, Coordinator, Manipulator, Journal,
-    relevante Tests
-  - `runtime_integration`: Controller, Bridge, Main, relevante Tests
-  - `dashboard`: `src/dashboard/`, HTML/CSS/JS, Dashboard-Tests
-  - `research`: Registry, Schemas, Recorder, Research-Tests
-  - `release`: gesamter produktiver Source Tree + komplette Tests
-- [x] Artefakte speichern `scope`, `scope_digest`, `tested_commit` statt
-      eines globalen Tree-Digests
-- [x] Gate Builder vergleicht nur den passenden Scope-Digest
-- [x] Full Test Baseline neu erzeugt (2026-08-31, 457 passed / 2 skipped / 0 failed)
-  - `xfailed` / `xpassed` in `BaselineEvaluation` ausgewertet
-  - Source Freeze → komplette Suite → neue `tests/test_baseline.json`
-  - Alle Evidence-Artefakte sauber regeneriert
+- [ ] Lokale Änderungen committen und pushen; vollständige GitHub-CI abwarten
+- [ ] Kein wissenschaftliches Experiment auf Dirty Tree ausführen
+- [ ] Hugging-Face-Sync erst nach geklärten `HF_USERNAME`-/`HF_TOKEN`-Secrets und CI-Grün aktivieren
+- [ ] Release-Registry, Changelog und Roadmap nach jedem abgeschlossenen Meilenstein synchronisieren
+- [ ] Dashboard-/Runtime-Verträge aktuell halten; `enabled`, `active`, `unavailable` und Evidenzstatus getrennt lassen
+- [ ] Dokumentierte Benchmarks nicht als wissenschaftliche Claims ausgeben
 
-> Neue Artefakte verwenden den passenden Scope-Digest. `tested_tree_digest`
-> bleibt als Legacy-Fallback für historische Artefakte erhalten.
+## Bereits erledigt, bewusst nicht erneut auf der Arbeitsliste
 
-## Priorität 3 — Infrastruktur
-
-- [ ] Hugging Face Space Deployment testen
-- [x] CI/CD Pipeline für automatische Tests (GitHub Actions: lint, type-check,
-      security, test matrix, build, docker, docs)
-- [x] Benchmark-Ladder für 5k-1M Neuronen vorbereiten
-  - `scripts/benchmark_ladder.py` misst reproduzierbar Konstruktion und
-    Schritt-Durchsatz; große Stufen benötigen `--allow-large` und erzeugen
-    keinen wissenschaftlichen Performance-Claim
-- [x] Repository-Hygiene: Diagnoseartefakte unter `tmp/restore_diag/` und
-      `tmp/trace_diag/` aus Source Tree entfernen oder nach
-      `research/generated/diagnostics/` mit Provenance verschieben
-
-## Erledigt
-
-- [x] Viewer als eigenständiges Overlay-Element (Close-Button, expandiert bei Bedarf)
-- [x] Fehlende Dateitypen ergänzt: `.bib`, `.patch`, `.rst`, `.tex`, `.sh`, `.bat`, `.ps1`, `.dockerfile`, `.cmake`, `.makefile`, `.txt`
-- [x] JSON-Erkennung jetzt über `ext.endsWith('.json')` — fängt auch `.schema.json` ab
-- [x] YAML Syntax-Highlighting (renderFMYaml mit farblichen Token-Klassen)
-- [x] Research-Registry Validierung verstärkt: Duplikate, ID-Formate, Referenzen, Pflichtfelder
-- [x] Fehlende Quellen `SRC-WATTS-STROGATZ-1998` und `SRC-BARABASI-1999` in `research/registry/sources.yaml` ergänzt
-- [x] Multi-Language Code Syntax-Highlighting (renderFMCode für 17 Sprachen)
-- [x] Dashboard-Informationsarchitektur auf 5 Bereiche vereinfacht
-- [x] File-Viewer als eigenständiges Modul `src/dashboard/static/file-viewer.js` ausgekoppelt
-- [x] CONTROL & CONSOLE entdoppelt: Runtime Configuration + Operator Console
-- [x] OVERVIEW entdoppelt: Roadmap/Integration-Status entfernt, Active Profile hinzugefügt
-- [x] Repository-Hygiene: Placeholder-Dateien `tmp_append.py` und
-      `src/dashboard/static/_build_viewer.py` entfernt
-
-## Bekannte Probleme
-
-- Dashboard State Publishing darf niemals die Simulation blockieren (bereits gelöst)
-- Self-Organization nur über canonical Coordinator->Approval->PlasticityEngine Pfad
-- Storage ist per Konfiguration deaktiviert (poc_config.yaml)
-- Evidence-Freshness-Modell nutzt explizite Evidence Scopes mit Legacy-Fallback
-- ~~Test-Baseline `tests/test_baseline.json` ist alt~~ (neu erzeugt am 2026-08-31)
-- Neue Diagnose-Dumps unter `tmp/restore_diag/` und `tmp/trace_diag/` werden
-  ignoriert; die zuvor eingecheckten Dumps wurden entfernt
-- Restore A/B/C: A/B/C-Digests und der strenge Fresh-Process-Nachweis sind
-  automatisiert verifiziert
-- Historische Artefakte ohne Scope-Metadaten nutzen weiterhin den globalen
-  Source-Tree-Digest als Legacy-Fallback
+Alpha.5/6-Integration, Operator/Experiment/Dev-Modi, Evidence Scopes,
+Restore-Determinismus, Structural E2E, RuntimeController, Embodiment-Verträge,
+Safety-Grenzen, deterministischer EnvironmentAdapter, Experience Engine v0,
+dirty-state emitter, Dashboard-Workbench und die lokale Qualitätsbaseline sind
+implementiert oder historisch abgeschlossen. Details bleiben in
+`docs/07-changelog/CHANGELOG.md` und den historischen Release-Dokumenten.

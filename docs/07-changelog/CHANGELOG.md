@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Roadmap and TODO separation
+
+- Reorganized the canonical roadmap around Alpha.7 through v1.0 instead of feature accumulation.
+- Split actionable work into ENGINEERING, SCIENCE and OPERATION tracks.
+- Added `docs/08-roadmap/RESEARCH_ROADMAP.md` with research questions, experiment order and evidence criteria.
+
 ## 2026-09-03 — Complete dirty-state emission
 
 - Structural neuron/synapse changes now emit dirty IDs.
