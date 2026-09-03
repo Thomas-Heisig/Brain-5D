@@ -83,6 +83,8 @@ Evidenz für Lernwirkung.
 - Causal-Attribution-Reports bündeln nun Exposure, Taint, Interaktionen,
 	Treatments sowie Twin-/Ablation-Referenzen, bleiben aber ausdrücklich keine
 	wissenschaftliche Evidenz.
+- Experimentlisten zeigen nun einen getrennten wissenschaftlichen Betriebsstatus
+	von PURE über Beobachtung und Vorschlag bis kausal aktiv.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

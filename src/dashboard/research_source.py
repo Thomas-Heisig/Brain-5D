@@ -68,6 +68,21 @@ def classify_ai_operation(manifest: dict[str, Any]) -> str:
     return "UNKNOWN"
 
 
+def classify_research_operation_status(manifest: dict[str, Any]) -> str:
+    """Classify the scientific AI operating status for read-only display."""
+    exposure = str(manifest.get("ai_exposure", "")).lower()
+    taint = str(manifest.get("causal_taint", "")).upper()
+    if exposure == "none" and taint == "PURE":
+        return "PURE EXPERIMENT"
+    if taint == "AI_INFLUENCED" or exposure in {"bounded_controller", "adaptive_controller"}:
+        return "AI CAUSALLY ACTIVE"
+    if taint == "PROPOSED" or exposure == "advisor":
+        return "AI PROPOSING"
+    if taint == "OBSERVED" or exposure in {"observer_only", "semantic_interface"}:
+        return "AI OBSERVING"
+    return "UNKNOWN"
+
+
 class ResearchSource:
     """Read-only view over the ``research/`` directory tree.
 
@@ -235,6 +250,9 @@ class ResearchSource:
                     "ai_operation_mode": classify_ai_operation(data)
                     if isinstance(data, dict)
                     else "NONE",
+                    "research_operation_status": classify_research_operation_status(data)
+                    if isinstance(data, dict)
+                    else "UNKNOWN",
                     "id": entry.name,
                     "path": str(entry.relative_to(self._root)).replace("\\", "/"),
                     "manifest": data,

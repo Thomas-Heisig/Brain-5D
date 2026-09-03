@@ -6,7 +6,11 @@ from pathlib import Path
 from threading import Thread
 from typing import Any, cast
 
-from src.dashboard.research_source import ResearchSource, classify_ai_operation  # type: ignore
+from src.dashboard.research_source import (  # type: ignore
+    ResearchSource,
+    classify_ai_operation,
+    classify_research_operation_status,
+)
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
 
@@ -67,6 +71,14 @@ def test_ai_operation_classification_is_explicit_and_fail_closed() -> None:
     assert classify_ai_operation(
         {"ai_model_provenance": {"provider": "frozen_replay"}}
     ) == "REPLAY"
+
+
+def test_research_operation_status_covers_pure_observing_proposing_and_causal() -> None:
+    assert classify_research_operation_status({"ai_exposure": "none", "causal_taint": "PURE"}) == "PURE EXPERIMENT"
+    assert classify_research_operation_status({"ai_exposure": "observer_only", "causal_taint": "OBSERVED"}) == "AI OBSERVING"
+    assert classify_research_operation_status({"ai_exposure": "advisor", "causal_taint": "PROPOSED"}) == "AI PROPOSING"
+    assert classify_research_operation_status({"ai_exposure": "bounded_controller", "causal_taint": "AI_INFLUENCED"}) == "AI CAUSALLY ACTIVE"
+    assert classify_research_operation_status({}) == "UNKNOWN"
 
 
 def test_research_summary_reports_available(tmp_path: Path) -> None:

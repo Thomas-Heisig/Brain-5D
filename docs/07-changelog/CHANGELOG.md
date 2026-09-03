@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Dashboard research operation status
+
+- Experimentlisten zeigen nun neben der technischen AI-Betriebsart den
+  wissenschaftlichen Status `PURE EXPERIMENT`, `AI OBSERVING`, `AI PROPOSING`
+  oder `AI CAUSALLY ACTIVE`; unvollständige Manifeste bleiben `UNKNOWN`.
+
 ## 2026-09-03 — Causal attribution reports
 
 - AI-Exposure, Causal-Taint, Interaktionsrollen, Treatments sowie Twin- und
