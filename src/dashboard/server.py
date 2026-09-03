@@ -41,7 +41,13 @@ from typing import Any, cast
 from urllib.parse import parse_qs, unquote, urlparse
 
 from src.embodiment import ConnectionManager
-from src.research_assistant import AIRRPipeline, AnalysisBackend, write_human_review
+from src.research_assistant import (
+    AIRRPipeline,
+    AnalysisBackend,
+    ChatBackend,
+    ResearchChat,
+    write_human_review,
+)
 
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
@@ -155,6 +161,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.docs_source = docs_source
         self.research_source = research_source
         self.research_ai_backend: AnalysisBackend | None = None
+        self.research_chat_backend: ChatBackend | None = None
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
@@ -629,6 +636,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/ai-reports/generate":
                 self._generate_ai_report(body)
+                return
+
+            if path == "/api/research/chat":
+                self._research_chat(body)
                 return
 
             if path.startswith("/api/research/ai-reports/") and path.endswith("/review"):
@@ -1906,6 +1917,35 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
         report = AIRRPipeline(source.root()).analyze(experiment_id, backend)
         self._send_json(report.to_dict(), HTTPStatus.CREATED)
+
+    def _research_chat(self, body: dict[str, object]) -> None:
+        source = self._require_research_source()
+        action = body.get("action", "ask")
+        if action == "execute_registered_experiment":
+            workflow = body.get("workflow")
+            if not isinstance(workflow, dict):
+                raise InvalidRequestError("workflow object is required for execution.")
+            self._run_experiment_workflow(cast(dict[str, object], workflow))
+            return
+        if action != "ask":
+            raise InvalidRequestError("Unknown research chat action.")
+        message = body.get("message")
+        if not isinstance(message, str) or not message.strip():
+            raise InvalidRequestError("message is required.")
+        backend = self.dashboard_server.research_chat_backend
+        if backend is None:
+            self._send_json(
+                {"error": "No research chat backend is configured."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+        docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
+        if docs is None:
+            raise BridgeNotConfiguredError("Documentation source is not configured.")
+        answer, metadata = ResearchChat(cast(Any, source), cast(Any, docs), backend).answer(message)
+        self._send_json(
+            {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
+        )
 
     def _write_ai_review(self, path: str, body: dict[str, object]) -> None:
         source = self._require_research_source()

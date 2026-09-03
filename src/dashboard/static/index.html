@@ -668,6 +668,12 @@
         <button type="button" data-research-source="research" data-research-query="MATRIX">Matrices</button>
         <button type="button" data-research-source="docs" data-research-query="">Documentation</button>
       </nav>
+      <section class="research-chat" id="research-chat" aria-label="Research AI chat">
+        <header><div><span class="workspace-kicker">SELF-KNOWLEDGE</span><h3>Research Assistant</h3><p>Research und Dokumentation als lesender Kontext</p></div><span class="ai-badge">AI GENERATED</span></header>
+        <div class="research-chat-log" id="research-chat-log" aria-live="polite"><p class="chat-empty">Stelle eine Frage zu Research, Dokumentation oder registrierten Experimenten.</p></div>
+        <form class="research-chat-form" id="research-chat-form"><label for="research-chat-input">Frage</label><textarea id="research-chat-input" rows="2" maxlength="4000" placeholder="Was ist der aktuelle Evidenzstatus von EXP-EMB-0001?"></textarea><button type="submit" class="btn-primary">Frage senden</button></form>
+        <p class="research-chat-note">Der Chat liest Research und Docs. Experimente werden nur über einen bestätigten, strukturierten Workflow ausgeführt.</p>
+      </section>
       <section class="experiment-workflow" id="experiment-workflow" aria-label="Experiment Runner">
         <header class="experiment-workflow-header">
           <div><span class="workspace-kicker">CONTROLLED RUN</span><h3>Experiment Runner</h3></div>

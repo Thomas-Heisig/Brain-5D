@@ -139,3 +139,23 @@ def test_unknown_research_subpath_returns_json_404(tmp_path: Path) -> None:
         assert "error" in payload
     finally:
         _stop(server, thread)
+
+
+def test_research_chat_requires_explicit_backend(tmp_path: Path) -> None:
+    root = tmp_path / "research"
+    root.mkdir()
+    server, thread, host, port = _start_server(root)
+    try:
+        conn = HTTPConnection(host, port)
+        conn.request(
+            "POST",
+            "/api/research/chat",
+            body=json.dumps({"message": "What is here?"}),
+            headers={"Content-Type": "application/json"},
+        )
+        response = conn.getresponse()
+        assert response.status == 503
+        assert "backend" in response.read().decode().lower()
+        conn.close()
+    finally:
+        _stop(server, thread)

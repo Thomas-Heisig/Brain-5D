@@ -50,3 +50,8 @@ Forschungsgegenstand:
 AIRR ist ausschließlich KI-Interpretation. `scientific_evidence` bleibt immer
 `false`; menschliche Prüfung wird als separates, append-only Review-Artefakt
 gespeichert.
+
+Der Research Self-Knowledge Chat darf Research und Docs lesend als Kontext
+verwenden. Experimentausführung ist davon getrennt und ausschließlich über
+registrierte, strukturierte Workflow-Parameter mit menschlicher Bestätigung
+zulässig.

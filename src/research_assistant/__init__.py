@@ -4,6 +4,7 @@ from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_r
 from .assistant import AnalysisBackend, ResearchAssistant
 from .models import AIAnalysisRecord, ResearchPacket
 from .statistics import summarize, write_statistics
+from .chat import ChatBackend, ResearchChat
 
 __all__ = [
     "AIAnalysisRecord",
@@ -16,4 +17,6 @@ __all__ = [
     "write_human_review",
     "summarize",
     "write_statistics",
+    "ChatBackend",
+    "ResearchChat",
 ]

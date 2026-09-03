@@ -50,6 +50,7 @@ import { ExperimentWorkflowPanel } from './experiment-workflow.js';
 import { renderOverviewCommandCenter, setupOverviewActions } from './overview-panel.js';
 import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
+import { initResearchChat } from './research-chat.js';
 
 // ================================================================
 // DOM HELPERS
@@ -207,6 +208,7 @@ function setupTabs() {
       }
       if (tabName === 'research' && !initialized.research) {
         initResearchBrowser();
+        initResearchChat();
         initDocumentationBrowser();
         instances.experimentWorkflow = new ExperimentWorkflowPanel();
         instances.experimentWorkflow.refresh();

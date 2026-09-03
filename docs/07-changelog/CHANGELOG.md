@@ -7,6 +7,8 @@
 - Reports are permanently marked as AI-generated interpretation, never scientific evidence.
 - Added full ResearchPacket and DATA/EVID provenance, deterministic statistics support, and append-only human reviews.
 - Exposed AIRR reports through the Research dashboard without granting AI execution or evidence authority.
+- Added a Research Self-Knowledge Chat grounded in repository Research and Docs; free text cannot execute experiments.
+- Registered experiment execution remains a separate, structured workflow action with existing validation boundaries.
 
 ## 2026-09-03 — Roadmap and TODO separation
 

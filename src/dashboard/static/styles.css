@@ -1689,6 +1689,24 @@ body .footer-segment {
   background: rgba(64, 224, 208, .07);
 }
 
+.research-chat {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--line, #334155);
+  background: color-mix(in srgb, var(--panel, #111827) 92%, #0ea5e9);
+}
+.research-chat > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.research-chat h3 { margin: .2rem 0; }
+.research-chat header p, .research-chat-note { margin: .25rem 0; color: var(--muted, #94a3b8); font-size: .85rem; }
+.ai-badge { color: #fbbf24; border: 1px solid #f59e0b; padding: .25rem .45rem; font-size: .7rem; letter-spacing: .08em; white-space: nowrap; }
+.research-chat-log { max-height: 270px; overflow-y: auto; margin: 1rem 0; display: grid; gap: .6rem; }
+.chat-message { padding: .6rem .75rem; border-left: 3px solid #38bdf8; background: rgba(15, 23, 42, .55); }
+.chat-message.user { border-left-color: #a3e635; }
+.chat-message.error { border-left-color: #f87171; }
+.chat-message p { margin: .3rem 0 0; white-space: pre-wrap; }
+.research-chat-form { display: grid; gap: .4rem; }
+.research-chat-form textarea { width: 100%; resize: vertical; min-height: 3.2rem; }
+
 .experiment-workflow {
   display: grid;
   gap: 10px;
