@@ -39,7 +39,7 @@
 - [ ] Shadow-Proposals quantitativ evaluieren: Precision, Recall, False Positives, Prediction Accuracy, Calibration und Utility
 - [x] `observation_stream.jsonl` für reproduzierbare Offline-Replays erzeugen und validieren
 - [x] `FrozenAIReplayBackend` mit Request-/Response-Digest und fehlendem Live-Fallback implementieren
-- [ ] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
+- [x] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
 - [ ] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen
 - [ ] Kontrollgruppen für SNN-only, Language Organ, Knowledge Intake, Language+Knowledge, LLM-only und Full System als Experimentvorlagen registrieren
 - [ ] `NullLanguageOrgan`, `RandomLanguageOrgan` und `ReplayLanguageOrgan` als Sham-Kontrollen ergänzen

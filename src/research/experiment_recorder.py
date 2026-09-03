@@ -15,7 +15,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Protocol, cast
 
-from src.research_assistant.contracts import AIExposure, AIInteractionRecord, CausalTaint
+from src.research_assistant.contracts import (
+    AIExposure,
+    AIInteractionRecord,
+    AIReproducibility,
+    CausalTaint,
+)
 
 from .registry import REPO_ROOT
 
@@ -116,6 +121,7 @@ class ExperimentRecorder:
             "experiment_id": experiment_id,
             "experiment_status": "not_started",
             "ai_exposure": AIExposure.NONE.value,
+            "ai_reproducibility": AIReproducibility.R0.value,
             "causal_taint": CausalTaint.PURE.value,
             "ai_interactions": [],
             "causal_card": {
@@ -164,6 +170,17 @@ class ExperimentRecorder:
         except ValueError as exc:
             raise ValueError(f"Unsupported AI exposure: {exposure}") from exc
         self._manifest["ai_exposure"] = normalized.value
+        return self
+
+    def record_ai_reproducibility(
+        self, level: AIReproducibility | str
+    ) -> ExperimentRecorder:
+        """Register the reproducibility level claimed for AI participation."""
+        try:
+            normalized = AIReproducibility(level)
+        except ValueError as exc:
+            raise ValueError(f"Unsupported AI reproducibility level: {level}") from exc
+        self._manifest["ai_reproducibility"] = normalized.value
         return self
 
     def record_ai_interaction(

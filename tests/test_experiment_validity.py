@@ -22,7 +22,12 @@ from src.research.evidence_engine import (
     EvidenceEngine,
     _check_experiment_valid,  # type: ignore[misc]
 )
-from src.research_assistant.contracts import AIExposure, AIInteractionRecord, CausalTaint
+from src.research_assistant.contracts import (
+    AIExposure,
+    AIInteractionRecord,
+    AIReproducibility,
+    CausalTaint,
+)
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
 
@@ -113,6 +118,15 @@ class TestRuntimeErrorsInManifest:
         assert manifest["validity"]["valid"] is True
         assert manifest["validity"]["runtime_error_count"] == 0
         assert manifest["ai_exposure"] == "none"
+        assert manifest["ai_reproducibility"] == "R0"
+
+    def test_recorder_registers_ai_reproducibility_level(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
+        recorder.record_ai_reproducibility(AIReproducibility.R2)
+        assert recorder.manifest["ai_reproducibility"] == "R2"
+
+        with pytest.raises(ValueError, match="Unsupported AI reproducibility level"):
+            recorder.record_ai_reproducibility("R9")
 
     def test_recorder_records_validated_ai_exposure(self, tmp_experiment_dir: Path) -> None:
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)

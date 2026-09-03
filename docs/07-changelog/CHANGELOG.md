@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Registered AI reproducibility levels
+
+- Experimentmanifeste enthalten nun standardmäßig `ai_reproducibility: R0`.
+- `R0` bis `R3` sind als strikt validierte Klassifikation für AI-Beteiligung registrierbar.
+- Die Registrierung behauptet noch keine Twin-Run- oder Kontrollgruppen-Reproduzierbarkeit; diese Nachweise bleiben separate TODOs.
+
 ## 2026-09-03 — Validated observation replay stream
 
 - `ObservationStream` erzeugt append-only `observation_stream.jsonl` mit Sequenz, Tick und Payload-Digest.

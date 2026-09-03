@@ -30,6 +30,15 @@ class CausalTaint(StrEnum):
     AI_INFLUENCED = "AI_INFLUENCED"
 
 
+class AIReproducibility(StrEnum):
+    """Registered reproducibility level for AI participation in a run."""
+
+    R0 = "R0"
+    R1 = "R1"
+    R2 = "R2"
+    R3 = "R3"
+
+
 @dataclass(frozen=True, slots=True)
 class ScientificContract:
     """Immutable, digest-backed data contract with no execution capability."""
