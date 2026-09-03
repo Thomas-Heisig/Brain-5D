@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from .contracts import AIExposure, AIInteractionRecord, CausalTaint
 from .firewall import ScientificAIFirewall
@@ -136,11 +136,16 @@ def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend
     """Adapt a text backend that returns either text or ``(text, metadata)``."""
     def call(prompt: str) -> tuple[str, dict[str, Any]]:
         result = backend(prompt)
-        if isinstance(result, tuple) and len(result) == 2:
-            text: Any = result[0]
-            metadata: Any = result[1]
+        if isinstance(result, tuple):
+            tuple_result = cast(tuple[object, ...], result)
+            if len(tuple_result) != 2:
+                raise ValueError("Chat backend must return text or (text, metadata).")
+            text, metadata = tuple_result
             if isinstance(text, str) and isinstance(metadata, dict):
-                return text, {str(key): value for key, value in metadata.items()}
+                typed_metadata = cast(dict[object, Any], metadata)
+                return text, {
+                    str(key): value for key, value in typed_metadata.items()
+                }
         if isinstance(result, str):
             return result, {}
         raise ValueError("Chat backend must return text or (text, metadata).")
