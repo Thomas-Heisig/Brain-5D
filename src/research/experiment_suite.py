@@ -13,10 +13,21 @@ from typing import Any, Mapping
 import yaml
 
 from src.core import NeuralNetwork
+from src.embodiment import (
+    InteroceptionFrame,
+    derive_drives,
+    derive_functional_state,
+    derive_regulatory_state,
+    normalize_vital_signals,
+)
+from src.experiments.learning_lab import run_learning_experiment
 from src.research.canonical_state import canonical_state_digest
 from src.research.network_probe import NetworkImpulseProbe, NetworkResponseSignature
-from src.research.temporal import TemporalComparator, TemporalStateFrame, TemporalStateMemory
-from src.experiments.learning_lab import run_learning_experiment
+from src.research.temporal import (
+    TemporalComparator,
+    TemporalStateFrame,
+    TemporalStateMemory,
+)
 
 Config = Mapping[str, Any]
 Coord5D = tuple[int, int, int, int, int]
@@ -162,6 +173,51 @@ def run_5d(
     return runs
 
 
+def run_regulation(
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+) -> list[ScientificRun]:
+    """Measure bounded regulation outputs under pressure and unknown inputs."""
+    del config
+    readings_by_condition: dict[str, dict[str, Any]] = {
+        "nominal": {
+            "cpu_percent": 20.0,
+            "memory_percent": 30.0,
+            "temperature_c": 40.0,
+            "network_up": True,
+        },
+        "chronic_pressure": {
+            "cpu_percent": 95.0,
+            "memory_percent": 92.0,
+            "temperature_c": 90.0,
+            "network_up": False,
+        },
+        "telemetry_unknown": {},
+    }
+    runs: list[ScientificRun] = []
+    for seed in seeds:
+        for condition, readings in readings_by_condition.items():
+            frame = InteroceptionFrame(seed, normalize_vital_signals(readings))
+            drives = derive_drives(frame)
+            regulatory = derive_regulatory_state(frame)
+            functional = derive_functional_state(frame)
+            runs.append(
+                ScientificRun(
+                    "EXP-REG-0001",
+                    condition,
+                    seed,
+                    {
+                        "drives": drives.to_json(),
+                        "regulatory_state": regulatory.to_json(),
+                        "functional_state": functional.to_json(),
+                    },
+                    "",
+                    "",
+                )
+            )
+    return runs
+
+
 def run_temporal(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
     """Compare retained fast/medium/slow state references without rewinding."""
     runs: list[ScientificRun] = []
@@ -242,7 +298,8 @@ def main() -> int:
     config = _load(Path(args.config))
     started = time.perf_counter()
     runs = (run_ping(config) + run_temporal(config) + run_stdp(config)
-            + run_learning_repeat(config) + run_time(config) + run_5d(config))
+            + run_learning_repeat(config) + run_time(config) + run_5d(config)
+            + run_regulation(config))
     write_data(Path(args.output), runs)
     print(json.dumps({"runs": len(runs), "duration_seconds": time.perf_counter() - started, "output": args.output}))
     return 0

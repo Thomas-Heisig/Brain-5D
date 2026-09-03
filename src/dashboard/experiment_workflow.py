@@ -89,12 +89,14 @@ class ExperimentWorkflowService:
             "EXP-EMB-0001": "run_learning_repeat",
             "EXP-TIME-0001": "run_time",
             "EXP-5D-0001": "run_5d",
+            "EXP-REG-0001": "run_regulation",
         }
         runner_name = runners.get(workflow.experiment_id)
         if runner_name is None:
             raise WorkflowValidationError(
                 "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
-                "EXP-STDP-0002, EXP-TIME-0001, and EXP-5D-0001."
+                "EXP-STDP-0002, EXP-TIME-0001, EXP-5D-0001, and "
+                "EXP-REG-0001."
             )
         output_dir = self._research_root / "experiments" / workflow.experiment_id
         if (output_dir / "manifest.json").exists():

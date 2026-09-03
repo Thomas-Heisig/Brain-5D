@@ -43,7 +43,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 ## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)
 
 - [ ] `full_change_scan` gegen causally complete `dirty_tracking` per A/B-Test validieren
-- [ ] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen
+- [x] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen (A/B/C-Produktionstest und Fresh-Process-Artefakt verifiziert)
 - [ ] Dauerbetrieb für 1k, 10k, 100k und 1M Ticks mit reproduzierbaren Metriken vermessen
 - [ ] Erst nach Gleichheitsnachweis `dirty_tracking` als Operator-Default aktivieren
 
@@ -76,6 +76,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	beim Wiederöffnen auf Kettenintegrität prüfen
 - [x] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
 	Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
+- [x] Deterministischen `EXP-REG-0001`-DATA-Runner für nominale, chronische
+	Druck- und UNKNOWN-Telemetriebedingungen anbinden; wissenschaftliche EVID bleibt offen
 - [x] Deterministischen `TaskOutcomeVerifier` als alleinige technische Quelle
 	für Task-Erfolg und Reward anbinden; fehlende Beobachtungen bleiben UNKNOWN
 

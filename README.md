@@ -47,6 +47,10 @@ The controlled embodiment layer supports deterministic multi-actuator routing;
 each actuator retains independent capabilities, safety limits, receipts and
 audit records.
 
+The science suite also provides a deterministic regulation DATA runner for
+nominal, chronic-pressure and unknown telemetry conditions; EVID remains
+separate from engineering execution.
+
 ---
 
 ## 🎯 Key Features

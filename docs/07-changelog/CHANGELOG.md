@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-03 — Regulation experiment runner
+
+- Added deterministic `EXP-REG-0001` runs for nominal, chronic-pressure and
+  unknown telemetry conditions.
+- Recorded bounded drives, regulatory state and functional state without
+  inferring missing signals or making consciousness claims.
+- Exposed the runner through the guarded dashboard science workflow.
+
+## 2026-09-03 — Restore determinism verification
+
+- Verified uninterrupted, in-process restore, and fresh-process restore paths
+  against one canonical digest.
+- Confirmed equality for runtime counters, neuron state, synapse weights and
+  eligibility, homeostasis, learning traces, pending rewards, and journal
+  restore in `research/generated/verification/restore_determinism.json`.
+
 ## 2026-09-03 — Multi-actuator routing
 
 - Added typed `ActuatorHub`/`ActionRouter` routing by stable actuator ID.

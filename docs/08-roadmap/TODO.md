@@ -123,7 +123,7 @@
 - [x] Dev-Artefakte ausschließlich unter `dev/disposable/` ablegen
 - [x] Harte Grenzen erzwingen: DEV -> OPERATOR verboten, EXPERIMENT -> OPERATOR kein Merge, OPERATOR -> EXPERIMENT nur Snapshot/Fork
 - [x] `full_change_scan` und `dirty_tracking` mit identischem Seed, Input und Tickzahl vergleichen
-- [ ] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen
+- [x] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen (`research/generated/verification/restore_determinism.json`, A/B/C verifiziert)
 - [ ] Laufzeitprofil für 1k / 10k / 100k / 1M Ticks erfassen: ticks/s, ms/tick, Storage, Telemetrie, Bytes, Dirty-Counts, RAM
 
 ### Release-Freeze vor Alpha.8
@@ -203,7 +203,7 @@
 - [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (Runner ergänzt, unabhängiger DATA-Lauf noch ausstehend)
 - [x] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks (Dashboard-DATA-Lauf mit 15 Runs; EVID nach Clean Freeze offen)
 - [x] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung (Dashboard-DATA-Lauf mit 150 Runs; EVID nach Clean Freeze offen)
-- [ ] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck
+- [x] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck (deterministischer DATA-Runner; wissenschaftliche EVID bleibt offen)
 - [ ] `EXP-BODY-0001`: Sensorverlust, Aktivitätsänderung, Rekonfiguration und Kompensation messen
 - [ ] `EXP-BODY-0001` um Wetter-/Umwelt-Kontrollbedingung, Sensorqualität,
   Kausalpfad, Body-Schema-Übergänge und unabhängige Effect-Observation erweitern
