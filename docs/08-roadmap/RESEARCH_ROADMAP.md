@@ -93,6 +93,8 @@ als unverified markiert.
 	Backend und Retry-Status als eigene Audit-Ereignisse erfasst.
 - Automatische Retries sind im Adapter deaktiviert und werden als `retry_count: 0`
 	und `retry_policy: disabled` reproduzierbar ausgewiesen.
+- Der `FrozenAIReplayBackend` erlaubt offline nur vorab registrierte Antworten,
+	validiert Request-/Response-Digests und verweigert jeden Live-Fallback.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

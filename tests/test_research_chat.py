@@ -19,6 +19,7 @@ from src.research_assistant.firewall import (
     AIFirewallViolation,
     ScientificAIFirewall,
 )
+from src.research_assistant.replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
 from src.research_assistant.authority import authority_for, authority_matrix, validate_authority_matrix
 
 
@@ -174,4 +175,20 @@ def test_scientific_authority_matrix_fails_closed_for_ai_roles() -> None:
     assert rules["Research Assistant"].scientific_evidence is False
     with pytest.raises(KeyError):
         authority_for("unknown component")
+
+
+def test_frozen_ai_replay_backend_has_no_live_fallback() -> None:
+    prompt = "frozen prompt"
+    backend = FrozenAIReplayBackend(
+        {FrozenAIReplayBackend.request_digest(prompt): "frozen answer"}
+    )
+
+    answer, metadata = backend(prompt)
+
+    assert answer == "frozen answer"
+    assert metadata["provider"] == "frozen_replay"
+    assert metadata["live_fallback"] is False
+    assert metadata["retry_count"] == 0
+    with pytest.raises(FrozenAIReplayError, match="No frozen AI replay response"):
+        backend("unknown prompt")
 

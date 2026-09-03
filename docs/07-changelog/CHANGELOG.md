@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Frozen AI replay backend
+
+- `FrozenAIReplayBackend` beantwortet ausschließlich vorab registrierte Request-Digests.
+- Unbekannte Requests werden abgewiesen; ein Live-Fallback ist explizit deaktiviert.
+- Replay-Metadaten enthalten Request-/Response-Digest sowie `retry_count: 0`.
+
 ## 2026-09-03 — AI inference failure auditing
 
 - Fehlgeschlagene Ollama-Inferenzen erzeugen nun ein unveränderliches `AIInferenceFailureEvent`.

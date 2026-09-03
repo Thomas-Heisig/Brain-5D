@@ -17,6 +17,7 @@ from .contracts import (
 )
 from .firewall import AIResource, AIAuthority, AIFirewallViolation, ScientificAIFirewall
 from .models import AIAnalysisRecord, ResearchPacket
+from .replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
 from .statistics import summarize, write_statistics
 
 __all__ = [
@@ -33,6 +34,8 @@ __all__ = [
     "AuthorityRule",
     "ResearchAssistant",
     "ResearchPacket",
+    "FrozenAIReplayBackend",
+    "FrozenAIReplayError",
     "render_markdown",
     "write_human_review",
     "summarize",
