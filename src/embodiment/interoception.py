@@ -110,6 +110,26 @@ class RegulatoryState:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class FunctionalState:
+    """Bounded functional qualities; these are not human emotion claims."""
+
+    tick: int
+    valence: float | None
+    activation: float | None
+    safety: float | None
+    uncertainty: float
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return {
+            "tick": self.tick,
+            "valence": self.valence,
+            "activation": self.activation,
+            "safety": self.safety,
+            "uncertainty": self.uncertainty,
+        }
+
+
 _SIGNAL_METADATA: dict[str, dict[str, JSONValue]] = {
     "cpu_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
     "memory_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
@@ -217,6 +237,36 @@ def derive_regulatory_state(frame: InteroceptionFrame) -> RegulatoryState:
     return RegulatoryState(tick=frame.tick, values=values, uncertainty=uncertainty)
 
 
+def derive_functional_state(frame: InteroceptionFrame) -> FunctionalState:
+    """Derive bounded technical qualities from regulatory state variables."""
+    drives = derive_drives(frame)
+    known_risks = [
+        value
+        for value in (
+            drives.drives["thermal_threat"],
+            drives.drives["resource_pressure"],
+            drives.drives["continuity_risk"],
+        )
+        if value is not None
+    ]
+    safety = None if not known_risks else 1.0 - max(known_risks)
+    activity_inputs = [
+        value
+        for value in (drives.drives["novelty"], drives.drives["resource_pressure"])
+        if value is not None
+    ]
+    activation = None if not activity_inputs else sum(activity_inputs) / len(activity_inputs)
+    valence = None if safety is None else (2.0 * safety) - 1.0
+    uncertainty = sum(drives.uncertainty.values()) / len(drives.uncertainty)
+    return FunctionalState(
+        tick=frame.tick,
+        valence=valence,
+        activation=activation,
+        safety=safety,
+        uncertainty=uncertainty,
+    )
+
+
 def _numeric_signal(signal: VitalSignal | None) -> float | None:
     if signal is None or signal.value is None:
         return None
@@ -259,10 +309,12 @@ def _range(value: JSONValue) -> tuple[float, float] | None:
 
 __all__ = [
     "DriveState",
+    "FunctionalState",
     "InteroceptionFrame",
     "RegulatoryState",
     "VitalSignal",
     "derive_drives",
+    "derive_functional_state",
     "derive_regulatory_state",
     "normalize_vital_signals",
 ]

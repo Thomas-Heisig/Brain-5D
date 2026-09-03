@@ -52,6 +52,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [x] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
 	Sensory Integrity, Resource Pressure und optional Task Progress deterministisch
 	ableiten; unbekannte Quellen bleiben unsicher
+- [x] Bounded funktionale Zustandsqualitäten für Valence, Activation, Safety und
+	Uncertainty ableiten, ohne daraus menschliche Emotionen oder Bewusstsein abzuleiten
 - [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
 	mit DATA/EVID-Provenienz ausführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten

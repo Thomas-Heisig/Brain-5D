@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Functional regulation qualities
+
+- Added deterministic bounded `FunctionalState` values for safety, activation,
+  valence and uncertainty.
+- Missing observations remain unknown; the values are technical regulation
+  outputs and are not evidence of emotion, self-reflection or consciousness.
+
 ## 2026-09-03 — Deterministic regulatory state
 
 - Added bounded internal regulation variables derived from interoception:

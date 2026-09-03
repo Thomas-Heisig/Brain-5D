@@ -15,10 +15,12 @@ from .deterministic import DeterministicTargetEnvironment
 from .environment import EnvironmentAdapter
 from .interoception import (
     DriveState,
+    FunctionalState,
     InteroceptionFrame,
     RegulatoryState,
     VitalSignal,
     derive_drives,
+    derive_functional_state,
     derive_regulatory_state,
     normalize_vital_signals,
 )
@@ -59,6 +61,7 @@ __all__ = [
     "EnvironmentKind",
     "EnvironmentObservation",
     "DriveState",
+    "FunctionalState",
     "InteroceptionFrame",
     "RegulatoryState",
     "EmbodimentPipeline",
@@ -68,6 +71,7 @@ __all__ = [
     "SystemSensorAdapter",
     "VitalSignal",
     "derive_drives",
+    "derive_functional_state",
     "derive_regulatory_state",
     "host_system_readings",
     "wall_clock_readings",

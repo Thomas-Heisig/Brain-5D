@@ -159,8 +159,9 @@
 - [ ] Drives vollständig aus Regelgrößen ableiten: thermal_threat,
   resource_pressure, sensory_integrity, continuity_risk, task_progress,
   novelty und actuator_confidence
-- [ ] Valence, Activation, Safety und Uncertainty als abgeleitete Zustände
-  modellieren; menschliche Emotionsbegriffe ausschließlich als nachgelagerte Interpretation zulassen
+- [x] Valence, Activation, Safety und Uncertainty als bounded technische
+  Zustände ableiten; menschliche Emotionsbegriffe ausschließlich als
+  nachgelagerte Interpretation zulassen
 - [ ] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und Neurogenese-Budgets ergänzen
 - [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
 - [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren

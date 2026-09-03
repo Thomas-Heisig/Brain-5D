@@ -7,6 +7,7 @@ from src.embodiment import (
     SystemSensorAdapter,
     VitalSignal,
     derive_drives,
+    derive_functional_state,
     derive_regulatory_state,
     normalize_vital_signals,
 )
@@ -127,3 +128,36 @@ def test_regulatory_state_keeps_unknown_sources_unknown() -> None:
     assert state.values["thermal_margin"] is None
     assert state.values["energy_reserve"] is None
     assert state.uncertainty["thermal_margin"] == 1.0
+
+
+def test_functional_state_is_bounded_and_not_emotion_interpretation() -> None:
+    frame = InteroceptionFrame(
+        8,
+        normalize_vital_signals(
+            {
+                "cpu_percent": 40.0,
+                "memory_percent": 40.0,
+                "temperature_c": 40.0,
+                "network_up": True,
+                "novelty": 0.8,
+            }
+        ),
+    )
+
+    state = derive_functional_state(frame)
+
+    assert state.safety == 1.0
+    assert state.valence == 1.0
+    assert state.activation == pytest.approx(0.4)
+    assert 0.0 <= state.uncertainty <= 1.0
+
+
+def test_functional_state_is_unknown_without_observable_drives() -> None:
+    state = derive_functional_state(
+        InteroceptionFrame(1, normalize_vital_signals({}))
+    )
+
+    assert state.valence is None
+    assert state.activation is None
+    assert state.safety is None
+    assert state.uncertainty > 0.8
