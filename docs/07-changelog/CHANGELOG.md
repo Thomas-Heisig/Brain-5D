@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Learning preparation reset
+
+- The non-executing Learning Preparation Studio now resets all preparation
+  inputs together with the proposal state.
+- Added regression coverage for the complete preparation form wiring.
+
 ## 2026-09-03 — Regulation experiment runner
 
 - Added deterministic `EXP-REG-0001` runs for nominal, chronic-pressure and

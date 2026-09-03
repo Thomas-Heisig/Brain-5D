@@ -123,6 +123,10 @@ function createLearningWorkspace() {
 
   byId("learning-ai-prepare")?.addEventListener("click", prepareWithAI);
   byId("learning-clear-proposal")?.addEventListener("click", () => {
+    ["learning-goal", "learning-success-metric", "learning-source-notes", "learning-constraints"].forEach((id) => {
+      const field = byId(id);
+      if (field) field.value = "";
+    });
     setText("learning-ai-status", "not requested");
     setText("learning-ai-proposal", "Noch kein KI-Vorschlag erstellt.");
   });

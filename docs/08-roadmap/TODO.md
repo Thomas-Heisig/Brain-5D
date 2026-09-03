@@ -108,6 +108,8 @@
 - [x] Größeres Chatfenster mit horizontaler Room-Aktionsleiste
 - [x] Drag-and-drop für Bildanhänge sowie lokale Sprach-Ein-/Ausgabe
 - [x] Ollama-Vision-Requestpfad und sichtbarer Verarbeitungsstatus
+- [x] Nicht ausführendes Learning-Preparation-Formular mit vollständigem
+  Reset der Eingaben und proposal-only KI-Vorbereitung
 
 ### Alpha.7 — Controlled Experience & Learning Loop
 

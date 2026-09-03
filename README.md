@@ -51,6 +51,9 @@ The science suite also provides a deterministic regulation DATA runner for
 nominal, chronic-pressure and unknown telemetry conditions; EVID remains
 separate from engineering execution.
 
+Learning Preparation Studio supports proposal-only experiment planning and
+clears all planning inputs without executing a run.
+
 ---
 
 ## 🎯 Key Features

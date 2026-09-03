@@ -56,3 +56,18 @@ def test_learning_studio_exposes_pre_post_and_holdout_diagnostics() -> None:
         "Holdout / Generalization",
     ):
         assert expected in studio
+
+
+def test_learning_studio_prepare_form_and_reset_are_wired() -> None:
+    studio = _read("learning-studio.js")
+
+    for field_id in (
+        "learning-goal",
+        "learning-success-metric",
+        "learning-source-notes",
+        "learning-constraints",
+    ):
+        assert f'id="{field_id}"' in studio
+        assert f'byId("{field_id}")' in studio
+    assert 'id="learning-ai-prepare"' in studio
+    assert 'id="learning-clear-proposal"' in studio

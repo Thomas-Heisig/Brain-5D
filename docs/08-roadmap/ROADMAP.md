@@ -22,6 +22,9 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 
 ## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
 
+- [x] Learning-Preparation-Formular für Lernziel, Erfolgskriterium,
+  Provenienz und Kontrollen mit proposal-only KI-Vorbereitung und vollständigem Reset
+
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:
 
