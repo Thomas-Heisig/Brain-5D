@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from src.research_assistant.advisor import CognitiveAdvisor
+from src.research_assistant.gateways import InterventionGateway, MemoryWriteGateway
 from src.research_assistant.governance import (
     KnowledgeOrigin,
     NetworkMode,
@@ -108,3 +109,24 @@ def test_cognitive_advisor_is_proposal_only() -> None:
     )
     assert proposal.to_dict()["executed"] is False
     assert "execute" not in proposal.to_dict()
+
+
+def test_intervention_gateway_requires_capability_and_human_approval() -> None:
+    proposal = CognitiveAdvisor().propose(
+        action="inspect_snapshot", rationale="inspect", confidence=0.5
+    )
+    gateway = InterventionGateway({"inspect_snapshot"})
+    proposal_id = gateway.submit(proposal, tick=4)
+    approval = gateway.approve(proposal_id, reviewer_id="human-1", tick=4)
+    assert approval.to_dict()["executed"] is False
+    assert len(gateway.audit) == 1
+
+    blocked = InterventionGateway({"inspect_snapshot"}, safety_envelope=lambda _item: False)
+    with pytest.raises(PermissionError, match="Safety envelope"):
+        blocked.submit(proposal, tick=4)
+
+
+def test_memory_write_gateway_only_creates_digest_proposals() -> None:
+    proposal = MemoryWriteGateway().propose(key="fact", value={"x": 1}, source="advisor")
+    assert proposal.to_dict()["executed"] is False
+    assert len(proposal.value_digest) == 64

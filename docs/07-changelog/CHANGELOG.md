@@ -10,6 +10,9 @@
   Kalibrierung und Brier/ECE-Metriken protokolliert.
 - Der `CognitiveAdvisor` erzeugt ausschließlich typisierte, nicht-ausführende
   `ActionProposal`-Contracts mit validierter Konfidenz.
+- `InterventionGateway` prüft Capability, Policy und Tick-Rate-Limit, führt ein
+  append-only Audit und verlangt Human Override; `MemoryWriteGateway` erzeugt
+  ausschließlich digest-only, nicht-ausführende Schreibvorschläge.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

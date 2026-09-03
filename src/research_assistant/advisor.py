@@ -14,6 +14,7 @@ class ActionProposal:
     """Typed action description with no executable command or callback."""
 
     proposal: Proposal
+    action: str
     rationale: str
     confidence: float
 
@@ -31,6 +32,7 @@ class ActionProposal:
                 source=source,
                 authority="proposal_only",
             ),
+            action=action,
             rationale=rationale,
             confidence=confidence,
         )

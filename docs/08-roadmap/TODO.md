@@ -61,8 +61,8 @@
 ### P1 — AI-Rollen und semantische Schnittstellen
 
 - [x] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
-- [ ] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
-- [ ] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
+- [x] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
+- [x] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
 - [ ] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
 - [ ] AI-0 Research AI, AI-1 Language Organ, AI-2 Cognitive Advisor und AI-3 Experimental Cognitive Controller als formale Rollen dokumentieren
 - [ ] Logical-Time- und Wall-Clock-Modus für asynchrone AI-Interaktionen unterscheiden und Response-Anwendungstics protokollieren

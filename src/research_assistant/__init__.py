@@ -23,6 +23,12 @@ from .contracts import (
     Proposal,
 )
 from .firewall import AIAuthority, AIFirewallViolation, AIResource, ScientificAIFirewall
+from .gateways import (
+    ApprovedIntervention,
+    InterventionGateway,
+    MemoryWriteGateway,
+    MemoryWriteProposal,
+)
 from .governance import (
     KnowledgeOrigin,
     NetworkMode,
@@ -50,10 +56,14 @@ from .statistics import summarize, write_statistics
 __all__ = [
     "AIAnalysisRecord",
     "ActionProposal",
+    "ApprovedIntervention",
     "AIAuthority",
     "AIFirewallViolation",
     "AIResource",
     "KnowledgeOrigin",
+    "InterventionGateway",
+    "MemoryWriteGateway",
+    "MemoryWriteProposal",
     "NetworkMode",
     "PreregistrationLock",
     "PromptRegistry",

@@ -45,6 +45,9 @@ Evidenz für Lernwirkung.
 - Der Cognitive Advisor ist als proposal-only Boundary mit typisiertem
 	`ActionProposal`-Contract umgesetzt; jede Anwendung bleibt extern und muss
 	separat autorisiert werden.
+- Interventionen und AI-Memory-Schreibvorschläge laufen nun über getrennte,
+	auditierbare Gateways. Die Gateways mutieren selbst keinen System- oder
+	Memory-Zustand.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
