@@ -69,6 +69,8 @@ Evidenz für Lernwirkung.
 - Chat-Antworten tragen nun explizite, versionierte Retrieval-Provenienz mit
 	Snapshot-Digest; Repository- und externe Webquellen sind im Antwortvertrag
 	getrennt sichtbar.
+- Die CI besitzt nun einen blockierenden Scientific Integrity Gate für die
+	zentralen Determinismus-, Restore-, Schema- und AI-Governance-Prüfungen.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Scientific Integrity Gate
+
+- CI führt nun einen blockierenden Integritätsjob für Determinismus, Restore,
+  Canonical State, Golden Chain, Registry-Schema, AI-Leakage und AI-Authority
+  aus.
+
 ## 2026-09-03 — Dashboard AI operation classification
 
 - Research-Experimente zeigen nun read-only, ob AI als `REPLAY`,
