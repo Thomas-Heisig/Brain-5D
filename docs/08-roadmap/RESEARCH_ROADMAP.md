@@ -109,6 +109,9 @@ als unverified markiert.
 - Die Shadow-Proposal-Auswertung liefert reproduzierbare Klassifikations-,
 	Kalibrierungs- und Utility-Metriken aus extern bereitgestellten Labels und
 	Konfidenzen; sie ist keine wissenschaftliche Evidenz.
+- Experimentmanifeste können nun die gemeinsamen Eingaben eines geplanten
+	AI-off/AI-on-Twin-Runs digestgebunden registrieren. Die Ausführung und der
+	statistische Vergleich beider Läufe sind weiterhin offene Forschungsarbeit.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

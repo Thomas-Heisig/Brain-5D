@@ -6,6 +6,9 @@
 - Vorschläge werden explizit mit `executed: false` markiert und besitzen keinen Apply-/Execute-Pfad.
 - Die Firewall erlaubt `propose` ausschließlich für `PROPOSAL_ONLY`; quantitative Proposal-Evaluation bleibt separat.
 - `evaluate_shadow_proposals` berechnet deterministisch Precision, Recall, False-Positive-Rate, Accuracy, Brier Score, ECE und Utility.
+- Experimentmanifeste können gemeinsame Twin-Run-Eingaben mit Snapshot-, Input-,
+  Reward- und Tickplan-Digest sowie getrennten AI-off/AI-on-IDs registrieren;
+  die tatsächliche Ausführung bleibt ein offener Forschungsschritt.
 
 ## 2026-09-03 — Language Organ sham controls
 

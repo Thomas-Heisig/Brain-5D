@@ -8,6 +8,7 @@ and links to research questions / hypotheses.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import platform
 import subprocess
@@ -25,6 +26,11 @@ from src.research_assistant.contracts import (
 from .registry import REPO_ROOT
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
+
+
+def _digest(value: object) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 class _VirtualMemoryLike(Protocol):
@@ -221,6 +227,39 @@ class ExperimentRecorder:
             "protocol_id": protocol_id,
             "registered": registered,
             "mode": mode,
+        }
+        return self
+
+    def record_twin_run(
+        self,
+        *,
+        snapshot_digest: str,
+        seed: int,
+        inputs: object,
+        reward: object,
+        tick_plan: list[int],
+        ai_off_experiment_id: str,
+        ai_on_experiment_id: str,
+    ) -> ExperimentRecorder:
+        """Register matching AI-off/AI-on inputs without executing either run."""
+        if not snapshot_digest.strip():
+            raise ValueError("Twin-run snapshot_digest must not be empty")
+        if not ai_off_experiment_id.strip() or not ai_on_experiment_id.strip():
+            raise ValueError("Twin-run experiment IDs must not be empty")
+        if ai_off_experiment_id == ai_on_experiment_id:
+            raise ValueError("Twin-run experiment IDs must be distinct")
+        if not tick_plan or any(tick < 0 for tick in tick_plan):
+            raise ValueError("Twin-run tick_plan must contain non-negative ticks")
+        self._manifest["twin_run"] = {
+            "snapshot_digest": snapshot_digest,
+            "seed": seed,
+            "input_digest": _digest(inputs),
+            "reward_digest": _digest(reward),
+            "tick_plan_digest": _digest(tick_plan),
+            "tick_count": len(tick_plan),
+            "ai_off_experiment_id": ai_off_experiment_id,
+            "ai_on_experiment_id": ai_on_experiment_id,
+            "executed": False,
         }
         return self
 

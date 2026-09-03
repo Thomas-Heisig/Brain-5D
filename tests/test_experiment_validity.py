@@ -175,6 +175,25 @@ class TestRuntimeErrorsInManifest:
             recorder.record_ai_treatment("PROTOCOL-AI-001")
             assert recorder.manifest["ai_treatment"]["registered"] is True
 
+    def test_twin_run_registration_is_digest_bound_and_non_executing(
+        self, tmp_experiment_dir: Path
+    ) -> None:
+        recorder = ExperimentRecorder("EXP-TWIN-0001", output_dir=tmp_experiment_dir)
+        recorder.record_twin_run(
+            snapshot_digest="snapshot-sha256",
+            seed=42,
+            inputs={"stimulus": [1, 2]},
+            reward={"target": 1},
+            tick_plan=[0, 1, 2],
+            ai_off_experiment_id="EXP-TWIN-0001-OFF",
+            ai_on_experiment_id="EXP-TWIN-0001-ON",
+        )
+        twin_run = recorder.manifest["twin_run"]
+        assert twin_run["input_digest"]
+        assert twin_run["reward_digest"]
+        assert twin_run["tick_plan_digest"]
+        assert twin_run["executed"] is False
+
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
