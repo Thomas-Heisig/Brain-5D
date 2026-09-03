@@ -362,11 +362,6 @@
           <span>Episode<strong id="embodiment-episode">0</strong></span>
         </div>
       </header>
-      <section class="runtime-clock-panel" aria-labelledby="runtime-clock-title">
-        <header><div><span class="workspace-kicker">RUNTIME CLOCK</span><h3 id="runtime-clock-title">Simulation Speed</h3></div><strong id="runtime-clock-mode">MAX</strong></header>
-        <label class="runtime-clock-control" for="runtime-clock-target">Target <output id="runtime-clock-target-value">MAX</output><input id="runtime-clock-target" type="range" min="0" max="5" step="1" value="5" aria-label="Simulation speed target"></label>
-        <div class="runtime-clock-readout"><span>Achieved <b id="runtime-clock-achieved">—</b></span><span>Simulation <b id="runtime-clock-ratio">—</b></span><span>Tick duration <b id="runtime-clock-latency">—</b></span><span>Jitter <b id="runtime-clock-jitter">—</b></span><span>Status <b id="runtime-clock-status">—</b></span></div>
-      </section>
       <section class="embodiment-living-map embodiment-anatomy" id="embodiment-living-map" data-system-state="idle" aria-label="Dynamische Embodiment-Anatomie">
         <div class="anatomy-zone anatomy-senses" data-detail-key="senses" tabindex="0" role="button">
           <header><span class="zone-index">01</span><div><span class="zone-kicker">EINGÄNGE</span><h3>Sinne</h3><p>Alles, was die Umwelt meldet</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></header>
@@ -403,6 +398,11 @@
           <header><span class="zone-index">02</span><div><span class="zone-kicker">INNERES ERLEBEN</span><h3>Innere Zustände</h3></div><span id="being-homeostasis" class="inner-status">disabled</span><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="feedback"><span>LOOP</span></label></header>
           <div class="inner-state-grid"><span><b id="being-energy">0.000</b><small>ENERGIE</small></span><span><b id="being-rate">0.00 Hz</b><small>AKTIVITÄT</small></span><span><b id="being-synchrony">0.000</b><small>SYNCHRONITÄT</small></span><span><b id="being-burst">0.000</b><small>BURST</small></span><span><b id="being-active">0</b><small>AKTIVE NEURONEN</small></span><span><b id="being-stdp">0</b><small>PLASTIZITÄT</small></span></div>
           <div class="inner-detail"><span>Rate-Fehler <b id="being-rate-error">0.000 Hz</b></span><span>Schwellenanpassung <b id="being-threshold">0.000</b></span><span>Spikes / Tick <b id="being-spikes">0</b></span><span>Episode Reward <b id="embodiment-episode-reward">0.000</b></span></div>
+          <section class="runtime-clock-panel" aria-labelledby="runtime-clock-title">
+            <header><div><span class="workspace-kicker">RUNTIME CLOCK</span><h3 id="runtime-clock-title">Simulation Speed</h3></div><strong id="runtime-clock-mode">MAX</strong></header>
+            <label class="runtime-clock-control" for="runtime-clock-target">Target <output id="runtime-clock-target-value">MAX</output><input id="runtime-clock-target" type="range" min="0" max="5" step="1" value="5" aria-label="Simulation speed target"></label>
+            <div class="runtime-clock-readout"><span>Achieved <b id="runtime-clock-achieved">—</b></span><span>Simulation <b id="runtime-clock-ratio">—</b></span><span>Tick duration <b id="runtime-clock-latency">—</b></span><span>Jitter <b id="runtime-clock-jitter">—</b></span><span>Status <b id="runtime-clock-status">—</b></span></div>
+          </section>
         </section>
       </section>
 

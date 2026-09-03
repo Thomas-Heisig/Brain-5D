@@ -1893,10 +1893,10 @@ body .footer-segment {
   gap: 8px;
 }
 
-.runtime-clock-panel { margin: 0 0 16px; padding: 14px 16px; border: 1px solid rgba(102, 170, 181, .25); background: rgba(5, 22, 32, .72); }
+.runtime-clock-panel { margin: 9px 0 0; padding: 8px 10px; border: 1px solid rgba(102, 170, 181, .25); background: rgba(5, 22, 32, .48); }
 .runtime-clock-panel > header, .runtime-clock-readout { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .runtime-clock-panel > header > div { min-width: 0; }
-.runtime-clock-panel h3 { margin: 3px 0 0; }
+.runtime-clock-panel h3 { margin: 2px 0 0; font-size: 10px; }
 .runtime-clock-panel > header > strong { color: #7ff5df; font: 10px var(--font-mono); }
 .runtime-clock-control { display: grid; gap: 7px; margin: 14px 0 10px; color: #b9d9dc; font: 10px var(--font-mono); }
 .runtime-clock-control output { color: #effcff; }
@@ -2517,7 +2517,7 @@ body .footer-segment {
 
 @media (max-width: 1100px) {
   #tab-embodiment.active {
-    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
   }
 
   #tab-embodiment .workspace-header,

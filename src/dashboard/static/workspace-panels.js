@@ -29,6 +29,7 @@ function initRuntimeClockControl() {
   const control = byId("runtime-clock-target");
   if (!control || control.dataset.bound === "true") return;
   control.dataset.bound = "true";
+  control.addEventListener("click", (event) => event.stopPropagation());
   control.addEventListener("input", async () => {
     const target = CLOCK_TARGETS[Number(control.value)];
     setText("runtime-clock-target-value", target === "MAX" ? "MAX" : `${target.toLocaleString()} Hz`);
