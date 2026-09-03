@@ -5,7 +5,6 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-
 ROOT = Path(__file__).parents[1]
 AI_PACKAGES = (ROOT / "src" / "research_assistant", ROOT / "src" / "language_organ")
 FORBIDDEN_ROOTS = ("src.core", "src.main")

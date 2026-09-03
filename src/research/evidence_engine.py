@@ -83,7 +83,10 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
     if status in _INVALID_EVIDENCE_STATUSES:
         return None
 
-    validity = manifest.get("validity", {})
+    validity_raw = manifest.get("validity", {})
+    if not isinstance(validity_raw, dict):
+        return None
+    validity = cast(dict[str, Any], validity_raw)
     if not validity.get("valid", True):
         return None
     causal_taint = manifest.get("causal_taint", "PURE")

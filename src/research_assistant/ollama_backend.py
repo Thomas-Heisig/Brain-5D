@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 from time import perf_counter_ns
 from typing import Any, cast
 from urllib.request import Request, urlopen

@@ -1,28 +1,39 @@
 """Contracts for the grounded Research Self-Knowledge chat."""
 
-import pytest
 from typing import Any
 
+import pytest
+
+from src.research_assistant.authority import (
+    authority_for,
+    authority_matrix,
+    validate_authority_matrix,
+)
 from src.research_assistant.chat import ResearchChat
 from src.research_assistant.contracts import (
     AIExposure,
     AIInteractionRecord,
     CausalTaint,
     Evidence,
-    Intervention,
     Interpretation,
+    Intervention,
     Observation,
     Proposal,
 )
 from src.research_assistant.firewall import (
-    AIResource,
     AIAuthority,
     AIFirewallViolation,
+    AIResource,
     ScientificAIFirewall,
 )
-from src.research_assistant.replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
-from src.research_assistant.observation_stream import ObservationStream, ObservationStreamError
-from src.research_assistant.authority import authority_for, authority_matrix, validate_authority_matrix
+from src.research_assistant.observation_stream import (
+    ObservationStream,
+    ObservationStreamError,
+)
+from src.research_assistant.replay_backend import (
+    FrozenAIReplayBackend,
+    FrozenAIReplayError,
+)
 
 
 class Doc:
@@ -40,8 +51,8 @@ class Source:
         del recursive
         return [Doc(path) for path in self.files]
 
-    def read_content(self, relative_path: str) -> str:
-        return self.files[relative_path]
+    def read_content(self, path: str) -> str:
+        return self.files[path]
 
 
 def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
@@ -73,7 +84,7 @@ def test_chat_rejects_empty_message() -> None:
 
 def test_chat_context_labels_research_and_docs() -> None:
     chat = ResearchChat(Source({"research.md": "research"}), Source({"docs.md": "docs"}), lambda prompt: (prompt, {}))
-    prompt = chat._prompt("Welche Quellen wurden verwendet?")
+    prompt = chat._prompt("Welche Quellen wurden verwendet?")  # pyright: ignore[reportPrivateUsage]
     assert "SCIENTIFIC RESEARCH SOURCES" in prompt
     assert "DOCUMENTATION SOURCES" in prompt
 

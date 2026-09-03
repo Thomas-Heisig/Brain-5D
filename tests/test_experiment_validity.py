@@ -22,14 +22,14 @@ from src.research.evidence_engine import (
     EvidenceEngine,
     _check_experiment_valid,  # type: ignore[misc]
 )
+from src.research.experiment_recorder import ExperimentRecorder
+from src.research.registry import ResearchRegistry
 from src.research_assistant.contracts import (
     AIExposure,
     AIInteractionRecord,
     AIReproducibility,
     CausalTaint,
 )
-from src.research.experiment_recorder import ExperimentRecorder
-from src.research.registry import ResearchRegistry
 
 # ============================================================================
 # Fixtures

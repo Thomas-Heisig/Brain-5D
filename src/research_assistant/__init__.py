@@ -2,7 +2,12 @@
 
 from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
 from .assistant import AnalysisBackend, ResearchAssistant
-from .authority import AuthorityRule, authority_for, authority_matrix, validate_authority_matrix
+from .authority import (
+    AuthorityRule,
+    authority_for,
+    authority_matrix,
+    validate_authority_matrix,
+)
 from .chat import ChatBackend, ResearchChat, chat_backend_from_text_backend
 from .contracts import (
     AIExposure,
@@ -11,15 +16,19 @@ from .contracts import (
     AIReproducibility,
     CausalTaint,
     Evidence,
-    Intervention,
     Interpretation,
+    Intervention,
     Observation,
     Proposal,
 )
-from .firewall import AIResource, AIAuthority, AIFirewallViolation, ScientificAIFirewall
+from .firewall import AIAuthority, AIFirewallViolation, AIResource, ScientificAIFirewall
 from .models import AIAnalysisRecord, ResearchPacket
+from .observation_stream import (
+    ObservationStream,
+    ObservationStreamError,
+    ObservationStreamRecord,
+)
 from .replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
-from .observation_stream import ObservationStream, ObservationStreamError, ObservationStreamRecord
 from .statistics import summarize, write_statistics
 
 __all__ = [

@@ -32,15 +32,15 @@ import argparse
 import datetime
 import json
 import os
-import signal
 import secrets
+import signal
 import threading
 from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, cast
-from urllib.parse import parse_qs, quote, urlencode, unquote, urlparse
+from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
 from src.embodiment import ConnectionManager
@@ -1991,8 +1991,6 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             )
             return
         docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
-        if docs is None:
-            raise BridgeNotConfiguredError("Documentation source is not configured.")
         web_context = ""
         if body.get("web_search") is True:
             if not self.dashboard_server.research_chat_web_search_enabled:
@@ -2004,6 +2002,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         images = body.get("images", [])
         if not isinstance(images, list) or any(not isinstance(image, str) or len(image) > 4_000_000 for image in images) or len(images) > 4:
             raise InvalidRequestError("images must contain at most four small base64 strings.")
+        images = cast(list[str], images)
         if images and not self.dashboard_server.research_chat_vision_enabled:
             raise InvalidRequestError("Vision is disabled in chat settings.")
         snapshot = self.dashboard_server.dashboard_state.snapshot()
@@ -2023,7 +2022,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             request_backend = chat_backend_from_text_backend(
                 lambda prompt: ollama.generate_text(
                     prompt,
-                    images=cast(list[str], images),
+                    images=images,
                     tools=[] if not self.dashboard_server.research_chat_tools_enabled else [],
                 )
             )
@@ -2149,8 +2148,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             tags_endpoint = backend.endpoint.rsplit("/api/", 1)[0] + "/api/tags"
             try:
                 with urlopen(tags_endpoint, timeout=3) as response:  # nosec B310: configured local provider endpoint
-                    payload = json.loads(response.read().decode("utf-8"))
-                models = [item["name"] for item in payload.get("models", []) if isinstance(item, dict) and isinstance(item.get("name"), str)]
+                    payload = cast(dict[str, Any], json.loads(response.read().decode("utf-8")))
+                models = [
+                    item["name"]
+                    for item in payload.get("models", [])
+                    if isinstance(item, dict) and isinstance(item.get("name"), str)
+                ]
             except (OSError, ValueError, TypeError):
                 pass
         self._send_json({"providers": [{"id": "ollama", "label": "Ollama", "available": backend is not None, "capabilities": ["chat", "vision", "tools"]}, {"id": "microsoft-copilot", "label": "Microsoft Copilot", "available": bool(self.dashboard_server.research_chat_oauth_token), "reason": "Requires Microsoft Entra OAuth and an approved Copilot API endpoint."}], "models": models})
@@ -2162,7 +2165,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             headers={"User-Agent": "Brain-5D Research Assistant/1.0"},
         )
         with urlopen(request, timeout=10) as response:  # nosec B310: fixed HTTPS host
-            payload = json.loads(response.read(256_000).decode("utf-8"))
+            payload = cast(dict[str, Any], json.loads(response.read(256_000).decode("utf-8")))
         results: list[str] = []
         abstract = payload.get("AbstractText")
         abstract_url = payload.get("AbstractURL")
@@ -3370,6 +3373,7 @@ def serve_dashboard(
     vision_enabled = os.environ.get("BRAIN5D_CHAT_VISION", str(configured_chat.get("vision_enabled", False))).lower() in {"1", "true", "yes", "on"}
     tools_enabled = os.environ.get("BRAIN5D_CHAT_TOOLS", str(configured_chat.get("tools_enabled", False))).lower() in {"1", "true", "yes", "on"}
     ollama_backend: OllamaBackend | None = None
+    resolved_chat_settings: dict[str, JSONValue] = {}
     if chat_model:
         chat_endpoint = os.environ.get(
             "BRAIN5D_CHAT_ENDPOINT",
@@ -3387,7 +3391,7 @@ def serve_dashboard(
         )
         ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature, top_p, max_tokens)
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
-        resolved_chat_settings: dict[str, JSONValue] = {
+        resolved_chat_settings = {
             "provider": "ollama",
             "model": chat_model,
             "endpoint": chat_endpoint,
