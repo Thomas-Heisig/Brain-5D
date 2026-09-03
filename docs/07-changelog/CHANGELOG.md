@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Learning source provenance derivation
+
+- Added typed `LearningSourceRef` derivation from validated `KnowledgeItem`
+  provenance and immutable environment-capture mappings.
+- Preserved source digest, origin, trust and explicit train/validation/holdout
+  partition metadata; incomplete captures fail closed.
+- Added regression coverage for both derivation paths.
+
 ## 2026-09-03 — Persistent Learning Preparation API
 
 - Persisted proposal and approved `PreparedLearningPlan` artifacts with typed

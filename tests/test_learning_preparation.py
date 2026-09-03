@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from src.knowledge.models import KnowledgeItem, SourceRecord
 from src.learning import (
     LearningDataPartition,
     LearningObjective,
@@ -103,7 +104,6 @@ def test_guard_rejects_direct_neural_or_reward_writes(payload: dict[str, object]
     with pytest.raises(PermissionError):
         LearningPreparationGuard.validate_mapping(payload)
 
-
 def test_guard_allows_protocol_metadata_and_provenance() -> None:
     LearningPreparationGuard.validate_mapping(
         {
@@ -114,6 +114,66 @@ def test_guard_allows_protocol_metadata_and_provenance() -> None:
             "evaluation": {"metric": "task_success", "repeat": 10},
         }
     )
+
+
+def test_source_refs_are_derived_from_knowledge_and_environment_provenance() -> None:
+    item = KnowledgeItem(
+        item_id="ITEM-001",
+        source=SourceRecord(
+            source_id="SRC-KNOWLEDGE-001",
+            source_type="document",
+            locator="fixture://knowledge",
+            retrieved_at_ns=1,
+            content_sha256="knowledge-digest",
+            trust_classification="REVIEWED",
+        ),
+        title="Controlled relation",
+        content="A validated knowledge item.",
+        language="en",
+        confidence=1.0,
+    )
+
+    knowledge_ref = LearningSourceRef.from_knowledge_item(
+        item, partition=LearningDataPartition.VALIDATION
+    )
+    environment_ref = LearningSourceRef.from_environment_capture(
+        {
+            "environment_id": "ENV-001",
+            "capture_id": "CAP-001",
+            "digest": "environment-digest",
+        },
+        partition=LearningDataPartition.HOLDOUT,
+    )
+
+    assert knowledge_ref.to_dict() == {
+        "source_id": "SRC-KNOWLEDGE-001",
+        "digest": "knowledge-digest",
+        "origin": "knowledge:document",
+        "partition": "validation",
+        "trust": "REVIEWED",
+    }
+    assert environment_ref.to_dict() == {
+        "source_id": "ENV-001:CAP-001",
+        "digest": "environment-digest",
+        "origin": "environment:ENV-001",
+        "partition": "holdout",
+        "trust": "CONTROLLED",
+    }
+
+
+@pytest.mark.parametrize("field", ["environment_id", "capture_id", "digest"])
+def test_environment_capture_derivation_fails_closed_for_missing_provenance(
+    field: str,
+) -> None:
+    capture = {
+        "environment_id": "ENV-001",
+        "capture_id": "CAP-001",
+        "digest": "environment-digest",
+    }
+    capture[field] = ""
+
+    with pytest.raises(ValueError, match=field):
+        LearningSourceRef.from_environment_capture(capture)
 
 
 def test_preparation_persistence_keeps_proposal_and_approval_separate(tmp_path: Path) -> None:

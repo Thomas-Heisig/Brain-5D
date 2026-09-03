@@ -32,7 +32,7 @@
   Proposal-Digest und unveränderlicher Provenienz speichern
 - [x] Typisierte `/api/learning/preparation`-API für Erstellen, Prüfen und Freigeben
   ergänzen; serverseitige `LearningPreparationGuard`-Prüfung erzwingen
-- [ ] `LearningSourceRef` aus Knowledge Intake und Environment-Capture ableiten
+- [x] `LearningSourceRef` aus Knowledge Intake und Environment-Capture ableiten
 - [ ] Train-, Validation- und Holdout-Partitionen serverseitig auf Leakage prüfen
 - [ ] Pre-/Post-Impulse, Temporal-State-Frames und TaskOutcome-Ergebnisse als
   Laufartefakte persistieren und im Studio anzeigen

@@ -18,6 +18,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Mapping, Sequence, cast
 
+from src.knowledge.models import KnowledgeItem
+
 
 class LearningPlanOrigin(str, Enum):
     """Origin of a learning-preparation proposal."""
@@ -60,6 +62,42 @@ class LearningSourceRef:
             "partition": self.partition.value,
             "trust": self.trust,
         }
+
+    @classmethod
+    def from_knowledge_item(
+        cls,
+        item: KnowledgeItem,
+        *,
+        partition: LearningDataPartition = LearningDataPartition.TRAIN,
+    ) -> LearningSourceRef:
+        """Derive a learning reference from validated knowledge provenance."""
+        return cls(
+            source_id=item.source.source_id,
+            digest=item.source.content_sha256,
+            origin=f"knowledge:{item.source.source_type}",
+            partition=partition,
+            trust=item.source.trust_classification,
+        )
+
+    @classmethod
+    def from_environment_capture(
+        cls,
+        capture: Mapping[str, Any],
+        *,
+        partition: LearningDataPartition = LearningDataPartition.TRAIN,
+    ) -> LearningSourceRef:
+        """Derive a reference from an immutable environment-capture record."""
+        environment_id = _required_capture_field(capture, "environment_id")
+        capture_id = _required_capture_field(capture, "capture_id")
+        digest = _required_capture_field(capture, "digest")
+        trust = str(capture.get("trust", "CONTROLLED"))
+        return cls(
+            source_id=f"{environment_id}:{capture_id}",
+            digest=digest,
+            origin=f"environment:{environment_id}",
+            partition=partition,
+            trust=trust,
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -371,7 +409,6 @@ class LearningPreparationService:
             rationale=rationale,
             ai_interaction_id=ai_interaction_id,
         )
-
     def approve(
         self,
         proposal: LearningPreparationProposal,
@@ -384,6 +421,13 @@ class LearningPreparationService:
             approved_by=approved_by,
             approval_note=approval_note,
         )
+
+
+def _required_capture_field(capture: Mapping[str, Any], name: str) -> str:
+    value = capture.get(name)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"environment capture {name} must be a non-empty string")
+    return value.strip()
 
 
 __all__ = [
