@@ -15,7 +15,7 @@ from src.embodiment import (
     SystemSensorAdapter,
     host_system_readings,
 )
-from src.experience import ExperienceEngine
+from src.experience import ExperienceEngine, build_experience_subsystem
 
 
 @dataclass
@@ -175,3 +175,37 @@ def test_runtime_hooks_use_one_existing_network_tick() -> None:
     assert record.observation is not None
     state = cast(dict[str, Any], record.observation.state)
     assert state["position"] == 1
+
+
+def test_composition_builds_deterministic_experience_subsystem() -> None:
+    config = {
+        "seed": 42,
+        "experience": {
+            "enabled": True,
+            "sensor": {
+                "type": "system",
+                "provider": "deterministic_trace",
+                "trace": [{"cpu_percent": 25.0}],
+            },
+            "encoder": {"type": "system_v1"},
+            "decoder": {"type": "controlled_v1"},
+            "environment": {"type": "deterministic_target"},
+        },
+    }
+
+    engine = build_experience_subsystem(config, Network(), LearningSpy())
+
+    assert engine is not None
+    assert engine.sensor.sample(0).payload == {"cpu_percent": 25.0}
+    assert engine.embodiment.environment.environment_id == "deterministic-target-v1"
+
+
+def test_composition_rejects_unknown_sensor_provider() -> None:
+    config = {"experience": {"enabled": True, "sensor": {"provider": "fallback"}}}
+
+    try:
+        build_experience_subsystem(config, Network(), LearningSpy())
+    except ValueError as error:
+        assert str(error) == "unknown experience sensor provider"
+    else:
+        raise AssertionError("unknown provider must fail closed")

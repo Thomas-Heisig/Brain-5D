@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-02 — Configured Experience composition
+
+- Added `build_experience_subsystem()` for the canonical runtime path.
+- Experience activation is explicit and defaults to disabled; supported sensor,
+  encoder, decoder and deterministic environment types reject unknown values.
+- Added a deterministic system encoder and controlled target actuator wiring;
+  this composes existing learning and safety components and claims no evidence.
+- Added focused tests for deterministic composition and fail-closed provider
+  configuration.
+
 ## 2026-09-02 — Ollama language-organ bridge
 
 - Connected `OllamaBackend` to the existing `LanguageModelBackend` contract;

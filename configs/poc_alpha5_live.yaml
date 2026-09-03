@@ -5,6 +5,18 @@
 
 seed: 42
 
+experience:
+  enabled: false
+  sensor:
+    type: system
+    provider: host
+  encoder:
+    type: system_v1
+  decoder:
+    type: controlled_v1
+  environment:
+    type: deterministic_target
+
 # Orthogonal state identity and observability intensity.
 state_mode: operator
 observability: minimal

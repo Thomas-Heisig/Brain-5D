@@ -41,7 +41,11 @@ akzeptierten `EnvironmentObservation` übernommen.
 7. **Runtime-Integration:** `prepare()` und `complete()` wurden als
   Pre-/Post-Hook registrierbar gemacht. Der Regressionstest bestätigt einen
   vorhandenen Netzwerktick ohne zweiten `network.step()`-Aufruf.
-8. **Präregistrierung:** `EXP-EMB-0001` definiert Bedingungen, Kontrollen,
+8. **Produktive Composition:** `build_experience_subsystem()` verdrahtet die
+   vorhandene Engine im kanonischen Runtime-Start nur bei
+   `experience.enabled: true`. Unbekannte Adaptertypen und Provider werden
+   fail-closed abgewiesen; `poc_alpha5_live.yaml` bleibt standardmäßig deaktiviert.
+9. **Präregistrierung:** `EXP-EMB-0001` definiert Bedingungen, Kontrollen,
   Wiederholungen und Messgrößen. Es ist noch keine Evidenz.
 
 ## Offene nächste Schritte

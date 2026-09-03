@@ -101,6 +101,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] Fail-closed discovery for compute, storage, network, camera, microphone, display, audio and print queues
 - [x] Local/intranet binding and authenticated TLS reverse-proxy template
 - [x] First deterministic `EnvironmentAdapter` integrated end-to-end (`DeterministicTargetEnvironment` + safety proof)
+- [x] Explicitly configured Experience composition is attached to the canonical runtime when enabled; unknown adapters fail closed and the default remains disabled
 - [x] Explicit authorization before actuator execution; unauthorized calls fail closed
 - [x] Capability and rate limits enforced per adapter
 - [x] Every actuator attempt recorded in a hash-linked immutable audit trail

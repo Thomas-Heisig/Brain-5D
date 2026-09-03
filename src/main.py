@@ -60,6 +60,7 @@ from src.diagnostics.stimulus import StimulusEngine, StimulusResult
 from src.diagnostics.topology_health import TopologyHealth
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
+from src.experience import build_experience_subsystem
 
 # ================================================================
 # Snapshot Writer
@@ -606,6 +607,11 @@ def main() -> int:
             snapshot_callback=_write_snapshot,
         )
         print("✅ Canonical RuntimeController created (idle)")
+
+        experience = build_experience_subsystem(config_dict, network, learning)
+        if experience is not None:
+            experience.attach_runtime(controller)
+            print("✅ ExperienceEngine attached via runtime hooks")
 
         # Shared state for stimulus result (set by pre-hook, read by post-hook)
         _last_stim: list[StimulusResult | None] = [None]

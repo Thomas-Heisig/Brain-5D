@@ -60,6 +60,7 @@
 - [x] SystemSensorAdapter contract added with injectable provider; live host metrics remain opt-in and are not scientific evidence
 - [ ] Connect configured physical/digital audio and vision adapters to the pipeline; no hardware is claimed until an adapter publishes data
 - [x] Integrate Experience Engine with the canonical runtime hook and preregister `EXP-EMB-0001`; execution remains gated by clean source freeze
+- [x] Add explicit fail-closed Experience composition for the canonical runtime; default operator profile remains disabled and deterministic traces are supported
 - [x] Embodiment pipeline stages expose validated in-element enable switches through the dashboard API
 - [x] Apply Embodiment stage switches inside the runtime pipeline with fail-closed execution
 - [x] Redraw the Wesen visual as a bilateral-symmetric body: paired senses, central neural database, paired extremities
