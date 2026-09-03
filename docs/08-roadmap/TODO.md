@@ -243,7 +243,7 @@
 - [x] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit drei unabhängigen Dashboard-DATA-Runs; mittlere Synapsengewichte steigen in allen Runs
 - [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
 - [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
-- [x] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (versionierter Dashboard-DATA-Lauf `EXP-LEARN-20260903-2300`; alle drei Seeds baseline ohne Zielspike, after mit Zielspike)
+- [x] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (versionierte Dashboard-DATA-Läufe; Zehn-Seed-Replikation `EXP-LEARN-20260903-2330` mit 0/10 Baseline- und 10/10 After-Zielspikes)
 - [x] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks (Dashboard-DATA-Lauf mit 15 Runs; EVID nach Clean Freeze offen)
 - [x] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung (Dashboard-DATA-Lauf mit 150 Runs; EVID nach Clean Freeze offen)
 - [x] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck (deterministischer DATA-Runner; wissenschaftliche EVID bleibt offen)

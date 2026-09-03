@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — Ten-seed learning loop replication
+
+- Published `EXP-LEARN-20260903-2330` through the Dashboard workflow with
+  seeds 42 through 51.
+- All 10 baseline probes lacked a target spike; all 10 trained probes produced
+  one. The mean synaptic-weight delta was `0.7788007831`.
+- Generated DATA, manifest, workflow, report and post-run summary; EVID remains
+  gated by clean freeze and independent review.
+
 ## 2026-09-03 — Automatic experiment summaries
 
 - Every completed dashboard experiment now creates `summary.md` in its own experiment directory.

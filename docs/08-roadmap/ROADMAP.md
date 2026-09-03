@@ -47,6 +47,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
 - [x] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, drei unabhängige Dashboard-DATA-Runs
 - [x] Versionierter Before/After-Lernwiederholungslauf `EXP-LEARN-20260903-2300` mit drei unabhängigen Dashboard-DATA-Runs
+- [x] Zehn-Seed-Replikation der geschlossenen Lernschleife `EXP-LEARN-20260903-2330` mit 0/10 Baseline- und 10/10 After-Zielspikes
 - [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
 - [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
 - [x] `EXP-PING-0001-v2` versioniert ausgeführt: sechs identische Replikatpaare
