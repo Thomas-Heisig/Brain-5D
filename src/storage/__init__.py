@@ -35,7 +35,7 @@ from .delta_journal import (
     UncommittedTailError,
     assert_journal_format_invariants,
 )
-from .layout import StorageLayout
+from .layout import StorageLayout, validate_scope_transition
 from .lazy_view import B5DLazyProjector, StorageHeatmap, StorageHeatmapKind
 from .optical_codec import (
     RECORD_SIZE,
@@ -94,6 +94,7 @@ __all__ = [
     "StorageHeatmap",
     "StorageHeatmapKind",
     "StorageLayout",
+    "validate_scope_transition",
     "StorageRuntimeConfig",
     "StorageRuntimeStats",
     "StorageSession",

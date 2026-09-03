@@ -3,7 +3,11 @@
 ## 2026-09-03 — Controlled storage layout
 
 - Ein zentraler `StorageLayout`-Vertrag kapselt Operator-State, Journals,
-  Checkpoints, Experimentpfade und disposable Dev-Artefakte.
+  Checkpoints, Experimentpfade (`state/`, `DATA/`, `EVID/`) und ausschließlich
+  disposable Dev-Artefakte.
+- Scope-Übergänge werden fail-closed begrenzt: DEV darf nicht nach OPERATOR,
+  Experimente dürfen nicht gemergt werden, und OPERATOR liefert Experimente
+  nur per Snapshot oder Fork.
 
 ## 2026-09-03 — Dashboard research operation status
 

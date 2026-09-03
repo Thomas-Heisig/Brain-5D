@@ -86,7 +86,9 @@ Evidenz für Lernwirkung.
 - Experimentlisten zeigen nun einen getrennten wissenschaftlichen Betriebsstatus
 	von PURE über Beobachtung und Vorschlag bis kausal aktiv.
 - Der StorageLayout-Vertrag trennt Operator-State, Journals, Checkpoints,
-	Experimentpfade und disposable Dev-Artefakte.
+	Experimentpfade (`state/`, `DATA/`, `EVID/`) und disposable Dev-Artefakte.
+- Die Storage-Scope-Grenzen verbieten unkontrollierte DEV-/Experiment-Merges
+	und erlauben Operator-Zustand in Experimenten nur über Snapshot oder Fork.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

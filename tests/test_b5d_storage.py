@@ -27,7 +27,7 @@ from src.storage.b5d import (
     B5DSnapshotWriter,
     assert_format_invariants,
 )
-from src.storage.layout import StorageLayout
+from src.storage.layout import StorageLayout, validate_scope_transition
 from src.storage.optical_codec import OpticalPointState
 
 
@@ -35,12 +35,26 @@ def test_storage_layout_separates_controlled_roots(tmp_path: Path) -> None:
     layout = StorageLayout(tmp_path)
     assert layout.operator_state == tmp_path / "operator" / "state.b5d"
     assert layout.experiment("EXP-0001") == tmp_path / "experiment" / "EXP-0001"
+    assert layout.experiment_state("EXP-0001") == tmp_path / "experiment" / "EXP-0001" / "state"
+    assert layout.experiment_data("EXP-0001") == tmp_path / "experiment" / "EXP-0001" / "DATA"
+    assert layout.experiment_evidence("EXP-0001") == tmp_path / "experiment" / "EXP-0001" / "EVID"
     layout.ensure_directories()
     assert layout.operator_journal.is_dir()
     assert layout.operator_checkpoints.is_dir()
     assert layout.dev_disposable.is_dir()
     with pytest.raises(ValueError, match="safe EXP"):
         layout.experiment("../outside")
+
+
+def test_storage_scope_transitions_are_fail_closed() -> None:
+    validate_scope_transition("OPERATOR", "EXPERIMENT", "snapshot")
+    validate_scope_transition("OPERATOR", "EXPERIMENT", "fork")
+    with pytest.raises(ValueError, match="DEV to OPERATOR"):
+        validate_scope_transition("DEV", "OPERATOR", "copy")
+    with pytest.raises(ValueError, match="merge"):
+        validate_scope_transition("EXPERIMENT", "OPERATOR", "merge")
+    with pytest.raises(ValueError, match="snapshot or fork"):
+        validate_scope_transition("OPERATOR", "EXPERIMENT", "merge")
 
 
 @dataclass(slots=True)
