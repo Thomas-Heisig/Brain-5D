@@ -1,0 +1,71 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_report_json": "experiments/EXP-5D-0001-v3/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-5D-0001-v3/reports/AIRR-2026-0001.md",
+    "data": "DATA/runs.json",
+    "report": "report.md",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": ""
+  },
+  "data_partitions": [],
+  "experiment_id": "EXP-5D-0001-v3",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "f0aca72400a08c247dbc535969332677fec305ad",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-5D-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "research_questions": [
+    "RQ-5D-001"
+  ],
+  "research_run_mode": "EXPLORATORY",
+  "results": {
+    "protocol": "science_suite_v1",
+    "run_count": 15
+  },
+  "runtime": {
+    "duration_seconds": 0.003703500027768314
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "ticks": 8
+  },
+  "software": {
+    "brain5d_version": "unknown",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "timestamp": "2026-09-03T23:12:35.361754",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

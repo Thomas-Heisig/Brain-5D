@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — 5D dimensionality experiment v3
+
+- Executed `EXP-5D-0001-v3` through the dashboard with 15 empirical DATA rows.
+- Verified experiment-local manifest, report, summary, AIRR, and three AIAR role reports.
+- The measured result was a zero-activity null finding across all five conditions; no scientific evidence was released.
+
 ## 2026-09-03 — Learning report recovery
 
 - Regenerated the missing AIRR and AIAR outputs for `EXP-LEARN-20260903-2330`.
