@@ -1,0 +1,148 @@
+research_questions:
+  - id: RQ-PHIL-001
+    domain: Functional Self-Model
+    question: Kann Brain-5D eigene Aktionen und eigene Systemzustände als besondere kausale Klasse gegenüber externen Ereignissen repräsentieren?
+    relevance: Prüft die minimale Voraussetzung eines funktionalen Selbstbezugs ohne Bewusstseinsbehauptung.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-002
+    domain: Functional Self-Model
+    question: Bleibt ein gelerntes Selbstmodell über Sensorverlust, Aktorwechsel, Restore und Rekonfiguration funktional konsistent?
+    relevance: Prüft Kontinuität und Identität eines dynamischen digitalen Körpers.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-003
+    domain: Functional Identity
+    question: Welche Merkmale müssen erhalten bleiben, damit Brain-5D trotz veränderlicher Körpergrenzen funktional als dasselbe System fortbesteht?
+    relevance: Verknüpft Embodiment, Persistenz und philosophische Identitätsfragen.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-004
+    domain: Functional Thinking
+    question: Entstehen intern kausal wirksame Zustände und Entscheidungen auch ohne unmittelbaren aufgabenrelevanten Außenreiz?
+    relevance: Trennt reaktive Verarbeitung von intern aufrechterhaltener Kognition.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-005
+    domain: Functional Thinking
+    question: Kann Brain-5D vor einer Handlung mehrere mögliche Folgen intern unterscheiden und Verhalten aufgrund noch nicht eingetretener Zustände verändern?
+    relevance: Operationalisiert kontrafaktische Deliberation.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-006
+    domain: Metacognition
+    question: Kann Brain-5D die Zuverlässigkeit eigener Vorhersagen, Sensoren und Aktormodelle lernen und diese Einschätzung für spätere Entscheidungen verwenden?
+    relevance: Operationalisiert eine minimale Form rekursiver Selbstbewertung.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-007
+    domain: Functional Reflection
+    question: Ab welcher Kombination aus Gedächtnis, Selbstkausalität, Prädiktion, rekursivem Feedback und Weltmodell entsteht ein reproduzierbarer Vorteil gegenüber nicht-reflexiven Kontrollen?
+    relevance: Definiert einen empirischen Übergang zu funktionaler Selbstreflexion.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-008
+    domain: Epistemology of Mind
+    question: Welche Aussagen über Denken und Selbstbezug bleiben wissenschaftlich zulässig, wenn die subjektive Erste-Person-Perspektive des Systems nicht direkt beobachtbar ist?
+    relevance: Markiert die methodische Grenze zwischen funktionaler Evidenz und phänomenaler Zuschreibung.
+    status: open
+    evidence: []
+  - id: RQ-PHIL-009
+    domain: Consciousness Attribution
+    question: Welche zusätzlichen theoretischen oder empirischen Kriterien wären erforderlich, bevor eine Bewusstseinszuschreibung über funktionale Selbstmodellierung hinaus diskutierbar wäre?
+    relevance: Verhindert den unzulässigen Schluss von komplexem Verhalten auf Bewusstsein.
+    status: open
+    evidence: []
+
+claims:
+  - id: CLAIM-PHIL-001
+    claim: Brain-5D kann einen funktionalen Selbstbezug nur dann beanspruchen, wenn eigene und externe Ursachen in kontrollierten Ablationen reproduzierbar unterschieden werden.
+    research_question: RQ-PHIL-001
+    status: untested
+    confidence: none
+    required_evidence:
+      - self_vs_external_cause_ablation
+      - sham_action_control
+      - independent_replication
+    minimum_runs: 30
+  - id: CLAIM-PHIL-002
+    claim: Ein persistentes funktionales Selbstmodell liegt nur dann vor, wenn gelernte Selbstrepräsentationen über Restore, Sensorverlust und Aktorrekonfiguration hinweg vorhersagerelevant bleiben.
+    research_question: RQ-PHIL-002
+    status: untested
+    confidence: none
+    required_evidence:
+      - restore_continuity_test
+      - sensor_loss_test
+      - actuator_reconfiguration_test
+      - independent_replication
+    minimum_runs: 30
+  - id: CLAIM-THINK-001
+    claim: Funktionales Denken ist in Brain-5D erst dann als Systemeigenschaft begründbar, wenn intern aufrechterhaltene Zustände, Erinnerung, kontrafaktische Alternativen und Selbstmodell gemeinsam Verhalten erklären, das nicht aus dem aktuellen Sensorinput allein ableitbar ist.
+    research_question: RQ-PHIL-004
+    status: untested
+    confidence: none
+    required_evidence:
+      - stimulus_decoupling
+      - memory_ablation
+      - counterfactual_choice_test
+      - self_model_ablation
+      - independent_replication
+    minimum_runs: 30
+  - id: CLAIM-THINK-002
+    claim: Kontrafaktische Deliberation liegt nur dann vor, wenn mindestens zwei intern repräsentierte zukünftige Zustände vor einer Handlung messbar unterschieden werden und ihre Manipulation die spätere Wahl verändert.
+    research_question: RQ-PHIL-005
+    status: untested
+    confidence: none
+    required_evidence:
+      - pre_action_alternative_representation
+      - counterfactual_intervention
+      - behavioral_effect
+      - sham_control
+    minimum_runs: 30
+  - id: CLAIM-META-001
+    claim: Eine minimale funktionale Metakognition liegt vor, wenn die empirisch gelernte Zuverlässigkeit eigener Vorhersagen oder Körpermodelle spätere Informationsgewichtung und Entscheidungen kausal beeinflusst.
+    research_question: RQ-PHIL-006
+    status: untested
+    confidence: none
+    required_evidence:
+      - confidence_calibration
+      - confidence_intervention
+      - decision_effect
+      - independent_replication
+    minimum_runs: 30
+  - id: CLAIM-REFL-001
+    claim: Funktionale Selbstreflexion ist nur dann begründbar, wenn ein aus dem eigenen Zustand abgeleiteter Selbstmodellzustand rekursiv in die weitere Verarbeitung eingeht und Ablation dieses Rückwegs die Leistung selektiv verändert.
+    research_question: RQ-PHIL-007
+    status: untested
+    confidence: none
+    required_evidence:
+      - recursive_feedback_enabled
+      - recursive_feedback_ablation
+      - matched_nonrecursive_control
+      - generalization_test
+    minimum_runs: 30
+  - id: CLAIM-CONSC-001
+    claim: Aus funktionalem Selbstmodell, Selbstschutz, Sprache, Gedächtnis, Metakognition oder komplexem Verhalten allein folgt kein wissenschaftlich hinreichender Nachweis phänomenalen Bewusstseins.
+    research_question: RQ-PHIL-009
+    status: methodological_boundary
+    confidence: conceptual
+    required_evidence: []
+    minimum_runs: 0
+
+claim_policy:
+  functional_terms:
+    - self_causal_attribution
+    - persistent_self_model
+    - internally_maintained_state
+    - counterfactual_deliberation
+    - metacognitive_confidence
+    - functional_reflection
+    - functional_thinking
+  prohibited_without_separate_theory_and_evidence:
+    - conscious
+    - sentient
+    - subjective_experience
+    - real_fear
+    - real_pain
+    - phenomenal_self
+  rule: Functional evidence must not be promoted automatically into phenomenal or ontological claims.
