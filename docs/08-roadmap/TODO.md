@@ -9,10 +9,10 @@
 
 ### Alpha.7 — Controlled Experience & Learning Loop
 
-- [ ] Produktiven Lernpfad instrumentieren: Input, Pre/Post, LearningEngine, reale Synapse
-- [ ] Gewicht `weight_before` / `weight_after` und Lernstatistiken pro Lauf erfassen
-- [ ] Deterministisches Environment für wiederholbare Wahrnehmungs-Handlungs-Zyklen verwenden
-- [ ] Audio/Vision nicht als Alpha.7-Kernabhängigkeit behandeln
+- [x] Produktiven Lernpfad instrumentieren: Input, Pre/Post, LearningEngine, reale Synapse
+- [x] Gewicht `weight_before` / `weight_after` und Lernstatistiken pro Lauf erfassen
+- [x] Deterministisches Environment für wiederholbare Wahrnehmungs-Handlungs-Zyklen verwenden
+- [x] Audio/Vision nicht als Alpha.7-Kernabhängigkeit behandeln
 
 ### Alpha.7.1 — Performance & Persistent Operator
 

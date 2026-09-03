@@ -6,6 +6,12 @@
 - Split actionable work into ENGINEERING, SCIENCE and OPERATION tracks.
 - Added `docs/08-roadmap/RESEARCH_ROADMAP.md` with research questions, experiment order and evidence criteria.
 
+## 2026-09-03 — Productive learning path verified locally
+
+- The existing learning experiment now has focused regression coverage.
+- A deterministic run changed mean synaptic weight from `0.05` to `0.8288007831`, applied 960 reward-weight updates, and changed the fresh probe from no target spike to a target spike.
+- This is an engineering/protocol result only; `EXP-STDP-0002` remains open until clean-freeze independent runs produce valid evidence artifacts.
+
 ## 2026-09-03 — Complete dirty-state emission
 
 - Structural neuron/synapse changes now emit dirty IDs.

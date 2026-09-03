@@ -22,7 +22,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
 - [ ] `EXP-EMB-0001`: Sensor -> Encoder -> SNN -> Decoder -> Action -> Environment -> Reward -> Learning
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
-- [ ] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
+- [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 
 ## v0.5.0-alpha.7.1 — Performance & Persistent Operator
 
