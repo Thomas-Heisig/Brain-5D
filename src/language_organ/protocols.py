@@ -31,6 +31,7 @@ Example:
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from enum import StrEnum
 from typing import Any, Protocol
 
 from src.signal_processing.models import SignalFrame
@@ -38,6 +39,13 @@ from src.signal_processing.models import SignalFrame
 # ============================================================================
 # Request / Response Models
 # ============================================================================
+
+
+class LanguageOrganMode(StrEnum):
+    """Experimental treatment applied by the language organ."""
+
+    LINGUISTIC_TRANSPORT = "LINGUISTIC_TRANSPORT"
+    SEMANTIC_AUGMENTATION = "SEMANTIC_AUGMENTATION"
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,6 +68,7 @@ class LanguageRequest:
     purpose: str
     text: str
     signal_frame: SignalFrame | None = None
+    mode: LanguageOrganMode = LanguageOrganMode.LINGUISTIC_TRANSPORT
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -68,6 +77,7 @@ class LanguageRequest:
             "request_id": self.request_id,
             "purpose": self.purpose,
             "text": self.text,
+            "mode": self.mode.value,
         }
         if self.signal_frame is not None:
             result["signal_frame"] = asdict(self.signal_frame)
@@ -177,6 +187,7 @@ class LanguageModelBackend(Protocol):
 
 __all__ = [
     "LanguageModelBackend",
+    "LanguageOrganMode",
     "LanguageRequest",
     "LanguageResponse",
 ]

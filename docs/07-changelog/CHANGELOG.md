@@ -13,6 +13,10 @@
 - `InterventionGateway` prüft Capability, Policy und Tick-Rate-Limit, führt ein
   append-only Audit und verlangt Human Override; `MemoryWriteGateway` erzeugt
   ausschließlich digest-only, nicht-ausführende Schreibvorschläge.
+- Language-Organ-Requests tragen nun explizit das Treatment
+  `LINGUISTIC_TRANSPORT` oder `SEMANTIC_AUGMENTATION`.
+- Knowledge-Intake-Provenienz speichert Capture-/Processing-Zeit, MIME,
+  Quellenversion, Trust-Klassifikation und Extraktionsmethode.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

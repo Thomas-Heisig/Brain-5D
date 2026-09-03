@@ -54,8 +54,8 @@
 - [x] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
 - [ ] Quantitative Statistik ausschließlich durch die deterministische Statistics Engine erzeugen; LLM darf Zahlen nur interpretieren
 - [ ] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
-- [ ] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
-- [ ] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
+- [x] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
+- [x] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
 - [ ] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein
 
 ### P1 — AI-Rollen und semantische Schnittstellen
@@ -63,7 +63,7 @@
 - [x] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
 - [x] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
 - [x] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
-- [ ] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
+- [x] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
 - [ ] AI-0 Research AI, AI-1 Language Organ, AI-2 Cognitive Advisor und AI-3 Experimental Cognitive Controller als formale Rollen dokumentieren
 - [ ] Logical-Time- und Wall-Clock-Modus für asynchrone AI-Interaktionen unterscheiden und Response-Anwendungstics protokollieren
 - [ ] Replay-, Live-Frozen-Model- und Live-External-API-Betrieb im Dashboard sichtbar klassifizieren

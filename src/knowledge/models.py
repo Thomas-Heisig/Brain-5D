@@ -31,6 +31,12 @@ class SourceRecord:
     locator: str
     retrieved_at_ns: int
     content_sha256: str
+    captured_at_ns: int = 0
+    processed_at_ns: int = 0
+    mime_type: str = "application/octet-stream"
+    source_version: str = "not_reported"
+    trust_classification: str = "UNKNOWN"
+    extraction_method: str = "not_reported"
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -40,6 +46,12 @@ class SourceRecord:
             "locator": self.locator,
             "retrieved_at_ns": self.retrieved_at_ns,
             "content_sha256": self.content_sha256,
+            "captured_at_ns": self.captured_at_ns,
+            "processed_at_ns": self.processed_at_ns,
+            "mime_type": self.mime_type,
+            "source_version": self.source_version,
+            "trust_classification": self.trust_classification,
+            "extraction_method": self.extraction_method,
         }
 
 

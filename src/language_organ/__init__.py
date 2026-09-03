@@ -15,7 +15,12 @@ allowing direct network mutation.
 
 from .bridge import LanguageOrgan, LanguageOrganStatus
 from .null_backend import NullBackend, NullLanguageBackend
-from .protocols import LanguageModelBackend, LanguageRequest, LanguageResponse
+from .protocols import (
+    LanguageModelBackend,
+    LanguageOrganMode,
+    LanguageRequest,
+    LanguageResponse,
+)
 from .sham_backends import RandomLanguageOrgan, ReplayLanguageError, ReplayLanguageOrgan
 
 __all__ = [
@@ -27,6 +32,7 @@ __all__ = [
     "NullBackend",
     # Protocols
     "LanguageModelBackend",
+    "LanguageOrganMode",
     "LanguageRequest",
     "LanguageResponse",
     "RandomLanguageOrgan",

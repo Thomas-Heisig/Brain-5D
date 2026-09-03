@@ -42,6 +42,10 @@ class KnowledgeDraft:
     content: str
     language: str = "und"
     confidence: float = 0.0
+    mime_type: str = "text/plain"
+    source_version: str = "not_reported"
+    trust_classification: str = "UNKNOWN"
+    extraction_method: str = "not_reported"
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -52,6 +56,10 @@ class KnowledgeDraft:
             "content": self.content,
             "language": self.language,
             "confidence": self.confidence,
+            "mime_type": self.mime_type,
+            "source_version": self.source_version,
+            "trust_classification": self.trust_classification,
+            "extraction_method": self.extraction_method,
         }
 
 
@@ -105,6 +113,7 @@ class KnowledgeIntakeValidator:
             ValueError: If the content is empty, confidence is out of bounds,
                 or required fields are missing.
         """
+        captured_at_ns = time.time_ns()
         # Validate content
         if not draft.content or not draft.content.strip():
             raise ValueError("knowledge content must not be empty")
@@ -127,12 +136,19 @@ class KnowledgeIntakeValidator:
         digest = hashlib.sha256(draft.content.encode("utf-8")).hexdigest()
 
         # Create SourceRecord with provenance
+        processed_at_ns = time.time_ns()
         source = SourceRecord(
             source_id=source_id,
             source_type=draft.source_type,
             locator=draft.locator,
             retrieved_at_ns=time.time_ns(),
             content_sha256=digest,
+            captured_at_ns=captured_at_ns,
+            processed_at_ns=processed_at_ns,
+            mime_type=draft.mime_type,
+            source_version=draft.source_version,
+            trust_classification=draft.trust_classification,
+            extraction_method=draft.extraction_method,
         )
 
         # Create KnowledgeItem

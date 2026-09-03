@@ -16,3 +16,5 @@ def test_knowledge_item_always_has_provenance_hash() -> None:
     )
     assert len(item.source.content_sha256) == 64
     assert item.source.locator == "docs/example.md"
+    assert item.source.captured_at_ns <= item.source.processed_at_ns
+    assert item.source.mime_type == "text/plain"

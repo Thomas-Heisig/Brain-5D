@@ -48,6 +48,8 @@ Evidenz für Lernwirkung.
 - Interventionen und AI-Memory-Schreibvorschläge laufen nun über getrennte,
 	auditierbare Gateways. Die Gateways mutieren selbst keinen System- oder
 	Memory-Zustand.
+- Language-Organ-Treatments sind explizit typisiert und Knowledge-Intake-Drafts
+	tragen erweiterte zeitliche und quellenbezogene Provenienz.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
