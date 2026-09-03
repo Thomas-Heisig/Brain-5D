@@ -105,6 +105,13 @@ export class ExperimentWorkflowPanel {
       if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`);
       if (result.data_id) lines.push(`Daten: ${result.data_id}`);
       if (result.result) lines.push(`Tick: ${result.result.start.tick} -> ${result.result.end.tick}`);
+      if (result.ai_report) {
+        lines.push(`KI-Bericht: ${result.ai_report.status}`);
+        if (result.ai_report.json) lines.push(`KI JSON: research/${result.ai_report.json}`);
+        if (result.ai_report.markdown) lines.push(`KI Markdown: research/${result.ai_report.markdown}`);
+        if (result.ai_report.reason) lines.push(`KI Hinweis: ${result.ai_report.reason}`);
+        if (result.ai_report.message) lines.push(`KI Fehler: ${result.ai_report.message}`);
+      }
       this.elements.result.textContent = lines.join("\n");
     } catch (error) {
       this._setStatus(`Ausfuehrung abgebrochen: ${error.message}`, "error");

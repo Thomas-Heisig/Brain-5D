@@ -3747,6 +3747,7 @@ def serve_dashboard(
         research_source,
     ) as server:
         server.research_chat_backend = chat_backend
+        server.research_ai_backend = cast(AnalysisBackend | None, ollama_backend)
         server.research_chat_context_chars = context_chars
         server.research_chat_system_prompt = system_prompt
         server.research_chat_handoff_prompt = handoff_prompt
