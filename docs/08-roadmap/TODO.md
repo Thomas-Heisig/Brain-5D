@@ -9,6 +9,7 @@
 
 ### P0 — Scientific AI Boundary & Provenance
 
+- [x] Erste Contract-Layer-Basis mit `AIExposure`, `CausalTaint` und digest-only `AIInteractionRecord` in Research Assistant und Chat-UI integrieren
 - [ ] Gemeinsamen AI-Contract-Layer für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` definieren
 - [ ] Scientific AI Firewall als strukturelle Grenze implementieren: kein LLM-Schreibpfad zu Netzwerk, Synapsen, Struktur, Rewards, Memory oder Experimentzustand
 - [ ] Scientific-Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer dokumentieren und validieren

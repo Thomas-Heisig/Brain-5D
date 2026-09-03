@@ -81,8 +81,19 @@ export function initResearchChat() {
       log.innerHTML = '<p class="chat-empty">Stelle eine Frage zu Research, Dokumentation oder registrierten Experimenten.</p>';
       return;
     }
+function renderInteractionTrace(metadata) {
+  const trace = metadata && metadata.ai_interaction;
+  if (!trace) return '';
+  const model = trace.model_provenance && (trace.model_provenance.model || trace.model_provenance.model_name);
+  const parts = [
+    trace.exposure,
+    trace.causal_effect,
+    model
+  ].filter(Boolean).map((value) => escapeChat(String(value)));
+  return parts.length ? `<small class="chat-trace">AI trace · ${parts.join(' · ')}</small>` : '';
+}
     room.messages.forEach((message) => {
-      const content = message.role === 'assistant' ? `<div class="chat-markdown"><p>${renderMarkdown(message.content)}</p></div>` : `<p>${escapeChat(message.content)}</p>`;
+      const content = message.role === 'assistant' ? `<div class="chat-markdown"><p>${renderMarkdown(message.content)}</p></div>${renderInteractionTrace(message.metadata)}` : `<p>${escapeChat(message.content)}</p>`;
       log.insertAdjacentHTML('beforeend', `<div class="chat-message ${message.role}"><strong>${message.role === 'assistant' ? 'Research AI · grounded in Research + Docs' : 'You'}</strong>${content}</div>`);
     });
   }
@@ -251,7 +262,7 @@ export function initResearchChat() {
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
       document.getElementById('chat-waiting')?.remove();
-      room.messages.push({ role: 'assistant', content: payload.answer || '' });
+      room.messages.push({ role: 'assistant', content: payload.answer || '', metadata: payload.metadata || {} });
       imageInput.value = '';
       dropZone.classList.remove('has-files');
       saveState(state);

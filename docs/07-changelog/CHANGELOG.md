@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — AI interaction provenance baseline
+
+- Research-Chat-Antworten erzeugen nun einen digest-only `AIInteractionRecord`.
+- Exposure, kausale Klassifikation, Read-only-Autorität und Modellkennung werden im Chatverlauf sichtbar persistiert.
+- Die vollständige Scientific-AI-Vertrags- und Firewall-Architektur bleibt als P0-TODO offen.
+
 ## 2026-09-03 — Scientific AI Boundary Roadmap
 
 - Die offenen Architekturaufgaben aus dem AI-Review wurden als priorisierte P0/P1/P2-Aufgaben in der TODO erfasst.

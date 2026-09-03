@@ -3,6 +3,7 @@
 import pytest
 
 from src.research_assistant.chat import ResearchChat
+from src.research_assistant.contracts import AIExposure, AIInteractionRecord, CausalTaint
 
 
 class Doc:
@@ -38,6 +39,9 @@ def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
 
     assert answer == "grounded answer"
     assert metadata["provider"] == "test"
+    assert metadata["ai_interaction"]["authority"] == "read_only"
+    assert metadata["ai_interaction"]["exposure"] == "observer_only"
+    assert metadata["ai_interaction"]["causal_effect"] == "OBSERVED"
     assert "RQ-1" in prompts[0] and "Brain-5D" in prompts[0]
     assert "never execute an experiment from free text" in prompts[0]
     assert "WEB SOURCES must never appear under EVIDENCE" in prompts[0]
@@ -59,4 +63,52 @@ def test_chat_rejects_unknown_response_mode() -> None:
     chat = ResearchChat(Source({}), Source({}), lambda prompt: (prompt, {}), response_mode="brief")
     with pytest.raises(ValueError, match="Unsupported response mode"):
         chat.answer("Status?")
+
+
+def test_ai_interaction_record_is_digest_only_and_json_compatible() -> None:
+    record = AIInteractionRecord.create(
+        role="research_ai",
+        experiment_id="EXP-1",
+        tick=12,
+        input_value={"state": 1},
+        prompt="Interpret the observation.",
+        output_value={"assessment": "uncertain"},
+        model_provenance={"provider": "ollama", "model": "test"},
+        authority="read_only",
+        exposure=AIExposure.OBSERVER_ONLY,
+        causal_effect=CausalTaint.OBSERVED,
+    )
+
+    payload = record.to_dict()
+    assert payload["exposure"] == "observer_only"
+    assert payload["causal_effect"] == "OBSERVED"
+    assert "Interpret the observation." not in record.to_json()
+    assert len(record.input_digest) == 64
+    assert len(record.prompt_digest) == 64
+    assert len(record.output_digest) == 64
+
+
+def test_ai_interaction_record_rejects_invalid_authority_and_tick() -> None:
+    with pytest.raises(ValueError, match="authority must not be empty"):
+        AIInteractionRecord.create(
+            role="research_ai",
+            experiment_id=None,
+            tick=None,
+            input_value=None,
+            prompt="prompt",
+            output_value=None,
+            model_provenance={},
+            authority=" ",
+        )
+    with pytest.raises(ValueError, match="tick must not be negative"):
+        AIInteractionRecord.create(
+            role="research_ai",
+            experiment_id=None,
+            tick=-1,
+            input_value=None,
+            prompt="prompt",
+            output_value=None,
+            model_provenance={},
+            authority="read_only",
+        )
 

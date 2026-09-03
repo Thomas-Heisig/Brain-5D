@@ -6,6 +6,8 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from .contracts import AIExposure, AIInteractionRecord, CausalTaint
+
 
 class _ResearchDocument(Protocol):
     path: str
@@ -26,7 +28,7 @@ class _DocsSource(Protocol):
     def list_documents(self, recursive: bool = False) -> Sequence[_DocDocument]: ...
     def read_content(self, path: str) -> str: ...
 
-ChatBackend = Callable[[str], tuple[str, dict[str, str | float]]]
+ChatBackend = Callable[[str], tuple[str, dict[str, Any]]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,14 +46,27 @@ class ResearchChat:
     handoff_prompt: str = ""
     response_mode: str = "detailed"
 
-    def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
+    def answer(self, message: str) -> tuple[str, dict[str, Any]]:
         question = message.strip()
         if not question:
             raise ValueError("Chat message must not be empty.")
         if self.response_mode not in {"short", "detailed", "scientific"}:
             raise ValueError("Unsupported response mode.")
         prompt = self._prompt(question)
-        return self.backend(prompt)
+        answer, metadata = self.backend(prompt)
+        interaction = AIInteractionRecord.create(
+            role="research_ai",
+            experiment_id=None,
+            tick=None,
+            input_value=question,
+            prompt=prompt,
+            output_value=answer,
+            model_provenance=metadata,
+            authority="read_only",
+            exposure=AIExposure.OBSERVER_ONLY,
+            causal_effect=CausalTaint.OBSERVED,
+        )
+        return answer, {**metadata, "ai_interaction": interaction.to_dict()}
 
     def _prompt(self, message: str) -> str:
         context = self._context()
@@ -115,13 +130,13 @@ class ResearchChat:
 
 def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend:
     """Adapt a text backend that returns either text or ``(text, metadata)``."""
-    def call(prompt: str) -> tuple[str, dict[str, str | float]]:
+    def call(prompt: str) -> tuple[str, dict[str, Any]]:
         result = backend(prompt)
         if isinstance(result, tuple) and len(result) == 2:
             text: Any = result[0]
             metadata: Any = result[1]
             if isinstance(text, str) and isinstance(metadata, dict):
-                return text, {str(key): value for key, value in metadata.items() if isinstance(value, (str, float))}
+                return text, {str(key): value for key, value in metadata.items()}
         if isinstance(result, str):
             return result, {}
         raise ValueError("Chat backend must return text or (text, metadata).")

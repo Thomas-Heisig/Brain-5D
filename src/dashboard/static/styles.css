@@ -1736,6 +1736,7 @@ body .footer-segment {
 .chat-message.waiting { border-left-color: #fbbf24; animation: chat-processing 1.4s ease-in-out infinite; }
 @keyframes chat-processing { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
 .chat-message p { margin: .3rem 0 0; white-space: pre-wrap; }
+.chat-trace { display: block; margin-top: .55rem; color: var(--muted, #94a3b8); font-size: .72rem; letter-spacing: .02em; }
 .chat-markdown h3, .chat-markdown h4, .chat-markdown h5 { margin: .65rem 0 .25rem; }
 .chat-markdown ul { margin: .35rem 0 .35rem 1.2rem; padding: 0; }
 .chat-markdown code { padding: .1rem .25rem; color: #bae6fd; background: rgba(14, 116, 144, .2); }
