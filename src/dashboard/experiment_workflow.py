@@ -116,6 +116,8 @@ class ExperimentWorkflowService:
             "EXP-REG-0001": "run_regulation",
         }
         runner_name = runners.get(workflow.experiment_id)
+        if workflow.experiment_id.startswith("EXP-PING-0001-v"):
+            runner_name = "run_ping_v2"
         if workflow.experiment_id.startswith("EXP-LEARN-"):
             runner_name = "run_learning"
         if runner_name is None:

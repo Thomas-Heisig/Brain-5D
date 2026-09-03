@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — PING v3 experiment run
+
+- Published the registered `EXP-PING-0001-v3` run with 12 DATA records,
+  manifest, workflow and technical report.
+- Persisted the post-hoc AIRR JSON/Markdown report and all three AIAR role
+  records; human review remains pending and scientific evidence remains false.
+
 ## 2026-09-03 — Productive STDP and learning repeat DATA runs
 
 - Published `EXP-STDP-0002` through the Dashboard workflow with three

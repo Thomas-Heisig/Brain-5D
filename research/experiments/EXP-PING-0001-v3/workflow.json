@@ -1,0 +1,17 @@
+{
+  "protocol": "science_suite_v1",
+  "experiment_id": "EXP-PING-0001-v3",
+  "research_question": "RQ-PING-001",
+  "hypothesis": "H-PING-001-A",
+  "title": "Network impulse response reproducibility v3",
+  "conditions": "Identical state, seed and input spike; recurrence controlled.",
+  "ticks": 8,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "Registered dashboard science-suite run.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

@@ -1,0 +1,400 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-PING-0001-v3",
+  "research_question_id": "RQ-PING-001",
+  "hypothesis_ids": [
+    "H-PING-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-03T20:49:38.984952+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-PING-0001-v3",
+      "research_question": "Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?",
+      "hypotheses": [
+        {
+          "id": "H-PING-001-A",
+          "research_question": "RQ-PING-001",
+          "hypothesis": "Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-09-03",
+          "updated": "2026-09-03"
+        }
+      ],
+      "date": "2026-09-03",
+      "source_sha": "0c74a941e48f46027ecc8b0022f0bba5a491a481"
+    },
+    "executive_summary": "The analysis is critically compromised due to severe failures in data provenance and experimental integrity. No scientific conclusion can be drawn regarding the reproducibility of the Network Impulse-Response (H-PING-001-A) because the necessary raw data, configuration hashes, and execution environment details are missing or explicitly marked as unreliable. The current metadata only confirms the *attempt* to run the experiment, not the reliable execution or the observed results.",
+    "research_question": {
+      "id": "RQ-PING-001",
+      "domain": "Network Dynamics",
+      "question": "Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?",
+      "relevance": "Reproduzierbarkeit der kontrollierten Impulsantwort.",
+      "hypotheses": [
+        "H-PING-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-09-03",
+      "updated": "2026-09-03"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": []
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      "The experiment (EXP-PING-0001-v3) was executed and marked 'completed' with a runtime of 0.004723799997009337 seconds.",
+      "The primary hypothesis (H-PING-001-A) posits that identical impulses applied at an identical initial state yield the same observed response signature.",
+      "The research question (RQ-PING-001) explicitly asks about the reproducibility of the observed Network Impulse-Response under identical conditions and seeds.",
+      "The manifest records multiple data integrity concerns, including 'git': {'dirty': true} and 'provenance': {'git_dirty': 'True'}.",
+      "The system lacks concrete evidence (data/evidence fields are null/empty) to confirm or deny the reproducibility claim."
+    ],
+    "interpretation": {
+      "assessment": "The analysis is critically compromised due to severe failures in data provenance and experimental integrity. No scientific conclusion can be drawn regarding the reproducibility of the Network Impulse-Response (H-PING-001-A) because the necessary raw data, configuration hashes, and execution environment details are missing or explicitly marked as unreliable. The current metadata only confirms the *attempt* to run the experiment, not the reliable execution or the observed results.",
+      "observations": [
+        "The experiment (EXP-PING-0001-v3) was marked 'completed' but the manifest explicitly records multiple critical data integrity issues: 'git': {'dirty': true} and 'provenance': {'git_dirty': 'True'}. This invalidates the claim of a reliable execution state.",
+        "The primary hypothesis (H-PING-001-A) concerns the reproducibility of the Network Impulse-Response under identical conditions. However, the provided data structure contains no actual observed response signatures or time-series data to test this hypothesis.",
+        "The provenance record is severely deficient: `configuration_sha256`, `data_digest`, and `protocol_digest` are all marked as 'NOT_AVAILABLE' or missing, making the entire experimental setup non-verifiable.",
+        "The analysis relies on a limited sample size (12 runs) and only three seeds (42, 43, 44), which is statistically insufficient to establish robust claims about system determinism or non-determinism."
+      ],
+      "effect_direction": "Cannot determine (Insufficient data/evidence)",
+      "methodological_concerns": [
+        "The 'dirty' git status and missing provenance digests (configuration_sha256, data_digest, etc.) raise serious doubts about the reproducibility and integrity of the experimental setup.",
+        "The lack of actual observed data (response signatures) prevents any quantitative assessment of the impulse response.",
+        "The reliance on a limited sample size (12 runs) and limited seeds is statistically insufficient for robust claims."
+      ],
+      "alternative_explanations": [
+        "The observed variability, if any, might be due to unrecorded environmental factors or subtle, unmonitored changes in the computational environment, rather than inherent system non-determinism. (This is a plausible explanation given the dirty git status.)",
+        "The apparent lack of reproducibility might stem from the 'dirty' git state, suggesting that the code or configuration used was not fully stable or traceable. (This is the most likely explanation.)",
+        "The observed results could be artifacts of the specific software version ('brain5d_version': 'unknown') or the operating system environment (Windows 11), which may introduce platform-specific non-determinism."
+      ],
+      "recommended_experiments": [
+        "Re-run the experiment (EXP-PING-0001-v3) only after committing all changes and ensuring a clean, verifiable git state (clean working directory, known commit SHA).",
+        "Implement a mandatory, granular data logging protocol to capture the full state vector (including all relevant internal parameters) at the moment of impulse application and response measurement for every single run.",
+        "Conduct a systematic sensitivity analysis by systematically varying the initial conditions and impulse parameters across a statistically significant range to map the system's phase space and identify sources of non-determinism.",
+        "Perform a cross-platform validation by executing the experiment on at least two different operating systems or hardware architectures to test for platform dependency."
+      ],
+      "requested_evidence": [
+        "The raw, time-series data of the observed response signature for multiple runs (minimum 30 runs) under identical initial conditions and seeds.",
+        "A complete and verifiable provenance record, including the exact SHA256 hashes for the configuration file, the code base, and the input data used for the experiment.",
+        "A detailed log of the computational environment variables and dependencies used during the experiment execution (e.g., Python environment, library versions)."
+      ],
+      "confidence": 0.1
+    },
+    "methodological_critique": [
+      "The 'dirty' git status and missing provenance digests (configuration_sha256, data_digest, etc.) raise serious doubts about the reproducibility and integrity of the experimental setup.",
+      "The lack of actual observed data (response signatures) prevents any quantitative assessment of the impulse response."
+    ],
+    "alternative_explanations": [
+      "The observed variability, if any, might be due to unrecorded environmental factors or subtle, unmonitored changes in the computational environment, rather than inherent system non-determinism. (This is a plausible explanation given the dirty git status.)",
+      "The apparent lack of reproducibility might stem from the 'dirty' git state, suggesting that the code or configuration used was not fully stable or traceable. (This is the most likely explanation.)",
+      "The observed results could be artifacts of the specific software version ('brain5d_version': 'unknown') or the operating system environment (Windows 11), which may introduce platform-specific non-determinism."
+    ],
+    "reproducibility": {
+      "git_commit": "0c74a941e48f46027ecc8b0022f0bba5a491a481",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "f3bf7d449cdc5b6f47e706c5c18ac5f730f18a67fe7597a88778d0670dd29efd",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.1,
+    "missing_evidence": [
+      "The raw, time-series data of the observed response signature for multiple runs (minimum 30 runs) under identical initial conditions and seeds.",
+      "A complete and verifiable provenance record, including the exact SHA256 hashes for the configuration file, the code base, and the input data used for the experiment.",
+      "A detailed log of the computational environment variables and dependencies used during the experiment execution (e.g., Python environment, library versions)."
+    ],
+    "recommended_follow_up": [
+      "Re-run the experiment (EXP-PING-0001-v3) only after committing all changes and ensuring a clean, verifiable git state (clean working directory, known commit SHA).",
+      "Implement a mandatory, granular data logging protocol to capture the full state vector (including all relevant internal parameters) at the moment of impulse application and response measurement for every single run.",
+      "Conduct a systematic sensitivity analysis by systematically varying the initial conditions and impulse parameters across a statistically significant range to map the system's phase space and identify sources of non-determinism.",
+      "Perform a cross-platform validation by executing the experiment on at least two different operating systems or hardware architectures to test for platform dependency."
+    ],
+    "conclusion": "The analysis is critically compromised due to severe failures in data provenance and experimental integrity. No scientific conclusion can be drawn regarding the reproducibility of the Network Impulse-Response (H-PING-001-A) because the necessary raw data, configuration hashes, and execution environment details are missing or explicitly marked as unreliable. The current metadata only confirms the *attempt* to run the experiment, not the reliable execution or the observed results.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260903204910480089-899ae1ec",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-PING-0001-v3",
+          "packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725"
+        },
+        "output": {
+          "assessment": "The current analysis is severely limited by the lack of verifiable data and provenance. While the experiment was marked 'completed', the manifest indicates significant data integrity issues (dirty git, missing digests/SHAs, and no registered scientific evidence). The core hypothesis (H-PING-001-A) concerns reproducibility, but the provided metadata does not contain the actual observed response signatures or the necessary control data to test this claim.",
+          "observations": [
+            "The experiment (EXP-PING-0001-v3) was executed and marked 'completed' with a runtime of 0.004723799997009337 seconds.",
+            "The primary hypothesis (H-PING-001-A) posits that identical impulses applied at an identical initial state yield the same observed response signature.",
+            "The research question (RQ-PING-001) explicitly asks about the reproducibility of the observed Network Impulse-Response under identical conditions and seeds.",
+            "The manifest records multiple data integrity concerns, including 'git': {'dirty': true} and 'provenance': {'git_dirty': 'True'}.",
+            "The system lacks concrete evidence (data/evidence fields are null/empty) to confirm or deny the reproducibility claim."
+          ],
+          "effect_direction": "Cannot determine (Insufficient data/evidence)",
+          "methodological_concerns": [
+            "The 'dirty' git status and missing provenance digests (configuration_sha256, data_digest, etc.) raise serious doubts about the reproducibility and integrity of the experimental setup.",
+            "The lack of actual observed data (response signatures) prevents any quantitative assessment of the impulse response.",
+            "The reliance on a single run count (12) and limited seeds (42, 43, 44) may not be sufficient to establish robust statistical reproducibility."
+          ],
+          "alternative_explanations": [
+            "The observed variability, if any, might be due to unrecorded environmental factors or subtle, unmonitored changes in the computational environment, rather than inherent system non-determinism.",
+            "The apparent lack of reproducibility might stem from the 'dirty' git state, suggesting that the code or configuration used was not fully stable or traceable.",
+            "The observed results could be artifacts of the specific software version ('brain5d_version': 'unknown') or the operating system environment (Windows 11)."
+          ],
+          "recommended_experiments": [
+            "Re-run the experiment (EXP-PING-0001-v3) after ensuring a clean, version-controlled git repository state.",
+            "Implement a rigorous data logging protocol to capture the full state vector (including all relevant internal parameters) at the moment of impulse application and response measurement.",
+            "Conduct a sensitivity analysis by systematically varying the initial conditions and impulse parameters across a wider, statistically significant range to map the system's phase space.",
+            "Compare results across multiple, independently managed computational environments (e.g., different OS or hardware architectures) to test for platform dependency."
+          ],
+          "requested_evidence": [
+            "The raw, time-series data of the observed response signature for multiple runs (at least 30 runs) under identical initial conditions and seeds.",
+            "A complete and verifiable provenance record, including the exact SHA256 hashes for the configuration file, the code base, and the input data used for the experiment.",
+            "A detailed log of the computational environment variables and dependencies used during the experiment execution."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "9e23a5cfea1f4bca1e40047533ec87bdfdc9d4d9593ba600d446908e62e1f0c2",
+          "research_packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "0c74a941e48f46027ecc8b0022f0bba5a491a481",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-03T20:49:10.480089+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260903204925672425-899ae1ec",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-PING-0001-v3",
+          "packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725"
+        },
+        "output": {
+          "assessment": "The analysis is fundamentally flawed and cannot draw any scientific conclusions due to catastrophic data and provenance failures. The core claim of non-reproducibility (or reproducibility) cannot be tested because the necessary raw data, configuration hashes, and execution environment details are missing or explicitly marked as unreliable. The current output is merely a summary of metadata deficiencies, not a scientific interpretation.",
+          "observations": [
+            "The experiment (EXP-PING-0001-v3) was marked 'completed' but the manifest explicitly records multiple critical data integrity issues: 'git': {'dirty': true} and 'provenance': {'git_dirty': 'True'}. This invalidates the claim of a reliable execution state.",
+            "The primary hypothesis (H-PING-001-A) concerns the reproducibility of the Network Impulse-Response under identical conditions. However, the provided data structure contains no actual observed response signatures or time-series data to test this hypothesis.",
+            "The provenance record is severely deficient: `configuration_sha256`, `data_digest`, and `protocol_digest` are all marked as 'NOT_AVAILABLE' or missing, making the entire experimental setup non-verifiable.",
+            "The analysis relies on a limited sample size (12 runs) and only three seeds (42, 43, 44), which is statistically insufficient to establish robust claims about system determinism or non-determinism."
+          ],
+          "methodological_concerns": [
+            "The 'dirty' git status and missing provenance digests (configuration_sha256, data_digest, etc.) raise serious doubts about the reproducibility and integrity of the experimental setup.",
+            "The lack of actual observed data (response signatures) prevents any quantitative assessment of the impulse response."
+          ],
+          "effect_direction": "Cannot determine (Insufficient data/evidence)",
+          "alternative_explanations": [
+            "The observed variability, if any, might be due to unrecorded environmental factors or subtle, unmonitored changes in the computational environment, rather than inherent system non-determinism. (This is a plausible explanation given the dirty git status.)",
+            "The apparent lack of reproducibility might stem from the 'dirty' git state, suggesting that the code or configuration used was not fully stable or traceable. (This is the most likely explanation.)",
+            "The observed results could be artifacts of the specific software version ('brain5d_version': 'unknown') or the operating system environment (Windows 11), which may introduce platform-specific non-determinism."
+          ],
+          "recommended_experiments": [
+            "Re-run the experiment (EXP-PING-0001-v3) only after committing all changes and ensuring a clean, verifiable git state (clean working directory, known commit SHA).",
+            "Implement a mandatory, granular data logging protocol to capture the full state vector (including all relevant internal parameters) at the moment of impulse application and response measurement for every single run.",
+            "Conduct a systematic sensitivity analysis by systematically varying the initial conditions and impulse parameters across a statistically significant range to map the system's phase space and identify sources of non-determinism.",
+            "Perform a cross-platform validation by executing the experiment on at least two different operating systems or hardware architectures to test for platform dependency."
+          ],
+          "requested_evidence": [
+            "The raw, time-series data of the observed response signature for multiple runs (minimum 30 runs) under identical initial conditions and seeds.",
+            "A complete and verifiable provenance record, including the exact SHA256 hashes for the configuration file, the code base, and the input data used for the experiment.",
+            "A detailed log of the computational environment variables and dependencies used during the experiment execution (e.g., Python environment, library versions)."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "44d2ee1f8f7f9aa6ba14923949a957bb850b430b22ee3720255926af5d98a93a",
+          "research_packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "0c74a941e48f46027ecc8b0022f0bba5a491a481",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-03T20:49:25.672425+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260903204938983950-899ae1ec",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-PING-0001-v3",
+          "packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725"
+        },
+        "output": {
+          "assessment": "The analysis is critically compromised due to severe failures in data provenance and experimental integrity. No scientific conclusion can be drawn regarding the reproducibility of the Network Impulse-Response (H-PING-001-A) because the necessary raw data, configuration hashes, and execution environment details are missing or explicitly marked as unreliable. The current metadata only confirms the *attempt* to run the experiment, not the reliable execution or the observed results.",
+          "observations": [
+            "The experiment (EXP-PING-0001-v3) was marked 'completed' but the manifest explicitly records multiple critical data integrity issues: 'git': {'dirty': true} and 'provenance': {'git_dirty': 'True'}. This invalidates the claim of a reliable execution state.",
+            "The primary hypothesis (H-PING-001-A) concerns the reproducibility of the Network Impulse-Response under identical conditions. However, the provided data structure contains no actual observed response signatures or time-series data to test this hypothesis.",
+            "The provenance record is severely deficient: `configuration_sha256`, `data_digest`, and `protocol_digest` are all marked as 'NOT_AVAILABLE' or missing, making the entire experimental setup non-verifiable.",
+            "The analysis relies on a limited sample size (12 runs) and only three seeds (42, 43, 44), which is statistically insufficient to establish robust claims about system determinism or non-determinism."
+          ],
+          "effect_direction": "Cannot determine (Insufficient data/evidence)",
+          "methodological_concerns": [
+            "The 'dirty' git status and missing provenance digests (configuration_sha256, data_digest, etc.) raise serious doubts about the reproducibility and integrity of the experimental setup.",
+            "The lack of actual observed data (response signatures) prevents any quantitative assessment of the impulse response.",
+            "The reliance on a limited sample size (12 runs) and limited seeds is statistically insufficient for robust claims."
+          ],
+          "alternative_explanations": [
+            "The observed variability, if any, might be due to unrecorded environmental factors or subtle, unmonitored changes in the computational environment, rather than inherent system non-determinism. (This is a plausible explanation given the dirty git status.)",
+            "The apparent lack of reproducibility might stem from the 'dirty' git state, suggesting that the code or configuration used was not fully stable or traceable. (This is the most likely explanation.)",
+            "The observed results could be artifacts of the specific software version ('brain5d_version': 'unknown') or the operating system environment (Windows 11), which may introduce platform-specific non-determinism."
+          ],
+          "recommended_experiments": [
+            "Re-run the experiment (EXP-PING-0001-v3) only after committing all changes and ensuring a clean, verifiable git state (clean working directory, known commit SHA).",
+            "Implement a mandatory, granular data logging protocol to capture the full state vector (including all relevant internal parameters) at the moment of impulse application and response measurement for every single run.",
+            "Conduct a systematic sensitivity analysis by systematically varying the initial conditions and impulse parameters across a statistically significant range to map the system's phase space and identify sources of non-determinism.",
+            "Perform a cross-platform validation by executing the experiment on at least two different operating systems or hardware architectures to test for platform dependency."
+          ],
+          "requested_evidence": [
+            "The raw, time-series data of the observed response signature for multiple runs (minimum 30 runs) under identical initial conditions and seeds.",
+            "A complete and verifiable provenance record, including the exact SHA256 hashes for the configuration file, the code base, and the input data used for the experiment.",
+            "A detailed log of the computational environment variables and dependencies used during the experiment execution (e.g., Python environment, library versions)."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "0ce6b14878431abfb73c64483e0eb4e6460d5e2d82bbfdafa738e09c82ea9859",
+          "research_packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "0c74a941e48f46027ecc8b0022f0bba5a491a481",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-03T20:49:38.983950+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "899ae1ecf0fd07c74935164b2796bf1c5a3b08aaff8c2ad0eea72a756e4ec725",
+    "source": {
+      "git_commit": "0c74a941e48f46027ecc8b0022f0bba5a491a481",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "f3bf7d449cdc5b6f47e706c5c18ac5f730f18a67fe7597a88778d0670dd29efd",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260903204910480089-899ae1ec",
+    "AIAR-critical_reviewer-20260903204925672425-899ae1ec",
+    "AIAR-scientific_writer-20260903204938983950-899ae1ec"
+  ],
+  "supersedes": null,
+  "content_digest": "34433b83c357757cd40c52c589070da7878cd5839542380ed9e106c6eb255f61",
+  "markdown_digest": "3a39ab9228768b85842ec130ff86d1f61dd609418f789c7a70caa5914b1469b8"
+}
