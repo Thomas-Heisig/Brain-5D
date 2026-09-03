@@ -124,7 +124,7 @@ export function initResearchChat() {
   roomList.addEventListener('click', (event) => {
     const action = event.target.closest('[data-pin-id], [data-collapse-id], [data-archive-id], [data-delete-id]');
     if (action) {
-      const id = action.dataset.collapseId || action.dataset.archiveId || action.dataset.deleteId;
+      const id = action.dataset.pinId || action.dataset.collapseId || action.dataset.archiveId || action.dataset.deleteId;
       const room = state.rooms.find((candidate) => candidate.id === id);
       if (!room) return;
       if (action.dataset.collapseId) room.collapsed = !room.collapsed;
@@ -162,6 +162,12 @@ export function initResearchChat() {
     input.focus();
   });
   archivedToggle.addEventListener('click', () => { state.showArchived = !state.showArchived; render(); });
+  const dropZone = document.querySelector('.research-chat-dialog');
+  const addFiles = (files) => { const accepted = [...files].filter((file) => /^(image\/(png|jpeg|webp))$/.test(file.type)).slice(0, 4); const transfer = new DataTransfer(); accepted.forEach((file) => transfer.items.add(file)); imageInput.files = transfer.files; dropZone.classList.toggle('has-files', accepted.length > 0); };
+  ['dragenter', 'dragover'].forEach((name) => dropZone.addEventListener(name, (event) => { event.preventDefault(); dropZone.classList.add('dragging'); }));
+  ['dragleave', 'drop'].forEach((name) => dropZone.addEventListener(name, (event) => { event.preventDefault(); dropZone.classList.remove('dragging'); }));
+  dropZone.addEventListener('drop', (event) => addFiles(event.dataTransfer.files));
+  imageInput.addEventListener('change', () => dropZone.classList.toggle('has-files', imageInput.files.length > 0));
   async function loadSettings() {
     try {
       const response = await fetch('/api/research/chat/settings');
@@ -239,14 +245,18 @@ export function initResearchChat() {
     input.value = '';
     try {
       const images = await Promise.all([...imageInput.files].slice(0, 4).map((file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); })));
+      log.insertAdjacentHTML('beforeend', '<div class="chat-message waiting" id="chat-waiting"><strong>Brain-5D</strong><p>Antwort wird im lokalen Provider verarbeitet ...</p></div>');
       const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, images, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+      document.getElementById('chat-waiting')?.remove();
       room.messages.push({ role: 'assistant', content: payload.answer || '' });
       imageInput.value = '';
+      dropZone.classList.remove('has-files');
       saveState(state);
       render();
     } catch (error) {
+      document.getElementById('chat-waiting')?.remove();
       log.insertAdjacentHTML('beforeend', `<div class="chat-message error"><strong>Unavailable</strong><p>${escapeChat(error.message)}</p></div>`);
     }
     log.scrollTop = log.scrollHeight;
@@ -257,5 +267,11 @@ export function initResearchChat() {
       form.requestSubmit();
     }
   });
+  const speechInput = document.getElementById('chat-speech-input');
+  const speechOutput = document.getElementById('chat-speech-output');
+  if (speechInput && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    speechInput.addEventListener('click', () => { const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new Recognition(); recognition.lang = 'de-DE'; recognition.onresult = (event) => { input.value = event.results[0][0].transcript; input.focus(); }; recognition.start(); });
+  } else if (speechInput) speechInput.disabled = true;
+  if (speechOutput) speechOutput.addEventListener('click', () => { const last = [...activeRoom().messages].reverse().find((message) => message.role === 'assistant'); if (last && 'speechSynthesis' in window) speechSynthesis.speak(new SpeechSynthesisUtterance(last.content)); });
   render();
 }

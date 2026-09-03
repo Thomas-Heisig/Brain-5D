@@ -7,6 +7,7 @@
 - Modell, Ollama-Endpoint, Temperatur und Kontextlimit sind über YAML oder Umgebungsvariablen konfigurierbar.
 - Chat unterstützt bearbeitbare Übergabeanweisungen, Pinning, Archivierung, Unterchats sowie begrenzte Ollama-Vision-Payloads.
 - Microsoft Entra OAuth PKCE-Start und Callback-Status sind vorbereitet; Copilot bleibt ohne freigegebenen API-Endpunkt deaktiviert.
+- Chatfenster und Sidebar wurden vergrößert; Drag-and-drop, Ollama-Vision, Sprach-Ein-/Ausgabe, Suchzugriff und Antwort-Warteanimation ergänzt.
 - Chat-Einstellungen unterstützen zusätzlich System-Prompt, Top-P und Tokenbudget.
 - Provider-Health wird über einen echten Live-Probe-Endpunkt angezeigt; Unterchats sowie Enter/Shift+Enter sind verfügbar.
 - Räume können eingeklappt, archiviert, wiederhergestellt und gelöscht werden; Unterchat-Kontext wird hierarchisch übergeben.

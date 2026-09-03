@@ -52,6 +52,8 @@ als unverified markiert.
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
 	freie System- oder Experimentausführung ist keine Chatfähigkeit.
+- Multimodale Antworten bleiben vom Provider abhängig: Ollama-Vision liefert
+	derzeit Textanalyse aus Bildern; Bildgenerierung wird nicht als verfügbar behauptet.
 - **R-AI3:** Wie stark unterscheiden sich Modelle bei identischem ResearchPacket?
 - **R-AI4:** Wie gut ist die Confidence der KI kalibriert?
 - **R-AI5:** Wie unterscheiden sich menschliche und KI-wissenschaftliche Bewertungen?

@@ -1691,7 +1691,9 @@ body .footer-segment {
 
 .research-chat-modal[hidden] { display: none; }
 .research-chat-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(0, 7, 13, .78); backdrop-filter: blur(5px); }
-.research-chat-dialog { display: grid; grid-template-columns: 190px minmax(0, 680px); width: min(900px, 100%); height: min(760px, calc(100vh - 32px)); overflow: hidden; border: 1px solid var(--line, #334155); background: var(--panel, #111827); box-shadow: 0 24px 80px rgba(0, 0, 0, .4); }
+.research-chat-dialog { display: grid; grid-template-columns: 260px minmax(0, 900px); width: min(1180px, 100%); height: min(820px, calc(100vh - 32px)); overflow: hidden; border: 1px solid var(--line, #334155); background: var(--panel, #111827); box-shadow: 0 24px 80px rgba(0, 0, 0, .4); }
+.research-chat-dialog.dragging { outline: 2px solid var(--accent2, #40e0d0); outline-offset: -6px; }
+.research-chat-dialog.has-files { border-color: #a3e635; }
 .chat-rooms { padding: 1rem .7rem; border-right: 1px solid var(--line, #334155); background: rgba(2, 12, 20, .45); }
 .chat-rooms-header, .chat-header-actions { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .chat-rooms-header { padding: 0 .35rem .7rem; color: var(--muted, #94a3b8); font-size: .7rem; letter-spacing: .08em; }
@@ -1731,6 +1733,8 @@ body .footer-segment {
 .chat-message { padding: .6rem .75rem; border-left: 3px solid #38bdf8; background: rgba(15, 23, 42, .55); }
 .chat-message.user { border-left-color: #a3e635; }
 .chat-message.error { border-left-color: #f87171; }
+.chat-message.waiting { border-left-color: #fbbf24; animation: chat-processing 1.4s ease-in-out infinite; }
+@keyframes chat-processing { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
 .chat-message p { margin: .3rem 0 0; white-space: pre-wrap; }
 .chat-markdown h3, .chat-markdown h4, .chat-markdown h5 { margin: .65rem 0 .25rem; }
 .chat-markdown ul { margin: .35rem 0 .35rem 1.2rem; padding: 0; }
@@ -1749,6 +1753,7 @@ body .footer-segment {
   .chat-settings-grid { grid-template-columns: 1fr; }
   .chat-settings-wide { grid-column: auto; }
 }
+@media (max-width: 980px) and (min-width: 681px) { .research-chat-dialog { grid-template-columns: 220px minmax(0, 1fr); } }
 
 .experiment-workflow {
   display: grid;
