@@ -103,6 +103,9 @@ als unverified markiert.
 - Für Language-Organ-Kontrollgruppen stehen nun ein deterministisches Random-Sham
 	und ein digestgebundenes Replay-Sham ohne Live-Fallback bereit; der bestehende
 	Null-Backend bleibt als deaktivierte Baseline erhalten.
+- Ein `ShadowMode` begrenzt AI auf Observation, Interpretation und markierte
+	Proposal-Contracts. `propose` ist nur mit `PROPOSAL_ONLY` erlaubt; Ausführung
+	ist nicht Bestandteil des Modus.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

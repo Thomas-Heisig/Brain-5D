@@ -29,6 +29,7 @@ from .observation_stream import (
     ObservationStreamRecord,
 )
 from .replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
+from .shadow import ShadowMode, ShadowResult
 from .statistics import summarize, write_statistics
 
 __all__ = [
@@ -48,6 +49,8 @@ __all__ = [
     "ResearchPacket",
     "FrozenAIReplayBackend",
     "FrozenAIReplayError",
+    "ShadowMode",
+    "ShadowResult",
     "ObservationStream",
     "ObservationStreamError",
     "ObservationStreamRecord",

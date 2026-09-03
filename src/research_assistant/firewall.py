@@ -45,6 +45,12 @@ class ScientificAIFirewall:
         normalized = action.strip().lower()
         if resource is not None and str(resource) not in self._RESOURCES:
             raise AIFirewallViolation(f"Unknown AI resource '{resource}'.")
+        if normalized == "propose":
+            if self.authority is not AIAuthority.PROPOSAL_ONLY:
+                raise AIFirewallViolation(
+                    f"AI authority {self.authority.value} cannot perform 'propose'."
+                )
+            return
         if normalized in self._MUTATION_ACTIONS or normalized not in self._READ_ACTIONS:
             surface = f" on {resource}" if resource is not None else ""
             raise AIFirewallViolation(

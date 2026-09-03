@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Non-executing AI shadow mode
+
+- `ShadowMode` erzeugt digest-basierte Observation-, Interpretation- und Proposal-Contracts.
+- Vorschläge werden explizit mit `executed: false` markiert und besitzen keinen Apply-/Execute-Pfad.
+- Die Firewall erlaubt `propose` ausschließlich für `PROPOSAL_ONLY`; quantitative Proposal-Evaluation bleibt separat.
+
 ## 2026-09-03 — Language Organ sham controls
 
 - Deterministisches `RandomLanguageOrgan` als pseudozufällige Kontrollbedingung ergänzt.

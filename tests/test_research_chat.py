@@ -34,6 +34,7 @@ from src.research_assistant.replay_backend import (
     FrozenAIReplayBackend,
     FrozenAIReplayError,
 )
+from src.research_assistant.shadow import ShadowMode
 
 
 class Doc:
@@ -204,6 +205,19 @@ def test_frozen_ai_replay_backend_has_no_live_fallback() -> None:
     assert metadata["retry_count"] == 0
     with pytest.raises(FrozenAIReplayError, match="No frozen AI replay response"):
         backend("unknown prompt")
+
+
+def test_shadow_mode_marks_proposals_without_execution() -> None:
+    shadow = ShadowMode()
+    observation = shadow.observe({"tick": 1})
+    interpretation = shadow.interpret("uncertain")
+    proposal = shadow.propose({"action": "inspect"})
+
+    assert observation.executed is False
+    assert interpretation.executed is False
+    assert proposal.executed is False
+    assert proposal.contract.kind == "proposal"
+    assert "execute" not in proposal.to_dict()
 
 
 def test_observation_stream_writes_and_validates_jsonl(tmp_path: Any) -> None:
