@@ -165,6 +165,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_source = research_source
         self.research_ai_backend: AnalysisBackend | None = None
         self.research_chat_backend: ChatBackend | None = None
+        self.research_chat_context_chars = 24_000
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
@@ -1945,7 +1946,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
         if docs is None:
             raise BridgeNotConfiguredError("Documentation source is not configured.")
-        answer, metadata = ResearchChat(cast(Any, source), cast(Any, docs), backend).answer(message)
+        answer, metadata = ResearchChat(
+            cast(Any, source),
+            cast(Any, docs),
+            backend,
+            max_context_chars=self.dashboard_server.research_chat_context_chars,
+        ).answer(message)
         self._send_json(
             {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
         )
@@ -3062,6 +3068,7 @@ def serve_dashboard(
     structural_bridge: OperatorBridge | None = None,
     docs_root: Path | None = None,
     research_root: Path | None = None,
+    chat_settings: Mapping[str, Any] | None = None,
 ) -> None:
     """Run the local Brain-5D operator dashboard until interrupted."""
 
@@ -3117,12 +3124,32 @@ def serve_dashboard(
             print("⚠️ Research source could not " f"be initialized: {exc}")
 
     chat_backend: ChatBackend | None = None
-    chat_model = os.environ.get("BRAIN5D_CHAT_MODEL", "").strip()
+    configured_chat = chat_settings or {}
+    chat_model = os.environ.get(
+        "BRAIN5D_CHAT_MODEL", str(configured_chat.get("model", ""))
+    ).strip()
+    context_chars = int(
+        os.environ.get(
+            "BRAIN5D_CHAT_CONTEXT_CHARS",
+            str(configured_chat.get("max_context_chars", 24_000)),
+        )
+    )
     if chat_model:
         chat_endpoint = os.environ.get(
-            "BRAIN5D_CHAT_ENDPOINT", "http://127.0.0.1:11434/api/generate"
+            "BRAIN5D_CHAT_ENDPOINT",
+            str(
+                configured_chat.get(
+                    "endpoint", "http://127.0.0.1:11434/api/generate"
+                )
+            ),
         ).strip()
-        ollama_backend = OllamaBackend(chat_model, chat_endpoint)
+        temperature = float(
+            os.environ.get(
+                "BRAIN5D_CHAT_TEMPERATURE",
+                str(configured_chat.get("temperature", 0.0)),
+            )
+        )
+        ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature)
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
         print(f"🤖 Research chat backend: Ollama ({chat_model})")
 
@@ -3141,6 +3168,7 @@ def serve_dashboard(
         research_source,
     ) as server:
         server.research_chat_backend = chat_backend
+        server.research_chat_context_chars = context_chars
         if structural_bridge is not None:
             print("✅ Operator bridge attached to " "dashboard server")
         else:

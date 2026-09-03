@@ -1131,7 +1131,7 @@ def main() -> int:
             )
             print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
             if _serve_dashboard is not None:
-                _serve_dashboard(host=_dashboard_host, port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root)  # type: ignore[reportOptionalCall, call-arg, operator]
+                _serve_dashboard(host=_dashboard_host, port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root, chat_settings=cast(dict[str, Any], config_dict.get("research_chat", {})))  # type: ignore[reportOptionalCall, call-arg, operator]
 
         except KeyboardInterrupt:
             print("\n⏹️ Dashboard interrupted, stopping simulation...")

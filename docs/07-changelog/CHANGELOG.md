@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Research Chat Markdown und Einstellungen
+
+- Research-Chat-Ausgaben werden als sicheres, lesbares Markdown gerendert.
+- Identität, Quellenbindung und Forschungsabschnitte des Assistenten wurden präzisiert.
+- Modell, Ollama-Endpoint, Temperatur und Kontextlimit sind über YAML oder Umgebungsvariablen konfigurierbar.
+
 ## 2026-09-03 — AI Research Reports (AIRR)
 
 - Added `PROTOCOL-AIRR-001`, the AIRR schema, and an Analyst -> Critical Reviewer -> Writer pipeline.

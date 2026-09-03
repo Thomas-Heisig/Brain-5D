@@ -69,7 +69,8 @@
 - [x] AIRR im Research-Dashboard lesbar machen
 - [x] Research Self-Knowledge Chat mit Research-/Docs-Kontext und fail-closed Backend
 - [x] Chat-Ausführung strikt vom Freitext trennen; Experimente bleiben registrierte Workflows
-- [ ] Ollama/Azure-Backend explizit konfigurieren und `EXP-AIR-0001` ausführen
+- [x] Lokales Ollama-Backend, Markdown-Ausgabe und Chat-Einstellungen konfigurieren
+- [ ] Azure-Backend explizit konfigurieren und `EXP-AIR-0001` ausführen
 - [ ] AIRR gegen menschliche Referenzauswertung und mehrere Modelle evaluieren
 
 ## OPERATION

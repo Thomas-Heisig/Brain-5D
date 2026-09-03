@@ -13,10 +13,14 @@ class OllamaBackend:
     """Call Ollama through the read-only language-backend contract."""
 
     def __init__(
-        self, model: str, endpoint: str = "http://127.0.0.1:11434/api/generate"
+        self,
+        model: str,
+        endpoint: str = "http://127.0.0.1:11434/api/generate",
+        temperature: float = 0.0,
     ) -> None:
         self.model = model
         self.endpoint = endpoint
+        self.temperature = temperature
 
     @property
     def name(self) -> str:
@@ -62,7 +66,7 @@ class OllamaBackend:
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "options": {"temperature": 0},
+                    "options": {"temperature": self.temperature},
                 }
             ).encode(),
             headers={"Content-Type": "application/json"},
@@ -75,7 +79,11 @@ class OllamaBackend:
         text = payload.get("response")
         if not isinstance(text, str):
             raise ValueError("Ollama returned no analysis text.")
-        return text, {"provider": "ollama", "model": self.model, "temperature": 0.0}
+        return text, {
+            "provider": "ollama",
+            "model": self.model,
+            "temperature": self.temperature,
+        }
 
 
 def _request_prompt(request: LanguageRequest) -> str:

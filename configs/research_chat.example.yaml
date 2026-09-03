@@ -1,0 +1,13 @@
+# Optional grounded Research Self-Knowledge Chat settings.
+# Add this section to the runtime config or use the matching environment variables.
+research_chat:
+  model: "gemma4:latest"
+  endpoint: "http://127.0.0.1:11434/api/generate"
+  temperature: 0.0
+  max_context_chars: 24000
+
+# Environment variable overrides:
+# BRAIN5D_CHAT_MODEL
+# BRAIN5D_CHAT_ENDPOINT
+# BRAIN5D_CHAT_TEMPERATURE
+# BRAIN5D_CHAT_CONTEXT_CHARS
