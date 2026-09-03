@@ -175,7 +175,8 @@
 - [x] `ActionReceipt` mit command_id, accepted, started, completed, failed,
   latency, error, safety_clamp und effect_observed einführen
 - [x] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
-- [ ] Hashverkettetes Aktionsjournal dauerhaft in Operator-/Experiment-Storage persistieren
+- [x] Hashverkettetes Aktionsjournal als JSONL dauerhaft an kontrollierte
+  Operator-/Experiment-Storage-Pfade persistieren und beim Reopen verifizieren
 - [ ] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden
 
 ### Alpha.9 bis v1.0

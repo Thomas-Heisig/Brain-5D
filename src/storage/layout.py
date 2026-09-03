@@ -36,6 +36,11 @@ class StorageLayout:
         return self.root / "operator" / "journal"
 
     @property
+    def operator_action_journal(self) -> Path:
+        """Durable hash-linked action audit path within operator storage."""
+        return self.operator_journal / "actions.jsonl"
+
+    @property
     def operator_checkpoints(self) -> Path:
         return self.root / "operator" / "checkpoints"
 

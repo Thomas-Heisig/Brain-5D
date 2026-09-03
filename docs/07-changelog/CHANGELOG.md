@@ -5,6 +5,8 @@
 - Added typed receipts for controlled embodiment actions with deterministic
   command IDs, lifecycle state, latency, errors, safety clamp and effect status.
 - Acceptance is explicitly distinct from observed environment feedback.
+- Hash-linked audit records can be persisted as JSONL and verified after reopen;
+  `StorageLayout` exposes the operator action-journal path.
 
 ## 2026-09-03 — Structural pressure hysteresis
 

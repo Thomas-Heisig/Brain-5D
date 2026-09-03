@@ -68,6 +68,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Stabilität unter Sensorausfall und chronischem Ressourcendruck nachweisen
 - [x] Typisierten `ActionReceipt` einführen und Befehlsannahme strikt von
 	beobachtetem Environment-Effekt trennen
+- [x] Hashverkettete Action-Audit-Records dauerhaft als JSONL speichern und
+	beim Wiederöffnen auf Kettenintegrität prüfen
 
 ## v0.5.0-alpha.9 — Memory & World Model
 

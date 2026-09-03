@@ -235,6 +235,41 @@ def test_action_receipt_separates_acceptance_from_observed_effect() -> None:
     assert agent.last_receipt.to_json()["command_id"] == "target-actuator:1"
 
 
+def test_action_audit_trail_reopens_from_durable_jsonl(tmp_path) -> None:
+    journal_path = tmp_path / "actions.jsonl"
+    trail = ActionAuditTrail(journal_path)
+    command = ActionCommand("target-actuator", 1, "right")
+    trail.append(
+        "target-actuator",
+        command,
+        ActuatorResult(True, "right"),
+        accepted=True,
+        reason="accepted",
+    )
+
+    restored = ActionAuditTrail(journal_path)
+
+    assert restored.records == trail.records
+    assert restored.verify()
+
+
+def test_action_audit_trail_rejects_tampered_journal(tmp_path) -> None:
+    journal_path = tmp_path / "actions.jsonl"
+    trail = ActionAuditTrail(journal_path)
+    trail.append(
+        "target-actuator",
+        ActionCommand("target-actuator", 1, "right"),
+        ActuatorResult(True, "right"),
+        accepted=True,
+        reason="accepted",
+    )
+    raw = journal_path.read_text(encoding="utf-8")
+    journal_path.write_text(raw.replace('"reason": "accepted"', '"reason": "tampered"'), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="chain verification"):
+        ActionAuditTrail(journal_path)
+
+
 def test_sensor_sampling_is_authorized_and_capability_bound() -> None:
     sensor = FakeSensor()
     descriptor = ConnectionDescriptor(

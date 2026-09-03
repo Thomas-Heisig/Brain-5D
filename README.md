@@ -62,6 +62,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 | **🧱 Morphology Ledger** | Deterministic neuron/synapse ages with separate growth and pruning budgets |
 | **〽️ Structural Hysteresis** | Per-mechanism release thresholds prevent proposal oscillation under changing pressure |
 | **🧾 Action Receipts** | Typed execution receipts separate command acceptance from observed environment effects |
+| **🔗 Durable Action Journal** | Hash-linked JSONL audit records reopen with integrity verification |
 
 ---
 
