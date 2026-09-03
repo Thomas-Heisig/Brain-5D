@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — Impulse response and temporal comparison foundations
+
+- Added bounded `NetworkImpulseProbe` and serializable `NetworkResponseSignature`
+  for observable single-impulse measurements.
+- Added `TemporalStateMemory` and `TemporalComparator` with FAST/MEDIUM/SLOW
+  horizons; references are retained without rewinding runtime state.
+- Registered `EXP-PING-0001` and `EXP-TEMP-0001` as pending scientific runs;
+  recurrence and self-reflection claims remain intentionally unproven.
+
 ## 2026-09-03 — Dashboard anatomy and footer telemetry
 
 - Added Research focus entries for Alpha.8, recursive causal loopbacks and the

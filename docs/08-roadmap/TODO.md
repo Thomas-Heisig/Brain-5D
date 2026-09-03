@@ -133,6 +133,10 @@
 
 ### Alpha.8 — Adaptive Self-Regulation & Morphology
 
+- [x] `NetworkImpulseProbe` und `NetworkResponseSignature` als kontrollierte,
+  beobachtbare Impulsantwort-Messung implementieren
+- [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
+  Referenzzustände ohne Runtime-Zurückspulen implementieren
 - [x] Neue Loopback-, Self-Model- und Alpha.8-Foki im Research-Dashboard sichtbar machen
 - [x] Dashboard-Grundlayout an die Embodiment-Anatomie angleichen, Network vollständig
   aus der sichtbaren Oberfläche entfernen und Aktivität/Spikes als Footer-Balken zeigen
@@ -178,6 +182,10 @@
 
 ## SCIENCE
 
+- [ ] `EXP-PING-0001`: Network Impulse Response mit identischem Zustand, Seed,
+  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen
+- [ ] `EXP-TEMP-0001`: Multi-Timescale State Comparison für Persistenz, Drift,
+  Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen
 - [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs
 - [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
 - [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen

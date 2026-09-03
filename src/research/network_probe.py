@@ -1,0 +1,105 @@
+"""Deterministic network impulse probes and observable response signatures."""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
+from typing import Any, Protocol
+
+
+class ImpulseRuntime(Protocol):
+    """Minimal runtime boundary required by :class:`NetworkImpulseProbe`."""
+
+    def inject_current_batch(self, currents: Mapping[int, float]) -> None: ...
+
+    def step(self) -> Mapping[str, Any]: ...
+
+
+@dataclass(frozen=True)
+class NetworkResponseSignature:
+    """Measured response to one controlled input impulse."""
+
+    first_response_latency: int | None
+    last_response_latency: int | None
+    activated_neurons: int
+    total_spikes: int
+    peak_spike_rate: float
+    propagation_depth: int
+    recurrent_events: int
+    return_latency: int | None
+    network_state_digest_before: str | None = None
+    network_state_digest_after: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "first_response_latency": self.first_response_latency,
+            "last_response_latency": self.last_response_latency,
+            "activated_neurons": self.activated_neurons,
+            "total_spikes": self.total_spikes,
+            "peak_spike_rate": self.peak_spike_rate,
+            "propagation_depth": self.propagation_depth,
+            "recurrent_events": self.recurrent_events,
+            "return_latency": self.return_latency,
+            "network_state_digest_before": self.network_state_digest_before,
+            "network_state_digest_after": self.network_state_digest_after,
+        }
+
+
+class NetworkImpulseProbe:
+    """Inject one bounded impulse and summarize only observed runtime output."""
+
+    def __init__(
+        self,
+        *,
+        source_neuron: int,
+        current: float = 1.0,
+        max_ticks: int = 100,
+        state_digest: Callable[[], str] | None = None,
+    ) -> None:
+        if max_ticks < 1:
+            raise ValueError("max_ticks must be positive")
+        self.source_neuron = source_neuron
+        self.current = current
+        self.max_ticks = max_ticks
+        self.state_digest = state_digest
+
+    def run(self, runtime: ImpulseRuntime) -> NetworkResponseSignature:
+        """Run the probe until quiescence or the configured tick limit."""
+        before = self.state_digest() if self.state_digest else None
+        runtime.inject_current_batch({self.source_neuron: self.current})
+        response_ticks: list[int] = []
+        response_neurons: set[int] = set()
+        total_spikes = 0
+        peak_rate = 0.0
+        recurrent_events = 0
+        return_latency: int | None = None
+
+        for tick in range(self.max_ticks):
+            result = runtime.step()
+            raw_ids = result.get("output_spike_ids", ())
+            spike_ids = tuple(int(value) for value in raw_ids)
+            if spike_ids:
+                response_ticks.append(tick)
+                response_neurons.update(spike_ids)
+                total_spikes += len(spike_ids)
+                peak_rate = max(peak_rate, float(len(spike_ids)))
+                if self.source_neuron in spike_ids and return_latency is None and tick > 0:
+                    return_latency = tick
+                if tick > 0 and self.source_neuron in spike_ids:
+                    recurrent_events += 1
+            if result.get("quiescent", False):
+                break
+
+        after = self.state_digest() if self.state_digest else None
+        return NetworkResponseSignature(
+            first_response_latency=response_ticks[0] if response_ticks else None,
+            last_response_latency=response_ticks[-1] if response_ticks else None,
+            activated_neurons=len(response_neurons),
+            total_spikes=total_spikes,
+            peak_spike_rate=peak_rate,
+            propagation_depth=(response_ticks[-1] - response_ticks[0] + 1) if response_ticks else 0,
+            recurrent_events=recurrent_events,
+            return_latency=return_latency,
+            network_state_digest_before=before,
+            network_state_digest_after=after,
+        )
