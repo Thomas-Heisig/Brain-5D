@@ -95,6 +95,8 @@ als unverified markiert.
 	und `retry_policy: disabled` reproduzierbar ausgewiesen.
 - Der `FrozenAIReplayBackend` erlaubt offline nur vorab registrierte Antworten,
 	validiert Request-/Response-Digests und verweigert jeden Live-Fallback.
+- `ObservationStream` erzeugt und validiert einen append-only JSONL-Stream für
+	Beobachtungs-Replays mit Sequenz-, Tick- und Payload-Digest-Prüfung.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

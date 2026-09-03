@@ -1,6 +1,7 @@
 """Contracts for the grounded Research Self-Knowledge chat."""
 
 import pytest
+from typing import Any
 
 from src.research_assistant.chat import ResearchChat
 from src.research_assistant.contracts import (
@@ -20,6 +21,7 @@ from src.research_assistant.firewall import (
     ScientificAIFirewall,
 )
 from src.research_assistant.replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
+from src.research_assistant.observation_stream import ObservationStream, ObservationStreamError
 from src.research_assistant.authority import authority_for, authority_matrix, validate_authority_matrix
 
 
@@ -191,4 +193,24 @@ def test_frozen_ai_replay_backend_has_no_live_fallback() -> None:
     assert metadata["retry_count"] == 0
     with pytest.raises(FrozenAIReplayError, match="No frozen AI replay response"):
         backend("unknown prompt")
+
+
+def test_observation_stream_writes_and_validates_jsonl(tmp_path: Any) -> None:
+    stream = ObservationStream(tmp_path / "observation_stream.jsonl")
+    first = stream.append({"state": 1, "source": "snn"}, tick=4)
+    second = stream.append({"state": 2, "source": "snn"}, tick=5)
+
+    records = stream.read()
+
+    assert first.sequence == 0
+    assert second.sequence == 1
+    assert [record.tick for record in records] == [4, 5]
+    assert len(records[0].observation_digest) == 64
+
+    stream.path.write_text(
+        stream.path.read_text(encoding="utf-8").replace(records[0].observation_digest, "0" * 64),
+        encoding="utf-8",
+    )
+    with pytest.raises(ObservationStreamError, match="digest mismatch"):
+        stream.read()
 

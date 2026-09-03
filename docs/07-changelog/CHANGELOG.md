@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Validated observation replay stream
+
+- `ObservationStream` erzeugt append-only `observation_stream.jsonl` mit Sequenz, Tick und Payload-Digest.
+- Beim Laden werden JSON-Struktur, Reihenfolge, monotone Ticks und Digest-Integrität fail-closed validiert.
+- Ungültige oder manipulierte Beobachtungen werden vor einem Offline-Replay abgewiesen.
+
 ## 2026-09-03 — Frozen AI replay backend
 
 - `FrozenAIReplayBackend` beantwortet ausschließlich vorab registrierte Request-Digests.
