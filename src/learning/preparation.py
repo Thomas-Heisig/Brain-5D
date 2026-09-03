@@ -1,0 +1,300 @@
+"""Guarded preparation contracts for Brain-5D learning runs.
+
+The learning preparation layer sits *before* the existing LearningEngine.  It may
+organize objectives, source provenance, baselines, training/evaluation phases and
+stopping criteria, but it has no authority to write neural patterns, synaptic
+weights, injected currents or reward values.
+
+AI assistance is deliberately proposal-only.  Approval produces a reproducible
+``PreparedLearningPlan``; it does not execute the plan or mutate the runtime.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Mapping, Sequence
+
+
+class LearningPlanOrigin(str, Enum):
+    """Origin of a learning-preparation proposal."""
+
+    HUMAN = "human"
+    AI_ASSISTED = "ai_assisted"
+
+
+class LearningDataPartition(str, Enum):
+    """Explicit data partition used by a prepared learning run."""
+
+    TRAIN = "train"
+    VALIDATION = "validation"
+    HOLDOUT = "holdout"
+
+
+@dataclass(frozen=True, slots=True)
+class LearningSourceRef:
+    """Provenance-only reference to material that may become an observation source."""
+
+    source_id: str
+    digest: str
+    origin: str
+    partition: LearningDataPartition
+    trust: str = "UNKNOWN"
+
+    def __post_init__(self) -> None:
+        if not self.source_id.strip():
+            raise ValueError("source_id must not be empty")
+        if not self.digest.strip():
+            raise ValueError("source digest must not be empty")
+        if not self.origin.strip():
+            raise ValueError("source origin must not be empty")
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "source_id": self.source_id,
+            "digest": self.digest,
+            "origin": self.origin,
+            "partition": self.partition.value,
+            "trust": self.trust,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class LearningObjective:
+    """A measurable goal without a prescribed neural representation."""
+
+    objective_id: str
+    description: str
+    success_metric: str
+    evaluation_question: str
+
+    def __post_init__(self) -> None:
+        for name, value in (
+            ("objective_id", self.objective_id),
+            ("description", self.description),
+            ("success_metric", self.success_metric),
+            ("evaluation_question", self.evaluation_question),
+        ):
+            if not value.strip():
+                raise ValueError(f"{name} must not be empty")
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "objective_id": self.objective_id,
+            "description": self.description,
+            "success_metric": self.success_metric,
+            "evaluation_question": self.evaluation_question,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class LearningPreparationProposal:
+    """Non-executable proposal describing how learning should be *prepared*."""
+
+    plan_id: str
+    objective: LearningObjective
+    sources: tuple[LearningSourceRef, ...]
+    baseline_protocol: str
+    exposure_protocol: str
+    evaluation_protocol: str
+    stopping_rule: str
+    controls: tuple[str, ...]
+    origin: LearningPlanOrigin
+    rationale: str = ""
+    ai_interaction_id: str | None = None
+    authority: str = "proposal_only"
+
+    def __post_init__(self) -> None:
+        if not self.plan_id.strip():
+            raise ValueError("plan_id must not be empty")
+        for name, value in (
+            ("baseline_protocol", self.baseline_protocol),
+            ("exposure_protocol", self.exposure_protocol),
+            ("evaluation_protocol", self.evaluation_protocol),
+            ("stopping_rule", self.stopping_rule),
+        ):
+            if not value.strip():
+                raise ValueError(f"{name} must not be empty")
+        if self.authority != "proposal_only":
+            raise ValueError("learning preparation proposals are proposal_only")
+        if self.origin is LearningPlanOrigin.AI_ASSISTED and not self.ai_interaction_id:
+            raise ValueError("AI-assisted proposals require ai_interaction_id provenance")
+
+    @property
+    def digest(self) -> str:
+        payload = self.to_dict(include_digest=False)
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "plan_id": self.plan_id,
+            "objective": self.objective.to_dict(),
+            "sources": [source.to_dict() for source in self.sources],
+            "baseline_protocol": self.baseline_protocol,
+            "exposure_protocol": self.exposure_protocol,
+            "evaluation_protocol": self.evaluation_protocol,
+            "stopping_rule": self.stopping_rule,
+            "controls": list(self.controls),
+            "origin": self.origin.value,
+            "rationale": self.rationale,
+            "ai_interaction_id": self.ai_interaction_id,
+            "authority": self.authority,
+            "executed": False,
+        }
+        if include_digest:
+            payload["digest"] = self.digest
+        return payload
+
+
+@dataclass(frozen=True, slots=True)
+class PreparedLearningPlan:
+    """Human-approved preparation artifact; still has no runtime mutation authority."""
+
+    proposal: LearningPreparationProposal
+    approved_by: str
+    approval_note: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.approved_by.strip():
+            raise ValueError("approved_by must not be empty")
+
+    @property
+    def digest(self) -> str:
+        payload = {
+            "proposal_digest": self.proposal.digest,
+            "approved_by": self.approved_by,
+            "approval_note": self.approval_note,
+        }
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "proposal": self.proposal.to_dict(),
+            "approved_by": self.approved_by,
+            "approval_note": self.approval_note,
+            "digest": self.digest,
+            "runtime_authority": "none",
+            "executed": False,
+        }
+
+
+class LearningPreparationGuard:
+    """Fail closed when a preparation payload attempts direct neural mutation.
+
+    The guard validates mapping keys, not prose.  An AI may discuss why STDP or
+    rewards are relevant, but a proposal must not carry executable fields such as
+    a weight matrix, a target spike train, injected currents or reward values.
+    """
+
+    _FORBIDDEN_KEYS = frozenset(
+        {
+            "weight",
+            "weights",
+            "synapse_weight",
+            "synapse_weights",
+            "weight_matrix",
+            "spike",
+            "spikes",
+            "spike_pattern",
+            "spike_train",
+            "target_spikes",
+            "target_pattern",
+            "current",
+            "currents",
+            "injected_current",
+            "injected_currents",
+            "reward",
+            "reward_value",
+            "reward_values",
+            "eligibility",
+            "eligibility_trace",
+            "plasticity_update",
+            "set_weight",
+        }
+    )
+
+    @classmethod
+    def validate_mapping(cls, payload: Mapping[str, Any]) -> None:
+        """Reject direct neural-control fields anywhere in a nested proposal."""
+
+        cls._validate_value(payload, path="proposal")
+
+    @classmethod
+    def _validate_value(cls, value: Any, *, path: str) -> None:
+        if isinstance(value, Mapping):
+            for key, child in value.items():
+                normalized = str(key).strip().lower()
+                if normalized in cls._FORBIDDEN_KEYS:
+                    raise PermissionError(
+                        f"learning preparation cannot carry direct neural mutation field: {path}.{key}"
+                    )
+                cls._validate_value(child, path=f"{path}.{key}")
+            return
+        if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+            for index, child in enumerate(value):
+                cls._validate_value(child, path=f"{path}[{index}]")
+
+
+class LearningPreparationService:
+    """Create and approve preparation artifacts without executing learning."""
+
+    def create_proposal(
+        self,
+        *,
+        plan_id: str,
+        objective: LearningObjective,
+        sources: Sequence[LearningSourceRef],
+        baseline_protocol: str,
+        exposure_protocol: str,
+        evaluation_protocol: str,
+        stopping_rule: str,
+        controls: Sequence[str] = (),
+        origin: LearningPlanOrigin = LearningPlanOrigin.HUMAN,
+        rationale: str = "",
+        ai_interaction_id: str | None = None,
+        raw_proposal_payload: Mapping[str, Any] | None = None,
+    ) -> LearningPreparationProposal:
+        if raw_proposal_payload is not None:
+            LearningPreparationGuard.validate_mapping(raw_proposal_payload)
+        return LearningPreparationProposal(
+            plan_id=plan_id,
+            objective=objective,
+            sources=tuple(sources),
+            baseline_protocol=baseline_protocol,
+            exposure_protocol=exposure_protocol,
+            evaluation_protocol=evaluation_protocol,
+            stopping_rule=stopping_rule,
+            controls=tuple(str(value) for value in controls),
+            origin=origin,
+            rationale=rationale,
+            ai_interaction_id=ai_interaction_id,
+        )
+
+    def approve(
+        self,
+        proposal: LearningPreparationProposal,
+        *,
+        approved_by: str,
+        approval_note: str = "",
+    ) -> PreparedLearningPlan:
+        return PreparedLearningPlan(
+            proposal=proposal,
+            approved_by=approved_by,
+            approval_note=approval_note,
+        )
+
+
+__all__ = [
+    "LearningDataPartition",
+    "LearningObjective",
+    "LearningPlanOrigin",
+    "LearningPreparationGuard",
+    "LearningPreparationProposal",
+    "LearningPreparationService",
+    "LearningSourceRef",
+    "PreparedLearningPlan",
+]
