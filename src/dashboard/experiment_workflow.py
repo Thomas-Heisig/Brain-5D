@@ -20,6 +20,76 @@ class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
 
 
+def write_experiment_summary(
+    research_root: Path,
+    experiment_id: str,
+    ai_report: dict[str, object],
+) -> str:
+    """Write the post-hoc assistant summary beside one experiment's artifacts."""
+    experiment_dir = research_root / "experiments" / experiment_id
+    report_dir = experiment_dir / "reports"
+    lines = [
+        f"# {experiment_id}: Zusammenfassung",
+        "",
+        "Diese Zusammenfassung wurde nach Abschluss des Laufs durch den internen "
+        "Research Assistant aus den Experimentartefakten und dem AIRR erstellt.",
+        "",
+        "## Artefakte",
+        "",
+    ]
+    for path in sorted(experiment_dir.rglob("*")):
+        if path.is_file() and path.name != "summary.md":
+            relative = path.relative_to(experiment_dir).as_posix()
+            lines.append(f"- [{relative}]({relative})")
+    lines.extend(["", "## AI-Bericht", ""])
+    status = str(ai_report.get("status", "unknown"))
+    lines.append(f"- AIRR-Status: `{status}`")
+    if status == "generated":
+        lines.extend(
+            [
+                f"- AIRR: [{ai_report['report_id']}.md](reports/{ai_report['report_id']}.md)",
+                f"- AIRR JSON: [{ai_report['report_id']}.json](reports/{ai_report['report_id']}.json)",
+                "- Wissenschaftliche Evidenz: `false`",
+                "- Human Review: `PENDING`",
+            ]
+        )
+        report_path = report_dir / f"{ai_report['report_id']}.json"
+        if report_path.is_file():
+            content = json.loads(report_path.read_text(encoding="utf-8"))["content"]
+            lines.extend(
+                [
+                    "",
+                    "### AI-Einschaetzung",
+                    "",
+                    str(
+                        content.get(
+                            "executive_summary",
+                            content.get("conclusion", "NOT_AVAILABLE"),
+                        )
+                    ),
+                    "",
+                    f"KI-Konfidenz: `{content.get('ai_confidence', 0.0)}`",
+                ]
+            )
+    else:
+        lines.append(
+            f"- Hinweis: `{ai_report.get('reason', ai_report.get('message', ''))}`"
+        )
+    lines.extend(
+        [
+            "",
+            "## Wissenschaftliche Grenze",
+            "",
+            "Die KI-Auswertung ist post-hoc, steuert den Lauf nicht und ersetzt keine "
+            "menschliche wissenschaftliche Pruefung oder Evidenzfreigabe.",
+            "",
+        ]
+    )
+    summary_path = experiment_dir / "summary.md"
+    summary_path.write_text("\n".join(lines), encoding="utf-8")
+    return f"experiments/{experiment_id}/summary.md"
+
+
 @dataclass(frozen=True, slots=True)
 class ExperimentWorkflow:
     """Validated, reproducible input for one controlled experiment run."""
@@ -204,6 +274,9 @@ class ExperimentWorkflowService:
                 json.dumps(manifest, indent=2, sort_keys=True) + "\n",
                 encoding="utf-8",
             )
+        summary_path = write_experiment_summary(
+            self._research_root, workflow.experiment_id, ai_report
+        )
         return {
             "experiment_id": workflow.experiment_id,
             "manifest": f"experiments/{workflow.experiment_id}/manifest.json",
@@ -211,6 +284,7 @@ class ExperimentWorkflowService:
             "workflow": f"experiments/{workflow.experiment_id}/workflow.json",
             "data_id": f"DATA-{workflow.experiment_id}",
             "ai_report": ai_report,
+            "summary": summary_path,
             "result": {"run_count": len(runs), "duration_seconds": duration},
         }
 

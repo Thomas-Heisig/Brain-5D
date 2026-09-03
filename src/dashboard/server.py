@@ -64,7 +64,10 @@ from src.research_assistant.ollama_backend import OllamaBackend
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
-from .experiment_workflow import ExperimentWorkflowService
+from .experiment_workflow import (
+    ExperimentWorkflowService,
+    write_experiment_summary,
+)
 from .file_manager import register_file_manager_routes
 from .gate_status import GateStatusBuilder
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
@@ -2687,6 +2690,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         )
         runtime_result["ai_report"] = self._append_ai_report(
             cast(str, runtime_result["experiment_id"])
+        )
+        runtime_result["summary"] = write_experiment_summary(
+            source.root(),
+            cast(str, runtime_result["experiment_id"]),
+            cast(dict[str, object], runtime_result["ai_report"]),
         )
         self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
 

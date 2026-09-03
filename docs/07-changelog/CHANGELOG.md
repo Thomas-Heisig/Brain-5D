@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — Automatic experiment summaries
+
+- Every completed dashboard experiment now creates `summary.md` in its own experiment directory.
+- The internal post-hoc assistant summary links DATA, manifests, workflows, technical reports, AIRR, and AIAR artifacts without changing the causal experiment path.
+
 ## 2026-09-03 — 5D dimensionality experiment v2
 
 - Executed `EXP-5D-0001-v2` for `RQ-5D-001` / `H-5D-001-A` with 15 controlled runs.

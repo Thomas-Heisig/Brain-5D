@@ -208,6 +208,7 @@ def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     assert manifest["artifacts"]["report"] == "report.md"
     assert len(data) == 2
     assert (experiment_dir / "report.md").is_file()
+    assert (experiment_dir / "summary.md").is_file()
     assert (experiment_dir / "workflow.json").is_file()
     assert result["ai_report"] == {
         "status": "unavailable",
@@ -246,3 +247,8 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     assert manifest["artifacts"]["ai_report_json"] == (
         f"experiments/EXP-PING-0001/reports/{report_id}.json"
     )
+    summary = (tmp_path / "experiments" / "EXP-PING-0001" / "summary.md").read_text(
+        encoding="utf-8"
+    )
+    assert f"{report_id}.md" in summary
+    assert "Post-hoc summary" in summary
