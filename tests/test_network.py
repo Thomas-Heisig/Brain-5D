@@ -1,4 +1,5 @@
 import random
+from dataclasses import replace
 
 from src.core.network import NeuralNetwork
 from tests.conftest import base_config
@@ -46,3 +47,22 @@ def test_dirty_ids_are_emitted_once_per_tick_and_include_topology() -> None:
     assert net.disconnect(a, b)
     third = net.step()
     assert (a, b) in third.dirty_synapse_ids
+
+
+def test_step_batch_matches_single_tick_execution() -> None:
+    single = NeuralNetwork(base_config(), random.Random(7))  # type: ignore[arg-type]
+    batched = NeuralNetwork(base_config(), random.Random(7))  # type: ignore[arg-type]
+    for network in (single, batched):
+        first = network.add_neuron((1, 1, 1, 1, 1))
+        second = network.add_neuron((1, 1, 1, 1, 2))
+        network.connect(first, second, 0.5, 1)
+        network.inject_current(first, 30.0)
+
+    expected = tuple(single.step() for _ in range(4))
+    actual = batched.step_batch(4)
+
+    assert tuple(replace(result, core_step_ms=0.0) for result in actual) == tuple(
+        replace(result, core_step_ms=0.0) for result in expected
+    )
+    assert batched.current_tick == single.current_tick == 4
+    assert batched.queued_event_count == single.queued_event_count

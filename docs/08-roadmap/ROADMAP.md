@@ -84,7 +84,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [x] Runtime Clock mit Target-/Achieved-Rate, `MAX`, Realtime-Verhältnis,
   Latenz, Jitter und Compute-Limit-Status einführen; `dt` bleibt unverändert
 - [x] Grobes Tick-Phasenprofil im Runtime-/Embodiment-Status veröffentlichen
-- [ ] Embodiment-Regler sowie vollständige Phaseninstrumentierung ergänzen
+- [x] Embodiment-Regler sowie vollständige Phaseninstrumentierung ergänzen; `network.step_batch(n)` ist gegen Einzel-Ticks validiert
 
 - [ ] `full_change_scan` gegen causally complete `dirty_tracking` per A/B-Test validieren
 - [x] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen (A/B/C-Produktionstest und Fresh-Process-Artefakt verifiziert)

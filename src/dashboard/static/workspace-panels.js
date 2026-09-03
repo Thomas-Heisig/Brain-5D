@@ -45,9 +45,6 @@ function initRuntimeClockControl() {
         body: JSON.stringify({ command: "configure", target_hz: target }),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      if (control.dataset.pendingTarget === (target === "MAX" ? "MAX" : String(target))) {
-        delete control.dataset.pendingTarget;
-      }
     } catch {
       if (control.dataset.pendingTarget === (target === "MAX" ? "MAX" : String(target))) {
         delete control.dataset.pendingTarget;
@@ -314,12 +311,17 @@ export function renderWorkspaceSummaries(state) {
   const targetIndex = targetHz == null ? CLOCK_TARGETS.length - 1 : CLOCK_TARGETS.indexOf(Number(targetHz));
   const clockControl = byId("runtime-clock-target");
   const pendingTarget = clockControl?.dataset.pendingTarget;
-  const pendingIndex = pendingTarget === "MAX"
+  const backendTarget = targetHz == null ? "MAX" : String(Number(targetHz));
+  if (pendingTarget !== undefined && pendingTarget === backendTarget) {
+    delete clockControl.dataset.pendingTarget;
+  }
+  const confirmedPendingTarget = clockControl?.dataset.pendingTarget;
+  const pendingIndex = confirmedPendingTarget === "MAX"
     ? CLOCK_TARGETS.length - 1
-    : CLOCK_TARGETS.indexOf(Number(pendingTarget));
+    : CLOCK_TARGETS.indexOf(Number(confirmedPendingTarget));
   if (clockControl && pendingIndex >= 0) {
     clockControl.value = String(pendingIndex);
-    setText("runtime-clock-target-value", pendingTarget === "MAX" ? "MAX" : `${formatNumber(pendingTarget)} Hz`);
+    setText("runtime-clock-target-value", confirmedPendingTarget === "MAX" ? "MAX" : `${formatNumber(confirmedPendingTarget)} Hz`);
   } else {
     if (clockControl && targetIndex >= 0) clockControl.value = String(targetIndex);
     setText("runtime-clock-target-value", targetHz == null ? "MAX" : `${formatNumber(targetHz)} Hz`);

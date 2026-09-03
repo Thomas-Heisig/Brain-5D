@@ -939,6 +939,20 @@ class NeuralNetwork:
 
         return result
 
+    def step_batch(self, count: int) -> tuple[StepResult, ...]:
+        """Execute consecutive ticks using the same semantics as ``step``.
+
+        The batch is deliberately a thin native loop: every tick still drains
+        its own event slot, advances the clock once, and runs post-step hooks.
+        This makes it suitable for an equivalence check against repeated
+        single-tick execution without changing the deterministic state model.
+        """
+        if isinstance(count, bool) or not isinstance(count, int):
+            raise TypeError("count must be an integer")
+        if count < 1:
+            raise ValueError("count must be >= 1")
+        return tuple(self.step() for _ in range(count))
+
     # ========================================================================
     # Post-Step Hooks
     # ========================================================================

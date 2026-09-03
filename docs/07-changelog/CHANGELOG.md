@@ -7,7 +7,10 @@
 - Telemetrie meldet Achieved Hz, Simulationsgeschwindigkeit relativ zu Echtzeit,
   Tick-Latenz, Jitter, Compute-Limit-Status und grobe Phasenzeiten.
 - Operator- und Embodiment-APIs veröffentlichen diese Werte als `runtime_clock`;
-  der visuelle Regler und ein vollständiges Phasenprofil bleiben offen.
+  der visuelle Regler ist gegen Polling-Rennen gehärtet.
+- Das Phasenprofil erfasst nun vollständige Tick-Segmente inklusive Pre-/Post-Hooks,
+  Netzwerk-Schritt und Homeostasis; `NeuralNetwork.step_batch(n)` führt dieselben
+  deterministischen Tick-Semantiken aus und wird gegen Einzel-Ticks geprüft.
 
 ## 2026-09-03 — Artefakt-Reviews und Experimentdatum
 

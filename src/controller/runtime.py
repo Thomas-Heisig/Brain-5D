@@ -68,6 +68,8 @@ class RuntimeNetworkLike(Protocol):
 
     def step(self) -> StepResultLike: ...
 
+    def step_batch(self, count: int) -> tuple[StepResultLike, ...]: ...
+
 
 class HomeostasisLike(Protocol):
     """Minimal homeostasis contract required by the controller."""
@@ -672,26 +674,55 @@ class RuntimeController:
     def _execute_ticks(self, count: int) -> int:
         """Execute a number of ticks and return total spikes."""
         spikes_total = 0
+        self._phase_totals_ms = {}
 
-        for _ in range(count):
+        with self._lock:
+            pre_hooks = tuple(self._pre_hooks)
+            hooks = tuple(self._hooks)
+
+        batched_results: tuple[StepResultLike, ...] | None = None
+        if not pre_hooks and count > 1:
+            batch_step = getattr(self.network, "step_batch", None)
+            if callable(batch_step):
+                network_started = time.perf_counter()
+                batched_results = tuple(batch_step(count))
+                network_elapsed_ms = (time.perf_counter() - network_started) * 1000.0
+                reported_core_ms = sum(
+                    float(getattr(result, "core_step_ms", 0.0))
+                    for result in batched_results
+                )
+                self._phase_totals_ms["network_step"] = (
+                    reported_core_ms if reported_core_ms > 0 else network_elapsed_ms
+                )
+
+        results = batched_results if batched_results is not None else (None,) * count
+        for batched_result in results:
             tick_started = time.perf_counter()
             # Check stop signal
             if self._stop_event.is_set() and self.state == ControllerState.RUNNING:
                 break
 
             # Run pre-tick hooks (e.g. stimulus)
-            with self._lock:
-                pre_hooks = tuple(self._pre_hooks)
             for hook in pre_hooks:
+                phase_started = time.perf_counter()
                 try:
                     hook(self.network.current_tick)
                 except Exception:
                     pass  # Hook errors are isolated
+                self._record_phase("pre_tick_hooks", phase_started)
 
             # Execute one tick
-            result = self.network.step()
+            if batched_result is None:
+                network_started = time.perf_counter()
+                result = self.network.step()
+                self._record_phase("network_step", network_started)
+            else:
+                result = batched_result
+                self._phase_totals_ms["network_step"] = self._phase_totals_ms.get(
+                    "network_step", 0.0
+                ) + float(getattr(result, "core_step_ms", 0.0))
             spikes_total += result.spikes_this_tick
-            self._record_phase("neuron_integration", tick_started)
+            self._record_phase("tick_segment", tick_started)
 
             # Update homeostasis
             if self.homeostasis is not None and self.homeostasis.enabled:
@@ -700,13 +731,13 @@ class RuntimeController:
                 self._record_phase("homeostasis", phase_started)
 
             # Run post-tick hooks
-            with self._lock:
-                hooks = tuple(self._hooks)
+            post_started = time.perf_counter()
             for i in range(len(hooks)):
                 try:
                     hooks[i](self.network.current_tick, result)
                 except Exception:
                     pass  # Hook errors are isolated
+            self._record_phase("post_tick_hooks", post_started)
 
             tick_latency_ms = (time.perf_counter() - tick_started) * 1000.0
             self._last_tick_latency_ms = tick_latency_ms
