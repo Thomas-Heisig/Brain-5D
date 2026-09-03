@@ -53,7 +53,7 @@
 - [x] Development-, Validation- und Scientific-Holdout-Daten strikt trennen und AI-/Gold-Label-Leakage testen
 - [x] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
 - [ ] Quantitative Statistik ausschließlich durch die deterministische Statistics Engine erzeugen; LLM darf Zahlen nur interpretieren
-- [ ] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
+- [x] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
 - [x] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
 - [x] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
 - [ ] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein

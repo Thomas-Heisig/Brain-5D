@@ -31,6 +31,9 @@
   AI-/Gold-Label-Digests im Scientific-Holdout.
 - Die Borrowed Intelligence Ratio ist nun an eine Protocol-ID gebunden und
   wird explizit als Nicht-Evidence markiert.
+- Experiment-Manifeste registrieren nun den Netzwerkmodus; Live Network wird
+  für Scientific Runs fail-closed abgewiesen und Retrieval-Versionen werden
+  sichtbar protokolliert.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

@@ -154,6 +154,13 @@ class TestRuntimeErrorsInManifest:
         assert recorder.manifest["retrieval"]["enabled"] is True
         assert recorder.manifest["retrieval"]["snapshot_digest"] == "corpus-sha"
 
+    def test_recorder_rejects_live_network_for_scientific_runs(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-NETWORK-0001", output_dir=tmp_experiment_dir)
+        with pytest.raises(ValueError, match="require OFFLINE"):
+            recorder.record_network_mode(NetworkMode.LIVE_NETWORK)
+        recorder.record_network_mode(NetworkMode.FROZEN_CORPUS)
+        assert recorder.manifest["network_mode"] == "FROZEN_CORPUS"
+
     def test_recorder_registers_ai_reproducibility_level(self, tmp_experiment_dir: Path) -> None:
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_ai_reproducibility(AIReproducibility.R2)

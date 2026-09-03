@@ -233,8 +233,11 @@ class RetrievalRecord:
     snapshot_digest: str
     source_count: int
     knowledge_origin: KnowledgeOrigin
+    protocol_version: int = 1
 
     def __post_init__(self) -> None:
+        if self.protocol_version < 1:
+            raise ValueError("Retrieval protocol_version must be positive")
         if self.source_count < 0:
             raise ValueError("Retrieval source_count must not be negative")
         if self.enabled and not self.snapshot_digest.strip():
@@ -249,4 +252,5 @@ class RetrievalRecord:
             "snapshot_digest": self.snapshot_digest,
             "source_count": self.source_count,
             "knowledge_origin": self.knowledge_origin.value,
+            "protocol_version": self.protocol_version,
         }

@@ -25,6 +25,7 @@ from src.research_assistant.contracts import (
 from src.research_assistant.governance import (
     ConfirmatoryRunLock,
     DataPartition,
+    NetworkMode,
     ResearchRunMode,
     RetrievalRecord,
 )
@@ -167,6 +168,7 @@ class ExperimentRecorder:
             "runtime_errors": [],
             "research_run_mode": ResearchRunMode.EXPLORATORY.value,
             "data_partitions": [],
+            "network_mode": NetworkMode.OFFLINE.value,
         }
 
     def record_config(self, config_path: str, sha256: str = "") -> ExperimentRecorder:
@@ -262,6 +264,16 @@ class ExperimentRecorder:
     def record_research_run_mode(self, mode: ResearchRunMode | str) -> ExperimentRecorder:
         """Declare exploratory or confirmatory protocol handling."""
         self._manifest["research_run_mode"] = ResearchRunMode(mode).value
+        return self
+
+    def record_network_mode(
+        self, mode: NetworkMode | str, *, scientific_run: bool = True
+    ) -> ExperimentRecorder:
+        """Register network policy and reject live access for scientific runs."""
+        normalized = NetworkMode(mode)
+        if scientific_run and normalized is NetworkMode.LIVE_NETWORK:
+            raise ValueError("Scientific runs require OFFLINE or FROZEN_CORPUS network mode")
+        self._manifest["network_mode"] = normalized.value
         return self
 
     def record_data_partition(self, partition: DataPartition | str) -> ExperimentRecorder:

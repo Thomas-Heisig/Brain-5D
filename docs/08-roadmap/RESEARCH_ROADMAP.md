@@ -62,6 +62,8 @@ Evidenz für Lernwirkung.
 	auf Überschneidungen sowie AI-/Gold-Label-Leakage geprüft werden.
 - Borrowed Intelligence Ratio ist als protokollgebundene, deterministische
 	Ablationsmetrik ohne Evidence-Status verfügbar.
+- Scientific Runs registrieren ihren Netzwerkmodus mit Offline-/Frozen-Corpus-
+	Default; versionierte Retrieval-Provenienz ist im Manifest sichtbar.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

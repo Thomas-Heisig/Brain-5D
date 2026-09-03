@@ -61,6 +61,7 @@ def test_retrieval_record_requires_visible_snapshot() -> None:
         knowledge_origin=KnowledgeOrigin.EXTERNAL_RETRIEVAL,
     )
     assert record.to_dict()["mode"] == "FROZEN_CORPUS"
+    assert record.to_dict()["protocol_version"] == 1
     with pytest.raises(ValueError, match="snapshot digest"):
         RetrievalRecord(
             enabled=True,
