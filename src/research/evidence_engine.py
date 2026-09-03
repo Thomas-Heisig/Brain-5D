@@ -86,13 +86,18 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
     validity_raw = manifest.get("validity", {})
     if not isinstance(validity_raw, dict):
         return None
-    validity = cast(dict[str, Any], validity_raw)
-    if not validity.get("valid", True):
+    validity = cast(dict[str, object], validity_raw)
+    valid = validity.get("valid", True)
+    if not isinstance(valid, bool) or not valid:
         return None
     causal_taint = manifest.get("causal_taint", "PURE")
     if causal_taint != "PURE":
-        treatment = manifest.get("ai_treatment")
-        if not isinstance(treatment, dict) or not treatment.get("registered") or not isinstance(treatment.get("protocol_id"), str) or not treatment["protocol_id"].strip():
+        treatment_raw = manifest.get("ai_treatment")
+        if not isinstance(treatment_raw, dict):
+            return None
+        treatment = cast(dict[str, object], treatment_raw)
+        protocol_id = treatment.get("protocol_id")
+        if not treatment.get("registered") or not isinstance(protocol_id, str) or not protocol_id.strip():
             return None
     git_raw = manifest.get("git", {})
     if not isinstance(git_raw, dict):
