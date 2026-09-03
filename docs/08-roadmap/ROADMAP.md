@@ -47,6 +47,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	UNKNOWN-Semantik als Digital-Interoception-Basis einführen
 - [x] Erste deterministische Drives für Thermal Threat, Resource Pressure und
 	Continuity Risk aus Interoception ableiten; nicht beobachtbare Drives bleiben unsicher
+- [x] Optionale Host-Telemetrie für RAM-Reserve, Storage, Disk-/Netzwerk-I/O,
+	Akku und Lüfter ergänzen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
 - [ ] Chronic Signals, Regional 5D Pressure, Neuron-/Synapsenalter und Growth Budgets integrieren
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen

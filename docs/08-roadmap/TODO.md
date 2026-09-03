@@ -135,6 +135,8 @@
 
 - [x] Typisierten Digital-Interoception-Vertrag mit VitalSignal, Signalqualität,
   Sicherheitsbereichen und explizitem UNKNOWN-Status einführen
+- [x] Optionale Host-Signale für RAM-Reserve, freien Speicher, Disk-/Netzwerk-I/O,
+  Akku und Lüfter über `psutil` erfassen; nicht unterstützte Quellen bleiben `None`
 - [ ] Vital Signals um Lüfter-RPM/-Status, CPU/GPU-Temperatur, Temperaturgradient,
   Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
   Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern

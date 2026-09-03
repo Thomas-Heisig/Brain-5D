@@ -9,6 +9,7 @@ from src.embodiment import (
     derive_drives,
     normalize_vital_signals,
 )
+from src.embodiment.system_sensor import host_system_readings
 
 
 def test_missing_signal_is_unknown_and_not_nominal() -> None:
@@ -66,3 +67,27 @@ def test_unavailable_drive_is_explicitly_uncertain() -> None:
 
     assert drives.drives["task_progress"] is None
     assert drives.uncertainty["task_progress"] == 1.0
+
+
+def test_normalizer_includes_optional_resource_and_continuity_signals() -> None:
+    names = {signal.name for signal in normalize_vital_signals({})}
+
+    assert {
+        "memory_available_bytes",
+        "disk_free_bytes",
+        "disk_read_bytes",
+        "disk_write_bytes",
+        "network_bytes_sent",
+        "network_bytes_received",
+        "battery_percent",
+        "battery_plugged",
+        "fan_rpm",
+    } <= names
+
+
+def test_host_readings_expose_optional_metrics_without_external_services() -> None:
+    readings = host_system_readings(2)
+
+    assert readings["tick"] == 2
+    assert isinstance(readings["memory_available_bytes"], int)
+    assert isinstance(readings["disk_free_bytes"], int)

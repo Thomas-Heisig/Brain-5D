@@ -9,6 +9,8 @@
 - Added bounded deterministic drives for thermal threat, resource pressure and
   continuity risk; unavailable task, novelty and actuator signals remain explicit
   `None` values with uncertainty rather than being inferred.
+- Extended the opt-in host sensor with RAM reserve, free storage, disk/network
+  I/O, battery and fan telemetry; unsupported hardware remains `None`.
 
 ## 2026-09-03 — Documentation and research status synchronization
 

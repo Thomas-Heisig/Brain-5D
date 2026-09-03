@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from time import time
@@ -72,12 +73,34 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
             break
 
     network_up = any(bool(status.isup) for status in psutil.net_if_stats().values())
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage(os.path.abspath(os.sep))
+    disk_io = psutil.disk_io_counters()
+    network_io = psutil.net_io_counters()
+    battery_reader = getattr(psutil, "sensors_battery", None)
+    battery = battery_reader() if callable(battery_reader) else None
+    fan_reader = getattr(psutil, "sensors_fans", None)
+    fans = fan_reader() if callable(fan_reader) else {}
+    fan_rpm: float | None = None
+    for entries in fans.values():
+        if entries:
+            fan_rpm = float(entries[0].current)
+            break
     return {
         "tick": tick,
         "cpu_percent": psutil.cpu_percent(interval=None),
-        "memory_percent": psutil.virtual_memory().percent,
+        "memory_percent": memory.percent,
+        "memory_available_bytes": memory.available,
         "temperature_c": temperature,
+        "disk_free_bytes": disk.free,
+        "disk_read_bytes": disk_io.read_bytes if disk_io is not None else None,
+        "disk_write_bytes": disk_io.write_bytes if disk_io is not None else None,
         "network_up": network_up,
+        "network_bytes_sent": network_io.bytes_sent,
+        "network_bytes_received": network_io.bytes_recv,
+        "battery_percent": battery.percent if battery is not None else None,
+        "battery_plugged": battery.power_plugged if battery is not None else None,
+        "fan_rpm": fan_rpm,
         "process_count": len(psutil.pids()),
         "unix_time": time(),
     }

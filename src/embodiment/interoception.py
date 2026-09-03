@@ -97,8 +97,17 @@ class DriveState:
 _SIGNAL_METADATA: dict[str, dict[str, JSONValue]] = {
     "cpu_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
     "memory_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
+    "memory_available_bytes": {"unit": "bytes", "causal_criticality": "continuity"},
     "temperature_c": {"unit": "degC", "warning_range": [-20.0, 80.0], "critical_range": [-30.0, 95.0]},
+    "disk_free_bytes": {"unit": "bytes", "causal_criticality": "continuity"},
+    "disk_read_bytes": {"unit": "bytes", "causal_criticality": "resource"},
+    "disk_write_bytes": {"unit": "bytes", "causal_criticality": "resource"},
     "network_up": {"unit": "bool", "causal_criticality": "continuity"},
+    "network_bytes_sent": {"unit": "bytes", "causal_criticality": "continuity"},
+    "network_bytes_received": {"unit": "bytes", "causal_criticality": "continuity"},
+    "battery_percent": {"unit": "%", "warning_range": [20.0, 100.0], "critical_range": [5.0, 100.0], "causal_criticality": "continuity"},
+    "battery_plugged": {"unit": "bool", "causal_criticality": "continuity"},
+    "fan_rpm": {"unit": "rpm", "causal_criticality": "thermal"},
 }
 
 
