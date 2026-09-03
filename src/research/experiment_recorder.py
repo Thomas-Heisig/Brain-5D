@@ -26,6 +26,14 @@ from src.research_assistant.contracts import (
 from .registry import REPO_ROOT
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
+CONTROL_GROUP_TEMPLATES = (
+    "SNN_ONLY",
+    "LANGUAGE_ORGAN",
+    "KNOWLEDGE_INTAKE",
+    "LANGUAGE_KNOWLEDGE",
+    "LLM_ONLY",
+    "FULL_SYSTEM",
+)
 
 
 def _digest(value: object) -> str:
@@ -274,6 +282,19 @@ class ExperimentRecorder:
         twin_run["ai_on_result_digest"] = _digest(ai_on_result)
         twin_run["results_recorded"] = True
         twin_run["executed"] = True
+        return self
+
+    def record_control_group(self, control_group: str) -> ExperimentRecorder:
+        """Register one predefined control-group condition for this experiment."""
+        normalized = control_group.strip().upper()
+        if normalized not in CONTROL_GROUP_TEMPLATES:
+            allowed = ", ".join(CONTROL_GROUP_TEMPLATES)
+            raise ValueError(f"Unsupported control group {control_group!r}; use: {allowed}")
+        self._manifest["control_group"] = {
+            "template": normalized,
+            "registered": True,
+            "executed": False,
+        }
         return self
 
     def record_research_links(

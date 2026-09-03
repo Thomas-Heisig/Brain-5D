@@ -11,6 +11,9 @@
   die tatsächliche Ausführung bleibt ein offener Forschungsschritt.
 - Abgeschlossene AI-off/AI-on-Ergebnisse können nachgelagert ausschließlich per
   Digest am Twin-Run registriert werden; der Vergleich selbst bleibt extern.
+- Die sechs Kontrollgruppen `SNN_ONLY`, `LANGUAGE_ORGAN`, `KNOWLEDGE_INTAKE`,
+  `LANGUAGE_KNOWLEDGE`, `LLM_ONLY` und `FULL_SYSTEM` sind als validierte,
+  nicht-ausführende Experimentvorlagen registrierbar.
 
 ## 2026-09-03 — Language Organ sham controls
 

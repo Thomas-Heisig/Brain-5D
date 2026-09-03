@@ -115,6 +115,9 @@ als unverified markiert.
 - Nach abgeschlossenen Läufen lassen sich auch die beiden Ergebnis-Digests
 	unveränderlich am Manifest hinterlegen; die Ausführung wird dabei nicht vom
 	Recorder übernommen.
+- Die vorgesehenen sechs Kontrollgruppen sind als standardisierte
+	Manifestvorlagen registriert; ihre tatsächliche Durchführung und Auswertung
+	erfordern weiterhin preregistrierte Experimente.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

@@ -22,7 +22,7 @@ from src.research.evidence_engine import (
     EvidenceEngine,
     _check_experiment_valid,  # type: ignore[misc]
 )
-from src.research.experiment_recorder import ExperimentRecorder
+from src.research.experiment_recorder import CONTROL_GROUP_TEMPLATES, ExperimentRecorder
 from src.research.registry import ResearchRegistry
 from src.research_assistant.contracts import (
     AIExposure,
@@ -201,6 +201,20 @@ class TestRuntimeErrorsInManifest:
         assert twin_run["ai_on_result_digest"]
         assert twin_run["results_recorded"] is True
         assert twin_run["executed"] is True
+
+    def test_control_group_templates_are_registered_without_execution(
+        self, tmp_experiment_dir: Path
+    ) -> None:
+        recorder = ExperimentRecorder("EXP-CONTROL-0001", output_dir=tmp_experiment_dir)
+        recorder.record_control_group("language_knowledge")
+        assert recorder.manifest["control_group"] == {
+            "template": "LANGUAGE_KNOWLEDGE",
+            "registered": True,
+            "executed": False,
+        }
+        assert len(CONTROL_GROUP_TEMPLATES) == 6
+        with pytest.raises(ValueError, match="Unsupported control group"):
+            recorder.record_control_group("UNKNOWN")
 
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""
