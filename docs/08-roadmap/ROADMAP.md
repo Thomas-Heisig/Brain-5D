@@ -12,7 +12,7 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **660 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
+Vollsuite meldet **661 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
@@ -27,6 +27,8 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 - [x] Expliziten Operator-Lernstart über einen getrennten, validierten
 	LearningEngine-Workflow mit DATA/Manifest/Report und sichtbarem Ergebnis ergänzen
 - [x] Begrenzte KI-Kontextlänge im Learning Studio bis zum Chat-Backend durchreichen
+- [x] Nach jedem erfolgreich abgeschlossenen Dashboard-Experiment einen post-hoc
+	AIRR-Bericht anhängen; fehlendes Backend bleibt sichtbar `unavailable`
 
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:

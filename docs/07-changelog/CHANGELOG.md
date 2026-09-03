@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Post-experiment AI research report
+
+- Dashboard experiment completion now appends the existing AIRR JSON/Markdown
+  report after DATA, Manifest and technical report publication.
+- AIRR generation is post-hoc and cannot affect the experiment causal path.
+- Missing or failing AI backends are returned as explicit report status while
+  the completed experiment remains completed; human review and Evidence remain open.
+
 ## 2026-09-03 — Full-stack Learning Studio run
 
 - Added a bounded AI context-length control to Learning Preparation requests.

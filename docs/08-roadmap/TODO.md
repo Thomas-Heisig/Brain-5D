@@ -4,7 +4,7 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: synchronisiertes `main`, lokale Vollsuite `660 passed,
+> Verifiziert am 2026-09-03: synchronisiertes `main`, lokale Vollsuite `661 passed,
 > 3 bekannte Legacy-Dashboard-Fehler, 5 skipped`.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
@@ -17,6 +17,14 @@
 - [x] Registrierten LearningEngine-Runner mit DATA, Manifest und Report anbinden
 - [x] Fail-closed-Bestätigung und UI-/Route-Regressionstests ergänzen
 - [ ] Wissenschaftliche EVID des Lernlaufs nach Clean Freeze und Review erzeugen
+
+### P0 — Post-Experiment AI Research Report
+
+- [x] AIRR nach erfolgreichem Dashboard-Experiment automatisch post-hoc anhängen
+- [x] AIRR-Erzeugung strikt vom Experimentlauf trennen; Fehler dürfen den Laufstatus
+  nicht verändern
+- [x] Fehlendes AI-Backend explizit als `unavailable` melden statt Evidence zu behaupten
+- [ ] AIRR mit Human Review abschließen; `scientific_evidence` bleibt bis dahin `false`
 
 ### P1 — Learning Preparation Ausbau
 

@@ -2404,6 +2404,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         protocol = body.get("protocol")
         if protocol in {"science_suite_v1", "science_time_v1", "science_5d_v1"}:
             runtime_result = ExperimentWorkflowService(source.root()).run_science(body)
+            runtime_result["ai_report"] = self._append_ai_report(
+                cast(str, runtime_result["experiment_id"])
+            )
             self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
             return
         if protocol == "stdp_pair_timing_v1":
@@ -2437,7 +2440,38 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             metrics(),
             metrics,
         )
+        runtime_result["ai_report"] = self._append_ai_report(
+            cast(str, runtime_result["experiment_id"])
+        )
         self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
+
+    def _append_ai_report(self, experiment_id: str) -> dict[str, JSONValue]:
+        """Append an AIRR interpretation after a completed experiment.
+
+        AIRR generation is post-hoc and therefore cannot influence the run. A
+        missing or failing AI backend is reported without changing run status.
+        """
+        backend = self.dashboard_server.research_ai_backend
+        if backend is None:
+            return {"status": "unavailable", "reason": "AI backend not configured"}
+        try:
+            report = AIRRPipeline(self._require_research_source().root()).analyze(
+                experiment_id, backend
+            )
+        except Exception as exc:
+            return {
+                "status": "failed",
+                "error": type(exc).__name__,
+                "message": str(exc),
+            }
+        return {
+            "status": "generated",
+            "report_id": report.report_id,
+            "json": f"reports/{experiment_id}/{report.report_id}.json",
+            "markdown": f"reports/{experiment_id}/{report.report_id}.md",
+            "human_review": "PENDING",
+            "scientific_evidence": False,
+        }
 
     def _set_experiment_mode(
         self,

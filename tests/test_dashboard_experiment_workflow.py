@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
@@ -11,6 +13,24 @@ from src.dashboard.experiment_workflow import (
     ExperimentWorkflowService,
     WorkflowValidationError,
 )
+from src.dashboard.research_source import ResearchSource
+from src.dashboard.server import DashboardRequestHandler
+
+
+def _report_backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str]]:
+    return (
+        {
+            "assessment": "Post-hoc summary",
+            "observations": ["The run completed."],
+            "effect_direction": "not_determined",
+            "methodological_concerns": [],
+            "alternative_explanations": [],
+            "recommended_experiments": [],
+            "requested_evidence": ["Human review"],
+            "confidence": 0.1,
+        },
+        {"provider": "test", "model": "fixture"},
+    )
 
 
 def _write_registry(root: Path) -> None:
@@ -25,6 +45,7 @@ def _write_registry(root: Path) -> None:
         "- id: H-SNN-001-A\n  research_question: RQ-SNN-001\n  hypothesis: It advances ticks.\n",
         encoding="utf-8",
     )
+    (registry / "claims.yaml").write_text("[]\n", encoding="utf-8")
 
 
 def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
@@ -64,6 +85,45 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     assert "## Reproduzierbarkeit" in report
     assert "## Evidenzstatus" in report
     assert "KI-Ausgaben" in report
+
+
+def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+    state = {"tick": 0, "neurons": 1, "synapses": 1}
+
+    result = service.run(
+        {
+            "experiment_id": "EXP-SNN-REPORT-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Report hook fixture",
+            "conditions": "fixed",
+            "ticks": 1,
+        },
+        lambda ticks: state.__setitem__("tick", state["tick"] + ticks),
+        dict(state),
+        lambda: dict(state),
+    )
+
+    assert result["experiment_id"] == "EXP-SNN-REPORT-0001"
+    experiment_dir = tmp_path / "experiments" / "EXP-SNN-REPORT-0001"
+    assert (experiment_dir / "manifest.json").is_file()
+
+    handler = DashboardRequestHandler.__new__(DashboardRequestHandler)
+    handler.server = SimpleNamespace(
+        research_source=ResearchSource(tmp_path),
+        research_ai_backend=_report_backend,
+    )
+    ai_result = handler._append_ai_report("EXP-SNN-REPORT-0001")
+
+    assert ai_result["status"] == "generated", ai_result
+    report_id = str(ai_result["report_id"])
+    report_dir = tmp_path / "reports" / "EXP-SNN-REPORT-0001"
+    saved = json.loads((report_dir / f"{report_id}.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "review_pending"
+    assert saved["scientific_evidence"] is False
+    assert (report_dir / f"{report_id}.md").is_file()
 
 
 def test_run_rejects_hypothesis_from_a_different_question(tmp_path: Path) -> None:
