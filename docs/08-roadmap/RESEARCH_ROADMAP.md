@@ -71,6 +71,8 @@ Evidenz für Lernwirkung.
 	getrennt sichtbar.
 - Die CI besitzt nun einen blockierenden Scientific Integrity Gate für die
 	zentralen Determinismus-, Restore-, Schema- und AI-Governance-Prüfungen.
+- Die Provenienzklasse `knowledge_origin` ist als vollständiger, getesteter
+	Contract für interne, externe, menschliche und abgeleitete Quellen definiert.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

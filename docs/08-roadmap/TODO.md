@@ -84,7 +84,7 @@
 - [x] Scientific Integrity Gate in CI für Determinismus, Restore, Canonical State, Golden Chain, Schema, AI-Leakage und AI-Authority ausführen
 - [ ] CI-Regeln für Prompt-, Modell-, Treatment- und Statistikversionsänderungen erzwingen
 - [ ] Epistemic Provenance Graph für Claims, Sensoren, Memory, Experimente, Webquellen und Derived Values modellieren
-- [ ] `knowledge_origin` mit `SNN_LEARNED`, `LLM_PRIOR`, `EXTERNAL_RETRIEVAL`, `HUMAN_INPUT`, `SENSOR_OBSERVATION`, `SYSTEM_STATE`, `SIMULATED_ENVIRONMENT`, `DERIVED` und `UNKNOWN` standardisieren
+- [x] `knowledge_origin` mit `SNN_LEARNED`, `LLM_PRIOR`, `EXTERNAL_RETRIEVAL`, `HUMAN_INPUT`, `SENSOR_OBSERVATION`, `SYSTEM_STATE`, `SIMULATED_ENVIRONMENT`, `DERIVED` und `UNKNOWN` standardisieren
 - [ ] Causal-Attribution-Report für jede AI-Exposure-Stufe und jeden Twin-/Ablation-Run generieren
 - [ ] Dashboard-Betriebsstatus für `PURE EXPERIMENT`, `AI OBSERVING`, `AI PROPOSING` und `AI CAUSALLY ACTIVE` anzeigen
 

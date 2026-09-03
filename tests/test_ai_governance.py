@@ -190,6 +190,20 @@ def test_scientific_runs_reject_development_partition() -> None:
         validate_data_partition(DataPartition.DEVELOPMENT, scientific_run=True)
 
 
+def test_knowledge_origin_contract_is_complete() -> None:
+    assert {origin.value for origin in KnowledgeOrigin} == {
+        "SNN_LEARNED",
+        "LLM_PRIOR",
+        "EXTERNAL_RETRIEVAL",
+        "HUMAN_INPUT",
+        "SENSOR_OBSERVATION",
+        "SYSTEM_STATE",
+        "SIMULATED_ENVIRONMENT",
+        "DERIVED",
+        "UNKNOWN",
+    }
+
+
 def test_quantitative_results_require_statistics_engine_provenance() -> None:
     summary = summarize([1.0, 2.0, 3.0])
     require_statistics_engine_artifact(summary)

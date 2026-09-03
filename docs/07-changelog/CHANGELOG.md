@@ -6,6 +6,11 @@
   Canonical State, Golden Chain, Registry-Schema, AI-Leakage und AI-Authority
   aus.
 
+## 2026-09-03 — Knowledge origin contract
+
+- `knowledge_origin` ist als vollständige, getestete Enum mit den neun
+  zulässigen Provenienzklassen standardisiert.
+
 ## 2026-09-03 — Dashboard AI operation classification
 
 - Research-Experimente zeigen nun read-only, ob AI als `REPLAY`,
