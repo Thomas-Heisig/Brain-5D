@@ -263,6 +263,19 @@ class ExperimentRecorder:
         }
         return self
 
+    def record_twin_results(
+        self, *, ai_off_result: object, ai_on_result: object
+    ) -> ExperimentRecorder:
+        """Attach digests from completed AI-off/AI-on runs to a twin manifest."""
+        twin_run = self._manifest.get("twin_run")
+        if not isinstance(twin_run, dict):
+            raise ValueError("Twin-run inputs must be registered before results")
+        twin_run["ai_off_result_digest"] = _digest(ai_off_result)
+        twin_run["ai_on_result_digest"] = _digest(ai_on_result)
+        twin_run["results_recorded"] = True
+        twin_run["executed"] = True
+        return self
+
     def record_research_links(
         self,
         research_questions: list[str] | None = None,

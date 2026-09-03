@@ -194,6 +194,14 @@ class TestRuntimeErrorsInManifest:
         assert twin_run["tick_plan_digest"]
         assert twin_run["executed"] is False
 
+        recorder.record_twin_results(
+            ai_off_result={"score": 0.2}, ai_on_result={"score": 0.3}
+        )
+        assert twin_run["ai_off_result_digest"]
+        assert twin_run["ai_on_result_digest"]
+        assert twin_run["results_recorded"] is True
+        assert twin_run["executed"] is True
+
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)

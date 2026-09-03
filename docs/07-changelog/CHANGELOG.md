@@ -9,6 +9,8 @@
 - Experimentmanifeste können gemeinsame Twin-Run-Eingaben mit Snapshot-, Input-,
   Reward- und Tickplan-Digest sowie getrennten AI-off/AI-on-IDs registrieren;
   die tatsächliche Ausführung bleibt ein offener Forschungsschritt.
+- Abgeschlossene AI-off/AI-on-Ergebnisse können nachgelagert ausschließlich per
+  Digest am Twin-Run registriert werden; der Vergleich selbst bleibt extern.
 
 ## 2026-09-03 — Language Organ sham controls
 

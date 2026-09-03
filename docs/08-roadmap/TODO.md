@@ -40,7 +40,7 @@
 - [x] `observation_stream.jsonl` für reproduzierbare Offline-Replays erzeugen und validieren
 - [x] `FrozenAIReplayBackend` mit Request-/Response-Digest und fehlendem Live-Fallback implementieren
 - [x] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
-- [ ] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen
+- [ ] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen (Manifest-Registrierung vorhanden; Ausführung und Vergleich offen)
 - [ ] Kontrollgruppen für SNN-only, Language Organ, Knowledge Intake, Language+Knowledge, LLM-only und Full System als Experimentvorlagen registrieren
 - [x] `NullLanguageOrgan`, `RandomLanguageOrgan` und `ReplayLanguageOrgan` als Sham-Kontrollen ergänzen
 

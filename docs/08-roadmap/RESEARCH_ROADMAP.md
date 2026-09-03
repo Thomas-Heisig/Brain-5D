@@ -112,6 +112,9 @@ als unverified markiert.
 - Experimentmanifeste können nun die gemeinsamen Eingaben eines geplanten
 	AI-off/AI-on-Twin-Runs digestgebunden registrieren. Die Ausführung und der
 	statistische Vergleich beider Läufe sind weiterhin offene Forschungsarbeit.
+- Nach abgeschlossenen Läufen lassen sich auch die beiden Ergebnis-Digests
+	unveränderlich am Manifest hinterlegen; die Ausführung wird dabei nicht vom
+	Recorder übernommen.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
