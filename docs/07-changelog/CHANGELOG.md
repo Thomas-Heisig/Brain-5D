@@ -8,6 +8,8 @@
   nach der Registrierung gegen stille Änderungen.
 - AI-Selbstvertrauen wird als `model_self_confidence` separat von empirischer
   Kalibrierung und Brier/ECE-Metriken protokolliert.
+- Der `CognitiveAdvisor` erzeugt ausschließlich typisierte, nicht-ausführende
+  `ActionProposal`-Contracts mit validierter Konfidenz.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

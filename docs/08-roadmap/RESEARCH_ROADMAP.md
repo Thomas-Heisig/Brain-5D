@@ -42,6 +42,9 @@ Evidenz für Lernwirkung.
   Preregistration-Locks und die getrennte Kennzeichnung von
   `model_self_confidence`. Diese technischen Sicherungen sind keine
   wissenschaftlichen Ergebnisse.
+- Der Cognitive Advisor ist als proposal-only Boundary mit typisiertem
+	`ActionProposal`-Contract umgesetzt; jede Anwendung bleibt extern und muss
+	separat autorisiert werden.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

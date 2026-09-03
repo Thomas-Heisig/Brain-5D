@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from src.research_assistant.advisor import CognitiveAdvisor
 from src.research_assistant.governance import (
     KnowledgeOrigin,
     NetworkMode,
@@ -97,3 +98,13 @@ def test_model_self_confidence_is_separate_from_empirical_metrics() -> None:
         prompt="prompt",
     )
     assert record.provenance["model_self_confidence"] == "0.8"
+
+
+def test_cognitive_advisor_is_proposal_only() -> None:
+    proposal = CognitiveAdvisor().propose(
+        action="inspect_snapshot",
+        rationale="The observation is incomplete.",
+        confidence=0.6,
+    )
+    assert proposal.to_dict()["executed"] is False
+    assert "execute" not in proposal.to_dict()

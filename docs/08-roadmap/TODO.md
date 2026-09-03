@@ -60,7 +60,7 @@
 
 ### P1 — AI-Rollen und semantische Schnittstellen
 
-- [ ] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
+- [x] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
 - [ ] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
 - [ ] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
 - [ ] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen

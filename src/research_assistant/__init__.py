@@ -1,5 +1,6 @@
 """Read-only AI assistance for scientific research artifacts."""
 
+from .advisor import ActionProposal, CognitiveAdvisor
 from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
 from .assistant import AnalysisBackend, ResearchAssistant
 from .authority import (
@@ -48,6 +49,7 @@ from .statistics import summarize, write_statistics
 
 __all__ = [
     "AIAnalysisRecord",
+    "ActionProposal",
     "AIAuthority",
     "AIFirewallViolation",
     "AIResource",
@@ -68,6 +70,7 @@ __all__ = [
     "AuthorityRule",
     "ResearchAssistant",
     "ResearchPacket",
+    "CognitiveAdvisor",
     "FrozenAIReplayBackend",
     "FrozenAIReplayError",
     "ShadowMode",
