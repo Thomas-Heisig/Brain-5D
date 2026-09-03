@@ -8,6 +8,7 @@ import pytest
 
 from src.embodiment import (
     ActionCommand,
+    ActuatorHub,
     ActuatorResult,
     ConnectionDescriptor,
     ConnectionKind,
@@ -233,6 +234,45 @@ def test_action_receipt_separates_acceptance_from_observed_effect() -> None:
     assert agent.last_receipt.effect_observed is True
     assert agent.last_receipt.latency == 0
     assert agent.last_receipt.to_json()["command_id"] == "target-actuator:1"
+
+
+def test_actuator_hub_routes_by_id_and_keeps_audit_paths_separate() -> None:
+    first, first_actuator = _agent()
+    second_actuator = FakeActuator(actuator_id="second-actuator")
+    second_descriptor = ConnectionDescriptor(
+        "second-actuator",
+        "Second actuator",
+        ConnectionKind.ACTUATOR,
+        RelationshipClass.CONTROLLABLE,
+        ConnectionStatus.CONNECTED,
+        capabilities=("right",),
+        available=True,
+        authorized=True,
+        active=True,
+    )
+    second = ControlledEmbodimentAgent(
+        DeterministicTargetEnvironment(), second_actuator, second_descriptor
+    )
+    hub = ActuatorHub({"target-actuator": first})
+    hub.register(second)
+    hub.reset(seed=42)
+
+    assert hub.step(ActionCommand("second-actuator", 1, "right")) is not None
+    assert hub.step(ActionCommand("target-actuator", 1, "right")) is not None
+    assert first_actuator.calls == 1
+    assert second_actuator.calls == 1
+    assert len(first.audit.records) == 1
+    assert len(second.audit.records) == 1
+    assert first.audit.records[0].connection_id != second.audit.records[0].connection_id
+
+
+def test_actuator_hub_rejects_unregistered_actuator_fail_closed() -> None:
+    hub = ActuatorHub()
+
+    assert hub.step(ActionCommand("missing", 4, "right")) is None
+    assert hub.last_receipt is not None
+    assert hub.last_receipt.accepted is False
+    assert hub.last_receipt.effect_observed is False
 
 
 def test_action_audit_trail_reopens_from_durable_jsonl(tmp_path) -> None:

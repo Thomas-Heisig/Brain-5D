@@ -173,7 +173,7 @@
 - [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen
 - [ ] `BodySchemaManager` über dem `ConnectionManager` mit Integrations- und
   Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
-- [ ] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
+- [x] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
   Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
 - [x] `ActionReceipt` mit command_id, accepted, started, completed, failed,
   latency, error, safety_clamp und effect_observed einführen
@@ -201,8 +201,8 @@
 - [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
 - [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
 - [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (Runner ergänzt, unabhängiger DATA-Lauf noch ausstehend)
-- [ ] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks
-- [ ] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung
+- [x] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks (Dashboard-DATA-Lauf mit 15 Runs; EVID nach Clean Freeze offen)
+- [x] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung (Dashboard-DATA-Lauf mit 150 Runs; EVID nach Clean Freeze offen)
 - [ ] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck
 - [ ] `EXP-BODY-0001`: Sensorverlust, Aktivitätsänderung, Rekonfiguration und Kompensation messen
 - [ ] `EXP-BODY-0001` um Wetter-/Umwelt-Kontrollbedingung, Sensorqualität,

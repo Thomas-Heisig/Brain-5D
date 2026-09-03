@@ -66,13 +66,6 @@
   evidence: []
   created: '2026-09-03'
   updated: '2026-09-03'
-- id: H-5D-001-A
-  research_question: RQ-5D-001
-  hypothesis: Die kontrollierten Raum- und Random-Graph-Bedingungen erzeugen messbar unterschiedliche Response-Signaturen.
-  status: untested
-  evidence: []
-  created: '2026-09-03'
-  updated: '2026-09-03'
 - id: H-STDP-001-A
   research_question: RQ-STDP-001
   hypothesis: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine

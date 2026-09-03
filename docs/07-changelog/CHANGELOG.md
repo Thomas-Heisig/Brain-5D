@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-03 — Multi-actuator routing
+
+- Added typed `ActuatorHub`/`ActionRouter` routing by stable actuator ID.
+- Each registered actuator retains its own authorization, capability, safety,
+  rate-limit, receipt and hash-linked audit boundary.
+- Unknown actuator IDs fail closed without invoking an adapter.
+
+## 2026-09-03 — TIME and 5D Dashboard science protocols
+
+- Added registered Dashboard protocols for TIME tick-ladder calibration and 5D
+  dimensional ablation.
+- Published `EXP-TIME-0001` with 15 DATA runs through 1,000,000 ticks and
+  `EXP-5D-0001` with 150 DATA runs across five conditions and 30 seeds each.
+- Kept EVID generation gated by clean-freeze and independent review.
+
 ## 2026-09-03 — Dashboard tab selection consistency
 
 - Unified static and dynamically created dashboard tabs behind one delegated

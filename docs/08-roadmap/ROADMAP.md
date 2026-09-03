@@ -34,6 +34,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
 - [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
 - [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
+- [x] TIME und 5D über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
 - [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
 - [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
@@ -73,6 +74,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	beobachtetem Environment-Effekt trennen
 - [x] Hashverkettete Action-Audit-Records dauerhaft als JSONL speichern und
 	beim Wiederöffnen auf Kettenintegrität prüfen
+- [x] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
+	Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
 - [x] Deterministischen `TaskOutcomeVerifier` als alleinige technische Quelle
 	für Task-Erfolg und Reward anbinden; fehlende Beobachtungen bleiben UNKNOWN
 

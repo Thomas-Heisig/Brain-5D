@@ -232,13 +232,14 @@ class ExperimentWorkflowService:
                 "Experiment ID must use the EXP-* convention."
             )
         ticks = body.get("ticks")
+        tick_limit = 1_000_000 if body.get("protocol") == "science_time_v1" else 100_000
         if (
             not isinstance(ticks, int)
             or isinstance(ticks, bool)
-            or not 1 <= ticks <= 100_000
+            or not 1 <= ticks <= tick_limit
         ):
             raise WorkflowValidationError(
-                "Ticks must be an integer between 1 and 100000."
+                f"Ticks must be an integer between 1 and {tick_limit}."
             )
 
         question_id = required("question_id")

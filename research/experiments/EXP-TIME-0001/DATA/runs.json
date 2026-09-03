@@ -1,0 +1,197 @@
+[
+  {
+    "condition": "100",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.0004176999209448695,
+      "ticks": 100,
+      "ticks_per_second": 239406.31775508184
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "619b4ca760291c5a5377b54f4e73c14e0177a67751dd582d71cb33a208c21085",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "1000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.004002499976195395,
+      "ticks": 1000,
+      "ticks_per_second": 249843.8490811828
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "ab517b6e86dd0c1fd5f6e27cde564376e923b882ff8edf322ac2d8f53ce59925",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "10000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.03886650002095848,
+      "ticks": 10000,
+      "ticks_per_second": 257290.98309875012
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "352633c89b0ab5f4f70541a27b12129dba43a2a0bac477689541d12e96c94cf3",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "100000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.3843137000221759,
+      "ticks": 100000,
+      "ticks_per_second": 260204.09887607372
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "e256d872631558f8cfab760f4bdf105e06670a3ad2c294a5f6e9bf55dbca8c66",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "1000000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 4.117373000015505,
+      "ticks": 1000000,
+      "ticks_per_second": 242873.3078096724
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "fe1d110729b3f7ce808a333bc0c344cd6bb4b5adcd09335f30d62a1234355ff6",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "100",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.0003823000006377697,
+      "ticks": 100,
+      "ticks_per_second": 261574.67913464713
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "888245899a2d825c5f0c7479e02058585beb81e170ff3bb191a3c1d4e62c3d39",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "1000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.0038003999507054687,
+      "ticks": 1000,
+      "ticks_per_second": 263130.2002344174
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "8cb1b8967229fb440c68ae05fc76bc9b62f9017362e0d2de85eced2f7214991b",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "10000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.03956169995944947,
+      "ticks": 10000,
+      "ticks_per_second": 252769.72451259542
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "811a2b05581880812e9924c86b71d18e393c5175fe476646d208459c136bb6f8",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "100000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.4051139000803232,
+      "ticks": 100000,
+      "ticks_per_second": 246844.15908753732
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "a3bbb79a80fa78a1b7ae50b34ee0b048afbf2fbdc351e2878656f713ff73101f",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "1000000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 3.9850025000050664,
+      "ticks": 1000000,
+      "ticks_per_second": 250940.87142949813
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "c4e33f0477caf0274e19103dcaad3f5c42a4a0251479d4a6388df7ded768a869",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "100",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.0004341999301686883,
+      "ticks": 100,
+      "ticks_per_second": 230308.6505821169
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "6c0c08d469bb3fbe179a991322a9a31de3dfca802e85c2ab93c02337d624fdb3",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  },
+  {
+    "condition": "1000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.003781599923968315,
+      "ticks": 1000,
+      "ticks_per_second": 264438.33829746465
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "1b43641ed52b5475592c22576b288d0ae166bfcce2ecd4d94c285b299e126766",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  },
+  {
+    "condition": "10000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.04009039991069585,
+      "ticks": 10000,
+      "ticks_per_second": 249436.2745763498
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "c9e192178789edf71b58db35fae5366e00bd600414a8ca42cff09d55fa99b1d1",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  },
+  {
+    "condition": "100000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 0.4011949000414461,
+      "ticks": 100000,
+      "ticks_per_second": 249255.41174543678
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "801c5aa9f4124fbc3b5317ec94ef04f3c12f967e5be6224738c3d53033063ee4",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  },
+  {
+    "condition": "1000000",
+    "experiment_id": "EXP-TIME-0001",
+    "metrics": {
+      "duration_seconds": 4.079161899979226,
+      "ticks": 1000000,
+      "ticks_per_second": 245148.3967834404
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "d7dbcbe7e3aca9a3ba1f44335e4182092265b864bf499b0447ecc66efbce9667",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  }
+]

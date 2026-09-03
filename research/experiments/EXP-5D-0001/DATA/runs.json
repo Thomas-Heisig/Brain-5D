@@ -1,0 +1,4052 @@
+[
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "1551fbbdfc4ec85905e6f842cb6827d4cfa133f4c81be1f9f2661d2358706a20",
+    "state_digest_before": "ead0c326af47dfa023507675ec05c61b1bfd829719bfe8efe532c4003c66ea23"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "f75dd0aa055005f2a239de71747d0e3111922c2975e04ffe9270f56235da1b29",
+    "state_digest_before": "33b5cf75851fe0bb731c70d28cb2ca07a61f9f8e8b1057c39ac934fa8c4eab8f"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "ad3e6449d869f5a46c04f11c427b89b6bf551989546827d1362e7cd4522be60f",
+    "state_digest_before": "238294c5fa5d23970757ede6aec6b61749baed5d8e5c3853b05554272b5d3e57"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "c34338f8243a59b488d47ea68ca6bbe4ad841df4dc7702cd34151e4b241fb060",
+    "state_digest_before": "d643134cb615fe401288b3b07d6b9a8cdadc00c60c3bd2903d3bf161612b605f"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "8cf6a8d389b7822710f97c60beccf28a220fd5859bcfb4adf8fd4d0895200bca",
+    "state_digest_before": "d9dd94e62e37662cec4f78bffc31ff29733905bf8fe291ef745504e9ccecba8e"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "f9981fa0019ae59bdce7f851f29d5d8e18ed09a11ca423c7234ea855f07de952",
+    "state_digest_before": "1da5903c1c3a0485b4e812ff4304f48bdac8cbd5eea4dbcb4b3973fcc8b45d51"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "1fefe8c52ad7b575515de17f605fef96b1fe118ac8429c00ba3dd43dab402d3a",
+    "state_digest_before": "7e3372aa0baa219a8c199f071b3810301df07f1d59a575a1d3baae388c55dd64"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "a4f329eae36fbcb0d5186f1b5a4a7f4e66cd900f3d3858907dd5e3b8a6679d98",
+    "state_digest_before": "bfdf1a96c15278417326db450cf7aad17469e26fb130491e27bb985ab0ac4fc9"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "fea72cccbc313130d3beaceaa09556e50cc14df2786d724606b85d4d46683ced",
+    "state_digest_before": "86a39b8a896be5d8207ce46296411be423afa76c660c8b762e164de65d30bf97"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "a7f87ebdfa07d7b17140c1e0b14c676bd2bdd1662df2eddba2a519eaf5308241",
+    "state_digest_before": "af8e6d4114684ae9900e4c88f40789ea1f1ece67dd13dd8897e8ec49f1c6ef9d"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "57c46f1e971c2a2badabe5ba553eb369f04afbcd5ccc014e59532175f89bfd82",
+    "state_digest_before": "89eef69be5629db2f5039445158a28706bea3e11c4a0e3ee3030408cf60b03ab"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "687b6367a55e4518fb90d6ae3a1a28068b798718465e26421e210331aa8802d6",
+    "state_digest_before": "f11ef4aa6d6d230b0e007278d13078081fd528319601bd7d6c5501309a76e042"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "68502283f3bfcc36598bdefa3dd2e5513af3398003b32f59d13426e54b28d8b5",
+    "state_digest_before": "268315f2c938464f7895092ba39eab857405c918c01c3758685b579483dfc599"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "3a57238cf3e9c5c5ccbcfef35ab4a8bb99aade9b208acb4afd41828be4bb87a2",
+    "state_digest_before": "83a182c6cc705a16eda5f4b126784b73ea7e587aec28d766c9c0b50a920055b1"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "d85a01be65d409a8ce79f31156b9fce4f10afe4a6cf7ddf645f4109cc7648d82",
+    "state_digest_before": "3d015ec0153058129346f85f85a4417db127a256221a9a9202f2221e453773a1"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "a6163af533b5033be800e21ec147538fab2f32e62253f871d76a39e35babbb3a",
+    "state_digest_before": "d9c21cf169c4c4716a1eecf25c3effbc2de58d0fab121625b7870ea4cfd9ba07"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "446c066da76a9ba12d611a255cd526fb263575f1dcdd06794d543ecfeb044325",
+    "state_digest_before": "b13dc376d31d921890dbcd0a16a138410eabb6b588ebddac88d2880da3ace0b6"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "7efb93717ee370077e2a743f3aca91e3546128d731c1bbcf498a1c869ca0cf2b",
+    "state_digest_before": "cb0c8cabb1e8ea6d56ef2a3d1603dd44f0eeb1f3f364433295b4ab18080ce1a8"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "ce41e0ed5cd6dc52bad7f78687e73ee48e9fb26bb5f87893269269fd069fb454",
+    "state_digest_before": "4d1cda075a2591b0f93cc34313ffd992e890da50d933c882d911c2d622516142"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "951ff9743535f7f85da3697671a52dd2f675e3a8144d940bab04a40aeebdaa20",
+    "state_digest_before": "ce7ad35058f5eaac2bc3735a7babbc94af000fe2cf2b8e6aa9e483fb13b8d7db"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "414ecd8804a0d1bb905bc2bea4393cbe1c9401a3ec7822ed8e37b0942dfcf76d",
+    "state_digest_before": "892713480b7479ddbca37bfe2cd913e0b6dddfc1b69c195446739770657902d9"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "b40d949b4be92e227121754427c9835cc39cc17885de0fb81bdbf20eb08cfe37",
+    "state_digest_before": "a86d74235417c9500bcd019b0606c49e95521d9d72a533351b96eb5e7ca8b06f"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "8f65ca0f5a99eb3d981a522bbfe6ea545cb4964844a13e84137b1b923f88e162",
+    "state_digest_before": "168a35c454b60c450c87001c6ccadf88a72c7192f36c5d3b04bcb0f5e4430833"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "14b2ba542929ebe2cbe620885832ac35ccebdf7328d32dec8e185749fd3a3bc9",
+    "state_digest_before": "03dd8b76642144e54b3590f57f7d59a3050c8b50c712643ceaa8c72b511ac04d"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "5095028df48f8d4c2ce510107a0752bb41fcf44ad0c8c434883dee52e24b6d83",
+    "state_digest_before": "7e7b23947c64ac38b8b4333b922080dad97acae18683c520066798140872e009"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "0e0583224c28b9c0b74923012c1d46dfdb90edf2f68c40c254a4d2cf015f2f0e",
+    "state_digest_before": "90ea986a5d3459625e699a36ee3d6314ae347e0341536c707d243fe8ea591a35"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "e0ca76bb735b9794e2ef72735f8491c1e318d7a37f58ab6d18ddd64a0f4695aa",
+    "state_digest_before": "c117472700147f1620b1fb697e3fab20ace0fc76f11e4ed1e2fc7312f2c48b8a"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "0fbaf52736ec623efdf6da8fdedf4e9b40daba7ce55fa796ad2e646d28a41008",
+    "state_digest_before": "3c078099e98520a8ff020552f6df6f1c7c3498a78d7266e0b1317cb909ec2809"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "02cf37c601fd0d5348d21d061e00002acf332edb2c081ed96cd08530df296b57",
+    "state_digest_before": "dc518cc205dbb52a492964415612a8fa74726c5eb47e5d8c95003b3aa0b0c669"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "9b39f1fe8da867ec75e323dea579ae99f11abef6e884ca297c8e09806a9d525a",
+    "state_digest_before": "ea5dbf7dccecd5b5e7335bb2db9d1b548ee2471c69795dcb780f50d306bf804c"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "cb69431a2d44cf3023189c1b0993a3e3330f770b0a1c3a52ead6772835284c9c",
+    "state_digest_before": "333d75564e4dd6cd67dd0d395667e46d6b6d1bfa36c4d8b543d9deeed8a6a84e"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "006f04a03996e8821c1460f76c3fef96b53e8d43af22e6ee87857966cca5b065",
+    "state_digest_before": "b552f3ffea425a60fdf9379df68013ce8a456df4528a859baba11238680ac9bb"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "566611eeb082a1ba672e26fc2f94dc5a415876fbc7d61d73635c9b0a3a2133f7",
+    "state_digest_before": "75524876653c27150e8c665f10391a554bca1606239e7be2d5060bd3e9737190"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "7e8cc3b555e108a1717939a0a8d823f286f1904c016f23d125f0abafeea6eff4",
+    "state_digest_before": "1ce737938180251ba1c1239033c3466be8359de9c1ba127539ece2c13b8eaf53"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "5123d0c5dad4bd86845524f224b2c48faa4781b19ebbe8b187da3011186e59d4",
+    "state_digest_before": "b51fe93e92ad77694d4be80c0da1ff5f4d770405fd215a1ba8f43b8ed7f17683"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "47256eb5edd2f46fe5838163fe2326abdbaa7958bac022ccdd57edd2eae27d12",
+    "state_digest_before": "71edd8c93cb0699df5138b841d2e104323ded1e4e0975c9a216a07eb55b7c951"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "878931aa5f4c5cfb518a8cb6a1438b0aae6a3189a7397ae062ca1b648aadd0d6",
+    "state_digest_before": "5cf41a6c7177c637a00fee901a453241a6a5f27cd0247504cf3fd1f15b936d89"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "f98df0729bc0a9d565c17e170b413f71ab0303d46e96a76ab468c530fe08b0d6",
+    "state_digest_before": "5b9e626f7c376c4b0d6e77f2ebabe156b3154b616e153d049727a885586f1afb"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "d2790fa4d77a7d63a0f6312c99e56081bc59b417f3a6982101960426535ede94",
+    "state_digest_before": "744cd7c541d41c4c2094b203d6a98fc4d44cac3ab029b9448d0b7841bc59bbe2"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "bec66997e311f6d20765b19bd03f1b643293a9106d8661ee6a6d5cddc9028607",
+    "state_digest_before": "d72c84c7371cd0214e62e2b4c0115942fc4c9216b5af1569910fd1fcf2b20c87"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "4e1b0cc86a6138f80ac2d21bc357a8c8969ac0d24b0d35f818bff8efbb6eb946",
+    "state_digest_before": "9eb518eec851f5b9e01ba3360b5f5277611aa4eb39121f9704e3ee6831acf435"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "bc234768acfa4820bd90f03b3f0a4b6c7d619226b768e82f0bd313b432f796f7",
+    "state_digest_before": "be3c22e259ea5a17386514241ad7064eb2d14fe17d21178d89b876d238db6bcd"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "239f59cc36f86a7c17a521f0c0e51e9846d30e24464fbddf08038a0ba7e1dd28",
+    "state_digest_before": "6fd05a6e836c673e2acd8d4f973a00f055d2fd9347dbe46d82a4d4afa3026634"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "32d16f9e07f0f7a12de143b9fa3b280b317889178e0d04af0c63585e7778a568",
+    "state_digest_before": "b00ef4b140de202c29ccaf80f66d1193986589583b21ef2b18f8d9ac4846b53c"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "244ff6e2e9de36544ee5d7074aa267dc3417cba0fbddc021f03856b6eee58ac3",
+    "state_digest_before": "ef678d9c2995b5aeb22074fe872139fe8dbd2cc6e7b4388721455aa639c1b8b2"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "05a99d715f9b4d6aaef13b2d5db018e129015df9e8683b6d93a7c8e3278c367b",
+    "state_digest_before": "b75fb2cb6061b21d580d21d065a2b56bda863e253d50a30aaf752b331239f768"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "33e2665bccafd7ad99fbea259116e187e143755045738a97535abf92c71de1f9",
+    "state_digest_before": "c6e175d71f088ca746894a596dcb2a524e3da5ced2e8ebf29c3e6d4b72c9c975"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "4ec1638da02e3a88bec8a0eae7789e52ad8e2562cc09d433648a050caffb3ffe",
+    "state_digest_before": "95f69170015391acd4c8c2eb4094ccc5064df68d96e190cea04ac9037c382e78"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "4b0bdf890f53644cdf0f8dde62419f1fe40121f5777c0d4f743fe5829087270b",
+    "state_digest_before": "dbce741fe8476d7285bc1e4d83f2dea20d07e541503b4bbc6f83d16cdcf136eb"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "7e15a3579a0b5caa787e057e446754af33e4eb308ed802424fc247f162b9ea9b",
+    "state_digest_before": "ebab6d3d39652db27925ef8f58d7d4d346bc36eb99732401b4a27a718d4e584c"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "363ec672541586df77aedc48551da497cbb4fd4ad90cc8f8f6ac4d6e56176773",
+    "state_digest_before": "d7c8186e6db9e22d422a70e38afb7d437db0881f8c4b13bd8242c35f8c9e968c"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "e7874e60f2c521d565625de804fdeac47b01b5fd95c6d87217e03dec493d8067",
+    "state_digest_before": "3a900afa344933eefd267bf72de25ccf34bd4c2fd3139c7bcb28304f149b63e4"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "44059f0ce22405d7a79924852e849614f97203a853778dc632137094ee914403",
+    "state_digest_before": "623fa7312241dcafb04f6bbff580c3dd493a89e6297b475b695fa3d73f5899f9"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "f974ac907e3dfa6833b3dc795c63cb137f5a363902387f09f0645be400cc899f",
+    "state_digest_before": "e74a0ed411a80ce228e27ecc6ef914449554e534f5d586bbeed1ce38d63d359c"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "e029cf28d924684e9be56072530df43aa61c083e01e3fb467b280a5845dcb87b",
+    "state_digest_before": "2f10c45e6bef9eeb41717dffc044d4a7534f9ecd92be99ee44a0d566ce24883c"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "00033342e79a887c6363898f24a31af602abc75ad2c892be64a5c3fb56aeb9e9",
+    "state_digest_before": "a87c8e5ed210b89546a3c469effe9b9adc12a8bf6434b9a6bc4b4b909af0017e"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "5ca4bce1a89706964c4d5267407d46ae394f504853c394d808250ab88cbc57af",
+    "state_digest_before": "070ce2039eff6ac2d29273e7f431744dd88c93beaa8cd9f50c5d5257c26fc963"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "f576eb6e6c25a2cba26598c03399c773fac49914b69b860c6c56965271c875f9",
+    "state_digest_before": "0bacd6a4dcdb29b6c5b4cf6f20f0b84f135e1c08f933d980982c33adca9ff6dd"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "cc11326c0959ecac6929893003718438fc5bf69e4859d048bb4b2da7e2985d83",
+    "state_digest_before": "25bd1590b148d36569e21c43a52d9a283d022081befb95ce0f3082ebe39b5688"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "1efe72d7a4598e8e44a52f86e599d86f3f76c031ed0dcbf73b4e6c1c46cb332e",
+    "state_digest_before": "344adebcd7b8f84e07370e9a80fdd85e75575518e44dd6ea0b6d8471608cd641"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "b769f946ec7f48b8c81de771d67fe24731355db6e3c53462211a8f31e13eb4bc",
+    "state_digest_before": "19e41ad29679369818b15343f44bf5577d6b33ece2a83b789c263ac0c7a1f442"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "c8387b29dacc3f55e4092f09be976e7aa2da7309966df3ad6757ffe6f2da8502",
+    "state_digest_before": "841926f192a514cd7a8a4e3d36a9ca9661cab345b677d347d27e5258a5aa40fe"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "16ed884b056e47eb020e449a11d6e61ca091b34fe4a0b3214a40371f4c2e9b57",
+    "state_digest_before": "5b5f35428ae9d945c76857b69421f62e1d033a522473b1b729eeab83a2b93a1d"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "b8c5765f353fcfc0cc3d359844bd30486f87de0a88ac029d562d37161b0b1d5c",
+    "state_digest_before": "90e07501b5e7dc45df787ada8c39da3cc511ef40f8a4832b008fa82c2ae1e3c7"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "a4d4fe1e2b3e147f0478409494ffc3c50bbb33639f7440f23d71cc7b55fbb5ab",
+    "state_digest_before": "e4a0bb563372b357b8fd1c68b74493ecde08830ea17176c2875384044ec1af95"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "82a92fbe987a56aead219bfc77e23926caa332826dde6887c14f8ec8b2d5d1db",
+    "state_digest_before": "865b1172a65046ca287ac5f6f83057742f6be325671f5355c4816aa022b5cd45"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "2bffd5b9557377e40a1b30a96e848f8330327c983caf94f8d19035f276c80461",
+    "state_digest_before": "3341c7a24320e90fa0a63545f31c587d36547f4c89efb961efd01752afe47825"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "78fdf384bb6488bf180bad55897ca39c33ee7f492aa2307350ca7662a348ea03",
+    "state_digest_before": "b9d270c1919b914009706a634d1face8f1db5f7751aab459fc6af55181c67af7"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "6d7aea3ca8167f519fd44c2df774c7382c5e87579a5699c15cad23f217086fce",
+    "state_digest_before": "c85febb3dc39bda3d55f4697fd2421c689fd88fbc614d75f8e87993d2f4e6593"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "a86e6ab2d62ee243a5bc76eb318041c3bb23513184f48d1a22986c137490d32d",
+    "state_digest_before": "e4ab309b60ca5bef14852b9f79dc76888fd4456eaedefcc079cd608f3ffefe74"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "c6ff51ef0960de55c0ab3f5322d5c72e9df4ccd2762ab77171c8046bc0892a89",
+    "state_digest_before": "76c8351e5a9cda51165024d9a2b2e6885dc992b21096a1b18e50d342f72fa97c"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "f64d99639575c956a3f89d7b8b2e3873edbfedb5eaf3b40a88329bd97fff3975",
+    "state_digest_before": "3bf920cdba505536ae00772e8e3b912c6b822a0d3ab84bbddd043c7ab6bb1288"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "fb47608053157ded9bf0af21fd2531e4d34a55e34dab682841220d5e8c9a6813",
+    "state_digest_before": "a153971398bc312a18c21fff842ee23b24fe7b62401aa0a33e7f8fe051848734"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "2519921a92243f700d34b848c54f0671cd054d375c869bcda0681f9e5c2f793e",
+    "state_digest_before": "6bf91cf2cb95fd20a49c0541c7bfb6e9542bbceef9b168b5ce5f3da9bab8b83f"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "ebefabb08b54ba1533f60caf95352c2e667931b7132bab4edc8eef496913bb64",
+    "state_digest_before": "3babf3f405024ba2f50aba1ea9a7f450622f4504505457949efba7b9addc5f93"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "eaa07c29934d81fae04fdbaaebc973028d23387270a691f19341b923536c2f5f",
+    "state_digest_before": "719b1521641a3fd6e896799190de5f5baa13e7f87e4a4d7448d88274a62865c8"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "97a38e1f8392d084790d0ee930c0ce327f6c2782473690a96a093fa5f9117cd3",
+    "state_digest_before": "642360e1cdf0991067f24c8155b21930b86951631fdd33efa69bea4e527ff68b"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "796df8f1e5fcc8977e96f9a5b0a0fc166150933d6bec87031efcb1a0b58eb79e",
+    "state_digest_before": "9d6c2edd96cb04bc0894c9eb40092997952607230526ae8c13b56c4b654778d2"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "a5b540285a8e97890d4f8bc7b66413531ea4dc316ed8bb620df51a18b721f9ad",
+    "state_digest_before": "17138f74ad4743aa0d62640ecd5f49ca07c85db2fbc1030fa7ee04d9ca1640d6"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "99b12fa60f318fd7c896a1af9a14d227b698de8352a977ab3089e55188533e48",
+    "state_digest_before": "6e9757743f61fb906cf0d8bb17b8e79429d44ecffe24f8b119737b13ce6fc1b7"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "a8bc9d710de4e2c0c095ba3c7c6b33284906f36726b2fea280bdb262d9ecc9c4",
+    "state_digest_before": "423d5128a6d6234a8f23bb2d5b2e743e8258f04ff4a85a8c2ba36ee2dd3498ea"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "6575d2babb0b16c62f20f214eaea191ddc1e0aa6a0b70d7809925e0c7326771a",
+    "state_digest_before": "245a31b274edfe4184e5c57d753ce0de37ae9091ed25945fadbd39e0a12bcce1"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "bc5b900899ceabdef06873a4c03bd0ce1005756b358069230feeeb0796bc0768",
+    "state_digest_before": "eba9be60992ffc268a7bfb5635520bd9d8e3fa6f3ef65ab008a64f8ac97de039"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "c6c6208be6c6cc698192ecd963656bdd0a8ec0edc998232dd25fdde6c794ec9e",
+    "state_digest_before": "d6ee84e45fd943b60db135828664dd1c07224731ef256ff0c76eb0cbbacdf824"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "308a85abde7269ba14e78f80dde9ea6e2fca6df397abfe4ff02abf8e4f110e8b",
+    "state_digest_before": "5629968ab7c7b5f275002d26d7d4fbfbe50ead3757188ce0896bf8f95e11a0b2"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "c6478466e4dc2cd7d95fe58cd0dee029dc97aaff3a33651339f609e156ee8934",
+    "state_digest_before": "45e4c054b6f575722cc25ef00bf23a7f1255265aebd3bb96a8e1b18ba2997b4c"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "12cee8419cb451e9586a86bc935480cb906db97bacc39b01f676488692c85445",
+    "state_digest_before": "8c7e9677857b9852924bc6c31bab977e8a44959befd19041d516720d1b84ac67"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "c4d0f4869a39b77a45003eebc2ac9aea4d929e2872ac9970c50d9d634fb11400",
+    "state_digest_before": "0ea842249676e0494f3057c0cc7295e10857c3cba8b1e3bfea03f1b7bc65ca92"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "90f3e2d4a2577e17d15684a81fecc7fd528765f4268b385e435dcbd946d0e786",
+    "state_digest_before": "7dc6bde57339a72e1733c1cfbce9c45f7bcb3b2d3e0ae5b00d07137d6e261a25"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "fc7ac4a96af38450a6743fb511cac6c1bb3d7c0cd3c9febf08607da2654d1e14",
+    "state_digest_before": "99a6d998a5524466a1bb2940d5b170189adf6bb0e9b7b4da625949b42efd3e6b"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "257f1e68e6a0ebfd0838aac5b45efb0e962cfbe4be1f25beaf2239236b31eb79",
+    "state_digest_before": "bd429549641a3ea9770e61921057759f27d7233eca112feb67635556d6ab8d60"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "06247f96c53a23dac4fe6824fb43ee98e8e8caa011c7c25bb3c2e1d2f444ef47",
+    "state_digest_before": "c1eab5ec0bf1f2dd54387e378d63b41e4f4f9530f67c7a72730b30508e2d0439"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "ea4e4b6ac3f3bf4c3c1f97b3b911db9753ec2ad7bb53604b44f66b1f49adaa4f",
+    "state_digest_before": "0c29c5a03b9b9d872157d72f72359357e9dae937b7a5e34fd9583b2092dd0bba"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "72179fc3830debed0152b6e1fc67fa0f778ea7444ef3bb334caaf99e1d224f8c",
+    "state_digest_before": "fef1a10658fc5e5a29e2723e4f4ed3e876f308eb24f8377b1c2988fa71d2ae0b"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "26ecacd8a3ef9709c32e489a6a145d617deba904be30432356282079829c5c2e",
+    "state_digest_before": "afb4be2192b6469f756852e1f51424076b94b4f36092a8a4b99f92134ccca388"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "8d1756996d05f13ed83c145278f221bd5ec8734f38fe7039fad382ee866be711",
+    "state_digest_before": "5116a7e90e2498879acdc669fad586aded6da717c0b4eaba6126d970203f2289"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "a72171b409496526adbaf57ca915037ae0d556ecfc806d6abb9804df2d35e6fd",
+    "state_digest_before": "3456a2167c6d26e4d2e624adc168e0673cc46711f041f1d9916cd54d3e4a9904"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "c9a52d3298a1ef245fe4b30ba4a89fa3dc634682d7ad6ef4baee2ac2a75317b7",
+    "state_digest_before": "03bf4157587fc95db55ca28093bcc1785c30dc95c184f8f40f5a3a5050c06656"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "f8bbcd82fb94fa67ff611b6065f6f72d2a71365bbc39c52834d6cb9ca7302ae1",
+    "state_digest_before": "60756c6cdc9b12ecfb2ddc31fc36849e08115f2036f77aecc1eab4e32865573a"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "d0587bea5c187278042fc5e46dbb44fee5f11560bff515c237b74c149620e0b7",
+    "state_digest_before": "545eddc0f132ebe0fda5d9e06803818ceaa976b1f36b08cd461ef911e012d519"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "dd7a2ddfa2f3b566ba8a06561538c277eb25e8c8ed21246ed4dc3e5e6cde3945",
+    "state_digest_before": "8664f068d1e7bb2646dd52f555a0c5c60cc8e054ea3822df3dbb9bb58944b92b"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "a96922b9e1a72c5762255d861b9bd2a6f6748d197141ff357c6ef963e4a806f1",
+    "state_digest_before": "402b3726d2b80445937093d3b12731c35d95bc37d3fa24cb033680b7e85b7f99"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "277e382f01635276f650fd876a669d7789632072101114974dcbb0f5b6d039e0",
+    "state_digest_before": "29763047ac729948043058bf15fc527d827e9b0cef1a2c47aea67d6cccfa862c"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "a9144b412b5e02e6e4e5ac6445b16b2391829da1d817914fd6be66e161badf9d",
+    "state_digest_before": "f1c640cfa5d0358284c74b2894c1f1c7e80ccc4b304a15bd15682cc60596ecd6"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "2abeeee21a065dff423a2edbefa9b4575e6c9d6bf2e37cb98b724157cf8040a2",
+    "state_digest_before": "825808083993d106b2ae56f807fa208c2fda894c216025fda697e1fa9f13f3ac"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "99d373789fa0dcf96b0e6e90e0435ba7ae1806c31fc9be1be667f3c79d2d194f",
+    "state_digest_before": "efe9a6fdc86cef677809896691ebf836f7fb6adc9c66f53a357a5b64e702633f"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "c098f30356cd3aeb4277781d9008451d1e6e95afff8d7b4bf806239dd6ea6926",
+    "state_digest_before": "c32e3cbbf13fdbf29070ae720e2591caec8d3bbc5899ac55e78ff202968ccab1"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "b80694bb93c2b85d45b0a9bb158dab9d49c44501a6f4d8168e01767098278a3e",
+    "state_digest_before": "f084007f9dbe7ff340024177ed21836f5dc8c00155e8c0672c3b24f35051bb2e"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "43a157aa53a566c362d59528f297c940e3cce804a46fcd5a7dbc30d8a5278864",
+    "state_digest_before": "77d3809b062c44824cf3b6093b513a4ebacae8500a3a3fa036671b40d45dccb9"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "7cb4f10f784c2a4503f2deac525c607e07cd1760cd85a06b2c5d8e210abeb361",
+    "state_digest_before": "79e6180550d390a03006723e0782900b3a1f02778aea8f2ae2d60187f6ca643a"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "84c266ecf847a6f118cb78862614467f757b2374b26c2df948301082d6ae7423",
+    "state_digest_before": "a620551dd2def39ff9a14784a26272f567fab77671d4ff5c6b1a4c456cc88f27"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "e9812d539eba44dc11ccb6aac9b4302c2a61217927999b5761078973a4e26776",
+    "state_digest_before": "4fcd9d74630054d77e3704f55caa434acc3bc7d507742db3628593750afc34b6"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "dec92cef6d53dcfcc0c7d70ec77ce2b5a6bc5370828bd6471567bd2292af9539",
+    "state_digest_before": "fcb57878ee03fafc5a6bd44c331349561a4b801c4271fbc771924fb0716774a9"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "7aca4a16a04c7a1b6d22a4535fbea51964ad44c1fd891424ef7bd25a752bc232",
+    "state_digest_before": "55f648ada9df14ca6bb933478dee83151d76525e05008950dd295e1b8b473c9f"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "a8ebe397e0d121b764f190148ceae41d9fe52ea37c279b3d7e0711bcc83388fd",
+    "state_digest_before": "639a51697efa3a2b0772af436ca30be5454548ae9bed6ee5e511ea04b9e8eb9e"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "c8666ef5949d94b00ecd7395cf581e4bfd366354b1d99b18b268b7b70b9bf790",
+    "state_digest_before": "bb0b6dbb0c9883084d7e4fa8f42733e1a0c6dc60fa760cf61282ef133d0f44f3"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "4f021a23ed37ac9d118837ee4f1a5e9a0c499a99d9e29034513a72d88918c755",
+    "state_digest_before": "dfd2fb5f2c11db5d0fcda31929ec69e612b6a53518c80a083f82e6214479bffe"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "1d9d56fe6a9e58362fa3d613a7b068ed91d72ab1f542300121ea057575227247",
+    "state_digest_before": "21c94da14f4798cdd0a8abc72805b1278cfacf059852b54f33e0c14dfa725816"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "24b930bc69b17ead4438a559208a235cdfed9007d7061381d9118c8c9bfbc976",
+    "state_digest_before": "37d9faa569c4581942381d33b3dcf7942dc75e7d910eb850b699538725313cda"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "07bfd3f977c833f93197ec7611fdb81f04550b5aee1d0053f87cac284a8b0912",
+    "state_digest_before": "f74b5b87b7bf4761b97f2763d04d951222f7f3b69e5f02c4a68166a9b5b1ad6f"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "92ccf58c157cf15422d2df91801bfb882a86d3c463730f3a384d3f019c646deb",
+    "state_digest_before": "aadd5e4ebc3814f0df66a8249d802d0d2f86bd43c3326343e4585581096e7494"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "d990255b2a0475789cd3a3c46f560f77b57293d3487d6a842af2081a5e25ade1",
+    "state_digest_before": "6709ddf6c2b4216b7ef144c6c9079e1cc87a72014bb1cc07f340defe37732ba5"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "aed9fb228fc6e648c7a0b1abf97debec83abd5cd831fd93b371690f577a902d7",
+    "state_digest_before": "dcf8bea24324c13158789449ffc2d0bf4b6750573cf74540d8f749404981cf6b"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "e7240aace2c1db669c03c9f9cadaffc2c6c6d7834026d96f45647619dad67be1",
+    "state_digest_before": "3023f4bbdc7c0a763c8a6d6378fb3a13aa80be932080457890f84868d8353f1b"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "99a8ed7a5f1ee3d59d8af6a5ba905327b02259cc229e8e907fbaa786fd358ed2",
+    "state_digest_before": "4e626e66df7de54c55c83f8cd9bca63d043af67e4a72b4753223ddb63a02dd41"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "d57e9f1369c0a9d9889f128f50575935aeb1ca1980136abe384be8e231bd9c43",
+    "state_digest_before": "e1fd8a18b73f62701ee716ccb88a23b36b9e61971cce27e620ef55d54f4308c9"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "dceab01c85e4f35cb730120148c5b67d6c84dd2cd09e2955e5f139453109cfe4",
+    "state_digest_before": "5f03e35d3a34dd6d9ca8daea115cde71c1f614857c1298f253ce12692804bc6f"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "e22880bca5d320d7e5c37b6b01bffb5edcdee9c8e10e6250c8074ae1588f839d",
+    "state_digest_before": "c85c0e4f5a9398303724a532bb34277fbed654c77eafb36c4ed1341f33234835"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "e3007c1bee4e90475e46e3f934de24f536c4f81978d252fffab1d19ee771af2f",
+    "state_digest_before": "e8dc8075d687a7df23c43e965965c2f2a563b9074d0f08480097a33397413d63"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "80b8d01e04ba057fbeda4b9161327a357bcee0681535e5dd323f8adacab4287f",
+    "state_digest_before": "112f3cdbcc3b704b1551e164c94235f2261580629d8e889ecc7e02ba0c3289aa"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "817b805967d199f0ce48d35ed20fde639bf5bfd87dfc2a2e39cf121dd2b8411b",
+    "state_digest_before": "561b754776bc088804c05fdb45baf5541f8dab32ff1f5d50a462759192f21653"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "1c19beeb42bb65755c9cea8f15b062a0ccc9f27ee432399e706af032c26ef960",
+    "state_digest_before": "6cb53f9dc28c28e1d0e8b19fc140b71d6d7e3c9a844534ee6e292c5ebfa69d76"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "4310d700556e121705d193dc4739e90715ea61dd549a9675f889fa13d4114056",
+    "state_digest_before": "0b23c83294101f9ae4a802bb332cfae077dc6e8b7d46938caf71e6f86df82d58"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "8bcd248becf42f1acb03d3872c4c9d865daf3dc58963c0ec23550882c1dc9579",
+    "state_digest_before": "1315caebac9d1ccfb8a9e382b7fdf79d438375845b402128bd19e4ef3a689103"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "e759ed7bb1b471ec02ed8926657908084e71d72c3a075cf081ec0802925bb99d",
+    "state_digest_before": "faad9d2949c25f6971254225f3d5a06fdd460147ab41f44df66285ef6c1b13a2"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "a3a58f65b7703a32b5dabbfc7d15de1f2114555d8a5fe8d6b17809feed5f1abe",
+    "state_digest_before": "2d597d311a00a9c3e5ac6e1014dd6fb94fb4424eabc2992792e59e1ea1b79457"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "22922f9d0570c55bf77b149ccf5341c12f5585c62d45b34ed6fc2e6166c618be",
+    "state_digest_before": "8862877bbfa781813b00e7be3a411b5046cca7434772eb19b6d518f100a515c5"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "d5389fe460326a87f6cc5bb5c385055e34c9ca31b86e663dcd70973e04d8a4ce",
+    "state_digest_before": "b568f5f7ae70064b9df822c7f5720834c3b721ba9093e50e323df762b2530232"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "afa6d73f712d12bfc0ba3b6052c7acf16941b901d4faa8beae92ed722999c752",
+    "state_digest_before": "42c7eb0a50fab978ea234c4816021cdb0c816f2e7725f3f48246f90174bed84a"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "c758582cf34759f3aafbd4022f8ce1b0874f615161f17f9e9b65477e00b54717",
+    "state_digest_before": "868a9d0aa2ee5adfb0d912e1a603dcda504a2c5ce3708504f015af5da20d9e82"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "bc33fd357a3644aaa1877b9775d709745d0b60e3378672cd2fb7cecddc50ffaa",
+    "state_digest_before": "7fc50e8fae112cdc3a26b7aac45cff185dcb641695df4e1c5413ab4610ab72ab"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "8e4fd2ae17a863dcb6e2d05358a98f3d7646740e7b7119606a3a4c2ce5ede086",
+    "state_digest_before": "58a6553e2b0add342a8078ec417c9cdaa59106a0ba599f1296f100ffb62a96db"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "3e551fc311ee33a39ae496903e72a04eea63137a69325df104f8efdc550756a7",
+    "state_digest_before": "49e9ad68f99593d8de570f3ba13fab7f375bbffe846e709d8ade46812b31ddf6"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "48ce3f534e14d7d0630f2f47ed5caa7fc1c2f32de3c9874d26426e6b4ac1648a",
+    "state_digest_before": "423f6969cb3ebffecb8ff1f76d43cbe53f641c6aaedf8919850efabb83b10b52"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "9f71ff60a5b190a5a3e2f8f69bf71a7c41e06d393ab8f44e21ee3cd98808b45a",
+    "state_digest_before": "5c3c2d23b7ade60ed5fe373ec6a494145d71b8811c780d07771ce5bb84f02e32"
+  },
+  {
+    "condition": "1d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "dfd8d842008e5e81f82008fcb72c69841f7998f0bb9eba1cc608529864d3406c",
+    "state_digest_before": "e388bc6898a297d6e3b8b8b973bd5f50780a720111a39e411f3367b5d0b3aca0"
+  },
+  {
+    "condition": "2d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "1061777ff78f605d2a85ce723fd8deab32a26d8fabb48bb33cddb3e36ef754ac",
+    "state_digest_before": "61b52fec5c4fe11da44bd6c3171e798cdcaaf040a74905d0b85400d9ea806c2f"
+  },
+  {
+    "condition": "3d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        1,
+        1
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "1af1aa6a4f10d41bc86b0e3bb26d87ba7d37cbb517ebacf69c502131b4d17942",
+    "state_digest_before": "07c8ea43dd2818f522f029eed4e907961b497bf8c2a7ffcc679603ccb466df05"
+  },
+  {
+    "condition": "5d",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "4fad6c64fad8b573985126e884d7dc8dfd1f9bb8c2eab7b96bed67bd031f89d4",
+    "state_digest_before": "d98ac499c16c8ba362c9753bb3fc24da636924581235d457479c1d9d19fbb33c"
+  },
+  {
+    "condition": "random_graph",
+    "experiment_id": "EXP-5D-0001",
+    "metrics": {
+      "activated_neurons": 0,
+      "dimensions": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_response_latency": null,
+      "last_response_latency": null,
+      "network_state_digest_after": null,
+      "network_state_digest_before": null,
+      "peak_spike_rate": 0.0,
+      "propagation_depth": 0,
+      "recurrent_events": 0,
+      "return_latency": null,
+      "total_spikes": 0
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "11376c217ea895b7e2ef00c3dfdecdb77fa9489be380b99d837c90f315b78e27",
+    "state_digest_before": "8d7f6a691b14b4475971d495154ae2593fec76f13f8dd3f5ecb66a9e9b1d7d18"
+  }
+]

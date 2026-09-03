@@ -43,6 +43,10 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 > embodiment evidence, long-horizon performance measurements and human-reviewed
 > AI research reports remain open research work.
 
+The controlled embodiment layer supports deterministic multi-actuator routing;
+each actuator retains independent capabilities, safety limits, receipts and
+audit records.
+
 ---
 
 ## 🎯 Key Features

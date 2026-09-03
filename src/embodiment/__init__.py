@@ -1,6 +1,7 @@
 """Embodiment interfaces for Brain-5D perception-action experiments."""
 
 from .actuator import ActuatorAdapter
+from .actuator_hub import ActionRouter, ActuatorHub
 from .agent import EmbodimentAgent
 from .audit import ActionAuditRecord, ActionAuditTrail
 from .connections import (
@@ -47,6 +48,8 @@ __all__ = [
     "ActionCommand",
     "ActionReceipt",
     "ActuatorAdapter",
+    "ActuatorHub",
+    "ActionRouter",
     "ActuatorResult",
     "ActionAuditRecord",
     "ActionAuditTrail",

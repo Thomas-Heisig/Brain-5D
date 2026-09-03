@@ -62,10 +62,15 @@ def _network(
     simulation["max_delay"] = 5
     values["simulation"] = simulation
     network = NeuralNetwork(values, random.Random(seed))
-    relay_x = 1 if dimensions[0] > 2 else 0
+    if dimensions[0] > 2:
+        relay = (1, 0, 0, 0, 0)
+    elif dimensions[1] > 1:
+        relay = (0, 1, 0, 0, 0)
+    else:
+        relay = (0, 0, 1, 0, 0)
     coordinates = (
         (0, 0, 0, 0, 0),
-        (relay_x, 0, 0, 0, 0),
+        relay,
         tuple(size - 1 for size in dimensions),
     )
     neurons = []
