@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — AI import boundary contract test
+
+- Struktureller AST-Test ergänzt, der direkte Imports von `src.core` und `src.main` aus Research-Assistant- und Language-Organ-Paketen verhindert.
+- Der Test meldet konkrete Datei- und Modulverletzungen und läuft fail-closed.
+
 ## 2026-09-03 — Scientific authority matrix
 
 - Maschinenlesbare Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer ergänzt.

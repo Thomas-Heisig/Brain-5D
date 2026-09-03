@@ -73,6 +73,8 @@ als unverified markiert.
 	Durchsetzung an Netzwerk-, Speicher- und Laufzeitgrenzen ist der nächste Ausbau.
 - Die Authority-Matrix ist als validierter Contract im Research-Assistant-Paket
 	hinterlegt und trennt AI-, Runtime-, Evidenz- und Human-Review-Autorität.
+- Ein AST-Contract-Test schützt die AI-Pakete vor direkten Core-/Main-Imports;
+	die Runtime- und Storage-Durchsetzung der Firewall bleibt davon getrennt offen.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
