@@ -97,6 +97,46 @@ class ReviewerMetrics:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class BorrowedIntelligenceMetric:
+    """Ablation metric that cannot be mistaken for standalone evidence."""
+
+    protocol_id: str
+    baseline_score: float
+    assisted_score: float
+    ceiling_score: float
+    ratio: float
+    scientific_evidence: bool = False
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        protocol_id: str,
+        baseline_score: float,
+        assisted_score: float,
+        ceiling_score: float,
+    ) -> BorrowedIntelligenceMetric:
+        if not protocol_id.strip():
+            raise ValueError("Borrowed Intelligence Ratio requires a registered protocol")
+        ratio = borrowed_intelligence_ratio(
+            baseline_score=baseline_score,
+            assisted_score=assisted_score,
+            ceiling_score=ceiling_score,
+        )
+        return cls(protocol_id, baseline_score, assisted_score, ceiling_score, ratio)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "protocol_id": self.protocol_id,
+            "baseline_score": self.baseline_score,
+            "assisted_score": self.assisted_score,
+            "ceiling_score": self.ceiling_score,
+            "borrowed_intelligence_ratio": self.ratio,
+            "scientific_evidence": self.scientific_evidence,
+        }
+
+
 AIR_RESEARCH_QUESTIONS = tuple(f"RQ-AIR{i}" for i in range(1, 6))
 
 

@@ -77,7 +77,7 @@
 - [x] Reviewer Correction Rate, False Criticism Rate und Missed Error Rate messen
 - [x] AIR-Forschungsfragen RQ-AIR1 bis RQ-AIR5 als Benchmark-/Experimentstruktur registrieren
 - [x] Modellabhängige Interpretationsdistanz `D(I_A, I_B)` und Fingerprints identischer SNN-Zustände messen
-- [ ] Borrowed Intelligence Ratio über Ablationen definieren, deterministisch berechnen und als keine wissenschaftliche Einzelmetrik ohne Protokoll markieren
+- [x] Borrowed Intelligence Ratio über Ablationen definieren, deterministisch berechnen und als keine wissenschaftliche Einzelmetrik ohne Protokoll markieren
 
 ### P2 — Wissenschaftliche Integritätsautomatisierung
 

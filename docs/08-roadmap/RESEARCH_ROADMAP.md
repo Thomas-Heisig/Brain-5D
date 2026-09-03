@@ -60,6 +60,8 @@ Evidenz für Lernwirkung.
 	interpretation-only Forschungsobjekte verfügbar.
 - Development-, Validation- und Scientific-Holdout-Digests können fail-closed
 	auf Überschneidungen sowie AI-/Gold-Label-Leakage geprüft werden.
+- Borrowed Intelligence Ratio ist als protokollgebundene, deterministische
+	Ablationsmetrik ohne Evidence-Status verfügbar.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

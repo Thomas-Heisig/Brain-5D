@@ -29,6 +29,8 @@
   Blindlabels, Reviewer-Raten, AIR-Fragen und Interpretations-Fingerprints.
 - Data-Partition-Governance prüft nun Digest-Überschneidungen und verhindert
   AI-/Gold-Label-Digests im Scientific-Holdout.
+- Die Borrowed Intelligence Ratio ist nun an eine Protocol-ID gebunden und
+  wird explizit als Nicht-Evidence markiert.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

@@ -4,6 +4,7 @@ from src.research_assistant.ai_research_object import (
     AIR_RESEARCH_QUESTIONS,
     AIResearchComparison,
     BlindAnalysis,
+    BorrowedIntelligenceMetric,
     ModelInterpretation,
     ReviewerMetrics,
     borrowed_intelligence_ratio,
@@ -31,6 +32,13 @@ def test_reviewer_metrics_and_air_questions_are_deterministic() -> None:
     assert len(AIR_RESEARCH_QUESTIONS) == 5
     assert ReviewerMetrics(2, 1, 1).to_dict()["reviewer_correction_rate"] == 0.5
     assert borrowed_intelligence_ratio(baseline_score=1, assisted_score=2, ceiling_score=3) == 0.5
+    metric = BorrowedIntelligenceMetric.create(
+        protocol_id="PROTOCOL-AIR-001",
+        baseline_score=1,
+        assisted_score=2,
+        ceiling_score=3,
+    )
+    assert metric.to_dict()["scientific_evidence"] is False
 
 
 def test_interpretation_distance_is_zero_for_identical_text() -> None:
