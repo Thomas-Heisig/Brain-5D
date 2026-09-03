@@ -10,6 +10,16 @@
 
 ## ENGINEERING
 
+### P1 — Runtime Clock & Tick Profiling
+
+- [x] Runtime Clock mit `target_hz`, explizitem `MAX`, erreichtem `ticks_per_second`,
+  Realtime-Verhältnis, Tick-Latenz, Jitter und Compute-Limit-Status ergänzen
+- [x] Runtime Clock und grobes Phasenprofil im Operator-/Embodiment-JSON sichtbar machen
+- [x] `dt = 1 ms` von der realen Abarbeitungsgeschwindigkeit getrennt halten
+- [ ] Embodiment-Regler und visuelle Simulation-Speed-Anzeige ergänzen
+- [ ] Phasenprofil auf vollständige Tick-Segmente erweitern und teuerste Phase optimieren
+- [ ] Echtes `network.step_batch(n)` mit Einzel-Tick-Gleichheitsnachweis validieren
+
 ### P0 — Type, Build, Lint und Runtime Hygiene
 
 - [x] AIRR-, Learning-, Chat-, Ollama- und Dashboard-Typfehler beheben

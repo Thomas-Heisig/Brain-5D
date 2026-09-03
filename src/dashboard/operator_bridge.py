@@ -123,6 +123,13 @@ class OperatorBridge:
             "requested_ticks": telemetry.requested_ticks,
             "completed_ticks": telemetry.completed_ticks,
             "last_error": telemetry.last_error,
+            "target_hz": telemetry.target_hz,
+            "simulation_speed_ratio": telemetry.simulation_speed_ratio,
+            "tick_latency_ms": telemetry.tick_latency_ms,
+            "jitter_ms": telemetry.jitter_ms,
+            "compute_saturation": telemetry.compute_saturation,
+            "runtime_mode": telemetry.runtime_mode,
+            "tick_profile": telemetry.tick_profile,
         }
 
         # Add self-organization report if available

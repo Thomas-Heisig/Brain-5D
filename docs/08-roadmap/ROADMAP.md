@@ -23,6 +23,11 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 Experimentzusammenfassungen enthalten die zentralen Laufmetadaten in deutscher
 Sprache; relative Artefakt-Links bleiben innerhalb des Datei-Viewers.
 
+Die Runtime besitzt nun eine getrennte Clock-Ebene: `dt = 1 ms` bleibt konstant,
+während `target_hz` beziehungsweise `MAX` nur die reale Tick-Abarbeitung steuern.
+Achieved Hz, Realtime-Verhältnis, Latenz, Jitter, Sättigung und ein grobes
+Phasenprofil werden im Operator- und Embodiment-Status veröffentlicht.
+
 ## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
 
 - [x] Learning-Preparation-Formular für Lernziel, Erfolgskriterium,
@@ -75,6 +80,11 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 
 ## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)
+
+- [x] Runtime Clock mit Target-/Achieved-Rate, `MAX`, Realtime-Verhältnis,
+  Latenz, Jitter und Compute-Limit-Status einführen; `dt` bleibt unverändert
+- [x] Grobes Tick-Phasenprofil im Runtime-/Embodiment-Status veröffentlichen
+- [ ] Embodiment-Regler sowie vollständige Phaseninstrumentierung ergänzen
 
 - [ ] `full_change_scan` gegen causally complete `dirty_tracking` per A/B-Test validieren
 - [x] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen (A/B/C-Produktionstest und Fresh-Process-Artefakt verifiziert)

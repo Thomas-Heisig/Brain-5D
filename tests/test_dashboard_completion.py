@@ -239,6 +239,20 @@ def test_canonical_command_step_advances_exactly_one_tick() -> None:
     assert network.current_tick == 1
 
 
+def test_runtime_clock_can_be_configured_through_control_service() -> None:
+    from src.dashboard.control_service import DashboardControlService
+
+    service = DashboardControlService(RuntimeController(_build_real_network(n=10)))
+    response = service.execute({"command": "configure", "target_hz": 100.0})
+
+    assert response.ok
+    assert response.payload["runtime"]["target_hz"] == 100.0
+
+    max_response = service.execute({"command": "configure", "target_hz": "MAX"})
+    assert max_response.ok
+    assert max_response.payload["runtime"]["target_hz"] is None
+
+
 def test_legacy_action_still_accepted_for_compat() -> None:
     from src.dashboard.control_service import DashboardControlService
 

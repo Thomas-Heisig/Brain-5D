@@ -321,14 +321,33 @@ class DashboardControlService:
         """Handle the 'configure' command."""
         loop_size = self._optional_int_field(body, "loop_size", minimum=1)
         delay_ms = self._optional_float_field(body, "delay_ms", minimum=0.0)
-        state = self._runtime.configure(loop_size=loop_size, delay_ms=delay_ms)
+        raw_target_hz = body.get("target_hz")
+        if isinstance(raw_target_hz, str):
+            if raw_target_hz.upper() != "MAX":
+                raise ValueError("'target_hz' must be numeric or 'MAX'.")
+            target_hz: float | None = None
+        elif raw_target_hz is None:
+            target_hz = None
+        else:
+            target_hz = self._optional_float_field(body, "target_hz", minimum=0.0)
+            if target_hz == 0.0:
+                target_hz = None
+        state = self._runtime.configure(
+            loop_size=loop_size,
+            delay_ms=delay_ms,
+            target_hz=target_hz,
+        )
         return ControlResponse.success(
             cast(
                 dict[str, JSONValue],
                 {
                     "ok": True,
                     "runtime": state.to_json(),
-                    "configured": {"loop_size": loop_size, "delay_ms": delay_ms},
+                    "configured": {
+                        "loop_size": loop_size,
+                        "delay_ms": delay_ms,
+                        "target_hz": target_hz,
+                    },
                 },
             )
         )

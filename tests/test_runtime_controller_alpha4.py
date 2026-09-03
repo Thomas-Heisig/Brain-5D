@@ -50,3 +50,23 @@ def test_alpha5_runtime_aliases_preserve_bounded_execution() -> None:
     assert controller.run_loop(9).tick == 10
     with pytest.raises(ValueError):
         controller.run_ticks(11)
+
+
+def test_runtime_clock_reports_target_and_realtime_ratio() -> None:
+    controller = RuntimeController(Network(), target_hz=1000.0)
+    telemetry = controller.run_ticks(2)
+
+    assert telemetry.target_hz == 1000.0
+    assert telemetry.ticks_per_second > 0.0
+    assert telemetry.simulation_speed_ratio == telemetry.ticks_per_second / 1000.0
+    assert telemetry.tick_latency_ms >= 0.0
+    assert telemetry.jitter_ms >= 0.0
+    assert telemetry.runtime_mode in {"TARGETED", "COMPUTE LIMITED"}
+    assert telemetry.tick_profile is not None
+
+
+def test_runtime_clock_none_is_unlimited_max_mode() -> None:
+    telemetry = RuntimeController(Network()).run_ticks(1)
+
+    assert telemetry.target_hz is None
+    assert telemetry.runtime_mode == "MAX"

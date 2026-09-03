@@ -31,7 +31,7 @@ from __future__ import annotations
 import threading
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any, Protocol
 
@@ -157,6 +157,13 @@ class RuntimeTelemetry:
     requested_ticks: int
     completed_ticks: int
     last_error: str | None = None
+    target_hz: float | None = None
+    simulation_speed_ratio: float = 0.0
+    tick_latency_ms: float = 0.0
+    jitter_ms: float = 0.0
+    compute_saturation: float = 0.0
+    runtime_mode: str = "MAX"
+    tick_profile: dict[str, float] | None = None
 
     def to_dict(self) -> dict[str, int | float | str | None]:
         """Convert to dictionary for JSON serialization."""
@@ -172,6 +179,13 @@ class RuntimeTelemetry:
             "requested_ticks": self.requested_ticks,
             "completed_ticks": self.completed_ticks,
             "last_error": self.last_error,
+            "target_hz": self.target_hz,
+            "simulation_speed_ratio": self.simulation_speed_ratio,
+            "tick_latency_ms": self.tick_latency_ms,
+            "jitter_ms": self.jitter_ms,
+            "compute_saturation": self.compute_saturation,
+            "runtime_mode": self.runtime_mode,
+            "tick_profile": self.tick_profile,
         }
 
     def to_json(self) -> dict[str, int | float | str | None]:
@@ -240,6 +254,7 @@ class RuntimeController:
         *,
         batch_size: int = 10,
         loop_delay_ms: float = 0.0,
+        target_hz: float | None = None,
         telemetry_interval_ticks: int = 10,
         snapshot_callback: SnapshotCallback | None = None,
         max_manual_ticks: int = 100_000,
@@ -267,6 +282,8 @@ class RuntimeController:
             )
         if loop_delay_ms < 0:
             raise ValueError(f"loop_delay_ms must be >= 0, got {loop_delay_ms}")
+        if target_hz is not None and target_hz <= 0:
+            raise ValueError(f"target_hz must be > 0 or None, got {target_hz}")
         if max_manual_ticks <= 0:
             raise ValueError(f"max_manual_ticks must be > 0, got {max_manual_ticks}")
 
@@ -274,6 +291,7 @@ class RuntimeController:
         self.homeostasis: HomeostasisLike | None = homeostasis
         self._batch_size: int = batch_size
         self._loop_delay_ms: float = loop_delay_ms
+        self._target_hz: float | None = target_hz
         self._telemetry_interval_ticks: int = telemetry_interval_ticks
         self._snapshot_callback: SnapshotCallback | None = snapshot_callback
         self._max_manual_ticks: int = max_manual_ticks
@@ -289,6 +307,9 @@ class RuntimeController:
         self._snapshot_requested: bool = False
         self._requested_ticks: int = 0
         self._completed_ticks: int = 0
+        self._last_tick_latency_ms: float = 0.0
+        self._tick_latency_samples: list[float] = []
+        self._phase_totals_ms: dict[str, float] = {}
         self._telemetry: RuntimeTelemetry = self._make_telemetry(0.0, 0.0, 0)
 
     # ========================================================================
@@ -597,9 +618,14 @@ class RuntimeController:
                 # Flush snapshot request
                 self._flush_snapshot_request()
 
-                # Delay between batches
-                if self._loop_delay_ms:
-                    time.sleep(self._loop_delay_ms / 1000.0)
+                # Apply an optional target clock without changing SNN dt.
+                target_delay_ms = 0.0
+                if self._target_hz is not None:
+                    target_batch_ms = self._batch_size * 1000.0 / self._target_hz
+                    target_delay_ms = max(0.0, target_batch_ms - elapsed_ms)
+                delay_ms = max(self._loop_delay_ms, target_delay_ms)
+                if delay_ms:
+                    time.sleep(delay_ms / 1000.0)
 
         except Exception as exc:
             # Handle errors and propagate to callbacks
@@ -618,6 +644,13 @@ class RuntimeController:
                     requested_ticks=old.requested_ticks,
                     completed_ticks=old.completed_ticks,
                     last_error=str(exc),
+                    target_hz=old.target_hz,
+                    simulation_speed_ratio=old.simulation_speed_ratio,
+                    tick_latency_ms=old.tick_latency_ms,
+                    jitter_ms=old.jitter_ms,
+                    compute_saturation=old.compute_saturation,
+                    runtime_mode=old.runtime_mode,
+                    tick_profile=old.tick_profile,
                 )
 
             # Notify error callbacks
@@ -638,6 +671,7 @@ class RuntimeController:
         spikes_total = 0
 
         for _ in range(count):
+            tick_started = time.perf_counter()
             # Check stop signal
             if self._stop_event.is_set() and self.state == ControllerState.RUNNING:
                 break
@@ -654,10 +688,13 @@ class RuntimeController:
             # Execute one tick
             result = self.network.step()
             spikes_total += result.spikes_this_tick
+            self._record_phase("neuron_integration", tick_started)
 
             # Update homeostasis
             if self.homeostasis is not None and self.homeostasis.enabled:
+                phase_started = time.perf_counter()
                 self.homeostasis.update(result)
+                self._record_phase("homeostasis", phase_started)
 
             # Run post-tick hooks
             with self._lock:
@@ -668,7 +705,18 @@ class RuntimeController:
                 except Exception:
                     pass  # Hook errors are isolated
 
+            tick_latency_ms = (time.perf_counter() - tick_started) * 1000.0
+            self._last_tick_latency_ms = tick_latency_ms
+            self._tick_latency_samples.append(tick_latency_ms)
+            if len(self._tick_latency_samples) > 1000:
+                self._tick_latency_samples.pop(0)
+
         return spikes_total
+
+    def _record_phase(self, phase: str, started: float) -> None:
+        """Accumulate coarse runtime phase timings for the latest profile."""
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        self._phase_totals_ms[phase] = self._phase_totals_ms.get(phase, 0.0) + elapsed_ms
 
     def _flush_snapshot_request(self) -> None:
         """Execute the snapshot callback if requested."""
@@ -692,6 +740,22 @@ class RuntimeController:
         tps: float = 0.0
         if elapsed_ms > 0:
             tps = self._batch_size * 1000.0 / elapsed_ms
+        latency = self._last_tick_latency_ms
+        jitter = 0.0
+        if len(self._tick_latency_samples) > 1:
+            mean = sum(self._tick_latency_samples) / len(self._tick_latency_samples)
+            jitter = (
+                sum((sample - mean) ** 2 for sample in self._tick_latency_samples)
+                / len(self._tick_latency_samples)
+            ) ** 0.5
+        target = self._target_hz
+        ratio = tps / 1000.0 if target is None else tps / (1.0 / 0.001)
+        saturation = (
+            0.0
+            if target is None or target == 0
+            else min(1.0, target / max(tps, 0.001))
+        )
+        mode = "MAX" if target is None else ("COMPUTE LIMITED" if tps < target * 0.98 else "TARGETED")
 
         return RuntimeTelemetry(
             tick=self.network.current_tick,
@@ -704,6 +768,13 @@ class RuntimeController:
             controller_state=self._state,
             requested_ticks=self._requested_ticks,
             completed_ticks=self._completed_ticks,
+            target_hz=target,
+            simulation_speed_ratio=ratio,
+            tick_latency_ms=latency,
+            jitter_ms=jitter,
+            compute_saturation=saturation,
+            runtime_mode=mode,
+            tick_profile=dict(self._phase_totals_ms),
         )
 
     # ========================================================================
@@ -780,6 +851,18 @@ class RuntimeController:
                     if not isinstance(delay_ms, (int, float)) or delay_ms < 0:
                         raise ValueError(f"delay_ms must be >= 0, got {delay_ms}")
                     self._loop_delay_ms = float(delay_ms)
+            if "target_hz" in kwargs:
+                target_hz = kwargs["target_hz"]
+                if target_hz is not None and (
+                    not isinstance(target_hz, (int, float)) or target_hz <= 0
+                ):
+                    raise ValueError("target_hz must be > 0 or None")
+                self._target_hz = float(target_hz) if target_hz is not None else None
+            self._telemetry = replace(
+                self._telemetry,
+                target_hz=self._target_hz,
+                runtime_mode="MAX" if self._target_hz is None else "TARGETED",
+            )
             return self._telemetry
 
 

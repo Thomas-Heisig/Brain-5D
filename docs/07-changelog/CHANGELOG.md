@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — Runtime Clock und Tick-Profiling
+
+- Runtime Controller unterstützt `target_hz` und explizites `MAX`, ohne das
+  wissenschaftliche `dt = 1 ms` zu verändern.
+- Telemetrie meldet Achieved Hz, Simulationsgeschwindigkeit relativ zu Echtzeit,
+  Tick-Latenz, Jitter, Compute-Limit-Status und grobe Phasenzeiten.
+- Operator- und Embodiment-APIs veröffentlichen diese Werte als `runtime_clock`;
+  der visuelle Regler und ein vollständiges Phasenprofil bleiben offen.
+
 ## 2026-09-03 — Artefakt-Reviews und Experimentdatum
 
 - Menschliche Reviews koennen nun an beliebige Dateien innerhalb eines

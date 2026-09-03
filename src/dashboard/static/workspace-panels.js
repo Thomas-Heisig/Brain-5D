@@ -23,6 +23,25 @@ function formatFixed(value, digits = 3, suffix = "") {
   return `${Number(value).toFixed(digits)}${suffix}`;
 }
 
+const CLOCK_TARGETS = [1, 10, 100, 1000, 10000, "MAX"];
+
+function initRuntimeClockControl() {
+  const control = byId("runtime-clock-target");
+  if (!control || control.dataset.bound === "true") return;
+  control.dataset.bound = "true";
+  control.addEventListener("input", async () => {
+    const target = CLOCK_TARGETS[Number(control.value)];
+    setText("runtime-clock-target-value", `${target.toLocaleString?.() ?? target} Hz`);
+    try {
+      await fetch("/api/control", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command: "configure", target_hz: target }),
+      });
+    } catch { /* the next state refresh reports the current value */ }
+  });
+}
+
 function formatBytes(value) {
   if (value === null || value === undefined) return "—";
   const bytes = Number(value);
@@ -199,6 +218,7 @@ function renderConnections(payload) {
 export function renderWorkspaceSummaries(state) {
   ensureLearningStudio();
   renderLearningStudio(state);
+  initRuntimeClockControl();
 
   const system = state.system || {};
   const network = state.network || {};
@@ -208,6 +228,7 @@ export function renderWorkspaceSummaries(state) {
   const parameters = state.parameters || {};
   const pending = state.pending_changes || {};
   const embodiment = state.embodiment || {};
+  const runtimeClock = embodiment.runtime_clock || {};
   const embodimentDetail = state.embodiment_detail || {};
   const embodimentHistory = state.embodiment_history || {};
   const embodimentConnections = state.embodiment_connections || {};
@@ -275,6 +296,14 @@ export function renderWorkspaceSummaries(state) {
   setText("embodiment-last-reward", Number(embodiment.last_reward || 0).toFixed(3));
   setText("embodiment-last-action", embodiment.last_action || "—");
   setText("embodiment-last-text", embodiment.last_text_input || "—");
+  const targetHz = runtimeClock.target_hz;
+  setText("runtime-clock-target-value", targetHz == null ? "MAX" : `${formatNumber(targetHz)} Hz`);
+  setText("runtime-clock-achieved", formatFixed(runtimeClock.achieved_hz, 1, " Hz"));
+  setText("runtime-clock-ratio", formatFixed(runtimeClock.simulation_speed_ratio, 3, " × realtime"));
+  setText("runtime-clock-latency", formatFixed(runtimeClock.tick_latency_ms, 2, " ms"));
+  setText("runtime-clock-jitter", formatFixed(runtimeClock.jitter_ms, 2, " ms"));
+  setText("runtime-clock-status", runtimeClock.runtime_mode || "—");
+  setText("runtime-clock-mode", runtimeClock.runtime_mode || "MAX");
   setText("embodiment-action-detail", embodiment.last_action || "—");
   setText("embodiment-sensor-state", sensors > 0 ? `${sensors} active` : "Not connected");
   setText("embodiment-actuator-state", actuators > 0 ? `${actuators} active` : "Not connected");
