@@ -10,7 +10,9 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 ## Verifizierter Repository-Stand
 
-`main` ist lokal sauber und mit `origin/main` synchron (`b8d5025`). Die lokale
+`main` ist lokal mit `origin/main` synchron (`ad0ca22`). Die neue
+Impulsantwort- und Multi-Timescale-Grundlage ist implementiert und fokussiert
+getestet. Die lokale
 Vollsuite meldet **618 passed, 5 skipped**. Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
@@ -43,12 +45,12 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 
 ## v0.5.0-alpha.8 — Adaptive Self-Regulation & Morphology
 
-- [x] Typisierte Vital Signals mit Safety Ranges, Confidence, Freshness und
-	UNKNOWN-Semantik als Digital-Interoception-Basis einführen
-- [x] Erste deterministische Drives für Thermal Threat, Resource Pressure und
-	Continuity Risk aus Interoception ableiten; nicht beobachtbare Drives bleiben unsicher
-- [x] Optionale Host-Telemetrie für RAM-Reserve, Storage, Disk-/Netzwerk-I/O,
-	Akku und Lüfter ergänzen
+- [x] Kontrollierten `NetworkImpulseProbe` mit serialisierbarer
+	`NetworkResponseSignature` für beobachtbare Impulsantworten einführen
+- [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
+	Referenzzustände ohne Zurückspulen des Runtime-Zustands einführen
+- [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
+	mit DATA/EVID-Provenienz ausführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
 - [ ] Chronic Signals, Regional 5D Pressure, Neuron-/Synapsenalter und Growth Budgets integrieren
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen

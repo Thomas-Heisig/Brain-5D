@@ -42,11 +42,50 @@
     <button class="tab-btn" data-tab="embodiment">◈ EMBODIMENT</button>
   </nav>
 
-          <div class="snapshot-info-item"><span>Status</span><strong id="snapshot-status">⏳</strong></div>
+  <main>
+    <section class="tab-content active" id="tab-overview">
+      <header class="overview-command-bar">
+        <div class="overview-command-copy">
+          <span class="overview-kicker">LIVING SYSTEM / COMMAND CENTER</span>
+          <h2>Der aktuelle Körperzustand</h2>
+          <p id="overview-context">Tick — · runtime wird verbunden</p>
         </div>
+        <div class="overview-actions" aria-label="Schnellzugriff">
+          <button class="overview-action" type="button" data-overview-tab="control">▶ Ausführen</button>
+          <button class="overview-action" type="button" data-overview-tab="embodiment">◈ Körper öffnen</button>
+          <button class="overview-action" type="button" data-overview-tab="research">⌕ Nachweise</button>
+          <button class="overview-action" type="button" data-overview-tab="settings">⚙ Parameter</button>
+        </div>
+      </header>
+      <section class="overview-status-rail" aria-label="Systemstatus">
+        <div class="overview-status-item"><span>Runtime</span><strong id="overview-runtime-status">unknown</strong></div>
+        <div class="overview-status-item"><span>Health</span><strong id="overview-health-status">unknown</strong></div>
+        <div class="overview-status-item"><span>Scientific Gate</span><strong id="overview-scientific-status">unknown</strong></div>
+        <div class="overview-status-item"><span>CI</span><strong id="overview-ci-status">unknown</strong></div>
+        <div class="overview-status-item"><span>Release</span><strong id="overview-release-status">not_ready</strong></div>
+        <div class="overview-status-item"><span>Mode</span><strong id="overview-mode-status">operator</strong></div>
       </section>
+      <section class="overview-operations-grid">
+        <article class="overview-surface overview-body-surface">
+          <div class="overview-surface-title"><div><span>NEURONALES INNERES</span><h3>Aktivität und Regulation</h3></div><strong id="system-status">idle</strong></div>
+          <div class="overview-dynamics-grid">
+            <div><span>Aktive Neuronen</span><strong id="overview-active-neurons">—</strong></div><div><span>Stille Neuronen</span><strong id="overview-silent-neurons">—</strong></div><div><span>Feuerrate</span><strong id="overview-mean-rate">—</strong></div><div><span>Synchronität</span><strong id="overview-synchrony">—</strong></div><div><span>Burst Index</span><strong id="overview-burst-index">—</strong></div><div><span>E / I Ratio</span><strong id="overview-ei-ratio">—</strong></div>
+          </div>
+          <div class="overview-dynamics-grid overview-core-metrics">
+            <div><span>Tick</span><strong id="tick">—</strong></div><div><span>Neuronen</span><strong id="neurons">—</strong></div><div><span>Synapsen</span><strong id="synapses">—</strong></div><div><span>Spikes</span><strong id="spikes">—</strong></div><div><span>Core ms</span><strong id="core-ms">—</strong></div><div><span>Energie</span><strong id="energy">—</strong></div>
+          </div>
+        </article>
+        <article class="overview-surface"><div class="overview-surface-title"><div><span>ORGANE</span><h3>Lebende Komponenten</h3></div><strong id="overview-component-count">0 / 0</strong></div><div class="overview-component-grid" id="overview-component-grid"><span class="overview-empty">Waiting for component state</span></div></article>
+        <article class="overview-surface"><div class="overview-surface-title"><div><span>RÜCKMELDUNG</span><h3>Aufmerksamkeit</h3></div><strong id="overview-problem-count">0</strong></div><div class="overview-problem-list" id="overview-problem-list"><span class="overview-empty overview-clear">No problems detected</span></div></article>
+      </section>
+      <section class="overview-operations-grid overview-metrics-row">
+        <article class="overview-surface"><div class="overview-surface-title"><div><span>SPEICHER</span><h3>Gedächtnis des Systems</h3></div><strong id="queue-badge">—</strong></div><div class="overview-dynamics-grid"><div><span>Deltas</span><strong id="deltas">—</strong></div><div><span>Bytes</span><strong id="bytes">—</strong></div><div><span>Journal</span><strong id="journal-size">—</strong></div><div><span>Drops</span><strong id="drops">—</strong></div><div><span>Write</span><strong id="write-ms">—</strong></div><div><span>Commit</span><strong id="commit-ms">—</strong></div></div><div class="bar"><div class="bar-fill" id="queue-fill"></div></div></article>
+        <article class="overview-surface"><div class="overview-surface-title"><div><span>LERNEN</span><h3>Plastizität</h3></div><strong id="learning-ms">—</strong></div><div class="overview-dynamics-grid"><div><span>STDP</span><strong id="stdp">—</strong></div><div><span>Rewards</span><strong id="rewards">—</strong></div><div><span>Pending</span><strong id="pending">—</strong></div><div><span>Reward Updates</span><strong id="reward-updates">—</strong></div><div><span>Homeostasis</span><strong id="homeostasis-state">—</strong></div><div><span>Active</span><strong id="active-neurons">—</strong></div></div></article>
+        <article class="overview-surface"><div class="overview-surface-title"><div><span>STRUKTUR</span><h3>Wachstum und Umbau</h3></div><strong>live</strong></div><div class="overview-dynamics-grid"><div><span>Neuronen +</span><strong id="neurons-created">—</strong></div><div><span>Neuronen −</span><strong id="neurons-removed">—</strong></div><div><span>Synapsen +</span><strong id="synapses-created">—</strong></div><div><span>Synapsen −</span><strong id="synapses-pruned">—</strong></div><div><span>Target Rate</span><strong id="target-rate">—</strong></div><div><span>Mean Rate</span><strong id="mean-rate">—</strong></div></div></article>
+      </section>
+      <section class="snapshot-info-card overview-surface" aria-label="Snapshot-Nachweis"><div class="overview-surface-title"><div><span>IDENTITÄT</span><h3>Aktueller Snapshot</h3></div><strong id="snapshot-status">⏳</strong></div><div class="overview-dynamics-grid"><div><span>Datei</span><strong id="snapshot-file">—</strong></div><div><span>Tick</span><strong id="snapshot-tick">—</strong></div><div><span>Größe</span><strong id="snapshot-size">—</strong></div><div><span>Rate Error</span><strong id="rate-error">—</strong></div><div><span>Threshold</span><strong id="threshold-adaptation">—</strong></div><div><span>Energy Error</span><strong id="energy-error">—</strong></div></div></section>
+    </section>
 
-    </section> <!-- /tab-overview -->
     <!-- ========================================================== -->
     <!-- TAB: CONTROL -->
     <!-- ========================================================== -->
