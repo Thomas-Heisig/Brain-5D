@@ -54,6 +54,8 @@ Evidenz für Lernwirkung.
 	Anwendungstic für reproduzierbare Laufprotokolle.
 - Experiment-Manifesten stehen nun getrennte Exploratory-/Confirmatory-Modi,
 	Confirmatory-Digest-Locks und sichtbare Retrieval-Provenienz zur Verfügung.
+- AI-0 bis AI-3 sind als formale, capability-beschränkte Rollen im Authority-
+	Vertrag registriert.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from src.research_assistant.advisor import CognitiveAdvisor
+from src.research_assistant.authority import AIRole, authority_for
 from src.research_assistant.contracts import AIClockMode, AIInteractionRecord
 from src.research_assistant.gateways import InterventionGateway, MemoryWriteGateway
 from src.research_assistant.governance import (
@@ -174,6 +175,11 @@ def test_confirmatory_lock_rejects_protocol_prompt_or_analysis_changes() -> None
             prompt_digest="prompt-sha",
             analysis_digest="analysis-sha",
         )
+
+
+def test_formal_ai_roles_are_readable_and_bounded() -> None:
+    assert authority_for(AIRole.AI_0_RESEARCH_AI.value).scientific_evidence is False
+    assert "apply" not in authority_for(AIRole.AI_3_EXPERIMENTAL_CONTROLLER.value).capabilities
 
 
 def test_scientific_runs_reject_development_partition() -> None:

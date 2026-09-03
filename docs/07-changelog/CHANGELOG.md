@@ -22,6 +22,8 @@
 - Experiment-Manifeste unterscheiden `EXPLORATORY` und `CONFIRMATORY`, können
   Confirmatory-Locks für Protocol-, Prompt- und Analyse-Digests speichern und
   Retrieval-Provenienz sichtbar registrieren.
+- Die Authority-Matrix enthält nun formale Rollen `AI-0` bis `AI-3` mit
+  explizit begrenzten Capabilities.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

@@ -4,6 +4,7 @@ from .advisor import ActionProposal, CognitiveAdvisor
 from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
 from .assistant import AnalysisBackend, ResearchAssistant
 from .authority import (
+    AIRole,
     AuthorityRule,
     authority_for,
     authority_matrix,
@@ -88,6 +89,7 @@ __all__ = [
     "AIRRPipeline",
     "AIResearchReport",
     "AuthorityRule",
+    "AIRole",
     "ResearchAssistant",
     "ResearchPacket",
     "CognitiveAdvisor",
