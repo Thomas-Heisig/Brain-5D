@@ -1,3 +1,5 @@
+import { ensureLearningStudio, renderLearningStudio } from "./learning-studio.js";
+
 /**
  * Shared workbench summaries for Network, Control, Research, Release and Settings.
  */
@@ -195,6 +197,9 @@ function renderConnections(payload) {
 }
 
 export function renderWorkspaceSummaries(state) {
+  ensureLearningStudio();
+  renderLearningStudio(state);
+
   const system = state.system || {};
   const network = state.network || {};
   const gate = state.gate || {};
