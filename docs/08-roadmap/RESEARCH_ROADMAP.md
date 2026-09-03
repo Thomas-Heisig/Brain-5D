@@ -65,6 +65,8 @@ als unverified markiert.
 - Jede Chat-Antwort trägt inzwischen einen digest-only `AIInteractionRecord` mit
 	Exposure, kausaler Klassifikation und Read-only-Autorität; dies ist eine Basis für
 	die noch offene vollständige Contract-/Firewall-Architektur.
+- Der Ollama-Adapter liefert dafür Samplingparameter, Stop-Sequenzen, Timeout und
+	Response-Digest; Modell-, Engine-, Hardware- und Tokenizer-Provenienz folgen noch.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

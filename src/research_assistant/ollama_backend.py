@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from typing import Any, cast
 from urllib.request import Request, urlopen
 
@@ -19,12 +20,22 @@ class OllamaBackend:
         temperature: float = 0.0,
         top_p: float = 0.9,
         max_tokens: int = 2048,
+        top_k: int | None = None,
+        num_ctx: int | None = None,
+        seed: int | None = None,
+        stop: list[str] | None = None,
+        timeout: float = 60.0,
     ) -> None:
         self.model = model
         self.endpoint = endpoint
         self.temperature = temperature
         self.top_p = top_p
         self.max_tokens = max_tokens
+        self.top_k = top_k
+        self.num_ctx = num_ctx
+        self.seed = seed
+        self.stop = list(stop or [])
+        self.timeout = timeout
 
     @property
     def name(self) -> str:
@@ -83,6 +94,15 @@ class OllamaBackend:
                 "num_predict": self.max_tokens,
             },
         }
+        options = cast(dict[str, object], payload["options"])
+        optional_options = {
+            "top_k": self.top_k,
+            "num_ctx": self.num_ctx,
+            "seed": self.seed,
+        }
+        options.update({key: value for key, value in optional_options.items() if value is not None})
+        if self.stop:
+            options["stop"] = self.stop
         if images:
             payload["images"] = images
         if tools:
@@ -94,7 +114,7 @@ class OllamaBackend:
             method="POST",
         )
         with urlopen(
-            request, timeout=60
+            request, timeout=self.timeout
         ) as response:  # nosec B310: local, explicit endpoint
             payload = json.loads(response.read().decode("utf-8"))
         text = payload.get("response")
@@ -104,6 +124,14 @@ class OllamaBackend:
             "provider": "ollama",
             "model": self.model,
             "temperature": self.temperature,
+            "top_p": self.top_p,
+            "top_k": self.top_k if self.top_k is not None else "not_reported",
+            "num_ctx": self.num_ctx if self.num_ctx is not None else "not_reported",
+            "seed": self.seed if self.seed is not None else "not_reported",
+            "stop": list(self.stop),
+            "max_tokens": self.max_tokens,
+            "timeout_seconds": self.timeout,
+            "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
         }
 
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — Ollama provenance baseline
+
+- Ollama-Chatantworten protokollieren nun Samplingparameter, Stop-Sequenzen, Timeout und einen Response-Digest.
+- Die vollständige Modell-, Engine-, Hardware- und Tokenizer-Provenienz bleibt als P0-Aufgabe offen.
+
 ## 2026-09-03 — AI interaction provenance baseline
 
 - Research-Chat-Antworten erzeugen nun einen digest-only `AIInteractionRecord`.

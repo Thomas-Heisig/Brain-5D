@@ -46,3 +46,37 @@ def test_ollama_backend_implements_read_only_language_contract(
     assert response.success is True
     assert response.backend_name == "ollama"
     assert response.text == '{"assessment":"ok"}'
+
+
+def test_ollama_backend_provenance_contains_sampling_parameters(
+    monkeypatch: Any,
+) -> None:
+    class _Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args: Any) -> None:
+            return None
+
+        def read(self):
+            return json.dumps({"response": "answer"}).encode()
+
+    requests: list[Any] = []
+
+    def _urlopen(request: Any, **_kwargs: Any) -> _Response:
+        requests.append(json.loads(request.data.decode()))
+        return _Response()
+
+    monkeypatch.setattr("src.research_assistant.ollama_backend.urlopen", _urlopen)
+    backend = OllamaBackend(
+        "qwen", top_k=20, num_ctx=4096, seed=42, stop=["END"], timeout=12
+    )
+    answer, metadata = backend.generate_text("prompt")
+
+    assert answer == "answer"
+    assert requests[0]["options"]["top_k"] == 20
+    assert requests[0]["options"]["num_ctx"] == 4096
+    assert requests[0]["options"]["seed"] == 42
+    assert requests[0]["options"]["stop"] == ["END"]
+    assert metadata["timeout_seconds"] == 12
+    assert len(metadata["response_digest"]) == 64
