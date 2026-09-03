@@ -13,6 +13,7 @@ from .connections import (
 from .controlled import ControlledEmbodimentAgent, ControlledSensorAdapter
 from .deterministic import DeterministicTargetEnvironment
 from .environment import EnvironmentAdapter
+from .interoception import InteroceptionFrame, VitalSignal, normalize_vital_signals
 from .models import (
     ActionCommand,
     ActuatorResult,
@@ -49,11 +50,14 @@ __all__ = [
     "EnvironmentAdapter",
     "EnvironmentKind",
     "EnvironmentObservation",
+    "InteroceptionFrame",
     "EmbodimentPipeline",
     "RelationshipClass",
     "SensorAdapter",
     "SensorFrame",
     "SystemSensorAdapter",
+    "VitalSignal",
     "host_system_readings",
     "wall_clock_readings",
+    "normalize_vital_signals",
 ]

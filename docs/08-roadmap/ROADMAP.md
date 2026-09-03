@@ -43,6 +43,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 
 ## v0.5.0-alpha.8 — Adaptive Self-Regulation & Morphology
 
+- [x] Typisierte Vital Signals mit Safety Ranges, Confidence, Freshness und
+	UNKNOWN-Semantik als Digital-Interoception-Basis einführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
 - [ ] Chronic Signals, Regional 5D Pressure, Neuron-/Synapsenalter und Growth Budgets integrieren
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen

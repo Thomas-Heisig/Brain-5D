@@ -32,7 +32,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 > Brain‑5D is an engineering and research project. The current implementation does **not** claim AGI, consciousness, sentience or biological equivalence.
 
 > **Current status (2026-09-03)**
-> The repository is on `main` at `b8d5025` (`0.5.0a7`). The local full test
+> The repository is on `main` at `67d91dd` (`0.5.0a7`). The local full test
 > suite passes with **618 passed, 5 skipped**. Scientific AI contracts,
 > provenance, read-only boundaries, replay/shadow controls, deterministic
 > statistics and storage-scope enforcement are implemented and tested.

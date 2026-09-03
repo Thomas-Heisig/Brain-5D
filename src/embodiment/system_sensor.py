@@ -9,6 +9,7 @@ from typing import Any, cast
 
 import psutil
 
+from .interoception import InteroceptionFrame, normalize_vital_signals
 from .models import JSONValue, SensorFrame
 
 SystemReadings = Callable[[int], Mapping[str, JSONValue]]
@@ -41,6 +42,13 @@ class SystemSensorAdapter:
             modality=self.modality,
             payload=payload,
         )
+
+    def sample_interoception(self, tick: int) -> InteroceptionFrame:
+        """Return typed body-relevant signals for the same deterministic sample."""
+        frame = self.sample(tick)
+        if not isinstance(frame.payload, dict):
+            raise TypeError("system sensor provider must return a mapping")
+        return InteroceptionFrame(tick=tick, signals=normalize_vital_signals(frame.payload))
 
 
 def wall_clock_readings(tick: int) -> Mapping[str, JSONValue]:
@@ -76,6 +84,7 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
 
 
 __all__ = [
+    "InteroceptionFrame",
     "SystemReadings",
     "SystemSensorAdapter",
     "host_system_readings",

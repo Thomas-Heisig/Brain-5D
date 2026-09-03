@@ -4,7 +4,7 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: `main` / `b8d5025`, lokale Vollsuite `618 passed, 5 skipped`.
+> Verifiziert am 2026-09-03: `main` / `67d91dd`, lokale Vollsuite `618 passed, 5 skipped`.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
 ## ENGINEERING
@@ -123,12 +123,42 @@
 - [ ] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen
 - [ ] Laufzeitprofil für 1k / 10k / 100k / 1M Ticks erfassen: ticks/s, ms/tick, Storage, Telemetrie, Bytes, Dirty-Counts, RAM
 
+### Release-Freeze vor Alpha.8
+
+- [ ] Black-Formatierung und alle sechs aktuellen mypy-Befunde beheben
+- [ ] Lokale Vollsuite und Scientific Integrity Gate nach den Qualitätsfixes erneut ausführen
+- [ ] Externe GitHub-CI vollständig grün abwarten; Hugging-Face-Sync erst danach freigeben
+- [ ] README-, Embodiment-Foundation-, Roadmap- und Changelog-Versionen auf denselben Commit-/Release-Stand synchronisieren
+- [ ] Clean-Freeze-Artefakt mit Tree-Digest, Teststatus und Dirty-Tree-Prüfung erzeugen
+
 ### Alpha.8 — Adaptive Self-Regulation & Morphology
 
-- [ ] Interne Regelgrößen und daraus abgeleitete Drives definieren
+- [x] Typisierten Digital-Interoception-Vertrag mit VitalSignal, Signalqualität,
+  Sicherheitsbereichen und explizitem UNKNOWN-Status einführen
+- [ ] Vital Signals um Lüfter-RPM/-Status, CPU/GPU-Temperatur, Temperaturgradient,
+    Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
+    Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern
+- [ ] Fehlende oder veraltete Sensorsignale fail-closed behandeln und niemals als sicher interpretieren
+- [ ] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
+    Sensory Integrity, Resource Pressure und Task Progress definieren
+- [ ] Drives deterministisch aus Regelgrößen ableiten: thermal_threat,
+    resource_pressure, sensory_integrity, continuity_risk, task_progress,
+    novelty und actuator_confidence
+- [ ] Valence, Activation, Safety und Uncertainty als abgeleitete Zustände
+    modellieren; menschliche Emotionsbegriffe ausschließlich als nachgelagerte Interpretation zulassen
 - [ ] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und Neurogenese-Budgets ergänzen
 - [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
 - [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
+- [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen
+- [ ] `BodySchemaManager` über dem `ConnectionManager` mit Integrations- und
+    Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
+- [ ] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
+    Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
+- [ ] `ActionReceipt` mit command_id, accepted, started, completed, failed,
+    latency, error, safety_clamp und effect_observed einführen
+- [ ] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
+- [ ] Hashverkettetes Aktionsjournal dauerhaft in Operator-/Experiment-Storage persistieren
+- [ ] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden
 
 ### Alpha.9 bis v1.0
 
@@ -148,6 +178,8 @@
 - [ ] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung
 - [ ] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck
 - [ ] `EXP-BODY-0001`: Sensorverlust, Aktivitätsänderung, Rekonfiguration und Kompensation messen
+- [ ] `EXP-BODY-0001` um Wetter-/Umwelt-Kontrollbedingung, Sensorqualität,
+  Kausalpfad, Body-Schema-Übergänge und unabhängige Effect-Observation erweitern
 - [ ] `EXP-MEM-0001`: Retention, Interferenz, Relearning, Transfer und Recall messen
 - [ ] `EXP-AIR-0001`: Scientific Research Assistant erst nach Clean Freeze, Push und externer CI ausführen
 

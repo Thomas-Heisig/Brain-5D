@@ -103,6 +103,6 @@ Manual actions remain disabled until a concrete, permission-bounded
 
 ## Roadmap role
 
-The interfaces are introduced in v0.4.0-alpha.7 so v0.5-v0.7 can design
+The interfaces were introduced in v0.5.0-alpha.7 so later alpha releases can design
 self-regulation and learning environments against a stable future boundary.
 Production sensor/action adapters remain a v0.8 milestone.

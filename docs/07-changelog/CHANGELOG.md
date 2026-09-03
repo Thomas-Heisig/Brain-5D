@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Alpha.8 digital interoception foundation
+
+- Added typed `VitalSignal` and `InteroceptionFrame` contracts for system-state
+  sensing, including quality, safety ranges and explicit unknown values.
+- Added deterministic normalization and `SystemSensorAdapter.sample_interoception()`
+  without changing the existing `SensorFrame` provider contract.
+
 ## 2026-09-03 — Documentation and research status synchronization
 
 - README, Forschungs-README und Roadmaps synchronisieren den verifizierten
