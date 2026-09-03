@@ -133,6 +133,9 @@
 
 ### Alpha.8 — Adaptive Self-Regulation & Morphology
 
+- [x] Neue Loopback-, Self-Model- und Alpha.8-Foki im Research-Dashboard sichtbar machen
+- [x] Dashboard-Grundlayout an die Embodiment-Anatomie angleichen und Network auf die
+  essentielle Live-Projektion mit reduziertem Polling begrenzen
 - [x] Typisierten Digital-Interoception-Vertrag mit VitalSignal, Signalqualität,
   Sicherheitsbereichen und explizitem UNKNOWN-Status einführen
 - [x] Optionale Host-Signale für RAM-Reserve, freien Speicher, Disk-/Netzwerk-I/O,

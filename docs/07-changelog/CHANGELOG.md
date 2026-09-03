@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Dashboard anatomy and focused Network view
+
+- Added Research focus entries for Alpha.8, recursive causal loopbacks and the
+  functional self-model documents.
+- Applied the Embodiment visual language to shared dashboard surfaces.
+- Reduced Network initialization to the essential live projection and removed
+  secondary visualization polling from the default path.
+
 ## 2026-09-03 — Alpha.8 digital interoception foundation
 
 - Added typed `VitalSignal` and `InteroceptionFrame` contracts for system-state

@@ -11,25 +11,11 @@
 "use strict";
 
 import {
-  refreshHeatmap,
   refreshLiveProjection,
   setHeatmapKind,
   toggleLiveSource,
   updateSourceBadge,
 } from './visualizations/heatmap.js';
-import { refreshIOFlow } from './visualizations/io-flow.js';
-import { refreshPopulation } from './visualizations/population.js';
-import {
-  refreshSpikeRaster,
-  refreshRateHistogram,
-  refreshLayerExplorer,
-} from './visualizations/dynamics.js';
-import {
-  refreshNetworkSummary,
-  loadNeuronPage,
-  loadSynapsePage,
-  loadProjection,
-} from './visualizations/inspector.js';
 
 const $ = (id) => document.getElementById(id);
 const $$ = (sel) => document.querySelectorAll(sel);
@@ -71,91 +57,16 @@ function bindHeatmapControls() {
   }
 }
 
-function bindDynamicsControls() {
-  const slider = $('layer-slider');
-  const dimSelect = $('layer-dim');
-  const kindSelect = $('layer-kind');
-  const layerVal = $('layer-value');
-  if (slider) {
-    slider.addEventListener('input', () => {
-      if (layerVal) layerVal.textContent = slider.value;
-    });
-    slider.addEventListener('change', refreshLayerExplorer);
-  }
-  if (dimSelect) dimSelect.addEventListener('change', refreshLayerExplorer);
-  if (kindSelect) kindSelect.addEventListener('change', refreshLayerExplorer);
-}
-
-function bindInspectorControls() {
-  const refreshBtn = $('inspect-refresh');
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', () => {
-      refreshNetworkSummary();
-      loadNeuronPage();
-      loadSynapsePage();
-      loadProjection();
-    });
-  }
-
-  const neuronLoad = $('neuron-load');
-  if (neuronLoad) neuronLoad.addEventListener('click', loadNeuronPage);
-
-  const synapseLoad = $('synapse-load');
-  if (synapseLoad) synapseLoad.addEventListener('click', loadSynapsePage);
-
-  const projMode = $('projection-mode');
-  if (projMode) projMode.addEventListener('change', loadProjection);
-}
-
 export function initNetworkTab() {
   if (initialized) return;
   console.log('🧠 Network tab initializing...');
 
   bindHeatmapControls();
 
-  refreshHeatmap();
   refreshLiveProjection();
-  refreshIOFlow();
-  refreshPopulation();
-
-  startInterval('heatmap', refreshHeatmap, 5000);
-  startInterval('liveProjection', refreshLiveProjection, 500);
-  startInterval('ioFlow', refreshIOFlow, 2000);
-  startInterval('population', refreshPopulation, 2000);
-
-  initDynamicsTab();
-  initInspectTab();
+  startInterval('liveProjection', refreshLiveProjection, 2500);
 
   updateSourceBadge();
   initialized = true;
-  console.log('✅ Network tab ready');
-}
-
-function initDynamicsTab() {
-  console.log('📈 Dynamics tab initializing...');
-  refreshSpikeRaster();
-  refreshRateHistogram();
-  refreshLayerExplorer();
-
-  bindDynamicsControls();
-
-  startInterval('spikeRaster', refreshSpikeRaster, 2000);
-  startInterval('rateHistogram', refreshRateHistogram, 2000);
-  startInterval('layerExplorer', refreshLayerExplorer, 3000);
-
-  console.log('✅ Dynamics tab ready');
-}
-
-function initInspectTab() {
-  console.log('🔍 Inspect tab initializing...');
-  refreshNetworkSummary();
-  loadNeuronPage();
-  loadSynapsePage();
-  loadProjection();
-
-  bindInspectorControls();
-
-  startInterval('networkSummary', refreshNetworkSummary, 2000);
-
-  console.log('✅ Inspect tab ready');
+  console.log('✅ Network core view ready');
 }
