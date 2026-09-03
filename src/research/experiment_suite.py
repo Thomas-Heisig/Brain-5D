@@ -8,7 +8,7 @@ import random
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, cast
 
 import yaml
 
@@ -79,12 +79,12 @@ def _network(
         relay = (0, 1, 0, 0, 0)
     else:
         relay = (0, 0, 1, 0, 0)
-    coordinates = (
+    coordinates: tuple[Coord5D, Coord5D, Coord5D] = (
         (0, 0, 0, 0, 0),
         relay,
-        tuple(size - 1 for size in dimensions),
+        cast(Coord5D, tuple(size - 1 for size in dimensions)),
     )
-    neurons = []
+    neurons: list[int] = []
     for coord in coordinates:
         existing = network.get_neuron_at_coord(coord)
         neurons.append(existing.neuron_id if existing is not None else network.add_neuron(coord))
@@ -287,7 +287,7 @@ def _load(path: Path) -> dict[str, Any]:
     loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(loaded, dict):
         raise TypeError("configuration root must be a mapping")
-    return loaded
+    return cast(dict[str, Any], loaded)
 
 
 def main() -> int:
