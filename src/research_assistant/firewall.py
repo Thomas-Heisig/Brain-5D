@@ -13,6 +13,17 @@ class AIAuthority(StrEnum):
     HUMAN_APPROVED = "human_approved"
 
 
+class AIResource(StrEnum):
+    """Mutable system surfaces protected from direct AI access."""
+
+    NETWORK = "network"
+    SYNAPSES = "synapses"
+    STRUCTURE = "structure"
+    REWARDS = "rewards"
+    MEMORY = "memory"
+    EXPERIMENT_STATE = "experiment_state"
+
+
 class AIFirewallViolation(PermissionError):
     """Raised when an AI component requests a mutation capability."""
 
@@ -21,6 +32,7 @@ class ScientificAIFirewall:
     """Allow bounded interpretation while rejecting direct mutation requests."""
 
     _READ_ACTIONS = frozenset({"read", "observe", "interpret", "cite"})
+    _RESOURCES = frozenset(AIResource)
     _MUTATION_ACTIONS = frozenset(
         {"write", "execute", "apply", "run", "mutate", "reward", "memory_write"}
     )
@@ -28,12 +40,15 @@ class ScientificAIFirewall:
     def __init__(self, authority: AIAuthority = AIAuthority.READ_ONLY) -> None:
         self.authority = authority
 
-    def authorize(self, action: str) -> None:
+    def authorize(self, action: str, resource: AIResource | str | None = None) -> None:
         """Authorize an explicit capability; prompts cannot expand this policy."""
         normalized = action.strip().lower()
+        if resource is not None and str(resource) not in self._RESOURCES:
+            raise AIFirewallViolation(f"Unknown AI resource '{resource}'.")
         if normalized in self._MUTATION_ACTIONS or normalized not in self._READ_ACTIONS:
+            surface = f" on {resource}" if resource is not None else ""
             raise AIFirewallViolation(
-                f"AI authority {self.authority.value} cannot perform '{action}'."
+                f"AI authority {self.authority.value} cannot perform '{action}'{surface}."
             )
 
     def assert_read_only(self) -> None:

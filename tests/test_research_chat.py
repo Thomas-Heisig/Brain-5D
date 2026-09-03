@@ -14,6 +14,7 @@ from src.research_assistant.contracts import (
     Proposal,
 )
 from src.research_assistant.firewall import (
+    AIResource,
     AIAuthority,
     AIFirewallViolation,
     ScientificAIFirewall,
@@ -151,9 +152,15 @@ def test_scientific_contracts_are_digest_backed_and_non_executable() -> None:
 
 def test_scientific_ai_firewall_rejects_mutating_capabilities() -> None:
     firewall = ScientificAIFirewall()
-    firewall.authorize("interpret")
+    protected_resources = tuple(AIResource)
+    for resource in protected_resources:
+        firewall.authorize("interpret", resource)
+        with pytest.raises(AIFirewallViolation):
+            firewall.authorize("write", resource)
     with pytest.raises(AIFirewallViolation):
         firewall.authorize("execute")
+    with pytest.raises(AIFirewallViolation):
+        firewall.authorize("read", "unclassified_surface")
     with pytest.raises(AIFirewallViolation):
         ScientificAIFirewall(AIAuthority.PROPOSAL_ONLY).assert_read_only()
 

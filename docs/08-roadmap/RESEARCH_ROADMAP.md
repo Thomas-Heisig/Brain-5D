@@ -41,6 +41,11 @@ Evidenz für Lernwirkung.
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
 
+- Die Scientific AI Firewall klassifiziert Netzwerk, Synapsen, Struktur, Rewards,
+  Memory und Experimentzustand als geschützte Ressourcen. AI-Zugriffe sind dort
+  auf Beobachtung und Interpretation begrenzt; unbekannte Ressourcen scheitern
+  fail-closed.
+
 - **R-AI1 / RQ-AIR-001:** Erkennt der Scientific Research Assistant methodische Defekte zuverlässig?
 - **R-AI2:** Wie genau sind AI Research Reports gegenüber einer menschlichen Referenzauswertung?
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Expanded scientific AI firewall
+
+- Die Firewall kennt nun die geschützten Ressourcen Netzwerk, Synapsen, Struktur, Rewards, Memory und Experimentzustand.
+- Leseaktionen bleiben zulässig; Mutation, Ausführung und unbekannte Aktionen oder Ressourcen werden fail-closed abgewiesen.
+- Die Policy ist als gemeinsame Capability-Grenze verfügbar, während konkrete Runtime-/Storage-Gateways weiter ausgebaut werden.
+
 ## 2026-09-03 — Ollama request and response provenance
 
 - Ollama-Provenienz enthält nun Request-Digest, Modell-ID, Completion-Grund und verfügbare Prompt-/Output-Tokenmetriken.
