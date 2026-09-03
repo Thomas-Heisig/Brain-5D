@@ -148,6 +148,7 @@ function renderSystemMetrics(state) {
       ? 'status-pill error'
       : (workerFailed === false ? 'status-pill online' : 'status-pill');
   }
+  setText('overview-system-status', data.status || 'idle');
 }
 
 /**
