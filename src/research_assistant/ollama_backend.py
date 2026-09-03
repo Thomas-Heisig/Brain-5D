@@ -110,7 +110,7 @@ class OllamaBackend:
                 error=str(exc),
             )
 
-    def __call__(self, prompt: str) -> tuple[dict[str, Any], dict[str, str | float]]:
+    def __call__(self, prompt: str) -> tuple[dict[str, Any], dict[str, Any]]:
         text, metadata = self._generate(prompt)
         output_raw: Any = json.loads(text)
         if not isinstance(output_raw, dict):
@@ -123,7 +123,7 @@ class OllamaBackend:
         prompt: str,
         images: list[str] | None = None,
         tools: list[dict[str, object]] | None = None,
-    ) -> tuple[str, dict[str, str | float]]:
+    ) -> tuple[str, dict[str, Any]]:
         """Return plain text for read-only chat consumers."""
         return self._generate(prompt, images=images, tools=tools)
 
@@ -132,7 +132,7 @@ class OllamaBackend:
         prompt: str,
         images: list[str] | None = None,
         tools: list[dict[str, object]] | None = None,
-    ) -> tuple[str, dict[str, str | float]]:
+    ) -> tuple[str, dict[str, Any]]:
         payload: dict[str, object] = {
             "model": self.model,
             "prompt": prompt,
@@ -156,13 +156,14 @@ class OllamaBackend:
             payload["images"] = images
         if tools:
             payload["tools"] = tools
+        request_data = json.dumps(payload).encode()
         request = Request(
             self.endpoint,
-            data=json.dumps(payload).encode(),
+            data=request_data,
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        request_digest = hashlib.sha256(request.data or b"").hexdigest()
+        request_digest = hashlib.sha256(request_data).hexdigest()
         request_timestamp = datetime.now(timezone.utc).isoformat()
         with urlopen(
             request, timeout=self.timeout

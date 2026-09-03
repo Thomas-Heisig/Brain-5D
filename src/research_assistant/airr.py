@@ -7,7 +7,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from .assistant import AnalysisBackend, ResearchAssistant
 from .models import AIAnalysisRecord, ResearchPacket
@@ -264,7 +264,7 @@ def _data_basis(packet: ResearchPacket) -> dict[str, Any]:
 
 def _statistics(packet: ResearchPacket) -> dict[str, Any]:
     if isinstance(packet.data, dict) and isinstance(packet.data.get("statistics"), dict):
-        statistics = packet.data["statistics"]
+        statistics = cast(dict[str, Any], packet.data["statistics"])
         require_statistics_engine_artifact(statistics)
         return statistics
     return {"status": "NOT_AVAILABLE", "source": "deterministic statistics.json"}
@@ -319,7 +319,10 @@ def write_human_review(research_root: Path, experiment_id: str, report_id: str, 
         report = json.loads(report_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError("AIRR report is unreadable") from exc
-    if not isinstance(report, dict) or report.get("report_id") != report_id:
+    if not isinstance(report, dict):
+        raise ValueError("AIRR report identity does not match")
+    report = cast(dict[str, Any], report)
+    if report.get("report_id") != report_id:
         raise ValueError("AIRR report identity does not match")
     if report.get("status") != "review_pending":
         raise ValueError("AIRR report is not awaiting human review")

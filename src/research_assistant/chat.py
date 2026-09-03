@@ -89,7 +89,8 @@ class ResearchChat:
         source_count += sum(
             1
             for document in self.docs.list_documents(recursive=True)
-            if document.file_type.value in {"markdown", "text", "json", "yaml"}
+            if getattr(document, "file_type", None) is not None
+            and getattr(document, "file_type").value in {"markdown", "text", "json", "yaml"}
         )
         if web_enabled:
             source_count += 1
@@ -157,14 +158,15 @@ class ResearchChat:
             except (OSError, UnicodeError):
                 continue
             research_chunks.append(f"[RESEARCH: {document.path}]\n{content[:4000]}")
-        for document in self.docs.list_documents(recursive=True):
-            if document.file_type.value not in {"markdown", "text", "json", "yaml"}:
+        for doc_document in self.docs.list_documents(recursive=True):
+            file_type = getattr(doc_document, "file_type", None)
+            if file_type is None or file_type.value not in {"markdown", "text", "json", "yaml"}:
                 continue
             try:
-                content = self.docs.read_content(document.path)
+                content = self.docs.read_content(doc_document.path)
             except (OSError, UnicodeError, ValueError):
                 continue
-            docs_chunks.append(f"[DOCS: docs/{document.path}]\n{content[:4000]}")
+            docs_chunks.append(f"[DOCS: docs/{doc_document.path}]\n{content[:4000]}")
         sections = [
             "SCIENTIFIC RESEARCH SOURCES (claims, protocols, DATA/EVIDENCE records; scientific authority is limited by their stated status):\n" + "\n\n".join(research_chunks),
             "DOCUMENTATION SOURCES (technical and operational reference; not scientific evidence):\n" + "\n\n".join(docs_chunks),

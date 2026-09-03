@@ -12,7 +12,8 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **663 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
+Vollsuite meldet **673 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
+Fehler.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
@@ -38,6 +39,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 ```
 
 - [ ] Lokale Änderungen committen, pushen und vollständige GitHub-CI grün bekommen
+- [x] Type-, Build-, Lint- und Runtime-Fehler des aktuellen Stands beheben und lokal verifizieren
 - [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
 - [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat

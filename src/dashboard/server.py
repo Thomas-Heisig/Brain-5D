@@ -1998,6 +1998,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         response_mode = body.get("response_mode", "detailed")
         if response_mode not in {"short", "detailed", "scientific"}:
             raise InvalidRequestError("response_mode must be short, detailed, or scientific.")
+        response_mode = str(response_mode)
         message = body.get("message")
         if not isinstance(message, str) or not message.strip():
             raise InvalidRequestError("message is required.")
@@ -2067,7 +2068,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             system_prompt=self.dashboard_server.research_chat_system_prompt,
             conversation_context=conversation_context,
             handoff_prompt=self.dashboard_server.research_chat_handoff_prompt,
-            response_mode=cast(str, response_mode),
+            response_mode=response_mode,
             web_context=web_context,
         ).answer(message)
         self._send_json(
@@ -2110,7 +2111,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             for item in typed_sources
             if isinstance(item, dict)
         ]
-        plan = service.create_proposal(
+        proposal = service.create_proposal(
             plan_id=self._string_field(body, "plan_id"),
             objective=LearningObjective(
                 objective_id=self._mapping_string(typed_objective, "objective_id"),
@@ -2129,8 +2130,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             ai_interaction_id=cast(str | None, body.get("ai_interaction_id")) if isinstance(body.get("ai_interaction_id"), str) else None,
             raw_proposal_payload=body,
         )
-        path = service.persist_proposal(plan)
-        self._send_json({"status": "created", "path": str(path.relative_to(source.root())).replace("\\", "/"), "proposal": cast(JSONValue, plan.to_dict())}, HTTPStatus.CREATED)
+        path = service.persist_proposal(proposal)
+        self._send_json({"status": "created", "path": str(path.relative_to(source.root())).replace("\\", "/"), "proposal": cast(JSONValue, proposal.to_dict())}, HTTPStatus.CREATED)
 
     def _list_learning_preparations(self) -> None:
         source = self._require_research_source()

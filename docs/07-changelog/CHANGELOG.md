@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-03 — Type and dashboard runtime hygiene
+
+- Fixed strict typing across AIRR, learning preparation, research chat, Ollama
+  metadata and dashboard learning routes.
+- Restored the Network workspace markup required by the dashboard renderers and
+  workspace-view navigation.
+- Verified `673 passed, 5 skipped`, clean Ruff and Mypy checks, and a successful
+  package build.
+
 ## 2026-09-03 — Learning partition leakage guard
 
 - Added fail-closed validation for digest overlap across train, validation and

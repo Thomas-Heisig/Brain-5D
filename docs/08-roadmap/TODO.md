@@ -4,11 +4,17 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: synchronisiertes `main`, lokale Vollsuite `663 passed,
-> 3 bekannte Legacy-Dashboard-Fehler, 5 skipped`.
+> Verifiziert am 2026-09-03: lokale Vollsuite `673 passed, 5 skipped`; Pyright,
+> Ruff und Mypy sind ohne Fehler.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
 ## ENGINEERING
+
+### P0 — Type, Build, Lint und Runtime Hygiene
+
+- [x] AIRR-, Learning-, Chat-, Ollama- und Dashboard-Typfehler beheben
+- [x] Fehlenden Network-Workspace samt Views und Runtime-Controls wieder anbinden
+- [x] Vollsuite, Ruff, Mypy und Paket-Build verifizieren
 
 ### P0 — Learning Studio Full-Stack
 

@@ -35,6 +35,7 @@
   <!-- ============================================================ -->
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="overview">📊 OVERVIEW</button>
+    <button class="tab-btn" data-tab="network">🧠 NETWORK</button>
     <button class="tab-btn" data-tab="control">🎮 CONTROL</button>
     <button class="tab-btn" data-tab="research">🔬 RESEARCH</button>
     <button class="tab-btn" data-tab="gate">🚀 RELEASE</button>
@@ -85,6 +86,33 @@
       </section>
       <section class="snapshot-info-card overview-surface" aria-label="Snapshot-Nachweis"><div class="overview-surface-title"><div><span>IDENTITÄT</span><h3>Aktueller Snapshot</h3></div><strong id="snapshot-status">⏳</strong></div><div class="overview-dynamics-grid"><div><span>Datei</span><strong id="snapshot-file">—</strong></div><div><span>Tick</span><strong id="snapshot-tick">—</strong></div><div><span>Größe</span><strong id="snapshot-size">—</strong></div><div><span>Rate Error</span><strong id="rate-error">—</strong></div><div><span>Threshold</span><strong id="threshold-adaptation">—</strong></div><div><span>Energy Error</span><strong id="energy-error">—</strong></div></div></section>
     </section>
+
+    <!-- ========================================================== -->
+    <!-- TAB: NETWORK -->
+    <!-- ========================================================== -->
+    <section class="tab-content" id="tab-network">
+      <header class="workspace-header" data-workspace="network">
+        <div><span class="workspace-kicker">OBSERVE</span><h2>Network Workbench</h2><p>Live dynamics, topology, populations and 5D inspection</p></div>
+        <div class="workspace-status-strip"><span>Source<strong id="network-workspace-source">live</strong></span><span>Tick<strong id="network-workspace-tick">0</strong></span></div>
+      </header>
+      <nav class="workspace-view-tabs" data-workspace-views="network" aria-label="Network views">
+        <button type="button" class="active" data-workspace-view="visual">Visual</button>
+        <button type="button" data-workspace-view="dynamics">Dynamics</button>
+        <button type="button" data-workspace-view="inspect">Inspect</button>
+        <button type="button" data-workspace-view="data">Data</button>
+      </nav>
+      <section class="card heatmap-panel" id="network-projection" data-network-view="visual">
+        <div class="panel-title"><div><h2>5D Netzwerk-Projektion</h2><p><span id="source-badge" class="badge badge-live">LIVE</span> · Live Runtime oder Snapshot</p></div><div class="button-group"><button id="live-toggle" class="active" type="button">LIVE</button><button data-kind="spike" type="button">Spikes</button><button data-kind="weight" type="button">Gewichte</button><label class="compact-slider">Auflösung <input id="projection-resolution" type="range" min="10" max="120" step="10" value="50"><output id="projection-resolution-value">50</output></label></div></div>
+        <div class="heatmap-split"><div class="heatmap-wrap"><canvas id="heatmap" width="800" height="420"></canvas><div class="heatmap-meta" id="heatmap-meta">Keine Live-Verbindung.</div></div><canvas id="projection-5d" width="800" height="420"></canvas></div>
+      </section>
+      <section class="card io-flow-panel" id="network-flow" data-network-view="visual"><div class="panel-title"><h2>Input-Output Fluss</h2><span id="io-flow-badge" class="gate-badge pending">pending</span></div><div class="io-flow-grid"><div id="io-input-count">0</div><div id="io-input-fill"></div><div id="io-input-rate">0.000</div><div id="io-output-count">0</div><div id="io-output-fill"></div><div id="io-output-rate">0.000</div></div></section>
+      <section class="card population-panel" id="network-populations" data-network-view="visual"><div class="panel-title"><h2>Neuronale Populationen</h2><span id="ei-ratio-badge" class="gate-badge">E/I: —</span></div><div class="population-grid" id="population-grid"></div><div class="population-meta" id="population-meta">—</div></section>
+      <section class="card raster-panel" id="network-dynamics" data-network-view="dynamics" hidden><div class="panel-title"><h2>Spike Raster</h2><span id="raster-badge" class="gate-badge pending">pending</span></div><canvas id="spike-raster" width="900" height="380"></canvas><div id="raster-meta" class="heatmap-meta">—</div></section>
+      <section class="card histogram-panel" id="network-histogram" data-network-view="dynamics" hidden><div class="panel-title"><h2>Feuerraten-Histogramm</h2><label>Bins <input id="histogram-bins" type="range" min="10" max="80" step="5" value="30"><output id="histogram-bins-value">30</output></label><span id="histogram-stats" class="gate-badge">—</span></div><canvas id="rate-histogram" width="900" height="300"></canvas><div id="histogram-meta" class="heatmap-meta">—</div></section>
+      <section class="card panel" id="network-inspector" data-network-view="inspect" hidden><div class="panel-title"><h2>Network Inspector</h2></div><dl class="kv" id="inspect-network-summary"></dl><canvas id="inspect-projection" width="900" height="480"></canvas><label>Samples <input id="projection-samples" type="range" min="250" max="2000" step="250" value="2000"><output id="projection-samples-value">2000</output></label></section>
+      <section class="card panel" id="network-neurons" data-network-view="data" hidden><div class="panel-title"><h2>Neurons</h2></div><div class="table-wrap"></div></section>
+      <section class="card panel" id="network-synapses" data-network-view="data" hidden><div class="panel-title"><h2>Synapses</h2></div><div class="table-wrap"></div></section>
+    </section> <!-- /tab-network -->
 
     <!-- ========================================================== -->
     <!-- TAB: CONTROL -->

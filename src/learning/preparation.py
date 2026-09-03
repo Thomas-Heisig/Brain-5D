@@ -290,8 +290,8 @@ class LearningPreparationGuard:
     @classmethod
     def _validate_value(cls, value: Any, *, path: str) -> None:
         if isinstance(value, Mapping):
-            typed_value = cast(Mapping[Any, Any], value)
-            for key, child in typed_value.items():
+            typed_mapping = cast(Mapping[object, Any], value)
+            for key, child in typed_mapping.items():
                 normalized = str(key).strip().lower()
                 if normalized in cls._FORBIDDEN_KEYS:
                     raise PermissionError(
@@ -300,8 +300,8 @@ class LearningPreparationGuard:
                 cls._validate_value(child, path=f"{path}.{key}")
             return
         if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
-            typed_value = cast(Sequence[Any], value)
-            for index, child in enumerate(typed_value):
+            typed_sequence = cast(Sequence[object], value)
+            for index, child in enumerate(typed_sequence):
                 cls._validate_value(child, path=f"{path}[{index}]")
 
 
@@ -365,7 +365,7 @@ class LearningPreparationService:
         sources_payload = payload.get("sources", [])
         if not isinstance(sources_payload, Sequence) or isinstance(sources_payload, (str, bytes)):
             raise ValueError("sources must be a list")
-        typed_sources = cast(Sequence[Any], sources_payload)
+        typed_sources = cast(Sequence[object], sources_payload)
         sources = tuple(
             LearningPreparationService._source_from_dict(
                 cast(Mapping[str, Any], source)
