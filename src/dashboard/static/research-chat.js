@@ -50,11 +50,13 @@ export function initResearchChat() {
   const close = document.getElementById('chat-close');
   const roomList = document.getElementById('chat-room-list');
   const newRoom = document.getElementById('chat-room-new');
+  const childRoom = document.getElementById('chat-room-child');
   const settingsToggle = document.getElementById('chat-settings-toggle');
   const settings = document.getElementById('chat-settings');
   const settingsRefresh = document.getElementById('chat-settings-refresh');
+  const settingsSave = document.getElementById('chat-settings-save');
   const webSearch = document.getElementById('chat-web-search');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !settingsToggle || !settings || !settingsRefresh || !webSearch) return;
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !webSearch) return;
   const state = loadState();
   webSearch.checked = state.webSearchEnabled === true;
 
@@ -63,7 +65,7 @@ export function initResearchChat() {
   }
 
   function render() {
-    roomList.innerHTML = state.rooms.map((room) => `<button type="button" class="chat-room${room.id === state.activeId ? ' active' : ''}" data-room-id="${escapeChat(room.id)}">${escapeChat(room.title)}</button>`).join('');
+    roomList.innerHTML = state.rooms.map((room) => `<button type="button" class="chat-room${room.id === state.activeId ? ' active' : ''}${room.parentId ? ' child' : ''}" data-room-id="${escapeChat(room.id)}">${room.parentId ? '↳ ' : ''}${escapeChat(room.title)}</button>`).join('');
     log.innerHTML = '';
     const room = activeRoom();
     if (!room.messages.length) {
@@ -107,15 +109,35 @@ export function initResearchChat() {
     render();
     input.focus();
   });
+  childRoom.addEventListener('click', () => {
+    const room = createRoom();
+    room.title = `Unterchat: ${activeRoom().title}`.slice(0, 32);
+    room.parentId = activeRoom().id;
+    state.rooms.splice(state.rooms.indexOf(activeRoom()) + 1, 0, room);
+    state.activeId = room.id;
+    saveState(state);
+    render();
+    input.focus();
+  });
   async function loadSettings() {
     try {
       const response = await fetch('/api/research/chat/settings');
       const payload = await response.json();
-      document.getElementById('chat-setting-provider').textContent = payload.provider || '—';
-      document.getElementById('chat-setting-model').textContent = payload.model || '—';
-      document.getElementById('chat-setting-temperature').textContent = payload.temperature ?? '—';
-      document.getElementById('chat-setting-context').textContent = payload.max_context_chars ? `${payload.max_context_chars} Zeichen` : '—';
-      document.getElementById('chat-setting-authority').textContent = payload.read_only ? 'read-only' : 'unavailable';
+      document.getElementById('chat-setting-provider').value = payload.provider || '';
+      document.getElementById('chat-setting-model').value = payload.model || '';
+      document.getElementById('chat-setting-endpoint').value = payload.endpoint || '';
+      document.getElementById('chat-setting-temperature').value = payload.temperature ?? 0;
+      document.getElementById('chat-setting-top-p').value = payload.top_p ?? 0.9;
+      document.getElementById('chat-setting-max-tokens').value = payload.max_tokens ?? 2048;
+      document.getElementById('chat-setting-context').value = payload.max_context_chars ?? 24000;
+      document.getElementById('chat-setting-prompt').value = payload.system_prompt || '';
+      const health = document.getElementById('chat-provider-health');
+      health.className = 'provider-health pending';
+      health.lastChild.textContent = ' checking';
+      const healthResponse = await fetch('/api/research/chat/health');
+      const healthPayload = await healthResponse.json();
+      health.className = `provider-health ${healthPayload.ok ? 'online' : 'offline'}`;
+      health.lastChild.textContent = healthPayload.ok ? ' online' : ' offline';
     } catch (_) {
       document.getElementById('chat-setting-provider').textContent = 'unavailable';
     }
@@ -125,6 +147,16 @@ export function initResearchChat() {
     if (!settings.hidden) loadSettings();
   });
   settingsRefresh.addEventListener('click', loadSettings);
+  settingsSave.addEventListener('click', async () => {
+    const value = (id) => document.getElementById(id).value;
+    const response = await fetch('/api/research/chat/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
+      model: value('chat-setting-model'), endpoint: value('chat-setting-endpoint'), temperature: Number(value('chat-setting-temperature')),
+      top_p: Number(value('chat-setting-top-p')), max_tokens: Number(value('chat-setting-max-tokens')), max_context_chars: Number(value('chat-setting-context')),
+      system_prompt: value('chat-setting-prompt')
+    })});
+    if (!response.ok) window.alert((await response.json()).error || 'Settings konnten nicht gespeichert werden.');
+    else await loadSettings();
+  });
   webSearch.addEventListener('change', () => {
     state.webSearchEnabled = webSearch.checked;
     saveState(state);
@@ -151,6 +183,12 @@ export function initResearchChat() {
       log.insertAdjacentHTML('beforeend', `<div class="chat-message error"><strong>Unavailable</strong><p>${escapeChat(error.message)}</p></div>`);
     }
     log.scrollTop = log.scrollHeight;
+  });
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
   });
   render();
 }

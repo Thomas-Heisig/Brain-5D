@@ -43,6 +43,11 @@ Forschungsgegenstand:
 
 - **R-AI1 / RQ-AIR-001:** Erkennt der Scientific Research Assistant methodische Defekte zuverlässig?
 - **R-AI2:** Wie genau sind AI Research Reports gegenüber einer menschlichen Referenzauswertung?
+
+Der Research-Chat bleibt dabei ein konfigurierbarer, read-only Assistent: Ein eigener
+System-Prompt darf Stil und Arbeitsweise präzisieren, erweitert aber weder die
+Evidenzautorität noch die Experimentausführung. Externe Webquellen bleiben explizit
+als unverified markiert.
 - **R-AI3:** Wie stark unterscheiden sich Modelle bei identischem ResearchPacket?
 - **R-AI4:** Wie gut ist die Confidence der KI kalibriert?
 - **R-AI5:** Wie unterscheiden sich menschliche und KI-wissenschaftliche Bewertungen?

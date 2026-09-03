@@ -168,13 +168,18 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_chat_backend: ChatBackend | None = None
         self.research_chat_context_chars = 24_000
         self.research_chat_web_search_enabled = False
+        self.research_chat_system_prompt = ""
+        self.research_chat_ollama_backend: OllamaBackend | None = None
         self.research_chat_settings: dict[str, JSONValue] = {
             "provider": "unconfigured",
             "model": None,
             "endpoint": None,
             "temperature": 0.0,
+            "top_p": 0.9,
+            "max_tokens": 2048,
             "max_context_chars": 24_000,
             "read_only": True,
+            "system_prompt": "",
         }
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
@@ -435,6 +440,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/research/chat/settings":
                 self._send_json(self.dashboard_server.research_chat_settings)
                 return
+            if path == "/api/research/chat/health":
+                self._research_chat_health()
+                return
 
             if path.startswith("/api/research/ai-reports/"):
                 self._serve_ai_report(path)
@@ -658,6 +666,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/chat":
                 self._research_chat(body)
+                return
+
+            if path == "/api/research/chat/settings":
+                self._update_research_chat_settings(body)
                 return
 
             if path.startswith("/api/research/ai-reports/") and path.endswith("/review"):
@@ -1982,11 +1994,69 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             backend,
             max_context_chars=self.dashboard_server.research_chat_context_chars,
             system_context=system_context,
+            system_prompt=self.dashboard_server.research_chat_system_prompt,
             web_context=web_context,
         ).answer(message)
         self._send_json(
             {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
         )
+
+    def _update_research_chat_settings(self, body: dict[str, object]) -> None:
+        """Update bounded runtime chat preferences from the settings panel."""
+        server = self.dashboard_server
+        if "system_prompt" in body:
+            prompt = body["system_prompt"]
+            if not isinstance(prompt, str) or len(prompt) > 8_000:
+                raise InvalidRequestError("system_prompt must be text up to 8000 characters.")
+            server.research_chat_system_prompt = prompt.strip()
+        for key in ("model", "endpoint"):
+            if key in body:
+                value = body[key]
+                if not isinstance(value, str) or not value.strip() or len(value) > 500:
+                    raise InvalidRequestError(f"{key} must be a non-empty string.")
+                if server.research_chat_ollama_backend is not None:
+                    setattr(server.research_chat_ollama_backend, key, value.strip())
+                server.research_chat_settings[key] = value.strip()
+        for key, minimum, maximum in (
+            ("temperature", 0.0, 2.0),
+            ("top_p", 0.0, 1.0),
+        ):
+            if key in body:
+                value = body[key]
+                if not isinstance(value, (int, float)) or not minimum <= float(value) <= maximum:
+                    raise InvalidRequestError(f"{key} is outside its allowed range.")
+                if server.research_chat_ollama_backend is not None:
+                    setattr(server.research_chat_ollama_backend, key, float(value))
+                server.research_chat_settings[key] = float(value)
+        if "max_tokens" in body:
+            value = body["max_tokens"]
+            if not isinstance(value, int) or not 128 <= value <= 16_384:
+                raise InvalidRequestError("max_tokens must be between 128 and 16384.")
+            if server.research_chat_ollama_backend is not None:
+                server.research_chat_ollama_backend.max_tokens = value
+            server.research_chat_settings["max_tokens"] = value
+        if "max_context_chars" in body:
+            value = body["max_context_chars"]
+            if not isinstance(value, int) or not 4_000 <= value <= 120_000:
+                raise InvalidRequestError("max_context_chars must be between 4000 and 120000.")
+            server.research_chat_context_chars = value
+            server.research_chat_settings["max_context_chars"] = value
+        server.research_chat_settings["system_prompt"] = server.research_chat_system_prompt
+        self._send_json(server.research_chat_settings)
+
+    def _research_chat_health(self) -> None:
+        """Probe the configured Ollama provider without generating tokens."""
+        backend = self.dashboard_server.research_chat_ollama_backend
+        if backend is None:
+            self._send_json({"ok": False, "provider": "unconfigured", "error": "No provider configured."}, HTTPStatus.SERVICE_UNAVAILABLE)
+            return
+        tags_endpoint = backend.endpoint.rsplit("/api/", 1)[0] + "/api/tags"
+        try:
+            with urlopen(tags_endpoint, timeout=3) as response:  # nosec B310: configured local provider endpoint
+                ok = 200 <= response.status < 300
+            self._send_json({"ok": ok, "provider": backend.name})
+        except OSError as exc:
+            self._send_json({"ok": False, "provider": backend.name, "error": str(exc)}, HTTPStatus.SERVICE_UNAVAILABLE)
 
     def _search_web(self, query: str) -> str:
         """Read a small set of structured public search results."""
@@ -3194,6 +3264,12 @@ def serve_dashboard(
         "BRAIN5D_CHAT_WEB_SEARCH",
         str(configured_chat.get("web_search_enabled", False)),
     ).lower() in {"1", "true", "yes", "on"}
+    system_prompt = os.environ.get(
+        "BRAIN5D_CHAT_SYSTEM_PROMPT", str(configured_chat.get("system_prompt", ""))
+    ).strip()
+    top_p = float(os.environ.get("BRAIN5D_CHAT_TOP_P", str(configured_chat.get("top_p", 0.9))))
+    max_tokens = int(os.environ.get("BRAIN5D_CHAT_MAX_TOKENS", str(configured_chat.get("max_tokens", 2048))))
+    ollama_backend: OllamaBackend | None = None
     if chat_model:
         chat_endpoint = os.environ.get(
             "BRAIN5D_CHAT_ENDPOINT",
@@ -3209,16 +3285,19 @@ def serve_dashboard(
                 str(configured_chat.get("temperature", 0.0)),
             )
         )
-        ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature)
+        ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature, top_p, max_tokens)
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
         resolved_chat_settings: dict[str, JSONValue] = {
             "provider": "ollama",
             "model": chat_model,
             "endpoint": chat_endpoint,
             "temperature": temperature,
+            "top_p": top_p,
+            "max_tokens": max_tokens,
             "max_context_chars": context_chars,
             "read_only": True,
             "web_search_enabled": web_search_enabled,
+            "system_prompt": system_prompt,
         }
         print(f"🤖 Research chat backend: Ollama ({chat_model})")
 
@@ -3238,6 +3317,8 @@ def serve_dashboard(
     ) as server:
         server.research_chat_backend = chat_backend
         server.research_chat_context_chars = context_chars
+        server.research_chat_system_prompt = system_prompt
+        server.research_chat_ollama_backend = ollama_backend
         server.research_chat_settings = cast(
             dict[str, JSONValue],
             {

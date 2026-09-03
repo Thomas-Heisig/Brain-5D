@@ -39,6 +39,7 @@ class ResearchChat:
     max_context_chars: int = 24_000
     system_context: str = ""
     web_context: str = ""
+    system_prompt: str = ""
 
     def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
         question = message.strip()
@@ -54,6 +55,8 @@ class ResearchChat:
         if self.web_context:
             context = f"WEB SOURCES (external and unverified):\n{self.web_context}\n\n{context}"
         return (
+            f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else ""
+        ) + (
             "You are the Brain-5D Research Self-Knowledge Assistant.\n"
             "You are an AI assistant, not a person and not a trained researcher.\n"
             "Answer only from the supplied repository context and cite exact paths.\n"

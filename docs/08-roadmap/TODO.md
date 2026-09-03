@@ -7,6 +7,12 @@
 
 ## ENGINEERING
 
+### Chat UX und Providersteuerung
+
+- [x] Editierbare Chat-Einstellungen inklusive System-Prompt, Sampling, Tokenbudget und Kontextlimit
+- [x] Persistente Räume und Unterchats mit festem Header und Composer
+- [x] Live-Health-Probe für den konfigurierten Provider
+
 ### Alpha.7 — Controlled Experience & Learning Loop
 
 - [x] Produktiven Lernpfad instrumentieren: Input, Pre/Post, LearningEngine, reale Synapse

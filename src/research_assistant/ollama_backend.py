@@ -17,10 +17,14 @@ class OllamaBackend:
         model: str,
         endpoint: str = "http://127.0.0.1:11434/api/generate",
         temperature: float = 0.0,
+        top_p: float = 0.9,
+        max_tokens: int = 2048,
     ) -> None:
         self.model = model
         self.endpoint = endpoint
         self.temperature = temperature
+        self.top_p = top_p
+        self.max_tokens = max_tokens
 
     @property
     def name(self) -> str:
@@ -66,7 +70,11 @@ class OllamaBackend:
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "options": {"temperature": self.temperature},
+                    "options": {
+                        "temperature": self.temperature,
+                        "top_p": self.top_p,
+                        "num_predict": self.max_tokens,
+                    },
                 }
             ).encode(),
             headers={"Content-Type": "application/json"},
