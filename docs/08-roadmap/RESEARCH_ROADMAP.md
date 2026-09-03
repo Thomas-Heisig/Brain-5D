@@ -56,6 +56,8 @@ Evidenz für Lernwirkung.
 	Confirmatory-Digest-Locks und sichtbare Retrieval-Provenienz zur Verfügung.
 - AI-0 bis AI-3 sind als formale, capability-beschränkte Rollen im Authority-
 	Vertrag registriert.
+- Multi-Model-Vergleich, Blindanalyse, Reviewer-Metriken und AIR-Fragen sind als
+	interpretation-only Forschungsobjekte verfügbar.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

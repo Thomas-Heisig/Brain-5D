@@ -70,13 +70,13 @@
 
 ### P1 — Vergleich, Bias und AI-Forschungsobjekt
 
-- [ ] Multi-Model-Vergleich mit identischem ResearchPacket, Modellmetadaten und Disagreement Map implementieren
-- [ ] LLM-Konsens ausdrücklich nicht als Evidence behandeln; Agreement nur als Messgröße speichern
-- [ ] Blind Analysis mit anonymisierten Gruppenlabels vor der Aufdeckung ermöglichen
-- [ ] Analyst und unabhängigen Reviewer mit getrennten Artefakten und ohne Chain-of-Thought-Leakage evaluieren
-- [ ] Reviewer Correction Rate, False Criticism Rate und Missed Error Rate messen
-- [ ] AIR-Forschungsfragen RQ-AIR1 bis RQ-AIR5 als Benchmark-/Experimentstruktur registrieren
-- [ ] Modellabhängige Interpretationsdistanz `D(I_A, I_B)` und Fingerprints identischer SNN-Zustände messen
+- [x] Multi-Model-Vergleich mit identischem ResearchPacket, Modellmetadaten und Disagreement Map implementieren
+- [x] LLM-Konsens ausdrücklich nicht als Evidence behandeln; Agreement nur als Messgröße speichern
+- [x] Blind Analysis mit anonymisierten Gruppenlabels vor der Aufdeckung ermöglichen
+- [x] Analyst und unabhängigen Reviewer mit getrennten Artefakten und ohne Chain-of-Thought-Leakage evaluieren
+- [x] Reviewer Correction Rate, False Criticism Rate und Missed Error Rate messen
+- [x] AIR-Forschungsfragen RQ-AIR1 bis RQ-AIR5 als Benchmark-/Experimentstruktur registrieren
+- [x] Modellabhängige Interpretationsdistanz `D(I_A, I_B)` und Fingerprints identischer SNN-Zustände messen
 - [ ] Borrowed Intelligence Ratio über Ablationen definieren, deterministisch berechnen und als keine wissenschaftliche Einzelmetrik ohne Protokoll markieren
 
 ### P2 — Wissenschaftliche Integritätsautomatisierung

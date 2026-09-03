@@ -1,6 +1,15 @@
 """Read-only AI assistance for scientific research artifacts."""
 
 from .advisor import ActionProposal, CognitiveAdvisor
+from .ai_research_object import (
+    AIR_RESEARCH_QUESTIONS,
+    AIResearchComparison,
+    BlindAnalysis,
+    ModelInterpretation,
+    ReviewerMetrics,
+    borrowed_intelligence_ratio,
+    interpretation_distance,
+)
 from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
 from .assistant import AnalysisBackend, ResearchAssistant
 from .authority import (
@@ -61,6 +70,13 @@ from .statistics import summarize, write_statistics
 
 __all__ = [
     "AIAnalysisRecord",
+    "AIR_RESEARCH_QUESTIONS",
+    "AIResearchComparison",
+    "BlindAnalysis",
+    "ModelInterpretation",
+    "ReviewerMetrics",
+    "borrowed_intelligence_ratio",
+    "interpretation_distance",
     "ActionProposal",
     "ApprovedIntervention",
     "AIAuthority",

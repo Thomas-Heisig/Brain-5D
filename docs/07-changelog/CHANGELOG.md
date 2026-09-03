@@ -24,6 +24,9 @@
   Retrieval-Provenienz sichtbar registrieren.
 - Die Authority-Matrix enthält nun formale Rollen `AI-0` bis `AI-3` mit
   explizit begrenzten Capabilities.
+- Das AI-Forschungsobjekt unterstützt nun identische ResearchPackets für
+  Multi-Model-Vergleiche, Disagreement-/Agreement-Messung ohne Evidence-Status,
+  Blindlabels, Reviewer-Raten, AIR-Fragen und Interpretations-Fingerprints.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 
