@@ -56,7 +56,8 @@
 - [ ] Vorbereitung und Ausführung strikt als zwei getrennte Services führen
 - [ ] Execution nur aus `PreparedLearningPlan` + registriertem Workflow erlauben
 - [ ] LearningEngine erhält weiterhin nur reale Spike-/Eligibility-/Reward-Ereignisse aus den vorhandenen Runtime-Grenzen
-- [ ] `TaskOutcomeVerifier` als deterministische Quelle für automatischen Task-Erfolg/Reward implementieren
+- [x] `TaskOutcomeVerifier` ist auf `origin/main` als deterministische technische Quelle für Task-Erfolg/Reward implementiert; fehlende Environment-Beobachtungen bleiben UNKNOWN
+- [ ] Learning Studio explizit an den bestehenden `TaskOutcomeVerifier` anbinden, ohne einen alternativen Rewardpfad zu eröffnen
 - [ ] LLM, Research Assistant und Language Organ von direkter Reward-Autorität ausschließen
 - [ ] Reward-Provenienz je Episode persistieren
 
