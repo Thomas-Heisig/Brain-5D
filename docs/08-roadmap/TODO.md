@@ -136,26 +136,26 @@
 - [x] Typisierten Digital-Interoception-Vertrag mit VitalSignal, Signalqualität,
   Sicherheitsbereichen und explizitem UNKNOWN-Status einführen
 - [ ] Vital Signals um Lüfter-RPM/-Status, CPU/GPU-Temperatur, Temperaturgradient,
-    Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
-    Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern
+  Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
+  Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern
 - [ ] Fehlende oder veraltete Sensorsignale fail-closed behandeln und niemals als sicher interpretieren
 - [ ] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
-    Sensory Integrity, Resource Pressure und Task Progress definieren
+  Sensory Integrity, Resource Pressure und Task Progress definieren
 - [ ] Drives deterministisch aus Regelgrößen ableiten: thermal_threat,
-    resource_pressure, sensory_integrity, continuity_risk, task_progress,
-    novelty und actuator_confidence
+  resource_pressure, sensory_integrity, continuity_risk, task_progress,
+  novelty und actuator_confidence
 - [ ] Valence, Activation, Safety und Uncertainty als abgeleitete Zustände
-    modellieren; menschliche Emotionsbegriffe ausschließlich als nachgelagerte Interpretation zulassen
+  modellieren; menschliche Emotionsbegriffe ausschließlich als nachgelagerte Interpretation zulassen
 - [ ] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und Neurogenese-Budgets ergänzen
 - [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
 - [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
 - [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen
 - [ ] `BodySchemaManager` über dem `ConnectionManager` mit Integrations- und
-    Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
+  Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
 - [ ] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
-    Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
+  Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
 - [ ] `ActionReceipt` mit command_id, accepted, started, completed, failed,
-    latency, error, safety_clamp und effect_observed einführen
+  latency, error, safety_clamp und effect_observed einführen
 - [ ] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
 - [ ] Hashverkettetes Aktionsjournal dauerhaft in Operator-/Experiment-Storage persistieren
 - [ ] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden
