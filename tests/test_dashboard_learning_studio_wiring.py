@@ -19,6 +19,13 @@ def test_learning_studio_is_loaded_through_existing_workspace_module() -> None:
     assert "renderLearningStudio(state);" in workspace
     assert 'data-tab="learning"' in studio
     assert 'section.id = "tab-learning"' in studio
+    assert 'button.addEventListener("click", activateLearningTab)' not in studio
+
+    app = _read("app.js")
+    assert "navigation.addEventListener('click'" in app
+    assert "document.querySelectorAll('.tab-content')" in app
+    assert "el.id === `tab-${tabName}`" in app
+    assert "el.hidden = !active" in app
 
 
 def test_learning_studio_ai_is_visibly_proposal_only_and_non_executing() -> None:

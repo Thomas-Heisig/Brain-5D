@@ -102,6 +102,34 @@
     limitations: null
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: RQ-PING-001
+  domain: Network Dynamics
+  question: Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?
+  relevance: Reproduzierbarkeit der kontrollierten Impulsantwort.
+  hypotheses:
+  - H-PING-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-03'
+  updated: '2026-09-03'
+- id: RQ-TEMP-001
+  domain: Temporal State
+  question: Wie unterscheiden sich FAST-, MEDIUM- und SLOW-Referenzzustände unter identischer Ausführung?
+  relevance: Messung von Persistenz und Zustandsdrift ohne Runtime-Zurückspulen.
+  hypotheses:
+  - H-TEMP-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-03'
+  updated: '2026-09-03'
 - id: RQ-STDP-001
   domain: STDP
   question: Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine

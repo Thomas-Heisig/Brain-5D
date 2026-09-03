@@ -1,0 +1,692 @@
+[
+  {
+    "condition": "fast_medium_slow",
+    "experiment_id": "EXP-TEMP-0001",
+    "metrics": {
+      "comparisons": [
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 3,
+          "digest_changed": true,
+          "discrepancy": 0.9520109699251881,
+          "horizon": "fast",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 4,
+          "digest_changed": true,
+          "discrepancy": 0.4783499384678673,
+          "horizon": "fast",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 0.20693013913367034,
+          "horizon": "fast",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 1.1589411090588584,
+          "horizon": "medium",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 5,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.07665972813165922,
+          "horizon": "fast",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.5550096665995264,
+          "horizon": "medium",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 6,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.019478220715114958,
+          "horizon": "fast",
+          "reference_tick": 5
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.2264083598487853,
+          "horizon": "medium",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 1.1784193297739733,
+          "horizon": "slow",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.004545277173804152,
+          "horizon": "fast",
+          "reference_tick": 6
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.07211445095785507,
+          "horizon": "medium",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.5504643894257223,
+          "horizon": "slow",
+          "reference_tick": 2
+        }
+      ],
+      "novelty": "not_registered",
+      "prediction_error": "not_available"
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "f64be66aa7de1038aba9ad69f88a1fc87a53ee3bb2a8374108ba7d24a0d5a3f1",
+    "state_digest_before": "09ca7d6cfa1e4d58f797594dcaa3ce74f0f9afdda73e9939e3441073f32f15d2"
+  },
+  {
+    "condition": "fast_medium_slow",
+    "experiment_id": "EXP-TEMP-0001",
+    "metrics": {
+      "comparisons": [
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 3,
+          "digest_changed": true,
+          "discrepancy": 0.9520109699251881,
+          "horizon": "fast",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 4,
+          "digest_changed": true,
+          "discrepancy": 0.4783499384678673,
+          "horizon": "fast",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 0.20693013913367034,
+          "horizon": "fast",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 1.1589411090588584,
+          "horizon": "medium",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 5,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.07665972813165922,
+          "horizon": "fast",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.5550096665995264,
+          "horizon": "medium",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 6,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.019478220715114958,
+          "horizon": "fast",
+          "reference_tick": 5
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.2264083598487853,
+          "horizon": "medium",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 1.1784193297739733,
+          "horizon": "slow",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.004545277173804152,
+          "horizon": "fast",
+          "reference_tick": 6
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.07211445095785507,
+          "horizon": "medium",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.5504643894257223,
+          "horizon": "slow",
+          "reference_tick": 2
+        }
+      ],
+      "novelty": "not_registered",
+      "prediction_error": "not_available"
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "28bd69d6704d04e81a5ef858af8382a7de9cf0c34bb1b293d62e4303f171a66f",
+    "state_digest_before": "3560c51f27691686e4f89de79aa9eaa959f109ed3b1236f88a1d0b9e4538e1f4"
+  },
+  {
+    "condition": "fast_medium_slow",
+    "experiment_id": "EXP-TEMP-0001",
+    "metrics": {
+      "comparisons": [
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 1,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "fast",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 2,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 3,
+          "digest_changed": true,
+          "discrepancy": 0.9520109699251881,
+          "horizon": "fast",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 3,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 4,
+          "digest_changed": true,
+          "discrepancy": 0.4783499384678673,
+          "horizon": "fast",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "medium",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 4,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 0.20693013913367034,
+          "horizon": "fast",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 5,
+          "digest_changed": true,
+          "discrepancy": 1.1589411090588584,
+          "horizon": "medium",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 5,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.07665972813165922,
+          "horizon": "fast",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 6,
+          "digest_changed": true,
+          "discrepancy": 0.5550096665995264,
+          "horizon": "medium",
+          "reference_tick": 2
+        },
+        {
+          "changed_metrics": [],
+          "current_tick": 6,
+          "digest_changed": null,
+          "discrepancy": null,
+          "horizon": "slow",
+          "reference_tick": null
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.019478220715114958,
+          "horizon": "fast",
+          "reference_tick": 5
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 0.2264083598487853,
+          "horizon": "medium",
+          "reference_tick": 3
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 7,
+          "digest_changed": true,
+          "discrepancy": 1.1784193297739733,
+          "horizon": "slow",
+          "reference_tick": 1
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.004545277173804152,
+          "horizon": "fast",
+          "reference_tick": 6
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.07211445095785507,
+          "horizon": "medium",
+          "reference_tick": 4
+        },
+        {
+          "changed_metrics": [
+            "mean_v"
+          ],
+          "current_tick": 8,
+          "digest_changed": true,
+          "discrepancy": 0.5504643894257223,
+          "horizon": "slow",
+          "reference_tick": 2
+        }
+      ],
+      "novelty": "not_registered",
+      "prediction_error": "not_available"
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "def2cdfd185dd0e75c4a82cea8f2d7967e420fc68e9edcd1dc2bcc0247bdbdee",
+    "state_digest_before": "121b3d5b2a46319293cc04de0e84cd22720b5c8815996ea04cb318ebe6fa9d84"
+  }
+]

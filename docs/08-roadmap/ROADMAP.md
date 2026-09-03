@@ -16,7 +16,8 @@ Vollsuite meldet **640 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
-AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Externe CI und
+AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Die Dashboard-Navigation
+behandelt nun statische und dynamische Arbeitsbereiche konsistent. Externe CI und
 wissenschaftliche EVID bleiben separate offene Nachweise.
 
 ## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
@@ -31,6 +32,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Lokale Änderungen committen, pushen und vollständige GitHub-CI grün bekommen
 - [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
+- [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
+- [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
 - [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
 - [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen

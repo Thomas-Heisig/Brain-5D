@@ -114,3 +114,29 @@ def test_catalog_publishes_the_next_generated_experiment_id(tmp_path: Path) -> N
     catalog = ExperimentWorkflowService(tmp_path).catalog()
 
     assert catalog["next_experiment_id"] == "EXP-GEN-0001"
+
+
+def test_science_suite_publishes_data_manifest_and_report(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-PING-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Impulse response",
+            "conditions": "seed=42; recurrence controlled",
+            "ticks": 8,
+        },
+        seeds=(42,),
+    )
+
+    experiment_dir = tmp_path / "experiments" / "EXP-PING-0001"
+    manifest = json.loads((experiment_dir / "manifest.json").read_text(encoding="utf-8"))
+    data = json.loads((experiment_dir / "DATA" / "runs.json").read_text(encoding="utf-8"))
+    assert result["data_id"] == "DATA-EXP-PING-0001"
+    assert manifest["experiment_status"] == "completed"
+    assert manifest["artifacts"]["data"] == "DATA/runs.json"
+    assert len(data) == 2
+    assert (experiment_dir / "report.md").is_file()

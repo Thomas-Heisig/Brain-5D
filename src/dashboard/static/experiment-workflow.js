@@ -102,7 +102,8 @@ export class ExperimentWorkflowPanel {
         `Manifest: research/${result.manifest}`,
         `Bericht: research/${result.report}`,
       ];
-      if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`, `Daten: ${result.data_id}`);
+      if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`);
+      if (result.data_id) lines.push(`Daten: ${result.data_id}`);
       if (result.result) lines.push(`Tick: ${result.result.start.tick} -> ${result.result.end.tick}`);
       this.elements.result.textContent = lines.join("\n");
     } catch (error) {
@@ -113,16 +114,22 @@ export class ExperimentWorkflowPanel {
   }
 
   _applyProtocol() {
-    if (this.elements.protocol?.value !== "stdp_pair_timing_v1") return;
+    const protocol = this.elements.protocol?.value;
+    const presets = {
+      science_suite_v1: ["RQ-PING-001", "H-PING-001-A", "EXP-PING-0001", "Network impulse response", "Identischer Zustand, Seed und Input-Spike; Rekurrenz kontrolliert.", "8"],
+      stdp_pair_timing_v1: ["RQ-STDP-001", "H-STDP-001-A", "EXP-STDP-0001", "Pair-Timing STDP", "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; Δt -50 bis +50 ms; 10 Replikationen pro Δt.", "11"],
+    };
+    const preset = presets[protocol];
+    if (!preset) return;
     const question = this.elements.question;
     const hypothesis = this.elements.hypothesis;
-    if (question) question.value = "RQ-STDP-001";
+    if (question) question.value = preset[0];
     this._renderHypotheses();
-    if (hypothesis) hypothesis.value = "H-STDP-001-A";
-    if (this.elements.experimentId) this.elements.experimentId.value = "EXP-STDP-0001";
-    if (this.elements.title) this.elements.title.value = "Pair-Timing STDP";
-    if (this.elements.conditions) this.elements.conditions.value = "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; Δt -50 bis +50 ms; 10 Replikationen pro Δt.";
-    if (this.elements.ticks) this.elements.ticks.value = "11";
+    if (hypothesis) hypothesis.value = preset[1];
+    if (this.elements.experimentId) this.elements.experimentId.value = preset[2];
+    if (this.elements.title) this.elements.title.value = preset[3];
+    if (this.elements.conditions) this.elements.conditions.value = preset[4];
+    if (this.elements.ticks) this.elements.ticks.value = preset[5];
   }
 
   _setStatus(message, state) {

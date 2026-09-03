@@ -45,6 +45,20 @@
   evidence: []
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: H-PING-001-A
+  research_question: RQ-PING-001
+  hypothesis: Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur.
+  status: untested
+  evidence: []
+  created: '2026-09-03'
+  updated: '2026-09-03'
+- id: H-TEMP-001-A
+  research_question: RQ-TEMP-001
+  hypothesis: Die Temporal-State-Vergleiche unterscheiden sich deterministisch nach FAST-, MEDIUM- und SLOW-Horizont.
+  status: untested
+  evidence: []
+  created: '2026-09-03'
+  updated: '2026-09-03'
 - id: H-STDP-001-A
   research_question: RQ-STDP-001
   hypothesis: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine

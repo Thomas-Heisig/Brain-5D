@@ -8,22 +8,6 @@ const setText = (id, value) => {
   if (node) node.textContent = String(value ?? "—");
 };
 
-function activateLearningTab() {
-  const button = document.querySelector('[data-tab="learning"]');
-  const section = byId("tab-learning");
-  if (!button || !section) return;
-
-  document.querySelectorAll(".tab-btn").forEach((item) => item.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach((item) => item.classList.remove("active"));
-  button.classList.add("active");
-  section.classList.add("active");
-
-  const previous = document.body.dataset.currentTab;
-  if (previous && previous !== "learning") document.body.dataset.previousTab = previous;
-  document.body.dataset.currentTab = "learning";
-  setText("header-context", "Learning");
-}
-
 function createLearningTabButton() {
   const nav = document.querySelector(".tab-nav");
   if (!nav || nav.querySelector('[data-tab="learning"]')) return;
@@ -32,7 +16,6 @@ function createLearningTabButton() {
   button.dataset.tab = "learning";
   button.type = "button";
   button.textContent = "🧭 LEARNING";
-  button.addEventListener("click", activateLearningTab);
 
   const control = nav.querySelector('[data-tab="control"]');
   if (control?.nextSibling) nav.insertBefore(button, control.nextSibling);

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from time import perf_counter
-from typing import Callable, cast
+from typing import Any, Callable, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
@@ -64,7 +64,73 @@ class ExperimentWorkflowService:
                     for hypothesis in registry.hypotheses.values()
                 ],
             ),
+            "protocols": cast(
+                JSONValue,
+                [
+                    {"id": "science_suite_v1", "label": "Science Suite v1 (DATA + Manifest)"},
+                    {"id": "runtime_ticks_v1", "label": "Runtime-Ticks (Laufprotokoll)"},
+                    {"id": "stdp_pair_timing_v1", "label": "STDP Pair-Timing v1 (registriert)"},
+                ],
+            ),
             "next_experiment_id": self._next_experiment_id(),
+        }
+
+    def run_science(
+        self, body: dict[str, object], *, seeds: tuple[int, ...] = (42, 43, 44)
+    ) -> dict[str, object]:
+        """Execute a registered suite and persist DATA, manifest, and report."""
+        workflow = self._validate(body)
+        runners = {
+            "EXP-PING-0001": "run_ping",
+            "EXP-TEMP-0001": "run_temporal",
+            "EXP-STDP-0002": "run_stdp",
+            "EXP-EMB-0001": "run_learning_repeat",
+        }
+        runner_name = runners.get(workflow.experiment_id)
+        if runner_name is None:
+            raise WorkflowValidationError(
+                "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
+                "EXP-STDP-0002, and EXP-EMB-0001 learning repeat."
+            )
+        output_dir = self._research_root / "experiments" / workflow.experiment_id
+        if (output_dir / "manifest.json").exists():
+            raise WorkflowValidationError(
+                f"Experiment '{workflow.experiment_id}' already exists."
+            )
+        from src.research import experiment_suite
+
+        config_path = self._research_root.parent / "configs" / "learning_experiment.yaml"
+        if not config_path.exists():
+            config_path = Path("configs/learning_experiment.yaml")
+        config = _load_yaml(config_path)
+        started = perf_counter()
+        runs = getattr(experiment_suite, runner_name)(config, seeds=seeds)
+        duration = perf_counter() - started
+        output_dir.mkdir(parents=True, exist_ok=False)
+        data_path = output_dir / "DATA" / "runs.json"
+        data_path.parent.mkdir(parents=True, exist_ok=True)
+        data_path.write_text(
+            json.dumps([asdict(run) for run in runs], indent=2, sort_keys=True, default=list)
+            + "\n",
+            encoding="utf-8",
+        )
+        recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
+        recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
+        recorder.record_config(str(config_path), "")
+        recorder.record_simulation_params(seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds))
+        recorder.record_artifact("data", "DATA/runs.json")
+        recorder.record_results(run_count=len(runs), protocol="science_suite_v1")
+        recorder.record_runtime(duration).mark_completed().save()
+        report_path = output_dir / "report.md"
+        report_path.write_text(
+            self._render_science_report(workflow, len(runs), duration), encoding="utf-8"
+        )
+        return {
+            "experiment_id": workflow.experiment_id,
+            "manifest": f"experiments/{workflow.experiment_id}/manifest.json",
+            "report": f"experiments/{workflow.experiment_id}/report.md",
+            "data_id": f"DATA-{workflow.experiment_id}",
+            "result": {"run_count": len(runs), "duration_seconds": duration},
         }
 
     def run(
@@ -203,6 +269,28 @@ class ExperimentWorkflowService:
         raise WorkflowValidationError("No generated experiment IDs are available.")
 
     @staticmethod
+    def _render_science_report(
+        workflow: ExperimentWorkflow, run_count: int, duration: float
+    ) -> str:
+        return "\n".join(
+            [
+                f"# {workflow.experiment_id}: {workflow.title}",
+                "",
+                "## Protokoll",
+                "science_suite_v1",
+                f"Runs: {run_count}; Dauer: {duration:.6f} s",
+                "",
+                "## Evidenzstatus",
+                "DATA und Manifest erzeugt. EVID wird erst nach Clean Freeze und Review erzeugt.",
+                "",
+                "## Hinweise",
+                "Prediction Error, Memory, TIME, 5D, Regulation und Sensorverlust sind in diesem Lauf nicht behauptet.",
+                workflow.notes or "Keine.",
+                "",
+            ]
+        )
+
+    @staticmethod
     def _render_report(
         workflow: ExperimentWorkflow,
         before: dict[str, int],
@@ -247,3 +335,12 @@ class ExperimentWorkflowService:
                 "",
             ]
         )
+
+
+def _load_yaml(path: Path) -> dict[str, Any]:
+    import yaml
+
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(loaded, dict):
+        raise WorkflowValidationError("Science configuration must be a mapping.")
+    return cast(dict[str, Any], loaded)

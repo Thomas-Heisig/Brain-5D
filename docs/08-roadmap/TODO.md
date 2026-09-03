@@ -93,6 +93,8 @@
 
 ### Chat UX und Providersteuerung
 
+- [x] Statische und dynamische Dashboard-Tabs über einen gemeinsamen Navigator
+  synchron halten; Learning Studio darf beim Seitenwechsel nicht sichtbar bleiben
 - [x] Editierbare Chat-Einstellungen inklusive System-Prompt, Sampling, Tokenbudget und Kontextlimit
 - [x] Persistente Räume und Unterchats mit festem Header und Composer
 - [x] Live-Health-Probe für den konfigurierten Provider
@@ -192,13 +194,13 @@
 ## SCIENCE
 
 - [ ] `EXP-PING-0001`: Network Impulse Response mit identischem Zustand, Seed,
-  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen
+  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen (Dashboard-DATA-Lauf erfolgt; Clean-Freeze-EVID noch offen)
 - [ ] `EXP-TEMP-0001`: Multi-Timescale State Comparison für Persistenz, Drift,
-  Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen
-- [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs
+  Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen (Dashboard-DATA-Lauf erfolgt; Novelty/Prediction Error noch nicht implementiert)
+- [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs (Runner ergänzt, DATA-Lauf noch ausstehend)
 - [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
 - [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
-- [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen
+- [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (Runner ergänzt, unabhängiger DATA-Lauf noch ausstehend)
 - [ ] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks
 - [ ] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung
 - [ ] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck

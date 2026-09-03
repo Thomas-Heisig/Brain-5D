@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Dashboard tab selection consistency
+
+- Unified static and dynamically created dashboard tabs behind one delegated
+  navigator so exactly one tab page remains active after every selection.
+- Removed the duplicate Learning Studio click handler and added a regression
+  test for dynamic-tab switching.
+
 ## 2026-09-03 — Deterministic task outcome verification
 
 - Added typed `TaskOutcome` and `TaskOutcomeVerifier` contracts that derive
@@ -343,6 +350,22 @@
 - The existing learning experiment now has focused regression coverage.
 - A deterministic run changed mean synaptic weight from `0.05` to `0.8288007831`, applied 960 reward-weight updates, and changed the fresh probe from no target spike to a target spike.
 - This is an engineering/protocol result only; `EXP-STDP-0002` remains open until clean-freeze independent runs produce valid evidence artifacts.
+
+## 2026-09-03 — Executable science suite foundation
+
+- Added `src/research/experiment_suite.py` for controlled PING, TEMP, productive
+  STDP and paired learning Before/After runs using real network APIs.
+- Added focused regression tests and temporary DATA export support.
+- Novelty, prediction error, memory, timescale, dimensional ablation, regulation
+  and sensor-loss claims remain open until their registered mechanisms and
+  independent protocols exist.
+
+## 2026-09-03 — Dashboard science execution
+
+- Connected `science_suite_v1` to the Dashboard Experiment Runner.
+- Published `EXP-PING-0001` with 6 DATA records and `EXP-TEMP-0001` with 3
+  DATA records through the workflow service, including manifests and reports.
+- EVID remains blocked until a clean source freeze and independent review.
 
 ## 2026-09-03 — EXP-EMB-0001 protocol run
 

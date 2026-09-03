@@ -143,15 +143,8 @@ function heatmapColor(value, min, max) {
 // ================================================================
 
 function setupTabs() {
-  const buttons = $$('.tab-btn');
-  const contents = {
-    overview: document.getElementById('tab-overview'),
-    control: document.getElementById('tab-control'),
-    research: document.getElementById('tab-research'),
-    gate: document.getElementById('tab-gate'),
-    settings: document.getElementById('tab-settings'),
-    embodiment: document.getElementById('tab-embodiment'),
-  };
+  const navigation = document.querySelector('.tab-nav');
+  if (!navigation) return {};
 
   // Track initialization state
   const initialized = {
@@ -172,55 +165,54 @@ function setupTabs() {
     settings: null,
   };
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  navigation.addEventListener('click', (event) => {
+    const btn = event.target.closest('.tab-btn');
+    if (!btn || !navigation.contains(btn)) return;
+    const buttons = navigation.querySelectorAll('.tab-btn');
+    buttons.forEach(b => b.classList.toggle('active', b === btn));
 
-      const tabName = btn.dataset.tab;
-      const currentTab = document.body.dataset.currentTab;
-      if (currentTab && currentTab !== tabName) {
-        document.body.dataset.previousTab = currentTab;
-      }
-      document.body.dataset.currentTab = tabName;
-      setText('header-context', tabName === 'gate' ? 'Release' : `${tabName.charAt(0).toUpperCase()}${tabName.slice(1)}`);
+    const tabName = btn.dataset.tab;
+    const currentTab = document.body.dataset.currentTab;
+    if (currentTab && currentTab !== tabName) {
+      document.body.dataset.previousTab = currentTab;
+    }
+    document.body.dataset.currentTab = tabName;
+    setText('header-context', tabName === 'gate' ? 'Release' : `${tabName.charAt(0).toUpperCase()}${tabName.slice(1)}`);
 
-      Object.keys(contents).forEach(key => {
-        const el = contents[key];
-        if (el) {
-          el.classList.toggle('active', key === tabName);
-        }
-      });
-
-      // Lazy initialize components when their tab becomes visible
-      if (tabName === 'control' && !initialized.control) {
-        instances.control = initControlPanel();
-        instances.console = initOperatorConsole();
-        instances.experimentMode = new ExperimentMode();
-        instances.experimentMode.refresh();
-        initialized.control = true;
-      }
-      if (tabName === 'research' && !initialized.research) {
-        initResearchBrowser();
-        initDocumentationBrowser();
-        instances.experimentWorkflow = new ExperimentWorkflowPanel();
-        instances.experimentWorkflow.refresh();
-        initialized.research = true;
-      }
-      if (tabName === 'gate' && !initialized.gate) {
-        initGateBoard();
-        initialized.gate = true;
-      }
-      if (tabName === 'settings' && !initialized.settings) {
-        instances.parameterInspector = initParameterInspector();
-        instances.settings = new SettingsPanel(instances.parameterInspector);
-        initialized.settings = true;
-      }
+    document.querySelectorAll('.tab-content').forEach((el) => {
+      const active = el.id === `tab-${tabName}`;
+      el.classList.toggle('active', active);
+      el.hidden = !active;
     });
+
+    // Lazy initialize components when their tab becomes visible
+    if (tabName === 'control' && !initialized.control) {
+      instances.control = initControlPanel();
+      instances.console = initOperatorConsole();
+      instances.experimentMode = new ExperimentMode();
+      instances.experimentMode.refresh();
+      initialized.control = true;
+    }
+    if (tabName === 'research' && !initialized.research) {
+      initResearchBrowser();
+      initDocumentationBrowser();
+      instances.experimentWorkflow = new ExperimentWorkflowPanel();
+      instances.experimentWorkflow.refresh();
+      initialized.research = true;
+    }
+    if (tabName === 'gate' && !initialized.gate) {
+      initGateBoard();
+      initialized.gate = true;
+    }
+    if (tabName === 'settings' && !initialized.settings) {
+      instances.parameterInspector = initParameterInspector();
+      instances.settings = new SettingsPanel(instances.parameterInspector);
+      initialized.settings = true;
+    }
   });
 
   // Activate the first tab by default (Dashboard)
-  const firstTab = document.querySelector('.tab-btn');
+  const firstTab = navigation.querySelector('.tab-btn');
   if (firstTab) {
     firstTab.click();
   }
