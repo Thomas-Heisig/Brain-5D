@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-03 — Complete science experiment artifact publication
+
+- Science-suite runs now publish and register `DATA/runs.json`, `workflow.json`
+  and `report.md` in the experiment manifest.
+- The configured AI backend is injected into the workflow and generates the
+  post-hoc AIRR JSON/Markdown pair after the completed run; without a backend,
+  the result explicitly reports `unavailable`.
+- Generated AIRR paths are recorded in the manifest without changing the
+  experiment's causal path or scientific-evidence status.
+
 ## 2026-09-03 — Type and dashboard runtime hygiene
 
 - Fixed strict typing across AIRR, learning preparation, research chat, Ollama

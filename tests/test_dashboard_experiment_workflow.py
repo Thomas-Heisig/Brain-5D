@@ -176,7 +176,9 @@ def test_catalog_publishes_the_next_generated_experiment_id(tmp_path: Path) -> N
     assert catalog["next_experiment_id"] == "EXP-GEN-0001"
 
 
-def test_science_suite_publishes_data_manifest_and_report(tmp_path: Path) -> None:
+def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
+    tmp_path: Path,
+) -> None:
     _write_registry(tmp_path)
     service = ExperimentWorkflowService(tmp_path)
 
@@ -198,5 +200,45 @@ def test_science_suite_publishes_data_manifest_and_report(tmp_path: Path) -> Non
     assert result["data_id"] == "DATA-EXP-PING-0001"
     assert manifest["experiment_status"] == "completed"
     assert manifest["artifacts"]["data"] == "DATA/runs.json"
+    assert manifest["artifacts"]["workflow"] == "workflow.json"
+    assert manifest["artifacts"]["report"] == "report.md"
     assert len(data) == 2
     assert (experiment_dir / "report.md").is_file()
+    assert (experiment_dir / "workflow.json").is_file()
+    assert result["ai_report"] == {
+        "status": "unavailable",
+        "reason": "AI backend not configured",
+    }
+
+
+def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
+    tmp_path: Path,
+) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path, _report_backend)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-PING-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Impulse response with AIRR",
+            "conditions": "seed=42",
+            "ticks": 8,
+        },
+        seeds=(42,),
+    )
+
+    assert result["ai_report"]["status"] == "generated"
+    report_id = str(result["ai_report"]["report_id"])
+    report_dir = tmp_path / "reports" / "EXP-PING-0001"
+    assert (report_dir / f"{report_id}.json").is_file()
+    assert (report_dir / f"{report_id}.md").is_file()
+    manifest = json.loads(
+        (tmp_path / "experiments" / "EXP-PING-0001" / "manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert manifest["artifacts"]["ai_report_json"] == (
+        f"reports/EXP-PING-0001/{report_id}.json"
+    )

@@ -10,6 +10,8 @@ from typing import Any, Callable, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
+from src.research_assistant.airr import AIRRPipeline
+from src.research_assistant.assistant import AnalysisBackend
 
 from .models import JSONValue
 
@@ -39,8 +41,13 @@ class ExperimentWorkflowService:
     causal path of the experiment.
     """
 
-    def __init__(self, research_root: Path) -> None:
+    def __init__(
+        self,
+        research_root: Path,
+        ai_backend: AnalysisBackend | None = None,
+    ) -> None:
         self._research_root = research_root
+        self._ai_backend = ai_backend
 
     def catalog(self) -> dict[str, JSONValue]:
         """Return registry entries suitable for workflow selection."""
@@ -128,18 +135,79 @@ class ExperimentWorkflowService:
         recorder.record_config(str(config_path), "")
         recorder.record_simulation_params(seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds))
         recorder.record_artifact("data", "DATA/runs.json")
+        recorder.record_artifact("workflow", "workflow.json")
+        recorder.record_artifact("report", "report.md")
         recorder.record_results(run_count=len(runs), protocol="science_suite_v1")
-        recorder.record_runtime(duration).mark_completed().save()
         report_path = output_dir / "report.md"
         report_path.write_text(
             self._render_science_report(workflow, len(runs), duration), encoding="utf-8"
         )
+        workflow_path = output_dir / "workflow.json"
+        workflow_path.write_text(
+            json.dumps(
+                {
+                    "protocol": "science_suite_v1",
+                    "experiment_id": workflow.experiment_id,
+                    "research_question": workflow.question_id,
+                    "hypothesis": workflow.hypothesis_id,
+                    "title": workflow.title,
+                    "conditions": workflow.conditions,
+                    "ticks": workflow.ticks,
+                    "seeds": list(seeds),
+                    "notes": workflow.notes,
+                    "execution": "registered experiment_suite runner",
+                    "assistant_policy": "AI is post-hoc interpretation only.",
+                },
+                indent=2,
+                ensure_ascii=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        recorder.record_runtime(duration).mark_completed().save()
+        ai_report = self._append_ai_report(workflow.experiment_id)
+        if ai_report.get("status") == "generated":
+            manifest = json.loads(
+                (output_dir / "manifest.json").read_text(encoding="utf-8")
+            )
+            artifacts = manifest.setdefault("artifacts", {})
+            artifacts["ai_report_json"] = str(ai_report["json"])
+            artifacts["ai_report_markdown"] = str(ai_report["markdown"])
+            (output_dir / "manifest.json").write_text(
+                json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
         return {
             "experiment_id": workflow.experiment_id,
             "manifest": f"experiments/{workflow.experiment_id}/manifest.json",
             "report": f"experiments/{workflow.experiment_id}/report.md",
+            "workflow": f"experiments/{workflow.experiment_id}/workflow.json",
             "data_id": f"DATA-{workflow.experiment_id}",
+            "ai_report": ai_report,
             "result": {"run_count": len(runs), "duration_seconds": duration},
+        }
+
+    def _append_ai_report(self, experiment_id: str) -> dict[str, object]:
+        """Generate AIRR only after completion, or expose unavailable explicitly."""
+        if self._ai_backend is None:
+            return {"status": "unavailable", "reason": "AI backend not configured"}
+        try:
+            report = AIRRPipeline(self._research_root).analyze(
+                experiment_id, self._ai_backend
+            )
+        except Exception as exc:
+            return {
+                "status": "failed",
+                "error": type(exc).__name__,
+                "message": str(exc),
+            }
+        return {
+            "status": "generated",
+            "report_id": report.report_id,
+            "json": f"reports/{experiment_id}/{report.report_id}.json",
+            "markdown": f"reports/{experiment_id}/{report.report_id}.md",
+            "human_review": "PENDING",
+            "scientific_evidence": False,
         }
 
     def run(

@@ -2489,10 +2489,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self._require_research_source()
         protocol = body.get("protocol")
         if protocol in {"science_suite_v1", "science_time_v1", "science_5d_v1"}:
-            runtime_result = ExperimentWorkflowService(source.root()).run_science(body)
-            runtime_result["ai_report"] = self._append_ai_report(
-                cast(str, runtime_result["experiment_id"])
-            )
+            runtime_result = ExperimentWorkflowService(
+                source.root(), self.dashboard_server.research_ai_backend
+            ).run_science(body)
             self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
             return
         if protocol == "stdp_pair_timing_v1":

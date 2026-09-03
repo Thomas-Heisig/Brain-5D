@@ -30,6 +30,8 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 - [x] Begrenzte KI-Kontextlänge im Learning Studio bis zum Chat-Backend durchreichen
 - [x] Nach jedem erfolgreich abgeschlossenen Dashboard-Experiment einen post-hoc
 	AIRR-Bericht anhängen; fehlendes Backend bleibt sichtbar `unavailable`
+- [x] Science-suite Läufe veröffentlichen DATA, Workflow, technischen Report und
+	bei konfiguriertem Backend den post-hoc AIRR-Bericht gemeinsam im Manifest
 
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:
