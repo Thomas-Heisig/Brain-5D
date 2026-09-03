@@ -20,7 +20,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Lokale Änderungen committen, pushen und vollständige GitHub-CI grün bekommen
 - [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
 - [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
-- [ ] `EXP-EMB-0001`: Sensor -> Encoder -> SNN -> Decoder -> Action -> Environment -> Reward -> Learning
+- [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
+- [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
 - [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 

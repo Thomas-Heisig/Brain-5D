@@ -42,7 +42,8 @@
 ## SCIENCE
 
 - [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs
-- [ ] `EXP-EMB-0001`: vollständige Sensor-to-Reward-to-Learning-Kette mit DATA/EVID-Artefakten
+- [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
+- [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
 - [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen
 - [ ] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks
 - [ ] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung
@@ -53,8 +54,8 @@
 
 ### Forschungsprotokoll für jeden Lauf
 
-- [ ] Forschungsfrage, Hypothesen, Bedingungen, Kontrollen und Seeds registrieren
-- [ ] Effektive Konfiguration, Input, Output, Gewichte, Struktur und Laufmetriken speichern
+- [x] Forschungsfrage, Hypothesen, Bedingungen, Kontrollen und Wiederholungszahl registrieren
+- [x] Effektive Inputs, Outputs, Rewards, Audit-Status und Laufmetriken für EXP-EMB-0001 speichern
 - [ ] DATA/EVID-Provenienz, Limitationen und unabhängige Wiederholungen prüfen
 - [ ] Claims erst nach menschlicher Review aktualisieren
 

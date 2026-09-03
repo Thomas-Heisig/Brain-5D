@@ -12,6 +12,13 @@
 - A deterministic run changed mean synaptic weight from `0.05` to `0.8288007831`, applied 960 reward-weight updates, and changed the fresh probe from no target spike to a target spike.
 - This is an engineering/protocol result only; `EXP-STDP-0002` remains open until clean-freeze independent runs produce valid evidence artifacts.
 
+## 2026-09-03 — EXP-EMB-0001 protocol run
+
+- Added a protocol runner for the deterministic sensor-action-reward boundary experiment.
+- Executed 180 DATA runs: 60 authorized, 60 unauthorized and 60 sensor-reproducibility controls.
+- Authorized runs reached the target at 100% with 60 environment rewards; unauthorized runs produced no reward; all audits and one-tick hook checks passed with zero runtime errors.
+- No EVID artifact was created because the registered evidence policy still requires a clean source freeze and review.
+
 ## 2026-09-03 — Complete dirty-state emission
 
 - Structural neuron/synapse changes now emit dirty IDs.

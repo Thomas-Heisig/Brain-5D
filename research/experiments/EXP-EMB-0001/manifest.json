@@ -1,0 +1,76 @@
+{
+  "experiment_id": "EXP-EMB-0001",
+  "experiment_status": "completed",
+  "timestamp": "2026-09-03T08:39:27.351333",
+  "git": {
+    "commit": "77d7f18e5cc63e917e0f4c11217c562d4d5ee083",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "independent_runs": 20,
+    "repetitions_per_condition": 3,
+    "conditions": [
+      "authorized",
+      "unauthorized",
+      "sensor_reproducibility"
+    ]
+  },
+  "artifacts": {
+    "data": "DATA\\runs.jsonl",
+    "analysis": "DATA\\analysis.json"
+  },
+  "research_questions": [
+    "RQ-EMB-001"
+  ],
+  "hypotheses": [
+    "H-EMB-001-A"
+  ],
+  "config": {},
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "results": {
+    "experiment_id": "EXP-EMB-0001",
+    "status": "completed",
+    "run_count": 180,
+    "conditions": {
+      "authorized": {
+        "runs": 60,
+        "target_reached_rate": 1.0,
+        "total_reward": 60.0,
+        "all_audits_valid": true,
+        "all_one_tick_hooks": true,
+        "runtime_errors": 0
+      },
+      "unauthorized": {
+        "runs": 60,
+        "target_reached_rate": 0.0,
+        "total_reward": 0,
+        "all_audits_valid": true,
+        "all_one_tick_hooks": true,
+        "runtime_errors": 0
+      },
+      "sensor_reproducibility": {
+        "runs": 60,
+        "target_reached_rate": 0.0,
+        "total_reward": 0,
+        "all_audits_valid": true,
+        "all_one_tick_hooks": true,
+        "runtime_errors": 0
+      }
+    },
+    "sensor_frames_reproducible": true,
+    "evidence_eligible": false,
+    "evidence_reason": "DATA run only; EVID requires clean source freeze and review"
+  }
+}
