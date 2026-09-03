@@ -62,12 +62,16 @@ def _network(
     simulation["max_delay"] = 5
     values["simulation"] = simulation
     network = NeuralNetwork(values, random.Random(seed))
+    relay_x = 1 if dimensions[0] > 2 else 0
     coordinates = (
         (0, 0, 0, 0, 0),
-        tuple(max(0, size - 1) if axis else 0 for axis, size in enumerate(dimensions)),
+        (relay_x, 0, 0, 0, 0),
         tuple(size - 1 for size in dimensions),
     )
-    neurons = [network.add_neuron(coord) for coord in coordinates]
+    neurons = []
+    for coord in coordinates:
+        existing = network.get_neuron_at_coord(coord)
+        neurons.append(existing.neuron_id if existing is not None else network.add_neuron(coord))
     network.input_cells.add(neurons[0])
     network.output_cells.add(neurons[2])
     if random_graph:
@@ -232,7 +236,7 @@ def main() -> int:
     args = parser.parse_args()
     config = _load(Path(args.config))
     started = time.perf_counter()
-        runs = (run_ping(config) + run_temporal(config) + run_stdp(config)
+    runs = (run_ping(config) + run_temporal(config) + run_stdp(config)
             + run_learning_repeat(config) + run_time(config) + run_5d(config))
     write_data(Path(args.output), runs)
     print(json.dumps({"runs": len(runs), "duration_seconds": time.perf_counter() - started, "output": args.output}))

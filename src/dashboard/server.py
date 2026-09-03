@@ -2378,7 +2378,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Run bounded controller ticks and publish reproducible artifacts."""
         source = self._require_research_source()
         protocol = body.get("protocol")
-        if protocol == "science_suite_v1":
+        if protocol in {"science_suite_v1", "science_time_v1", "science_5d_v1"}:
             runtime_result = ExperimentWorkflowService(source.root()).run_science(body)
             self._send_json(cast(dict[str, JSONValue], {"ok": True, **runtime_result}))
             return

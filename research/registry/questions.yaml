@@ -130,6 +130,34 @@
     limitations: null
   created: '2026-09-03'
   updated: '2026-09-03'
+- id: RQ-TIME-001
+  domain: Learning Timescale
+  question: Wie verändert sich die messbare Laufzeit und Lernaktivität über die registrierte Tick-Leiter?
+  relevance: Kalibrierung der zeitlichen Ausführung vor Langzeitexperimenten.
+  hypotheses:
+  - H-TIME-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-03'
+  updated: '2026-09-03'
+- id: RQ-5D-001
+  domain: Dimensional Ablation
+  question: Unterscheiden sich kontrollierte Impulsantworten zwischen eingebetteten Raumdimensionen und einem Random-Graph?
+  relevance: Vergleich der vorhandenen 5D-Topologie mit reduzierten Kontrollen.
+  hypotheses:
+  - H-5D-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-03'
+  updated: '2026-09-03'
 - id: RQ-STDP-001
   domain: STDP
   question: Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine

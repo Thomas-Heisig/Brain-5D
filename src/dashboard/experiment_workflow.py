@@ -68,6 +68,8 @@ class ExperimentWorkflowService:
                 JSONValue,
                 [
                     {"id": "science_suite_v1", "label": "Science Suite v1 (DATA + Manifest)"},
+                    {"id": "science_time_v1", "label": "Science TIME v1 (DATA + Manifest)"},
+                    {"id": "science_5d_v1", "label": "Science 5D v1 (DATA + Manifest)"},
                     {"id": "runtime_ticks_v1", "label": "Runtime-Ticks (Laufprotokoll)"},
                     {"id": "stdp_pair_timing_v1", "label": "STDP Pair-Timing v1 (registriert)"},
                 ],
@@ -85,12 +87,14 @@ class ExperimentWorkflowService:
             "EXP-TEMP-0001": "run_temporal",
             "EXP-STDP-0002": "run_stdp",
             "EXP-EMB-0001": "run_learning_repeat",
+            "EXP-TIME-0001": "run_time",
+            "EXP-5D-0001": "run_5d",
         }
         runner_name = runners.get(workflow.experiment_id)
         if runner_name is None:
             raise WorkflowValidationError(
                 "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
-                "EXP-STDP-0002, and EXP-EMB-0001 learning repeat."
+                "EXP-STDP-0002, EXP-TIME-0001, and EXP-5D-0001."
             )
         output_dir = self._research_root / "experiments" / workflow.experiment_id
         if (output_dir / "manifest.json").exists():

@@ -117,6 +117,8 @@ export class ExperimentWorkflowPanel {
     const protocol = this.elements.protocol?.value;
     const presets = {
       science_suite_v1: ["RQ-PING-001", "H-PING-001-A", "EXP-PING-0001", "Network impulse response", "Identischer Zustand, Seed und Input-Spike; Rekurrenz kontrolliert.", "8"],
+      science_time_v1: ["RQ-TIME-001", "H-TIME-001-A", "EXP-TIME-0001", "Learning timescale calibration", "Unabhängige Seeds; Tick-Leiter 100 bis 1.000.000; keine automatische Wiederholung.", "1000000"],
+      science_5d_v1: ["RQ-5D-001", "H-5D-001-A", "EXP-5D-0001", "Dimensional ablation", "1D, 2D, 3D, 5D und Random-Graph; 30 Seeds je Bedingung.", "8"],
       stdp_pair_timing_v1: ["RQ-STDP-001", "H-STDP-001-A", "EXP-STDP-0001", "Pair-Timing STDP", "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; Δt -50 bis +50 ms; 10 Replikationen pro Δt.", "11"],
     };
     const preset = presets[protocol];
