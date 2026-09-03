@@ -11,6 +11,7 @@ from .coordinator import (
     SelfOrganizationSnapshot,
 )
 from .engine import SelfOrganizationEngine
+from .morphology import MorphologyBudget, MorphologyLedger, StructuralCostModel
 from .plasticity import (
     ChangeKind,
     PlasticitySafetyLimits,
@@ -32,6 +33,8 @@ __all__ = [
     "ChangeKind",
     "PlasticitySafetyLimits",
     "PolicyReport",
+    "MorphologyBudget",
+    "MorphologyLedger",
     "ProposalApprovalPolicy",
     "ProposalDecision",
     "ProposalKind",
@@ -43,6 +46,7 @@ __all__ = [
     "SelfOrganizationSnapshot",
     "StructuralAction",
     "StructuralChange",
+    "StructuralCostModel",
     "StructuralPlasticityConfig",
     "StructuralPlasticityEngine",
     "StructuralProposal",

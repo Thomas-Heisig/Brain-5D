@@ -162,7 +162,8 @@
 - [x] Valence, Activation, Safety und Uncertainty als bounded technische
   Zustände ableiten; menschliche Emotionsbegriffe ausschließlich als
   nachgelagerte Interpretation zulassen
-- [ ] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und Neurogenese-Budgets ergänzen
+- [x] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und getrennte
+  Neurogenese-/Pruning-Budgets über ein deterministisches Morphology-Ledger ergänzen
 - [ ] Regional Pressure, Hysterese und Anti-Oszillation integrieren
 - [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
 - [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen

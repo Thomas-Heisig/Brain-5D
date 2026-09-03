@@ -59,6 +59,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 | **📡 Impulse Response** | Controlled single-spike probes with observable latency, propagation and recurrence metrics |
 | **⏱️ Temporal Comparison** | Bounded FAST/MEDIUM/SLOW state references without rewinding runtime state |
 | **🧭 Functional Regulation** | Bounded safety, activation, valence and uncertainty values derived from observable state |
+| **🧱 Morphology Ledger** | Deterministic neuron/synapse ages with separate growth and pruning budgets |
 
 ---
 

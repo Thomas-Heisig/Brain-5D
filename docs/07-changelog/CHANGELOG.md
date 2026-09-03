@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Deterministic morphology ledger
+
+- Added typed neuron/synapse birth-tick tracking and deterministic age queries.
+- Added structural cost accounting with independent growth and pruning budgets;
+  budget overruns fail closed.
+
 ## 2026-09-03 — Functional regulation qualities
 
 - Added deterministic bounded `FunctionalState` values for safety, activation,

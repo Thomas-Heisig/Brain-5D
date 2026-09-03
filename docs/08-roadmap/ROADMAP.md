@@ -54,6 +54,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	ableiten; unbekannte Quellen bleiben unsicher
 - [x] Bounded funktionale Zustandsqualitäten für Valence, Activation, Safety und
 	Uncertainty ableiten, ohne daraus menschliche Emotionen oder Bewusstsein abzuleiten
+- [x] Deterministisches Morphology-Ledger für Geburts-Ticks, Strukturkosten und
+	getrennte Growth-/Pruning-Budgets ergänzen
 - [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
 	mit DATA/EVID-Provenienz ausführen
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
