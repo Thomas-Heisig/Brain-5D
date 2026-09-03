@@ -16,8 +16,8 @@
 - [x] Scientific-Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer dokumentieren und validieren
 - [x] Contract-Test ergänzen, der direkte Core-Imports aus Research-Assistant- und Language-Organ-Backends verhindert
 - [x] `AIExposure` in Experimentmanifesten und Laufmetadaten einführen (`none`, `observer_only`, `semantic_interface`, `advisor`, `bounded_controller`, `adaptive_controller`)
-- [ ] Gemeinsames `AIInteractionRecord` mit Rolle, Experiment, Tick, Input-/Prompt-/Output-Digest, Modell-Provenienz, Autorität und `causal_effect` speichern
-- [ ] AI-Causal-Taint-Tracking von `PURE` über beobachtend/vorschlagend bis `AI_INFLUENCED` implementieren
+- [x] Gemeinsames `AIInteractionRecord` mit Rolle, Experiment, Tick, Input-/Prompt-/Output-Digest, Modell-Provenienz, Autorität und `causal_effect` im Experimentmanifest speichern
+- [x] AI-Causal-Taint-Tracking von `PURE` über beobachtend/vorschlagend bis `AI_INFLUENCED` implementieren
 - [ ] Causal Card je Experiment erzeugen: AI-Beobachtung, externer Input, AI-Reward, AI-Aktorentscheidung und wissenschaftliche Klassifikation
 - [ ] Evidence-Gate verschärfen: AI-beeinflusste Läufe benötigen ein passendes Treatment-Protokoll und dürfen nicht als reine SNN-Evidenz erscheinen
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — AI interaction persistence and causal taint
+
+- Experimentmanifeste speichern AI-Interaktionen append-only mit Digest-Provenienz.
+- `causal_taint` wird von `PURE` über `OBSERVED` und `PROPOSED` bis `AI_INFLUENCED` monoton aggregiert.
+- Interaktionen fremder Experimente werden abgewiesen.
+
 ## 2026-09-03 — AI exposure in experiment manifests
 
 - Experimentmanifeste enthalten standardmäßig `ai_exposure: none`.

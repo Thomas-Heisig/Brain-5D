@@ -77,6 +77,8 @@ als unverified markiert.
 	die Runtime- und Storage-Durchsetzung der Firewall bleibt davon getrennt offen.
 - Experimentmanifeste tragen jetzt eine validierte `ai_exposure`-Stufe mit dem
 	sicheren Default `none`; Interaktions- und Causal-Taint-Provenienz folgen separat.
+- `AIInteractionRecord`-Einträge werden nun im Manifest persistiert und heben den
+	aggregierten `causal_taint` nur monoton auf eine stärkere Einflussstufe an.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

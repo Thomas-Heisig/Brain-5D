@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Protocol, cast
 
-from src.research_assistant.contracts import AIExposure
+from src.research_assistant.contracts import AIExposure, AIInteractionRecord, CausalTaint
 
 from .registry import REPO_ROOT
 
@@ -116,6 +116,8 @@ class ExperimentRecorder:
             "experiment_id": experiment_id,
             "experiment_status": "not_started",
             "ai_exposure": AIExposure.NONE.value,
+            "causal_taint": CausalTaint.PURE.value,
+            "ai_interactions": [],
             "timestamp": datetime.now().isoformat(),
             "git": get_git_info(),
             "software": get_software_info(),
@@ -157,6 +159,27 @@ class ExperimentRecorder:
         except ValueError as exc:
             raise ValueError(f"Unsupported AI exposure: {exposure}") from exc
         self._manifest["ai_exposure"] = normalized.value
+        return self
+
+    def record_ai_interaction(
+        self, interaction: AIInteractionRecord
+    ) -> ExperimentRecorder:
+        """Append one interaction and monotonically update the run's causal taint."""
+        if interaction.experiment_id not in (None, self.experiment_id):
+            raise ValueError(
+                "AI interaction experiment_id does not match this recorder."
+            )
+        interactions = cast(list[dict[str, Any]], self._manifest["ai_interactions"])
+        interactions.append(interaction.to_dict())
+        taint_order = {
+            CausalTaint.PURE: 0,
+            CausalTaint.OBSERVED: 1,
+            CausalTaint.PROPOSED: 2,
+            CausalTaint.AI_INFLUENCED: 3,
+        }
+        current = CausalTaint(cast(str, self._manifest["causal_taint"]))
+        if taint_order[interaction.causal_effect] > taint_order[current]:
+            self._manifest["causal_taint"] = interaction.causal_effect.value
         return self
 
     def record_research_links(
