@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — 5D dimensionality experiment v2
+
+- Executed `EXP-5D-0001-v2` for `RQ-5D-001` / `H-5D-001-A` with 15 controlled runs.
+- Stored DATA, AIRR, and AIAR outputs in the experiment-owned directory.
+
 ## 2026-09-03 — Experiment-owned AI reports
 
 - AIRR and AIAR reports are now stored below the owning experiment directory.

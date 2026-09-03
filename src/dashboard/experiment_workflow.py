@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Callable, cast
@@ -118,6 +118,8 @@ class ExperimentWorkflowService:
         runner_name = runners.get(workflow.experiment_id)
         if workflow.experiment_id.startswith("EXP-PING-0001-v"):
             runner_name = "run_ping_v2"
+        if workflow.experiment_id.startswith("EXP-5D-0001-v"):
+            runner_name = "run_5d"
         if workflow.experiment_id.startswith("EXP-LEARN-"):
             runner_name = "run_learning"
         if runner_name is None:
@@ -141,6 +143,7 @@ class ExperimentWorkflowService:
         config = _load_yaml(config_path)
         started = perf_counter()
         runs = getattr(experiment_suite, runner_name)(config, seeds=seeds)
+        runs = [replace(run, experiment_id=workflow.experiment_id) for run in runs]
         duration = perf_counter() - started
         output_dir.mkdir(parents=True, exist_ok=False)
         data_path = output_dir / "DATA" / "runs.json"

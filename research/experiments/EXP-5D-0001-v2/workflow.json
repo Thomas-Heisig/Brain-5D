@@ -1,0 +1,17 @@
+{
+  "protocol": "science_suite_v1",
+  "experiment_id": "EXP-5D-0001-v2",
+  "research_question": "RQ-5D-001",
+  "hypothesis": "H-5D-001-A",
+  "title": "Dimensionalitaet und Netzwerkdynamik v2",
+  "conditions": "Kontrollierte identische Ketten in 1D, 2D, 3D und 5D sowie Random-Graph-Kontrolle; Seeds 42, 43, 44",
+  "ticks": 8,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "Post-hoc AIRR. KI beeinflusst weder Ausfuehrung noch Evidenzbewertung.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}
