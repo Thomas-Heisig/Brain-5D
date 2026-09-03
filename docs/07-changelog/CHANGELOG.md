@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — Scientific authority matrix
+
+- Maschinenlesbare Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer ergänzt.
+- AI-Rollen sind read-only oder proposal-only; unbekannte Rollen werden fail-closed abgewiesen.
+
 ## 2026-09-03 — Scientific AI read-only firewall
 
 - Der Research-Chat erzwingt vor jeder Interpretation eine explizite Read-only-Autorität.

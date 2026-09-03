@@ -2,6 +2,7 @@
 
 from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
 from .assistant import AnalysisBackend, ResearchAssistant
+from .authority import AuthorityRule, authority_for, authority_matrix, validate_authority_matrix
 from .chat import ChatBackend, ResearchChat, chat_backend_from_text_backend
 from .contracts import (
     AIExposure,
@@ -26,6 +27,7 @@ __all__ = [
     "AnalysisBackend",
     "AIRRPipeline",
     "AIResearchReport",
+    "AuthorityRule",
     "ResearchAssistant",
     "ResearchPacket",
     "render_markdown",
@@ -42,4 +44,7 @@ __all__ = [
     "Observation",
     "Proposal",
     "ScientificAIFirewall",
+    "authority_for",
+    "authority_matrix",
+    "validate_authority_matrix",
 ]

@@ -18,6 +18,7 @@ from src.research_assistant.firewall import (
     AIFirewallViolation,
     ScientificAIFirewall,
 )
+from src.research_assistant.authority import authority_for, authority_matrix, validate_authority_matrix
 
 
 class Doc:
@@ -155,4 +156,15 @@ def test_scientific_ai_firewall_rejects_mutating_capabilities() -> None:
         firewall.authorize("execute")
     with pytest.raises(AIFirewallViolation):
         ScientificAIFirewall(AIAuthority.PROPOSAL_ONLY).assert_read_only()
+
+
+def test_scientific_authority_matrix_fails_closed_for_ai_roles() -> None:
+    validate_authority_matrix()
+    rules = {rule.role: rule for rule in authority_matrix()}
+    assert rules["Research Assistant"].authority == "read_only"
+    assert rules["Cognitive Advisor"].authority == "proposal_only"
+    assert "apply" not in rules["Language Organ"].capabilities
+    assert rules["Research Assistant"].scientific_evidence is False
+    with pytest.raises(KeyError):
+        authority_for("unknown component")
 

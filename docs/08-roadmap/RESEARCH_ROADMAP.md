@@ -71,6 +71,8 @@ als unverified markiert.
 	Intervention und Evidence als digest-only Datentypen ohne Ausführungsautorität.
 - Der Research-Chat passiert eine explizite Read-only-Firewall; die vollständige
 	Durchsetzung an Netzwerk-, Speicher- und Laufzeitgrenzen ist der nächste Ausbau.
+- Die Authority-Matrix ist als validierter Contract im Research-Assistant-Paket
+	hinterlegt und trennt AI-, Runtime-, Evidenz- und Human-Review-Autorität.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
