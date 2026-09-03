@@ -129,6 +129,37 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert isinstance(response_digest, str) and len(response_digest) == 64
 
 
+def test_ollama_analysis_parses_wrapped_json_and_requests_json_format(
+    monkeypatch: Any,
+) -> None:
+    class _Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args: Any) -> None:
+            return None
+
+        def read(self):
+            return json.dumps(
+                {
+                    "model": "qwen",
+                    "response": 'Here is the result:\n```json\n{"assessment":"ok"}\n```',
+                }
+            ).encode()
+
+    requests: list[Any] = []
+
+    def _urlopen(request: Any, **_kwargs: Any) -> _Response:
+        requests.append(json.loads(request.data.decode()))
+        return _Response()
+
+    monkeypatch.setattr("src.research_assistant.ollama_backend.urlopen", _urlopen)
+    output, _metadata = OllamaBackend("qwen")("prompt")
+
+    assert output == {"assessment": "ok"}
+    assert requests[0]["format"] == "json"
+
+
 def test_ollama_inference_failure_is_audited(monkeypatch: Any) -> None:
     def _urlopen(*_args: Any, **_kwargs: Any) -> Any:
         raise OSError("provider unavailable")

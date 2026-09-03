@@ -167,9 +167,14 @@ def _role_prompt(
     )
     return (
         f"Role: {role}\n"
-        "Return JSON only. Separate observations, calculations, interpretation, "
-        "limitations and requested evidence. Never create evidence, confirm claims, "
-        "answer a research question, or issue execution commands.\n"
+        "Return exactly one JSON object with these fields: assessment (string), "
+        "observations (array), effect_direction (string), "
+        "methodological_concerns (array), alternative_explanations (array), "
+        "recommended_experiments (array), requested_evidence (array), and "
+        "confidence (number from 0 to 1). Use empty arrays when no items apply. "
+        "Separate observations, calculations, interpretation, limitations and "
+        "requested evidence. Never create evidence, confirm claims, answer a "
+        "research question, or issue execution commands.\n"
         + review_instruction
         + f"Prior role outputs: {json.dumps(context, sort_keys=True)}\n"
         + f"ResearchPacket: {packet.to_json()}"

@@ -111,12 +111,8 @@ class OllamaBackend:
             )
 
     def __call__(self, prompt: str) -> tuple[dict[str, Any], dict[str, Any]]:
-        text, metadata = self._generate(prompt)
-        output_raw: Any = json.loads(text)
-        if not isinstance(output_raw, dict):
-            raise ValueError("Ollama output must be a JSON object.")
-        output = cast(dict[str, Any], output_raw)
-        return output, metadata
+        text, metadata = self._generate(prompt, format_json=True)
+        return _parse_json_object(text), metadata
 
     def generate_text(
         self,
@@ -132,6 +128,7 @@ class OllamaBackend:
         prompt: str,
         images: list[str] | None = None,
         tools: list[dict[str, object]] | None = None,
+        format_json: bool = False,
     ) -> tuple[str, dict[str, Any]]:
         payload: dict[str, object] = {
             "model": self.model,
@@ -158,6 +155,8 @@ class OllamaBackend:
             payload["images"] = images
         if tools:
             payload["tools"] = tools
+        if format_json:
+            payload["format"] = "json"
         request_data = json.dumps(payload).encode()
         request = Request(
             self.endpoint,
@@ -214,6 +213,37 @@ class OllamaBackend:
             "prompt_eval_count": _numeric_metadata(payload.get("prompt_eval_count")),
             "eval_count": _numeric_metadata(payload.get("eval_count")),
         }
+
+
+def _parse_json_object(text: str) -> dict[str, Any]:
+    """Parse an object from strict JSON or a model-wrapped JSON response."""
+    decoder = json.JSONDecoder()
+    stripped = text.strip()
+    candidates = [stripped]
+    if "```" in stripped:
+        candidates.extend(
+            block.strip()
+            for block in stripped.split("```")[1::2]
+            if block.strip().removeprefix("json").strip()
+        )
+    for candidate in candidates:
+        candidate = candidate.removeprefix("json").strip()
+        try:
+            output_raw: Any = json.loads(candidate)
+        except json.JSONDecodeError:
+            output_raw = None
+        if isinstance(output_raw, dict):
+            return cast(dict[str, Any], output_raw)
+        for index, character in enumerate(candidate):
+            if character != "{":
+                continue
+            try:
+                output_raw, _ = decoder.raw_decode(candidate[index:])
+            except json.JSONDecodeError:
+                continue
+            if isinstance(output_raw, dict):
+                return cast(dict[str, Any], output_raw)
+    raise ValueError("Ollama output must contain a JSON object.")
 
 
 def _request_prompt(request: LanguageRequest) -> str:
