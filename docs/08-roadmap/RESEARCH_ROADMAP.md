@@ -106,6 +106,9 @@ als unverified markiert.
 - Ein `ShadowMode` begrenzt AI auf Observation, Interpretation und markierte
 	Proposal-Contracts. `propose` ist nur mit `PROPOSAL_ONLY` erlaubt; Ausführung
 	ist nicht Bestandteil des Modus.
+- Die Shadow-Proposal-Auswertung liefert reproduzierbare Klassifikations-,
+	Kalibrierungs- und Utility-Metriken aus extern bereitgestellten Labels und
+	Konfidenzen; sie ist keine wissenschaftliche Evidenz.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

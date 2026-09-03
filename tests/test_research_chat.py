@@ -34,7 +34,7 @@ from src.research_assistant.replay_backend import (
     FrozenAIReplayBackend,
     FrozenAIReplayError,
 )
-from src.research_assistant.shadow import ShadowMode
+from src.research_assistant.shadow import ShadowMode, evaluate_shadow_proposals
 
 
 class Doc:
@@ -218,6 +218,22 @@ def test_shadow_mode_marks_proposals_without_execution() -> None:
     assert proposal.executed is False
     assert proposal.contract.kind == "proposal"
     assert "execute" not in proposal.to_dict()
+
+
+def test_shadow_proposals_have_deterministic_metrics() -> None:
+    metrics = evaluate_shadow_proposals(
+        [True, True, False, False],
+        [True, False, False, True],
+        confidence=[0.9, 0.8, 0.2, 0.1],
+        utility=[1.0, -1.0, 0.5, -0.5],
+    )
+    assert metrics.sample_count == 4
+    assert metrics.precision == 0.5
+    assert metrics.recall == 0.5
+    assert metrics.false_positive_rate == 0.5
+    assert metrics.prediction_accuracy == 0.5
+    assert metrics.brier_score == pytest.approx(0.375)
+    assert metrics.utility == 0.0
 
 
 def test_observation_stream_writes_and_validates_jsonl(tmp_path: Any) -> None:

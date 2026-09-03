@@ -5,6 +5,7 @@
 - `ShadowMode` erzeugt digest-basierte Observation-, Interpretation- und Proposal-Contracts.
 - Vorschläge werden explizit mit `executed: false` markiert und besitzen keinen Apply-/Execute-Pfad.
 - Die Firewall erlaubt `propose` ausschließlich für `PROPOSAL_ONLY`; quantitative Proposal-Evaluation bleibt separat.
+- `evaluate_shadow_proposals` berechnet deterministisch Precision, Recall, False-Positive-Rate, Accuracy, Brier Score, ECE und Utility.
 
 ## 2026-09-03 — Language Organ sham controls
 

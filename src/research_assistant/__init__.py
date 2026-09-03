@@ -29,7 +29,12 @@ from .observation_stream import (
     ObservationStreamRecord,
 )
 from .replay_backend import FrozenAIReplayBackend, FrozenAIReplayError
-from .shadow import ShadowMode, ShadowResult
+from .shadow import (
+    ShadowMode,
+    ShadowProposalMetrics,
+    ShadowResult,
+    evaluate_shadow_proposals,
+)
 from .statistics import summarize, write_statistics
 
 __all__ = [
@@ -50,7 +55,9 @@ __all__ = [
     "FrozenAIReplayBackend",
     "FrozenAIReplayError",
     "ShadowMode",
+    "ShadowProposalMetrics",
     "ShadowResult",
+    "evaluate_shadow_proposals",
     "ObservationStream",
     "ObservationStreamError",
     "ObservationStreamRecord",
