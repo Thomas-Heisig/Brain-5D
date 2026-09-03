@@ -388,8 +388,9 @@ function renderStatus(state) {
   const statusEl = $('system-status');
   setText('footer-version', data.version || 'unknown');
   const network = data.network || {};
-  const activity = network.active_neurons != null && network.neuron_count
-    ? Number(network.active_neurons) / Number(network.neuron_count)
+  const neuronCount = network.neuron_count ?? system.neurons;
+  const activity = network.active_neurons != null && neuronCount
+    ? Number(network.active_neurons) / Number(neuronCount)
     : null;
   const spikesPerTick = network.spikes_per_tick != null ? Number(network.spikes_per_tick) : null;
   const spikes = spikesPerTick != null ? spikesPerTick : (system.spikes_total != null ? Number(system.spikes_total) : null);
@@ -404,7 +405,7 @@ function renderStatus(state) {
   const spikesBar = $('footer-spikes-bar');
   const pressureBar = $('footer-pressure-bar');
   if (activityBar) activityBar.style.width = `${Math.min(100, Math.max(0, (activity || 0) * 100))}%`;
-  if (spikesBar) spikesBar.style.width = `${Math.min(100, Math.max(0, spikes || 0))}%`;
+  if (spikesBar) spikesBar.style.width = `${spikesPerTick == null ? 0 : Math.min(100, Math.max(0, spikesPerTick * 100))}%`;
   if (pressureBar) pressureBar.style.width = `${pressure == null ? 0 : Math.min(100, Math.max(0, pressure * 100))}%`;
   if (statusEl) {
     statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
