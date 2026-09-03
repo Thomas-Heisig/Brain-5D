@@ -15,6 +15,9 @@
 - AIRR generation is post-hoc and cannot affect the experiment causal path.
 - Missing or failing AI backends are returned as explicit report status while
   the completed experiment remains completed; human review and Evidence remain open.
+- Human review now requires an existing review-pending AIRR, a non-empty reviewer
+  identity and comments; the append-only review records the report digest and
+  never grants `scientific_evidence`.
 
 ## 2026-09-03 — Full-stack Learning Studio run
 

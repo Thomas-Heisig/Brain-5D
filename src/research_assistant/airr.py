@@ -307,13 +307,44 @@ def render_markdown(report: AIResearchReport) -> str:
 
 
 def write_human_review(research_root: Path, experiment_id: str, report_id: str, review: dict[str, Any]) -> Path:
-    status = review.get("review_status")
-    if status not in _STATUSES - {"generated", "review_pending", "superseded"}:
-        raise ValueError("Invalid human review status")
+    if not experiment_id or "/" in experiment_id or "\\" in experiment_id:
+        raise ValueError("Invalid experiment id")
+    if not report_id or "/" in report_id or "\\" in report_id:
+        raise ValueError("Invalid report id")
     directory = research_root / "reports" / experiment_id
+    report_path = directory / f"{report_id}.json"
+    if not report_path.is_file():
+        raise ValueError("AIRR report does not exist")
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("AIRR report is unreadable") from exc
+    if not isinstance(report, dict) or report.get("report_id") != report_id:
+        raise ValueError("AIRR report identity does not match")
+    if report.get("status") != "review_pending":
+        raise ValueError("AIRR report is not awaiting human review")
+    if report.get("scientific_evidence") is not False:
+        raise ValueError("AIRR review cannot grant scientific evidence")
+
+    status = review.get("review_status")
+    if status not in {"accepted_as_interpretation", "rejected"}:
+        raise ValueError("Human review must accept or reject the interpretation")
+    reviewer = review.get("reviewer")
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise ValueError("Human reviewer identity is required")
+    comments = review.get("comments")
+    if not isinstance(comments, str) or not comments.strip():
+        raise ValueError("Human review comments are required")
     path = directory / f"{report_id}.review.json"
     if path.exists():
         raise FileExistsError(f"Human review already exists: {report_id}")
-    payload = {"report_id": report_id, **review}
+    payload = {
+        "report_id": report_id,
+        "review_status": status,
+        "reviewer": reviewer.strip(),
+        "reviewed_at": datetime.now(timezone.utc).isoformat(),
+        "comments": comments.strip(),
+        "report_content_digest": report.get("content_digest"),
+    }
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path

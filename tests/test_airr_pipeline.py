@@ -98,10 +98,38 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
         tmp_path,
         "EXP-AIR-0001",
         report.report_id,
-        {"review_status": "accepted_as_interpretation", "reviewer": "human"},
+        {
+            "review_status": "accepted_as_interpretation",
+            "reviewer": "human",
+            "comments": "Interpretation accepted; this is not scientific evidence.",
+        },
     )
     assert review.name.endswith(".review.json")
     assert (report_dir / f"{report.report_id}.json").read_text() == original
+
+
+def test_human_review_requires_bound_report_identity_and_comments(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    report = AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)
+
+    with pytest.raises(ValueError, match="comments"):
+        write_human_review(
+            tmp_path,
+            "EXP-AIR-0001",
+            report.report_id,
+            {"review_status": "accepted_as_interpretation", "reviewer": "human"},
+        )
+    with pytest.raises(ValueError, match="does not exist"):
+        write_human_review(
+            tmp_path,
+            "EXP-AIR-0001",
+            "AIRR-2026-9999",
+            {
+                "review_status": "accepted_as_interpretation",
+                "reviewer": "human",
+                "comments": "Reviewed.",
+            },
+        )
 
 
 def test_pipeline_rejects_unverified_quantitative_statistics(tmp_path: Path) -> None:
