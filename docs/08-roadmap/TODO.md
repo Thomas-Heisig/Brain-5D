@@ -24,6 +24,7 @@
 ### P0 — Vollständige AI-Provenienz
 
 - [x] Ollama-Baseline-Provenienz mit Samplingparametern, Stop-Sequenzen, Timeout und Response-Digest integrieren
+- [x] Ollama-Request-/Response-Digest, Modell-ID, Completion-Grund und Tokenmetriken ergänzen
 - [ ] Ollama-Provenienz vollständig erfassen: Modell-ID, Modell-Digest, Artefakt-/Quantisierungsdaten, Ollama-/Engine-Version, Hardware, Präzision, Seed und alle Samplingparameter
 - [ ] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
 - [ ] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen

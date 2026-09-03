@@ -113,6 +113,7 @@ class OllamaBackend:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
+        request_digest = hashlib.sha256(request.data or b"").hexdigest()
         with urlopen(
             request, timeout=self.timeout
         ) as response:  # nosec B310: local, explicit endpoint
@@ -123,6 +124,7 @@ class OllamaBackend:
         return text, {
             "provider": "ollama",
             "model": self.model,
+            "model_id": str(payload.get("model", self.model)),
             "temperature": self.temperature,
             "top_p": self.top_p,
             "top_k": self.top_k if self.top_k is not None else "not_reported",
@@ -131,10 +133,21 @@ class OllamaBackend:
             "stop": list(self.stop),
             "max_tokens": self.max_tokens,
             "timeout_seconds": self.timeout,
+            "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "created_at": str(payload.get("created_at", "not_reported")),
+            "done_reason": str(payload.get("done_reason", "not_reported")),
+            "total_duration_ns": _numeric_metadata(payload.get("total_duration")),
+            "load_duration_ns": _numeric_metadata(payload.get("load_duration")),
+            "prompt_eval_count": _numeric_metadata(payload.get("prompt_eval_count")),
+            "eval_count": _numeric_metadata(payload.get("eval_count")),
         }
 
 
 def _request_prompt(request: LanguageRequest) -> str:
     """Serialize only the immutable request contract for Ollama."""
     return json.dumps(request.to_dict(), sort_keys=True, ensure_ascii=True)
+
+
+def _numeric_metadata(value: object) -> int | str:
+    return value if isinstance(value, int) and not isinstance(value, bool) else "not_reported"

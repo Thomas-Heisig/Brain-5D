@@ -59,7 +59,17 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
             return None
 
         def read(self):
-            return json.dumps({"response": "answer"}).encode()
+            return json.dumps(
+                {
+                    "model": "qwen",
+                    "response": "answer",
+                    "created_at": "2026-09-03T00:00:00Z",
+                    "done_reason": "stop",
+                    "total_duration": 100,
+                    "prompt_eval_count": 4,
+                    "eval_count": 2,
+                }
+            ).encode()
 
     requests: list[Any] = []
 
@@ -79,4 +89,9 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert requests[0]["options"]["seed"] == 42
     assert requests[0]["options"]["stop"] == ["END"]
     assert metadata["timeout_seconds"] == 12
+    assert metadata["model_id"] == "qwen"
+    assert metadata["done_reason"] == "stop"
+    assert metadata["prompt_eval_count"] == 4
+    assert metadata["eval_count"] == 2
+    assert len(metadata["request_digest"]) == 64
     assert len(metadata["response_digest"]) == 64

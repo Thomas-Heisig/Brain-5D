@@ -81,6 +81,9 @@ als unverified markiert.
 	aggregierten `causal_taint` nur monoton auf eine stärkere Einflussstufe an.
 - Die Causal Card bündelt Interaktions-IDs, Rollen und Klassifikation; das
 	Evidence-Gate verlangt für jeden nicht-puren Lauf ein registriertes AI-Treatment.
+- Ollama liefert nun Request-/Response-Digests, Modell-ID, Completion-Grund und
+	verfügbare Tokenmetriken; echte Artefakt- und Engine-Provenienz folgt über einen
+	expliziten Provider-Manifestpfad.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

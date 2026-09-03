@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Ollama request and response provenance
+
+- Ollama-Provenienz enthält nun Request-Digest, Modell-ID, Completion-Grund und verfügbare Prompt-/Output-Tokenmetriken.
+- Verfügbare Laufzeitmetriken wie Lade- und Gesamtdauer werden ohne erfundene Werte übernommen.
+- Echte Modellartefakt-, Quantisierungs-, Engine- und Hardware-Digests benötigen noch einen expliziten Provider-Manifestpfad.
+
 ## 2026-09-03 — Causal card and AI evidence gate
 
 - Experimentmanifeste erzeugen eine Causal Card mit Interaktions-IDs, Rollen und wissenschaftlicher Klassifikation.
