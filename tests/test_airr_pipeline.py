@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from src.research_assistant import AIRRPipeline, write_human_review
 
 
@@ -26,7 +28,19 @@ def _fixture(root: Path) -> None:
         encoding="utf-8",
     )
     (root / "generated" / "data" / "DATA-AIR-0001.json").write_text(
-        json.dumps({"statistics": {"n": 3, "mean": 2.0}, "weight": [1, 2, 3]}),
+        json.dumps({"weight": [1, 2, 3]}),
+        encoding="utf-8",
+    )
+    analysis = root / "experiments" / "EXP-AIR-0001" / "analysis"
+    analysis.mkdir()
+    (analysis / "statistics.json").write_text(
+        json.dumps(
+            {
+                "n": 3,
+                "mean": 2.0,
+                "generated_by": "deterministic_statistics_engine",
+            }
+        ),
         encoding="utf-8",
     )
     (root / "registry" / "questions.yaml").write_text(
@@ -71,7 +85,11 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
     assert saved["scientific_evidence"] is False
     assert saved["human_review_required"] is True
     assert saved["status"] == "review_pending"
-    assert saved["content"]["quantitative_results"] == {"n": 3, "mean": 2.0}
+    assert saved["content"]["quantitative_results"] == {
+        "n": 3,
+        "mean": 2.0,
+        "generated_by": "deterministic_statistics_engine",
+    }
     markdown = (report_dir / f"{report.report_id}.md").read_text()
     assert markdown.startswith("============================================================\nBRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS")
     assert "## Observations" in markdown and "## Interpretation" in markdown
@@ -85,3 +103,14 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
     )
     assert review.name.endswith(".review.json")
     assert (report_dir / f"{report.report_id}.json").read_text() == original
+
+
+def test_pipeline_rejects_unverified_quantitative_statistics(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    statistics_path = (
+        tmp_path / "experiments" / "EXP-AIR-0001" / "analysis" / "statistics.json"
+    )
+    statistics_path.write_text(json.dumps({"n": 3, "mean": 2.0}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Statistics Engine"):
+        AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)

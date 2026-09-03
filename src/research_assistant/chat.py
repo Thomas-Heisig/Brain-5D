@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol, cast
 
 from .contracts import AIExposure, AIInteractionRecord, CausalTaint
 from .firewall import ScientificAIFirewall
+from .governance import KnowledgeOrigin, NetworkMode, RetrievalRecord
 
 
 class _ResearchDocument(Protocol):
@@ -58,6 +61,8 @@ class ResearchChat:
         self.firewall.authorize("interpret")
         prompt = self._prompt(question)
         answer, metadata = self.backend(prompt)
+        retrieval = self._retrieval_record()
+        metadata = {**metadata, "retrieval": retrieval.to_dict()}
         interaction = AIInteractionRecord.create(
             role="research_ai",
             experiment_id=None,
@@ -71,6 +76,41 @@ class ResearchChat:
             causal_effect=CausalTaint.OBSERVED,
         )
         return answer, {**metadata, "ai_interaction": interaction.to_dict()}
+
+    def _retrieval_record(self) -> RetrievalRecord:
+        context = self._context()
+        web_enabled = bool(self.web_context.strip())
+        mode = NetworkMode.LIVE_NETWORK if web_enabled else NetworkMode.FROZEN_CORPUS
+        source_count = sum(
+            1
+            for document in self.research.list_documents()
+            if document.kind in {"md", "json", "yaml", "yml", "txt"}
+        )
+        source_count += sum(
+            1
+            for document in self.docs.list_documents(recursive=True)
+            if document.file_type.value in {"markdown", "text", "json", "yaml"}
+        )
+        if web_enabled:
+            source_count += 1
+        snapshot_digest = hashlib.sha256(
+            json.dumps(
+                {"context": context, "web_context": self.web_context},
+                sort_keys=True,
+                ensure_ascii=True,
+            ).encode("utf-8")
+        ).hexdigest()
+        return RetrievalRecord(
+            enabled=True,
+            mode=mode,
+            snapshot_digest=snapshot_digest,
+            source_count=source_count,
+            knowledge_origin=(
+                KnowledgeOrigin.EXTERNAL_RETRIEVAL
+                if web_enabled
+                else KnowledgeOrigin.SYSTEM_STATE
+            ),
+        )
 
     def _prompt(self, message: str) -> str:
         context = self._context()

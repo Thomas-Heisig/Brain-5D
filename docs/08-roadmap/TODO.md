@@ -56,7 +56,7 @@
 - [x] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
 - [x] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
 - [x] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
-- [ ] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein
+- [x] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein
 
 ### P1 — AI-Rollen und semantische Schnittstellen
 

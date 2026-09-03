@@ -84,11 +84,13 @@ export function initResearchChat() {
 function renderInteractionTrace(metadata) {
   const trace = metadata && metadata.ai_interaction;
   if (!trace) return '';
+  const retrieval = metadata && metadata.retrieval;
   const model = trace.model_provenance && (trace.model_provenance.model || trace.model_provenance.model_name);
   const parts = [
     trace.exposure,
     trace.causal_effect,
-    model
+    model,
+    retrieval && retrieval.enabled ? `retrieval ${retrieval.mode} · ${retrieval.source_count} sources` : 'retrieval disabled'
   ].filter(Boolean).map((value) => escapeChat(String(value)));
   return parts.length ? `<small class="chat-trace">AI trace · ${parts.join(' · ')}</small>` : '';
 }

@@ -66,6 +66,9 @@ Evidenz für Lernwirkung.
 	Default; versionierte Retrieval-Provenienz ist im Manifest sichtbar.
 - Das Dashboard klassifiziert AI-Betrieb aus expliziten Manifest- und
 	Modell-Provenienzfeldern als Replay, Live-Frozen-Model oder Live-External-API.
+- Chat-Antworten tragen nun explizite, versionierte Retrieval-Provenienz mit
+	Snapshot-Digest; Repository- und externe Webquellen sind im Antwortvertrag
+	getrennt sichtbar.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

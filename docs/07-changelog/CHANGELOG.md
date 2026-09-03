@@ -6,6 +6,13 @@
   `LIVE_FROZEN_MODEL` oder `LIVE_EXTERNAL_API` betrieben wurde; unvollständige
   Protokolle bleiben als `UNKNOWN` sichtbar.
 
+## 2026-09-03 — Explicit retrieval provenance
+
+- Research-Chat-Antworten tragen nun einen versionierten `RetrievalRecord` mit
+  Aktivierung, Quellenanzahl, Snapshot-Digest, NetworkMode und Knowledge Origin.
+- Repository-Kontext wird als `FROZEN_CORPUS`, externe Webquellen werden als
+  `LIVE_NETWORK` sichtbar protokolliert und bleiben von Evidence getrennt.
+
 ## 2026-09-03 — P1 AI governance contracts
 
 - Eingefrorene Prompt-Dateien unter `research/prompts/` werden per

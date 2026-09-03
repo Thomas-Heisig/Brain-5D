@@ -11,6 +11,7 @@ from typing import Any
 
 from .assistant import AnalysisBackend, ResearchAssistant
 from .models import AIAnalysisRecord, ResearchPacket
+from .statistics import require_statistics_engine_artifact
 
 AI_WARNING = """============================================================
 BRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS
@@ -262,7 +263,9 @@ def _data_basis(packet: ResearchPacket) -> dict[str, Any]:
 
 def _statistics(packet: ResearchPacket) -> dict[str, Any]:
     if isinstance(packet.data, dict) and isinstance(packet.data.get("statistics"), dict):
-        return packet.data["statistics"]
+        statistics = packet.data["statistics"]
+        require_statistics_engine_artifact(statistics)
+        return statistics
     return {"status": "NOT_AVAILABLE", "source": "deterministic statistics.json"}
 
 

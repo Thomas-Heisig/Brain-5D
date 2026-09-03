@@ -73,9 +73,28 @@ def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
     assert metadata["ai_interaction"]["authority"] == "read_only"
     assert metadata["ai_interaction"]["exposure"] == "observer_only"
     assert metadata["ai_interaction"]["causal_effect"] == "OBSERVED"
+    assert metadata["retrieval"]["enabled"] is True
+    assert metadata["retrieval"]["mode"] == "FROZEN_CORPUS"
+    assert metadata["retrieval"]["protocol_version"] == 1
     assert "RQ-1" in prompts[0] and "Brain-5D" in prompts[0]
     assert "never execute an experiment from free text" in prompts[0]
     assert "WEB SOURCES must never appear under EVIDENCE" in prompts[0]
+
+
+def test_chat_marks_external_retrieval_as_live_and_visible() -> None:
+    chat = ResearchChat(
+        Source({"research.md": "research"}),
+        Source({}),
+        lambda prompt: ("answer", {"provider": "test"}),
+        web_context="https://example.test/source",
+    )
+
+    _answer, metadata = chat.answer("What was retrieved?")
+
+    assert metadata["retrieval"]["enabled"] is True
+    assert metadata["retrieval"]["mode"] == "LIVE_NETWORK"
+    assert metadata["retrieval"]["knowledge_origin"] == "EXTERNAL_RETRIEVAL"
+    assert metadata["ai_interaction"]["model_provenance"]["provider"] == "test"
 
 
 def test_chat_rejects_empty_message() -> None:
