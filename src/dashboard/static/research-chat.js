@@ -163,8 +163,12 @@ export function initResearchChat() {
     try {
       const response = await fetch('/api/research/chat/settings');
       const payload = await response.json();
+      const providers = await (await fetch('/api/research/chat/providers')).json();
       document.getElementById('chat-setting-provider').value = payload.provider || '';
-      document.getElementById('chat-setting-model').value = payload.model || '';
+      const modelSelect = document.getElementById('chat-setting-model');
+      modelSelect.innerHTML = (providers.models || []).map((model) => `<option value="${escapeChat(model)}">${escapeChat(model)}</option>`).join('');
+      if (payload.model && !(providers.models || []).includes(payload.model)) modelSelect.insertAdjacentHTML('afterbegin', `<option value="${escapeChat(payload.model)}">${escapeChat(payload.model)}</option>`);
+      modelSelect.value = payload.model || '';
       document.getElementById('chat-setting-endpoint').value = payload.endpoint || '';
       document.getElementById('chat-setting-temperature').value = payload.temperature ?? 0;
       document.getElementById('chat-setting-top-p').value = payload.top_p ?? 0.9;
@@ -178,8 +182,6 @@ export function initResearchChat() {
       const healthPayload = await healthResponse.json();
       health.className = `provider-health ${healthPayload.ok ? 'online' : 'offline'}`;
       health.lastChild.textContent = healthPayload.ok ? ' online' : ' offline';
-      const providers = await (await fetch('/api/research/chat/providers')).json();
-      document.getElementById('chat-model-options').innerHTML = (providers.models || []).map((model) => `<option value="${escapeChat(model)}"></option>`).join('');
     } catch (_) {
       document.getElementById('chat-setting-provider').value = 'unavailable';
     }
