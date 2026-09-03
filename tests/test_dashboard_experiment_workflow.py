@@ -15,6 +15,7 @@ from src.dashboard.experiment_workflow import (
 )
 from src.dashboard.research_source import ResearchSource
 from src.dashboard.server import DashboardRequestHandler
+from src.research_assistant.airr import write_artifact_review
 
 
 def _report_backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str]]:
@@ -81,6 +82,7 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     assert manifest["research_questions"] == ["RQ-SNN-001"]
     assert manifest["hypotheses"] == ["H-SNN-001-A"]
     assert manifest["results"]["observed_ticks"] == 25
+    assert manifest["created_at"]
     assert "## Ergebnis" in report
     assert "## Reproduzierbarkeit" in report
     assert "## Evidenzstatus" in report
@@ -124,6 +126,45 @@ def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> No
     assert saved["status"] == "review_pending"
     assert saved["scientific_evidence"] is False
     assert (report_dir / f"{report_id}.md").is_file()
+
+
+def test_human_review_can_be_attached_to_any_experiment_artifact(
+    tmp_path: Path,
+) -> None:
+    artifact = tmp_path / "experiments" / "EXP-REVIEW-0001" / "summary.md"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("# Zusammenfassung\n", encoding="utf-8")
+
+    review_path = write_artifact_review(
+        tmp_path,
+        "experiments/EXP-REVIEW-0001/summary.md",
+        {
+            "review_status": "accepted_as_interpretation",
+            "reviewer": "Dr. Test",
+            "comments": "Inhalt und Zuordnung geprueft.",
+        },
+    )
+
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    assert review["artifact_path"].endswith("/summary.md")
+    assert review["review_status"] == "accepted_as_interpretation"
+    assert review["artifact_content_digest"]
+
+
+def test_experiments_are_listed_by_creation_date(tmp_path: Path) -> None:
+    for experiment_id, created_at in (
+        ("EXP-OLD", "2026-09-01T00:00:00+00:00"),
+        ("EXP-NEW", "2026-09-03T00:00:00+00:00"),
+    ):
+        directory = tmp_path / "experiments" / experiment_id
+        directory.mkdir(parents=True)
+        (directory / "manifest.json").write_text(
+            json.dumps({"created_at": created_at}), encoding="utf-8"
+        )
+
+    experiments = ResearchSource(tmp_path).list_experiments()
+
+    assert [item["id"] for item in experiments] == ["EXP-NEW", "EXP-OLD"]
 
 
 def test_run_rejects_hypothesis_from_a_different_question(tmp_path: Path) -> None:
@@ -250,5 +291,9 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     summary = (tmp_path / "experiments" / "EXP-PING-0001" / "summary.md").read_text(
         encoding="utf-8"
     )
+    assert "## Versuchsuebersicht" in summary
+    assert "- Status: `completed`" in summary
+    assert "Angeforderte zusaetzliche Nachweise:" in summary
+    assert "Empfohlene Folgeexperimente:" in summary
     assert f"{report_id}.md" in summary
     assert "Post-hoc summary" in summary

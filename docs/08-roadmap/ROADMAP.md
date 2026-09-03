@@ -20,6 +20,8 @@ Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Die Dashboard-Navigation
 behandelt nun statische und dynamische Arbeitsbereiche konsistent. Externe CI und
 wissenschaftliche EVID bleiben separate offene Nachweise.
+Experimentzusammenfassungen enthalten die zentralen Laufmetadaten in deutscher
+Sprache; relative Artefakt-Links bleiben innerhalb des Datei-Viewers.
 
 ## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
 

@@ -12,7 +12,7 @@ import hashlib
 import json
 import platform
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol, cast
 
@@ -154,6 +154,7 @@ class ExperimentRecorder:
                 "roles": [],
             },
             "timestamp": datetime.now().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "git": get_git_info(),
             "software": get_software_info(),
             "simulation": {},

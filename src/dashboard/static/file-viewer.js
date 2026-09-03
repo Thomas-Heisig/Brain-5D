@@ -626,6 +626,13 @@ async function openFMFile(path) {
         <div class="fm-analyze-panel" id="fm-analyze-panel" style="display:none;"></div>
       `;
 
+      viewer.querySelectorAll('.fm-md-link[data-fm-path]').forEach(link => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          openFMFile(link.dataset.fmPath);
+        });
+      });
+
       // Wire up the close button
       const closeBtn = document.getElementById('fm-close-viewer');
       if (closeBtn) {
@@ -877,7 +884,7 @@ function renderFMContent(content, ext, path = '') {
 
   // Markdown rendering
   if (ext === '.md' || ext === '.markdown') {
-    return renderFMMarkdown(content);
+    return renderFMMarkdown(content, path);
   }
 
   // JSON rendering: also catch .schema.json, .ipynb etc.
@@ -1039,7 +1046,7 @@ function initDocumentationBrowser() { initFileManager(); }
 // Markdown / CSV rendering helpers
 // ================================================================
 
-function renderFMMarkdown(content) {
+function renderFMMarkdown(content, currentPath = '') {
   let html = content;
 
   // Code blocks (```...```) with language label
@@ -1060,8 +1067,19 @@ function renderFMMarkdown(content) {
     return `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(alt)}" class="fm-md-image" loading="lazy" />`;
   });
 
-  // Links: [text](url)
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" class="fm-md-link">$1</a>');
+  // Links: keep internal research links inside the unified viewer.
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, target) => {
+    if (/^(https?:|mailto:|#)/i.test(target)) {
+      return `<a href="${escapeHtml(target)}" target="_blank" rel="noopener" class="fm-md-link">${label}</a>`;
+    }
+    const base = currentPath.split('/').slice(0, -1);
+    target.split('/').forEach(part => {
+      if (!part || part === '.') return;
+      if (part === '..') base.pop();
+      else base.push(part);
+    });
+    return `<a href="#" data-fm-path="${escapeHtml(base.join('/'))}" class="fm-md-link">${label}</a>`;
+  });
 
   // Headings (### → h4, ## → h3, # → h2)
   html = html.replace(/^### (.+)$/gm, '<h4 class="fm-md-h3">$1</h4>');

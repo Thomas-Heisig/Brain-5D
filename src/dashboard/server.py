@@ -57,6 +57,7 @@ from src.research_assistant import (
     ChatBackend,
     ResearchChat,
     chat_backend_from_text_backend,
+    write_artifact_review,
     write_human_review,
 )
 from src.research_assistant.ollama_backend import OllamaBackend
@@ -693,6 +694,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/ai-reports/generate":
                 self._generate_ai_report(body)
+                return
+
+            if path == "/api/research/reviews":
+                self._write_artifact_review(body)
                 return
 
             if path == "/api/research/chat":
@@ -2498,6 +2503,20 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(
             {"experiments": cast(list[JSONValue], source.list_experiments())}
+        )
+
+    def _write_artifact_review(self, body: dict[str, Any]) -> None:
+        source = self._require_research_source()
+        artifact_path = body.get("artifact_path")
+        if not isinstance(artifact_path, str):
+            raise InvalidRequestError("artifact_path is required")
+        review_path = write_artifact_review(source.root(), artifact_path, body)
+        self._send_json(
+            {
+                "ok": True,
+                "path": str(review_path.relative_to(source.root())).replace("\\", "/"),
+            },
+            HTTPStatus.CREATED,
         )
 
     def _serve_research_file(self, path: str) -> None:

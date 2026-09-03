@@ -168,6 +168,7 @@ def _role_prompt(
     )
     return (
         f"Role: {role}\n"
+        "Write every natural-language value in German. Keep identifiers, field names, and technical values unchanged.\n"
         "Return exactly one JSON object with these fields: assessment (string), "
         "observations (array), effect_direction (string), "
         "methodological_concerns (array), alternative_explanations (array), "
@@ -394,3 +395,48 @@ def write_human_review(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     return path
+
+
+def write_artifact_review(
+    research_root: Path, artifact_path: str, review: dict[str, Any]
+) -> Path:
+    """Write one append-only human review beside an experiment artifact."""
+    normalized = artifact_path.replace("\\", "/").lstrip("/")
+    parts = normalized.split("/")
+    if len(parts) < 3 or parts[0] != "experiments" or parts[2].endswith(".review.json"):
+        raise ValueError("Review target must be an experiment artifact")
+    target = (research_root / normalized).resolve()
+    experiment_dir = (research_root / "experiments" / parts[1]).resolve()
+    if not target.is_file() or experiment_dir not in target.parents:
+        raise ValueError("Review target does not exist in the experiment")
+    status = review.get("review_status")
+    if status not in {"accepted_as_interpretation", "rejected"}:
+        raise ValueError("Human review must accept or reject the interpretation")
+    reviewer = review.get("reviewer")
+    comments = review.get("comments")
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise ValueError("Human reviewer identity is required")
+    if not isinstance(comments, str) or not comments.strip():
+        raise ValueError("Human review comments are required")
+    review_path = target.with_name(f"{target.name}.review.json")
+    if review_path.exists():
+        raise FileExistsError(f"Human review already exists: {normalized}")
+    review_path.write_text(
+        json.dumps(
+            {
+                "artifact_path": normalized,
+                "review_status": status,
+                "reviewer": reviewer.strip(),
+                "reviewed_at": datetime.now(timezone.utc).isoformat(),
+                "comments": comments.strip(),
+                "artifact_content_digest": hashlib.sha256(
+                    target.read_bytes()
+                ).hexdigest(),
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return review_path

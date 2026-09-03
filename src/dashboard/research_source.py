@@ -254,7 +254,7 @@ class ResearchSource:
             return []
 
         experiments: list[dict[str, JSONValue]] = []
-        for entry in sorted(directory.iterdir()):
+        for entry in directory.iterdir():
             manifest = entry / "manifest.json"
             if not manifest.is_file():
                 continue
@@ -262,6 +262,11 @@ class ResearchSource:
                 data: Any = json.loads(manifest.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
                 continue
+            created_at = (
+                str(data.get("created_at") or data.get("timestamp"))
+                if isinstance(data, dict)
+                else None
+            )
             experiments.append(
                 {
                     "ai_operation_mode": (
@@ -275,10 +280,14 @@ class ResearchSource:
                         else "UNKNOWN"
                     ),
                     "id": entry.name,
+                    "created_at": created_at,
                     "path": str(entry.relative_to(self._root)).replace("\\", "/"),
                     "manifest": data,
                 }
             )
+        experiments.sort(
+            key=lambda item: str(item.get("created_at") or ""), reverse=True
+        )
         return experiments
 
     # ------------------------------------------------------------------

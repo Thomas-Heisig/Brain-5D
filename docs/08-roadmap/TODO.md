@@ -27,6 +27,9 @@
 ### P0 — Post-Experiment AI Research Report
 
 - [x] AIRR nach erfolgreichem Dashboard-Experiment automatisch post-hoc anhängen
+- [x] Menschliche Reviews für experimentbezogene KI- und sonstige Artefakte integrieren
+- [x] Experimente mit UTC-Erstellungsdatum versehen und danach sortieren
+- [x] Ausfuehrliche deutsche `summary.md` mit Metadaten und Viewer-internen Links erzeugen
 - [x] AIRR-Erzeugung strikt vom Experimentlauf trennen; Fehler dürfen den Laufstatus
   nicht verändern
 - [x] Fehlendes AI-Backend explizit als `unavailable` melden statt Evidence zu behaupten

@@ -11,7 +11,13 @@ from .ai_research_object import (
     borrowed_intelligence_ratio,
     interpretation_distance,
 )
-from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
+from .airr import (
+    AIResearchReport,
+    AIRRPipeline,
+    render_markdown,
+    write_artifact_review,
+    write_human_review,
+)
 from .assistant import AnalysisBackend, ResearchAssistant
 from .authority import (
     AIRole,
@@ -128,6 +134,7 @@ __all__ = [
     "ObservationStreamRecord",
     "render_markdown",
     "write_human_review",
+    "write_artifact_review",
     "summarize",
     "write_statistics",
     "ChatBackend",

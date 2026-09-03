@@ -1,92 +1,58 @@
 # EXP-5D-0001-v2: Zusammenfassung
 
-## Kurzfassung
+Diese Zusammenfassung wurde nach Abschluss des Laufs durch den internen Research Assistant aus den Experimentartefakten und dem AIRR erstellt. Sie beschreibt die Daten, die Berichte und deren wissenschaftliche Grenzen.
 
-Das Experiment untersucht, ob eine fuenfdimensionale Anordnung eine messbar andere Netzwerkdynamik als niedrigere Dimensionen erzeugt.
+## Versuchsuebersicht
 
-**Ergebnis:** Der Lauf wurde technisch erfolgreich abgeschlossen. In allen 15 Messungen wurden jedoch keine aktivierten Neuronen und keine Spikes beobachtet. Eine belastbare Aussage ueber einen Effekt der Dimensionalitaet ist deshalb nicht moeglich.
+- Status: `completed`
+- Forschungsfragen: RQ-5D-001
+- Hypothesen: H-5D-001-A
+- Durchlaeufe: `15`
+- Laufmodus: `EXPLORATORY`
+- Netzwerkmodus: `OFFLINE`
 
-## Zuordnung
+## Artefakte
 
-| Feld | Wert |
-|---|---|
-| Experiment | `EXP-5D-0001-v2` |
-| Titel | Dimensionalitaet und Netzwerkdynamik v2 |
-| Forschungsfrage | `RQ-5D-001` |
-| Hypothese | `H-5D-001-A` |
-| Protokoll | `science_suite_v1` |
-| Laufmodus | EXPLORATORY |
-| Netzwerkmodus | OFFLINE |
-| Seeds | 42, 43, 44 |
-| Messungen | 15 (3 Seeds x 5 Bedingungen) |
-| Laufzeit | 0.003842 s |
-| Technischer Status | completed |
-| Gueltigkeitsstatus | valid, 0 Laufzeitfehler |
+- [analysis/AIAR-critical_reviewer-20260903205642547131-d11507fa.json](analysis/AIAR-critical_reviewer-20260903205642547131-d11507fa.json)
+- [analysis/AIAR-critical_reviewer-20260903205732047321-664b8e2f.json](analysis/AIAR-critical_reviewer-20260903205732047321-664b8e2f.json)
+- [analysis/AIAR-scientific_analyst-20260903205623921935-d11507fa.json](analysis/AIAR-scientific_analyst-20260903205623921935-d11507fa.json)
+- [analysis/AIAR-scientific_analyst-20260903205715084095-664b8e2f.json](analysis/AIAR-scientific_analyst-20260903205715084095-664b8e2f.json)
+- [analysis/AIAR-scientific_writer-20260903205748858380-664b8e2f.json](analysis/AIAR-scientific_writer-20260903205748858380-664b8e2f.json)
+- [DATA/runs.json](DATA/runs.json)
+- [manifest.json](manifest.json)
+- [report.md](report.md)
+- [reports/AIRR-2026-0001.json](reports/AIRR-2026-0001.json)
+- [reports/AIRR-2026-0001.md](reports/AIRR-2026-0001.md)
+- [workflow.json](workflow.json)
 
-## Bedingungen und Daten
+## AI-Bericht
 
-| Bedingung | Dimensionen | Laeufe | Aktivierte Neuronen | Gesamt-Spikes | Propagationstiefe | Latenz |
-|---|---:|---:|---:|---:|---:|---|
-| 1d | `[3, 1, 1, 1, 1]` | 3 | 0 | 0 | 0 | nicht bestimmt |
-| 2d | `[2, 2, 1, 1, 1]` | 3 | 0 | 0 | 0 | nicht bestimmt |
-| 3d | `[2, 2, 2, 1, 1]` | 3 | 0 | 0 | 0 | nicht bestimmt |
-| 5d | `[2, 2, 2, 2, 2]` | 3 | 0 | 0 | 0 | nicht bestimmt |
-| random_graph | `[2, 2, 2, 2, 2]` | 3 | 0 | 0 | 0 | nicht bestimmt |
-
-Die Rohdaten enthalten fuer jeden Lauf die Vorher-/Nachher-State-Digests. Die Probe meldete in allen Bedingungen keine Netzwerkantwort; deshalb sind `first_response_latency`, `last_response_latency` und `return_latency` null.
-
-## Berichtslage
-
-### Technischer Experimentbericht
-
-[report.md](report.md) dokumentiert Protokoll, Laufanzahl und den Evidenzvorbehalt.
-
-### DATA
-
-[runs.json](DATA/runs.json) enthaelt alle 15 Einzelmessungen.
-
-### Manifest und Workflow
-
-- [manifest.json](manifest.json) beschreibt Status, Seeds, Konfiguration, Artefakte und Validitaet.
-- [workflow.json](workflow.json) beschreibt die registrierte Forschungsfrage, Hypothese, Bedingungen und KI-Grenzen.
-
-### AIRR
-
-[AIRR-2026-0001.json](reports/AIRR-2026-0001.json) und [AIRR-2026-0001.md](reports/AIRR-2026-0001.md) wurden post-hoc erzeugt.
-
-- Status: `review_pending`
-- KI-Konfidenz: `0.1`
-- Menschliche Pruefung: `PENDING`
+- AIRR-Status: `generated`
+- AIRR: [AIRR-2026-0001.md](reports/AIRR-2026-0001.md)
+- AIRR JSON: [AIRR-2026-0001.json](reports/AIRR-2026-0001.json)
 - Wissenschaftliche Evidenz: `false`
-- Interpretation bleibt von der Ausfuehrung getrennt.
+- Human Review: `PENDING`
 
-Der AIRR fordert fuer eine belastbare Bewertung insbesondere Rohdaten mit auswertbaren Netzwerkmetriken, eine detailliertere reproduzierbare Protokollbeschreibung und statistische Vergleiche zwischen 2D, 3D und 5D.
+### KI-Einschaetzung
 
-### AIAR
+Die KI bewertet den vorliegenden Datensatz wie folgt:
 
-Im Ordner [analysis](analysis) liegen die AIAR-Ausgaben der Rollen `scientific_analyst`, `critical_reviewer` und `scientific_writer`.
+The research packet presents a clear, novel hypothesis (H-5D-001-A) and claim (CLAIM-5D-001) regarding the enhanced robustness and unique dynamics of 5D network organization. However, the associated experiment (EXP-5D-0001-v2) is marked as 'completed' but provides no quantitative results, data files, or calculated metrics. The `results` section only contains metadata (run_count: 15, runtime: 0.0038415000308305025). Consequently, a substantive scientific assessment of the claimed effect is impossible, rendering the current evidence base purely theoretical and unverified. The methodological concerns regarding missing data, dirty provenance, and lack of controls are critical and prevent any conclusion.
 
-Vorhandene AIAR-Dateien:
+KI-Konfidenz: `0.1`
 
-- [AIAR-scientific_analyst-20260903205623921935-d11507fa.json](analysis/AIAR-scientific_analyst-20260903205623921935-d11507fa.json)
-- [AIAR-critical_reviewer-20260903205642547131-d11507fa.json](analysis/AIAR-critical_reviewer-20260903205642547131-d11507fa.json)
-- [AIAR-scientific_analyst-20260903205715084095-664b8e2f.json](analysis/AIAR-scientific_analyst-20260903205715084095-664b8e2f.json)
-- [AIAR-critical_reviewer-20260903205732047321-664b8e2f.json](analysis/AIAR-critical_reviewer-20260903205732047321-664b8e2f.json)
-- [AIAR-scientific_writer-20260903205748858380-664b8e2f.json](analysis/AIAR-scientific_writer-20260903205748858380-664b8e2f.json)
+Angeforderte zusaetzliche Nachweise:
 
-Die Rollen kommen uebereinstimmend zu dem Schluss, dass aus dem vorliegenden Lauf keine wissenschaftliche Aussage ueber einen Dimensionalitaetseffekt abgeleitet werden kann. Die kritische Hauptursache ist die fehlende Netzwerkaktivitaet, nicht ein bestaetigter negativer Effekt der 5D-Anordnung.
+- The raw data files (e.g., time series, connectivity matrices) from the 15 runs of EXP-5D-0001-v2.
+- A detailed, reproducible protocol description for EXP-5D-0001-v2, including all parameters and initialization steps.
+- Statistical evidence (e.g., p-values, confidence intervals) comparing the network metrics (e.g., synchronization, activity level) between 5D and 3D/2D configurations.
 
-## Wissenschaftliche Einordnung
+Empfohlene Folgeexperimente:
 
-Die Hypothese ist mit diesem Lauf **weder bestaetigt noch widerlegt**. Der beobachtete Nullbefund kann auf die Stimulations- oder Modellkonfiguration zurueckgehen. Fuer einen aussagekraeftigen Folgelauf sollten die Ursache der ausbleibenden Spikes geprueft, eine messbare Kontrollreaktion hergestellt und anschliessend die Dimensionen unter ansonsten identischen Parametern statistisch verglichen werden.
+- Conduct a controlled ablation study comparing the network dynamics and robustness metrics (e.g., critical transition points, recovery time) of 5D, 3D, and 2D networks under identical damage scenarios.
+- Systematically vary the scale and type of local structural damage (e.g., random node removal, targeted link removal) to determine if the robustness benefit is scale-invariant.
+- Implement a comparative analysis where the only variable is the dimensionality, keeping all other parameters (neuron count, coupling strength, damage rate) constant.
 
-Es wurde keine `EVID` erzeugt. Human Review bleibt erforderlich; die KI-Berichte sind keine wissenschaftliche Evidenz.
+## Wissenschaftliche Grenze
 
-## Reproduzierbarkeit
-
-- Python: 3.13.14
-- Betriebssystem: Windows 11
-- Git-Commit zum Lauf: `254b3574af41364619e297a5c399cb29249e9270`
-- Konfiguration: `configs/learning_experiment.yaml`
-- Git-Status beim Lauf: dirty
-
+Die KI-Auswertung ist post-hoc, steuert den Lauf nicht und ersetzt keine menschliche wissenschaftliche Pruefung oder Evidenzfreigabe.

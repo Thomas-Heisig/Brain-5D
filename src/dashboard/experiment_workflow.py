@@ -28,11 +28,28 @@ def write_experiment_summary(
     """Write the post-hoc assistant summary beside one experiment's artifacts."""
     experiment_dir = research_root / "experiments" / experiment_id
     report_dir = experiment_dir / "reports"
+    manifest: dict[str, Any] = {}
+    manifest_path = experiment_dir / "manifest.json"
+    if manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            manifest = {}
     lines = [
         f"# {experiment_id}: Zusammenfassung",
         "",
         "Diese Zusammenfassung wurde nach Abschluss des Laufs durch den internen "
-        "Research Assistant aus den Experimentartefakten und dem AIRR erstellt.",
+        "Research Assistant aus den Experimentartefakten und dem AIRR erstellt. "
+        "Sie beschreibt die Daten, die Berichte und deren wissenschaftliche Grenzen.",
+        "",
+        "## Versuchsuebersicht",
+        "",
+        f"- Status: `{manifest.get('experiment_status', 'unbekannt')}`",
+        f"- Forschungsfragen: {', '.join(map(str, manifest.get('research_questions', []))) or 'nicht angegeben'}",
+        f"- Hypothesen: {', '.join(map(str, manifest.get('hypotheses', []))) or 'nicht angegeben'}",
+        f"- Durchlaeufe: `{manifest.get('results', {}).get('run_count', 'unbekannt') if isinstance(manifest.get('results'), dict) else 'unbekannt'}`",
+        f"- Laufmodus: `{manifest.get('research_run_mode', 'unbekannt')}`",
+        f"- Netzwerkmodus: `{manifest.get('network_mode', 'unbekannt')}`",
         "",
         "## Artefakte",
         "",
@@ -59,18 +76,28 @@ def write_experiment_summary(
             lines.extend(
                 [
                     "",
-                    "### AI-Einschaetzung",
+                    "### KI-Einschaetzung",
+                    "",
+                    "Die KI bewertet den vorliegenden Datensatz wie folgt:",
                     "",
                     str(
                         content.get(
                             "executive_summary",
-                            content.get("conclusion", "NOT_AVAILABLE"),
+                            content.get("conclusion", "Keine Einschaetzung vorhanden."),
                         )
                     ),
                     "",
                     f"KI-Konfidenz: `{content.get('ai_confidence', 0.0)}`",
+                    "",
+                    "Angeforderte zusaetzliche Nachweise:",
+                    "",
                 ]
             )
+            for item in content.get("missing_evidence", []):
+                lines.append(f"- {item}")
+            lines.extend(["", "Empfohlene Folgeexperimente:", ""])
+            for item in content.get("recommended_follow_up", []):
+                lines.append(f"- {item}")
     else:
         lines.append(
             f"- Hinweis: `{ai_report.get('reason', ai_report.get('message', ''))}`"

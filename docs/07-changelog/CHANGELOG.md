@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-03 — Artefakt-Reviews und Experimentdatum
+
+- Menschliche Reviews koennen nun an beliebige Dateien innerhalb eines
+  Experimentordners angehaengt werden; Reviewstatus, Reviewer, Kommentar und
+  Inhaltsdigest werden append-only als `.review.json` gespeichert.
+- Neue Experimente erhalten `created_at` in UTC und werden in der Research-API
+  nach diesem Datum absteigend ausgegeben.
+
+## 2026-09-03 — Ausfuehrliche deutsche Experimentzusammenfassungen
+
+- `summary.md` enthaelt nun Versuchsmetadaten, Laufanzahl, Status, AI-Konfidenz,
+  angeforderte Nachweise und empfohlene Folgeexperimente.
+- Relative Markdown-Links in der Dashboard-Dateiansicht oeffnen Dateien im
+  bestehenden Viewer; externe Links bleiben externe Browser-Links.
+
 ## 2026-09-03 — 5D dimensionality experiment v3
 
 - Executed `EXP-5D-0001-v3` through the dashboard with 15 empirical DATA rows.
