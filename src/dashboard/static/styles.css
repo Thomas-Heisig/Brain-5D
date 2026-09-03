@@ -1895,6 +1895,7 @@ body .footer-segment {
 
 .runtime-clock-panel { margin: 0 0 16px; padding: 14px 16px; border: 1px solid rgba(102, 170, 181, .25); background: rgba(5, 22, 32, .72); }
 .runtime-clock-panel > header, .runtime-clock-readout { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.runtime-clock-panel > header > div { min-width: 0; }
 .runtime-clock-panel h3 { margin: 3px 0 0; }
 .runtime-clock-panel > header > strong { color: #7ff5df; font: 10px var(--font-mono); }
 .runtime-clock-control { display: grid; gap: 7px; margin: 14px 0 10px; color: #b9d9dc; font: 10px var(--font-mono); }
@@ -2516,8 +2517,14 @@ body .footer-segment {
 
 @media (max-width: 1100px) {
   #tab-embodiment.active {
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
   }
+
+  #tab-embodiment .workspace-header,
+  #tab-embodiment .workspace-status-strip { min-width: 0; }
+
+  #tab-embodiment .workspace-header { align-items: flex-start; flex-wrap: wrap; }
+  #tab-embodiment .workspace-status-strip { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
 
   .embodiment-living-map {
     grid-template-columns: 1fr;
@@ -2568,6 +2575,14 @@ body .footer-segment {
 }
 
 @media (max-width: 680px) {
+  .runtime-clock-panel { padding: 12px; }
+  .runtime-clock-panel > header { align-items: flex-start; }
+  .runtime-clock-readout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .runtime-clock-readout span { min-width: 0; overflow-wrap: anywhere; }
+
+  #tab-embodiment .workspace-status-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #tab-embodiment .workspace-status-strip span { min-width: 0; }
+
   .organism-core,
   .brain-database { min-height: 340px; }
 

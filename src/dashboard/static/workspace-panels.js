@@ -31,7 +31,7 @@ function initRuntimeClockControl() {
   control.dataset.bound = "true";
   control.addEventListener("input", async () => {
     const target = CLOCK_TARGETS[Number(control.value)];
-    setText("runtime-clock-target-value", `${target.toLocaleString?.() ?? target} Hz`);
+    setText("runtime-clock-target-value", target === "MAX" ? "MAX" : `${target.toLocaleString()} Hz`);
     try {
       await fetch("/api/control", {
         method: "POST",
@@ -297,6 +297,9 @@ export function renderWorkspaceSummaries(state) {
   setText("embodiment-last-action", embodiment.last_action || "—");
   setText("embodiment-last-text", embodiment.last_text_input || "—");
   const targetHz = runtimeClock.target_hz;
+  const targetIndex = targetHz == null ? CLOCK_TARGETS.length - 1 : CLOCK_TARGETS.indexOf(Number(targetHz));
+  const clockControl = byId("runtime-clock-target");
+  if (clockControl && targetIndex >= 0) clockControl.value = String(targetIndex);
   setText("runtime-clock-target-value", targetHz == null ? "MAX" : `${formatNumber(targetHz)} Hz`);
   setText("runtime-clock-achieved", formatFixed(runtimeClock.achieved_hz, 1, " Hz"));
   setText("runtime-clock-ratio", formatFixed(runtimeClock.simulation_speed_ratio, 3, " × realtime"));
