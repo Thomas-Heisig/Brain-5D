@@ -33,7 +33,7 @@
 - [x] Typisierte `/api/learning/preparation`-API für Erstellen, Prüfen und Freigeben
   ergänzen; serverseitige `LearningPreparationGuard`-Prüfung erzwingen
 - [x] `LearningSourceRef` aus Knowledge Intake und Environment-Capture ableiten
-- [ ] Train-, Validation- und Holdout-Partitionen serverseitig auf Leakage prüfen
+- [x] Train-, Validation- und Holdout-Partitionen serverseitig auf Leakage prüfen
 - [ ] Pre-/Post-Impulse, Temporal-State-Frames und TaskOutcome-Ergebnisse als
   Laufartefakte persistieren und im Studio anzeigen
 - [ ] `EXP-LEARN-0001` als registriertes ON/OFF- und Holdout-Protokoll mit

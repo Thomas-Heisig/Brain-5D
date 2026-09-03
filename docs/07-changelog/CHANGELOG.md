@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Learning partition leakage guard
+
+- Added fail-closed validation for digest overlap across train, validation and
+  holdout learning partitions.
+- Added explicit rejection of registered AI- and gold-label digests in holdout
+  data before a preparation proposal can be persisted.
+- Added regression coverage for cross-partition overlap and holdout labels.
+
 ## 2026-09-03 — Learning source provenance derivation
 
 - Added typed `LearningSourceRef` derivation from validated `KnowledgeItem`

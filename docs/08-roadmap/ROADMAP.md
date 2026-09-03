@@ -52,6 +52,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 	Guard-/Freigabeprüfung ergänzen
 - [x] `LearningSourceRef` aus validierter Knowledge-Provenienz und Environment-Capture
 	ableiten; unvollständige Capture-Records werden fail-closed abgewiesen
+- [x] Train-, Validation- und Holdout-Digests serverseitig auf Partition-Overlap
+	prüfen und Label-Digests aus dem Holdout ausschließen
 - [ ] Pre-/Post-Probes, TaskOutcomeVerifier und Holdout-Leakage im Learning-Lauf
 	als DATA-Artefakte verknüpfen
 - [ ] `EXP-LEARN-0001` als ON/OFF- und Holdout-Protokoll registrieren und ausführen

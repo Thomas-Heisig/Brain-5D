@@ -176,6 +176,35 @@ def test_environment_capture_derivation_fails_closed_for_missing_provenance(
         LearningSourceRef.from_environment_capture(capture)
 
 
+def test_partition_leakage_guard_rejects_cross_partition_digest_overlap() -> None:
+    sources = [
+        _source(),
+        LearningSourceRef(
+            source_id="SRC-002",
+            digest="abc123",
+            origin="deterministic_environment",
+            partition=LearningDataPartition.HOLDOUT,
+        ),
+    ]
+
+    with pytest.raises(ValueError, match="leakage"):
+        LearningPreparationGuard.validate_partition_leakage(sources)
+
+
+def test_partition_leakage_guard_rejects_labels_in_holdout() -> None:
+    holdout = LearningSourceRef(
+        source_id="LABEL-001",
+        digest="gold-digest",
+        origin="gold_label",
+        partition=LearningDataPartition.HOLDOUT,
+    )
+
+    with pytest.raises(ValueError, match="label"):
+        LearningPreparationGuard.validate_partition_leakage(
+            [holdout], gold_label_digests={"gold-digest"}
+        )
+
+
 def test_preparation_persistence_keeps_proposal_and_approval_separate(tmp_path: Path) -> None:
     service = LearningPreparationService(tmp_path / "preparations")
     proposal = service.create_proposal(

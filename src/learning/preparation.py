@@ -263,6 +263,31 @@ class LearningPreparationGuard:
         cls._validate_value(payload, path="proposal")
 
     @classmethod
+    def validate_partition_leakage(
+        cls,
+        sources: Sequence[LearningSourceRef],
+        *,
+        ai_label_digests: set[str] | None = None,
+        gold_label_digests: set[str] | None = None,
+    ) -> None:
+        """Reject digest overlap and labels exposed through the holdout set."""
+        seen: dict[str, LearningDataPartition] = {}
+        for source in sources:
+            previous = seen.get(source.digest)
+            if previous is not None and previous is not source.partition:
+                raise ValueError("data leakage detected across learning partitions")
+            seen[source.digest] = source.partition
+
+        holdout = {
+            source.digest
+            for source in sources
+            if source.partition is LearningDataPartition.HOLDOUT
+        }
+        forbidden = (ai_label_digests or set()) | (gold_label_digests or set())
+        if holdout & forbidden:
+            raise ValueError("learning holdout must not contain label records")
+
+    @classmethod
     def _validate_value(cls, value: Any, *, path: str) -> None:
         if isinstance(value, Mapping):
             typed_value = cast(Mapping[Any, Any], value)
@@ -396,6 +421,7 @@ class LearningPreparationService:
     ) -> LearningPreparationProposal:
         if raw_proposal_payload is not None:
             LearningPreparationGuard.validate_mapping(raw_proposal_payload)
+        LearningPreparationGuard.validate_partition_leakage(sources)
         return LearningPreparationProposal(
             plan_id=plan_id,
             objective=objective,
