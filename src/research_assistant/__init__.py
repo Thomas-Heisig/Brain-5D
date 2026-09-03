@@ -31,12 +31,16 @@ from .gateways import (
     MemoryWriteProposal,
 )
 from .governance import (
+    ConfirmatoryRunLock,
+    DataPartition,
     KnowledgeOrigin,
     NetworkMode,
     PreregistrationLock,
     PromptRegistry,
+    ResearchRunMode,
     RetrievalRecord,
     VersionedPrompt,
+    validate_data_partition,
     validate_network_mode,
 )
 from .models import AIAnalysisRecord, ResearchPacket
@@ -62,6 +66,8 @@ __all__ = [
     "AIFirewallViolation",
     "AIResource",
     "KnowledgeOrigin",
+    "ConfirmatoryRunLock",
+    "DataPartition",
     "InterventionGateway",
     "MemoryWriteGateway",
     "MemoryWriteProposal",
@@ -70,6 +76,8 @@ __all__ = [
     "PromptRegistry",
     "RetrievalRecord",
     "VersionedPrompt",
+    "ResearchRunMode",
+    "validate_data_partition",
     "validate_network_mode",
     "AIExposure",
     "AIClockMode",
