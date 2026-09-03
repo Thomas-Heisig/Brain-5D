@@ -12,7 +12,7 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **640 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
+Vollsuite meldet **660 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
@@ -46,6 +46,13 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
 - [ ] Wissenschaftliche EVID für den operator-ausgelösten Learning-Studio-Lauf nach
 	Clean Freeze und unabhängiger Review erzeugen
+- [ ] Persistente PreparedLearningPlans, typisierte Preparation-API und serverseitige
+	Guard-/Freigabeprüfung ergänzen
+- [ ] Pre-/Post-Probes, TaskOutcomeVerifier und Holdout-Leakage im Learning-Lauf
+	als DATA-Artefakte verknüpfen
+- [ ] `EXP-LEARN-0001` als ON/OFF- und Holdout-Protokoll registrieren und ausführen
+- [ ] Curriculum-Vergleich `EXP-CURR-0001` für deterministische, menschliche und
+	KI-gestützte Vorbereitung registrieren
 - [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
 
 ## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)

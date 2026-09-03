@@ -163,7 +163,7 @@ async function prepareWithAI() {
   setText("learning-ai-proposal", "KI erstellt einen proposal-only Vorbereitungsentwurf …");
 
   try {
-    const response = await fetch("/api/learning/run", {
+    const response = await fetch("/api/research/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -200,7 +200,7 @@ async function runLearning() {
   setText("learning-ai-proposal", "Lernlauf wird ausgeführt; KI-Ausgabe und Freitext werden nicht als Lernparameter verwendet.");
   const suffix = `${Date.now()}`.slice(-10);
   try {
-    const response = await fetch("/api/research/chat", {
+    const response = await fetch("/api/learning/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
