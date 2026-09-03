@@ -1,0 +1,74 @@
+[
+  {
+    "condition": "productive_reward_stdp",
+    "experiment_id": "EXP-STDP-0002",
+    "metrics": {
+      "baseline_target_peak_v": -65.0,
+      "baseline_target_spike_tick": null,
+      "baseline_target_spiked": false,
+      "final_mean_weight": 0.828800783071405,
+      "initial_mean_weight": 0.05,
+      "mean_weight_delta": 0.778800783071405,
+      "presynaptic_neurons": 48,
+      "reward_weight_updates": 960,
+      "rewards_applied": 20,
+      "rewards_received": 20,
+      "trained_target_peak_v": -27.037432064883927,
+      "trained_target_spike_tick": 2,
+      "trained_target_spiked": true,
+      "training_trials": 20
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "productive_reward_stdp",
+    "experiment_id": "EXP-STDP-0002",
+    "metrics": {
+      "baseline_target_peak_v": -65.0,
+      "baseline_target_spike_tick": null,
+      "baseline_target_spiked": false,
+      "final_mean_weight": 0.828800783071405,
+      "initial_mean_weight": 0.05,
+      "mean_weight_delta": 0.778800783071405,
+      "presynaptic_neurons": 48,
+      "reward_weight_updates": 960,
+      "rewards_applied": 20,
+      "rewards_received": 20,
+      "trained_target_peak_v": -27.037432064883927,
+      "trained_target_spike_tick": 2,
+      "trained_target_spiked": true,
+      "training_trials": 20
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "productive_reward_stdp",
+    "experiment_id": "EXP-STDP-0002",
+    "metrics": {
+      "baseline_target_peak_v": -65.0,
+      "baseline_target_spike_tick": null,
+      "baseline_target_spiked": false,
+      "final_mean_weight": 0.828800783071405,
+      "initial_mean_weight": 0.05,
+      "mean_weight_delta": 0.778800783071405,
+      "presynaptic_neurons": 48,
+      "reward_weight_updates": 960,
+      "rewards_applied": 20,
+      "rewards_received": 20,
+      "trained_target_peak_v": -27.037432064883927,
+      "trained_target_spike_tick": 2,
+      "trained_target_spiked": true,
+      "training_trials": 20
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  }
+]

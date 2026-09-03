@@ -4,7 +4,7 @@
 
 - Published `EXP-STDP-0002` through the Dashboard workflow with three
   independent seeds and reproducible positive synaptic-weight changes.
-- Published versioned learning repeat `EXP-LEARN-20260903-2229` without
+- Published versioned learning repeat `EXP-LEARN-20260903-2300` without
   overwriting `EXP-EMB-0001`; all three seeds changed from no baseline target
   spike to a trained target spike after 20 reward updates.
 - EVID remains gated by clean freeze and independent review; BODY, MEM and
