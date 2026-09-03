@@ -39,6 +39,13 @@ class AIReproducibility(StrEnum):
     R3 = "R3"
 
 
+class AIClockMode(StrEnum):
+    """Clock semantics for asynchronous AI interaction timing."""
+
+    LOGICAL_TIME = "LOGICAL_TIME"
+    WALL_CLOCK = "WALL_CLOCK"
+
+
 @dataclass(frozen=True, slots=True)
 class ScientificContract:
     """Immutable, digest-backed data contract with no execution capability."""
@@ -122,6 +129,8 @@ class AIInteractionRecord:
     authority: str
     exposure: AIExposure
     causal_effect: CausalTaint
+    clock_mode: AIClockMode
+    response_application_tick: int | None
     created_at: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -148,6 +157,8 @@ class AIInteractionRecord:
         authority: str,
         exposure: AIExposure = AIExposure.OBSERVER_ONLY,
         causal_effect: CausalTaint = CausalTaint.OBSERVED,
+        clock_mode: AIClockMode = AIClockMode.LOGICAL_TIME,
+        response_application_tick: int | None = None,
     ) -> AIInteractionRecord:
         """Build a record from canonicalized values without storing their contents."""
         if not role.strip():
@@ -156,6 +167,8 @@ class AIInteractionRecord:
             raise ValueError("AI interaction authority must not be empty")
         if tick is not None and tick < 0:
             raise ValueError("AI interaction tick must not be negative")
+        if response_application_tick is not None and response_application_tick < 0:
+            raise ValueError("AI response application tick must not be negative")
 
         input_digest = _digest(input_value)
         prompt_digest = _digest(prompt)
@@ -184,6 +197,8 @@ class AIInteractionRecord:
             authority=authority,
             exposure=exposure,
             causal_effect=causal_effect,
+            clock_mode=clock_mode,
+            response_application_tick=response_application_tick,
             created_at=created_at,
         )
 

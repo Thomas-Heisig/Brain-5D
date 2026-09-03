@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from src.research_assistant.advisor import CognitiveAdvisor
+from src.research_assistant.contracts import AIClockMode, AIInteractionRecord
 from src.research_assistant.gateways import InterventionGateway, MemoryWriteGateway
 from src.research_assistant.governance import (
     KnowledgeOrigin,
@@ -130,3 +131,20 @@ def test_memory_write_gateway_only_creates_digest_proposals() -> None:
     proposal = MemoryWriteGateway().propose(key="fact", value={"x": 1}, source="advisor")
     assert proposal.to_dict()["executed"] is False
     assert len(proposal.value_digest) == 64
+
+
+def test_ai_interaction_records_clock_mode_and_application_tick() -> None:
+    record = AIInteractionRecord.create(
+        role="research_ai",
+        experiment_id="EXP-001",
+        tick=2,
+        input_value={"x": 1},
+        prompt="observe",
+        output_value={"y": 1},
+        model_provenance={},
+        authority="read_only",
+        clock_mode=AIClockMode.WALL_CLOCK,
+        response_application_tick=4,
+    )
+    assert record.to_dict()["clock_mode"] == "WALL_CLOCK"
+    assert record.to_dict()["response_application_tick"] == 4

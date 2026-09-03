@@ -50,6 +50,8 @@ Evidenz für Lernwirkung.
 	Memory-Zustand.
 - Language-Organ-Treatments sind explizit typisiert und Knowledge-Intake-Drafts
 	tragen erweiterte zeitliche und quellenbezogene Provenienz.
+- Asynchrone AI-Interaktionen tragen nun explizite Zeitsemantik und einen
+	Anwendungstic für reproduzierbare Laufprotokolle.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

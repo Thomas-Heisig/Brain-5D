@@ -17,6 +17,8 @@
   `LINGUISTIC_TRANSPORT` oder `SEMANTIC_AUGMENTATION`.
 - Knowledge-Intake-Provenienz speichert Capture-/Processing-Zeit, MIME,
   Quellenversion, Trust-Klassifikation und Extraktionsmethode.
+- AI-Interaction-Records unterscheiden nun `LOGICAL_TIME` und `WALL_CLOCK` und
+  können den Response-Anwendungstic explizit protokollieren.
 
 ## 2026-09-03 — Non-executing AI shadow mode
 

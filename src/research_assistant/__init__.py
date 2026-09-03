@@ -11,6 +11,7 @@ from .authority import (
 )
 from .chat import ChatBackend, ResearchChat, chat_backend_from_text_backend
 from .contracts import (
+    AIClockMode,
     AIExposure,
     AIInferenceFailureEvent,
     AIInteractionRecord,
@@ -71,6 +72,7 @@ __all__ = [
     "VersionedPrompt",
     "validate_network_mode",
     "AIExposure",
+    "AIClockMode",
         "AIInferenceFailureEvent",
     "AIInteractionRecord",
     "AIReproducibility",
