@@ -1,0 +1,94 @@
+{
+  "experiment_id": "EXP-REG-0001",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-03T21:52:26.342901",
+  "git": {
+    "commit": "c923328a61812174a8be8291d4998c519aa12379",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "seed": 0,
+    "ticks": 8,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  "artifacts": {
+    "data": "DATA/runs.json"
+  },
+  "research_questions": [
+    "RQ-REG-001"
+  ],
+  "hypotheses": [
+    "H-REG-001-A"
+  ],
+  "config": {
+    "path": "configs\\learning_experiment.yaml",
+    "sha256": ""
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "run_count": 90,
+    "protocol": "science_suite_v1"
+  },
+  "runtime": {
+    "duration_seconds": 0.002744200057350099
+  }
+}

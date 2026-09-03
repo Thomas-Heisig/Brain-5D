@@ -66,6 +66,13 @@
   evidence: []
   created: '2026-09-03'
   updated: '2026-09-03'
+- id: H-REG-001-A
+  research_question: RQ-REG-001
+  hypothesis: Chronischer Druck erhöht deterministisch Resource Pressure und Thermal Threat, während unbekannte Telemetrie Unsicherheit erhält.
+  status: untested
+  evidence: []
+  created: '2026-09-03'
+  updated: '2026-09-03'
 - id: H-STDP-001-A
   research_question: RQ-STDP-001
   hypothesis: Pair-based STDP erzeugt unter definierten Pre/Post-Zeitabständen eine

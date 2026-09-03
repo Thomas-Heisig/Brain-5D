@@ -144,6 +144,20 @@
     limitations: null
   created: '2026-09-03'
   updated: '2026-09-03'
+- id: RQ-REG-001
+  domain: Regulation
+  question: Wie reagieren Drives und funktionale Zustandsgrößen auf nominale, chronische und unbekannte Telemetrie?
+  relevance: Deterministische Prüfung der Selbstregulation unter Ressourcen- und Sensorbedingungen.
+  hypotheses:
+  - H-REG-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: null
+  created: '2026-09-03'
+  updated: '2026-09-03'
 - id: RQ-STDP-001
   domain: STDP
   question: Erzeugt pair-based STDP unter definierten Pre/Post-Zeitabständen eine

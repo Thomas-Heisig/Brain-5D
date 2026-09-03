@@ -1,0 +1,5132 @@
+[
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 0,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 0,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 0,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 0,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 0,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 0,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 0,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 0,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 0,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 0,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 1,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 1,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 1,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 1,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 1,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 1,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 1,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 1,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 1,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 1,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 2,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 2,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 2,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 2,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 2,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 2,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 2,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 2,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 2,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 2,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 3,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 3,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 3,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 3,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 3,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 3,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 3,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 3,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 3,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 3,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 4,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 4,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 4,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 4,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 4,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 4,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 4,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 4,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 4,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 4,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 5,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 5,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 5,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 5,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 5,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 5,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 5,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 5,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 5,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 5,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 6,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 6,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 6,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 6,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 6,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 6,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 6,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 6,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 6,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 6,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 7,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 7,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 7,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 7,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 7,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 7,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 7,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 7,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 7,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 7,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 8,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 8,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 8,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 8,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 8,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 8,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 8,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 8,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 8,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 8,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 9,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 9,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 9,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 9,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 9,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 9,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 9,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 9,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 9,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 9,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 10,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 10,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 10,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 10,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 10,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 10,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 10,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 10,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 10,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 10,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 11,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 11,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 11,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 11,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 11,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 11,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 11,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 11,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 11,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 11,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 12,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 12,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 12,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 12,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 12,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 12,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 12,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 12,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 12,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 12,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 13,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 13,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 13,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 13,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 13,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 13,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 13,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 13,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 13,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 13,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 14,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 14,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 14,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 14,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 14,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 14,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 14,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 14,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 14,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 14,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 15,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 15,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 15,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 15,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 15,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 15,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 15,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 15,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 15,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 15,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 16,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 16,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 16,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 16,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 16,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 16,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 16,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 16,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 16,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 16,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 17,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 17,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 17,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 17,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 17,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 17,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 17,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 17,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 17,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 17,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 18,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 18,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 18,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 18,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 18,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 18,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 18,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 18,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 18,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 18,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 19,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 19,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 19,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 19,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 19,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 19,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 19,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 19,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 19,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 19,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 20,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 20,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 20,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 20,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 20,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 20,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 20,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 20,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 20,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 20,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 21,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 21,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 21,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 21,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 21,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 21,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 21,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 21,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 21,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 21,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 22,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 22,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 22,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 22,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 22,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 22,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 22,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 22,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 22,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 22,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 23,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 23,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 23,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 23,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 23,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 23,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 23,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 23,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 23,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 23,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 24,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 24,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 24,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 24,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 24,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 24,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 24,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 24,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 24,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 24,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 25,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 25,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 25,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 25,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 25,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 25,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 25,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 25,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 25,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 25,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 26,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 26,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 26,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 26,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 26,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 26,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 26,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 26,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 26,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 26,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 27,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 27,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 27,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 27,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 27,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 27,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 27,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 27,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 27,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 27,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 28,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 28,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 28,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 28,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 28,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 28,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 28,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 28,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 28,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 28,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "nominal",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 0.0,
+          "novelty": null,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.0
+        },
+        "tick": 29,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.0,
+        "safety": 1.0,
+        "tick": 29,
+        "uncertainty": 0.42857142857142855,
+        "valence": 1.0
+      },
+      "regulatory_state": {
+        "tick": 29,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 1.0
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "chronic_pressure",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": 1.0,
+          "novelty": null,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_threat": 0.6666666666666666
+        },
+        "tick": 29,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_threat": 0.0
+        }
+      },
+      "functional_state": {
+        "activation": 0.6666666666666666,
+        "safety": 0.0,
+        "tick": 29,
+        "uncertainty": 0.42857142857142855,
+        "valence": -1.0
+      },
+      "regulatory_state": {
+        "tick": 29,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 0.0,
+          "resource_pressure": 0.0,
+          "sensory_integrity": 0.0,
+          "task_progress": 1.0,
+          "thermal_margin": 0.0
+        },
+        "values": {
+          "continuity_risk": 1.0,
+          "energy_reserve": 0.33333333333333337,
+          "resource_pressure": 0.6666666666666666,
+          "sensory_integrity": 1.0,
+          "task_progress": null,
+          "thermal_margin": 0.33333333333333337
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  },
+  {
+    "condition": "telemetry_unknown",
+    "experiment_id": "EXP-REG-0001",
+    "metrics": {
+      "drives": {
+        "drives": {
+          "actuator_confidence": null,
+          "continuity_risk": null,
+          "novelty": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_threat": null
+        },
+        "tick": 29,
+        "uncertainty": {
+          "actuator_confidence": 1.0,
+          "continuity_risk": 0.0,
+          "novelty": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_threat": 1.0
+        }
+      },
+      "functional_state": {
+        "activation": null,
+        "safety": null,
+        "tick": 29,
+        "uncertainty": 0.8214285714285714,
+        "valence": null
+      },
+      "regulatory_state": {
+        "tick": 29,
+        "uncertainty": {
+          "continuity_risk": 0.0,
+          "energy_reserve": 1.0,
+          "resource_pressure": 1.0,
+          "sensory_integrity": 0.75,
+          "task_progress": 1.0,
+          "thermal_margin": 1.0
+        },
+        "values": {
+          "continuity_risk": null,
+          "energy_reserve": null,
+          "resource_pressure": null,
+          "sensory_integrity": 0.25,
+          "task_progress": null,
+          "thermal_margin": null
+        }
+      }
+    },
+    "runtime_error": null,
+    "seed": 29,
+    "state_digest_after": "",
+    "state_digest_before": ""
+  }
+]
