@@ -66,3 +66,7 @@ Der Research Self-Knowledge Chat darf Research und Docs lesend als Kontext
 verwenden. Experimentausführung ist davon getrennt und ausschließlich über
 registrierte, strukturierte Workflow-Parameter mit menschlicher Bestätigung
 zulässig.
+
+Antworten unterscheiden zwischen wissenschaftlichen Research-Quellen, technischen
+Docs, aktuellem Runtime-Status und externen Webquellen. Ein abgeschlossener Versuch
+oder ein Registry-Status ist kein Beleg für einen aktuell laufenden Prozess.

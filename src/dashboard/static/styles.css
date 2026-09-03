@@ -1745,6 +1745,8 @@ body .footer-segment {
 .chat-web-toggle { color: var(--muted, #94a3b8); font-size: .8rem; }
 .chat-web-toggle input { accent-color: var(--accent2, #40e0d0); margin-right: .35rem; }
 .chat-web-toggle input[type="file"] { max-width: 12rem; font-size: .7rem; }
+.chat-mode { display: inline-flex; align-items: center; gap: .35rem; color: var(--muted, #94a3b8); font-size: .8rem; }
+.chat-mode select { min-width: 8rem; }
 @media (max-width: 680px) {
   .research-chat-modal { padding: 8px; }
   .research-chat-dialog { grid-template-columns: 1fr; height: 94vh; }

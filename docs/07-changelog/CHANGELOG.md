@@ -9,6 +9,8 @@
 - Microsoft Entra OAuth PKCE-Start und Callback-Status sind vorbereitet; Copilot bleibt ohne freigegebenen API-Endpunkt deaktiviert.
 - Chatfenster und Sidebar wurden vergrößert; Drag-and-drop, Ollama-Vision, Sprach-Ein-/Ausgabe, Suchzugriff und Antwort-Warteanimation ergänzt.
 - Chat-Einstellungen unterstützen zusätzlich System-Prompt, Top-P und Tokenbudget.
+- Antwortmodi Kurz, Ausführlich und Wissenschaftlich ergänzt; Research, Docs, Runtime und Webquellen werden im Prompt strikt getrennt.
+- Fragen nach aktuell laufenden Experimenten verwenden ausschließlich den expliziten Runtime-/Sessionstatus.
 - Provider-Health wird über einen echten Live-Probe-Endpunkt angezeigt; Unterchats sowie Enter/Shift+Enter sind verfügbar.
 - Räume können eingeklappt, archiviert, wiederhergestellt und gelöscht werden; Unterchat-Kontext wird hierarchisch übergeben.
 - Ollama-Modelle werden entdeckt; Microsoft Copilot ist als OAuth-abhängige, derzeit nicht konfigurierte Option ausgewiesen.

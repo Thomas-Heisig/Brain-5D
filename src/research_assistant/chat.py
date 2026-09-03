@@ -42,11 +42,14 @@ class ResearchChat:
     system_prompt: str = ""
     conversation_context: str = ""
     handoff_prompt: str = ""
+    response_mode: str = "detailed"
 
     def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
         question = message.strip()
         if not question:
             raise ValueError("Chat message must not be empty.")
+        if self.response_mode not in {"short", "detailed", "scientific"}:
+            raise ValueError("Unsupported response mode.")
         prompt = self._prompt(question)
         return self.backend(prompt)
 
@@ -60,6 +63,11 @@ class ResearchChat:
             context = f"CHAT HIERARCHY (conversation context, not evidence):\n{self.conversation_context}\n\n{context}"
         if self.handoff_prompt.strip():
             context = f"HANDOFF INSTRUCTIONS (editable operator context, not evidence):\n{self.handoff_prompt.strip()}\n\n{context}"
+        mode_instructions = {
+            "short": "Response mode: SHORT. Answer in at most 5 concise bullet points. Lead with the direct answer and omit background.",
+            "detailed": "Response mode: DETAILED. Explain the answer with relevant context, status, sources, uncertainty, and a concise conclusion.",
+            "scientific": "Response mode: SCIENTIFIC. Separate research question, method/protocol, DATA, EVIDENCE, limitations, AI interpretation, and human conclusion. Never upgrade inconclusive or untested status.",
+        }[self.response_mode]
         return (
             f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else ""
         ) + (
@@ -74,11 +82,14 @@ class ResearchChat:
             "WEB SOURCES must never appear under EVIDENCE and are never scientific evidence.\n"
             "Never claim that AI output or web content is evidence. Never invent values or experiment results.\n"
             "You may explain registered experiments, but never execute an experiment from free text.\n"
+            f"{mode_instructions}\n"
+            "For questions about what is currently running, use only the SYSTEM READ-ONLY CONTEXT runtime/session fields. Completed experiments, registry entries, claims, and evidence do not prove that an experiment is running now. If no active session is explicitly listed, answer: 'Kein aktiver Lauf im bereitgestellten Runtime-Status nachweisbar.'\n"
             f"User question: {message}\n\nRepository context:\n{context}"
         )
 
     def _context(self) -> str:
-        chunks: list[str] = []
+        research_chunks: list[str] = []
+        docs_chunks: list[str] = []
         for document in self.research.list_documents():
             if document.kind not in {"md", "json", "yaml", "yml", "txt"}:
                 continue
@@ -86,7 +97,7 @@ class ResearchChat:
                 content = self.research.read_content(document.path)
             except (OSError, UnicodeError):
                 continue
-            chunks.append(f"[{document.path}]\n{content[:4000]}")
+            research_chunks.append(f"[RESEARCH: {document.path}]\n{content[:4000]}")
         for document in self.docs.list_documents(recursive=True):
             if document.file_type.value not in {"markdown", "text", "json", "yaml"}:
                 continue
@@ -94,8 +105,12 @@ class ResearchChat:
                 content = self.docs.read_content(document.path)
             except (OSError, UnicodeError, ValueError):
                 continue
-            chunks.append(f"[docs/{document.path}]\n{content[:4000]}")
-        return "\n\n".join(chunks)[: self.max_context_chars]
+            docs_chunks.append(f"[DOCS: docs/{document.path}]\n{content[:4000]}")
+        sections = [
+            "SCIENTIFIC RESEARCH SOURCES (claims, protocols, DATA/EVIDENCE records; scientific authority is limited by their stated status):\n" + "\n\n".join(research_chunks),
+            "DOCUMENTATION SOURCES (technical and operational reference; not scientific evidence):\n" + "\n\n".join(docs_chunks),
+        ]
+        return "\n\n".join(sections)[: self.max_context_chars]
 
 
 def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend:

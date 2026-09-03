@@ -18,6 +18,7 @@
 - [x] Bearbeitbarer Übergabeprompt und wiederherstellbare Standardwerte
 - [x] Ollama-Vision mit begrenzten Bildanhängen
 - [x] Microsoft Entra OAuth PKCE Start/Callback-Grundlage
+- [x] Antwortmodi mit wissenschaftlicher Quellen- und Runtime-Trennung
 - [x] Größeres Chatfenster mit horizontaler Room-Aktionsleiste
 - [x] Drag-and-drop für Bildanhänge sowie lokale Sprach-Ein-/Ausgabe
 - [x] Ollama-Vision-Requestpfad und sichtbarer Verarbeitungsstatus

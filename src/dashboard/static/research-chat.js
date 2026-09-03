@@ -62,8 +62,9 @@ export function initResearchChat() {
   const settingsRefresh = document.getElementById('chat-settings-refresh');
   const settingsSave = document.getElementById('chat-settings-save');
   const webSearch = document.getElementById('chat-web-search');
+  const responseMode = document.getElementById('chat-response-mode');
   const imageInput = document.getElementById('chat-image-input');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput) return;
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput || !responseMode) return;
   const state = loadState();
   webSearch.checked = state.webSearchEnabled === true;
 
@@ -246,7 +247,7 @@ export function initResearchChat() {
     try {
       const images = await Promise.all([...imageInput.files].slice(0, 4).map((file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); })));
       log.insertAdjacentHTML('beforeend', '<div class="chat-message waiting" id="chat-waiting"><strong>Brain-5D</strong><p>Antwort wird im lokalen Provider verarbeitet ...</p></div>');
-      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, images, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
+      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, images, response_mode: responseMode.value, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
       document.getElementById('chat-waiting')?.remove();

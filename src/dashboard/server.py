@@ -1977,6 +1977,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
         if action != "ask":
             raise InvalidRequestError("Unknown research chat action.")
+        response_mode = body.get("response_mode", "detailed")
+        if response_mode not in {"short", "detailed", "scientific"}:
+            raise InvalidRequestError("response_mode must be short, detailed, or scientific.")
         message = body.get("message")
         if not isinstance(message, str) or not message.strip():
             raise InvalidRequestError("message is required.")
@@ -2033,6 +2036,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             system_prompt=self.dashboard_server.research_chat_system_prompt,
             conversation_context=conversation_context,
             handoff_prompt=self.dashboard_server.research_chat_handoff_prompt,
+            response_mode=cast(str, response_mode),
             web_context=web_context,
         ).answer(message)
         self._send_json(

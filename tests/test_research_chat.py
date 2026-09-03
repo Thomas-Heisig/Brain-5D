@@ -47,3 +47,16 @@ def test_chat_rejects_empty_message() -> None:
     chat = ResearchChat(Source({}), Source({}), lambda prompt: (prompt, {}))
     with pytest.raises(ValueError, match="must not be empty"):
         chat.answer("  ")
+
+def test_chat_context_labels_research_and_docs() -> None:
+    chat = ResearchChat(Source({"research.md": "research"}), Source({"docs.md": "docs"}), lambda prompt: (prompt, {}))
+    prompt = chat._prompt("Welche Quellen wurden verwendet?")
+    assert "SCIENTIFIC RESEARCH SOURCES" in prompt
+    assert "DOCUMENTATION SOURCES" in prompt
+
+
+def test_chat_rejects_unknown_response_mode() -> None:
+    chat = ResearchChat(Source({}), Source({}), lambda prompt: (prompt, {}), response_mode="brief")
+    with pytest.raises(ValueError, match="Unsupported response mode"):
+        chat.answer("Status?")
+
