@@ -28,11 +28,14 @@ from .contracts import (
     AIInteractionRecord,
     AIReproducibility,
     CausalTaint,
+    EpistemicProvenanceGraph,
     Evidence,
     Interpretation,
     Intervention,
     Observation,
     Proposal,
+    ProvenanceEdge,
+    ProvenanceNode,
 )
 from .firewall import AIAuthority, AIFirewallViolation, AIResource, ScientificAIFirewall
 from .gateways import (
@@ -131,10 +134,13 @@ __all__ = [
     "chat_backend_from_text_backend",
     "CausalTaint",
     "Evidence",
+    "EpistemicProvenanceGraph",
     "Intervention",
     "Interpretation",
     "Observation",
     "Proposal",
+    "ProvenanceEdge",
+    "ProvenanceNode",
     "ScientificAIFirewall",
     "authority_for",
     "authority_matrix",

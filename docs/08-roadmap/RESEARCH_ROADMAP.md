@@ -78,6 +78,8 @@ Evidenz für Lernwirkung.
 	in Modellantworten werden fail-closed abgewiesen.
 - Der Scientific Integrity Gate erzwingt für geänderte Prompt-, Modell-,
 	Treatment- und Statistikkomponenten positive Versionen mit Änderungsgrund.
+- Epistemische Provenienz kann nun als digest-only, azyklischer Graph mit
+	expliziten Quellenursprüngen und Derived-Value-Beziehungen validiert werden.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

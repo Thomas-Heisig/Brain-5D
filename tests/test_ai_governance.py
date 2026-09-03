@@ -6,7 +6,13 @@ import pytest
 
 from src.research_assistant.advisor import CognitiveAdvisor
 from src.research_assistant.authority import AIRole, authority_for
-from src.research_assistant.contracts import AIClockMode, AIInteractionRecord
+from src.research_assistant.contracts import (
+    AIClockMode,
+    AIInteractionRecord,
+    EpistemicProvenanceGraph,
+    ProvenanceEdge,
+    ProvenanceNode,
+)
 from src.research_assistant.gateways import InterventionGateway, MemoryWriteGateway
 from src.research_assistant.governance import (
     ConfirmatoryRunLock,
@@ -232,6 +238,28 @@ def test_version_bump_contract_requires_reason_for_changed_components() -> None:
             {"version_bumps": {"statistics": {"version": 2, "bump_reason": ""}}},
             {"statistics"},
         )
+
+
+def test_epistemic_provenance_graph_is_digest_only_and_acyclic() -> None:
+    sensor = ProvenanceNode.create(
+        node_id="sensor-1",
+        node_type="sensor",
+        knowledge_origin="SENSOR_OBSERVATION",
+        payload={"value": 1},
+    )
+    claim = ProvenanceNode.create(
+        node_id="claim-1",
+        node_type="claim",
+        knowledge_origin="DERIVED",
+        payload="value is stable",
+    )
+    graph = EpistemicProvenanceGraph().add_node(sensor).add_node(claim)
+    graph = graph.add_edge(ProvenanceEdge("sensor-1", "claim-1", "supports"))
+    assert graph.to_dict()["nodes"][0]["payload_digest"] != "1"
+    with pytest.raises(ValueError, match="cycles"):
+        graph.add_edge(ProvenanceEdge("claim-1", "sensor-1", "derived_from"))
+    with pytest.raises(ValueError, match="unknown node"):
+        graph.add_edge(ProvenanceEdge("claim-1", "missing", "supports"))
 
 
 def test_data_leakage_validator_rejects_overlap_and_holdout_labels() -> None:

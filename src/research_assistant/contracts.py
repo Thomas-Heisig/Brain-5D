@@ -115,6 +115,109 @@ class Evidence(ScientificContract):
 
 
 @dataclass(frozen=True, slots=True)
+class ProvenanceNode:
+    """Digest-only epistemic source or derived value in a provenance graph."""
+
+    node_id: str
+    node_type: str
+    knowledge_origin: str
+    payload_digest: str
+
+    @classmethod
+    def create(
+        cls, *, node_id: str, node_type: str, knowledge_origin: str, payload: object
+    ) -> ProvenanceNode:
+        if not node_id.strip() or not node_type.strip():
+            raise ValueError("Provenance node ID and type must not be empty")
+        if not knowledge_origin.strip():
+            raise ValueError("Provenance node knowledge_origin must not be empty")
+        return cls(node_id, node_type, knowledge_origin, _digest(payload))
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "node_id": self.node_id,
+            "node_type": self.node_type,
+            "knowledge_origin": self.knowledge_origin,
+            "payload_digest": self.payload_digest,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ProvenanceEdge:
+    """Directed dependency between two epistemic provenance nodes."""
+
+    source_id: str
+    target_id: str
+    relation: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "source_id": self.source_id,
+            "target_id": self.target_id,
+            "relation": self.relation,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class EpistemicProvenanceGraph:
+    """Append-only acyclic graph for claims, sources, experiments and derivations."""
+
+    nodes: tuple[ProvenanceNode, ...] = ()
+    edges: tuple[ProvenanceEdge, ...] = ()
+
+    def add_node(self, node: ProvenanceNode) -> EpistemicProvenanceGraph:
+        if any(existing.node_id == node.node_id for existing in self.nodes):
+            raise ValueError(f"Provenance node already exists: {node.node_id}")
+        return EpistemicProvenanceGraph(self.nodes + (node,), self.edges)
+
+    def add_edge(self, edge: ProvenanceEdge) -> EpistemicProvenanceGraph:
+        node_ids = {node.node_id for node in self.nodes}
+        if edge.source_id not in node_ids or edge.target_id not in node_ids:
+            raise ValueError("Provenance edge references an unknown node")
+        if edge.source_id == edge.target_id:
+            raise ValueError("Provenance graph cannot contain self-edges")
+        if edge in self.edges:
+            raise ValueError("Provenance edge already exists")
+        candidate = EpistemicProvenanceGraph(self.nodes, self.edges + (edge,))
+        candidate.validate()
+        return candidate
+
+    def validate(self) -> None:
+        """Validate references and reject cycles that obscure derivation order."""
+        node_ids = {node.node_id for node in self.nodes}
+        if len(node_ids) != len(self.nodes):
+            raise ValueError("Provenance graph contains duplicate node IDs")
+        adjacency: dict[str, set[str]] = {node_id: set() for node_id in node_ids}
+        for edge in self.edges:
+            if edge.source_id not in node_ids or edge.target_id not in node_ids:
+                raise ValueError("Provenance edge references an unknown node")
+            adjacency[edge.source_id].add(edge.target_id)
+        visiting: set[str] = set()
+        visited: set[str] = set()
+
+        def visit(node_id: str) -> None:
+            if node_id in visiting:
+                raise ValueError("Provenance graph cannot contain cycles")
+            if node_id in visited:
+                return
+            visiting.add(node_id)
+            for child_id in adjacency[node_id]:
+                visit(child_id)
+            visiting.remove(node_id)
+            visited.add(node_id)
+
+        for node_id in node_ids:
+            visit(node_id)
+
+    def to_dict(self) -> dict[str, list[dict[str, str]]]:
+        self.validate()
+        return {
+            "nodes": [node.to_dict() for node in self.nodes],
+            "edges": [edge.to_dict() for edge in self.edges],
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class AIInteractionRecord:
     """Audit record for one AI interaction; it grants no execution authority."""
 

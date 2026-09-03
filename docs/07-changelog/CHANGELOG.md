@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Epistemic provenance graph
+
+- Digest-only-Knoten und gerichtete, azyklische Kanten verbinden nun Claims,
+  Quellen, Experimente und Derived Values mit explizitem `knowledge_origin`.
+- Unbekannte Referenzen, doppelte Knoten, Selbstkanten und Zyklen werden
+  fail-closed abgewiesen.
+
 ## 2026-09-03 — Version bump contract in CI
 
 - Der Scientific Integrity Gate validiert nun positive Versionen und
