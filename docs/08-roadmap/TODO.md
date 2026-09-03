@@ -4,7 +4,7 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: lokale Vollsuite `675 passed, 5 skipped`; Pyright,
+> Verifiziert am 2026-09-03: lokale Vollsuite `682 passed, 5 skipped`; Pyright,
 > Ruff und Mypy sind ohne Fehler.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 

@@ -129,7 +129,7 @@ class OperatorBridge:
             "jitter_ms": telemetry.jitter_ms,
             "compute_saturation": telemetry.compute_saturation,
             "runtime_mode": telemetry.runtime_mode,
-            "tick_profile": telemetry.tick_profile,
+            "tick_profile": cast(JSONValue, telemetry.tick_profile),
             "max_possible_hz": telemetry.max_possible_hz,
         }
 

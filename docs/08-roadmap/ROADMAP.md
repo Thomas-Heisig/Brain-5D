@@ -12,7 +12,7 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **675 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
+Vollsuite meldet **682 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
 Fehler.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über

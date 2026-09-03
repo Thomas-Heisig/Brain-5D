@@ -168,7 +168,7 @@ class RuntimeTelemetry:
     tick_profile: dict[str, float] | None = None
     max_possible_hz: float | None = None
 
-    def to_dict(self) -> dict[str, int | float | str | None]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "tick": self.tick,
@@ -192,7 +192,7 @@ class RuntimeTelemetry:
             "max_possible_hz": self.max_possible_hz,
         }
 
-    def to_json(self) -> dict[str, int | float | str | None]:
+    def to_json(self) -> dict[str, Any]:
         """Alias for to_dict() for DashboardControlService compatibility."""
         return self.to_dict()
 

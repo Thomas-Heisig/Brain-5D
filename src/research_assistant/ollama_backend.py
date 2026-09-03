@@ -248,6 +248,8 @@ def _parse_json_object(text: str) -> dict[str, Any]:
 
 def _normalize_analysis_output(output: dict[str, Any]) -> dict[str, Any]:
     """Normalize numeric fields that local models occasionally quote as text."""
+    if "confidence" not in output:
+        return output
     confidence = output.get("confidence")
     if isinstance(confidence, str):
         try:
