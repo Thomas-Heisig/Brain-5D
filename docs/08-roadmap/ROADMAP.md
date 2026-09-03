@@ -10,10 +10,10 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 ## Verifizierter Repository-Stand
 
-`main` ist lokal mit `origin/main` synchron (`ad0ca22`). Die neue
-Impulsantwort- und Multi-Timescale-Grundlage ist implementiert und fokussiert
-getestet. Die lokale
-Vollsuite meldet **618 passed, 5 skipped**. Die zuletzt abgeschlossene
+`main` ist lokal mit `origin/main` synchron (`d55cf0e`). Die deterministische
+Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
+Vollsuite meldet **640 passed, 3 bekannte Legacy-Dashboard-Fehler, 5 skipped**.
+Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
 AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Externe CI und

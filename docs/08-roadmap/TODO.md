@@ -4,7 +4,8 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: `main` / `67d91dd`, lokale Vollsuite `618 passed, 5 skipped`.
+> Verifiziert am 2026-09-03: `main` / `d55cf0e`, lokale Vollsuite `640 passed,
+> 3 bekannte Legacy-Dashboard-Fehler, 5 skipped`.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
 ## ENGINEERING
