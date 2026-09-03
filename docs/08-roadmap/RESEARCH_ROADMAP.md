@@ -67,6 +67,8 @@ als unverified markiert.
 	die noch offene vollständige Contract-/Firewall-Architektur.
 - Der Ollama-Adapter liefert dafür Samplingparameter, Stop-Sequenzen, Timeout und
 	Response-Digest; Modell-, Engine-, Hardware- und Tokenizer-Provenienz folgen noch.
+- Die Contract-Basis unterscheidet nun Observation, Interpretation, Proposal,
+	Intervention und Evidence als digest-only Datentypen ohne Ausführungsautorität.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Scientific AI contract records
+
+- Immutable Verträge für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` ergänzt.
+- Verträge speichern nur Payload-Digests und Metadaten; sie stellen keine Ausführungsmethode bereit.
+- Die strukturelle Firewall und Authority-Matrix bleiben als nächste P0-Schritte offen.
+
 ## 2026-09-03 — Ollama provenance baseline
 
 - Ollama-Chatantworten protokollieren nun Samplingparameter, Stop-Sequenzen, Timeout und einen Response-Digest.

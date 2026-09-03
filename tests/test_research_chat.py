@@ -3,7 +3,16 @@
 import pytest
 
 from src.research_assistant.chat import ResearchChat
-from src.research_assistant.contracts import AIExposure, AIInteractionRecord, CausalTaint
+from src.research_assistant.contracts import (
+    AIExposure,
+    AIInteractionRecord,
+    CausalTaint,
+    Evidence,
+    Intervention,
+    Interpretation,
+    Observation,
+    Proposal,
+)
 
 
 class Doc:
@@ -111,4 +120,25 @@ def test_ai_interaction_record_rejects_invalid_authority_and_tick() -> None:
             model_provenance={},
             authority="read_only",
         )
+
+
+def test_scientific_contracts_are_digest_backed_and_non_executable() -> None:
+    contracts = [
+        Observation.create(payload={"tick": 1}, source="sensor", authority="read_only"),
+        Interpretation.create(payload="uncertain", source="research_ai", authority="read_only"),
+        Proposal.create(payload={"action": "inspect"}, source="advisor", authority="proposal_only"),
+        Intervention.create(payload={"target": "runtime"}, source="human", authority="approved"),
+        Evidence.create(payload={"path": "EVID-1"}, source="evidence_engine", authority="registered"),
+    ]
+
+    assert [contract.kind for contract in contracts] == [
+        "observation",
+        "interpretation",
+        "proposal",
+        "intervention",
+        "evidence",
+    ]
+    assert all(len(contract.payload_digest) == 64 for contract in contracts)
+    assert all("payload" not in contract.to_dict() for contract in contracts)
+    assert not any(callable(getattr(contracts[3], name, None)) for name in ("execute", "apply", "run"))
 

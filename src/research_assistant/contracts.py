@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from enum import StrEnum
-from typing import Any, Mapping
+from typing import Any, ClassVar, Mapping, Self
 
 
 class AIExposure(StrEnum):
@@ -28,6 +28,74 @@ class CausalTaint(StrEnum):
     OBSERVED = "OBSERVED"
     PROPOSED = "PROPOSED"
     AI_INFLUENCED = "AI_INFLUENCED"
+
+
+@dataclass(frozen=True, slots=True)
+class ScientificContract:
+    """Immutable, digest-backed data contract with no execution capability."""
+
+    contract_id: str
+    payload_digest: str
+    source: str
+    authority: str
+    created_at: str
+    kind: ClassVar[str] = "contract"
+
+    def to_dict(self) -> dict[str, str]:
+        return {"kind": self.kind, **asdict(self)}
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        payload: object,
+        source: str,
+        authority: str,
+    ) -> Self:
+        if not source.strip():
+            raise ValueError("contract source must not be empty")
+        if not authority.strip():
+            raise ValueError("contract authority must not be empty")
+        payload_digest = _digest(payload)
+        identity = f"{cls.kind}|{source}|{authority}|{payload_digest}"
+        contract_id = f"{cls.kind.upper()}-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:16]}"
+        return cls(
+            contract_id=contract_id,
+            payload_digest=payload_digest,
+            source=source,
+            authority=authority,
+            created_at=datetime.now(timezone.utc).isoformat(),
+        )
+
+
+class Observation(ScientificContract):
+    """Read-only observation; it carries no interpretation or action."""
+
+    kind = "observation"
+
+
+class Interpretation(ScientificContract):
+    """Derived interpretation that is not evidence by itself."""
+
+    kind = "interpretation"
+
+
+class Proposal(ScientificContract):
+    """Suggested next step; proposals require an external approval path."""
+
+    kind = "proposal"
+
+
+class Intervention(ScientificContract):
+    """Description of a possible intervention, never an executable command."""
+
+    kind = "intervention"
+
+
+class Evidence(ScientificContract):
+    """Reference to evidence whose scientific authority comes from its source."""
+
+    kind = "evidence"
 
 
 @dataclass(frozen=True, slots=True)
