@@ -114,6 +114,8 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert metadata["retry_count"] == 0
     assert metadata["retry_policy"] == "disabled"
     assert metadata["model_id"] == "qwen"
+    assert metadata["model_digest"] == "not_reported"
+    assert metadata["tokenizer_digest"] == "not_reported"
     assert metadata["done_reason"] == "stop"
     assert metadata["prompt_eval_count"] == 4
     assert metadata["eval_count"] == 2

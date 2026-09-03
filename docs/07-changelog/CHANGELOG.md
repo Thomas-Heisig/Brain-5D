@@ -14,6 +14,10 @@
 - Die sechs Kontrollgruppen `SNN_ONLY`, `LANGUAGE_ORGAN`, `KNOWLEDGE_INTAKE`,
   `LANGUAGE_KNOWLEDGE`, `LLM_ONLY` und `FULL_SYSTEM` sind als validierte,
   nicht-ausführende Experimentvorlagen registrierbar.
+- Ollama-Provenienz weist nun explizite Felder für Modell-/Artefakt-Digest,
+  Quantisierung, Präzision, Engine, Hardware sowie Tokenizer-, Prompt-,
+  Toolset- und Retrieval-Digests aus; nicht gelieferte Providerdaten bleiben
+  als `not_reported` sichtbar.
 
 ## 2026-09-03 — Language Organ sham controls
 

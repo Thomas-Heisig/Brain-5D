@@ -118,6 +118,10 @@ als unverified markiert.
 - Die vorgesehenen sechs Kontrollgruppen sind als standardisierte
 	Manifestvorlagen registriert; ihre tatsächliche Durchführung und Auswertung
 	erfordern weiterhin preregistrierte Experimente.
+- Der Ollama-Provenienzvertrag enthält nun explizite Modell-, Laufzeit-,
+	Tokenizer-, Prompt-, Toolset- und Retrieval-Felder. Automatisches Befüllen
+	dieser Felder aus jeder Providerinstallation bleibt offen, wenn der Provider
+	die Daten nicht liefert.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

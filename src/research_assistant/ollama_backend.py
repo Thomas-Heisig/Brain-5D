@@ -28,6 +28,17 @@ class OllamaBackend:
         seed: int | None = None,
         stop: list[str] | None = None,
         timeout: float = 60.0,
+        model_digest: str | None = None,
+        artifact_digest: str | None = None,
+        quantization: str | None = None,
+        precision: str | None = None,
+        engine_version: str | None = None,
+        hardware: str | None = None,
+        tokenizer_digest: str | None = None,
+        prompt_template_digest: str | None = None,
+        system_prompt_digest: str | None = None,
+        toolset_digest: str | None = None,
+        retrieval_snapshot_digest: str | None = None,
     ) -> None:
         self.model = model
         self.endpoint = endpoint
@@ -39,6 +50,17 @@ class OllamaBackend:
         self.seed = seed
         self.stop = list(stop or [])
         self.timeout = timeout
+        self.model_digest = model_digest or "not_reported"
+        self.artifact_digest = artifact_digest or "not_reported"
+        self.quantization = quantization or "not_reported"
+        self.precision = precision or "not_reported"
+        self.engine_version = engine_version or "not_reported"
+        self.hardware = hardware or "not_reported"
+        self.tokenizer_digest = tokenizer_digest or "not_reported"
+        self.prompt_template_digest = prompt_template_digest or "not_reported"
+        self.system_prompt_digest = system_prompt_digest or "not_reported"
+        self.toolset_digest = toolset_digest or "not_reported"
+        self.retrieval_snapshot_digest = retrieval_snapshot_digest or "not_reported"
         self._last_failure_event: AIInferenceFailureEvent | None = None
 
     @property
@@ -147,6 +169,12 @@ class OllamaBackend:
             "provider": "ollama",
             "model": self.model,
             "model_id": str(payload.get("model", self.model)),
+            "model_digest": self.model_digest,
+            "artifact_digest": self.artifact_digest,
+            "quantization": self.quantization,
+            "precision": self.precision,
+            "engine_version": self.engine_version,
+            "hardware": self.hardware,
             "temperature": self.temperature,
             "top_p": self.top_p,
             "top_k": self.top_k if self.top_k is not None else "not_reported",
@@ -159,6 +187,11 @@ class OllamaBackend:
             "retry_policy": "disabled",
             "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "tokenizer_digest": self.tokenizer_digest,
+            "prompt_template_digest": self.prompt_template_digest,
+            "system_prompt_digest": self.system_prompt_digest,
+            "toolset_digest": self.toolset_digest,
+            "retrieval_snapshot_digest": self.retrieval_snapshot_digest,
             "created_at": str(payload.get("created_at", "not_reported")),
             "done_reason": str(payload.get("done_reason", "not_reported")),
             "total_duration_ns": _numeric_metadata(payload.get("total_duration")),
