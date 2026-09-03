@@ -95,9 +95,7 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
     engine = ExperienceEngine(
         sensor=SystemSensorAdapter(lambda tick: {"signal": tick}),
         network=network,
-        encoder=lambda frame: {
-            0: float(cast(dict[str, int], frame.payload)["signal"])
-        },
+        encoder=lambda frame: {0: float(cast(dict[str, int], frame.payload)["signal"])},
         decoder=lambda result, frame: ActionCommand(
             "target-actuator", frame.tick, "right"
         ),
@@ -174,9 +172,7 @@ def run_protocol(
         "conditions": {
             condition: {
                 "runs": len(condition_runs),
-                "target_reached_rate": sum(
-                    run.target_reached for run in condition_runs
-                )
+                "target_reached_rate": sum(run.target_reached for run in condition_runs)
                 / len(condition_runs),
                 "total_reward": sum(
                     run.environment_reward_received for run in condition_runs
@@ -213,9 +209,7 @@ def run_protocol(
         conditions=list(conditions),
     )
     recorder.record_artifact("data", str(data_path.relative_to(output_dir)))
-    recorder.record_artifact(
-        "analysis", str(analysis_path.relative_to(output_dir))
-    )
+    recorder.record_artifact("analysis", str(analysis_path.relative_to(output_dir)))
     recorder.record_results(**analysis)
     recorder.mark_completed().save()
 
@@ -232,9 +226,7 @@ def run_protocol(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--output-dir", default="research/experiments/EXP-EMB-0001"
-    )
+    parser.add_argument("--output-dir", default="research/experiments/EXP-EMB-0001")
     parser.add_argument("--independent-runs", type=int, default=20)
     parser.add_argument("--repetitions-per-condition", type=int, default=3)
     args = parser.parse_args()

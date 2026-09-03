@@ -1,11 +1,12 @@
 """Protocol-level regression tests for EXP-EMB-0001."""
 
 import json
+from pathlib import Path
 
 from src.experiments.embodiment_lab import run_protocol
 
 
-def test_embodiment_protocol_records_all_conditions_as_data(tmp_path) -> None:
+def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> None:
     analysis = run_protocol(
         tmp_path / "EXP-EMB-0001",
         independent_runs=2,
