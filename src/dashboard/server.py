@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import os
 import signal
 import threading
 from collections.abc import Mapping
@@ -46,8 +47,10 @@ from src.research_assistant import (
     AnalysisBackend,
     ChatBackend,
     ResearchChat,
+    chat_backend_from_text_backend,
     write_human_review,
 )
+from src.research_assistant.ollama_backend import OllamaBackend
 
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
@@ -3113,6 +3116,16 @@ def serve_dashboard(
         except Exception as exc:
             print("⚠️ Research source could not " f"be initialized: {exc}")
 
+    chat_backend: ChatBackend | None = None
+    chat_model = os.environ.get("BRAIN5D_CHAT_MODEL", "").strip()
+    if chat_model:
+        chat_endpoint = os.environ.get(
+            "BRAIN5D_CHAT_ENDPOINT", "http://127.0.0.1:11434/api/generate"
+        ).strip()
+        ollama_backend = OllamaBackend(chat_model, chat_endpoint)
+        chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
+        print(f"🤖 Research chat backend: Ollama ({chat_model})")
+
     # ------------------------------------------------------------------------
     # Server
     # ------------------------------------------------------------------------
@@ -3127,6 +3140,7 @@ def serve_dashboard(
         docs_source,
         research_source,
     ) as server:
+        server.research_chat_backend = chat_backend
         if structural_bridge is not None:
             print("✅ Operator bridge attached to " "dashboard server")
         else:

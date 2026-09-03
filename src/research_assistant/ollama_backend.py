@@ -50,6 +50,10 @@ class OllamaBackend:
         output = cast(dict[str, Any], output_raw)
         return output, metadata
 
+    def generate_text(self, prompt: str) -> tuple[str, dict[str, str | float]]:
+        """Return plain text for read-only chat consumers."""
+        return self._generate(prompt)
+
     def _generate(self, prompt: str) -> tuple[str, dict[str, str | float]]:
         request = Request(
             self.endpoint,
