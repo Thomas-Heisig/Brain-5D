@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Causal card and AI evidence gate
+
+- Experimentmanifeste erzeugen eine Causal Card mit Interaktions-IDs, Rollen und wissenschaftlicher Klassifikation.
+- AI-influenced Läufe benötigen vor Evidence-Erzeugung ein registriertes `ai_treatment` mit `protocol_id`.
+- Pure SNN-Läufe bleiben rückwärtskompatibel; fehlende AI-Metadaten werden als `PURE` behandelt.
+
 ## 2026-09-03 — AI interaction persistence and causal taint
 
 - Experimentmanifeste speichern AI-Interaktionen append-only mit Digest-Provenienz.

@@ -79,6 +79,8 @@ als unverified markiert.
 	sicheren Default `none`; Interaktions- und Causal-Taint-Provenienz folgen separat.
 - `AIInteractionRecord`-Einträge werden nun im Manifest persistiert und heben den
 	aggregierten `causal_taint` nur monoton auf eine stärkere Einflussstufe an.
+- Die Causal Card bündelt Interaktions-IDs, Rollen und Klassifikation; das
+	Evidence-Gate verlangt für jeden nicht-puren Lauf ein registriertes AI-Treatment.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

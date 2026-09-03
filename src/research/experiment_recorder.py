@@ -118,6 +118,11 @@ class ExperimentRecorder:
             "ai_exposure": AIExposure.NONE.value,
             "causal_taint": CausalTaint.PURE.value,
             "ai_interactions": [],
+            "causal_card": {
+                "classification": CausalTaint.PURE.value,
+                "interaction_ids": [],
+                "roles": [],
+            },
             "timestamp": datetime.now().isoformat(),
             "git": get_git_info(),
             "software": get_software_info(),
@@ -171,6 +176,10 @@ class ExperimentRecorder:
             )
         interactions = cast(list[dict[str, Any]], self._manifest["ai_interactions"])
         interactions.append(interaction.to_dict())
+        card = cast(dict[str, Any], self._manifest["causal_card"])
+        card["interaction_ids"].append(interaction.interaction_id)
+        if interaction.role not in card["roles"]:
+            card["roles"].append(interaction.role)
         taint_order = {
             CausalTaint.PURE: 0,
             CausalTaint.OBSERVED: 1,
@@ -180,6 +189,22 @@ class ExperimentRecorder:
         current = CausalTaint(cast(str, self._manifest["causal_taint"]))
         if taint_order[interaction.causal_effect] > taint_order[current]:
             self._manifest["causal_taint"] = interaction.causal_effect.value
+            card["classification"] = interaction.causal_effect.value
+        return self
+
+    def record_ai_treatment(
+        self, protocol_id: str, *, registered: bool = True, mode: str = "confirmatory"
+    ) -> ExperimentRecorder:
+        """Register the treatment required to interpret AI-influenced runs."""
+        if not protocol_id.strip():
+            raise ValueError("AI treatment protocol_id must not be empty")
+        if mode not in {"exploratory", "confirmatory"}:
+            raise ValueError("AI treatment mode must be exploratory or confirmatory")
+        self._manifest["ai_treatment"] = {
+            "protocol_id": protocol_id,
+            "registered": registered,
+            "mode": mode,
+        }
         return self
 
     def record_research_links(

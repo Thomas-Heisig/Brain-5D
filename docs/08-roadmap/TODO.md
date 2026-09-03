@@ -18,8 +18,8 @@
 - [x] `AIExposure` in Experimentmanifesten und Laufmetadaten einführen (`none`, `observer_only`, `semantic_interface`, `advisor`, `bounded_controller`, `adaptive_controller`)
 - [x] Gemeinsames `AIInteractionRecord` mit Rolle, Experiment, Tick, Input-/Prompt-/Output-Digest, Modell-Provenienz, Autorität und `causal_effect` im Experimentmanifest speichern
 - [x] AI-Causal-Taint-Tracking von `PURE` über beobachtend/vorschlagend bis `AI_INFLUENCED` implementieren
-- [ ] Causal Card je Experiment erzeugen: AI-Beobachtung, externer Input, AI-Reward, AI-Aktorentscheidung und wissenschaftliche Klassifikation
-- [ ] Evidence-Gate verschärfen: AI-beeinflusste Läufe benötigen ein passendes Treatment-Protokoll und dürfen nicht als reine SNN-Evidenz erscheinen
+- [x] Causal Card je Experiment erzeugen: AI-Beobachtung, externer Input, AI-Reward, AI-Aktorentscheidung und wissenschaftliche Klassifikation
+- [x] Evidence-Gate verschärfen: AI-beeinflusste Läufe benötigen ein passendes Treatment-Protokoll und dürfen nicht als reine SNN-Evidenz erscheinen
 
 ### P0 — Vollständige AI-Provenienz
 
