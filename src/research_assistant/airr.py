@@ -11,7 +11,7 @@ from typing import Any
 
 from .assistant import AnalysisBackend, ResearchAssistant
 from .models import AIAnalysisRecord, ResearchPacket
-from .statistics import require_statistics_engine_artifact
+from .statistics import reject_model_statistics, require_statistics_engine_artifact
 
 AI_WARNING = """============================================================
 BRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS
@@ -139,6 +139,7 @@ class AIRRPipeline:
     ) -> AIAnalysisRecord:
         prompt = _role_prompt(role, packet, analyses)
         output, model = backend(prompt)
+        reject_model_statistics(output)
         record = AIAnalysisRecord.create(
             role=role, model=model, packet=packet, output=output, prompt=prompt
         )

@@ -119,8 +119,6 @@ def _validate_output(output: dict[str, Any], role: str) -> None:
         if not isinstance(output.get(name), list):
             raise ValueError(f"Invalid AI analysis output field: {name}")
     if role == "scientific_analyst":
-        if not isinstance(output.get("quantitative_results"), (dict, list)):
-            raise ValueError("Invalid AI analysis output field: quantitative_results")
         if not isinstance(output.get("effect_direction"), str):
             raise ValueError("Invalid AI analysis output field: effect_direction")
     if not isinstance(output.get("confidence"), (int, float)):

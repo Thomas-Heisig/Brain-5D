@@ -61,7 +61,6 @@ def _backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str | float]]:
         {
             "assessment": "The data are compatible with the hypothesis.",
             "observations": ["The deterministic statistics report n=3."],
-            "quantitative_results": {"n": 3, "mean": 2.0},
             "effect_direction": "positive",
             "methodological_concerns": ["Independent replications are absent."],
             "alternative_explanations": ["A deterministic fixture may explain the result."],
@@ -114,3 +113,17 @@ def test_pipeline_rejects_unverified_quantitative_statistics(tmp_path: Path) -> 
 
     with pytest.raises(ValueError, match="Statistics Engine"):
         AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)
+
+
+def test_pipeline_rejects_model_owned_quantitative_statistics(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+
+    def model_statistics_backend(
+        _prompt: str,
+    ) -> tuple[dict[str, Any], dict[str, str | float]]:
+        output, model = _backend(_prompt)
+        output["quantitative_results"] = {"n": 999, "mean": 999.0}
+        return output, model
+
+    with pytest.raises(ValueError, match="LLM must not generate quantitative statistics"):
+        AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", model_statistics_backend)

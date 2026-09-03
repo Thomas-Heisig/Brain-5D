@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-03 — Deterministic statistics boundary
+
+- AIRR-Modelle dürfen keine reservierten quantitativen Ergebnisfelder mehr
+  erzeugen. Quantitative Reports werden ausschließlich aus validierten
+  `deterministic_statistics_engine`-Artefakten aufgebaut; Modellantworten
+  bleiben auf Beobachtung und Interpretation begrenzt.
+
 ## 2026-09-03 — Scientific Integrity Gate
 
 - CI führt nun einen blockierenden Integritätsjob für Determinismus, Restore,

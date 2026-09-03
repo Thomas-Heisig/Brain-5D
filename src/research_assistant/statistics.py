@@ -8,6 +8,10 @@ from pathlib import Path
 from statistics import fmean, median, pstdev
 from typing import Any, Iterable
 
+_MODEL_STATISTICS_KEYS = frozenset(
+    {"quantitative_results", "statistics", "computed_statistics"}
+)
+
 
 def summarize(values: Iterable[float]) -> dict[str, Any]:
     """Return reproducible descriptive statistics without any model call."""
@@ -31,6 +35,14 @@ def require_statistics_engine_artifact(artifact: dict[str, Any]) -> None:
     """Reject quantitative result payloads not produced by this engine."""
     if artifact.get("generated_by") != "deterministic_statistics_engine":
         raise ValueError("Quantitative results must come from the deterministic Statistics Engine")
+
+
+def reject_model_statistics(output: dict[str, Any]) -> None:
+    """Reject model-owned quantitative result fields at the AI boundary."""
+    forbidden = sorted(_MODEL_STATISTICS_KEYS.intersection(output))
+    if forbidden:
+        fields = ", ".join(forbidden)
+        raise ValueError(f"LLM must not generate quantitative statistics: {fields}")
 
 
 def write_statistics(experiment_root: Path, values: Iterable[float]) -> Path:

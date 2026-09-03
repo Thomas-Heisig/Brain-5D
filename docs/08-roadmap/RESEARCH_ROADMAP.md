@@ -73,6 +73,9 @@ Evidenz für Lernwirkung.
 	zentralen Determinismus-, Restore-, Schema- und AI-Governance-Prüfungen.
 - Die Provenienzklasse `knowledge_origin` ist als vollständiger, getesteter
 	Contract für interne, externe, menschliche und abgeleitete Quellen definiert.
+- Quantitative AIRR-Ergebnisse stammen nun ausschließlich aus validierten
+	deterministischen Statistics-Engine-Artefakten; reservierte Statistikfelder
+	in Modellantworten werden fail-closed abgewiesen.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:
