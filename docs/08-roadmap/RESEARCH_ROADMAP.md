@@ -50,6 +50,8 @@ Evidenzautorität noch die Experimentausführung. Externe Webquellen bleiben exp
 als unverified markiert.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
+- Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
+	freie System- oder Experimentausführung ist keine Chatfähigkeit.
 - **R-AI3:** Wie stark unterscheiden sich Modelle bei identischem ResearchPacket?
 - **R-AI4:** Wie gut ist die Confidence der KI kalibriert?
 - **R-AI5:** Wie unterscheiden sich menschliche und KI-wissenschaftliche Bewertungen?

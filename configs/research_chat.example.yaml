@@ -9,6 +9,9 @@ research_chat:
   max_context_chars: 24000
   web_search_enabled: false
   system_prompt: ""
+  handoff_prompt: ""
+  vision_enabled: false
+  tools_enabled: false
 
 # Environment variable overrides:
 # BRAIN5D_CHAT_MODEL
@@ -16,3 +19,7 @@ research_chat:
 # BRAIN5D_CHAT_TEMPERATURE
 # BRAIN5D_CHAT_CONTEXT_CHARS
 # BRAIN5D_CHAT_WEB_SEARCH
+# BRAIN5D_CHAT_SYSTEM_PROMPT
+# BRAIN5D_CHAT_HANDOFF_PROMPT
+# BRAIN5D_CHAT_VISION
+# BRAIN5D_CHAT_TOOLS

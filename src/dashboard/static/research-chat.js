@@ -21,7 +21,7 @@ function renderMarkdown(value) {
 const STORAGE_KEY = 'brain5d.research-chat.rooms.v1';
 
 function createRoom() {
-  return { id: crypto.randomUUID(), title: 'Neuer Chat', messages: [], archived: false, collapsed: false };
+  return { id: crypto.randomUUID(), title: 'Neuer Chat', messages: [], archived: false, collapsed: false, pinned: false };
 }
 
 const DEFAULT_PROMPT = 'Beantworte Fragen strikt faktenbasiert aus Research und Docs. Zitiere exakte Pfade, trenne DATA, EVIDENCE und AI interpretation, markiere Unsicherheit und fuehre niemals Experimente aus freiem Text aus.';
@@ -56,12 +56,14 @@ export function initResearchChat() {
   const archivedToggle = document.getElementById('chat-room-archived');
   const promptGenerate = document.getElementById('chat-prompt-generate');
   const settingsReset = document.getElementById('chat-settings-reset');
+  const copilotLogin = document.getElementById('chat-copilot-login');
   const settingsToggle = document.getElementById('chat-settings-toggle');
   const settings = document.getElementById('chat-settings');
   const settingsRefresh = document.getElementById('chat-settings-refresh');
   const settingsSave = document.getElementById('chat-settings-save');
   const webSearch = document.getElementById('chat-web-search');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !webSearch) return;
+  const imageInput = document.getElementById('chat-image-input');
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput) return;
   const state = loadState();
   webSearch.checked = state.webSearchEnabled === true;
 
@@ -70,8 +72,8 @@ export function initResearchChat() {
   }
 
   function render() {
-    const visible = state.rooms.filter((room) => (state.showArchived || !room.archived) && (state.showArchived || !isHiddenByParent(room)));
-    roomList.innerHTML = visible.map((room) => `<div class="chat-room-row"><button type="button" class="chat-room${room.id === state.activeId ? ' active' : ''}${room.parentId ? ' child' : ''}${room.archived ? ' archived' : ''}" data-room-id="${escapeChat(room.id)}">${room.parentId ? '↳ ' : ''}${escapeChat(room.title)}</button><button type="button" class="chat-room-action" data-collapse-id="${room.id}" title="Chat einklappen">${room.collapsed ? '+' : '−'}</button><button type="button" class="chat-room-action" data-archive-id="${room.id}" title="${room.archived ? 'Chat wiederherstellen' : 'Chat archivieren'}">${room.archived ? '↥' : '□'}</button><button type="button" class="chat-room-action danger" data-delete-id="${room.id}" title="Chat löschen">×</button></div>`).join('');
+    const visible = state.rooms.filter((room) => (state.showArchived || !room.archived) && (state.showArchived || !isHiddenByParent(room))).sort((left, right) => Number(right.pinned) - Number(left.pinned));
+    roomList.innerHTML = visible.map((room) => `<div class="chat-room-row"><button type="button" class="chat-room${room.id === state.activeId ? ' active' : ''}${room.parentId ? ' child' : ''}${room.archived ? ' archived' : ''}" data-room-id="${escapeChat(room.id)}">${room.pinned ? '★ ' : ''}${room.parentId ? '↳ ' : ''}${escapeChat(room.title)}</button><button type="button" class="chat-room-action" data-pin-id="${room.id}" title="Anpinnen">${room.pinned ? '★' : '☆'}</button><button type="button" class="chat-room-action" data-collapse-id="${room.id}" title="Chat einklappen">${room.collapsed ? '+' : '−'}</button><button type="button" class="chat-room-action" data-archive-id="${room.id}" title="Archivieren">${room.archived ? '↥' : '□'}</button><button type="button" class="chat-room-action danger" data-delete-id="${room.id}" title="Chat löschen">×</button></div>`).join('');
     log.innerHTML = '';
     const room = activeRoom();
     if (!room.messages.length) {
@@ -120,17 +122,18 @@ export function initResearchChat() {
   modal.addEventListener('click', (event) => { if (event.target === modal) closeChat(); });
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !modal.hidden) closeChat(); });
   roomList.addEventListener('click', (event) => {
-    const action = event.target.closest('[data-collapse-id], [data-archive-id], [data-delete-id]');
+    const action = event.target.closest('[data-pin-id], [data-collapse-id], [data-archive-id], [data-delete-id]');
     if (action) {
       const id = action.dataset.collapseId || action.dataset.archiveId || action.dataset.deleteId;
       const room = state.rooms.find((candidate) => candidate.id === id);
       if (!room) return;
       if (action.dataset.collapseId) room.collapsed = !room.collapsed;
+      if (action.dataset.pinId) room.pinned = !room.pinned;
       if (action.dataset.archiveId) room.archived = !room.archived;
       if (action.dataset.deleteId && window.confirm(`Chat "${room.title}" wirklich löschen?`)) {
         state.rooms = state.rooms.filter((candidate) => candidate.id !== id && candidate.parentId !== id);
-        state.activeId = state.rooms[0]?.id || createRoom().id;
         if (!state.rooms.length) state.rooms = [createRoom()];
+        state.activeId = state.rooms[0].id;
       }
       saveState(state); render(); return;
     }
@@ -175,6 +178,9 @@ export function initResearchChat() {
       document.getElementById('chat-setting-max-tokens').value = payload.max_tokens ?? 2048;
       document.getElementById('chat-setting-context').value = payload.max_context_chars ?? 24000;
       document.getElementById('chat-setting-prompt').value = payload.system_prompt || '';
+      document.getElementById('chat-setting-handoff').value = payload.handoff_prompt || '';
+      document.getElementById('chat-setting-vision').checked = payload.vision_enabled === true;
+      document.getElementById('chat-setting-tools').checked = payload.tools_enabled === true;
       const health = document.getElementById('chat-provider-health');
       health.className = 'provider-health pending';
       health.lastChild.textContent = ' checking';
@@ -198,13 +204,20 @@ export function initResearchChat() {
     document.getElementById('chat-setting-max-tokens').value = 2048;
     document.getElementById('chat-setting-context').value = 24000;
     document.getElementById('chat-setting-prompt').value = DEFAULT_PROMPT;
+    document.getElementById('chat-setting-handoff').value = '';
+  });
+  copilotLogin.addEventListener('click', async () => {
+    const payload = await (await fetch('/api/research/chat/oauth/start')).json();
+    if (payload.authorize_url) window.open(payload.authorize_url, '_blank', 'noopener,noreferrer');
+    else window.alert(payload.error || 'Microsoft OAuth ist nicht konfiguriert.');
   });
   settingsSave.addEventListener('click', async () => {
     const value = (id) => document.getElementById(id).value;
     const response = await fetch('/api/research/chat/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
       model: value('chat-setting-model'), endpoint: value('chat-setting-endpoint'), temperature: Number(value('chat-setting-temperature')),
       top_p: Number(value('chat-setting-top-p')), max_tokens: Number(value('chat-setting-max-tokens')), max_context_chars: Number(value('chat-setting-context')),
-      system_prompt: value('chat-setting-prompt')
+      system_prompt: value('chat-setting-prompt'), handoff_prompt: value('chat-setting-handoff'),
+      vision_enabled: document.getElementById('chat-setting-vision').checked, tools_enabled: document.getElementById('chat-setting-tools').checked
     })});
     if (!response.ok) window.alert((await response.json()).error || 'Settings konnten nicht gespeichert werden.');
     else await loadSettings();
@@ -225,10 +238,12 @@ export function initResearchChat() {
     render();
     input.value = '';
     try {
-      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
+      const images = await Promise.all([...imageInput.files].slice(0, 4).map((file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); })));
+      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, images, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
       room.messages.push({ role: 'assistant', content: payload.answer || '' });
+      imageInput.value = '';
       saveState(state);
       render();
     } catch (error) {

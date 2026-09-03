@@ -15,6 +15,9 @@
 - [x] Räume einklappen, archivieren, wiederherstellen und löschen
 - [x] Hierarchischen Kontext für Unterchats übertragen
 - [x] Provider-/Modellauswahl mit klarer OAuth-Grenze für Microsoft Copilot
+- [x] Bearbeitbarer Übergabeprompt und wiederherstellbare Standardwerte
+- [x] Ollama-Vision mit begrenzten Bildanhängen
+- [x] Microsoft Entra OAuth PKCE Start/Callback-Grundlage
 
 ### Alpha.7 — Controlled Experience & Learning Loop
 

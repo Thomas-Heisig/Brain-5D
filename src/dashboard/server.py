@@ -33,13 +33,14 @@ import datetime
 import json
 import os
 import signal
+import secrets
 import threading
 from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, cast
-from urllib.parse import parse_qs, quote, unquote, urlparse
+from urllib.parse import parse_qs, quote, urlencode, unquote, urlparse
 from urllib.request import Request, urlopen
 
 from src.embodiment import ConnectionManager
@@ -169,6 +170,11 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_chat_context_chars = 24_000
         self.research_chat_web_search_enabled = False
         self.research_chat_system_prompt = ""
+        self.research_chat_handoff_prompt = ""
+        self.research_chat_vision_enabled = False
+        self.research_chat_tools_enabled = False
+        self.research_chat_oauth_state: str | None = None
+        self.research_chat_oauth_token: str | None = None
         self.research_chat_ollama_backend: OllamaBackend | None = None
         self.research_chat_settings: dict[str, JSONValue] = {
             "provider": "unconfigured",
@@ -179,7 +185,10 @@ class DashboardServer(ThreadingHTTPServer):
             "max_tokens": 2048,
             "max_context_chars": 24_000,
             "read_only": True,
+            "vision_enabled": False,
+            "tools_enabled": False,
             "system_prompt": "",
+            "handoff_prompt": "",
         }
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
@@ -445,6 +454,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/research/chat/providers":
                 self._research_chat_providers()
+                return
+            if path == "/api/research/chat/oauth/start":
+                self._research_chat_oauth_start()
+                return
+            if path == "/api/research/chat/oauth/callback":
+                self._research_chat_oauth_callback(query)
                 return
 
             if path.startswith("/api/research/ai-reports/"):
@@ -1983,6 +1998,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         conversation_context = body.get("conversation_context", "")
         if not isinstance(conversation_context, str) or len(conversation_context) > 20_000:
             raise InvalidRequestError("conversation_context must be text up to 20000 characters.")
+        images = body.get("images", [])
+        if not isinstance(images, list) or any(not isinstance(image, str) or len(image) > 4_000_000 for image in images) or len(images) > 4:
+            raise InvalidRequestError("images must contain at most four small base64 strings.")
+        if images and not self.dashboard_server.research_chat_vision_enabled:
+            raise InvalidRequestError("Vision is disabled in chat settings.")
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         system_context = json.dumps(
             {
@@ -1994,14 +2014,25 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             default=str,
             sort_keys=True,
         )
+        request_backend = backend
+        ollama = self.dashboard_server.research_chat_ollama_backend
+        if ollama is not None and (images or self.dashboard_server.research_chat_tools_enabled):
+            request_backend = chat_backend_from_text_backend(
+                lambda prompt: ollama.generate_text(
+                    prompt,
+                    images=cast(list[str], images),
+                    tools=[] if not self.dashboard_server.research_chat_tools_enabled else [],
+                )
+            )
         answer, metadata = ResearchChat(
             cast(Any, source),
             cast(Any, docs),
-            backend,
+            request_backend,
             max_context_chars=self.dashboard_server.research_chat_context_chars,
             system_context=system_context,
             system_prompt=self.dashboard_server.research_chat_system_prompt,
             conversation_context=conversation_context,
+            handoff_prompt=self.dashboard_server.research_chat_handoff_prompt,
             web_context=web_context,
         ).answer(message)
         self._send_json(
@@ -2016,6 +2047,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if not isinstance(prompt, str) or len(prompt) > 8_000:
                 raise InvalidRequestError("system_prompt must be text up to 8000 characters.")
             server.research_chat_system_prompt = prompt.strip()
+        if "handoff_prompt" in body:
+            prompt = body["handoff_prompt"]
+            if not isinstance(prompt, str) or len(prompt) > 8_000:
+                raise InvalidRequestError("handoff_prompt must be text up to 8000 characters.")
+            server.research_chat_handoff_prompt = prompt.strip()
+        for key in ("vision_enabled", "tools_enabled"):
+            if key in body:
+                value = body[key]
+                if not isinstance(value, bool):
+                    raise InvalidRequestError(f"{key} must be boolean.")
+                setattr(server, f"research_chat_{key}", value)
+                server.research_chat_settings[key] = value
         for key in ("model", "endpoint"):
             if key in body:
                 value = body[key]
@@ -2049,7 +2092,36 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             server.research_chat_context_chars = value
             server.research_chat_settings["max_context_chars"] = value
         server.research_chat_settings["system_prompt"] = server.research_chat_system_prompt
+        server.research_chat_settings["handoff_prompt"] = server.research_chat_handoff_prompt
         self._send_json(server.research_chat_settings)
+
+    def _research_chat_oauth_start(self) -> None:
+        """Start Microsoft Entra PKCE authorization without exposing client secrets."""
+        client_id = os.environ.get("BRAIN5D_MICROSOFT_CLIENT_ID", "").strip()
+        tenant = os.environ.get("BRAIN5D_MICROSOFT_TENANT", "common").strip()
+        redirect_uri = os.environ.get("BRAIN5D_MICROSOFT_REDIRECT_URI", "http://127.0.0.1:8765/api/research/chat/oauth/callback").strip()
+        if not client_id:
+            self._send_json({"ok": False, "error": "BRAIN5D_MICROSOFT_CLIENT_ID is not configured."}, HTTPStatus.NOT_IMPLEMENTED)
+            return
+        state = secrets.token_urlsafe(32)
+        self.dashboard_server.research_chat_oauth_state = state
+        params = {"client_id": client_id, "response_type": "code", "redirect_uri": redirect_uri, "response_mode": "query", "scope": "openid profile offline_access", "state": state}
+        authorize = f"https://login.microsoftonline.com/{quote(tenant)}/oauth2/v2.0/authorize?{urlencode(params)}"
+        self._send_json({"ok": True, "authorize_url": authorize, "provider": "microsoft-copilot"})
+
+    def _research_chat_oauth_callback(self, query: dict[str, list[str]]) -> None:
+        """Validate the OAuth callback state; token exchange remains server-side configuration."""
+        state = query.get("state", [""])[0]
+        code = query.get("code", [""])[0]
+        if not state or not secrets.compare_digest(state, self.dashboard_server.research_chat_oauth_state or ""):
+            self._send_json({"ok": False, "error": "Invalid OAuth state."}, HTTPStatus.BAD_REQUEST)
+            return
+        if not code:
+            self._send_json({"ok": False, "error": query.get("error_description", ["Authorization was denied."])[0]}, HTTPStatus.BAD_REQUEST)
+            return
+        self.dashboard_server.research_chat_oauth_token = code
+        self.dashboard_server.research_chat_oauth_state = None
+        self._send_json({"ok": True, "message": "Authorization code received. Configure the server-side token exchange before enabling Copilot chat."}, HTTPStatus.OK)
 
     def _research_chat_health(self) -> None:
         """Probe the configured Ollama provider without generating tokens."""
@@ -2077,7 +2149,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 models = [item["name"] for item in payload.get("models", []) if isinstance(item, dict) and isinstance(item.get("name"), str)]
             except (OSError, ValueError, TypeError):
                 pass
-        self._send_json({"providers": [{"id": "ollama", "label": "Ollama", "available": backend is not None}, {"id": "microsoft-copilot", "label": "Microsoft Copilot", "available": False, "reason": "Requires Microsoft account and tenant OAuth configuration."}], "models": models})
+        self._send_json({"providers": [{"id": "ollama", "label": "Ollama", "available": backend is not None, "capabilities": ["chat", "vision", "tools"]}, {"id": "microsoft-copilot", "label": "Microsoft Copilot", "available": bool(self.dashboard_server.research_chat_oauth_token), "reason": "Requires Microsoft Entra OAuth and an approved Copilot API endpoint."}], "models": models})
 
     def _search_web(self, query: str) -> str:
         """Read a small set of structured public search results."""
@@ -3290,6 +3362,9 @@ def serve_dashboard(
     ).strip()
     top_p = float(os.environ.get("BRAIN5D_CHAT_TOP_P", str(configured_chat.get("top_p", 0.9))))
     max_tokens = int(os.environ.get("BRAIN5D_CHAT_MAX_TOKENS", str(configured_chat.get("max_tokens", 2048))))
+    handoff_prompt = os.environ.get("BRAIN5D_CHAT_HANDOFF_PROMPT", str(configured_chat.get("handoff_prompt", ""))).strip()
+    vision_enabled = os.environ.get("BRAIN5D_CHAT_VISION", str(configured_chat.get("vision_enabled", False))).lower() in {"1", "true", "yes", "on"}
+    tools_enabled = os.environ.get("BRAIN5D_CHAT_TOOLS", str(configured_chat.get("tools_enabled", False))).lower() in {"1", "true", "yes", "on"}
     ollama_backend: OllamaBackend | None = None
     if chat_model:
         chat_endpoint = os.environ.get(
@@ -3319,6 +3394,9 @@ def serve_dashboard(
             "read_only": True,
             "web_search_enabled": web_search_enabled,
             "system_prompt": system_prompt,
+            "handoff_prompt": handoff_prompt,
+            "vision_enabled": vision_enabled,
+            "tools_enabled": tools_enabled,
         }
         print(f"🤖 Research chat backend: Ollama ({chat_model})")
 
@@ -3339,6 +3417,9 @@ def serve_dashboard(
         server.research_chat_backend = chat_backend
         server.research_chat_context_chars = context_chars
         server.research_chat_system_prompt = system_prompt
+        server.research_chat_handoff_prompt = handoff_prompt
+        server.research_chat_vision_enabled = vision_enabled
+        server.research_chat_tools_enabled = tools_enabled
         server.research_chat_ollama_backend = ollama_backend
         server.research_chat_settings = cast(
             dict[str, JSONValue],

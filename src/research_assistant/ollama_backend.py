@@ -58,25 +58,38 @@ class OllamaBackend:
         output = cast(dict[str, Any], output_raw)
         return output, metadata
 
-    def generate_text(self, prompt: str) -> tuple[str, dict[str, str | float]]:
+    def generate_text(
+        self,
+        prompt: str,
+        images: list[str] | None = None,
+        tools: list[dict[str, object]] | None = None,
+    ) -> tuple[str, dict[str, str | float]]:
         """Return plain text for read-only chat consumers."""
-        return self._generate(prompt)
+        return self._generate(prompt, images=images, tools=tools)
 
-    def _generate(self, prompt: str) -> tuple[str, dict[str, str | float]]:
+    def _generate(
+        self,
+        prompt: str,
+        images: list[str] | None = None,
+        tools: list[dict[str, object]] | None = None,
+    ) -> tuple[str, dict[str, str | float]]:
+        payload: dict[str, object] = {
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False,
+            "options": {
+                "temperature": self.temperature,
+                "top_p": self.top_p,
+                "num_predict": self.max_tokens,
+            },
+        }
+        if images:
+            payload["images"] = images
+        if tools:
+            payload["tools"] = tools
         request = Request(
             self.endpoint,
-            data=json.dumps(
-                {
-                    "model": self.model,
-                    "prompt": prompt,
-                    "stream": False,
-                    "options": {
-                        "temperature": self.temperature,
-                        "top_p": self.top_p,
-                        "num_predict": self.max_tokens,
-                    },
-                }
-            ).encode(),
+            data=json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
             method="POST",
         )

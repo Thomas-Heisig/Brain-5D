@@ -41,6 +41,7 @@ class ResearchChat:
     web_context: str = ""
     system_prompt: str = ""
     conversation_context: str = ""
+    handoff_prompt: str = ""
 
     def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
         question = message.strip()
@@ -57,6 +58,8 @@ class ResearchChat:
             context = f"WEB SOURCES (external and unverified):\n{self.web_context}\n\n{context}"
         if self.conversation_context:
             context = f"CHAT HIERARCHY (conversation context, not evidence):\n{self.conversation_context}\n\n{context}"
+        if self.handoff_prompt.strip():
+            context = f"HANDOFF INSTRUCTIONS (editable operator context, not evidence):\n{self.handoff_prompt.strip()}\n\n{context}"
         return (
             f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else ""
         ) + (
