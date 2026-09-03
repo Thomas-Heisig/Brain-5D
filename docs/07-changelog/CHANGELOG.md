@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Causal attribution reports
+
+- AI-Exposure, Causal-Taint, Interaktionsrollen, Treatments sowie Twin- und
+  Ablation-Referenzen werden nun deterministisch als nicht-evidenter
+  `CausalAttributionReport` aus dem Experimentmanifest erzeugt.
+
 ## 2026-09-03 — Epistemic provenance graph
 
 - Digest-only-Knoten und gerichtete, azyklische Kanten verbinden nun Claims,

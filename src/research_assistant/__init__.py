@@ -20,6 +20,7 @@ from .authority import (
     authority_matrix,
     validate_authority_matrix,
 )
+from .causal import CausalAttributionReport, generate_causal_attribution_report
 from .chat import ChatBackend, ResearchChat, chat_backend_from_text_backend
 from .contracts import (
     AIClockMode,
@@ -130,6 +131,8 @@ __all__ = [
     "summarize",
     "write_statistics",
     "ChatBackend",
+    "CausalAttributionReport",
+    "generate_causal_attribution_report",
     "ResearchChat",
     "chat_backend_from_text_backend",
     "CausalTaint",

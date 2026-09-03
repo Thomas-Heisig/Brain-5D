@@ -85,7 +85,7 @@
 - [x] CI-Regeln für Prompt-, Modell-, Treatment- und Statistikversionsänderungen erzwingen
 - [x] Epistemic Provenance Graph für Claims, Sensoren, Memory, Experimente, Webquellen und Derived Values modellieren
 - [x] `knowledge_origin` mit `SNN_LEARNED`, `LLM_PRIOR`, `EXTERNAL_RETRIEVAL`, `HUMAN_INPUT`, `SENSOR_OBSERVATION`, `SYSTEM_STATE`, `SIMULATED_ENVIRONMENT`, `DERIVED` und `UNKNOWN` standardisieren
-- [ ] Causal-Attribution-Report für jede AI-Exposure-Stufe und jeden Twin-/Ablation-Run generieren
+- [x] Causal-Attribution-Report für jede AI-Exposure-Stufe und jeden Twin-/Ablation-Run generieren
 - [ ] Dashboard-Betriebsstatus für `PURE EXPERIMENT`, `AI OBSERVING`, `AI PROPOSING` und `AI CAUSALLY ACTIVE` anzeigen
 
 ### Chat UX und Providersteuerung

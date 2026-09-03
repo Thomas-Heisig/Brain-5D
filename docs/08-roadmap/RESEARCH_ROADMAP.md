@@ -80,6 +80,9 @@ Evidenz für Lernwirkung.
 	Treatment- und Statistikkomponenten positive Versionen mit Änderungsgrund.
 - Epistemische Provenienz kann nun als digest-only, azyklischer Graph mit
 	expliziten Quellenursprüngen und Derived-Value-Beziehungen validiert werden.
+- Causal-Attribution-Reports bündeln nun Exposure, Taint, Interaktionen,
+	Treatments sowie Twin-/Ablation-Referenzen, bleiben aber ausdrücklich keine
+	wissenschaftliche Evidenz.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

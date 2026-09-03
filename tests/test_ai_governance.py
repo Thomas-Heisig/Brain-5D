@@ -6,6 +6,7 @@ import pytest
 
 from src.research_assistant.advisor import CognitiveAdvisor
 from src.research_assistant.authority import AIRole, authority_for
+from src.research_assistant.causal import generate_causal_attribution_report
 from src.research_assistant.contracts import (
     AIClockMode,
     AIInteractionRecord,
@@ -260,6 +261,26 @@ def test_epistemic_provenance_graph_is_digest_only_and_acyclic() -> None:
         graph.add_edge(ProvenanceEdge("claim-1", "sensor-1", "derived_from"))
     with pytest.raises(ValueError, match="unknown node"):
         graph.add_edge(ProvenanceEdge("claim-1", "missing", "supports"))
+
+
+def test_causal_attribution_report_is_manifest_bound_and_not_evidence() -> None:
+    report = generate_causal_attribution_report(
+        {
+            "experiment_id": "EXP-TWIN-0001",
+            "ai_exposure": "bounded_controller",
+            "causal_taint": "AI_INFLUENCED",
+            "causal_card": {"interaction_ids": ["AIRC-1"], "roles": ["AI-3"]},
+            "ai_treatment": {"protocol_id": "PROTOCOL-AI-001"},
+            "twin_run": {"results_recorded": True},
+            "ablation": {"protocol_id": "ABL-001"},
+        }
+    )
+    assert report.report_id.startswith("CAR-")
+    assert report.to_dict()["scientific_evidence"] is False
+    with pytest.raises(ValueError, match="causal_card"):
+        generate_causal_attribution_report(
+            {"experiment_id": "EXP-1", "ai_exposure": "observer_only", "causal_taint": "OBSERVED"}
+        )
 
 
 def test_data_leakage_validator_rejects_overlap_and_holdout_labels() -> None:
