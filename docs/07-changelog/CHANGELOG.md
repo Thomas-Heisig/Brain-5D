@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Dashboard AI operation classification
+
+- Research-Experimente zeigen nun read-only, ob AI als `REPLAY`,
+  `LIVE_FROZEN_MODEL` oder `LIVE_EXTERNAL_API` betrieben wurde; unvollständige
+  Protokolle bleiben als `UNKNOWN` sichtbar.
+
 ## 2026-09-03 — P1 AI governance contracts
 
 - Eingefrorene Prompt-Dateien unter `research/prompts/` werden per

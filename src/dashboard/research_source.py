@@ -27,6 +27,47 @@ class ResearchDocument:
     category: str
 
 
+def classify_ai_operation(manifest: dict[str, Any]) -> str:
+    """Classify AI execution provenance for read-only dashboard display."""
+    explicit = manifest.get("ai_operation_mode", manifest.get("operation_mode"))
+    if isinstance(explicit, str) and explicit in {
+        "REPLAY",
+        "LIVE_FROZEN_MODEL",
+        "LIVE_EXTERNAL_API",
+        "NONE",
+        "UNKNOWN",
+    }:
+        return explicit
+    interactions = manifest.get("ai_interactions", [])
+    if not isinstance(interactions, list):
+        interactions = []
+    if not interactions and isinstance(manifest.get("ai_model_provenance"), dict):
+        interactions = [{"model_provenance": manifest["ai_model_provenance"]}]
+    if not isinstance(interactions, list) or not interactions:
+        return "NONE"
+    network_mode = str(manifest.get("network_mode", "")).upper()
+    for interaction in interactions:
+        if not isinstance(interaction, dict):
+            continue
+        provenance = interaction.get("model_provenance", {})
+        if isinstance(provenance, dict):
+            provider = str(
+                provenance.get("provider", provenance.get("backend", ""))
+            ).lower()
+            if "replay" in provider or provenance.get("replay") is True:
+                return "REPLAY"
+            if network_mode in {"OFFLINE", "FROZEN_CORPUS"} and (
+                provider in {"ollama", "local", "frozen_model"}
+                or "frozen" in provider
+            ):
+                return "LIVE_FROZEN_MODEL"
+            if network_mode == "LIVE_NETWORK" or (
+                provider and provider not in {"unknown", "not_reported"}
+            ):
+                return "LIVE_EXTERNAL_API"
+    return "UNKNOWN"
+
+
 class ResearchSource:
     """Read-only view over the ``research/`` directory tree.
 
@@ -191,6 +232,9 @@ class ResearchSource:
                 continue
             experiments.append(
                 {
+                    "ai_operation_mode": classify_ai_operation(data)
+                    if isinstance(data, dict)
+                    else "NONE",
                     "id": entry.name,
                     "path": str(entry.relative_to(self._root)).replace("\\", "/"),
                     "manifest": data,

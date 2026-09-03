@@ -64,6 +64,8 @@ Evidenz für Lernwirkung.
 	Ablationsmetrik ohne Evidence-Status verfügbar.
 - Scientific Runs registrieren ihren Netzwerkmodus mit Offline-/Frozen-Corpus-
 	Default; versionierte Retrieval-Provenienz ist im Manifest sichtbar.
+- Das Dashboard klassifiziert AI-Betrieb aus expliziten Manifest- und
+	Modell-Provenienzfeldern als Replay, Live-Frozen-Model oder Live-External-API.
 
 Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
 Forschungsgegenstand:

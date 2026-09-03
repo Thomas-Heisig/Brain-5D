@@ -66,7 +66,7 @@
 - [x] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
 - [x] AI-0 Research AI, AI-1 Language Organ, AI-2 Cognitive Advisor und AI-3 Experimental Cognitive Controller als formale Rollen dokumentieren
 - [x] Logical-Time- und Wall-Clock-Modus für asynchrone AI-Interaktionen unterscheiden und Response-Anwendungstics protokollieren
-- [ ] Replay-, Live-Frozen-Model- und Live-External-API-Betrieb im Dashboard sichtbar klassifizieren
+- [x] Replay-, Live-Frozen-Model- und Live-External-API-Betrieb im Dashboard sichtbar klassifizieren
 
 ### P1 — Vergleich, Bias und AI-Forschungsobjekt
 
