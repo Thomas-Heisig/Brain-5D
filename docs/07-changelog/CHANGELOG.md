@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — Persistent Learning Preparation API
+
+- Persisted proposal and approved `PreparedLearningPlan` artifacts with typed
+  deserialization, revision metadata and separate approval storage.
+- Added guarded `GET`/`POST /api/learning/preparation` operations for create,
+  approve and list without granting runtime authority to proposals.
+- Added persistence and HTTP route regression coverage.
+
 ## 2026-09-03 — Post-experiment AI research report
 
 - Dashboard experiment completion now appends the existing AIRR JSON/Markdown

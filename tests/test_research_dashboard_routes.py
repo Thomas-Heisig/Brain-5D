@@ -54,6 +54,21 @@ def _get(host: str, port: int, path: str) -> tuple[int, dict[str, Any]]:
         conn.close()
 
 
+def _post(host: str, port: int, path: str, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    conn = HTTPConnection(host, port)
+    try:
+        conn.request(
+            "POST",
+            path,
+            body=json.dumps(payload),
+            headers={"Content-Type": "application/json"},
+        )
+        response = conn.getresponse()
+        return response.status, cast(dict[str, Any], json.loads(response.read()))
+    finally:
+        conn.close()
+
+
 def test_ai_operation_classification_is_explicit_and_fail_closed() -> None:
     assert classify_ai_operation({}) == "NONE"
     assert classify_ai_operation({"ai_operation_mode": "REPLAY"}) == "REPLAY"
@@ -208,5 +223,49 @@ def test_learning_run_requires_explicit_operator_confirmation(tmp_path: Path) ->
         assert response.status == 400
         assert "operator_confirmed" in response.read().decode()
         conn.close()
+    finally:
+        _stop(server, thread)
+
+
+def test_learning_preparation_api_persists_and_approves_guarded_plan(tmp_path: Path) -> None:
+    root = tmp_path / "research"
+    root.mkdir()
+    server, thread, host, port = _start_server(root)
+    payload = {
+        "action": "create",
+        "plan_id": "LP-API-001",
+        "objective": {
+            "objective_id": "OBJ-API-001",
+            "description": "Learn a controlled environment relation.",
+            "success_metric": "holdout success",
+            "evaluation_question": "Does performance improve?",
+        },
+        "sources": [{
+            "source_id": "SRC-API-001",
+            "digest": "digest",
+            "origin": "environment",
+            "partition": "train",
+        }],
+        "baseline_protocol": "baseline",
+        "exposure_protocol": "exposure",
+        "evaluation_protocol": "holdout",
+        "stopping_rule": "fixed episodes",
+        "controls": ["learning_off"],
+    }
+    try:
+        status, created = _post(host, port, "/api/learning/preparation", payload)
+        assert status == 201
+        assert created["status"] == "created"
+        status, approved = _post(
+            host,
+            port,
+            "/api/learning/preparation",
+            {"action": "approve", "plan_id": "LP-API-001", "approved_by": "operator"},
+        )
+        assert status == 201
+        assert approved["status"] == "approved"
+        status, listed = _get(host, port, "/api/learning/preparation")
+        assert status == 200
+        assert len(listed["plans"]) == 2
     finally:
         _stop(server, thread)

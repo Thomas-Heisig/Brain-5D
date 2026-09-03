@@ -15,7 +15,8 @@ import hashlib
 import json
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Mapping, Sequence
+from pathlib import Path
+from typing import Any, Mapping, Sequence, cast
 
 
 class LearningPlanOrigin(str, Enum):
@@ -226,7 +227,8 @@ class LearningPreparationGuard:
     @classmethod
     def _validate_value(cls, value: Any, *, path: str) -> None:
         if isinstance(value, Mapping):
-            for key, child in value.items():
+            typed_value = cast(Mapping[Any, Any], value)
+            for key, child in typed_value.items():
                 normalized = str(key).strip().lower()
                 if normalized in cls._FORBIDDEN_KEYS:
                     raise PermissionError(
@@ -235,12 +237,108 @@ class LearningPreparationGuard:
                 cls._validate_value(child, path=f"{path}.{key}")
             return
         if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
-            for index, child in enumerate(value):
+            typed_value = cast(Sequence[Any], value)
+            for index, child in enumerate(typed_value):
                 cls._validate_value(child, path=f"{path}[{index}]")
 
 
 class LearningPreparationService:
-    """Create and approve preparation artifacts without executing learning."""
+    """Create, approve, and persist preparation artifacts without executing learning."""
+
+    def __init__(self, storage_root: Path | None = None) -> None:
+        self._storage_root = storage_root
+
+    def persist_proposal(self, proposal: LearningPreparationProposal) -> Path:
+        """Persist one immutable proposal and return its artifact path."""
+        return self._persist(proposal.plan_id, proposal.to_dict())
+
+    def persist_approved(self, plan: PreparedLearningPlan) -> Path:
+        """Persist one approved plan without granting runtime authority."""
+        return self._persist(f"{plan.proposal.plan_id}-approved", plan.to_dict())
+
+    def load_proposal(self, plan_id: str) -> LearningPreparationProposal:
+        """Load a proposal for explicit human approval."""
+        payload = self._load(plan_id)
+        proposal_payload = payload.get("proposal", payload)
+        if not isinstance(proposal_payload, Mapping):
+            raise ValueError("stored preparation proposal must be an object")
+        return self._proposal_from_dict(cast(Mapping[str, Any], proposal_payload))
+
+    def list_plans(self) -> list[dict[str, Any]]:
+        """Return stored preparation artifacts in stable order."""
+        if self._storage_root is None or not self._storage_root.is_dir():
+            return []
+        return [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted(self._storage_root.glob("*.json"))
+        ]
+
+    def _persist(self, plan_id: str, payload: dict[str, Any]) -> Path:
+        if self._storage_root is None:
+            raise ValueError("storage_root is required for persistence")
+        self._storage_root.mkdir(parents=True, exist_ok=True)
+        path = self._storage_root / f"{plan_id}.json"
+        if path.exists():
+            raise FileExistsError(f"learning preparation already exists: {plan_id}")
+        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return path
+
+    def _load(self, plan_id: str) -> dict[str, Any]:
+        if self._storage_root is None:
+            raise ValueError("storage_root is required for persistence")
+        path = self._storage_root / f"{plan_id}.json"
+        if not path.is_file():
+            raise FileNotFoundError(plan_id)
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(loaded, dict):
+            raise ValueError("stored preparation must be an object")
+        return cast(dict[str, Any], loaded)
+
+    @staticmethod
+    def _proposal_from_dict(payload: Mapping[str, Any]) -> LearningPreparationProposal:
+        objective_payload = payload.get("objective")
+        if not isinstance(objective_payload, Mapping):
+            raise ValueError("objective object is required")
+        sources_payload = payload.get("sources", [])
+        if not isinstance(sources_payload, Sequence) or isinstance(sources_payload, (str, bytes)):
+            raise ValueError("sources must be a list")
+        typed_sources = cast(Sequence[Any], sources_payload)
+        sources = tuple(
+            LearningPreparationService._source_from_dict(
+                cast(Mapping[str, Any], source)
+            )
+            for source in typed_sources
+            if isinstance(source, Mapping)
+        )
+        typed_objective = cast(Mapping[str, Any], objective_payload)
+        return LearningPreparationProposal(
+            plan_id=str(payload["plan_id"]),
+            objective=LearningObjective(
+                objective_id=str(typed_objective["objective_id"]),
+                description=str(typed_objective["description"]),
+                success_metric=str(typed_objective["success_metric"]),
+                evaluation_question=str(typed_objective["evaluation_question"]),
+            ),
+            sources=sources,
+            baseline_protocol=str(payload["baseline_protocol"]),
+            exposure_protocol=str(payload["exposure_protocol"]),
+            evaluation_protocol=str(payload["evaluation_protocol"]),
+            stopping_rule=str(payload["stopping_rule"]),
+            controls=tuple(str(value) for value in payload.get("controls", [])),
+            origin=LearningPlanOrigin(str(payload.get("origin", LearningPlanOrigin.HUMAN.value))),
+            rationale=str(payload.get("rationale", "")),
+            ai_interaction_id=payload.get("ai_interaction_id"),
+        )
+
+    @staticmethod
+    def _source_from_dict(source: Mapping[str, Any]) -> LearningSourceRef:
+        return LearningSourceRef(
+            source_id=str(source["source_id"]),
+            digest=str(source["digest"]),
+            origin=str(source["origin"]),
+            partition=LearningDataPartition(str(source["partition"])),
+            trust=str(source.get("trust", "UNKNOWN")),
+        )
 
     def create_proposal(
         self,

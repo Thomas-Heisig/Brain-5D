@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from src.learning import (
@@ -112,3 +114,24 @@ def test_guard_allows_protocol_metadata_and_provenance() -> None:
             "evaluation": {"metric": "task_success", "repeat": 10},
         }
     )
+
+
+def test_preparation_persistence_keeps_proposal_and_approval_separate(tmp_path: Path) -> None:
+    service = LearningPreparationService(tmp_path / "preparations")
+    proposal = service.create_proposal(
+        plan_id="LP-PERSIST-001",
+        objective=_objective(),
+        sources=[_source()],
+        baseline_protocol="baseline",
+        exposure_protocol="exposure",
+        evaluation_protocol="evaluation",
+        stopping_rule="fixed episodes",
+    )
+    proposal_path = service.persist_proposal(proposal)
+    approved = service.approve(proposal, approved_by="operator")
+    approved_path = service.persist_approved(approved)
+
+    assert proposal_path.name == "LP-PERSIST-001.json"
+    assert approved_path.name == "LP-PERSIST-001-approved.json"
+    assert len(service.list_plans()) == 2
+    assert service.load_proposal("LP-PERSIST-001").digest == proposal.digest

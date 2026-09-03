@@ -4,7 +4,7 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: synchronisiertes `main`, lokale Vollsuite `661 passed,
+> Verifiziert am 2026-09-03: synchronisiertes `main`, lokale Vollsuite `663 passed,
 > 3 bekannte Legacy-Dashboard-Fehler, 5 skipped`.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
@@ -28,9 +28,9 @@
 
 ### P1 — Learning Preparation Ausbau
 
-- [ ] Persistente `PreparedLearningPlan`-Artefakte mit Revision, Freigabe-Identität,
+- [x] Persistente `PreparedLearningPlan`-Artefakte mit Revision, Freigabe-Identität,
   Proposal-Digest und unveränderlicher Provenienz speichern
-- [ ] Typisierte `/api/learning/preparation`-API für Erstellen, Prüfen und Freigeben
+- [x] Typisierte `/api/learning/preparation`-API für Erstellen, Prüfen und Freigeben
   ergänzen; serverseitige `LearningPreparationGuard`-Prüfung erzwingen
 - [ ] `LearningSourceRef` aus Knowledge Intake und Environment-Capture ableiten
 - [ ] Train-, Validation- und Holdout-Partitionen serverseitig auf Leakage prüfen

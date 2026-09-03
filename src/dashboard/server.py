@@ -44,6 +44,13 @@ from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
 from src.embodiment import ConnectionManager
+from src.learning import (
+    LearningDataPartition,
+    LearningObjective,
+    LearningPlanOrigin,
+    LearningPreparationService,
+    LearningSourceRef,
+)
 from src.research_assistant import (
     AIRRPipeline,
     AnalysisBackend,
@@ -433,6 +440,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/research":
                 self._serve_research_summary()
                 return
+            if path == "/api/learning/preparation":
+                self._list_learning_preparations()
+                return
 
             if path == "/api/research/documents":
                 self._serve_research_documents()
@@ -688,6 +698,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/learning/run":
                 self._run_learning_workflow(body)
+                return
+
+            if path == "/api/learning/preparation":
+                self._learning_preparation(body)
                 return
 
             if path == "/api/research/chat/settings":
@@ -2068,6 +2082,77 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         workflow.pop("operator_confirmed", None)
         workflow["protocol"] = "science_suite_v1"
         self._run_experiment_workflow(workflow)
+
+    def _learning_preparation(self, body: dict[str, object]) -> None:
+        """Persist or approve a guarded, non-executable learning preparation."""
+        source = self._require_research_source()
+        service = LearningPreparationService(source.root() / "learning" / "preparations")
+        action = body.get("action", "create")
+        if action == "approve":
+            plan_id = self._string_field(body, "plan_id")
+            approved_by = self._string_field(body, "approved_by")
+            plan = service.approve(service.load_proposal(plan_id), approved_by=approved_by, approval_note=str(body.get("approval_note", "")))
+            path = service.persist_approved(plan)
+            self._send_json({"status": "approved", "path": str(path.relative_to(source.root())).replace("\\", "/"), "plan": cast(JSONValue, plan.to_dict())}, HTTPStatus.CREATED)
+            return
+        if action != "create":
+            raise InvalidRequestError("action must be create or approve")
+        objective = body.get("objective")
+        if not isinstance(objective, dict):
+            raise InvalidRequestError("objective object is required")
+        typed_objective = cast(dict[str, object], objective)
+        raw_sources = body.get("sources", [])
+        if not isinstance(raw_sources, list):
+            raise InvalidRequestError("sources must be a list")
+        typed_sources = cast(list[object], raw_sources)
+        sources = [
+            self._learning_source_from_mapping(cast(dict[str, object], item))
+            for item in typed_sources
+            if isinstance(item, dict)
+        ]
+        plan = service.create_proposal(
+            plan_id=self._string_field(body, "plan_id"),
+            objective=LearningObjective(
+                objective_id=self._mapping_string(typed_objective, "objective_id"),
+                description=self._mapping_string(typed_objective, "description"),
+                success_metric=self._mapping_string(typed_objective, "success_metric"),
+                evaluation_question=self._mapping_string(typed_objective, "evaluation_question"),
+            ),
+            sources=sources,
+            baseline_protocol=self._string_field(body, "baseline_protocol"),
+            exposure_protocol=self._string_field(body, "exposure_protocol"),
+            evaluation_protocol=self._string_field(body, "evaluation_protocol"),
+            stopping_rule=self._string_field(body, "stopping_rule"),
+            controls=[str(value) for value in cast(list[object], body.get("controls", []))] if isinstance(body.get("controls", []), list) else [],
+            origin=LearningPlanOrigin(str(body.get("origin", LearningPlanOrigin.HUMAN.value))),
+            rationale=str(body.get("rationale", "")),
+            ai_interaction_id=cast(str | None, body.get("ai_interaction_id")) if isinstance(body.get("ai_interaction_id"), str) else None,
+            raw_proposal_payload=body,
+        )
+        path = service.persist_proposal(plan)
+        self._send_json({"status": "created", "path": str(path.relative_to(source.root())).replace("\\", "/"), "proposal": cast(JSONValue, plan.to_dict())}, HTTPStatus.CREATED)
+
+    def _list_learning_preparations(self) -> None:
+        source = self._require_research_source()
+        service = LearningPreparationService(source.root() / "learning" / "preparations")
+        self._send_json({"plans": cast(JSONValue, service.list_plans())})
+
+    @staticmethod
+    def _mapping_string(mapping: dict[str, object], name: str) -> str:
+        value = mapping.get(name)
+        if not isinstance(value, str) or not value.strip():
+            raise InvalidRequestError(f"'{name}' must be a non-empty string.")
+        return value.strip()
+
+    @classmethod
+    def _learning_source_from_mapping(cls, item: dict[str, object]) -> LearningSourceRef:
+        return LearningSourceRef(
+            source_id=cls._mapping_string(item, "source_id"),
+            digest=cls._mapping_string(item, "digest"),
+            origin=cls._mapping_string(item, "origin"),
+            partition=LearningDataPartition(cls._mapping_string(item, "partition")),
+            trust=str(item.get("trust", "UNKNOWN")),
+        )
 
     def _update_research_chat_settings(self, body: dict[str, object]) -> None:
         """Update bounded runtime chat preferences from the settings panel."""
