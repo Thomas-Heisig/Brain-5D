@@ -22,6 +22,7 @@ from src.research.evidence_engine import (
     EvidenceEngine,
     _check_experiment_valid,  # type: ignore[misc]
 )
+from src.research_assistant.contracts import AIExposure
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.registry import ResearchRegistry
 
@@ -111,6 +112,15 @@ class TestRuntimeErrorsInManifest:
         assert manifest["runtime_errors"] == []
         assert manifest["validity"]["valid"] is True
         assert manifest["validity"]["runtime_error_count"] == 0
+        assert manifest["ai_exposure"] == "none"
+
+    def test_recorder_records_validated_ai_exposure(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
+        recorder.record_ai_exposure(AIExposure.OBSERVER_ONLY)
+        assert recorder.manifest["ai_exposure"] == "observer_only"
+
+        with pytest.raises(ValueError, match="Unsupported AI exposure"):
+            recorder.record_ai_exposure("unrestricted")
 
     def test_recorder_captures_runtime_error(self, tmp_experiment_dir: Path) -> None:
         """Recording a runtime error updates the manifest."""

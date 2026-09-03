@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — AI exposure in experiment manifests
+
+- Experimentmanifeste enthalten standardmäßig `ai_exposure: none`.
+- `ExperimentRecorder.record_ai_exposure()` validiert und speichert die kontrollierten Exposure-Stufen.
+- Ungültige oder uneingeschränkte Exposure-Werte werden fail-closed abgewiesen.
+
 ## 2026-09-03 — AI import boundary contract test
 
 - Struktureller AST-Test ergänzt, der direkte Imports von `src.core` und `src.main` aus Research-Assistant- und Language-Organ-Paketen verhindert.

@@ -15,6 +15,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Protocol, cast
 
+from src.research_assistant.contracts import AIExposure
+
 from .registry import REPO_ROOT
 
 EXPERIMENTS_DIR = REPO_ROOT / "research" / "experiments"
@@ -113,6 +115,7 @@ class ExperimentRecorder:
         self._manifest: dict[str, Any] = {
             "experiment_id": experiment_id,
             "experiment_status": "not_started",
+            "ai_exposure": AIExposure.NONE.value,
             "timestamp": datetime.now().isoformat(),
             "git": get_git_info(),
             "software": get_software_info(),
@@ -145,6 +148,15 @@ class ExperimentRecorder:
     ) -> ExperimentRecorder:
         """Record simulation parameters (seed, ticks, dimensions, etc.)."""
         self._manifest["simulation"].update(kwargs)
+        return self
+
+    def record_ai_exposure(self, exposure: AIExposure | str) -> ExperimentRecorder:
+        """Record the declared AI exposure level for this experiment."""
+        try:
+            normalized = AIExposure(exposure)
+        except ValueError as exc:
+            raise ValueError(f"Unsupported AI exposure: {exposure}") from exc
+        self._manifest["ai_exposure"] = normalized.value
         return self
 
     def record_research_links(

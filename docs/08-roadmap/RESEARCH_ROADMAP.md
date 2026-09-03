@@ -75,6 +75,8 @@ als unverified markiert.
 	hinterlegt und trennt AI-, Runtime-, Evidenz- und Human-Review-Autorität.
 - Ein AST-Contract-Test schützt die AI-Pakete vor direkten Core-/Main-Imports;
 	die Runtime- und Storage-Durchsetzung der Firewall bleibt davon getrennt offen.
+- Experimentmanifeste tragen jetzt eine validierte `ai_exposure`-Stufe mit dem
+	sicheren Default `none`; Interaktions- und Causal-Taint-Provenienz folgen separat.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
