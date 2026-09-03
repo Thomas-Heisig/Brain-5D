@@ -1,0 +1,10 @@
+{
+  "protocol_id": "PROTOCOL-AIRR-001",
+  "title": "AI-assisted experiment interpretation",
+  "trigger": "experiment_status == completed and DATA artifact exists",
+  "evidence_required": false,
+  "ai_authority": "interpretation_only",
+  "stages": ["scientific_analyst", "critical_reviewer", "scientific_writer"],
+  "human_review_required": true,
+  "markdown_renderer": "deterministic_json_projection"
+}

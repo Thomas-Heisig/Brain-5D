@@ -1,6 +1,19 @@
 """Read-only AI assistance for scientific research artifacts."""
 
-from .assistant import ResearchAssistant
+from .airr import AIResearchReport, AIRRPipeline, render_markdown, write_human_review
+from .assistant import AnalysisBackend, ResearchAssistant
 from .models import AIAnalysisRecord, ResearchPacket
+from .statistics import summarize, write_statistics
 
-__all__ = ["AIAnalysisRecord", "ResearchAssistant", "ResearchPacket"]
+__all__ = [
+    "AIAnalysisRecord",
+    "AnalysisBackend",
+    "AIRRPipeline",
+    "AIResearchReport",
+    "ResearchAssistant",
+    "ResearchPacket",
+    "render_markdown",
+    "write_human_review",
+    "summarize",
+    "write_statistics",
+]

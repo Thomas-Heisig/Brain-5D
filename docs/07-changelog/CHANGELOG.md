@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-03 — AI Research Reports (AIRR)
+
+- Added `PROTOCOL-AIRR-001`, the AIRR schema, and an Analyst -> Critical Reviewer -> Writer pipeline.
+- AIRR JSON is canonical; Markdown is rendered deterministically and linked by digests.
+- Reports are permanently marked as AI-generated interpretation, never scientific evidence.
+- Added full ResearchPacket and DATA/EVID provenance, deterministic statistics support, and append-only human reviews.
+- Exposed AIRR reports through the Research dashboard without granting AI execution or evidence authority.
+
 ## 2026-09-03 — Roadmap and TODO separation
 
 - Reorganized the canonical roadmap around Alpha.7 through v1.0 instead of feature accumulation.

@@ -35,3 +35,18 @@ sauberen Source Freeze mit registriertem Protokoll, unabhängigen Wiederholungen
 vollständiger DATA/EVID-Provenienz und dokumentierten Limitationen beruht.
 Dashboard-Zustände, aktivierte Flags und reine Implementierungstests sind keine
 Evidenz für Lernwirkung.
+
+## AI Research Track
+
+Die AI-Unterstützung bleibt parallel zu den Brain-5D-Experimenten ein eigener
+Forschungsgegenstand:
+
+- **R-AI1 / RQ-AIR-001:** Erkennt der Scientific Research Assistant methodische Defekte zuverlässig?
+- **R-AI2:** Wie genau sind AI Research Reports gegenüber einer menschlichen Referenzauswertung?
+- **R-AI3:** Wie stark unterscheiden sich Modelle bei identischem ResearchPacket?
+- **R-AI4:** Wie gut ist die Confidence der KI kalibriert?
+- **R-AI5:** Wie unterscheiden sich menschliche und KI-wissenschaftliche Bewertungen?
+
+AIRR ist ausschließlich KI-Interpretation. `scientific_evidence` bleibt immer
+`false`; menschliche Prüfung wird als separates, append-only Review-Artefakt
+gespeichert.

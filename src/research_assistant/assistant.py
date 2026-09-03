@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Callable
 from pathlib import Path
@@ -29,9 +30,20 @@ class ResearchAssistant:
         question = _by_id(questions, question_id)
         hypothesis_ids = _string_list(manifest, "hypotheses")
         data = self._data_for_manifest(manifest)
+        statistics_path = self._root / "experiments" / experiment_id / "analysis" / "statistics.json"
+        if data is not None and statistics_path.is_file():
+            data = dict(data)
+            data["statistics"] = self._read_json(
+                str(statistics_path.relative_to(self._root))
+            )
         evidence = self._evidence_for_experiment(experiment_id)
         protocol = self._protocol_for_manifest(manifest)
         previous_analyses = self._previous_analyses(experiment_id)
+        manifest_path = self._root / "experiments" / experiment_id / "manifest.json"
+        manifest_digest = _file_digest(manifest_path)
+        config_path = str(cast(dict[str, Any], manifest.get("config", {})).get("path", "NOT_AVAILABLE"))
+        config_file = self._root.parent / config_path if config_path.startswith("research/") else None
+        data_path = _artifact_path(self._root.parent, manifest, "data")
         return ResearchPacket(
             experiment_id=experiment_id,
             research_question=question,
@@ -56,6 +68,17 @@ class ResearchAssistant:
                 ),
                 "experiment_status": str(manifest.get("experiment_status", "unknown")),
                 "evidence_mode": str(manifest.get("evidence_mode", "not_reported")),
+                "git_dirty": str(cast(dict[str, Any], manifest.get("git", {})).get("dirty", "NOT_AVAILABLE")),
+                "source_freeze_sha": str(manifest.get("source_freeze_sha", "NOT_AVAILABLE")),
+                "configuration_path": config_path,
+                "configuration_sha256": _file_digest(config_file) if config_file else "NOT_AVAILABLE",
+                "experiment_manifest_digest": manifest_digest,
+                "data_ids": str(manifest.get("data_ids", "NOT_AVAILABLE")),
+                "evid_ids": str(manifest.get("evid_ids", "NOT_AVAILABLE")),
+                "protocol_id": str(manifest.get("protocol_id", "NOT_AVAILABLE")),
+                "protocol_digest": _json_digest(protocol),
+                "data_digest": _file_digest(data_path),
+                "evid_digests": str([_file_digest(path) for path in self._evidence_paths(experiment_id)]),
             },
         )
 
@@ -120,6 +143,17 @@ class ResearchAssistant:
             if record.get("experiment_id") == experiment_id:
                 records.append(record)
         return records
+
+    def _evidence_paths(self, experiment_id: str) -> list[Path]:
+        directory = self._root / "registry" / "evidence"
+        if not directory.is_dir():
+            return []
+        return [
+            path
+            for path in sorted(directory.glob("EVID-*.json"))
+            if self._read_json(str(path.relative_to(self._root))).get("experiment_id")
+            == experiment_id
+        ]
 
     def _literature_for_question(
         self, question: dict[str, Any]
@@ -204,6 +238,31 @@ class ResearchAssistant:
             "alternative_explanations, recommended_experiments, confidence, requested_evidence.\n"
             f"Packet: {packet.to_json()}"
         )
+
+
+def _file_digest(path: Path | None) -> str:
+    if path is None or not path.is_file():
+        return "NOT_AVAILABLE"
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _artifact_path(root: Path, manifest: dict[str, Any], name: str) -> Path | None:
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, dict):
+        return None
+    artifact_map = cast(dict[str, Any], artifacts)
+    value = artifact_map.get(name)
+    if not isinstance(value, str) or not value.startswith("research/"):
+        return None
+    return root / value
+
+
+def _json_digest(value: dict[str, Any] | None) -> str:
+    if value is None:
+        return "NOT_AVAILABLE"
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, ensure_ascii=True).encode("utf-8")
+    ).hexdigest()
 
 
 def _one_str(data: dict[str, Any], key: str) -> str:

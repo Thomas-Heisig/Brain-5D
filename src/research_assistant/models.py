@@ -61,9 +61,9 @@ class AIAnalysisRecord:
         output: dict[str, Any],
         prompt: str,
     ) -> AIAnalysisRecord:
-        _validate_output(output)
+        _validate_output(output, role)
         now = datetime.now(timezone.utc)
-        analysis_id = f"AIAR-{now:%Y-%m-%d-%H%M%S}-{packet.digest[:8]}"
+        analysis_id = f"AIAR-{role}-{now:%Y%m%d%H%M%S%f}-{packet.digest[:8]}"
         return cls(
             analysis_id=analysis_id,
             role=role,
@@ -105,7 +105,7 @@ class AIAnalysisRecord:
         )
 
 
-def _validate_output(output: dict[str, Any]) -> None:
+def _validate_output(output: dict[str, Any], role: str) -> None:
     if not isinstance(output.get("assessment"), str):
         raise ValueError("Invalid AI analysis output field: assessment")
     for name in (
@@ -117,6 +117,11 @@ def _validate_output(output: dict[str, Any]) -> None:
     ):
         if not isinstance(output.get(name), list):
             raise ValueError(f"Invalid AI analysis output field: {name}")
+    if role == "scientific_analyst":
+        if not isinstance(output.get("quantitative_results"), (dict, list)):
+            raise ValueError("Invalid AI analysis output field: quantitative_results")
+        if not isinstance(output.get("effect_direction"), str):
+            raise ValueError("Invalid AI analysis output field: effect_direction")
     if not isinstance(output.get("confidence"), (int, float)):
         raise ValueError("Invalid AI analysis output field: confidence")
     confidence = float(output["confidence"])

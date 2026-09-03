@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://brain-5d.dev/schemas/ai_research_report.schema.json",
+  "title": "Brain-5D AI Research Report",
+  "type": "object",
+  "required": ["report_id", "experiment_id", "research_question_id", "generated_at", "generated_by", "ai_generated", "scientific_evidence", "human_review_required", "status", "content", "provenance", "analysis_ids", "content_digest", "markdown_digest"],
+  "properties": {
+    "report_id": {"type": "string", "pattern": "^AIRR-"},
+    "experiment_id": {"type": "string"},
+    "research_question_id": {"type": "string"},
+    "hypothesis_ids": {"type": "array", "items": {"type": "string"}},
+    "claim_ids": {"type": "array", "items": {"type": "string"}},
+    "generated_at": {"type": "string"},
+    "report_schema_version": {"type": "string"},
+    "report_protocol_version": {"const": "PROTOCOL-AIRR-001"},
+    "generated_by": {"const": "artificial_intelligence"},
+    "ai_generated": {"const": true},
+    "scientific_evidence": {"const": false},
+    "human_review_required": {"const": true},
+    "status": {"enum": ["generated", "review_pending", "reviewed", "accepted_as_interpretation", "rejected", "superseded"]},
+    "content": {"type": "object"},
+    "provenance": {"type": "object"},
+    "analysis_ids": {"type": "array", "minItems": 3, "items": {"type": "string", "pattern": "^AIAR-"}},
+    "content_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "markdown_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

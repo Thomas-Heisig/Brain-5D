@@ -59,6 +59,17 @@
 - [ ] DATA/EVID-Provenienz, Limitationen und unabhängige Wiederholungen prüfen
 - [ ] Claims erst nach menschlicher Review aktualisieren
 
+### AI Research Reports (AIRR)
+
+- [x] `PROTOCOL-AIRR-001` und kanonisches AIRR-JSON-Schema registrieren
+- [x] Analyst -> Critical Reviewer -> Scientific Writer als getrennte AIAR-Pipeline
+- [x] Deterministisches JSON -> Markdown Rendering mit vollständiger Provenienz
+- [x] DATA/EVID-Referenzen und ResearchPacket-Digest im Bericht speichern
+- [x] Human Review als separates append-only `.review.json` speichern
+- [x] AIRR im Research-Dashboard lesbar machen
+- [ ] Ollama/Azure-Backend explizit konfigurieren und `EXP-AIR-0001` ausführen
+- [ ] AIRR gegen menschliche Referenzauswertung und mehrere Modelle evaluieren
+
 ## OPERATION
 
 - [ ] Lokale Änderungen committen und pushen; vollständige GitHub-CI abwarten

@@ -41,6 +41,7 @@ from typing import Any, cast
 from urllib.parse import parse_qs, unquote, urlparse
 
 from src.embodiment import ConnectionManager
+from src.research_assistant import AIRRPipeline, AnalysisBackend, write_human_review
 
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
@@ -153,6 +154,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.structural_bridge = structural_bridge
         self.docs_source = docs_source
         self.research_source = research_source
+        self.research_ai_backend: AnalysisBackend | None = None
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
@@ -405,6 +407,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._serve_research_reports()
                 return
 
+            if path == "/api/research/ai-reports":
+                self._serve_ai_reports(query)
+                return
+
+            if path.startswith("/api/research/ai-reports/"):
+                self._serve_ai_report(path)
+                return
+
             if path == "/api/research/experiments":
                 self._serve_research_experiments()
                 return
@@ -615,6 +625,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/experiment/workflow/run":
                 self._run_experiment_workflow(body)
+                return
+
+            if path == "/api/research/ai-reports/generate":
+                self._generate_ai_report(body)
+                return
+
+            if path.startswith("/api/research/ai-reports/") and path.endswith("/review"):
+                self._write_ai_review(path, body)
                 return
 
             # ----------------------------------------------------------------
@@ -1852,6 +1870,57 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             )
             return
         self._send_json({"reports": cast(list[JSONValue], source.generated_reports())})
+
+    def _serve_ai_reports(self, query: dict[str, list[str]]) -> None:
+        source = self.dashboard_server.research_source
+        if source is None:
+            self._send_json({"reports": []})
+            return
+        experiment_id = query.get("experiment_id", [None])[0]
+        self._send_json({"reports": cast(list[JSONValue], source.ai_reports(experiment_id))})
+
+    def _serve_ai_report(self, path: str) -> None:
+        source = self._require_research_source()
+        report_path = unquote(path[len("/api/research/ai-reports/") :])
+        if not report_path or report_path.endswith("/review"):
+            self._send_api_not_found(path)
+            return
+        try:
+            content = source.read_content(f"reports/{report_path}")
+        except FileNotFoundError:
+            self._send_json({"error": "AI report not found."}, HTTPStatus.NOT_FOUND)
+            return
+        self._send_json({"path": f"reports/{report_path}", "content": content})
+
+    def _generate_ai_report(self, body: dict[str, object]) -> None:
+        experiment_id = body.get("experiment_id")
+        if not isinstance(experiment_id, str) or not experiment_id:
+            raise InvalidRequestError("experiment_id is required.")
+        backend = self.dashboard_server.research_ai_backend
+        source = self._require_research_source()
+        if backend is None:
+            self._send_json(
+                {"error": "No AI backend is configured; report was not generated."},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+        report = AIRRPipeline(source.root()).analyze(experiment_id, backend)
+        self._send_json(report.to_dict(), HTTPStatus.CREATED)
+
+    def _write_ai_review(self, path: str, body: dict[str, object]) -> None:
+        source = self._require_research_source()
+        prefix = "/api/research/ai-reports/"
+        report_ref = unquote(path[len(prefix) : -len("/review")])
+        parts = report_ref.split("/", 1)
+        if len(parts) != 2:
+            raise InvalidRequestError("AI report review path is invalid.")
+        review = dict(body)
+        review.pop("report_id", None)
+        review_path = write_human_review(source.root(), parts[0], parts[1], review)
+        self._send_json(
+            {"ok": True, "path": str(review_path.relative_to(source.root())).replace("\\", "/")},
+            HTTPStatus.CREATED,
+        )
 
     def _serve_research_experiments(self) -> None:
         source = self.dashboard_server.research_source
