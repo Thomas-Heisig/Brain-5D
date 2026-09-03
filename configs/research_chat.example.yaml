@@ -5,9 +5,11 @@ research_chat:
   endpoint: "http://127.0.0.1:11434/api/generate"
   temperature: 0.0
   max_context_chars: 24000
+  web_search_enabled: false
 
 # Environment variable overrides:
 # BRAIN5D_CHAT_MODEL
 # BRAIN5D_CHAT_ENDPOINT
 # BRAIN5D_CHAT_TEMPERATURE
 # BRAIN5D_CHAT_CONTEXT_CHARS
+# BRAIN5D_CHAT_WEB_SEARCH

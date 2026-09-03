@@ -24,6 +24,7 @@ set "PROJECT_ROOT=%CD%"
 :: fails closed if no provider is configured or Ollama is unavailable.
 where ollama >nul 2>nul
 if not errorlevel 1 if not defined BRAIN5D_CHAT_MODEL set "BRAIN5D_CHAT_MODEL=gemma4:latest"
+if not errorlevel 1 if not defined BRAIN5D_CHAT_WEB_SEARCH set "BRAIN5D_CHAT_WEB_SEARCH=true"
 
 :: Python finden (bevorzugt venv)
 set "PYTHON_CMD=python"

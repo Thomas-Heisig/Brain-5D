@@ -39,7 +39,8 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, cast
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import parse_qs, quote, unquote, urlparse
+from urllib.request import Request, urlopen
 
 from src.embodiment import ConnectionManager
 from src.research_assistant import (
@@ -166,6 +167,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_ai_backend: AnalysisBackend | None = None
         self.research_chat_backend: ChatBackend | None = None
         self.research_chat_context_chars = 24_000
+        self.research_chat_web_search_enabled = False
         self.research_chat_settings: dict[str, JSONValue] = {
             "provider": "unconfigured",
             "model": None,
@@ -1958,6 +1960,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
         if docs is None:
             raise BridgeNotConfiguredError("Documentation source is not configured.")
+        web_context = ""
+        if body.get("web_search") is True:
+            if not self.dashboard_server.research_chat_web_search_enabled:
+                raise InvalidRequestError("Web search is disabled in chat settings.")
+            web_context = self._search_web(message)
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         system_context = json.dumps(
             {
@@ -1975,10 +1982,35 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             backend,
             max_context_chars=self.dashboard_server.research_chat_context_chars,
             system_context=system_context,
+            web_context=web_context,
         ).answer(message)
         self._send_json(
             {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
         )
+
+    def _search_web(self, query: str) -> str:
+        """Read a small set of structured public search results."""
+        request = Request(
+            "https://api.duckduckgo.com/?q=" + quote(query) + "&format=json&no_html=1",
+            headers={"User-Agent": "Brain-5D Research Assistant/1.0"},
+        )
+        with urlopen(request, timeout=10) as response:  # nosec B310: fixed HTTPS host
+            payload = json.loads(response.read(256_000).decode("utf-8"))
+        results: list[str] = []
+        abstract = payload.get("AbstractText")
+        abstract_url = payload.get("AbstractURL")
+        if isinstance(abstract, str) and abstract and isinstance(abstract_url, str):
+            results.append(f"- {abstract} ({abstract_url})")
+        for topic in payload.get("RelatedTopics", []):
+            if not isinstance(topic, dict):
+                continue
+            text = topic.get("Text")
+            url = topic.get("FirstURL")
+            if isinstance(text, str) and isinstance(url, str):
+                results.append(f"- {text} ({url})")
+            if len(results) >= 5:
+                break
+        return "\n".join(results) or "No structured web results were returned."
 
     def _write_ai_review(self, path: str, body: dict[str, object]) -> None:
         source = self._require_research_source()
@@ -3158,6 +3190,10 @@ def serve_dashboard(
             str(configured_chat.get("max_context_chars", 24_000)),
         )
     )
+    web_search_enabled = os.environ.get(
+        "BRAIN5D_CHAT_WEB_SEARCH",
+        str(configured_chat.get("web_search_enabled", False)),
+    ).lower() in {"1", "true", "yes", "on"}
     if chat_model:
         chat_endpoint = os.environ.get(
             "BRAIN5D_CHAT_ENDPOINT",
@@ -3175,13 +3211,14 @@ def serve_dashboard(
         )
         ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature)
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
-        chat_settings = {
+        resolved_chat_settings: dict[str, JSONValue] = {
             "provider": "ollama",
             "model": chat_model,
             "endpoint": chat_endpoint,
             "temperature": temperature,
             "max_context_chars": context_chars,
             "read_only": True,
+            "web_search_enabled": web_search_enabled,
         }
         print(f"🤖 Research chat backend: Ollama ({chat_model})")
 
@@ -3201,7 +3238,16 @@ def serve_dashboard(
     ) as server:
         server.research_chat_backend = chat_backend
         server.research_chat_context_chars = context_chars
-        server.research_chat_settings = cast(dict[str, JSONValue], chat_settings)
+        server.research_chat_settings = cast(
+            dict[str, JSONValue],
+            {
+                **resolved_chat_settings,
+                "web_search_enabled": web_search_enabled,
+            }
+            if chat_model
+            else {**configured_chat, "web_search_enabled": web_search_enabled},
+        )
+        server.research_chat_web_search_enabled = web_search_enabled
         if structural_bridge is not None:
             print("✅ Operator bridge attached to " "dashboard server")
         else:

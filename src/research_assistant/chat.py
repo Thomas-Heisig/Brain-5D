@@ -38,6 +38,7 @@ class ResearchChat:
     backend: ChatBackend
     max_context_chars: int = 24_000
     system_context: str = ""
+    web_context: str = ""
 
     def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
         question = message.strip()
@@ -50,15 +51,19 @@ class ResearchChat:
         context = self._context()
         if self.system_context:
             context = f"SYSTEM READ-ONLY CONTEXT:\n{self.system_context}\n\n{context}"
+        if self.web_context:
+            context = f"WEB SOURCES (external and unverified):\n{self.web_context}\n\n{context}"
         return (
             "You are the Brain-5D Research Self-Knowledge Assistant.\n"
             "You are an AI assistant, not a person and not a trained researcher.\n"
             "Answer only from the supplied repository context and cite exact paths.\n"
+            "If WEB SOURCES are supplied, cite their URLs and label them as external and unverified.\n"
             "Return clean Markdown only, using short paragraphs, headings, and bullet lists.\n"
-            "For research questions use exactly these headings when relevant: ## DATA, ## EVIDENCE, ## AI interpretation, ## Human conclusion.\n"
+            "For research questions use exactly these headings when relevant: ## DATA, ## EVIDENCE, ## WEB SOURCES (EXTERNAL, UNVERIFIED), ## AI interpretation, ## Human conclusion.\n"
             "Do not use horizontal rules, decorative emojis, or raw JSON unless requested.\n"
-            "Clearly distinguish DATA, EVIDENCE, AI interpretation, and human conclusion.\n"
-            "Never claim that AI output is evidence. Never invent values or experiment results.\n"
+            "Clearly distinguish internal DATA, internal EVIDENCE, WEB SOURCES, AI interpretation, and human conclusion.\n"
+            "WEB SOURCES must never appear under EVIDENCE and are never scientific evidence.\n"
+            "Never claim that AI output or web content is evidence. Never invent values or experiment results.\n"
             "You may explain registered experiments, but never execute an experiment from free text.\n"
             f"User question: {message}\n\nRepository context:\n{context}"
         )

@@ -53,8 +53,10 @@ export function initResearchChat() {
   const settingsToggle = document.getElementById('chat-settings-toggle');
   const settings = document.getElementById('chat-settings');
   const settingsRefresh = document.getElementById('chat-settings-refresh');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !settingsToggle || !settings || !settingsRefresh) return;
+  const webSearch = document.getElementById('chat-web-search');
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !settingsToggle || !settings || !settingsRefresh || !webSearch) return;
   const state = loadState();
+  webSearch.checked = state.webSearchEnabled === true;
 
   function activeRoom() {
     return state.rooms.find((room) => room.id === state.activeId) || state.rooms[0];
@@ -123,6 +125,10 @@ export function initResearchChat() {
     if (!settings.hidden) loadSettings();
   });
   settingsRefresh.addEventListener('click', loadSettings);
+  webSearch.addEventListener('change', () => {
+    state.webSearchEnabled = webSearch.checked;
+    saveState(state);
+  });
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -135,7 +141,7 @@ export function initResearchChat() {
     render();
     input.value = '';
     try {
-      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message}) });
+      const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, web_search: webSearch.checked}) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
       room.messages.push({ role: 'assistant', content: payload.answer || '' });

@@ -40,6 +40,7 @@ def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
     assert metadata["provider"] == "test"
     assert "RQ-1" in prompts[0] and "Brain-5D" in prompts[0]
     assert "never execute an experiment from free text" in prompts[0]
+    assert "WEB SOURCES must never appear under EVIDENCE" in prompts[0]
 
 
 def test_chat_rejects_empty_message() -> None:
