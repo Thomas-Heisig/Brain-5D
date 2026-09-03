@@ -7,6 +7,83 @@
 
 ## ENGINEERING
 
+### P0 — Scientific AI Boundary & Provenance
+
+- [ ] Gemeinsamen AI-Contract-Layer für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` definieren
+- [ ] Scientific AI Firewall als strukturelle Grenze implementieren: kein LLM-Schreibpfad zu Netzwerk, Synapsen, Struktur, Rewards, Memory oder Experimentzustand
+- [ ] Scientific-Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer dokumentieren und validieren
+- [ ] Contract-Test ergänzen, der direkte Core-Imports aus Research-Assistant- und Language-Organ-Backends verhindert
+- [ ] `AIExposure` in Experimentmanifesten und Laufmetadaten einführen (`none`, `observer_only`, `semantic_interface`, `advisor`, `bounded_controller`, `adaptive_controller`)
+- [ ] Gemeinsames `AIInteractionRecord` mit Rolle, Experiment, Tick, Input-/Prompt-/Output-Digest, Modell-Provenienz, Autorität und `causal_effect` speichern
+- [ ] AI-Causal-Taint-Tracking von `PURE` über beobachtend/vorschlagend bis `AI_INFLUENCED` implementieren
+- [ ] Causal Card je Experiment erzeugen: AI-Beobachtung, externer Input, AI-Reward, AI-Aktorentscheidung und wissenschaftliche Klassifikation
+- [ ] Evidence-Gate verschärfen: AI-beeinflusste Läufe benötigen ein passendes Treatment-Protokoll und dürfen nicht als reine SNN-Evidenz erscheinen
+
+### P0 — Vollständige AI-Provenienz
+
+- [ ] Ollama-Provenienz vollständig erfassen: Modell-ID, Modell-Digest, Artefakt-/Quantisierungsdaten, Ollama-/Engine-Version, Hardware, Präzision, Seed und alle Samplingparameter
+- [ ] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
+- [ ] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
+- [ ] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
+- [ ] AI-Fehler als `AIInferenceFailureEvent` mit Tick, Request-ID, Backend, Latenz und Retry-Status auditieren
+- [ ] Automatische Retries in wissenschaftlichen Runs deaktivieren oder als eigener reproduzierbarer Treatment-Faktor protokollieren
+- [ ] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump erzwingen
+
+### P0 — Shadow, Replay und kontrollierte Kausalität
+
+- [ ] Shadow Mode implementieren: AI darf beobachten, interpretieren und Vorschläge erzeugen; Vorschläge werden markiert, aber nicht ausgeführt
+- [ ] Shadow-Proposals quantitativ evaluieren: Precision, Recall, False Positives, Prediction Accuracy, Calibration und Utility
+- [ ] `observation_stream.jsonl` für reproduzierbare Offline-Replays erzeugen und validieren
+- [ ] `FrozenAIReplayBackend` mit Request-/Response-Digest und fehlendem Live-Fallback implementieren
+- [ ] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
+- [ ] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen
+- [ ] Kontrollgruppen für SNN-only, Language Organ, Knowledge Intake, Language+Knowledge, LLM-only und Full System als Experimentvorlagen registrieren
+- [ ] `NullLanguageOrgan`, `RandomLanguageOrgan` und `ReplayLanguageOrgan` als Sham-Kontrollen ergänzen
+
+### P1 — Prompt-, Daten- und Netzwerkdisziplin
+
+- [ ] Versionierte Prompt Registry unter `research/prompts/` mit eingefrorenen Prompt-Dateien und Protocol-Digests einführen
+- [ ] Preregistration Lock für Forschungsfrage, Hypothesen, Metriken, Stichprobe, Seeds, Stopping Rule, Analyse und Ausschlussregeln implementieren
+- [ ] Exploratory und Confirmatory AI-Modus technisch und im Dashboard trennen
+- [ ] Confirmatory Runs gegen nachträgliche Hypothesen-, Prompt- und Analyseänderungen sperren
+- [ ] Development-, Validation- und Scientific-Holdout-Daten strikt trennen und AI-/Gold-Label-Leakage testen
+- [ ] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
+- [ ] Quantitative Statistik ausschließlich durch die deterministische Statistics Engine erzeugen; LLM darf Zahlen nur interpretieren
+- [ ] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
+- [ ] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
+- [ ] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
+- [ ] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein
+
+### P1 — AI-Rollen und semantische Schnittstellen
+
+- [ ] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
+- [ ] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
+- [ ] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
+- [ ] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
+- [ ] AI-0 Research AI, AI-1 Language Organ, AI-2 Cognitive Advisor und AI-3 Experimental Cognitive Controller als formale Rollen dokumentieren
+- [ ] Logical-Time- und Wall-Clock-Modus für asynchrone AI-Interaktionen unterscheiden und Response-Anwendungstics protokollieren
+- [ ] Replay-, Live-Frozen-Model- und Live-External-API-Betrieb im Dashboard sichtbar klassifizieren
+
+### P1 — Vergleich, Bias und AI-Forschungsobjekt
+
+- [ ] Multi-Model-Vergleich mit identischem ResearchPacket, Modellmetadaten und Disagreement Map implementieren
+- [ ] LLM-Konsens ausdrücklich nicht als Evidence behandeln; Agreement nur als Messgröße speichern
+- [ ] Blind Analysis mit anonymisierten Gruppenlabels vor der Aufdeckung ermöglichen
+- [ ] Analyst und unabhängigen Reviewer mit getrennten Artefakten und ohne Chain-of-Thought-Leakage evaluieren
+- [ ] Reviewer Correction Rate, False Criticism Rate und Missed Error Rate messen
+- [ ] AIR-Forschungsfragen RQ-AIR1 bis RQ-AIR5 als Benchmark-/Experimentstruktur registrieren
+- [ ] Modellabhängige Interpretationsdistanz `D(I_A, I_B)` und Fingerprints identischer SNN-Zustände messen
+- [ ] Borrowed Intelligence Ratio über Ablationen definieren, deterministisch berechnen und als keine wissenschaftliche Einzelmetrik ohne Protokoll markieren
+
+### P2 — Wissenschaftliche Integritätsautomatisierung
+
+- [ ] Scientific Integrity Gate in CI für Determinismus, Restore, Canonical State, Golden Chain, Schema, AI-Leakage und AI-Authority ausführen
+- [ ] CI-Regeln für Prompt-, Modell-, Treatment- und Statistikversionsänderungen erzwingen
+- [ ] Epistemic Provenance Graph für Claims, Sensoren, Memory, Experimente, Webquellen und Derived Values modellieren
+- [ ] `knowledge_origin` mit `SNN_LEARNED`, `LLM_PRIOR`, `EXTERNAL_RETRIEVAL`, `HUMAN_INPUT`, `SENSOR_OBSERVATION`, `SYSTEM_STATE`, `SIMULATED_ENVIRONMENT`, `DERIVED` und `UNKNOWN` standardisieren
+- [ ] Causal-Attribution-Report für jede AI-Exposure-Stufe und jeden Twin-/Ablation-Run generieren
+- [ ] Dashboard-Betriebsstatus für `PURE EXPERIMENT`, `AI OBSERVING`, `AI PROPOSING` und `AI CAUSALLY ACTIVE` anzeigen
+
 ### Chat UX und Providersteuerung
 
 - [x] Editierbare Chat-Einstellungen inklusive System-Prompt, Sampling, Tokenbudget und Kontextlimit

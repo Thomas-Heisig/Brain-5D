@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-03 — Scientific AI Boundary Roadmap
+
+- Die offenen Architekturaufgaben aus dem AI-Review wurden als priorisierte P0/P1/P2-Aufgaben in der TODO erfasst.
+- Schwerpunkt sind AIExposure, AIInteractionRecord, Scientific AI Firewall, vollständige Modell-/Prompt-Provenienz, Shadow Mode, Frozen Replay, Twin Runs und Causal-Taint-Tracking.
+
 ## 2026-09-03 — Research Chat Markdown und Einstellungen
 
 - Research-Chat-Ausgaben werden als sicheres, lesbares Markdown gerendert.

@@ -44,6 +44,20 @@ Forschungsgegenstand:
 - **R-AI1 / RQ-AIR-001:** Erkennt der Scientific Research Assistant methodische Defekte zuverlässig?
 - **R-AI2:** Wie genau sind AI Research Reports gegenüber einer menschlichen Referenzauswertung?
 
+### Scientific AI Boundary
+
+Die weitere AI-Integration folgt einer gestuften Rollen- und Autoritätsarchitektur:
+
+- AI-0 Research AI: beobachtet und interpretiert außerhalb des Organismus.
+- AI-1 Language Organ: übersetzt Signale read-only; das SNN lernt.
+- AI-2 Cognitive Advisor: erzeugt typisierte Vorschläge ohne direkten Aktionspfad.
+- AI-3 Controller: wird erst als eigenes, explizit registriertes Treatment untersucht.
+
+Für alle Stufen werden AIExposure, Interaktionsprovenienz und kausale Beteiligung
+separat erfasst. Shadow Mode, Frozen AI Replay, Counterfactual Twin Runs und
+AI-Ablationen sind Voraussetzung, bevor AI-Einfluss als wissenschaftliche Ursache
+interpretiert werden darf.
+
 Der Research-Chat bleibt dabei ein konfigurierbarer, read-only Assistent: Ein eigener
 System-Prompt darf Stil und Arbeitsweise präzisieren, erweitert aber weder die
 Evidenzautorität noch die Experimentausführung. Externe Webquellen bleiben explizit
