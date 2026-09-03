@@ -6,6 +6,9 @@
   sensing, including quality, safety ranges and explicit unknown values.
 - Added deterministic normalization and `SystemSensorAdapter.sample_interoception()`
   without changing the existing `SensorFrame` provider contract.
+- Added bounded deterministic drives for thermal threat, resource pressure and
+  continuity risk; unavailable task, novelty and actuator signals remain explicit
+  `None` values with uncertainty rather than being inferred.
 
 ## 2026-09-03 — Documentation and research status synchronization
 

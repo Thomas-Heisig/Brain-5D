@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import pytest
 
-from src.embodiment import SystemSensorAdapter, VitalSignal, normalize_vital_signals
+from src.embodiment import (
+    InteroceptionFrame,
+    SystemSensorAdapter,
+    VitalSignal,
+    derive_drives,
+    normalize_vital_signals,
+)
 
 
 def test_missing_signal_is_unknown_and_not_nominal() -> None:
@@ -38,3 +44,25 @@ def test_system_sensor_exposes_typed_interoception_without_changing_sample() -> 
 def test_confidence_must_be_bounded() -> None:
     with pytest.raises(ValueError, match="confidence"):
         VitalSignal(name="test", value=1.0, unit="x", confidence=1.1)
+
+
+def test_drives_are_bounded_and_derive_resource_and_continuity_pressure() -> None:
+    signals = normalize_vital_signals(
+        {"cpu_percent": 92.0, "memory_percent": 40.0, "temperature_c": 90.0, "network_up": False}
+    )
+
+    drives = derive_drives(InteroceptionFrame(3, signals))
+
+    assert drives.drives["resource_pressure"] == pytest.approx(7 / 15)
+    assert drives.drives["thermal_threat"] == pytest.approx(10 / 15)
+    assert drives.drives["continuity_risk"] == 1.0
+    assert all(value is None or 0.0 <= value <= 1.0 for value in drives.drives.values())
+
+
+def test_unavailable_drive_is_explicitly_uncertain() -> None:
+    frame = SystemSensorAdapter(lambda tick: {}).sample_interoception(4)
+
+    drives = derive_drives(frame)
+
+    assert drives.drives["task_progress"] is None
+    assert drives.uncertainty["task_progress"] == 1.0

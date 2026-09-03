@@ -141,7 +141,10 @@
 - [ ] Fehlende oder veraltete Sensorsignale fail-closed behandeln und niemals als sicher interpretieren
 - [ ] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
   Sensory Integrity, Resource Pressure und Task Progress definieren
-- [ ] Drives deterministisch aus Regelgrößen ableiten: thermal_threat,
+- [x] Erste Drives deterministisch aus Interoception ableiten: thermal_threat,
+  resource_pressure und continuity_risk; nicht beobachtbare Drives bleiben
+  explizit `None` mit Unsicherheit
+- [ ] Drives vollständig aus Regelgrößen ableiten: thermal_threat,
   resource_pressure, sensory_integrity, continuity_risk, task_progress,
   novelty und actuator_confidence
 - [ ] Valence, Activation, Safety und Uncertainty als abgeleitete Zustände

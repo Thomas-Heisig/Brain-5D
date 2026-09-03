@@ -45,6 +45,8 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 
 - [x] Typisierte Vital Signals mit Safety Ranges, Confidence, Freshness und
 	UNKNOWN-Semantik als Digital-Interoception-Basis einführen
+- [x] Erste deterministische Drives für Thermal Threat, Resource Pressure und
+	Continuity Risk aus Interoception ableiten; nicht beobachtbare Drives bleiben unsicher
 - [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
 - [ ] Chronic Signals, Regional 5D Pressure, Neuron-/Synapsenalter und Growth Budgets integrieren
 - [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen

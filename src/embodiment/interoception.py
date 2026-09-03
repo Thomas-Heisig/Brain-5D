@@ -78,6 +78,22 @@ class InteroceptionFrame:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class DriveState:
+    """Deterministic regulatory drives derived from one interoception frame."""
+
+    tick: int
+    drives: dict[str, float | None]
+    uncertainty: dict[str, float]
+
+    def to_json(self) -> dict[str, JSONValue]:
+        return {
+            "tick": self.tick,
+            "drives": self.drives,
+            "uncertainty": self.uncertainty,
+        }
+
+
 _SIGNAL_METADATA: dict[str, dict[str, JSONValue]] = {
     "cpu_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
     "memory_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
@@ -106,6 +122,70 @@ def normalize_vital_signals(readings: dict[str, JSONValue]) -> tuple[VitalSignal
     return tuple(signals)
 
 
+def derive_drives(frame: InteroceptionFrame) -> DriveState:
+    """Derive bounded regulatory drives without claiming psychological states."""
+    signals = {signal.name: signal for signal in frame.signals}
+    cpu = _numeric_signal(signals.get("cpu_percent"))
+    memory = _numeric_signal(signals.get("memory_percent"))
+    temperature = _numeric_signal(signals.get("temperature_c"))
+    network = signals.get("network_up")
+
+    known_pressures = [
+        pressure
+        for pressure in (_pressure(cpu, 85.0), _pressure(memory, 85.0))
+        if pressure is not None
+    ]
+    resource_pressure = max(known_pressures) if known_pressures else None
+    thermal_threat = _pressure(temperature, 80.0, 95.0)
+    continuity_risk = _continuity_risk(network)
+    known_count = sum(value is not None for value in (cpu, memory, temperature, network))
+    sensory_integrity = known_count / 4.0
+
+    drives: dict[str, float | None] = {
+        "thermal_threat": thermal_threat,
+        "resource_pressure": resource_pressure,
+        "sensory_integrity": sensory_integrity,
+        "continuity_risk": continuity_risk,
+        "task_progress": None,
+        "novelty": None,
+        "actuator_confidence": None,
+    }
+    uncertainty = {
+        "thermal_threat": _uncertainty(temperature),
+        "resource_pressure": 1.0 if not known_pressures else 0.0,
+        "sensory_integrity": 1.0 - sensory_integrity,
+        "continuity_risk": _uncertainty(network),
+        "task_progress": 1.0,
+        "novelty": 1.0,
+        "actuator_confidence": 1.0,
+    }
+    return DriveState(tick=frame.tick, drives=drives, uncertainty=uncertainty)
+
+
+def _numeric_signal(signal: VitalSignal | None) -> float | None:
+    if signal is None or signal.value is None:
+        return None
+    if isinstance(signal.value, bool) or not isinstance(signal.value, (int, float)):
+        return None
+    return float(signal.value)
+
+
+def _pressure(value: float | None, warning: float, critical: float = 100.0) -> float | None:
+    if value is None:
+        return None
+    return max(0.0, min(1.0, (value - warning) / (critical - warning)))
+
+
+def _continuity_risk(signal: VitalSignal | None) -> float | None:
+    if signal is None or not isinstance(signal.value, bool):
+        return None
+    return 0.0 if signal.value else 1.0
+
+
+def _uncertainty(value: object) -> float:
+    return 1.0 if value is None else 0.0
+
+
 def _range(value: JSONValue) -> tuple[float, float] | None:
     if not isinstance(value, list) or len(value) != 2:
         return None
@@ -114,4 +194,10 @@ def _range(value: JSONValue) -> tuple[float, float] | None:
     return float(value[0]), float(value[1])
 
 
-__all__ = ["InteroceptionFrame", "VitalSignal", "normalize_vital_signals"]
+__all__ = [
+    "DriveState",
+    "InteroceptionFrame",
+    "VitalSignal",
+    "derive_drives",
+    "normalize_vital_signals",
+]
