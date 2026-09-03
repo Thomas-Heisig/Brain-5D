@@ -37,7 +37,9 @@ class ObservationStream:
     def __init__(self, path: Path) -> None:
         self.path = path
 
-    def append(self, observation: Mapping[str, Any], *, tick: int) -> ObservationStreamRecord:
+    def append(
+        self, observation: Mapping[str, Any], *, tick: int
+    ) -> ObservationStreamRecord:
         if tick < 0:
             raise ObservationStreamError("Observation tick must not be negative.")
         payload = _canonical_json(observation)
@@ -60,7 +62,9 @@ class ObservationStream:
         with self.path.open("r", encoding="utf-8") as stream:
             for line_number, line in enumerate(stream, start=1):
                 if not line.strip():
-                    raise ObservationStreamError(f"Blank line at JSONL line {line_number}.")
+                    raise ObservationStreamError(
+                        f"Blank line at JSONL line {line_number}."
+                    )
                 try:
                     raw: Any = json.loads(line)
                 except json.JSONDecodeError as exc:
@@ -68,12 +72,18 @@ class ObservationStream:
                         f"Invalid JSON at JSONL line {line_number}."
                     ) from exc
                 if not isinstance(raw, dict):
-                    raise ObservationStreamError(f"Record at line {line_number} is not an object.")
+                    raise ObservationStreamError(
+                        f"Record at line {line_number} is not an object."
+                    )
                 record = _record_from_dict(raw, line_number)
                 if record.sequence != len(records):
-                    raise ObservationStreamError(f"Unexpected sequence at JSONL line {line_number}.")
+                    raise ObservationStreamError(
+                        f"Unexpected sequence at JSONL line {line_number}."
+                    )
                 if record.sequence and record.tick < records[-1].tick:
-                    raise ObservationStreamError(f"Tick moved backwards at JSONL line {line_number}.")
+                    raise ObservationStreamError(
+                        f"Tick moved backwards at JSONL line {line_number}."
+                    )
                 records.append(record)
         return tuple(records)
 
@@ -92,16 +102,26 @@ def _record_from_dict(raw: dict[str, Any], line_number: int) -> ObservationStrea
         or not isinstance(digest, str)
         or not isinstance(observation, dict)
     ):
-        raise ObservationStreamError(f"Invalid observation record at JSONL line {line_number}.")
+        raise ObservationStreamError(
+            f"Invalid observation record at JSONL line {line_number}."
+        )
     payload = _canonical_json(observation)
     if _digest(payload) != digest:
-        raise ObservationStreamError(f"Observation digest mismatch at JSONL line {line_number}.")
+        raise ObservationStreamError(
+            f"Observation digest mismatch at JSONL line {line_number}."
+        )
     return ObservationStreamRecord(sequence, tick, digest, observation)
 
 
 def _canonical_json(value: object) -> str:
     try:
-        return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
+        return json.dumps(
+            value,
+            sort_keys=True,
+            ensure_ascii=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
     except (TypeError, ValueError) as exc:
         raise ObservationStreamError("Observation is not canonical JSON data.") from exc
 

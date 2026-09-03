@@ -287,7 +287,9 @@ class AIInteractionRecord:
                 output_digest,
             )
         )
-        interaction_id = f"AIRC-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:16]}"
+        interaction_id = (
+            f"AIRC-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:16]}"
+        )
         return cls(
             interaction_id=interaction_id,
             role=role,

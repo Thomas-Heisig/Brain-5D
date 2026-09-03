@@ -26,7 +26,11 @@ def test_ai_packages_do_not_import_core_or_main_directly() -> None:
     for package in AI_PACKAGES:
         for path in package.glob("*.py"):
             for module in _imported_modules(path):
-                if module == "src.core" or module.startswith("src.core.") or module == "src.main":
+                if (
+                    module == "src.core"
+                    or module.startswith("src.core.")
+                    or module == "src.main"
+                ):
                     violations.append(f"{path.relative_to(ROOT)} imports {module}")
 
     assert violations == [], "AI boundary import violations: " + "; ".join(violations)

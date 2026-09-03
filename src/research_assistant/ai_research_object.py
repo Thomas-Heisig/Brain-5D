@@ -21,10 +21,20 @@ class ModelInterpretation:
     fingerprint: str
 
     @classmethod
-    def create(cls, model_id: str, research_packet_digest: str, interpretation: str) -> ModelInterpretation:
-        if not model_id.strip() or not research_packet_digest.strip() or not interpretation.strip():
-            raise ValueError("Model interpretation identity and content must not be empty")
-        return cls(model_id, research_packet_digest, interpretation, _digest(interpretation))
+    def create(
+        cls, model_id: str, research_packet_digest: str, interpretation: str
+    ) -> ModelInterpretation:
+        if (
+            not model_id.strip()
+            or not research_packet_digest.strip()
+            or not interpretation.strip()
+        ):
+            raise ValueError(
+                "Model interpretation identity and content must not be empty"
+            )
+        return cls(
+            model_id, research_packet_digest, interpretation, _digest(interpretation)
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,18 +48,28 @@ class AIResearchComparison:
     scientific_evidence: bool = False
 
     @classmethod
-    def create(cls, interpretations: tuple[ModelInterpretation, ...]) -> AIResearchComparison:
+    def create(
+        cls, interpretations: tuple[ModelInterpretation, ...]
+    ) -> AIResearchComparison:
         if not interpretations:
             raise ValueError("At least one model interpretation is required")
         packet_digests = {item.research_packet_digest for item in interpretations}
         if len(packet_digests) != 1:
-            raise ValueError("All model interpretations must use the identical ResearchPacket")
+            raise ValueError(
+                "All model interpretations must use the identical ResearchPacket"
+            )
         groups: dict[str, list[str]] = {}
         for item in interpretations:
             groups.setdefault(item.fingerprint, []).append(item.model_id)
-        disagreement = {fingerprint: tuple(models) for fingerprint, models in groups.items()}
-        agreement_score = max(len(models) for models in groups.values()) / len(interpretations)
-        return cls(next(iter(packet_digests)), interpretations, disagreement, agreement_score)
+        disagreement = {
+            fingerprint: tuple(models) for fingerprint, models in groups.items()
+        }
+        agreement_score = max(len(models) for models in groups.values()) / len(
+            interpretations
+        )
+        return cls(
+            next(iter(packet_digests)), interpretations, disagreement, agreement_score
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -70,10 +90,15 @@ class BlindAnalysis:
     revealed: bool = False
 
     @classmethod
-    def create(cls, group_ids: tuple[str, ...], reveal_map: Mapping[str, str]) -> BlindAnalysis:
+    def create(
+        cls, group_ids: tuple[str, ...], reveal_map: Mapping[str, str]
+    ) -> BlindAnalysis:
         if not group_ids or set(group_ids) != set(reveal_map):
             raise ValueError("Blind analysis requires a complete group-to-label map")
-        labels = {group_id: f"GROUP-{index + 1:03d}" for index, group_id in enumerate(sorted(group_ids))}
+        labels = {
+            group_id: f"GROUP-{index + 1:03d}"
+            for index, group_id in enumerate(sorted(group_ids))
+        }
         return cls(labels, _digest(dict(reveal_map)))
 
 
@@ -118,7 +143,9 @@ class BorrowedIntelligenceMetric:
         ceiling_score: float,
     ) -> BorrowedIntelligenceMetric:
         if not protocol_id.strip():
-            raise ValueError("Borrowed Intelligence Ratio requires a registered protocol")
+            raise ValueError(
+                "Borrowed Intelligence Ratio requires a registered protocol"
+            )
         ratio = borrowed_intelligence_ratio(
             baseline_score=baseline_score,
             assisted_score=assisted_score,
@@ -140,7 +167,9 @@ class BorrowedIntelligenceMetric:
 AIR_RESEARCH_QUESTIONS = tuple(f"RQ-AIR{i}" for i in range(1, 6))
 
 
-def interpretation_distance(first: ModelInterpretation, second: ModelInterpretation) -> float:
+def interpretation_distance(
+    first: ModelInterpretation, second: ModelInterpretation
+) -> float:
     """Return a deterministic normalized distance based on token-set overlap."""
     first_tokens = set(first.interpretation.lower().split())
     second_tokens = set(second.interpretation.lower().split())
@@ -148,7 +177,9 @@ def interpretation_distance(first: ModelInterpretation, second: ModelInterpretat
     return 0.0 if not union else 1.0 - len(first_tokens & second_tokens) / len(union)
 
 
-def borrowed_intelligence_ratio(*, baseline_score: float, assisted_score: float, ceiling_score: float) -> float:
+def borrowed_intelligence_ratio(
+    *, baseline_score: float, assisted_score: float, ceiling_score: float
+) -> float:
     """Calculate an ablation ratio; the caller must register its protocol separately."""
     if ceiling_score <= baseline_score:
         raise ValueError("Ablation ceiling must exceed baseline score")

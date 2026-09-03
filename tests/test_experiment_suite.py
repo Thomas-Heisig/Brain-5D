@@ -16,7 +16,9 @@ from src.research.experiment_suite import (
 
 
 def _config() -> dict[str, Any]:
-    loaded = yaml.safe_load(Path("configs/learning_experiment.yaml").read_text(encoding="utf-8"))
+    loaded = yaml.safe_load(
+        Path("configs/learning_experiment.yaml").read_text(encoding="utf-8")
+    )
     assert isinstance(loaded, dict)
     return cast(dict[str, Any], loaded)
 

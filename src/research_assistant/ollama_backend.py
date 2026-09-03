@@ -149,7 +149,9 @@ class OllamaBackend:
             "num_ctx": self.num_ctx,
             "seed": self.seed,
         }
-        options.update({key: value for key, value in optional_options.items() if value is not None})
+        options.update(
+            {key: value for key, value in optional_options.items() if value is not None}
+        )
         if self.stop:
             options["stop"] = self.stop
         if images:
@@ -220,4 +222,8 @@ def _request_prompt(request: LanguageRequest) -> str:
 
 
 def _numeric_metadata(value: object) -> int | str:
-    return value if isinstance(value, int) and not isinstance(value, bool) else "not_reported"
+    return (
+        value
+        if isinstance(value, int) and not isinstance(value, bool)
+        else "not_reported"
+    )

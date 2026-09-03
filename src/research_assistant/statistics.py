@@ -34,7 +34,9 @@ def summarize(values: Iterable[float]) -> dict[str, Any]:
 def require_statistics_engine_artifact(artifact: dict[str, Any]) -> None:
     """Reject quantitative result payloads not produced by this engine."""
     if artifact.get("generated_by") != "deterministic_statistics_engine":
-        raise ValueError("Quantitative results must come from the deterministic Statistics Engine")
+        raise ValueError(
+            "Quantitative results must come from the deterministic Statistics Engine"
+        )
 
 
 def reject_model_statistics(output: dict[str, Any]) -> None:

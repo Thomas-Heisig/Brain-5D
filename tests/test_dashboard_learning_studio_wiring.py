@@ -44,7 +44,9 @@ def test_learning_studio_ai_is_visibly_proposal_only_and_non_executing() -> None
     assert 'fetch("/api/learning/run"' in studio
     assert "operator_confirmed: true" in studio
     assert studio.index('fetch("/api/research/chat"') < studio.index('action: "ask"')
-    assert studio.index('fetch("/api/learning/run"') < studio.index("operator_confirmed: true")
+    assert studio.index('fetch("/api/learning/run"') < studio.index(
+        "operator_confirmed: true"
+    )
 
 
 def test_learning_studio_exposes_pre_post_and_holdout_diagnostics() -> None:

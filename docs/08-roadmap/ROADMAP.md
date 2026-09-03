@@ -12,7 +12,7 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **673 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
+Vollsuite meldet **675 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
 Fehler.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
@@ -32,6 +32,8 @@ wissenschaftliche EVID bleiben separate offene Nachweise.
 	AIRR-Bericht anhängen; fehlendes Backend bleibt sichtbar `unavailable`
 - [x] Science-suite Läufe veröffentlichen DATA, Workflow, technischen Report und
 	bei konfiguriertem Backend den post-hoc AIRR-Bericht gemeinsam im Manifest
+- [x] Productive STDP und ein versionierter Before/After-Lernwiederholungslauf
+	über den Dashboard-Workflow als DATA/Manifest/Report veröffentlichen
 
 Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
 vollständige Kette zeigt:
@@ -43,7 +45,7 @@ Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
 - [ ] Lokale Änderungen committen, pushen und vollständige GitHub-CI grün bekommen
 - [x] Type-, Build-, Lint- und Runtime-Fehler des aktuellen Stands beheben und lokal verifizieren
 - [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
-- [ ] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, unabhängige Runs
+- [x] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, drei unabhängige Dashboard-DATA-Runs
 - [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
 - [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
 - [x] `EXP-PING-0001-v2` versioniert ausgeführt: sechs identische Replikatpaare

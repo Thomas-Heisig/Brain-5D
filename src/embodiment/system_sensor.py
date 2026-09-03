@@ -49,7 +49,9 @@ class SystemSensorAdapter:
         frame = self.sample(tick)
         if not isinstance(frame.payload, dict):
             raise TypeError("system sensor provider must return a mapping")
-        return InteroceptionFrame(tick=tick, signals=normalize_vital_signals(frame.payload))
+        return InteroceptionFrame(
+            tick=tick, signals=normalize_vital_signals(frame.payload)
+        )
 
 
 def wall_clock_readings(tick: int) -> Mapping[str, JSONValue]:

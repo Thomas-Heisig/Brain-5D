@@ -22,8 +22,13 @@ class FrozenAIReplayBackend:
     def __post_init__(self) -> None:
         if not self.model.strip():
             raise ValueError("Replay model name must not be empty.")
-        if any(not digest or not isinstance(text, str) for digest, text in self.responses.items()):
-            raise ValueError("Replay responses must use non-empty digests and text values.")
+        if any(
+            not digest or not isinstance(text, str)
+            for digest, text in self.responses.items()
+        ):
+            raise ValueError(
+                "Replay responses must use non-empty digests and text values."
+            )
 
     @staticmethod
     def request_digest(prompt: str) -> str:
@@ -60,7 +65,9 @@ class FrozenAIReplayBackend:
             digest = record.get("request_digest")
             text = record.get("response")
             if not isinstance(digest, str) or not isinstance(text, str):
-                raise FrozenAIReplayError("Replay records require request_digest and response.")
+                raise FrozenAIReplayError(
+                    "Replay records require request_digest and response."
+                )
             if digest in responses and responses[digest] != text:
                 raise FrozenAIReplayError(f"Conflicting replay response for {digest}.")
             responses[digest] = text

@@ -20,7 +20,9 @@ class TemporalStateFrame:
     def from_mapping(
         cls, tick: int, state_digest: str, metrics: dict[str, float]
     ) -> "TemporalStateFrame":
-        normalized = tuple(sorted((str(key), float(value)) for key, value in metrics.items()))
+        normalized = tuple(
+            sorted((str(key), float(value)) for key, value in metrics.items())
+        )
         if any(not isfinite(value) for _, value in normalized):
             raise ValueError("temporal metrics must be finite")
         return cls(tick=tick, state_digest=state_digest, metrics=normalized)
@@ -32,7 +34,9 @@ class TemporalStateFrame:
 class TemporalStateMemory:
     """Keep bounded FAST/MEDIUM/SLOW references of observed state frames."""
 
-    def __init__(self, *, horizons: dict[str, int] | None = None, capacity: int = 256) -> None:
+    def __init__(
+        self, *, horizons: dict[str, int] | None = None, capacity: int = 256
+    ) -> None:
         self.horizons = dict(horizons or {"fast": 10, "medium": 100, "slow": 1000})
         if not self.horizons or any(value < 1 for value in self.horizons.values()):
             raise ValueError("temporal horizons must be positive")
@@ -91,9 +95,14 @@ class TemporalComparator:
         current_metrics = current.metric_map()
         reference_metrics = reference.metric_map()
         common = sorted(set(current_metrics) & set(reference_metrics))
-        differences = {name: abs(current_metrics[name] - reference_metrics[name]) for name in common}
+        differences = {
+            name: abs(current_metrics[name] - reference_metrics[name])
+            for name in common
+        }
         changed = tuple(name for name in common if differences[name] > 0.0)
-        discrepancy = sum(differences.values()) / len(differences) if differences else 0.0
+        discrepancy = (
+            sum(differences.values()) / len(differences) if differences else 0.0
+        )
         return TemporalComparison(
             horizon=horizon,
             current_tick=current.tick,

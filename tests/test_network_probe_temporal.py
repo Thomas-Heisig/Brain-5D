@@ -30,7 +30,9 @@ class ProbeRuntime:
 
 
 def frame(tick: int, value: float, digest: str = "digest") -> TemporalStateFrame:
-    return TemporalStateFrame.from_mapping(tick, digest, {"activity": value, "energy": 1.0})
+    return TemporalStateFrame.from_mapping(
+        tick, digest, {"activity": value, "energy": 1.0}
+    )
 
 
 def test_network_impulse_probe_measures_observed_response() -> None:

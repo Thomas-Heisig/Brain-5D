@@ -87,7 +87,9 @@ def _network(
     neurons: list[int] = []
     for coord in coordinates:
         existing = network.get_neuron_at_coord(coord)
-        neurons.append(existing.neuron_id if existing is not None else network.add_neuron(coord))
+        neurons.append(
+            existing.neuron_id if existing is not None else network.add_neuron(coord)
+        )
     network.input_cells.add(neurons[0])
     network.output_cells.add(neurons[2])
     if random_graph:
@@ -105,7 +107,9 @@ def _digest(network: NeuralNetwork) -> str:
     return canonical_state_digest(network)
 
 
-def run_ping(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+def run_ping(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
     """Measure reproducible impulse responses with and without recurrence."""
     runs: list[ScientificRun] = []
     for seed in seeds:
@@ -114,12 +118,21 @@ def run_ping(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[Scie
             before = _digest(network)
             source = min(network.input_cells)
             signature: NetworkResponseSignature = NetworkImpulseProbe(
-                source_neuron=source, current=100.0, max_ticks=8, state_digest=lambda: _digest(network)
+                source_neuron=source,
+                current=100.0,
+                max_ticks=8,
+                state_digest=lambda: _digest(network),
             ).run(_ProbeRuntime(network))
-            runs.append(ScientificRun(
-                "EXP-PING-0001", "recurrence_on" if recurrence else "recurrence_off", seed,
-                signature.to_dict(), before, _digest(network),
-            ))
+            runs.append(
+                ScientificRun(
+                    "EXP-PING-0001",
+                    "recurrence_on" if recurrence else "recurrence_off",
+                    seed,
+                    signature.to_dict(),
+                    before,
+                    _digest(network),
+                )
+            )
     return runs
 
 
@@ -168,11 +181,20 @@ def run_time(
             for _ in range(ticks):
                 network.step()
             duration = time.perf_counter() - started
-            runs.append(ScientificRun(
-                "EXP-TIME-0001", str(ticks), seed,
-                {"ticks": ticks, "duration_seconds": duration, "ticks_per_second": ticks / duration},
-                before, _digest(network),
-            ))
+            runs.append(
+                ScientificRun(
+                    "EXP-TIME-0001",
+                    str(ticks),
+                    seed,
+                    {
+                        "ticks": ticks,
+                        "duration_seconds": duration,
+                        "ticks_per_second": ticks / duration,
+                    },
+                    before,
+                    _digest(network),
+                )
+            )
     return runs
 
 
@@ -191,15 +213,25 @@ def run_5d(
     runs: list[ScientificRun] = []
     for seed in seeds:
         for condition, shape in dimensions.items():
-            network = _network(config, seed, dimensions=shape, random_graph=condition == "random_graph")
+            network = _network(
+                config, seed, dimensions=shape, random_graph=condition == "random_graph"
+            )
             before = _digest(network)
             signature = NetworkImpulseProbe(
-                source_neuron=min(network.input_cells), current=100.0, max_ticks=8,
+                source_neuron=min(network.input_cells),
+                current=100.0,
+                max_ticks=8,
             ).run(_ProbeRuntime(network))
-            runs.append(ScientificRun(
-                "EXP-5D-0001", condition, seed,
-                {"dimensions": list(shape), **signature.to_dict()}, before, _digest(network),
-            ))
+            runs.append(
+                ScientificRun(
+                    "EXP-5D-0001",
+                    condition,
+                    seed,
+                    {"dimensions": list(shape), **signature.to_dict()},
+                    before,
+                    _digest(network),
+                )
+            )
     return runs
 
 
@@ -248,66 +280,109 @@ def run_regulation(
     return runs
 
 
-def run_temporal(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+def run_temporal(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
     """Compare retained fast/medium/slow state references without rewinding."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         network = _network(config, seed)
         before = _digest(network)
-        memory = TemporalStateMemory(horizons={"fast": 2, "medium": 4, "slow": 6}, capacity=32)
+        memory = TemporalStateMemory(
+            horizons={"fast": 2, "medium": 4, "slow": 6}, capacity=32
+        )
         comparator = TemporalComparator()
         comparisons: list[dict[str, Any]] = []
         for _ in range(8):
             result = network.step()
             frame = TemporalStateFrame.from_mapping(
-                network.current_tick, _digest(network),
-                {"mean_v": sum(neuron.v for neuron in network.neurons.values()) / len(network.neurons),
-                 "spikes_this_tick": float(len(result.spike_ids)),
-                 "synapse_count": float(network.synapse_count)},
+                network.current_tick,
+                _digest(network),
+                {
+                    "mean_v": sum(neuron.v for neuron in network.neurons.values())
+                    / len(network.neurons),
+                    "spikes_this_tick": float(len(result.spike_ids)),
+                    "synapse_count": float(network.synapse_count),
+                },
             )
             for horizon in memory.horizons:
-                comparisons.append(comparator.compare(frame, memory.reference(frame.tick, horizon), horizon=horizon).to_dict())
+                comparisons.append(
+                    comparator.compare(
+                        frame, memory.reference(frame.tick, horizon), horizon=horizon
+                    ).to_dict()
+                )
             memory.append(frame)
-        runs.append(ScientificRun(
-            "EXP-TEMP-0001", "fast_medium_slow", seed,
-            {"comparisons": comparisons, "novelty": "not_registered", "prediction_error": "not_available"},
-            before, _digest(network),
-        ))
+        runs.append(
+            ScientificRun(
+                "EXP-TEMP-0001",
+                "fast_medium_slow",
+                seed,
+                {
+                    "comparisons": comparisons,
+                    "novelty": "not_registered",
+                    "prediction_error": "not_available",
+                },
+                before,
+                _digest(network),
+            )
+        )
     return runs
 
 
-def run_stdp(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+def run_stdp(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
     """Run the existing productive LearningEngine path for independent seeds."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         values = dict(config)
         values["seed"] = seed
         result = run_learning_experiment(values)
-        runs.append(ScientificRun(
-            "EXP-STDP-0002", "productive_reward_stdp", seed, asdict(result), "", "",
-        ))
+        runs.append(
+            ScientificRun(
+                "EXP-STDP-0002",
+                "productive_reward_stdp",
+                seed,
+                asdict(result),
+                "",
+                "",
+            )
+        )
     return runs
 
 
-def run_learning_repeat(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+def run_learning_repeat(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
     """Record the paired before/after outcome using fresh evaluation networks."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         values = dict(config)
         values["seed"] = seed
         result = run_learning_experiment(values)
-        runs.append(ScientificRun(
-            "EXP-EMB-0001", "learning_before_after", seed,
-            {"success_before": result.baseline_target_spiked, "success_after": result.trained_target_spiked,
-             "p_success_before": float(result.baseline_target_spiked),
-             "p_success_after": float(result.trained_target_spiked),
-             "after_greater_than_before": result.trained_target_spiked and not result.baseline_target_spiked},
-            "", "",
-        ))
+        runs.append(
+            ScientificRun(
+                "EXP-EMB-0001",
+                "learning_before_after",
+                seed,
+                {
+                    "success_before": result.baseline_target_spiked,
+                    "success_after": result.trained_target_spiked,
+                    "p_success_before": float(result.baseline_target_spiked),
+                    "p_success_after": float(result.trained_target_spiked),
+                    "after_greater_than_before": result.trained_target_spiked
+                    and not result.baseline_target_spiked,
+                },
+                "",
+                "",
+            )
+        )
     return runs
 
 
-def run_learning(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[ScientificRun]:
+def run_learning(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
     """Run the registered full-stack LearningEngine experiment from the operator workflow."""
     runs: list[ScientificRun] = []
     for seed in seeds:
@@ -330,7 +405,10 @@ def run_learning(config: Config, seeds: tuple[int, ...] = (42, 43, 44)) -> list[
 def write_data(path: Path, runs: list[ScientificRun]) -> None:
     """Write deterministic run records as one JSON document."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps([asdict(run) for run in runs], indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps([asdict(run) for run in runs], indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -343,15 +421,31 @@ def _load(path: Path) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/learning_experiment.yaml")
-    parser.add_argument("--output", default="research/generated/data/science_suite.json")
+    parser.add_argument(
+        "--output", default="research/generated/data/science_suite.json"
+    )
     args = parser.parse_args()
     config = _load(Path(args.config))
     started = time.perf_counter()
-    runs = (run_ping(config) + run_temporal(config) + run_stdp(config)
-            + run_learning_repeat(config) + run_time(config) + run_5d(config)
-            + run_regulation(config))
+    runs = (
+        run_ping(config)
+        + run_temporal(config)
+        + run_stdp(config)
+        + run_learning_repeat(config)
+        + run_time(config)
+        + run_5d(config)
+        + run_regulation(config)
+    )
     write_data(Path(args.output), runs)
-    print(json.dumps({"runs": len(runs), "duration_seconds": time.perf_counter() - started, "output": args.output}))
+    print(
+        json.dumps(
+            {
+                "runs": len(runs),
+                "duration_seconds": time.perf_counter() - started,
+                "output": args.output,
+            }
+        )
+    )
     return 0
 
 

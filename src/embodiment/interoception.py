@@ -54,7 +54,9 @@ class VitalSignal:
             "unit": self.unit,
             "safe_range": list(self.safe_range) if self.safe_range else None,
             "warning_range": list(self.warning_range) if self.warning_range else None,
-            "critical_range": list(self.critical_range) if self.critical_range else None,
+            "critical_range": (
+                list(self.critical_range) if self.critical_range else None
+            ),
             "confidence": self.confidence,
             "freshness": self.freshness,
             "source": self.source,
@@ -131,17 +133,34 @@ class FunctionalState:
 
 
 _SIGNAL_METADATA: dict[str, dict[str, JSONValue]] = {
-    "cpu_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
-    "memory_percent": {"unit": "%", "warning_range": [0.0, 85.0], "critical_range": [0.0, 98.0]},
+    "cpu_percent": {
+        "unit": "%",
+        "warning_range": [0.0, 85.0],
+        "critical_range": [0.0, 98.0],
+    },
+    "memory_percent": {
+        "unit": "%",
+        "warning_range": [0.0, 85.0],
+        "critical_range": [0.0, 98.0],
+    },
     "memory_available_bytes": {"unit": "bytes", "causal_criticality": "continuity"},
-    "temperature_c": {"unit": "degC", "warning_range": [-20.0, 80.0], "critical_range": [-30.0, 95.0]},
+    "temperature_c": {
+        "unit": "degC",
+        "warning_range": [-20.0, 80.0],
+        "critical_range": [-30.0, 95.0],
+    },
     "disk_free_bytes": {"unit": "bytes", "causal_criticality": "continuity"},
     "disk_read_bytes": {"unit": "bytes", "causal_criticality": "resource"},
     "disk_write_bytes": {"unit": "bytes", "causal_criticality": "resource"},
     "network_up": {"unit": "bool", "causal_criticality": "continuity"},
     "network_bytes_sent": {"unit": "bytes", "causal_criticality": "continuity"},
     "network_bytes_received": {"unit": "bytes", "causal_criticality": "continuity"},
-    "battery_percent": {"unit": "%", "warning_range": [20.0, 100.0], "critical_range": [5.0, 100.0], "causal_criticality": "continuity"},
+    "battery_percent": {
+        "unit": "%",
+        "warning_range": [20.0, 100.0],
+        "critical_range": [5.0, 100.0],
+        "causal_criticality": "continuity",
+    },
     "battery_plugged": {"unit": "bool", "causal_criticality": "continuity"},
     "fan_rpm": {"unit": "rpm", "causal_criticality": "thermal"},
     "task_progress": {"unit": "ratio", "causal_criticality": "task"},
@@ -186,7 +205,9 @@ def derive_drives(frame: InteroceptionFrame) -> DriveState:
     resource_pressure = max(known_pressures) if known_pressures else None
     thermal_threat = _pressure(temperature, 80.0, 95.0)
     continuity_risk = _continuity_risk(network)
-    known_count = sum(value is not None for value in (cpu, memory, temperature, network))
+    known_count = sum(
+        value is not None for value in (cpu, memory, temperature, network)
+    )
     sensory_integrity = known_count / 4.0
     task_progress = _bounded_signal(signals.get("task_progress"))
     novelty = _bounded_signal(signals.get("novelty"))
@@ -220,7 +241,9 @@ def derive_regulatory_state(frame: InteroceptionFrame) -> RegulatoryState:
     thermal_threat = drives.drives["thermal_threat"]
     values = {
         "thermal_margin": None if thermal_threat is None else 1.0 - thermal_threat,
-        "energy_reserve": None if resource_pressure is None else 1.0 - resource_pressure,
+        "energy_reserve": (
+            None if resource_pressure is None else 1.0 - resource_pressure
+        ),
         "continuity_risk": drives.drives["continuity_risk"],
         "sensory_integrity": drives.drives["sensory_integrity"],
         "resource_pressure": resource_pressure,
@@ -255,7 +278,9 @@ def derive_functional_state(frame: InteroceptionFrame) -> FunctionalState:
         for value in (drives.drives["novelty"], drives.drives["resource_pressure"])
         if value is not None
     ]
-    activation = None if not activity_inputs else sum(activity_inputs) / len(activity_inputs)
+    activation = (
+        None if not activity_inputs else sum(activity_inputs) / len(activity_inputs)
+    )
     valence = None if safety is None else (2.0 * safety) - 1.0
     uncertainty = sum(drives.uncertainty.values()) / len(drives.uncertainty)
     return FunctionalState(
@@ -280,7 +305,9 @@ def _bounded_signal(signal: VitalSignal | None) -> float | None:
     return None if value is None else max(0.0, min(1.0, value))
 
 
-def _pressure(value: float | None, warning: float, critical: float = 100.0) -> float | None:
+def _pressure(
+    value: float | None, warning: float, critical: float = 100.0
+) -> float | None:
     if value is None:
         return None
     return max(0.0, min(1.0, (value - warning) / (critical - warning)))

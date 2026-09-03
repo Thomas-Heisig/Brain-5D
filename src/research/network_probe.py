@@ -83,7 +83,11 @@ class NetworkImpulseProbe:
                 response_neurons.update(spike_ids)
                 total_spikes += len(spike_ids)
                 peak_rate = max(peak_rate, float(len(spike_ids)))
-                if self.source_neuron in spike_ids and return_latency is None and tick > 0:
+                if (
+                    self.source_neuron in spike_ids
+                    and return_latency is None
+                    and tick > 0
+                ):
                     return_latency = tick
                 if tick > 0 and self.source_neuron in spike_ids:
                     recurrent_events += 1
@@ -97,7 +101,9 @@ class NetworkImpulseProbe:
             activated_neurons=len(response_neurons),
             total_spikes=total_spikes,
             peak_spike_rate=peak_rate,
-            propagation_depth=(response_ticks[-1] - response_ticks[0] + 1) if response_ticks else 0,
+            propagation_depth=(
+                (response_ticks[-1] - response_ticks[0] + 1) if response_ticks else 0
+            ),
             recurrent_events=recurrent_events,
             return_latency=return_latency,
             network_state_digest_before=before,

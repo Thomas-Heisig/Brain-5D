@@ -20,7 +20,12 @@ class ActionProposal:
 
     @classmethod
     def create(
-        cls, *, action: str, rationale: str, confidence: float, source: str = "cognitive_advisor"
+        cls,
+        *,
+        action: str,
+        rationale: str,
+        confidence: float,
+        source: str = "cognitive_advisor",
     ) -> ActionProposal:
         if not action.strip() or not rationale.strip():
             raise ValueError("Action and rationale must not be empty")
@@ -28,7 +33,11 @@ class ActionProposal:
             raise ValueError("Proposal confidence must be between 0 and 1")
         return cls(
             proposal=Proposal.create(
-                payload={"action": action, "rationale": rationale, "confidence": confidence},
+                payload={
+                    "action": action,
+                    "rationale": rationale,
+                    "confidence": confidence,
+                },
                 source=source,
                 authority="proposal_only",
             ),
@@ -53,7 +62,12 @@ class CognitiveAdvisor:
         self._firewall = ScientificAIFirewall(AIAuthority.PROPOSAL_ONLY)
 
     def propose(
-        self, *, action: str, rationale: str, confidence: float, source: str = "cognitive_advisor"
+        self,
+        *,
+        action: str,
+        rationale: str,
+        confidence: float,
+        source: str = "cognitive_advisor",
     ) -> ActionProposal:
         self._firewall.authorize("propose")
         return ActionProposal.create(

@@ -89,7 +89,13 @@ class ControlledEmbodimentAgent:
         result, reason = self._authorize(command)
         if result is not None:
             self.last_receipt = ActionReceipt(
-                command_id, False, False, False, True, error=reason, effect_observed=False
+                command_id,
+                False,
+                False,
+                False,
+                True,
+                error=reason,
+                effect_observed=False,
             )
             self.audit.append(
                 self.descriptor.connection_id,
@@ -111,9 +117,7 @@ class ControlledEmbodimentAgent:
                 effect_observed=False,
             )
         else:
-            self.last_receipt = ActionReceipt(
-                command_id, True, True, False, False
-            )
+            self.last_receipt = ActionReceipt(command_id, True, True, False, False)
         self.audit.append(
             self.descriptor.connection_id,
             command,

@@ -34,7 +34,9 @@ class TaskOutcome:
 class TaskOutcomeVerifier:
     """Derive task success and reward exclusively from observed environment data."""
 
-    expected_state: Mapping[str, JSONValue] = field(default_factory=_empty_expected_state)
+    expected_state: Mapping[str, JSONValue] = field(
+        default_factory=_empty_expected_state
+    )
     success_reward: float = 1.0
     failure_reward: float = 0.0
 
@@ -51,8 +53,10 @@ class TaskOutcomeVerifier:
         success = observation.terminated and matches
         reason = "terminated state matched" if success else "task condition not met"
         reward = (
-            self.success_reward if success else self.failure_reward
-        ) if self.expected_state else observation.reward
+            (self.success_reward if success else self.failure_reward)
+            if self.expected_state
+            else observation.reward
+        )
         return TaskOutcome(
             known=True,
             success=success,

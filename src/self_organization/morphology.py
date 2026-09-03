@@ -55,18 +55,28 @@ class MorphologyLedger:
         return _age(self.synapse_birth_ticks.get((source_id, target_id)), tick)
 
     def can_afford_growth(self, *, neurons: int = 0, synapses: int = 0) -> bool:
-        return self.growth_spent + self._growth_cost(neurons, synapses) <= self.budget.growth
+        return (
+            self.growth_spent + self._growth_cost(neurons, synapses)
+            <= self.budget.growth
+        )
 
     def can_afford_pruning(self, *, neurons: int = 0, synapses: int = 0) -> bool:
-        return self.pruning_spent + self._pruning_cost(neurons, synapses) <= self.budget.pruning
+        return (
+            self.pruning_spent + self._pruning_cost(neurons, synapses)
+            <= self.budget.pruning
+        )
 
-    def consume_growth(self, *, neurons: int = 0, synapses: int = 0) -> "MorphologyLedger":
+    def consume_growth(
+        self, *, neurons: int = 0, synapses: int = 0
+    ) -> "MorphologyLedger":
         cost = self._growth_cost(neurons, synapses)
         if not self.can_afford_growth(neurons=neurons, synapses=synapses):
             raise ValueError("growth budget exceeded")
         return replace(self, growth_spent=self.growth_spent + cost)
 
-    def consume_pruning(self, *, neurons: int = 0, synapses: int = 0) -> "MorphologyLedger":
+    def consume_pruning(
+        self, *, neurons: int = 0, synapses: int = 0
+    ) -> "MorphologyLedger":
         cost = self._pruning_cost(neurons, synapses)
         if not self.can_afford_pruning(neurons=neurons, synapses=synapses):
             raise ValueError("pruning budget exceeded")
@@ -77,7 +87,9 @@ class MorphologyLedger:
         births.setdefault(neuron_id, birth_tick)
         return replace(self, neuron_birth_ticks=births)
 
-    def register_synapse(self, source_id: int, target_id: int, birth_tick: int) -> "MorphologyLedger":
+    def register_synapse(
+        self, source_id: int, target_id: int, birth_tick: int
+    ) -> "MorphologyLedger":
         births = dict(self.synapse_birth_ticks)
         births.setdefault((source_id, target_id), birth_tick)
         return replace(self, synapse_birth_ticks=births)
@@ -86,7 +98,10 @@ class MorphologyLedger:
         return neurons * self.costs.neuron_growth + synapses * self.costs.synapse_growth
 
     def _pruning_cost(self, neurons: int, synapses: int) -> float:
-        return neurons * self.costs.neuron_pruning + synapses * self.costs.synapse_pruning
+        return (
+            neurons * self.costs.neuron_pruning + synapses * self.costs.synapse_pruning
+        )
+
 
 def _age(birth_tick: int | None, tick: int) -> int | None:
     if birth_tick is None:

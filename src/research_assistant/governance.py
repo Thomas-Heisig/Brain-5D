@@ -36,7 +36,9 @@ class DataPartition(StrEnum):
 def validate_network_mode(mode: NetworkMode, *, scientific_run: bool) -> None:
     """Reject live network access for scientific runs unless explicitly non-scientific."""
     if scientific_run and mode is NetworkMode.LIVE_NETWORK:
-        raise ValueError("Scientific runs require OFFLINE or FROZEN_CORPUS network mode")
+        raise ValueError(
+            "Scientific runs require OFFLINE or FROZEN_CORPUS network mode"
+        )
 
 
 class KnowledgeOrigin(StrEnum):
@@ -127,7 +129,9 @@ class PromptRegistry:
         key = (prompt.prompt_id, prompt.version)
         existing = self._prompts.get(key)
         if existing is not None and existing != prompt:
-            raise ValueError("Prompt version is already registered with different content")
+            raise ValueError(
+                "Prompt version is already registered with different content"
+            )
         self._prompts[key] = prompt
         return prompt.protocol_digest
 
@@ -169,7 +173,9 @@ class PreregistrationLock:
     ) -> PreregistrationLock:
         if not protocol_id.strip() or protocol_version < 1:
             raise ValueError("Protocol ID must be non-empty and version positive")
-        canonical = json.dumps(dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":"))
+        canonical = json.dumps(
+            dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":")
+        )
         return cls(
             protocol_id=protocol_id,
             protocol_version=protocol_version,
@@ -177,7 +183,9 @@ class PreregistrationLock:
         )
 
     def validate(self, protocol: Mapping[str, object]) -> None:
-        canonical = json.dumps(dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":"))
+        canonical = json.dumps(
+            dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":")
+        )
         digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
         if self.locked and digest != self.protocol_digest:
             raise ValueError("Preregistration lock rejects changed protocol content")
@@ -202,7 +210,9 @@ class ConfirmatoryRunLock:
     ) -> ConfirmatoryRunLock:
         if not prompt_digest.strip() or not analysis_digest.strip():
             raise ValueError("Confirmatory lock requires prompt and analysis digests")
-        canonical = json.dumps(dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":"))
+        canonical = json.dumps(
+            dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":")
+        )
         return cls(
             protocol_digest=hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
             prompt_digest=prompt_digest,
@@ -216,14 +226,18 @@ class ConfirmatoryRunLock:
         prompt_digest: str,
         analysis_digest: str,
     ) -> None:
-        canonical = json.dumps(dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":"))
+        canonical = json.dumps(
+            dict(protocol), sort_keys=True, ensure_ascii=True, separators=(",", ":")
+        )
         protocol_digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
         if self.locked and (
             protocol_digest != self.protocol_digest
             or prompt_digest != self.prompt_digest
             or analysis_digest != self.analysis_digest
         ):
-            raise ValueError("Confirmatory run lock rejects protocol, prompt, or analysis changes")
+            raise ValueError(
+                "Confirmatory run lock rejects protocol, prompt, or analysis changes"
+            )
 
 
 def validate_data_partition(partition: DataPartition, *, scientific_run: bool) -> None:

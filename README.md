@@ -21,7 +21,7 @@ pipeline_tag: reinforcement-learning
 **Sparse 5D Spiking‑Neural Simulation with Observable Plasticity**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-618%20passing-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
+[![Tests](https://img.shields.io/badge/tests-675%20passing-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -35,7 +35,7 @@ It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), home
 > The repository is on synchronized `main` (`0.5.0a7`). Deterministic task
 > outcome verification now derives task success and reward from observed
 > environment state. The local full test
-> suite reports **640 passed, 3 known legacy dashboard failures, 5 skipped**.
+> suite reports **675 passed, 5 skipped**.
 > Scientific AI contracts,
 > provenance, read-only boundaries, replay/shadow controls, deterministic
 > statistics and storage-scope enforcement are implemented and tested.
@@ -196,7 +196,7 @@ pytest -v
 pytest --cov=src --cov-report=term-missing
 ```
 
-Current local baseline: **618 passed, 5 skipped, 0 failed** ✅
+Current local baseline: **675 passed, 5 skipped, 0 failed** ✅
 
 The skipped tests are platform- or opt-in large-storage checks. Run the full
 suite with `python -m pytest -q`; scientific experiments additionally require

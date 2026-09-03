@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-03 — Productive STDP and learning repeat DATA runs
+
+- Published `EXP-STDP-0002` through the Dashboard workflow with three
+  independent seeds and reproducible positive synaptic-weight changes.
+- Published versioned learning repeat `EXP-LEARN-20260903-2229` without
+  overwriting `EXP-EMB-0001`; all three seeds changed from no baseline target
+  spike to a trained target spike after 20 reward updates.
+- EVID remains gated by clean freeze and independent review; BODY, MEM and
+  Azure-backed AIRR experiments remain open.
+
+## 2026-09-03 — Release hygiene baseline
+
+- Applied Black formatting across the CI scope (`src`, `tests`, `scripts`).
+- Verified the local baseline at **675 passed, 5 skipped**, with Black, Ruff and
+  Mypy clean.
+
 ## 2026-09-03 — Versioned PING experiment
 
 - Preserved the existing `EXP-PING-0001` run as v1 and added
@@ -457,7 +473,7 @@
 
 - The existing learning experiment now has focused regression coverage.
 - A deterministic run changed mean synaptic weight from `0.05` to `0.8288007831`, applied 960 reward-weight updates, and changed the fresh probe from no target spike to a target spike.
-- This is an engineering/protocol result only; `EXP-STDP-0002` remains open until clean-freeze independent runs produce valid evidence artifacts.
+- This is an engineering/protocol result only; `EXP-STDP-0002` DATA is published, while EVID remains gated by clean freeze and independent review.
 
 ## 2026-09-03 — Executable science suite foundation
 

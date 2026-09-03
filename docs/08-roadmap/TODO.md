@@ -4,7 +4,7 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: lokale Vollsuite `673 passed, 5 skipped`; Pyright,
+> Verifiziert am 2026-09-03: lokale Vollsuite `675 passed, 5 skipped`; Pyright,
 > Ruff und Mypy sind ohne Fehler.
 > Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
 
@@ -240,10 +240,10 @@
   Clean-Freeze-EVID noch offen)
 - [ ] `EXP-TEMP-0001`: Multi-Timescale State Comparison für Persistenz, Drift,
   Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen (Dashboard-DATA-Lauf erfolgt; Novelty/Prediction Error noch nicht implementiert)
-- [ ] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit unabhängigen Runs (Runner ergänzt, DATA-Lauf noch ausstehend)
+- [x] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit drei unabhängigen Dashboard-DATA-Runs; mittlere Synapsengewichte steigen in allen Runs
 - [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
 - [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
-- [ ] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (Runner ergänzt, unabhängiger DATA-Lauf noch ausstehend)
+- [x] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (versionierter Dashboard-DATA-Lauf `EXP-LEARN-20260903-2229`; alle drei Seeds baseline ohne Zielspike, after mit Zielspike)
 - [x] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks (Dashboard-DATA-Lauf mit 15 Runs; EVID nach Clean Freeze offen)
 - [x] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung (Dashboard-DATA-Lauf mit 150 Runs; EVID nach Clean Freeze offen)
 - [x] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck (deterministischer DATA-Runner; wissenschaftliche EVID bleibt offen)

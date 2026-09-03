@@ -74,12 +74,27 @@ class ExperimentWorkflowService:
             "protocols": cast(
                 JSONValue,
                 [
-                    {"id": "science_suite_v1", "label": "Science Suite v1 (DATA + Manifest)"},
-                    {"id": "science_time_v1", "label": "Science TIME v1 (DATA + Manifest)"},
+                    {
+                        "id": "science_suite_v1",
+                        "label": "Science Suite v1 (DATA + Manifest)",
+                    },
+                    {
+                        "id": "science_time_v1",
+                        "label": "Science TIME v1 (DATA + Manifest)",
+                    },
                     {"id": "science_5d_v1", "label": "Science 5D v1 (DATA + Manifest)"},
-                    {"id": "learning_operator_v1", "label": "Operator Learning v1 (DATA + Manifest + Report)"},
-                    {"id": "runtime_ticks_v1", "label": "Runtime-Ticks (Laufprotokoll)"},
-                    {"id": "stdp_pair_timing_v1", "label": "STDP Pair-Timing v1 (registriert)"},
+                    {
+                        "id": "learning_operator_v1",
+                        "label": "Operator Learning v1 (DATA + Manifest + Report)",
+                    },
+                    {
+                        "id": "runtime_ticks_v1",
+                        "label": "Runtime-Ticks (Laufprotokoll)",
+                    },
+                    {
+                        "id": "stdp_pair_timing_v1",
+                        "label": "STDP Pair-Timing v1 (registriert)",
+                    },
                 ],
             ),
             "next_experiment_id": self._next_experiment_id(),
@@ -116,7 +131,9 @@ class ExperimentWorkflowService:
             )
         from src.research import experiment_suite
 
-        config_path = self._research_root.parent / "configs" / "learning_experiment.yaml"
+        config_path = (
+            self._research_root.parent / "configs" / "learning_experiment.yaml"
+        )
         if not config_path.exists():
             config_path = Path("configs/learning_experiment.yaml")
         config = _load_yaml(config_path)
@@ -127,14 +144,18 @@ class ExperimentWorkflowService:
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
         data_path.write_text(
-            json.dumps([asdict(run) for run in runs], indent=2, sort_keys=True, default=list)
+            json.dumps(
+                [asdict(run) for run in runs], indent=2, sort_keys=True, default=list
+            )
             + "\n",
             encoding="utf-8",
         )
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
         recorder.record_config(str(config_path), "")
-        recorder.record_simulation_params(seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds))
+        recorder.record_simulation_params(
+            seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds)
+        )
         recorder.record_artifact("data", "DATA/runs.json")
         recorder.record_artifact("workflow", "workflow.json")
         recorder.record_artifact("report", "report.md")

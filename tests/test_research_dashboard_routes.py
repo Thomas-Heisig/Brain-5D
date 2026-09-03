@@ -54,7 +54,9 @@ def _get(host: str, port: int, path: str) -> tuple[int, dict[str, Any]]:
         conn.close()
 
 
-def _post(host: str, port: int, path: str, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+def _post(
+    host: str, port: int, path: str, payload: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
     conn = HTTPConnection(host, port)
     try:
         conn.request(
@@ -72,27 +74,63 @@ def _post(host: str, port: int, path: str, payload: dict[str, Any]) -> tuple[int
 def test_ai_operation_classification_is_explicit_and_fail_closed() -> None:
     assert classify_ai_operation({}) == "NONE"
     assert classify_ai_operation({"ai_operation_mode": "REPLAY"}) == "REPLAY"
-    assert classify_ai_operation({"ai_operation_mode": "LIVE_FROZEN_MODEL"}) == "LIVE_FROZEN_MODEL"
-    assert classify_ai_operation({"ai_operation_mode": "LIVE_EXTERNAL_API"}) == "LIVE_EXTERNAL_API"
-    assert classify_ai_operation(
-        {
-            "network_mode": "FROZEN_CORPUS",
-            "ai_model_provenance": {"provider": "ollama"},
-        }
-    ) == "LIVE_FROZEN_MODEL"
-    assert classify_ai_operation(
-        {"network_mode": "LIVE_NETWORK", "ai_model_provenance": {"provider": "openai"}}
-    ) == "LIVE_EXTERNAL_API"
-    assert classify_ai_operation(
-        {"ai_model_provenance": {"provider": "frozen_replay"}}
-    ) == "REPLAY"
+    assert (
+        classify_ai_operation({"ai_operation_mode": "LIVE_FROZEN_MODEL"})
+        == "LIVE_FROZEN_MODEL"
+    )
+    assert (
+        classify_ai_operation({"ai_operation_mode": "LIVE_EXTERNAL_API"})
+        == "LIVE_EXTERNAL_API"
+    )
+    assert (
+        classify_ai_operation(
+            {
+                "network_mode": "FROZEN_CORPUS",
+                "ai_model_provenance": {"provider": "ollama"},
+            }
+        )
+        == "LIVE_FROZEN_MODEL"
+    )
+    assert (
+        classify_ai_operation(
+            {
+                "network_mode": "LIVE_NETWORK",
+                "ai_model_provenance": {"provider": "openai"},
+            }
+        )
+        == "LIVE_EXTERNAL_API"
+    )
+    assert (
+        classify_ai_operation({"ai_model_provenance": {"provider": "frozen_replay"}})
+        == "REPLAY"
+    )
 
 
 def test_research_operation_status_covers_pure_observing_proposing_and_causal() -> None:
-    assert classify_research_operation_status({"ai_exposure": "none", "causal_taint": "PURE"}) == "PURE EXPERIMENT"
-    assert classify_research_operation_status({"ai_exposure": "observer_only", "causal_taint": "OBSERVED"}) == "AI OBSERVING"
-    assert classify_research_operation_status({"ai_exposure": "advisor", "causal_taint": "PROPOSED"}) == "AI PROPOSING"
-    assert classify_research_operation_status({"ai_exposure": "bounded_controller", "causal_taint": "AI_INFLUENCED"}) == "AI CAUSALLY ACTIVE"
+    assert (
+        classify_research_operation_status(
+            {"ai_exposure": "none", "causal_taint": "PURE"}
+        )
+        == "PURE EXPERIMENT"
+    )
+    assert (
+        classify_research_operation_status(
+            {"ai_exposure": "observer_only", "causal_taint": "OBSERVED"}
+        )
+        == "AI OBSERVING"
+    )
+    assert (
+        classify_research_operation_status(
+            {"ai_exposure": "advisor", "causal_taint": "PROPOSED"}
+        )
+        == "AI PROPOSING"
+    )
+    assert (
+        classify_research_operation_status(
+            {"ai_exposure": "bounded_controller", "causal_taint": "AI_INFLUENCED"}
+        )
+        == "AI CAUSALLY ACTIVE"
+    )
     assert classify_research_operation_status({}) == "UNKNOWN"
 
 
@@ -227,7 +265,9 @@ def test_learning_run_requires_explicit_operator_confirmation(tmp_path: Path) ->
         _stop(server, thread)
 
 
-def test_learning_preparation_api_persists_and_approves_guarded_plan(tmp_path: Path) -> None:
+def test_learning_preparation_api_persists_and_approves_guarded_plan(
+    tmp_path: Path,
+) -> None:
     root = tmp_path / "research"
     root.mkdir()
     server, thread, host, port = _start_server(root)
@@ -240,12 +280,14 @@ def test_learning_preparation_api_persists_and_approves_guarded_plan(tmp_path: P
             "success_metric": "holdout success",
             "evaluation_question": "Does performance improve?",
         },
-        "sources": [{
-            "source_id": "SRC-API-001",
-            "digest": "digest",
-            "origin": "environment",
-            "partition": "train",
-        }],
+        "sources": [
+            {
+                "source_id": "SRC-API-001",
+                "digest": "digest",
+                "origin": "environment",
+                "partition": "train",
+            }
+        ],
         "baseline_protocol": "baseline",
         "exposure_protocol": "exposure",
         "evaluation_protocol": "holdout",

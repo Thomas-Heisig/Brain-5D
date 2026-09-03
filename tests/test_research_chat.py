@@ -102,15 +102,24 @@ def test_chat_rejects_empty_message() -> None:
     with pytest.raises(ValueError, match="must not be empty"):
         chat.answer("  ")
 
+
 def test_chat_context_labels_research_and_docs() -> None:
-    chat = ResearchChat(Source({"research.md": "research"}), Source({"docs.md": "docs"}), lambda prompt: (prompt, {}))
-    prompt = chat._prompt("Welche Quellen wurden verwendet?")  # pyright: ignore[reportPrivateUsage]
+    chat = ResearchChat(
+        Source({"research.md": "research"}),
+        Source({"docs.md": "docs"}),
+        lambda prompt: (prompt, {}),
+    )
+    prompt = chat._prompt(
+        "Welche Quellen wurden verwendet?"
+    )  # pyright: ignore[reportPrivateUsage]
     assert "SCIENTIFIC RESEARCH SOURCES" in prompt
     assert "DOCUMENTATION SOURCES" in prompt
 
 
 def test_chat_rejects_unknown_response_mode() -> None:
-    chat = ResearchChat(Source({}), Source({}), lambda prompt: (prompt, {}), response_mode="brief")
+    chat = ResearchChat(
+        Source({}), Source({}), lambda prompt: (prompt, {}), response_mode="brief"
+    )
     with pytest.raises(ValueError, match="Unsupported response mode"):
         chat.answer("Status?")
 
@@ -166,10 +175,18 @@ def test_ai_interaction_record_rejects_invalid_authority_and_tick() -> None:
 def test_scientific_contracts_are_digest_backed_and_non_executable() -> None:
     contracts = [
         Observation.create(payload={"tick": 1}, source="sensor", authority="read_only"),
-        Interpretation.create(payload="uncertain", source="research_ai", authority="read_only"),
-        Proposal.create(payload={"action": "inspect"}, source="advisor", authority="proposal_only"),
-        Intervention.create(payload={"target": "runtime"}, source="human", authority="approved"),
-        Evidence.create(payload={"path": "EVID-1"}, source="evidence_engine", authority="registered"),
+        Interpretation.create(
+            payload="uncertain", source="research_ai", authority="read_only"
+        ),
+        Proposal.create(
+            payload={"action": "inspect"}, source="advisor", authority="proposal_only"
+        ),
+        Intervention.create(
+            payload={"target": "runtime"}, source="human", authority="approved"
+        ),
+        Evidence.create(
+            payload={"path": "EVID-1"}, source="evidence_engine", authority="registered"
+        ),
     ]
 
     assert [contract.kind for contract in contracts] == [
@@ -181,7 +198,10 @@ def test_scientific_contracts_are_digest_backed_and_non_executable() -> None:
     ]
     assert all(len(contract.payload_digest) == 64 for contract in contracts)
     assert all("payload" not in contract.to_dict() for contract in contracts)
-    assert not any(callable(getattr(contracts[3], name, None)) for name in ("execute", "apply", "run"))
+    assert not any(
+        callable(getattr(contracts[3], name, None))
+        for name in ("execute", "apply", "run")
+    )
 
 
 def test_scientific_ai_firewall_rejects_mutating_capabilities() -> None:
@@ -268,9 +288,10 @@ def test_observation_stream_writes_and_validates_jsonl(tmp_path: Any) -> None:
     assert len(records[0].observation_digest) == 64
 
     stream.path.write_text(
-        stream.path.read_text(encoding="utf-8").replace(records[0].observation_digest, "0" * 64),
+        stream.path.read_text(encoding="utf-8").replace(
+            records[0].observation_digest, "0" * 64
+        ),
         encoding="utf-8",
     )
     with pytest.raises(ObservationStreamError, match="digest mismatch"):
         stream.read()
-

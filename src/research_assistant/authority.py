@@ -31,16 +31,50 @@ class AuthorityRule:
 
 
 _AUTHORITY_RULES = (
-    AuthorityRule(AIRole.AI_0_RESEARCH_AI.value, AIAuthority.READ_ONLY.value, ("read", "interpret", "cite"), False),
-    AuthorityRule(AIRole.AI_1_LANGUAGE_ORGAN.value, AIAuthority.READ_ONLY.value, ("observe", "interpret"), False),
-    AuthorityRule(AIRole.AI_2_COGNITIVE_ADVISOR.value, AIAuthority.PROPOSAL_ONLY.value, ("read", "interpret", "propose"), False),
-    AuthorityRule(AIRole.AI_3_EXPERIMENTAL_CONTROLLER.value, AIAuthority.HUMAN_APPROVED.value, ("propose", "validate"), False),
+    AuthorityRule(
+        AIRole.AI_0_RESEARCH_AI.value,
+        AIAuthority.READ_ONLY.value,
+        ("read", "interpret", "cite"),
+        False,
+    ),
+    AuthorityRule(
+        AIRole.AI_1_LANGUAGE_ORGAN.value,
+        AIAuthority.READ_ONLY.value,
+        ("observe", "interpret"),
+        False,
+    ),
+    AuthorityRule(
+        AIRole.AI_2_COGNITIVE_ADVISOR.value,
+        AIAuthority.PROPOSAL_ONLY.value,
+        ("read", "interpret", "propose"),
+        False,
+    ),
+    AuthorityRule(
+        AIRole.AI_3_EXPERIMENTAL_CONTROLLER.value,
+        AIAuthority.HUMAN_APPROVED.value,
+        ("propose", "validate"),
+        False,
+    ),
     AuthorityRule("SNN", "runtime", ("observe", "learn"), False),
     AuthorityRule("Statistics Engine", "deterministic", ("read", "compute"), False),
-    AuthorityRule("Language Organ", AIAuthority.READ_ONLY.value, ("observe", "interpret"), False),
-    AuthorityRule("Research Assistant", AIAuthority.READ_ONLY.value, ("read", "interpret", "cite"), False),
-    AuthorityRule("Cognitive Advisor", AIAuthority.PROPOSAL_ONLY.value, ("read", "interpret", "propose"), False),
-    AuthorityRule("Action Gateway", AIAuthority.HUMAN_APPROVED.value, ("validate", "apply"), False),
+    AuthorityRule(
+        "Language Organ", AIAuthority.READ_ONLY.value, ("observe", "interpret"), False
+    ),
+    AuthorityRule(
+        "Research Assistant",
+        AIAuthority.READ_ONLY.value,
+        ("read", "interpret", "cite"),
+        False,
+    ),
+    AuthorityRule(
+        "Cognitive Advisor",
+        AIAuthority.PROPOSAL_ONLY.value,
+        ("read", "interpret", "propose"),
+        False,
+    ),
+    AuthorityRule(
+        "Action Gateway", AIAuthority.HUMAN_APPROVED.value, ("validate", "apply"), False
+    ),
     AuthorityRule("Evidence Engine", "registered", ("read", "register"), True),
     AuthorityRule("Human Reviewer", "human", ("read", "review", "approve"), False),
 )

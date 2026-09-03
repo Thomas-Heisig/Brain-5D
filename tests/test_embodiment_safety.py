@@ -304,7 +304,9 @@ def test_action_audit_trail_rejects_tampered_journal(tmp_path) -> None:
         reason="accepted",
     )
     raw = journal_path.read_text(encoding="utf-8")
-    journal_path.write_text(raw.replace('"reason": "accepted"', '"reason": "tampered"'), encoding="utf-8")
+    journal_path.write_text(
+        raw.replace('"reason": "accepted"', '"reason": "tampered"'), encoding="utf-8"
+    )
 
     with pytest.raises(ValueError, match="chain verification"):
         ActionAuditTrail(journal_path)

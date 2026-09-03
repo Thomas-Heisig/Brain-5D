@@ -30,7 +30,9 @@ class ResearchAssistant:
         question = _by_id(questions, question_id)
         hypothesis_ids = _string_list(manifest, "hypotheses")
         data = self._data_for_manifest(manifest)
-        statistics_path = self._root / "experiments" / experiment_id / "analysis" / "statistics.json"
+        statistics_path = (
+            self._root / "experiments" / experiment_id / "analysis" / "statistics.json"
+        )
         if data is not None and statistics_path.is_file():
             data = dict(data)
             data["statistics"] = self._read_json(
@@ -41,8 +43,16 @@ class ResearchAssistant:
         previous_analyses = self._previous_analyses(experiment_id)
         manifest_path = self._root / "experiments" / experiment_id / "manifest.json"
         manifest_digest = _file_digest(manifest_path)
-        config_path = str(cast(dict[str, Any], manifest.get("config", {})).get("path", "NOT_AVAILABLE"))
-        config_file = self._root.parent / config_path if config_path.startswith("research/") else None
+        config_path = str(
+            cast(dict[str, Any], manifest.get("config", {})).get(
+                "path", "NOT_AVAILABLE"
+            )
+        )
+        config_file = (
+            self._root.parent / config_path
+            if config_path.startswith("research/")
+            else None
+        )
         data_path = _artifact_path(self._root.parent, manifest, "data")
         return ResearchPacket(
             experiment_id=experiment_id,
@@ -68,17 +78,27 @@ class ResearchAssistant:
                 ),
                 "experiment_status": str(manifest.get("experiment_status", "unknown")),
                 "evidence_mode": str(manifest.get("evidence_mode", "not_reported")),
-                "git_dirty": str(cast(dict[str, Any], manifest.get("git", {})).get("dirty", "NOT_AVAILABLE")),
-                "source_freeze_sha": str(manifest.get("source_freeze_sha", "NOT_AVAILABLE")),
+                "git_dirty": str(
+                    cast(dict[str, Any], manifest.get("git", {})).get(
+                        "dirty", "NOT_AVAILABLE"
+                    )
+                ),
+                "source_freeze_sha": str(
+                    manifest.get("source_freeze_sha", "NOT_AVAILABLE")
+                ),
                 "configuration_path": config_path,
-                "configuration_sha256": _file_digest(config_file) if config_file else "NOT_AVAILABLE",
+                "configuration_sha256": (
+                    _file_digest(config_file) if config_file else "NOT_AVAILABLE"
+                ),
                 "experiment_manifest_digest": manifest_digest,
                 "data_ids": str(manifest.get("data_ids", "NOT_AVAILABLE")),
                 "evid_ids": str(manifest.get("evid_ids", "NOT_AVAILABLE")),
                 "protocol_id": str(manifest.get("protocol_id", "NOT_AVAILABLE")),
                 "protocol_digest": _json_digest(protocol),
                 "data_digest": _file_digest(data_path),
-                "evid_digests": str([_file_digest(path) for path in self._evidence_paths(experiment_id)]),
+                "evid_digests": str(
+                    [_file_digest(path) for path in self._evidence_paths(experiment_id)]
+                ),
             },
         )
 

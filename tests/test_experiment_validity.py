@@ -127,7 +127,9 @@ class TestRuntimeErrorsInManifest:
         assert manifest["ai_exposure"] == "none"
         assert manifest["ai_reproducibility"] == "R0"
 
-    def test_recorder_separates_run_mode_and_data_partitions(self, tmp_experiment_dir: Path) -> None:
+    def test_recorder_separates_run_mode_and_data_partitions(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         recorder = ExperimentRecorder("EXP-MODE-0001", output_dir=tmp_experiment_dir)
         recorder.record_research_run_mode(ResearchRunMode.CONFIRMATORY)
         recorder.record_data_partition(DataPartition.SCIENTIFIC_HOLDOUT)
@@ -140,8 +142,12 @@ class TestRuntimeErrorsInManifest:
         assert recorder.manifest["data_partitions"] == ["SCIENTIFIC_HOLDOUT"]
         assert recorder.manifest["confirmatory_lock"]["locked"] is True
 
-    def test_recorder_makes_retrieval_provenance_visible(self, tmp_experiment_dir: Path) -> None:
-        recorder = ExperimentRecorder("EXP-RETRIEVAL-0001", output_dir=tmp_experiment_dir)
+    def test_recorder_makes_retrieval_provenance_visible(
+        self, tmp_experiment_dir: Path
+    ) -> None:
+        recorder = ExperimentRecorder(
+            "EXP-RETRIEVAL-0001", output_dir=tmp_experiment_dir
+        )
         recorder.record_retrieval(
             RetrievalRecord(
                 enabled=True,
@@ -154,14 +160,18 @@ class TestRuntimeErrorsInManifest:
         assert recorder.manifest["retrieval"]["enabled"] is True
         assert recorder.manifest["retrieval"]["snapshot_digest"] == "corpus-sha"
 
-    def test_recorder_rejects_live_network_for_scientific_runs(self, tmp_experiment_dir: Path) -> None:
+    def test_recorder_rejects_live_network_for_scientific_runs(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         recorder = ExperimentRecorder("EXP-NETWORK-0001", output_dir=tmp_experiment_dir)
         with pytest.raises(ValueError, match="require OFFLINE"):
             recorder.record_network_mode(NetworkMode.LIVE_NETWORK)
         recorder.record_network_mode(NetworkMode.FROZEN_CORPUS)
         assert recorder.manifest["network_mode"] == "FROZEN_CORPUS"
 
-    def test_recorder_registers_ai_reproducibility_level(self, tmp_experiment_dir: Path) -> None:
+    def test_recorder_registers_ai_reproducibility_level(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_ai_reproducibility(AIReproducibility.R2)
         assert recorder.manifest["ai_reproducibility"] == "R2"
@@ -169,7 +179,9 @@ class TestRuntimeErrorsInManifest:
         with pytest.raises(ValueError, match="Unsupported AI reproducibility level"):
             recorder.record_ai_reproducibility("R9")
 
-    def test_recorder_records_validated_ai_exposure(self, tmp_experiment_dir: Path) -> None:
+    def test_recorder_records_validated_ai_exposure(
+        self, tmp_experiment_dir: Path
+    ) -> None:
         recorder = ExperimentRecorder("EXP-TEST-0001", output_dir=tmp_experiment_dir)
         recorder.record_ai_exposure(AIExposure.OBSERVER_ONLY)
         assert recorder.manifest["ai_exposure"] == "observer_only"
@@ -196,7 +208,10 @@ class TestRuntimeErrorsInManifest:
         recorder.record_ai_exposure(AIExposure.ADVISOR)
 
         assert recorder.manifest["causal_taint"] == "PROPOSED"
-        assert recorder.manifest["ai_interactions"][0]["interaction_id"] == interaction.interaction_id
+        assert (
+            recorder.manifest["ai_interactions"][0]["interaction_id"]
+            == interaction.interaction_id
+        )
         with pytest.raises(ValueError, match="does not match"):
             recorder.record_ai_interaction(
                 AIInteractionRecord.create(
@@ -212,7 +227,9 @@ class TestRuntimeErrorsInManifest:
             )
 
             assert recorder.manifest["causal_card"]["classification"] == "PROPOSED"
-            assert recorder.manifest["causal_card"]["interaction_ids"] == [interaction.interaction_id]
+            assert recorder.manifest["causal_card"]["interaction_ids"] == [
+                interaction.interaction_id
+            ]
             recorder.record_ai_treatment("PROTOCOL-AI-001")
             assert recorder.manifest["ai_treatment"]["registered"] is True
 
@@ -257,8 +274,12 @@ class TestRuntimeErrorsInManifest:
         with pytest.raises(ValueError, match="Unsupported control group"):
             recorder.record_control_group("UNKNOWN")
 
-    def test_ai_protocol_requires_version_and_reason(self, tmp_experiment_dir: Path) -> None:
-        recorder = ExperimentRecorder("EXP-PROTOCOL-0001", output_dir=tmp_experiment_dir)
+    def test_ai_protocol_requires_version_and_reason(
+        self, tmp_experiment_dir: Path
+    ) -> None:
+        recorder = ExperimentRecorder(
+            "EXP-PROTOCOL-0001", output_dir=tmp_experiment_dir
+        )
         recorder.record_ai_protocol(2, "prompt template revision")
         assert recorder.manifest["ai_protocol"] == {
             "version": 2,
@@ -278,7 +299,9 @@ class TestRuntimeErrorsInManifest:
             calls.append(kwargs)
             return {"ai_enabled": kwargs["ai_enabled"]}
 
-        recorder = ExperimentRecorder("EXP-TWIN-EXEC-0001", output_dir=tmp_experiment_dir)
+        recorder = ExperimentRecorder(
+            "EXP-TWIN-EXEC-0001", output_dir=tmp_experiment_dir
+        )
         off_result, on_result = recorder.execute_twin_run(
             runner,
             snapshot_digest="snapshot-sha256",
@@ -509,7 +532,9 @@ class TestEvidenceRejection:
         self._create_manifest(exp_dir, "completed", valid=False)
         assert _check_experiment_valid("EXP-TEST-0001") is None
 
-    def test_ai_influenced_run_requires_registered_treatment(self, tmp_path: Path) -> None:
+    def test_ai_influenced_run_requires_registered_treatment(
+        self, tmp_path: Path
+    ) -> None:
         import src.research.evidence_engine as ee_module
 
         exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
@@ -524,7 +549,10 @@ class TestEvidenceRejection:
         try:
             ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
             assert _check_experiment_valid("EXP-TEST-0001") is None
-            manifest["ai_treatment"] = {"protocol_id": "PROTOCOL-AI-001", "registered": True}
+            manifest["ai_treatment"] = {
+                "protocol_id": "PROTOCOL-AI-001",
+                "registered": True,
+            }
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
             assert _check_experiment_valid("EXP-TEST-0001") is not None
         finally:

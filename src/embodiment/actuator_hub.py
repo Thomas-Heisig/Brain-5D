@@ -34,8 +34,7 @@ class ActuatorHub:
     def reset(self, seed: int | None = None) -> dict[str, EnvironmentObservation]:
         """Reset every registered actuator deterministically."""
         return {
-            actuator_id: agent.reset(seed)
-            for actuator_id, agent in self.agents.items()
+            actuator_id: agent.reset(seed) for actuator_id, agent in self.agents.items()
         }
 
     def step(self, command: ActionCommand) -> EnvironmentObservation | None:
@@ -59,8 +58,7 @@ class ActuatorHub:
     def metrics(self) -> dict[str, EmbodimentMetrics]:
         """Return per-actuator metrics without merging independent environments."""
         return {
-            actuator_id: agent.metrics()
-            for actuator_id, agent in self.agents.items()
+            actuator_id: agent.metrics() for actuator_id, agent in self.agents.items()
         }
 
 

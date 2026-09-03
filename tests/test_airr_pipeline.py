@@ -63,7 +63,9 @@ def _backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str | float]]:
             "observations": ["The deterministic statistics report n=3."],
             "effect_direction": "positive",
             "methodological_concerns": ["Independent replications are absent."],
-            "alternative_explanations": ["A deterministic fixture may explain the result."],
+            "alternative_explanations": [
+                "A deterministic fixture may explain the result."
+            ],
             "recommended_experiments": ["Run independent clean-freeze repetitions."],
             "confidence": 0.73,
             "requested_evidence": ["Independent EVID records."],
@@ -90,7 +92,9 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
         "generated_by": "deterministic_statistics_engine",
     }
     markdown = (report_dir / f"{report.report_id}.md").read_text()
-    assert markdown.startswith("============================================================\nBRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS")
+    assert markdown.startswith(
+        "============================================================\nBRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS"
+    )
     assert "## Observations" in markdown and "## Interpretation" in markdown
 
     original = (report_dir / f"{report.report_id}.json").read_text()
@@ -108,7 +112,9 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
     assert (report_dir / f"{report.report_id}.json").read_text() == original
 
 
-def test_human_review_requires_bound_report_identity_and_comments(tmp_path: Path) -> None:
+def test_human_review_requires_bound_report_identity_and_comments(
+    tmp_path: Path,
+) -> None:
     _fixture(tmp_path)
     report = AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)
 
@@ -153,5 +159,7 @@ def test_pipeline_rejects_model_owned_quantitative_statistics(tmp_path: Path) ->
         output["quantitative_results"] = {"n": 999, "mean": 999.0}
         return output, model
 
-    with pytest.raises(ValueError, match="LLM must not generate quantitative statistics"):
+    with pytest.raises(
+        ValueError, match="LLM must not generate quantitative statistics"
+    ):
         AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", model_statistics_backend)

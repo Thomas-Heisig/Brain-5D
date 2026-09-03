@@ -159,12 +159,16 @@ class LearningPreparationProposal:
         if self.authority != "proposal_only":
             raise ValueError("learning preparation proposals are proposal_only")
         if self.origin is LearningPlanOrigin.AI_ASSISTED and not self.ai_interaction_id:
-            raise ValueError("AI-assisted proposals require ai_interaction_id provenance")
+            raise ValueError(
+                "AI-assisted proposals require ai_interaction_id provenance"
+            )
 
     @property
     def digest(self) -> str:
         payload = self.to_dict(include_digest=False)
-        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode(
+            "utf-8"
+        )
         return hashlib.sha256(encoded).hexdigest()
 
     def to_dict(self, *, include_digest: bool = True) -> dict[str, Any]:
@@ -207,7 +211,9 @@ class PreparedLearningPlan:
             "approved_by": self.approved_by,
             "approval_note": self.approval_note,
         }
-        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode(
+            "utf-8"
+        )
         return hashlib.sha256(encoded).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -299,7 +305,9 @@ class LearningPreparationGuard:
                     )
                 cls._validate_value(child, path=f"{path}.{key}")
             return
-        if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        if isinstance(value, Sequence) and not isinstance(
+            value, (str, bytes, bytearray)
+        ):
             typed_sequence = cast(Sequence[object], value)
             for index, child in enumerate(typed_sequence):
                 cls._validate_value(child, path=f"{path}[{index}]")
@@ -343,7 +351,9 @@ class LearningPreparationService:
         path = self._storage_root / f"{plan_id}.json"
         if path.exists():
             raise FileExistsError(f"learning preparation already exists: {plan_id}")
-        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         return path
 
     def _load(self, plan_id: str) -> dict[str, Any]:
@@ -363,7 +373,9 @@ class LearningPreparationService:
         if not isinstance(objective_payload, Mapping):
             raise ValueError("objective object is required")
         sources_payload = payload.get("sources", [])
-        if not isinstance(sources_payload, Sequence) or isinstance(sources_payload, (str, bytes)):
+        if not isinstance(sources_payload, Sequence) or isinstance(
+            sources_payload, (str, bytes)
+        ):
             raise ValueError("sources must be a list")
         typed_sources = cast(Sequence[object], sources_payload)
         sources = tuple(
@@ -388,7 +400,9 @@ class LearningPreparationService:
             evaluation_protocol=str(payload["evaluation_protocol"]),
             stopping_rule=str(payload["stopping_rule"]),
             controls=tuple(str(value) for value in payload.get("controls", [])),
-            origin=LearningPlanOrigin(str(payload.get("origin", LearningPlanOrigin.HUMAN.value))),
+            origin=LearningPlanOrigin(
+                str(payload.get("origin", LearningPlanOrigin.HUMAN.value))
+            ),
             rationale=str(payload.get("rationale", "")),
             ai_interaction_id=payload.get("ai_interaction_id"),
         )
@@ -435,6 +449,7 @@ class LearningPreparationService:
             rationale=rationale,
             ai_interaction_id=ai_interaction_id,
         )
+
     def approve(
         self,
         proposal: LearningPreparationProposal,

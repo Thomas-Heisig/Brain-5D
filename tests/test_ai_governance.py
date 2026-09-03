@@ -140,13 +140,17 @@ def test_intervention_gateway_requires_capability_and_human_approval() -> None:
     assert approval.to_dict()["executed"] is False
     assert len(gateway.audit) == 1
 
-    blocked = InterventionGateway({"inspect_snapshot"}, safety_envelope=lambda _item: False)
+    blocked = InterventionGateway(
+        {"inspect_snapshot"}, safety_envelope=lambda _item: False
+    )
     with pytest.raises(PermissionError, match="Safety envelope"):
         blocked.submit(proposal, tick=4)
 
 
 def test_memory_write_gateway_only_creates_digest_proposals() -> None:
-    proposal = MemoryWriteGateway().propose(key="fact", value={"x": 1}, source="advisor")
+    proposal = MemoryWriteGateway().propose(
+        key="fact", value={"x": 1}, source="advisor"
+    )
     assert proposal.to_dict()["executed"] is False
     assert len(proposal.value_digest) == 64
 
@@ -189,7 +193,10 @@ def test_confirmatory_lock_rejects_protocol_prompt_or_analysis_changes() -> None
 
 def test_formal_ai_roles_are_readable_and_bounded() -> None:
     assert authority_for(AIRole.AI_0_RESEARCH_AI.value).scientific_evidence is False
-    assert "apply" not in authority_for(AIRole.AI_3_EXPERIMENTAL_CONTROLLER.value).capabilities
+    assert (
+        "apply"
+        not in authority_for(AIRole.AI_3_EXPERIMENTAL_CONTROLLER.value).capabilities
+    )
 
 
 def test_scientific_runs_reject_development_partition() -> None:
@@ -228,7 +235,9 @@ def test_version_bump_contract_requires_reason_for_changed_components() -> None:
             "statistics": {"version": 4, "bump_reason": "change estimator"},
         }
     }
-    validate_version_bump_contract(manifest, {"prompt", "model", "treatment", "statistics"})
+    validate_version_bump_contract(
+        manifest, {"prompt", "model", "treatment", "statistics"}
+    )
     with pytest.raises(ValueError, match="Missing version bump for model"):
         validate_version_bump_contract(
             {"version_bumps": {"prompt": manifest["version_bumps"]["prompt"]}},
@@ -279,7 +288,11 @@ def test_causal_attribution_report_is_manifest_bound_and_not_evidence() -> None:
     assert report.to_dict()["scientific_evidence"] is False
     with pytest.raises(ValueError, match="causal_card"):
         generate_causal_attribution_report(
-            {"experiment_id": "EXP-1", "ai_exposure": "observer_only", "causal_taint": "OBSERVED"}
+            {
+                "experiment_id": "EXP-1",
+                "ai_exposure": "observer_only",
+                "causal_taint": "OBSERVED",
+            }
         )
 
 

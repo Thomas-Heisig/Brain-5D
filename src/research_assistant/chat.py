@@ -32,6 +32,7 @@ class _DocsSource(Protocol):
     def list_documents(self, recursive: bool = False) -> Sequence[_DocDocument]: ...
     def read_content(self, path: str) -> str: ...
 
+
 ChatBackend = Callable[[str], tuple[str, dict[str, Any]]]
 
 
@@ -90,7 +91,8 @@ class ResearchChat:
             1
             for document in self.docs.list_documents(recursive=True)
             if getattr(document, "file_type", None) is not None
-            and getattr(document, "file_type").value in {"markdown", "text", "json", "yaml"}
+            and getattr(document, "file_type").value
+            in {"markdown", "text", "json", "yaml"}
         )
         if web_enabled:
             source_count += 1
@@ -160,7 +162,12 @@ class ResearchChat:
             research_chunks.append(f"[RESEARCH: {document.path}]\n{content[:4000]}")
         for doc_document in self.docs.list_documents(recursive=True):
             file_type = getattr(doc_document, "file_type", None)
-            if file_type is None or file_type.value not in {"markdown", "text", "json", "yaml"}:
+            if file_type is None or file_type.value not in {
+                "markdown",
+                "text",
+                "json",
+                "yaml",
+            }:
                 continue
             try:
                 content = self.docs.read_content(doc_document.path)
@@ -168,14 +175,17 @@ class ResearchChat:
                 continue
             docs_chunks.append(f"[DOCS: docs/{doc_document.path}]\n{content[:4000]}")
         sections = [
-            "SCIENTIFIC RESEARCH SOURCES (claims, protocols, DATA/EVIDENCE records; scientific authority is limited by their stated status):\n" + "\n\n".join(research_chunks),
-            "DOCUMENTATION SOURCES (technical and operational reference; not scientific evidence):\n" + "\n\n".join(docs_chunks),
+            "SCIENTIFIC RESEARCH SOURCES (claims, protocols, DATA/EVIDENCE records; scientific authority is limited by their stated status):\n"
+            + "\n\n".join(research_chunks),
+            "DOCUMENTATION SOURCES (technical and operational reference; not scientific evidence):\n"
+            + "\n\n".join(docs_chunks),
         ]
         return "\n\n".join(sections)[: self.max_context_chars]
 
 
 def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend:
     """Adapt a text backend that returns either text or ``(text, metadata)``."""
+
     def call(prompt: str) -> tuple[str, dict[str, Any]]:
         result = backend(prompt)
         if isinstance(result, tuple):
@@ -185,10 +195,9 @@ def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend
             text, metadata = tuple_result
             if isinstance(text, str) and isinstance(metadata, dict):
                 typed_metadata = cast(dict[object, Any], metadata)
-                return text, {
-                    str(key): value for key, value in typed_metadata.items()
-                }
+                return text, {str(key): value for key, value in typed_metadata.items()}
         if isinstance(result, str):
             return result, {}
         raise ValueError("Chat backend must return text or (text, metadata).")
+
     return call

@@ -10,11 +10,23 @@ def validate_scope_transition(source: str, target: str, operation: str) -> None:
     """Reject storage transitions that could merge uncontrolled state."""
     if source.upper() == "DEV" and target.upper() == "OPERATOR":
         raise ValueError("DEV to OPERATOR transitions are forbidden")
-    if source.upper() == "EXPERIMENT" and target.upper() == "OPERATOR" and operation.lower() == "merge":
+    if (
+        source.upper() == "EXPERIMENT"
+        and target.upper() == "OPERATOR"
+        and operation.lower() == "merge"
+    ):
         raise ValueError("EXPERIMENT to OPERATOR merge is forbidden")
-    if source.upper() == "OPERATOR" and target.upper() == "EXPERIMENT" and operation.lower() not in {"snapshot", "fork"}:
+    if (
+        source.upper() == "OPERATOR"
+        and target.upper() == "EXPERIMENT"
+        and operation.lower() not in {"snapshot", "fork"}
+    ):
         raise ValueError("OPERATOR to EXPERIMENT requires snapshot or fork")
-    if source.upper() not in {"DEV", "EXPERIMENT", "OPERATOR"} or target.upper() not in {"DEV", "EXPERIMENT", "OPERATOR"}:
+    if source.upper() not in {
+        "DEV",
+        "EXPERIMENT",
+        "OPERATOR",
+    } or target.upper() not in {"DEV", "EXPERIMENT", "OPERATOR"}:
         raise ValueError(f"Unknown storage scope transition: {source} -> {target}")
 
 
@@ -49,7 +61,11 @@ class StorageLayout:
         return self.root / "dev" / "disposable"
 
     def experiment(self, experiment_id: str) -> Path:
-        if not experiment_id.startswith("EXP-") or "/" in experiment_id or "\\" in experiment_id:
+        if (
+            not experiment_id.startswith("EXP-")
+            or "/" in experiment_id
+            or "\\" in experiment_id
+        ):
             raise ValueError("Experiment ID must be a safe EXP-* name")
         candidate = self.root / "experiment" / experiment_id
         try:

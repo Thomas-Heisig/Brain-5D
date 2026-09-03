@@ -57,15 +57,24 @@ class InterventionGateway:
             raise PermissionError("Experiment policy rejected intervention proposal")
         if not self._safety_envelope(proposal):
             raise PermissionError("Safety envelope rejected intervention proposal")
-        if len([entry for entry in self._audit if entry["tick"] == tick]) >= self._limit:
+        if (
+            len([entry for entry in self._audit if entry["tick"] == tick])
+            >= self._limit
+        ):
             raise PermissionError("Intervention rate limit exceeded")
         if action not in self._capabilities:
             raise PermissionError("Intervention capability not granted")
-        digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
-        self._audit.append({**payload, "proposal_digest": action, "audit_digest": digest})
+        digest = hashlib.sha256(
+            json.dumps(payload, sort_keys=True).encode()
+        ).hexdigest()
+        self._audit.append(
+            {**payload, "proposal_digest": action, "audit_digest": digest}
+        )
         return proposal.proposal.contract_id
 
-    def approve(self, proposal_id: str, *, reviewer_id: str, tick: int) -> ApprovedIntervention:
+    def approve(
+        self, proposal_id: str, *, reviewer_id: str, tick: int
+    ) -> ApprovedIntervention:
         if not reviewer_id.strip() or tick < 0:
             raise ValueError("Reviewer ID must be non-empty and tick non-negative")
         if not any(entry["proposal_id"] == proposal_id for entry in self._audit):

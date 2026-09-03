@@ -32,7 +32,9 @@ class RandomLanguageOrgan:
         digest = hashlib.sha256(
             f"{self.seed}|{request.request_id}|{request.text}".encode("utf-8")
         ).digest()
-        choice = self.vocabulary[int.from_bytes(digest[:8], "big") % len(self.vocabulary)]
+        choice = self.vocabulary[
+            int.from_bytes(digest[:8], "big") % len(self.vocabulary)
+        ]
         return LanguageResponse(request.request_id, choice, self.name, True)
 
 

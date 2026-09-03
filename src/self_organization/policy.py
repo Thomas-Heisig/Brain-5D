@@ -478,7 +478,10 @@ class SelfOrganizationPolicy:
         if pressure <= threshold:
             return False
         latched_tick = self._latched_kinds.get(kind)
-        if latched_tick is not None and tick - latched_tick < self.config.hysteresis_rearm_ticks:
+        if (
+            latched_tick is not None
+            and tick - latched_tick < self.config.hysteresis_rearm_ticks
+        ):
             return False
         self._latched_kinds[kind] = tick
         return True

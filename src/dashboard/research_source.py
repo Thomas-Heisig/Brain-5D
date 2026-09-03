@@ -57,8 +57,7 @@ def classify_ai_operation(manifest: dict[str, Any]) -> str:
             if "replay" in provider or provenance.get("replay") is True:
                 return "REPLAY"
             if network_mode in {"OFFLINE", "FROZEN_CORPUS"} and (
-                provider in {"ollama", "local", "frozen_model"}
-                or "frozen" in provider
+                provider in {"ollama", "local", "frozen_model"} or "frozen" in provider
             ):
                 return "LIVE_FROZEN_MODEL"
             if network_mode == "LIVE_NETWORK" or (
@@ -74,7 +73,10 @@ def classify_research_operation_status(manifest: dict[str, Any]) -> str:
     taint = str(manifest.get("causal_taint", "")).upper()
     if exposure == "none" and taint == "PURE":
         return "PURE EXPERIMENT"
-    if taint == "AI_INFLUENCED" or exposure in {"bounded_controller", "adaptive_controller"}:
+    if taint == "AI_INFLUENCED" or exposure in {
+        "bounded_controller",
+        "adaptive_controller",
+    }:
         return "AI CAUSALLY ACTIVE"
     if taint == "PROPOSED" or exposure == "advisor":
         return "AI PROPOSING"
@@ -196,7 +198,9 @@ class ResearchSource:
             )
         return reports
 
-    def ai_reports(self, experiment_id: str | None = None) -> list[dict[str, JSONValue]]:
+    def ai_reports(
+        self, experiment_id: str | None = None
+    ) -> list[dict[str, JSONValue]]:
         """List canonical AIRR JSON/Markdown pairs without exposing write access."""
         directory = self._root / "reports"
         if not directory.is_dir():
@@ -213,7 +217,9 @@ class ResearchSource:
                     "report_id": entry.stem,
                     "experiment_id": current_experiment,
                     "json_path": str(entry.relative_to(self._root)).replace("\\", "/"),
-                    "markdown_path": str(entry.with_suffix(".md").relative_to(self._root)).replace("\\", "/"),
+                    "markdown_path": str(
+                        entry.with_suffix(".md").relative_to(self._root)
+                    ).replace("\\", "/"),
                     "size_bytes": entry.stat().st_size,
                 }
             )
@@ -247,12 +253,16 @@ class ResearchSource:
                 continue
             experiments.append(
                 {
-                    "ai_operation_mode": classify_ai_operation(data)
-                    if isinstance(data, dict)
-                    else "NONE",
-                    "research_operation_status": classify_research_operation_status(data)
-                    if isinstance(data, dict)
-                    else "UNKNOWN",
+                    "ai_operation_mode": (
+                        classify_ai_operation(data)
+                        if isinstance(data, dict)
+                        else "NONE"
+                    ),
+                    "research_operation_status": (
+                        classify_research_operation_status(data)
+                        if isinstance(data, dict)
+                        else "UNKNOWN"
+                    ),
                     "id": entry.name,
                     "path": str(entry.relative_to(self._root)).replace("\\", "/"),
                     "manifest": data,

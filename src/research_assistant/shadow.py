@@ -55,7 +55,9 @@ def evaluate_shadow_proposals(
 ) -> ShadowProposalMetrics:
     """Evaluate proposals without interpreting or executing their contents."""
     if not predicted or len(predicted) != len(actual):
-        raise ValueError("Predicted and actual proposal labels must have equal non-zero length.")
+        raise ValueError(
+            "Predicted and actual proposal labels must have equal non-zero length."
+        )
     if confidence is not None and len(confidence) != len(predicted):
         raise ValueError("Confidence values must match proposal count.")
     if utility is not None and len(utility) != len(predicted):
@@ -63,29 +65,64 @@ def evaluate_shadow_proposals(
     if confidence is not None and any(value < 0 or value > 1 for value in confidence):
         raise ValueError("Confidence values must be between 0 and 1.")
 
-    true_positive = sum(predicted_value and actual_value for predicted_value, actual_value in zip(predicted, actual))
-    false_positive = sum(predicted_value and not actual_value for predicted_value, actual_value in zip(predicted, actual))
-    false_negative = sum(not predicted_value and actual_value for predicted_value, actual_value in zip(predicted, actual))
-    true_negative = sum(not predicted_value and not actual_value for predicted_value, actual_value in zip(predicted, actual))
+    true_positive = sum(
+        predicted_value and actual_value
+        for predicted_value, actual_value in zip(predicted, actual)
+    )
+    false_positive = sum(
+        predicted_value and not actual_value
+        for predicted_value, actual_value in zip(predicted, actual)
+    )
+    false_negative = sum(
+        not predicted_value and actual_value
+        for predicted_value, actual_value in zip(predicted, actual)
+    )
+    true_negative = sum(
+        not predicted_value and not actual_value
+        for predicted_value, actual_value in zip(predicted, actual)
+    )
     count = len(predicted)
-    precision = true_positive / (true_positive + false_positive) if true_positive + false_positive else 0.0
-    recall = true_positive / (true_positive + false_negative) if true_positive + false_negative else 0.0
-    false_positive_rate = false_positive / (false_positive + true_negative) if false_positive + true_negative else 0.0
+    precision = (
+        true_positive / (true_positive + false_positive)
+        if true_positive + false_positive
+        else 0.0
+    )
+    recall = (
+        true_positive / (true_positive + false_negative)
+        if true_positive + false_negative
+        else 0.0
+    )
+    false_positive_rate = (
+        false_positive / (false_positive + true_negative)
+        if false_positive + true_negative
+        else 0.0
+    )
     accuracy = (true_positive + true_negative) / count
     probabilities = list(confidence or [float(value) for value in predicted])
-    brier_score = sum((probability - float(outcome)) ** 2 for probability, outcome in zip(probabilities, actual)) / count
+    brier_score = (
+        sum(
+            (probability - float(outcome)) ** 2
+            for probability, outcome in zip(probabilities, actual)
+        )
+        / count
+    )
     calibration_bins = [0.0] * 10
     calibration_counts = [0] * 10
     for probability, outcome in zip(probabilities, actual):
         index = min(int(probability * 10), 9)
         calibration_bins[index] += float(outcome)
         calibration_counts[index] += 1
-    expected_calibration_error = sum(
-        abs(calibration_bins[index] / calibration_counts[index] - (index + 0.5) / 10)
-        * calibration_counts[index]
-        for index in range(10)
-        if calibration_counts[index]
-    ) / count
+    expected_calibration_error = (
+        sum(
+            abs(
+                calibration_bins[index] / calibration_counts[index] - (index + 0.5) / 10
+            )
+            * calibration_counts[index]
+            for index in range(10)
+            if calibration_counts[index]
+        )
+        / count
+    )
     measured_utility = sum(utility or [float(value) for value in predicted]) / count
     return ShadowProposalMetrics(
         precision=precision,

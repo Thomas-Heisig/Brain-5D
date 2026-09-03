@@ -195,8 +195,12 @@ def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     )
 
     experiment_dir = tmp_path / "experiments" / "EXP-PING-0001"
-    manifest = json.loads((experiment_dir / "manifest.json").read_text(encoding="utf-8"))
-    data = json.loads((experiment_dir / "DATA" / "runs.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (experiment_dir / "manifest.json").read_text(encoding="utf-8")
+    )
+    data = json.loads(
+        (experiment_dir / "DATA" / "runs.json").read_text(encoding="utf-8")
+    )
     assert result["data_id"] == "DATA-EXP-PING-0001"
     assert manifest["experiment_status"] == "completed"
     assert manifest["artifacts"]["data"] == "DATA/runs.json"

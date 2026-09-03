@@ -100,9 +100,12 @@ def test_ai_preparation_requires_provenance_and_remains_proposal_only() -> None:
         {"nested": {"plasticity_update": {"synapse_weight": 0.9}}},
     ],
 )
-def test_guard_rejects_direct_neural_or_reward_writes(payload: dict[str, object]) -> None:
+def test_guard_rejects_direct_neural_or_reward_writes(
+    payload: dict[str, object],
+) -> None:
     with pytest.raises(PermissionError):
         LearningPreparationGuard.validate_mapping(payload)
+
 
 def test_guard_allows_protocol_metadata_and_provenance() -> None:
     LearningPreparationGuard.validate_mapping(
@@ -205,7 +208,9 @@ def test_partition_leakage_guard_rejects_labels_in_holdout() -> None:
         )
 
 
-def test_preparation_persistence_keeps_proposal_and_approval_separate(tmp_path: Path) -> None:
+def test_preparation_persistence_keeps_proposal_and_approval_separate(
+    tmp_path: Path,
+) -> None:
     service = LearningPreparationService(tmp_path / "preparations")
     proposal = service.create_proposal(
         plan_id="LP-PERSIST-001",

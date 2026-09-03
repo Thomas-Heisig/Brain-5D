@@ -97,7 +97,11 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
             return None
         treatment = cast(dict[str, object], treatment_raw)
         protocol_id = treatment.get("protocol_id")
-        if not treatment.get("registered") or not isinstance(protocol_id, str) or not protocol_id.strip():
+        if (
+            not treatment.get("registered")
+            or not isinstance(protocol_id, str)
+            or not protocol_id.strip()
+        ):
             return None
     git_raw = manifest.get("git", {})
     if not isinstance(git_raw, dict):

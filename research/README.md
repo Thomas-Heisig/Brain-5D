@@ -8,7 +8,7 @@ Die technische Forschungsinfrastruktur ist weitgehend implementiert und lokal
 verifiziert: Scientific Integrity Gate, AI-Provenienz und Causal-Taint,
 Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischer
 Provenienzgraph sowie getrennte Operator-/Experiment-/Dev-Storage-Scope sind
-vorhanden. Die lokale Regression am 2026-09-03 ergab **618 passed, 5 skipped**.
+vorhanden. Die lokale Regression am 2026-09-03 ergab **675 passed, 5 skipped**.
 
 ## Verifikation
 

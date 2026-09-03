@@ -100,9 +100,12 @@ class ActionAuditTrail:
                 record.reason,
                 previous,
             )
-            if hashlib.sha256(
-                json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-            ).hexdigest() != record.digest:
+            if (
+                hashlib.sha256(
+                    json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+                ).hexdigest()
+                != record.digest
+            ):
                 return False
             previous = record.digest
         return previous == self._digest

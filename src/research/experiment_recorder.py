@@ -44,7 +44,9 @@ CONTROL_GROUP_TEMPLATES = (
 
 
 def _digest(value: object) -> str:
-    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    payload = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -261,7 +263,9 @@ class ExperimentRecorder:
         }
         return self
 
-    def record_research_run_mode(self, mode: ResearchRunMode | str) -> ExperimentRecorder:
+    def record_research_run_mode(
+        self, mode: ResearchRunMode | str
+    ) -> ExperimentRecorder:
         """Declare exploratory or confirmatory protocol handling."""
         self._manifest["research_run_mode"] = ResearchRunMode(mode).value
         return self
@@ -272,11 +276,15 @@ class ExperimentRecorder:
         """Register network policy and reject live access for scientific runs."""
         normalized = NetworkMode(mode)
         if scientific_run and normalized is NetworkMode.LIVE_NETWORK:
-            raise ValueError("Scientific runs require OFFLINE or FROZEN_CORPUS network mode")
+            raise ValueError(
+                "Scientific runs require OFFLINE or FROZEN_CORPUS network mode"
+            )
         self._manifest["network_mode"] = normalized.value
         return self
 
-    def record_data_partition(self, partition: DataPartition | str) -> ExperimentRecorder:
+    def record_data_partition(
+        self, partition: DataPartition | str
+    ) -> ExperimentRecorder:
         """Record a data partition used by this run."""
         normalized = DataPartition(partition).value
         partitions = cast(list[str], self._manifest["data_partitions"])
@@ -387,9 +395,7 @@ class ExperimentRecorder:
         }
         ai_off_result = runner(ai_enabled=False, **common)
         ai_on_result = runner(ai_enabled=True, **common)
-        self.record_twin_results(
-            ai_off_result=ai_off_result, ai_on_result=ai_on_result
-        )
+        self.record_twin_results(ai_off_result=ai_off_result, ai_on_result=ai_on_result)
         return ai_off_result, ai_on_result
 
     def record_control_group(self, control_group: str) -> ExperimentRecorder:
@@ -397,7 +403,9 @@ class ExperimentRecorder:
         normalized = control_group.strip().upper()
         if normalized not in CONTROL_GROUP_TEMPLATES:
             allowed = ", ".join(CONTROL_GROUP_TEMPLATES)
-            raise ValueError(f"Unsupported control group {control_group!r}; use: {allowed}")
+            raise ValueError(
+                f"Unsupported control group {control_group!r}; use: {allowed}"
+            )
         self._manifest["control_group"] = {
             "template": normalized,
             "registered": True,

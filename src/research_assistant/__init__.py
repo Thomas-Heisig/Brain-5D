@@ -106,7 +106,7 @@ __all__ = [
     "validate_network_mode",
     "AIExposure",
     "AIClockMode",
-        "AIInferenceFailureEvent",
+    "AIInferenceFailureEvent",
     "AIInteractionRecord",
     "AIReproducibility",
     "AnalysisBackend",

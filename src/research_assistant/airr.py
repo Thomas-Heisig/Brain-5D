@@ -104,9 +104,7 @@ class AIRRPipeline:
         packet = self._assistant.build_packet(experiment_id)
         analyst = self._run_role("scientific_analyst", packet, backend)
         reviewer = self._run_role("critical_reviewer", packet, backend, analyst)
-        writer = self._run_role(
-            "scientific_writer", packet, backend, analyst, reviewer
-        )
+        writer = self._run_role("scientific_writer", packet, backend, analyst, reviewer)
         report = _build_report(
             packet,
             analyst,
@@ -147,7 +145,9 @@ class AIRRPipeline:
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / f"{record.analysis_id}.json"
         if path.exists():
-            raise FileExistsError(f"Analysis record already exists: {record.analysis_id}")
+            raise FileExistsError(
+                f"Analysis record already exists: {record.analysis_id}"
+            )
         path.write_text(
             json.dumps(record.to_dict(), indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
@@ -171,8 +171,7 @@ def _role_prompt(
         "limitations and requested evidence. Never create evidence, confirm claims, "
         "answer a research question, or issue execution commands.\n"
         + review_instruction
-        +
-        f"Prior role outputs: {json.dumps(context, sort_keys=True)}\n"
+        + f"Prior role outputs: {json.dumps(context, sort_keys=True)}\n"
         + f"ResearchPacket: {packet.to_json()}"
     )
 
@@ -192,7 +191,9 @@ def _build_report(
     content = {
         "identification": {
             "experiment": packet.experiment_id,
-            "research_question": packet.research_question.get("question", "NOT_AVAILABLE"),
+            "research_question": packet.research_question.get(
+                "question", "NOT_AVAILABLE"
+            ),
             "hypotheses": packet.hypotheses,
             "date": datetime.now(timezone.utc).date().isoformat(),
             "source_sha": packet.provenance.get("git_commit", "NOT_AVAILABLE"),
@@ -227,7 +228,11 @@ def _build_report(
             "disposition": None,
             "comments": None,
         },
-        "aiar": {"analyst": analyst.to_dict(), "reviewer": reviewer.to_dict(), "writer": writer.to_dict()},
+        "aiar": {
+            "analyst": analyst.to_dict(),
+            "reviewer": reviewer.to_dict(),
+            "writer": writer.to_dict(),
+        },
     }
     now = datetime.now(timezone.utc).isoformat()
     return AIResearchReport(
@@ -245,7 +250,10 @@ def _build_report(
         human_review_required=True,
         status="review_pending",
         content=content,
-        provenance={"research_packet_digest": packet.digest, "source": packet.provenance},
+        provenance={
+            "research_packet_digest": packet.digest,
+            "source": packet.provenance,
+        },
         analysis_ids=[analyst.analysis_id, reviewer.analysis_id, writer.analysis_id],
         supersedes=supersedes,
     )
@@ -259,11 +267,17 @@ def _next_report_id(report_directory: Path, now: str) -> str:
 
 
 def _data_basis(packet: ResearchPacket) -> dict[str, Any]:
-    return {"data": packet.data or {}, "evid": packet.evidence, "literature": packet.literature_sources}
+    return {
+        "data": packet.data or {},
+        "evid": packet.evidence,
+        "literature": packet.literature_sources,
+    }
 
 
 def _statistics(packet: ResearchPacket) -> dict[str, Any]:
-    if isinstance(packet.data, dict) and isinstance(packet.data.get("statistics"), dict):
+    if isinstance(packet.data, dict) and isinstance(
+        packet.data.get("statistics"), dict
+    ):
         statistics = cast(dict[str, Any], packet.data["statistics"])
         require_statistics_engine_artifact(statistics)
         return statistics
@@ -276,7 +290,9 @@ def _with_digests(report: AIResearchReport, markdown: str) -> AIResearchReport:
         json.dumps(payload, sort_keys=True, ensure_ascii=True).encode("utf-8")
     ).hexdigest()
     payload["markdown_digest"] = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
-    return AIResearchReport(**{key: payload[key] for key in AIResearchReport.__dataclass_fields__})
+    return AIResearchReport(
+        **{key: payload[key] for key in AIResearchReport.__dataclass_fields__}
+    )
 
 
 def render_markdown(report: AIResearchReport) -> str:
@@ -301,12 +317,31 @@ def render_markdown(report: AIResearchReport) -> str:
         ("Conclusion", "conclusion"),
         ("Human Review", "human_review"),
     ):
-        lines.extend([f"## {title}", "", "```json", json.dumps(sections.get(key), indent=2, ensure_ascii=False), "```", ""])
-    lines.extend([f"AI confidence: {sections.get('ai_confidence', 0.0)}", "This value describes internal AI confidence and is not a statistical confidence interval.", "", f"Content digest: {report.content_digest}", f"JSON/Markdown link digest: {report.markdown_digest}"])
+        lines.extend(
+            [
+                f"## {title}",
+                "",
+                "```json",
+                json.dumps(sections.get(key), indent=2, ensure_ascii=False),
+                "```",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            f"AI confidence: {sections.get('ai_confidence', 0.0)}",
+            "This value describes internal AI confidence and is not a statistical confidence interval.",
+            "",
+            f"Content digest: {report.content_digest}",
+            f"JSON/Markdown link digest: {report.markdown_digest}",
+        ]
+    )
     return "\n".join(lines) + "\n"
 
 
-def write_human_review(research_root: Path, experiment_id: str, report_id: str, review: dict[str, Any]) -> Path:
+def write_human_review(
+    research_root: Path, experiment_id: str, report_id: str, review: dict[str, Any]
+) -> Path:
     if not experiment_id or "/" in experiment_id or "\\" in experiment_id:
         raise ValueError("Invalid experiment id")
     if not report_id or "/" in report_id or "\\" in report_id:
@@ -349,5 +384,7 @@ def write_human_review(research_root: Path, experiment_id: str, report_id: str, 
         "comments": comments.strip(),
         "report_content_digest": report.get("content_digest"),
     }
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     return path

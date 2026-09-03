@@ -51,7 +51,12 @@ def test_confidence_must_be_bounded() -> None:
 
 def test_drives_are_bounded_and_derive_resource_and_continuity_pressure() -> None:
     signals = normalize_vital_signals(
-        {"cpu_percent": 92.0, "memory_percent": 40.0, "temperature_c": 90.0, "network_up": False}
+        {
+            "cpu_percent": 92.0,
+            "memory_percent": 40.0,
+            "temperature_c": 90.0,
+            "network_up": False,
+        }
     )
 
     drives = derive_drives(InteroceptionFrame(3, signals))
@@ -117,13 +122,13 @@ def test_regulatory_state_is_bounded_and_fail_closed() -> None:
     assert state.values["sensory_integrity"] == 1.0
     assert state.values["resource_pressure"] == pytest.approx(1 / 3)
     assert state.values["task_progress"] == 1.0
-    assert all(0.0 <= value <= 1.0 for value in state.values.values() if value is not None)
+    assert all(
+        0.0 <= value <= 1.0 for value in state.values.values() if value is not None
+    )
 
 
 def test_regulatory_state_keeps_unknown_sources_unknown() -> None:
-    state = derive_regulatory_state(
-        InteroceptionFrame(1, normalize_vital_signals({}))
-    )
+    state = derive_regulatory_state(InteroceptionFrame(1, normalize_vital_signals({})))
 
     assert state.values["thermal_margin"] is None
     assert state.values["energy_reserve"] is None
@@ -153,9 +158,7 @@ def test_functional_state_is_bounded_and_not_emotion_interpretation() -> None:
 
 
 def test_functional_state_is_unknown_without_observable_drives() -> None:
-    state = derive_functional_state(
-        InteroceptionFrame(1, normalize_vital_signals({}))
-    )
+    state = derive_functional_state(InteroceptionFrame(1, normalize_vital_signals({})))
 
     assert state.valence is None
     assert state.activation is None
