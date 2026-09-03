@@ -48,6 +48,8 @@ Der Research-Chat bleibt dabei ein konfigurierbarer, read-only Assistent: Ein ei
 System-Prompt darf Stil und Arbeitsweise präzisieren, erweitert aber weder die
 Evidenzautorität noch die Experimentausführung. Externe Webquellen bleiben explizit
 als unverified markiert.
+- Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
+	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - **R-AI3:** Wie stark unterscheiden sich Modelle bei identischem ResearchPacket?
 - **R-AI4:** Wie gut ist die Confidence der KI kalibriert?
 - **R-AI5:** Wie unterscheiden sich menschliche und KI-wissenschaftliche Bewertungen?

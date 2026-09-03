@@ -7,6 +7,8 @@
 - Modell, Ollama-Endpoint, Temperatur und Kontextlimit sind über YAML oder Umgebungsvariablen konfigurierbar.
 - Chat-Einstellungen unterstützen zusätzlich System-Prompt, Top-P und Tokenbudget.
 - Provider-Health wird über einen echten Live-Probe-Endpunkt angezeigt; Unterchats sowie Enter/Shift+Enter sind verfügbar.
+- Räume können eingeklappt, archiviert, wiederhergestellt und gelöscht werden; Unterchat-Kontext wird hierarchisch übergeben.
+- Ollama-Modelle werden entdeckt; Microsoft Copilot ist als OAuth-abhängige, derzeit nicht konfigurierte Option ausgewiesen.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 

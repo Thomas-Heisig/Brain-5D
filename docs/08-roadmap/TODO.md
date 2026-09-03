@@ -12,6 +12,9 @@
 - [x] Editierbare Chat-Einstellungen inklusive System-Prompt, Sampling, Tokenbudget und Kontextlimit
 - [x] Persistente Räume und Unterchats mit festem Header und Composer
 - [x] Live-Health-Probe für den konfigurierten Provider
+- [x] Räume einklappen, archivieren, wiederherstellen und löschen
+- [x] Hierarchischen Kontext für Unterchats übertragen
+- [x] Provider-/Modellauswahl mit klarer OAuth-Grenze für Microsoft Copilot
 
 ### Alpha.7 — Controlled Experience & Learning Loop
 

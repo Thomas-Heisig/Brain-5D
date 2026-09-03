@@ -443,6 +443,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/research/chat/health":
                 self._research_chat_health()
                 return
+            if path == "/api/research/chat/providers":
+                self._research_chat_providers()
+                return
 
             if path.startswith("/api/research/ai-reports/"):
                 self._serve_ai_report(path)
@@ -1977,6 +1980,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if not self.dashboard_server.research_chat_web_search_enabled:
                 raise InvalidRequestError("Web search is disabled in chat settings.")
             web_context = self._search_web(message)
+        conversation_context = body.get("conversation_context", "")
+        if not isinstance(conversation_context, str) or len(conversation_context) > 20_000:
+            raise InvalidRequestError("conversation_context must be text up to 20000 characters.")
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         system_context = json.dumps(
             {
@@ -1995,6 +2001,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             max_context_chars=self.dashboard_server.research_chat_context_chars,
             system_context=system_context,
             system_prompt=self.dashboard_server.research_chat_system_prompt,
+            conversation_context=conversation_context,
             web_context=web_context,
         ).answer(message)
         self._send_json(
@@ -2057,6 +2064,20 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"ok": ok, "provider": backend.name})
         except OSError as exc:
             self._send_json({"ok": False, "provider": backend.name, "error": str(exc)}, HTTPStatus.SERVICE_UNAVAILABLE)
+
+    def _research_chat_providers(self) -> None:
+        """Return configured provider choices and locally available Ollama models."""
+        backend = self.dashboard_server.research_chat_ollama_backend
+        models: list[str] = []
+        if backend is not None:
+            tags_endpoint = backend.endpoint.rsplit("/api/", 1)[0] + "/api/tags"
+            try:
+                with urlopen(tags_endpoint, timeout=3) as response:  # nosec B310: configured local provider endpoint
+                    payload = json.loads(response.read().decode("utf-8"))
+                models = [item["name"] for item in payload.get("models", []) if isinstance(item, dict) and isinstance(item.get("name"), str)]
+            except (OSError, ValueError, TypeError):
+                pass
+        self._send_json({"providers": [{"id": "ollama", "label": "Ollama", "available": backend is not None}, {"id": "microsoft-copilot", "label": "Microsoft Copilot", "available": False, "reason": "Requires Microsoft account and tenant OAuth configuration."}], "models": models})
 
     def _search_web(self, query: str) -> str:
         """Read a small set of structured public search results."""
