@@ -42,10 +42,10 @@
 - [x] Expose Learning Engine, STDP, Eligibility, Reward and measured STDP/Reward weight-update counters separately; `enabled` or `armed` is not displayed as proof of learning
 - [ ] Performance: replace the enabled storage full-change scan with a causally complete dirty-state pipeline; current interactive 5k/36k runtime remains scan-bound
 - [x] Define and validate orthogonal state identity (`operator` / `experiment` / `dev`) and observability (`full` / `scientific` / `minimal` / `compute`) axes
-- [ ] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
-  - Core-Emitter und `StepResult`-Dirty-IDs sind implementiert; Storage nutzt sie
-    für emittierte Zustände mit sicherem Scan-Fallback. Lern-/Homeostasis-
-    Direktmutationen müssen vor dem Aktivieren noch vollständig emittieren.
+- [x] Implement the dirty-state emitter in the neural core before enabling `capture_policy: dirty_tracking`
+  - Core-Emitter, Strukturmutationen, STDP/Reward-Gewichte und Homeostasis-
+    Direktmutationen emittieren Dirty-IDs; Storage nutzt sie mit sicherem Scan-
+    Fallback. Die Performance-Umstellung bleibt separat offen.
 - [x] First deterministic EnvironmentAdapter integrated end-to-end (`DeterministicTargetEnvironment`)
 - [x] Explicit actuator authorization enforced before adapter execution
 - [x] Per-adapter capability and rate limits enforced
@@ -193,9 +193,9 @@
 ## Priorität 2 — Code-Qualität
 
 - [x] Research-Registry Tests verstärken (Duplikate, Referenzen, Pflichtfelder)
-- [ ] Pylance/Pyright clean: alle Typfehler beseitigen
+- [x] Pylance/Pyright clean: alle Typfehler beseitigen
 - [ ] type:ignore-Kommentare auf Minimum reduzieren
-- [ ] Testabdeckung für neue Module erhöhen
+- [x] Testabdeckung für neue Module erhöhen
 - [x] Dokumentation zu den neuen API-Endpunkten schreiben (`docs/03-dashboard/API_REFERENCE.md`)
 
 ## Priorität 1c — Evidence-Freshness & Verification Architecture

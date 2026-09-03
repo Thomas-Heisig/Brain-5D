@@ -193,7 +193,7 @@ def test_composition_builds_deterministic_experience_subsystem() -> None:
         },
     }
 
-    engine = build_experience_subsystem(config, Network(), LearningSpy())
+    engine = build_experience_subsystem(config, Network(), cast("Any", LearningSpy()))
 
     assert engine is not None
     assert engine.sensor.sample(0).payload == {"cpu_percent": 25.0}
@@ -204,7 +204,7 @@ def test_composition_rejects_unknown_sensor_provider() -> None:
     config = {"experience": {"enabled": True, "sensor": {"provider": "fallback"}}}
 
     try:
-        build_experience_subsystem(config, Network(), LearningSpy())
+        build_experience_subsystem(config, Network(), cast("Any", LearningSpy()))
     except ValueError as error:
         assert str(error) == "unknown experience sensor provider"
     else:

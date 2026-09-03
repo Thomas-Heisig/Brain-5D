@@ -573,6 +573,7 @@ class LearningEngine:
             old_weight = event.synapse.weight
             event.synapse.weight = self._bounded_weight(old_weight + raw_delta)
             if event.synapse.weight != old_weight:
+                event.synapse.mark_dirty()
                 self._stdp_weight_updates += 1
 
         # Update spike timing
@@ -621,6 +622,7 @@ class LearningEngine:
             state.synapse.weight = candidate
 
             if candidate != old_weight:
+                state.synapse.mark_dirty()
                 self._reward_weight_updates += 1
                 changed = True
 

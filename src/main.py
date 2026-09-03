@@ -58,9 +58,9 @@ from src.core.spatial_index import (
 from src.diagnostics.propagation import PropagationAnalyzer
 from src.diagnostics.stimulus import StimulusEngine, StimulusResult
 from src.diagnostics.topology_health import TopologyHealth
+from src.experience import build_experience_subsystem
 from src.homeostasis import HomeostasisEngine
 from src.learning.learning_engine import LearningEngine
-from src.experience import build_experience_subsystem
 
 # ================================================================
 # Snapshot Writer

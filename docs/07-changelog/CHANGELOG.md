@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-09-03 — Complete dirty-state emission
+
+- Structural neuron/synapse changes now emit dirty IDs.
+- Direct Homeostasis, STDP and reward-weight mutations now invoke the existing
+  dirty callbacks.
+- Added regression coverage for topology dirty IDs and retained the full-scan
+  fallback until storage hook ordering and final-tick capture are optimized.
+
+## 2026-09-03 — Local quality closure
+
+- Pyright now reports zero errors, warnings or informations for the workspace.
+- Added regression coverage for the configured Experience composition and
+  tick-level topology dirty IDs.
+
 ## 2026-09-02 — Configured Experience composition
 
 - Added `build_experience_subsystem()` for the canonical runtime path.

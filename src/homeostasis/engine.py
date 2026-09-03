@@ -244,6 +244,7 @@ class HomeostasisEngine:
                 self.params.threshold_min,
                 self.params.threshold_max,
             )
+            neuron.mark_dirty()
 
             # Energy homeostasis
             if self.params.energy_enabled:
@@ -255,6 +256,7 @@ class HomeostasisEngine:
                     self.params.energy_min,
                     self.params.energy_max,
                 )
+                neuron.mark_dirty()
 
             rate_sum += rate
             threshold_sum += neuron.threshold_adaptation

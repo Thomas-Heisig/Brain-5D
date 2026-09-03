@@ -28,3 +28,21 @@ def test_remove_updates_degrees() -> None:
     net.connect(a, c, 1, 1)
     net.remove_neuron(a)
     assert net.synapse_count == 0 and net.in_degree[b] == 0 and net.in_degree[c] == 0
+
+
+def test_dirty_ids_are_emitted_once_per_tick_and_include_topology() -> None:
+    net = NeuralNetwork(base_config(), random.Random(1))  # type: ignore[arg-type]
+    a = net.add_neuron((1, 1, 1, 1, 1))
+    b = net.add_neuron((1, 1, 1, 1, 2))
+    net.connect(a, b, 0.5, 1)
+
+    first = net.step()
+    second = net.step()
+
+    assert a in first.dirty_neuron_ids and b in first.dirty_neuron_ids
+    assert (a, b) in first.dirty_synapse_ids
+    assert (a, b) in second.dirty_synapse_ids
+
+    assert net.disconnect(a, b)
+    third = net.step()
+    assert (a, b) in third.dirty_synapse_ids

@@ -81,7 +81,7 @@ Verified Observable Core: Raum, Neuronendynamik, Delay-Events, reale Spike-Histo
 - [x] `EXP-AIR-0001` pre-registered: benchmark labels are technically excluded from ResearchPacket, 21 defective plus 9 negative-control cases are fixed, and three model repetitions with exact model/sampling provenance are required
 - [x] Effective live-profile verification: `/api/config` publishes the absolute config path and SHA-256; `poc_alpha5_live.yaml` reaches the active runtime with STDP, Eligibility and Reward enabled
 - [x] Shared dashboard truth: Health, Overview, Footer, Settings and Release consume the enriched DashboardSnapshot; Network live endpoints consume the same OperatorBridge runtime and report unavailable E/I explicitly instead of hiding populations
-- [ ] Replace storage's current full $O(N+E)$ per-tick change scan with a causally complete dirty-state pipeline before treating interactive throughput as a performance result
+- [ ] Replace storage's current full $O(N+E)$ per-tick change scan with a causally complete dirty-state pipeline before treating interactive throughput as a performance result; dirty emitters are now complete, but the fallback remains active
 - [x] Evidence feedback updates question maturity (`in_progress` / `inconclusive` / `ready_for_answer`) while final answers remain human-reviewed
 
 > Development began after the Alpha.6 closure commit `8fac75d`. Alpha.6 evidence remains historical and is not evidence for this changed source tree.

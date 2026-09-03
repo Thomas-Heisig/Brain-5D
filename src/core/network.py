@@ -402,6 +402,7 @@ class NeuralNetwork:
         neuron.set_dirty_callback(mark_neuron_dirty)
         self.synapses[nid] = []
         self.in_degree[nid] = 0
+        self._dirty_neuron_ids.add(nid)
 
         return nid
 
@@ -446,6 +447,7 @@ class NeuralNetwork:
         self.in_degree.pop(neuron_id, None)
         self.input_cells.discard(neuron_id)
         self.output_cells.discard(neuron_id)
+        self._dirty_neuron_ids.add(neuron_id)
 
         return True
 
@@ -545,6 +547,7 @@ class NeuralNetwork:
         synapse.set_dirty_callback(mark_synapse_dirty)
         self._synapse_count += 1
         self.in_degree[post_id] = self.in_degree.get(post_id, 0) + 1
+        self._dirty_synapse_ids.add((pre_id, post_id))
 
         return True
 
@@ -571,6 +574,7 @@ class NeuralNetwork:
             self._synapse_count -= removed
             if post_id in self.in_degree:
                 self.in_degree[post_id] = max(0, self.in_degree[post_id] - removed)
+            self._dirty_synapse_ids.add((pre_id, post_id))
             return True
 
         return False
