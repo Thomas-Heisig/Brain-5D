@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import json
 import hashlib
+from time import perf_counter_ns
 from typing import Any, cast
 from urllib.request import Request, urlopen
 
 from src.language_organ.protocols import LanguageRequest, LanguageResponse
+from src.language_organ.protocols import LanguageRequest, LanguageResponse
+
+from .contracts import AIInferenceFailureEvent
 
 
 class OllamaBackend:
@@ -36,6 +40,12 @@ class OllamaBackend:
         self.seed = seed
         self.stop = list(stop or [])
         self.timeout = timeout
+        self._last_failure_event: AIInferenceFailureEvent | None = None
+
+    @property
+    def last_failure_event(self) -> AIInferenceFailureEvent | None:
+        """Return the most recent failed inference audit event, if any."""
+        return self._last_failure_event
 
     @property
     def name(self) -> str:
@@ -44,6 +54,11 @@ class OllamaBackend:
 
     def infer(self, request: LanguageRequest) -> LanguageResponse:
         """Process immutable language data and convert failures to responses."""
+        started_ns = perf_counter_ns()
+        request_digest = hashlib.sha256(
+            _request_prompt(request).encode("utf-8")
+        ).hexdigest()
+        self._last_failure_event = None
         try:
             text, _metadata = self._generate(_request_prompt(request))
             return LanguageResponse(
@@ -53,6 +68,14 @@ class OllamaBackend:
                 success=True,
             )
         except (OSError, ValueError) as exc:
+            self._last_failure_event = AIInferenceFailureEvent.create(
+                request_id=request.request_id,
+                backend=self.name,
+                request_digest=request_digest,
+                latency_ms=(perf_counter_ns() - started_ns) / 1_000_000,
+                retry_status="not_retried",
+                error=str(exc),
+            )
             return LanguageResponse(
                 request_id=request.request_id,
                 text="",

@@ -89,6 +89,8 @@ als unverified markiert.
 - Ollama liefert nun Request-/Response-Digests, Modell-ID, Completion-Grund und
 	verfügbare Tokenmetriken; echte Artefakt- und Engine-Provenienz folgt über einen
 	expliziten Provider-Manifestpfad.
+- Fehlgeschlagene Ollama-Anfragen werden mit Request-ID, Request-Digest, Latenz,
+	Backend und Retry-Status als eigene Audit-Ereignisse erfasst.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

@@ -95,3 +95,24 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert metadata["eval_count"] == 2
     assert len(metadata["request_digest"]) == 64
     assert len(metadata["response_digest"]) == 64
+
+
+def test_ollama_inference_failure_is_audited(monkeypatch: Any) -> None:
+    def _urlopen(*_args: Any, **_kwargs: Any) -> Any:
+        raise OSError("provider unavailable")
+
+    monkeypatch.setattr("src.research_assistant.ollama_backend.urlopen", _urlopen)
+    backend = OllamaBackend("qwen")
+    response = backend.infer(
+        LanguageRequest(request_id="req-failure", purpose="describe", text="state")
+    )
+
+    assert response.success is False
+    event = backend.last_failure_event
+    assert event is not None
+    assert event.request_id == "req-failure"
+    assert event.backend == "ollama"
+    assert event.retry_status == "not_retried"
+    assert event.error == "provider unavailable"
+    assert len(event.request_digest) == 64
+    assert event.latency_ms >= 0

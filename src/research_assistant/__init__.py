@@ -6,6 +6,7 @@ from .authority import AuthorityRule, authority_for, authority_matrix, validate_
 from .chat import ChatBackend, ResearchChat, chat_backend_from_text_backend
 from .contracts import (
     AIExposure,
+    AIInferenceFailureEvent,
     AIInteractionRecord,
     CausalTaint,
     Evidence,
@@ -24,6 +25,7 @@ __all__ = [
     "AIFirewallViolation",
     "AIResource",
     "AIExposure",
+        "AIInferenceFailureEvent",
     "AIInteractionRecord",
     "AnalysisBackend",
     "AIRRPipeline",

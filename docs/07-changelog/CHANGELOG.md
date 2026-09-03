@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — AI inference failure auditing
+
+- Fehlgeschlagene Ollama-Inferenzen erzeugen nun ein unveränderliches `AIInferenceFailureEvent`.
+- Das Ereignis enthält Request-ID, Backend, Request-Digest, Latenz, Fehlertext und den expliziten Status `not_retried`.
+- Automatische Retries bleiben deaktiviert und werden als eigener Treatment-Punkt weitergeführt.
+
 ## 2026-09-03 — Expanded scientific AI firewall
 
 - Die Firewall kennt nun die geschützten Ressourcen Netzwerk, Synapsen, Struktur, Rewards, Memory und Experimentzustand.

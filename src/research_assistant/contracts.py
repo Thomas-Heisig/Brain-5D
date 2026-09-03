@@ -179,6 +179,52 @@ class AIInteractionRecord:
         )
 
 
+@dataclass(frozen=True, slots=True)
+class AIInferenceFailureEvent:
+    """Digest-backed audit record for a failed AI inference attempt."""
+
+    event_id: str
+    request_id: str
+    backend: str
+    request_digest: str
+    latency_ms: float
+    retry_status: str
+    error: str
+    created_at: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        request_id: str,
+        backend: str,
+        request_digest: str,
+        latency_ms: float,
+        retry_status: str,
+        error: str,
+    ) -> AIInferenceFailureEvent:
+        if not request_id.strip() or not backend.strip():
+            raise ValueError("AI failure event identity must not be empty")
+        if latency_ms < 0:
+            raise ValueError("AI failure latency must not be negative")
+        created_at = datetime.now(timezone.utc).isoformat()
+        identity = "|".join((request_id, backend, request_digest, error, created_at))
+        event_id = f"AIFE-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:16]}"
+        return cls(
+            event_id=event_id,
+            request_id=request_id,
+            backend=backend,
+            request_digest=request_digest,
+            latency_ms=latency_ms,
+            retry_status=retry_status,
+            error=error,
+            created_at=created_at,
+        )
+
+
 def _digest(value: object) -> str:
     if isinstance(value, str):
         canonical = value

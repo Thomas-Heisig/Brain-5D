@@ -29,7 +29,7 @@
 - [ ] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
 - [ ] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
 - [ ] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
-- [ ] AI-Fehler als `AIInferenceFailureEvent` mit Tick, Request-ID, Backend, Latenz und Retry-Status auditieren
+- [x] AI-Fehler als `AIInferenceFailureEvent` mit Request-ID, Backend, Latenz und Retry-Status auditieren
 - [ ] Automatische Retries in wissenschaftlichen Runs deaktivieren oder als eigener reproduzierbarer Treatment-Faktor protokollieren
 - [ ] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump erzwingen
 
