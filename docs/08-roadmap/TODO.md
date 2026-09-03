@@ -11,7 +11,8 @@
 
 - [x] Erste Contract-Layer-Basis mit `AIExposure`, `CausalTaint` und digest-only `AIInteractionRecord` in Research Assistant und Chat-UI integrieren
 - [x] Gemeinsamen AI-Contract-Layer für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` definieren
-- [ ] Scientific AI Firewall als strukturelle Grenze implementieren: kein LLM-Schreibpfad zu Netzwerk, Synapsen, Struktur, Rewards, Memory oder Experimentzustand
+- [x] Scientific AI Firewall als read-only Chat-Grenze implementieren: mutierende und unbekannte Aktionen werden abgewiesen
+- [ ] Scientific AI Firewall auf Netzwerk, Synapsen, Struktur, Rewards, Memory und Experimentzustand ausweiten
 - [ ] Scientific-Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer dokumentieren und validieren
 - [ ] Contract-Test ergänzen, der direkte Core-Imports aus Research-Assistant- und Language-Organ-Backends verhindert
 - [ ] `AIExposure` in Experimentmanifesten und Laufmetadaten einführen (`none`, `observer_only`, `semantic_interface`, `advisor`, `bounded_controller`, `adaptive_controller`)

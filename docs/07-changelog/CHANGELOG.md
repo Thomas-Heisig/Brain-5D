@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Scientific AI read-only firewall
+
+- Der Research-Chat erzwingt vor jeder Interpretation eine explizite Read-only-Autorität.
+- Mutierende oder unbekannte AI-Aktionen werden durch `ScientificAIFirewall` abgewiesen.
+- Die Firewall-Ausweitung auf alle Laufzeit- und Speichergrenzen bleibt offen.
+
 ## 2026-09-03 — Scientific AI contract records
 
 - Immutable Verträge für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` ergänzt.

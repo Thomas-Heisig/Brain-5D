@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from .contracts import AIExposure, AIInteractionRecord, CausalTaint
+from .firewall import ScientificAIFirewall
 
 
 class _ResearchDocument(Protocol):
@@ -45,6 +46,7 @@ class ResearchChat:
     conversation_context: str = ""
     handoff_prompt: str = ""
     response_mode: str = "detailed"
+    firewall: ScientificAIFirewall = ScientificAIFirewall()
 
     def answer(self, message: str) -> tuple[str, dict[str, Any]]:
         question = message.strip()
@@ -52,6 +54,8 @@ class ResearchChat:
             raise ValueError("Chat message must not be empty.")
         if self.response_mode not in {"short", "detailed", "scientific"}:
             raise ValueError("Unsupported response mode.")
+        self.firewall.assert_read_only()
+        self.firewall.authorize("interpret")
         prompt = self._prompt(question)
         answer, metadata = self.backend(prompt)
         interaction = AIInteractionRecord.create(

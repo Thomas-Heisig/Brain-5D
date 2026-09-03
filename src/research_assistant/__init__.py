@@ -13,11 +13,14 @@ from .contracts import (
     Observation,
     Proposal,
 )
+from .firewall import AIAuthority, AIFirewallViolation, ScientificAIFirewall
 from .models import AIAnalysisRecord, ResearchPacket
 from .statistics import summarize, write_statistics
 
 __all__ = [
     "AIAnalysisRecord",
+    "AIAuthority",
+    "AIFirewallViolation",
     "AIExposure",
     "AIInteractionRecord",
     "AnalysisBackend",
@@ -38,4 +41,5 @@ __all__ = [
     "Interpretation",
     "Observation",
     "Proposal",
+    "ScientificAIFirewall",
 ]

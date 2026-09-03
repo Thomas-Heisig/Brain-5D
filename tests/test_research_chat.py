@@ -13,6 +13,11 @@ from src.research_assistant.contracts import (
     Observation,
     Proposal,
 )
+from src.research_assistant.firewall import (
+    AIAuthority,
+    AIFirewallViolation,
+    ScientificAIFirewall,
+)
 
 
 class Doc:
@@ -141,4 +146,13 @@ def test_scientific_contracts_are_digest_backed_and_non_executable() -> None:
     assert all(len(contract.payload_digest) == 64 for contract in contracts)
     assert all("payload" not in contract.to_dict() for contract in contracts)
     assert not any(callable(getattr(contracts[3], name, None)) for name in ("execute", "apply", "run"))
+
+
+def test_scientific_ai_firewall_rejects_mutating_capabilities() -> None:
+    firewall = ScientificAIFirewall()
+    firewall.authorize("interpret")
+    with pytest.raises(AIFirewallViolation):
+        firewall.authorize("execute")
+    with pytest.raises(AIFirewallViolation):
+        ScientificAIFirewall(AIAuthority.PROPOSAL_ONLY).assert_read_only()
 

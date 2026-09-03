@@ -69,6 +69,8 @@ als unverified markiert.
 	Response-Digest; Modell-, Engine-, Hardware- und Tokenizer-Provenienz folgen noch.
 - Die Contract-Basis unterscheidet nun Observation, Interpretation, Proposal,
 	Intervention und Evidence als digest-only Datentypen ohne Ausführungsautorität.
+- Der Research-Chat passiert eine explizite Read-only-Firewall; die vollständige
+	Durchsetzung an Netzwerk-, Speicher- und Laufzeitgrenzen ist der nächste Ausbau.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;
