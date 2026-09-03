@@ -2712,8 +2712,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         return {
             "status": "generated",
             "report_id": report.report_id,
-            "json": f"reports/{experiment_id}/{report.report_id}.json",
-            "markdown": f"reports/{experiment_id}/{report.report_id}.md",
+            "json": f"experiments/{experiment_id}/reports/{report.report_id}.json",
+            "markdown": f"experiments/{experiment_id}/reports/{report.report_id}.md",
             "human_review": "PENDING",
             "scientific_evidence": False,
         }

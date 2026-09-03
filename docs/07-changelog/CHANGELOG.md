@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-03 — Experiment-owned AI reports
+
+- AIRR and AIAR reports are now stored below the owning experiment directory.
+- Dashboard report paths explicitly include the experiment ID; legacy global
+  AIRR reports remain readable for compatibility.
+
 ## 2026-09-03 — PING v3 experiment run
 
 - Published the registered `EXP-PING-0001-v3` run with 12 DATA records,

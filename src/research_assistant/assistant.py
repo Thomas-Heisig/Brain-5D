@@ -118,7 +118,7 @@ class ResearchAssistant:
         record = AIAnalysisRecord.create(
             role=role, model=model, packet=packet, output=output, prompt=prompt
         )
-        directory = self._root / "analysis"
+        directory = self._root / "experiments" / experiment_id / "analysis"
         directory.mkdir(exist_ok=True)
         path = directory / f"{record.analysis_id}.json"
         if path.exists():
@@ -186,7 +186,7 @@ class ResearchAssistant:
         return [source for source in sources if source.get("source_id") in source_ids]
 
     def _previous_analyses(self, experiment_id: str) -> list[dict[str, Any]]:
-        directory = self._root / "analysis"
+        directory = self._root / "experiments" / experiment_id / "analysis"
         if not directory.is_dir():
             return []
         return [

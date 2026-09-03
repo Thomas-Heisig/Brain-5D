@@ -105,15 +105,16 @@ class AIRRPipeline:
         analyst = self._run_role("scientific_analyst", packet, backend)
         reviewer = self._run_role("critical_reviewer", packet, backend, analyst)
         writer = self._run_role("scientific_writer", packet, backend, analyst, reviewer)
+        experiment_directory = self._root / "experiments" / experiment_id
         report = _build_report(
             packet,
             analyst,
             reviewer,
             writer,
             supersedes,
-            self._root / "reports" / experiment_id,
+            experiment_directory / "reports",
         )
-        directory = self._root / "reports" / experiment_id
+        directory = experiment_directory / "reports"
         directory.mkdir(parents=True, exist_ok=True)
         json_path = directory / f"{report.report_id}.json"
         markdown_path = directory / f"{report.report_id}.md"
@@ -141,7 +142,7 @@ class AIRRPipeline:
         record = AIAnalysisRecord.create(
             role=role, model=model, packet=packet, output=output, prompt=prompt
         )
-        directory = self._root / "analysis"
+        directory = self._root / "experiments" / packet.experiment_id / "analysis"
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / f"{record.analysis_id}.json"
         if path.exists():
@@ -351,7 +352,7 @@ def write_human_review(
         raise ValueError("Invalid experiment id")
     if not report_id or "/" in report_id or "\\" in report_id:
         raise ValueError("Invalid report id")
-    directory = research_root / "reports" / experiment_id
+    directory = research_root / "experiments" / experiment_id / "reports"
     report_path = directory / f"{report_id}.json"
     if not report_path.is_file():
         raise ValueError("AIRR report does not exist")

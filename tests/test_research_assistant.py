@@ -63,7 +63,13 @@ def test_critical_reviewer_persists_interpretation_only_record(tmp_path: Path) -
     record = assistant.analyze("EXP-STDP-0001", "critical_reviewer", _reviewer_backend)
 
     saved = json.loads(
-        (tmp_path / "analysis" / f"{record.analysis_id}.json").read_text()
+        (
+            tmp_path
+            / "experiments"
+            / "EXP-STDP-0001"
+            / "analysis"
+            / f"{record.analysis_id}.json"
+        ).read_text()
     )
     assert saved["epistemic_status"] == {
         "evidence": False,

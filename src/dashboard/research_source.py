@@ -202,27 +202,38 @@ class ResearchSource:
         self, experiment_id: str | None = None
     ) -> list[dict[str, JSONValue]]:
         """List canonical AIRR JSON/Markdown pairs without exposing write access."""
-        directory = self._root / "reports"
-        if not directory.is_dir():
-            return []
         reports: list[dict[str, JSONValue]] = []
-        for entry in sorted(directory.glob("*/AIRR-*.json")):
-            if entry.name.endswith(".review.json"):
-                continue
-            current_experiment = entry.parent.name
-            if experiment_id is not None and current_experiment != experiment_id:
-                continue
-            reports.append(
-                {
-                    "report_id": entry.stem,
-                    "experiment_id": current_experiment,
-                    "json_path": str(entry.relative_to(self._root)).replace("\\", "/"),
-                    "markdown_path": str(
-                        entry.with_suffix(".md").relative_to(self._root)
-                    ).replace("\\", "/"),
-                    "size_bytes": entry.stat().st_size,
-                }
-            )
+        directories = [
+            directory
+            for directory in (self._root / "experiments").glob("*/reports")
+            if directory.is_dir()
+        ]
+        legacy_directory = self._root / "reports"
+        if legacy_directory.is_dir():
+            directories.append(legacy_directory)
+        for directory in directories:
+            experiment_id = directory.parent.name
+            for entry in sorted(directory.glob("AIRR-*.json")):
+                if entry.name.endswith(".review.json"):
+                    continue
+                current_experiment = experiment_id
+                reports.append(
+                    {
+                        "report_id": entry.stem,
+                        "experiment_id": current_experiment,
+                        "json_path": str(entry.relative_to(self._root)).replace(
+                            "\\", "/"
+                        ),
+                        "markdown_path": str(
+                            entry.with_suffix(".md").relative_to(self._root)
+                        ).replace("\\", "/"),
+                        "size_bytes": entry.stat().st_size,
+                    }
+                )
+        if experiment_id is not None:
+            reports = [
+                report for report in reports if report["experiment_id"] == experiment_id
+            ]
         return reports
 
     def experiment_manifest(self, experiment_id: str) -> dict[str, JSONValue] | None:

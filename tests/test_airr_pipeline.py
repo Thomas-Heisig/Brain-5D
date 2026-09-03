@@ -77,7 +77,7 @@ def _backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str | float]]:
 def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
     _fixture(tmp_path)
     report = AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)
-    report_dir = tmp_path / "reports" / "EXP-AIR-0001"
+    report_dir = tmp_path / "experiments" / "EXP-AIR-0001" / "reports"
     saved = json.loads((report_dir / f"{report.report_id}.json").read_text())
 
     assert report.report_id == "AIRR-2026-0001"

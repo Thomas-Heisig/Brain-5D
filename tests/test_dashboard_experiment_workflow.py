@@ -119,7 +119,7 @@ def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> No
 
     assert ai_result["status"] == "generated", ai_result
     report_id = str(ai_result["report_id"])
-    report_dir = tmp_path / "reports" / "EXP-SNN-REPORT-0001"
+    report_dir = tmp_path / "experiments" / "EXP-SNN-REPORT-0001" / "reports"
     saved = json.loads((report_dir / f"{report_id}.json").read_text(encoding="utf-8"))
     assert saved["status"] == "review_pending"
     assert saved["scientific_evidence"] is False
@@ -235,7 +235,7 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
 
     assert result["ai_report"]["status"] == "generated"
     report_id = str(result["ai_report"]["report_id"])
-    report_dir = tmp_path / "reports" / "EXP-PING-0001"
+    report_dir = tmp_path / "experiments" / "EXP-PING-0001" / "reports"
     assert (report_dir / f"{report_id}.json").is_file()
     assert (report_dir / f"{report_id}.md").is_file()
     manifest = json.loads(
@@ -244,5 +244,5 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
         )
     )
     assert manifest["artifacts"]["ai_report_json"] == (
-        f"reports/EXP-PING-0001/{report_id}.json"
+        f"experiments/EXP-PING-0001/reports/{report_id}.json"
     )
