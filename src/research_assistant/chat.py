@@ -37,6 +37,7 @@ class ResearchChat:
     docs: _DocsSource
     backend: ChatBackend
     max_context_chars: int = 24_000
+    system_context: str = ""
 
     def answer(self, message: str) -> tuple[str, dict[str, str | float]]:
         question = message.strip()
@@ -47,6 +48,8 @@ class ResearchChat:
 
     def _prompt(self, message: str) -> str:
         context = self._context()
+        if self.system_context:
+            context = f"SYSTEM READ-ONLY CONTEXT:\n{self.system_context}\n\n{context}"
         return (
             "You are the Brain-5D Research Self-Knowledge Assistant.\n"
             "You are an AI assistant, not a person and not a trained researcher.\n"

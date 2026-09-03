@@ -50,7 +50,10 @@ export function initResearchChat() {
   const close = document.getElementById('chat-close');
   const roomList = document.getElementById('chat-room-list');
   const newRoom = document.getElementById('chat-room-new');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom) return;
+  const settingsToggle = document.getElementById('chat-settings-toggle');
+  const settings = document.getElementById('chat-settings');
+  const settingsRefresh = document.getElementById('chat-settings-refresh');
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !settingsToggle || !settings || !settingsRefresh) return;
   const state = loadState();
 
   function activeRoom() {
@@ -102,6 +105,24 @@ export function initResearchChat() {
     render();
     input.focus();
   });
+  async function loadSettings() {
+    try {
+      const response = await fetch('/api/research/chat/settings');
+      const payload = await response.json();
+      document.getElementById('chat-setting-provider').textContent = payload.provider || '—';
+      document.getElementById('chat-setting-model').textContent = payload.model || '—';
+      document.getElementById('chat-setting-temperature').textContent = payload.temperature ?? '—';
+      document.getElementById('chat-setting-context').textContent = payload.max_context_chars ? `${payload.max_context_chars} Zeichen` : '—';
+      document.getElementById('chat-setting-authority').textContent = payload.read_only ? 'read-only' : 'unavailable';
+    } catch (_) {
+      document.getElementById('chat-setting-provider').textContent = 'unavailable';
+    }
+  }
+  settingsToggle.addEventListener('click', () => {
+    settings.hidden = !settings.hidden;
+    if (!settings.hidden) loadSettings();
+  });
+  settingsRefresh.addEventListener('click', loadSettings);
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();

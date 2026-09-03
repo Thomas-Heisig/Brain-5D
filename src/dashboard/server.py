@@ -166,6 +166,14 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_ai_backend: AnalysisBackend | None = None
         self.research_chat_backend: ChatBackend | None = None
         self.research_chat_context_chars = 24_000
+        self.research_chat_settings: dict[str, JSONValue] = {
+            "provider": "unconfigured",
+            "model": None,
+            "endpoint": None,
+            "temperature": 0.0,
+            "max_context_chars": 24_000,
+            "read_only": True,
+        }
         self.connection_manager = connection_manager or ConnectionManager()
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
@@ -420,6 +428,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/ai-reports":
                 self._serve_ai_reports(query)
+                return
+
+            if path == "/api/research/chat/settings":
+                self._send_json(self.dashboard_server.research_chat_settings)
                 return
 
             if path.startswith("/api/research/ai-reports/"):
@@ -1946,11 +1958,23 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
         if docs is None:
             raise BridgeNotConfiguredError("Documentation source is not configured.")
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        system_context = json.dumps(
+            {
+                "current_time": datetime.datetime.now().astimezone().isoformat(),
+                "runtime": snapshot.runtime,
+                "system": snapshot.system,
+                "health": snapshot.health.to_json(),
+            },
+            default=str,
+            sort_keys=True,
+        )
         answer, metadata = ResearchChat(
             cast(Any, source),
             cast(Any, docs),
             backend,
             max_context_chars=self.dashboard_server.research_chat_context_chars,
+            system_context=system_context,
         ).answer(message)
         self._send_json(
             {"answer": answer, "metadata": cast(JSONValue, metadata), "grounded": True}
@@ -3151,6 +3175,14 @@ def serve_dashboard(
         )
         ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature)
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
+        chat_settings = {
+            "provider": "ollama",
+            "model": chat_model,
+            "endpoint": chat_endpoint,
+            "temperature": temperature,
+            "max_context_chars": context_chars,
+            "read_only": True,
+        }
         print(f"🤖 Research chat backend: Ollama ({chat_model})")
 
     # ------------------------------------------------------------------------
@@ -3169,6 +3201,7 @@ def serve_dashboard(
     ) as server:
         server.research_chat_backend = chat_backend
         server.research_chat_context_chars = context_chars
+        server.research_chat_settings = cast(dict[str, JSONValue], chat_settings)
         if structural_bridge is not None:
             print("✅ Operator bridge attached to " "dashboard server")
         else:
