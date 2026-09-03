@@ -4,7 +4,7 @@
 
 - Fehlgeschlagene Ollama-Inferenzen erzeugen nun ein unveränderliches `AIInferenceFailureEvent`.
 - Das Ereignis enthält Request-ID, Backend, Request-Digest, Latenz, Fehlertext und den expliziten Status `not_retried`.
-- Automatische Retries bleiben deaktiviert und werden als eigener Treatment-Punkt weitergeführt.
+- Erfolgreiche und fehlgeschlagene Aufrufe weisen `retry_count: 0` und `retry_policy: disabled` explizit aus.
 
 ## 2026-09-03 — Expanded scientific AI firewall
 

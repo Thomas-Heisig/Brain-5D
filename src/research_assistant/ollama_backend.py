@@ -9,7 +9,6 @@ from typing import Any, cast
 from urllib.request import Request, urlopen
 
 from src.language_organ.protocols import LanguageRequest, LanguageResponse
-from src.language_organ.protocols import LanguageRequest, LanguageResponse
 
 from .contracts import AIInferenceFailureEvent
 
@@ -156,6 +155,8 @@ class OllamaBackend:
             "stop": list(self.stop),
             "max_tokens": self.max_tokens,
             "timeout_seconds": self.timeout,
+            "retry_count": 0,
+            "retry_policy": "disabled",
             "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "created_at": str(payload.get("created_at", "not_reported")),

@@ -91,6 +91,8 @@ als unverified markiert.
 	expliziten Provider-Manifestpfad.
 - Fehlgeschlagene Ollama-Anfragen werden mit Request-ID, Request-Digest, Latenz,
 	Backend und Retry-Status als eigene Audit-Ereignisse erfasst.
+- Automatische Retries sind im Adapter deaktiviert und werden als `retry_count: 0`
+	und `retry_policy: disabled` reproduzierbar ausgewiesen.
 - Unterchats dürfen den Verlauf ihrer Elternräume als Gesprächskontext erben; dieser
 	Kontext ist ausdrücklich keine DATA- oder EVIDENCE-Quelle.
 - Vision- und Tool-Fähigkeiten müssen opt-in, begrenzt und reproduzierbar bleiben;

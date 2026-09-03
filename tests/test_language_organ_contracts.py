@@ -89,6 +89,8 @@ def test_ollama_backend_provenance_contains_sampling_parameters(
     assert requests[0]["options"]["seed"] == 42
     assert requests[0]["options"]["stop"] == ["END"]
     assert metadata["timeout_seconds"] == 12
+    assert metadata["retry_count"] == 0
+    assert metadata["retry_policy"] == "disabled"
     assert metadata["model_id"] == "qwen"
     assert metadata["done_reason"] == "stop"
     assert metadata["prompt_eval_count"] == 4

@@ -30,7 +30,7 @@
 - [ ] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
 - [ ] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
 - [x] AI-Fehler als `AIInferenceFailureEvent` mit Request-ID, Backend, Latenz und Retry-Status auditieren
-- [ ] Automatische Retries in wissenschaftlichen Runs deaktivieren oder als eigener reproduzierbarer Treatment-Faktor protokollieren
+- [x] Automatische Retries in wissenschaftlichen Runs deaktivieren und als reproduzierbaren Treatment-Faktor protokollieren
 - [ ] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump erzwingen
 
 ### P0 — Shadow, Replay und kontrollierte Kausalität
