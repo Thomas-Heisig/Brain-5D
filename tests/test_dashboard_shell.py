@@ -31,7 +31,7 @@ def test_dashboard_shell_is_full_width_and_responsive() -> None:
 
 def test_dashboard_shell_has_dark_and_light_design_contracts() -> None:
     css = (STATIC / "dashboard-shell.css").read_text(encoding="utf-8")
-    assert ':root {' in css
+    assert ":root {" in css
     assert 'body[data-theme="light"]' in css
     assert "--shell-surface" in css
     assert "--shell-text" in css
