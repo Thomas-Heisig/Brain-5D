@@ -221,11 +221,7 @@ function layoutOrgans(connections) {
   byId("real-body-authorized-count").textContent = String(available.filter((item) => item.authorized).length);
   byId("real-body-unavailable-count").textContent = String(unavailable.length);
 
-  available.forEach((connection, index) => {
-    const angle = (-90 + index * (360 / Math.max(available.length, 1))) * Math.PI / 180;
-    const radius = available.length > 10 ? 45 : 40;
-    const x = 50 + Math.cos(angle) * radius;
-    const y = 50 + Math.sin(angle) * radius;
+  available.forEach((connection) => {
     const node = document.createElement("button");
     node.type = "button";
     node.className = "real-body-organ";
@@ -234,8 +230,6 @@ function layoutOrgans(connections) {
     node.dataset.active = String(Boolean(connection.active));
     node.dataset.authorized = String(Boolean(connection.authorized));
     node.dataset.connectionId = connection.connection_id;
-    node.style.setProperty("--x", `${x}%`);
-    node.style.setProperty("--y", `${y}%`);
     node.innerHTML = `<i aria-hidden="true">${iconFor(connection)}</i><span>${text(connection.name, connection.connection_id)}</span><small>${text(connection.relationship)}</small>`;
     node.title = connection.message || connection.connection_id;
     node.setAttribute("role", "listitem");

@@ -2536,13 +2536,13 @@ body .footer-segment {
   .anatomy-actuators { border: 0; border-bottom: 1px solid rgba(83, 218, 218, .22); }
   .anatomy-actuators { border-color: rgba(255, 164, 77, .22); }
   .anatomy-senses { grid-row: 1; }
-  .brain-database { grid-row: 2; min-height: 430px; }
+  .brain-database { grid-row: 2; min-height: clamp(280px, 42vh, 430px); }
   .anatomy-inner { grid-column: 1; grid-row: 3; }
   .anatomy-actuators { grid-row: 4; }
 
   .organism-core {
     grid-row: 1;
-    min-height: 430px;
+    min-height: clamp(280px, 42vh, 430px);
   }
 
   .organism-rail {
@@ -2571,7 +2571,7 @@ body .footer-segment {
 }
 
 @media (max-width: 680px) {
-  .runtime-clock-panel { padding: 12px; }
+  .runtime-clock-panel { padding: 8px; }
   .runtime-clock-panel > header { align-items: flex-start; }
   .runtime-clock-readout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .runtime-clock-readout span { min-width: 0; overflow-wrap: anywhere; }
@@ -2580,7 +2580,7 @@ body .footer-segment {
   #tab-embodiment .workspace-status-strip span { min-width: 0; }
 
   .organism-core,
-  .brain-database { min-height: 340px; }
+  .brain-database { min-height: 280px; }
 
   .anatomy-zone { padding: 13px 12px; }
   .sense-orbit { width: 130px; margin: 14px auto; }
