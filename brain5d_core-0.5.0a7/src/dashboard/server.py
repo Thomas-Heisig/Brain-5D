@@ -690,7 +690,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._update_research_chat_settings(body)
                 return
 
-            if path.startswith("/api/research/ai-reports/") and path.endswith("/review"):
+            if path.startswith("/api/research/ai-reports/") and path.endswith(
+                "/review"
+            ):
                 self._write_ai_review(path, body)
                 return
 
@@ -1936,7 +1938,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"reports": []})
             return
         experiment_id = query.get("experiment_id", [None])[0]
-        self._send_json({"reports": cast(list[JSONValue], source.ai_reports(experiment_id))})
+        self._send_json(
+            {"reports": cast(list[JSONValue], source.ai_reports(experiment_id))}
+        )
 
     def _serve_ai_report(self, path: str) -> None:
         source = self._require_research_source()
@@ -1979,7 +1983,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             raise InvalidRequestError("Unknown research chat action.")
         response_mode = body.get("response_mode", "detailed")
         if response_mode not in {"short", "detailed", "scientific"}:
-            raise InvalidRequestError("response_mode must be short, detailed, or scientific.")
+            raise InvalidRequestError(
+                "response_mode must be short, detailed, or scientific."
+            )
         message = body.get("message")
         if not isinstance(message, str) or not message.strip():
             raise InvalidRequestError("message is required.")
@@ -1990,21 +1996,38 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
             return
-        docs = self.dashboard_server.docs_source or create_docs_source(_DEFAULT_DOCS_ROOT)
+        docs = self.dashboard_server.docs_source or create_docs_source(
+            _DEFAULT_DOCS_ROOT
+        )
         web_context = ""
         if body.get("web_search") is True:
             if not self.dashboard_server.research_chat_web_search_enabled:
                 raise InvalidRequestError("Web search is disabled in chat settings.")
             web_context = self._search_web(message)
         conversation_context = body.get("conversation_context", "")
-        if not isinstance(conversation_context, str) or len(conversation_context) > 20_000:
-            raise InvalidRequestError("conversation_context must be text up to 20000 characters.")
+        if (
+            not isinstance(conversation_context, str)
+            or len(conversation_context) > 20_000
+        ):
+            raise InvalidRequestError(
+                "conversation_context must be text up to 20000 characters."
+            )
         images = body.get("images", [])
         if not isinstance(images, list):
-            raise InvalidRequestError("images must contain at most four small base64 strings.")
+            raise InvalidRequestError(
+                "images must contain at most four small base64 strings."
+            )
         raw_images = cast(list[object], images)
-        if any(not isinstance(image, str) or len(image) > 4_000_000 for image in raw_images) or len(raw_images) > 4:
-            raise InvalidRequestError("images must contain at most four small base64 strings.")
+        if (
+            any(
+                not isinstance(image, str) or len(image) > 4_000_000
+                for image in raw_images
+            )
+            or len(raw_images) > 4
+        ):
+            raise InvalidRequestError(
+                "images must contain at most four small base64 strings."
+            )
         images = cast(list[str], raw_images)
         if images and not self.dashboard_server.research_chat_vision_enabled:
             raise InvalidRequestError("Vision is disabled in chat settings.")
@@ -2021,12 +2044,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         )
         request_backend = backend
         ollama = self.dashboard_server.research_chat_ollama_backend
-        if ollama is not None and (images or self.dashboard_server.research_chat_tools_enabled):
+        if ollama is not None and (
+            images or self.dashboard_server.research_chat_tools_enabled
+        ):
             request_backend = chat_backend_from_text_backend(
                 lambda prompt: ollama.generate_text(
                     prompt,
                     images=images,
-                    tools=[] if not self.dashboard_server.research_chat_tools_enabled else [],
+                    tools=(
+                        []
+                        if not self.dashboard_server.research_chat_tools_enabled
+                        else []
+                    ),
                 )
             )
         answer, metadata = ResearchChat(
@@ -2051,12 +2080,16 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if "system_prompt" in body:
             prompt = body["system_prompt"]
             if not isinstance(prompt, str) or len(prompt) > 8_000:
-                raise InvalidRequestError("system_prompt must be text up to 8000 characters.")
+                raise InvalidRequestError(
+                    "system_prompt must be text up to 8000 characters."
+                )
             server.research_chat_system_prompt = prompt.strip()
         if "handoff_prompt" in body:
             prompt = body["handoff_prompt"]
             if not isinstance(prompt, str) or len(prompt) > 8_000:
-                raise InvalidRequestError("handoff_prompt must be text up to 8000 characters.")
+                raise InvalidRequestError(
+                    "handoff_prompt must be text up to 8000 characters."
+                )
             server.research_chat_handoff_prompt = prompt.strip()
         for key in ("vision_enabled", "tools_enabled"):
             if key in body:
@@ -2079,7 +2112,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         ):
             if key in body:
                 value = body[key]
-                if not isinstance(value, (int, float)) or not minimum <= float(value) <= maximum:
+                if (
+                    not isinstance(value, (int, float))
+                    or not minimum <= float(value) <= maximum
+                ):
                     raise InvalidRequestError(f"{key} is outside its allowed range.")
                 if server.research_chat_ollama_backend is not None:
                     setattr(server.research_chat_ollama_backend, key, float(value))
@@ -2094,54 +2130,108 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if "max_context_chars" in body:
             value = body["max_context_chars"]
             if not isinstance(value, int) or not 4_000 <= value <= 120_000:
-                raise InvalidRequestError("max_context_chars must be between 4000 and 120000.")
+                raise InvalidRequestError(
+                    "max_context_chars must be between 4000 and 120000."
+                )
             server.research_chat_context_chars = value
             server.research_chat_settings["max_context_chars"] = value
-        server.research_chat_settings["system_prompt"] = server.research_chat_system_prompt
-        server.research_chat_settings["handoff_prompt"] = server.research_chat_handoff_prompt
+        server.research_chat_settings["system_prompt"] = (
+            server.research_chat_system_prompt
+        )
+        server.research_chat_settings["handoff_prompt"] = (
+            server.research_chat_handoff_prompt
+        )
         self._send_json(server.research_chat_settings)
 
     def _research_chat_oauth_start(self) -> None:
         """Start Microsoft Entra PKCE authorization without exposing client secrets."""
         client_id = os.environ.get("BRAIN5D_MICROSOFT_CLIENT_ID", "").strip()
         tenant = os.environ.get("BRAIN5D_MICROSOFT_TENANT", "common").strip()
-        redirect_uri = os.environ.get("BRAIN5D_MICROSOFT_REDIRECT_URI", "http://127.0.0.1:8765/api/research/chat/oauth/callback").strip()
+        redirect_uri = os.environ.get(
+            "BRAIN5D_MICROSOFT_REDIRECT_URI",
+            "http://127.0.0.1:8765/api/research/chat/oauth/callback",
+        ).strip()
         if not client_id:
-            self._send_json({"ok": False, "error": "BRAIN5D_MICROSOFT_CLIENT_ID is not configured."}, HTTPStatus.NOT_IMPLEMENTED)
+            self._send_json(
+                {
+                    "ok": False,
+                    "error": "BRAIN5D_MICROSOFT_CLIENT_ID is not configured.",
+                },
+                HTTPStatus.NOT_IMPLEMENTED,
+            )
             return
         state = secrets.token_urlsafe(32)
         self.dashboard_server.research_chat_oauth_state = state
-        params = {"client_id": client_id, "response_type": "code", "redirect_uri": redirect_uri, "response_mode": "query", "scope": "openid profile offline_access", "state": state}
+        params = {
+            "client_id": client_id,
+            "response_type": "code",
+            "redirect_uri": redirect_uri,
+            "response_mode": "query",
+            "scope": "openid profile offline_access",
+            "state": state,
+        }
         authorize = f"https://login.microsoftonline.com/{quote(tenant)}/oauth2/v2.0/authorize?{urlencode(params)}"
-        self._send_json({"ok": True, "authorize_url": authorize, "provider": "microsoft-copilot"})
+        self._send_json(
+            {"ok": True, "authorize_url": authorize, "provider": "microsoft-copilot"}
+        )
 
     def _research_chat_oauth_callback(self, query: dict[str, list[str]]) -> None:
         """Validate the OAuth callback state; token exchange remains server-side configuration."""
         state = query.get("state", [""])[0]
         code = query.get("code", [""])[0]
-        if not state or not secrets.compare_digest(state, self.dashboard_server.research_chat_oauth_state or ""):
-            self._send_json({"ok": False, "error": "Invalid OAuth state."}, HTTPStatus.BAD_REQUEST)
+        if not state or not secrets.compare_digest(
+            state, self.dashboard_server.research_chat_oauth_state or ""
+        ):
+            self._send_json(
+                {"ok": False, "error": "Invalid OAuth state."}, HTTPStatus.BAD_REQUEST
+            )
             return
         if not code:
-            self._send_json({"ok": False, "error": query.get("error_description", ["Authorization was denied."])[0]}, HTTPStatus.BAD_REQUEST)
+            self._send_json(
+                {
+                    "ok": False,
+                    "error": query.get(
+                        "error_description", ["Authorization was denied."]
+                    )[0],
+                },
+                HTTPStatus.BAD_REQUEST,
+            )
             return
         self.dashboard_server.research_chat_oauth_token = code
         self.dashboard_server.research_chat_oauth_state = None
-        self._send_json({"ok": True, "message": "Authorization code received. Configure the server-side token exchange before enabling Copilot chat."}, HTTPStatus.OK)
+        self._send_json(
+            {
+                "ok": True,
+                "message": "Authorization code received. Configure the server-side token exchange before enabling Copilot chat.",
+            },
+            HTTPStatus.OK,
+        )
 
     def _research_chat_health(self) -> None:
         """Probe the configured Ollama provider without generating tokens."""
         backend = self.dashboard_server.research_chat_ollama_backend
         if backend is None:
-            self._send_json({"ok": False, "provider": "unconfigured", "error": "No provider configured."}, HTTPStatus.SERVICE_UNAVAILABLE)
+            self._send_json(
+                {
+                    "ok": False,
+                    "provider": "unconfigured",
+                    "error": "No provider configured.",
+                },
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
             return
         tags_endpoint = backend.endpoint.rsplit("/api/", 1)[0] + "/api/tags"
         try:
-            with urlopen(tags_endpoint, timeout=3) as response:  # nosec B310: configured local provider endpoint
+            with urlopen(
+                tags_endpoint, timeout=3
+            ) as response:  # nosec B310: configured local provider endpoint
                 ok = 200 <= response.status < 300
             self._send_json({"ok": ok, "provider": backend.name})
         except OSError as exc:
-            self._send_json({"ok": False, "provider": backend.name, "error": str(exc)}, HTTPStatus.SERVICE_UNAVAILABLE)
+            self._send_json(
+                {"ok": False, "provider": backend.name, "error": str(exc)},
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
 
     def _research_chat_providers(self) -> None:
         """Return configured provider choices and locally available Ollama models."""
@@ -2150,8 +2240,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if backend is not None:
             tags_endpoint = backend.endpoint.rsplit("/api/", 1)[0] + "/api/tags"
             try:
-                with urlopen(tags_endpoint, timeout=3) as response:  # nosec B310: configured local provider endpoint
-                    payload = cast(dict[str, Any], json.loads(response.read().decode("utf-8")))
+                with urlopen(
+                    tags_endpoint, timeout=3
+                ) as response:  # nosec B310: configured local provider endpoint
+                    payload = cast(
+                        dict[str, Any], json.loads(response.read().decode("utf-8"))
+                    )
                 raw_models = payload.get("models", [])
                 if isinstance(raw_models, list):
                     for raw_model in cast(list[object], raw_models):
@@ -2162,7 +2256,30 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                                 models.append(model_name)
             except (OSError, ValueError, TypeError):
                 pass
-        self._send_json(cast(dict[str, JSONValue], {"providers": [{"id": "ollama", "label": "Ollama", "available": backend is not None, "capabilities": ["chat", "vision", "tools"]}, {"id": "microsoft-copilot", "label": "Microsoft Copilot", "available": bool(self.dashboard_server.research_chat_oauth_token), "reason": "Requires Microsoft Entra OAuth and an approved Copilot API endpoint."}], "models": cast(list[JSONValue], models)}))
+        self._send_json(
+            cast(
+                dict[str, JSONValue],
+                {
+                    "providers": [
+                        {
+                            "id": "ollama",
+                            "label": "Ollama",
+                            "available": backend is not None,
+                            "capabilities": ["chat", "vision", "tools"],
+                        },
+                        {
+                            "id": "microsoft-copilot",
+                            "label": "Microsoft Copilot",
+                            "available": bool(
+                                self.dashboard_server.research_chat_oauth_token
+                            ),
+                            "reason": "Requires Microsoft Entra OAuth and an approved Copilot API endpoint.",
+                        },
+                    ],
+                    "models": cast(list[JSONValue], models),
+                },
+            )
+        )
 
     def _search_web(self, query: str) -> str:
         """Read a small set of structured public search results."""
@@ -2171,7 +2288,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             headers={"User-Agent": "Brain-5D Research Assistant/1.0"},
         )
         with urlopen(request, timeout=10) as response:  # nosec B310: fixed HTTPS host
-            payload = cast(dict[str, Any], json.loads(response.read(256_000).decode("utf-8")))
+            payload = cast(
+                dict[str, Any], json.loads(response.read(256_000).decode("utf-8"))
+            )
         results: list[str] = []
         abstract = payload.get("AbstractText")
         abstract_url = payload.get("AbstractURL")
@@ -2200,7 +2319,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         review.pop("report_id", None)
         review_path = write_human_review(source.root(), parts[0], parts[1], review)
         self._send_json(
-            {"ok": True, "path": str(review_path.relative_to(source.root())).replace("\\", "/")},
+            {
+                "ok": True,
+                "path": str(review_path.relative_to(source.root())).replace("\\", "/"),
+            },
             HTTPStatus.CREATED,
         )
 
@@ -3374,21 +3496,29 @@ def serve_dashboard(
     system_prompt = os.environ.get(
         "BRAIN5D_CHAT_SYSTEM_PROMPT", str(configured_chat.get("system_prompt", ""))
     ).strip()
-    top_p = float(os.environ.get("BRAIN5D_CHAT_TOP_P", str(configured_chat.get("top_p", 0.9))))
-    max_tokens = int(os.environ.get("BRAIN5D_CHAT_MAX_TOKENS", str(configured_chat.get("max_tokens", 2048))))
-    handoff_prompt = os.environ.get("BRAIN5D_CHAT_HANDOFF_PROMPT", str(configured_chat.get("handoff_prompt", ""))).strip()
-    vision_enabled = os.environ.get("BRAIN5D_CHAT_VISION", str(configured_chat.get("vision_enabled", False))).lower() in {"1", "true", "yes", "on"}
-    tools_enabled = os.environ.get("BRAIN5D_CHAT_TOOLS", str(configured_chat.get("tools_enabled", False))).lower() in {"1", "true", "yes", "on"}
+    top_p = float(
+        os.environ.get("BRAIN5D_CHAT_TOP_P", str(configured_chat.get("top_p", 0.9)))
+    )
+    max_tokens = int(
+        os.environ.get(
+            "BRAIN5D_CHAT_MAX_TOKENS", str(configured_chat.get("max_tokens", 2048))
+        )
+    )
+    handoff_prompt = os.environ.get(
+        "BRAIN5D_CHAT_HANDOFF_PROMPT", str(configured_chat.get("handoff_prompt", ""))
+    ).strip()
+    vision_enabled = os.environ.get(
+        "BRAIN5D_CHAT_VISION", str(configured_chat.get("vision_enabled", False))
+    ).lower() in {"1", "true", "yes", "on"}
+    tools_enabled = os.environ.get(
+        "BRAIN5D_CHAT_TOOLS", str(configured_chat.get("tools_enabled", False))
+    ).lower() in {"1", "true", "yes", "on"}
     ollama_backend: OllamaBackend | None = None
     resolved_chat_settings: dict[str, JSONValue] = {}
     if chat_model:
         chat_endpoint = os.environ.get(
             "BRAIN5D_CHAT_ENDPOINT",
-            str(
-                configured_chat.get(
-                    "endpoint", "http://127.0.0.1:11434/api/generate"
-                )
-            ),
+            str(configured_chat.get("endpoint", "http://127.0.0.1:11434/api/generate")),
         ).strip()
         temperature = float(
             os.environ.get(
@@ -3396,7 +3526,9 @@ def serve_dashboard(
                 str(configured_chat.get("temperature", 0.0)),
             )
         )
-        ollama_backend = OllamaBackend(chat_model, chat_endpoint, temperature, top_p, max_tokens)
+        ollama_backend = OllamaBackend(
+            chat_model, chat_endpoint, temperature, top_p, max_tokens
+        )
         chat_backend = chat_backend_from_text_backend(ollama_backend.generate_text)
         resolved_chat_settings = {
             "provider": "ollama",
@@ -3438,12 +3570,14 @@ def serve_dashboard(
         server.research_chat_ollama_backend = ollama_backend
         server.research_chat_settings = cast(
             dict[str, JSONValue],
-            {
-                **resolved_chat_settings,
-                "web_search_enabled": web_search_enabled,
-            }
-            if chat_model
-            else {**configured_chat, "web_search_enabled": web_search_enabled},
+            (
+                {
+                    **resolved_chat_settings,
+                    "web_search_enabled": web_search_enabled,
+                }
+                if chat_model
+                else {**configured_chat, "web_search_enabled": web_search_enabled}
+            ),
         )
         server.research_chat_web_search_enabled = web_search_enabled
         if structural_bridge is not None:

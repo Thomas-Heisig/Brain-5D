@@ -140,7 +140,9 @@ class ResearchSource:
             )
         return reports
 
-    def ai_reports(self, experiment_id: str | None = None) -> list[dict[str, JSONValue]]:
+    def ai_reports(
+        self, experiment_id: str | None = None
+    ) -> list[dict[str, JSONValue]]:
         """List canonical AIRR JSON/Markdown pairs without exposing write access."""
         directory = self._root / "reports"
         if not directory.is_dir():
@@ -157,7 +159,9 @@ class ResearchSource:
                     "report_id": entry.stem,
                     "experiment_id": current_experiment,
                     "json_path": str(entry.relative_to(self._root)).replace("\\", "/"),
-                    "markdown_path": str(entry.with_suffix(".md").relative_to(self._root)).replace("\\", "/"),
+                    "markdown_path": str(
+                        entry.with_suffix(".md").relative_to(self._root)
+                    ).replace("\\", "/"),
                     "size_bytes": entry.stat().st_size,
                 }
             )
