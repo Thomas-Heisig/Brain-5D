@@ -8,6 +8,15 @@ const TAB_META = {
   embodiment: { kicker: "EMBODY", title: "Embodiment", context: "Observed body, devices, interoception and feedback" },
 };
 
+function ensureStylesheet() {
+  if (document.querySelector('link[data-dashboard-shell="true"]')) return;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "/dashboard-shell.css";
+  link.dataset.dashboardShell = "true";
+  document.head.appendChild(link);
+}
+
 function currentTab() {
   const active = document.querySelector(".tab-content.active[id^='tab-']");
   return active?.id?.replace("tab-", "") || "overview";
@@ -115,6 +124,7 @@ function restorePreferences() {
 }
 
 function init() {
+  ensureStylesheet();
   restorePreferences();
   ensureWorkspaceHeaders();
   addUtilityBars();
@@ -123,6 +133,7 @@ function init() {
   fitVisibleCanvases(document.querySelector(".tab-content.active") || document);
 }
 
+ensureStylesheet();
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init, { once: true });
 } else {
