@@ -4,11 +4,17 @@
  * This module provides only the console log output.  It does not send
  * control commands; it only displays command results and system events.
  *
- * @version 1.0.0
+ * The real-body embodiment view is imported for its read-only dashboard
+ * side effect.  It consumes only published API data and never issues runtime
+ * control commands.
+ *
+ * @version 1.1.0
  * @license MIT
  */
 
 "use strict";
+
+import "./embodiment-self-model.js";
 
 function byId(id) {
   return document.getElementById(id);
