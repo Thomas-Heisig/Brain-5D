@@ -1,7 +1,7 @@
 # Brain-5D Development Roadmap
 
-**Canonical roadmap for current `main`**  
-**Baseline:** `brain5d-core 0.5.0a7`  
+**Canonical roadmap for current `main`**
+**Baseline:** `brain5d-core 0.5.0a7`
 **Updated:** 2026-09-04
 
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
