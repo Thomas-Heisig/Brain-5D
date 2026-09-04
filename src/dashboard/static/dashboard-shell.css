@@ -1,0 +1,541 @@
+/* Brain-5D unified dashboard shell
+ *
+ * This layer deliberately contains presentation only. It does not fabricate
+ * runtime state and it does not alter scientific or actuator contracts.
+ */
+
+:root {
+  --shell-bg: #071019;
+  --shell-surface: rgba(8, 25, 36, 0.78);
+  --shell-surface-strong: rgba(11, 31, 44, 0.96);
+  --shell-surface-soft: rgba(15, 39, 54, 0.62);
+  --shell-line: #1c4155;
+  --shell-line-strong: #2a6077;
+  --shell-text: #edf7fa;
+  --shell-muted: #8eb2c1;
+  --shell-accent: #40e0d0;
+  --shell-accent-warm: #ff9f1c;
+  --shell-good: #39d98a;
+  --shell-warn: #f5b642;
+  --shell-bad: #ff667d;
+  --shell-radius: 10px;
+  --shell-radius-small: 6px;
+  --shell-gap: clamp(10px, 1.15vw, 18px);
+  --shell-pad: clamp(14px, 1.6vw, 24px);
+  --shell-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+}
+
+body[data-theme="light"] {
+  --shell-bg: #f4f8fa;
+  --shell-surface: rgba(255, 255, 255, 0.94);
+  --shell-surface-strong: #ffffff;
+  --shell-surface-soft: #eef5f7;
+  --shell-line: #bfd1da;
+  --shell-line-strong: #8eb2c1;
+  --shell-text: #10242f;
+  --shell-muted: #4c6875;
+  --shell-accent: #087f78;
+  --shell-accent-warm: #b85f00;
+  --shell-good: #0b7a4b;
+  --shell-warn: #966000;
+  --shell-bad: #b4233a;
+  --shell-shadow: 0 10px 28px rgba(16, 36, 47, 0.09);
+}
+
+/* Full-width application frame ------------------------------------------------ */
+main {
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: clamp(12px, 1.3vw, 24px) clamp(12px, 1.8vw, 32px) 48px !important;
+}
+
+.tab-content,
+.tab-content.active,
+.dashboard-workspace {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.tab-content > *,
+.dashboard-workspace > * {
+  min-width: 0;
+}
+
+/* Global navigation ---------------------------------------------------------- */
+.tab-nav {
+  position: sticky;
+  top: var(--dashboard-topbar-height, 88px);
+  z-index: 4;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: calc(100% - clamp(24px, 3.6vw, 64px));
+  max-width: none;
+  margin: 12px auto 16px !important;
+  padding: 6px !important;
+  gap: 6px !important;
+  overflow: hidden;
+  border: 1px solid var(--shell-line) !important;
+  border-radius: var(--shell-radius) !important;
+  background: color-mix(in srgb, var(--shell-surface-strong) 90%, transparent) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.tab-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--shell-radius-small) !important;
+  color: var(--shell-muted) !important;
+  font-size: clamp(0.72rem, 0.75vw, 0.9rem) !important;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  border-color: var(--shell-line) !important;
+  background: var(--shell-surface-soft) !important;
+  color: var(--shell-text) !important;
+}
+
+.tab-btn.active {
+  border-color: color-mix(in srgb, var(--shell-accent) 50%, var(--shell-line)) !important;
+  background: color-mix(in srgb, var(--shell-accent) 13%, var(--shell-surface-strong)) !important;
+  color: var(--shell-text) !important;
+  box-shadow: inset 0 -2px 0 var(--shell-accent) !important;
+}
+
+/* Unified workspace header --------------------------------------------------- */
+.workspace-header,
+.overview-command-bar,
+.dashboard-generated-header {
+  width: 100%;
+  margin: 0 0 var(--shell-gap);
+  padding: clamp(14px, 1.4vw, 22px) clamp(16px, 1.8vw, 28px) !important;
+  border: 1px solid var(--shell-line) !important;
+  border-radius: var(--shell-radius) !important;
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--shell-accent) 8%, transparent), transparent 34%),
+    var(--shell-surface) !important;
+  box-shadow: var(--shell-shadow);
+}
+
+.workspace-header,
+.dashboard-generated-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--shell-gap);
+}
+
+.workspace-header h2,
+.dashboard-generated-header h2,
+.overview-command-bar h2 {
+  margin: 2px 0 0;
+  color: var(--shell-text);
+  font-size: clamp(1.25rem, 1.7vw, 1.9rem);
+}
+
+.workspace-header p,
+.dashboard-generated-header p,
+.overview-command-bar p {
+  max-width: 78ch;
+  margin: 5px 0 0;
+  color: var(--shell-muted);
+}
+
+.workspace-kicker,
+.dashboard-workspace-kicker,
+.overview-kicker,
+.overview-surface-title span {
+  color: var(--shell-accent) !important;
+  font-size: 0.69rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+}
+
+.workspace-status-strip {
+  display: grid !important;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(94px, 1fr);
+  gap: 1px !important;
+  overflow: hidden;
+  border: 1px solid var(--shell-line) !important;
+  border-radius: var(--shell-radius-small) !important;
+  background: var(--shell-line) !important;
+}
+
+.workspace-status-strip > span {
+  min-width: 0;
+  padding: 8px 11px !important;
+  background: var(--shell-surface-strong) !important;
+  color: var(--shell-muted) !important;
+  font-size: 0.68rem !important;
+  text-transform: uppercase;
+}
+
+.workspace-status-strip strong {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--shell-text) !important;
+  font-size: 0.78rem !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Shared tab utility row ----------------------------------------------------- */
+.dashboard-utility-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin: calc(var(--shell-gap) * -0.45) 0 var(--shell-gap);
+  padding: 7px 9px;
+  border: 1px solid var(--shell-line);
+  border-radius: var(--shell-radius-small);
+  background: var(--shell-surface-soft);
+}
+
+.dashboard-utility-context {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--shell-muted);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-utility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.dashboard-utility-button {
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid var(--shell-line);
+  border-radius: var(--shell-radius-small);
+  background: var(--shell-surface-strong);
+  color: var(--shell-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.dashboard-utility-button:hover,
+.dashboard-utility-button:focus-visible {
+  border-color: var(--shell-accent);
+  outline: none;
+}
+
+body[data-dashboard-density="compact"] .card,
+body[data-dashboard-density="compact"] .panel,
+body[data-dashboard-density="compact"] .overview-surface,
+body[data-dashboard-density="compact"] .control-card {
+  padding: 10px 12px !important;
+}
+
+/* Surfaces ------------------------------------------------------------------ */
+.card,
+.panel,
+.control-card,
+.overview-surface,
+.snapshot-info-card,
+.settings-section,
+.research-section,
+.gate-panel,
+.embodiment-card {
+  min-width: 0;
+  border-color: var(--shell-line) !important;
+  background: var(--shell-surface) !important;
+  color: var(--shell-text);
+  box-shadow: var(--shell-shadow);
+}
+
+.card:hover,
+.control-card:hover,
+.overview-surface:hover {
+  border-color: var(--shell-line-strong) !important;
+}
+
+/* Direct tab children should consume available width. */
+#tab-overview > *,
+#tab-network > *,
+#tab-control > *,
+#tab-research > *,
+#tab-gate > *,
+#tab-settings > *,
+#tab-embodiment > * {
+  width: 100%;
+  max-width: none;
+}
+
+/* Responsive layout primitives --------------------------------------------- */
+.grid,
+.detail-grid,
+.metrics-grid,
+.roadmap-grid,
+.overview-operations-grid,
+.overview-metrics-row,
+.population-grid,
+.io-flow-grid,
+.settings-grid,
+.research-grid,
+.gate-grid,
+.control-grid {
+  min-width: 0;
+}
+
+.metrics-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+}
+
+.detail-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)) !important;
+}
+
+.overview-operations-grid,
+.overview-metrics-row {
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)) !important;
+}
+
+.overview-status-rail {
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)) !important;
+}
+
+.overview-dynamics-grid {
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)) !important;
+}
+
+.workspace-view-tabs,
+.workspace-jumps {
+  display: flex !important;
+  width: 100%;
+  gap: 6px;
+  margin: 0 0 var(--shell-gap) !important;
+  padding: 6px !important;
+  overflow-x: auto;
+  border: 1px solid var(--shell-line) !important;
+  border-radius: var(--shell-radius-small) !important;
+  background: var(--shell-surface-soft) !important;
+  scrollbar-width: thin;
+}
+
+.workspace-view-tabs > *,
+.workspace-jumps > * {
+  flex: 1 0 auto;
+  min-width: max-content;
+}
+
+.workspace-view-tabs button,
+.workspace-jumps a {
+  min-height: 34px;
+  padding: 7px 12px !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--shell-muted) !important;
+  text-align: center;
+  text-decoration: none;
+}
+
+.workspace-view-tabs button:hover,
+.workspace-view-tabs button.active,
+.workspace-jumps a:hover {
+  border-color: var(--shell-line) !important;
+  background: var(--shell-surface-strong) !important;
+  color: var(--shell-text) !important;
+}
+
+/* Media/data surfaces -------------------------------------------------------- */
+canvas,
+svg,
+img,
+video {
+  max-width: 100%;
+}
+
+.card canvas,
+.panel canvas,
+.heatmap-wrap canvas,
+.heatmap-split canvas {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  height: auto;
+}
+
+.heatmap-split {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: var(--shell-gap) !important;
+  min-width: 0;
+}
+
+.table-wrap,
+pre,
+.code-block,
+.file-content {
+  max-width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+/* Light-mode contrast corrections ------------------------------------------ */
+body[data-theme="light"] .tab-nav,
+body[data-theme="light"] .workspace-header,
+body[data-theme="light"] .dashboard-generated-header,
+body[data-theme="light"] .dashboard-utility-bar,
+body[data-theme="light"] .workspace-view-tabs,
+body[data-theme="light"] .workspace-jumps,
+body[data-theme="light"] .card,
+body[data-theme="light"] .panel,
+body[data-theme="light"] .control-card,
+body[data-theme="light"] .overview-surface {
+  box-shadow: var(--shell-shadow) !important;
+}
+
+body[data-theme="light"] .bar {
+  background: #dce9ee !important;
+}
+
+body[data-theme="light"] .tab-btn.active {
+  color: #083f47 !important;
+}
+
+/* Breakpoints --------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .tab-nav {
+    display: flex !important;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: thin;
+  }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 128px;
+    scroll-snap-align: start;
+  }
+
+  .workspace-header,
+  .dashboard-generated-header,
+  .overview-command-bar {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .workspace-status-strip {
+    width: 100%;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  main {
+    padding-inline: 10px !important;
+  }
+
+  .topbar {
+    gap: 10px;
+    padding: 12px 10px !important;
+  }
+
+  .topbar-right {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .tab-nav {
+    width: calc(100% - 20px);
+    margin-top: 8px !important;
+  }
+
+  .heatmap-split {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-utility-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dashboard-utility-actions {
+    justify-content: stretch;
+  }
+
+  .dashboard-utility-button {
+    flex: 1 1 auto;
+  }
+
+  .overview-actions {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar h1 {
+    font-size: 1rem !important;
+  }
+
+  .header-context,
+  .eyebrow {
+    display: none;
+  }
+
+  .workspace-header,
+  .dashboard-generated-header,
+  .overview-command-bar {
+    padding: 12px !important;
+  }
+
+  .workspace-status-strip,
+  .overview-status-rail,
+  .overview-dynamics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .overview-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-content,
+  .tab-btn,
+  .card,
+  .dashboard-utility-button {
+    animation: none !important;
+    transition: none !important;
+  }
+}
