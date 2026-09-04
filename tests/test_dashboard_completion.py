@@ -246,11 +246,13 @@ def test_runtime_clock_can_be_configured_through_control_service() -> None:
     response = service.execute({"command": "configure", "target_hz": 100.0})
 
     assert response.ok
-    assert response.payload["runtime"]["target_hz"] == 100.0
+    runtime_payload = cast(dict[str, Any], response.payload["runtime"])
+    assert runtime_payload["target_hz"] == 100.0
 
     max_response = service.execute({"command": "configure", "target_hz": "MAX"})
     assert max_response.ok
-    assert max_response.payload["runtime"]["target_hz"] is None
+    max_runtime_payload = cast(dict[str, Any], max_response.payload["runtime"])
+    assert max_runtime_payload["target_hz"] is None
 
 
 def test_legacy_action_still_accepted_for_compat() -> None:

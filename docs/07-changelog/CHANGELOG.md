@@ -5,9 +5,10 @@
 - Lokale Vollsuite und Determinismus-Evidence fuer den aktuellen Tree erneuert:
   **682 passed, 5 skipped, 0 failed**; Scientific Gate ist `passed`.
 - Black lokal fuer `runtime.py` und `server.py` korrigiert.
-- GitHub Continuous Integration #307 ist fuer `c587f0b` in Black und Pyright
-  fehlgeschlagen; Release Readiness bleibt deshalb `not_ready`, bis CI nach den
-  verbleibenden Pyright-Befunden erneut gruen ist.
+- GitHub Continuous Integration #307 war fuer den damaligen Tree in Black und
+  Pyright fehlgeschlagen. Nach den lokalen Korrekturen steht ein erfolgreicher
+  CI-Lauf fuer den aktuellen Tree noch aus; Release Readiness bleibt bis dahin
+  `not_ready`.
 
 ## 2026-09-03 — Release-Gate Übersicht und Re-Check
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
@@ -18,7 +18,7 @@ from src.dashboard.server import DashboardRequestHandler
 from src.research_assistant.airr import write_artifact_review
 
 
-def _report_backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str]]:
+def _report_backend(_prompt: str) -> tuple[dict[str, Any], dict[str, str | float]]:
     return (
         {
             "assessment": "Post-hoc summary",
@@ -112,12 +112,14 @@ def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> No
     experiment_dir = tmp_path / "experiments" / "EXP-SNN-REPORT-0001"
     assert (experiment_dir / "manifest.json").is_file()
 
-    handler = DashboardRequestHandler.__new__(DashboardRequestHandler)
+    handler = cast(Any, DashboardRequestHandler.__new__(DashboardRequestHandler))
     handler.server = SimpleNamespace(
         research_source=ResearchSource(tmp_path),
         research_ai_backend=_report_backend,
     )
-    ai_result = handler._append_ai_report("EXP-SNN-REPORT-0001")
+    ai_result = handler._append_ai_report(  # pyright: ignore[reportPrivateUsage]
+        "EXP-SNN-REPORT-0001"
+    )
 
     assert ai_result["status"] == "generated", ai_result
     report_id = str(ai_result["report_id"])
@@ -275,8 +277,9 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
         seeds=(42,),
     )
 
-    assert result["ai_report"]["status"] == "generated"
-    report_id = str(result["ai_report"]["report_id"])
+    ai_report = cast(dict[str, Any], result["ai_report"])
+    assert ai_report["status"] == "generated"
+    report_id = str(ai_report["report_id"])
     report_dir = tmp_path / "experiments" / "EXP-PING-0001" / "reports"
     assert (report_dir / f"{report_id}.json").is_file()
     assert (report_dir / f"{report_id}.md").is_file()

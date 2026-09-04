@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -101,7 +102,7 @@ def test_model_self_confidence_is_separate_from_empirical_metrics() -> None:
         previous_analyses=[],
         provenance={},
     )
-    output = {
+    output: dict[str, Any] = {
         "assessment": "uncertain",
         "observations": [],
         "methodological_concerns": [],

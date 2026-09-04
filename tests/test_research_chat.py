@@ -109,9 +109,9 @@ def test_chat_context_labels_research_and_docs() -> None:
         Source({"docs.md": "docs"}),
         lambda prompt: (prompt, {}),
     )
-    prompt = chat._prompt(
+    prompt = chat._prompt(  # pyright: ignore[reportPrivateUsage]
         "Welche Quellen wurden verwendet?"
-    )  # pyright: ignore[reportPrivateUsage]
+    )
     assert "SCIENTIFIC RESEARCH SOURCES" in prompt
     assert "DOCUMENTATION SOURCES" in prompt
 
@@ -271,7 +271,7 @@ def test_shadow_proposals_have_deterministic_metrics() -> None:
     assert metrics.recall == 0.5
     assert metrics.false_positive_rate == 0.5
     assert metrics.prediction_accuracy == 0.5
-    assert metrics.brier_score == pytest.approx(0.375)
+    assert metrics.brier_score == getattr(pytest, "approx")(0.375)
     assert metrics.utility == 0.0
 
 

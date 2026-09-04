@@ -12,8 +12,8 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **682 passed, 5 skipped**. Black ist lokal bereinigt; Pyright
-meldet noch Befunde. GitHub CI #307 scheitert deshalb in Black und Pyright.
+Vollsuite meldet **682 passed, 5 skipped**. Black und Pyright melden lokal keine
+Fehler. Ein erfolgreicher GitHub-CI-Lauf fuer den aktuellen Tree steht noch aus.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale

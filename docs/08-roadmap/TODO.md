@@ -4,9 +4,9 @@
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-04: lokale Vollsuite `682 passed, 5 skipped`; Black ist
-> lokal bereinigt, Pyright meldet noch 24 Befunde. Scientific Gate ist gruen;
-> GitHub CI #307 scheitert in Black und Pyright, daher bleibt Release Readiness offen.
+> Verifiziert am 2026-09-04: lokale Vollsuite `682 passed, 5 skipped`; Black und
+> Pyright sind lokal ohne Befunde. Scientific Gate ist gruen; ein erfolgreicher
+> GitHub-CI-Lauf fuer den aktuellen Tree steht noch aus.
 
 ## ENGINEERING
 
