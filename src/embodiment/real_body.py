@@ -304,7 +304,9 @@ class ConnectionManager(BaseConnectionManager):
             return ()
         if result.returncode != 0:
             return ()
-        return tuple(line.strip() for line in result.stdout.splitlines() if line.strip())
+        return tuple(
+            line.strip() for line in result.stdout.splitlines() if line.strip()
+        )
 
     def to_json(self, *, refresh: bool = False) -> dict[str, JSONValue]:
         connections = self.snapshot(refresh=refresh)
@@ -316,7 +318,10 @@ class ConnectionManager(BaseConnectionManager):
         visible = tuple(
             item
             for item in connections
-            if not (item.connection_id in dynamic_families and item.connection_id in _GENERIC_DEVICE_FAMILIES)
+            if not (
+                item.connection_id in dynamic_families
+                and item.connection_id in _GENERIC_DEVICE_FAMILIES
+            )
         )
         sample_tick = int(time.monotonic() * 1000)
         return {
@@ -325,7 +330,7 @@ class ConnectionManager(BaseConnectionManager):
             "authorized": sum(item.authorized for item in visible),
             "active": sum(item.active for item in visible),
             "connections": [item.to_json() for item in visible],
-            "host": cast(dict[str, JSONValue], dict(host_system_readings(sample_tick))),
+            "host": dict(host_system_readings(sample_tick)),
             "body_contract": {
                 "observed_only": True,
                 "missing_values_are_unknown": True,
