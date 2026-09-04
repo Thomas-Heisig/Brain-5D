@@ -1,7 +1,6 @@
-# fmt: off
 from pathlib import Path
 
-
+# fmt: off
 STATIC = Path(__file__).parents[1] / "src" / "dashboard" / "static"
 TABS = (
     "overview",
