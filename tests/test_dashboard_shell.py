@@ -6,7 +6,15 @@ STATIC = Path(__file__).parents[1] / "src" / "dashboard" / "static"
 
 def test_dashboard_shell_covers_every_primary_tab() -> None:
     source = (STATIC / "dashboard-shell.js").read_text(encoding="utf-8")
-    for tab in ("overview", "network", "control", "research", "gate", "settings", "embodiment"):
+    for tab in (
+        "overview",
+        "network",
+        "control",
+        "research",
+        "gate",
+        "settings",
+        "embodiment",
+    ):
         assert f"{tab}:" in source
         assert f"tab-${{tabName}}" in source
 
