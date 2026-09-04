@@ -1,7 +1,7 @@
 # Brain-5D Current TODO
 
-**Canonical TODO for `main`**  
-**Baseline:** `brain5d-core 0.5.0a7`  
+**Canonical TODO for `main`**
+**Baseline:** `brain5d-core 0.5.0a7`
 **Updated:** 2026-09-04
 
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
