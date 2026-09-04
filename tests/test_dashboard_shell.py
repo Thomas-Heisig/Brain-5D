@@ -1,3 +1,4 @@
+# fmt: off
 from pathlib import Path
 
 
@@ -51,3 +52,4 @@ def test_dashboard_shell_is_loaded_from_main_dashboard_module_graph() -> None:
     app = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "dashboard-shell.js" in console_log
     assert "console-log.js" in app
+# fmt: on
