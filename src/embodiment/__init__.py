@@ -7,7 +7,6 @@ from .audit import ActionAuditRecord, ActionAuditTrail
 from .connections import (
     ConnectionDescriptor,
     ConnectionKind,
-    ConnectionManager,
     ConnectionStatus,
     RelationshipClass,
 )
@@ -35,6 +34,7 @@ from .models import (
     SensorFrame,
 )
 from .pipeline import EmbodimentPipeline
+from .real_body import ConnectionManager
 from .registry import EmbodimentRegistry
 from .sensor import SensorAdapter
 from .system_sensor import (
