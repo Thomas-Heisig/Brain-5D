@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from .models import JSONValue
 
@@ -38,19 +38,28 @@ def classify_ai_operation(manifest: dict[str, Any]) -> str:
         "UNKNOWN",
     }:
         return explicit
-    interactions = manifest.get("ai_interactions", [])
-    if not isinstance(interactions, list):
+    interactions_value: Any = manifest.get("ai_interactions", [])
+    interactions: list[Any]
+    if not isinstance(interactions_value, list):
         interactions = []
+    else:
+        interactions = cast(list[Any], interactions_value)
     if not interactions and isinstance(manifest.get("ai_model_provenance"), dict):
         interactions = [{"model_provenance": manifest["ai_model_provenance"]}]
-    if not isinstance(interactions, list) or not interactions:
+    if not interactions:
         return "NONE"
     network_mode = str(manifest.get("network_mode", "")).upper()
     for interaction in interactions:
         if not isinstance(interaction, dict):
             continue
-        provenance = interaction.get("model_provenance", {})
-        if isinstance(provenance, dict):
+        interaction_data = cast(dict[str, Any], interaction)
+        provenance_value: Any = interaction_data.get("model_provenance", {})
+        provenance = (
+            cast(dict[str, Any], provenance_value)
+            if isinstance(provenance_value, dict)
+            else {}
+        )
+        if provenance:
             provider = str(
                 provenance.get("provider", provenance.get("backend", ""))
             ).lower()
@@ -262,21 +271,24 @@ class ResearchSource:
                 data: Any = json.loads(manifest.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
                 continue
+            manifest_data = (
+                cast(dict[str, Any], data) if isinstance(data, dict) else None
+            )
             created_at = (
-                str(data.get("created_at") or data.get("timestamp"))
-                if isinstance(data, dict)
+                str(manifest_data.get("created_at") or manifest_data.get("timestamp"))
+                if manifest_data is not None
                 else None
             )
             experiments.append(
                 {
                     "ai_operation_mode": (
-                        classify_ai_operation(data)
-                        if isinstance(data, dict)
+                        classify_ai_operation(manifest_data)
+                        if manifest_data is not None
                         else "NONE"
                     ),
                     "research_operation_status": (
-                        classify_research_operation_status(data)
-                        if isinstance(data, dict)
+                        classify_research_operation_status(manifest_data)
+                        if manifest_data is not None
                         else "UNKNOWN"
                     ),
                     "id": entry.name,

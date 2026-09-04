@@ -1,12 +1,12 @@
 # Brain-5D — Consolidated TODO
 
-> Last updated: 2026-09-03
+> Last updated: 2026-09-04
 > Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
 > Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
 > reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-03: lokale Vollsuite `682 passed, 5 skipped`; Pyright,
-> Ruff und Mypy sind ohne Fehler.
-> Externe CI und wissenschaftliche EVID sind damit nicht vorweggenommen.
+> Verifiziert am 2026-09-04: lokale Vollsuite `682 passed, 5 skipped`; Black ist
+> lokal bereinigt, Pyright meldet noch 24 Befunde. Scientific Gate ist gruen;
+> GitHub CI #307 scheitert in Black und Pyright, daher bleibt Release Readiness offen.
 
 ## ENGINEERING
 
@@ -33,6 +33,10 @@
 - [x] Registrierten LearningEngine-Runner mit DATA, Manifest und Report anbinden
 - [x] Fail-closed-Bestätigung und UI-/Route-Regressionstests ergänzen
 - [ ] Wissenschaftliche EVID des Lernlaufs nach Clean Freeze und Review erzeugen
+- [x] Release-Gate als responsive Gesamtübersicht mit zentralem Re-Check und
+  sichtbaren Gate-A/B/C-Kriterien ausbauen; offene Evidenz bleibt fail-closed
+- [x] Gate-Kriterien anklickbar machen und Grund, Quelle sowie Evidence im
+  Detaildialog sichtbar ausgeben
 
 ### P0 — Post-Experiment AI Research Report
 
@@ -182,7 +186,8 @@
 
 ### Release-Freeze vor Alpha.8
 
-- [ ] Black-Formatierung und alle sechs aktuellen mypy-Befunde beheben
+- [x] Black-Formatierung der aktuellen Runtime-/Server-Aenderungen beheben
+- [ ] Pyright-Befunde in Source und Tests beheben; GitHub CI #307 erneut ausfuehren
 - [ ] Lokale Vollsuite und Scientific Integrity Gate nach den Qualitätsfixes erneut ausführen
 - [ ] Externe GitHub-CI vollständig grün abwarten; Hugging-Face-Sync erst danach freigeben
 - [ ] README-, Embodiment-Foundation-, Roadmap- und Changelog-Versionen auf denselben Commit-/Release-Stand synchronisieren

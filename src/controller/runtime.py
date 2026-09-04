@@ -33,7 +33,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from enum import Enum
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 # ============================================================================
 # Protocols (Minimal contracts for loose coupling)
@@ -67,8 +67,6 @@ class RuntimeNetworkLike(Protocol):
     def neuron_count(self) -> int: ...
 
     def step(self) -> StepResultLike: ...
-
-    def step_batch(self, count: int) -> tuple[StepResultLike, ...]: ...
 
 
 class HomeostasisLike(Protocol):
@@ -685,7 +683,10 @@ class RuntimeController:
             batch_step = getattr(self.network, "step_batch", None)
             if callable(batch_step):
                 network_started = time.perf_counter()
-                batched_results = tuple(batch_step(count))
+                typed_batch_step = cast(
+                    Callable[[int], tuple[StepResultLike, ...]], batch_step
+                )
+                batched_results = typed_batch_step(count)
                 network_elapsed_ms = (time.perf_counter() - network_started) * 1000.0
                 reported_core_ms = sum(
                     float(getattr(result, "core_step_ms", 0.0))
@@ -750,7 +751,9 @@ class RuntimeController:
     def _record_phase(self, phase: str, started: float) -> None:
         """Accumulate coarse runtime phase timings for the latest profile."""
         elapsed_ms = (time.perf_counter() - started) * 1000.0
-        self._phase_totals_ms[phase] = self._phase_totals_ms.get(phase, 0.0) + elapsed_ms
+        self._phase_totals_ms[phase] = (
+            self._phase_totals_ms.get(phase, 0.0) + elapsed_ms
+        )
 
     def _flush_snapshot_request(self) -> None:
         """Execute the snapshot callback if requested."""
@@ -785,11 +788,13 @@ class RuntimeController:
         target = self._target_hz
         ratio = tps / 1000.0 if target is None else tps / (1.0 / 0.001)
         saturation = (
-            0.0
-            if target is None or target == 0
-            else min(1.0, target / max(tps, 0.001))
+            0.0 if target is None or target == 0 else min(1.0, target / max(tps, 0.001))
         )
-        mode = "MAX" if target is None else ("COMPUTE LIMITED" if tps < target * 0.98 else "TARGETED")
+        mode = (
+            "MAX"
+            if target is None
+            else ("COMPUTE LIMITED" if tps < target * 0.98 else "TARGETED")
+        )
         max_possible_hz = 1000.0 / latency if latency > 0 else None
 
         return RuntimeTelemetry(

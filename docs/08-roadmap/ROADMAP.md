@@ -1,6 +1,6 @@
 # Brain-5D Roadmap
 
-> Last updated: 2026-09-03
+> Last updated: 2026-09-04
 > Operative task list: [TODO.md](TODO.md)
 > Research questions and experiment sequence: [RESEARCH_ROADMAP.md](RESEARCH_ROADMAP.md)
 
@@ -12,8 +12,8 @@ Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
 
 `main` ist lokal mit `origin/main` synchron. Die deterministische
 Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **682 passed, 5 skipped**. Pyright, Ruff und Mypy melden keine
-Fehler.
+Vollsuite meldet **682 passed, 5 skipped**. Black ist lokal bereinigt; Pyright
+meldet noch Befunde. GitHub CI #307 scheitert deshalb in Black und Pyright.
 Die zuletzt abgeschlossene
 Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
 `StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
@@ -27,6 +27,13 @@ Die Runtime besitzt nun eine getrennte Clock-Ebene: `dt = 1 ms` bleibt konstant,
 während `target_hz` beziehungsweise `MAX` nur die reale Tick-Abarbeitung steuern.
 Achieved Hz, Realtime-Verhältnis, Latenz, Jitter, Sättigung und ein grobes
 Phasenprofil werden im Operator- und Embodiment-Status veröffentlicht.
+
+Das Release-Gate zeigt nun Live-Profil sowie alle Kriterien aus Gate A, B und C
+gleichzeitig in einer responsiven Ansicht. Manuelle Re-Checks laufen über den
+zentralen State Store; `pending`, `stale` und `unknown` bleiben sichtbar und
+werden nicht als erfolgreich dargestellt. Jede Kriterienzeile öffnet per Klick
+oder Tastatur einen Detaildialog mit dem konkreten backendseitigen Grund,
+Quelle, Live-Status und vorhandener Evidence.
 
 ## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
 

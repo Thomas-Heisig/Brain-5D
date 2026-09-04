@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from src.research.network_probe import NetworkImpulseProbe
 from src.research.temporal import (
     TemporalComparator,
@@ -13,8 +15,8 @@ class ProbeRuntime:
         self.ticks = 0
         self.injected: dict[int, float] | None = None
 
-    def inject_current_batch(self, currents: dict[int, float]) -> None:
-        self.injected = currents
+    def inject_current_batch(self, currents: Mapping[int, float]) -> None:
+        self.injected = dict(currents)
 
     def step(self) -> dict[str, object]:
         self.ticks += 1
@@ -61,8 +63,10 @@ def test_temporal_memory_selects_reference_without_rewinding() -> None:
     memory.append(frame(10, 2.0))
     memory.append(frame(20, 3.0))
 
-    assert memory.reference(30, "fast").tick == 20
-    assert memory.reference(150, "slow").tick == 20
+    fast_reference = memory.reference(30, "fast")
+    slow_reference = memory.reference(150, "slow")
+    assert fast_reference is not None and fast_reference.tick == 20
+    assert slow_reference is not None and slow_reference.tick == 20
     assert memory.reference(9, "fast") is None
 
 

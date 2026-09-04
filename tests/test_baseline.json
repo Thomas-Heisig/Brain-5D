@@ -1,6 +1,6 @@
 {
-  "tested_commit": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
-  "tested_tree_digest": "90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9",
+  "tested_commit": "c587f0bb424258bbe556c341198c4515eb63d69b",
+  "tested_tree_digest": "d612303055598c1561f6bd184e32c8e1319ea12e62ef98b9ec186a53e701038c",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -11,7 +11,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-01T15:34:51+0200",
+  "timestamp": "2026-09-04T09:13:06+0200",
   "python": "3.13.14",
   "full_collection": {
     "status": "passed",
@@ -19,13 +19,13 @@
   },
   "full_suite": {
     "command": "python -m pytest tests/ -q",
-    "passed": 489,
+    "passed": 682,
     "failed": 0,
     "skipped": 5,
     "xfailed": 0,
     "xpassed": 0,
     "skipped_reasons": [
-      "1] tests\\test_b5d_storage.py:344: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
+      "1] tests\\test_b5d_storage.py:380: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
       "1] tests\\test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable",
       "3] tests\\test_single_listener_linux_parser.py:109: /proc filesystem not available on this platform"
     ]

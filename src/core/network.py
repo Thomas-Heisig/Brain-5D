@@ -947,7 +947,7 @@ class NeuralNetwork:
         This makes it suitable for an equivalence check against repeated
         single-tick execution without changing the deterministic state model.
         """
-        if isinstance(count, bool) or not isinstance(count, int):
+        if isinstance(count, bool):
             raise TypeError("count must be an integer")
         if count < 1:
             raise ValueError("count must be >= 1")

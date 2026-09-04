@@ -272,6 +272,8 @@ export class DashboardStateStore {
    * Force an immediate refresh.
    */
   refresh() {
+    // A manual refresh must also invalidate the slower supplemental cadence.
+    this.lastSupplementalFetch = 0;
     return this._fetch();
   }
 }

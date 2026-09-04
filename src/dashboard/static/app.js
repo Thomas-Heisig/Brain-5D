@@ -1830,28 +1830,44 @@ function initGateBoard() {
     if (refreshBtn) {
       refreshBtn.addEventListener('click', refreshGateStatus);
     }
+    const closeBtn = $('gate-detail-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeGateDetail);
+    const detailDialog = $('gate-detail-dialog');
+    if (detailDialog) {
+      detailDialog.addEventListener('click', (event) => {
+        if (event.target === detailDialog) closeGateDetail();
+      });
+    }
     gateLoaded = true;
   }
 }
 
 async function refreshGateStatus() {
-  // Fetch the dynamic Alpha.5 release-gate status from the backend.
-  // The browser NEVER infers scientific completion — the gate truth is
-  // built by the backend GateStatusBuilder from real evidence.
-  let data = null;
-  try {
-    const r = await fetch('/api/gate/status', { cache: 'no-store' });
-    if (r.ok) data = await r.json();
-  } catch {
-    data = null;
+  const refreshBtn = $('gate-refresh');
+  if (refreshBtn) {
+    refreshBtn.disabled = true;
+    refreshBtn.textContent = 'Checking...';
   }
 
+  try {
+    await dashboardStore.refresh();
+  } catch {
+    // The store publishes its error state; keep the last truthful gate data.
+  }
+
+  // The browser never infers scientific completion. GateStatusBuilder owns
+  // the evidence-based result and the store is the single request path.
+  const data = dashboardStore.state.gate;
   if (!data) {
     // Fallback: show unavailable message
     const overallEl = $('gate-overall');
     if (overallEl) {
       overallEl.textContent = 'unavailable';
       overallEl.className = 'gate-badge gate-failed';
+    }
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = 'Re-check';
     }
     return;
   }
@@ -1898,6 +1914,11 @@ async function refreshGateStatus() {
   }
   if (gateC?.items) {
     renderGateCriteria('gate-c-list', gateC.items);
+  }
+
+  if (refreshBtn) {
+    refreshBtn.disabled = false;
+    refreshBtn.textContent = 'Re-check';
   }
 }
 
@@ -1965,6 +1986,10 @@ function renderGateCriteria(containerId, items) {
 
     const row = document.createElement('div');
     row.className = `gate-row gate-row-${status}`;
+    row.tabIndex = 0;
+    row.setAttribute('role', 'button');
+    row.setAttribute('aria-label', `Details for ${item.label || item.id || 'criterion'}`);
+    row.title = 'Click to view the reason and evidence';
     row.innerHTML = `
       <span class="gate-col-criterion" title="${item.id || ''}">
         <strong>${item.label}</strong>
@@ -1974,8 +1999,59 @@ function renderGateCriteria(containerId, items) {
       <span class="gate-col-maturity maturity-${maturity}">${maturity.toUpperCase()}</span>
       <span class="gate-col-result gate-${status}">${icon} ${status}</span>
     `;
+    row.addEventListener('click', () => openGateDetail(item));
+    row.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openGateDetail(item);
+      }
+    });
     container.appendChild(row);
   }
+}
+
+function closeGateDetail() {
+  const dialog = $('gate-detail-dialog');
+  if (dialog?.open) dialog.close();
+}
+
+function openGateDetail(item) {
+  const dialog = $('gate-detail-dialog');
+  const title = $('gate-detail-title');
+  const body = $('gate-detail-body');
+  if (!dialog || !title || !body) return;
+
+  title.textContent = item.label || item.id || 'Criterion details';
+  body.replaceChildren();
+  const fields = [
+    ['Status', item.status || 'pending', `gate-detail-status gate-${item.status || 'pending'}`],
+    ['Maturity', (item.maturity || 'implemented').toUpperCase(), ''],
+    ['Live status', item.live_status || 'n/a', ''],
+    ['Source', item.source || 'not reported', ''],
+    ['Reason', item.message || 'No reason was reported by the backend.', 'gate-detail-reason'],
+  ];
+  for (const [label, value, className] of fields) {
+    const section = document.createElement('div');
+    section.className = 'gate-detail-field';
+    const heading = document.createElement('strong');
+    heading.textContent = label;
+    const content = document.createElement('p');
+    content.className = className;
+    content.textContent = String(value);
+    section.append(heading, content);
+    body.appendChild(section);
+  }
+  if (item.evidence && typeof item.evidence === 'object') {
+    const evidence = document.createElement('div');
+    evidence.className = 'gate-detail-field';
+    const heading = document.createElement('strong');
+    heading.textContent = 'Evidence';
+    const content = document.createElement('pre');
+    content.textContent = JSON.stringify(item.evidence, null, 2);
+    evidence.append(heading, content);
+    body.appendChild(evidence);
+  }
+  if (!dialog.open) dialog.showModal();
 }
 
 // ================================================================

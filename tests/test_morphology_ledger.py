@@ -4,6 +4,8 @@ import pytest
 
 from src.self_organization import MorphologyBudget, MorphologyLedger
 
+approx = getattr(pytest, "approx")
+
 
 def test_morphology_ledger_tracks_ages_and_first_birth_tick() -> None:
     ledger = MorphologyLedger(budget=MorphologyBudget(growth=3.0, pruning=2.0))
@@ -20,10 +22,10 @@ def test_morphology_ledger_keeps_growth_and_pruning_budgets_separate() -> None:
 
     assert ledger.can_afford_growth(neurons=1, synapses=2)
     ledger = ledger.consume_growth(neurons=1, synapses=2)
-    assert ledger.growth_spent == pytest.approx(1.5)
+    assert ledger.growth_spent == approx(1.5)
     assert ledger.can_afford_pruning(synapses=4)
     ledger = ledger.consume_pruning(synapses=4)
-    assert ledger.pruning_spent == pytest.approx(1.0)
+    assert ledger.pruning_spent == approx(1.0)
     assert not ledger.can_afford_pruning(synapses=1)
 
 

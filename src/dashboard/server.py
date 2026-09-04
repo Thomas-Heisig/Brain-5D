@@ -955,18 +955,21 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         metrics = embodiment.to_json()
         if self.dashboard_server.structural_bridge is not None:
             runtime = self.dashboard_server.structural_bridge.controller.telemetry
-            metrics["runtime_clock"] = cast(JSONValue, {
-                "target_hz": runtime.target_hz,
-                "achieved_hz": runtime.ticks_per_second,
-                "simulation_speed_ratio": runtime.simulation_speed_ratio,
-                "dt_ms": 1.0,
-                "tick_latency_ms": runtime.tick_latency_ms,
-                "jitter_ms": runtime.jitter_ms,
-                "compute_saturation": runtime.compute_saturation,
-                "runtime_mode": runtime.runtime_mode,
-                "tick_profile": runtime.tick_profile,
-                "max_possible_hz": runtime.max_possible_hz,
-            })
+            metrics["runtime_clock"] = cast(
+                JSONValue,
+                {
+                    "target_hz": runtime.target_hz,
+                    "achieved_hz": runtime.ticks_per_second,
+                    "simulation_speed_ratio": runtime.simulation_speed_ratio,
+                    "dt_ms": 1.0,
+                    "tick_latency_ms": runtime.tick_latency_ms,
+                    "jitter_ms": runtime.jitter_ms,
+                    "compute_saturation": runtime.compute_saturation,
+                    "runtime_mode": runtime.runtime_mode,
+                    "tick_profile": runtime.tick_profile,
+                    "max_possible_hz": runtime.max_possible_hz,
+                },
+            )
         environment_kind = embodiment.environment_kind
         configured = environment_kind != "unconfigured"
         return {

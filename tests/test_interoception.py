@@ -13,6 +13,8 @@ from src.embodiment import (
 )
 from src.embodiment.system_sensor import host_system_readings
 
+approx = getattr(pytest, "approx")
+
 
 def test_missing_signal_is_unknown_and_not_nominal() -> None:
     signals = normalize_vital_signals({"cpu_percent": 42.0})
@@ -61,8 +63,8 @@ def test_drives_are_bounded_and_derive_resource_and_continuity_pressure() -> Non
 
     drives = derive_drives(InteroceptionFrame(3, signals))
 
-    assert drives.drives["resource_pressure"] == pytest.approx(7 / 15)
-    assert drives.drives["thermal_threat"] == pytest.approx(10 / 15)
+    assert drives.drives["resource_pressure"] == approx(7 / 15)
+    assert drives.drives["thermal_threat"] == approx(10 / 15)
     assert drives.drives["continuity_risk"] == 1.0
     assert all(value is None or 0.0 <= value <= 1.0 for value in drives.drives.values())
 
@@ -116,11 +118,11 @@ def test_regulatory_state_is_bounded_and_fail_closed() -> None:
 
     state = derive_regulatory_state(frame)
 
-    assert state.values["thermal_margin"] == pytest.approx(2 / 3)
-    assert state.values["energy_reserve"] == pytest.approx(2 / 3)
+    assert state.values["thermal_margin"] == approx(2 / 3)
+    assert state.values["energy_reserve"] == approx(2 / 3)
     assert state.values["continuity_risk"] == 1.0
     assert state.values["sensory_integrity"] == 1.0
-    assert state.values["resource_pressure"] == pytest.approx(1 / 3)
+    assert state.values["resource_pressure"] == approx(1 / 3)
     assert state.values["task_progress"] == 1.0
     assert all(
         0.0 <= value <= 1.0 for value in state.values.values() if value is not None
@@ -153,7 +155,7 @@ def test_functional_state_is_bounded_and_not_emotion_interpretation() -> None:
 
     assert state.safety == 1.0
     assert state.valence == 1.0
-    assert state.activation == pytest.approx(0.4)
+    assert state.activation == approx(0.4)
     assert 0.0 <= state.uncertainty <= 1.0
 
 

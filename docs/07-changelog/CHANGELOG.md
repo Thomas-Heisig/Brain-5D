@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-04 — Gate-Evidence aktualisiert
+
+- Lokale Vollsuite und Determinismus-Evidence fuer den aktuellen Tree erneuert:
+  **682 passed, 5 skipped, 0 failed**; Scientific Gate ist `passed`.
+- Black lokal fuer `runtime.py` und `server.py` korrigiert.
+- GitHub Continuous Integration #307 ist fuer `c587f0b` in Black und Pyright
+  fehlgeschlagen; Release Readiness bleibt deshalb `not_ready`, bis CI nach den
+  verbleibenden Pyright-Befunden erneut gruen ist.
+
+## 2026-09-03 — Release-Gate Übersicht und Re-Check
+
+- Gate A, B und C werden vollständig in einer responsiven Release-Ansicht
+  dargestellt, einschließlich aller Kriterien und Live-Runtime-Werte.
+- Der manuelle Re-Check nutzt nun denselben zentralen State Store wie das
+  Polling und zeigt während der Prüfung einen deaktivierten Button.
+- Die Evidenzanzeige bleibt fail-closed: lokale Tests, externe CI und
+  wissenschaftliche Nachweise werden getrennt und mit ihrem echten Status gezeigt.
+- Jedes Gate-Kriterium öffnet per Klick oder Tastatur einen Detaildialog mit
+  dem konkreten Grund, der Quelle und vorhandener Evidence.
+
 ## 2026-09-03 — Runtime Clock und Tick-Profiling
 
 - Runtime Controller unterstützt `target_hz` und explizites `MAX`, ohne das

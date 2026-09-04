@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -275,7 +276,7 @@ def test_actuator_hub_rejects_unregistered_actuator_fail_closed() -> None:
     assert hub.last_receipt.effect_observed is False
 
 
-def test_action_audit_trail_reopens_from_durable_jsonl(tmp_path) -> None:
+def test_action_audit_trail_reopens_from_durable_jsonl(tmp_path: Path) -> None:
     journal_path = tmp_path / "actions.jsonl"
     trail = ActionAuditTrail(journal_path)
     command = ActionCommand("target-actuator", 1, "right")
@@ -293,7 +294,7 @@ def test_action_audit_trail_reopens_from_durable_jsonl(tmp_path) -> None:
     assert restored.verify()
 
 
-def test_action_audit_trail_rejects_tampered_journal(tmp_path) -> None:
+def test_action_audit_trail_rejects_tampered_journal(tmp_path: Path) -> None:
     journal_path = tmp_path / "actions.jsonl"
     trail = ActionAuditTrail(journal_path)
     trail.append(
