@@ -75,7 +75,9 @@ def _temperature_readings() -> tuple[float | None, dict[str, JSONValue]]:
             values.append(
                 {
                     "label": str(getattr(entry, "label", "") or ""),
-                    "current_c": float(current) if isinstance(current, (int, float)) else None,
+                    "current_c": (
+                        float(current) if isinstance(current, (int, float)) else None
+                    ),
                     "high_c": (
                         float(getattr(entry, "high"))
                         if isinstance(getattr(entry, "high", None), (int, float))
@@ -106,7 +108,9 @@ def _fan_readings() -> tuple[float | None, dict[str, JSONValue]]:
             values.append(
                 {
                     "label": str(getattr(entry, "label", "") or ""),
-                    "rpm": float(current) if isinstance(current, (int, float)) else None,
+                    "rpm": (
+                        float(current) if isinstance(current, (int, float)) else None
+                    ),
                 }
             )
         groups[str(group)] = values
@@ -157,7 +161,7 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     )
     battery_reader = getattr(psutil, "sensors_battery", None)
     battery = cast(Any, battery_reader() if callable(battery_reader) else None)
-    frequency = psutil.cpu_freq()
+    frequency = cast(Any, psutil.cpu_freq())
     per_cpu = psutil.cpu_percent(interval=None, percpu=True)
 
     try:
@@ -178,9 +182,15 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
         "cpu_percent_per_core": [float(value) for value in per_cpu],
         "cpu_logical_count": psutil.cpu_count(logical=True),
         "cpu_physical_count": psutil.cpu_count(logical=False),
-        "cpu_frequency_mhz": float(frequency.current) if frequency is not None else None,
-        "cpu_frequency_min_mhz": float(frequency.min) if frequency is not None else None,
-        "cpu_frequency_max_mhz": float(frequency.max) if frequency is not None else None,
+        "cpu_frequency_mhz": (
+            float(frequency.current) if frequency is not None else None
+        ),
+        "cpu_frequency_min_mhz": (
+            float(frequency.min) if frequency is not None else None
+        ),
+        "cpu_frequency_max_mhz": (
+            float(frequency.max) if frequency is not None else None
+        ),
         "load_average": load_average,
         "memory_percent": memory.percent,
         "memory_total_bytes": memory.total,
