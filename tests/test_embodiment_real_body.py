@@ -7,7 +7,6 @@ from pathlib import Path
 from src.embodiment import ConnectionManager
 from src.embodiment.system_sensor import host_system_readings
 
-
 STATIC = Path("src/dashboard/static")
 
 
@@ -25,6 +24,7 @@ def test_real_body_manager_adds_measured_host_snapshot() -> None:
     assert contract["observed_only"] is True
     assert contract["missing_values_are_unknown"] is True
     assert contract["availability_is_not_authorization"] is True
+    assert contract["per_device_identity"] is True
 
 
 def test_host_snapshot_exposes_real_pc_resources_without_fallback_values() -> None:
