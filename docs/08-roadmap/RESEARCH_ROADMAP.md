@@ -1,7 +1,7 @@
 # Brain-5D Research Roadmap
 
-**Canonical research roadmap**  
-**Updated:** 2026-09-04  
+**Canonical research roadmap**
+**Updated:** 2026-09-04
 **Engineering baseline:** `brain5d-core 0.5.0a7`
 
 ## Research objective
