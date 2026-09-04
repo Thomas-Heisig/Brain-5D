@@ -1,12 +1,9 @@
 # ============================================================================
-# Brain-5D — GitHub → Hugging Face Sync Workflow
+# Brain-5D — optional GitHub -> Hugging Face mirror
 # ============================================================================
-# Dieses Workflow synchronisiert den main-Branch automatisch von GitHub
-# zum Hugging Face Repository nach jedem Push.
-#
-# Voraussetzungen:
-#   1. HF_TOKEN als Secret in GitHub Settings → Secrets and variables → Actions
-#   2. Hugging Face Repository existiert bereits
+# The GitHub repository is canonical. The mirror runs after pushes to main only
+# when both HF_USERNAME and HF_TOKEN are configured as Actions secrets.
+# Missing mirror credentials are not a failure of Brain-5D itself.
 # ============================================================================
 
 name: Sync to Hugging Face
@@ -14,7 +11,7 @@ name: Sync to Hugging Face
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # Manueller Trigger
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -26,7 +23,7 @@ jobs:
           fetch-depth: 0
           lfs: false
 
-      - name: Push to Hugging Face
+      - name: Push to Hugging Face when configured
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
@@ -34,32 +31,21 @@ jobs:
         run: |
           set -e
 
-          # HF_USERNAME is mandatory; fail explicitly rather than falling back.
-          if [ -z "${HF_USERNAME}" ]; then
-            echo "::error::HF_USERNAME secret is required for Hugging Face sync."
-            exit 1
+          if [ -z "${HF_USERNAME}" ] || [ -z "${HF_TOKEN}" ]; then
+            echo "::notice::Hugging Face mirror is not configured; skipping optional sync."
+            exit 0
           fi
 
-          if [ -z "${HF_TOKEN}" ]; then
-            echo "::error::HF_TOKEN secret is required for Hugging Face sync."
-            exit 1
-          fi
-
-          # Git-Konfiguration
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-          # Hugging Face Remote hinzufügen
           git remote add huggingface \
             "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
 
-          # Haupt-README durch HF-README ersetzen (für Hugging Face)
-          # und dann pushen
           if [ -f HF_README.md ]; then
             cp HF_README.md README.md
             git add README.md
             git commit --allow-empty -m "Sync: Update HF README"
           fi
 
-          # Push zum Hugging Face Repository
           git push huggingface main --force
