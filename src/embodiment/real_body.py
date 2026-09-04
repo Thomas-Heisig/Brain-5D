@@ -19,9 +19,11 @@ from typing import cast
 from .connections import (
     ConnectionDescriptor,
     ConnectionKind,
-    ConnectionManager as BaseConnectionManager,
     ConnectionStatus,
     RelationshipClass,
+)
+from .connections import (
+    ConnectionManager as BaseConnectionManager,
 )
 from .models import JSONValue
 from .system_sensor import host_system_readings
