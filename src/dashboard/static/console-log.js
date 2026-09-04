@@ -34,41 +34,6 @@ function formatTime(date = new Date()) {
 }
 
 /**
- * Brain-5D Dashboard — Console Log (pure output component)
- *
- * This module provides only the console log output.  It does not send
- * control commands; it only displays command results and system events.
- *
- * The dashboard shell, operator experience and real-body embodiment view are
- * imported for their presentation-only/read-only side effects. They consume
- * published state and never issue runtime control commands.
- *
- * @version 1.3.0
- * @license MIT
- */
-
-"use strict";
-
-import "./dashboard-shell.js";
-import "./dashboard-experience.js";
-import "./embodiment-self-model.js";
-
-function byId(id) {
-  return document.getElementById(id);
-}
-
-function escapeHtml(str) {
-  if (!str) return "";
-  const div = document.createElement("div");
-  div.textContent = String(str);
-  return div.innerHTML;
-}
-
-function formatTime(date = new Date()) {
-  return date.toLocaleTimeString("en-US", { hour12: false });
-}
-
-/**
  * Console log output controller.
  */
 export class ConsoleLog {
