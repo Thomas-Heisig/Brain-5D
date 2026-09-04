@@ -4,17 +4,18 @@
  * This module provides only the console log output.  It does not send
  * control commands; it only displays command results and system events.
  *
- * The dashboard shell and real-body embodiment view are imported for their
- * presentation-only/read-only side effects. They consume published state and
- * never issue runtime control commands.
+ * The dashboard shell, operator experience and real-body embodiment view are
+ * imported for their presentation-only/read-only side effects. They consume
+ * published state and never issue runtime control commands.
  *
- * @version 1.2.0
+ * @version 1.3.0
  * @license MIT
  */
 
 "use strict";
 
 import "./dashboard-shell.js";
+import "./dashboard-experience.js";
 import "./embodiment-self-model.js";
 
 function byId(id) {
