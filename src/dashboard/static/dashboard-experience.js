@@ -34,9 +34,29 @@ function activeWorkspaceName() {
   return section?.id?.replace("tab-", "") || "overview";
 }
 
+function repairWorkspaceActivation(button) {
+  const name = button?.dataset.tab;
+  if (!name) return;
+  requestAnimationFrame(() => {
+    const active = document.querySelector(".tab-content.active[id^='tab-']");
+    if (active?.id === `tab-${name}`) return;
+    document.querySelectorAll(".tab-btn[data-tab]").forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+    document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => {
+      const selected = tab.id === `tab-${name}`;
+      tab.classList.toggle("active", selected);
+      tab.hidden = !selected;
+    });
+    document.body.dataset.currentTab = name;
+  });
+}
+
 function activateWorkspace(name) {
   const button = document.querySelector(`.tab-btn[data-tab="${name}"]`);
-  if (button) button.click();
+  if (!button) return;
+  button.click();
+  repairWorkspaceActivation(button);
 }
 
 function safeText(selector, fallback = "unknown") {
@@ -304,7 +324,10 @@ function bindActions() {
     if (/^[1-7]$/.test(event.key)) activateWorkspace(Object.keys(WORKSPACES)[Number(event.key) - 1]);
   });
 
-  document.querySelectorAll(".tab-btn[data-tab]").forEach((button) => button.addEventListener("click", () => requestAnimationFrame(syncChrome)));
+  document.querySelectorAll(".tab-btn[data-tab]").forEach((button) => button.addEventListener("click", () => {
+    repairWorkspaceActivation(button);
+    requestAnimationFrame(syncChrome);
+  }));
 }
 
 function observeRenderedState() {

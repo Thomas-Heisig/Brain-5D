@@ -21,6 +21,11 @@ function text(value, fallback = "—") {
   return value === null || value === undefined || value === "" ? fallback : String(value);
 }
 
+function setText(id, value) {
+  const element = byId(id);
+  if (element) element.textContent = value;
+}
+
 function number(value, digits = 0) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
   return Number(value).toLocaleString(undefined, {
@@ -144,14 +149,14 @@ function telemetryItems(host) {
 }
 
 function renderHost(host = {}) {
-  byId("real-body-hostname").textContent = text(host.hostname, "host unknown");
-  byId("real-body-cpu").textContent = host.cpu_percent == null ? "—" : `${number(host.cpu_percent, 1)}%`;
-  byId("real-body-memory").textContent = host.memory_percent == null ? "—" : `${number(host.memory_percent, 1)}%`;
-  byId("real-body-temperature").textContent = host.temperature_c == null ? "UNKNOWN" : `${number(host.temperature_c, 1)}°C`;
-  byId("real-body-disk").textContent = bytes(host.disk_free_bytes);
-  byId("real-body-network").textContent = host.network_up === true ? "UP" : host.network_up === false ? "DOWN" : "UNKNOWN";
-  byId("real-body-processes").textContent = number(host.process_count, 0);
-  byId("real-body-sample").textContent = host.unix_time ? new Date(Number(host.unix_time) * 1000).toLocaleTimeString() : "—";
+  setText("real-body-hostname", text(host.hostname, "host unknown"));
+  setText("real-body-cpu", host.cpu_percent == null ? "—" : `${number(host.cpu_percent, 1)}%`);
+  setText("real-body-memory", host.memory_percent == null ? "—" : `${number(host.memory_percent, 1)}%`);
+  setText("real-body-temperature", host.temperature_c == null ? "UNKNOWN" : `${number(host.temperature_c, 1)}°C`);
+  setText("real-body-disk", bytes(host.disk_free_bytes));
+  setText("real-body-network", host.network_up === true ? "UP" : host.network_up === false ? "DOWN" : "UNKNOWN");
+  setText("real-body-processes", number(host.process_count, 0));
+  setText("real-body-sample", host.unix_time ? new Date(Number(host.unix_time) * 1000).toLocaleTimeString() : "—");
 
   const grid = byId("real-body-telemetry-grid");
   if (!grid) return;
@@ -169,8 +174,9 @@ function renderHost(host = {}) {
 
 function renderStatus(status = {}) {
   const raw = status.status || status.runtime?.state || "idle";
-  byId("real-body-runtime-state").textContent = String(raw).toUpperCase();
-  byId("real-body-core").dataset.state = String(raw).toLowerCase();
+  setText("real-body-runtime-state", String(raw).toUpperCase());
+  const core = byId("real-body-core");
+  if (core) core.dataset.state = String(raw).toLowerCase();
 }
 
 function detailRows(connection) {
@@ -193,9 +199,10 @@ function detailRows(connection) {
 
 function showDetail(connection) {
   selectedConnectionId = connection.connection_id;
-  byId("real-body-detail-name").textContent = connection.name || connection.connection_id;
-  byId("real-body-detail-message").textContent = connection.message || "Kein zusätzlicher Status geliefert.";
+  setText("real-body-detail-name", connection.name || connection.connection_id);
+  setText("real-body-detail-message", connection.message || "Kein zusätzlicher Status geliefert.");
   const list = byId("real-body-detail-fields");
+  if (!list) return;
   list.replaceChildren();
   for (const [label, value] of detailRows(connection)) {
     const dt = document.createElement("dt");
@@ -216,13 +223,14 @@ function layoutOrgans(connections) {
 
   const available = connections.filter((item) => item.available);
   const unavailable = connections.filter((item) => !item.available);
-  byId("real-body-organ-count").textContent = String(available.length);
-  byId("real-body-active-count").textContent = String(available.filter((item) => item.active).length);
-  byId("real-body-authorized-count").textContent = String(available.filter((item) => item.authorized).length);
-  byId("real-body-unavailable-count").textContent = String(unavailable.length);
+  setText("real-body-organ-count", String(available.length));
+  setText("real-body-active-count", String(available.filter((item) => item.active).length));
+  setText("real-body-authorized-count", String(available.filter((item) => item.authorized).length));
+  setText("real-body-unavailable-count", String(unavailable.length));
 
   available.forEach((connection) => {
     const node = document.createElement("button");
+  if (!unavailableRoot) return;
     node.type = "button";
     node.className = "real-body-organ";
     node.dataset.kind = connection.kind || "resource";
@@ -291,20 +299,22 @@ async function readJson(url) {
 }
 
 async function refresh() {
-  if (!byId("real-body-shell")) return;
+  const shell = byId("real-body-shell");
+  if (!shell) return;
   const results = await Promise.allSettled([
     readJson("/api/embodiment/connections"),
     readJson("/api/status"),
   ]);
+  if (!shell.isConnected) return;
   if (results[0].status === "fulfilled") renderConnections(results[0].value);
   if (results[1].status === "fulfilled") {
     lastStatus = results[1].value;
     renderStatus(lastStatus);
   }
   if (results.some((result) => result.status === "rejected")) {
-    byId("real-body-shell").dataset.telemetry = "degraded";
+    shell.dataset.telemetry = "degraded";
   } else {
-    byId("real-body-shell").dataset.telemetry = "live";
+    shell.dataset.telemetry = "live";
   }
 }
 
