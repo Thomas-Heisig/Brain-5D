@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   format:
-    if: github.event.head_commit.message == 'ci: add temporary embodiment format helper'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -28,7 +27,7 @@ jobs:
           cp src/embodiment/system_sensor.py formatted/src/embodiment/
           cp src/embodiment/real_body.py formatted/src/embodiment/
           cp tests/test_embodiment_real_body.py formatted/tests/
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         with:
           name: embodiment-black-formatted
           path: formatted
