@@ -1,166 +1,202 @@
-# Brain-5D Roadmap
+# Brain-5D Development Roadmap
 
-> Last updated: 2026-09-04
-> Operative task list: [TODO.md](TODO.md)
-> Research questions and experiment sequence: [RESEARCH_ROADMAP.md](RESEARCH_ROADMAP.md)
+**Canonical roadmap for current `main`**  
+**Baseline:** `brain5d-core 0.5.0a7`  
+**Updated:** 2026-09-04
 
-Die Infrastruktur ist weitgehend gebaut. Die Roadmap trennt deshalb bewusst
-zwischen technischer Produktreife, wissenschaftlichem Nachweis und Betrieb.
-Ein abgeschlossenes Engineering-Item ist kein wissenschaftlicher Claim.
+This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
-## Verifizierter Repository-Stand
+## Current baseline — completed engineering foundation
 
-`main` ist lokal mit `origin/main` synchron. Die deterministische
-Task-Outcome-Verifikation ist implementiert und fokussiert getestet. Die lokale
-Vollsuite meldet **682 passed, 5 skipped**. Black und Pyright melden lokal keine
-Fehler. Ein erfolgreicher GitHub-CI-Lauf fuer den aktuellen Tree steht noch aus.
-Die zuletzt abgeschlossene
-Engineering-Etappe trennt nun Operator-, Experiment- und Dev-Artefakte über
-`StorageLayout`; Scientific Integrity, AI-Provenienz und kausale
-AI-Betriebsstatus sind ebenfalls technisch abgedeckt. Die Dashboard-Navigation
-behandelt nun statische und dynamische Arbeitsbereiche konsistent. Externe CI und
-wissenschaftliche EVID bleiben separate offene Nachweise.
-Experimentzusammenfassungen enthalten die zentralen Laufmetadaten in deutscher
-Sprache; relative Artefakt-Links bleiben innerhalb des Datei-Viewers.
+The following capabilities are already part of `main` and are covered by current tests/contracts:
 
-Die Runtime besitzt nun eine getrennte Clock-Ebene: `dt = 1 ms` bleibt konstant,
-während `target_hz` beziehungsweise `MAX` nur die reale Tick-Abarbeitung steuern.
-Achieved Hz, Realtime-Verhältnis, Latenz, Jitter, Sättigung und ein grobes
-Phasenprofil werden im Operator- und Embodiment-Status veröffentlicht.
+- sparse 5D spiking core with delayed event propagation;
+- deterministic RNG/state capture and restore/continue infrastructure;
+- STDP, signed eligibility and reward-modulated learning;
+- homeostatic regulation;
+- structural proposal/approval/mutation/journal/undo/recovery chain;
+- `.b5d` storage, delta journaling and checkpoints;
+- research registries, manifests, DATA/EVID separation and scientific integrity gates;
+- bounded Language Organ / Research Assistant contracts;
+- Learning Preparation Studio foundation;
+- typed embodiment, actuator authorization, audit chain and deterministic environment loop;
+- real host interoception and dynamic device discovery without fabricated fallback values;
+- responsive seven-workspace operator/research dashboard;
+- CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification.
 
-Das Release-Gate zeigt nun Live-Profil sowie alle Kriterien aus Gate A, B und C
-gleichzeitig in einer responsiven Ansicht. Manuelle Re-Checks laufen über den
-zentralen State Store; `pending`, `stale` und `unknown` bleiben sichtbar und
-werden nicht als erfolgreich dargestellt. Jede Kriterienzeile öffnet per Klick
-oder Tastatur einen Detaildialog mit dem konkreten backendseitigen Grund,
-Quelle, Live-Status und vorhandener Evidence.
+## Roadmap principle
 
-## v0.5.0-alpha.7 — Controlled Experience & Learning Loop (implemented, evidence open)
+Development now moves away from simply adding more modules. The next scientific gain comes from **closing causal and evidential loops on the capabilities already built**.
 
-- [x] Learning-Preparation-Formular für Lernziel, Erfolgskriterium,
-  Provenienz und Kontrollen mit proposal-only KI-Vorbereitung und vollständigem Reset
-- [x] Expliziten Operator-Lernstart über einen getrennten, validierten
-	LearningEngine-Workflow mit DATA/Manifest/Report und sichtbarem Ergebnis ergänzen
-- [x] Begrenzte KI-Kontextlänge im Learning Studio bis zum Chat-Backend durchreichen
-- [x] Nach jedem erfolgreich abgeschlossenen Dashboard-Experiment einen post-hoc
-	AIRR-Bericht anhängen; fehlendes Backend bleibt sichtbar `unavailable`
-- [x] Science-suite Läufe veröffentlichen DATA, Workflow, technischen Report und
-	bei konfiguriertem Backend den post-hoc AIRR-Bericht gemeinsam im Manifest
-- [x] Productive STDP und ein versionierter Before/After-Lernwiederholungslauf
-	über den Dashboard-Workflow als DATA/Manifest/Report veröffentlichen
+---
 
-Alpha.7 schliesst, wenn ein deterministisches Environment experimentell die
-vollständige Kette zeigt:
+## R1 — Evidence closure for productive learning
 
-```text
-Wahrnehmung -> Handlung -> Konsequenz -> Lernen -> verändertes Verhalten
-```
+**Goal:** Demonstrate, under preregistered conditions, that learning changes later network behavior rather than only internal weights.
 
-- [ ] Lokale Änderungen committen, pushen und vollständige GitHub-CI grün bekommen
-- [x] Type-, Build-, Lint- und Runtime-Fehler des aktuellen Stands beheben und lokal verifizieren
-- [ ] Operator-, Experiment- und Dev-Storage physisch trennen und Zugriffsmatrix prüfen
-- [x] `EXP-STDP-0002`: NeuralNetwork -> LearningEngine -> reale Synapse, drei unabhängige Dashboard-DATA-Runs
-- [x] Versionierter Before/After-Lernwiederholungslauf `EXP-LEARN-20260903-2300` mit drei unabhängigen Dashboard-DATA-Runs
-- [x] Zehn-Seed-Replikation der geschlossenen Lernschleife `EXP-LEARN-20260903-2330` mit 0/10 Baseline- und 10/10 After-Zielspikes
-- [x] Deterministischer Suite-Runner für PING, TEMP, produktives STDP und Before/After-Lernvergleich ergänzt; wissenschaftliche DATA-Ausführung bleibt separat
-- [x] PING und TEMP über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
-- [x] `EXP-PING-0001-v2` versioniert ausgeführt: sechs identische Replikatpaare
-	bestätigen pro Seed und Rekurrenzbedingung denselben Vorher-Digest und dieselbe
-	Response-Signatur; EVID bleibt Clean-Freeze-gated
-- [x] TIME und 5D über den Dashboard-Workflow ausgeführt und als Manifest/Report/DATA publiziert; EVID bleibt Clean-Freeze-gated
-- [x] `EXP-EMB-0001` Protocol Run: Sensor -> Encoder -> Network -> Decoder -> Action -> Environment -> Reward
-- [ ] `EXP-EMB-0001` als wissenschaftliche Evidenz mit unabhängigen Clean-Freeze-Runs abschliessen
-- [ ] Zweiten Durchlauf derselben Situation ausführen und verändertes Verhalten nachweisen
-- [ ] Wissenschaftliche EVID für den operator-ausgelösten Learning-Studio-Lauf nach
-	Clean Freeze und unabhängiger Review erzeugen
-- [x] Persistente PreparedLearningPlans, typisierte Preparation-API und serverseitige
-	Guard-/Freigabeprüfung ergänzen
-- [x] `LearningSourceRef` aus validierter Knowledge-Provenienz und Environment-Capture
-	ableiten; unvollständige Capture-Records werden fail-closed abgewiesen
-- [x] Train-, Validation- und Holdout-Digests serverseitig auf Partition-Overlap
-	prüfen und Label-Digests aus dem Holdout ausschließen
-- [ ] Pre-/Post-Probes, TaskOutcomeVerifier und Holdout-Leakage im Learning-Lauf
-	als DATA-Artefakte verknüpfen
-- [ ] `EXP-LEARN-0001` als ON/OFF- und Holdout-Protokoll registrieren und ausführen
-- [ ] Curriculum-Vergleich `EXP-CURR-0001` für deterministische, menschliche und
-	KI-gestützte Vorbereitung registrieren
-- [x] Audio/Vision aus dem Alpha.7-Kernnachweis herauslösen; Hardware bleibt opt-in
+Engineering tasks:
 
-## v0.5.0-alpha.7.1 — Performance & Persistent Operator (current)
+- freeze reproducible learning protocol/configuration;
+- enforce train/validation/holdout separation and leakage checks;
+- capture pre-training and post-training response probes;
+- persist reward accounting, weight deltas and behavior deltas in the same manifest-bound run;
+- add matched learning-off / sham controls;
+- repeat across independent seeds and clean processes.
 
-- [x] Runtime Clock mit Target-/Achieved-Rate, `MAX`, Realtime-Verhältnis,
-  Latenz, Jitter und Compute-Limit-Status einführen; `dt` bleibt unverändert
-- [x] Grobes Tick-Phasenprofil im Runtime-/Embodiment-Status veröffentlichen
-- [x] Embodiment-Regler sowie vollständige Phaseninstrumentierung ergänzen; `network.step_batch(n)` ist gegen Einzel-Ticks validiert
+Scientific deliverable:
 
-- [ ] `full_change_scan` gegen causally complete `dirty_tracking` per A/B-Test validieren
-- [x] Identität von Digest, Gewichten, Neuronenzustand, Struktur und Restore nachweisen (A/B/C-Produktionstest und Fresh-Process-Artefakt verifiziert)
-- [ ] Dauerbetrieb für 1k, 10k, 100k und 1M Ticks mit reproduzierbaren Metriken vermessen
-- [ ] Erst nach Gleichheitsnachweis `dirty_tracking` als Operator-Default aktivieren
+- evidence package supporting, rejecting or leaving inconclusive the claim that reward-modulated local learning produces reproducible task-relevant behavioral change.
 
-## v0.5.0-alpha.8 — Adaptive Self-Regulation & Morphology
+**Priority:** highest.
 
-- [x] Kontrollierten `NetworkImpulseProbe` mit serialisierbarer
-	`NetworkResponseSignature` für beobachtbare Impulsantworten einführen
-- [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
-	Referenzzustände ohne Zurückspulen des Runtime-Zustands einführen
-- [x] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
-	Sensory Integrity, Resource Pressure und optional Task Progress deterministisch
-	ableiten; unbekannte Quellen bleiben unsicher
-- [x] Bounded funktionale Zustandsqualitäten für Valence, Activation, Safety und
-	Uncertainty ableiten, ohne daraus menschliche Emotionen oder Bewusstsein abzuleiten
-- [x] Deterministisches Morphology-Ledger für Geburts-Ticks, Strukturkosten und
-	getrennte Growth-/Pruning-Budgets ergänzen
-- [x] Strukturvorschläge mit per-Mechanismus-Hysterese gegen Druck-Oszillation
-	absichern; Release-Schwelle und deterministisches Re-Arm-Intervall bleiben
-	konfigurierbar
-- [ ] `EXP-PING-0001` und `EXP-TEMP-0001` als unabhängige Clean-Freeze-Runs
-	mit DATA/EVID-Provenienz ausführen
-- [ ] Drives aus Energy, Thermal State, Sensor-/Netzwerkintegrität, Fehlern und Ressourcenlast ableiten
-- [ ] Chronic Signals und Regional 5D Pressure integrieren; Neuron-/Synapsenalter
-	und Growth Budgets sind technisch vorhanden
-- [ ] Wachstum, Pruning, Kosten, Hysterese und Anti-Oszillation messen
-- [ ] Stabilität unter Sensorausfall und chronischem Ressourcendruck nachweisen
-- [x] Typisierten `ActionReceipt` einführen und Befehlsannahme strikt von
-	beobachtetem Environment-Effekt trennen
-- [x] Hashverkettete Action-Audit-Records dauerhaft als JSONL speichern und
-	beim Wiederöffnen auf Kettenintegrität prüfen
-- [x] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
-	Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
-- [x] Deterministischen `EXP-REG-0001`-DATA-Runner für nominale, chronische
-	Druck- und UNKNOWN-Telemetriebedingungen anbinden; wissenschaftliche EVID bleibt offen
-- [x] Deterministischen `TaskOutcomeVerifier` als alleinige technische Quelle
-	für Task-Erfolg und Reward anbinden; fehlende Beobachtungen bleiben UNKNOWN
+---
 
-## v0.5.0-alpha.9 — Memory & World Model
+## R2 — Closed-loop embodiment evidence
 
-- [ ] Synaptic, episodic und semantic memory getrennt modellieren
-- [ ] Persistent World Model mit Provenienz und gelernten Körpermodellen verbinden
-- [ ] Retention, Interferenz, Relearning, Transfer, Recall und Catastrophic Forgetting messen
+**Goal:** Turn the existing Sensor → SNN → Actuator → Outcome → Reward infrastructure into controlled experiments.
 
-## v0.5.0-alpha.10 — Multimodal Perception
+Engineering tasks:
 
-- [ ] AudioFrame in Amplitude, Frequenzbänder, Onsets und Rhythmus zerlegen
-- [ ] VisualFrame in Helligkeit, Kanten, Bewegung, Position und Novelty zerlegen
-- [ ] Sensorische Low-Level-Features in SNN-Populationen einspeisen
+- standardize episode manifests and terminal-state verification;
+- persist observation/action/outcome/reward receipts;
+- compare deterministic simulated environments before relying on real devices;
+- add sensor-loss, actuator-loss and degraded-quality conditions;
+- distinguish command acceptance from measured physical/logical effect.
 
-## v0.5.0-alpha.11 — Knowledge Grounding
+Scientific deliverable:
 
-- [ ] Knowledge Intake mit Quelle, Provenienz und KnowledgeFrame einführen
-- [ ] Lernen aus sprachlich/symbolisch vermittelten Beziehungen messen
-- [ ] LLM bleibt Übersetzer und erhält keine Speicher-, Reward- oder Mutationsautorität
+- evidence on whether the network adapts differently when consequences are closed-loop versus replayed/open-loop.
 
-## v0.5.0-alpha.12 — Language & Reflective Interface
+---
 
-- [ ] SignalFrame, MemoryFrame, WorldModelFrame und CurrentDriveFrame an das Language Organ geben
-- [ ] Zustandsbeschreibung und Reflexion ermöglichen, ohne kausale Schreibrechte zu vergeben
+## R3 — Time-scale and runtime calibration
 
-## v1.0 — Integrated Embodied Cognitive Research Platform
+**Goal:** Make simulation time, wall-clock pacing and experiment timing explicit and independently controllable.
 
-Eine reproduzierbare, persistente und evaluierbare Plattform für verkörperte
-Forschung mit begrenzten Aktionen. Dies ist kein Claim über AGI oder Bewusstsein.
+Engineering tasks:
 
-## Historische Releases
+- benchmark target-Hz controller from slow real-time through unlimited mode;
+- profile per-tick cost by network size and enabled subsystem;
+- expose achieved Hz, target Hz and realtime ratio consistently;
+- verify that pacing changes do not alter deterministic simulation outcomes when `dt` and inputs are unchanged;
+- define experiment-specific timing profiles.
 
-- `v0.5.0-alpha.5`: Integration Hardening, Verification und Structural E2E
-- `v0.5.0-alpha.6`: Operator Workbench, Observable Runtime und Evidence Gates
+Scientific deliverable:
+
+- defensible mapping between configured simulation time and experimental protocol time, without claiming biological equivalence.
+
+---
+
+## R4 — Scientific test of the 5D organization
+
+**Goal:** Determine whether the five-dimensional spatial organization contributes measurable function or is only an indexing/design choice.
+
+Required comparisons:
+
+- full 5D organization;
+- dimension-shuffled controls;
+- reduced-dimensional ablations;
+- topology-matched non-spatial controls where feasible.
+
+Metrics should include propagation, locality, learning efficiency, structural motifs, robustness and storage/runtime cost.
+
+Scientific deliverable:
+
+- evidence for or against a functional contribution of the 5D embedding.
+
+---
+
+## R5 — Self-regulation, continuity and sensor-loss studies
+
+**Goal:** Test homeostasis/interoception as control mechanisms without anthropomorphic interpretation.
+
+Engineering tasks:
+
+- formalize bounded drive/regulatory-state observables;
+- preregister thermal/resource/continuity perturbations in deterministic environments;
+- measure adaptation under missing or unreliable sensors;
+- keep functional-state metrics separate from emotion labels.
+
+Scientific deliverable:
+
+- evidence on whether internal regulatory signals improve stability, recovery or task continuity.
+
+---
+
+## R6 — Memory and world-model layer
+
+**Goal:** Add persistent learned temporal/world state only after R1–R5 provide clear behavioral baselines.
+
+Planned work:
+
+- explicit short/medium/long temporal state contracts;
+- causal comparison of memory-on versus memory-off conditions;
+- recall/reconstruction metrics;
+- separation of stored observation, learned representation and external knowledge;
+- deterministic persistence/replay of memory state.
+
+No memory mechanism should be labeled a world model merely because it stores history; predictive utility must be measured.
+
+---
+
+## R7 — Multimodal grounding and knowledge intake
+
+**Goal:** Introduce camera/audio/network/document observations through typed, provenance-rich intake rather than direct LLM-to-SNN writes.
+
+Planned work:
+
+- deterministic SignalFrame/feature contracts for multimodal input;
+- source identity, timestamp, digest and trust metadata;
+- frozen/replayable knowledge snapshots for scientific runs;
+- comparison of raw sensory learning versus externally structured knowledge conditions.
+
+---
+
+## R8 — AI-as-treatment research
+
+**Goal:** Study AI participation itself as an experimental variable.
+
+Conditions may include:
+
+- no AI;
+- frozen replay AI;
+- sham/random proposer;
+- different LLM families under an identical research packet;
+- AI proposal accepted versus rejected by the same governance path.
+
+Measurements include topology fingerprints, proposal characteristics, interpretation distance and downstream behavioral effects. AI involvement must remain fully provenance-bound and cannot be silently mixed into control runs.
+
+---
+
+## R9 — Scaling and performance engineering
+
+Scaling should follow evidence needs rather than headline neuron counts.
+
+Work includes:
+
+- storage and journal stress tests beyond current opt-in tests;
+- network/tick profiling at increasing neuron/synapse counts;
+- async persistence backpressure characterization;
+- bounded telemetry sampling;
+- memory footprint profiling;
+- optional accelerator/native kernels only after semantic equivalence tests exist.
+
+A larger network is not automatically a more valid model.
+
+---
+
+## Release direction
+
+The next release boundary should be earned by evidence and contracts, not only by feature volume. Before a new major research milestone is declared:
+
+1. `main` CI is green;
+2. deterministic and recovery contracts remain intact;
+3. Scientific Integrity Gate is green;
+4. new causal capabilities have matched controls;
+5. experiment artifacts are reproducible from recorded manifests;
+6. documentation source-of-truth is current;
+7. AI involvement is registered as provenance/treatment where applicable.
+
+## Historical roadmaps
+
+Files such as `ROADMAP_ALPHA4.md`, `ROADMAP_ALPHA5*.md`, `ROADMAP_V*.md` and sprint-specific plans are retained as historical records. They describe earlier planning states and do not override this roadmap.

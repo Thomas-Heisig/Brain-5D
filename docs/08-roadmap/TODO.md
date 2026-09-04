@@ -1,311 +1,139 @@
-# Brain-5D — Consolidated TODO
+# Brain-5D Current TODO
 
-> Last updated: 2026-09-04
-> Die TODO ist nach Verantwortung getrennt: ENGINEERING, SCIENCE und OPERATION.
-> Wissenschaftliche Aussagen benötigen ein registriertes Experiment und
-> reproduzierbare EVID-Artefakte; technische Implementierung allein genügt nicht.
-> Verifiziert am 2026-09-04: lokale Vollsuite `682 passed, 5 skipped`; Black und
-> Pyright sind lokal ohne Befunde. Scientific Gate ist gruen; ein erfolgreicher
-> GitHub-CI-Lauf fuer den aktuellen Tree steht noch aus.
+**Canonical TODO for `main`**  
+**Baseline:** `brain5d-core 0.5.0a7`  
+**Updated:** 2026-09-04
 
-## ENGINEERING
+This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
-### P1 — Runtime Clock & Tick Profiling
+## Verified baseline
 
-- [x] Runtime Clock mit `target_hz`, explizitem `MAX`, erreichtem `ticks_per_second`,
-  Realtime-Verhältnis, Tick-Latenz, Jitter und Compute-Limit-Status ergänzen
-- [x] Runtime Clock und grobes Phasenprofil im Operator-/Embodiment-JSON sichtbar machen
-- [x] `dt = 1 ms` von der realen Abarbeitungsgeschwindigkeit getrennt halten
-- [x] Embodiment-Regler und visuelle Simulation-Speed-Anzeige ergänzen
-- [x] Phasenprofil auf vollständige Tick-Segmente erweitern und teuerste Phase optimieren
-- [x] Echtes `network.step_batch(n)` mit Einzel-Tick-Gleichheitsnachweis validieren
+- [x] `main` is the canonical development line.
+- [x] CI green across Python 3.11, 3.12 and 3.13.
+- [x] 700 tests collected; 698 unique tests pass in the full current suite; 2 large-storage tests are intentionally opt-in/skipped by default.
+- [x] Fast-suite coverage currently 72%.
+- [x] Scientific Integrity Gate green.
+- [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.
+- [x] Responsive dashboard experience merged for all seven workspaces.
+- [x] Real-body host telemetry/device discovery integrated without fabricated fallback values.
+- [x] Learning Preparation Studio foundation and AI proposal-only boundary implemented.
+- [x] Structural proposal → approval → mutation → journal → undo/recovery chain implemented and tested.
+- [x] Deterministic persistence/restore infrastructure implemented and tested.
 
-### P0 — Type, Build, Lint und Runtime Hygiene
+## P0 — scientific evidence closure
 
-- [x] AIRR-, Learning-, Chat-, Ollama- und Dashboard-Typfehler beheben
-- [x] Fehlenden Network-Workspace samt Views und Runtime-Controls wieder anbinden
-- [x] Vollsuite, Ruff, Mypy und Paket-Build verifizieren
+These tasks should produce the next scientific gain before broad feature expansion.
 
-### P0 — Learning Studio Full-Stack
+### Productive learning
 
-- [x] Kontextlänge im Learning Studio bounded validieren und an den AI-Chat weitergeben
-- [x] Proposal-only KI-Vorbereitung von explizitem Operator-Lernstart trennen
-- [x] Registrierten LearningEngine-Runner mit DATA, Manifest und Report anbinden
-- [x] Fail-closed-Bestätigung und UI-/Route-Regressionstests ergänzen
-- [ ] Wissenschaftliche EVID des Lernlaufs nach Clean Freeze und Review erzeugen
-- [x] Release-Gate als responsive Gesamtübersicht mit zentralem Re-Check und
-  sichtbaren Gate-A/B/C-Kriterien ausbauen; offene Evidenz bleibt fail-closed
-- [x] Gate-Kriterien anklickbar machen und Grund, Quelle sowie Evidence im
-  Detaildialog sichtbar ausgeben
+- [ ] Freeze a canonical productive-learning protocol and configuration.
+- [ ] Bind every run to code/config/prompt/data digests.
+- [ ] Enforce train/validation/holdout partition separation in the final protocol.
+- [ ] Add matched learning-off and sham/replay controls.
+- [ ] Persist pre/post behavioral probes together with weight/reward changes.
+- [ ] Execute independent multi-seed repeats in clean processes.
+- [ ] Promote only valid runs from `DATA` to `EVID` through the evidence gate.
+- [ ] Human-review the resulting claim status: supported, rejected or inconclusive.
 
-### P0 — Post-Experiment AI Research Report
+### Closed-loop embodiment
 
-- [x] AIRR nach erfolgreichem Dashboard-Experiment automatisch post-hoc anhängen
-- [x] Menschliche Reviews für experimentbezogene KI- und sonstige Artefakte integrieren
-- [x] Experimente mit UTC-Erstellungsdatum versehen und danach sortieren
-- [x] Ausfuehrliche deutsche `summary.md` mit Metadaten und Viewer-internen Links erzeugen
-- [x] AIRR-Erzeugung strikt vom Experimentlauf trennen; Fehler dürfen den Laufstatus
-  nicht verändern
-- [x] Fehlendes AI-Backend explizit als `unavailable` melden statt Evidence zu behaupten
-- [ ] AIRR mit Human Review abschließen; `scientific_evidence` bleibt bis dahin `false`
+- [ ] Freeze a deterministic embodiment protocol for Sensor → SNN → Actuator → Outcome → Reward.
+- [ ] Store action acceptance and observed effect as separate receipts.
+- [ ] Add replay/open-loop control condition.
+- [ ] Add sensor-loss/degraded-quality condition.
+- [ ] Add actuator failure/no-effect condition.
+- [ ] Repeat across seeds and compare adaptation/stability metrics.
+- [ ] Promote validated results to evidence only after protocol checks.
 
-### P1 — Learning Preparation Ausbau
+## P1 — runtime/time semantics and performance
 
-- [x] Persistente `PreparedLearningPlan`-Artefakte mit Revision, Freigabe-Identität,
-  Proposal-Digest und unveränderlicher Provenienz speichern
-- [x] Typisierte `/api/learning/preparation`-API für Erstellen, Prüfen und Freigeben
-  ergänzen; serverseitige `LearningPreparationGuard`-Prüfung erzwingen
-- [x] `LearningSourceRef` aus Knowledge Intake und Environment-Capture ableiten
-- [x] Train-, Validation- und Holdout-Partitionen serverseitig auf Leakage prüfen
-- [ ] Pre-/Post-Impulse, Temporal-State-Frames und TaskOutcome-Ergebnisse als
-  Laufartefakte persistieren und im Studio anzeigen
-- [ ] `EXP-LEARN-0001` als registriertes ON/OFF- und Holdout-Protokoll mit
-  identischem Snapshot, Seed, Input und Evaluation ausführen
-- [ ] `/api/learning/run` auf feste Lernparameter, Operator-Identität,
-  serverseitige Freigabe und OutcomeVerifier-Ergebnis erweitern
-- [ ] Curriculum-Progression und `EXP-CURR-0001` für deterministisches,
-  menschlich vorbereitetes und KI-vorbereitetes Curriculum registrieren
+- [ ] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
+- [ ] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
+- [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
+- [ ] Profile tick cost by subsystem: core, learning, homeostasis, structural, embodiment, dashboard telemetry and storage.
+- [ ] Profile increasing neuron/synapse counts before optimizing kernels.
+- [ ] Run the two opt-in large-storage tests in a scheduled/explicit large-test job and archive the results.
 
-### P0 — Scientific AI Boundary & Provenance
+## P1 — 5D causal/ablation program
 
-- [x] Erste Contract-Layer-Basis mit `AIExposure`, `CausalTaint` und digest-only `AIInteractionRecord` in Research Assistant und Chat-UI integrieren
-- [x] Gemeinsamen AI-Contract-Layer für `Observation`, `Interpretation`, `Proposal`, `Intervention` und `Evidence` definieren
-- [x] Scientific AI Firewall als read-only Chat-Grenze implementieren: mutierende und unbekannte Aktionen werden abgewiesen
-- [x] Scientific AI Firewall auf Netzwerk, Synapsen, Struktur, Rewards, Memory und Experimentzustand ausweiten
-- [x] Scientific-Authority-Matrix für SNN, Statistics Engine, Language Organ, Research Assistant, Cognitive Advisor, Action Gateway, Evidence Engine und Human Reviewer dokumentieren und validieren
-- [x] Contract-Test ergänzen, der direkte Core-Imports aus Research-Assistant- und Language-Organ-Backends verhindert
-- [x] `AIExposure` in Experimentmanifesten und Laufmetadaten einführen (`none`, `observer_only`, `semantic_interface`, `advisor`, `bounded_controller`, `adaptive_controller`)
-- [x] Gemeinsames `AIInteractionRecord` mit Rolle, Experiment, Tick, Input-/Prompt-/Output-Digest, Modell-Provenienz, Autorität und `causal_effect` im Experimentmanifest speichern
-- [x] AI-Causal-Taint-Tracking von `PURE` über beobachtend/vorschlagend bis `AI_INFLUENCED` implementieren
-- [x] Causal Card je Experiment erzeugen: AI-Beobachtung, externer Input, AI-Reward, AI-Aktorentscheidung und wissenschaftliche Klassifikation
-- [x] Evidence-Gate verschärfen: AI-beeinflusste Läufe benötigen ein passendes Treatment-Protokoll und dürfen nicht als reine SNN-Evidenz erscheinen
+- [ ] Define a preregistered 5D-vs-control experiment.
+- [ ] Implement dimension-shuffled control.
+- [ ] Implement reduced-dimensional ablations.
+- [ ] Add topology-matched non-spatial control where feasible.
+- [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost.
+- [ ] Keep dimensionality claims open until the ablation evidence exists.
 
-### P0 — Vollständige AI-Provenienz
+## P1 — evidence and provenance hardening
 
-- [x] Ollama-Baseline-Provenienz mit Samplingparametern, Stop-Sequenzen, Timeout und Response-Digest integrieren
-- [x] Ollama-Request-/Response-Digest, Modell-ID, Completion-Grund und Tokenmetriken ergänzen
-- [x] Ollama-Provenienz vollständig erfassen: Modell-ID, Modell-Digest, Artefakt-/Quantisierungsdaten, Ollama-/Engine-Version, Hardware, Präzision, Seed und alle Samplingparameter (fehlende Providerdaten bleiben `not_reported`)
-- [x] `top_k`, `num_ctx`, Stop-Sequenzen, Timeout, Retry-Anzahl, Input-/Output-Tokens und Raw-Response-Digest protokollieren
-- [x] Tokenizer-Digest, Prompt-Template-Digest, System-/Übergabeprompt-Digest, Toolset-Digest und Retrieval-Snapshot-Digest ergänzen
-- [x] Provider-Revision, Request-Zeitpunkt, Response-Fingerprint und `knowledge_origin` für API-/Webwissen speichern
-- [x] AI-Fehler als `AIInferenceFailureEvent` mit Request-ID, Backend, Latenz und Retry-Status auditieren
-- [x] Automatische Retries in wissenschaftlichen Runs deaktivieren und als reproduzierbaren Treatment-Faktor protokollieren
-- [x] Modellwechsel, Promptwechsel und Statistikcodeänderungen mit Versions-/Protocol-Bump registrieren und validieren
+- [ ] Add automated documentation link checking to CI.
+- [ ] Add a current-doc consistency check so fixed version/test claims cannot drift silently.
+- [ ] Expand evidence-engine negative tests for incomplete/mismatched provenance.
+- [ ] Ensure all quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
+- [ ] Add a stable action/outcome provenance view to the dashboard only when backed by a verified endpoint.
+- [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
 
-### P0 — Shadow, Replay und kontrollierte Kausalität
+## P1 — test coverage on high-risk surfaces
 
-- [x] Shadow Mode implementieren: AI darf beobachten, interpretieren und Vorschläge erzeugen; Vorschläge werden markiert, aber nicht ausgeführt
-- [x] Shadow-Proposals quantitativ evaluieren: Precision, Recall, False Positives, Prediction Accuracy, Calibration und Utility
-- [x] `observation_stream.jsonl` für reproduzierbare Offline-Replays erzeugen und validieren
-- [x] `FrozenAIReplayBackend` mit Request-/Response-Digest und fehlendem Live-Fallback implementieren
-- [x] Reproduzierbarkeitsstufen R0 bis R3 für AI-Beteiligung in Experimenten registrieren
-- [x] Counterfactual Twin Runs aus identischem Snapshot mit AI-off/AI-on und identischem Seed, Input, Reward und Tickplan ermöglichen (statistischer Vergleich bleibt Forschungsauswertung)
-- [x] Kontrollgruppen für SNN-only, Language Organ, Knowledge Intake, Language+Knowledge, LLM-only und Full System als Experimentvorlagen registrieren
-- [x] `NullLanguageOrgan`, `RandomLanguageOrgan` und `ReplayLanguageOrgan` als Sham-Kontrollen ergänzen
+Current global fast-suite coverage is useful but uneven. Prioritize behaviorally important low-coverage modules rather than chasing a vanity percentage.
 
-### P1 — Prompt-, Daten- und Netzwerkdisziplin
+- [ ] Increase coverage of dashboard server routing/error paths.
+- [ ] Increase evidence-engine rejection/edge-path coverage.
+- [ ] Increase operator bridge and control boundary coverage.
+- [ ] Increase real-body platform-specific failure-path coverage.
+- [ ] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
 
-- [x] Versionierte Prompt Registry unter `research/prompts/` mit eingefrorenen Prompt-Dateien und Protocol-Digests einführen
-- [x] Preregistration Lock für Forschungsfrage, Hypothesen, Metriken, Stichprobe, Seeds, Stopping Rule, Analyse und Ausschlussregeln implementieren
-- [x] Exploratory und Confirmatory AI-Modus technisch und im Dashboard trennen
-- [x] Confirmatory Runs gegen nachträgliche Hypothesen-, Prompt- und Analyseänderungen sperren
-- [x] Development-, Validation- und Scientific-Holdout-Daten strikt trennen und AI-/Gold-Label-Leakage testen
-- [x] AI-Selbstvertrauen als `model_self_confidence` kennzeichnen und von empirischer Kalibrierung, Brier Score und ECE trennen
-- [x] Quantitative Statistik ausschließlich durch die deterministische Statistics Engine erzeugen; LLM darf Zahlen nur interpretieren
-- [x] Netzwerkmodi `OFFLINE`, `FROZEN_CORPUS` und `LIVE_NETWORK` implementieren; wissenschaftliche Runs standardmäßig offline/frozen erzwingen
-- [x] Für Sensor-, Internet- und Knowledge-Intake-Daten Observation-, Capture-, Processing-Zeit, Quelle, Version und Digest speichern
-- [x] Knowledge-Intake-Pipeline mit URL, Rohdaten-Digest, MIME, Trust-Klassifikation, Extraktionsmethode und Provenienz vervollständigen
-- [x] Unsichtbares RAG verhindern: Retrieval muss explizit aktiviert, versioniert und im Antwort-/Laufprotokoll sichtbar sein
+## P2 — self-regulation and continuity experiments
 
-### P1 — AI-Rollen und semantische Schnittstellen
+- [ ] Define non-anthropomorphic regulatory metrics for resource/continuity pressure.
+- [ ] Test missing sensor and uncertain sensor conditions.
+- [ ] Test recovery after resource pressure in deterministic environments.
+- [ ] Compare homeostasis/interoception enabled vs disabled under matched conditions.
+- [ ] Avoid emotion labels as primary measured variables; keep them, if used, as interpretation layers.
 
-- [x] Cognitive Advisor als Proposal-only-Komponente mit typisiertem `ActionProposal`-Contract implementieren
-- [x] Deterministisches Intervention Gateway mit Capability Check, Rate Limit, Safety Envelope, Experiment Policy, Audit Journal und Human Override ergänzen
-- [x] Memory Write Gateway für alle zukünftigen AI-generierten Memory-Proposals einführen
-- [x] Language Organ in `LINGUISTIC_TRANSPORT` und `SEMANTIC_AUGMENTATION` trennen und beide Treatments messbar machen
-- [x] AI-0 Research AI, AI-1 Language Organ, AI-2 Cognitive Advisor und AI-3 Experimental Cognitive Controller als formale Rollen dokumentieren
-- [x] Logical-Time- und Wall-Clock-Modus für asynchrone AI-Interaktionen unterscheiden und Response-Anwendungstics protokollieren
-- [x] Replay-, Live-Frozen-Model- und Live-External-API-Betrieb im Dashboard sichtbar klassifizieren
+## P2 — memory/world model
 
-### P1 — Vergleich, Bias und AI-Forschungsobjekt
+Start only after productive-learning and closed-loop baselines are reproducible.
 
-- [x] Multi-Model-Vergleich mit identischem ResearchPacket, Modellmetadaten und Disagreement Map implementieren
-- [x] LLM-Konsens ausdrücklich nicht als Evidence behandeln; Agreement nur als Messgröße speichern
-- [x] Blind Analysis mit anonymisierten Gruppenlabels vor der Aufdeckung ermöglichen
-- [x] Analyst und unabhängigen Reviewer mit getrennten Artefakten und ohne Chain-of-Thought-Leakage evaluieren
-- [x] Reviewer Correction Rate, False Criticism Rate und Missed Error Rate messen
-- [x] AIR-Forschungsfragen RQ-AIR1 bis RQ-AIR5 als Benchmark-/Experimentstruktur registrieren
-- [x] Modellabhängige Interpretationsdistanz `D(I_A, I_B)` und Fingerprints identischer SNN-Zustände messen
-- [x] Borrowed Intelligence Ratio über Ablationen definieren, deterministisch berechnen und als keine wissenschaftliche Einzelmetrik ohne Protokoll markieren
+- [ ] Specify memory state and persistence contracts.
+- [ ] Define memory-on / memory-off controls.
+- [ ] Add temporal prediction/recall metrics.
+- [ ] Separate observation history, learned internal state and external knowledge.
+- [ ] Require predictive/behavioral benefit before calling a mechanism a world model.
 
-### P2 — Wissenschaftliche Integritätsautomatisierung
+## P2 — multimodal and knowledge grounding
 
-- [x] Scientific Integrity Gate in CI für Determinismus, Restore, Canonical State, Golden Chain, Schema, AI-Leakage und AI-Authority ausführen
-- [x] CI-Regeln für Prompt-, Modell-, Treatment- und Statistikversionsänderungen erzwingen
-- [x] Epistemic Provenance Graph für Claims, Sensoren, Memory, Experimente, Webquellen und Derived Values modellieren
-- [x] `knowledge_origin` mit `SNN_LEARNED`, `LLM_PRIOR`, `EXTERNAL_RETRIEVAL`, `HUMAN_INPUT`, `SENSOR_OBSERVATION`, `SYSTEM_STATE`, `SIMULATED_ENVIRONMENT`, `DERIVED` und `UNKNOWN` standardisieren
-- [x] Causal-Attribution-Report für jede AI-Exposure-Stufe und jeden Twin-/Ablation-Run generieren
-- [x] Dashboard-Betriebsstatus für `PURE EXPERIMENT`, `AI OBSERVING`, `AI PROPOSING` und `AI CAUSALLY ACTIVE` anzeigen
+- [ ] Define typed SignalFrames for camera/audio/document/network inputs.
+- [ ] Store source, timestamp, digest and trust/provenance metadata.
+- [ ] Provide frozen/replayable snapshots for scientific runs.
+- [ ] Compare raw sensory learning against externally structured knowledge conditions.
+- [ ] Keep LLM transformation outside the causal SNN state unless explicitly registered as a treatment.
 
-### Chat UX und Providersteuerung
+## P2 — AI treatment experiments
 
-- [x] Statische und dynamische Dashboard-Tabs über einen gemeinsamen Navigator
-  synchron halten; Learning Studio darf beim Seitenwechsel nicht sichtbar bleiben
-- [x] Editierbare Chat-Einstellungen inklusive System-Prompt, Sampling, Tokenbudget und Kontextlimit
-- [x] Persistente Räume und Unterchats mit festem Header und Composer
-- [x] Live-Health-Probe für den konfigurierten Provider
-- [x] Räume einklappen, archivieren, wiederherstellen und löschen
-- [x] Hierarchischen Kontext für Unterchats übertragen
-- [x] Provider-/Modellauswahl mit klarer OAuth-Grenze für Microsoft Copilot
-- [x] Bearbeitbarer Übergabeprompt und wiederherstellbare Standardwerte
-- [x] Ollama-Vision mit begrenzten Bildanhängen
-- [x] Microsoft Entra OAuth PKCE Start/Callback-Grundlage
-- [x] Antwortmodi mit wissenschaftlicher Quellen- und Runtime-Trennung
-- [x] Größeres Chatfenster mit horizontaler Room-Aktionsleiste
-- [x] Drag-and-drop für Bildanhänge sowie lokale Sprach-Ein-/Ausgabe
-- [x] Ollama-Vision-Requestpfad und sichtbarer Verarbeitungsstatus
-- [x] Nicht ausführendes Learning-Preparation-Formular mit vollständigem
-  Reset der Eingaben und proposal-only KI-Vorbereitung
+- [ ] Standardize identical research packets for multi-model comparisons.
+- [ ] Add no-AI, frozen replay, sham/random and model-family conditions.
+- [ ] Measure proposal/topology fingerprints without allowing direct hidden writes.
+- [ ] Keep AI self-confidence separate from empirical performance metrics.
+- [ ] Require treatment identity and provenance in every AI-influenced scientific run.
 
-### Alpha.7 — Controlled Experience & Learning Loop
+## Repository/documentation hygiene
 
-- [x] Produktiven Lernpfad instrumentieren: Input, Pre/Post, LearningEngine, reale Synapse
-- [x] Gewicht `weight_before` / `weight_after` und Lernstatistiken pro Lauf erfassen
-- [x] Deterministisches Environment für wiederholbare Wahrnehmungs-Handlungs-Zyklen verwenden
-- [x] Audio/Vision nicht als Alpha.7-Kernabhängigkeit behandeln
+- [x] Consolidate canonical README, architecture, dashboard, roadmap and research roadmap.
+- [x] Add a documentation source-of-truth index.
+- [x] Classify versioned Alpha/Sprint/Release documents as historical rather than current state.
+- [x] Identify accidental package snapshot and temporary JSON artifacts for removal.
+- [ ] Keep remote branch list to `main` plus active short-lived work only; delete merged branches after merge.
+- [ ] Enable/maintain automatic deletion of merged PR branches when repository settings permit.
 
-### Alpha.7.1 — Performance & Persistent Operator
+## Definition of done for a scientific milestone
 
-- [x] Storage unter `operator/state.b5d`, `operator/journal/`, `operator/checkpoints/` kapseln
-- [x] Experimente unter `experiment/EXP-*/state/`, `DATA/` und `EVID/` kapseln
-- [x] Dev-Artefakte ausschließlich unter `dev/disposable/` ablegen
-- [x] Harte Grenzen erzwingen: DEV -> OPERATOR verboten, EXPERIMENT -> OPERATOR kein Merge, OPERATOR -> EXPERIMENT nur Snapshot/Fork
-- [x] `full_change_scan` und `dirty_tracking` mit identischem Seed, Input und Tickzahl vergleichen
-- [x] Digest, Gewichte, Neuronen-, Strukturzustand und Journal-Restore auf Gleichheit prüfen (`research/generated/verification/restore_determinism.json`, A/B/C verifiziert)
-- [ ] Laufzeitprofil für 1k / 10k / 100k / 1M Ticks erfassen: ticks/s, ms/tick, Storage, Telemetrie, Bytes, Dirty-Counts, RAM
+A milestone is not complete because a UI card is green. It is complete only when:
 
-### Release-Freeze vor Alpha.8
-
-- [x] Black-Formatierung der aktuellen Runtime-/Server-Aenderungen beheben
-- [ ] Pyright-Befunde in Source und Tests beheben; GitHub CI #307 erneut ausfuehren
-- [ ] Lokale Vollsuite und Scientific Integrity Gate nach den Qualitätsfixes erneut ausführen
-- [ ] Externe GitHub-CI vollständig grün abwarten; Hugging-Face-Sync erst danach freigeben
-- [ ] README-, Embodiment-Foundation-, Roadmap- und Changelog-Versionen auf denselben Commit-/Release-Stand synchronisieren
-- [ ] Clean-Freeze-Artefakt mit Tree-Digest, Teststatus und Dirty-Tree-Prüfung erzeugen
-
-### Alpha.8 — Adaptive Self-Regulation & Morphology
-
-- [x] `NetworkImpulseProbe` und `NetworkResponseSignature` als kontrollierte,
-  beobachtbare Impulsantwort-Messung implementieren; Rekurrenz und
-  Selbstreflexion daraus nicht ableiten
-- [x] `TemporalStateMemory` und `TemporalComparator` für FAST/MEDIUM/SLOW-
-  Referenzzustände ohne Runtime-Zurückspulen implementieren; Digest- und
-  Metrikänderungen bleiben getrennte Beobachtungen
-- [x] Neue Loopback-, Self-Model- und Alpha.8-Foki im Research-Dashboard sichtbar machen
-- [x] Dashboard-Grundlayout an die Embodiment-Anatomie angleichen, Network vollständig
-  aus der sichtbaren Oberfläche entfernen und Aktivität/Spikes als Footer-Balken zeigen
-- [x] Typisierten Digital-Interoception-Vertrag mit VitalSignal, Signalqualität,
-  Sicherheitsbereichen und explizitem UNKNOWN-Status einführen
-- [x] Optionale Host-Signale für RAM-Reserve, freien Speicher, Disk-/Netzwerk-I/O,
-  Akku und Lüfter über `psutil` erfassen; nicht unterstützte Quellen bleiben `None`
-- [ ] Vital Signals um Lüfter-RPM/-Status, CPU/GPU-Temperatur, Temperaturgradient,
-  Thermal Throttling, GPU/VRAM, RAM-Reserve, Storage, Disk-I/O/SMART,
-  Strom/USV/Akku, Netzwerkqualität, Sensoralter und Sensorfehler erweitern
-- [ ] Fehlende oder veraltete Sensorsignale fail-closed behandeln und niemals als sicher interpretieren
-- [x] Interne Regelgrößen für Thermal Margin, Energy Reserve, Continuity Risk,
-  Sensory Integrity, Resource Pressure und Task Progress deterministisch und
-  mit expliziter Unsicherheit definieren
-- [x] Erste Drives deterministisch aus Interoception ableiten: thermal_threat,
-  resource_pressure und continuity_risk; nicht beobachtbare Drives bleiben
-  explizit `None` mit Unsicherheit
-- [ ] Drives vollständig aus Regelgrößen ableiten: thermal_threat,
-  resource_pressure, sensory_integrity, continuity_risk, task_progress,
-  novelty und actuator_confidence
-- [x] Valence, Activation, Safety und Uncertainty als bounded technische
-  Zustände ableiten; menschliche Emotionsbegriffe ausschließlich als
-  nachgelagerte Interpretation zulassen
-- [x] Neuron-/Synapsenalter, Growth-/Pruning-Kosten und getrennte
-  Neurogenese-/Pruning-Budgets über ein deterministisches Morphology-Ledger ergänzen
-- [x] Proposal-Druck mit konfigurierbarer Hysterese und Anti-Oszillation pro
-  Strukturmechanismus absichern; Kapazitätsgrenzen setzen keinen falschen Latch
-- [ ] Langhorizont-Stabilität unter chronischem Druck verifizieren
-- [ ] Wetter-/Umweltrelevanz nur über nachgewiesene Kausalketten zur Systemkontinuität zulassen
-- [ ] `BodySchemaManager` über dem `ConnectionManager` mit Integrations- und
-  Kausalvertrauen, Verifikationstic, Abhängigkeiten und Fallbacks ergänzen
-- [x] `ActuatorHub`/`ActionRouter` für mehrere autorisierte Aktoren mit getrennten
-  Capabilities, Safety Envelopes, Rate Limits und Auditpfaden implementieren
-- [x] `ActionReceipt` mit command_id, accepted, started, completed, failed,
-  latency, error, safety_clamp und effect_observed einführen
-- [x] Befehlsannahme strikt von beobachtetem Handlungserfolg trennen
-- [x] Hashverkettetes Aktionsjournal als JSONL dauerhaft an kontrollierte
-  Operator-/Experiment-Storage-Pfade persistieren und beim Reopen verifizieren
-- [x] Deterministischen `TaskOutcomeVerifier` als einzige Quelle für Task-Erfolg/Reward anbinden;
-  unbekannte Ergebnisse bleiben bei fehlender Environment-Beobachtung explizit
-
-### Alpha.9 bis v1.0
-
-- [ ] Memory-/World-Model-Schnittstellen implementieren
-- [ ] Multimodale Audio-/Vision-Adapter als echte, opt-in Datenquellen anbinden
-- [ ] Provenance-gebundenen Knowledge Intake implementieren
-- [ ] Language Organ auf lesende Zustandsbeschreibung begrenzen
-- [ ] Release- und Installationspfad für die integrierte Forschungsplattform härten
-
-## SCIENCE
-
-- [x] `EXP-PING-0001`: Network Impulse Response mit identischem Zustand, Seed,
-  Input-Spike und kontrollierten Rekurrenz-/Plastizitätsbedingungen ausführen
-  (v1 archiviert; v2 mit 12 Dashboard-DATA-Runs und identischen Replikatpaaren;
-  Clean-Freeze-EVID noch offen)
-- [ ] `EXP-TEMP-0001`: Multi-Timescale State Comparison für Persistenz, Drift,
-  Novelty und Prediction Error mit unabhängigen Wiederholungen ausführen (Dashboard-DATA-Lauf erfolgt; Novelty/Prediction Error noch nicht implementiert)
-- [x] `EXP-STDP-0002`: Productive STDP auf `NeuralNetwork -> LearningEngine -> Synapse` mit drei unabhängigen Dashboard-DATA-Runs; mittlere Synapsengewichte steigen in allen Runs
-- [x] `EXP-EMB-0001` Protocol Run: 180 DATA-Runs mit autorisiertem, unauthorisiertem und Reproduzierbarkeits-Kontrollpfad
-- [ ] `EXP-EMB-0001`: EVID-Artefakt nach Clean Freeze, unabhängiger Review und vollständiger Provenienz erzeugen
-- [x] Zweiten identischen Versuch nach dem Lernen ausführen und `P(success | after) > P(success | before)` prüfen (versionierte Dashboard-DATA-Läufe; Zehn-Seed-Replikation `EXP-LEARN-20260903-2330` mit 0/10 Baseline- und 10/10 After-Zielspikes)
-- [x] `EXP-TIME-0001`: Learning Timescale Calibration bei 100 bis 1.000.000 Ticks (Dashboard-DATA-Lauf mit 15 Runs; EVID nach Clean Freeze offen)
-- [x] `EXP-5D-0001`: 1D/2D/3D/5D/Random-Graph-Ablation mit mindestens 30 Seeds je Bedingung (Dashboard-DATA-Lauf mit 150 Runs; EVID nach Clean Freeze offen)
-- [x] `EXP-REG-0001`: Homeostase, Drives und strukturelle Selbstregulation unter kontrolliertem Druck (deterministischer DATA-Runner; wissenschaftliche EVID bleibt offen)
-- [ ] `EXP-BODY-0001`: Sensorverlust, Aktivitätsänderung, Rekonfiguration und Kompensation messen
-- [ ] `EXP-BODY-0001` um Wetter-/Umwelt-Kontrollbedingung, Sensorqualität,
-  Kausalpfad, Body-Schema-Übergänge und unabhängige Effect-Observation erweitern
-- [ ] `EXP-MEM-0001`: Retention, Interferenz, Relearning, Transfer und Recall messen
-- [ ] `EXP-AIR-0001`: Scientific Research Assistant erst nach Clean Freeze, Push und externer CI ausführen
-
-### Forschungsprotokoll für jeden Lauf
-
-- [x] Forschungsfrage, Hypothesen, Bedingungen, Kontrollen und Wiederholungszahl registrieren
-- [x] Effektive Inputs, Outputs, Rewards, Audit-Status und Laufmetriken für EXP-EMB-0001 speichern
-- [ ] DATA/EVID-Provenienz, Limitationen und unabhängige Wiederholungen prüfen
-- [ ] Claims erst nach menschlicher Review aktualisieren als option
-
-### AI Research Reports (AIRR)
-
-- [x] `PROTOCOL-AIRR-001` und kanonisches AIRR-JSON-Schema registrieren
-- [x] Analyst -> Critical Reviewer -> Scientific Writer als getrennte AIAR-Pipeline
-- [x] Deterministisches JSON -> Markdown Rendering mit vollständiger Provenienz
-- [x] DATA/EVID-Referenzen und ResearchPacket-Digest im Bericht speichern
-- [x] Human Review als separates append-only `.review.json` speichern
-- [x] AIRR im Research-Dashboard lesbar machen
-- [x] Research Self-Knowledge Chat mit Research-/Docs-Kontext und fail-closed Backend
-- [x] Chat-Ausführung strikt vom Freitext trennen; Experimente bleiben registrierte Workflows
-- [x] Lokales Ollama-Backend, Markdown-Ausgabe und Chat-Einstellungen konfigurieren
-- [ ] Azure-Backend explizit konfigurieren und `EXP-AIR-0001` ausführen
-- [ ] AIRR gegen menschliche Referenzauswertung und mehrere Modelle evaluieren als option
-
-## OPERATION
-
-- [ ] Lokale Änderungen committen und pushen; vollständige GitHub-CI abwarten
-- [ ] Kein wissenschaftliches Experiment auf Dirty Tree ausführen
-- [ ] Hugging-Face-Sync erst nach geklärten `HF_USERNAME`-/`HF_TOKEN`-Secrets und CI-Grün aktivieren
-- [ ] Release-Registry, Changelog und Roadmap nach jedem abgeschlossenen Meilenstein synchronisieren
-- [ ] Dashboard-/Runtime-Verträge aktuell halten; `enabled`, `active`, `unavailable` und Evidenzstatus getrennt lassen
-- [ ] Dokumentierte Benchmarks nicht als wissenschaftliche Claims ausgeben
-
-## Bereits erledigt, bewusst nicht erneut auf der Arbeitsliste
-
-Alpha.5/6-Integration, Operator/Experiment/Dev-Modi, Evidence Scopes,
-Restore-Determinismus, Structural E2E, RuntimeController, Embodiment-Verträge,
-Safety-Grenzen, deterministischer EnvironmentAdapter, Experience Engine v0,
-dirty-state emitter, Dashboard-Workbench und die lokale Qualitätsbaseline sind
-implementiert oder historisch abgeschlossen. Details bleiben in
-`docs/07-changelog/CHANGELOG.md` und den historischen Release-Dokumenten.
+- [ ] protocol is frozen/preregistered;
+- [ ] implementation and controls are tested;
+- [ ] runs are reproducible from manifests;
+- [ ] data partitions and AI treatments are explicit;
+- [ ] runtime errors/provenance checks pass;
+- [ ] evidence artifacts are accepted by the evidence gate;
+- [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
+- [ ] documentation records what was actually shown, not what was expected.

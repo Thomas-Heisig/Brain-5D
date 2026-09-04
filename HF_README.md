@@ -16,182 +16,100 @@ tags:
 pipeline_tag: reinforcement-learning
 ---
 
-# 🧠 Brain‑5D
+# Brain-5D
 
-**Sparse 5D Spiking‑Neural Simulation with Observable Plasticity**
+**Sparse 5D spiking-neural research framework with controlled plasticity, embodiment and scientific provenance.**
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-379%20passing-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
-[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+Brain-5D is an experimental framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network. The SNN remains the primary adaptive system; language models and research assistants are bounded interpretation/proposal components unless explicitly registered as experimental treatments.
 
-**Brain‑5D** is an experimental **spiking‑neural simulation platform** operating in a sparse 5D coordinate space.
-It combines spiking dynamics, spike‑timing‑dependent plasticity (STDP), homeostatic regulation, structural self‑organization, deterministic persistence, and an operator‑facing dashboard.
+> Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests is not the same as scientific evidence.
 
-> **Research status**
-> Brain‑5D is an engineering and research project. The current implementation does **not** claim AGI, consciousness, sentience or biological equivalence.
+## Current baseline
 
----
+- version: `0.5.0a7`
+- Python: 3.11–3.13
+- 700 tests collected; current full suite: 698 passed, 2 intentionally opt-in large-storage tests skipped
+- fast-suite coverage: 72%
+- Scientific Integrity, typing, security, wheel and Docker CI gates: green on the verified `main` baseline
 
-## 🎯 Key Features
+## Capabilities
 
-| Feature | Description |
-|---------|-------------|
-| **🧬 Spiking Core** | Izhikevich regular‑spiking neurons in a sparse 5D coordinate space |
-| **📐 STDP Learning** | Spike‑timing‑dependent plasticity with signed eligibility traces |
-| **⚖️ Homeostasis** | Target firing‑rate regulation, adaptive thresholds, energy homeostasis |
-| **🔄 Structural Plasticity** | Controlled neuron/synapse creation, pruning, and persistent undo |
-| **🧠 Self‑Organization** | Policy‑driven structural proposals with safety validation |
-| **💾 Deterministic Persistence** | `.b5d` snapshots, state delta journal, structural journal, runtime checkpoints |
-| **📊 Operator Dashboard** | Real‑time visualization, heatmaps, structural approval, live projection |
-| **🔬 Scientific Evidence** | Built‑in evidence framework (B5D‑SEF) for reproducible experiments |
+- sparse 5D Izhikevich SNN with delayed events and deterministic RNG state;
+- STDP, signed eligibility and delayed reward / three-factor learning;
+- homeostasis and bounded interoception;
+- structural proposals, explicit approval, mutation, journal, undo and recovery;
+- `.b5d` snapshots, delta journals, checkpoints and deterministic restore/continue;
+- typed embodiment, actuator authorization, audit trails and deterministic environments;
+- real host telemetry/device discovery without fabricated fallback values;
+- research registries, manifests, DATA/EVID separation and AI provenance;
+- responsive seven-workspace dashboard: Overview, Network, Control, Research, Release, Settings and Embodiment.
 
----
-
-## 🏗️ Architecture Overview
-
-```
-                    ┌─────────────────────┐
-                    │   Operator Dashboard │
-                    │   (127.0.0.1:8765)   │
-                    └──────────┬──────────┘
-                               │ HTTP / Bridge
-                    ┌──────────▼──────────┐
-                    │   RuntimeController │
-                    └──────────┬──────────┘
-                               │
-          ┌────────────────────┼────────────────────┐
-          ▼                    ▼                    ▼
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│  NeuralNetwork  │  │ HomeostasisEng. │  │ LearningEngine  │
-│  (5D sparse)    │  │ (rate/threshold)│  │ (STDP/eligibility)│
-└────────┬────────┘  └─────────────────┘  └─────────────────┘
-         │
-         ▼
-┌──────────────────────────────────────────────────────────┐
-│              Persistence Layer                            │
-│  .b5d Snapshot + Delta Journal + Structural Journal + CP │
-└──────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🚀 Quick Start
-
-### Installation
+## Quick start
 
 ```bash
-git clone https://huggingface.co/<your-org>/Brain-5D
+git clone https://github.com/Thomas-Heisig/Brain-5D.git
 cd Brain-5D
 python -m venv .venv
-source .venv/bin/activate   # Linux/Mac
-# .venv\Scripts\Activate.ps1  # Windows
+source .venv/bin/activate
 pip install -e ".[dev]"
-```
-
-### Run the Simulation
-
-```bash
-# With dashboard (default)
 python -m src.main --config configs/poc_config.yaml
-
-# Headless mode
-python -m src.main --config configs/poc_structural_live.yaml --no-dashboard --ticks 500
 ```
 
-### Open the Dashboard
+Windows PowerShell activation:
 
-Navigate to [http://127.0.0.1:8765](http://127.0.0.1:8765)
-
----
-
-## 📦 Repository Structure
-
-```
-Brain-5D/
-├── src/
-│   ├── core/                 # Neural network and neuron/synapse core
-│   ├── controller/           # Operator/runtime controller
-│   ├── learning/             # STDP, eligibility and reward learning
-│   ├── homeostasis/          # Firing-rate / threshold / energy regulation
-│   ├── self_organization/    # Policy, coordinator, approval, plasticity
-│   ├── manipulation/         # Controlled mutation boundary
-│   ├── storage/              # Snapshots, journals, checkpoint, recovery
-│   ├── dashboard/            # Local operator console and API
-│   └── ...
-├── tests/                    # Test suite (379+ tests)
-├── configs/                  # YAML configuration files
-├── docs/                     # Documentation and roadmap
-├── research/                 # Scientific evidence framework
-├── artifacts/                # Simulation snapshots and journals
-└── scripts/                  # Utility and verification scripts
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+.\start.ps1
 ```
 
----
+The dashboard defaults to `http://127.0.0.1:8765`.
 
-## 📚 Documentation
+## Current research focus
 
-| Resource | Description |
-|----------|-------------|
-| [docs/08-roadmap/ROADMAP.md](docs/08-roadmap/ROADMAP.md) | Development roadmap and milestones |
-| [docs/07-changelog/CHANGELOG.md](docs/07-changelog/CHANGELOG.md) | Detailed changelog |
-| [docs/08-roadmap/TODO.md](docs/08-roadmap/TODO.md) | Current TODO and gate status |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture documentation |
-| [docs/B5D_FORMAT.md](docs/B5D_FORMAT.md) | `.b5d` snapshot format specification |
-| [research/README.md](research/README.md) | Scientific evidence framework |
+The engineering foundation is broad enough that the next priority is **evidence closure rather than feature accumulation**:
 
----
+1. productive learning with holdout and matched controls;
+2. closed-loop embodiment versus replay/open-loop controls;
+3. simulation-time versus wall-clock pacing calibration;
+4. causal ablations of the 5D organization;
+5. self-regulation/sensor-loss studies;
+6. later memory/world-model and multimodal grounding;
+7. AI-as-treatment comparisons with frozen provenance.
 
-## 🧪 Testing
+## Documentation
 
-```bash
-# Fast regression suite
-pytest -v -m "not slow"
+- [Project README](README.md)
+- [Architecture](docs/02-architecture/ARCHITECTURE.md)
+- [Dashboard](docs/03-dashboard/DASHBOARD.md)
+- [Roadmap](docs/08-roadmap/ROADMAP.md)
+- [TODO](docs/08-roadmap/TODO.md)
+- [Research roadmap](docs/08-roadmap/RESEARCH_ROADMAP.md)
+- [Research/evidence framework](research/README.md)
 
-# Full suite
-pytest -v
+Versioned Alpha/Sprint/Release documents are historical traceability records and should not be used as the current project status unless linked by a canonical document.
 
-# With coverage
-pytest --cov=src --cov-report=term-missing
+## Scientific boundary
+
+```text
+implementation test != experiment data != accepted evidence != interpretation
 ```
 
-Current baseline: **379 passed, 0 failed** ✅
+Observed values remain distinct from inferred values. Missing telemetry remains unknown. Device availability is not authorization. AI output is not empirical measurement.
 
----
+## License and citation
 
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE).
-
-Copyright © 2025-2026 Thomas Heisig and contributors.
-
----
-
-## 📖 Citation
+MIT License — see `LICENSE`.
 
 ```bibtex
 @software{heisig2026brain5d,
-  author = {Thomas Heisig},
-  title = {Brain-5D: Sparse 5D Spiking-Neural Simulation with Observable Plasticity},
-  year = {2026},
-  version = {0.5.0-alpha.7},
-  url = {https://huggingface.co/<your-org>/Brain-5D},
+  author  = {Thomas Heisig},
+  title   = {Brain-5D: Sparse 5D Spiking-Neural Research Framework},
+  year    = {2026},
+  version = {0.5.0a7},
+  url     = {https://github.com/Thomas-Heisig/Brain-5D},
   license = {MIT}
 }
 ```
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-**Current focus:** Alpha.7 — Embodiment Foundation & Safe Environment I/O.
-
----
-
-## 🔗 Links
-
-- **GitHub:** [Thomas-Heisig/Brain-5D](https://github.com/Thomas-Heisig/Brain-5D)
-- **Issues:** [GitHub Issues](https://github.com/Thomas-Heisig/Brain-5D/issues)
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+GitHub: https://github.com/Thomas-Heisig/Brain-5D
