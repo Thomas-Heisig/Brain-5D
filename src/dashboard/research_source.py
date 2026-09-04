@@ -38,12 +38,12 @@ def classify_ai_operation(manifest: dict[str, Any]) -> str:
         "UNKNOWN",
     }:
         return explicit
-    interactions_value: Any = manifest.get("ai_interactions", [])
-    interactions: list[Any]
-    if not isinstance(interactions_value, list):
-        interactions = []
-    else:
-        interactions = cast(list[Any], interactions_value)
+    interactions_value: object = manifest.get("ai_interactions", [])
+    interactions: list[Any] = []
+    if isinstance(interactions_value, list):
+        interactions.extend(
+            interactions_value  # pyright: ignore[reportUnknownArgumentType]
+        )
     if not interactions and isinstance(manifest.get("ai_model_provenance"), dict):
         interactions = [{"model_provenance": manifest["ai_model_provenance"]}]
     if not interactions:
