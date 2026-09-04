@@ -164,9 +164,17 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     frequency = cast(Any, psutil.cpu_freq())
     per_cpu = psutil.cpu_percent(interval=None, percpu=True)
 
+    load_average_reader = cast(
+        Callable[[], tuple[float, float, float]] | None,
+        getattr(os, "getloadavg", None),
+    )
     try:
-        load_average: JSONValue = [float(value) for value in os.getloadavg()]
-    except (AttributeError, OSError):
+        load_average: JSONValue = (
+            [float(value) for value in load_average_reader()]
+            if callable(load_average_reader)
+            else None
+        )
+    except OSError:
         load_average = None
 
     return {
