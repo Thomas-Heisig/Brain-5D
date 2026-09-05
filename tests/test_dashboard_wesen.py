@@ -37,11 +37,11 @@ def test_wesen_has_dynamic_machine_native_morphology() -> None:
     ):
         assert token in source
     for token in (
-        "force",
-        "hullPath",
-        "satellites",
-        "desired",
-        "radius(kind)",
+        "function layout",
+        "function hullPath",
+        "function satellites",
+        "function radius",
+        "1900 / d2",
     ):
         assert token in organism
     assert "WESEN_POLL_MS = 750" in source
