@@ -9,7 +9,6 @@ from __future__ import annotations
 import random
 import statistics
 import time
-from dataclasses import asdict
 from typing import Any, Mapping
 
 from src.core import NeuralNetwork
@@ -20,7 +19,11 @@ from src.embodiment import (
     derive_regulatory_state,
     normalize_vital_signals,
 )
-from src.experiments.learning_lab import _probe_response, _train, run_learning_experiment
+from src.experiments.learning_lab import (
+    _probe_response,
+    _train,
+    run_learning_experiment,
+)
 from src.research.canonical_state import canonical_state_digest
 from src.research.experiment_suite import ScientificRun
 from src.research.network_probe import NetworkImpulseProbe
@@ -58,7 +61,13 @@ def _three_node_network(
     coords: tuple[Coord5D, Coord5D, Coord5D] = (
         (0, 0, 0, 0, 0),
         (1, 0, 0, 0, 0) if dimensions[0] >= 2 else (0, 1, 0, 0, 0),
-        tuple(size - 1 for size in dimensions),  # type: ignore[arg-type]
+        (
+            dimensions[0] - 1,
+            dimensions[1] - 1,
+            dimensions[2] - 1,
+            dimensions[3] - 1,
+            dimensions[4] - 1,
+        ),
     )
     ids = [network.add_neuron(coord) for coord in coords]
     network.input_cells.add(ids[0])
@@ -67,7 +76,9 @@ def _three_node_network(
     network.connect(ids[0], ids[1], 100.0, 1, config=syn_cfg)
     network.connect(ids[1], ids[2], 100.0, 1, config=syn_cfg)
     if recurrent_weight is not None and recurrent_weight > 0.0:
-        network.connect(ids[2], ids[0], recurrent_weight, recurrent_delay, config=syn_cfg)
+        network.connect(
+            ids[2], ids[0], recurrent_weight, recurrent_delay, config=syn_cfg
+        )
     return network
 
 
@@ -118,9 +129,11 @@ def run_recurrence_map(
                         "persistence_class": (
                             "persistent_to_window"
                             if isinstance(last, int) and last >= ticks - 1
-                            else "transient"
-                            if isinstance(last, int) and last > 2
-                            else "immediate_decay"
+                            else (
+                                "transient"
+                                if isinstance(last, int) and last > 2
+                                else "immediate_decay"
+                            )
                         ),
                     }
                 )
@@ -207,6 +220,7 @@ def run_generalization(
                 )
     return runs
 
+
 def run_replication(
     config: Config,
     seeds: tuple[int, ...] = tuple(range(20)),
@@ -285,7 +299,7 @@ def run_regulation_recovery(
     ticks: int = 128,
 ) -> list[ScientificRun]:
     """Measure a defined regulatory feedback intervention against a disabled control."""
-    readings = {
+    readings: dict[str, dict[str, Any]] = {
         "nominal": {
             "cpu_percent": 20.0,
             "memory_percent": 30.0,
@@ -310,7 +324,9 @@ def run_regulation_recovery(
             recovery_spikes = 0
             for tick in range(ticks):
                 phase = "pressure" if ticks // 3 <= tick < 2 * ticks // 3 else "nominal"
-                frame = InteroceptionFrame(tick, normalize_vital_signals(readings[phase]))
+                frame = InteroceptionFrame(
+                    tick, normalize_vital_signals(readings[phase])
+                )
                 regulatory = derive_regulatory_state(frame)
                 functional = derive_functional_state(frame)
                 current = 100.0
@@ -340,7 +356,9 @@ def run_regulation_recovery(
                         "pressure_phase_spikes": pressure_spikes,
                         "recovery_phase_spikes": recovery_spikes,
                         "recovery_ratio": (
-                            recovery_spikes / pressure_spikes if pressure_spikes else None
+                            recovery_spikes / pressure_spikes
+                            if pressure_spikes
+                            else None
                         ),
                         "feedback_definition": "pressure scales source current only in regulation_on",
                     },

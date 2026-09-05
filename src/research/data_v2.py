@@ -14,7 +14,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence, cast
+from typing import Any, Mapping, Sequence, cast
 
 AI_PACKET_MAX_BYTES = 1_000_000
 RUN_SUMMARY_MAX_BYTES = 5_000_000
@@ -55,18 +55,31 @@ def _safe_name(value: object) -> str:
     return name or "run"
 
 
-def compact_for_storage(value: Any, *, preview_items: int = SEQUENCE_PREVIEW_ITEMS) -> Any:
+def compact_for_storage(
+    value: Any, *, preview_items: int = SEQUENCE_PREVIEW_ITEMS
+) -> Any:
     """Return a deterministic bounded projection without inventing statistics."""
     if isinstance(value, dict):
-        return {str(key): compact_for_storage(item, preview_items=preview_items) for key, item in value.items()}
+        return {
+            str(key): compact_for_storage(item, preview_items=preview_items)
+            for key, item in value.items()
+        }
     if isinstance(value, list):
         if len(value) <= preview_items * 2:
-            return [compact_for_storage(item, preview_items=preview_items) for item in value]
+            return [
+                compact_for_storage(item, preview_items=preview_items) for item in value
+            ]
         return {
             "_projection": "bounded_sequence",
             "item_count": len(value),
-            "head": [compact_for_storage(item, preview_items=preview_items) for item in value[:preview_items]],
-            "tail": [compact_for_storage(item, preview_items=preview_items) for item in value[-preview_items:]],
+            "head": [
+                compact_for_storage(item, preview_items=preview_items)
+                for item in value[:preview_items]
+            ],
+            "tail": [
+                compact_for_storage(item, preview_items=preview_items)
+                for item in value[-preview_items:]
+            ],
         }
     if isinstance(value, tuple):
         return compact_for_storage(list(value), preview_items=preview_items)
@@ -76,7 +89,8 @@ def compact_for_storage(value: Any, *, preview_items: int = SEQUENCE_PREVIEW_ITE
 def _write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True, default=list) + "\n",
+        json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True, default=list)
+        + "\n",
         encoding="utf-8",
     )
 
@@ -126,13 +140,18 @@ def prepare_research_data_v2(
     summaries: list[dict[str, Any]] = []
     raw_paths: list[Path] = []
 
-    for index, run in enumerate(tuple(runs)):
+    for run_index, run in enumerate(tuple(runs)):
         condition = _safe_name(run.get("condition", "unknown"))
         seed = run.get("seed", "unknown")
-        raw_path = raw_dir / f"run-{index:04d}-{condition}-seed-{seed}.json.gz"
+        raw_path = raw_dir / f"run-{run_index:04d}-{condition}-seed-{seed}.json.gz"
         _write_json(
             current_path,
-            {"status": "archiving", "run_index": index, "condition": run.get("condition"), "seed": seed},
+            {
+                "status": "archiving",
+                "run_index": run_index,
+                "condition": run.get("condition"),
+                "seed": seed,
+            },
         )
         digest, size_bytes, uncompressed_bytes = _write_gzip_json(raw_path, run)
         raw_paths.append(raw_path)
@@ -148,7 +167,7 @@ def prepare_research_data_v2(
         summaries.append(summary)
         raw_entries.append(
             {
-                "run_index": index,
+                "run_index": run_index,
                 "condition": run.get("condition"),
                 "seed": seed,
                 **raw_ref,
@@ -156,7 +175,7 @@ def prepare_research_data_v2(
         )
         _write_json(
             current_path,
-            {"status": "idle", "last_archived_run": index, "raw_artifact": raw_ref},
+            {"status": "idle", "last_archived_run": run_index, "raw_artifact": raw_ref},
         )
 
     index = {
@@ -225,7 +244,9 @@ def prepare_research_data_v2(
     )
 
 
-def _select_metrics(run: dict[str, Any], metrics: Sequence[str] | None) -> dict[str, Any]:
+def _select_metrics(
+    run: dict[str, Any], metrics: Sequence[str] | None
+) -> dict[str, Any]:
     if not metrics:
         return run
     selected = dict(run)
@@ -269,7 +290,11 @@ def build_detail_packet(
             )
         )
         source_refs.append(
-            {"path": entry["path"], "sha256": entry["sha256"], "seed": entry.get("seed")}
+            {
+                "path": entry["path"],
+                "sha256": entry["sha256"],
+                "seed": entry.get("seed"),
+            }
         )
     packet = {
         "schema_version": "1.0",

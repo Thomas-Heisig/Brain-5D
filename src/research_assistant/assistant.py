@@ -270,7 +270,6 @@ class ResearchAssistant:
             raise FileNotFoundError(f"Research artifact not found: {relative_path}")
         return path
 
-
     @staticmethod
     def _prompt(role: str, packet: ResearchPacket) -> str:
         common = (

@@ -66,7 +66,10 @@ def test_data_v2_archives_full_runs_and_bounds_ai_input(tmp_path: Path) -> None:
     assert index["run_count"] == 2
     assert current["status"] == "idle"
     assert artifacts.ai_packet_path.stat().st_size <= AI_PACKET_MAX_BYTES
-    assert packet["ai_input_policy"] == "compact_only_raw_on_explicit_deterministic_extract"
+    assert (
+        packet["ai_input_policy"]
+        == "compact_only_raw_on_explicit_deterministic_extract"
+    )
     assert isinstance(runs[0]["metrics"]["comparisons"], dict)  # type: ignore[index]
     assert runs[0]["metrics"]["comparisons"]["item_count"] == 20_000  # type: ignore[index]
 

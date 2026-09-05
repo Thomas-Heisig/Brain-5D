@@ -254,12 +254,16 @@ def _semantic_status(
     if question_id == "RQ-REC-001":
         return classify(
             any(item.startswith("w0_") for item in plain)
-            and any(item.startswith("w100_") or item.startswith("w125_") for item in plain),
+            and any(
+                item.startswith("w100_") or item.startswith("w125_") for item in plain
+            ),
             "REC-001 erwartet eine registrierte Rekurrenz-Gewicht/Delay-Karte mit Nullkontrolle.",
         )
     if question_id == "RQ-REC-002":
         return classify(
-            {"loop_delay_1", "loop_delay_2", "loop_delay_4", "loop_delay_8"}.issubset(plain),
+            {"loop_delay_1", "loop_delay_2", "loop_delay_4", "loop_delay_8"}.issubset(
+                plain
+            ),
             "REC-002 erwartet die registrierte Loop-Delay-Leiter.",
         )
     if question_id == "RQ-GEN-001":

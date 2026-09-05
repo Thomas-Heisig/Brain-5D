@@ -92,8 +92,7 @@ def test_build_packet_bounds_large_raw_sequences_for_analysis_prompt(
     _write_research_fixture(tmp_path)
     data_path = tmp_path / "generated" / "data" / "DATA-2026-17.json"
     raw_runs = [
-        {"current_tick": index, "discrepancy": index / 10}
-        for index in range(300)
+        {"current_tick": index, "discrepancy": index / 10} for index in range(300)
     ]
     data_path.write_text(json.dumps(raw_runs), encoding="utf-8")
 

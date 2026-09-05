@@ -38,7 +38,9 @@ def main() -> None:
     replace(followup, "    readings = {", "    readings: dict[str, dict[str, Any]] = {")
 
     workflow = ROOT / "src/dashboard/experiment_workflow.py"
-    replace(workflow, "from types import CodeType", "from types import CodeType, ModuleType")
+    replace(
+        workflow, "from types import CodeType", "from types import CodeType, ModuleType"
+    )
     replace(
         workflow,
         "            runner_module = experiment_suite",
@@ -47,7 +49,7 @@ def main() -> None:
     replace(
         workflow,
         "        runner = getattr(runner_module, runner_name)\n        runtime_runner_digest, source_runner_digest = (\n            _assert_loaded_callable_matches_source(\n                runner, Path(runner_module.__file__).resolve(), runner_name\n            )\n        )",
-        "        runner = getattr(runner_module, runner_name)\n        runner_source = runner_module.__file__\n        if runner_source is None:\n            raise WorkflowValidationError(\n                f\"Cannot resolve source path for runner module {runner_module.__name__}.\"\n            )\n        runtime_runner_digest, source_runner_digest = (\n            _assert_loaded_callable_matches_source(\n                runner, Path(runner_source).resolve(), runner_name\n            )\n        )",
+        '        runner = getattr(runner_module, runner_name)\n        runner_source = runner_module.__file__\n        if runner_source is None:\n            raise WorkflowValidationError(\n                f"Cannot resolve source path for runner module {runner_module.__name__}."\n            )\n        runtime_runner_digest, source_runner_digest = (\n            _assert_loaded_callable_matches_source(\n                runner, Path(runner_source).resolve(), runner_name\n            )\n        )',
     )
 
 

@@ -10,7 +10,7 @@ import re
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
-from types import CodeType
+from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
 from src.research.data_v2 import prepare_research_data_v2
@@ -168,15 +168,20 @@ class ExperimentWorkflowService:
         config_digest = _sha256_file(config_path)
         started = perf_counter()
         if hasattr(experiment_suite, runner_name):
-            runner_module = experiment_suite
+            runner_module: ModuleType = experiment_suite
         else:
             from src.research import followup_experiments
 
             runner_module = followup_experiments
         runner = getattr(runner_module, runner_name)
+        runner_source = runner_module.__file__
+        if runner_source is None:
+            raise WorkflowValidationError(
+                f"Cannot resolve source path for runner module {runner_module.__name__}."
+            )
         runtime_runner_digest, source_runner_digest = (
             _assert_loaded_callable_matches_source(
-                runner, Path(runner_module.__file__).resolve(), runner_name
+                runner, Path(runner_source).resolve(), runner_name
             )
         )
         summary_runtime_digest, summary_source_digest = (
@@ -362,7 +367,9 @@ class ExperimentWorkflowService:
             },
         }
 
-    def _science_runner(self, body: dict[str, object], workflow: ExperimentWorkflow) -> str:
+    def _science_runner(
+        self, body: dict[str, object], workflow: ExperimentWorkflow
+    ) -> str:
         """Resolve execution from protocol and registered research question.
 
         Generated experiment IDs are labels only. They must never silently select

@@ -54,7 +54,9 @@ def protocol_by_id(research_root: Path, protocol_id: str) -> dict[str, Any] | No
     )
 
 
-def protocol_for_question(research_root: Path, question_id: str) -> dict[str, Any] | None:
+def protocol_for_question(
+    research_root: Path, question_id: str
+) -> dict[str, Any] | None:
     matches = [
         protocol
         for protocol in load_operational_protocols(research_root)
@@ -89,8 +91,10 @@ def _validate_prereg_object(
                 f"Preregistration {key} does not match operational protocol."
             )
     outcomes = prereg.get("primary_outcomes")
-    if not isinstance(outcomes, list) or not outcomes or not all(
-        isinstance(item, str) and item for item in outcomes
+    if (
+        not isinstance(outcomes, list)
+        or not outcomes
+        or not all(isinstance(item, str) and item for item in outcomes)
     ):
         raise PreregistrationError("primary_outcomes must be a non-empty string list.")
     conditions = prereg.get("conditions")
