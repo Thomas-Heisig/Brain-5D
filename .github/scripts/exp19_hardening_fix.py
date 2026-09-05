@@ -35,6 +35,10 @@ text = text.replace(
 )
 text = text.replace(
     "        comparisons = metrics.get(\"comparisons\")\n        if not isinstance(comparisons, list) or len(comparisons) <= threshold:\n            continue\n",
+    "        metrics_raw: object = run.get(\"metrics\")\n        if not isinstance(metrics_raw, dict):\n            continue\n        metrics = cast(dict[str, object], metrics_raw)\n        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons = cast(list[object], comparison_value)\n",
+)
+text = text.replace(
     "        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons: list[object] = list(comparison_value)\n",
+    "        metrics_raw: object = run.get(\"metrics\")\n        if not isinstance(metrics_raw, dict):\n            continue\n        metrics = cast(dict[str, object], metrics_raw)\n        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons = cast(list[object], comparison_value)\n",
 )
 workflow.write_text(text, encoding="utf-8")
