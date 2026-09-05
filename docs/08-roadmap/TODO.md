@@ -10,7 +10,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] `main` is the canonical development line.
 - [x] CI green across Python 3.11, 3.12 and 3.13.
-- [x] 713 tests collected; 708 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
+- [x] 714 tests collected; 709 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
 - [x] Fast-suite coverage currently 72%.
 - [x] Scientific Integrity Gate green.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.
@@ -26,9 +26,9 @@ These tasks should produce the next scientific gain before broad feature expansi
 
 ### Productive learning
 
-- [ ] Freeze a canonical productive-learning protocol and configuration.
+- [x] Freeze a canonical productive-learning protocol and configuration.
 - [ ] Bind every run to code/config/prompt/data digests.
-- [ ] Enforce train/validation/holdout partition separation in the final protocol.
+- [x] Enforce train/validation/holdout partition separation in the final protocol.
 - [x] Add matched learning-off and sham/replay controls.
 - [x] Persist pre/post behavioral probes together with weight/reward changes.
 - [ ] Execute independent multi-seed repeats in clean processes.

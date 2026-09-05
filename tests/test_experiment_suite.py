@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any, cast
 
+import pytest
 import yaml
 
 from src.research.experiment_suite import (
@@ -75,3 +76,21 @@ def test_productive_stdp_and_learning_repeat_use_real_result() -> None:
     assert by_condition["sham_replay"].metrics["mean_weight_delta"] == 0.0
     assert by_condition["sham_replay"].metrics["rewards_received"] > 0
     assert by_condition["sham_replay"].metrics["reward_weight_updates"] == 0
+    assert by_condition["learning_on"].metrics["train_trial_count"] == 12
+    assert by_condition["learning_on"].metrics["validation_trial_count"] == 4
+    assert by_condition["learning_on"].metrics["holdout_trial_count"] == 4
+    assert by_condition["learning_on"].metrics["protocol_id"] == "PROTOCOL-STDP-0002"
+    assert by_condition["learning_on"].metrics["protocol_version"] == 1
+
+
+def test_learning_protocol_rejects_overlapping_partitions() -> None:
+    config = _config()
+    config["learning_experiment"] = dict(config["learning_experiment"])
+    config["learning_experiment"]["partitions"] = {
+        "train": [0, 1],
+        "validation": [1, 2],
+        "holdout": list(range(3, 20)),
+    }
+
+    with pytest.raises(ValueError, match="must be disjoint"):
+        run_learning_repeat(config, seeds=(42,))

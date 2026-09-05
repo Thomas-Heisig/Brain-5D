@@ -30,7 +30,7 @@ def test_reward_training_changes_network_response(
 
     assert not result.baseline_target_spiked
     assert result.trained_target_spiked
-    assert result.trained_target_spike_tick == 2
+    assert result.trained_target_spike_tick == 4
     assert result.learned
 
 
@@ -41,7 +41,7 @@ def test_reward_training_strengthens_weights(
     result = run_learning_experiment(experiment_config)
 
     assert result.initial_mean_weight == pytest.approx(0.05)  # type: ignore[reportUnknownMemberType]
-    assert result.final_mean_weight > 0.8
+    assert result.final_mean_weight > 0.5
     assert result.final_mean_weight <= 1.0
     assert result.mean_weight_delta > 0.0
 
@@ -52,10 +52,13 @@ def test_reward_accounting_matches_training_trials(
     """Every training episode must receive and apply exactly one reward."""
     result = run_learning_experiment(experiment_config)
 
-    assert result.rewards_received == result.training_trials
-    assert result.rewards_applied == result.training_trials
+    assert result.train_trial_count == 12
+    assert result.validation_trial_count == 4
+    assert result.holdout_trial_count == 4
+    assert result.rewards_received == result.train_trial_count
+    assert result.rewards_applied == result.train_trial_count
     assert result.reward_weight_updates == (
-        result.training_trials * result.presynaptic_neurons
+        result.train_trial_count * result.presynaptic_neurons
     )
 
 

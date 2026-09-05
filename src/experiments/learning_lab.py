@@ -27,6 +27,7 @@ from src.learning.learning_engine import LearningEngine
 
 Config = Mapping[str, Any]
 Coord5D = tuple[int, int, int, int, int]
+TrialPartitions = dict[str, tuple[int, ...]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,6 +48,11 @@ class LearningExperimentResult:
     trained_target_peak_v: float
     baseline_target_spike_tick: int | None
     trained_target_spike_tick: int | None
+    train_trial_count: int
+    validation_trial_count: int
+    holdout_trial_count: int
+    protocol_id: str
+    protocol_version: int
     condition: str = "learning_on"
 
     @property
@@ -91,6 +97,48 @@ def _candidate_coords(dims: Coord5D) -> Iterable[Coord5D]:
     return (cast(Coord5D, coord) for coord in product)
 
 
+def _validated_trial_partitions(config: Config) -> TrialPartitions:
+    """Validate the canonical train/validation/holdout trial split."""
+    exp = _experiment_config(config)
+    protocol_id = exp.get("protocol_id")
+    protocol_version = exp.get("protocol_version")
+    if not isinstance(protocol_id, str) or not protocol_id.strip():
+        raise ValueError("learning_experiment.protocol_id must not be empty")
+    if not isinstance(protocol_version, int) or isinstance(protocol_version, bool):
+        raise ValueError("learning_experiment.protocol_version must be an integer")
+    if protocol_version < 1:
+        raise ValueError("learning_experiment.protocol_version must be positive")
+    trials = int(exp.get("training_trials", 20))
+    raw = exp.get("partitions")
+    if not isinstance(raw, Mapping):
+        raise ValueError("learning_experiment.partitions must be a mapping")
+
+    partitions: TrialPartitions = {}
+    expected = set(range(trials))
+    seen: set[int] = set()
+    for name in ("train", "validation", "holdout"):
+        values = raw.get(name)
+        if not isinstance(values, Sequence) or isinstance(values, (str, bytes)):
+            raise ValueError(f"learning_experiment.partitions.{name} must be a list")
+        indices = tuple(int(value) for value in values)
+        if not indices:
+            raise ValueError(f"learning_experiment.partitions.{name} must not be empty")
+        if any(index < 0 or index >= trials for index in indices):
+            raise ValueError(
+                f"learning_experiment.partitions.{name} has out-of-range trial"
+            )
+        if len(set(indices)) != len(indices) or seen.intersection(indices):
+            raise ValueError("learning_experiment partitions must be disjoint")
+        seen.update(indices)
+        partitions[name] = indices
+
+    if seen != expected:
+        raise ValueError(
+            "learning_experiment partitions must cover every training trial exactly once"
+        )
+    return partitions
+
+
 def _build_convergent_network(
     config: Config,
     weight: float,
@@ -128,11 +176,14 @@ def _advance_to_tick(network: NeuralNetwork, tick: int) -> None:
         network.step()
 
 
-def _train(config: Config, condition: str) -> tuple[tuple[float, ...], LearningEngine]:
+def _train(
+    config: Config, condition: str
+) -> tuple[tuple[float, ...], LearningEngine, TrialPartitions]:
     """Train the network using reward-modulated STDP."""
     if condition not in {"learning_on", "learning_off", "sham_replay"}:
         raise ValueError(f"Unsupported learning condition: {condition}")
     exp = _experiment_config(config)
+    partitions = _validated_trial_partitions(config)
     trials = int(exp.get("training_trials", 20))
     spacing = int(exp.get("trial_spacing_ticks", 25))
     pair_delay = int(exp.get("pair_delay_ticks", 5))
@@ -166,7 +217,7 @@ def _train(config: Config, condition: str) -> tuple[tuple[float, ...], LearningE
         raise ValueError("learning experiment requires reward.enabled=true")
     learning.attach()
 
-    for trial in range(trials):
+    for trial in partitions["train"]:
         pre_tick = trial * spacing
         post_tick = pre_tick + pair_delay
         _advance_to_tick(network, pre_tick)
@@ -192,7 +243,7 @@ def _train(config: Config, condition: str) -> tuple[tuple[float, ...], LearningE
     weights = tuple(
         synapse.weight for pre_id in pre_ids for synapse in network.synapses[pre_id]
     )
-    return weights, learning
+    return weights, learning, partitions
 
 
 def _probe_response(
@@ -233,11 +284,12 @@ def run_learning_experiment(
     initial_weight = float(exp.get("initial_weight", 0.05))
     pre_count = int(exp.get("presynaptic_neurons", 48))
     initial_weights = tuple(initial_weight for _ in range(pre_count))
+    partitions = _validated_trial_partitions(config)
 
     baseline_spiked, baseline_peak_v, baseline_tick = _probe_response(
         config, initial_weights
     )
-    trained_weights, learning = _train(config, condition)
+    trained_weights, learning, partitions = _train(config, condition)
     trained_spiked, trained_peak_v, trained_tick = _probe_response(
         config, trained_weights
     )
@@ -260,6 +312,11 @@ def run_learning_experiment(
         baseline_target_spike_tick=baseline_tick,
         trained_target_spike_tick=trained_tick,
         condition=condition,
+        train_trial_count=len(partitions["train"]),
+        validation_trial_count=len(partitions["validation"]),
+        holdout_trial_count=len(partitions["holdout"]),
+        protocol_id=str(exp["protocol_id"]),
+        protocol_version=int(exp["protocol_version"]),
     )
 
 

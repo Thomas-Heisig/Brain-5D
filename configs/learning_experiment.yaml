@@ -60,6 +60,8 @@ reward:
   reward_source: external
 
 learning_experiment:
+  protocol_id: PROTOCOL-STDP-0002
+  protocol_version: 1
   presynaptic_neurons: 48
   initial_weight: 0.05
   connection_delay_ticks: 1
@@ -69,3 +71,7 @@ learning_experiment:
   drive_current: 100.0
   reward_value: 1.0
   probe_ticks: 5
+  partitions:
+    train: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    validation: [12, 13, 14, 15]
+    holdout: [16, 17, 18, 19]

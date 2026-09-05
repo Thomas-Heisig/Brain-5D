@@ -556,7 +556,7 @@
   canonical version claims and the collected pytest baseline.
 - Added scheduled/manual CI coverage for the opt-in large `.b5d` and journal
   storage tests with archived JUnit results.
-- Refreshed the verified suite baseline to 713 collected, 708 passed and 5
+- Refreshed the verified suite baseline to 714 collected, 709 passed and 5
   skipped tests.
 - Extended `EXP-EMB-0001` DATA records with separate action-acceptance and
   observed-effect receipts.
@@ -570,6 +570,8 @@
   applicability and DATA through validated SHA-256 provenance digests.
 - Productive-learning repeats now include matched learning-off and sham-replay
   controls, preserving pre/post behavior, reward and weight metrics per seed.
+- `PROTOCOL-STDP-0002` is now explicit in the canonical YAML configuration and
+  rejects overlapping or incomplete train/validation/holdout trial partitions.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 
