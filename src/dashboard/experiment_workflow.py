@@ -2,21 +2,27 @@
 
 from __future__ import annotations
 
-import gzip
 import hashlib
 import json
 import marshal
-import re
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
-from types import CodeType
+from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
+from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
     write_detailed_experiment_summary,
     write_statistics_artifact,
+)
+from src.research.protocol_registry import (
+    OPERATIONAL_RUNNERS,
+    PreregistrationError,
+    protocol_by_id,
+    protocol_catalog,
+    validate_operational_protocol,
 )
 from src.research.registry import ResearchRegistry
 from src.research_assistant.airr import AIRRPipeline
@@ -127,6 +133,7 @@ class ExperimentWorkflowService:
                         "id": "stdp_pair_timing_v1",
                         "label": "STDP Pair-Timing v1 (registriert)",
                     },
+                    *protocol_catalog(self._research_root),
                 ],
             ),
             "next_experiment_id": self._next_experiment_id(),
@@ -159,10 +166,22 @@ class ExperimentWorkflowService:
         config = _load_yaml(config_path)
         config_digest = _sha256_file(config_path)
         started = perf_counter()
-        runner = getattr(experiment_suite, runner_name)
+        if hasattr(experiment_suite, runner_name):
+            runner_module: ModuleType = experiment_suite
+        else:
+            from src.research import followup_experiments
+
+            runner_module = followup_experiments
+        runner = getattr(runner_module, runner_name)
+        runner_source_value = getattr(runner_module, "__file__", None)
+        if not isinstance(runner_source_value, str):
+            raise WorkflowValidationError(
+                f"Cannot resolve source path for runner module {runner_module.__name__}."
+            )
+        runner_source = runner_source_value
         runtime_runner_digest, source_runner_digest = (
             _assert_loaded_callable_matches_source(
-                runner, Path(experiment_suite.__file__).resolve(), runner_name
+                runner, Path(runner_source).resolve(), runner_name
             )
         )
         summary_runtime_digest, summary_source_digest = (
@@ -179,6 +198,13 @@ class ExperimentWorkflowService:
             "run_5d",
             "run_time",
             "run_temporal",
+            "run_recurrence_map",
+            "run_replication",
+            "run_5d_matched",
+            "run_regulation_recovery",
+            "run_temporal_order",
+            "run_performance_profile",
+            "run_recurrence_scale",
         }
         if runner_name in tick_aware_runners:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
@@ -201,7 +227,11 @@ class ExperimentWorkflowService:
         # per-tick traces are then moved to compressed sidecars so runs.json remains
         # reviewable without discarding raw observations.
         statistics_path = write_statistics_artifact(output_dir, serialized_runs)
-        trace_paths = _externalize_large_traces(output_dir, serialized_runs)
+        statistics_payload = json.loads(statistics_path.read_text(encoding="utf-8"))
+        data_v2 = prepare_research_data_v2(
+            output_dir, serialized_runs, statistics_payload
+        )
+        trace_paths = list(data_v2.raw_paths)
         data_path.write_text(
             json.dumps(serialized_runs, indent=2, sort_keys=True, default=list) + "\n",
             encoding="utf-8",
@@ -217,6 +247,9 @@ class ExperimentWorkflowService:
             protocol=workflow.protocol,
         )
         recorder.record_artifact("data", "DATA/runs.json")
+        recorder.record_artifact("data_index", "DATA/runs_index.json")
+        recorder.record_artifact("ai_packet", "analysis/ai_packet.json")
+        recorder.record_artifact("ai_packet_digest", "analysis/ai_packet_digest.json")
         recorder.record_artifact("statistics", "analysis/statistics.json")
         recorder.record_artifact("workflow", "workflow.json")
         recorder.record_artifact("report", "report.md")
@@ -264,7 +297,16 @@ class ExperimentWorkflowService:
             code_digest=_sha256_file(Path(experiment_suite.__file__)),
             config_digest=config_digest,
             prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),
-            data_digest=_sha256_files([data_path, *trace_paths], output_dir),
+            data_digest=_sha256_files(
+                [
+                    data_path,
+                    data_v2.raw_index_path,
+                    data_v2.ai_packet_path,
+                    data_v2.ai_packet_digest_path,
+                    *trace_paths,
+                ],
+                output_dir,
+            ),
         )
         recorder.record_runtime(duration).mark_completed().save()
 
@@ -288,8 +330,13 @@ class ExperimentWorkflowService:
             "source_summary_bytecode_sha256": summary_source_digest,
             "source_runtime_consistency": "MATCH",
         }
-        if trace_paths:
-            artifacts["raw_trace_index"] = "DATA/traces/index.json"
+        artifacts["raw_run_index"] = "DATA/runs_index.json"
+        artifacts["current_run"] = "DATA/current_run.json"
+        artifacts["ai_packet"] = "analysis/ai_packet.json"
+        artifacts["ai_packet_digest"] = "analysis/ai_packet_digest.json"
+        operational_protocol = protocol_by_id(self._research_root, workflow.protocol)
+        if operational_protocol is not None:
+            artifacts["preregistration"] = str(operational_protocol["preregistration"])
         if ai_report.get("status") == "generated":
             artifacts["ai_report_json"] = str(ai_report["json"])
             artifacts["ai_report_markdown"] = str(ai_report["markdown"])
@@ -306,6 +353,8 @@ class ExperimentWorkflowService:
             "report": f"experiments/{workflow.experiment_id}/report.md",
             "workflow": f"experiments/{workflow.experiment_id}/workflow.json",
             "statistics": f"experiments/{workflow.experiment_id}/analysis/statistics.json",
+            "ai_packet": f"experiments/{workflow.experiment_id}/analysis/ai_packet.json",
+            "raw_run_index": f"experiments/{workflow.experiment_id}/DATA/runs_index.json",
             "data_id": f"DATA-{workflow.experiment_id}",
             "ai_report": ai_report,
             "summary": summary_path,
@@ -328,6 +377,9 @@ class ExperimentWorkflowService:
         """
         protocol = str(body.get("protocol") or workflow.protocol)
         question_id = workflow.question_id
+        operational_runner = OPERATIONAL_RUNNERS.get(protocol)
+        if operational_runner is not None:
+            return operational_runner
         if protocol == "science_all_v1":
             return "run_all"
         if protocol == "science_time_v1":
@@ -380,7 +432,19 @@ class ExperimentWorkflowService:
         runs: Sequence[_ScientificRunLike],
     ) -> dict[str, object]:
         """Verify that tick-aware runners really respected the requested window."""
-        exact_window_runners = {"run_ping", "run_ping_v2", "run_5d", "run_temporal"}
+        exact_window_runners = {
+            "run_ping",
+            "run_ping_v2",
+            "run_5d",
+            "run_temporal",
+            "run_recurrence_map",
+            "run_replication",
+            "run_5d_matched",
+            "run_regulation_recovery",
+            "run_temporal_order",
+            "run_performance_profile",
+            "run_recurrence_scale",
+        }
         if runner_name in exact_window_runners:
             observed_ints: list[int] = []
             for run in runs:
@@ -625,6 +689,17 @@ class ExperimentWorkflowService:
             raise WorkflowValidationError(
                 "The selected hypothesis does not belong to the research question."
             )
+        if protocol_by_id(self._research_root, protocol) is not None:
+            try:
+                validate_operational_protocol(
+                    self._research_root,
+                    question_id=question_id,
+                    hypothesis_id=hypothesis_id,
+                    protocol_id=protocol,
+                    seed_count=len(seeds),
+                )
+            except PreregistrationError as exc:
+                raise WorkflowValidationError(str(exc)) from exc
 
         return ExperimentWorkflow(
             experiment_id=experiment_id,
@@ -713,7 +788,9 @@ class ExperimentWorkflowService:
                 f"Runs: {run_count}; Dauer: {duration:.6f} s",
                 "",
                 "## Daten und Statistik",
-                "Rohdaten: `DATA/runs.json`",
+                "Kompakte Run-Projektion: `DATA/runs.json`",
+                "Unveränderlicher Rohdatenindex: `DATA/runs_index.json`",
+                "KI-Eingabepaket: `analysis/ai_packet.json` (hart begrenzt)",
                 "Deterministische deskriptive Statistik: `analysis/statistics.json`",
                 "Die Summary verbindet Rohdaten, Formeln, Einzelruns, Bedingungen, Reproduzierbarkeit und AIRR ohne KI-generierte Statistik.",
                 "",
@@ -811,80 +888,6 @@ def _assert_loaded_callable_matches_source(
             "dashboard/runtime before creating a scientific experiment."
         )
     return runtime_digest, source_digest
-
-
-def _safe_trace_name(condition: object, seed: object) -> str:
-    label = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(condition)).strip("-") or "trace"
-    return f"{label}-seed-{seed}.jsonl.gz"
-
-
-def _externalize_large_traces(
-    output_dir: Path, serialized_runs: list[dict[str, Any]], threshold: int = 10_000
-) -> list[Path]:
-    """Keep complete large traces compressed and references inside compact DATA."""
-    trace_dir = output_dir / "DATA" / "traces"
-    trace_entries: list[dict[str, object]] = []
-    written: list[Path] = []
-    for run in serialized_runs:
-        metrics_raw: object = run.get("metrics")
-        if not isinstance(metrics_raw, dict):
-            continue
-        metrics = cast(dict[str, object], metrics_raw)
-        comparison_value: object = metrics.get("comparisons")
-        if not isinstance(comparison_value, list):
-            continue
-        comparisons = cast(list[object], comparison_value)
-        if len(comparisons) <= threshold:
-            continue
-        trace_dir.mkdir(parents=True, exist_ok=True)
-        path = trace_dir / _safe_trace_name(run.get("condition"), run.get("seed"))
-        with gzip.open(
-            path, "wt", encoding="utf-8", newline="\n", compresslevel=9
-        ) as handle:
-            for item in comparisons:
-                handle.write(
-                    json.dumps(
-                        item,
-                        ensure_ascii=False,
-                        sort_keys=True,
-                        separators=(",", ":"),
-                    )
-                )
-                handle.write("\n")
-        digest = _sha256_file(path)
-        count = len(comparisons)
-        metrics["comparisons_artifact"] = {
-            "path": path.relative_to(output_dir).as_posix(),
-            "format": "jsonl.gz",
-            "count": count,
-            "sha256": digest,
-        }
-        metrics["comparisons_preview"] = comparisons[:8] + comparisons[-8:]
-        del metrics["comparisons"]
-        trace_entries.append(
-            {
-                "condition": run.get("condition"),
-                "seed": run.get("seed"),
-                "path": path.relative_to(output_dir).as_posix(),
-                "count": count,
-                "sha256": digest,
-                "size_bytes": path.stat().st_size,
-            }
-        )
-        written.append(path)
-    if trace_entries:
-        index_path = trace_dir / "index.json"
-        index_path.write_text(
-            json.dumps(
-                {"schema_version": "1.0", "traces": trace_entries},
-                indent=2,
-                sort_keys=True,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-        written.append(index_path)
-    return written
 
 
 def _sha256_files(paths: Sequence[Path], root: Path) -> str:

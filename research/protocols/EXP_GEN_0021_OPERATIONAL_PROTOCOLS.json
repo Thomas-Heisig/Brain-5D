@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "source_experiment": "EXP-GEN-0021",
+  "protocols": [
+    {
+      "id": "recurrence_map_v1",
+      "research_question": "RQ-REC-001",
+      "hypothesis": "H-REC-001-A",
+      "runner": "run_recurrence_map",
+      "preregistration": "preregistrations/PREREG-REC-001.json",
+      "tick_aware": true,
+      "default_ticks": 256,
+      "primary_outcomes": ["last_response_latency", "recurrent_events", "propagation_depth", "persistence_class"],
+      "controls": ["recurrent_weight=0"],
+      "treatments": ["recurrent_weight>0", "recurrent_delay"]
+    },
+    {
+      "id": "learning_generalization_v1",
+      "research_question": "RQ-GEN-001",
+      "hypothesis": "H-GEN-001-A",
+      "runner": "run_generalization",
+      "preregistration": "preregistrations/PREREG-GEN-001.json",
+      "tick_aware": false,
+      "primary_outcomes": ["generalization_success", "p_success_after", "mean_weight_delta"],
+      "controls": ["learning_off", "sham_replay"],
+      "treatments": ["learning_on", "probe_drive_scale"]
+    },
+    {
+      "id": "independent_replication_v1",
+      "research_question": "RQ-REPL-001",
+      "hypothesis": "H-REPL-001-A",
+      "runner": "run_replication",
+      "preregistration": "preregistrations/PREREG-REPL-001.json",
+      "tick_aware": true,
+      "default_ticks": 256,
+      "primary_outcomes": ["total_spikes", "recurrent_events", "propagation_depth", "last_response_latency"],
+      "controls": ["recurrence_off"],
+      "treatments": ["recurrence_on"]
+    },
+    {
+      "id": "topology_matched_5d_v1",
+      "research_question": "RQ-5D-005",
+      "hypothesis": "H-5D-005-A",
+      "runner": "run_5d_matched",
+      "preregistration": "preregistrations/PREREG-5D-005.json",
+      "tick_aware": true,
+      "default_ticks": 64,
+      "primary_outcomes": ["first_response_latency", "last_response_latency", "propagation_depth", "total_spikes"],
+      "controls": ["1d", "2d", "3d"],
+      "treatments": ["5d"]
+    },
+    {
+      "id": "closed_loop_regulation_v1",
+      "research_question": "RQ-REG-002",
+      "hypothesis": "H-REG-002-A",
+      "runner": "run_regulation_recovery",
+      "preregistration": "preregistrations/PREREG-REG-002.json",
+      "tick_aware": true,
+      "default_ticks": 128,
+      "primary_outcomes": ["pressure_phase_spikes", "recovery_phase_spikes", "recovery_ratio"],
+      "controls": ["regulation_off"],
+      "treatments": ["regulation_on"]
+    },
+    {
+      "id": "temporal_order_spiking_v1",
+      "research_question": "RQ-TEMP-002",
+      "hypothesis": "H-TEMP-002-A",
+      "runner": "run_temporal_order",
+      "preregistration": "preregistrations/PREREG-TEMP-002.json",
+      "tick_aware": true,
+      "default_ticks": 32,
+      "primary_outcomes": ["output_spike_count", "total_spikes", "sequence_digest"],
+      "controls": ["simultaneous", "reverse"],
+      "treatments": ["forward"]
+    },
+    {
+      "id": "subsystem_performance_v1",
+      "research_question": "RQ-PERF-001",
+      "hypothesis": "H-PERF-001-A",
+      "runner": "run_performance_profile",
+      "preregistration": "preregistrations/PREREG-PERF-001.json",
+      "tick_aware": true,
+      "default_ticks": 10000,
+      "primary_outcomes": ["construction_seconds", "core_step_seconds", "digest_seconds", "ticks_per_second"],
+      "controls": ["same code/config/seed strategy before optimization"],
+      "treatments": ["measured subsystem phase"]
+    },
+    {
+      "id": "recurrence_scale_v1",
+      "research_question": "RQ-REC-002",
+      "hypothesis": "H-REC-002-A",
+      "runner": "run_recurrence_scale",
+      "preregistration": "preregistrations/PREREG-REC-002.json",
+      "tick_aware": true,
+      "default_ticks": 256,
+      "primary_outcomes": ["last_response_latency", "recurrent_events", "propagation_depth"],
+      "controls": ["loop_delay=1"],
+      "treatments": ["loop_delay=2,4,8"]
+    },
+    {
+      "id": "learning_interference_screen_v1",
+      "research_question": "RQ-LIFE-001",
+      "hypothesis": "H-LIFE-001-A",
+      "runner": "run_learning_interference",
+      "preregistration": "preregistrations/PREREG-LIFE-001.json",
+      "tick_aware": false,
+      "primary_outcomes": ["retained_success_fraction", "weight_range", "task_successes"],
+      "controls": ["single-task acquisition baseline"],
+      "treatments": ["sequential three-task perturbation screen"]
+    }
+  ]
+}

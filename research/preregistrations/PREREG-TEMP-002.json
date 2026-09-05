@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-TEMP-002","research_question":"RQ-TEMP-002","hypothesis":"H-TEMP-002-A","protocol_id":"temporal_order_spiking_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["output_spike_count","total_spikes","sequence_digest"],
+  "secondary_outcomes":["condition-wise spike timing"],
+  "conditions":[{"id":"simultaneous","role":"control"},{"id":"reverse","role":"comparison"},{"id":"forward","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"same seed set and observation window for all temporal orders"},
+  "stopping_rule":"complete all registered temporal-order conditions for all seeds",
+  "inclusion_criteria":["spike-carrying input schedule","tick contract satisfied","identical amplitudes across conditions"],
+  "exclusion_criteria":["condition-specific amplitude changes","post-hoc schedule changes","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["condition spike distributions","sequence digest consistency","paired condition differences"],"inference_policy":"Temporal-order use requires a condition-dependent response not explainable by stimulus count alone.","planned_tests":[]},
+  "expected_failure_modes":["all schedules produce identical response","network is insensitive to order"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot change temporal schedules or stimuli.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}

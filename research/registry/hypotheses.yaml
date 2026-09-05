@@ -268,3 +268,68 @@
   evidence: []
   created: '2026-09-05'
   updated: '2026-09-05'
+
+- id: H-REC-001-A
+  research_question: RQ-REC-001
+  hypothesis: Rekurrenzgewicht und Delay erzeugen reproduzierbare Übergänge zwischen sofortigem Erlöschen, transienter Aktivität und Aktivität bis zum Ende des registrierten Beobachtungsfensters.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-GEN-001-A
+  research_question: RQ-GEN-001
+  hypothesis: Learning-on verbessert die Erfolgsrate auf vorab registrierten Perturbationsproben gegenüber Learning-off und Sham-Replay.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-REPL-001-A
+  research_question: RQ-REPL-001
+  hypothesis: Der Rekurrenzbehandlungseffekt bleibt über mindestens 20 vorab registrierte Initialisierungsseeds in Richtung und Größenordnung konsistent.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-5D-005-A
+  research_question: RQ-5D-005
+  hypothesis: Mindestens eine registrierte Propagationsmetrik unterscheidet sich in 5D von topology-matched niedrigdimensionalen Einbettungen.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-REG-002-A
+  research_question: RQ-REG-002
+  hypothesis: Der registrierte Regulationsfeedbackpfad verbessert die Recovery-Metrik nach einer identischen Druckphase gegenüber Regulation-off.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-TEMP-002-A
+  research_question: RQ-TEMP-002
+  hypothesis: Forward-, Reverse- und Simultanfolgen erzeugen bei gleicher Ereignisanzahl unterscheidbare spike-basierte Antwortsignaturen.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-PERF-001-A
+  research_question: RQ-PERF-001
+  hypothesis: Der Core-Tick-Loop ist nicht der einzige dominante Kostenblock vollständiger Science-Läufe; mindestens ein zusätzlicher gemessener Subsystemanteil ist relevant.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-REC-002-A
+  research_question: RQ-REC-002
+  hypothesis: Größere rekurrente Delays verändern Persistenzdauer oder Propagation Depth gegenüber dem Delay-1-Kontrollarm.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: H-LIFE-001-A
+  research_question: RQ-LIFE-001
+  hypothesis: Sequenzielle Lernaufgaben zeigen eine messbare Veränderung der Retentions- oder Gewichtssignatur gegenüber einer Single-Task-Baseline.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'
+
