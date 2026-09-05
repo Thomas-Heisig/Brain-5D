@@ -13,7 +13,7 @@ permissions:
 jobs:
   repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 17
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
         with:
