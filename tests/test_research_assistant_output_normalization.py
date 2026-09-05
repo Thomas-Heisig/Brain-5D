@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from src.research_assistant.models import _normalize_output
+from src.research_assistant.models import (
+    _normalize_output,
+)  # pyright: ignore[reportPrivateUsage]
 
 
 def _payload(confidence: object) -> dict[str, object]:
@@ -41,7 +43,7 @@ def test_qualitative_confidence_does_not_abort_airr_chain() -> None:
     assert normalized["confidence_original"] == "high"
     concerns = normalized["methodological_concerns"]
     assert isinstance(concerns, list)
-    assert any("confidence" in str(item) for item in concerns)
+    assert any("confidence" in str(item) for item in list(concerns))
 
 
 def test_out_of_range_confidence_is_preserved_and_zeroed() -> None:

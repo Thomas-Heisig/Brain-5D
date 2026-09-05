@@ -12,7 +12,7 @@ class _PacketStub:
 
 
 def test_scientific_writer_prompt_requires_quantitative_and_scope_checks() -> None:
-    prompt = ResearchAssistant._prompt(
+    prompt = ResearchAssistant._prompt(  # pyright: ignore[reportPrivateUsage]
         "scientific_writer", cast(ResearchPacket, _PacketStub())
     )
 
@@ -26,7 +26,7 @@ def test_scientific_writer_prompt_requires_quantitative_and_scope_checks() -> No
 
 
 def test_critical_reviewer_prompt_rejects_unjustified_statistics() -> None:
-    prompt = ResearchAssistant._prompt(
+    prompt = ResearchAssistant._prompt(  # pyright: ignore[reportPrivateUsage]
         "critical_reviewer", cast(ResearchPacket, _PacketStub())
     )
 

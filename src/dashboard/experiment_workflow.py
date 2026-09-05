@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
-from typing import Any, Callable, cast
+from typing import Any, Callable, Protocol, Sequence, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -23,6 +23,14 @@ from .models import JSONValue
 
 class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
+
+
+class _ScientificRunLike(Protocol):
+    """Typed read boundary used only for post-run execution validation."""
+
+    seed: int
+    condition: str
+    metrics: dict[str, Any]
 
 
 def write_experiment_summary(
@@ -164,7 +172,10 @@ class ExperimentWorkflowService:
         duration = perf_counter() - started
 
         tick_validation = self._validate_tick_execution(
-            runner_name, workflow.ticks, effective_seeds, runs
+            runner_name,
+            workflow.ticks,
+            effective_seeds,
+            cast(Sequence[_ScientificRunLike], runs),
         )
         output_dir.mkdir(parents=True, exist_ok=False)
         data_path = output_dir / "DATA" / "runs.json"
@@ -334,7 +345,7 @@ class ExperimentWorkflowService:
         runner_name: str,
         requested_ticks: int,
         seeds: tuple[int, ...],
-        runs: list[Any],
+        runs: Sequence[_ScientificRunLike],
     ) -> dict[str, object]:
         """Verify that tick-aware runners really respected the requested window."""
         exact_window_runners = {"run_ping", "run_ping_v2", "run_5d", "run_temporal"}

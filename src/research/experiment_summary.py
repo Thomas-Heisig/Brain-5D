@@ -1,5 +1,7 @@
 """Deterministic, data-first experiment summaries for Brain-5D research runs."""
 
+# pyright: reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportUnnecessaryIsInstance=false
+
 from __future__ import annotations
 
 import json
