@@ -1,7 +1,7 @@
 """Research DATA v2: compact AI packets plus immutable compressed raw runs.
 
 The raw experiment observations remain available for audit, but the default
-Research Assistant path is intentionally bounded.  `DATA/runs.json` is a compact
+Research Assistant path is intentionally bounded. `DATA/runs.json` is a compact
 projection for the current experiment, while each complete run is archived as an
 immutable gzip member under `DATA/raw/` and indexed by SHA-256.
 """
@@ -42,10 +42,6 @@ def _json_bytes(value: object) -> bytes:
     ).encode("utf-8")
 
 
-def _sha256_bytes(value: bytes) -> str:
-    return hashlib.sha256(value).hexdigest()
-
-
 def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -56,33 +52,36 @@ def _safe_name(value: object) -> str:
 
 
 def compact_for_storage(
-    value: Any, *, preview_items: int = SEQUENCE_PREVIEW_ITEMS
-) -> Any:
+    value: object, *, preview_items: int = SEQUENCE_PREVIEW_ITEMS
+) -> object:
     """Return a deterministic bounded projection without inventing statistics."""
     if isinstance(value, dict):
+        mapping = cast(dict[object, object], value)
         return {
             str(key): compact_for_storage(item, preview_items=preview_items)
-            for key, item in value.items()
+            for key, item in mapping.items()
         }
     if isinstance(value, list):
-        if len(value) <= preview_items * 2:
+        items = cast(list[object], value)
+        if len(items) <= preview_items * 2:
             return [
-                compact_for_storage(item, preview_items=preview_items) for item in value
+                compact_for_storage(item, preview_items=preview_items) for item in items
             ]
         return {
             "_projection": "bounded_sequence",
-            "item_count": len(value),
+            "item_count": len(items),
             "head": [
                 compact_for_storage(item, preview_items=preview_items)
-                for item in value[:preview_items]
+                for item in items[:preview_items]
             ],
             "tail": [
                 compact_for_storage(item, preview_items=preview_items)
-                for item in value[-preview_items:]
+                for item in items[-preview_items:]
             ],
         }
     if isinstance(value, tuple):
-        return compact_for_storage(list(value), preview_items=preview_items)
+        items_tuple = cast(tuple[object, ...], value)
+        return compact_for_storage(list(items_tuple), preview_items=preview_items)
     return value
 
 
@@ -121,12 +120,7 @@ def prepare_research_data_v2(
     runs: list[dict[str, Any]],
     statistics: Mapping[str, Any],
 ) -> ResearchDataArtifacts:
-    """Archive full runs and replace the mutable in-memory list with compact summaries.
-
-    The function mutates ``runs`` in-place deliberately.  Callers compute deterministic
-    statistics before invoking it; subsequent legacy writers therefore persist only the
-    bounded projections instead of hundreds of megabytes of traces.
-    """
+    """Archive full runs and replace the mutable list with compact summaries."""
     data_dir = experiment_dir / "DATA"
     raw_dir = data_dir / "raw"
     analysis_dir = experiment_dir / "analysis"
@@ -155,14 +149,17 @@ def prepare_research_data_v2(
         )
         digest, size_bytes, uncompressed_bytes = _write_gzip_json(raw_path, run)
         raw_paths.append(raw_path)
-        raw_ref = {
+        raw_ref: dict[str, Any] = {
             "path": raw_path.relative_to(experiment_dir).as_posix(),
             "format": "json.gz",
             "sha256": digest,
             "size_bytes": size_bytes,
             "uncompressed_bytes": uncompressed_bytes,
         }
-        summary = cast(dict[str, Any], compact_for_storage(run))
+        compact = compact_for_storage(run)
+        if not isinstance(compact, dict):
+            raise ValueError("Compact run projection must remain an object.")
+        summary = cast(dict[str, Any], compact)
         summary["_raw_artifact"] = raw_ref
         summaries.append(summary)
         raw_entries.append(
@@ -178,13 +175,13 @@ def prepare_research_data_v2(
             {"status": "idle", "last_archived_run": run_index, "raw_artifact": raw_ref},
         )
 
-    index = {
+    index_payload = {
         "schema_version": "2.0",
         "storage_policy": "immutable_raw_runs_plus_compact_current_experiment",
         "run_count": len(raw_entries),
         "runs": raw_entries,
     }
-    _write_json(index_path, index)
+    _write_json(index_path, index_payload)
 
     compact_bytes = json.dumps(
         summaries, indent=2, ensure_ascii=False, sort_keys=True, default=list
@@ -265,38 +262,48 @@ def build_detail_packet(
     metrics: Sequence[str] | None = None,
     preview_items: int = 64,
 ) -> dict[str, Any]:
-    """Build a bounded condition-specific packet by reading only indexed raw runs."""
+    """Build a bounded condition-specific packet from indexed raw runs only."""
     index_path = experiment_dir / "DATA" / "runs_index.json"
-    index = json.loads(index_path.read_text(encoding="utf-8"))
-    entries = index.get("runs", []) if isinstance(index, dict) else []
+    raw_index: object = json.loads(index_path.read_text(encoding="utf-8"))
+    if not isinstance(raw_index, dict):
+        raise ValueError("Raw run index must be a JSON object.")
+    index_object = cast(dict[str, object], raw_index)
+    entries_value = index_object.get("runs", [])
+    if not isinstance(entries_value, list):
+        raise ValueError("Raw run index 'runs' must be a list.")
+    entries = cast(list[object], entries_value)
+
     detail_runs: list[dict[str, Any]] = []
     source_refs: list[dict[str, Any]] = []
-    for entry in entries:
-        if not isinstance(entry, dict) or str(entry.get("condition")) != condition:
+    for entry_value in entries:
+        if not isinstance(entry_value, dict):
             continue
-        path = experiment_dir / str(entry["path"])
-        if _sha256_file(path) != str(entry.get("sha256")):
+        entry = cast(dict[str, object], entry_value)
+        condition_value = entry.get("condition")
+        if not isinstance(condition_value, str) or condition_value != condition:
+            continue
+        path_value = entry.get("path")
+        digest_value = entry.get("sha256")
+        if not isinstance(path_value, str) or not isinstance(digest_value, str):
+            raise ValueError("Raw run index entry lacks path or SHA-256.")
+        path = experiment_dir / path_value
+        if _sha256_file(path) != digest_value:
             raise ValueError(f"Raw run digest mismatch: {path}")
         with gzip.open(path, "rt", encoding="utf-8") as handle:
-            raw = json.load(handle)
-        if not isinstance(raw, dict):
+            raw_value: object = json.load(handle)
+        if not isinstance(raw_value, dict):
             continue
-        detail_runs.append(
-            cast(
-                dict[str, Any],
-                compact_for_storage(
-                    _select_metrics(raw, metrics), preview_items=preview_items
-                ),
-            )
+        raw = cast(dict[str, Any], raw_value)
+        compact = compact_for_storage(
+            _select_metrics(raw, metrics), preview_items=preview_items
         )
+        if not isinstance(compact, dict):
+            raise ValueError("Detail run projection must remain an object.")
+        detail_runs.append(cast(dict[str, Any], compact))
         source_refs.append(
-            {
-                "path": entry["path"],
-                "sha256": entry["sha256"],
-                "seed": entry.get("seed"),
-            }
+            {"path": path_value, "sha256": digest_value, "seed": entry.get("seed")}
         )
-    packet = {
+    packet: dict[str, Any] = {
         "schema_version": "1.0",
         "generated_by": "deterministic_detail_extractor",
         "condition": condition,
