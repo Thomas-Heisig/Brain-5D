@@ -1,20 +1,33 @@
-name: Format Diff
+name: Format Apply
 
 on:
   push:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  black-diff:
+  black-apply:
+    if: ${{ !contains(github.event.head_commit.message, 'style: apply black formatting') }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
       - run: python -m pip install black
-      - name: Black diff
-        run: python -m black --diff src tests scripts
+      - name: Apply Black
+        run: python -m black src tests scripts
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src tests scripts
+          git commit -m "style: apply black formatting"
+          git push origin HEAD:main
