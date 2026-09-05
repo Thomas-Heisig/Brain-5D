@@ -33,12 +33,14 @@ text = text.replace(
     "def _code_digest(code: object) -> str:\n",
     "def _code_digest(code: CodeType) -> str:\n",
 )
-text = text.replace(
+old_variants = [
     "        comparisons = metrics.get(\"comparisons\")\n        if not isinstance(comparisons, list) or len(comparisons) <= threshold:\n            continue\n",
-    "        metrics_raw: object = run.get(\"metrics\")\n        if not isinstance(metrics_raw, dict):\n            continue\n        metrics = cast(dict[str, object], metrics_raw)\n        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons = cast(list[object], comparison_value)\n",
-)
-text = text.replace(
     "        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons: list[object] = list(comparison_value)\n",
     "        metrics_raw: object = run.get(\"metrics\")\n        if not isinstance(metrics_raw, dict):\n            continue\n        metrics = cast(dict[str, object], metrics_raw)\n        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons = cast(list[object], comparison_value)\n",
-)
+]
+new = "        metrics_raw: object = run.get(\"metrics\")\n        if not isinstance(metrics_raw, dict):\n            continue\n        metrics = cast(dict[str, object], metrics_raw)\n        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list):\n            continue\n        comparisons = cast(list[object], comparison_value)\n        if len(comparisons) <= threshold:\n            continue\n"
+for old in old_variants:
+    if old in text:
+        text = text.replace(old, new, 1)
+        break
 workflow.write_text(text, encoding="utf-8")
