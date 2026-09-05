@@ -128,7 +128,7 @@ def test_wesen_has_loopback_causality_camera_and_time_travel() -> None:
     organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
     styles = (STATIC / "wesen-organism.css").read_text(encoding="utf-8")
     assert "renderEcho" in source
-    assert "show-causality" in source
+    assert "show-causality" in organism
     assert "delayedClone" in organism
     assert "brain5d.wesen.morphology.v2" in organism
     assert "wesen-timeline" in organism

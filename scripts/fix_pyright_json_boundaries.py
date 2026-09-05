@@ -15,14 +15,14 @@ def replace_once(path: Path, old: str, new: str) -> None:
 def main() -> int:
     replace_once(
         Path("src/dashboard/file_manager.py"),
-        '''                        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        """                        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                         if isinstance(manifest, dict):
                             created_at = manifest.get("created_at") or manifest.get(
                                 "timestamp"
                             )
                             if created_at:
-                                result["created_at"] = str(created_at)''',
-        '''                        manifest_raw: object = json.loads(
+                                result["created_at"] = str(created_at)""",
+        """                        manifest_raw: object = json.loads(
                             manifest_path.read_text(encoding="utf-8")
                         )
                         if isinstance(manifest_raw, dict):
@@ -31,12 +31,12 @@ def main() -> int:
                                 "timestamp"
                             )
                             if created_at is not None:
-                                result["created_at"] = str(created_at)''',
+                                result["created_at"] = str(created_at)""",
     )
 
     replace_once(
         Path("src/research/evidence_engine.py"),
-        '''        provenance = manifest.get("provenance_digests")
+        """        provenance = manifest.get("provenance_digests")
         source_freeze_sha = manifest.get("source_freeze_sha")
         if not isinstance(provenance, dict) or not isinstance(source_freeze_sha, str):
             raise ValueError("Validated promotion requires source-freeze digests")
@@ -51,8 +51,8 @@ def main() -> int:
         if not isinstance(review, dict):
             raise ValueError("Human review artifact is invalid")
         if review.get("experiment_id") != experiment_id:
-            raise ValueError("Human review experiment identity does not match")''',
-        '''        provenance_raw = manifest.get("provenance_digests")
+            raise ValueError("Human review experiment identity does not match")""",
+        """        provenance_raw = manifest.get("provenance_digests")
         source_freeze_sha = manifest.get("source_freeze_sha")
         if not isinstance(provenance_raw, dict) or not isinstance(source_freeze_sha, str):
             raise ValueError("Validated promotion requires source-freeze digests")
@@ -69,20 +69,20 @@ def main() -> int:
             raise ValueError("Human review artifact is invalid")
         review = cast(dict[str, object], review_raw)
         if review.get("experiment_id") != experiment_id:
-            raise ValueError("Human review experiment identity does not match")''',
+            raise ValueError("Human review experiment identity does not match")""",
     )
     replace_once(
         Path("src/research/evidence_engine.py"),
-        '''        decision = review.get("decision")
+        """        decision = review.get("decision")
         if decision not in {"supports", "refutes", "inconclusive"}:
-            raise ValueError("Human review decision is invalid")''',
-        '''        decision = review.get("decision")
+            raise ValueError("Human review decision is invalid")""",
+        """        decision = review.get("decision")
         if not isinstance(decision, str) or decision not in {
             "supports",
             "refutes",
             "inconclusive",
         }:
-            raise ValueError("Human review decision is invalid")''',
+            raise ValueError("Human review decision is invalid")""",
     )
     replace_once(
         Path("src/research/evidence_engine.py"),
@@ -92,14 +92,14 @@ def main() -> int:
 
     replace_once(
         Path("src/research/productive_learning.py"),
-        '''    try:
+        """    try:
         payload = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
         raise RuntimeError("clean worker returned invalid JSON") from exc
     if not isinstance(payload, dict) or not isinstance(payload.get("result"), dict):
         raise RuntimeError("clean worker returned an invalid result envelope")
-    return payload''',
-        '''    try:
+    return payload""",
+        """    try:
         payload_raw: object = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
         raise RuntimeError("clean worker returned invalid JSON") from exc
@@ -108,7 +108,7 @@ def main() -> int:
     payload = cast(dict[str, Any], payload_raw)
     if not isinstance(payload.get("result"), dict):
         raise RuntimeError("clean worker returned an invalid result envelope")
-    return payload''',
+    return payload""",
     )
     replace_once(
         Path("src/research/productive_learning.py"),
@@ -120,12 +120,12 @@ def main() -> int:
     # module. Keep the behavioral assertion while following the current owner.
     replace_once(
         Path("tests/test_dashboard_wesen.py"),
-        '''    assert "renderEcho" in source
+        """    assert "renderEcho" in source
     assert "show-causality" in source
-    assert "delayedClone" in organism''',
-        '''    assert "renderEcho" in source
+    assert "delayedClone" in organism""",
+        """    assert "renderEcho" in source
     assert "show-causality" in organism
-    assert "delayedClone" in organism''',
+    assert "delayedClone" in organism""",
     )
 
     # The network contract clips requested weights to weight_max=0.5. The test
@@ -133,14 +133,14 @@ def main() -> int:
     # impossible unclipped 0.8 value.
     replace_once(
         Path("tests/test_heatmap.py"),
-        '''    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
+        """    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
     # no incoming weight (0.0); the second has mean incoming weight 0.6.
-    assert values[1, 2] == pytest.approx(0.3)  # type: ignore[reportUnknownMemberType]''',
-        '''    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
+    assert values[1, 2] == pytest.approx(0.3)  # type: ignore[reportUnknownMemberType]""",
+        """    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
     # no incoming weight (0.0); the second receives 0.4 and a requested 0.8,
     # which is clipped by this test configuration to weight_max=0.5. Its actual
     # mean incoming weight is therefore 0.45, yielding 0.225 for the XY cell.
-    assert values[1, 2] == pytest.approx(0.225)  # type: ignore[reportUnknownMemberType]''',
+    assert values[1, 2] == pytest.approx(0.225)  # type: ignore[reportUnknownMemberType]""",
     )
     return 0
 
