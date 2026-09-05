@@ -179,6 +179,30 @@ class ExperimentRecorder:
         self._manifest["config"] = {"path": config_path, "sha256": sha256}
         return self
 
+    def record_provenance_digests(
+        self,
+        *,
+        code_digest: str,
+        config_digest: str,
+        prompt_digest: str,
+        data_digest: str,
+    ) -> ExperimentRecorder:
+        """Bind a run to code, configuration, prompt and DATA digests."""
+        digests = {
+            "code": code_digest,
+            "config": config_digest,
+            "prompt": prompt_digest,
+            "data": data_digest,
+        }
+        for name, digest in digests.items():
+            if len(digest) != 64 or any(
+                character not in "0123456789abcdef" for character in digest
+            ):
+                raise ValueError(f"{name}_digest must be a lowercase SHA-256 digest")
+        self._manifest["provenance_digests"] = digests
+        self._manifest["source_freeze_sha"] = _digest(digests)
+        return self
+
     def record_software_version(self, key: str, value: str) -> ExperimentRecorder:
         """Record or override a software version entry (e.g. brain5d_version)."""
         self._manifest["software"][key] = value

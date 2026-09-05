@@ -1,5 +1,6 @@
 """Protocol-level regression tests for EXP-EMB-0001."""
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -37,6 +38,13 @@ def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> N
         "43": {"runs": 2, "target_reached_rate": 0.0, "runtime_errors": 0},
     }
     assert analysis["replay_plan"]["actions"] == ["right", "right", "right"]
+    assert analysis["source_freeze_sha"]
+    assert (
+        analysis["provenance_digests"]["data"]
+        == hashlib.sha256(
+            (tmp_path / "EXP-EMB-0001" / "DATA" / "runs.jsonl").read_bytes()
+        ).hexdigest()
+    )
     assert analysis["conditions"]["authorized"]["acceptance_receipts_complete"] is True
     assert analysis["conditions"]["authorized"]["effect_receipts_complete"] is True
 
@@ -59,3 +67,9 @@ def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> N
     sensor_loss = next(run for run in run_records if run["condition"] == "sensor_loss")
     assert sensor_loss["action_acceptance_receipts"] == []
     assert sensor_loss["runtime_error"] == "RuntimeError: experience sensor is inactive"
+
+    manifest = json.loads(
+        (tmp_path / "EXP-EMB-0001" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["provenance_digests"] == analysis["provenance_digests"]
+    assert manifest["source_freeze_sha"] == analysis["source_freeze_sha"]

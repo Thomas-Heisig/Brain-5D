@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -66,6 +67,33 @@ class ProtocolRun:
 
 
 _REPLAY_ACTIONS = ("right", "right", "right")
+
+
+def _sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _json_digest(value: object) -> str:
+    payload = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("utf-8")
+    return _sha256_bytes(payload)
+
+
+def _protocol_code_digest() -> str:
+    repo_root = Path(__file__).resolve().parents[2]
+    files = (
+        "src/experiments/embodiment_lab.py",
+        "src/embodiment/controlled.py",
+        "src/embodiment/deterministic.py",
+        "src/embodiment/models.py",
+        "src/experience/engine.py",
+    )
+    file_digests = [
+        (relative_path, _sha256_bytes((repo_root / relative_path).read_bytes()))
+        for relative_path in files
+    ]
+    return _json_digest(file_digests)
 
 
 def _agent(
@@ -236,6 +264,27 @@ def run_protocol(
         for run in runs:
             handle.write(json.dumps(asdict(run), ensure_ascii=False) + "\n")
 
+    code_digest = _protocol_code_digest()
+    config_digest = _json_digest(
+        {
+            "experiment_id": "EXP-EMB-0001",
+            "independent_runs": independent_runs,
+            "repetitions_per_condition": repetitions_per_condition,
+            "conditions": list(conditions),
+            "replay_actions": list(_REPLAY_ACTIONS),
+            "ticks_per_run": 3,
+        }
+    )
+    prompt_digest = _sha256_bytes(b"NO_PROMPT")
+    data_digest = _sha256_bytes(data_path.read_bytes())
+    provenance_digests = {
+        "code": code_digest,
+        "config": config_digest,
+        "prompt": prompt_digest,
+        "data": data_digest,
+    }
+    source_freeze_sha = _json_digest(provenance_digests)
+
     by_condition: dict[str, list[ProtocolRun]] = {
         condition: [run for run in runs if run.condition == condition]
         for condition in conditions
@@ -244,6 +293,8 @@ def run_protocol(
         "experiment_id": "EXP-EMB-0001",
         "status": "completed",
         "run_count": len(runs),
+        "provenance_digests": provenance_digests,
+        "source_freeze_sha": source_freeze_sha,
         "replay_plan": {
             "actions": list(_REPLAY_ACTIONS),
             "source": "pre_registered_replay",
@@ -326,6 +377,12 @@ def run_protocol(
     recorder.record_artifact("data", str(data_path.relative_to(output_dir)))
     recorder.record_artifact("analysis", str(analysis_path.relative_to(output_dir)))
     recorder.record_results(**analysis)
+    recorder.record_provenance_digests(
+        code_digest=code_digest,
+        config_digest=config_digest,
+        prompt_digest=prompt_digest,
+        data_digest=data_digest,
+    )
     recorder.mark_completed().save()
 
     report = output_dir / "report.md"

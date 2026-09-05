@@ -23,6 +23,8 @@ The following capabilities are already part of `main` and are covered by current
 - deterministic embodiment DATA controls with separate action/effect receipts,
     sensor-loss, actuator-failure and pre-registered replay/open-loop conditions;
 - independent deterministic seeds with per-condition stability metrics;
+- source-freeze binding across protocol code, configuration, prompt sentinel and
+    DATA digests;
 - real host interoception and dynamic device discovery without fabricated fallback values;
 - responsive seven-workspace operator/research dashboard;
 - documentation link/version/test-count consistency checks and scheduled storage validation;

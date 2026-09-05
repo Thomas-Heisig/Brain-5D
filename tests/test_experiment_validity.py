@@ -127,6 +127,31 @@ class TestRuntimeErrorsInManifest:
         assert manifest["ai_exposure"] == "none"
         assert manifest["ai_reproducibility"] == "R0"
 
+    def test_recorder_binds_provenance_digests(self, tmp_experiment_dir: Path) -> None:
+        recorder = ExperimentRecorder("EXP-DIGEST-0001", output_dir=tmp_experiment_dir)
+        digest = "a" * 64
+        recorder.record_provenance_digests(
+            code_digest=digest,
+            config_digest="b" * 64,
+            prompt_digest="c" * 64,
+            data_digest="d" * 64,
+        )
+
+        assert recorder.manifest["provenance_digests"] == {
+            "code": digest,
+            "config": "b" * 64,
+            "prompt": "c" * 64,
+            "data": "d" * 64,
+        }
+        assert len(recorder.manifest["source_freeze_sha"]) == 64
+        with pytest.raises(ValueError, match="lowercase SHA-256"):
+            recorder.record_provenance_digests(
+                code_digest="invalid",
+                config_digest="b" * 64,
+                prompt_digest="c" * 64,
+                data_digest="d" * 64,
+            )
+
     def test_recorder_separates_run_mode_and_data_partitions(
         self, tmp_experiment_dir: Path
     ) -> None:

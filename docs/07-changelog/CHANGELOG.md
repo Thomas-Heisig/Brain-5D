@@ -556,7 +556,7 @@
   canonical version claims and the collected pytest baseline.
 - Added scheduled/manual CI coverage for the opt-in large `.b5d` and journal
   storage tests with archived JUnit results.
-- Refreshed the verified suite baseline to 712 collected, 707 passed and 5
+- Refreshed the verified suite baseline to 713 collected, 708 passed and 5
   skipped tests.
 - Extended `EXP-EMB-0001` DATA records with separate action-acceptance and
   observed-effect receipts.
@@ -566,6 +566,8 @@
   action source in each DATA record.
 - Independent protocol runs now use distinct deterministic seeds and persist
   per-seed target and runtime-error metrics for stability comparison.
+- EXP-EMB-0001 manifests now bind protocol code, configuration, prompt
+  applicability and DATA through validated SHA-256 provenance digests.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 
