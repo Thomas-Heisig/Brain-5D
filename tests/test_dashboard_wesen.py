@@ -40,13 +40,36 @@ def test_wesen_has_dynamic_machine_native_morphology() -> None:
         "function layout",
         "function hullPath",
         "function satellites",
-        "function radius",
-        "1900 / d2",
+        "function ringRadius",
+        "minDistance",
     ):
         assert token in organism
     assert "WESEN_POLL_MS = 750" in source
     assert "sensor-placeholder" in source
     assert "actuator-placeholder" in source
+
+
+def test_wesen_has_icon_first_collision_safe_accessibility() -> None:
+    organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
+    styles = (STATIC / "wesen-organism.css").read_text(encoding="utf-8")
+    for token in (
+        "deviceType",
+        "iconFor",
+        "decorateNodes",
+        "ensureIconDock",
+        "bindKeyboard",
+        "wesen-icon-dock",
+        'setAttribute("aria-label"',
+        'setAttribute("tabindex", "0")',
+    ):
+        assert token in organism
+    assert "count < 8" in organism
+    assert "7200" in organism
+    assert "#wesen-organ-layer .wesen-organ-label" in styles
+    assert "#wesen-organ-layer .wesen-organ-value" in styles
+    assert "#wesen-pin-layer .wesen-data-pin" in styles
+    assert ".wesen-icon-dock" in styles
+    assert 'data-device-type="gpu"' in styles
 
 
 def test_wesen_has_loopback_causality_camera_and_time_travel() -> None:
