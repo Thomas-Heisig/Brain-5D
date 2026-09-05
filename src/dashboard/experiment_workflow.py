@@ -10,6 +10,10 @@ from time import perf_counter
 from typing import Any, Callable, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
+from src.research.experiment_summary import (
+    write_detailed_experiment_summary,
+    write_statistics_artifact,
+)
 from src.research.registry import ResearchRegistry
 from src.research_assistant.airr import AIRRPipeline
 from src.research_assistant.assistant import AnalysisBackend
@@ -21,172 +25,13 @@ class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
 
 
-def _json_mapping(value: object) -> dict[str, JSONValue] | None:
-    """Narrow one decoded JSON object to the dashboard JSON value shape."""
-    if not isinstance(value, dict):
-        return None
-    return cast(dict[str, JSONValue], value)
-
-
-def _json_list(value: object) -> list[JSONValue]:
-    """Narrow one decoded JSON list without leaking Unknown into Pylance."""
-    if not isinstance(value, list):
-        return []
-    return cast(list[JSONValue], value)
-
-
-def _summary_items(value: object) -> list[str]:
-    """Return non-empty textual items from an AIRR list field."""
-    return [
-        item.strip()
-        for item in _json_list(value)
-        if isinstance(item, str) and item.strip()
-    ]
-
-
-def _airr_observation_fallback(content: dict[str, JSONValue]) -> list[str]:
-    """Extract explicit limitation observations when AIRR request lists are empty."""
-    interpretation = _json_mapping(content.get("interpretation")) or {}
-    observations = _json_list(interpretation.get("observations"))
-    observations.extend(_json_list(content.get("observations")))
-    limitation_items: list[str] = []
-    for raw_item in observations:
-        item = _json_mapping(raw_item)
-        if item is None:
-            continue
-        item_type = item.get("type")
-        item_value = item.get("value")
-        if (
-            isinstance(item_type, str)
-            and item_type.lower() in {"limitation", "limitations"}
-            and isinstance(item_value, str)
-            and item_value.strip()
-        ):
-            limitation_items.append(item_value.strip())
-    return limitation_items
-
-
 def write_experiment_summary(
     research_root: Path,
     experiment_id: str,
     ai_report: dict[str, object],
 ) -> str:
-    """Write the post-hoc assistant summary beside one experiment's artifacts."""
-    experiment_dir = research_root / "experiments" / experiment_id
-    report_dir = experiment_dir / "reports"
-    manifest: dict[str, Any] = {}
-    manifest_path = experiment_dir / "manifest.json"
-    if manifest_path.is_file():
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            manifest = {}
-    lines = [
-        f"# {experiment_id}: Zusammenfassung",
-        "",
-        "Diese Zusammenfassung wurde nach Abschluss des Laufs durch den internen "
-        "Research Assistant aus den Experimentartefakten und dem AIRR erstellt. "
-        "Sie beschreibt die Daten, die Berichte und deren wissenschaftliche Grenzen.",
-        "",
-        "## Versuchsuebersicht",
-        "",
-        f"- Status: `{manifest.get('experiment_status', 'unbekannt')}`",
-        f"- Forschungsfragen: {', '.join(map(str, manifest.get('research_questions', []))) or 'nicht angegeben'}",
-        f"- Hypothesen: {', '.join(map(str, manifest.get('hypotheses', []))) or 'nicht angegeben'}",
-        f"- Durchlaeufe: `{manifest.get('results', {}).get('run_count', 'unbekannt') if isinstance(manifest.get('results'), dict) else 'unbekannt'}`",
-        f"- Laufmodus: `{manifest.get('research_run_mode', 'unbekannt')}`",
-        f"- Netzwerkmodus: `{manifest.get('network_mode', 'unbekannt')}`",
-        "",
-        "## Artefakte",
-        "",
-    ]
-    for path in sorted(experiment_dir.rglob("*")):
-        if path.is_file() and path.name != "summary.md":
-            relative = path.relative_to(experiment_dir).as_posix()
-            lines.append(f"- [{relative}]({relative})")
-    lines.extend(["", "## AI-Bericht", ""])
-    status = str(ai_report.get("status", "unknown"))
-    lines.append(f"- AIRR-Status: `{status}`")
-    if status == "generated":
-        lines.extend(
-            [
-                f"- AIRR: [{ai_report['report_id']}.md](reports/{ai_report['report_id']}.md)",
-                f"- AIRR JSON: [{ai_report['report_id']}.json](reports/{ai_report['report_id']}.json)",
-                "- Wissenschaftliche Evidenz: `false`",
-                "- Human Review: `PENDING`",
-            ]
-        )
-        report_path = report_dir / f"{ai_report['report_id']}.json"
-        if report_path.is_file():
-            report_payload: object = json.loads(report_path.read_text(encoding="utf-8"))
-            report_object = _json_mapping(report_payload) or {}
-            content = _json_mapping(report_object.get("content")) or {}
-            interpretation = _json_mapping(content.get("interpretation")) or {}
-            requested_evidence = _summary_items(content.get("missing_evidence"))
-            if not requested_evidence:
-                requested_evidence = _summary_items(
-                    interpretation.get("requested_evidence")
-                )
-            if not requested_evidence:
-                requested_evidence = [
-                    f"AIRR-Limitation dokumentieren: {item}"
-                    for item in _airr_observation_fallback(content)
-                ]
-            if not requested_evidence:
-                requested_evidence = [
-                    "Keine expliziten zusätzlichen Nachweise im AIRR angegeben."
-                ]
-            recommended_follow_up = _summary_items(content.get("recommended_follow_up"))
-            if not recommended_follow_up:
-                recommended_follow_up = _summary_items(
-                    interpretation.get("recommended_experiments")
-                )
-            if not recommended_follow_up:
-                recommended_follow_up = [
-                    "Keine expliziten Folgeexperimente im AIRR angegeben."
-                ]
-            lines.extend(
-                [
-                    "",
-                    "### KI-Einschaetzung",
-                    "",
-                    "Die KI bewertet den vorliegenden Datensatz wie folgt:",
-                    "",
-                    str(
-                        content.get(
-                            "executive_summary",
-                            content.get("conclusion", "Keine Einschaetzung vorhanden."),
-                        )
-                    ),
-                    "",
-                    f"KI-Konfidenz: `{content.get('ai_confidence', 0.0)}`",
-                    "",
-                    "Angeforderte zusaetzliche Nachweise:",
-                    "",
-                ]
-            )
-            for item in requested_evidence:
-                lines.append(f"- {item}")
-            lines.extend(["", "Empfohlene Folgeexperimente:", ""])
-            for item in recommended_follow_up:
-                lines.append(f"- {item}")
-    else:
-        lines.append(
-            f"- Hinweis: `{ai_report.get('reason', ai_report.get('message', ''))}`"
-        )
-    lines.extend(
-        [
-            "",
-            "## Wissenschaftliche Grenze",
-            "",
-            "Die KI-Auswertung ist post-hoc, steuert den Lauf nicht und ersetzt keine "
-            "menschliche wissenschaftliche Pruefung oder Evidenzfreigabe.",
-            "",
-        ]
-    )
-    summary_path = experiment_dir / "summary.md"
-    summary_path.write_text("\n".join(lines), encoding="utf-8")
-    return f"experiments/{experiment_id}/summary.md"
+    """Write the canonical detailed, data-first experiment summary."""
+    return write_detailed_experiment_summary(research_root, experiment_id, ai_report)
 
 
 @dataclass(frozen=True, slots=True)
@@ -247,7 +92,7 @@ class ExperimentWorkflowService:
                 [
                     {
                         "id": "science_suite_v1",
-                        "label": "Science Suite v1 (DATA + Manifest)",
+                        "label": "Science Suite v1 (RQ-gesteuerter Runner + DATA + Manifest)",
                     },
                     {
                         "id": "science_all_v1",
@@ -278,11 +123,11 @@ class ExperimentWorkflowService:
     def run_science(
         self, body: dict[str, object], *, seeds: tuple[int, ...] | None = None
     ) -> dict[str, object]:
-        """Execute a registered suite and persist DATA, manifest, and report."""
+        """Execute the RQ-compatible science runner and persist complete artifacts."""
         science_body = dict(body)
         science_body.setdefault("protocol", "science_suite_v1")
         workflow = self._validate(science_body)
-        runner_name = self._science_runner(science_body, workflow.experiment_id)
+        runner_name = self._science_runner(science_body, workflow)
         effective_seeds = seeds if seeds is not None else workflow.seeds
         workflow = replace(workflow, seeds=effective_seeds)
         output_dir = self._research_root / "experiments" / workflow.experiment_id
@@ -290,11 +135,10 @@ class ExperimentWorkflowService:
             raise WorkflowValidationError(
                 f"Experiment '{workflow.experiment_id}' already exists."
             )
+
         from src.research import experiment_suite
 
-        config_path = (
-            self._research_root.parent / "configs" / "learning_experiment.yaml"
-        )
+        config_path = self._research_root.parent / "configs" / "learning_experiment.yaml"
         if not config_path.exists():
             config_path = Path("configs/learning_experiment.yaml")
         config_path = config_path.resolve()
@@ -302,22 +146,34 @@ class ExperimentWorkflowService:
         config_digest = _sha256_file(config_path)
         started = perf_counter()
         runner = getattr(experiment_suite, runner_name)
-        if runner_name in {"run_all", "run_ping", "run_ping_v2", "run_5d", "run_time"}:
+        tick_aware_runners = {
+            "run_all",
+            "run_ping",
+            "run_ping_v2",
+            "run_5d",
+            "run_time",
+            "run_temporal",
+        }
+        if runner_name in tick_aware_runners:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
         else:
             runs = runner(config, seeds=effective_seeds)
         runs = [replace(run, experiment_id=workflow.experiment_id) for run in runs]
         duration = perf_counter() - started
+
+        tick_validation = self._validate_tick_execution(
+            runner_name, workflow.ticks, effective_seeds, runs
+        )
         output_dir.mkdir(parents=True, exist_ok=False)
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
+        serialized_runs = [asdict(run) for run in runs]
         data_path.write_text(
-            json.dumps(
-                [asdict(run) for run in runs], indent=2, sort_keys=True, default=list
-            )
-            + "\n",
+            json.dumps(serialized_runs, indent=2, sort_keys=True, default=list) + "\n",
             encoding="utf-8",
         )
+        statistics_path = write_statistics_artifact(output_dir, serialized_runs)
+
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
         recorder.record_config(str(config_path), config_digest)
@@ -328,12 +184,23 @@ class ExperimentWorkflowService:
             protocol=workflow.protocol,
         )
         recorder.record_artifact("data", "DATA/runs.json")
+        recorder.record_artifact("statistics", "analysis/statistics.json")
         recorder.record_artifact("workflow", "workflow.json")
         recorder.record_artifact("report", "report.md")
-        recorder.record_results(run_count=len(runs), protocol=workflow.protocol)
+        recorder.record_results(
+            run_count=len(runs),
+            protocol=workflow.protocol,
+            runner=runner_name,
+            ticks_requested=workflow.ticks,
+            tick_contract=tick_validation,
+        )
+
         report_path = output_dir / "report.md"
         report_path.write_text(
-            self._render_science_report(workflow, len(runs), duration), encoding="utf-8"
+            self._render_science_report(
+                workflow, len(runs), duration, runner_name, tick_validation
+            ),
+            encoding="utf-8",
         )
         workflow_path = output_dir / "workflow.json"
         workflow_path.write_text(
@@ -345,8 +212,11 @@ class ExperimentWorkflowService:
                     "title": workflow.title,
                     "conditions": workflow.conditions,
                     "ticks": workflow.ticks,
+                    "ticks_contract": "minimum requested observation window",
                     "seeds": list(effective_seeds),
                     "protocol": workflow.protocol,
+                    "resolved_runner": runner_name,
+                    "tick_validation": tick_validation,
                     "notes": workflow.notes,
                     "execution": "registered experiment_suite runner",
                     "assistant_policy": "AI is post-hoc interpretation only.",
@@ -364,18 +234,27 @@ class ExperimentWorkflowService:
             data_digest=_sha256_file(data_path),
         )
         recorder.record_runtime(duration).mark_completed().save()
+
         ai_report = self._append_ai_report(workflow.experiment_id)
+        manifest_path = output_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        artifacts = manifest.setdefault("artifacts", {})
+        artifacts["statistics"] = str(statistics_path.relative_to(output_dir)).replace("\\", "/")
+        manifest["execution_contract"] = {
+            "resolved_runner": runner_name,
+            "ticks_requested": workflow.ticks,
+            "tick_validation": tick_validation,
+            "question_id": workflow.question_id,
+            "hypothesis_id": workflow.hypothesis_id,
+            "protocol": workflow.protocol,
+        }
         if ai_report.get("status") == "generated":
-            manifest = json.loads(
-                (output_dir / "manifest.json").read_text(encoding="utf-8")
-            )
-            artifacts = manifest.setdefault("artifacts", {})
             artifacts["ai_report_json"] = str(ai_report["json"])
             artifacts["ai_report_markdown"] = str(ai_report["markdown"])
-            (output_dir / "manifest.json").write_text(
-                json.dumps(manifest, indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
+        manifest_path.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
         summary_path = write_experiment_summary(
             self._research_root, workflow.experiment_id, ai_report
         )
@@ -384,39 +263,152 @@ class ExperimentWorkflowService:
             "manifest": f"experiments/{workflow.experiment_id}/manifest.json",
             "report": f"experiments/{workflow.experiment_id}/report.md",
             "workflow": f"experiments/{workflow.experiment_id}/workflow.json",
+            "statistics": f"experiments/{workflow.experiment_id}/analysis/statistics.json",
             "data_id": f"DATA-{workflow.experiment_id}",
             "ai_report": ai_report,
             "summary": summary_path,
-            "result": {"run_count": len(runs), "duration_seconds": duration},
+            "result": {
+                "run_count": len(runs),
+                "duration_seconds": duration,
+                "runner": runner_name,
+                "ticks_requested": workflow.ticks,
+                "tick_validation": tick_validation,
+            },
         }
 
     @staticmethod
-    def _science_runner(body: dict[str, object], experiment_id: str) -> str:
-        """Resolve execution from the protocol, while keeping IDs traceable labels."""
-        protocol_runners = {
-            "science_all_v1": "run_all",
-            "science_time_v1": "run_time",
-            "science_5d_v1": "run_5d",
-        }
-        runner_name = protocol_runners.get(str(body.get("protocol")))
-        if runner_name is not None:
-            return runner_name
+    def _science_runner(body: dict[str, object], workflow: ExperimentWorkflow) -> str:
+        """Resolve execution from protocol and registered research question.
 
-        if experiment_id.startswith("EXP-PING-0001-v"):
-            return "run_ping_v2"
-        if experiment_id.startswith("EXP-PING-"):
-            return "run_ping"
-        if experiment_id.startswith("EXP-TEMP-"):
-            return "run_temporal"
-        if experiment_id.startswith("EXP-STDP-"):
-            return "run_stdp"
-        if experiment_id.startswith("EXP-EMB-"):
+        Generated experiment IDs are labels only. They must never silently select
+        a scientific runner, because that previously allowed TEMP questions to be
+        executed as PING recurrence experiments.
+        """
+        protocol = str(body.get("protocol") or workflow.protocol)
+        question_id = workflow.question_id
+        if protocol == "science_all_v1":
+            return "run_all"
+        if protocol == "science_time_v1":
+            if not question_id.startswith("RQ-TIME-"):
+                raise WorkflowValidationError(
+                    "science_time_v1 requires a RQ-TIME-* research question."
+                )
+            return "run_time"
+        if protocol == "science_5d_v1":
+            if not question_id.startswith("RQ-5D-"):
+                raise WorkflowValidationError(
+                    "science_5d_v1 requires a RQ-5D-* research question."
+                )
+            return "run_5d"
+        if protocol != "science_suite_v1":
+            raise WorkflowValidationError(
+                f"Protocol '{protocol}' is not a Science Suite runner protocol."
+            )
+
+        rq_runners = (
+            ("RQ-PING-", "run_ping"),
+            ("RQ-TEMP-", "run_temporal"),
+            ("RQ-TIME-", "run_time"),
+            ("RQ-5D-", "run_5d"),
+            ("RQ-STDP-", "run_stdp"),
+            ("RQ-REG-", "run_regulation"),
+        )
+        for prefix, runner_name in rq_runners:
+            if question_id.startswith(prefix):
+                return runner_name
+        if question_id == "RQ-SNN-005":
             return "run_learning_repeat"
-        if experiment_id.startswith("EXP-REG-"):
-            return "run_regulation"
-        if experiment_id.startswith("EXP-LEARN-"):
-            return "run_learning"
-        return "run_ping"
+        raise WorkflowValidationError(
+            f"No science runner is registered for research question '{question_id}'. "
+            "Select a compatible registered protocol instead of falling back to PING."
+        )
+
+    @staticmethod
+    def _validate_tick_execution(
+        runner_name: str,
+        requested_ticks: int,
+        seeds: tuple[int, ...],
+        runs: list[Any],
+    ) -> dict[str, object]:
+        """Verify that tick-aware runners really respected the requested window."""
+        exact_window_runners = {"run_ping", "run_ping_v2", "run_5d", "run_temporal"}
+        if runner_name in exact_window_runners:
+            observed = [
+                run.metrics.get("ticks_executed")
+                for run in runs
+                if isinstance(run.metrics, dict)
+            ]
+            if not observed or any(
+                not isinstance(value, int) or value < requested_ticks for value in observed
+            ):
+                raise WorkflowValidationError(
+                    f"Tick contract violated: runner {runner_name} did not execute at least {requested_ticks} ticks in every run."
+                )
+            return {
+                "status": "SATISFIED",
+                "mode": "minimum_per_run",
+                "requested_ticks": requested_ticks,
+                "observed_min": min(cast(list[int], observed)),
+                "observed_max": max(cast(list[int], observed)),
+            }
+
+        if runner_name == "run_time":
+            missing_seeds = []
+            for seed in seeds:
+                if not any(
+                    run.seed == seed
+                    and isinstance(run.metrics, dict)
+                    and run.metrics.get("ticks") == requested_ticks
+                    for run in runs
+                ):
+                    missing_seeds.append(seed)
+            if missing_seeds:
+                raise WorkflowValidationError(
+                    "TIME tick ladder does not contain the requested terminal tick count "
+                    f"for seeds: {missing_seeds}."
+                )
+            return {
+                "status": "SATISFIED",
+                "mode": "terminal_tick_per_seed",
+                "requested_ticks": requested_ticks,
+            }
+
+        if runner_name == "run_all":
+            tick_groups = ("ping:", "temporal:", "5d:")
+            relevant = [
+                run
+                for run in runs
+                if any(str(run.condition).startswith(prefix) for prefix in tick_groups)
+            ]
+            if not relevant or any(
+                not isinstance(run.metrics.get("ticks_executed"), int)
+                or run.metrics["ticks_executed"] < requested_ticks
+                for run in relevant
+            ):
+                raise WorkflowValidationError(
+                    "Science ALL tick contract violated in a tick-aware subgroup."
+                )
+            for seed in seeds:
+                if not any(
+                    run.seed == seed
+                    and str(run.condition).startswith("time:")
+                    and run.metrics.get("ticks") == requested_ticks
+                    for run in runs
+                ):
+                    raise WorkflowValidationError(
+                        f"Science ALL TIME subgroup lacks requested tick terminal for seed {seed}."
+                    )
+            return {
+                "status": "SATISFIED",
+                "mode": "mixed_protocol_tick_contract",
+                "requested_ticks": requested_ticks,
+            }
+
+        return {
+            "status": "NOT_APPLICABLE",
+            "mode": "protocol_defined_internal_trials",
+            "requested_ticks": requested_ticks,
+        }
 
     def _append_ai_report(self, experiment_id: str) -> dict[str, object]:
         """Generate AIRR only after completion, or expose unavailable explicitly."""
@@ -509,11 +501,26 @@ class ExperimentWorkflowService:
 
         runtime = after()
         duration = perf_counter() - started
+        observed_ticks = runtime["tick"] - before["tick"]
+        if observed_ticks < workflow.ticks:
+            recorder.record_runtime_error(
+                tick=runtime["tick"],
+                phase="tick_contract",
+                exception_type="TickContractViolation",
+                message=f"Requested {workflow.ticks}, observed {observed_ticks} ticks.",
+                fatal=True,
+            ).mark_failed()
+            recorder.record_runtime(duration).save()
+            raise WorkflowValidationError(
+                f"Runtime tick contract violated: requested {workflow.ticks}, observed {observed_ticks}."
+            )
         recorder.record_results(
             passed=True,
             start=before,
             end=runtime,
-            observed_ticks=runtime["tick"] - before["tick"],
+            observed_ticks=observed_ticks,
+            ticks_requested=workflow.ticks,
+            tick_contract="SATISFIED",
         ).record_runtime(duration).mark_completed().save()
 
         report_path = output_dir / "report.md"
@@ -555,7 +562,6 @@ class ExperimentWorkflowService:
             )
 
         seeds = self._parse_seeds(body.get("seeds"))
-
         question_id = required("question_id")
         hypothesis_id = required("hypothesis_id")
         registry = ResearchRegistry(self._research_root / "registry").load_all()
@@ -629,26 +635,40 @@ class ExperimentWorkflowService:
 
     @staticmethod
     def _render_science_report(
-        workflow: ExperimentWorkflow, run_count: int, duration: float
+        workflow: ExperimentWorkflow,
+        run_count: int,
+        duration: float,
+        runner_name: str,
+        tick_validation: dict[str, object],
     ) -> str:
         return "\n".join(
             [
                 f"# {workflow.experiment_id}: {workflow.title}",
                 "",
-                "## Protokoll",
-                workflow.protocol,
-                f"Ticks: {workflow.ticks}; Seeds: {', '.join(str(seed) for seed in workflow.seeds)}",
+                "## Forschungszuordnung",
+                f"Forschungsfrage: `{workflow.question_id}`",
+                f"Hypothese: `{workflow.hypothesis_id}`",
+                f"Aufgeloester Runner: `{runner_name}`",
+                "",
+                "## Protokoll und Einstellungen",
+                f"Protokoll: `{workflow.protocol}`",
+                f"Angeforderte Mindest-Ticks: `{workflow.ticks}`",
+                f"Seeds: `{', '.join(str(seed) for seed in workflow.seeds)}`",
+                f"Tick-Vertrag: `{json.dumps(tick_validation, ensure_ascii=False, sort_keys=True)}`",
                 "",
                 "## Bedingungen",
                 workflow.conditions,
                 f"Runs: {run_count}; Dauer: {duration:.6f} s",
                 "",
+                "## Daten und Statistik",
+                "Rohdaten: `DATA/runs.json`",
+                "Deterministische deskriptive Statistik: `analysis/statistics.json`",
+                "Die Summary verbindet Rohdaten, Formeln, Einzelruns, Bedingungen, Reproduzierbarkeit und AIRR ohne KI-generierte Statistik.",
+                "",
                 "## Evidenzstatus",
-                "DATA und Manifest erzeugt. EVID wird erst nach Clean Freeze und Review erzeugt.",
-                "Die beobachtete Spike-Sequenz, ihr Digest und der Seed-Vergleich stehen in DATA/runs.json; diese Laufdaten sind eine technische Reproduzierbarkeitsmessung, noch keine freigegebene EVID.",
+                "DATA, Manifest, Workflow und deterministische Statistik sind erzeugt. Wissenschaftliche EVID entsteht erst nach passender semantischer Zuordnung, Clean Freeze und Human Review.",
                 "",
                 "## Hinweise",
-                "Prediction Error, Memory, TIME, 5D, Regulation und Sensorverlust sind in diesem Lauf nicht behauptet.",
                 workflow.notes or "Keine.",
                 "",
             ]
@@ -661,6 +681,7 @@ class ExperimentWorkflowService:
         after: dict[str, int],
         duration: float,
     ) -> str:
+        observed_ticks = after["tick"] - before["tick"]
         return "\n".join(
             [
                 f"# {workflow.experiment_id}: {workflow.title}",
@@ -683,14 +704,15 @@ class ExperimentWorkflowService:
                 f"Tick: {before['tick']} -> {after['tick']}",
                 f"Neuronen: {before['neurons']} -> {after['neurons']}",
                 f"Synapsen: {before['synapses']} -> {after['synapses']}",
-                f"Beobachtete Ticks: {after['tick'] - before['tick']}",
+                f"Angeforderte Ticks: {workflow.ticks}",
+                f"Beobachtete Ticks: {observed_ticks}",
+                f"Tick-Vertrag: {'SATISFIED' if observed_ticks >= workflow.ticks else 'VIOLATED'}",
                 "",
                 "## Reproduzierbarkeit",
                 "Git-Commit, Laufzeitumgebung und Runtime-Parameter stehen im Manifest.",
-                "Dieser allgemeine Runner schreibt keinen kontrollierten Seed oder eingefrorenen Konfigurations-Snapshot; daher ist der Lauf ein Betriebsprotokoll, keine evidenzfaehige Messstudie.",
                 "",
                 "## Evidenzstatus",
-                "Keine EVID erzeugt. Fuer wissenschaftliche Evidenz sind ein sauberer Source-Freeze, ein registriertes Protokoll, kontrollierte unabhängige Variablen und definierte Messgroessen erforderlich.",
+                "Keine EVID erzeugt. Fuer wissenschaftliche Evidenz sind ein sauberer Source-Freeze, ein registriertes Protokoll, kontrollierte unabhaengige Variablen und definierte Messgroessen erforderlich.",
                 "",
                 "## Hinweise",
                 workflow.notes or "Keine.",

@@ -126,7 +126,7 @@ def run_ping(
     seeds: tuple[int, ...] = (42, 43, 44),
     ticks: int = 8,
 ) -> list[ScientificRun]:
-    """Measure reproducible impulse responses with and without recurrence."""
+    """Measure reproducible impulse responses for exactly the requested tick window."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         for recurrence in (False, True):
@@ -137,6 +137,7 @@ def run_ping(
                 source_neuron=source,
                 current=100.0,
                 max_ticks=ticks,
+                min_ticks=ticks,
                 state_digest=lambda: _digest(network),
             ).run(_ProbeRuntime(network))
             runs.append(
@@ -144,7 +145,7 @@ def run_ping(
                     "EXP-PING-0001",
                     "recurrence_on" if recurrence else "recurrence_off",
                     seed,
-                    signature.to_dict(),
+                    {"ticks_requested": ticks, **signature.to_dict()},
                     before,
                     _digest(network),
                 )
@@ -196,6 +197,7 @@ def run_ping_v2(
                     source_neuron=source,
                     current=100.0,
                     max_ticks=ticks,
+                    min_ticks=ticks,
                     state_digest=lambda: _digest(network),
                 ).run(_ProbeRuntime(network))
                 runs.append(
@@ -203,7 +205,7 @@ def run_ping_v2(
                         "EXP-PING-0001-v2",
                         f"{'recurrence_on' if recurrence else 'recurrence_off'}_{replica}",
                         seed,
-                        signature.to_dict(),
+                        {"ticks_requested": ticks, **signature.to_dict()},
                         before,
                         _digest(network),
                     )
@@ -217,11 +219,12 @@ def run_time(
     tick_counts: tuple[int, ...] = (100, 1_000, 10_000, 100_000, 1_000_000),
     ticks: int = 1_000_000,
 ) -> list[ScientificRun]:
-    """Calibrate wall-clock throughput over the registered tick ladder."""
+    """Calibrate wall-clock throughput up to and including the requested tick count."""
     runs: list[ScientificRun] = []
     selected_tick_counts = tuple(count for count in tick_counts if count <= ticks)
-    if not selected_tick_counts:
-        selected_tick_counts = (ticks,)
+    if ticks not in selected_tick_counts:
+        selected_tick_counts = (*selected_tick_counts, ticks)
+    selected_tick_counts = tuple(sorted(set(selected_tick_counts)))
     for seed in seeds:
         for run_ticks in selected_tick_counts:
             network = _network(config, seed)
@@ -237,8 +240,9 @@ def run_time(
                     seed,
                     {
                         "ticks": run_ticks,
+                        "ticks_requested": ticks,
                         "duration_seconds": duration,
-                        "ticks_per_second": run_ticks / duration,
+                        "ticks_per_second": run_ticks / duration if duration > 0 else 0.0,
                     },
                     before,
                     _digest(network),
@@ -271,13 +275,15 @@ def run_5d(
                 source_neuron=min(network.input_cells),
                 current=100.0,
                 max_ticks=ticks,
+                min_ticks=ticks,
+                state_digest=lambda: _digest(network),
             ).run(_ProbeRuntime(network))
             runs.append(
                 ScientificRun(
                     "EXP-5D-0001",
                     condition,
                     seed,
-                    {"dimensions": list(shape), **signature.to_dict()},
+                    {"dimensions": list(shape), "ticks_requested": ticks, **signature.to_dict()},
                     before,
                     _digest(network),
                 )
@@ -331,20 +337,26 @@ def run_regulation(
 
 
 def run_temporal(
-    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+    ticks: int = 8,
 ) -> list[ScientificRun]:
-    """Compare retained fast/medium/slow state references without rewinding."""
+    """Compare retained fast/medium/slow references for the requested tick window."""
+    if ticks < 1:
+        raise ValueError("ticks must be positive")
     runs: list[ScientificRun] = []
     for seed in seeds:
         network = _network(config, seed)
         before = _digest(network)
         memory = TemporalStateMemory(
-            horizons={"fast": 2, "medium": 4, "slow": 6}, capacity=32
+            horizons={"fast": 2, "medium": 4, "slow": 6}, capacity=max(32, min(ticks + 1, 4096))
         )
         comparator = TemporalComparator()
         comparisons: list[dict[str, Any]] = []
-        for _ in range(8):
+        total_spikes = 0
+        for _ in range(ticks):
             result = network.step()
+            total_spikes += len(result.spike_ids)
             frame = TemporalStateFrame.from_mapping(
                 network.current_tick,
                 _digest(network),
@@ -368,6 +380,9 @@ def run_temporal(
                 "fast_medium_slow",
                 seed,
                 {
+                    "ticks_requested": ticks,
+                    "ticks_executed": ticks,
+                    "total_spikes": total_spikes,
                     "comparisons": comparisons,
                     "novelty": "not_registered",
                     "prediction_error": "not_available",
@@ -471,7 +486,7 @@ def run_all(
     """Run every registered science-suite runner under one traceable protocol."""
     groups = (
         ("ping", run_ping(config, seeds=seeds, ticks=ticks)),
-        ("temporal", run_temporal(config, seeds=seeds)),
+        ("temporal", run_temporal(config, seeds=seeds, ticks=ticks)),
         ("stdp", run_stdp(config, seeds=seeds)),
         ("learning", run_learning_repeat(config, seeds=seeds)),
         ("time", run_time(config, seeds=seeds, ticks=ticks)),
@@ -515,23 +530,17 @@ def main() -> int:
     parser.add_argument(
         "--output", default="research/generated/data/science_suite.json"
     )
+    parser.add_argument("--ticks", type=int, default=1_000)
     args = parser.parse_args()
     config = _load(Path(args.config))
     started = time.perf_counter()
-    runs = (
-        run_ping(config)
-        + run_temporal(config)
-        + run_stdp(config)
-        + run_learning_repeat(config)
-        + run_time(config)
-        + run_5d(config)
-        + run_regulation(config)
-    )
+    runs = run_all(config, ticks=args.ticks)
     write_data(Path(args.output), runs)
     print(
         json.dumps(
             {
                 "runs": len(runs),
+                "ticks_requested": args.ticks,
                 "duration_seconds": time.perf_counter() - started,
                 "output": args.output,
             }
