@@ -42,6 +42,7 @@ The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They
 | Dashboard | [`03-dashboard/DASHBOARD.md`](03-dashboard/DASHBOARD.md) |
 | API reference | [`03-dashboard/API_REFERENCE.md`](03-dashboard/API_REFERENCE.md) |
 | Quality gate | [`05-quality/QUALITY_GATE.md`](05-quality/QUALITY_GATE.md) |
+| Research positioning & evidence program | [`06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md`](06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md) |
 | Development roadmap | [`08-roadmap/ROADMAP.md`](08-roadmap/ROADMAP.md) |
 | Current TODO | [`08-roadmap/TODO.md`](08-roadmap/TODO.md) |
 | Research roadmap | [`08-roadmap/RESEARCH_ROADMAP.md`](08-roadmap/RESEARCH_ROADMAP.md) |
@@ -49,6 +50,22 @@ The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They
 | Network observability/CI repair | [`07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md`](07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md) |
 | Security | [`../SECURITY.md`](../SECURITY.md) |
 | Contribution workflow | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
+
+## Current research direction
+
+The project is now explicitly evidence-led rather than feature-led. The canonical research positioning defines:
+
+- classification and scientific scope;
+- distinguishing architectural characteristics;
+- benchmark and independent-replication strategy;
+- preregistration/Open-Science requirements;
+- intervention-based causal inference standards;
+- performance/scaling rules that preserve deterministic equivalence;
+- longitudinal research-dashboard requirements;
+- additional recurrence, generalization, lifelong-learning, self-model, latency, replication and AI-treatment research questions;
+- a staged publication pathway.
+
+These additions do not establish new scientific findings. They define how future findings must be produced and reported.
 
 ## Current dashboard terminology
 
@@ -90,7 +107,7 @@ This instrumentation makes runtime activity inspectable, but a nonzero spike cou
 - `03-dashboard/` — dashboard contracts and UI/API documentation.
 - `04-integration/` — integration notes, overlays and legacy patches.
 - `05-quality/` — quality and release-gate definitions.
-- `06-research/` — research notes, dissertations and conceptual documents; not automatically empirical evidence.
+- `06-research/` — research notes, dissertations, conceptual documents and the canonical research-positioning/evidence program; not automatically empirical evidence.
 - `07-changelog/` — changelog history, including dated current-change records.
 - `08-roadmap/` — current roadmap/TODO plus historical phase-specific roadmaps.
 - `09-sprints/` — time-boxed sprint records; historical unless explicitly referenced by current roadmap.
