@@ -1,0 +1,78 @@
+{
+  "experiment_id": "EXP-GEN-0016",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-05T19:47:52.129977",
+  "created_at": "2026-09-05T17:47:52.129985+00:00",
+  "git": {
+    "commit": "6ca5f7a2571bb978ceb3d5167f31325be5531727",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "seed": 42,
+    "ticks": 1000,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "protocol": "science_suite_v1"
+  },
+  "artifacts": {
+    "data": "DATA/runs.json",
+    "workflow": "workflow.json",
+    "report": "report.md"
+  },
+  "research_questions": [
+    "RQ-TEMP-001"
+  ],
+  "hypotheses": [
+    "H-TEMP-001-A"
+  ],
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "run_count": 6,
+    "protocol": "science_suite_v1"
+  },
+  "provenance_digests": {
+    "code": "c9bc6bffe2b27ef0c1e421011c3a504ccb64e47e6a3b6926d66e748cad6eae1f",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14",
+    "data": "9a7695dc3c8adec9bf785b70934823baee7d983e1dedb05a2bd57e730a7220ef"
+  },
+  "source_freeze_sha": "aba735e0289c98f7b89d3d625bf80c00d58dc48c1deffd0ed7ffe195d0374889",
+  "runtime": {
+    "duration_seconds": 0.039885499980300665
+  }
+}
