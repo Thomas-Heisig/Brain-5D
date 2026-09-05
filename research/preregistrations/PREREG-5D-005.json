@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-5D-005","research_question":"RQ-5D-005","hypothesis":"H-5D-005-A","protocol_id":"topology_matched_5d_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["first_response_latency","last_response_latency","propagation_depth","total_spikes"],
+  "secondary_outcomes":["delivered_synaptic_events","activated_neurons"],
+  "conditions":[{"id":"1d","role":"control"},{"id":"2d","role":"comparison"},{"id":"3d","role":"comparison"},{"id":"5d","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":30,"rule":"same seed set for every dimensional embedding"},
+  "stopping_rule":"complete every dimensional embedding for every registered seed",
+  "inclusion_criteria":["equal neuron count","equal synapse count","equal degree and weight pattern","identical stimulus schedule"],
+  "exclusion_criteria":["topology mismatch other than coordinates/dimensions","seed mismatch","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["condition distributions","paired differences versus 5d","effect ratios"],"inference_policy":"No 5D-specific claim unless matched controls differ on a preregistered outcome.","planned_tests":[]},
+  "expected_failure_modes":["all dimensions remain identical","coordinate embedding is behaviorally inert in this topology"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot redesign matched topology after results are seen.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}
