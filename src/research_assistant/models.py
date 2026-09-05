@@ -61,7 +61,7 @@ class AIAnalysisRecord:
         output: dict[str, Any],
         prompt: str,
     ) -> AIAnalysisRecord:
-        normalized_output = _normalize_output(output)
+        normalized_output = normalize_output(output)
         _validate_output(normalized_output, role)
         now = datetime.now(timezone.utc)
         analysis_id = f"AIAR-{role}-{now:%Y%m%d%H%M%S%f}-{packet.digest[:8]}"
@@ -107,7 +107,7 @@ class AIAnalysisRecord:
         )
 
 
-def _normalize_output(output: dict[str, Any]) -> dict[str, Any]:
+def normalize_output(output: dict[str, Any]) -> dict[str, Any]:
     """Normalize common model-format variations before schema validation.
 
     Numeric strings and percentages are converted losslessly. If a model emits a
@@ -122,9 +122,7 @@ def _normalize_output(output: dict[str, Any]) -> dict[str, Any]:
     raw_confidence = normalized.get("confidence")
     parsed: float | None = None
 
-    if isinstance(raw_confidence, (int, float)) and not isinstance(
-        raw_confidence, bool
-    ):
+    if isinstance(raw_confidence, (int, float)) and not isinstance(raw_confidence, bool):
         parsed = float(raw_confidence)
     elif isinstance(raw_confidence, str):
         text = raw_confidence.strip().replace(",", ".")
@@ -170,13 +168,10 @@ def _validate_output(output: dict[str, Any], role: str) -> None:
     ):
         if not isinstance(output.get(name), list):
             raise ValueError(f"Invalid AI analysis output field: {name}")
-    if role == "scientific_analyst":
-        if not isinstance(output.get("effect_direction"), str):
-            raise ValueError("Invalid AI analysis output field: effect_direction")
+    if role == "scientific_analyst" and not isinstance(output.get("effect_direction"), str):
+        raise ValueError("Invalid AI analysis output field: effect_direction")
     confidence_value = output.get("confidence")
-    if isinstance(confidence_value, bool) or not isinstance(
-        confidence_value, (int, float)
-    ):
+    if isinstance(confidence_value, bool) or not isinstance(confidence_value, (int, float)):
         raise ValueError("Invalid AI analysis output field: confidence")
     confidence = float(confidence_value)
     if not 0.0 <= confidence <= 1.0:
