@@ -24,10 +24,36 @@ text = text.replace(
     "def _find_named_code(code: object, name: str) -> object | None:\n    if not hasattr(code, \"co_consts\"):\n        return None\n    if getattr(code, \"co_name\", None) == name:\n        return code\n    for value in code.co_consts:\n",
     "def _find_named_code(code: CodeType, name: str) -> CodeType | None:\n    if code.co_name == name:\n        return code\n    for value in code.co_consts:\n",
 )
+raw_recursion = (
+    "    for value in code.co_consts:\n"
+    "        found = _find_named_code(value, name)\n"
+    "        if found is not None:\n"
+    "            return found\n"
+)
+typed_recursion = (
+    "    for value in code.co_consts:\n"
+    "        if not isinstance(value, CodeType):\n"
+    "            continue\n"
+    "        found = _find_named_code(value, name)\n"
+    "        if found is not None:\n"
+    "            return found\n"
+)
+if raw_recursion in text:
+    text = text.replace(raw_recursion, typed_recursion, 1)
+duplicate_recursion = (
+    "    for value in code.co_consts:\n"
+    "        if not isinstance(value, CodeType):\n"
+    "            continue\n"
+    "        if not isinstance(value, CodeType):\n"
+    "            continue\n"
+    "        found = _find_named_code(value, name)\n"
+)
 text = text.replace(
-    "        found = _find_named_code(value, name)\n        if found is not None:\n            return found\n",
-    "        if not isinstance(value, CodeType):\n            continue\n        found = _find_named_code(value, name)\n        if found is not None:\n            return found\n",
-    1,
+    duplicate_recursion,
+    "    for value in code.co_consts:\n"
+    "        if not isinstance(value, CodeType):\n"
+    "            continue\n"
+    "        found = _find_named_code(value, name)\n",
 )
 text = text.replace(
     "def _code_digest(code: object) -> str:\n",
