@@ -71,6 +71,11 @@ def main() -> int:
         if review.get("experiment_id") != experiment_id:
             raise ValueError("Human review experiment identity does not match")''',
     )
+    replace_once(
+        Path("src/research/evidence_engine.py"),
+        "            status=cast(str, decision),\n",
+        "            status=decision,\n",
+    )
 
     replace_once(
         Path("src/research/productive_learning.py"),
