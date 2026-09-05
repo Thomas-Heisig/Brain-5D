@@ -13,10 +13,10 @@ def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> N
         repetitions_per_condition=2,
     )
 
-    assert analysis["run_count"] == 20
+    assert analysis["run_count"] == 24
     assert analysis["evidence_eligible"] is False
     assert analysis["sensor_frames_reproducible"] is True
-    assert analysis["conditions"]["authorized"]["target_reached_rate"] == 1.0
+    assert analysis["conditions"]["authorized"]["target_reached_rate"] == 0.5
     assert analysis["conditions"]["unauthorized"]["target_reached_rate"] == 0.0
     assert analysis["conditions"]["unauthorized"]["total_reward"] == 0.0
     assert analysis["conditions"]["authorized"]["all_audits_valid"] is True
@@ -28,11 +28,20 @@ def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> N
     assert analysis["conditions"]["actuator_failure"]["observed_effect_count"] == 0
     assert analysis["conditions"]["sensor_loss"]["runtime_errors"] == 4
     assert analysis["conditions"]["sensor_loss"]["accepted_action_count"] == 0
+    assert analysis["conditions"]["open_loop_replay"]["target_reached_rate"] == 0.5
+    assert analysis["conditions"]["open_loop_replay"]["action_sources"] == [
+        "pre_registered_replay"
+    ]
+    assert analysis["conditions"]["authorized"]["seed_metrics"] == {
+        "42": {"runs": 2, "target_reached_rate": 1.0, "runtime_errors": 0},
+        "43": {"runs": 2, "target_reached_rate": 0.0, "runtime_errors": 0},
+    }
+    assert analysis["replay_plan"]["actions"] == ["right", "right", "right"]
     assert analysis["conditions"]["authorized"]["acceptance_receipts_complete"] is True
     assert analysis["conditions"]["authorized"]["effect_receipts_complete"] is True
 
     data_path = tmp_path / "EXP-EMB-0001" / "DATA" / "analysis.json"
-    assert json.loads(data_path.read_text(encoding="utf-8"))["run_count"] == 20
+    assert json.loads(data_path.read_text(encoding="utf-8"))["run_count"] == 24
 
     runs_path = tmp_path / "EXP-EMB-0001" / "DATA" / "runs.jsonl"
     run_records = [
@@ -41,6 +50,7 @@ def test_embodiment_protocol_records_all_conditions_as_data(tmp_path: Path) -> N
     first_run = run_records[0]
     assert first_run["action_acceptance_receipts"][0]["accepted"] is True
     assert first_run["observed_effect_receipts"][0]["effect_observed"] is True
+    assert first_run["action_source"] == "network_output"
     actuator_failure = next(
         run for run in run_records if run["condition"] == "actuator_failure"
     )

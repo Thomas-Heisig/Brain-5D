@@ -562,6 +562,10 @@
   observed-effect receipts.
 - Added deterministic actuator-failure and sensor-loss control conditions;
   rejected actions and sensor runtime errors remain visible in DATA.
+- Added a pre-registered replay/open-loop action condition with an explicit
+  action source in each DATA record.
+- Independent protocol runs now use distinct deterministic seeds and persist
+  per-seed target and runtime-error metrics for stability comparison.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 

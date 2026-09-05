@@ -51,6 +51,7 @@ class ProtocolRun:
     run_id: str
     condition: str
     repetition: int
+    seed: int
     frames: tuple[dict[str, Any], ...]
     rewards: tuple[tuple[float, int], ...]
     target_reached: bool
@@ -61,10 +62,14 @@ class ProtocolRun:
     runtime_error: str | None
     action_acceptance_receipts: tuple[dict[str, Any], ...]
     observed_effect_receipts: tuple[dict[str, Any], ...]
+    action_source: str
+
+
+_REPLAY_ACTIONS = ("right", "right", "right")
 
 
 def _agent(
-    authorized: bool, actuator_failure: bool = False
+    authorized: bool, actuator_failure: bool = False, seed: int = 42
 ) -> ControlledEmbodimentAgent:
     descriptor = ConnectionDescriptor(
         connection_id="target-actuator",
@@ -90,12 +95,15 @@ def _agent(
     agent = ControlledEmbodimentAgent(
         DeterministicTargetEnvironment(), Actuator(), descriptor
     )
-    agent.reset(seed=42)
+    agent.reset(seed=seed)
     return agent
 
 
-def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
-    authorized = condition == "authorized"
+def _run_condition(
+    run_id: str, condition: str, repetition: int, seed: int
+) -> ProtocolRun:
+    authorized = condition in {"authorized", "open_loop_replay"}
+    open_loop_replay = condition == "open_loop_replay"
     sensor = SystemSensorAdapter(lambda tick: {"signal": tick})
     if condition == "sensor_loss":
         sensor._active = False
@@ -105,10 +113,22 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
         sensor=sensor,
         network=network,
         encoder=lambda frame: {0: float(cast(dict[str, int], frame.payload)["signal"])},
-        decoder=lambda result, frame: ActionCommand(
-            "target-actuator", frame.tick, "right"
+        decoder=lambda result, frame: (
+            ActionCommand(
+                "target-actuator", frame.tick, _REPLAY_ACTIONS[frame.tick - 1]
+            )
+            if open_loop_replay
+            else (
+                ActionCommand("target-actuator", frame.tick, "right")
+                if 1 in result.get("output_spike_ids", ())
+                else None
+            )
         ),
-        embodiment=_agent(authorized, actuator_failure=condition == "actuator_failure"),
+        embodiment=_agent(
+            authorized,
+            actuator_failure=condition == "actuator_failure",
+            seed=seed,
+        ),
         learning=cast(Any, learning),
     )
 
@@ -116,7 +136,7 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
     action_acceptance_receipts: list[dict[str, Any]] = []
     observed_effect_receipts: list[dict[str, Any]] = []
     try:
-        engine.reset(seed=42)
+        engine.reset(seed=seed)
         for tick in range(1, 4):
             record = engine.step(tick)
             frames.append({"tick": record.frame.tick, "payload": record.frame.payload})
@@ -143,6 +163,7 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
             run_id=run_id,
             condition=condition,
             repetition=repetition,
+            seed=seed,
             frames=tuple(frames),
             rewards=tuple(learning.rewards),
             target_reached=observation is not None and observation.terminated,
@@ -153,12 +174,16 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
             runtime_error=None,
             action_acceptance_receipts=tuple(action_acceptance_receipts),
             observed_effect_receipts=tuple(observed_effect_receipts),
+            action_source=(
+                "pre_registered_replay" if open_loop_replay else "network_output"
+            ),
         )
     except Exception as error:  # pragma: no cover - protocol records failures as data
         return ProtocolRun(
             run_id=run_id,
             condition=condition,
             repetition=repetition,
+            seed=seed,
             frames=tuple(frames),
             rewards=tuple(learning.rewards),
             target_reached=False,
@@ -169,6 +194,9 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
             runtime_error=f"{type(error).__name__}: {error}",
             action_acceptance_receipts=tuple(action_acceptance_receipts),
             observed_effect_receipts=tuple(observed_effect_receipts),
+            action_source=(
+                "pre_registered_replay" if open_loop_replay else "network_output"
+            ),
         )
 
 
@@ -184,6 +212,7 @@ def run_protocol(
         "unauthorized",
         "actuator_failure",
         "sensor_loss",
+        "open_loop_replay",
         "sensor_reproducibility",
     )
     runs: list[ProtocolRun] = []
@@ -191,7 +220,14 @@ def run_protocol(
         for repetition in range(repetitions_per_condition):
             for condition in conditions:
                 run_id = f"EMB-{independent + 1:03d}-{repetition + 1:02d}-{condition}"
-                runs.append(_run_condition(run_id, condition, repetition + 1))
+                runs.append(
+                    _run_condition(
+                        run_id,
+                        condition,
+                        repetition + 1,
+                        seed=42 + independent,
+                    )
+                )
 
     output_dir.mkdir(parents=True, exist_ok=True)
     data_path = output_dir / "DATA" / "runs.jsonl"
@@ -208,6 +244,10 @@ def run_protocol(
         "experiment_id": "EXP-EMB-0001",
         "status": "completed",
         "run_count": len(runs),
+        "replay_plan": {
+            "actions": list(_REPLAY_ACTIONS),
+            "source": "pre_registered_replay",
+        },
         "conditions": {
             condition: {
                 "runs": len(condition_runs),
@@ -241,6 +281,26 @@ def run_protocol(
                 "effect_receipts_complete": all(
                     len(run.observed_effect_receipts) == 3 for run in condition_runs
                 ),
+                "action_sources": sorted({run.action_source for run in condition_runs}),
+                "seed_metrics": {
+                    str(seed): {
+                        "runs": sum(run.seed == seed for run in condition_runs),
+                        "target_reached_rate": (
+                            sum(
+                                run.target_reached
+                                for run in condition_runs
+                                if run.seed == seed
+                            )
+                            / sum(run.seed == seed for run in condition_runs)
+                        ),
+                        "runtime_errors": sum(
+                            run.runtime_error is not None
+                            for run in condition_runs
+                            if run.seed == seed
+                        ),
+                    }
+                    for seed in sorted({run.seed for run in condition_runs})
+                },
             }
             for condition, condition_runs in by_condition.items()
         },

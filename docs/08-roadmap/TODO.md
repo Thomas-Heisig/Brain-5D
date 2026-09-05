@@ -38,11 +38,11 @@ These tasks should produce the next scientific gain before broad feature expansi
 ### Closed-loop embodiment
 
 - [ ] Freeze a deterministic embodiment protocol for Sensor → SNN → Actuator → Outcome → Reward.
-- [ ] Add replay/open-loop control condition.
+- [x] Add replay/open-loop control condition.
 - [x] Store action acceptance and observed effect as separate receipts.
 - [x] Add sensor-loss/degraded-quality condition.
 - [x] Add actuator failure/no-effect condition.
-- [ ] Repeat across seeds and compare adaptation/stability metrics.
+- [x] Repeat across seeds and compare adaptation/stability metrics.
 - [ ] Promote validated results to evidence only after protocol checks.
 
 ## P1 — runtime/time semantics and performance
