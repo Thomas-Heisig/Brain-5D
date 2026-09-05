@@ -61,7 +61,8 @@ class AIAnalysisRecord:
         output: dict[str, Any],
         prompt: str,
     ) -> AIAnalysisRecord:
-        _validate_output(output, role)
+        normalized_output = _normalize_output(output)
+        _validate_output(normalized_output, role)
         now = datetime.now(timezone.utc)
         analysis_id = f"AIAR-{role}-{now:%Y%m%d%H%M%S%f}-{packet.digest[:8]}"
         return cls(
@@ -82,14 +83,14 @@ class AIAnalysisRecord:
                 "experiment_id": packet.experiment_id,
                 "packet_digest": packet.digest,
             },
-            output=output,
+            output=normalized_output,
             provenance={
                 "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
                 "research_packet_digest": packet.digest,
                 "prompt_protocol_version": "research_assistant_v1",
-                "assistant_schema_version": "1",
+                "assistant_schema_version": "1.1",
                 "git_commit": packet.provenance.get("git_commit", "unknown"),
-                "model_self_confidence": str(float(output["confidence"])),
+                "model_self_confidence": str(float(normalized_output["confidence"])),
             },
             review={
                 "status": "pending",
@@ -104,6 +105,33 @@ class AIAnalysisRecord:
             },
             generated_at=now.isoformat(),
         )
+
+
+def _normalize_output(output: dict[str, Any]) -> dict[str, Any]:
+    """Normalize narrow, lossless model-format variations before validation.
+
+    LLM backends occasionally serialize a numeric confidence as a JSON string
+    (for example ``"0.85"`` or ``"85%"``). Rejecting an otherwise valid AIRR
+    because of that transport-level representation is not scientifically useful.
+    This function only normalizes unambiguous numeric representations; qualitative
+    labels such as ``"high"`` remain invalid.
+    """
+
+    normalized = dict(output)
+    confidence = normalized.get("confidence")
+    if isinstance(confidence, str):
+        text = confidence.strip().replace(",", ".")
+        percentage = text.endswith("%")
+        if percentage:
+            text = text[:-1].strip()
+        try:
+            value = float(text)
+        except ValueError:
+            return normalized
+        if percentage:
+            value /= 100.0
+        normalized["confidence"] = value
+    return normalized
 
 
 def _validate_output(output: dict[str, Any], role: str) -> None:
@@ -121,8 +149,9 @@ def _validate_output(output: dict[str, Any], role: str) -> None:
     if role == "scientific_analyst":
         if not isinstance(output.get("effect_direction"), str):
             raise ValueError("Invalid AI analysis output field: effect_direction")
-    if not isinstance(output.get("confidence"), (int, float)):
+    confidence_value = output.get("confidence")
+    if isinstance(confidence_value, bool) or not isinstance(confidence_value, (int, float)):
         raise ValueError("Invalid AI analysis output field: confidence")
-    confidence = float(output["confidence"])
+    confidence = float(confidence_value)
     if not 0.0 <= confidence <= 1.0:
         raise ValueError("AI analysis confidence must be between 0 and 1.")
