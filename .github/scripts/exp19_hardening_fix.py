@@ -33,4 +33,8 @@ text = text.replace(
     "def _code_digest(code: object) -> str:\n",
     "def _code_digest(code: CodeType) -> str:\n",
 )
+text = text.replace(
+    "        comparisons = metrics.get(\"comparisons\")\n        if not isinstance(comparisons, list) or len(comparisons) <= threshold:\n            continue\n",
+    "        comparison_value: object = metrics.get(\"comparisons\")\n        if not isinstance(comparison_value, list) or len(comparison_value) <= threshold:\n            continue\n        comparisons: list[object] = list(comparison_value)\n",
+)
 workflow.write_text(text, encoding="utf-8")
