@@ -1816,6 +1816,11 @@ body .footer-segment {
 .workflow-wide { grid-column: 1 / -1; }
 .workflow-actions { align-items: flex-start; }
 .workflow-actions pre { flex: 1; min-width: 0; margin: 0; color: var(--muted); font: .72rem/1.4 var(--font-mono); white-space: pre-wrap; }
+.workflow-progress-row { display: grid; grid-template-columns: auto minmax(120px, 1fr) auto; align-items: center; gap: 8px; color: var(--muted); font-size: .72rem; }
+.workflow-progress-track { position: relative; height: 7px; overflow: hidden; border-radius: 4px; background: rgba(255, 255, 255, .1); }
+.workflow-progress-track b { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--accent2); transition: width .25s ease; }
+.workflow-progress-track.is-running b { width: 38% !important; background: var(--color-success); animation: workflow-progress-sweep 1.2s ease-in-out infinite; }
+@keyframes workflow-progress-sweep { 0%, 100% { transform: translateX(-105%); } 50% { transform: translateX(205%); } }
 
 @media (max-width: 680px) {
   .workflow-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -8835,6 +8840,21 @@ body.accessibility-mode .health-bar {
   border-radius: inherit;
   background: linear-gradient(90deg, #4fe4d5, #ffad60);
   transition: width .35s ease;
+}
+
+.footer-vitals.is-test-running .footer-vital:nth-child(1) strong,
+.footer-vitals.is-test-running .footer-vital:nth-child(2) strong {
+  color: #7ff1df;
+}
+
+.footer-vitals.is-test-running .footer-vital:nth-child(1) b,
+.footer-vitals.is-test-running .footer-vital:nth-child(2) b {
+  animation: footer-test-activity 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes footer-test-activity {
+  from { opacity: .45; transform: scaleX(.72); transform-origin: left; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: left; }
 }
 
 @media (max-width: 900px) {

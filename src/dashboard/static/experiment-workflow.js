@@ -36,6 +36,9 @@ export class ExperimentWorkflowPanel {
       notes: byId("workflow-notes"),
       run: byId("workflow-run"),
       status: byId("workflow-status"),
+      progressBar: byId("workflow-progress-bar"),
+      progressLabel: byId("workflow-progress-label"),
+      progressValue: byId("workflow-progress-value"),
       result: byId("workflow-result"),
     };
     this.elements.question?.addEventListener("change", () => this._renderHypotheses());
@@ -56,6 +59,7 @@ export class ExperimentWorkflowPanel {
       this._renderQuestions();
       this._applyProtocol();
       this._setStatus("Bereit", "ready");
+      this._setProgress(0, "Bereit", false);
     } catch (error) {
       this._setStatus(`Nicht verfuegbar: ${error.message}`, "error");
     }
@@ -97,6 +101,7 @@ export class ExperimentWorkflowPanel {
     };
     this.elements.run.disabled = true;
     this._setStatus("Ausfuehrung laeuft", "running");
+    this._setProgress(8, "Testlauf laeuft", true);
     this.elements.result.textContent = "";
     try {
       const result = await fetchJson("/api/experiment/workflow/run", {
@@ -130,9 +135,11 @@ export class ExperimentWorkflowPanel {
         if (result.ai_report.message) lines.push(`KI Fehler: ${result.ai_report.message}`);
       }
       this.elements.result.textContent = lines.join("\n");
+      this._setProgress(100, "Testlauf abgeschlossen", false);
       if (this.onCompleted) await this.onCompleted();
     } catch (error) {
       this._setStatus(`Ausfuehrung abgebrochen: ${error.message}`, "error");
+      this._setProgress(0, "Testlauf fehlgeschlagen", false);
     } finally {
       this.elements.run.disabled = false;
     }
@@ -230,5 +237,19 @@ export class ExperimentWorkflowPanel {
     if (!this.elements.status) return;
     this.elements.status.textContent = message;
     this.elements.status.dataset.state = state;
+  }
+
+  _setProgress(percent, label, active) {
+    const value = Math.max(0, Math.min(100, percent));
+    if (this.elements.progressBar) {
+      this.elements.progressBar.style.width = `${value}%`;
+      this.elements.progressBar.parentElement?.classList.toggle("is-running", active);
+      this.elements.progressBar.parentElement?.setAttribute("aria-valuenow", String(value));
+    }
+    if (this.elements.progressLabel) this.elements.progressLabel.textContent = label;
+    if (this.elements.progressValue) this.elements.progressValue.textContent = active ? "laufend" : `${value}%`;
+    document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
+      detail: { active, progress: value, label },
+    }));
   }
 }

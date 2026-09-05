@@ -504,6 +504,11 @@
           <label class="workflow-wide">Bedingungen<textarea id="workflow-conditions" rows="3" placeholder="Seed, Konfiguration, Replikate und Abbruchkriterien"></textarea></label>
           <label class="workflow-wide">Beobachtung / Hinweise<textarea id="workflow-notes" rows="2" placeholder="Optionale Beobachtungen; keine KI-Ausgabe wird als Evidenz verwendet"></textarea></label>
         </div>
+        <div class="workflow-progress-row" aria-live="polite">
+          <span id="workflow-progress-label">Bereit</span>
+          <div id="workflow-progress-track" class="workflow-progress-track" role="progressbar" aria-label="Experimentfortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><b id="workflow-progress-bar"></b></div>
+          <strong id="workflow-progress-value">0%</strong>
+        </div>
         <div class="workflow-actions"><button id="workflow-run" type="button" class="btn-success">Ausfuehren und Bericht eintragen</button><pre id="workflow-result" aria-live="polite"></pre></div>
       </section>
       <!-- Source selector toolbar -->

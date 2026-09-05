@@ -1,0 +1,457 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0010",
+  "research_question_id": "RQ-SNN-001",
+  "hypothesis_ids": [
+    "H-SNN-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-05T08:59:13.397741+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0010",
+      "research_question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-001-A",
+          "research_question": "RQ-SNN-001",
+          "hypothesis": "Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken ohne numerische Drift.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-05",
+      "source_sha": "94388543f01a1d29c3d8b824c2752b78bc45ebdf"
+    },
+    "executive_summary": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist aufgrund der fehlenden Rohdaten und der extrem kurzen Laufzeit unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die Analyse ist rein spekulativ, da die eigentlichen Simulationsergebnisse (Spike-Zeitreihen, Drift-Metriken) fehlen. Die Metadaten deuten auf eine potenziell fehlerhafte oder stark beschleunigte Datenverarbeitung hin, was die Schlussfolgerungen über die Stabilität über 100.000 Ticks unmöglich macht.",
+    "research_question": {
+      "id": "RQ-SNN-001",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "relevance": "Grundvoraussetzung für alle weiteren Lern- und Selbstorganisationsexperimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      "**Berechnungen/Interpretation:** Die Simulation wurde mit einem maximalen Ticks-Wert von 100.000 durchgeführt (simulation.ticks: 100000).",
+      "Die Hypothese H-SNN-001-A postuliert die Stabilität von Spike-Dynamiken über mindestens 100.000 Ticks ohne numerische Drift.",
+      "Die experimentellen Ergebnisse (data: DATA/runs.json) sind nicht im aktuellen Kontext verfügbar, was eine direkte quantitative Bewertung der Stabilität unmöglich macht.",
+      "Die Laufzeit (runtime.duration_seconds: 0.002512000035494566) ist extrem kurz, was auf eine unvollständige oder stark beschleunigte Datenverarbeitung hindeuten könnte, ohne die tatsächliche Dynamik zu erfassen."
+    ],
+    "interpretation": {
+      "assessment": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist aufgrund der fehlenden Rohdaten und der extrem kurzen Laufzeit unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die Analyse ist rein spekulativ, da die eigentlichen Simulationsergebnisse (Spike-Zeitreihen, Drift-Metriken) fehlen. Die Metadaten deuten auf eine potenziell fehlerhafte oder stark beschleunigte Datenverarbeitung hin, was die Schlussfolgerungen über die Stabilität über 100.000 Ticks unmöglich macht.",
+      "observations": [
+        {
+          "type": "Berechnungen/Interpretation",
+          "content": "Die Simulation wurde mit einem maximalen Ticks-Wert von 100.000 durchgeführt (simulation.ticks: 100000)."
+        },
+        {
+          "type": "Berechnungen/Interpretation",
+          "content": "Die Hypothese H-SNN-001-A postuliert die Stabilität von Spike-Dynamiken über mindestens 100.000 Ticks ohne numerische Drift."
+        },
+        {
+          "type": "Berechnungen/Interpretation",
+          "content": "Die Laufzeit (runtime.duration_seconds: 0.002512000035494566) ist extrem kurz, was auf eine unvollständige oder stark beschleunigte Datenverarbeitung hindeuten könnte, ohne die tatsächliche Dynamik zu erfassen."
+        },
+        {
+          "type": "Berechnungen/Interpretation",
+          "content": "Die Provenienz ist unvollständig, da die Konfigurations- und Daten-Hashes (SHA256) fehlen, was die Reproduzierbarkeit stark einschränkt."
+        }
+      ],
+      "effect_direction": "Nicht bestimmbar (Fehlende Daten)",
+      "methodological_concerns": [
+        "Die Angabe eines sehr kurzen Laufzeitintervalls im Verhältnis zu den 100.000 Ticks wirft Fragen bezüglich der Rechengenauigkeit und der tatsächlichen Simulationsdauer auf.",
+        "Die Provenienz ist unvollständig, insbesondere die SHA256-Hashes für Konfiguration und Daten sind nicht verfügbar, was die Reproduzierbarkeit einschränkt."
+      ],
+      "alternative_explanations": [],
+      "recommended_experiments": [
+        "Durchführung eines erweiterten Experiments mit einer systematischen Variation der Simulationsparameter (z.B. unterschiedliche Spike-Rate-Limits, unterschiedliche Lernraten) bei Beibehaltung der 100.000 Ticks.",
+        "Implementierung eines automatisierten Stabilitäts-Checks, der während der Simulation kontinuierlich die numerische Drift (z.B. durch Überwachung der Energieerhaltung oder der Spike-Rate-Verteilung) protokolliert.",
+        "Vergleich der Ergebnisse mit einer bekannten, stabilen Referenzimplementierung (z.B. einem etablierten SNN-Framework) zur Validierung der numerischen Stabilität."
+      ],
+      "requested_evidence": [
+        "Bereitstellung der vollständigen Spike-Zeitreihendaten (z.B. in einem HDF5-Format) für die 100.000 Ticks, um die Spike-Dynamik visuell und quantitativ zu analysieren.",
+        "Detaillierte Protokollierung der numerischen Drift-Metriken während der gesamten Simulationsdauer, um die Stabilität zu belegen.",
+        "Bestätigung der verwendeten Software-Version ('brain5d_version') und des genauen Simulations-Time-Stepping-Algorithmus."
+      ],
+      "confidence": 0.2
+    },
+    "methodological_critique": [
+      "Die Angabe eines sehr kurzen Laufzeitintervalls im Verhältnis zu den 100.000 Ticks wirft Fragen bezüglich der Rechengenauigkeit und der tatsächlichen Simulationsdauer auf.",
+      "Die Provenienz ist unvollständig, insbesondere die SHA256-Hashes für Konfiguration und Daten sind nicht verfügbar, was die Reproduzierbarkeit einschränkt."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete kurze Laufzeit könnte auf eine fehlerhafte Konfiguration des Simulations-Time-Stepping-Mechanismus zurückzuführen sein, anstatt auf eine tatsächliche physikalische Eigenschaft des Systems."
+    ],
+    "reproducibility": {
+      "git_commit": "94388543f01a1d29c3d8b824c2752b78bc45ebdf",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "9ac13456f1a9b79caa29f091a4a809b07e466ad760d0a99e6d0fe017c5a9d15a",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.2,
+    "missing_evidence": [
+      "Bereitstellung der vollständigen Spike-Zeitreihendaten (z.B. in einem HDF5-Format) für die 100.000 Ticks, um die Spike-Dynamik visuell und quantitativ zu analysieren.",
+      "Detaillierte Protokollierung der numerischen Drift-Metriken während der gesamten Simulationsdauer, um die Stabilität zu belegen.",
+      "Bestätigung der verwendeten Software-Version ('brain5d_version') und des genauen Simulations-Time-Stepping-Algorithmus."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines erweiterten Experiments mit einer systematischen Variation der Simulationsparameter (z.B. unterschiedliche Spike-Rate-Limits, unterschiedliche Lernraten) bei Beibehaltung der 100.000 Ticks.",
+      "Implementierung eines automatisierten Stabilitäts-Checks, der während der Simulation kontinuierlich die numerische Drift (z.B. durch Überwachung der Energieerhaltung oder der Spike-Rate-Verteilung) protokolliert.",
+      "Vergleich der Ergebnisse mit einer bekannten, stabilen Referenzimplementierung (z.B. einem etablierten SNN-Framework) zur Validierung der numerischen Stabilität."
+    ],
+    "conclusion": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist aufgrund der fehlenden Rohdaten und der extrem kurzen Laufzeit unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die Analyse ist rein spekulativ, da die eigentlichen Simulationsergebnisse (Spike-Zeitreihen, Drift-Metriken) fehlen. Die Metadaten deuten auf eine potenziell fehlerhafte oder stark beschleunigte Datenverarbeitung hin, was die Schlussfolgerungen über die Stabilität über 100.000 Ticks unmöglich macht.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260905085841433389-e4337f91",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0010",
+          "packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e"
+        },
+        "output": {
+          "assessment": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die verfügbaren Metadaten zeigen zwar, dass die Simulation durchgeführt wurde (run_count: 6), aber es fehlen die eigentlichen Simulationsergebnisse (z.B. Spike-Zählungen, Drift-Metriken oder Visualisierungen), um die Stabilität über 100.000 Ticks zu beurteilen. Die Analyse ist daher rein spekulativ.",
+          "observations": [
+            "**Berechnungen/Interpretation:** Die Simulation wurde mit einem maximalen Ticks-Wert von 100.000 durchgeführt (simulation.ticks: 100000).",
+            "Die Hypothese H-SNN-001-A postuliert die Stabilität von Spike-Dynamiken über mindestens 100.000 Ticks ohne numerische Drift.",
+            "Die experimentellen Ergebnisse (data: DATA/runs.json) sind nicht im aktuellen Kontext verfügbar, was eine direkte quantitative Bewertung der Stabilität unmöglich macht.",
+            "Die Laufzeit (runtime.duration_seconds: 0.002512000035494566) ist extrem kurz, was auf eine unvollständige oder stark beschleunigte Datenverarbeitung hindeuten könnte, ohne die tatsächliche Dynamik zu erfassen."
+          ],
+          "effect_direction": "Nicht bestimmbar (Fehlende Daten)",
+          "methodological_concerns": [
+            "Die Verlässlichkeit der Simulation wird durch die fehlende Bereitstellung der Rohdaten (Spike-Zeitreihen, Drift-Metriken) beeinträchtigt.",
+            "Die Angabe eines sehr kurzen Laufzeitintervalls im Verhältnis zu den 100.000 Ticks wirft Fragen bezüglich der Rechengenauigkeit und der tatsächlichen Simulationsdauer auf.",
+            "Die Provenienz ist unvollständig, insbesondere die SHA256-Hashes für Konfiguration und Daten sind nicht verfügbar, was die Reproduzierbarkeit einschränkt."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete kurze Laufzeit könnte auf eine fehlerhafte Konfiguration des Simulations-Time-Stepping-Mechanismus zurückzuführen sein, anstatt auf eine tatsächliche physikalische Eigenschaft des Systems.",
+            "Die numerische Drift könnte durch die verwendete Software-Version ('unknown') oder die spezifische Hardware-Umgebung (Windows 11) verursacht worden sein, was die Ergebnisse nicht portierbar macht."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Experiments mit einer systematischen Variation der Simulationsparameter (z.B. unterschiedliche Spike-Rate-Limits, unterschiedliche Lernraten) bei Beibehaltung der 100.000 Ticks.",
+            "Implementierung eines automatisierten Stabilitäts-Checks, der während der Simulation kontinuierlich die numerische Drift (z.B. durch Überwachung der Energieerhaltung oder der Spike-Rate-Verteilung) protokolliert.",
+            "Vergleich der Ergebnisse mit einer bekannten, stabilen Referenzimplementierung (z.B. einem etablierten SNN-Framework) zur Validierung der numerischen Stabilität."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen Spike-Zeitreihendaten (z.B. in einem HDF5-Format) für die 100.000 Ticks, um die Spike-Dynamik visuell und quantitativ zu analysieren.",
+            "Detaillierte Protokollierung der numerischen Drift-Metriken während der gesamten Simulationsdauer, um die Stabilität zu belegen.",
+            "Bestätigung der verwendeten Software-Version ('brain5d_version') und des genauen Simulations-Time-Stepping-Algorithmus."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "23f231ccb005c24f8cb47d6c6066cdbb4e1d90f43f33b4f6ea65d38096f67f95",
+          "research_packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "94388543f01a1d29c3d8b824c2752b78bc45ebdf",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:58:41.433389+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260905085858751808-e4337f91",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0010",
+          "packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e"
+        },
+        "output": {
+          "assessment": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist aufgrund der fehlenden Rohdaten und der extrem kurzen Laufzeit unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die Analyse ist rein spekulativ, da die eigentlichen Simulationsergebnisse (Spike-Zeitreihen, Drift-Metriken) fehlen. Die Metadaten deuten auf eine potenziell fehlerhafte oder stark beschleunigte Datenverarbeitung hin, was die Schlussfolgerungen über die Stabilität über 100.000 Ticks unmöglich macht.",
+          "observations": [
+            "**Berechnungen/Interpretation:** Die Simulation wurde mit einem maximalen Ticks-Wert von 100.000 durchgeführt (simulation.ticks: 100000).",
+            "Die Hypothese H-SNN-001-A postuliert die Stabilität von Spike-Dynamiken über mindestens 100.000 Ticks ohne numerische Drift.",
+            "Die Laufzeit (runtime.duration_seconds: 0.002512000035494566) ist extrem kurz, was auf eine unvollständige oder stark beschleunigte Datenverarbeitung hindeuten könnte, ohne die tatsächliche Dynamik zu erfassen.",
+            "Die Provenienz ist unvollständig, da die Konfigurations- und Daten-Hashes (SHA256) fehlen, was die Reproduzierbarkeit stark einschränkt."
+          ],
+          "effect_direction": "Nicht bestimmbar (Fehlende Daten)",
+          "methodological_concerns": [
+            "Die Angabe eines sehr kurzen Laufzeitintervalls im Verhältnis zu den 100.000 Ticks wirft Fragen bezüglich der Rechengenauigkeit und der tatsächlichen Simulationsdauer auf.",
+            "Die Provenienz ist unvollständig, insbesondere die SHA256-Hashes für Konfiguration und Daten sind nicht verfügbar, was die Reproduzierbarkeit einschränkt."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete kurze Laufzeit könnte auf eine fehlerhafte Konfiguration des Simulations-Time-Stepping-Mechanismus zurückzuführen sein, anstatt auf eine tatsächliche physikalische Eigenschaft des Systems."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Experiments mit einer systematischen Variation der Simulationsparameter (z.B. unterschiedliche Spike-Rate-Limits, unterschiedliche Lernraten) bei Beibehaltung der 100.000 Ticks.",
+            "Implementierung eines automatisierten Stabilitäts-Checks, der während der Simulation kontinuierlich die numerische Drift (z.B. durch Überwachung der Energieerhaltung oder der Spike-Rate-Verteilung) protokolliert.",
+            "Vergleich der Ergebnisse mit einer bekannten, stabilen Referenzimplementierung (z.B. einem etablierten SNN-Framework) zur Validierung der numerischen Stabilität."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen Spike-Zeitreihendaten (z.B. in einem HDF5-Format) für die 100.000 Ticks, um die Spike-Dynamik visuell und quantitativ zu analysieren.",
+            "Detaillierte Protokollierung der numerischen Drift-Metriken während der gesamten Simulationsdauer, um die Stabilität zu belegen.",
+            "Bestätigung der verwendeten Software-Version ('brain5d_version') und des genauen Simulations-Time-Stepping-Algorithmus."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "3b3850647cc834823957deb507ae815a2fdeec032e72347a2f8a5429135707e6",
+          "research_packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "94388543f01a1d29c3d8b824c2752b78bc45ebdf",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:58:58.751808+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260905085913396884-e4337f91",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0010",
+          "packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e"
+        },
+        "output": {
+          "assessment": "Die Durchführung des Experiments EXP-GEN-0010 zur Überprüfung der Stabilität von Spike-Dynamiken in Brain-5D ist aufgrund der fehlenden Rohdaten und der extrem kurzen Laufzeit unzureichend, um die Hypothese H-SNN-001-A zu bestätigen. Die Analyse ist rein spekulativ, da die eigentlichen Simulationsergebnisse (Spike-Zeitreihen, Drift-Metriken) fehlen. Die Metadaten deuten auf eine potenziell fehlerhafte oder stark beschleunigte Datenverarbeitung hin, was die Schlussfolgerungen über die Stabilität über 100.000 Ticks unmöglich macht.",
+          "observations": [
+            {
+              "type": "Berechnungen/Interpretation",
+              "content": "Die Simulation wurde mit einem maximalen Ticks-Wert von 100.000 durchgeführt (simulation.ticks: 100000)."
+            },
+            {
+              "type": "Berechnungen/Interpretation",
+              "content": "Die Hypothese H-SNN-001-A postuliert die Stabilität von Spike-Dynamiken über mindestens 100.000 Ticks ohne numerische Drift."
+            },
+            {
+              "type": "Berechnungen/Interpretation",
+              "content": "Die Laufzeit (runtime.duration_seconds: 0.002512000035494566) ist extrem kurz, was auf eine unvollständige oder stark beschleunigte Datenverarbeitung hindeuten könnte, ohne die tatsächliche Dynamik zu erfassen."
+            },
+            {
+              "type": "Berechnungen/Interpretation",
+              "content": "Die Provenienz ist unvollständig, da die Konfigurations- und Daten-Hashes (SHA256) fehlen, was die Reproduzierbarkeit stark einschränkt."
+            }
+          ],
+          "effect_direction": "Nicht bestimmbar (Fehlende Daten)",
+          "methodological_concerns": [
+            "Die Angabe eines sehr kurzen Laufzeitintervalls im Verhältnis zu den 100.000 Ticks wirft Fragen bezüglich der Rechengenauigkeit und der tatsächlichen Simulationsdauer auf.",
+            "Die Provenienz ist unvollständig, insbesondere die SHA256-Hashes für Konfiguration und Daten sind nicht verfügbar, was die Reproduzierbarkeit einschränkt."
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Experiments mit einer systematischen Variation der Simulationsparameter (z.B. unterschiedliche Spike-Rate-Limits, unterschiedliche Lernraten) bei Beibehaltung der 100.000 Ticks.",
+            "Implementierung eines automatisierten Stabilitäts-Checks, der während der Simulation kontinuierlich die numerische Drift (z.B. durch Überwachung der Energieerhaltung oder der Spike-Rate-Verteilung) protokolliert.",
+            "Vergleich der Ergebnisse mit einer bekannten, stabilen Referenzimplementierung (z.B. einem etablierten SNN-Framework) zur Validierung der numerischen Stabilität."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen Spike-Zeitreihendaten (z.B. in einem HDF5-Format) für die 100.000 Ticks, um die Spike-Dynamik visuell und quantitativ zu analysieren.",
+            "Detaillierte Protokollierung der numerischen Drift-Metriken während der gesamten Simulationsdauer, um die Stabilität zu belegen.",
+            "Bestätigung der verwendeten Software-Version ('brain5d_version') und des genauen Simulations-Time-Stepping-Algorithmus."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "ec4b70bb09de7073cab6fc27b83cfd4d22122c38cc88b4216e27f3640eef8eac",
+          "research_packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "94388543f01a1d29c3d8b824c2752b78bc45ebdf",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:59:13.396884+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "e4337f914e66b103f5b3d9fee9f0f83cd413552633373b8a5213dcc50d966a0e",
+    "source": {
+      "git_commit": "94388543f01a1d29c3d8b824c2752b78bc45ebdf",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "9ac13456f1a9b79caa29f091a4a809b07e466ad760d0a99e6d0fe017c5a9d15a",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260905085841433389-e4337f91",
+    "AIAR-critical_reviewer-20260905085858751808-e4337f91",
+    "AIAR-scientific_writer-20260905085913396884-e4337f91"
+  ],
+  "supersedes": null,
+  "content_digest": "0a38236a278c4814fa252caa3e7f89307002074932b7571a8fc7d0df466cc1af",
+  "markdown_digest": "d9bb238066c31596fb095fa5b0fa48a9f4de5c6c29b5ff2bef953ca30260101e"
+}

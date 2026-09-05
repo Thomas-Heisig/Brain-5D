@@ -275,6 +275,27 @@ let liveSource = true;  // true = LIVE_RUNTIME, false = SNAPSHOT
 let refreshInterval = null;
 let heatmapInterval = null;
 let liveProjectionInterval = null;
+let experimentRunActive = false;
+
+function renderExperimentRunFooter() {
+  const vitals = document.querySelector('.footer-vitals');
+  if (!vitals) return;
+  vitals.classList.toggle('is-test-running', experimentRunActive);
+  if (!experimentRunActive) return;
+
+  setText('footer-activity-value', 'Testlauf');
+  setText('footer-spikes-value', 'Testlauf');
+  const activityBar = $('footer-activity-bar');
+  const spikesBar = $('footer-spikes-bar');
+  if (activityBar) activityBar.style.width = '58%';
+  if (spikesBar) spikesBar.style.width = '42%';
+}
+
+document.addEventListener('brain5d:experiment-progress', (event) => {
+  experimentRunActive = Boolean(event.detail?.active);
+  renderExperimentRunFooter();
+  if (!experimentRunActive) dashboardStore.refresh().catch(() => {});
+});
 
 /**
  * Render system status from the central dashboard store.
@@ -401,6 +422,7 @@ function renderStatus(state) {
   if (activityBar) activityBar.style.width = `${Math.min(100, Math.max(0, (activity || 0) * 100))}%`;
   if (spikesBar) spikesBar.style.width = `${spikesPerTick == null ? 0 : Math.min(100, Math.max(0, spikesPerTick * 100))}%`;
   if (pressureBar) pressureBar.style.width = `${pressure == null ? 0 : Math.min(100, Math.max(0, pressure * 100))}%`;
+  renderExperimentRunFooter();
   if (statusEl) {
     statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
     const workerFailed = storage.worker_failed;

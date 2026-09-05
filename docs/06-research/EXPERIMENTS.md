@@ -30,3 +30,8 @@ Das Tick-Budget wird für PING/5D als Messdauer und für TIME als obere Stufe de
 Tick-Leiter ausgeführt. Freitext-Bedingungen werden als Versuchsmetadaten
 persistiert; nur als ausführbar ausgewiesene Parameter (Seeds, Ticks und
 Protokoll) steuern den Lauf.
+
+Während eines laufenden separaten Science-Laufs zeigt der Runner einen
+Fortschrittszustand. Die Footer-Balken werden in diesem Zeitraum ausdrücklich
+als `Testlauf` markiert und sind keine behaupteten Runtime-Messwerte; nach dem
+Lauf wird die normale Telemetrie erneut geladen.

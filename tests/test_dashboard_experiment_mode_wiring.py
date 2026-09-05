@@ -47,7 +47,11 @@ class TestExperimentModeFrontendWiring:
         assert 'id="fm-experiment-sort"' in html
         assert 'id="workflow-seeds"' in html
         assert 'id="workflow-condition-profile"' in html
+        assert 'id="workflow-progress-track"' in html
         assert "0-29" in workflow_js
+        assert "brain5d:experiment-progress" in workflow_js
+        assert "brain5d:experiment-progress" in app_js
+        assert "is-test-running" in _read_static("styles.css")
 
     def test_release_summary_uses_canonical_status_sections(self) -> None:
         html = _read_static("index.html")

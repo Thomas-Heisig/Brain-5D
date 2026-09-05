@@ -9,6 +9,9 @@
   die bisherigen widersprüchlichen festen Messdauern entfallen.
 - Protokollspezifische Voreinstellungen und Bedingungsvorlagen für Standard-,
   Replikations-, Sensitivitäts-, Pilot- und Kurzläufe wurden ergänzt.
+- Laufende Tests zeigen nun einen animierten Fortschrittsbalken; der Footer zeigt
+  während separater Science-Läufe `Testlauf` statt fälschlich leerer Runtime-
+  Aktivität und lädt danach wieder echte Telemetrie.
 
 ## 2026-09-05 — EXP-GEN-0007 Provenance and impulse response repair
 
