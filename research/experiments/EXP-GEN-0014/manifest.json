@@ -7,10 +7,12 @@
   },
   "ai_reproducibility": "R0",
   "artifacts": {
-    "ai_report_json": "experiments/EXP-GEN-0014/reports/AIRR-2026-0001.json",
-    "ai_report_markdown": "experiments/EXP-GEN-0014/reports/AIRR-2026-0001.md",
+    "ai_report_json": "reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "reports/AIRR-2026-0001.md",
     "data": "DATA/runs.json",
     "report": "report.md",
+    "scientific_review": "reports/SCIENTIFIC-REVIEW.md",
+    "summary": "summary.md",
     "workflow": "workflow.json"
   },
   "causal_card": {
@@ -54,6 +56,14 @@
     "duration_seconds": 0.0064607999520376325
   },
   "runtime_errors": [],
+  "semantic_validation": {
+    "valid": false,
+    "status": "RQ_PROTOCOL_MISMATCH",
+    "registered_scope": "FAST/MEDIUM/SLOW temporal reference-state comparison",
+    "executed_scope": "recurrence_off versus recurrence_on network impulse response",
+    "evidence_promotion_blocked": true,
+    "review_artifact": "reports/SCIENTIFIC-REVIEW.md"
+  },
   "simulation": {
     "protocol": "science_suite_v1",
     "seed": 42,
