@@ -46,6 +46,7 @@ The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They
 | Current TODO | [`08-roadmap/TODO.md`](08-roadmap/TODO.md) |
 | Research roadmap | [`08-roadmap/RESEARCH_ROADMAP.md`](08-roadmap/RESEARCH_ROADMAP.md) |
 | Research/evidence system | [`../research/README.md`](../research/README.md) |
+| Network observability/CI repair | [`07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md`](07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md) |
 | Security | [`../SECURITY.md`](../SECURITY.md) |
 | Contribution workflow | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
@@ -108,6 +109,6 @@ Historical experiment DATA must not be silently rewritten when instrumentation i
 
 Current-state facts should be stated in canonical documents and linked elsewhere. Avoid copying fixed test counts or commit hashes into many files because they become stale quickly. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
 
-The 2026-09-05 adaptive Wesen redesign is recorded in [`07-changelog/2026-09-05_WESEN.md`](07-changelog/2026-09-05_WESEN.md).
+The 2026-09-05 adaptive Wesen redesign is recorded in [`07-changelog/2026-09-05_WESEN.md`](07-changelog/2026-09-05_WESEN.md). The network-observability and CI-repair pass is recorded in [`07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md`](07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md).
 
 **Current development policy:** `main` is the canonical branch. Short-lived branches should be merged through reviewed/verified changes and deleted after merge. New work starts from current `origin/main`. Obsolete branches must not be merged merely to make the branch list empty; a branch with no commits ahead of `main` contains nothing to integrate.
