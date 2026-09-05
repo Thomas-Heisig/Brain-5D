@@ -1,0 +1,39 @@
+"""Fail fast unless the real science-suite network shows observable activity."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+from src.research.experiment_suite import run_ping
+
+
+def main() -> int:
+    config = yaml.safe_load(
+        Path("configs/learning_experiment.yaml").read_text(encoding="utf-8")
+    )
+    runs = run_ping(config, seeds=(42,), ticks=12)
+    if len(runs) != 2:
+        raise RuntimeError(f"Expected two ping conditions, got {len(runs)}")
+
+    metrics = [run.metrics for run in runs]
+    if not all(int(item.get("ticks_executed", 0)) > 0 for item in metrics):
+        raise RuntimeError(f"No executed ticks observed: {metrics}")
+    if not all(int(item.get("total_synapses", 0)) > 0 for item in metrics):
+        raise RuntimeError(f"No synapses observed: {metrics}")
+    if not any(int(item.get("total_spikes", 0)) > 0 for item in metrics):
+        raise RuntimeError(f"No neuronal spikes observed: {metrics}")
+    if not any(
+        int(item.get("delivered_synaptic_events", 0)) > 0 for item in metrics
+    ):
+        raise RuntimeError(f"No delivered synaptic events observed: {metrics}")
+
+    print("Real network activity verified.")
+    for run in runs:
+        print(run.condition, run.metrics)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
