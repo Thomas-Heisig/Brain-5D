@@ -316,6 +316,8 @@ class ExperimentWorkflowService:
         for prefix, runner_name in rq_runners:
             if question_id.startswith(prefix):
                 return runner_name
+        if question_id in {"RQ-SNN-001", "RQ-SNN-002"}:
+            return "run_ping"
         if question_id == "RQ-SNN-005":
             return "run_learning_repeat"
         raise WorkflowValidationError(
@@ -344,12 +346,13 @@ class ExperimentWorkflowService:
                 raise WorkflowValidationError(
                     f"Tick contract violated: runner {runner_name} did not execute at least {requested_ticks} ticks in every run."
                 )
+            observed_ints = [int(value) for value in observed]
             return {
                 "status": "SATISFIED",
                 "mode": "minimum_per_run",
                 "requested_ticks": requested_ticks,
-                "observed_min": min(cast(list[int], observed)),
-                "observed_max": max(cast(list[int], observed)),
+                "observed_min": min(observed_ints),
+                "observed_max": max(observed_ints),
             }
 
         if runner_name == "run_time":
