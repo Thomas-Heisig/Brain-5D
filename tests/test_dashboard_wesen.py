@@ -42,8 +42,8 @@ def test_wesen_has_adaptive_and_interactive_visual_contracts() -> None:
 def test_primary_frontend_hides_network_and_moves_release_to_footer() -> None:
     console = (STATIC / "console-log.js").read_text(encoding="utf-8")
     styles = (STATIC / "wesen.css").read_text(encoding="utf-8")
-    assert "data-tab=\"network\"" in console
-    assert "data-tab=\"gate\"" in console
+    assert 'data-tab="network"' in console
+    assert 'data-tab="gate"' in console
     assert ".remove()" in console
     assert "data.footerRelease" not in console  # guard accidental property typo
     assert "dataset.footerRelease" in console
@@ -55,7 +55,9 @@ def test_primary_frontend_hides_network_and_moves_release_to_footer() -> None:
 def test_embodiment_is_presented_as_simple_technical_surface() -> None:
     console = (STATIC / "console-log.js").read_text(encoding="utf-8")
     styles = (STATIC / "wesen.css").read_text(encoding="utf-8")
-    assert "Embodiment bleibt die einfache technische Schnittstellen-Seite" in console
+    assert (
+        "Embodiment bleibt die einfache technische Schnittstellen-Seite" in console
+    )
     assert "#tab-embodiment .anatomy-zone" in styles
     assert "#tab-embodiment .legacy-embodiment-details" in styles
 
