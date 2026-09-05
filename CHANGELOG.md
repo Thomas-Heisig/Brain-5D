@@ -12,6 +12,12 @@
 
 ### Fixed
 
+- **AIRR-Promptgröße**: Große Rohdatensequenzen werden für die nachgelagerte
+  KI-Interpretation mit Anzahl sowie Kopf-/End-Sample kompakt dargestellt.
+  `DATA/runs.json` und seine Provenienz bleiben unverändert; dadurch können
+  Experimente mit langen Temporal-Traces nicht mehr allein an der Ollama-
+  Kontextgröße mit HTTP 500 scheitern.
+
 - **Learning profile loader**: validated configuration now preserves
   `stdp.enabled`, weight bounds, and all `reward` fields, so the effective
   LearningEngine configuration matches `poc_alpha5_live.yaml` after restart.

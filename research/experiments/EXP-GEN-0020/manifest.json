@@ -7,6 +7,8 @@
   },
   "ai_reproducibility": "R0",
   "artifacts": {
+    "ai_report_json": "experiments/EXP-GEN-0020/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-GEN-0020/reports/AIRR-2026-0001.md",
     "data": "DATA/runs.json",
     "report": "report.md",
     "statistics": "analysis/statistics.json",

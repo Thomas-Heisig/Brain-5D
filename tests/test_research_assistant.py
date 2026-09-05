@@ -84,3 +84,26 @@ def test_critical_reviewer_persists_interpretation_only_record(tmp_path: Path) -
         assistant.build_packet("EXP-STDP-0001").previous_analyses[0]["analysis_id"]
         == record.analysis_id
     )
+
+
+def test_build_packet_bounds_large_raw_sequences_for_analysis_prompt(
+    tmp_path: Path,
+) -> None:
+    _write_research_fixture(tmp_path)
+    data_path = tmp_path / "generated" / "data" / "DATA-2026-17.json"
+    raw_runs = [
+        {"current_tick": index, "discrepancy": index / 10}
+        for index in range(300)
+    ]
+    data_path.write_text(json.dumps(raw_runs), encoding="utf-8")
+
+    packet = ResearchAssistant(tmp_path).build_packet("EXP-STDP-0001")
+
+    projected = packet.data["runs"] if packet.data is not None else None
+    assert isinstance(projected, dict)
+    assert projected["_analysis_projection"] == "truncated_sequence"
+    assert projected["item_count"] == 300
+    assert len(projected["head"]) == 8
+    assert len(projected["tail"]) == 8
+    assert len(packet.to_json()) < 20_000
+    assert json.loads(data_path.read_text(encoding="utf-8")) == raw_runs

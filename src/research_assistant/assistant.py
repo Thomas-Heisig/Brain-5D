@@ -14,6 +14,9 @@ from .models import AIAnalysisRecord, ResearchPacket
 
 AnalysisBackend = Callable[[str], tuple[dict[str, Any], dict[str, str | float]]]
 
+_MAX_ANALYSIS_SEQUENCE_ITEMS = 128
+_ANALYSIS_SAMPLE_ITEMS = 8
+
 
 class ResearchAssistant:
     """Build packets and persist interpretations without scientific authority."""
@@ -135,8 +138,10 @@ class ResearchAssistant:
             return None
         raw_data: Any = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(raw_data, list):
-            return {"runs": raw_data}
-        return cast(dict[str, Any], raw_data) if isinstance(raw_data, dict) else None
+            return {"runs": _compact_for_analysis(raw_data)}
+        if isinstance(raw_data, dict):
+            return cast(dict[str, Any], _compact_for_analysis(raw_data))
+        return None
 
     def _protocol_for_manifest(
         self, experiment_id: str, manifest: dict[str, Any]
@@ -250,6 +255,7 @@ class ResearchAssistant:
             raise FileNotFoundError(f"Research artifact not found: {relative_path}")
         return path
 
+
     @staticmethod
     def _prompt(role: str, packet: ResearchPacket) -> str:
         common = (
@@ -278,6 +284,24 @@ class ResearchAssistant:
             "Observations should contain exact values and formulas where possible.\n"
             f"Packet: {packet.to_json()}"
         )
+
+
+def _compact_for_analysis(value: Any) -> Any:
+    """Bound large raw sequences before they enter an AI analysis prompt."""
+    if isinstance(value, dict):
+        return {str(key): _compact_for_analysis(item) for key, item in value.items()}
+    if isinstance(value, list):
+        if len(value) <= _MAX_ANALYSIS_SEQUENCE_ITEMS:
+            return [_compact_for_analysis(item) for item in value]
+        head = value[:_ANALYSIS_SAMPLE_ITEMS]
+        tail = value[-_ANALYSIS_SAMPLE_ITEMS:]
+        return {
+            "_analysis_projection": "truncated_sequence",
+            "item_count": len(value),
+            "head": [_compact_for_analysis(item) for item in head],
+            "tail": [_compact_for_analysis(item) for item in tail],
+        }
+    return value
 
 
 def _file_digest(path: Path | None) -> str:
