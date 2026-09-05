@@ -6,6 +6,19 @@
 
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
+## Current verified baseline
+
+The repaired main baseline has:
+
+- **735 collected tests**;
+- **733 passed, 2 skipped, 0 failed** in the verified repair-suite run;
+- successful completed GitHub CI across Python 3.11, 3.12 and 3.13;
+- green Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity checks;
+- no open pull requests at the verification point;
+- one obsolete `tmp-do-not-use` branch with zero commits ahead of `main`, therefore nothing to merge.
+
+Historical experiment DATA remains historical evidence. Instrumentation repairs create new observations and new experiments rather than rewriting previous DATA.
+
 ## Current baseline — completed engineering foundation
 
 The following capabilities are part of `main`:
@@ -37,12 +50,28 @@ The following capabilities are part of `main`:
 - visible running-test progress in the Experiment Runner and explicit test activity in the dashboard footer;
 - one `science_all_v1` protocol covering all registered Science-Suite runner groups;
 - raw impulse spike sequences and deterministic cross-seed response digests persisted in DATA;
-- impulse-response suite with observable propagation and complete DATA provenance;
+- network impulse response signatures that persist executed ticks, all observed spike IDs, activated neurons, delivered synaptic events, synaptic-activity ticks and total synapses;
+- true recurrent impulse topology with a return edge to the source neuron;
+- direct activity verification that fails if tick execution, neuron spikes or synaptic delivery are absent;
 - CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification as required release gates.
+
+## Experiment interpretation after the observability repair
+
+`EXP-GEN-0009` through `EXP-GEN-0012` are intentionally retained unchanged. Their zero-spike/zero-activation records describe what the older output-only probe observed, not a rewritten reconstruction of what the runtime may have done internally.
+
+The current network probe observes complete published spike IDs and synaptic delivery. Direct validation on the actual runtime showed:
+
+- ticks execute;
+- all three neurons in the impulse chain can become active;
+- feed-forward propagation produces observable spikes and synaptic events;
+- the recurrent condition produces a return path and additional repeated activity;
+- all new metrics are serializable into future experiment `DATA/runs.json` artifacts.
+
+The next scientific step is therefore a **new registered multi-seed validation experiment**, not modification of the historical runs.
 
 ## Dashboard/Wesen direction
 
-The frontend architecture is now intentionally split:
+The frontend architecture is intentionally split:
 
 - `Embodiment` = technical connection/configuration surface;
 - `Wesen` = read-only live body projection;
@@ -72,37 +101,59 @@ Development now moves away from simply adding more modules. The next scientific 
 
 ---
 
+## R0 — Revalidate network propagation on repaired instrumentation
+
+**Goal:** Establish a clean post-repair baseline for propagation and recurrence without changing historical DATA.
+
+Engineering/scientific tasks:
+
+- register a new experiment ID from the current catalog;
+- freeze current code/configuration and probe contract;
+- run feed-forward and recurrence conditions over multiple independent seeds;
+- persist complete spike sequences, latencies, tick counts, synaptic events, synapse counts and before/after digests;
+- verify cross-seed determinism where the protocol expects deterministic equality;
+- compare recurrence-on against recurrence-off using predefined metrics;
+- independently review the run before any EVID promotion.
+
+Scientific deliverable:
+
+- a defensible post-repair baseline showing whether propagation and recurrent return are reproducibly observable under the registered impulse protocol.
+
+**Priority:** immediate.
+
+---
+
 ## R1 — Evidence closure for productive learning
 
 **Goal:** Demonstrate, under preregistered conditions, that learning changes later network behavior rather than only internal weights.
 
 Engineering tasks:
 
-- freeze reproducible learning protocol/configuration;
+- maintain the frozen reproducible learning protocol/configuration;
 - enforce train/validation/holdout separation and leakage checks;
 - capture pre-training and post-training response probes;
 - persist reward accounting, weight deltas and behavior deltas in the same manifest-bound run;
-- add matched learning-off / sham controls;
-- repeat across independent seeds and clean processes.
+- retain matched learning-off / sham controls;
+- repeat across independent seeds and clean processes when replication is required.
 
 Scientific deliverable:
 
 - evidence supporting, rejecting or leaving inconclusive the claim that reward-modulated local learning produces reproducible task-relevant behavioral change.
 
-**Priority:** highest.
+**Priority:** highest after R0 validation.
 
 ---
 
 ## R2 — Closed-loop embodiment evidence
 
-**Goal:** Turn the existing Sensor → SNN → Actuator → Outcome → Reward infrastructure into controlled experiments.
+**Goal:** Turn the existing Sensor → SNN → Actuator → Outcome → Reward infrastructure into controlled evidence.
 
 Engineering tasks:
 
 - standardize episode manifests and terminal-state verification;
 - persist observation/action/outcome/reward receipts;
 - compare deterministic simulated environments before relying on real devices;
-- add sensor-loss, actuator-loss and degraded-quality conditions;
+- retain sensor-loss, actuator-loss and degraded-quality conditions;
 - distinguish command acceptance from measured physical/logical effect;
 - expose receipt-linked causal paths to `Wesen` only when the backend can verify the chain.
 
@@ -230,7 +281,8 @@ Before a new major research milestone is declared:
 5. experiment artifacts are reproducible from recorded manifests;
 6. documentation source-of-truth is current;
 7. AI involvement is registered as provenance/treatment where applicable;
-8. dashboard visualizations remain clearly separated from scientific evidence.
+8. dashboard visualizations remain clearly separated from scientific evidence;
+9. historical DATA has not been rewritten to fit newer instrumentation.
 
 ## Historical roadmaps
 

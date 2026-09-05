@@ -37,8 +37,10 @@ def test_weight_projection_averages_incoming_weights_per_neuron() -> None:
     projector = HeatmapProjector(network)
     values = projector.weights()
     # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
-    # no incoming weight (0.0); the second has mean incoming weight 0.6.
-    assert values[1, 2] == pytest.approx(0.3)  # type: ignore[reportUnknownMemberType]
+    # no incoming weight (0.0); the second receives 0.4 and a requested 0.8,
+    # which is clipped by this test configuration to weight_max=0.5. Its actual
+    # mean incoming weight is therefore 0.45, yielding 0.225 for the XY cell.
+    assert values[1, 2] == pytest.approx(0.225)  # type: ignore[reportUnknownMemberType]
     assert network.in_degree[second] == 2
 
 

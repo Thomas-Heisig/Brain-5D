@@ -195,20 +195,24 @@ class EvidenceEngine:
         manifest = _check_experiment_valid(experiment_id)
         if manifest is None:
             raise ValueError("Experiment is not eligible for validated promotion")
-        provenance = manifest.get("provenance_digests")
+        provenance_raw = manifest.get("provenance_digests")
         source_freeze_sha = manifest.get("source_freeze_sha")
-        if not isinstance(provenance, dict) or not isinstance(source_freeze_sha, str):
+        if not isinstance(provenance_raw, dict) or not isinstance(
+            source_freeze_sha, str
+        ):
             raise ValueError("Validated promotion requires source-freeze digests")
+        provenance = cast(dict[str, object], provenance_raw)
         if _json_digest(provenance) != source_freeze_sha:
             raise ValueError("Source-freeze digest does not match provenance digests")
 
         review_path = EXPERIMENTS_DIR / experiment_id / "human_review.json"
         try:
-            review = json.loads(review_path.read_text(encoding="utf-8"))
+            review_raw: object = json.loads(review_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise ValueError("Validated promotion requires a human review") from exc
-        if not isinstance(review, dict):
+        if not isinstance(review_raw, dict):
             raise ValueError("Human review artifact is invalid")
+        review = cast(dict[str, object], review_raw)
         if review.get("experiment_id") != experiment_id:
             raise ValueError("Human review experiment identity does not match")
         if (
@@ -222,7 +226,11 @@ class EvidenceEngine:
         ):
             raise ValueError("Human review requires comments")
         decision = review.get("decision")
-        if decision not in {"supports", "refutes", "inconclusive"}:
+        if not isinstance(decision, str) or decision not in {
+            "supports",
+            "refutes",
+            "inconclusive",
+        }:
             raise ValueError("Human review decision is invalid")
 
         merged_verification = dict(verification or {})
@@ -236,7 +244,7 @@ class EvidenceEngine:
             effect_size=effect_size,
             evidence_mode=evidence_mode,
             verification=merged_verification,
-            status=cast(str, decision),
+            status=decision,
             limitations=limitations,
         )
 

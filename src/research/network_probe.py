@@ -30,6 +30,11 @@ class NetworkResponseSignature:
     spike_sequence: tuple[tuple[int, int], ...] = ()
     network_state_digest_before: str | None = None
     network_state_digest_after: str | None = None
+    ticks_executed: int = 0
+    delivered_synaptic_events: int = 0
+    synaptic_activity_ticks: int = 0
+    max_synaptic_current_targets: int = 0
+    total_synapses: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -47,6 +52,11 @@ class NetworkResponseSignature:
             ],
             "network_state_digest_before": self.network_state_digest_before,
             "network_state_digest_after": self.network_state_digest_after,
+            "ticks_executed": self.ticks_executed,
+            "delivered_synaptic_events": self.delivered_synaptic_events,
+            "synaptic_activity_ticks": self.synaptic_activity_ticks,
+            "max_synaptic_current_targets": self.max_synaptic_current_targets,
+            "total_synapses": self.total_synapses,
         }
 
 
@@ -79,14 +89,37 @@ class NetworkImpulseProbe:
         recurrent_events = 0
         return_latency: int | None = None
         spike_sequence: list[tuple[int, int]] = []
+        ticks_executed = 0
+        delivered_synaptic_events = 0
+        synaptic_activity_ticks = 0
+        max_synaptic_current_targets = 0
+        total_synapses = 0
 
         for tick in range(self.max_ticks):
             result = runtime.step()
-            raw_ids = result.get("output_spike_ids", ())
+            ticks_executed = tick + 1
+            raw_ids = result.get("spike_ids")
+            if raw_ids is None:
+                raw_ids = result.get("output_spike_ids")
+            if raw_ids is None:
+                raw_ids = ()
             spike_ids = tuple(int(value) for value in raw_ids)
+            output_ids = tuple(
+                int(value) for value in result.get("output_spike_ids", spike_ids)
+            )
+            delivered = int(result.get("delivered_events", 0) or 0)
+            synaptic_targets = int(result.get("synaptic_current_targets", 0) or 0)
+            delivered_synaptic_events += delivered
+            if delivered > 0 or synaptic_targets > 0:
+                synaptic_activity_ticks += 1
+            max_synaptic_current_targets = max(
+                max_synaptic_current_targets, synaptic_targets
+            )
+            total_synapses = max(
+                total_synapses, int(result.get("total_synapses", 0) or 0)
+            )
             if spike_ids:
                 spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)
-                response_ticks.append(tick)
                 response_neurons.update(spike_ids)
                 total_spikes += len(spike_ids)
                 peak_rate = max(peak_rate, float(len(spike_ids)))
@@ -98,6 +131,8 @@ class NetworkImpulseProbe:
                     return_latency = tick
                 if tick > 0 and self.source_neuron in spike_ids:
                     recurrent_events += 1
+            if output_ids:
+                response_ticks.append(tick)
             if result.get("quiescent", False):
                 break
 
@@ -116,4 +151,9 @@ class NetworkImpulseProbe:
             spike_sequence=tuple(spike_sequence),
             network_state_digest_before=before,
             network_state_digest_after=after,
+            ticks_executed=ticks_executed,
+            delivered_synaptic_events=delivered_synaptic_events,
+            synaptic_activity_ticks=synaptic_activity_ticks,
+            max_synaptic_current_targets=max_synaptic_current_targets,
+            total_synapses=total_synapses,
         )

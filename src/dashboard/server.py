@@ -2712,13 +2712,25 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if protocol == "stdp_pair_timing_v1":
             from src.research.stdp_pair_experiment import execute_stdp_pair_experiment
 
-            experiment_id = body.get("experiment_id")
-            if not isinstance(experiment_id, str) or not experiment_id.strip():
-                experiment_id = ExperimentWorkflowService(source.root()).catalog()[
-                    "next_experiment_id"
-                ]
+            experiment_id_value = body.get("experiment_id")
+            if isinstance(experiment_id_value, str) and experiment_id_value.strip():
+                experiment_id = experiment_id_value.strip()
+            else:
+                next_experiment_id = (
+                    ExperimentWorkflowService(source.root())
+                    .catalog()
+                    .get("next_experiment_id")
+                )
+                if (
+                    not isinstance(next_experiment_id, str)
+                    or not next_experiment_id.strip()
+                ):
+                    raise InvalidRequestError(
+                        "No generated experiment ID is available."
+                    )
+                experiment_id = next_experiment_id.strip()
             protocol_result = execute_stdp_pair_experiment(
-                experiment_id=experiment_id.strip(), research_root=source.root()
+                experiment_id=experiment_id, research_root=source.root()
             )
             self._send_json(cast(dict[str, JSONValue], {"ok": True, **protocol_result}))
             return

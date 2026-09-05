@@ -41,8 +41,11 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
-        exclude: ^research/generated/verification/(restore_determinism|single_listener|structural_e2e|structural_live_loop)\.json$
+        # Frozen experiment manifests are evidence artifacts and must not be
+        # byte-rewritten by an automatic formatting hook.
+        exclude: ^(research/generated/verification/(restore_determinism|single_listener|structural_e2e|structural_live_loop)\.json|research/experiments/.+/manifest\.json)$
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml

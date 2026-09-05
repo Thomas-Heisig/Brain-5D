@@ -8,7 +8,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from .experiment_recorder import ExperimentRecorder
 
@@ -80,10 +80,13 @@ def _run_worker(config_path: Path, seed: int, condition: str) -> dict[str, Any]:
             f"condition={condition}: {completed.stderr.strip()}"
         )
     try:
-        payload = json.loads(completed.stdout)
+        payload_raw: object = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
         raise RuntimeError("clean worker returned invalid JSON") from exc
-    if not isinstance(payload, dict) or not isinstance(payload.get("result"), dict):
+    if not isinstance(payload_raw, dict):
+        raise RuntimeError("clean worker returned an invalid result envelope")
+    payload = cast(dict[str, Any], payload_raw)
+    if not isinstance(payload.get("result"), dict):
         raise RuntimeError("clean worker returned an invalid result envelope")
     return payload
 

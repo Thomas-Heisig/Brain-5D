@@ -9,10 +9,15 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] Current test collection is 727 tests after the Wesen anatomy v3 and empirical-overlay regression additions.
+- [x] 735 tests collected on the current main tree.
+- [x] Verified repair-suite result: 733 passed, 2 skipped, 0 failed.
+- [x] Latest completed GitHub Continuous Integration run on the repaired main baseline finished successfully.
+- [x] Python 3.11, 3.12 and 3.13 CI matrix passes.
+- [x] Black, Ruff, Pylint and Pre-Commit pass.
+- [x] Mypy and Pyright pass.
+- [x] Scientific Integrity Gate remains a required release check and passes on the repaired baseline.
+- [x] Security checks remain required and pass on the repaired baseline.
 - [x] Fast-suite coverage baseline is 72%.
-- [x] Scientific Integrity Gate remains a required release check.
-- [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification remain required CI/release gates.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] `Network` removed from primary frontend navigation.
 - [x] Release/Gate moved to a footer action.
@@ -45,14 +50,18 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Experiment Runner exposes protocol-specific defaults, seed ranges and effective tick budgets in the persisted workflow.
 - [x] Running experiments expose progress state in the Runner and a clearly labelled test-activity state in the footer.
 - [x] `science_all_v1` executes all registered Science-Suite runner groups with grouped conditions in one DATA/Manifest run.
-- [x] Network impulse DATA persists observed spike sequences and cross-seed reproducibility metrics without changing protocol conditions.
+- [x] Network impulse DATA persists observed spike sequences and cross-seed reproducibility metrics without changing historical experiments.
+- [x] Network impulse observability now includes executed ticks, all published spike IDs, activated neurons, delivered synaptic events, synaptic-activity ticks and total synapses.
+- [x] Recurrence impulse topology contains a true return path to the source neuron.
+- [x] Direct runtime validation confirmed nonzero neuron and synaptic activity in feed-forward and recurrent conditions.
+- [x] Historical `EXP-GEN-0009` to `EXP-GEN-0012` remain unchanged as traceable zero-observation artifacts from the older probe contract.
 
-## P0 — engineering verification after current frontend integration
+## P0 — engineering verification after current frontend/runtime integration
 
-- [ ] Require the latest `main` CI run to finish green across the complete job matrix.
-- [ ] Fix only verified current-tree CI failures; do not mask typing/scientific-integrity failures.
-- [ ] Confirm documentation consistency checker accepts the 727-test baseline.
-- [ ] Verify `/wesen-adaptive.css`, `/wesen-organism.css` and `/wesen-anatomy-v3.css` are served in integrated runtime and dashboard-only modes.
+- [x] Require the latest `main` CI run to finish green across the complete job matrix.
+- [x] Fix only verified current-tree CI failures; no typing/scientific-integrity checks were masked.
+- [x] Documentation consistency updated to the 735-test current collection.
+- [ ] Verify `/wesen-adaptive.css`, `/wesen-organism.css` and `/wesen-anatomy-v3.css` are served in integrated runtime and dashboard-only modes on a live host.
 - [ ] Verify anatomy v3 rendering in at least one live-host session with real connection inventory and populated empirical endpoints.
 - [ ] Add a browser/E2E check for pointer-centered camera pan/zoom, icon-dock navigation, anatomy placement and timeline scrubbing.
 
@@ -68,6 +77,15 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Execute independent multi-seed repeats in clean processes.
 - [x] Promote only valid runs from `DATA` to `EVID` through the evidence gate.
 - [x] Human-review the resulting claim status: supported, rejected or inconclusive.
+
+### Network impulse observability / recurrence
+
+- [x] Measure complete published spike sequences instead of only output spikes.
+- [x] Persist tick, neuron, synapse and recurrence metrics in new DATA.
+- [x] Add a direct verification script that fails if ticks, spikes or synaptic delivery are absent.
+- [x] Keep historical zero-observation experiments immutable.
+- [ ] Run a new registered multi-seed validation experiment on the repaired probe/topology and evaluate it independently rather than retroactively editing `EXP-GEN-0009` to `EXP-GEN-0012`.
+- [ ] Promote a recurrence/propagation claim only if the new controlled experiment and review support it.
 
 ### Closed-loop embodiment
 
@@ -159,7 +177,9 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Remove superseded unreferenced organism prototype from `main` after review.
 - [x] Classify versioned Alpha/Sprint/Release documents as historical rather than current state.
 - [x] Identify accidental package snapshot and temporary JSON artifacts for removal.
-- [ ] Keep remote branch list to `main` plus active short-lived work only; delete obsolete `tmp-do-not-use` when branch-delete access is available.
+- [x] Confirm there are no open pull requests requiring merge at the current verification point.
+- [x] Confirm `tmp-do-not-use` is zero commits ahead and therefore contains nothing to merge.
+- [ ] Delete obsolete `tmp-do-not-use` when branch-delete capability/permissions are available.
 - [ ] Enable/maintain automatic deletion of merged PR branches when repository settings permit.
 
 ## Definition of done for a scientific milestone

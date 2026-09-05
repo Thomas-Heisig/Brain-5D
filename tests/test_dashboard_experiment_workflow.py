@@ -154,7 +154,9 @@ def test_human_review_can_be_attached_to_any_experiment_artifact(
     assert review["artifact_content_digest"]
 
 
-def test_summary_falls_back_from_empty_airr_lists_to_limitations(tmp_path: Path) -> None:
+def test_summary_falls_back_from_empty_airr_lists_to_limitations(
+    tmp_path: Path,
+) -> None:
     experiment_dir = tmp_path / "experiments" / "EXP-SUMMARY-0001"
     report_dir = experiment_dir / "reports"
     report_dir.mkdir(parents=True)
@@ -376,13 +378,9 @@ def test_science_suite_persists_deterministic_spike_sequence_evidence(
     )
 
     runs = json.loads(
-        (
-            tmp_path
-            / "experiments"
-            / "EXP-GEN-0003"
-            / "DATA"
-            / "runs.json"
-        ).read_text(encoding="utf-8")
+        (tmp_path / "experiments" / "EXP-GEN-0003" / "DATA" / "runs.json").read_text(
+            encoding="utf-8"
+        )
     )
     ping_runs = [run for run in runs if run["condition"] == "recurrence_off"]
     assert ping_runs
@@ -417,7 +415,15 @@ def test_science_all_covers_every_registered_suite_group(tmp_path: Path) -> None
     )
     groups = {run["condition"].split(":", 1)[0] for run in runs}
     assert result["experiment_id"] == "EXP-GEN-ALL-0001"
-    assert groups == {"ping", "temporal", "stdp", "learning", "time", "5d", "regulation"}
+    assert groups == {
+        "ping",
+        "temporal",
+        "stdp",
+        "learning",
+        "time",
+        "5d",
+        "regulation",
+    }
     assert workflow["protocol"] == "science_all_v1"
 
 
@@ -492,9 +498,7 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     assert f"{report_id}.md" in summary
     assert "Post-hoc summary" in summary
 
-    report = json.loads(
-        (report_dir / f"{report_id}.json").read_text(encoding="utf-8")
-    )
+    report = json.loads((report_dir / f"{report_id}.json").read_text(encoding="utf-8"))
     assert report["content"]["epistemic_status"]["experiment_data"] == "PRESENT"
     assert report["content"]["data_basis"]["data"]["runs"]
     assert report["content"]["experimental_design"]["protocol"] == "science_suite_v1"

@@ -392,12 +392,15 @@ class FileManager:
                 manifest_path = path / "manifest.json"
                 if manifest_path.is_file():
                     try:
-                        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                        if isinstance(manifest, dict):
+                        manifest_raw: object = json.loads(
+                            manifest_path.read_text(encoding="utf-8")
+                        )
+                        if isinstance(manifest_raw, dict):
+                            manifest = cast(dict[str, object], manifest_raw)
                             created_at = manifest.get("created_at") or manifest.get(
                                 "timestamp"
                             )
-                            if created_at:
+                            if created_at is not None:
                                 result["created_at"] = str(created_at)
                     except (OSError, json.JSONDecodeError):
                         pass
