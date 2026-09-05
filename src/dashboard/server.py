@@ -2707,7 +2707,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if protocol == "stdp_pair_timing_v1":
             from src.research.stdp_pair_experiment import execute_stdp_pair_experiment
 
-            protocol_result = execute_stdp_pair_experiment()
+            experiment_id = body.get("experiment_id")
+            if not isinstance(experiment_id, str) or not experiment_id.strip():
+                experiment_id = ExperimentWorkflowService(source.root()).catalog()[
+                    "next_experiment_id"
+                ]
+            protocol_result = execute_stdp_pair_experiment(
+                experiment_id=experiment_id.strip(), research_root=source.root()
+            )
             self._send_json(cast(dict[str, JSONValue], {"ok": True, **protocol_result}))
             return
         if protocol not in {None, "runtime_ticks_v1"}:

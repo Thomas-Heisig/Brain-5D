@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-05 — Research Experiment Runner IDs
+
+- Science-Runner werden jetzt durch das gewählte Protokoll bestimmt; automatische
+  und manuelle `EXP-*`-IDs bleiben frei waehlbare, traceable Labels.
+- Der Dashboard-Runner ueberschreibt automatische IDs nicht mehr mit bereits
+  publizierten Vorlagen-IDs.
+- Der registrierte STDP-Pair-Timing-Pfad akzeptiert ebenfalls generierte und
+  manuelle IDs und schreibt diese konsistent in DATA, Manifest und Report.
+
 ## 2026-09-04 — Gate-Evidence aktualisiert
 
 - Lokale Vollsuite und Determinismus-Evidence fuer den aktuellen Tree erneuert:

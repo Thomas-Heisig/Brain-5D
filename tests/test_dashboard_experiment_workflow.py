@@ -259,6 +259,68 @@ def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     }
 
 
+def test_science_suite_accepts_generated_experiment_id(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-GEN-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Generated impulse response",
+            "conditions": "seed=42",
+            "ticks": 8,
+            "protocol": "science_suite_v1",
+        },
+        seeds=(42,),
+    )
+
+    assert result["experiment_id"] == "EXP-GEN-0001"
+    runs = json.loads(
+        (tmp_path / "experiments" / "EXP-GEN-0001" / "DATA" / "runs.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert len(runs) == 2
+    assert {run["experiment_id"] for run in runs} == {"EXP-GEN-0001"}
+
+
+def test_science_protocol_selection_overrides_manual_label_prefix(
+    tmp_path: Path,
+) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-MANUAL-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Manual time calibration",
+            "conditions": "seed=42",
+            "ticks": 100,
+            "protocol": "science_time_v1",
+        },
+        seeds=(42,),
+    )
+
+    runs = json.loads(
+        (tmp_path / "experiments" / "EXP-MANUAL-0001" / "DATA" / "runs.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert result["experiment_id"] == "EXP-MANUAL-0001"
+    assert len(runs) == 5
+    assert {run["condition"] for run in runs} == {
+        "100",
+        "1000",
+        "10000",
+        "100000",
+        "1000000",
+    }
+
+
 def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     tmp_path: Path,
 ) -> None:

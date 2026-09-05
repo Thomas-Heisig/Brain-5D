@@ -202,29 +202,7 @@ class ExperimentWorkflowService:
     ) -> dict[str, object]:
         """Execute a registered suite and persist DATA, manifest, and report."""
         workflow = self._validate(body)
-        runners = {
-            "EXP-PING-0001": "run_ping",
-            "EXP-PING-0001-v2": "run_ping_v2",
-            "EXP-TEMP-0001": "run_temporal",
-            "EXP-STDP-0002": "run_stdp",
-            "EXP-EMB-0001": "run_learning_repeat",
-            "EXP-TIME-0001": "run_time",
-            "EXP-5D-0001": "run_5d",
-            "EXP-REG-0001": "run_regulation",
-        }
-        runner_name = runners.get(workflow.experiment_id)
-        if workflow.experiment_id.startswith("EXP-PING-0001-v"):
-            runner_name = "run_ping_v2"
-        if workflow.experiment_id.startswith("EXP-5D-0001-v"):
-            runner_name = "run_5d"
-        if workflow.experiment_id.startswith("EXP-LEARN-"):
-            runner_name = "run_learning"
-        if runner_name is None:
-            raise WorkflowValidationError(
-                "Science Suite supports EXP-PING-0001, EXP-TEMP-0001, "
-                "EXP-PING-0001-v2, EXP-STDP-0002, EXP-TIME-0001, EXP-5D-0001, and "
-                "EXP-REG-0001."
-            )
+        runner_name = self._science_runner(body, workflow.experiment_id)
         output_dir = self._research_root / "experiments" / workflow.experiment_id
         if (output_dir / "manifest.json").exists():
             raise WorkflowValidationError(
@@ -314,6 +292,33 @@ class ExperimentWorkflowService:
             "summary": summary_path,
             "result": {"run_count": len(runs), "duration_seconds": duration},
         }
+
+    @staticmethod
+    def _science_runner(body: dict[str, object], experiment_id: str) -> str:
+        """Resolve execution from the protocol, while keeping IDs traceable labels."""
+        protocol_runners = {
+            "science_time_v1": "run_time",
+            "science_5d_v1": "run_5d",
+        }
+        runner_name = protocol_runners.get(str(body.get("protocol")))
+        if runner_name is not None:
+            return runner_name
+
+        if experiment_id.startswith("EXP-PING-0001-v"):
+            return "run_ping_v2"
+        if experiment_id.startswith("EXP-PING-"):
+            return "run_ping"
+        if experiment_id.startswith("EXP-TEMP-"):
+            return "run_temporal"
+        if experiment_id.startswith("EXP-STDP-"):
+            return "run_stdp"
+        if experiment_id.startswith("EXP-EMB-"):
+            return "run_learning_repeat"
+        if experiment_id.startswith("EXP-REG-"):
+            return "run_regulation"
+        if experiment_id.startswith("EXP-LEARN-"):
+            return "run_learning"
+        return "run_ping"
 
     def _append_ai_report(self, experiment_id: str) -> dict[str, object]:
         """Generate AIRR only after completion, or expose unavailable explicitly."""

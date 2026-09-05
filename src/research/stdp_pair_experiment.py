@@ -18,12 +18,15 @@ QUESTION_ID = "RQ-STDP-001"
 HYPOTHESIS_ID = "H-STDP-001-A"
 
 
-def execute_stdp_pair_experiment() -> dict[str, str]:
+def execute_stdp_pair_experiment(
+    experiment_id: str = EXPERIMENT_ID,
+    research_root: Path | None = None,
+) -> dict[str, str]:
     """Publish the pre-registered isolated STDP timing experiment once."""
-    research_root = REPO_ROOT / "research"
-    experiment_dir = research_root / "experiments" / EXPERIMENT_ID
+    research_root = research_root or REPO_ROOT / "research"
+    experiment_dir = research_root / "experiments" / experiment_id
     if (experiment_dir / "manifest.json").exists():
-        raise FileExistsError(f"{EXPERIMENT_ID} has already been published.")
+        raise FileExistsError(f"{experiment_id} has already been published.")
     experiment_dir.mkdir(parents=True, exist_ok=False)
 
     started = perf_counter()
@@ -33,12 +36,12 @@ def execute_stdp_pair_experiment() -> dict[str, str]:
     protocol_path.write_text(
         json.dumps(data["conditions"], indent=2) + "\n", encoding="utf-8"
     )
-    data_path = _write_data(research_root, data)
+    data_path = _write_data(research_root, data, experiment_id)
 
-    recorder = ExperimentRecorder(EXPERIMENT_ID, output_dir=experiment_dir)
+    recorder = ExperimentRecorder(experiment_id, output_dir=experiment_dir)
     recorder.record_software_version("brain5d_version", _brain5d_version())
     recorder.record_config(
-        str(protocol_path.relative_to(REPO_ROOT).as_posix()), _sha256(protocol_path)
+        _artifact_reference(protocol_path, research_root), _sha256(protocol_path)
     ).record_research_links([QUESTION_ID], [HYPOTHESIS_ID]).record_simulation_params(
         seed=data["seed"],
         ticks=len(data["measurements"]),
@@ -46,9 +49,9 @@ def execute_stdp_pair_experiment() -> dict[str, str]:
         input_pattern="isolated pre/post spike pair timing sweep",
         protocol=PROTOCOL_ID,
     ).record_artifact(
-        "data", data_path.relative_to(REPO_ROOT).as_posix()
+        "data", _artifact_reference(data_path, research_root)
     ).record_artifact(
-        "protocol", protocol_path.relative_to(REPO_ROOT).as_posix()
+        "protocol", _artifact_reference(protocol_path, research_root)
     ).record_results(
         metrics_summary=data["summary"],
         hypothesis_supported=data["summary"]["hypothesis_supported"],
@@ -59,17 +62,29 @@ def execute_stdp_pair_experiment() -> dict[str, str]:
     recorder.save()
 
     report_path = experiment_dir / "report.md"
-    report_path.write_text(_render_report(data, duration), encoding="utf-8")
-    _rebuild_reports()
+    report_path.write_text(
+        _render_report(data, duration, experiment_id), encoding="utf-8"
+    )
+    _rebuild_reports(research_root)
     return {
-        "experiment_id": EXPERIMENT_ID,
+        "experiment_id": experiment_id,
         "data_id": data_path.stem,
         "evidence_id": "",
-        "report": report_path.relative_to(REPO_ROOT).as_posix(),
+        "report": _artifact_reference(report_path, research_root),
     }
 
 
-def _write_data(research_root: Path, data: dict[str, Any]) -> Path:
+def _artifact_reference(path: Path, research_root: Path) -> str:
+    """Return a stable repository-relative reference for local or test roots."""
+    try:
+        return path.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.relative_to(research_root).as_posix()
+
+
+def _write_data(
+    research_root: Path, data: dict[str, Any], experiment_id: str
+) -> Path:
     directory = research_root / "generated" / "data"
     directory.mkdir(parents=True, exist_ok=True)
     year = datetime.now(timezone.utc).year
@@ -79,7 +94,7 @@ def _write_data(research_root: Path, data: dict[str, Any]) -> Path:
     path = directory / f"DATA-{year}-{index:02d}.json"
     record = {
         "data_id": path.stem,
-        "experiment_id": EXPERIMENT_ID,
+        "experiment_id": experiment_id,
         "generated": datetime.now(timezone.utc).isoformat(),
         **data,
     }
@@ -89,12 +104,13 @@ def _write_data(research_root: Path, data: dict[str, Any]) -> Path:
     return path
 
 
-def _rebuild_reports() -> None:
+def _rebuild_reports(research_root: Path) -> None:
     from .report_builder import ReportBuilder
 
-    registry = ResearchRegistry().load_all()
+    registry = ResearchRegistry(research_root / "registry").load_all()
     builder = ReportBuilder(registry)
-    generated = REPO_ROOT / "research" / "generated"
+    generated = research_root / "generated"
+    generated.mkdir(parents=True, exist_ok=True)
     (generated / "RESEARCH_CATALOG.md").write_text(
         builder.build_research_catalog(), encoding="utf-8"
     )
@@ -119,11 +135,13 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _render_report(data: dict[str, Any], duration: float) -> str:
+def _render_report(
+    data: dict[str, Any], duration: float, experiment_id: str = EXPERIMENT_ID
+) -> str:
     summary = data["summary"]
     return "\n".join(
         [
-            f"# {EXPERIMENT_ID}: Pair-Timing STDP",
+            f"# {experiment_id}: Pair-Timing STDP",
             "",
             "## Forschungsfrage",
             QUESTION_ID,
