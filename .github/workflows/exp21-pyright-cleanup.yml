@@ -1,0 +1,46 @@
+name: EXP21 strict pyright cleanup
+
+on:
+  push:
+    branches:
+      - research/data-v2-and-operational-rqs
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: ${{ !contains(github.event.head_commit.message, '[pyright-cleaned]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install CI dependencies
+        run: python -m pip install -e ".[dev,docs]"
+      - name: Apply strict typing cleanup
+        run: python scripts/fix_exp21_pyright.py
+      - name: Format and lint
+        run: |
+          python -m black src tests scripts
+          python -m ruff check --fix src tests scripts
+          python -m black src tests scripts
+      - name: Verify strict typing and targeted tests
+        run: |
+          python -m mypy src/
+          python -m pyright
+          python -m pytest tests/test_research_registry.py tests/test_exp21_operational_protocols.py tests/test_research_data_v2.py tests/test_exp21_followup_runners.py tests/test_scientific_execution_contract.py tests/test_research_assistant.py -q
+      - name: Commit cleanup
+        run: |
+          if git diff --quiet; then
+            echo "No cleanup changes"
+            exit 0
+          fi
+          git config user.name "Brain-5D Research Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add src tests
+          git commit -m "types: clean EXP-GEN-0021 strict Pyright [pyright-cleaned]"
+          git push origin HEAD:research/data-v2-and-operational-rqs
