@@ -21,35 +21,45 @@ class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
 
 
-def _summary_items(value: object) -> list[str]:
-    """Return non-empty textual items from an AIRR list field."""
+def _json_mapping(value: object) -> dict[str, JSONValue] | None:
+    """Narrow one decoded JSON object to the dashboard JSON value shape."""
+    if not isinstance(value, dict):
+        return None
+    return cast(dict[str, JSONValue], value)
+
+
+def _json_list(value: object) -> list[JSONValue]:
+    """Narrow one decoded JSON list without leaking Unknown into Pylance."""
     if not isinstance(value, list):
         return []
-    return [str(item).strip() for item in value if str(item).strip()]
+    return cast(list[JSONValue], value)
 
 
-def _airr_observation_fallback(content: dict[str, object]) -> list[str]:
+def _summary_items(value: object) -> list[str]:
+    """Return non-empty textual items from an AIRR list field."""
+    return [item.strip() for item in _json_list(value) if isinstance(item, str) and item.strip()]
+
+
+def _airr_observation_fallback(content: dict[str, JSONValue]) -> list[str]:
     """Extract explicit limitation observations when AIRR request lists are empty."""
-    interpretation = content.get("interpretation")
-    observations: list[object] = []
-    if isinstance(interpretation, dict):
-        observations.extend(
-            interpretation.get("observations", [])
-            if isinstance(interpretation.get("observations"), list)
-            else []
-        )
-    observations.extend(
-        content.get("observations", [])
-        if isinstance(content.get("observations"), list)
-        else []
-    )
-    return [
-        str(item["value"]).strip()
-        for item in observations
-        if isinstance(item, dict)
-        and str(item.get("type", "")).lower() in {"limitation", "limitations"}
-        and str(item.get("value", "")).strip()
-    ]
+    interpretation = _json_mapping(content.get("interpretation")) or {}
+    observations = _json_list(interpretation.get("observations"))
+    observations.extend(_json_list(content.get("observations")))
+    limitation_items: list[str] = []
+    for raw_item in observations:
+        item = _json_mapping(raw_item)
+        if item is None:
+            continue
+        item_type = item.get("type")
+        item_value = item.get("value")
+        if (
+            isinstance(item_type, str)
+            and item_type.lower() in {"limitation", "limitations"}
+            and isinstance(item_value, str)
+            and item_value.strip()
+        ):
+            limitation_items.append(item_value.strip())
+    return limitation_items
 
 
 def write_experiment_summary(
@@ -104,9 +114,10 @@ def write_experiment_summary(
         )
         report_path = report_dir / f"{ai_report['report_id']}.json"
         if report_path.is_file():
-            content = json.loads(report_path.read_text(encoding="utf-8"))["content"]
-            interpretation = content.get("interpretation", {})
-            interpretation = interpretation if isinstance(interpretation, dict) else {}
+            report_payload: object = json.loads(report_path.read_text(encoding="utf-8"))
+            report_object = _json_mapping(report_payload) or {}
+            content = _json_mapping(report_object.get("content")) or {}
+            interpretation = _json_mapping(content.get("interpretation")) or {}
             requested_evidence = _summary_items(content.get("missing_evidence"))
             if not requested_evidence:
                 requested_evidence = _summary_items(
@@ -235,6 +246,10 @@ class ExperimentWorkflowService:
                         "label": "Science Suite v1 (DATA + Manifest)",
                     },
                     {
+                        "id": "science_all_v1",
+                        "label": "Science ALL v1 (alle Science-Suite-Protokolle)",
+                    },
+                    {
                         "id": "science_time_v1",
                         "label": "Science TIME v1 (DATA + Manifest)",
                     },
@@ -283,7 +298,7 @@ class ExperimentWorkflowService:
         config_digest = _sha256_file(config_path)
         started = perf_counter()
         runner = getattr(experiment_suite, runner_name)
-        if runner_name in {"run_ping", "run_ping_v2", "run_5d", "run_time"}:
+        if runner_name in {"run_all", "run_ping", "run_ping_v2", "run_5d", "run_time"}:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
         else:
             runs = runner(config, seeds=effective_seeds)
@@ -339,7 +354,7 @@ class ExperimentWorkflowService:
             encoding="utf-8",
         )
         recorder.record_provenance_digests(
-            code_digest=_sha256_file(Path(cast(str, experiment_suite.__file__))),
+            code_digest=_sha256_file(Path(experiment_suite.__file__)),
             config_digest=config_digest,
             prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),
             data_digest=_sha256_file(data_path),
@@ -375,6 +390,7 @@ class ExperimentWorkflowService:
     def _science_runner(body: dict[str, object], experiment_id: str) -> str:
         """Resolve execution from the protocol, while keeping IDs traceable labels."""
         protocol_runners = {
+            "science_all_v1": "run_all",
             "science_time_v1": "run_time",
             "science_5d_v1": "run_5d",
         }
@@ -570,7 +586,7 @@ class ExperimentWorkflowService:
                 token.strip() for token in value.split(",") if token.strip()
             ]
         elif isinstance(value, (list, tuple)):
-            tokens = list(value)
+            tokens = list(cast(list[object] | tuple[object, ...], value))
         else:
             raise WorkflowValidationError("Seeds must be comma-separated integers.")
 
@@ -617,7 +633,7 @@ class ExperimentWorkflowService:
                 "",
                 "## Protokoll",
                 workflow.protocol,
-                f"Ticks: {workflow.ticks}; Seeds: {', '.join(map(str, workflow.seeds))}",
+                f"Ticks: {workflow.ticks}; Seeds: {', '.join(str(seed) for seed in workflow.seeds)}",
                 "",
                 "## Bedingungen",
                 workflow.conditions,

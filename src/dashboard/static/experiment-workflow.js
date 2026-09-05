@@ -148,6 +148,18 @@ export class ExperimentWorkflowPanel {
   _applyProtocol() {
     const protocol = this.elements.protocol?.value;
     const presets = {
+      science_all_v1: {
+        question: "RQ-SNN-001",
+        hypothesis: "H-SNN-001-A",
+        title: "Complete science suite",
+        conditions: "Seeds 42,43,44; PING, Temporal, STDP/Learning, TIME, 5D und Regulation in einem Lauf; gemeinsame Provenienz und gruppierte Bedingungen.",
+        ticks: "1000",
+        seeds: "42,43,44",
+        profiles: {
+          standard: "Seeds 42,43,44; alle registrierten Science-Suite-Runner ausführen; Bedingungen im DATA über Gruppenpräfixe trennen.",
+          pilot: "Seed 42; alle registrierten Science-Suite-Runner als kostenguenstiger Gesamt-Pilotlauf.",
+        },
+      },
       science_suite_v1: {
         question: "RQ-PING-001",
         hypothesis: "H-PING-001-A",

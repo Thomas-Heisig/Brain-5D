@@ -44,6 +44,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Science-suite impulse responses publish observable propagation and complete DATA/configuration provenance.
 - [x] Experiment Runner exposes protocol-specific defaults, seed ranges and effective tick budgets in the persisted workflow.
 - [x] Running experiments expose progress state in the Runner and a clearly labelled test-activity state in the footer.
+- [x] `science_all_v1` executes all registered Science-Suite runner groups with grouped conditions in one DATA/Manifest run.
 
 ## P0 — engineering verification after current frontend integration
 

@@ -12,6 +12,8 @@
 - Laufende Tests zeigen nun einen animierten Fortschrittsbalken; der Footer zeigt
   während separater Science-Läufe `Testlauf` statt fälschlich leerer Runtime-
   Aktivität und lädt danach wieder echte Telemetrie.
+- `science_all_v1` bündelt PING, Temporal, STDP, Learning, TIME, 5D und
+  Regulation in einem gemeinsamen, gruppiert dokumentierten DATA-/Manifest-Lauf.
 
 ## 2026-09-05 — EXP-GEN-0007 Provenance and impulse response repair
 

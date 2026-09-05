@@ -35,6 +35,7 @@ The following capabilities are part of `main`:
 - protocol-driven Research Experiment Runner with automatic/manual traceable IDs;
 - protocol-specific Runner presets with validated seed lists/ranges, effective tick budgets and documented condition templates;
 - visible running-test progress in the Experiment Runner and explicit test activity in the dashboard footer;
+- one `science_all_v1` protocol covering all registered Science-Suite runner groups;
 - impulse-response suite with observable propagation and complete DATA provenance;
 - CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification as required release gates.
 

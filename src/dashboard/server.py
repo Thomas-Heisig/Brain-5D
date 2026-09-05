@@ -2698,7 +2698,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Run bounded controller ticks and publish reproducible artifacts."""
         source = self._require_research_source()
         protocol = body.get("protocol")
-        if protocol in {"science_suite_v1", "science_time_v1", "science_5d_v1"}:
+        if protocol in {
+            "science_suite_v1",
+            "science_all_v1",
+            "science_time_v1",
+            "science_5d_v1",
+        }:
             runtime_result = ExperimentWorkflowService(
                 source.root(), self.dashboard_server.research_ai_backend
             ).run_science(body)

@@ -35,3 +35,9 @@ Während eines laufenden separaten Science-Laufs zeigt der Runner einen
 Fortschrittszustand. Die Footer-Balken werden in diesem Zeitraum ausdrücklich
 als `Testlauf` markiert und sind keine behaupteten Runtime-Messwerte; nach dem
 Lauf wird die normale Telemetrie erneut geladen.
+
+Für einen vollständigen protokollierten Durchlauf steht `science_all_v1` zur
+Verfügung. Es umfasst die registrierten Science-Suite-Gruppen PING, Temporal,
+STDP, Learning, TIME, 5D und Regulation. Runtime-Ticks sowie das separat
+registrierte STDP-Pair-Timing-Protokoll bleiben bewusst eigene Pfade, weil sie
+andere Ausführungs- und Artefaktverträge haben.

@@ -48,6 +48,8 @@ class TestExperimentModeFrontendWiring:
         assert 'id="workflow-seeds"' in html
         assert 'id="workflow-condition-profile"' in html
         assert 'id="workflow-progress-track"' in html
+        assert "science_all_v1" in html
+        assert "science_all_v1" in workflow_js
         assert "0-29" in workflow_js
         assert "brain5d:experiment-progress" in workflow_js
         assert "brain5d:experiment-progress" in app_js

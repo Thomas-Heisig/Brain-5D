@@ -435,6 +435,36 @@ def run_learning(
     return runs
 
 
+def run_all(
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+    ticks: int = 1_000,
+) -> list[ScientificRun]:
+    """Run every registered science-suite runner under one traceable protocol."""
+    groups = (
+        ("ping", run_ping(config, seeds=seeds, ticks=ticks)),
+        ("temporal", run_temporal(config, seeds=seeds)),
+        ("stdp", run_stdp(config, seeds=seeds)),
+        ("learning", run_learning_repeat(config, seeds=seeds)),
+        ("time", run_time(config, seeds=seeds, ticks=ticks)),
+        ("5d", run_5d(config, seeds=seeds, ticks=ticks)),
+        ("regulation", run_regulation(config, seeds=seeds)),
+    )
+    return [
+        ScientificRun(
+            run.experiment_id,
+            f"{group}:{run.condition}",
+            run.seed,
+            run.metrics,
+            run.state_digest_before,
+            run.state_digest_after,
+            run.runtime_error,
+        )
+        for group, group_runs in groups
+        for run in group_runs
+    ]
+
+
 def write_data(path: Path, runs: list[ScientificRun]) -> None:
     """Write deterministic run records as one JSON document."""
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -357,6 +357,36 @@ def test_science_suite_uses_selected_seeds_and_ticks(tmp_path: Path) -> None:
     assert workflow["ticks"] == 3
 
 
+def test_science_all_covers_every_registered_suite_group(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-GEN-ALL-0001",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Complete science suite",
+            "conditions": "All registered science-suite runners",
+            "ticks": 2,
+            "seeds": "42",
+            "protocol": "science_all_v1",
+        }
+    )
+
+    experiment_dir = tmp_path / "experiments" / "EXP-GEN-ALL-0001"
+    runs = json.loads(
+        (experiment_dir / "DATA" / "runs.json").read_text(encoding="utf-8")
+    )
+    workflow = json.loads(
+        (experiment_dir / "workflow.json").read_text(encoding="utf-8")
+    )
+    groups = {run["condition"].split(":", 1)[0] for run in runs}
+    assert result["experiment_id"] == "EXP-GEN-ALL-0001"
+    assert groups == {"ping", "temporal", "stdp", "learning", "time", "5d", "regulation"}
+    assert workflow["protocol"] == "science_all_v1"
+
+
 def test_science_protocol_selection_overrides_manual_label_prefix(
     tmp_path: Path,
 ) -> None:
