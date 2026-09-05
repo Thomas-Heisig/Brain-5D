@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.3
+ * @version 1.4.4
  * @license MIT
  */
 
@@ -18,6 +18,7 @@ import "./dashboard-experience.js";
 import "./embodiment-self-model.js";
 import "./wesen.js";
 import "./wesen-organism-v2.js";
+import "./wesen-anatomy-v3.js";
 
 function byId(id) {
   return document.getElementById(id);
@@ -39,6 +40,7 @@ function ensureWesenStylesheet() {
     ["wesen-base", "/wesen.css"],
     ["wesen-adaptive", "/wesen-adaptive.css"],
     ["wesen-organism", "/wesen-organism.css"],
+    ["wesen-anatomy", "/wesen-anatomy-v3.css"],
   ];
   stylesheets.forEach(([name, href]) => {
     if (document.querySelector(`link[data-wesen-style="${name}"]`)) return;

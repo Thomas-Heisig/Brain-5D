@@ -1,0 +1,153 @@
+/* Brain-5D Wesen anatomy v3 */
+#wesen-anatomy-layer { pointer-events: none; }
+.wesen-body-silhouette { opacity: .96; }
+.wesen-body-head,
+.wesen-body-neck,
+.wesen-body-torso {
+  fill: rgba(20, 88, 122, .11);
+  stroke: rgba(93, 205, 255, .26);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 18px rgba(34, 153, 211, .08));
+}
+.wesen-body-head { fill: rgba(26, 125, 164, .09); }
+.wesen-body-torso { fill: rgba(24, 100, 135, .08); }
+.wesen-body-spine,
+.wesen-body-limb {
+  fill: none;
+  stroke: rgba(108, 194, 238, .18);
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+.wesen-body-spine {
+  stroke-width: 9;
+  stroke: rgba(148, 120, 255, .2);
+}
+.wesen-body-core-ring,
+.wesen-body-interoception-ring {
+  fill: none;
+  stroke-width: 1.2;
+  stroke-dasharray: 4 6;
+}
+.wesen-body-core-ring { stroke: rgba(255, 212, 106, .28); }
+.wesen-body-interoception-ring { stroke: rgba(255, 91, 142, .23); }
+
+/* Anatomy zones */
+.wesen-organ[data-anatomy-zone="head"] .wesen-organ-body {
+  stroke-width: 2;
+}
+.wesen-organ[data-anatomy-zone="arm"] .wesen-organ-body,
+.wesen-organ[data-anatomy-zone="leg"] .wesen-organ-body {
+  stroke-width: 2.5;
+}
+.wesen-organ[data-anatomy-zone="torso"] .wesen-organ-body {
+  filter: drop-shadow(0 0 12px rgba(255, 91, 142, .3));
+}
+
+/* Empirical overlay */
+.wesen-empirical-card > header small {
+  color: var(--b5-green);
+  letter-spacing: .04em;
+}
+.wesen-empirical-grid {
+  display: grid;
+  gap: 1px;
+  background: rgba(110, 180, 218, .06);
+}
+.wesen-empirical-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 7px 10px 10px;
+  background: rgba(6, 19, 31, .93);
+  overflow: hidden;
+}
+.wesen-empirical-row span {
+  color: var(--b5-muted);
+  font-size: .69rem;
+}
+.wesen-empirical-row strong {
+  color: var(--b5-text);
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+}
+.wesen-empirical-row i {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--b5-cyan) 0 var(--empirical-fill, 0%), rgba(86, 147, 181, .12) var(--empirical-fill, 0%) 100%);
+}
+
+.wesen-pipeline-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-top: 1px solid var(--b5-line);
+}
+.wesen-pipeline-body span {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--b5-line);
+  background: rgba(7, 25, 38, .9);
+  color: var(--b5-muted);
+  font-size: 13px;
+}
+.wesen-pipeline-body span.active {
+  color: var(--b5-green);
+  border-color: rgba(72, 236, 161, .52);
+  box-shadow: 0 0 12px rgba(72, 236, 161, .14);
+}
+.wesen-pipeline-body span.inactive {
+  color: #6e7c86;
+  opacity: .58;
+}
+.wesen-pipeline-body span.unknown {
+  border-style: dashed;
+}
+.wesen-pipeline-body b {
+  color: rgba(136, 168, 189, .36);
+  font-weight: 400;
+}
+
+/* Empirical state subtly shapes the rendered body without inventing values. */
+#tab-wesen {
+  --wesen-pressure: 0;
+  --wesen-integrity: 1;
+  --wesen-continuity: 0;
+}
+#tab-wesen .wesen-body-torso {
+  stroke-opacity: calc(.18 + var(--wesen-integrity) * .32);
+}
+#tab-wesen .wesen-body-spine {
+  stroke-opacity: calc(.16 + (1 - var(--wesen-continuity)) * .32);
+}
+#tab-wesen .wesen-body-silhouette {
+  filter: drop-shadow(0 0 calc(4px + var(--wesen-pressure) * 16px) rgba(255, 115, 97, calc(var(--wesen-pressure) * .22)));
+}
+
+/* Keep dense hardware endpoints visually subordinate to the body form. */
+#wesen-organ-layer .wesen-organ.kind-actuator:not(.selected),
+#wesen-organ-layer .wesen-organ.kind-sensor:not(.selected) {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (max-width: 1050px) {
+  .wesen-body-limb { stroke-width: 14; }
+  .wesen-body-head { rx: 108px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wesen-body-silhouette,
+  .wesen-body-torso,
+  .wesen-body-spine { transition: none !important; animation: none !important; }
+}
