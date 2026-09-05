@@ -264,7 +264,7 @@ class ExperimentWorkflowService:
             code_digest=_sha256_file(Path(experiment_suite.__file__)),
             config_digest=config_digest,
             prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),
-            data_digest=_sha256_files([data_path, *trace_paths]),
+            data_digest=_sha256_files([data_path, *trace_paths], output_dir),
         )
         recorder.record_runtime(duration).mark_completed().save()
 
@@ -821,9 +821,6 @@ def _externalize_large_traces(
     trace_entries: list[dict[str, object]] = []
     written: list[Path] = []
     for run in serialized_runs:
-        metrics = run.get("metrics")
-        if not isinstance(metrics, dict):
-            continue
         metrics_raw: object = run.get("metrics")
         if not isinstance(metrics_raw, dict):
             continue
@@ -885,12 +882,11 @@ def _externalize_large_traces(
     return written
 
 
-def _sha256_files(paths: Sequence[Path]) -> str:
+def _sha256_files(paths: Sequence[Path], root: Path) -> str:
+    """Hash a set of artifacts using experiment-relative names for portability."""
     digest = hashlib.sha256()
-    for path in sorted(paths, key=lambda item: item.as_posix()):
-        digest.update(
-            path.relative_to(path.parent.parent.parent).as_posix().encode("utf-8")
-        )
+    for path in sorted(paths, key=lambda item: item.relative_to(root).as_posix()):
+        digest.update(path.relative_to(root).as_posix().encode("utf-8"))
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")
