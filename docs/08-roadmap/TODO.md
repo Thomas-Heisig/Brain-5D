@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 735 tests collected on the current main tree.
+- [x] 746 tests collected on the current main tree.
 - [x] Verified repair-suite result: 733 passed, 2 skipped, 0 failed.
 - [x] Latest completed GitHub Continuous Integration run on the repaired main baseline finished successfully.
 - [x] Python 3.11, 3.12 and 3.13 CI matrix passes.

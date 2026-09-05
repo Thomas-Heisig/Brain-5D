@@ -116,7 +116,19 @@ export class ExperimentWorkflowPanel {
       ];
       if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`);
       if (result.data_id) lines.push(`Daten: ${result.data_id}`);
+      if (result.workflow) lines.push(`Workflow: research/${result.workflow}`);
+      if (result.summary) lines.push(`Zusammenfassung: research/${result.summary}`);
+      if (result.statistics) lines.push(`Statistik: research/${result.statistics}`);
       const runResult = result.result;
+      if (runResult && typeof runResult === "object") {
+        if (runResult.runner) lines.push(`Runner: ${runResult.runner}`);
+        if (typeof runResult.ticks_requested === "number") {
+          lines.push(`Ticks angefordert: ${runResult.ticks_requested}`);
+        }
+        if (runResult.tick_validation?.status) {
+          lines.push(`Tick-Vertrag: ${runResult.tick_validation.status}`);
+        }
+      }
       if (runResult && typeof runResult === "object") {
         if (runResult.start && runResult.end) {
           lines.push(`Tick: ${runResult.start.tick} -> ${runResult.end.tick}`);

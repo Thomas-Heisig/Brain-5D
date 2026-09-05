@@ -339,19 +339,26 @@ class ExperimentWorkflowService:
         """Verify that tick-aware runners really respected the requested window."""
         exact_window_runners = {"run_ping", "run_ping_v2", "run_5d", "run_temporal"}
         if runner_name in exact_window_runners:
-            observed = [
-                run.metrics.get("ticks_executed")
-                for run in runs
-                if isinstance(run.metrics, dict)
-            ]
-            if not observed or any(
-                not isinstance(value, int) or value < requested_ticks
-                for value in observed
-            ):
+            observed_ints: list[int] = []
+            for run in runs:
+                if not isinstance(run.metrics, dict):
+                    raise WorkflowValidationError(
+                        f"Tick contract violated: runner {runner_name} returned an invalid metrics payload."
+                    )
+                value = run.metrics.get("ticks_executed")
+                if (
+                    isinstance(value, bool)
+                    or not isinstance(value, int)
+                    or value < requested_ticks
+                ):
+                    raise WorkflowValidationError(
+                        f"Tick contract violated: runner {runner_name} did not execute at least {requested_ticks} ticks in every run."
+                    )
+                observed_ints.append(value)
+            if not observed_ints:
                 raise WorkflowValidationError(
-                    f"Tick contract violated: runner {runner_name} did not execute at least {requested_ticks} ticks in every run."
+                    f"Tick contract violated: runner {runner_name} produced no runs."
                 )
-            observed_ints = [int(value) for value in observed]
             return {
                 "status": "SATISFIED",
                 "mode": "minimum_per_run",

@@ -388,7 +388,10 @@ def write_detailed_experiment_summary(
         ]
     )
     for run in runs:
-        metrics = run.get("metrics") if isinstance(run.get("metrics"), dict) else {}
+        metrics_value = run.get("metrics")
+        metrics: dict[str, Any] = (
+            dict(metrics_value) if isinstance(metrics_value, dict) else {}
+        )
         lines.append(
             "| "
             + " | ".join(
@@ -449,24 +452,70 @@ def write_detailed_experiment_summary(
                 f"KI-Konfidenz: `{content.get('ai_confidence', 0.0) if isinstance(content, dict) else 0.0}` — dies ist keine statistische Konfidenz.",
             ]
         )
-        for heading, key in (
-            ("Methodische Kritik", "methodological_critique"),
-            ("Alternative Erklaerungen", "alternative_explanations"),
-            ("Fehlende Nachweise", "missing_evidence"),
-            ("Empfohlene Folgeexperimente", "recommended_follow_up"),
+        interpretation = (
+            content.get("interpretation", {}) if isinstance(content, dict) else {}
+        )
+        if not isinstance(interpretation, dict):
+            interpretation = {}
+
+        methodological = (
+            content.get("methodological_critique", [])
+            if isinstance(content, dict)
+            else []
+        )
+        alternatives = (
+            content.get("alternative_explanations", [])
+            if isinstance(content, dict)
+            else []
+        )
+        missing = (
+            content.get("missing_evidence", []) if isinstance(content, dict) else []
+        )
+        if not isinstance(missing, list) or not missing:
+            missing = interpretation.get("requested_evidence", [])
+        if not isinstance(missing, list) or not missing:
+            limitations: list[str] = []
+            observation_sources = [interpretation.get("observations", [])]
+            if isinstance(content, dict):
+                observation_sources.append(content.get("observations", []))
+            for source in observation_sources:
+                if not isinstance(source, list):
+                    continue
+                for item in source:
+                    if not isinstance(item, dict):
+                        continue
+                    item_type = item.get("type")
+                    item_value = item.get("value")
+                    if (
+                        isinstance(item_type, str)
+                        and item_type.lower() in {"limitation", "limitations"}
+                        and isinstance(item_value, str)
+                        and item_value.strip()
+                    ):
+                        limitations.append(
+                            f"AIRR-Limitation dokumentieren: {item_value.strip()}"
+                        )
+            missing = limitations
+        if not isinstance(missing, list) or not missing:
+            missing = ["Keine expliziten zusätzlichen Nachweise im AIRR angegeben."]
+
+        follow_up = (
+            content.get("recommended_follow_up", [])
+            if isinstance(content, dict)
+            else []
+        )
+        if not isinstance(follow_up, list) or not follow_up:
+            follow_up = interpretation.get("recommended_experiments", [])
+        if not isinstance(follow_up, list) or not follow_up:
+            follow_up = ["Keine expliziten Folgeexperimente im AIRR angegeben."]
+
+        for heading, values in (
+            ("Methodische Kritik", methodological),
+            ("Alternative Erklaerungen", alternatives),
+            ("Fehlende Nachweise", missing),
+            ("Empfohlene Folgeexperimente", follow_up),
         ):
-            values = content.get(key, []) if isinstance(content, dict) else []
-            lines.extend(
-                [
-                    "",
-                    (
-                        f"### 8.2 {heading}"
-                        if heading == "Methodische Kritik"
-                        else f"### {heading}"
-                    ),
-                    "",
-                ]
-            )
+            lines.extend(["", f"### {heading}", ""])
             if isinstance(values, list) and values:
                 lines.extend(f"- {value}" for value in values)
             else:
