@@ -1,28 +1,46 @@
 # Brain-5D Current TODO
 
-**Canonical TODO for `main`**
-**Baseline:** `brain5d-core 0.5.0a7`
+**Canonical TODO for `main`**  
+**Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-05
 
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
-## Verified baseline
+## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] CI green across Python 3.11, 3.12 and 3.13.
-- [x] 722 tests collected; 717 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
-- [x] Fast-suite coverage currently 72%.
-- [x] Scientific Integrity Gate green.
-- [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.
-- [x] Unified responsive dashboard design with dedicated adaptive `Wesen` workspace; Network removed from primary frontend navigation and Release moved to the footer.
+- [x] Current test collection is 723 tests after the adaptive Wesen regression additions.
+- [x] Fast-suite coverage baseline is 72%.
+- [x] Scientific Integrity Gate remains a required release check.
+- [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification remain required CI/release gates.
+- [x] Unified responsive dashboard design applied across the system.
+- [x] `Network` removed from primary frontend navigation.
+- [x] Release/Gate moved to a footer action.
+- [x] `Embodiment` simplified to the technical sensor/device/actuator/body-boundary surface.
+- [x] Dedicated read-only `Wesen` workspace added.
+- [x] `Wesen` morphology derived dynamically from observed embodiment connections.
+- [x] Sensor and actuator branches appear from real connection inventory; missing capabilities remain explicit placeholders.
+- [x] Machine-native interoception represented from available CPU/RAM/temperature/fan/storage/runtime telemetry.
+- [x] Adaptive visual states cover resource/thermal pressure and reported sensor/actuator/network degradation.
+- [x] Body membrane is recalculated from observed body nodes.
+- [x] Node inspection, data pins, zoom/reset, event filtering and session-local morphology history implemented.
+- [x] Recurrence trend and delayed same-morphology self-model implemented where telemetry exists.
+- [x] Causal-path emphasis is visually available while remaining distinct from experimental causal proof.
+- [x] `Wesen` remains read-only: no learning execution, language output, actuator writes or `/api/control` calls.
 - [x] Real-body host telemetry/device discovery integrated without fabricated fallback values.
 - [x] Learning Preparation Studio foundation and AI proposal-only boundary implemented.
 - [x] Structural proposal → approval → mutation → journal → undo/recovery chain implemented and tested.
 - [x] Deterministic persistence/restore infrastructure implemented and tested.
 
-## P0 — scientific evidence closure
+## P0 — engineering verification after current frontend integration
 
-These tasks should produce the next scientific gain before broad feature expansion.
+- [ ] Require the latest `main` CI run to finish green across the complete job matrix.
+- [ ] Fix only verified current-tree CI failures; do not mask typing/scientific-integrity failures.
+- [ ] Confirm documentation consistency checker accepts the 723-test baseline.
+- [ ] Verify `/wesen-adaptive.css` is served in integrated runtime and dashboard-only modes.
+- [ ] Verify adaptive body rendering in at least one live-host session with real connection inventory.
+
+## P0 — scientific evidence closure
 
 ### Productive learning
 
@@ -44,6 +62,7 @@ These tasks should produce the next scientific gain before broad feature expansi
 - [x] Add actuator failure/no-effect condition.
 - [x] Repeat across seeds and compare adaptation/stability metrics.
 - [ ] Promote validated results to evidence only after protocol checks.
+- [ ] Expose receipt-linked action/outcome chains to `Wesen` only when a backend endpoint can verify them.
 
 ## P1 — runtime/time semantics and performance
 
@@ -66,21 +85,21 @@ These tasks should produce the next scientific gain before broad feature expansi
 ## P1 — evidence and provenance hardening
 
 - [x] Add automated documentation link checking to CI.
-- [x] Add a current-doc consistency check so fixed version/test claims cannot drift silently.
+- [x] Add current-doc consistency checks for fixed version/test claims.
 - [x] Expand evidence-engine negative tests for incomplete/mismatched provenance.
-- [x] Ensure all quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
-- [ ] Add a stable action/outcome provenance view to the dashboard only when backed by a verified endpoint.
+- [x] Ensure quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
+- [ ] Add a stable action/outcome provenance view only when backed by a verified endpoint.
+- [ ] Persist morphology/body-boundary change records when they are part of a scientific protocol instead of relying on session-local UI history.
 - [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
 
 ## P1 — test coverage on high-risk surfaces
-
-Current global fast-suite coverage is useful but uneven. Prioritize behaviorally important low-coverage modules rather than chasing a vanity percentage.
 
 - [ ] Increase coverage of dashboard server routing/error paths.
 - [ ] Increase evidence-engine rejection/edge-path coverage.
 - [ ] Increase operator bridge and control boundary coverage.
 - [ ] Increase real-body platform-specific failure-path coverage.
 - [ ] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
+- [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance in `Wesen`.
 
 ## P2 — self-regulation and continuity experiments
 
@@ -88,11 +107,10 @@ Current global fast-suite coverage is useful but uneven. Prioritize behaviorally
 - [ ] Test missing sensor and uncertain sensor conditions.
 - [ ] Test recovery after resource pressure in deterministic environments.
 - [ ] Compare homeostasis/interoception enabled vs disabled under matched conditions.
+- [ ] Test whether body-boundary changes predictably alter behavior under matched conditions.
 - [ ] Avoid emotion labels as primary measured variables; keep them, if used, as interpretation layers.
 
 ## P2 — memory/world model
-
-Start only after productive-learning and closed-loop baselines are reproducible.
 
 - [ ] Specify memory state and persistence contracts.
 - [ ] Define memory-on / memory-off controls.
@@ -114,15 +132,17 @@ Start only after productive-learning and closed-loop baselines are reproducible.
 - [ ] Add no-AI, frozen replay, sham/random and model-family conditions.
 - [ ] Measure proposal/topology fingerprints without allowing direct hidden writes.
 - [ ] Keep AI self-confidence separate from empirical performance metrics.
-- [ ] Require treatment identity and provenance in every AI-influenced scientific run.
+- [ ] Require treatment identity/provenance in every AI-influenced scientific run.
 
 ## Repository/documentation hygiene
 
 - [x] Consolidate canonical README, architecture, dashboard, roadmap and research roadmap.
-- [x] Add a documentation source-of-truth index.
+- [x] Add documentation source-of-truth index.
+- [x] Add canonical `WESEN_ADAPTIVE_BODY.md` architecture contract.
+- [x] Add dated changelog record for the 2026-09-05 Wesen redesign.
 - [x] Classify versioned Alpha/Sprint/Release documents as historical rather than current state.
 - [x] Identify accidental package snapshot and temporary JSON artifacts for removal.
-- [ ] Keep remote branch list to `main` plus active short-lived work only; delete merged branches after merge.
+- [ ] Keep remote branch list to `main` plus active short-lived work only; delete merged/obsolete temporary branches.
 - [ ] Enable/maintain automatic deletion of merged PR branches when repository settings permit.
 
 ## Definition of done for a scientific milestone
@@ -136,4 +156,5 @@ A milestone is not complete because a UI card is green. It is complete only when
 - [ ] runtime errors/provenance checks pass;
 - [ ] evidence artifacts are accepted by the evidence gate;
 - [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
-- [ ] documentation records what was actually shown, not what was expected.
+- [ ] documentation records what was actually shown, not what was expected;
+- [ ] dashboard visualization is not substituted for experimental evidence.
