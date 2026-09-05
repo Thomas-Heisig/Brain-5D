@@ -10,11 +10,11 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] `main` is the canonical development line.
 - [x] CI green across Python 3.11, 3.12 and 3.13.
-- [x] 716 tests collected; 711 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
+- [x] 722 tests collected; 717 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
 - [x] Fast-suite coverage currently 72%.
 - [x] Scientific Integrity Gate green.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.
-- [x] Responsive dashboard experience merged for all seven workspaces.
+- [x] Unified responsive dashboard design with dedicated adaptive `Wesen` workspace; Network removed from primary frontend navigation and Release moved to the footer.
 - [x] Real-body host telemetry/device discovery integrated without fabricated fallback values.
 - [x] Learning Preparation Studio foundation and AI proposal-only boundary implemented.
 - [x] Structural proposal → approval → mutation → journal → undo/recovery chain implemented and tested.
