@@ -15,7 +15,7 @@ Brain-5D is a research framework for studying learning, self-organization and em
 As of **2026-09-05**, `main` is the canonical development line.
 
 - package version: `0.5.0a7`
-- current test collection after the adaptive Wesen regression additions: **723 tests**
+- current test collection after the adaptive organism v2 regression additions: **724 tests**
 - fast-suite coverage baseline: **72%**
 - Scientific Integrity Gate is part of the required CI path
 - wheel build/install and Docker verification remain part of release verification
@@ -49,7 +49,11 @@ Brain-5D intentionally separates the technical body interface from the live body
 
 The `Wesen` page builds its morphology from currently published connections rather than from a fixed human-like anatomy. Sensor and actuator branches appear from observed connection data; unsupported or missing endpoints stay explicitly unavailable. Host CPU, memory, temperature, fan, disk and timing signals are treated as machine-native interoception where available.
 
-The body membrane changes with the observed connection envelope. The UI also provides node inspection, session-local morphology history, recurrence trend, signal animation, causal-path emphasis and a delayed self-model that mirrors the same current morphology.
+Adaptive organism v2 adds a bounded force-directed presentation layout and a convex-hull membrane so the body can grow or retract asymmetrically when endpoints change. External services can appear as satellites outside the membrane. The body stage supports pointer-centered zoom, pan, focus fading and whole-body reset.
+
+The delayed self-model uses a bounded frame ring buffer and selects the earlier body frame matching reported loopback latency where available. Browser-local morphology snapshots can be inspected with a timeline scrubber. These snapshots are operator history only and are not scientific DATA/EVID.
+
+The UI can also surface existing event/decision/action/receipt identifiers as causal tracer labels. It never manufactures missing IDs, and visual path highlighting remains distinct from experimentally established causality.
 
 These visuals do **not** establish consciousness or causality. Recurrence and loopback are technical observables. Experimental causal claims still require controlled intervention/outcome evidence.
 
