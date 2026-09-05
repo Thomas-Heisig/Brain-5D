@@ -11,7 +11,7 @@ The page intentionally avoids biological-human body assumptions. Its morphology 
 - **Embodiment** is the technical connection/configuration surface for sensors, devices, actuators, permissions and body boundaries.
 - **Wesen** is the live visual projection of the body state exposed by those contracts.
 - **Release** is no longer a primary workspace; its legacy gate surface is opened from the footer.
-- **Network** is no longer a primary user-facing workspace. Network state remains available through domain APIs and other inspector/research surfaces where needed.
+- **Network** is no longer a primary user-facing workspace. Network state remains available through domain APIs and inspector/research surfaces where needed.
 
 ## Data sources
 
@@ -25,7 +25,7 @@ Polling currently runs at 750 ms. Unknown/missing values remain `—`, `unknown`
 
 ## Dynamic morphology
 
-The body map is generated from observed connections on every refresh.
+The body is generated from observed connection inventory instead of fixed coordinates.
 
 Core body components are:
 
@@ -34,15 +34,29 @@ Core body components are:
 3. **Feedback** — observed return/loopback context.
 4. **Body boundary** — current discovered connection envelope.
 
-Discovered connections are classified for visualization as:
+Discovered connections are classified for visualization as sensor endpoints, actuator endpoints or generic body connections when direction/capability cannot be determined. Examples include camera, microphone/audio, weather/network inputs, display, speaker, printer or external robotics where the embodiment API actually reports them. If no sensor or actuator is reported, the UI renders an explicitly unavailable placeholder instead of inventing a device.
 
-- sensor endpoints;
-- actuator endpoints;
-- generic body connections when the direction/capability cannot be determined.
+### Force-directed body layout
 
-Examples include camera, microphone/audio, weather/network inputs, display, speaker, printer or external robotics where the embodiment API actually reports them. If no sensor or actuator is reported, the UI renders an explicitly unavailable placeholder instead of inventing a device.
+The adaptive organism v2 layer places body nodes with a bounded force-directed layout:
 
-The membrane/body envelope is recalculated from the current set of observed body nodes. Connecting or losing a device therefore changes the visible morphology.
+- the SNN core is attracted to the body center;
+- internal/interoceptive nodes remain relatively close to the core;
+- sensor endpoints are biased toward the sensory boundary;
+- actuator endpoints are biased toward the motor/output boundary;
+- all body nodes repel each other to avoid a rigid circular arrangement.
+
+The layout is presentation-only and does not alter neural topology or embodiment state.
+
+### Convex-hull membrane
+
+The visible body membrane is recalculated as a padded convex hull around current body nodes. A device appearing or disappearing can therefore change the visible body envelope. The membrane is a visualization of the currently observed connection boundary, not an authoritative authorization boundary.
+
+## Sensor and actuator differentiation
+
+Sensor and actuator branches are deliberately rendered as different functional endpoint types. Sensor branches represent available input paths; actuator branches represent available output paths. An actuator being displayed as available never implies permission to use it.
+
+External services or sources such as network, weather, camera or audio can be represented as **environment satellites** outside the membrane. Where a real sensor endpoint exists, the satellite can be linked visually to that endpoint.
 
 ## Adaptive state visualization
 
@@ -53,54 +67,63 @@ The presentation can react to observed state without writing back to the runtime
 - critical resource/thermal pressure;
 - sensor loss/degradation when reported;
 - actuator failure when reported;
-- network isolation when reported.
+- network isolation when reported;
+- recovery when reported;
+- unknown/unavailable telemetry.
 
-The adaptive response may change membrane tension, body scale, emphasis and status styling. These visual changes are **derived display state**, not a claim that the SNN has an emotion or subjective experience.
+Visual state changes may alter membrane emphasis, branch opacity, environmental satellites and endpoint styling. These are **derived display states**, not claims of emotion, illness, consciousness or subjective experience.
 
 ## Interoception
 
-Host telemetry is treated as machine-native interoception rather than merely a diagnostics sidebar. Where exposed, the view may show:
-
-- CPU load;
-- memory use/reserve;
-- temperature;
-- fan RPM;
-- storage pressure;
-- runtime target/achieved Hz;
-- regulatory state.
-
-Unsupported values remain unknown.
+Host telemetry is treated as machine-native interoception rather than merely a diagnostics sidebar. Where exposed, the view may show CPU load, memory use/reserve, temperature, fan RPM, storage pressure, runtime target/achieved Hz and regulatory state. Unsupported values remain unknown.
 
 ## Signals and causal paths
 
 Animated signal markers indicate activity along currently rendered body paths. They are a visualization of observed availability/state and do not themselves prove a causal relationship.
 
-The **Kausalpfade** mode highlights sensor/feedback/actuator paths that are candidates for an observed causal loop. A path may only be described as experimentally causal when backed by an intervention/outcome protocol and corresponding receipts/evidence. UI connectivity alone is not causal proof.
+The **Kausalpfade** mode can emphasize paths and consume event/action/decision/receipt identifiers when such identifiers are already present in displayed event data. The UI does not invent missing IDs. A path may only be described as experimentally causal when backed by an intervention/outcome protocol and corresponding receipts/evidence.
 
 ## Self-model / delayed mirror
 
-The Self-Model panel renders a small copy of the **same current morphology**, rather than a generic second body. Its opacity is linked to an available recurrence measure and its caption uses the reported loopback latency when present.
+The Self-Model panel renders a small copy of the same morphology rather than a generic second body. The adaptive organism layer maintains a bounded in-browser frame ring buffer. If a loopback latency is reported, the mirror selects the frame closest to `now - latency` instead of merely applying a visual delay to the current frame.
 
-This is a visualization of measured recurrence/return structure. It must not be labelled proof of consciousness, self-awareness or subjective self-recognition.
+If no measured loopback latency exists, the mirror remains explicitly uncalibrated. Recurrence and loopback visualization must not be labelled proof of consciousness, self-awareness or subjective self-recognition.
 
 ## Recurrence trend
 
 When a recurrence metric is published, the page retains the last 100 observed samples for a session-local mini-chart. The chart shows metric evolution only. Increasing recurrence means increasing measured recurrence under that metric definition; it does not by itself mean increasing consciousness.
 
-## Morphology history
+## Morphology history and timeline
 
-The current browser session records changes in the observed body signature. This provides an operator-visible history of body-boundary changes such as devices appearing/disappearing. It is a UI observation history, not a persisted scientific artifact unless a research protocol stores the underlying source data separately.
+The browser records bounded morphology snapshots when the body signature changes. The current v2 implementation stores this operator history in browser `localStorage` and exposes a scrubber that can render an earlier body snapshot in the delayed/self-model surface.
 
-## Interaction
+This history is **not scientific persistence**. It is local operator state only. If morphology history is needed as research evidence, the source connection/body-boundary events must be persisted by a protocol-bound backend artifact.
 
-The page supports:
+## Camera and focus interaction
 
-- click a node to inspect its published primitive fields;
-- mouse-wheel zoom of the body map;
-- double-click/reset to restore the whole-body view;
-- toggles for signals, connections, environment and causal-path emphasis;
-- event filtering;
-- reduced-motion support.
+The body stage supports a real presentation camera:
+
+- mouse-wheel zoom around the pointer position;
+- pointer drag for pan;
+- double-click reset;
+- selected-node focus that fades non-selected nodes;
+- bounded zoom limits.
+
+Camera state affects rendering only and has no simulation meaning.
+
+## Terminology
+
+Technical strings are centralized in the organism layer to keep the internal semantics neutral. Preferred terms include:
+
+- `SNN-Kern`
+- `Adaptive Regelstruktur`
+- `Sensor-Endpunkt`
+- `Aktor-Endpunkt`
+- `Interozeption`
+- `Umweltquelle`
+- `Rückkopplung`
+
+The product-facing workspace may still be named `Wesen`, but internal technical language must avoid unsupported claims such as consciousness, awareness or biological equivalence.
 
 ## Scientific integrity rules
 
@@ -110,4 +133,6 @@ The page supports:
 4. The view is read-only; no hidden `/api/control` or actuator write is issued.
 5. Recurrence/loopback is not equated with consciousness.
 6. Dashboard animation is presentation, not experimental evidence.
-7. Scientific claims must continue through DATA/EVID and the research integrity gates.
+7. Browser-local morphology history is not DATA/EVID.
+8. Causal tracer labels use only identifiers already present in observed events.
+9. Scientific claims must continue through DATA/EVID and the research integrity gates.
