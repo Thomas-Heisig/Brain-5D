@@ -47,6 +47,7 @@ class LearningExperimentResult:
     trained_target_peak_v: float
     baseline_target_spike_tick: int | None
     trained_target_spike_tick: int | None
+    condition: str = "learning_on"
 
     @property
     def learned(self) -> bool:
@@ -127,8 +128,10 @@ def _advance_to_tick(network: NeuralNetwork, tick: int) -> None:
         network.step()
 
 
-def _train(config: Config) -> tuple[tuple[float, ...], LearningEngine]:
+def _train(config: Config, condition: str) -> tuple[tuple[float, ...], LearningEngine]:
     """Train the network using reward-modulated STDP."""
+    if condition not in {"learning_on", "learning_off", "sham_replay"}:
+        raise ValueError(f"Unsupported learning condition: {condition}")
     exp = _experiment_config(config)
     trials = int(exp.get("training_trials", 20))
     spacing = int(exp.get("trial_spacing_ticks", 25))
@@ -144,9 +147,22 @@ def _train(config: Config) -> tuple[tuple[float, ...], LearningEngine]:
     if spacing <= pair_delay:
         raise ValueError("trial_spacing_ticks must be greater than pair_delay_ticks")
 
-    network, pre_ids, target_id = _build_convergent_network(config, initial_weight)
-    learning = LearningEngine(network, config)
-    if not learning.params.reward_enabled:
+    training_config = dict(config)
+    if condition == "learning_off":
+        training_config["eligibility"] = {
+            **dict(cast(Mapping[str, Any], config.get("eligibility", {}))),
+            "enabled": False,
+        }
+        training_config["reward"] = {
+            **dict(cast(Mapping[str, Any], config.get("reward", {}))),
+            "enabled": False,
+        }
+
+    network, pre_ids, target_id = _build_convergent_network(
+        training_config, initial_weight
+    )
+    learning = LearningEngine(network, training_config)
+    if condition != "learning_off" and not learning.params.reward_enabled:
         raise ValueError("learning experiment requires reward.enabled=true")
     learning.attach()
 
@@ -166,6 +182,8 @@ def _train(config: Config) -> tuple[tuple[float, ...], LearningEngine]:
         if target_id not in post_result.spike_ids:
             raise RuntimeError("training drive failed to spike target neuron")
 
+        if condition == "sham_replay":
+            learning.reset_state()
         learning.set_reward(reward_value, post_result.tick)
         # Each trial is an independent timing episode. Weight changes persist,
         # while timing/eligibility state is cleared to avoid cross-trial pairing.
@@ -207,7 +225,9 @@ def _probe_response(
     return spike_tick is not None, peak_v, spike_tick
 
 
-def run_learning_experiment(config: Config) -> LearningExperimentResult:
+def run_learning_experiment(
+    config: Config, condition: str = "learning_on"
+) -> LearningExperimentResult:
     """Run training and compare fresh baseline/trained network responses."""
     exp = _experiment_config(config)
     initial_weight = float(exp.get("initial_weight", 0.05))
@@ -217,7 +237,7 @@ def run_learning_experiment(config: Config) -> LearningExperimentResult:
     baseline_spiked, baseline_peak_v, baseline_tick = _probe_response(
         config, initial_weights
     )
-    trained_weights, learning = _train(config)
+    trained_weights, learning = _train(config, condition)
     trained_spiked, trained_peak_v, trained_tick = _probe_response(
         config, trained_weights
     )
@@ -239,6 +259,7 @@ def run_learning_experiment(config: Config) -> LearningExperimentResult:
         trained_target_peak_v=trained_peak_v,
         baseline_target_spike_tick=baseline_tick,
         trained_target_spike_tick=trained_tick,
+        condition=condition,
     )
 
 

@@ -568,6 +568,8 @@
   per-seed target and runtime-error metrics for stability comparison.
 - EXP-EMB-0001 manifests now bind protocol code, configuration, prompt
   applicability and DATA through validated SHA-256 provenance digests.
+- Productive-learning repeats now include matched learning-off and sham-replay
+  controls, preserving pre/post behavior, reward and weight metrics per seed.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 

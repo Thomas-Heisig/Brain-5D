@@ -67,4 +67,11 @@ def test_productive_stdp_and_learning_repeat_use_real_result() -> None:
     stdp = run_stdp(_config(), seeds=(42,))
     repeat = run_learning_repeat(_config(), seeds=(42,))
     assert stdp[0].metrics["final_mean_weight"] > stdp[0].metrics["initial_mean_weight"]
-    assert repeat[0].metrics["after_greater_than_before"] is True
+    by_condition = {run.condition: run for run in repeat}
+    assert set(by_condition) == {"learning_on", "learning_off", "sham_replay"}
+    assert by_condition["learning_on"].metrics["after_greater_than_before"] is True
+    assert by_condition["learning_off"].metrics["mean_weight_delta"] == 0.0
+    assert by_condition["learning_off"].metrics["reward_weight_updates"] == 0
+    assert by_condition["sham_replay"].metrics["mean_weight_delta"] == 0.0
+    assert by_condition["sham_replay"].metrics["rewards_received"] > 0
+    assert by_condition["sham_replay"].metrics["reward_weight_updates"] == 0

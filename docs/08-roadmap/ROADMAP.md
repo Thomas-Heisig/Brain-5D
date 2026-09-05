@@ -25,6 +25,8 @@ The following capabilities are already part of `main` and are covered by current
 - independent deterministic seeds with per-condition stability metrics;
 - source-freeze binding across protocol code, configuration, prompt sentinel and
     DATA digests;
+- productive-learning controls now compare learning-on, learning-off and
+    sham-replay conditions with persisted behavioral and weight deltas;
 - real host interoception and dynamic device discovery without fabricated fallback values;
 - responsive seven-workspace operator/research dashboard;
 - documentation link/version/test-count consistency checks and scheduled storage validation;

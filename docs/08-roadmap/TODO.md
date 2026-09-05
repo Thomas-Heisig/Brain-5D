@@ -29,8 +29,8 @@ These tasks should produce the next scientific gain before broad feature expansi
 - [ ] Freeze a canonical productive-learning protocol and configuration.
 - [ ] Bind every run to code/config/prompt/data digests.
 - [ ] Enforce train/validation/holdout partition separation in the final protocol.
-- [ ] Add matched learning-off and sham/replay controls.
-- [ ] Persist pre/post behavioral probes together with weight/reward changes.
+- [x] Add matched learning-off and sham/replay controls.
+- [x] Persist pre/post behavioral probes together with weight/reward changes.
 - [ ] Execute independent multi-seed repeats in clean processes.
 - [ ] Promote only valid runs from `DATA` to `EVID` through the evidence gate.
 - [ ] Human-review the resulting claim status: supported, rejected or inconclusive.

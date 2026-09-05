@@ -354,29 +354,35 @@ def run_stdp(
 def run_learning_repeat(
     config: Config, seeds: tuple[int, ...] = (42, 43, 44)
 ) -> list[ScientificRun]:
-    """Record the paired before/after outcome using fresh evaluation networks."""
+    """Compare learning-on, learning-off and sham-replay controls."""
     runs: list[ScientificRun] = []
     for seed in seeds:
-        values = dict(config)
-        values["seed"] = seed
-        result = run_learning_experiment(values)
-        runs.append(
-            ScientificRun(
-                "EXP-EMB-0001",
-                "learning_before_after",
-                seed,
-                {
-                    "success_before": result.baseline_target_spiked,
-                    "success_after": result.trained_target_spiked,
-                    "p_success_before": float(result.baseline_target_spiked),
-                    "p_success_after": float(result.trained_target_spiked),
-                    "after_greater_than_before": result.trained_target_spiked
-                    and not result.baseline_target_spiked,
-                },
-                "",
-                "",
+        for condition in ("learning_on", "learning_off", "sham_replay"):
+            values = dict(config)
+            values["seed"] = seed
+            result = run_learning_experiment(values, condition=condition)
+            runs.append(
+                ScientificRun(
+                    "EXP-STDP-0002",
+                    condition,
+                    seed,
+                    {
+                        "success_before": result.baseline_target_spiked,
+                        "success_after": result.trained_target_spiked,
+                        "p_success_before": float(result.baseline_target_spiked),
+                        "p_success_after": float(result.trained_target_spiked),
+                        "after_greater_than_before": result.trained_target_spiked
+                        and not result.baseline_target_spiked,
+                        "initial_mean_weight": result.initial_mean_weight,
+                        "final_mean_weight": result.final_mean_weight,
+                        "mean_weight_delta": result.mean_weight_delta,
+                        "rewards_received": result.rewards_received,
+                        "reward_weight_updates": result.reward_weight_updates,
+                    },
+                    "",
+                    "",
+                )
             )
-        )
     return runs
 
 
