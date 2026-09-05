@@ -233,3 +233,25 @@ def test_long_term_stability_is_not_claimed_from_ping_omnibus() -> None:
     )
     assert status == "MISMATCH"
     assert "langfristig" in note
+
+
+def test_long_term_stability_question_rejects_ping_runner() -> None:
+    import pytest
+
+    from src.dashboard.experiment_workflow import WorkflowValidationError
+
+    with pytest.raises(
+        WorkflowValidationError, match="dedicated long-term stability protocol"
+    ):
+        ExperimentWorkflowService._science_runner(
+            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-001")
+        )
+
+
+def test_reproducibility_question_keeps_ping_runner() -> None:
+    assert (
+        ExperimentWorkflowService._science_runner(
+            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-002")
+        )
+        == "run_ping"
+    )

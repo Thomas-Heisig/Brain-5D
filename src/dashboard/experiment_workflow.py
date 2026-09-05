@@ -358,7 +358,12 @@ class ExperimentWorkflowService:
         for prefix, runner_name in rq_runners:
             if question_id.startswith(prefix):
                 return runner_name
-        if question_id in {"RQ-SNN-001", "RQ-SNN-002"}:
+        if question_id == "RQ-SNN-001":
+            raise WorkflowValidationError(
+                "RQ-SNN-001 requires a dedicated long-term stability protocol with sustained activity; "
+                "run_ping is not valid primary evidence for this research question."
+            )
+        if question_id == "RQ-SNN-002":
             return "run_ping"
         if question_id == "RQ-SNN-005":
             return "run_learning_repeat"
