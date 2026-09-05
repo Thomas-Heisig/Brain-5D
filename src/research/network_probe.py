@@ -65,11 +65,10 @@ class NetworkResponseSignature:
 class NetworkImpulseProbe:
     """Inject one bounded impulse and summarize only observed runtime output.
 
-    ``max_ticks`` is the hard upper bound. ``min_ticks`` defines the minimum
-    observation window that must be executed even if the runtime reports an
-    earlier quiescent state. This distinction is important for registered
-    experiments: a requested observation window must not silently collapse to a
-    shorter run just because the network becomes temporarily quiescent.
+    ``max_ticks`` is the requested observation window. By default the complete
+    window is executed even when the runtime reports temporary quiescence. A
+    caller that explicitly wants an early-stop probe can pass a smaller
+    ``min_ticks`` value.
     """
 
     def __init__(
@@ -78,19 +77,20 @@ class NetworkImpulseProbe:
         source_neuron: int,
         current: float = 1.0,
         max_ticks: int = 100,
-        min_ticks: int = 0,
+        min_ticks: int | None = None,
         state_digest: Callable[[], str] | None = None,
     ) -> None:
         if max_ticks < 1:
             raise ValueError("max_ticks must be positive")
-        if min_ticks < 0:
+        effective_min_ticks = max_ticks if min_ticks is None else min_ticks
+        if effective_min_ticks < 0:
             raise ValueError("min_ticks must not be negative")
-        if min_ticks > max_ticks:
+        if effective_min_ticks > max_ticks:
             raise ValueError("min_ticks must not exceed max_ticks")
         self.source_neuron = source_neuron
         self.current = current
         self.max_ticks = max_ticks
-        self.min_ticks = min_ticks
+        self.min_ticks = effective_min_ticks
         self.state_digest = state_digest
 
     def run(self, runtime: ImpulseRuntime) -> NetworkResponseSignature:
