@@ -30,7 +30,7 @@ jobs:
           tests = Path('tests/test_scientific_execution_contract.py')
           text = tests.read_text(encoding='utf-8')
           if 'test_long_term_stability_question_rejects_ping_runner' not in text:
-              text += '''\n\ndef test_long_term_stability_question_rejects_ping_runner() -> None:\n    import pytest\n    from src.dashboard.experiment_workflow import WorkflowValidationError\n\n    with pytest.raises(WorkflowValidationError, match="dedicated long-term stability protocol"):\n        ExperimentWorkflowService._science_runner(\n            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-001")\n        )\n\n\ndef test_reproducibility_question_keeps_ping_runner() -> None:\n    assert (\n        ExperimentWorkflowService._science_runner(\n            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-002")\n        )\n        == "run_ping"\n    )\n'''
+              text += '''\n\ndef test_long_term_stability_question_rejects_ping_runner() -> None:\n    import pytest\n\n    from src.dashboard.experiment_workflow import WorkflowValidationError\n\n    with pytest.raises(WorkflowValidationError, match="dedicated long-term stability protocol"):\n        ExperimentWorkflowService._science_runner(\n            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-001")\n        )\n\n\ndef test_reproducibility_question_keeps_ping_runner() -> None:\n    assert (\n        ExperimentWorkflowService._science_runner(\n            {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-002")\n        )\n        == "run_ping"\n    )\n'''
           tests.write_text(text, encoding='utf-8')
           PY
       - name: Validate
