@@ -1,0 +1,435 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0007",
+  "research_question_id": "RQ-PING-001",
+  "hypothesis_ids": [
+    "H-PING-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-05T08:37:43.197404+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0007",
+      "research_question": "Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?",
+      "hypotheses": [
+        {
+          "id": "H-PING-001-A",
+          "research_question": "RQ-PING-001",
+          "hypothesis": "Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-09-03",
+          "updated": "2026-09-03"
+        }
+      ],
+      "date": "2026-09-05",
+      "source_sha": "c709e2c0e844adfd89440f77ff895dbccd6062bd"
+    },
+    "executive_summary": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response ist aufgrund mehrerer kritischer Mängel in der Protokollierung und der Datenprovenienz nicht zuverläßig zu beurteilen. Die experimentellen Bedingungen sind unvollständig spezifiziert, und die Datenintegrität ist durch den 'dirty' Git-Status und das Fehlen registrierter wissenschaftlicher Beweise gefährdet.",
+    "research_question": {
+      "id": "RQ-PING-001",
+      "domain": "Network Dynamics",
+      "question": "Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?",
+      "relevance": "Reproduzierbarkeit der kontrollierten Impulsantwort.",
+      "hypotheses": [
+        "H-PING-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-09-03",
+      "updated": "2026-09-03"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": []
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      {
+        "type": "Interpretation",
+        "value": "Die Hypothese H-PING-001-A postuliert, dass identische Impulse bei identischem Anfangszustand dieselbe beobachtete Response-Signatur erzeugen. Die Forschungsfrage RQ-PING-001 zielt auf die Reproduzierbarkeit dieser Response ab."
+      },
+      {
+        "type": "Interpretation",
+        "value": "Die experimentellen Metadaten zeigen, dass die Simulation mit Seeds [42, 43, 44] durchgeführt wurde, was auf einen Versuch der Reproduzierbarkeitsprüfung hindeutet. Allerdings ist der Git-Status als 'dirty' markiert, und es gibt keine registrierten wissenschaftlichen Beweise, die mit diesem Experiment verknüpft sind."
+      },
+      {
+        "type": "Limitation",
+        "value": "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar ('Git provenance is dirty or unavailable')."
+      },
+      {
+        "type": "Limitation",
+        "value": "Es sind keine registrierten wissenschaftlichen Beweise mit diesem Experiment verknüpft ('No registered scientific evidence is linked to this experiment')."
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response ist aufgrund mehrerer kritischer Mängel in der Protokollierung und der Datenprovenienz nicht zuverläßig zu beurteilen. Die experimentellen Bedingungen sind unvollständig spezifiziert, und die Datenintegrität ist durch den 'dirty' Git-Status und das Fehlen registrierter wissenschaftlicher Beweise gefährdet.",
+      "observations": [
+        {
+          "type": "Interpretation",
+          "value": "Die Hypothese H-PING-001-A postuliert, dass identische Impulse bei identischem Anfangszustand dieselbe beobachtete Response-Signatur erzeugen. Die Forschungsfrage RQ-PING-001 zielt auf die Reproduzierbarkeit dieser Response ab."
+        },
+        {
+          "type": "Interpretation",
+          "value": "Die Simulation wurde mit Seeds [42, 43, 44] durchgeführt, was einen Versuch der Reproduzierbarkeitsprüfung darstellt. Allerdings ist der Git-Status als 'dirty' markiert, und es gibt keine registrierten wissenschaftlichen Beweise, die mit diesem Experiment verknüpft sind."
+        },
+        {
+          "type": "Limitation",
+          "value": "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar ('Git provenance is dirty or unavailable')."
+        },
+        {
+          "type": "Limitation",
+          "value": "Es sind keine registrierten wissenschaftlichen Beweise mit diesem Experiment verknüpft ('No registered scientific evidence is linked to this experiment')."
+        }
+      ],
+      "effect_direction": "",
+      "methodological_concerns": [
+        "Die Unzuverlässigkeit der Provenienzdaten (Git dirty) wirft Zweifel an der Integrität der experimentellen Durchführung auf.",
+        "Die fehlende Verknüpfung mit registrierten wissenschaftlichen Beweisen verhindert eine fundierte Bewertung der Ergebnisse."
+      ],
+      "alternative_explanations": [
+        "Die beobachtete Variabilität der Response-Signatur könnte auf nicht kontrollierte externe Faktoren oder eine unvollständige Modellbeschreibung des Anfangszustands zurückzuführen sein, die über den Seed hinausgeht.",
+        "Die scheinbare Nicht-Reproduzierbarkeit könnte durch die Komplexität des zugrundeliegenden Netzwerkmodells und dessen Empfindlichkeit gegenüber kleinen Anfangsbedingungen (Chaos-Theorie) verursacht werden."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines Kontrollexperiments, bei dem der Anfangszustand (State Vector) nicht nur durch den Seed, sondern auch durch eine vollständige Spezifikation aller relevanten Parameter fixiert wird.",
+        "Vergleich der Response-Signatur unter Verwendung von mindestens drei unabhängigen, validierten und nachvollziehbaren Datensätzen, um die Robustheit der Reproduzierbarkeit zu testen."
+      ],
+      "requested_evidence": [
+        "Vollständige und unveränderte Protokolle der experimentellen Durchführung, einschließlich aller Eingabeparameter und des exakten Anfangszustands, die über den Seed hinausgehen.",
+        "Nachweis der Datenintegrität und der Reproduzierbarkeit der Umgebung (Software- und Hardware-Spezifikationen) zum Zeitpunkt der Durchführung."
+      ],
+      "confidence": 0.2
+    },
+    "methodological_critique": [
+      "Die Unzuverlässigkeit der Provenienzdaten (Git dirty) wirft Zweifel an der Integrität der experimentellen Durchführung auf.",
+      "Die fehlende Verknüpfung mit registrierten wissenschaftlichen Beweisen verhindert eine fundierte Bewertung der Ergebnisse."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete Variabilität der Response-Signatur könnte auf nicht kontrollierte externe Faktoren oder eine unvollständige Modellbeschreibung des Anfangszustands zurückzuführen sein, die über den Seed hinausgeht.",
+      "Die scheinbare Nicht-Reproduzierbarkeit könnte durch die Komplexität des zugrundeliegenden Netzwerkmodells und dessen Empfindlichkeit gegenüber kleinen Anfangsbedingungen (Chaos-Theorie) verursacht werden.)"
+    ],
+    "reproducibility": {
+      "git_commit": "c709e2c0e844adfd89440f77ff895dbccd6062bd",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "85d0313752925a6f1483acdb381fd55171da123f2279e736ca4bc9f154681efe",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.2,
+    "missing_evidence": [
+      "Vollständige und unveränderte Protokolle der experimentellen Durchführung, einschließlich aller Eingabeparameter und des exakten Anfangszustands, die über den Seed hinausgehen.",
+      "Nachweis der Datenintegrität und der Reproduzierbarkeit der Umgebung (Software- und Hardware-Spezifikationen) zum Zeitpunkt der Durchführung."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines Kontrollexperiments, bei dem der Anfangszustand (State Vector) nicht nur durch den Seed, sondern auch durch eine vollständige Spezifikation aller relevanten Parameter fixiert wird.",
+      "Vergleich der Response-Signatur unter Verwendung von mindestens drei unabhängigen, validierten und nachvollziehbaren Datensätzen, um die Robustheit der Reproduzierbarkeit zu testen."
+    ],
+    "conclusion": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response ist aufgrund mehrerer kritischer Mängel in der Protokollierung und der Datenprovenienz nicht zuverläßig zu beurteilen. Die experimentellen Bedingungen sind unvollständig spezifiziert, und die Datenintegrität ist durch den 'dirty' Git-Status und das Fehlen registrierter wissenschaftlicher Beweise gefährdet.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260905083718734281-82036dfb",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0007",
+          "packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response bei identischem Zustand und Seed ist unklar, da die experimentellen Bedingungen (insbesondere der Anfangszustand) nicht vollständig dokumentiert sind und die Datenquellen unzuverlässig sind.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Hypothese H-PING-001-A postuliert, dass identische Impulse bei identischem Anfangszustand dieselbe beobachtete Response-Signatur erzeugen. Die Forschungsfrage RQ-PING-001 zielt auf die Reproduzierbarkeit dieser Response ab."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die experimentellen Metadaten zeigen, dass die Simulation mit Seeds [42, 43, 44] durchgeführt wurde, was auf einen Versuch der Reproduzierbarkeitsprüfung hindeutet. Allerdings ist der Git-Status als 'dirty' markiert, und es gibt keine registrierten wissenschaftlichen Beweise, die mit diesem Experiment verknüpft sind."
+            },
+            {
+              "type": "Limitation",
+              "value": "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar ('Git provenance is dirty or unavailable')."
+            },
+            {
+              "type": "Limitation",
+              "value": "Es sind keine registrierten wissenschaftlichen Beweise mit diesem Experiment verknüpft ('No registered scientific evidence is linked to this experiment')."
+            }
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Unzuverlässigkeit der Provenienzdaten (Git dirty) wirft Zweifel an der Integrität der experimentellen Durchführung auf.",
+            "Die fehlende Verknüpfung mit registrierten wissenschaftlichen Beweisen verhindert eine fundierte Bewertung der Ergebnisse."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Response-Signatur könnte auf nicht kontrollierte externe Faktoren oder eine unvollständige Modellbeschreibung des Anfangszustands zurückzuführen sein, die über den Seed hinausgeht.",
+            "Die scheinbare Nicht-Reproduzierbarkeit könnte durch die Komplexität des zugrundeliegenden Netzwerkmodells und dessen Empfindlichkeit gegenüber kleinen Anfangsbedingungen (Chaos-Theorie) verursacht werden."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrollexperiments, bei dem der Anfangszustand (State Vector) nicht nur durch den Seed, sondern auch durch eine vollständige Spezifikation aller relevanten Parameter fixiert wird.",
+            "Vergleich der Response-Signatur unter Verwendung von mindestens drei unabhängigen, validierten und nachvollziehbaren Datensätzen, um die Robustheit der Reproduzierbarkeit zu testen."
+          ],
+          "requested_evidence": [
+            "Vollständige und unveränderte Protokolle der experimentellen Durchführung, einschließlich aller Eingabeparameter und des exakten Anfangszustands, die über den Seed hinausgehen.",
+            "Nachweis der Datenintegrität und der Reproduzierbarkeit der Umgebung (Software- und Hardware-Spezifikationen) zum Zeitpunkt der Durchführung."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "59673b1b5c157eaa7b909a9d1eef614a1580398fc7fcaf4638298e8d79cab048",
+          "research_packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "c709e2c0e844adfd89440f77ff895dbccd6062bd",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:37:18.734281+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260905083732656388-82036dfb",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0007",
+          "packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response ist aufgrund mehrerer kritischer Mängel in der Protokollierung und der Datenprovenienz nicht zuverlässig zu beurteilen. Die experimentellen Bedingungen sind unvollständig spezifiziert, und die Datenintegrität ist durch den 'dirty' Git-Status und das Fehlen registrierter wissenschaftlicher Beweise gefährdet.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Hypothese H-PING-001-A postuliert, dass identische Impulse bei identischem Anfangszustand dieselbe beobachtete Response-Signatur erzeugen. Die Forschungsfrage RQ-PING-001 zielt auf die Reproduzierbarkeit dieser Response ab."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Simulation wurde mit Seeds [42, 43, 44] durchgeführt, was einen Versuch der Reproduzierbarkeitsprüfung darstellt. Allerdings ist der Git-Status als 'dirty' markiert, und es gibt keine registrierten wissenschaftlichen Beweise, die mit diesem Experiment verknüpft sind."
+            },
+            {
+              "type": "Limitation",
+              "value": "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar ('Git provenance is dirty or unavailable')."
+            },
+            {
+              "type": "Limitation",
+              "value": "Es sind keine registrierten wissenschaftlichen Beweise mit diesem Experiment verknüpft ('No registered scientific evidence is linked to this experiment')."
+            }
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Unzuverlässigkeit der Provenienzdaten (Git dirty) wirft Zweifel an der Integrität der experimentellen Durchführung auf.",
+            "Die fehlende Verknüpfung mit registrierten wissenschaftlichen Beweisen verhindert eine fundierte Bewertung der Ergebnisse."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Response-Signatur könnte auf nicht kontrollierte externe Faktoren oder eine unvollständige Modellbeschreibung des Anfangszustands zurückzuführen sein, die über den Seed hinausgeht.",
+            "Die scheinbare Nicht-Reproduzierbarkeit könnte durch die Komplexität des zugrundeliegenden Netzwerkmodells und dessen Empfindlichkeit gegenüber kleinen Anfangsbedingungen (Chaos-Theorie) verursacht werden.)"
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrollexperiments, bei dem der Anfangszustand (State Vector) nicht nur durch den Seed, sondern auch durch eine vollständige Spezifikation aller relevanten Parameter fixiert wird.",
+            "Vergleich der Response-Signatur unter Verwendung von mindestens drei unabhängigen, validierten und nachvollziehbaren Datensätzen, um die Robustheit der Reproduzierbarkeit zu testen."
+          ],
+          "requested_evidence": [
+            "Vollständige und unveränderte Protokolle der experimentellen Durchführung, einschließlich aller Eingabeparameter und des exakten Anfangszustands, die über den Seed hinausgehen.",
+            "Nachweis der Datenintegrität und der Reproduzierbarkeit der Umgebung (Software- und Hardware-Spezifikationen) zum Zeitpunkt der Durchführung."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "cc27cdf4f140deafa893df442403b75ac1d3710ae1287f6dc3a2711586847898",
+          "research_packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "c709e2c0e844adfd89440f77ff895dbccd6062bd",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:37:32.656388+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260905083743196280-82036dfb",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0007",
+          "packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit der beobachteten Network-Impuls-Response ist aufgrund mehrerer kritischer Mängel in der Protokollierung und der Datenprovenienz nicht zuverläßig zu beurteilen. Die experimentellen Bedingungen sind unvollständig spezifiziert, und die Datenintegrität ist durch den 'dirty' Git-Status und das Fehlen registrierter wissenschaftlicher Beweise gefährdet.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Hypothese H-PING-001-A postuliert, dass identische Impulse bei identischem Anfangszustand dieselbe beobachtete Response-Signatur erzeugen. Die Forschungsfrage RQ-PING-001 zielt auf die Reproduzierbarkeit dieser Response ab."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Simulation wurde mit Seeds [42, 43, 44] durchgeführt, was einen Versuch der Reproduzierbarkeitsprüfung darstellt. Allerdings ist der Git-Status als 'dirty' markiert, und es gibt keine registrierten wissenschaftlichen Beweise, die mit diesem Experiment verknüpft sind."
+            },
+            {
+              "type": "Limitation",
+              "value": "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar ('Git provenance is dirty or unavailable')."
+            },
+            {
+              "type": "Limitation",
+              "value": "Es sind keine registrierten wissenschaftlichen Beweise mit diesem Experiment verknüpft ('No registered scientific evidence is linked to this experiment')."
+            }
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Unzuverlässigkeit der Provenienzdaten (Git dirty) wirft Zweifel an der Integrität der experimentellen Durchführung auf.",
+            "Die fehlende Verknüpfung mit registrierten wissenschaftlichen Beweisen verhindert eine fundierte Bewertung der Ergebnisse."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Response-Signatur könnte auf nicht kontrollierte externe Faktoren oder eine unvollständige Modellbeschreibung des Anfangszustands zurückzuführen sein, die über den Seed hinausgeht.",
+            "Die scheinbare Nicht-Reproduzierbarkeit könnte durch die Komplexität des zugrundeliegenden Netzwerkmodells und dessen Empfindlichkeit gegenüber kleinen Anfangsbedingungen (Chaos-Theorie) verursacht werden."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrollexperiments, bei dem der Anfangszustand (State Vector) nicht nur durch den Seed, sondern auch durch eine vollständige Spezifikation aller relevanten Parameter fixiert wird.",
+            "Vergleich der Response-Signatur unter Verwendung von mindestens drei unabhängigen, validierten und nachvollziehbaren Datensätzen, um die Robustheit der Reproduzierbarkeit zu testen."
+          ],
+          "requested_evidence": [
+            "Vollständige und unveränderte Protokolle der experimentellen Durchführung, einschließlich aller Eingabeparameter und des exakten Anfangszustands, die über den Seed hinausgehen.",
+            "Nachweis der Datenintegrität und der Reproduzierbarkeit der Umgebung (Software- und Hardware-Spezifikationen) zum Zeitpunkt der Durchführung."
+          ],
+          "confidence": 0.2
+        },
+        "provenance": {
+          "prompt_sha256": "f6eabb5f4e516fd1f6ee19688e1ddb0311210621708fe3f381ad370b84cf85de",
+          "research_packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "c709e2c0e844adfd89440f77ff895dbccd6062bd",
+          "model_self_confidence": "0.2"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:37:43.196280+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "82036dfbca05985cfeb7da9beedb88e87bd94e374e4bdf2330f6a2ce8170dd37",
+    "source": {
+      "git_commit": "c709e2c0e844adfd89440f77ff895dbccd6062bd",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "85d0313752925a6f1483acdb381fd55171da123f2279e736ca4bc9f154681efe",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260905083718734281-82036dfb",
+    "AIAR-critical_reviewer-20260905083732656388-82036dfb",
+    "AIAR-scientific_writer-20260905083743196280-82036dfb"
+  ],
+  "supersedes": null,
+  "content_digest": "847330d30860ef093bf85dd80ba79ff537da4fb7751a43bb16e24258ccb477ed",
+  "markdown_digest": "618a865574a577ce16a9143b54d10bc3dc87ffc7267e79d2f2648dff8069dff9"
+}
