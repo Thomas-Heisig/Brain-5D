@@ -1,0 +1,17 @@
+{
+  "protocol": "science_suite_v1",
+  "experiment_id": "EXP-GEN-0008",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "title": "Network impulse response",
+  "conditions": "Identischer Zustand, Seed und Input-Spike; Rekurrenz kontrolliert.",
+  "ticks": 100,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}
