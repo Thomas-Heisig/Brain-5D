@@ -44,7 +44,8 @@ The adaptive organism v2 layer places body nodes with a bounded force-directed l
 - internal/interoceptive nodes remain relatively close to the core;
 - sensor endpoints are biased toward the sensory boundary;
 - actuator endpoints are biased toward the motor/output boundary;
-- all body nodes repel each other to avoid a rigid circular arrangement.
+- dense sensor/actuator sets are distributed over multiple radii;
+- same-class nodes use stronger repulsion so large device inventories do not collapse into one unreadable cluster.
 
 The layout is presentation-only and does not alter neural topology or embodiment state.
 
@@ -52,11 +53,25 @@ The layout is presentation-only and does not alter neural topology or embodiment
 
 The visible body membrane is recalculated as a padded convex hull around current body nodes. A device appearing or disappearing can therefore change the visible body envelope. The membrane is a visualization of the currently observed connection boundary, not an authoritative authorization boundary.
 
+## Icon-first visual contract
+
+Dense machine inventories can contain dozens of endpoints. Rendering full device names and values inside each SVG node produces unavoidable overlap, so the body follows an **icon-first** rule:
+
+- the body itself shows symbols and status rings rather than long text;
+- device classes receive stable semantic symbols, including camera, microphone, speaker, display, GPU, network, USB, storage, printer and robotics;
+- complete device names and values remain available through native SVG tooltips and the right-hand inspector;
+- body metric pins are hidden by default in the dense overview rather than overlapping neighboring nodes;
+- selected/hovered/focused nodes receive stronger halo and stroke emphasis;
+- every body node remains keyboard-focusable and activatable with Enter/Space;
+- a horizontally scrollable icon dock provides guaranteed mouse/keyboard access to every discovered endpoint even if a dense graph, current pan/zoom position or viewport size makes the corresponding body node difficult to reach.
+
+The icon dock is an accessibility/navigation surface only. It does not create additional body state or duplicate devices in the model.
+
 ## Sensor and actuator differentiation
 
 Sensor and actuator branches are deliberately rendered as different functional endpoint types. Sensor branches represent available input paths; actuator branches represent available output paths. An actuator being displayed as available never implies permission to use it.
 
-External services or sources such as network, weather, camera or audio can be represented as **environment satellites** outside the membrane. Where a real sensor endpoint exists, the satellite can be linked visually to that endpoint.
+External services or sources such as network, weather, camera or audio can be represented as **environment satellites** outside the membrane. Satellites are also icon-first and expose their labels through tooltips rather than permanent text labels.
 
 ## Adaptive state visualization
 
@@ -111,6 +126,16 @@ The body stage supports a real presentation camera:
 
 Camera state affects rendering only and has no simulation meaning.
 
+## Rendering technology boundary
+
+The current body view remains browser-native SVG/CSS/JavaScript. Libraries such as `PyBullet`, `vedo` or `viser` may be evaluated later for specialized 3D/operator experiments, but they are intentionally not required for the primary body view:
+
+- `PyBullet` is a physics/simulation engine and would risk coupling presentation physics to scientific/runtime semantics;
+- `vedo` is useful for Python-side 3D rendering but would add a separate rendering process for a view that currently needs lightweight browser interaction;
+- `viser` is suitable for interactive 3D scenes but would introduce another server/UI dependency.
+
+A future 3D renderer should consume the same read-only body-view contract and must not become an alternative source of runtime or scientific state.
+
 ## Terminology
 
 Technical strings are centralized in the organism layer to keep the internal semantics neutral. Preferred terms include:
@@ -135,4 +160,5 @@ The product-facing workspace may still be named `Wesen`, but internal technical 
 6. Dashboard animation is presentation, not experimental evidence.
 7. Browser-local morphology history is not DATA/EVID.
 8. Causal tracer labels use only identifiers already present in observed events.
-9. Scientific claims must continue through DATA/EVID and the research integrity gates.
+9. Icon/tool-tip/dock presentation never changes body state.
+10. Scientific claims must continue through DATA/EVID and the research integrity gates.

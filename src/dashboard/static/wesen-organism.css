@@ -5,6 +5,70 @@
   transform-origin: 450px 350px;
   transition: translate 80ms linear, scale 80ms linear;
 }
+
+/* Icon-first body: labels and metric text stay in tooltip/inspector, not inside the body. */
+#wesen-organ-layer .wesen-organ-label,
+#wesen-organ-layer .wesen-organ-value,
+#wesen-pin-layer .wesen-data-pin {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+#wesen-organ-layer .wesen-organ {
+  cursor: pointer;
+}
+
+#wesen-organ-layer .wesen-organ-body {
+  fill: rgba(5, 18, 30, .98);
+}
+
+#wesen-organ-layer .wesen-organ-icon {
+  font-size: 30px;
+  font-weight: 700;
+  dominant-baseline: middle;
+  transform: translateY(7px);
+}
+
+#wesen-organ-layer .kind-sensor .wesen-organ-body,
+#wesen-organ-layer .kind-actuator .wesen-organ-body,
+#wesen-organ-layer .kind-connection .wesen-organ-body {
+  stroke-width: 2;
+}
+
+#wesen-organ-layer .kind-sensor .wesen-organ-halo,
+#wesen-organ-layer .kind-actuator .wesen-organ-halo,
+#wesen-organ-layer .kind-connection .wesen-organ-halo {
+  opacity: .55;
+}
+
+#wesen-organ-layer .wesen-organ:hover .wesen-organ-body,
+#wesen-organ-layer .wesen-organ:focus-visible .wesen-organ-body,
+#wesen-organ-layer .wesen-organ.selected .wesen-organ-body {
+  stroke-width: 3.2;
+  filter: drop-shadow(0 0 18px currentColor);
+}
+
+#wesen-organ-layer .wesen-organ:hover .wesen-organ-halo,
+#wesen-organ-layer .wesen-organ:focus-visible .wesen-organ-halo,
+#wesen-organ-layer .wesen-organ.selected .wesen-organ-halo {
+  stroke-opacity: .9;
+  opacity: 1;
+}
+
+/* Device-type accents */
+.wesen-organ[data-device-type="camera"],
+.wesen-organ[data-device-type="microphone"],
+.wesen-organ[data-device-type="sensor"] { color: var(--b5-cyan); }
+.wesen-organ[data-device-type="speaker"],
+.wesen-organ[data-device-type="display"],
+.wesen-organ[data-device-type="printer"],
+.wesen-organ[data-device-type="robot"],
+.wesen-organ[data-device-type="actuator"] { color: var(--b5-amber); }
+.wesen-organ[data-device-type="network"] { color: var(--b5-blue); }
+.wesen-organ[data-device-type="gpu"] { color: var(--b5-violet); }
+.wesen-organ[data-device-type="storage"],
+.wesen-organ[data-device-type="usb"] { color: var(--b5-green); }
+
 .wesen-satellite circle {
   fill: rgba(6, 19, 31, .96);
   stroke: rgba(93, 204, 255, .58);
@@ -14,18 +78,16 @@
 .wesen-satellite > text:first-of-type {
   fill: var(--b5-cyan);
   text-anchor: middle;
-  font-size: 9px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
 }
-.wesen-satellite-label {
-  fill: var(--b5-muted);
-  font-size: 10px;
-}
+.wesen-satellite-label { display: none; }
 .wesen-satellite-link {
   stroke: rgba(70, 190, 243, .25);
   stroke-width: 1.4;
   stroke-dasharray: 5 6;
 }
+
 .wesen-organ.kind-sensor .wesen-organ-body { stroke-dasharray: 2 2; }
 .wesen-organ.kind-actuator .wesen-organ-body { stroke-width: 2.7; }
 .wesen-organ.kind-actuator .wesen-organ-icon { fill: var(--b5-amber); }
@@ -33,9 +95,55 @@
   stroke: var(--b5-rose);
   animation: wesen-interoception-pulse 3.6s ease-in-out infinite;
 }
-.wesen-organ.wesen-defocused { opacity: .22; filter: blur(.45px); }
+.wesen-organ.wesen-defocused { opacity: .16; filter: blur(.55px); }
 .wesen-organ.selected { opacity: 1 !important; filter: none; }
 .wesen-tracer-active .wesen-signal-dot { filter: drop-shadow(0 0 8px var(--b5-gold)); }
+
+/* Always-reachable compact node dock */
+.wesen-icon-dock {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 8;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px;
+  border: 1px solid var(--b5-line);
+  border-radius: 10px;
+  background: rgba(4, 14, 23, .86);
+  backdrop-filter: blur(12px);
+  scrollbar-width: thin;
+}
+
+.wesen-icon-dock button {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(118, 188, 225, .18);
+  border-radius: 9px;
+  background: rgba(11, 30, 45, .82);
+  color: var(--b5-muted);
+  cursor: pointer;
+}
+
+.wesen-icon-dock button:hover,
+.wesen-icon-dock button:focus-visible {
+  color: var(--b5-text);
+  border-color: rgba(59, 202, 255, .62);
+  background: rgba(18, 76, 106, .72);
+}
+
+.wesen-icon-dock button[data-kind="sensor"] { color: var(--b5-cyan); }
+.wesen-icon-dock button[data-kind="actuator"] { color: var(--b5-amber); }
+.wesen-icon-dock button[data-device-type="gpu"] { color: var(--b5-violet); }
+.wesen-icon-dock button[data-device-type="storage"],
+.wesen-icon-dock button[data-device-type="usb"] { color: var(--b5-green); }
+.wesen-icon-dock button span { font-size: 19px; line-height: 1; }
+
 .wesen-timeline {
   padding: 10px 12px 12px;
   border-bottom: 1px solid var(--b5-line);
@@ -52,6 +160,7 @@
   padding: 6px 8px;
   cursor: pointer;
 }
+
 .wesen-delayed-clone line { stroke: rgba(141, 114, 255, .32); stroke-width: 1; }
 .wesen-delayed-clone circle { fill: rgba(123, 95, 255, .35); stroke: rgba(203, 189, 255, .6); }
 .wesen-delayed-clone .kind-core { fill: rgba(255, 210, 91, .45); stroke: var(--b5-gold); }
@@ -90,6 +199,11 @@
 }
 @keyframes wesen-thermal-alert { from { stroke-opacity: .5; } to { stroke-opacity: 1; } }
 @keyframes wesen-recovery { from { stroke-opacity: .35; } 50% { stroke-opacity: 1; } to { stroke-opacity: .35; } }
+
+@media (max-width: 900px) {
+  .wesen-icon-dock { left: 8px; right: 8px; bottom: 8px; }
+  .wesen-icon-dock button { flex-basis: 34px; width: 34px; height: 34px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .wesen-organ.kind-internal .wesen-organ-body,
