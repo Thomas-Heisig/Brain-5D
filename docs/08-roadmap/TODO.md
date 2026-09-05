@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] Current test collection is 724 tests after the adaptive organism v2 regression additions.
+- [x] Current test collection is 725 tests after the icon-first Wesen accessibility regression addition.
 - [x] Fast-suite coverage baseline is 72%.
 - [x] Scientific Integrity Gate remains a required release check.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification remain required CI/release gates.
@@ -21,11 +21,15 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] `Wesen` morphology derived dynamically from observed embodiment connections.
 - [x] Sensor and actuator branches appear from real connection inventory; missing capabilities remain explicit placeholders.
 - [x] Force-directed presentation layout removes the rigid fixed-coordinate body arrangement.
+- [x] Dense sensor/actuator populations are distributed over multiple radii with stronger same-class repulsion.
 - [x] Convex-hull membrane follows the currently observed body nodes.
 - [x] External environment satellites represent real reported external sources/services where available.
 - [x] Machine-native interoception represented from available CPU/RAM/temperature/fan/storage/runtime telemetry.
 - [x] Adaptive visual states cover resource/thermal pressure and reported sensor/actuator/network degradation, recovery and unknown telemetry.
-- [x] Node inspection, data pins, pointer-centered zoom, pan, reset, focus fading and event filtering implemented.
+- [x] Body view is icon-first: labels/metric strings are removed from crowded SVG nodes and exposed through tooltips/inspector instead.
+- [x] Device-type symbols distinguish camera, microphone, speaker, display, GPU, network, USB, storage, printer, robotics and generic endpoints.
+- [x] Scrollable icon dock provides guaranteed mouse/keyboard access to every discovered body node.
+- [x] Node inspection, pointer-centered zoom, pan, reset, focus fading and event filtering implemented.
 - [x] Recurrence trend and delayed same-morphology self-model implemented where telemetry exists.
 - [x] Delayed self-model uses a bounded frame ring buffer and measured loopback latency when available.
 - [x] Browser-local morphology snapshots and timeline scrubber implemented for operator time-travel inspection.
@@ -42,10 +46,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [ ] Require the latest `main` CI run to finish green across the complete job matrix.
 - [ ] Fix only verified current-tree CI failures; do not mask typing/scientific-integrity failures.
-- [ ] Confirm documentation consistency checker accepts the 724-test baseline.
+- [ ] Confirm documentation consistency checker accepts the 725-test baseline.
 - [ ] Verify `/wesen-adaptive.css` and `/wesen-organism.css` are served in integrated runtime and dashboard-only modes.
 - [ ] Verify adaptive body rendering in at least one live-host session with real connection inventory.
-- [ ] Add a browser/E2E check for pointer-centered camera pan/zoom and timeline scrubbing.
+- [ ] Add a browser/E2E check for pointer-centered camera pan/zoom, icon-dock navigation and timeline scrubbing.
 
 ## P0 — scientific evidence closure
 
