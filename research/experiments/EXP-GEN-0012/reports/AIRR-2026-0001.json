@@ -1,0 +1,475 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0012",
+  "research_question_id": "RQ-SNN-002",
+  "hypothesis_ids": [
+    "H-SNN-002-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-05T09:08:55.319597+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0012",
+      "research_question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-002-A",
+          "research_question": "RQ-SNN-002",
+          "hypothesis": "Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare Spikefolgen.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-05",
+      "source_sha": "dde62da5575d037c3ed9a6c026d8c74aa593161a"
+    },
+    "executive_summary": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+    "research_question": {
+      "id": "RQ-SNN-002",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "relevance": "Basis für deterministische Reproduzierbarkeit aller Experimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-002-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      {
+        "type": "Interpretation",
+        "value": "Die Literatur (SRC-IZHIKEVICH-2003) stützt die Idee, dass einfache Spike-Modelle komplexe kortikale Aktivitätsmuster reproduzieren können. Dies deutet auf eine inhärente Fähigkeit des Modells zur Mustererzeugung hin."
+      },
+      {
+        "type": "Interpretation",
+        "value": "Die Forschungsfrage RQ-SNN-002 zielt direkt auf die deterministische Reproduzierbarkeit ab, was ein zentrales Kriterium für die Validität von neuronalen Modellen ist."
+      },
+      {
+        "type": "Interpretation",
+        "value": "Die Tatsache, dass das Experiment in einem 'EXPLORATORY' Modus durchgeführt wurde und die 'git' Historie als 'dirty' markiert ist, könnte auf unvollständige oder nicht standardisierte Protokolle hinweisen, was die Reproduzierbarkeit beeinträchtigen könnte."
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+      "observations": [
+        {
+          "type": "Interpretation",
+          "value": "Die Literatur (SRC-IZHIKEVICH-2003) stützt die Idee, dass einfache Spike-Modelle komplexe kortikale Aktivitätsmuster reproduzieren können. Dies deutet auf eine inhärente Fähigkeit des Modells zur Mustererzeugung hin."
+        },
+        {
+          "type": "Interpretation",
+          "value": "Die Forschungsfrage RQ-SNN-002 zielt direkt auf die deterministische Reproduzierbarkeit ab, was ein zentrales Kriterium für die Validität von neuronalen Modellen ist."
+        },
+        {
+          "type": "Interpretation",
+          "value": "Die Tatsache, dass das Experiment in einem 'EXPLORATORY' Modus durchgeführt wurde und die 'git' Historie als 'dirty' markiert ist, könnte auf unvollständige oder nicht standardisierte Protokolle hinweisen, was die Reproduzierbarkeit beeinträchtigen könnte."
+        }
+      ],
+      "effect_direction": "Unbestimmt",
+      "methodological_concerns": [
+        "Die 'git' Historie ist als 'dirty' markiert, was auf nicht versionierte oder unvollständige Änderungen im Experiment-Setup hindeutet und die Reproduzierbarkeit gefährdet.",
+        "Die 'provenance' Informationen sind unvollständig ('configuration_sha256': 'NOT_AVAILABLE', 'data_digest': 'NOT_AVAILABLE'), was eine vollständige Nachverfolgung der verwendeten Parameter und Daten unmöglich macht.",
+        "Die 'known_limitations' nennen, dass 'No registered scientific evidence is linked to this experiment', was die wissenschaftliche Verankerung der Ergebnisse schwächt."
+      ],
+      "alternative_explanations": [
+        "Die beobachtete Variabilität der Spikefolgen könnte auf numerische Instabilitäten des Izhikevich-Modells bei den verwendeten Parametern zurückzuführen sein, anstatt auf einen Fehler im Input.",
+        "Die Reproduzierbarkeit könnte durch die spezifische Initialisierung der Neuronen oder durch nicht erfasste Umgebungsfaktoren (z.B. Hardware-Floating-Point-Präzision) beeinflusst werden, die nicht im Manifest dokumentiert sind."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines Kontrolllaufs mit einem fest definierten, versionierten Seed und einem vollständig dokumentierten Konfigurations-SHA256, um die deterministische Reproduzierbarkeit zu testen.",
+        "Vergleich des Izhikevich-Modells mit einem anderen, etablierten Spike-Modell (z.B. Hodgkin-Huxley) unter identischen Inputbedingungen, um die Modellabhängigkeit der Ergebnisse zu bewerten."
+      ],
+      "requested_evidence": [
+        "Bereitstellung des vollständigen und versionierten Konfigurations-SHA256 für das verwendete 'learning_experiment.yaml', um die exakte Parameterbasis zu gewährleisten.",
+        "Bereitstellung der Rohdaten (Spike-Timing-Daten) für mindestens drei unabhängige Läufe mit identischem Input, um die statistische Variabilität zu analysieren."
+      ],
+      "confidence": 0.5
+    },
+    "methodological_critique": [
+      "Die 'git' Historie ist als 'dirty' markiert, was auf nicht versionierte oder unvollständige Änderungen im Experiment-Setup hindeutet und die Reproduzierbarkeit gefährdet.",
+      "Die 'provenance' Informationen sind unvollständig ('configuration_sha256': 'NOT_AVAILABLE', 'data_digest': 'NOT_AVAILABLE'), was eine vollständige Nachverfolgung der verwendeten Parameter und Daten unmöglich macht.",
+      "Die 'known_limitations' nennen, dass 'No registered scientific evidence is linked to this experiment', was die wissenschaftliche Verankerung der Ergebnisse schwächt."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete Variabilität der Spikefolgen könnte auf numerische Instabilitäten des Izhikevich-Modells bei den verwendeten Parametern zurückzuführen sein, anstatt auf einen Fehler im Input.",
+      "Die Reproduzierbarkeit könnte durch die spezifische Initialisierung der Neuronen oder durch nicht erfasste Umgebungsfaktoren (z.B. Hardware-Floating-Point-Präzision) beeinflusst werden, die nicht im Manifest dokumentiert sind."
+    ],
+    "reproducibility": {
+      "git_commit": "dde62da5575d037c3ed9a6c026d8c74aa593161a",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "010c2dce69a10ca19409d6cfb04b016052ac82125bbaa4f4a815ded7aed4c998",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.5,
+    "missing_evidence": [
+      "Bereitstellung des vollständigen und versionierten Konfigurations-SHA256 für das verwendete 'learning_experiment.yaml', um die exakte Parameterbasis zu gewährleisten.",
+      "Bereitstellung der Rohdaten (Spike-Timing-Daten) für mindestens drei unabhängige Läufe mit identischem Input, um die statistische Variabilität zu analysieren."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines Kontrolllaufs mit einem fest definierten, versionierten Seed und einem vollständig dokumentierten Konfigurations-SHA256, um die deterministische Reproduzierbarkeit zu testen.",
+      "Vergleich des Izhikevich-Modells mit einem anderen, etablierten Spike-Modell (z.B. Hodgkin-Huxley) unter identischen Inputbedingungen, um die Modellabhängigkeit der Ergebnisse zu bewerten."
+    ],
+    "conclusion": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260905090827475618-9142d3c2",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0012",
+          "packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Literatur (SRC-IZHIKEVICH-2003) stützt die Idee, dass einfache Spike-Modelle komplexe kortikale Aktivitätsmuster reproduzieren können. Dies deutet auf eine inhärente Fähigkeit des Modells zur Mustererzeugung hin."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Forschungsfrage RQ-SNN-002 zielt direkt auf die deterministische Reproduzierbarkeit ab, was ein zentrales Kriterium für die Validität von neuronalen Modellen ist."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Tatsache, dass das Experiment in einem 'EXPLORATORY' Modus durchgeführt wurde und die 'git' Historie als 'dirty' markiert ist, könnte auf unvollständige oder nicht standardisierte Protokolle hinweisen, was die Reproduzierbarkeit beeinträchtigen könnte."
+            }
+          ],
+          "effect_direction": "Unbestimmt",
+          "methodological_concerns": [
+            "Die 'git' Historie ist als 'dirty' markiert, was auf nicht versionierte oder unvollständige Änderungen im Experiment-Setup hindeutet und die Reproduzierbarkeit gefährdet.",
+            "Die 'provenance' Informationen sind unvollständig ('configuration_sha256': 'NOT_AVAILABLE', 'data_digest': 'NOT_AVAILABLE'), was eine vollständige Nachverfolgung der verwendeten Parameter und Daten unmöglich macht.",
+            "Die 'known_limitations' nennen, dass 'No registered scientific evidence is linked to this experiment', was die wissenschaftliche Verankerung der Ergebnisse schwächt."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Spikefolgen könnte auf numerische Instabilitäten des Izhikevich-Modells bei den verwendeten Parametern zurückzuführen sein, anstatt auf einen Fehler im Input.",
+            "Die Reproduzierbarkeit könnte durch die spezifische Initialisierung der Neuronen oder durch nicht erfasste Umgebungsfaktoren (z.B. Hardware-Floating-Point-Präzision) beeinflusst werden, die nicht im Manifest dokumentiert sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrolllaufs mit einem fest definierten, versionierten Seed und einem vollständig dokumentierten Konfigurations-SHA256, um die deterministische Reproduzierbarkeit zu testen.",
+            "Vergleich des Izhikevich-Modells mit einem anderen, etablierten Spike-Modell (z.B. Hodgkin-Huxley) unter identischen Inputbedingungen, um die Modellabhängigkeit der Ergebnisse zu bewerten."
+          ],
+          "requested_evidence": [
+            "Bereitstellung des vollständigen und versionierten Konfigurations-SHA256 für das verwendete 'learning_experiment.yaml', um die exakte Parameterbasis zu gewährleisten.",
+            "Bereitstellung der Rohdaten (Spike-Timing-Daten) für mindestens drei unabhängige Läufe mit identischem Input, um die statistische Variabilität zu analysieren."
+          ],
+          "confidence": 0.5
+        },
+        "provenance": {
+          "prompt_sha256": "a88fc009686ef95351075338b596f98a5f7fe45b4e9d1ec5a1603ec411adc12c",
+          "research_packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "dde62da5575d037c3ed9a6c026d8c74aa593161a",
+          "model_self_confidence": "0.5"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T09:08:27.475618+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260905090842144804-9142d3c2",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0012",
+          "packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Literatur (SRC-IZHIKEVICH-2003) stützt die Idee, dass einfache Spike-Modelle komplexe kortikale Aktivitätsmuster reproduzieren können. Dies deutet auf eine inhärente Fähigkeit des Modells zur Mustererzeugung hin."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Forschungsfrage RQ-SNN-002 zielt direkt auf die deterministische Reproduzierbarkeit ab, was ein zentrales Kriterium für die Validität von neuronalen Modellen ist."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Tatsache, dass das Experiment in einem 'EXPLORATORY' Modus durchgeführt wurde und die 'git' Historie als 'dirty' markiert ist, könnte auf unvollständige oder nicht standardisierte Protokolle hinweisen, was die Reproduzierbarkeit beeinträchtigen könnte."
+            }
+          ],
+          "effect_direction": "Unbestimmt",
+          "methodological_concerns": [
+            "Die 'git' Historie ist als 'dirty' markiert, was auf nicht versionierte oder unvollständige Änderungen im Experiment-Setup hindeutet und die Reproduzierbarkeit gefährdet.",
+            "Die 'provenance' Informationen sind unvollständig ('configuration_sha256': 'NOT_AVAILABLE', 'data_digest': 'NOT_AVAILABLE'), was eine vollständige Nachverfolgung der verwendeten Parameter und Daten unmöglich macht.",
+            "Die 'known_limitations' nennen, dass 'No registered scientific evidence is linked to this experiment', was die wissenschaftliche Verankerung der Ergebnisse schwächt."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Spikefolgen könnte auf numerische Instabilitäten des Izhikevich-Modells bei den verwendeten Parametern zurückzuführen sein, anstatt auf einen Fehler im Input.",
+            "Die Reproduzierbarkeit könnte durch die spezifische Initialisierung der Neuronen oder durch nicht erfasste Umgebungsfaktoren (z.B. Hardware-Floating-Point-Präzision) beeinflusst werden, die nicht im Manifest dokumentiert sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrolllaufs mit einem fest definierten, versionierten Seed und einem vollständig dokumentierten Konfigurations-SHA256, um die deterministische Reproduzierbarkeit zu testen.",
+            "Vergleich des Izhikevich-Modells mit einem anderen, etablierten Spike-Modell (z.B. Hodgkin-Huxley) unter identischen Inputbedingungen, um die Modellabhängigkeit der Ergebnisse zu bewerten."
+          ],
+          "requested_evidence": [
+            "Bereitstellung des vollständigen und versionierten Konfigurations-SHA256 für das verwendete 'learning_experiment.yaml', um die exakte Parameterbasis zu gewährleisten.",
+            "Bereitstellung der Rohdaten (Spike-Timing-Daten) für mindestens drei unabhängige Läufe mit identischem Input, um die statistische Variabilität zu analysieren."
+          ],
+          "confidence": 0.5
+        },
+        "provenance": {
+          "prompt_sha256": "729df7be6a6f6c9799fd2836c3e072f369907e2ccc4e6680589f339699a08213",
+          "research_packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "dde62da5575d037c3ed9a6c026d8c74aa593161a",
+          "model_self_confidence": "0.5"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T09:08:42.144804+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260905090855318703-9142d3c2",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0012",
+          "packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e"
+        },
+        "output": {
+          "assessment": "Die Reproduzierbarkeit von Spikefolgen hängt stark von den verwendeten Modellparametern und der Stabilität des Systems ab. Die Hypothese, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, ist theoretisch plausibel, erfordert jedoch eine sorgfältige Überprüfung der Simulationsbedingungen und der Systemstabilität.",
+          "observations": [
+            {
+              "type": "Interpretation",
+              "value": "Die Literatur (SRC-IZHIKEVICH-2003) stützt die Idee, dass einfache Spike-Modelle komplexe kortikale Aktivitätsmuster reproduzieren können. Dies deutet auf eine inhärente Fähigkeit des Modells zur Mustererzeugung hin."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Forschungsfrage RQ-SNN-002 zielt direkt auf die deterministische Reproduzierbarkeit ab, was ein zentrales Kriterium für die Validität von neuronalen Modellen ist."
+            },
+            {
+              "type": "Interpretation",
+              "value": "Die Tatsache, dass das Experiment in einem 'EXPLORATORY' Modus durchgeführt wurde und die 'git' Historie als 'dirty' markiert ist, könnte auf unvollständige oder nicht standardisierte Protokolle hinweisen, was die Reproduzierbarkeit beeinträchtigen könnte."
+            }
+          ],
+          "effect_direction": "Unbestimmt",
+          "methodological_concerns": [
+            "Die 'git' Historie ist als 'dirty' markiert, was auf nicht versionierte oder unvollständige Änderungen im Experiment-Setup hindeutet und die Reproduzierbarkeit gefährdet.",
+            "Die 'provenance' Informationen sind unvollständig ('configuration_sha256': 'NOT_AVAILABLE', 'data_digest': 'NOT_AVAILABLE'), was eine vollständige Nachverfolgung der verwendeten Parameter und Daten unmöglich macht.",
+            "Die 'known_limitations' nennen, dass 'No registered scientific evidence is linked to this experiment', was die wissenschaftliche Verankerung der Ergebnisse schwächt."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Variabilität der Spikefolgen könnte auf numerische Instabilitäten des Izhikevich-Modells bei den verwendeten Parametern zurückzuführen sein, anstatt auf einen Fehler im Input.",
+            "Die Reproduzierbarkeit könnte durch die spezifische Initialisierung der Neuronen oder durch nicht erfasste Umgebungsfaktoren (z.B. Hardware-Floating-Point-Präzision) beeinflusst werden, die nicht im Manifest dokumentiert sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Kontrolllaufs mit einem fest definierten, versionierten Seed und einem vollständig dokumentierten Konfigurations-SHA256, um die deterministische Reproduzierbarkeit zu testen.",
+            "Vergleich des Izhikevich-Modells mit einem anderen, etablierten Spike-Modell (z.B. Hodgkin-Huxley) unter identischen Inputbedingungen, um die Modellabhängigkeit der Ergebnisse zu bewerten."
+          ],
+          "requested_evidence": [
+            "Bereitstellung des vollständigen und versionierten Konfigurations-SHA256 für das verwendete 'learning_experiment.yaml', um die exakte Parameterbasis zu gewährleisten.",
+            "Bereitstellung der Rohdaten (Spike-Timing-Daten) für mindestens drei unabhängige Läufe mit identischem Input, um die statistische Variabilität zu analysieren."
+          ],
+          "confidence": 0.5
+        },
+        "provenance": {
+          "prompt_sha256": "20f42f86da5fc70bee263c6e7c55d3a84840b9589cdf039119bfb6aef9d82ee7",
+          "research_packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "dde62da5575d037c3ed9a6c026d8c74aa593161a",
+          "model_self_confidence": "0.5"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T09:08:55.318703+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "9142d3c25a472b10041f7545accee72834063810f85f0d1997b7f1cb5110873e",
+    "source": {
+      "git_commit": "dde62da5575d037c3ed9a6c026d8c74aa593161a",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "010c2dce69a10ca19409d6cfb04b016052ac82125bbaa4f4a815ded7aed4c998",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260905090827475618-9142d3c2",
+    "AIAR-critical_reviewer-20260905090842144804-9142d3c2",
+    "AIAR-scientific_writer-20260905090855318703-9142d3c2"
+  ],
+  "supersedes": null,
+  "content_digest": "9da1d5b9179c04adba50486013f26f2aa996b3c182bd9e9f9fcbad588fa3da9d",
+  "markdown_digest": "b68b8fef1f438cc425af9f1ee2e06dc82ffe35a01a0b6860e329493adb53917d"
+}
