@@ -41,7 +41,7 @@ jobs:
         run: python -m pytest tests/test_network_probe_temporal.py tests/test_dashboard_experiment_workflow.py -q
       - name: Verify real network activity
         run: python scripts/verify_network_activity.py
-      - name: Commit
+      - name: Commit repaired main
         run: |
           git config user.name "Brain-5D CI Repair"
           git config user.email "actions@users.noreply.github.com"
