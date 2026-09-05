@@ -1,0 +1,282 @@
+name: EXP19 Scientific Hardening
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Apply EXP-0019 findings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # 1) Register an omnibus diagnostic RQ instead of abusing RQ-SNN-001.
+          q = Path('research/registry/questions.yaml')
+          text = q.read_text(encoding='utf-8')
+          if 'RQ-SUITE-001' not in text:
+              text += '''\n- id: RQ-SUITE-001\n  domain: Research Infrastructure\n  question: Erzeugt der vollstaendige Science-Suite-Lauf unter gemeinsamer Provenienz vollstaendige und intern konsistente Diagnoseartefakte fuer alle registrierten Teilprotokolle?\n  relevance: Trennt technische Omnibus-Validierung von hypothesenspezifischer wissenschaftlicher Evidenz.\n  literature: []\n  hypotheses:\n  - H-SUITE-001-A\n  evidence: []\n  status: open\n  answer:\n    current: null\n    confidence: none\n    limitations: Omnibus-Diagnostik ist keine Primaerevidenz fuer die enthaltenen Fach-RQs.\n  created: '2026-09-05'\n  updated: '2026-09-05'\n'''
+              q.write_text(text, encoding='utf-8')
+
+          h = Path('research/registry/hypotheses.yaml')
+          text = h.read_text(encoding='utf-8')
+          if 'H-SUITE-001-A' not in text:
+              text += '''\n- id: H-SUITE-001-A\n  research_question: RQ-SUITE-001\n  hypothesis: Alle Science-Suite-Teilprotokolle erfuellen in einem gemeinsamen Lauf ihre registrierten Ausfuehrungsvertraege und erzeugen auswertbare DATA-, Statistik- und Provenienzartefakte.\n  status: untested\n  evidence: []\n  created: '2026-09-05'\n  updated: '2026-09-05'\n'''
+              h.write_text(text, encoding='utf-8')
+
+          # 2) Make the ALL preset scientifically honest.
+          js = Path('src/dashboard/static/experiment-workflow.js')
+          text = js.read_text(encoding='utf-8')
+          text = text.replace(
+              'question: "RQ-SNN-001",\n        hypothesis: "H-SNN-001-A",\n        title: "Complete science suite",',
+              'question: "RQ-SUITE-001",\n        hypothesis: "H-SUITE-001-A",\n        title: "Complete science suite diagnostic",',
+              1,
+          )
+          js.write_text(text, encoding='utf-8')
+
+          # 3) Hardening of workflow: stale-process guard + compressed raw traces + full data digest.
+          wf = Path('src/dashboard/experiment_workflow.py')
+          text = wf.read_text(encoding='utf-8')
+          text = text.replace('import hashlib\nimport json\n', 'import gzip\nimport hashlib\nimport json\nimport marshal\nimport re\n')
+
+          needle = '''        runner = getattr(experiment_suite, runner_name)\n        tick_aware_runners = {\n'''
+          replacement = '''        runner = getattr(experiment_suite, runner_name)\n        runtime_runner_digest, source_runner_digest = _assert_loaded_callable_matches_source(\n            runner, Path(experiment_suite.__file__).resolve(), runner_name\n        )\n        summary_runtime_digest, summary_source_digest = _assert_loaded_callable_matches_source(\n            write_detailed_experiment_summary,\n            Path(write_detailed_experiment_summary.__code__.co_filename).resolve(),\n            "write_detailed_experiment_summary",\n        )\n        tick_aware_runners = {\n'''
+          if needle not in text:
+              raise SystemExit('runner guard insertion target missing')
+          text = text.replace(needle, replacement, 1)
+
+          old = '''        serialized_runs = [asdict(run) for run in runs]\n        data_path.write_text(\n            json.dumps(serialized_runs, indent=2, sort_keys=True, default=list) + "\\n",\n            encoding="utf-8",\n        )\n        statistics_path = write_statistics_artifact(output_dir, serialized_runs)\n'''
+          new = '''        serialized_runs = [asdict(run) for run in runs]\n        # Statistics are computed from the complete in-memory raw runs before bulky\n        # traces are externalized. The compact runs.json stays navigable even for\n        # 100k+ tick temporal experiments while the complete trace remains preserved.\n        statistics_path = write_statistics_artifact(output_dir, serialized_runs)\n        trace_paths = _externalize_large_traces(output_dir, serialized_runs)\n        data_path.write_text(\n            json.dumps(serialized_runs, indent=2, sort_keys=True, default=list) + "\\n",\n            encoding="utf-8",\n        )\n'''
+          if old not in text:
+              raise SystemExit('serialized runs target missing')
+          text = text.replace(old, new, 1)
+
+          old = '''        recorder.record_provenance_digests(\n            code_digest=_sha256_file(Path(experiment_suite.__file__)),\n            config_digest=config_digest,\n            prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),\n            data_digest=_sha256_file(data_path),\n        )\n'''
+          new = '''        recorder.record_provenance_digests(\n            code_digest=_sha256_file(Path(experiment_suite.__file__)),\n            config_digest=config_digest,\n            prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),\n            data_digest=_sha256_files([data_path, *trace_paths]),\n        )\n'''
+          if old not in text:
+              raise SystemExit('provenance digest target missing')
+          text = text.replace(old, new, 1)
+
+          old = '''        manifest["execution_contract"] = {\n            "resolved_runner": runner_name,\n            "ticks_requested": workflow.ticks,\n            "tick_validation": tick_validation,\n            "question_id": workflow.question_id,\n            "hypothesis_id": workflow.hypothesis_id,\n            "protocol": workflow.protocol,\n        }\n'''
+          new = '''        manifest["execution_contract"] = {\n            "resolved_runner": runner_name,\n            "ticks_requested": workflow.ticks,\n            "tick_validation": tick_validation,\n            "question_id": workflow.question_id,\n            "hypothesis_id": workflow.hypothesis_id,\n            "protocol": workflow.protocol,\n            "runtime_runner_bytecode_sha256": runtime_runner_digest,\n            "source_runner_bytecode_sha256": source_runner_digest,\n            "runtime_summary_bytecode_sha256": summary_runtime_digest,\n            "source_summary_bytecode_sha256": summary_source_digest,\n            "source_runtime_consistency": "MATCH",\n        }\n        if trace_paths:\n            artifacts["raw_trace_index"] = "DATA/traces/index.json"\n'''
+          if old not in text:
+              raise SystemExit('execution contract target missing')
+          text = text.replace(old, new, 1)
+
+          # Insert helper functions before YAML loader.
+          marker = '\n\ndef _load_yaml(path: Path) -> dict[str, Any]:\n'
+          helpers = r'''
+
+def _find_named_code(code: object, name: str) -> object | None:
+    if not hasattr(code, "co_consts"):
+        return None
+    if getattr(code, "co_name", None) == name:
+        return code
+    for value in code.co_consts:
+        found = _find_named_code(value, name)
+        if found is not None:
+            return found
+    return None
+
+
+def _code_digest(code: object) -> str:
+    return hashlib.sha256(marshal.dumps(code)).hexdigest()
+
+
+def _assert_loaded_callable_matches_source(
+    function: Callable[..., object], source_path: Path, function_name: str
+) -> tuple[str, str]:
+    """Refuse experiments when the running Python process still holds stale code."""
+    runtime_digest = _code_digest(function.__code__)
+    compiled = compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+    source_code = _find_named_code(compiled, function_name)
+    if source_code is None:
+        raise WorkflowValidationError(
+            f"Cannot verify runtime/source consistency for {function_name}."
+        )
+    source_digest = _code_digest(source_code)
+    if runtime_digest != source_digest:
+        raise WorkflowValidationError(
+            f"Running process contains stale code for {function_name}. Restart the Brain-5D "
+            "dashboard/runtime before creating a scientific experiment."
+        )
+    return runtime_digest, source_digest
+
+
+def _safe_trace_name(condition: object, seed: object) -> str:
+    label = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(condition)).strip("-") or "trace"
+    return f"{label}-seed-{seed}.jsonl.gz"
+
+
+def _externalize_large_traces(
+    output_dir: Path, serialized_runs: list[dict[str, Any]], threshold: int = 10_000
+) -> list[Path]:
+    """Preserve large per-tick traces compressed while keeping runs.json compact."""
+    trace_dir = output_dir / "DATA" / "traces"
+    trace_entries: list[dict[str, object]] = []
+    written: list[Path] = []
+    for run in serialized_runs:
+        metrics = run.get("metrics")
+        if not isinstance(metrics, dict):
+            continue
+        comparisons = metrics.get("comparisons")
+        if not isinstance(comparisons, list) or len(comparisons) <= threshold:
+            continue
+        trace_dir.mkdir(parents=True, exist_ok=True)
+        path = trace_dir / _safe_trace_name(run.get("condition"), run.get("seed"))
+        with gzip.open(path, "wt", encoding="utf-8", newline="\n", compresslevel=9) as handle:
+            for item in comparisons:
+                handle.write(json.dumps(item, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+                handle.write("\n")
+        digest = _sha256_file(path)
+        count = len(comparisons)
+        metrics["comparisons_artifact"] = {
+            "path": path.relative_to(output_dir).as_posix(),
+            "format": "jsonl.gz",
+            "count": count,
+            "sha256": digest,
+        }
+        metrics["comparisons_preview"] = comparisons[:8] + comparisons[-8:]
+        del metrics["comparisons"]
+        trace_entries.append(
+            {
+                "condition": run.get("condition"),
+                "seed": run.get("seed"),
+                "path": path.relative_to(output_dir).as_posix(),
+                "count": count,
+                "sha256": digest,
+                "size_bytes": path.stat().st_size,
+            }
+        )
+        written.append(path)
+    if trace_entries:
+        index_path = trace_dir / "index.json"
+        index_path.write_text(
+            json.dumps({"schema_version": "1.0", "traces": trace_entries}, indent=2, sort_keys=True)
+            + "\n",
+            encoding="utf-8",
+        )
+        written.append(index_path)
+    return written
+
+
+def _sha256_files(paths: Sequence[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(paths, key=lambda item: item.as_posix()):
+        digest.update(path.name.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+'''
+          if helpers.strip() not in text:
+              if marker not in text:
+                  raise SystemExit('helper insertion marker missing')
+              text = text.replace(marker, helpers + marker, 1)
+          wf.write_text(text, encoding='utf-8')
+
+          # 4) Statistics + summary: use canonical stats artifact; expose learning, regulation,
+          # throughput and sparse temporal activity rather than rows full of em-dashes.
+          s = Path('src/research/experiment_summary.py')
+          text = s.read_text(encoding='utf-8')
+          text = text.replace(
+              '        "reward_weight_updates",\n    )',
+              '        "reward_weight_updates",\n        "p_success_before",\n        "p_success_after",\n        "train_trial_count",\n        "validation_trial_count",\n        "holdout_trial_count",\n    )',
+              1,
+          )
+
+          # Add nested regulation statistics before condition assignment.
+          old = '''        conditions[condition] = {\n            "run_count": len(condition_runs),\n'''
+          new = '''        nested_paths = {\n            "functional_activation": ("functional_state", "activation"),\n            "functional_safety": ("functional_state", "safety"),\n            "functional_valence": ("functional_state", "valence"),\n            "functional_uncertainty": ("functional_state", "uncertainty"),\n            "regulatory_continuity_risk": ("regulatory_state", "values", "continuity_risk"),\n            "regulatory_energy_reserve": ("regulatory_state", "values", "energy_reserve"),\n            "regulatory_resource_pressure": ("regulatory_state", "values", "resource_pressure"),\n            "regulatory_sensory_integrity": ("regulatory_state", "values", "sensory_integrity"),\n            "regulatory_thermal_margin": ("regulatory_state", "values", "thermal_margin"),\n        }\n        for name, path in nested_paths.items():\n            values: list[float] = []\n            for run in condition_runs:\n                current: object = run.get("metrics") or {}\n                for part in path:\n                    current = current.get(part) if isinstance(current, dict) else None\n                value = _number(current)\n                if value is not None:\n                    values.append(value)\n            if values:\n                metric_stats[name] = _stats(values)\n        conditions[condition] = {\n            "run_count": len(condition_runs),\n'''
+          if old not in text:
+              raise SystemExit('condition stats target missing')
+          text = text.replace(old, new, 1)
+
+          # Rich temporal sparsity diagnostics.
+          old = '''        temporal[horizon] = {\n            "discrepancy": _stats(horizon_values[horizon]),\n            "reference_comparisons": horizon_reference_counts[horizon],\n        }\n'''
+          new = '''        horizon_all = horizon_values[horizon]\n        nonzero = [value for value in horizon_all if value != 0.0]\n        temporal[horizon] = {\n            "discrepancy": _stats(horizon_all),\n            "reference_comparisons": horizon_reference_counts[horizon],\n            "nonzero_comparisons": len(nonzero),\n            "nonzero_fraction": (len(nonzero) / len(horizon_all)) if horizon_all else 0.0,\n            "nonzero_discrepancy": _stats(nonzero),\n        }\n'''
+          if old not in text:
+              raise SystemExit('temporal stats target missing')
+          text = text.replace(old, new, 1)
+
+          # Prefer the already generated full statistics artifact so compressed raw runs do not
+          # silently lose temporal statistics when summary is generated afterwards.
+          old = '''    statistics = build_descriptive_statistics(runs)\n    statistics_path = write_statistics_artifact(experiment_dir, runs)\n'''
+          new = '''    statistics_path = experiment_dir / "analysis" / "statistics.json"\n    stored_statistics = _read_json(statistics_path, None)\n    if isinstance(stored_statistics, dict) and stored_statistics.get("generated_by") == "deterministic_statistics_engine":\n        statistics = stored_statistics\n    else:\n        statistics = build_descriptive_statistics(runs)\n        statistics_path = write_statistics_artifact(experiment_dir, runs)\n'''
+          if old not in text:
+              raise SystemExit('canonical statistics target missing')
+          text = text.replace(old, new, 1)
+
+          # Suite semantic rule before fallback.
+          marker = '''    if question_id.startswith("RQ-5D-"):\n        return classify(\n            {"1d", "2d", "3d", "5d", "random_graph"}.issubset(plain),\n            "5D erwartet die registrierten Dimensions-/Topologiebedingungen.",\n        )\n    return (\n'''
+          replacement = '''    if question_id.startswith("RQ-5D-"):\n        return classify(\n            {"1d", "2d", "3d", "5d", "random_graph"}.issubset(plain),\n            "5D erwartet die registrierten Dimensions-/Topologiebedingungen.",\n        )\n    if question_id == "RQ-SUITE-001":\n        required_groups = {"ping", "temporal", "stdp", "learning", "time", "5d", "regulation"}\n        present_groups = {item.split(":", 1)[0] for item in conditions if ":" in item}\n        found = required_groups.issubset(present_groups) and protocol == "science_all_v1"\n        return (\n            "DIRECT_MATCH" if found else "MISMATCH",\n            "SUITE erwartet science_all_v1 und PING, TEMP, STDP, Learning, TIME, 5D sowie Regulation unter gemeinsamer Provenienz.",\n        )\n    if question_id == "RQ-SNN-001":\n        return (\n            "MISMATCH",\n            "RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. Ein einzelner Impuls bzw. science_all_v1 mit langer stiller Nachlaufphase ist dafuer keine ausreichende Primaerpruefung.",\n        )\n    return (\n'''
+          if marker not in text:
+              raise SystemExit('suite semantic insertion target missing')
+          text = text.replace(marker, replacement, 1)
+
+          # Replace old actual tick derivation by subgroup-aware view.
+          old = '''    actual_ticks = [\n        int(value)\n        for run in runs\n        for value in [(run.get("metrics") or {}).get("ticks_executed")]\n        if isinstance(value, int)\n    ]\n'''
+          new = '''    actual_ticks = [\n        int(value)\n        for run in runs\n        if str(run.get("condition", "")).startswith(("ping:", "temporal:", "5d:"))\n        for value in [(run.get("metrics") or {}).get("ticks_executed")]\n        if isinstance(value, int) and not isinstance(value, bool)\n    ]\n'''
+          if old in text:
+              text = text.replace(old, new, 1)
+
+          # Add evidence readiness directly after semantic status.
+          old = '''    semantic_status, semantic_note = _semantic_status(question_id, protocol, conditions)\n\n    requested_ticks = (\n'''
+          new = '''    semantic_status, semantic_note = _semantic_status(question_id, protocol, conditions)\n    git_info = manifest.get("git", {}) if isinstance(manifest, dict) else {}\n    git_dirty = bool(git_info.get("dirty")) if isinstance(git_info, dict) else True\n    if semantic_status == "MISMATCH":\n        evidence_readiness = "BLOCKED_SEMANTIC_MISMATCH"\n    elif semantic_status == "NOT_AUTOMATICALLY_CLASSIFIED":\n        evidence_readiness = "BLOCKED_UNCLASSIFIED_SEMANTICS"\n    elif git_dirty:\n        evidence_readiness = "BLOCKED_DIRTY_SOURCE_TREE"\n    elif question_id == "RQ-SUITE-001":\n        evidence_readiness = "DIAGNOSTIC_ONLY"\n    else:\n        evidence_readiness = "HUMAN_REVIEW_REQUIRED"\n\n    requested_ticks = (\n'''
+          if old not in text:
+              raise SystemExit('evidence readiness insertion target missing')
+          text = text.replace(old, new, 1)
+
+          old = '''        f"- RQ/Condition-Pruefung: `{semantic_status}`",\n        f"- Begründung: {semantic_note}",\n'''
+          new = '''        f"- RQ/Condition-Pruefung: `{semantic_status}`",\n        f"- Evidence Readiness: `{evidence_readiness}`",\n        f"- Begründung: {semantic_note}",\n'''
+          if old not in text:
+              raise SystemExit('semantic summary target missing')
+          text = text.replace(old, new, 1)
+
+          # Temporal section: make dilution visible.
+          old = '''            lines.append(\n                f"- `{horizon}`: Referenzvergleiche={payload.get('reference_comparisons', 0) if isinstance(payload, dict) else 0}; discrepancy mean={_fmt(discrepancy.get('mean') if isinstance(discrepancy, dict) else None)}, max={_fmt(discrepancy.get('max') if isinstance(discrepancy, dict) else None)}."\n            )\n'''
+          new = '''            nonzero = payload.get("nonzero_discrepancy", {}) if isinstance(payload, dict) else {}\n            lines.append(\n                f"- `{horizon}`: Referenzvergleiche={payload.get('reference_comparisons', 0) if isinstance(payload, dict) else 0}; discrepancy mean={_fmt(discrepancy.get('mean') if isinstance(discrepancy, dict) else None)}, max={_fmt(discrepancy.get('max') if isinstance(discrepancy, dict) else None)}; nonzero={payload.get('nonzero_comparisons', 0) if isinstance(payload, dict) else 0} ({_fmt(payload.get('nonzero_fraction') if isinstance(payload, dict) else None)}); mean(nonzero)={_fmt(nonzero.get('mean') if isinstance(nonzero, dict) else None)}."\n            )\n'''
+          if old not in text:
+              raise SystemExit('temporal summary target missing')
+          text = text.replace(old, new, 1)
+
+          # Add protocol-specific tables before individual runs.
+          marker = '''    lines.extend(\n        [\n            "",\n            "## 6. Einzelne Läufe",\n'''
+          extra = '''    condition_stats = statistics.get("conditions", {})\n    if isinstance(condition_stats, dict):\n        learning_rows = {k: v for k, v in condition_stats.items() if str(k).startswith(("learning:", "stdp:"))}\n        if learning_rows:\n            lines.extend(["", "### 5.4 Learning / STDP", "", "| Condition | n | Weight initial | Weight final | Delta weight | Success before | Success after | Rewards | Updates |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"])\n            for condition, payload in learning_rows.items():\n                metrics = payload.get("metrics", {}) if isinstance(payload, dict) else {}\n                def lm(name: str) -> object:\n                    value = metrics.get(name, {}) if isinstance(metrics, dict) else {}\n                    return value.get("mean") if isinstance(value, dict) else None\n                lines.append(f"| {condition} | {payload.get('run_count', 0)} | {_fmt(lm('initial_mean_weight'))} | {_fmt(lm('final_mean_weight'))} | {_fmt(lm('mean_weight_delta'))} | {_fmt(lm('p_success_before'))} | {_fmt(lm('p_success_after'))} | {_fmt(lm('rewards_received'))} | {_fmt(lm('reward_weight_updates'))} |")\n\n        time_rows = {k: v for k, v in condition_stats.items() if str(k).startswith("time:")}\n        if time_rows:\n            lines.extend(["", "### 5.5 TIME-Durchsatz", "", "| Tick-Stufe | n | Dauer mean [s] | Ticks/s mean | Ticks/s std |", "| ---: | ---: | ---: | ---: | ---: |"])\n            for condition, payload in sorted(time_rows.items(), key=lambda item: int(str(item[0]).split(":", 1)[1])):\n                metrics = payload.get("metrics", {}) if isinstance(payload, dict) else {}\n                duration = metrics.get("duration_seconds", {}) if isinstance(metrics, dict) else {}\n                rate = metrics.get("ticks_per_second", {}) if isinstance(metrics, dict) else {}\n                lines.append(f"| {str(condition).split(':', 1)[1]} | {payload.get('run_count', 0)} | {_fmt(duration.get('mean') if isinstance(duration, dict) else None)} | {_fmt(rate.get('mean') if isinstance(rate, dict) else None)} | {_fmt(rate.get('std') if isinstance(rate, dict) else None)} |")\n\n        regulation_rows = {k: v for k, v in condition_stats.items() if str(k).startswith("regulation:")}\n        if regulation_rows:\n            lines.extend(["", "### 5.6 Regulation", "", "| Condition | Activation | Safety | Valence | Uncertainty | Resource pressure | Thermal margin |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"])\n            for condition, payload in regulation_rows.items():\n                metrics = payload.get("metrics", {}) if isinstance(payload, dict) else {}\n                def rm(name: str) -> object:\n                    value = metrics.get(name, {}) if isinstance(metrics, dict) else {}\n                    return value.get("mean") if isinstance(value, dict) else None\n                lines.append(f"| {condition} | {_fmt(rm('functional_activation'))} | {_fmt(rm('functional_safety'))} | {_fmt(rm('functional_valence'))} | {_fmt(rm('functional_uncertainty'))} | {_fmt(rm('regulatory_resource_pressure'))} | {_fmt(rm('regulatory_thermal_margin'))} |")\n\n'''
+          if marker not in text:
+              raise SystemExit('protocol table insertion target missing')
+          text = text.replace(marker, extra + marker, 1)
+          s.write_text(text, encoding='utf-8')
+
+          # 5) Tests for the new hardening contracts.
+          t = Path('tests/test_scientific_execution_contract.py')
+          text = t.read_text(encoding='utf-8')
+          if 'test_suite_semantics_require_all_registered_groups' not in text:
+              text += '''\n\ndef test_suite_semantics_require_all_registered_groups() -> None:\n    from src.research.experiment_summary import _semantic_status\n\n    conditions = {\n        "ping:recurrence_off", "temporal:fast_medium_slow",\n        "stdp:productive_reward_stdp", "learning:learning_on",\n        "time:1000", "5d:5d", "regulation:nominal",\n    }\n    status, _ = _semantic_status("RQ-SUITE-001", "science_all_v1", conditions)\n    assert status == "DIRECT_MATCH"\n    conditions.remove("regulation:nominal")\n    status, _ = _semantic_status("RQ-SUITE-001", "science_all_v1", conditions)\n    assert status == "MISMATCH"\n\n\ndef test_long_term_stability_is_not_claimed_from_ping_omnibus() -> None:\n    from src.research.experiment_summary import _semantic_status\n\n    status, note = _semantic_status(\n        "RQ-SNN-001", "science_all_v1", {"ping:recurrence_off", "ping:recurrence_on"}\n    )\n    assert status == "MISMATCH"\n    assert "langfristig" in note\n'''
+              t.write_text(text, encoding='utf-8')
+          PY
+      - name: Validate hardening
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m black src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_scientific_execution_contract.py
+          python -m ruff check src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_scientific_execution_contract.py
+          python -m pytest -q tests/test_scientific_execution_contract.py tests/test_experiment_suite.py tests/test_research_assistant_output_normalization.py
+          python -m mypy src/dashboard/experiment_workflow.py src/research/experiment_summary.py
+          python -m pyright src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_scientific_execution_contract.py
+      - name: Commit hardening
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/registry/questions.yaml research/registry/hypotheses.yaml src/dashboard/static/experiment-workflow.js src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_scientific_execution_contract.py
+          git commit -m "feat: harden science suite provenance and reporting"
+          git push origin HEAD:main
