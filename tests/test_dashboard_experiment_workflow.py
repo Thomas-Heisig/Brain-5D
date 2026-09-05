@@ -357,6 +357,40 @@ def test_science_suite_uses_selected_seeds_and_ticks(tmp_path: Path) -> None:
     assert workflow["ticks"] == 3
 
 
+def test_science_suite_persists_deterministic_spike_sequence_evidence(
+    tmp_path: Path,
+) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    service.run_science(
+        {
+            "experiment_id": "EXP-GEN-0003",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Observable impulse response",
+            "conditions": "Seeds 42,43,44; identical impulse conditions",
+            "ticks": 1000,
+            "protocol": "science_suite_v1",
+        }
+    )
+
+    runs = json.loads(
+        (
+            tmp_path
+            / "experiments"
+            / "EXP-GEN-0003"
+            / "DATA"
+            / "runs.json"
+        ).read_text(encoding="utf-8")
+    )
+    ping_runs = [run for run in runs if run["condition"] == "recurrence_off"]
+    assert ping_runs
+    assert all(run["metrics"]["spike_sequence"] for run in ping_runs)
+    assert all(run["metrics"]["reproducible_across_seeds"] for run in ping_runs)
+    assert len({run["metrics"]["spike_sequence_digest"] for run in ping_runs}) == 1
+
+
 def test_science_all_covers_every_registered_suite_group(tmp_path: Path) -> None:
     _write_registry(tmp_path)
     service = ExperimentWorkflowService(tmp_path)

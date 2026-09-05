@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import random
 import time
@@ -147,6 +148,33 @@ def run_ping(
                     before,
                     _digest(network),
                 )
+            )
+    for condition in ("recurrence_off", "recurrence_on"):
+        condition_runs = [run for run in runs if run.condition == condition]
+        sequence_keys = {
+            json.dumps(run.metrics.get("spike_sequence", []), sort_keys=True)
+            for run in condition_runs
+        }
+        reproducible = len(sequence_keys) == 1 and bool(condition_runs)
+        digest = hashlib.sha256(
+            next(iter(sequence_keys), "").encode("utf-8")
+        ).hexdigest()
+        for index, run in enumerate(runs):
+            if run.condition != condition:
+                continue
+            runs[index] = ScientificRun(
+                run.experiment_id,
+                run.condition,
+                run.seed,
+                {
+                    **run.metrics,
+                    "spike_sequence_digest": digest,
+                    "reproducible_across_seeds": reproducible,
+                    "reproducibility_sample_count": len(condition_runs),
+                },
+                run.state_digest_before,
+                run.state_digest_after,
+                run.runtime_error,
             )
     return runs
 

@@ -14,6 +14,8 @@
   Aktivität und lädt danach wieder echte Telemetrie.
 - `science_all_v1` bündelt PING, Temporal, STDP, Learning, TIME, 5D und
   Regulation in einem gemeinsamen, gruppiert dokumentierten DATA-/Manifest-Lauf.
+- Network-Impulse-DATA enthält nun die beobachtete Spike-Sequenz, einen
+  Sequenz-Digest und den transparenten Reproduzierbarkeitsvergleich über Seeds.
 
 ## 2026-09-05 — EXP-GEN-0007 Provenance and impulse response repair
 

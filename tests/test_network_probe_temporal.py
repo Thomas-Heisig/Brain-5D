@@ -54,6 +54,7 @@ def test_network_impulse_probe_measures_observed_response() -> None:
     assert signature.peak_spike_rate == 2.0
     assert signature.return_latency == 3
     assert signature.recurrent_events == 1
+    assert signature.spike_sequence == ((1, 7), (1, 8), (2, 7), (3, 3))
     assert signature.network_state_digest_before == signature.network_state_digest_after
 
 

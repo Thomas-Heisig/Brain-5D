@@ -27,6 +27,7 @@ class NetworkResponseSignature:
     propagation_depth: int
     recurrent_events: int
     return_latency: int | None
+    spike_sequence: tuple[tuple[int, int], ...] = ()
     network_state_digest_before: str | None = None
     network_state_digest_after: str | None = None
 
@@ -40,6 +41,10 @@ class NetworkResponseSignature:
             "propagation_depth": self.propagation_depth,
             "recurrent_events": self.recurrent_events,
             "return_latency": self.return_latency,
+            "spike_sequence": [
+                {"tick": tick, "neuron_id": neuron_id}
+                for tick, neuron_id in self.spike_sequence
+            ],
             "network_state_digest_before": self.network_state_digest_before,
             "network_state_digest_after": self.network_state_digest_after,
         }
@@ -73,12 +78,14 @@ class NetworkImpulseProbe:
         peak_rate = 0.0
         recurrent_events = 0
         return_latency: int | None = None
+        spike_sequence: list[tuple[int, int]] = []
 
         for tick in range(self.max_ticks):
             result = runtime.step()
             raw_ids = result.get("output_spike_ids", ())
             spike_ids = tuple(int(value) for value in raw_ids)
             if spike_ids:
+                spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)
                 response_ticks.append(tick)
                 response_neurons.update(spike_ids)
                 total_spikes += len(spike_ids)
@@ -106,6 +113,7 @@ class NetworkImpulseProbe:
             ),
             recurrent_events=recurrent_events,
             return_latency=return_latency,
+            spike_sequence=tuple(spike_sequence),
             network_state_digest_before=before,
             network_state_digest_after=after,
         )

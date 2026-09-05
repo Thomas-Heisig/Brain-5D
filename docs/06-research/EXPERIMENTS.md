@@ -41,3 +41,9 @@ Verfügung. Es umfasst die registrierten Science-Suite-Gruppen PING, Temporal,
 STDP, Learning, TIME, 5D und Regulation. Runtime-Ticks sowie das separat
 registrierte STDP-Pair-Timing-Protokoll bleiben bewusst eigene Pfade, weil sie
 andere Ausführungs- und Artefaktverträge haben.
+
+Bei der Network-Impulse-Response werden die beobachteten Output-Spikes als
+Rohsequenz mit Tick und Neuron-ID in `DATA/runs.json` gespeichert. Zusätzlich
+werden Sequenz-Digest und Gleichheit über die unveränderten Seeds ausgewiesen.
+Das erlaubt eine positive Reproduzierbarkeitsaussage nur dann, wenn die Messung
+identische Sequenzen ergibt; der Runner erzwingt kein positives Ergebnis.

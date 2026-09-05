@@ -641,6 +641,7 @@ class ExperimentWorkflowService:
                 "",
                 "## Evidenzstatus",
                 "DATA und Manifest erzeugt. EVID wird erst nach Clean Freeze und Review erzeugt.",
+                "Die beobachtete Spike-Sequenz, ihr Digest und der Seed-Vergleich stehen in DATA/runs.json; diese Laufdaten sind eine technische Reproduzierbarkeitsmessung, noch keine freigegebene EVID.",
                 "",
                 "## Hinweise",
                 "Prediction Error, Memory, TIME, 5D, Regulation und Sensorverlust sind in diesem Lauf nicht behauptet.",
