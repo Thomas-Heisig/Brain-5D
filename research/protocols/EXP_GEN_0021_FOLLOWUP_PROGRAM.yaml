@@ -1,0 +1,238 @@
+program_id: EXP-GEN-0021-FOLLOWUP
+status: proposed
+source_experiment: EXP-GEN-0021
+created: '2026-09-05'
+authoring:
+  ai_assisted: true
+  ai_authority: interpretation_and_proposal_only
+  human_review_required: true
+principles:
+  - science_all_v1 remains omnibus diagnostics and is not primary evidence for domain-specific RQs
+  - each confirmatory experiment binds exactly one primary research question and hypothesis
+  - clean_git_required: true
+  - explicit_version_required: true
+  - immutable_preregistration_required: true
+  - explicit_data_partitions_required_when_learning: true
+  - negative_and_inconclusive_results_retained: true
+  - independent_replication_required_before_replicated_claim: true
+
+systems:
+  recurrence_map:
+    purpose: Map the boundary between decay, transient recurrence and self-sustained activity.
+    controls:
+      - recurrence_off
+      - matched_feedforward
+    factors:
+      recurrent_weight: [0.25, 0.5, 0.75, 1.0, 1.25, 1.5]
+      recurrent_delay_ticks: [1, 2, 4, 8, 16]
+      neuron_count: [3, 10, 100, 1000]
+      loop_length: [3, 5, 10]
+    primary_metrics:
+      - recurrence_lifetime_ticks
+      - total_spikes
+      - recurrent_events
+      - propagation_depth
+      - isi_mean
+      - isi_variance
+      - extinction_tick
+      - sustained_activity_fraction
+    linked_questions: [RQ-REC-001, RQ-REC-002]
+
+  productive_learning_generalization:
+    purpose: Distinguish true held-out functional learning from training-condition reinforcement.
+    conditions:
+      - learning_on
+      - learning_off
+      - sham_replay
+    partitions:
+      train: required
+      validation: required
+      holdout: required
+      perturbation_holdout: required
+    independent_variation:
+      - initial_weights
+      - neuron_initial_state
+      - input_pattern_order
+      - controlled_input_noise
+      - topology_instance
+    primary_metrics:
+      - holdout_success_rate
+      - perturbation_success_rate
+      - pre_post_behavior_delta
+      - final_mean_weight
+      - reward_weight_update_count
+      - retention_after_delay
+    linked_questions: [RQ-GEN-001, RQ-REPL-001, RQ-LEARN-INTERF-001]
+
+  topology_matched_5d_ablation:
+    purpose: Isolate dimensional geometry from trivial graph-size or connectivity differences.
+    conditions:
+      - 1d
+      - 2d
+      - 3d
+      - 5d
+      - coordinate_shuffled_5d
+      - topology_matched_nonspatial
+    invariants:
+      - neuron_count
+      - synapse_count
+      - in_degree_distribution
+      - out_degree_distribution
+      - weight_distribution
+      - delay_distribution
+      - initial_neuron_state
+      - stimulus_schedule
+    primary_metrics:
+      - propagation_latency
+      - propagation_depth
+      - robustness_to_node_loss
+      - learning_efficiency
+      - motif_distribution
+      - modularity
+      - energy_or_tick_cost
+    linked_questions: [RQ-5D-005]
+
+  closed_loop_regulation:
+    purpose: Test whether regulation improves functional stability and recovery rather than only transforming telemetry.
+    conditions:
+      - regulation_on
+      - regulation_off
+    perturbations:
+      - thermal_pressure
+      - resource_pressure
+      - sensor_dropout
+      - uncertain_sensor_quality
+      - recovery_restoration
+    primary_metrics:
+      - firing_rate_stability
+      - recovery_time
+      - activity_collapse_rate
+      - output_task_performance
+      - continuity_risk
+      - resource_pressure
+      - uncertainty
+    linked_questions: [RQ-REG-002]
+
+  temporal_order_task:
+    purpose: Test spike-carrying temporal-order sensitivity.
+    conditions:
+      - original_order
+      - shuffled_order
+      - reversed_order
+      - history_ablation
+    requirements:
+      - task_generates_observable_spikes
+      - identical_symbol_or_event_statistics_across_order_controls
+      - holdout_sequences
+    primary_metrics:
+      - sequence_discrimination_accuracy
+      - response_latency
+      - spike_sequence_digest
+      - temporal_generalization
+      - history_ablation_delta
+    linked_questions: [RQ-TEMP-002]
+
+  runtime_profile:
+    purpose: Explain the wall-time gap between isolated tick execution and the complete science suite.
+    subsystems:
+      - snn_core
+      - learning
+      - homeostasis
+      - structural_plasticity
+      - embodiment
+      - temporal_statistics
+      - dashboard_telemetry
+      - serialization
+      - storage
+      - report_generation
+    workloads:
+      ticks: [100, 1000, 10000, 100000, 1000000]
+      neuron_counts: [100, 1000, 5000, 10000]
+    primary_metrics:
+      - wall_time_seconds
+      - tick_cost_seconds
+      - achieved_ticks_per_second
+      - memory_peak_bytes
+      - storage_bytes
+      - telemetry_overhead_fraction
+    acceptance:
+      deterministic_equivalence_before_after_optimization: required
+    linked_questions: [RQ-PERF-001]
+
+experiments:
+  - id: EXP-PLAN-REC-001
+    priority: P0
+    system: recurrence_map
+    primary_rq: RQ-REC-001
+    primary_hypothesis: H-REC-001-A
+    mode: exploratory_then_confirmatory
+    goal: Identify recurrence parameter regions and preregister a confirmatory boundary test.
+
+  - id: EXP-PLAN-GEN-001
+    priority: P0
+    system: productive_learning_generalization
+    primary_rq: RQ-GEN-001
+    primary_hypothesis: H-GEN-001-A
+    mode: confirmatory_after_partition_freeze
+    goal: Test functional generalization on holdout and perturbation-holdout conditions.
+
+  - id: EXP-PLAN-REPL-001
+    priority: P0
+    system: productive_learning_generalization
+    primary_rq: RQ-REPL-001
+    primary_hypothesis: H-REPL-001-A
+    mode: replication
+    goal: Re-run recurrence and learning effects under independent initializations and clean processes.
+
+  - id: EXP-PLAN-5D-005
+    priority: P1
+    system: topology_matched_5d_ablation
+    primary_rq: RQ-5D-005
+    primary_hypothesis: H-5D-005-A
+    mode: confirmatory
+    goal: Test whether dimensional organization contributes beyond matched topology controls.
+
+  - id: EXP-PLAN-REG-002
+    priority: P1
+    system: closed_loop_regulation
+    primary_rq: RQ-REG-002
+    primary_hypothesis: H-REG-002-A
+    mode: confirmatory
+    goal: Measure stability and recovery benefits from active regulation.
+
+  - id: EXP-PLAN-TEMP-002
+    priority: P1
+    system: temporal_order_task
+    primary_rq: RQ-TEMP-002
+    primary_hypothesis: H-TEMP-002-A
+    mode: confirmatory
+    goal: Establish or reject temporal-order sensitivity using spike-carrying controls.
+
+  - id: EXP-PLAN-PERF-001
+    priority: P1
+    system: runtime_profile
+    primary_rq: RQ-PERF-001
+    primary_hypothesis: H-PERF-001-A
+    mode: engineering_measurement
+    goal: Attribute wall time by subsystem before optimization.
+
+promotion_rules:
+  proposed_to_preregistered:
+    - human_review_completed
+    - canonical_question_and_hypothesis_ids_registered
+    - protocol_and_metrics_frozen
+    - stopping_rule_defined
+    - controls_defined
+  preregistered_to_executed:
+    - clean_git
+    - explicit_brain5d_version
+    - code_config_protocol_digests_present
+    - required_data_partitions_bound
+  executed_to_evidence_candidate:
+    - runtime_valid
+    - semantic_rq_condition_match
+    - deterministic_statistics_complete
+    - no_provenance_blockers
+  evidence_candidate_to_replicated:
+    - independent_replication_completed
+    - effect_direction_or_null_result_consistent_with_registered_analysis
