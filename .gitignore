@@ -46,6 +46,7 @@ tmp/trace_diag/
 
 # Generated experiment data
 research/experiments/EXP-GEN-0019/DATA/runs.json
+research/experiments/*/DATA/runs.json
 
 # OS noise
 .DS_Store
