@@ -21,6 +21,37 @@ class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
 
 
+def _summary_items(value: object) -> list[str]:
+    """Return non-empty textual items from an AIRR list field."""
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _airr_observation_fallback(content: dict[str, object]) -> list[str]:
+    """Extract explicit limitation observations when AIRR request lists are empty."""
+    interpretation = content.get("interpretation")
+    observations: list[object] = []
+    if isinstance(interpretation, dict):
+        observations.extend(
+            interpretation.get("observations", [])
+            if isinstance(interpretation.get("observations"), list)
+            else []
+        )
+    observations.extend(
+        content.get("observations", [])
+        if isinstance(content.get("observations"), list)
+        else []
+    )
+    return [
+        str(item["value"]).strip()
+        for item in observations
+        if isinstance(item, dict)
+        and str(item.get("type", "")).lower() in {"limitation", "limitations"}
+        and str(item.get("value", "")).strip()
+    ]
+
+
 def write_experiment_summary(
     research_root: Path,
     experiment_id: str,
@@ -74,6 +105,31 @@ def write_experiment_summary(
         report_path = report_dir / f"{ai_report['report_id']}.json"
         if report_path.is_file():
             content = json.loads(report_path.read_text(encoding="utf-8"))["content"]
+            interpretation = content.get("interpretation", {})
+            interpretation = interpretation if isinstance(interpretation, dict) else {}
+            requested_evidence = _summary_items(content.get("missing_evidence"))
+            if not requested_evidence:
+                requested_evidence = _summary_items(
+                    interpretation.get("requested_evidence")
+                )
+            if not requested_evidence:
+                requested_evidence = [
+                    f"AIRR-Limitation dokumentieren: {item}"
+                    for item in _airr_observation_fallback(content)
+                ]
+            if not requested_evidence:
+                requested_evidence = [
+                    "Keine expliziten zusätzlichen Nachweise im AIRR angegeben."
+                ]
+            recommended_follow_up = _summary_items(content.get("recommended_follow_up"))
+            if not recommended_follow_up:
+                recommended_follow_up = _summary_items(
+                    interpretation.get("recommended_experiments")
+                )
+            if not recommended_follow_up:
+                recommended_follow_up = [
+                    "Keine expliziten Folgeexperimente im AIRR angegeben."
+                ]
             lines.extend(
                 [
                     "",
@@ -94,10 +150,10 @@ def write_experiment_summary(
                     "",
                 ]
             )
-            for item in content.get("missing_evidence", []):
+            for item in requested_evidence:
                 lines.append(f"- {item}")
             lines.extend(["", "Empfohlene Folgeexperimente:", ""])
-            for item in content.get("recommended_follow_up", []):
+            for item in recommended_follow_up:
                 lines.append(f"- {item}")
     else:
         lines.append(

@@ -12,6 +12,7 @@ import pytest
 from src.dashboard.experiment_workflow import (
     ExperimentWorkflowService,
     WorkflowValidationError,
+    write_experiment_summary,
 )
 from src.dashboard.research_source import ResearchSource
 from src.dashboard.server import DashboardRequestHandler
@@ -151,6 +152,43 @@ def test_human_review_can_be_attached_to_any_experiment_artifact(
     assert review["artifact_path"].endswith("/summary.md")
     assert review["review_status"] == "accepted_as_interpretation"
     assert review["artifact_content_digest"]
+
+
+def test_summary_falls_back_from_empty_airr_lists_to_limitations(tmp_path: Path) -> None:
+    experiment_dir = tmp_path / "experiments" / "EXP-SUMMARY-0001"
+    report_dir = experiment_dir / "reports"
+    report_dir.mkdir(parents=True)
+    (experiment_dir / "manifest.json").write_text(
+        json.dumps({"experiment_status": "completed"}), encoding="utf-8"
+    )
+    (report_dir / "AIRR-2026-0001.json").write_text(
+        json.dumps(
+            {
+                "content": {
+                    "executive_summary": "Interpretation only.",
+                    "ai_confidence": 0.3,
+                    "missing_evidence": [],
+                    "recommended_follow_up": [],
+                    "interpretation": {
+                        "observations": [
+                            {"type": "Limitations", "value": "Raw traces are missing."}
+                        ]
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    write_experiment_summary(
+        tmp_path,
+        "EXP-SUMMARY-0001",
+        {"status": "generated", "report_id": "AIRR-2026-0001"},
+    )
+
+    summary = (experiment_dir / "summary.md").read_text(encoding="utf-8")
+    assert "AIRR-Limitation dokumentieren: Raw traces are missing." in summary
+    assert "Keine expliziten Folgeexperimente im AIRR angegeben." in summary
 
 
 def test_experiments_are_listed_by_creation_date(tmp_path: Path) -> None:
