@@ -31,9 +31,9 @@ def test_research_tree_orders_experiments_by_manifest_timestamp(tmp_path: Path) 
             json.dumps({"created_at": created_at}), encoding="utf-8"
         )
 
-    tree = FileManager(
-        ResearchSource(research_root), None, tmp_path / "docs"
-    ).get_tree("research")
+    tree = FileManager(ResearchSource(research_root), None, tmp_path / "docs").get_tree(
+        "research"
+    )
     experiments = next(
         child for child in tree["children"] if child["name"] == "experiments"
     )

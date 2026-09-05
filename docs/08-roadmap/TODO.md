@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] Current test collection is 727 tests after the Wesen anatomy v3 and empirical-overlay regression additions.
+- [x] 735 tests collected on the current main tree.
 - [x] Fast-suite coverage baseline is 72%.
 - [x] Scientific Integrity Gate remains a required release check.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification remain required CI/release gates.

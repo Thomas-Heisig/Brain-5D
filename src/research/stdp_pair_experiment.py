@@ -82,9 +82,7 @@ def _artifact_reference(path: Path, research_root: Path) -> str:
         return path.relative_to(research_root).as_posix()
 
 
-def _write_data(
-    research_root: Path, data: dict[str, Any], experiment_id: str
-) -> Path:
+def _write_data(research_root: Path, data: dict[str, Any], experiment_id: str) -> Path:
     directory = research_root / "generated" / "data"
     directory.mkdir(parents=True, exist_ok=True)
     year = datetime.now(timezone.utc).year

@@ -112,7 +112,7 @@ def _network(
         )
     if recurrence:
         network.connect(
-            neurons[2], neurons[1], impulse_weight, 1, config=impulse_synapse_config
+            neurons[2], neurons[0], impulse_weight, 1, config=impulse_synapse_config
         )
     return network
 
@@ -233,7 +233,7 @@ def run_time(
             runs.append(
                 ScientificRun(
                     "EXP-TIME-0001",
-                        str(run_ticks),
+                    str(run_ticks),
                     seed,
                     {
                         "ticks": run_ticks,

@@ -32,9 +32,7 @@ def main() -> int:
         raise RuntimeError(f"No synapses observed: {metrics}")
     if not any(int(item.get("total_spikes", 0)) > 0 for item in metrics):
         raise RuntimeError(f"No neuronal spikes observed: {metrics}")
-    if not any(
-        int(item.get("delivered_synaptic_events", 0)) > 0 for item in metrics
-    ):
+    if not any(int(item.get("delivered_synaptic_events", 0)) > 0 for item in metrics):
         raise RuntimeError(f"No delivered synaptic events observed: {metrics}")
 
     print("Real network activity verified.")

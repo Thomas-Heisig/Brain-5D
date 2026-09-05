@@ -18,15 +18,15 @@ def replace_once(path: Path, old: str, new: str) -> None:
 def patch_server() -> None:
     replace_once(
         Path("src/dashboard/server.py"),
-        '''            experiment_id = body.get("experiment_id")
+        """            experiment_id = body.get("experiment_id")
             if not isinstance(experiment_id, str) or not experiment_id.strip():
                 experiment_id = ExperimentWorkflowService(source.root()).catalog()[
                     "next_experiment_id"
                 ]
             protocol_result = execute_stdp_pair_experiment(
                 experiment_id=experiment_id.strip(), research_root=source.root()
-            )''',
-        '''            experiment_id_value = body.get("experiment_id")
+            )""",
+        """            experiment_id_value = body.get("experiment_id")
             if isinstance(experiment_id_value, str) and experiment_id_value.strip():
                 experiment_id = experiment_id_value.strip()
             else:
@@ -38,7 +38,7 @@ def patch_server() -> None:
                 experiment_id = next_experiment_id.strip()
             protocol_result = execute_stdp_pair_experiment(
                 experiment_id=experiment_id, research_root=source.root()
-            )''',
+            )""",
     )
 
 
@@ -65,7 +65,7 @@ def patch_probe() -> None:
         '            "total_synapses": self.total_synapses,\n',
         1,
     )
-    old = '''        spike_sequence: list[tuple[int, int]] = []
+    old = """        spike_sequence: list[tuple[int, int]] = []
 
         for tick in range(self.max_ticks):
             result = runtime.step()
@@ -85,8 +85,8 @@ def patch_probe() -> None:
                     return_latency = tick
                 if tick > 0 and self.source_neuron in spike_ids:
                     recurrent_events += 1
-'''
-    new = '''        spike_sequence: list[tuple[int, int]] = []
+"""
+    new = """        spike_sequence: list[tuple[int, int]] = []
         ticks_executed = 0
         delivered_synaptic_events = 0
         synaptic_activity_ticks = 0
@@ -129,7 +129,7 @@ def patch_probe() -> None:
                     recurrent_events += 1
             if output_ids:
                 response_ticks.append(tick)
-'''
+"""
     if old not in text:
         raise RuntimeError("Network probe target block not found")
     text = text.replace(old, new, 1)
@@ -151,14 +151,14 @@ def patch_probe() -> None:
 def patch_recurrence() -> None:
     replace_once(
         Path("src/research/experiment_suite.py"),
-        '''    if recurrence:
+        """    if recurrence:
         network.connect(
             neurons[2], neurons[1], impulse_weight, 1, config=impulse_synapse_config
-        )''',
-        '''    if recurrence:
+        )""",
+        """    if recurrence:
         network.connect(
             neurons[2], neurons[0], impulse_weight, 1, config=impulse_synapse_config
-        )''',
+        )""",
     )
 
 

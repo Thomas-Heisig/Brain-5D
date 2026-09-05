@@ -37,7 +37,11 @@ def _json_list(value: object) -> list[JSONValue]:
 
 def _summary_items(value: object) -> list[str]:
     """Return non-empty textual items from an AIRR list field."""
-    return [item.strip() for item in _json_list(value) if isinstance(item, str) and item.strip()]
+    return [
+        item.strip()
+        for item in _json_list(value)
+        if isinstance(item, str) and item.strip()
+    ]
 
 
 def _airr_observation_fallback(content: dict[str, JSONValue]) -> list[str]:
