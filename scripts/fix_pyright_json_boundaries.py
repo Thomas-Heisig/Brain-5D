@@ -73,6 +73,19 @@ def main() -> int:
     )
     replace_once(
         Path("src/research/evidence_engine.py"),
+        '''        decision = review.get("decision")
+        if decision not in {"supports", "refutes", "inconclusive"}:
+            raise ValueError("Human review decision is invalid")''',
+        '''        decision = review.get("decision")
+        if not isinstance(decision, str) or decision not in {
+            "supports",
+            "refutes",
+            "inconclusive",
+        }:
+            raise ValueError("Human review decision is invalid")''',
+    )
+    replace_once(
+        Path("src/research/evidence_engine.py"),
         "            status=cast(str, decision),\n",
         "            status=decision,\n",
     )
