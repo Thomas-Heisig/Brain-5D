@@ -1,85 +1,211 @@
 /* Brain-5D Wesen workspace
- *
- * Read-only adaptive organism visualization. This module visualizes observed
- * runtime, embodiment and connection state; it does not fabricate scientific
- * evidence, run learning, or issue actuator/language output.
+ * Read-only, machine-native body visualization.
+ * Observed state only: no learning, language output or actuator writes.
  */
-
 const WESEN_POLL_MS = 750;
-const WESEN_ORGANS = [
-  { id: "sensorik", label: "Sensorik", icon: "◉", hue: "cyan", role: "Umwelt erfassen" },
-  { id: "innenzustand", label: "Innenzustand", icon: "♥", hue: "rose", role: "Homöostase und Belastung" },
-  { id: "rueckkopplung", label: "Rückkopplung", icon: "↻", hue: "violet", role: "Eigenwirkung beobachten" },
-  { id: "struktur", label: "Struktur", icon: "⌬", hue: "green", role: "Körpergrenze und Plastizität" },
-  { id: "ressourcen", label: "Ressourcen", icon: "▤", hue: "amber", role: "Host und Laufzeit" },
-  { id: "umwelt", label: "Umwelt", icon: "◎", hue: "blue", role: "Externe Situation" },
-  { id: "kern", label: "SNN-Kern", icon: "◆", hue: "gold", role: "Neuronale Dynamik" },
+const NS = "http://www.w3.org/2000/svg";
+
+const WESEN_BASE = [
+  { id: "kern", label: "SNN-Kern", kind: "core", hue: "gold", icon: "◆" },
+  { id: "innenzustand", label: "Interozeption", kind: "internal", hue: "rose", icon: "♥" },
+  { id: "rueckkopplung", label: "Rückkopplung", kind: "feedback", hue: "violet", icon: "↻" },
+  { id: "struktur", label: "Körpergrenze", kind: "structure", hue: "green", icon: "⌬" },
 ];
 
-const wesenState = {
-  selected: "sensorik",
+const state = {
   status: null,
   embodiment: null,
   connections: null,
-  recurrenceHistory: [],
-  eventHistory: [],
-  lastSnapshot: null,
-  controller: null,
-  timer: null,
+  selected: "kern",
+  history: [],
+  recurrence: [],
+  morphologyHistory: [],
+  previousSignature: "",
   paused: false,
+  zoom: 1,
+  filter: "all",
+  timer: null,
+  controller: null,
 };
 
-function wesenNumber(value) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
+function num(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
-
-function wesenPick(source, paths) {
+function pick(source, paths) {
   for (const path of paths) {
-    const parts = path.split(".");
     let value = source;
-    for (const part of parts) value = value && typeof value === "object" ? value[part] : undefined;
-    if (value !== undefined && value !== null) return value;
+    for (const part of path.split(".")) value = value && typeof value === "object" ? value[part] : undefined;
+    if (value !== undefined && value !== null && value !== "") return value;
   }
   return null;
 }
-
-function wesenMetric(source, paths) {
-  return wesenNumber(wesenPick(source, paths));
+function text(source, paths, fallback = "unbekannt") {
+  const value = pick(source, paths);
+  return value === null ? fallback : String(value);
 }
-
-function wesenText(source, paths, fallback = "unbekannt") {
-  const value = wesenPick(source, paths);
-  if (value === null || value === undefined || value === "") return fallback;
-  return String(value);
+function metric(source, paths) { return num(pick(source, paths)); }
+function fmt(value, suffix = "", digits = 1) {
+  const n = num(value);
+  return n === null ? "—" : `${n.toFixed(digits)}${suffix}`;
 }
-
-function wesenFormat(value, suffix = "", digits = 1) {
-  const number = wesenNumber(value);
-  return number === null ? "—" : `${number.toFixed(digits)}${suffix}`;
+function clamp(value, min = 0, max = 1) { return Math.max(min, Math.min(max, value)); }
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
-
-function wesenClamp(value, min = 0, max = 1) {
-  return Math.min(max, Math.max(min, value));
-}
-
-function wesenStatusClass(value) {
-  if (value === null || value === undefined) return "unknown";
-  if (typeof value === "boolean") return value ? "ok" : "warn";
-  const text = String(value).toLowerCase();
-  if (["ok", "healthy", "active", "running", "stable", "ready", "nominal", "connected"].some((token) => text.includes(token))) return "ok";
-  if (["critical", "error", "failed", "offline", "unsafe"].some((token) => text.includes(token))) return "critical";
-  if (["warn", "degraded", "pressure", "partial", "paused"].some((token) => text.includes(token))) return "warn";
-  return "unknown";
-}
-
 async function wesenReadJson(url, signal) {
   const response = await fetch(url, { cache: "no-store", signal });
   if (!response.ok) throw new Error(`${url}: ${response.status}`);
   return response.json();
 }
+function wesenConnectionArray() {
+  const payload = state.connections;
+  if (!payload) return [];
+  for (const candidate of [payload.connections, payload.items, payload.devices, payload.available_connections, payload]) {
+    if (Array.isArray(candidate)) return candidate;
+  }
+  return [];
+}
+function connectionLabel(item, index) {
+  return text(item, ["label", "name", "id", "connection_id", "device_id"], `Verbindung ${index + 1}`);
+}
+function connectionKind(item) {
+  return text(item, ["kind", "type", "category", "direction", "capability"], "connection").toLowerCase();
+}
+function classifyConnection(item) {
+  const raw = `${connectionLabel(item, 0)} ${connectionKind(item)} ${JSON.stringify(item)}`.toLowerCase();
+  if (/actuator|output|printer|display|speaker|robot|motor|arm|write|send/.test(raw)) return "actuator";
+  if (/camera|micro|audio|sensor|weather|input|network|vision|temperature/.test(raw)) return "sensor";
+  return "connection";
+}
+function statusClass(value) {
+  const raw = String(value ?? "unknown").toLowerCase();
+  if (/critical|error|failed|offline|unsafe|lost/.test(raw)) return "critical";
+  if (/warn|degraded|pressure|partial|stale|paused/.test(raw)) return "warn";
+  if (/ok|healthy|active|running|stable|ready|connected|true|nominal/.test(raw)) return "ok";
+  return "unknown";
+}
+function runtimeMetrics() {
+  const s = state.status || {};
+  const e = state.embodiment || {};
+  return {
+    tick: pick(s, ["tick", "runtime.tick", "metrics.tick"]),
+    firing: metric(s, ["firing_rate_hz", "metrics.firing_rate_hz", "network.firing_rate_hz"]),
+    targetHz: metric(s, ["runtime_clock.target_hz", "target_hz", "runtime.target_hz"]),
+    achievedHz: metric(s, ["runtime_clock.achieved_hz", "achieved_hz", "runtime.achieved_hz"]),
+    energy: metric(e, ["energy", "metrics.energy", "homeostasis.energy"]),
+    cpu: metric(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]),
+    memory: metric(e, ["host.memory_percent", "interoception.memory_percent", "metrics.memory_percent"]),
+    temp: metric(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]),
+    fan: metric(e, ["host.fan_rpm", "interoception.fan_rpm", "metrics.fan_rpm"]),
+    disk: metric(e, ["host.disk_percent", "interoception.disk_percent", "metrics.disk_percent"]),
+    recurrence: metric(e, ["recurrence", "metrics.recurrence", "loopback.recurrence", "feedback.recurrence"]),
+    latency: metric(e, ["loopback_latency_ms", "metrics.loopback_latency_ms", "loopback.latency_ms", "feedback.latency_ms"]),
+    regulation: text(e, ["regulatory_state", "homeostasis.state", "homeostasis_status"], "unbekannt"),
+    environment: text(e, ["environment.name", "environment_status", "environment.state"], "nicht beobachtet"),
+  };
+}
 
-function wesenEnsureWorkspace() {
+function dynamicNodes() {
+  const nodes = [...WESEN_BASE];
+  const connections = wesenConnectionArray();
+  connections.forEach((item, index) => {
+    const type = classifyConnection(item);
+    const id = `conn-${index}`;
+    nodes.push({
+      id,
+      label: connectionLabel(item, index),
+      kind: type,
+      hue: type === "sensor" ? "cyan" : type === "actuator" ? "amber" : "blue",
+      icon: type === "sensor" ? "◉" : type === "actuator" ? "▶" : "•",
+      source: item,
+    });
+  });
+  if (!connections.some((item) => classifyConnection(item) === "sensor")) {
+    nodes.push({ id: "sensor-placeholder", label: "Sensorik", kind: "sensor", hue: "cyan", icon: "◉", placeholder: true });
+  }
+  if (!connections.some((item) => classifyConnection(item) === "actuator")) {
+    nodes.push({ id: "actuator-placeholder", label: "Aktorik", kind: "actuator", hue: "amber", icon: "▶", placeholder: true });
+  }
+  return nodes;
+}
+function morphologySignature(nodes) {
+  return nodes.filter((n) => !n.placeholder).map((n) => `${n.kind}:${n.label}`).sort().join("|");
+}
+function recordMorphology(nodes) {
+  const signature = morphologySignature(nodes);
+  if (!state.previousSignature) state.previousSignature = signature;
+  if (signature === state.previousSignature) return;
+  state.previousSignature = signature;
+  const entry = { time: new Date().toLocaleTimeString("de-DE", { hour12: false }), signature, count: nodes.length };
+  state.morphologyHistory.unshift(entry);
+  if (state.morphologyHistory.length > 12) state.morphologyHistory.length = 12;
+  pushEvent("structure", "Körpergrenze verändert", `${nodes.filter((n) => !n.placeholder).length} beobachtete Körperknoten`);
+}
+
+function layoutNodes(nodes) {
+  const center = { x: 450, y: 350 };
+  const groups = { sensor: [], actuator: [], internal: [], feedback: [], structure: [], connection: [] };
+  nodes.forEach((n) => { if (n.kind !== "core") (groups[n.kind] || groups.connection).push(n); });
+  const positions = { kern: center };
+  const placeArc = (items, cx, cy, rx, ry, start, end) => {
+    items.forEach((item, i) => {
+      const t = items.length === 1 ? 0.5 : i / (items.length - 1);
+      const angle = start + (end - start) * t;
+      positions[item.id] = { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
+    });
+  };
+  placeArc(groups.sensor, 430, 340, 300, 235, Math.PI * 1.05, Math.PI * 1.55);
+  placeArc(groups.actuator, 465, 365, 310, 235, Math.PI * 0.15, Math.PI * 0.65);
+  placeArc(groups.connection, 450, 350, 325, 210, Math.PI * 0.72, Math.PI * 0.98);
+  positions.innenzustand = { x: 340, y: 435 };
+  positions.rueckkopplung = { x: 555, y: 445 };
+  positions.struktur = { x: 450, y: 565 };
+  return positions;
+}
+
+function adaptiveProfile() {
+  const m = runtimeMetrics();
+  const e = state.embodiment || {};
+  const sensorNodes = dynamicNodes().filter((n) => n.kind === "sensor" && !n.placeholder);
+  const actuatorNodes = dynamicNodes().filter((n) => n.kind === "actuator" && !n.placeholder);
+  const sensorLost = pick(e, ["sensor_loss", "degraded_sensor", "metrics.sensor_loss"]);
+  const actuatorFault = pick(e, ["actuator_fault", "actuator_error", "metrics.actuator_fault"]);
+  const network = text(e, ["host.network_state", "network_state", "interoception.network_state"], "unknown");
+  const pressure = Math.max(
+    m.cpu === null ? 0 : m.cpu / 100,
+    m.memory === null ? 0 : m.memory / 100,
+    m.disk === null ? 0 : m.disk / 100,
+    m.temp === null ? 0 : clamp((m.temp - 45) / 45)
+  );
+  let label = "Stabil beobachtet", level = "ok", scale = 1, tension = 0;
+  if (sensorLost === true || /lost|offline|degraded/.test(String(sensorLost).toLowerCase())) {
+    label = "Sensorverlust"; level = "warn"; scale = 0.97; tension = 0.45;
+  }
+  if (actuatorFault === true || /failed|error|offline/.test(String(actuatorFault).toLowerCase())) {
+    label = "Aktorfehler"; level = "warn"; scale = 0.96; tension = 0.5;
+  }
+  if (/offline|isolated|down/.test(network.toLowerCase())) {
+    label = "Netzwerkisolation"; level = "warn"; scale = 0.95; tension = 0.6;
+  }
+  if (pressure > 0.82) {
+    label = m.temp !== null && m.temp > 80 ? "Thermische Belastung" : "Ressourcendruck";
+    level = "critical"; scale = 0.91; tension = 1;
+  } else if (pressure > 0.65 && level === "ok") {
+    label = "Erhöhte Belastung"; level = "warn"; scale = 0.96; tension = 0.5;
+  }
+  return {
+    label, level, scale, tension, pressure,
+    notes: [
+      `Sensoren: ${sensorNodes.length || "unbekannt"}`,
+      `Aktoren: ${actuatorNodes.length || "unbekannt"}`,
+      `Regulation: ${m.regulation}`,
+      `Netzwerk: ${network}`,
+    ],
+  };
+}
+
+function ensureWorkspace() {
   if (document.getElementById("tab-wesen")) return;
   const main = document.querySelector("main") || document.querySelector(".dashboard-main") || document.body;
   const section = document.createElement("section");
@@ -87,590 +213,263 @@ function wesenEnsureWorkspace() {
   section.className = "tab-content dashboard-workspace wesen-workspace";
   section.hidden = true;
   section.innerHTML = `
-    <header class="dashboard-generated-header wesen-header">
-      <div>
-        <span class="dashboard-workspace-kicker">LIVE BODY</span>
-        <h2>Wesen</h2>
-        <p>Interaktive Echtzeitansicht der beobachtbaren Körperzustände. Keine Lern- oder Sprachausgabe.</p>
-      </div>
-      <div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div>
-    </header>
+    <header class="dashboard-generated-header wesen-header"><div><span class="dashboard-workspace-kicker">LIVE BODY</span><h2>Wesen</h2><p>Maschinen-native Echtzeitansicht aus beobachteten Sensoren, Interozeption, SNN, Aktoren und Rückkopplung.</p></div><div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div></header>
     <div class="wesen-layout">
-      <aside class="wesen-sidebar wesen-sidebar-left">
-        <section class="wesen-card">
-          <header><span>ΚÖRPER-ZUSTAND</span><small>live</small></header>
-          <div class="wesen-metrics" id="wesen-vitals"></div>
-          <div class="wesen-spark-wrap">
-            <div><span>Rückkopplung</span><strong id="wesen-recurrence-value">—</strong></div>
-            <svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none" aria-label="Rückkopplungstrend"></svg>
-          </div>
-        </section>
-        <section class="wesen-card">
-          <header><span>INTERAKTION</span><small>Ansicht</small></header>
-          <div class="wesen-view-controls">
-            <button type="button" data-wesen-view="signals" class="active">Signale</button>
-            <button type="button" data-wesen-view="causality">Kausalpfade</button>
-            <button type="button" data-wesen-view="connections">Verbindungen</button>
-            <button type="button" data-wesen-view="environment">Umweltwirkung</button>
-          </div>
-          <p class="wesen-hint">Organ anklicken: Fokus und Diagnose rechts. Mausrad: Detaildichte. Doppelklick: Gesamtansicht.</p>
-        </section>
-        <section class="wesen-card">
-          <header><span>AUTOMATISCHE ANPASSUNG</span><small>beobachtet</small></header>
-          <div class="wesen-adaptation" id="wesen-adaptation"></div>
-        </section>
+      <aside class="wesen-sidebar">
+        <section class="wesen-card"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
+        <section class="wesen-card"><header><span>ANSICHT</span><small>interaktiv</small></header><div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div><p class="wesen-hint">Klick: Fokus · Mausrad: Zoom · Doppelklick: Gesamtansicht</p></section>
+        <section class="wesen-card"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
       </aside>
-
       <section class="wesen-stage-card">
-        <div class="wesen-stage-toolbar">
-          <div><strong>Das Brain-5D Wesen</strong><span id="wesen-stage-subtitle">Körperform folgt realen Verbindungen und Zuständen.</span></div>
-          <div class="wesen-stage-actions">
-            <button type="button" data-wesen-action="reset-view">⌂ Gesamt</button>
-            <button type="button" data-wesen-action="pause-visual">Ⅱ Visualisierung</button>
-          </div>
-        </div>
-        <div class="wesen-stage" id="wesen-stage">
-          <svg id="wesen-svg" viewBox="0 0 900 720" role="img" aria-label="Interaktive Brain-5D Wesen-Darstellung">
-            <defs>
-              <filter id="wesen-glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              <radialGradient id="wesen-core-gradient"><stop offset="0" stop-color="#fff3b0"/><stop offset="0.28" stop-color="#ffca57"/><stop offset="1" stop-color="#4a2b02"/></radialGradient>
-              <linearGradient id="wesen-membrane-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#37d9ff" stop-opacity=".22"/><stop offset=".48" stop-color="#7c5cff" stop-opacity=".1"/><stop offset="1" stop-color="#2af598" stop-opacity=".16"/></linearGradient>
-            </defs>
-            <g id="wesen-camera">
-              <path id="wesen-membrane" class="wesen-membrane" d="M450 72 C640 66 790 178 822 352 C854 528 704 662 472 674 C252 684 88 568 86 365 C84 173 248 79 450 72Z"/>
-              <g id="wesen-connection-layer"></g>
-              <g id="wesen-signal-layer"></g>
-              <g id="wesen-organ-layer"></g>
-              <g id="wesen-echo-layer" class="wesen-echo-layer"></g>
-            </g>
-          </svg>
-          <div class="wesen-environment-caption"><span>UMWELT</span><strong id="wesen-environment-label">nicht beobachtet</strong></div>
-          <div class="wesen-adaptive-caption"><span>REAKTION</span><strong id="wesen-reaction-label">warte auf Telemetrie</strong></div>
-        </div>
-        <div class="wesen-console">
-          <div class="wesen-console-head"><strong>Ereignisse</strong><div id="wesen-event-filters"><button class="active" data-wesen-filter="all">Alle</button><button data-wesen-filter="sensorik">Sensorik</button><button data-wesen-filter="innenzustand">Innen</button><button data-wesen-filter="rueckkopplung">Loop</button><button data-wesen-filter="struktur">Struktur</button><button data-wesen-filter="system">System</button></div></div>
-          <div id="wesen-events" class="wesen-events"></div>
-        </div>
+        <div class="wesen-stage-toolbar"><div><strong>Adaptive Körperkarte</strong><span id="wesen-stage-subtitle">Körperform entsteht aus real verfügbaren Verbindungen.</span></div><div class="wesen-stage-actions"><button data-wesen-action="reset-view">⌂ Gesamt</button><button data-wesen-action="pause-visual">Ⅱ Visualisierung</button></div></div>
+        <div class="wesen-stage" id="wesen-stage"><svg id="wesen-svg" viewBox="0 0 900 700"><defs><filter id="wesen-glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g id="wesen-camera"><path id="wesen-membrane" class="wesen-membrane"/><g id="wesen-environment-layer"></g><g id="wesen-connection-layer"></g><g id="wesen-signal-layer"></g><g id="wesen-organ-layer"></g><g id="wesen-pin-layer"></g></g></svg><div class="wesen-environment-caption"><span>UMWELT</span><strong id="wesen-environment-label">nicht beobachtet</strong></div><div class="wesen-adaptive-caption"><span>REAKTION</span><strong id="wesen-reaction-label">warte auf Telemetrie</strong></div></div>
+        <div class="wesen-console"><div class="wesen-console-head"><strong>Ereignisse & Kausalität</strong><div id="wesen-event-filters"><button class="active" data-wesen-filter="all">Alle</button><button data-wesen-filter="sensor">Sensorik</button><button data-wesen-filter="actuator">Aktorik</button><button data-wesen-filter="feedback">Loop</button><button data-wesen-filter="structure">Morphologie</button><button data-wesen-filter="system">System</button></div></div><div id="wesen-events" class="wesen-events"></div></div>
       </section>
-
-      <aside class="wesen-sidebar wesen-sidebar-right">
-        <section class="wesen-card wesen-inspector">
-          <header><span>ORGAN-INSPEKTION</span><small id="wesen-inspector-status">—</small></header>
-          <div id="wesen-inspector"></div>
-        </section>
-        <section class="wesen-card">
-          <header><span>KÖRPERGRENZE</span><small>Verbindungen</small></header>
-          <div id="wesen-connections" class="wesen-connection-list"></div>
-        </section>
-        <section class="wesen-card">
-          <header><span>SELBST-MODELL</span><small>zeitversetzt</small></header>
-          <div class="wesen-self-model">
-            <svg id="wesen-self-svg" viewBox="0 0 260 140" aria-label="Zeitverzögertes Selbstmodell"></svg>
-            <div class="wesen-self-metrics" id="wesen-self-metrics"></div>
-          </div>
-        </section>
+      <aside class="wesen-sidebar">
+        <section class="wesen-card wesen-inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
+        <section class="wesen-card"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
+        <section class="wesen-card"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></section>
+        <section class="wesen-card"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
       </aside>
     </div>`;
   main.appendChild(section);
-  wesenRenderOrganism();
-  wesenBindInteractions();
+  bindInteractions();
 }
-
-function wesenEnsureNavButton() {
+function ensureNav() {
   if (document.querySelector('.tab-btn[data-tab="wesen"]')) return;
   const nav = document.querySelector(".tab-nav") || document.querySelector("nav");
   if (!nav) return;
-  const reference = nav.querySelector('.tab-btn[data-tab="embodiment"]') || nav.querySelector('.tab-btn[data-tab="control"]');
   const button = document.createElement("button");
-  button.type = "button";
-  button.className = "tab-btn";
-  button.dataset.tab = "wesen";
-  button.innerHTML = "◉ WESEN";
-  if (reference) reference.insertAdjacentElement("beforebegin", button);
-  else nav.appendChild(button);
-  button.addEventListener("click", () => wesenActivate());
+  button.type = "button"; button.className = "tab-btn"; button.dataset.tab = "wesen"; button.textContent = "◉ WESEN";
+  const ref = nav.querySelector('.tab-btn[data-tab="embodiment"]');
+  if (ref) ref.before(button); else nav.appendChild(button);
+  button.addEventListener("click", activate);
 }
-
-function wesenActivate() {
-  document.querySelectorAll(".tab-btn[data-tab]").forEach((button) => button.classList.toggle("active", button.dataset.tab === "wesen"));
-  document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => {
-    const active = tab.id === "tab-wesen";
-    tab.classList.toggle("active", active);
-    tab.hidden = !active;
-  });
+function activate() {
+  document.querySelectorAll(".tab-btn[data-tab]").forEach((b) => b.classList.toggle("active", b.dataset.tab === "wesen"));
+  document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => { const on = tab.id === "tab-wesen"; tab.hidden = !on; tab.classList.toggle("active", on); });
   document.body.dataset.currentTab = "wesen";
   document.body.dataset.experienceWorkspace = "wesen";
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function wesenOrganPosition(id) {
-  const positions = {
-    sensorik: [450, 150],
-    innenzustand: [650, 245],
-    struktur: [690, 438],
-    rueckkopplung: [565, 575],
-    ressourcen: [335, 574],
-    umwelt: [215, 420],
-    kern: [450, 365],
-  };
-  return positions[id] || [450, 365];
+function membranePath(nodes, positions, profile) {
+  const pts = nodes.filter((n) => !n.placeholder && positions[n.id]).map((n) => positions[n.id]);
+  if (!pts.length) return "M450 80 C720 80 820 220 820 350 C820 570 650 640 450 640 C250 640 80 570 80 350 C80 180 220 80 450 80Z";
+  const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
+  const minX = Math.max(35, Math.min(...xs) - 95), maxX = Math.min(865, Math.max(...xs) + 95);
+  const minY = Math.max(45, Math.min(...ys) - 90), maxY = Math.min(655, Math.max(...ys) + 90);
+  const inset = profile.tension * 18;
+  return `M${(minX + maxX) / 2} ${minY + inset} C${maxX - inset} ${minY} ${maxX} ${(minY + maxY) / 2} ${(maxX - inset)} ${maxY - inset} C${(minX + maxX) / 2} ${maxY} ${minX + inset} ${maxY - inset} ${minX} ${(minY + maxY) / 2} C${minX + inset} ${minY} ${(minX + maxX) / 2} ${minY + inset} ${(minX + maxX) / 2} ${minY + inset}Z`;
 }
-
-function wesenRenderOrganism() {
+function nodeValue(node) {
+  const m = runtimeMetrics();
+  if (node.id === "kern") return m.firing === null ? "—" : `${m.firing.toFixed(1)} Hz`;
+  if (node.id === "innenzustand") return m.regulation;
+  if (node.id === "rueckkopplung") return m.recurrence === null ? "—" : m.recurrence.toFixed(2);
+  if (node.id === "struktur") return `${wesenConnectionArray().length} Ports`;
+  if (node.placeholder) return "nicht verfügbar";
+  return text(node.source, ["status", "state", "available", "connected"], "beobachtet");
+}
+function renderBody() {
+  const nodes = dynamicNodes();
+  recordMorphology(nodes);
+  const positions = layoutNodes(nodes);
+  const profile = adaptiveProfile();
   const organLayer = document.getElementById("wesen-organ-layer");
   const connectionLayer = document.getElementById("wesen-connection-layer");
-  if (!organLayer || !connectionLayer) return;
-  organLayer.innerHTML = "";
-  connectionLayer.innerHTML = "";
+  const pinLayer = document.getElementById("wesen-pin-layer");
+  const envLayer = document.getElementById("wesen-environment-layer");
+  if (!organLayer || !connectionLayer || !pinLayer || !envLayer) return;
+  organLayer.innerHTML = ""; connectionLayer.innerHTML = ""; pinLayer.innerHTML = ""; envLayer.innerHTML = "";
 
-  WESEN_ORGANS.filter((organ) => organ.id !== "kern").forEach((organ) => {
-    const [x, y] = wesenOrganPosition(organ.id);
-    const [cx, cy] = wesenOrganPosition("kern");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    const mx = (x + cx) / 2 + (y - cy) * 0.08;
-    const my = (y + cy) / 2 - (x - cx) * 0.08;
-    path.setAttribute("d", `M ${cx} ${cy} Q ${mx} ${my} ${x} ${y}`);
-    path.setAttribute("class", `wesen-nerve wesen-hue-${organ.hue}`);
-    path.dataset.organ = organ.id;
+  const core = positions.kern;
+  nodes.filter((n) => n.id !== "kern").forEach((node) => {
+    const p = positions[node.id]; if (!p) return;
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("d", `M ${core.x} ${core.y} Q ${(core.x + p.x) / 2} ${(core.y + p.y) / 2 - 18} ${p.x} ${p.y}`);
+    path.setAttribute("class", `wesen-nerve kind-${node.kind}`);
+    path.dataset.node = node.id;
     connectionLayer.appendChild(path);
   });
 
-  WESEN_ORGANS.forEach((organ) => {
-    const [x, y] = wesenOrganPosition(organ.id);
-    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    group.setAttribute("class", `wesen-organ wesen-hue-${organ.hue}${organ.id === "kern" ? " wesen-core" : ""}`);
-    group.setAttribute("transform", `translate(${x} ${y})`);
-    group.dataset.organ = organ.id;
-    group.tabIndex = 0;
-    group.setAttribute("role", "button");
-    group.setAttribute("aria-label", organ.label);
-    group.innerHTML = `
-      <circle class="wesen-organ-halo" r="${organ.id === "kern" ? 108 : 74}"/>
-      <circle class="wesen-organ-body" r="${organ.id === "kern" ? 82 : 56}"/>
-      <circle class="wesen-organ-status" cx="${organ.id === "kern" ? 56 : 40}" cy="${organ.id === "kern" ? -56 : -40}" r="7"/>
-      <text class="wesen-organ-icon" y="-13">${organ.icon}</text>
-      <text class="wesen-organ-label" y="16">${organ.label}</text>
-      <text class="wesen-organ-value" y="38" data-wesen-organ-value="${organ.id}">—</text>`;
-    organLayer.appendChild(group);
+  nodes.forEach((node) => {
+    const p = positions[node.id]; if (!p) return;
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("transform", `translate(${p.x} ${p.y})`);
+    g.setAttribute("class", `wesen-organ wesen-hue-${node.hue} kind-${node.kind}${state.selected === node.id ? " selected" : ""}${node.placeholder ? " unknown" : ""}`);
+    g.dataset.node = node.id; g.tabIndex = 0; g.setAttribute("role", "button");
+    const r = node.kind === "core" ? 70 : node.kind === "sensor" || node.kind === "actuator" ? 38 : 48;
+    g.innerHTML = `<circle class="wesen-organ-halo" r="${r + 16}"/><circle class="wesen-organ-body" r="${r}"/><circle class="wesen-organ-status" cx="${r - 7}" cy="-${r - 7}" r="6"/><text class="wesen-organ-icon" y="-7">${esc(node.icon)}</text><text class="wesen-organ-label" y="15">${esc(node.label).slice(0, 22)}</text><text class="wesen-organ-value" y="33">${esc(nodeValue(node))}</text>`;
+    organLayer.appendChild(g);
+
+    if (!node.placeholder) {
+      const pin = document.createElementNS(NS, "g");
+      pin.setAttribute("transform", `translate(${p.x + r + 12} ${p.y - r - 8})`);
+      pin.setAttribute("class", "wesen-data-pin");
+      pin.innerHTML = `<rect x="0" y="-16" rx="5" width="92" height="23"/><text x="7" y="0">${esc(nodeValue(node)).slice(0, 18)}</text>`;
+      pinLayer.appendChild(pin);
+    }
   });
-}
 
-function wesenConnectionArray() {
-  const payload = wesenState.connections;
-  if (!payload) return [];
-  const candidates = [payload.connections, payload.items, payload.devices, payload.available_connections, payload];
-  for (const candidate of candidates) if (Array.isArray(candidate)) return candidate;
-  return [];
-}
-
-function wesenVitals() {
-  const s = wesenState.status || {};
-  const e = wesenState.embodiment || {};
-  return [
-    ["Tick", wesenText(s, ["tick", "runtime.tick", "metrics.tick"], "—"), "tick"],
-    ["Feuerrate", wesenFormat(wesenPick(s, ["firing_rate_hz", "metrics.firing_rate_hz", "network.firing_rate_hz"]), " Hz", 1), "rate"],
-    ["Energie", wesenFormat(wesenPick(e, ["energy", "metrics.energy", "homeostasis.energy"]), "", 3), "energy"],
-    ["Homöostase", wesenText(e, ["homeostasis.state", "homeostasis_status", "regulatory_state"], "—"), "homeostasis"],
-    ["CPU", wesenFormat(wesenPick(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]), " %", 0), "cpu"],
-    ["Temperatur", wesenFormat(wesenPick(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]), " °C", 1), "temperature"],
-  ];
-}
-
-function wesenRecurrence() {
-  const e = wesenState.embodiment || {};
-  return wesenMetric(e, ["recurrence", "metrics.recurrence", "loopback.recurrence", "feedback.recurrence"]);
-}
-
-function wesenLoopLatency() {
-  const e = wesenState.embodiment || {};
-  return wesenMetric(e, ["loopback_latency_ms", "metrics.loopback_latency_ms", "loopback.latency_ms", "feedback.latency_ms"]);
-}
-
-function wesenCoreRate() {
-  const s = wesenState.status || {};
-  return wesenMetric(s, ["firing_rate_hz", "metrics.firing_rate_hz", "network.firing_rate_hz"]);
-}
-
-function wesenSensorRate() {
-  const e = wesenState.embodiment || {};
-  return wesenMetric(e, ["sensor_rate_hz", "metrics.sensor_rate_hz", "input_rate_hz", "metrics.input_rate_hz"]);
-}
-
-function wesenHostPressure() {
-  const e = wesenState.embodiment || {};
-  const cpu = wesenMetric(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]);
-  const temperature = wesenMetric(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]);
-  if (cpu === null && temperature === null) return null;
-  const cpuPart = cpu === null ? 0 : wesenClamp(cpu / 100);
-  const tempPart = temperature === null ? 0 : wesenClamp((temperature - 35) / 60);
-  return Math.max(cpuPart, tempPart);
-}
-
-function wesenOrganValue(id) {
-  const e = wesenState.embodiment || {};
-  if (id === "kern") return wesenCoreRate() === null ? "—" : `${wesenCoreRate().toFixed(1)} Hz`;
-  if (id === "sensorik") return wesenSensorRate() === null ? "—" : `${wesenSensorRate().toFixed(1)} Hz`;
-  if (id === "rueckkopplung") {
-    const recurrence = wesenRecurrence();
-    return recurrence === null ? "—" : recurrence.toFixed(2);
-  }
-  if (id === "ressourcen") {
-    const cpu = wesenMetric(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]);
-    return cpu === null ? "—" : `CPU ${cpu.toFixed(0)}%`;
-  }
-  if (id === "struktur") return String(wesenConnectionArray().length || "—");
-  if (id === "innenzustand") return wesenText(e, ["regulatory_state", "homeostasis.state", "homeostasis_status"], "—");
-  if (id === "umwelt") return wesenText(e, ["environment.name", "environment_status", "environment.state"], "—");
-  return "—";
-}
-
-function wesenAdaptiveProfile() {
-  const e = wesenState.embodiment || {};
-  const pressure = wesenHostPressure();
-  const recurrence = wesenRecurrence();
-  const sensorRate = wesenSensorRate();
-  const available = wesenPick(e, ["available"]);
-  const profile = { label: "Beobachtung", className: "unknown", scale: 1, membrane: 1, notes: [] };
-
-  if (available === false) {
-    profile.label = "Embodiment nicht verfügbar";
-    profile.className = "warn";
-    profile.scale = 0.94;
-    profile.membrane = 0.45;
-    profile.notes.push("Körperdaten fehlen; keine Reaktion wird simuliert.");
-    return profile;
-  }
-  if (pressure !== null && pressure > 0.85) {
-    profile.label = "Ressourcendruck";
-    profile.className = "critical";
-    profile.scale = 0.93;
-    profile.membrane = 0.72;
-    profile.notes.push("Hostbelastung ist hoch; Darstellung zieht die Körpergrenze zusammen.");
-  } else if (pressure !== null && pressure > 0.65) {
-    profile.label = "Erhöhte Belastung";
-    profile.className = "warn";
-    profile.scale = 0.97;
-    profile.membrane = 0.84;
-    profile.notes.push("Erhöhte Hostbelastung wird als kompakter Körper visualisiert.");
-  } else {
-    profile.label = "Stabil beobachtet";
-    profile.className = "ok";
-    profile.notes.push("Keine kritische Hostbelastung aus verfügbaren Messwerten erkannt.");
-  }
-  if (sensorRate !== null && sensorRate > 0) profile.notes.push(`Sensoraktivität: ${sensorRate.toFixed(1)} Hz.`);
-  if (recurrence !== null) profile.notes.push(`Rückkopplung: ${recurrence.toFixed(2)}.`);
-  profile.notes.push(`${wesenConnectionArray().length} reale Verbindung(en) beobachtet.`);
-  return profile;
-}
-
-function wesenUpdateVitals() {
-  const root = document.getElementById("wesen-vitals");
-  if (!root) return;
-  root.innerHTML = wesenVitals().map(([label, value, key]) => `<div class="wesen-metric"><span>${label}</span><strong data-vital="${key}">${value}</strong></div>`).join("");
-  const recurrence = wesenRecurrence();
-  document.getElementById("wesen-recurrence-value").textContent = recurrence === null ? "—" : recurrence.toFixed(2);
-  if (recurrence !== null) {
-    wesenState.recurrenceHistory.push(recurrence);
-    if (wesenState.recurrenceHistory.length > 100) wesenState.recurrenceHistory.shift();
-  }
-  wesenDrawRecurrence();
-}
-
-function wesenDrawRecurrence() {
-  const svg = document.getElementById("wesen-recurrence-chart");
-  if (!svg) return;
-  const values = wesenState.recurrenceHistory;
-  if (!values.length) {
-    svg.innerHTML = '<text x="120" y="31" text-anchor="middle" class="wesen-chart-empty">keine Messwerte</text>';
-    return;
-  }
-  const width = 240, height = 56;
-  const min = Math.min(0, ...values), max = Math.max(1, ...values);
-  const range = Math.max(0.001, max - min);
-  const points = values.map((value, index) => `${(index / Math.max(1, values.length - 1)) * width},${height - ((value - min) / range) * (height - 8) - 4}`).join(" ");
-  const last = points.split(" ").at(-1).split(",");
-  svg.innerHTML = `<polyline class="wesen-chart-line" points="${points}"/><circle class="wesen-chart-point" cx="${last[0]}" cy="${last[1]}" r="3"/>`;
-}
-
-function wesenUpdateOrganism() {
-  document.querySelectorAll("[data-wesen-organ-value]").forEach((node) => { node.textContent = wesenOrganValue(node.dataset.wesenOrganValue); });
-  const profile = wesenAdaptiveProfile();
-  const camera = document.getElementById("wesen-camera");
   const membrane = document.getElementById("wesen-membrane");
-  if (camera) camera.style.setProperty("--wesen-adaptive-scale", String(profile.scale));
-  if (membrane) membrane.style.opacity = String(profile.membrane);
-  const reaction = document.getElementById("wesen-reaction-label");
-  if (reaction) {
-    reaction.textContent = profile.label;
-    reaction.dataset.state = profile.className;
-  }
-
-  const environment = document.getElementById("wesen-environment-label");
-  if (environment) environment.textContent = wesenOrganValue("umwelt");
-
-  const adaptation = document.getElementById("wesen-adaptation");
-  if (adaptation) adaptation.innerHTML = `<div class="wesen-adaptation-state ${profile.className}"><span></span><strong>${profile.label}</strong></div>${profile.notes.map((note) => `<p>${note}</p>`).join("")}`;
-
-  document.querySelectorAll(".wesen-organ").forEach((node) => {
-    node.classList.toggle("selected", node.dataset.organ === wesenState.selected);
-    const value = wesenOrganValue(node.dataset.organ);
-    node.classList.toggle("unknown", value === "—" || value === "unbekannt");
-  });
-
-  wesenDrawSignals();
-  wesenDrawEcho();
+  membrane.setAttribute("d", membranePath(nodes, positions, profile));
+  membrane.dataset.state = profile.level;
+  const camera = document.getElementById("wesen-camera");
+  camera.style.setProperty("--wesen-adaptive-scale", String(profile.scale * state.zoom));
+  renderSignals(nodes, positions);
+  renderEnvironment(profile);
+  renderEcho(nodes, positions);
+  renderInspector(nodes);
+  renderConnections();
+  renderHistory();
 }
 
-function wesenDrawSignals() {
-  if (wesenState.paused) return;
-  const layer = document.getElementById("wesen-signal-layer");
-  if (!layer) return;
-  layer.innerHTML = "";
-  const active = ["sensorik", "innenzustand", "rueckkopplung", "struktur", "ressourcen", "umwelt"];
-  const core = wesenOrganPosition("kern");
-  active.forEach((id, index) => {
-    const value = wesenOrganValue(id);
-    if (value === "—" || value === "unbekannt") return;
-    const pos = wesenOrganPosition(id);
-    const line = document.querySelector(`.wesen-nerve[data-organ="${id}"]`);
-    if (!line) return;
-    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    dot.setAttribute("r", id === "sensorik" ? "4.5" : "3.5");
-    dot.setAttribute("class", `wesen-signal-dot wesen-signal-${id}`);
-    dot.innerHTML = `<animateMotion dur="${1.1 + index * 0.13}s" repeatCount="indefinite" path="${line.getAttribute("d")}"/>`;
+function renderSignals(nodes, positions) {
+  const layer = document.getElementById("wesen-signal-layer"); if (!layer) return;
+  layer.innerHTML = ""; if (state.paused) return;
+  const core = positions.kern;
+  nodes.filter((n) => !n.placeholder && n.id !== "kern").forEach((node, index) => {
+    const p = positions[node.id]; if (!p) return;
+    const path = document.querySelector(`.wesen-nerve[data-node="${CSS.escape(node.id)}"]`); if (!path) return;
+    const dot = document.createElementNS(NS, "circle"); dot.setAttribute("r", "3.5"); dot.setAttribute("class", `wesen-signal-dot kind-${node.kind}`);
+    dot.innerHTML = `<animateMotion dur="${1 + (index % 5) * 0.17}s" repeatCount="indefinite" path="${path.getAttribute("d")}"/>`;
     layer.appendChild(dot);
-    if (id === "rueckkopplung") {
-      const echo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      echo.setAttribute("r", "3.5");
-      echo.setAttribute("class", "wesen-signal-dot wesen-signal-echo");
-      const reversePath = `M ${pos[0]} ${pos[1]} Q ${(pos[0] + core[0]) / 2} ${(pos[1] + core[1]) / 2} ${core[0]} ${core[1]}`;
-      echo.innerHTML = `<animateMotion begin=".35s" dur="1.5s" repeatCount="indefinite" path="${reversePath}"/>`;
+    if (node.kind === "feedback" || node.kind === "sensor") {
+      const echo = document.createElementNS(NS, "circle"); echo.setAttribute("r", "3"); echo.setAttribute("class", "wesen-signal-dot feedback-echo");
+      echo.innerHTML = `<animateMotion begin=".22s" dur="1.35s" repeatCount="indefinite" path="M ${p.x} ${p.y} Q ${(p.x + core.x) / 2} ${(p.y + core.y) / 2 + 18} ${core.x} ${core.y}"/>`;
       layer.appendChild(echo);
     }
   });
 }
-
-function wesenDrawEcho() {
-  const svg = document.getElementById("wesen-self-svg");
-  if (!svg) return;
-  const latency = wesenLoopLatency();
-  const recurrence = wesenRecurrence();
-  const delayText = latency === null ? "Latenz unbekannt" : `${latency.toFixed(1)} ms Echo`;
-  const opacity = recurrence === null ? 0.25 : 0.25 + wesenClamp(recurrence) * 0.65;
-  svg.innerHTML = `
-    <g class="wesen-self-primary" transform="translate(67 70)">
-      <circle r="43"/><circle cx="0" cy="-23" r="8"/><circle cx="22" cy="9" r="8"/><circle cx="-22" cy="9" r="8"/><circle cx="0" cy="25" r="8"/>
-    </g>
-    <path class="wesen-self-arrow" d="M116 70 H143"/>
-    <g class="wesen-self-echo" transform="translate(194 70)" style="opacity:${opacity}">
-      <circle r="43"/><circle cx="0" cy="-23" r="8"/><circle cx="22" cy="9" r="8"/><circle cx="-22" cy="9" r="8"/><circle cx="0" cy="25" r="8"/>
-    </g>
-    <text x="130" y="130" text-anchor="middle">${delayText}</text>`;
-  const metrics = document.getElementById("wesen-self-metrics");
-  if (metrics) metrics.innerHTML = `<div><span>Recurrence</span><strong>${recurrence === null ? "—" : recurrence.toFixed(2)}</strong></div><div><span>Loop-Latenz</span><strong>${latency === null ? "—" : `${latency.toFixed(1)} ms`}</strong></div>`;
+function renderEnvironment(profile) {
+  const m = runtimeMetrics();
+  document.getElementById("wesen-environment-label").textContent = m.environment;
+  const reaction = document.getElementById("wesen-reaction-label"); reaction.textContent = profile.label; reaction.dataset.state = profile.level;
+  const layer = document.getElementById("wesen-environment-layer");
+  if (layer) layer.innerHTML = `<g class="wesen-env-node" transform="translate(72 100)"><circle r="28"/><text y="4">ENV</text></g><text class="wesen-env-label" x="110" y="104">${esc(m.environment)}</text>`;
+  const root = document.getElementById("wesen-adaptation");
+  root.innerHTML = `<div class="wesen-adaptation-state ${profile.level}"><span></span><strong>${esc(profile.label)}</strong></div>${profile.notes.map((n) => `<p>${esc(n)}</p>`).join("")}`;
+}
+function renderEcho(nodes, positions) {
+  const svg = document.getElementById("wesen-self-svg"); if (!svg) return;
+  const m = runtimeMetrics(); const delay = m.latency === null ? "Latenz unbekannt" : `${m.latency.toFixed(1)} ms`;
+  const opacity = m.recurrence === null ? 0.25 : 0.25 + clamp(m.recurrence) * 0.65;
+  const scaleX = 0.29, scaleY = 0.23;
+  const dots = nodes.filter((n) => positions[n.id]).map((n) => {
+    const p = positions[n.id]; const x = 18 + p.x * scaleX, y = 12 + p.y * scaleY;
+    return `<circle cx="${x}" cy="${y}" r="${n.kind === "core" ? 9 : 4}" class="kind-${n.kind}"/>`;
+  }).join("");
+  const lines = nodes.filter((n) => n.id !== "kern" && positions[n.id]).map((n) => {
+    const p = positions[n.id], c = positions.kern;
+    return `<line x1="${18 + c.x * scaleX}" y1="${12 + c.y * scaleY}" x2="${18 + p.x * scaleX}" y2="${12 + p.y * scaleY}"/>`;
+  }).join("");
+  svg.innerHTML = `<g class="wesen-self-body" style="opacity:${opacity}">${lines}${dots}</g><text x="150" y="172" text-anchor="middle">Echo ${esc(delay)}</text>`;
+  document.getElementById("wesen-self-metrics").innerHTML = `<div><span>Recurrence</span><strong>${m.recurrence === null ? "—" : m.recurrence.toFixed(2)}</strong></div><div><span>Loop-Latenz</span><strong>${esc(delay)}</strong></div>`;
 }
 
-function wesenInspectorData(id) {
-  const organ = WESEN_ORGANS.find((item) => item.id === id) || WESEN_ORGANS[0];
-  const e = wesenState.embodiment || {};
-  const rows = [];
-  if (id === "sensorik") {
-    rows.push(["Input-Rate", wesenOrganValue(id)], ["Verbindungen", String(wesenConnectionArray().filter((item) => /sensor|camera|audio|micro|weather|input/i.test(JSON.stringify(item))).length)], ["Letzter Input", wesenText(e, ["last_text_input", "last_input", "metrics.last_input"], "—")]);
-  } else if (id === "innenzustand") {
-    rows.push(["Regulation", wesenOrganValue(id)], ["Energie", wesenFormat(wesenPick(e, ["energy", "metrics.energy", "homeostasis.energy"]), "", 3)], ["Temperatur", wesenFormat(wesenPick(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]), " °C", 1)]);
-  } else if (id === "rueckkopplung") {
-    rows.push(["Recurrence", wesenOrganValue(id)], ["Latenz", wesenFormat(wesenLoopLatency(), " ms", 1)], ["Messpunkte", String(wesenState.recurrenceHistory.length)]);
-  } else if (id === "struktur") {
-    rows.push(["Körperverbindungen", String(wesenConnectionArray().length)], ["Körpergrenze", wesenConnectionArray().length ? "dynamisch" : "unbekannt"], ["Modus", "beobachtend"]);
-  } else if (id === "ressourcen") {
-    rows.push(["CPU", wesenOrganValue(id)], ["RAM", wesenFormat(wesenPick(e, ["host.memory_percent", "interoception.memory_percent", "metrics.memory_percent"]), " %", 0)], ["Host", wesenText(e, ["host.hostname", "interoception.hostname"], "—")]);
-  } else if (id === "umwelt") {
-    rows.push(["Umgebung", wesenOrganValue(id)], ["Episode", wesenText(e, ["episode", "episode_id", "metrics.episode"], "—")], ["Verfügbarkeit", wesenText(e, ["available"], "—")]);
-  } else {
-    rows.push(["Feuerrate", wesenOrganValue(id)], ["Tick", wesenText(wesenState.status || {}, ["tick", "runtime.tick"], "—")], ["Runtime", wesenText(wesenState.status || {}, ["state", "runtime.state", "status"], "—")]);
-  }
-  return { organ, rows };
+function renderVitals() {
+  const m = runtimeMetrics();
+  const rows = [
+    ["Tick", m.tick ?? "—"], ["Feuerrate", fmt(m.firing, " Hz", 1)], ["Target Hz", fmt(m.targetHz, " Hz", 0)], ["Achieved Hz", fmt(m.achievedHz, " Hz", 1)],
+    ["Energie", fmt(m.energy, "", 3)], ["CPU", fmt(m.cpu, " %", 0)], ["RAM", fmt(m.memory, " %", 0)], ["Temperatur", fmt(m.temp, " °C", 1)], ["Fan", fmt(m.fan, " rpm", 0)], ["Disk", fmt(m.disk, " %", 0)],
+  ];
+  document.getElementById("wesen-vitals").innerHTML = rows.map(([a,b]) => `<div class="wesen-metric"><span>${a}</span><strong>${esc(b)}</strong></div>`).join("");
+  document.getElementById("wesen-recurrence-value").textContent = m.recurrence === null ? "—" : m.recurrence.toFixed(2);
+  if (m.recurrence !== null) { state.recurrence.push(m.recurrence); if (state.recurrence.length > 100) state.recurrence.shift(); }
+  drawRecurrence();
 }
-
-function wesenUpdateInspector() {
-  const root = document.getElementById("wesen-inspector");
-  if (!root) return;
-  const { organ, rows } = wesenInspectorData(wesenState.selected);
-  const value = wesenOrganValue(organ.id);
-  const unknown = value === "—" || value === "unbekannt";
-  const status = document.getElementById("wesen-inspector-status");
-  if (status) {
-    status.textContent = unknown ? "unbekannt" : "beobachtet";
-    status.className = unknown ? "unknown" : "ok";
-  }
-  root.innerHTML = `
-    <div class="wesen-inspector-title wesen-hue-${organ.hue}"><span>${organ.icon}</span><div><strong>${organ.label}</strong><small>${organ.role}</small></div></div>
-    <div class="wesen-inspector-rows">${rows.map(([label, item]) => `<div><span>${label}</span><strong>${item}</strong></div>`).join("")}</div>
-    <p class="wesen-integrity-note">Diese Ansicht zeigt beobachtete Telemetrie. Fehlende Felder bleiben unbekannt; es werden keine Ersatzwerte simuliert.</p>`;
+function drawRecurrence() {
+  const svg = document.getElementById("wesen-recurrence-chart"); const values = state.recurrence;
+  if (!values.length) { svg.innerHTML = '<text x="120" y="31" text-anchor="middle" class="wesen-chart-empty">keine Messwerte</text>'; return; }
+  const pts = values.map((v,i) => `${i / Math.max(1, values.length - 1) * 240},${52 - clamp(v) * 46}`).join(" ");
+  const [x,y] = pts.split(" ").at(-1).split(",");
+  svg.innerHTML = `<polyline class="wesen-chart-line" points="${pts}"/><circle class="wesen-chart-point" cx="${x}" cy="${y}" r="3"/>`;
 }
-
-function wesenUpdateConnections() {
-  const root = document.getElementById("wesen-connections");
-  if (!root) return;
-  const connections = wesenConnectionArray();
-  if (!connections.length) {
-    root.innerHTML = '<p class="wesen-empty">Keine realen Verbindungen gemeldet.</p>';
-    return;
-  }
-  root.innerHTML = connections.slice(0, 10).map((item, index) => {
-    const label = wesenText(item, ["label", "name", "id", "connection_id", "device_id"], `Verbindung ${index + 1}`);
-    const kind = wesenText(item, ["kind", "type", "category", "direction"], "Verbindung");
-    const state = wesenText(item, ["status", "state", "available", "connected"], "beobachtet");
-    return `<button type="button" class="wesen-connection-row" data-wesen-connection="${index}"><span class="wesen-connection-led ${wesenStatusClass(state)}"></span><span><strong>${label}</strong><small>${kind}</small></span><em>${state}</em></button>`;
+function selectedNode(nodes) { return nodes.find((n) => n.id === state.selected) || nodes[0]; }
+function renderInspector(nodes) {
+  const node = selectedNode(nodes); state.selected = node.id;
+  const m = runtimeMetrics(); const root = document.getElementById("wesen-inspector");
+  const rows = node.source ? Object.entries(node.source).filter(([,v]) => ["string","number","boolean"].includes(typeof v)).slice(0,7) : [];
+  const generic = node.id === "kern" ? [["Feuerrate", fmt(m.firing," Hz",1)],["Tick",m.tick??"—"]] : node.id === "innenzustand" ? [["Regulation",m.regulation],["CPU",fmt(m.cpu," %",0)],["Temperatur",fmt(m.temp," °C",1)]] : node.id === "rueckkopplung" ? [["Recurrence",m.recurrence===null?"—":m.recurrence.toFixed(2)],["Latenz",fmt(m.latency," ms",1)]] : [["Status",nodeValue(node)],["Typ",node.kind]];
+  const data = rows.length ? rows : generic;
+  document.getElementById("wesen-inspector-status").textContent = node.placeholder ? "unbekannt" : "beobachtet";
+  root.innerHTML = `<div class="wesen-inspector-title wesen-hue-${node.hue}"><span>${esc(node.icon)}</span><div><strong>${esc(node.label)}</strong><small>${esc(node.kind)}</small></div></div><div class="wesen-inspector-rows">${data.map(([a,b]) => `<div><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`).join("")}</div><p class="wesen-integrity-note">OBSERVED/UNKNOWN: keine erfundenen Ersatzwerte. Darstellung ist Visualisierung, keine Bewusstseinsmessung.</p>`;
+}
+function renderConnections() {
+  const root = document.getElementById("wesen-connections"); const items = wesenConnectionArray();
+  if (!items.length) { root.innerHTML = '<p class="wesen-empty">Keine realen Verbindungen gemeldet.</p>'; return; }
+  root.innerHTML = items.slice(0,14).map((item,index) => {
+    const status = text(item,["status","state","available","connected"],"beobachtet");
+    const kind = classifyConnection(item);
+    return `<button class="wesen-connection-row" data-node="conn-${index}"><span class="wesen-connection-led ${statusClass(status)}"></span><span><strong>${esc(connectionLabel(item,index))}</strong><small>${esc(kind)}</small></span><em>${esc(status)}</em></button>`;
   }).join("");
 }
-
-function wesenSnapshot() {
-  return {
-    sensorRate: wesenSensorRate(),
-    recurrence: wesenRecurrence(),
-    latency: wesenLoopLatency(),
-    pressure: wesenHostPressure(),
-    connections: wesenConnectionArray().length,
-    regulation: wesenOrganValue("innenzustand"),
-  };
+function renderHistory() {
+  const root = document.getElementById("wesen-morphology-history");
+  root.innerHTML = state.morphologyHistory.length ? state.morphologyHistory.map((h) => `<div><time>${h.time}</time><span>${h.count} Knoten</span></div>`).join("") : '<p class="wesen-empty">Noch keine Änderung der Körpergrenze.</p>';
 }
-
-function wesenRecordEvents() {
-  const next = wesenSnapshot();
-  const previous = wesenState.lastSnapshot;
-  wesenState.lastSnapshot = next;
-  if (!previous) return;
-  const now = new Date().toLocaleTimeString("de-DE", { hour12: false });
-  const events = [];
-  const changed = (a, b, threshold = 0.001) => a !== null && b !== null && Math.abs(a - b) > threshold;
-  if (changed(next.sensorRate, previous.sensorRate, 0.1)) events.push(["sensorik", "Sensoraktivität verändert", `${previous.sensorRate?.toFixed(1)} → ${next.sensorRate?.toFixed(1)} Hz`]);
-  if (changed(next.recurrence, previous.recurrence, 0.01)) events.push(["rueckkopplung", "Rückkopplung verändert", `${previous.recurrence?.toFixed(2)} → ${next.recurrence?.toFixed(2)}`]);
-  if (changed(next.latency, previous.latency, 0.5)) events.push(["rueckkopplung", "Loop-Latenz verändert", `${previous.latency?.toFixed(1)} → ${next.latency?.toFixed(1)} ms`]);
-  if (next.connections !== previous.connections) events.push(["struktur", "Körpergrenze verändert", `${previous.connections} → ${next.connections} Verbindungen`]);
-  if (next.regulation !== previous.regulation) events.push(["innenzustand", "Regulationszustand verändert", `${previous.regulation} → ${next.regulation}`]);
-  if (changed(next.pressure, previous.pressure, 0.05)) events.push(["system", "Hostbelastung verändert", `${Math.round((previous.pressure || 0) * 100)} → ${Math.round((next.pressure || 0) * 100)} %`]);
-  events.forEach(([type, label, detail]) => wesenState.eventHistory.unshift({ time: now, type, label, detail }));
-  if (wesenState.eventHistory.length > 40) wesenState.eventHistory.length = 40;
-  wesenUpdateEvents();
+function pushEvent(type,label,detail) {
+  state.history.unshift({ time:new Date().toLocaleTimeString("de-DE",{hour12:false}), type, label, detail });
+  if (state.history.length > 40) state.history.length = 40;
 }
-
-function wesenUpdateEvents() {
+function snapshot() {
+  const m = runtimeMetrics();
+  return { recurrence:m.recurrence, latency:m.latency, cpu:m.cpu, temp:m.temp, regulation:m.regulation, connections:wesenConnectionArray().length };
+}
+function recordEvents() {
+  const next = snapshot(), prev = state.lastSnapshot; state.lastSnapshot = next; if (!prev) return;
+  const changed = (a,b,t=0.01) => a!==null && b!==null && Math.abs(a-b)>t;
+  if (changed(next.recurrence,prev.recurrence)) pushEvent("feedback","Rückkopplung verändert",`${prev.recurrence?.toFixed(2)} → ${next.recurrence?.toFixed(2)}`);
+  if (changed(next.latency,prev.latency,0.5)) pushEvent("feedback","Loop-Latenz verändert",`${prev.latency?.toFixed(1)} → ${next.latency?.toFixed(1)} ms`);
+  if (changed(next.cpu,prev.cpu,3)) pushEvent("system","CPU-Belastung verändert",`${prev.cpu?.toFixed(0)} → ${next.cpu?.toFixed(0)} %`);
+  if (changed(next.temp,prev.temp,1)) pushEvent("system","Temperatur verändert",`${prev.temp?.toFixed(1)} → ${next.temp?.toFixed(1)} °C`);
+  if (next.connections!==prev.connections) pushEvent("structure","Körpergrenze verändert",`${prev.connections} → ${next.connections} Verbindungen`);
+  if (next.regulation!==prev.regulation) pushEvent("system","Regulation verändert",`${prev.regulation} → ${next.regulation}`);
+  renderEvents();
+}
+function renderEvents() {
   const root = document.getElementById("wesen-events");
-  if (!root) return;
-  const active = document.querySelector("#wesen-event-filters .active")?.dataset.wesenFilter || "all";
-  const events = wesenState.eventHistory.filter((event) => active === "all" || event.type === active).slice(0, 20);
-  if (!events.length) {
-    root.innerHTML = '<p class="wesen-empty">Noch keine Zustandsänderung im aktuellen Beobachtungsfenster.</p>';
-    return;
-  }
-  root.innerHTML = events.map((event) => `<button type="button" class="wesen-event-row" data-wesen-event-organ="${event.type}"><time>${event.time}</time><span class="wesen-event-kind ${event.type}"></span><strong>${event.label}</strong><em>${event.detail}</em></button>`).join("");
+  const events = state.history.filter((e) => state.filter === "all" || e.type === state.filter).slice(0,20);
+  root.innerHTML = events.length ? events.map((e) => `<button class="wesen-event-row"><time>${e.time}</time><span class="wesen-event-kind ${e.type}"></span><strong>${esc(e.label)}</strong><em>${esc(e.detail)}</em></button>`).join("") : '<p class="wesen-empty">Noch keine Zustandsänderung im Beobachtungsfenster.</p>';
 }
-
-function wesenUpdateLiveState(error = null) {
-  const label = document.getElementById("wesen-live-label");
-  const dot = document.querySelector(".wesen-live-dot");
-  if (!label || !dot) return;
-  if (error) {
-    label.textContent = "Telemetrie nicht erreichbar";
-    dot.dataset.state = "critical";
-    return;
-  }
-  const runtime = wesenText(wesenState.status || {}, ["state", "runtime.state", "status"], "verbunden");
-  label.textContent = runtime;
-  dot.dataset.state = wesenStatusClass(runtime);
+function updateLive(error=null) {
+  const label=document.getElementById("wesen-live-label"), dot=document.querySelector(".wesen-live-dot");
+  if (error) { label.textContent="Telemetrie nicht erreichbar"; dot.dataset.state="critical"; return; }
+  const runtime=text(state.status||{},["state","runtime.state","status"],"verbunden"); label.textContent=runtime; dot.dataset.state=statusClass(runtime);
 }
+function renderAll() { renderVitals(); renderBody(); recordEvents(); updateLive(); }
 
-function wesenUpdateAll() {
-  wesenUpdateVitals();
-  wesenUpdateOrganism();
-  wesenUpdateInspector();
-  wesenUpdateConnections();
-  wesenRecordEvents();
-  wesenUpdateLiveState();
-}
-
-async function wesenPoll() {
-  if (wesenState.controller) wesenState.controller.abort();
-  wesenState.controller = new AbortController();
+async function poll() {
+  state.controller?.abort(); state.controller = new AbortController();
   try {
-    const [status, embodiment, connections] = await Promise.allSettled([
-      wesenReadJson("/api/status", wesenState.controller.signal),
-      wesenReadJson("/api/embodiment/state", wesenState.controller.signal),
-      wesenReadJson("/api/embodiment/connections", wesenState.controller.signal),
+    const results = await Promise.allSettled([
+      wesenReadJson("/api/status",state.controller.signal),
+      wesenReadJson("/api/embodiment/state",state.controller.signal),
+      wesenReadJson("/api/embodiment/connections",state.controller.signal),
     ]);
-    if (status.status === "fulfilled") wesenState.status = status.value;
-    if (embodiment.status === "fulfilled") wesenState.embodiment = embodiment.value;
-    if (connections.status === "fulfilled") wesenState.connections = connections.value;
-    if ([status, embodiment, connections].every((item) => item.status === "rejected")) throw new Error("Keine Telemetriequelle erreichbar");
-    wesenUpdateAll();
-  } catch (error) {
-    if (error.name !== "AbortError") wesenUpdateLiveState(error);
-  } finally {
-    clearTimeout(wesenState.timer);
-    wesenState.timer = setTimeout(wesenPoll, WESEN_POLL_MS);
-  }
+    if (results[0].status==="fulfilled") state.status=results[0].value;
+    if (results[1].status==="fulfilled") state.embodiment=results[1].value;
+    if (results[2].status==="fulfilled") state.connections=results[2].value;
+    if (results.every((r)=>r.status==="rejected")) throw new Error("Keine Telemetriequelle erreichbar");
+    renderAll();
+  } catch (error) { if (error.name!=="AbortError") updateLive(error); }
+  finally { clearTimeout(state.timer); state.timer=setTimeout(poll,WESEN_POLL_MS); }
 }
 
-function wesenSelectOrgan(id) {
-  if (!WESEN_ORGANS.some((item) => item.id === id)) return;
-  wesenState.selected = id;
-  wesenUpdateOrganism();
-  wesenUpdateInspector();
-}
-
-function wesenBindInteractions() {
-  const workspace = document.getElementById("tab-wesen");
-  if (!workspace || workspace.dataset.bound === "true") return;
-  workspace.dataset.bound = "true";
-  workspace.addEventListener("click", (event) => {
-    const organ = event.target.closest(".wesen-organ");
-    if (organ) wesenSelectOrgan(organ.dataset.organ);
-
-    const eventRow = event.target.closest("[data-wesen-event-organ]");
-    if (eventRow && WESEN_ORGANS.some((item) => item.id === eventRow.dataset.wesenEventOrgan)) wesenSelectOrgan(eventRow.dataset.wesenEventOrgan);
-
-    const filter = event.target.closest("[data-wesen-filter]");
-    if (filter) {
-      document.querySelectorAll("#wesen-event-filters [data-wesen-filter]").forEach((item) => item.classList.toggle("active", item === filter));
-      wesenUpdateEvents();
-    }
-
-    const view = event.target.closest("[data-wesen-view]");
-    if (view) {
-      view.classList.toggle("active");
-      document.getElementById("wesen-svg")?.classList.toggle(`show-${view.dataset.wesenView}`, view.classList.contains("active"));
-    }
-
-    const action = event.target.closest("[data-wesen-action]")?.dataset.wesenAction;
-    if (action === "reset-view") wesenSelectOrgan("sensorik");
-    if (action === "pause-visual") {
-      wesenState.paused = !wesenState.paused;
-      event.target.classList.toggle("active", wesenState.paused);
-      event.target.textContent = wesenState.paused ? "▶ Visualisierung" : "Ⅱ Visualisierung";
-      if (!wesenState.paused) wesenDrawSignals();
-      else document.getElementById("wesen-signal-layer").innerHTML = "";
-    }
+function selectNode(id) { state.selected=id; renderBody(); }
+function bindInteractions() {
+  const root=document.getElementById("tab-wesen"); if (!root || root.dataset.bound) return; root.dataset.bound="1";
+  root.addEventListener("click",(event)=>{
+    const node=event.target.closest("[data-node]"); if (node) selectNode(node.dataset.node);
+    const filter=event.target.closest("[data-wesen-filter]"); if (filter) { state.filter=filter.dataset.wesenFilter; document.querySelectorAll("[data-wesen-filter]").forEach((b)=>b.classList.toggle("active",b===filter)); renderEvents(); }
+    const view=event.target.closest("[data-wesen-view]"); if (view) { view.classList.toggle("active"); document.getElementById("wesen-svg")?.classList.toggle(`show-${view.dataset.wesenView}`,view.classList.contains("active")); }
+    const action=event.target.closest("[data-wesen-action]")?.dataset.wesenAction;
+    if (action==="reset-view") { state.zoom=1; state.selected="kern"; renderBody(); }
+    if (action==="pause-visual") { state.paused=!state.paused; event.target.textContent=state.paused?"▶ Visualisierung":"Ⅱ Visualisierung"; renderBody(); }
   });
-
-  workspace.addEventListener("keydown", (event) => {
-    const organ = event.target.closest(".wesen-organ");
-    if (organ && (event.key === "Enter" || event.key === " ")) {
-      event.preventDefault();
-      wesenSelectOrgan(organ.dataset.organ);
-    }
-  });
-
-  document.getElementById("wesen-stage")?.addEventListener("dblclick", () => wesenSelectOrgan("sensorik"));
+  document.getElementById("wesen-stage")?.addEventListener("wheel",(event)=>{ event.preventDefault(); state.zoom=clamp(state.zoom + (event.deltaY<0?0.08:-0.08),0.72,1.45); renderBody(); },{passive:false});
+  document.getElementById("wesen-stage")?.addEventListener("dblclick",()=>{ state.zoom=1; state.selected="kern"; renderBody(); });
 }
-
-function initWesenWorkspace() {
-  wesenEnsureWorkspace();
-  wesenEnsureNavButton();
-  if (!wesenState.timer) wesenPoll();
-}
-
-window.Brain5DWesen = { init: initWesenWorkspace, activate: wesenActivate, refresh: wesenPoll };
-
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initWesenWorkspace, { once: true });
-else initWesenWorkspace();
+function initWesenWorkspace() { ensureWorkspace(); ensureNav(); if (!state.timer) poll(); }
+window.Brain5DWesen={init:initWesenWorkspace,activate,refresh:poll};
+if (document.readyState==="loading") document.addEventListener("DOMContentLoaded",initWesenWorkspace,{once:true}); else initWesenWorkspace();
