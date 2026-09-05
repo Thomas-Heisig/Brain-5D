@@ -24,7 +24,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           server = Path('src/dashboard/server.py')
           text = server.read_text(encoding='utf-8')
@@ -44,7 +43,7 @@ jobs:
                     "next_experiment_id"
                 )
                 if not isinstance(next_experiment_id, str) or not next_experiment_id.strip():
-                    raise WorkflowValidationError("No generated experiment ID is available.")
+                    raise InvalidRequestError("No generated experiment ID is available.")
                 experiment_id = next_experiment_id.strip()
             protocol_result = execute_stdp_pair_experiment(
                 experiment_id=experiment_id, research_root=source.root()
@@ -75,52 +74,74 @@ jobs:
               '            "total_synapses": self.total_synapses,\n',
               1,
           )
-          text = text.replace(
-              '        spike_sequence: list[tuple[int, int]] = []\n\n        for tick in range(self.max_ticks):\n            result = runtime.step()\n            raw_ids = result.get("output_spike_ids", ())\n            spike_ids = tuple(int(value) for value in raw_ids)\n            if spike_ids:\n                spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)\n                response_ticks.append(tick)\n                response_neurons.update(spike_ids)\n                total_spikes += len(spike_ids)\n                peak_rate = max(peak_rate, float(len(spike_ids)))\n                if (\n                    self.source_neuron in spike_ids\n                    and return_latency is None\n                    and tick > 0\n                ):\n                    return_latency = tick\n                if tick > 0 and self.source_neuron in spike_ids:\n                    recurrent_events += 1\n',
-              '        spike_sequence: list[tuple[int, int]] = []\n'
-              '        ticks_executed = 0\n'
-              '        delivered_synaptic_events = 0\n'
-              '        synaptic_activity_ticks = 0\n'
-              '        max_synaptic_current_targets = 0\n'
-              '        total_synapses = 0\n\n'
-              '        for tick in range(self.max_ticks):\n'
-              '            result = runtime.step()\n'
-              '            ticks_executed = tick + 1\n'
-              '            raw_ids = result.get("spike_ids")\n'
-              '            if raw_ids is None:\n'
-              '                raw_ids = result.get("output_spike_ids", ())\n'
-              '            spike_ids = tuple(int(value) for value in raw_ids)\n'
-              '            output_ids = tuple(\n'
-              '                int(value) for value in result.get("output_spike_ids", spike_ids)\n'
-              '            )\n'
-              '            delivered = int(result.get("delivered_events", 0) or 0)\n'
-              '            synaptic_targets = int(result.get("synaptic_current_targets", 0) or 0)\n'
-              '            delivered_synaptic_events += delivered\n'
-              '            if delivered > 0 or synaptic_targets > 0:\n'
-              '                synaptic_activity_ticks += 1\n'
-              '            max_synaptic_current_targets = max(\n'
-              '                max_synaptic_current_targets, synaptic_targets\n'
-              '            )\n'
-              '            total_synapses = max(\n'
-              '                total_synapses, int(result.get("total_synapses", 0) or 0)\n'
-              '            )\n'
-              '            if spike_ids:\n'
-              '                spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)\n'
-              '                response_neurons.update(spike_ids)\n'
-              '                total_spikes += len(spike_ids)\n'
-              '                peak_rate = max(peak_rate, float(len(spike_ids)))\n'
-              '                if (\n'
-              '                    self.source_neuron in spike_ids\n'
-              '                    and return_latency is None\n'
-              '                    and tick > 0\n'
-              '                ):\n'
-              '                    return_latency = tick\n'
-              '                if tick > 0 and self.source_neuron in spike_ids:\n'
-              '                    recurrent_events += 1\n'
-              '            if output_ids:\n'
-              '                response_ticks.append(tick)\n',
-              1,
-          )
+          old_probe = '''        spike_sequence: list[tuple[int, int]] = []
+
+        for tick in range(self.max_ticks):
+            result = runtime.step()
+            raw_ids = result.get("output_spike_ids", ())
+            spike_ids = tuple(int(value) for value in raw_ids)
+            if spike_ids:
+                spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)
+                response_ticks.append(tick)
+                response_neurons.update(spike_ids)
+                total_spikes += len(spike_ids)
+                peak_rate = max(peak_rate, float(len(spike_ids)))
+                if (
+                    self.source_neuron in spike_ids
+                    and return_latency is None
+                    and tick > 0
+                ):
+                    return_latency = tick
+                if tick > 0 and self.source_neuron in spike_ids:
+                    recurrent_events += 1
+'''
+          new_probe = '''        spike_sequence: list[tuple[int, int]] = []
+        ticks_executed = 0
+        delivered_synaptic_events = 0
+        synaptic_activity_ticks = 0
+        max_synaptic_current_targets = 0
+        total_synapses = 0
+
+        for tick in range(self.max_ticks):
+            result = runtime.step()
+            ticks_executed = tick + 1
+            raw_ids = result.get("spike_ids")
+            if raw_ids is None:
+                raw_ids = result.get("output_spike_ids", ())
+            spike_ids = tuple(int(value) for value in raw_ids)
+            output_ids = tuple(
+                int(value) for value in result.get("output_spike_ids", spike_ids)
+            )
+            delivered = int(result.get("delivered_events", 0) or 0)
+            synaptic_targets = int(result.get("synaptic_current_targets", 0) or 0)
+            delivered_synaptic_events += delivered
+            if delivered > 0 or synaptic_targets > 0:
+                synaptic_activity_ticks += 1
+            max_synaptic_current_targets = max(
+                max_synaptic_current_targets, synaptic_targets
+            )
+            total_synapses = max(
+                total_synapses, int(result.get("total_synapses", 0) or 0)
+            )
+            if spike_ids:
+                spike_sequence.extend((tick, neuron_id) for neuron_id in spike_ids)
+                response_neurons.update(spike_ids)
+                total_spikes += len(spike_ids)
+                peak_rate = max(peak_rate, float(len(spike_ids)))
+                if (
+                    self.source_neuron in spike_ids
+                    and return_latency is None
+                    and tick > 0
+                ):
+                    return_latency = tick
+                if tick > 0 and self.source_neuron in spike_ids:
+                    recurrent_events += 1
+            if output_ids:
+                response_ticks.append(tick)
+'''
+          if old_probe not in text:
+              raise SystemExit('network_probe.py target block not found')
+          text = text.replace(old_probe, new_probe, 1)
           text = text.replace(
               '            network_state_digest_after=after,\n        )\n',
               '            network_state_digest_after=after,\n'
@@ -192,6 +213,22 @@ jobs:
               raise SystemExit('TODO test-count claim not found')
           path.write_text(text, encoding='utf-8')
           print(f'documented collected tests: {count}')
+      - name: Verify actual network activity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          from src.research.experiment_suite import run_ping
+
+          config = yaml.safe_load(Path('configs/learning_experiment.yaml').read_text(encoding='utf-8'))
+          runs = run_ping(config, seeds=(42,), ticks=12)
+          assert len(runs) == 2
+          assert all(run.metrics['ticks_executed'] > 0 for run in runs)
+          assert all(run.metrics['total_synapses'] > 0 for run in runs)
+          assert any(run.metrics['total_spikes'] > 0 for run in runs)
+          assert any(run.metrics['delivered_synaptic_events'] > 0 for run in runs)
+          print([run.metrics for run in runs])
+          PY
       - name: Verify repaired gates
         run: |
           python -m black --check src tests scripts
