@@ -16,8 +16,16 @@ def replace(path: Path, old: str, new: str) -> None:
 
 def main() -> None:
     data_v2 = ROOT / "src/research/data_v2.py"
-    replace(data_v2, "for index, run in enumerate(tuple(runs)):", "for run_index, run in enumerate(tuple(runs)):")
-    replace(data_v2, "f\"run-{index:04d}-{condition}-seed-{seed}.json.gz\"", "f\"run-{run_index:04d}-{condition}-seed-{seed}.json.gz\"")
+    replace(
+        data_v2,
+        "for index, run in enumerate(tuple(runs)):",
+        "for run_index, run in enumerate(tuple(runs)):",
+    )
+    replace(
+        data_v2,
+        'f"run-{index:04d}-{condition}-seed-{seed}.json.gz"',
+        'f"run-{run_index:04d}-{condition}-seed-{seed}.json.gz"',
+    )
     replace(data_v2, '"run_index": index,', '"run_index": run_index,')
     replace(data_v2, '"last_archived_run": index,', '"last_archived_run": run_index,')
 
@@ -35,6 +43,11 @@ def main() -> None:
         workflow,
         "            runner_module = experiment_suite",
         "            runner_module: ModuleType = experiment_suite",
+    )
+    replace(
+        workflow,
+        "        runner = getattr(runner_module, runner_name)\n        runtime_runner_digest, source_runner_digest = (\n            _assert_loaded_callable_matches_source(\n                runner, Path(runner_module.__file__).resolve(), runner_name\n            )\n        )",
+        "        runner = getattr(runner_module, runner_name)\n        runner_source = runner_module.__file__\n        if runner_source is None:\n            raise WorkflowValidationError(\n                f\"Cannot resolve source path for runner module {runner_module.__name__}.\"\n            )\n        runtime_runner_digest, source_runner_digest = (\n            _assert_loaded_callable_matches_source(\n                runner, Path(runner_source).resolve(), runner_name\n            )\n        )",
     )
 
 
