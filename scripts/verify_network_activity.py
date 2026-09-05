@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-import yaml
+import yaml  # noqa: E402
 
-from src.research.experiment_suite import run_ping
+from src.research.experiment_suite import run_ping  # noqa: E402
 
 
 def main() -> int:
