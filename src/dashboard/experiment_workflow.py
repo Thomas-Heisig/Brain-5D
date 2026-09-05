@@ -129,6 +129,8 @@ class ExperimentWorkflow:
     conditions: str
     ticks: int
     notes: str
+    protocol: str
+    seeds: tuple[int, ...]
 
 
 class ExperimentWorkflowService:
@@ -199,11 +201,12 @@ class ExperimentWorkflowService:
         }
 
     def run_science(
-        self, body: dict[str, object], *, seeds: tuple[int, ...] = (42, 43, 44)
+        self, body: dict[str, object], *, seeds: tuple[int, ...] | None = None
     ) -> dict[str, object]:
         """Execute a registered suite and persist DATA, manifest, and report."""
         workflow = self._validate(body)
         runner_name = self._science_runner(body, workflow.experiment_id)
+        effective_seeds = seeds if seeds is not None else workflow.seeds
         output_dir = self._research_root / "experiments" / workflow.experiment_id
         if (output_dir / "manifest.json").exists():
             raise WorkflowValidationError(
@@ -220,7 +223,11 @@ class ExperimentWorkflowService:
         config = _load_yaml(config_path)
         config_digest = _sha256_file(config_path)
         started = perf_counter()
-        runs = getattr(experiment_suite, runner_name)(config, seeds=seeds)
+        runner = getattr(experiment_suite, runner_name)
+        if runner_name in {"run_ping", "run_ping_v2", "run_5d", "run_time"}:
+            runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
+        else:
+            runs = runner(config, seeds=effective_seeds)
         runs = [replace(run, experiment_id=workflow.experiment_id) for run in runs]
         duration = perf_counter() - started
         output_dir.mkdir(parents=True, exist_ok=False)
@@ -237,12 +244,15 @@ class ExperimentWorkflowService:
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
         recorder.record_config(str(config_path), config_digest)
         recorder.record_simulation_params(
-            seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds)
+            seed=effective_seeds[0],
+            ticks=workflow.ticks,
+            seeds=list(effective_seeds),
+            protocol=workflow.protocol,
         )
         recorder.record_artifact("data", "DATA/runs.json")
         recorder.record_artifact("workflow", "workflow.json")
         recorder.record_artifact("report", "report.md")
-        recorder.record_results(run_count=len(runs), protocol="science_suite_v1")
+        recorder.record_results(run_count=len(runs), protocol=workflow.protocol)
         report_path = output_dir / "report.md"
         report_path.write_text(
             self._render_science_report(workflow, len(runs), duration), encoding="utf-8"
@@ -251,14 +261,14 @@ class ExperimentWorkflowService:
         workflow_path.write_text(
             json.dumps(
                 {
-                    "protocol": "science_suite_v1",
                     "experiment_id": workflow.experiment_id,
                     "research_question": workflow.question_id,
                     "hypothesis": workflow.hypothesis_id,
                     "title": workflow.title,
                     "conditions": workflow.conditions,
                     "ticks": workflow.ticks,
-                    "seeds": list(seeds),
+                    "seeds": list(effective_seeds),
+                    "protocol": workflow.protocol,
                     "notes": workflow.notes,
                     "execution": "registered experiment_suite runner",
                     "assistant_policy": "AI is post-hoc interpretation only.",
@@ -379,6 +389,8 @@ class ExperimentWorkflowService:
                     "hypothesis": workflow.hypothesis_id,
                     "conditions": workflow.conditions,
                     "ticks": workflow.ticks,
+                    "protocol": workflow.protocol,
+                    "seeds": list(workflow.seeds),
                     "notes": workflow.notes,
                     "execution": "controller.step",
                     "assistant_policy": "No AI-generated input is executed or used as evidence.",
@@ -393,7 +405,12 @@ class ExperimentWorkflowService:
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links(
             [workflow.question_id], [workflow.hypothesis_id]
-        ).record_simulation_params(ticks=workflow.ticks).record_artifact(
+        ).record_simulation_params(
+            ticks=workflow.ticks,
+            seed=workflow.seeds[0],
+            seeds=list(workflow.seeds),
+            protocol=workflow.protocol,
+        ).record_artifact(
             "workflow", str(relative_root / plan_path.name).replace("\\", "/")
         )
 
@@ -447,7 +464,8 @@ class ExperimentWorkflowService:
                 "Experiment ID must use the EXP-* convention."
             )
         ticks = body.get("ticks")
-        tick_limit = 1_000_000 if body.get("protocol") == "science_time_v1" else 100_000
+        protocol = str(body.get("protocol") or "runtime_ticks_v1")
+        tick_limit = 1_000_000 if protocol == "science_time_v1" else 100_000
         if (
             not isinstance(ticks, int)
             or isinstance(ticks, bool)
@@ -456,6 +474,8 @@ class ExperimentWorkflowService:
             raise WorkflowValidationError(
                 f"Ticks must be an integer between 1 and {tick_limit}."
             )
+
+        seeds = self._parse_seeds(body.get("seeds"))
 
         question_id = required("question_id")
         hypothesis_id = required("hypothesis_id")
@@ -477,7 +497,47 @@ class ExperimentWorkflowService:
             conditions=required("conditions"),
             ticks=ticks,
             notes=str(body.get("notes", "")).strip(),
+            protocol=protocol,
+            seeds=seeds,
         )
+
+    @staticmethod
+    def _parse_seeds(value: object) -> tuple[int, ...]:
+        """Parse comma-separated seeds and compact ranges from the runner UI."""
+        if value is None or value == "":
+            return (42, 43, 44)
+        if isinstance(value, str):
+            tokens: list[object] = [
+                token.strip() for token in value.split(",") if token.strip()
+            ]
+        elif isinstance(value, (list, tuple)):
+            tokens = list(value)
+        else:
+            raise WorkflowValidationError("Seeds must be comma-separated integers.")
+
+        parsed: list[int] = []
+        for token in tokens:
+            if isinstance(token, bool):
+                raise WorkflowValidationError("Seeds must be non-negative integers.")
+            text = str(token).strip()
+            if "-" in text and text.count("-") == 1:
+                start_text, end_text = (part.strip() for part in text.split("-"))
+                if start_text.isdigit() and end_text.isdigit():
+                    start, end = int(start_text), int(end_text)
+                    if end < start or end - start > 63:
+                        raise WorkflowValidationError(
+                            "Seed ranges must contain 64 values or fewer."
+                        )
+                    parsed.extend(range(start, end + 1))
+                    continue
+            if not text.isdigit():
+                raise WorkflowValidationError("Seeds must be non-negative integers.")
+            parsed.append(int(text))
+
+        unique = tuple(dict.fromkeys(parsed))
+        if not unique or len(unique) > 64:
+            raise WorkflowValidationError("Provide between 1 and 64 unique seeds.")
+        return unique
 
     def _next_experiment_id(self) -> str:
         """Return the first available generated experiment identifier."""
@@ -497,7 +557,11 @@ class ExperimentWorkflowService:
                 f"# {workflow.experiment_id}: {workflow.title}",
                 "",
                 "## Protokoll",
-                "science_suite_v1",
+                workflow.protocol,
+                f"Ticks: {workflow.ticks}; Seeds: {', '.join(map(str, workflow.seeds))}",
+                "",
+                "## Bedingungen",
+                workflow.conditions,
                 f"Runs: {run_count}; Dauer: {duration:.6f} s",
                 "",
                 "## Evidenzstatus",

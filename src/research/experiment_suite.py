@@ -121,7 +121,9 @@ def _digest(network: NeuralNetwork) -> str:
 
 
 def run_ping(
-    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+    ticks: int = 8,
 ) -> list[ScientificRun]:
     """Measure reproducible impulse responses with and without recurrence."""
     runs: list[ScientificRun] = []
@@ -133,7 +135,7 @@ def run_ping(
             signature: NetworkResponseSignature = NetworkImpulseProbe(
                 source_neuron=source,
                 current=100.0,
-                max_ticks=8,
+                max_ticks=ticks,
                 state_digest=lambda: _digest(network),
             ).run(_ProbeRuntime(network))
             runs.append(
@@ -150,7 +152,9 @@ def run_ping(
 
 
 def run_ping_v2(
-    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+    ticks: int = 8,
 ) -> list[ScientificRun]:
     """Run recurrence treatments as identical replica pairs per seed."""
     runs: list[ScientificRun] = []
@@ -163,7 +167,7 @@ def run_ping_v2(
                 signature = NetworkImpulseProbe(
                     source_neuron=source,
                     current=100.0,
-                    max_ticks=8,
+                    max_ticks=ticks,
                     state_digest=lambda: _digest(network),
                 ).run(_ProbeRuntime(network))
                 runs.append(
@@ -183,26 +187,30 @@ def run_time(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
     tick_counts: tuple[int, ...] = (100, 1_000, 10_000, 100_000, 1_000_000),
+    ticks: int = 1_000_000,
 ) -> list[ScientificRun]:
     """Calibrate wall-clock throughput over the registered tick ladder."""
     runs: list[ScientificRun] = []
+    selected_tick_counts = tuple(count for count in tick_counts if count <= ticks)
+    if not selected_tick_counts:
+        selected_tick_counts = (ticks,)
     for seed in seeds:
-        for ticks in tick_counts:
+        for run_ticks in selected_tick_counts:
             network = _network(config, seed)
             before = _digest(network)
             started = time.perf_counter()
-            for _ in range(ticks):
+            for _ in range(run_ticks):
                 network.step()
             duration = time.perf_counter() - started
             runs.append(
                 ScientificRun(
                     "EXP-TIME-0001",
-                    str(ticks),
+                        str(run_ticks),
                     seed,
                     {
-                        "ticks": ticks,
+                        "ticks": run_ticks,
                         "duration_seconds": duration,
-                        "ticks_per_second": ticks / duration,
+                        "ticks_per_second": run_ticks / duration,
                     },
                     before,
                     _digest(network),
@@ -214,6 +222,7 @@ def run_time(
 def run_5d(
     config: Config,
     seeds: tuple[int, ...] = tuple(range(30)),
+    ticks: int = 8,
 ) -> list[ScientificRun]:
     """Compare the same controlled chain embedded in dimensional spaces."""
     dimensions = {
@@ -233,7 +242,7 @@ def run_5d(
             signature = NetworkImpulseProbe(
                 source_neuron=min(network.input_cells),
                 current=100.0,
-                max_ticks=8,
+                max_ticks=ticks,
             ).run(_ProbeRuntime(network))
             runs.append(
                 ScientificRun(

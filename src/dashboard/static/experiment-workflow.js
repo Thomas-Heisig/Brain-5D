@@ -28,6 +28,8 @@ export class ExperimentWorkflowPanel {
       experimentId: byId("workflow-experiment-id"),
       title: byId("workflow-title"),
       conditions: byId("workflow-conditions"),
+      conditionProfile: byId("workflow-condition-profile"),
+      seeds: byId("workflow-seeds"),
       protocol: byId("workflow-protocol"),
       ticks: byId("workflow-ticks"),
       notes: byId("workflow-notes"),
@@ -37,6 +39,7 @@ export class ExperimentWorkflowPanel {
     };
     this.elements.question?.addEventListener("change", () => this._renderHypotheses());
     this.elements.protocol?.addEventListener("change", () => this._applyProtocol());
+    this.elements.conditionProfile?.addEventListener("change", () => this._applyConditionProfile());
     this.elements.run?.addEventListener("click", () => this._run());
   }
 
@@ -86,6 +89,7 @@ export class ExperimentWorkflowPanel {
       experiment_id: this.elements.experimentId?.value.trim() || this.nextExperimentId,
       title: this.elements.title?.value.trim() || "",
       conditions: this.elements.conditions?.value.trim() || "",
+      seeds: this.elements.seeds?.value.trim() || "",
       ticks: Number(this.elements.ticks?.value),
       notes: this.elements.notes?.value.trim() || "",
       protocol: this.elements.protocol?.value || "runtime_ticks_v1",
