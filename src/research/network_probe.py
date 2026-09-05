@@ -35,6 +35,7 @@ class NetworkResponseSignature:
     synaptic_activity_ticks: int = 0
     max_synaptic_current_targets: int = 0
     total_synapses: int = 0
+    stopped_on_quiescence: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -57,11 +58,19 @@ class NetworkResponseSignature:
             "synaptic_activity_ticks": self.synaptic_activity_ticks,
             "max_synaptic_current_targets": self.max_synaptic_current_targets,
             "total_synapses": self.total_synapses,
+            "stopped_on_quiescence": self.stopped_on_quiescence,
         }
 
 
 class NetworkImpulseProbe:
-    """Inject one bounded impulse and summarize only observed runtime output."""
+    """Inject one bounded impulse and summarize only observed runtime output.
+
+    ``max_ticks`` is the hard upper bound. ``min_ticks`` defines the minimum
+    observation window that must be executed even if the runtime reports an
+    earlier quiescent state. This distinction is important for registered
+    experiments: a requested observation window must not silently collapse to a
+    shorter run just because the network becomes temporarily quiescent.
+    """
 
     def __init__(
         self,
@@ -69,17 +78,23 @@ class NetworkImpulseProbe:
         source_neuron: int,
         current: float = 1.0,
         max_ticks: int = 100,
+        min_ticks: int = 0,
         state_digest: Callable[[], str] | None = None,
     ) -> None:
         if max_ticks < 1:
             raise ValueError("max_ticks must be positive")
+        if min_ticks < 0:
+            raise ValueError("min_ticks must not be negative")
+        if min_ticks > max_ticks:
+            raise ValueError("min_ticks must not exceed max_ticks")
         self.source_neuron = source_neuron
         self.current = current
         self.max_ticks = max_ticks
+        self.min_ticks = min_ticks
         self.state_digest = state_digest
 
     def run(self, runtime: ImpulseRuntime) -> NetworkResponseSignature:
-        """Run the probe until quiescence or the configured tick limit."""
+        """Run until quiescence after ``min_ticks`` or until ``max_ticks``."""
         before = self.state_digest() if self.state_digest else None
         runtime.inject_current_batch({self.source_neuron: self.current})
         response_ticks: list[int] = []
@@ -94,6 +109,7 @@ class NetworkImpulseProbe:
         synaptic_activity_ticks = 0
         max_synaptic_current_targets = 0
         total_synapses = 0
+        stopped_on_quiescence = False
 
         for tick in range(self.max_ticks):
             result = runtime.step()
@@ -133,7 +149,8 @@ class NetworkImpulseProbe:
                     recurrent_events += 1
             if output_ids:
                 response_ticks.append(tick)
-            if result.get("quiescent", False):
+            if result.get("quiescent", False) and ticks_executed >= self.min_ticks:
+                stopped_on_quiescence = ticks_executed < self.max_ticks
                 break
 
         after = self.state_digest() if self.state_digest else None
@@ -156,4 +173,5 @@ class NetworkImpulseProbe:
             synaptic_activity_ticks=synaptic_activity_ticks,
             max_synaptic_current_targets=max_synaptic_current_targets,
             total_synapses=total_synapses,
+            stopped_on_quiescence=stopped_on_quiescence,
         )
