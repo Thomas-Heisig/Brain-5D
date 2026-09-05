@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-REC-001","research_question":"RQ-REC-001","hypothesis":"H-REC-001-A","protocol_id":"recurrence_map_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["last_response_latency","recurrent_events","propagation_depth","persistence_class"],
+  "secondary_outcomes":["total_spikes","inter_spike_intervals"],
+  "conditions":[{"id":"recurrent_weight_0","role":"control"},{"id":"weight_delay_grid","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"predeclared integer seeds; no replacement after inspection"},
+  "stopping_rule":"execute the full registered weight x delay x seed grid",
+  "inclusion_criteria":["tick contract satisfied","no fatal runtime error","clean source freeze"],
+  "exclusion_criteria":["digest mismatch","stale runtime code","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["mean","median","population_std","min","max","condition ratios"],"inference_policy":"No significance claim unless an explicit registered inferential test is added before freeze.","planned_tests":[]},
+  "expected_failure_modes":["all activity decays","all treatments saturate","seed has no effective variation"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot change run state, protocol, DATA or evidence.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}
