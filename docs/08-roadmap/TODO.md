@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] Current test collection is 723 tests after the adaptive Wesen regression additions.
+- [x] Current test collection is 724 tests after the adaptive organism v2 regression additions.
 - [x] Fast-suite coverage baseline is 72%.
 - [x] Scientific Integrity Gate remains a required release check.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification remain required CI/release gates.
@@ -20,12 +20,17 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Dedicated read-only `Wesen` workspace added.
 - [x] `Wesen` morphology derived dynamically from observed embodiment connections.
 - [x] Sensor and actuator branches appear from real connection inventory; missing capabilities remain explicit placeholders.
+- [x] Force-directed presentation layout removes the rigid fixed-coordinate body arrangement.
+- [x] Convex-hull membrane follows the currently observed body nodes.
+- [x] External environment satellites represent real reported external sources/services where available.
 - [x] Machine-native interoception represented from available CPU/RAM/temperature/fan/storage/runtime telemetry.
-- [x] Adaptive visual states cover resource/thermal pressure and reported sensor/actuator/network degradation.
-- [x] Body membrane is recalculated from observed body nodes.
-- [x] Node inspection, data pins, zoom/reset, event filtering and session-local morphology history implemented.
+- [x] Adaptive visual states cover resource/thermal pressure and reported sensor/actuator/network degradation, recovery and unknown telemetry.
+- [x] Node inspection, data pins, pointer-centered zoom, pan, reset, focus fading and event filtering implemented.
 - [x] Recurrence trend and delayed same-morphology self-model implemented where telemetry exists.
-- [x] Causal-path emphasis is visually available while remaining distinct from experimental causal proof.
+- [x] Delayed self-model uses a bounded frame ring buffer and measured loopback latency when available.
+- [x] Browser-local morphology snapshots and timeline scrubber implemented for operator time-travel inspection.
+- [x] Causal-path emphasis can surface observed event/decision/action/receipt IDs without inventing missing identifiers.
+- [x] Central neutral terminology constants added for SNN core, endpoints, interoception, environment and feedback.
 - [x] `Wesen` remains read-only: no learning execution, language output, actuator writes or `/api/control` calls.
 - [x] Real-body host telemetry/device discovery integrated without fabricated fallback values.
 - [x] Learning Preparation Studio foundation and AI proposal-only boundary implemented.
@@ -36,9 +41,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [ ] Require the latest `main` CI run to finish green across the complete job matrix.
 - [ ] Fix only verified current-tree CI failures; do not mask typing/scientific-integrity failures.
-- [ ] Confirm documentation consistency checker accepts the 723-test baseline.
-- [ ] Verify `/wesen-adaptive.css` is served in integrated runtime and dashboard-only modes.
+- [ ] Confirm documentation consistency checker accepts the 724-test baseline.
+- [ ] Verify `/wesen-adaptive.css` and `/wesen-organism.css` are served in integrated runtime and dashboard-only modes.
 - [ ] Verify adaptive body rendering in at least one live-host session with real connection inventory.
+- [ ] Add a browser/E2E check for pointer-centered camera pan/zoom and timeline scrubbing.
 
 ## P0 — scientific evidence closure
 
@@ -89,7 +95,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Expand evidence-engine negative tests for incomplete/mismatched provenance.
 - [x] Ensure quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
 - [ ] Add a stable action/outcome provenance view only when backed by a verified endpoint.
-- [ ] Persist morphology/body-boundary change records when they are part of a scientific protocol instead of relying on session-local UI history.
+- [ ] Persist morphology/body-boundary change records when they are part of a scientific protocol instead of relying on browser-local UI history.
 - [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
 
 ## P1 — test coverage on high-risk surfaces
@@ -140,9 +146,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Add documentation source-of-truth index.
 - [x] Add canonical `WESEN_ADAPTIVE_BODY.md` architecture contract.
 - [x] Add dated changelog record for the 2026-09-05 Wesen redesign.
+- [x] Remove superseded unreferenced organism prototype from `main` after review.
 - [x] Classify versioned Alpha/Sprint/Release documents as historical rather than current state.
 - [x] Identify accidental package snapshot and temporary JSON artifacts for removal.
-- [ ] Keep remote branch list to `main` plus active short-lived work only; delete merged/obsolete temporary branches.
+- [ ] Keep remote branch list to `main` plus active short-lived work only; delete obsolete `tmp-do-not-use` when branch-delete access is available.
 - [ ] Enable/maintain automatic deletion of merged PR branches when repository settings permit.
 
 ## Definition of done for a scientific milestone
