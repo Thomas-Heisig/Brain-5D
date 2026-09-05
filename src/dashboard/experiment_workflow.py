@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import gzip
 import hashlib
 import json
 import marshal
-import re
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
@@ -20,6 +18,7 @@ from src.research.experiment_summary import (
     write_statistics_artifact,
 )
 from src.research.protocol_registry import (
+    OPERATIONAL_RUNNERS,
     PreregistrationError,
     protocol_by_id,
     protocol_catalog,
@@ -174,11 +173,12 @@ class ExperimentWorkflowService:
 
             runner_module = followup_experiments
         runner = getattr(runner_module, runner_name)
-        runner_source = runner_module.__file__
-        if runner_source is None:
+        runner_source_value = getattr(runner_module, "__file__", None)
+        if not isinstance(runner_source_value, str):
             raise WorkflowValidationError(
                 f"Cannot resolve source path for runner module {runner_module.__name__}."
             )
+        runner_source = runner_source_value
         runtime_runner_digest, source_runner_digest = (
             _assert_loaded_callable_matches_source(
                 runner, Path(runner_source).resolve(), runner_name
@@ -367,9 +367,8 @@ class ExperimentWorkflowService:
             },
         }
 
-    def _science_runner(
-        self, body: dict[str, object], workflow: ExperimentWorkflow
-    ) -> str:
+    @staticmethod
+    def _science_runner(body: dict[str, object], workflow: ExperimentWorkflow) -> str:
         """Resolve execution from protocol and registered research question.
 
         Generated experiment IDs are labels only. They must never silently select
@@ -378,9 +377,9 @@ class ExperimentWorkflowService:
         """
         protocol = str(body.get("protocol") or workflow.protocol)
         question_id = workflow.question_id
-        operational = protocol_by_id(self._research_root, protocol)
-        if operational is not None:
-            return str(operational["runner"])
+        operational_runner = OPERATIONAL_RUNNERS.get(protocol)
+        if operational_runner is not None:
+            return operational_runner
         if protocol == "science_all_v1":
             return "run_all"
         if protocol == "science_time_v1":
@@ -889,80 +888,6 @@ def _assert_loaded_callable_matches_source(
             "dashboard/runtime before creating a scientific experiment."
         )
     return runtime_digest, source_digest
-
-
-def _safe_trace_name(condition: object, seed: object) -> str:
-    label = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(condition)).strip("-") or "trace"
-    return f"{label}-seed-{seed}.jsonl.gz"
-
-
-def _externalize_large_traces(
-    output_dir: Path, serialized_runs: list[dict[str, Any]], threshold: int = 10_000
-) -> list[Path]:
-    """Keep complete large traces compressed and references inside compact DATA."""
-    trace_dir = output_dir / "DATA" / "traces"
-    trace_entries: list[dict[str, object]] = []
-    written: list[Path] = []
-    for run in serialized_runs:
-        metrics_raw: object = run.get("metrics")
-        if not isinstance(metrics_raw, dict):
-            continue
-        metrics = cast(dict[str, object], metrics_raw)
-        comparison_value: object = metrics.get("comparisons")
-        if not isinstance(comparison_value, list):
-            continue
-        comparisons = cast(list[object], comparison_value)
-        if len(comparisons) <= threshold:
-            continue
-        trace_dir.mkdir(parents=True, exist_ok=True)
-        path = trace_dir / _safe_trace_name(run.get("condition"), run.get("seed"))
-        with gzip.open(
-            path, "wt", encoding="utf-8", newline="\n", compresslevel=9
-        ) as handle:
-            for item in comparisons:
-                handle.write(
-                    json.dumps(
-                        item,
-                        ensure_ascii=False,
-                        sort_keys=True,
-                        separators=(",", ":"),
-                    )
-                )
-                handle.write("\n")
-        digest = _sha256_file(path)
-        count = len(comparisons)
-        metrics["comparisons_artifact"] = {
-            "path": path.relative_to(output_dir).as_posix(),
-            "format": "jsonl.gz",
-            "count": count,
-            "sha256": digest,
-        }
-        metrics["comparisons_preview"] = comparisons[:8] + comparisons[-8:]
-        del metrics["comparisons"]
-        trace_entries.append(
-            {
-                "condition": run.get("condition"),
-                "seed": run.get("seed"),
-                "path": path.relative_to(output_dir).as_posix(),
-                "count": count,
-                "sha256": digest,
-                "size_bytes": path.stat().st_size,
-            }
-        )
-        written.append(path)
-    if trace_entries:
-        index_path = trace_dir / "index.json"
-        index_path.write_text(
-            json.dumps(
-                {"schema_version": "1.0", "traces": trace_entries},
-                indent=2,
-                sort_keys=True,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-        written.append(index_path)
-    return written
 
 
 def _sha256_files(paths: Sequence[Path], root: Path) -> str:

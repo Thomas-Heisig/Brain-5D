@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -20,7 +20,7 @@ def _config() -> dict[str, Any]:
         (ROOT / "configs" / "learning_experiment.yaml").read_text(encoding="utf-8")
     )
     assert isinstance(loaded, dict)
-    return loaded
+    return cast(dict[str, Any], loaded)
 
 
 def test_recurrence_map_has_control_and_treatment() -> None:

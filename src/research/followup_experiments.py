@@ -20,9 +20,9 @@ from src.embodiment import (
     normalize_vital_signals,
 )
 from src.experiments.learning_lab import (
-    _probe_response,
-    _train,
+    probe_learning_response,
     run_learning_experiment,
+    train_learning_weights,
 )
 from src.research.canonical_state import canonical_state_digest
 from src.research.experiment_suite import ScientificRun
@@ -171,7 +171,9 @@ def run_generalization(
         initial_weights = tuple(initial_weight for _ in range(pre_count))
 
         for condition in ("learning_on", "learning_off", "sham_replay"):
-            trained_weights, learning, partitions = _train(values, condition)
+            trained_weights, learning, partitions = train_learning_weights(
+                values, condition
+            )
             initial_mean = statistics.mean(initial_weights)
             final_mean = statistics.mean(trained_weights)
 
@@ -180,10 +182,10 @@ def run_generalization(
                 probe_exp = dict(exp)
                 probe_exp["drive_current"] = base_drive * drive_scale
                 probe_config["learning_experiment"] = probe_exp
-                baseline_spiked, baseline_peak_v, baseline_tick = _probe_response(
-                    probe_config, initial_weights
+                baseline_spiked, baseline_peak_v, baseline_tick = (
+                    probe_learning_response(probe_config, initial_weights)
                 )
-                trained_spiked, trained_peak_v, trained_tick = _probe_response(
+                trained_spiked, trained_peak_v, trained_tick = probe_learning_response(
                     probe_config, trained_weights
                 )
                 runs.append(
@@ -335,8 +337,7 @@ def run_regulation_recovery(
                     pressure = regulatory.values.get("resource_pressure")
                     if isinstance(pressure, (int, float)):
                         current *= max(0.25, 1.0 - 0.5 * float(pressure))
-                    if isinstance(uncertainty, (int, float)):
-                        current *= max(0.5, 1.0 - 0.25 * float(uncertainty))
+                    current *= max(0.5, 1.0 - 0.25 * float(uncertainty))
                 network.inject_current(source, current)
                 step = network.step()
                 count = len(step.spike_ids)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 import yaml
@@ -31,9 +32,16 @@ EXPECTED = {
 
 
 def _yaml_ids(path: Path) -> set[str]:
-    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-    assert isinstance(payload, list)
-    return {str(item["id"]) for item in payload if isinstance(item, dict)}
+    payload_value: object = yaml.safe_load(path.read_text(encoding="utf-8"))
+    assert isinstance(payload_value, list)
+    payload = cast(list[object], payload_value)
+    ids: set[str] = set()
+    for item_value in payload:
+        if not isinstance(item_value, dict):
+            continue
+        item = cast(dict[str, Any], item_value)
+        ids.add(str(item["id"]))
+    return ids
 
 
 def test_followup_questions_and_hypotheses_are_canonical() -> None:

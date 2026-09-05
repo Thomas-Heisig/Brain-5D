@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from src.research_assistant import ResearchAssistant
 
@@ -98,11 +98,18 @@ def test_build_packet_bounds_large_raw_sequences_for_analysis_prompt(
 
     packet = ResearchAssistant(tmp_path).build_packet("EXP-STDP-0001")
 
-    projected = packet.data["runs"] if packet.data is not None else None
-    assert isinstance(projected, dict)
+    projected_value: object = packet.data["runs"] if packet.data is not None else None
+    assert isinstance(projected_value, dict)
+    projected = cast(dict[str, object], projected_value)
     assert projected["_analysis_projection"] == "truncated_sequence"
     assert projected["item_count"] == 300
-    assert len(projected["head"]) == 8
-    assert len(projected["tail"]) == 8
+    head_value = projected["head"]
+    tail_value = projected["tail"]
+    assert isinstance(head_value, list)
+    assert isinstance(tail_value, list)
+    head = cast(list[object], head_value)
+    tail = cast(list[object], tail_value)
+    assert len(head) == 8
+    assert len(tail) == 8
     assert len(packet.to_json()) < 20_000
     assert json.loads(data_path.read_text(encoding="utf-8")) == raw_runs
