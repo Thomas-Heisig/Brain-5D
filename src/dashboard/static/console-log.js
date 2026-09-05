@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.0
+ * @version 1.4.1
  * @license MIT
  */
 
@@ -34,12 +34,22 @@ function formatTime(date = new Date()) {
 }
 
 function ensureWesenStylesheet() {
-  if (document.querySelector('link[data-wesen-style="true"]')) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "/wesen.css";
-  link.dataset.wesenStyle = "true";
-  document.head.appendChild(link);
+  if (!document.querySelector('link[data-wesen-style="true"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/wesen.css";
+    link.dataset.wesenStyle = "true";
+    document.head.appendChild(link);
+  }
+  if (!document.querySelector('style[data-wesen-navigation="true"]')) {
+    const style = document.createElement("style");
+    style.dataset.wesenNavigation = "true";
+    style.textContent = `
+      .experience-command-item[data-command-id="workspace:network"],
+      .experience-command-item[data-command-id="workspace:gate"] { display: none !important; }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
 function activateLegacyWorkspace(name) {
@@ -48,16 +58,19 @@ function activateLegacyWorkspace(name) {
     button.click();
     return;
   }
+  document.querySelectorAll(".tab-btn[data-tab]").forEach((item) => item.classList.remove("active"));
   document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => {
     const active = tab.id === `tab-${name}`;
     tab.classList.toggle("active", active);
     tab.hidden = !active;
   });
+  document.body.dataset.currentTab = name;
+  document.body.dataset.experienceWorkspace = name;
 }
 
 function adaptDashboardNavigation() {
-  document.querySelector('.tab-btn[data-tab="network"]')?.setAttribute("aria-hidden", "true");
-  document.querySelector('.tab-btn[data-tab="gate"]')?.setAttribute("aria-hidden", "true");
+  document.querySelector('.tab-btn[data-tab="network"]')?.remove();
+  document.querySelector('.tab-btn[data-tab="gate"]')?.remove();
 
   document.querySelectorAll('.experience-command-item[data-command-id="workspace:network"], .experience-command-item[data-command-id="workspace:gate"]').forEach((node) => node.remove());
   document.querySelectorAll('[data-jump-workspace="network"]').forEach((node) => {
@@ -67,6 +80,7 @@ function adaptDashboardNavigation() {
     if (strong) strong.textContent = "Wesen beobachten";
     if (small) small.textContent = "Körper, Zustände, Rückkopplung";
   });
+  document.querySelectorAll('[data-jump-workspace="gate"]').forEach((node) => node.remove());
 
   const bodyShortcut = document.querySelector('[data-overview-tab="embodiment"]');
   if (bodyShortcut) {
