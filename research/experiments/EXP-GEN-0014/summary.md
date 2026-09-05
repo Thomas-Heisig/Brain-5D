@@ -1,55 +1,138 @@
 # EXP-GEN-0014: Zusammenfassung
 
-Diese Zusammenfassung wurde nach Abschluss des Laufs durch den internen Research Assistant aus den Experimentartefakten und dem AIRR erstellt. Sie beschreibt die Daten, die Berichte und deren wissenschaftliche Grenzen.
+Diese Zusammenfassung wurde nachträglich korrigiert. Sie trennt den technischen Lauf, die tatsächlich gemessenen Ergebnisse und die wissenschaftliche Aussagekraft voneinander.
 
-## Versuchsuebersicht
+## Versuchsübersicht
 
 - Status: `completed`
-- Forschungsfragen: RQ-TEMP-001
-- Hypothesen: H-TEMP-001-A
-- Durchlaeufe: `6`
+- Durchläufe: `6`
+- Seeds: `42, 43, 44`
+- Ticks: `100`
 - Laufmodus: `EXPLORATORY`
 - Netzwerkmodus: `OFFLINE`
+- registrierte Forschungsfrage: `RQ-TEMP-001`
+- registrierte Hypothese: `H-TEMP-001-A`
+
+## Wichtiger Konsistenzhinweis
+
+Die registrierte Forschungsfrage betrifft FAST-, MEDIUM- und SLOW-Referenzzustände. Tatsächlich ausgeführt wurde jedoch ein Impulsantwort-Experiment mit den Bedingungen `recurrence_off` und `recurrence_on`.
+
+Damit beantwortet EXP-GEN-0014 **nicht** die registrierte Temporal-State-Frage. Das Experiment ist als explorativer Rekurrenz-/Impulsantwort-Test interpretierbar, darf aber nicht als Evidenz für `RQ-TEMP-001` oder `H-TEMP-001-A` freigegeben werden.
+
+## Tatsächlich beobachtete Ergebnisse
+
+### Rekurrenz aus
+
+- 1 beobachteter Spike
+- Spike bei Tick 2
+- erste Antwort: Tick 2
+- letzte Antwort: Tick 2
+- `propagation_depth = 1`
+- `activated_neurons = 1`
+- `peak_spike_rate = 1.0`
+
+### Rekurrenz an
+
+- 8 beobachtete Spikes
+- Spike-Ticks: `2, 4, 8, 12, 16, 20, 24, 30`
+- erste Antwort: Tick 2
+- letzte Antwort: Tick 30
+- `propagation_depth = 29`
+- `activated_neurons = 1`
+- `peak_spike_rate = 1.0`
+
+### Deskriptive Unterschiede
+
+Spike-Verhältnis:
+
+\[
+RR_{spike}=\frac{8}{1}=8
+\]
+
+Die Rekurrenz-Bedingung erzeugte in dieser Konfiguration achtmal so viele beobachtete Spikes.
+
+Verlängerung bis zum letzten Spike:
+
+\[
+\Delta t_{last}=30-2=28\;\text{Ticks}
+\]
+
+Unterschied der gemeldeten Propagation Depth:
+
+\[
+\Delta D=29-1=28
+\]
+
+Die Zahl aktivierter Neuronen blieb unverändert:
+
+\[
+\Delta A=1-1=0
+\]
+
+Damit besteht der beobachtete Unterschied nicht in einer Rekrutierung weiterer Neuronen, sondern in wiederholter Aktivität desselben beobachteten Neurons über einen längeren Zeitraum.
+
+## Spike-Timing
+
+Für `recurrence_on` ergeben sich die Inter-Spike-Intervalle:
+
+\[
+ISI=(2,4,4,4,4,4,6)
+\]
+
+Der Mittelwert beträgt:
+
+\[
+\overline{ISI}=4.0\;\text{Ticks}
+\]
+
+Dies beschreibt ein relativ regelmäßiges wiederholtes Antwortmuster. Daraus darf noch kein biologischer Rhythmus, Attraktor, Gedächtnismechanismus oder Oszillator abgeleitet werden.
+
+## Reproduzierbarkeit
+
+Die Spike-Sequenzen und ihre Digests sind für Seeds 42, 43 und 44 innerhalb der jeweiligen Bedingung identisch. Das zeigt eine reproduzierbare deterministische Ausgabe.
+
+Es ist jedoch nicht automatisch eine statistisch unabhängige Stichprobe `n=3`. Falls der untersuchte Pfad seed-unabhängig oder vollständig deterministisch ist, handelt es sich um wiederholte Ausführungen und nicht um drei unabhängige experimentelle Einheiten.
+
+## Kritische Messgrößen
+
+`recurrent_events` ist in allen Läufen `0`, auch bei `recurrence_on`. Diese Metrik ist daher derzeit nicht interpretierbar, solange ihre operationale und mathematische Definition nicht dokumentiert und getestet ist.
+
+Auch `propagation_depth` darf ohne Implementationsdefinition nicht als biologische Verarbeitungstiefe, kognitive Komplexität oder kausale Pfadlänge interpretiert werden.
+
+State-Digests sind kryptographische Identifikatoren. Unterschiedliche Hashes zeigen, dass Zustände nicht identisch sind; sie definieren keine metrische Entfernung zwischen Zuständen.
+
+## Wissenschaftlicher Status
+
+- Technischer Lauf: **erfolgreich**
+- Runtime-Fehler: **keine gemeldet**
+- Semantische Übereinstimmung RQ/H ↔ Protokoll: **nicht gegeben**
+- Deskriptiver Rekurrenzbefund: **vorläufig nutzbar**
+- statistische Signifikanz: **nicht nachgewiesen**
+- wissenschaftliche Evidenz: `false`
+- Human Review: `PENDING`
 
 ## Artefakte
 
-- [analysis/AIAR-critical_reviewer-20260905171908983732-8829089c.json](analysis/AIAR-critical_reviewer-20260905171908983732-8829089c.json)
-- [analysis/AIAR-scientific_analyst-20260905171845283530-8829089c.json](analysis/AIAR-scientific_analyst-20260905171845283530-8829089c.json)
-- [analysis/AIAR-scientific_writer-20260905171929340721-8829089c.json](analysis/AIAR-scientific_writer-20260905171929340721-8829089c.json)
-- [DATA/runs.json](DATA/runs.json)
-- [manifest.json](manifest.json)
-- [report.md](report.md)
-- [reports/AIRR-2026-0001.json](reports/AIRR-2026-0001.json)
-- [reports/AIRR-2026-0001.md](reports/AIRR-2026-0001.md)
-- [workflow.json](workflow.json)
+Die lokalen `127.0.0.1/#`-Links wurden bewusst nicht verwendet. Die folgenden Links zeigen direkt auf die Dateien im Repository:
 
-## AI-Bericht
+- [DATA/runs.json](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/DATA/runs.json)
+- [manifest.json](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/manifest.json)
+- [workflow.json](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/workflow.json)
+- [report.md](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/report.md)
+- [AIRR-2026-0001.md](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/reports/AIRR-2026-0001.md)
+- [AIRR-2026-0001.json](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/reports/AIRR-2026-0001.json)
+- [SCIENTIFIC-REVIEW.md](https://github.com/Thomas-Heisig/Brain-5D/blob/main/research/experiments/EXP-GEN-0014/reports/SCIENTIFIC-REVIEW.md)
 
-- AIRR-Status: `generated`
-- AIRR: [AIRR-2026-0001.md](reports/AIRR-2026-0001.md)
-- AIRR JSON: [AIRR-2026-0001.json](reports/AIRR-2026-0001.json)
-- Wissenschaftliche Evidenz: `false`
-- Human Review: `PENDING`
+## Empfohlene Folgearbeiten
 
-### KI-Einschaetzung
-
-Die KI bewertet den vorliegenden Datensatz wie folgt:
-
-Die Ergebnisse zeigen einen klaren und statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.
-
-KI-Konfidenz: `0.9`
-
-Angeforderte zusaetzliche Nachweise:
-
-- Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.
-- Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden.
-
-Empfohlene Folgeexperimente:
-
-- Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $eta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.
-- Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).
-- Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt.
+1. `RQ-TEMP-001` ausschließlich mit einem Temporal-State-Protokoll ausführen, das FAST/MEDIUM/SLOW tatsächlich misst.
+2. Für Rekurrenz eine eigene Forschungsfrage und Hypothese registrieren.
+3. Rekurrenzstärke systematisch variieren.
+4. Impulsstärke systematisch variieren.
+5. `recurrent_events` und `propagation_depth` mathematisch und im Code definieren und separat testen.
+6. Längere Laufzeiten und größere rekurrente Motive untersuchen.
+7. Eine geeignete unabhängige experimentelle Einheit definieren, bevor p-Werte, Konfidenzintervalle oder Aussagen wie „statistisch robust“ verwendet werden.
 
 ## Wissenschaftliche Grenze
 
-Die KI-Auswertung ist post-hoc, steuert den Lauf nicht und ersetzt keine menschliche wissenschaftliche Pruefung oder Evidenzfreigabe.
+Die KI-Auswertung ist post-hoc, steuert den Lauf nicht und ersetzt keine menschliche wissenschaftliche Prüfung oder Evidenzfreigabe. Insbesondere dürfen die ursprünglichen Aussagen „statistisch robust“, „signifikant“ oder eine allgemeine Kausalitätsbehauptung aus diesem Datensatz allein nicht übernommen werden.
