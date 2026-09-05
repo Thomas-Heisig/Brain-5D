@@ -1,0 +1,177 @@
+/* Adaptive machine-native Wesen extensions. Loaded after wesen.css. */
+
+#wesen-membrane {
+  fill: rgba(32, 142, 196, 0.09);
+  stroke: rgba(74, 197, 255, 0.42);
+  stroke-width: 1.7;
+  stroke-dasharray: 7 8;
+  transition: d 700ms cubic-bezier(.2,.8,.2,1), stroke 220ms ease, fill 220ms ease;
+}
+
+#wesen-membrane[data-state="warn"] {
+  stroke: var(--b5-amber);
+  fill: rgba(255, 200, 90, 0.06);
+}
+
+#wesen-membrane[data-state="critical"] {
+  stroke: var(--b5-red);
+  fill: rgba(255, 93, 104, 0.08);
+  animation-duration: 2.6s;
+}
+
+.wesen-organ.kind-sensor { color: var(--b5-cyan); }
+.wesen-organ.kind-actuator { color: var(--b5-amber); }
+.wesen-organ.kind-core { color: var(--b5-gold); }
+.wesen-organ.kind-internal { color: var(--b5-rose); }
+.wesen-organ.kind-feedback { color: var(--b5-violet); }
+.wesen-organ.kind-structure { color: var(--b5-green); }
+.wesen-organ.kind-connection { color: var(--b5-blue); }
+
+.wesen-nerve.kind-sensor { stroke: rgba(40, 215, 255, .32); }
+.wesen-nerve.kind-actuator { stroke: rgba(255, 200, 90, .34); }
+.wesen-nerve.kind-feedback { stroke: rgba(138, 108, 255, .35); }
+.wesen-nerve.kind-internal { stroke: rgba(255, 91, 142, .25); }
+.wesen-nerve.kind-structure { stroke: rgba(72, 236, 161, .25); }
+
+#wesen-svg.show-causality .wesen-nerve {
+  opacity: .12;
+}
+
+#wesen-svg.show-causality .wesen-nerve.kind-feedback,
+#wesen-svg.show-causality .wesen-nerve.kind-sensor,
+#wesen-svg.show-causality .wesen-nerve.kind-actuator {
+  opacity: .9;
+  stroke-width: 3;
+}
+
+#wesen-svg:not(.show-connections) .wesen-nerve.kind-connection {
+  opacity: .12;
+}
+
+.wesen-signal-dot.kind-sensor { fill: var(--b5-cyan); filter: drop-shadow(0 0 7px var(--b5-cyan)); }
+.wesen-signal-dot.kind-actuator { fill: var(--b5-amber); filter: drop-shadow(0 0 7px var(--b5-amber)); }
+.wesen-signal-dot.kind-feedback,
+.wesen-signal-dot.feedback-echo { fill: #b6a8ff; filter: drop-shadow(0 0 7px var(--b5-violet)); }
+.wesen-signal-dot.kind-internal { fill: var(--b5-rose); }
+.wesen-signal-dot.kind-structure { fill: var(--b5-green); }
+
+.wesen-data-pin {
+  pointer-events: none;
+}
+
+.wesen-data-pin rect {
+  fill: rgba(4, 15, 25, .88);
+  stroke: rgba(123, 193, 230, .22);
+}
+
+.wesen-data-pin text {
+  fill: var(--b5-text);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wesen-env-node circle {
+  fill: rgba(74, 140, 255, .09);
+  stroke: rgba(74, 140, 255, .55);
+  stroke-dasharray: 4 4;
+}
+
+.wesen-env-node text,
+.wesen-env-label {
+  fill: var(--b5-muted);
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.wesen-env-label {
+  text-anchor: start;
+}
+
+#wesen-self-svg {
+  width: 100%;
+  min-height: 170px;
+  display: block;
+  background: radial-gradient(circle at 50% 45%, rgba(138, 108, 255, .08), transparent 62%);
+}
+
+.wesen-self-body line {
+  stroke: rgba(138, 108, 255, .25);
+  stroke-width: 1;
+}
+
+.wesen-self-body circle {
+  fill: rgba(138, 108, 255, .2);
+  stroke: rgba(194, 181, 255, .75);
+}
+
+.wesen-self-body circle.kind-sensor { stroke: var(--b5-cyan); }
+.wesen-self-body circle.kind-actuator { stroke: var(--b5-amber); }
+.wesen-self-body circle.kind-core { stroke: var(--b5-gold); }
+
+#wesen-self-svg text {
+  fill: var(--b5-muted);
+  font-size: 10px;
+}
+
+.wesen-history {
+  max-height: 190px;
+  overflow: auto;
+  padding: 8px 11px;
+}
+
+.wesen-history > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(130, 190, 224, .08);
+  color: var(--b5-muted);
+  font-size: .72rem;
+}
+
+.wesen-history time {
+  font-variant-numeric: tabular-nums;
+}
+
+.wesen-organ.kind-sensor .wesen-organ-body,
+.wesen-organ.kind-actuator .wesen-organ-body {
+  stroke-width: 1.7;
+}
+
+.wesen-organ.unknown .wesen-organ-status {
+  fill: #6f8290;
+  filter: none;
+}
+
+.wesen-organ.unknown {
+  opacity: .55;
+}
+
+.wesen-organ.selected .wesen-organ-halo {
+  stroke-opacity: .75;
+  stroke-width: 2;
+}
+
+.wesen-organ.selected .wesen-organ-body {
+  stroke-width: 3;
+}
+
+#wesen-camera {
+  transform-origin: 450px 350px;
+}
+
+.wesen-event-kind.sensor { background: var(--b5-cyan); }
+.wesen-event-kind.actuator { background: var(--b5-amber); }
+.wesen-event-kind.feedback { background: var(--b5-violet); }
+.wesen-event-kind.structure { background: var(--b5-green); }
+.wesen-event-kind.system { background: var(--b5-rose); }
+
+@media (prefers-reduced-motion: reduce) {
+  #wesen-membrane,
+  .wesen-organ-halo,
+  .wesen-organ-body,
+  #wesen-camera {
+    animation: none !important;
+    transition: none !important;
+  }
+}
