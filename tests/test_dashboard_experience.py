@@ -56,3 +56,9 @@ def test_experience_is_loaded_from_dashboard_module_graph() -> None:
     app = (STATIC / "app.js").read_text(encoding="utf-8")
     assert 'import "./dashboard-experience.js"' in console_log
     assert "console-log.js" in app
+
+
+def test_experience_workspace_status_never_targets_body_state() -> None:
+    source = (STATIC / "dashboard-experience.js").read_text(encoding="utf-8")
+    assert ".experience-status-copy [data-experience-workspace]" in source
+    assert 'document.querySelectorAll("[data-experience-workspace]")' not in source

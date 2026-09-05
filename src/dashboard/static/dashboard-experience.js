@@ -278,7 +278,7 @@ function toggleFocus() {
 function syncChrome() {
   const name = activeWorkspaceName();
   const meta = WORKSPACES[name] || WORKSPACES.overview;
-  document.querySelectorAll("[data-experience-workspace]").forEach((node) => { node.textContent = meta.label; });
+  document.querySelectorAll(".experience-status-copy [data-experience-workspace]").forEach((node) => { node.textContent = meta.label; });
   document.querySelectorAll("[data-experience-runtime]").forEach((node) => { node.textContent = safeText("#overview-runtime-status", safeText("#control-workspace-state")); });
   document.querySelectorAll("[data-experience-tick]").forEach((node) => { node.textContent = safeText("#tick", safeText("#control-workspace-tick", "—")); });
   document.body.dataset.experienceWorkspace = name;

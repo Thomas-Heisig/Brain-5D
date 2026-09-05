@@ -51,4 +51,15 @@ def test_dashboard_shell_is_loaded_from_main_dashboard_module_graph() -> None:
     app = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "dashboard-shell.js" in console_log
     assert "console-log.js" in app
+
+
+def test_dashboard_tabs_are_hidden_before_external_styles_load() -> None:
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    assert ".tab-content { display: none; }" in html
+    assert ".tab-content.active { display: block; }" in html
+
+
+def test_print_styles_do_not_capture_screen_rules() -> None:
+    css = (STATIC / "styles.css").read_text(encoding="utf-8")
+    assert "color: black !important;\n  }\n}\n\n/* ============================================================================\n   BIBTEX VIEWER" in css
 # fmt: on
