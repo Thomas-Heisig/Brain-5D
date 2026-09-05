@@ -23,16 +23,7 @@ The legacy Release/Gate surface is no longer in the primary navigation. It is op
 
 ## Operator experience
 
-The dashboard experience layer provides:
-
-- unified workspace navigation;
-- live runtime context;
-- command palette;
-- focus/keyboard navigation where supported;
-- responsive desktop/tablet/mobile layouts;
-- light/dark presentation contracts;
-- reduced-motion support;
-- explicit rendering of unknown/unavailable values.
+The dashboard experience layer provides unified workspace navigation, live runtime context, command palette, focus/keyboard navigation where supported, responsive desktop/tablet/mobile layouts, light/dark presentation contracts, reduced-motion support and explicit rendering of unknown/unavailable values.
 
 The common shell is presentation-only. Runtime actions remain in typed/domain control paths.
 
@@ -66,24 +57,59 @@ The body is machine-native rather than human-shaped:
 - discovered sensor endpoints form input branches;
 - discovered actuator endpoints form output branches;
 - feedback/loopback is represented separately;
-- the visible membrane/body boundary is recalculated from observed body nodes.
+- the visible membrane/body boundary follows the currently observed body nodes.
 
-A camera, microphone, weather/network source, display, speaker, printer or external robot endpoint is shown only when the published connection data actually supports it. Missing capabilities remain unavailable rather than appearing as demo anatomy.
+A camera, microphone, weather/network source, display, speaker, printer or external robot endpoint is shown only when published connection data supports it. Missing capabilities remain unavailable rather than appearing as demo anatomy.
 
-The view supports:
+### Adaptive organism v2
 
-- dynamic sensor/actuator morphology;
-- node inspection;
-- live data pins;
-- session-local morphology history;
-- recurrence trend for up to 100 observed samples;
-- event filtering;
-- wheel zoom and whole-body reset;
-- signal animation;
-- causal-path emphasis;
-- delayed self-model using the same current morphology.
+The current presentation enhancement adds a bounded force-directed body layout. Core, internal, sensor, actuator and generic connection nodes are positioned according to their functional role while repelling each other to avoid a rigid circular anatomy.
 
-The delayed mirror visualizes recurrence/loopback structure only. It is not evidence of consciousness, self-awareness or subjective self-recognition.
+The body membrane is derived from a padded convex hull around the current node set. As devices appear or disappear, the visible body envelope can grow, retract or change asymmetrically.
+
+External sources can appear as satellites outside the membrane. Sensor and actuator paths are visually distinct; actuator availability never implies authorization.
+
+### Camera and focus
+
+The body stage now has a real presentation camera:
+
+- pointer-centered wheel zoom;
+- pointer drag to pan;
+- bounded zoom range;
+- double-click reset;
+- focus fading for non-selected body nodes.
+
+These camera operations affect only rendering.
+
+### Delayed self-model
+
+The self-model uses a bounded in-browser frame ring buffer. When measured loopback latency is available, the mirror chooses the body frame closest to `now - latency`. It therefore renders an actually earlier observed morphology rather than only dimming or delaying the current frame.
+
+If no measured latency exists, the view remains explicitly uncalibrated. Recurrence and loopback are not evidence of consciousness or self-awareness.
+
+### Morphology history
+
+Morphology signatures are stored as bounded browser-local snapshots when the observed body shape changes. A timeline scrubber can inspect earlier snapshots in the self-model surface.
+
+This is operator history only. Browser `localStorage` is not research DATA/EVID and must not be cited as scientific evidence.
+
+### Differentiated visual states
+
+The presentation layer can distinguish reported/derived states such as:
+
+- thermal pressure;
+- generic resource pressure;
+- sensor loss;
+- actuator failure;
+- network isolation;
+- recovery;
+- unknown telemetry.
+
+These are visualization states, not emotion or illness claims.
+
+### Causal tracer
+
+The UI can surface event/decision/action/receipt identifiers already present in observed event text and use them as a visual tracer label. It never manufactures missing identifiers. A highlighted path remains a debugging/inspection aid unless a protocol and accepted evidence establish causality.
 
 Detailed contract: [`../02-architecture/WESEN_ADAPTIVE_BODY.md`](../02-architecture/WESEN_ADAPTIVE_BODY.md).
 
@@ -95,29 +121,9 @@ Possible host/device signals include CPU load, memory, temperatures/fans where e
 
 **Availability does not equal authorization.** Discovery does not grant capture or actuation permission.
 
-## Causal-path display
-
-The Wesen UI can emphasize candidate sensor → SNN → actuator → feedback paths. This is a visualization aid for debugging and experiment inspection.
-
-A highlighted path is not automatically a scientifically established causal path. Causal claims require an intervention/outcome protocol, receipts and accepted evidence.
-
-## Self-model display
-
-The Self-Model panel renders a scaled copy of the current body topology and uses reported loopback latency/recurrence when available. Its purpose is to make measured return structure inspectable.
-
-The dashboard must not translate rising recurrence into claims that the system is becoming "more conscious".
-
 ## Research workspace
 
-Research connects to:
-
-- questions/hypotheses/claims/sources registries;
-- experiment creation/execution;
-- manifests, reports and DATA;
-- evidence/integrity status;
-- research file browser/editor;
-- post-hoc AI analysis where explicitly configured;
-- Learning Preparation Studio.
+Research connects to questions/hypotheses/claims/sources registries, experiment creation/execution, manifests/reports/DATA, evidence/integrity status, research file browser/editor, post-hoc AI analysis where configured and the Learning Preparation Studio.
 
 Research AI remains observing/interpreting/proposal-only by default.
 
@@ -126,12 +132,6 @@ Research AI remains observing/interpreting/proposal-only by default.
 Release readiness separates engineering verification from scientific evidence. The Release/Gate surface remains available, but is opened from the dashboard footer instead of occupying a primary navigation tab.
 
 CI success, typing, security and deterministic tests are engineering gates. Experimental claims require valid evidence artifacts.
-
-## File and documentation tools
-
-Repository-scoped research/docs file operations use explicit server endpoints and are not part of the SNN execution loop. Unsupported paths/writes fail closed.
-
-For endpoint inventory see [`API_REFERENCE.md`](API_REFERENCE.md).
 
 ## Security
 
