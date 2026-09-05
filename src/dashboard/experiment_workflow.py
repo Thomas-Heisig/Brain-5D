@@ -352,10 +352,6 @@ class ExperimentWorkflowService:
         if runner_name in exact_window_runners:
             observed_ints: list[int] = []
             for run in runs:
-                if not isinstance(run.metrics, dict):
-                    raise WorkflowValidationError(
-                        f"Tick contract violated: runner {runner_name} returned an invalid metrics payload."
-                    )
                 value = run.metrics.get("ticks_executed")
                 if (
                     isinstance(value, bool)
@@ -379,12 +375,10 @@ class ExperimentWorkflowService:
             }
 
         if runner_name == "run_time":
-            missing_seeds = []
+            missing_seeds: list[int] = []
             for seed in seeds:
                 if not any(
-                    run.seed == seed
-                    and isinstance(run.metrics, dict)
-                    and run.metrics.get("ticks") == requested_ticks
+                    run.seed == seed and run.metrics.get("ticks") == requested_ticks
                     for run in runs
                 ):
                     missing_seeds.append(seed)
