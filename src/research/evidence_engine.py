@@ -10,6 +10,7 @@ After each experiment, the evidence engine:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import datetime
 from typing import Any, cast
@@ -53,6 +54,12 @@ _VALID_EVIDENCE_MODES = frozenset(
         "observational_experiment",
     }
 )
+
+
+def _json_digest(value: object) -> str:
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 
 def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
@@ -137,6 +144,88 @@ class EvidenceEngine:
 
     def __init__(self, registry: ResearchRegistry):
         self.registry = registry
+
+    def record_human_review(
+        self,
+        experiment_id: str,
+        *,
+        reviewer: str,
+        decision: str,
+        comments: str,
+    ) -> Path:
+        """Write the mandatory human review artifact for an experiment."""
+        if not experiment_id or "/" in experiment_id or "\\" in experiment_id:
+            raise ValueError("Invalid experiment id")
+        if not reviewer.strip() or not comments.strip():
+            raise ValueError("Human review requires reviewer and comments")
+        if decision not in {"supports", "refutes", "inconclusive"}:
+            raise ValueError("Human review decision is invalid")
+        experiment_dir = EXPERIMENTS_DIR / experiment_id
+        if not (experiment_dir / "manifest.json").is_file():
+            raise ValueError("Experiment manifest does not exist")
+        review_path = experiment_dir / "human_review.json"
+        if review_path.exists():
+            raise FileExistsError(f"Human review already exists: {experiment_id}")
+        review = {
+            "experiment_id": experiment_id,
+            "reviewer": reviewer.strip(),
+            "decision": decision,
+            "comments": comments.strip(),
+            "reviewed_at": datetime.now().isoformat(),
+        }
+        review_path.write_text(
+            json.dumps(review, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        return review_path
+
+    def promote_validated_experiment(
+        self,
+        experiment_id: str,
+        claim_id: str,
+        hypothesis_id: str,
+        result_summary: str,
+        *,
+        evidence_mode: str = "observational_experiment",
+        effect_size: dict[str, Any] | None = None,
+        verification: dict[str, Any] | None = None,
+        limitations: str | None = None,
+    ) -> str:
+        """Promote DATA to EVID only after source freeze and human review."""
+        manifest = _check_experiment_valid(experiment_id)
+        if manifest is None:
+            raise ValueError("Experiment is not eligible for validated promotion")
+        provenance = manifest.get("provenance_digests")
+        source_freeze_sha = manifest.get("source_freeze_sha")
+        if not isinstance(provenance, dict) or not isinstance(source_freeze_sha, str):
+            raise ValueError("Validated promotion requires source-freeze digests")
+        if _json_digest(provenance) != source_freeze_sha:
+            raise ValueError("Source-freeze digest does not match provenance digests")
+
+        review_path = EXPERIMENTS_DIR / experiment_id / "human_review.json"
+        try:
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError("Validated promotion requires a human review") from exc
+        if not isinstance(review, dict):
+            raise ValueError("Human review artifact is invalid")
+        decision = review.get("decision")
+        if decision not in {"supports", "refutes", "inconclusive"}:
+            raise ValueError("Human review decision is invalid")
+
+        merged_verification = dict(verification or {})
+        merged_verification["source_freeze_sha"] = source_freeze_sha
+        merged_verification["human_review"] = review
+        return self.evaluate_experiment(
+            experiment_id=experiment_id,
+            claim_id=claim_id,
+            hypothesis_id=hypothesis_id,
+            result_summary=result_summary,
+            effect_size=effect_size,
+            evidence_mode=evidence_mode,
+            verification=merged_verification,
+            status=cast(str, decision),
+            limitations=limitations,
+        )
 
     def evaluate_experiment(
         self,

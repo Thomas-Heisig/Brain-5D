@@ -29,6 +29,8 @@ The following capabilities are already part of `main` and are covered by current
     sham-replay conditions with persisted behavioral and weight deltas;
 - canonical `PROTOCOL-STDP-0002` enforces disjoint 12/4/4 train, validation and
     holdout trial partitions;
+- clean-process repeats publish digest-bound DATA, and EVID promotion requires
+    a matching source freeze plus a human review artifact;
 - real host interoception and dynamic device discovery without fabricated fallback values;
 - responsive seven-workspace operator/research dashboard;
 - documentation link/version/test-count consistency checks and scheduled storage validation;

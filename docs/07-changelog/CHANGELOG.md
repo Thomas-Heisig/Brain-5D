@@ -572,6 +572,9 @@
   controls, preserving pre/post behavior, reward and weight metrics per seed.
 - `PROTOCOL-STDP-0002` is now explicit in the canonical YAML configuration and
   rejects overlapping or incomplete train/validation/holdout trial partitions.
+- Added clean-process productive-learning publication with code/config/prompt/
+  DATA digests, plus a guarded DATA-to-EVID promotion path requiring human
+  review and a matching source freeze.
 
 ## 2026-09-03 — AI Research Reports (AIRR)
 

@@ -14,6 +14,7 @@ Covers:
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -727,6 +728,66 @@ class TestEvidenceRejection:
                 status="supports",
             )
             assert evidence_id.startswith("EVID-")
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+            ee_module.EVIDENCE_DIR = original_evidence
+
+    def test_validated_promotion_requires_review_and_source_freeze(
+        self, registry: ResearchRegistry, tmp_path: Path
+    ) -> None:
+        engine = EvidenceEngine(registry)
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        provenance = {
+            "code": "a" * 64,
+            "config": "b" * 64,
+            "prompt": "c" * 64,
+            "data": "d" * 64,
+        }
+        manifest["provenance_digests"] = provenance
+        manifest["source_freeze_sha"] = hashlib.sha256(
+            json.dumps(provenance, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        import src.research.evidence_engine as ee_module
+
+        original_dir = ee_module.EXPERIMENTS_DIR
+        original_evidence = ee_module.EVIDENCE_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            ee_module.EVIDENCE_DIR = tmp_path / "research" / "registry" / "evidence"
+            ee_module.EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+            with pytest.raises(ValueError, match="human review"):
+                engine.promote_validated_experiment(
+                    "EXP-TEST-0001",
+                    "CLAIM-TEST-001",
+                    "H-TEST-001-A",
+                    "Reviewed result",
+                )
+            review_path = engine.record_human_review(
+                "EXP-TEST-0001",
+                reviewer="human",
+                decision="supports",
+                comments="Protocol and source freeze reviewed.",
+            )
+            evidence_id = engine.promote_validated_experiment(
+                "EXP-TEST-0001",
+                "CLAIM-TEST-001",
+                "H-TEST-001-A",
+                "Reviewed result",
+            )
+            assert review_path.is_file()
+            evidence = json.loads(
+                (ee_module.EVIDENCE_DIR / f"{evidence_id}.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            assert evidence["status"] == "supports"
+            assert evidence["verification"]["human_review"]["reviewer"] == "human"
         finally:
             ee_module.EXPERIMENTS_DIR = original_dir
             ee_module.EVIDENCE_DIR = original_evidence
