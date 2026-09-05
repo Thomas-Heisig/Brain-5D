@@ -1,0 +1,24 @@
+{
+  "experiment_id": "EXP-GEN-0018",
+  "research_question": "RQ-TEMP-001",
+  "hypothesis": "H-TEMP-001-A",
+  "title": "Complete science suite",
+  "conditions": "Seeds 42,43,44; alle registrierten Science-Suite-Runner ausf\u00fchren; Bedingungen im DATA \u00fcber Gruppenpr\u00e4fixe trennen.",
+  "ticks": 1000,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "protocol": "science_all_v1",
+  "resolved_runner": "run_all",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "mixed_protocol_tick_contract",
+    "requested_ticks": 1000
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

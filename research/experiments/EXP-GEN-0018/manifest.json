@@ -1,0 +1,98 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "data": "DATA/runs.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-05T18:18:35.773721+00:00",
+  "data_partitions": [],
+  "execution_contract": {
+    "hypothesis_id": "H-TEMP-001-A",
+    "protocol": "science_all_v1",
+    "question_id": "RQ-TEMP-001",
+    "resolved_runner": "run_all",
+    "tick_validation": {
+      "mode": "mixed_protocol_tick_contract",
+      "requested_ticks": 1000,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 1000
+  },
+  "experiment_id": "EXP-GEN-0018",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "b6e474c749b261147d44bf2f947590ca58c1457f",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-TEMP-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "649953eca37da3280f6c6743acd30bf375c04fc69c16444e3affe76d5c5c612a",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "2bc81f49f638ca53e0ab38ee64f8a9a1857ed49947a30b66978f6be6ad0aed77",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-TEMP-001"
+  ],
+  "research_run_mode": "EXPLORATORY",
+  "results": {
+    "protocol": "science_all_v1",
+    "run_count": 51,
+    "runner": "run_all",
+    "tick_contract": {
+      "mode": "mixed_protocol_tick_contract",
+      "requested_ticks": 1000,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 1000
+  },
+  "runtime": {
+    "duration_seconds": 1.0453017998952419
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "science_all_v1",
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "ticks": 1000
+  },
+  "software": {
+    "brain5d_version": "unknown",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "0710f63c7fd0bd993d010528aa18022c0ad8b4d492d5a60001b248f9dfb1a074",
+  "timestamp": "2026-09-05T20:18:35.773712",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}
