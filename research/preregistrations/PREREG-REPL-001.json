@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-REPL-001","research_question":"RQ-REPL-001","hypothesis":"H-REPL-001-A","protocol_id":"independent_replication_v1","mode":"REPLICATION",
+  "primary_outcomes":["total_spikes","recurrent_events","propagation_depth","last_response_latency"],
+  "secondary_outcomes":["state_digest_after"],
+  "conditions":[{"id":"recurrence_off","role":"control"},{"id":"recurrence_on","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"at least 20 predeclared initialization seeds; clean process preferred"},
+  "stopping_rule":"complete all registered seeds in both treatment arms",
+  "inclusion_criteria":["clean source freeze","same configuration and stimulus schedule across arms","tick contract satisfied"],
+  "exclusion_criteria":["seed replacement after outcome inspection","runtime/source mismatch","fatal runtime error"],
+  "analysis_plan":{"descriptive_statistics":["paired seed differences","effect direction consistency","condition distributions"],"inference_policy":"Replication means effect-direction and magnitude consistency across independent initializations; deterministic equality alone is not independent replication.","planned_tests":[]},
+  "expected_failure_modes":["no effective seed variation","effect disappears under clean process","large seed-dependent reversals"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot select successful seeds or exclude runs.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}
