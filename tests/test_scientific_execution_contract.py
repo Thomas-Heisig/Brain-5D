@@ -32,7 +32,9 @@ class EarlyQuiescentRuntime:
         }
 
 
-def _workflow(question_id: str, protocol: str = "science_suite_v1") -> ExperimentWorkflow:
+def _workflow(
+    question_id: str, protocol: str = "science_suite_v1"
+) -> ExperimentWorkflow:
     return ExperimentWorkflow(
         experiment_id="EXP-GEN-9999",
         question_id=question_id,

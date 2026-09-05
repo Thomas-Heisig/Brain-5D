@@ -76,7 +76,13 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
                 metric_stats[name] = _stats(values)
         conditions[condition] = {
             "run_count": len(condition_runs),
-            "seeds": sorted({int(run["seed"]) for run in condition_runs if isinstance(run.get("seed"), int)}),
+            "seeds": sorted(
+                {
+                    int(run["seed"])
+                    for run in condition_runs
+                    if isinstance(run.get("seed"), int)
+                }
+            ),
             "metrics": metric_stats,
         }
 
@@ -160,7 +166,13 @@ def write_statistics_artifact(experiment_dir: Path, runs: list[dict[str, Any]]) 
     path = experiment_dir / "analysis" / "statistics.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps(build_descriptive_statistics(runs), indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+        json.dumps(
+            build_descriptive_statistics(runs),
+            indent=2,
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        + "\n",
         encoding="utf-8",
     )
     return path
@@ -170,18 +182,33 @@ def _semantic_status(question_id: str, conditions: set[str]) -> tuple[str, str]:
     plain = {item.split(":", 1)[-1] for item in conditions}
     if question_id.startswith("RQ-PING-"):
         ok = {"recurrence_off", "recurrence_on"}.issubset(plain)
-        return ("MATCH" if ok else "MISMATCH", "PING erwartet recurrence_off und recurrence_on.")
+        return (
+            "MATCH" if ok else "MISMATCH",
+            "PING erwartet recurrence_off und recurrence_on.",
+        )
     if question_id.startswith("RQ-TEMP-"):
         ok = "fast_medium_slow" in plain
-        return ("MATCH" if ok else "MISMATCH", "TEMP erwartet fast_medium_slow mit FAST/MEDIUM/SLOW-Horizonten.")
+        return (
+            "MATCH" if ok else "MISMATCH",
+            "TEMP erwartet fast_medium_slow mit FAST/MEDIUM/SLOW-Horizonten.",
+        )
     if question_id.startswith("RQ-TIME-"):
         ok = bool(plain) and all(item.isdigit() for item in plain)
-        return ("MATCH" if ok else "MISMATCH", "TIME erwartet numerische Tick-Leiter-Bedingungen.")
+        return (
+            "MATCH" if ok else "MISMATCH",
+            "TIME erwartet numerische Tick-Leiter-Bedingungen.",
+        )
     if question_id.startswith("RQ-5D-"):
         expected = {"1d", "2d", "3d", "5d", "random_graph"}
         ok = expected.issubset(plain)
-        return ("MATCH" if ok else "MISMATCH", "5D erwartet die registrierten Dimensions-/Topologiebedingungen.")
-    return ("NOT_AUTOMATICALLY_CLASSIFIED", "Keine automatische semantische Regel fuer diese RQ-Familie registriert.")
+        return (
+            "MATCH" if ok else "MISMATCH",
+            "5D erwartet die registrierten Dimensions-/Topologiebedingungen.",
+        )
+    return (
+        "NOT_AUTOMATICALLY_CLASSIFIED",
+        "Keine automatische semantische Regel fuer diese RQ-Familie registriert.",
+    )
 
 
 def _fmt(value: object) -> str:
@@ -200,19 +227,35 @@ def write_detailed_experiment_summary(
     manifest = _read_json(experiment_dir / "manifest.json", {})
     workflow = _read_json(experiment_dir / "workflow.json", {})
     raw_runs = _read_json(experiment_dir / "DATA" / "runs.json", [])
-    runs = [item for item in raw_runs if isinstance(item, dict)] if isinstance(raw_runs, list) else []
+    runs = (
+        [item for item in raw_runs if isinstance(item, dict)]
+        if isinstance(raw_runs, list)
+        else []
+    )
     statistics = build_descriptive_statistics(runs)
     statistics_path = write_statistics_artifact(experiment_dir, runs)
 
     simulation = manifest.get("simulation", {}) if isinstance(manifest, dict) else {}
     results = manifest.get("results", {}) if isinstance(manifest, dict) else {}
-    question_ids = manifest.get("research_questions", []) if isinstance(manifest, dict) else []
-    hypothesis_ids = manifest.get("hypotheses", []) if isinstance(manifest, dict) else []
-    question_id = str(question_ids[0]) if isinstance(question_ids, list) and question_ids else "NOT_AVAILABLE"
+    question_ids = (
+        manifest.get("research_questions", []) if isinstance(manifest, dict) else []
+    )
+    hypothesis_ids = (
+        manifest.get("hypotheses", []) if isinstance(manifest, dict) else []
+    )
+    question_id = (
+        str(question_ids[0])
+        if isinstance(question_ids, list) and question_ids
+        else "NOT_AVAILABLE"
+    )
     conditions = {str(run.get("condition", "unknown")) for run in runs}
     semantic_status, semantic_note = _semantic_status(question_id, conditions)
 
-    requested_ticks = simulation.get("ticks", workflow.get("ticks", "NOT_AVAILABLE")) if isinstance(simulation, dict) else workflow.get("ticks", "NOT_AVAILABLE")
+    requested_ticks = (
+        simulation.get("ticks", workflow.get("ticks", "NOT_AVAILABLE"))
+        if isinstance(simulation, dict)
+        else workflow.get("ticks", "NOT_AVAILABLE")
+    )
     actual_ticks = [
         int(value)
         for run in runs
@@ -221,7 +264,9 @@ def write_detailed_experiment_summary(
     ]
     tick_contract = "NOT_APPLICABLE"
     if isinstance(requested_ticks, int) and actual_ticks:
-        tick_contract = "SATISFIED" if min(actual_ticks) >= requested_ticks else "VIOLATED"
+        tick_contract = (
+            "SATISFIED" if min(actual_ticks) >= requested_ticks else "VIOLATED"
+        )
 
     lines = [
         f"# {experiment_id}: Wissenschaftliche Zusammenfassung",
@@ -280,11 +325,14 @@ def write_detailed_experiment_summary(
     ]
     for condition, payload in statistics.get("conditions", {}).items():
         metrics = payload.get("metrics", {})
+
         def mean_of(name: str) -> object:
             item = metrics.get(name, {})
             return item.get("mean") if isinstance(item, dict) else None
+
         lines.append(
-            "| " + " | ".join(
+            "| "
+            + " | ".join(
                 [
                     condition,
                     str(payload.get("run_count", 0)),
@@ -296,7 +344,8 @@ def write_detailed_experiment_summary(
                     _fmt(mean_of("recurrent_events")),
                     _fmt(mean_of("propagation_depth")),
                 ]
-            ) + " |"
+            )
+            + " |"
         )
 
     effects = statistics.get("two_condition_effects", {})
@@ -322,22 +371,27 @@ def write_detailed_experiment_summary(
     if isinstance(temporal, dict) and temporal:
         lines.extend(["", "### 5.3 Temporal-State-Horizonte", ""])
         for horizon, payload in temporal.items():
-            discrepancy = payload.get("discrepancy", {}) if isinstance(payload, dict) else {}
+            discrepancy = (
+                payload.get("discrepancy", {}) if isinstance(payload, dict) else {}
+            )
             lines.append(
                 f"- `{horizon}`: Referenzvergleiche={payload.get('reference_comparisons', 0) if isinstance(payload, dict) else 0}; discrepancy mean={_fmt(discrepancy.get('mean') if isinstance(discrepancy, dict) else None)}, max={_fmt(discrepancy.get('max') if isinstance(discrepancy, dict) else None)}."
             )
 
-    lines.extend([
-        "",
-        "## 6. Einzelne Läufe",
-        "",
-        "| Seed | Condition | Ticks | Spikes | Syn. events | Aktivierte Neuronen | Recurrent events | Depth | Runtime error |",
-        "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
-    ])
+    lines.extend(
+        [
+            "",
+            "## 6. Einzelne Läufe",
+            "",
+            "| Seed | Condition | Ticks | Spikes | Syn. events | Aktivierte Neuronen | Recurrent events | Depth | Runtime error |",
+            "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+        ]
+    )
     for run in runs:
         metrics = run.get("metrics") if isinstance(run.get("metrics"), dict) else {}
         lines.append(
-            "| " + " | ".join(
+            "| "
+            + " | ".join(
                 [
                     _fmt(run.get("seed")),
                     _fmt(run.get("condition")),
@@ -349,38 +403,52 @@ def write_detailed_experiment_summary(
                     _fmt(metrics.get("propagation_depth")),
                     _fmt(run.get("runtime_error")),
                 ]
-            ) + " |"
+            )
+            + " |"
         )
 
-    lines.extend([
-        "",
-        "## 7. Reproduzierbarkeit und Provenienz",
-        "",
-        "Identische Ausgaben ueber mehrere Seeds dokumentieren reproduzierbare Modelltrajektorien unter diesen Bedingungen. Sie sind nicht automatisch statistisch unabhaengige Replikate. State-Digests sind Integritaets-/Identitaetsmarker und keine metrischen Zustandsabstaende.",
-        "",
-        f"Deterministische Statistikdatei: [`{statistics_path.relative_to(experiment_dir).as_posix()}`]({statistics_path.relative_to(experiment_dir).as_posix()})",
-        "",
-        "## 8. AI Research Report",
-        "",
-        f"- AIRR Status: `{ai_report.get('status', 'unknown')}`",
-        "- Wissenschaftliche Evidenz durch KI: `false`",
-        "- Human Review: `PENDING`",
-    ])
+    lines.extend(
+        [
+            "",
+            "## 7. Reproduzierbarkeit und Provenienz",
+            "",
+            "Identische Ausgaben ueber mehrere Seeds dokumentieren reproduzierbare Modelltrajektorien unter diesen Bedingungen. Sie sind nicht automatisch statistisch unabhaengige Replikate. State-Digests sind Integritaets-/Identitaetsmarker und keine metrischen Zustandsabstaende.",
+            "",
+            f"Deterministische Statistikdatei: [`{statistics_path.relative_to(experiment_dir).as_posix()}`]({statistics_path.relative_to(experiment_dir).as_posix()})",
+            "",
+            "## 8. AI Research Report",
+            "",
+            f"- AIRR Status: `{ai_report.get('status', 'unknown')}`",
+            "- Wissenschaftliche Evidenz durch KI: `false`",
+            "- Human Review: `PENDING`",
+        ]
+    )
 
     if ai_report.get("status") == "generated" and ai_report.get("report_id"):
         report_id = str(ai_report["report_id"])
         report = _read_json(experiment_dir / "reports" / f"{report_id}.json", {})
         content = report.get("content", {}) if isinstance(report, dict) else {}
-        lines.extend([
-            f"- AIRR Markdown: [`reports/{report_id}.md`](reports/{report_id}.md)",
-            f"- AIRR JSON: [`reports/{report_id}.json`](reports/{report_id}.json)",
-            "",
-            "### 8.1 KI-Einschaetzung",
-            "",
-            str(content.get("executive_summary", content.get("conclusion", "Keine Einschätzung vorhanden."))) if isinstance(content, dict) else "Keine Einschätzung vorhanden.",
-            "",
-            f"KI-Konfidenz: `{content.get('ai_confidence', 0.0) if isinstance(content, dict) else 0.0}` — dies ist keine statistische Konfidenz.",
-        ])
+        lines.extend(
+            [
+                f"- AIRR Markdown: [`reports/{report_id}.md`](reports/{report_id}.md)",
+                f"- AIRR JSON: [`reports/{report_id}.json`](reports/{report_id}.json)",
+                "",
+                "### 8.1 KI-Einschaetzung",
+                "",
+                (
+                    str(
+                        content.get(
+                            "executive_summary",
+                            content.get("conclusion", "Keine Einschätzung vorhanden."),
+                        )
+                    )
+                    if isinstance(content, dict)
+                    else "Keine Einschätzung vorhanden."
+                ),
+                "",
+                f"KI-Konfidenz: `{content.get('ai_confidence', 0.0) if isinstance(content, dict) else 0.0}` — dies ist keine statistische Konfidenz.",
+            ]
+        )
         for heading, key in (
             ("Methodische Kritik", "methodological_critique"),
             ("Alternative Erklaerungen", "alternative_explanations"),
@@ -388,13 +456,28 @@ def write_detailed_experiment_summary(
             ("Empfohlene Folgeexperimente", "recommended_follow_up"),
         ):
             values = content.get(key, []) if isinstance(content, dict) else []
-            lines.extend(["", f"### 8.2 {heading}" if heading == "Methodische Kritik" else f"### {heading}", ""])
+            lines.extend(
+                [
+                    "",
+                    (
+                        f"### 8.2 {heading}"
+                        if heading == "Methodische Kritik"
+                        else f"### {heading}"
+                    ),
+                    "",
+                ]
+            )
             if isinstance(values, list) and values:
                 lines.extend(f"- {value}" for value in values)
             else:
                 lines.append("- Keine expliziten Angaben.")
     elif ai_report.get("status") == "failed":
-        lines.extend(["", f"AIRR-Fehler: `{ai_report.get('message', ai_report.get('reason', 'unknown'))}`. Die deterministische Datenauswertung oben bleibt davon unberuehrt."])
+        lines.extend(
+            [
+                "",
+                f"AIRR-Fehler: `{ai_report.get('message', ai_report.get('reason', 'unknown'))}`. Die deterministische Datenauswertung oben bleibt davon unberuehrt.",
+            ]
+        )
 
     lines.extend(["", "## 9. Artefakte", ""])
     for path in sorted(experiment_dir.rglob("*")):
@@ -402,15 +485,17 @@ def write_detailed_experiment_summary(
             relative = path.relative_to(experiment_dir).as_posix()
             lines.append(f"- [{relative}]({relative})")
 
-    lines.extend([
-        "",
-        "## 10. Wissenschaftliche Grenze und Schlussfolgerung",
-        "",
-        "Die technischen Laufdaten duerfen deskriptiv ausgewertet werden. Eine Hypothese gilt dadurch nicht automatisch als bestaetigt oder widerlegt. Kausale Aussagen sind nur fuer explizit kontrollierte Interventionen und nur innerhalb des simulierten Systems zulaessig; biologische Generalisierung erfordert zusaetzliche Evidenz. Die KI-Auswertung ist post-hoc und besitzt keine Evidenzfreigabe.",
-        "",
-        f"**Gesamtstatus:** technische Ausfuehrung `{manifest.get('experiment_status', 'unknown')}`, Tick-Vertrag `{tick_contract}`, semantische Zuordnung `{semantic_status}`, wissenschaftliche Evidenz `false` bis zur menschlichen Review/Freigabe.",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "## 10. Wissenschaftliche Grenze und Schlussfolgerung",
+            "",
+            "Die technischen Laufdaten duerfen deskriptiv ausgewertet werden. Eine Hypothese gilt dadurch nicht automatisch als bestaetigt oder widerlegt. Kausale Aussagen sind nur fuer explizit kontrollierte Interventionen und nur innerhalb des simulierten Systems zulaessig; biologische Generalisierung erfordert zusaetzliche Evidenz. Die KI-Auswertung ist post-hoc und besitzt keine Evidenzfreigabe.",
+            "",
+            f"**Gesamtstatus:** technische Ausfuehrung `{manifest.get('experiment_status', 'unknown')}`, Tick-Vertrag `{tick_contract}`, semantische Zuordnung `{semantic_status}`, wissenschaftliche Evidenz `false` bis zur menschlichen Review/Freigabe.",
+            "",
+        ]
+    )
 
     summary_path = experiment_dir / "summary.md"
     summary_path.write_text("\n".join(lines), encoding="utf-8")

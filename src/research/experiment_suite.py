@@ -242,7 +242,9 @@ def run_time(
                         "ticks": run_ticks,
                         "ticks_requested": ticks,
                         "duration_seconds": duration,
-                        "ticks_per_second": run_ticks / duration if duration > 0 else 0.0,
+                        "ticks_per_second": (
+                            run_ticks / duration if duration > 0 else 0.0
+                        ),
                     },
                     before,
                     _digest(network),
@@ -283,7 +285,11 @@ def run_5d(
                     "EXP-5D-0001",
                     condition,
                     seed,
-                    {"dimensions": list(shape), "ticks_requested": ticks, **signature.to_dict()},
+                    {
+                        "dimensions": list(shape),
+                        "ticks_requested": ticks,
+                        **signature.to_dict(),
+                    },
                     before,
                     _digest(network),
                 )
@@ -349,7 +355,8 @@ def run_temporal(
         network = _network(config, seed)
         before = _digest(network)
         memory = TemporalStateMemory(
-            horizons={"fast": 2, "medium": 4, "slow": 6}, capacity=max(32, min(ticks + 1, 4096))
+            horizons={"fast": 2, "medium": 4, "slow": 6},
+            capacity=max(32, min(ticks + 1, 4096)),
         )
         comparator = TemporalComparator()
         comparisons: list[dict[str, Any]] = []

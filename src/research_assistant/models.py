@@ -122,7 +122,9 @@ def _normalize_output(output: dict[str, Any]) -> dict[str, Any]:
     raw_confidence = normalized.get("confidence")
     parsed: float | None = None
 
-    if isinstance(raw_confidence, (int, float)) and not isinstance(raw_confidence, bool):
+    if isinstance(raw_confidence, (int, float)) and not isinstance(
+        raw_confidence, bool
+    ):
         parsed = float(raw_confidence)
     elif isinstance(raw_confidence, str):
         text = raw_confidence.strip().replace(",", ".")
@@ -172,7 +174,9 @@ def _validate_output(output: dict[str, Any], role: str) -> None:
         if not isinstance(output.get("effect_direction"), str):
             raise ValueError("Invalid AI analysis output field: effect_direction")
     confidence_value = output.get("confidence")
-    if isinstance(confidence_value, bool) or not isinstance(confidence_value, (int, float)):
+    if isinstance(confidence_value, bool) or not isinstance(
+        confidence_value, (int, float)
+    ):
         raise ValueError("Invalid AI analysis output field: confidence")
     confidence = float(confidence_value)
     if not 0.0 <= confidence <= 1.0:

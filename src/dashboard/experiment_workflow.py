@@ -138,7 +138,9 @@ class ExperimentWorkflowService:
 
         from src.research import experiment_suite
 
-        config_path = self._research_root.parent / "configs" / "learning_experiment.yaml"
+        config_path = (
+            self._research_root.parent / "configs" / "learning_experiment.yaml"
+        )
         if not config_path.exists():
             config_path = Path("configs/learning_experiment.yaml")
         config_path = config_path.resolve()
@@ -239,7 +241,9 @@ class ExperimentWorkflowService:
         manifest_path = output_dir / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         artifacts = manifest.setdefault("artifacts", {})
-        artifacts["statistics"] = str(statistics_path.relative_to(output_dir)).replace("\\", "/")
+        artifacts["statistics"] = str(statistics_path.relative_to(output_dir)).replace(
+            "\\", "/"
+        )
         manifest["execution_contract"] = {
             "resolved_runner": runner_name,
             "ticks_requested": workflow.ticks,
@@ -341,7 +345,8 @@ class ExperimentWorkflowService:
                 if isinstance(run.metrics, dict)
             ]
             if not observed or any(
-                not isinstance(value, int) or value < requested_ticks for value in observed
+                not isinstance(value, int) or value < requested_ticks
+                for value in observed
             ):
                 raise WorkflowValidationError(
                     f"Tick contract violated: runner {runner_name} did not execute at least {requested_ticks} ticks in every run."
