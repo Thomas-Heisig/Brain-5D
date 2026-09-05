@@ -44,6 +44,9 @@ artifacts/
 tmp/restore_diag/
 tmp/trace_diag/
 
+# Generated experiment data
+research/experiments/EXP-GEN-0019/DATA/runs.json
+
 # OS noise
 .DS_Store
 Thumbs.db
