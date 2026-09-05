@@ -1,0 +1,527 @@
+:root {
+  --b5-bg-0: #07111c;
+  --b5-bg-1: #0a1725;
+  --b5-bg-2: #0e2031;
+  --b5-panel: rgba(10, 25, 39, 0.88);
+  --b5-panel-strong: rgba(12, 30, 46, 0.96);
+  --b5-line: rgba(115, 188, 229, 0.18);
+  --b5-line-strong: rgba(87, 206, 255, 0.38);
+  --b5-text: #e4f3ff;
+  --b5-muted: #88a8bd;
+  --b5-cyan: #28d7ff;
+  --b5-blue: #4a8cff;
+  --b5-violet: #8a6cff;
+  --b5-green: #48eca1;
+  --b5-amber: #ffc85a;
+  --b5-rose: #ff5b8e;
+  --b5-red: #ff5d68;
+  --b5-gold: #ffd46a;
+  --b5-radius: 13px;
+  --b5-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(39, 146, 204, 0.14), transparent 38rem),
+    linear-gradient(180deg, var(--b5-bg-1), var(--b5-bg-0) 55%, #050d15);
+  color: var(--b5-text);
+}
+
+.topbar,
+.tab-nav,
+footer {
+  background: rgba(5, 16, 27, 0.92) !important;
+  border-color: var(--b5-line) !important;
+  backdrop-filter: blur(18px) saturate(130%);
+}
+
+.topbar h1,
+.dashboard-generated-header h2,
+.workspace-header h2,
+.overview-command-bar h2 {
+  color: var(--b5-text) !important;
+  letter-spacing: -0.02em;
+}
+
+.card,
+.overview-surface,
+.dashboard-generated-header,
+.workspace-header,
+.dashboard-utility-bar,
+.experience-ribbon,
+.snapshot-info-card,
+.panel {
+  background: linear-gradient(145deg, rgba(15, 34, 51, 0.94), rgba(7, 20, 32, 0.94)) !important;
+  border-color: var(--b5-line) !important;
+  border-radius: var(--b5-radius) !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.12) !important;
+}
+
+.tab-nav {
+  gap: 4px !important;
+  padding: 7px 12px !important;
+}
+
+.tab-btn {
+  min-height: 42px;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--b5-muted) !important;
+  transition: 160ms ease;
+}
+
+.tab-btn:hover {
+  color: var(--b5-text) !important;
+  border-color: var(--b5-line) !important;
+  background: rgba(65, 159, 213, 0.08) !important;
+}
+
+.tab-btn.active {
+  color: #eefaff !important;
+  border-color: rgba(42, 179, 255, 0.7) !important;
+  background: linear-gradient(180deg, rgba(18, 116, 184, 0.4), rgba(14, 74, 119, 0.34)) !important;
+  box-shadow: inset 0 0 24px rgba(29, 166, 247, 0.1);
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: 7px;
+}
+
+button:focus-visible,
+.wesen-organ:focus-visible {
+  outline: 2px solid var(--b5-cyan);
+  outline-offset: 3px;
+}
+
+/* The legacy Network workbench remains in the DOM for compatibility and tests,
+   but it is intentionally not a user-facing workspace anymore. */
+.tab-btn[data-tab="network"] { display: none !important; }
+.tab-btn[data-tab="gate"] { display: none !important; }
+
+/* Embodiment is now a simple connection / body-boundary page. The elaborate
+   organism representation belongs to the dedicated Wesen workspace. */
+#tab-embodiment .experience-welcome,
+#tab-embodiment .anatomy-zone,
+#tab-embodiment .embodiment-living-system,
+#tab-embodiment #real-body-shell .real-body-hero,
+#tab-embodiment .legacy-embodiment-details {
+  display: none !important;
+}
+
+#tab-embodiment.active {
+  display: block !important;
+}
+
+#tab-embodiment .embodiment-grid,
+#tab-embodiment .connection-manager-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* Wesen workspace                                                           */
+/* ------------------------------------------------------------------------- */
+.wesen-workspace {
+  padding: 0 12px 74px;
+}
+
+.wesen-workspace.active {
+  display: block !important;
+}
+
+.wesen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 8px;
+  padding: 12px 16px !important;
+}
+
+.wesen-header p {
+  max-width: 840px;
+  margin-bottom: 0;
+  color: var(--b5-muted);
+}
+
+.wesen-live-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border: 1px solid var(--b5-line);
+  border-radius: 999px;
+  color: var(--b5-muted);
+  white-space: nowrap;
+}
+
+.wesen-live-dot,
+.wesen-connection-led {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #7b8c98;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.wesen-live-dot[data-state="ok"], .wesen-connection-led.ok { color: var(--b5-green); background: currentColor; }
+.wesen-live-dot[data-state="warn"], .wesen-connection-led.warn { color: var(--b5-amber); background: currentColor; }
+.wesen-live-dot[data-state="critical"], .wesen-connection-led.critical { color: var(--b5-red); background: currentColor; }
+
+.wesen-layout {
+  display: grid;
+  grid-template-columns: minmax(210px, 255px) minmax(520px, 1fr) minmax(255px, 315px);
+  gap: 9px;
+  align-items: start;
+}
+
+.wesen-sidebar {
+  display: grid;
+  gap: 9px;
+}
+
+.wesen-card,
+.wesen-stage-card,
+.wesen-console {
+  border: 1px solid var(--b5-line);
+  background: linear-gradient(145deg, rgba(12, 30, 46, 0.95), rgba(6, 18, 29, 0.95));
+  border-radius: var(--b5-radius);
+  box-shadow: var(--b5-shadow);
+  overflow: hidden;
+}
+
+.wesen-card > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--b5-line);
+}
+
+.wesen-card > header span {
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.wesen-card > header small {
+  color: var(--b5-muted);
+}
+
+.wesen-metrics {
+  padding: 7px 12px;
+}
+
+.wesen-metric,
+.wesen-inspector-rows > div,
+.wesen-self-metrics > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  min-height: 30px;
+  border-bottom: 1px solid rgba(130, 190, 224, 0.08);
+}
+
+.wesen-metric span,
+.wesen-inspector-rows span,
+.wesen-self-metrics span {
+  color: var(--b5-muted);
+  font-size: 0.78rem;
+}
+
+.wesen-metric strong,
+.wesen-inspector-rows strong,
+.wesen-self-metrics strong {
+  color: var(--b5-text);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.wesen-spark-wrap {
+  padding: 8px 12px 12px;
+}
+
+.wesen-spark-wrap > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: var(--b5-muted);
+  font-size: 0.75rem;
+}
+
+#wesen-recurrence-chart {
+  display: block;
+  width: 100%;
+  height: 58px;
+  background: rgba(4, 13, 22, 0.52);
+  border: 1px solid rgba(124, 93, 255, 0.13);
+  border-radius: 6px;
+}
+
+.wesen-chart-line {
+  fill: none;
+  stroke: var(--b5-violet);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.wesen-chart-point { fill: #cfbaff; filter: drop-shadow(0 0 5px var(--b5-violet)); }
+.wesen-chart-empty { fill: var(--b5-muted); font-size: 10px; }
+
+.wesen-view-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 10px;
+}
+
+.wesen-view-controls button,
+.wesen-stage-actions button,
+#wesen-event-filters button {
+  border: 1px solid var(--b5-line);
+  background: rgba(12, 38, 58, 0.6);
+  color: var(--b5-muted);
+  padding: 7px 8px;
+  cursor: pointer;
+}
+
+.wesen-view-controls button.active,
+.wesen-stage-actions button.active,
+#wesen-event-filters button.active {
+  border-color: rgba(53, 196, 255, 0.55);
+  color: var(--b5-text);
+  background: rgba(24, 124, 183, 0.26);
+}
+
+.wesen-hint,
+.wesen-integrity-note {
+  color: var(--b5-muted);
+  font-size: 0.71rem;
+  line-height: 1.45;
+  padding: 0 11px 10px;
+  margin: 0;
+}
+
+.wesen-adaptation { padding: 10px 12px; }
+.wesen-adaptation p { margin: 6px 0 0; color: var(--b5-muted); font-size: 0.72rem; line-height: 1.35; }
+.wesen-adaptation-state { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+.wesen-adaptation-state span { width: 8px; height: 8px; border-radius: 50%; background: #778b9a; }
+.wesen-adaptation-state.ok span { background: var(--b5-green); box-shadow: 0 0 12px var(--b5-green); }
+.wesen-adaptation-state.warn span { background: var(--b5-amber); box-shadow: 0 0 12px var(--b5-amber); }
+.wesen-adaptation-state.critical span { background: var(--b5-red); box-shadow: 0 0 12px var(--b5-red); }
+
+.wesen-stage-card {
+  min-height: 760px;
+  display: grid;
+  grid-template-rows: auto minmax(540px, 1fr) auto;
+}
+
+.wesen-stage-toolbar {
+  min-height: 50px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--b5-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.wesen-stage-toolbar > div:first-child { display: grid; gap: 2px; }
+.wesen-stage-toolbar strong { font-size: 1rem; }
+.wesen-stage-toolbar span { color: var(--b5-muted); font-size: 0.72rem; }
+.wesen-stage-actions { display: flex; gap: 6px; }
+
+.wesen-stage {
+  position: relative;
+  min-height: 550px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(28, 108, 153, 0.17), transparent 32%),
+    linear-gradient(rgba(67, 145, 189, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 145, 189, 0.045) 1px, transparent 1px),
+    #06131f;
+  background-size: auto, 44px 44px, 44px 44px, auto;
+}
+
+#wesen-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#wesen-camera {
+  transform-origin: 450px 365px;
+  transform: scale(var(--wesen-adaptive-scale, 1));
+  transition: transform 650ms cubic-bezier(.2,.8,.2,1);
+}
+
+.wesen-membrane {
+  fill: url(#wesen-membrane-gradient);
+  stroke: rgba(74, 197, 255, 0.32);
+  stroke-width: 1.5;
+  stroke-dasharray: 7 8;
+  filter: drop-shadow(0 0 20px rgba(32, 162, 227, 0.16));
+  transition: opacity 500ms ease;
+  animation: wesen-membrane-breathe 8s ease-in-out infinite;
+}
+
+@keyframes wesen-membrane-breathe {
+  0%, 100% { stroke-opacity: .45; }
+  50% { stroke-opacity: .88; }
+}
+
+.wesen-nerve {
+  fill: none;
+  stroke: rgba(130, 190, 220, 0.16);
+  stroke-width: 2.2;
+  transition: stroke 180ms ease, stroke-width 180ms ease, opacity 180ms ease;
+}
+
+#wesen-svg.show-connections .wesen-nerve { stroke: rgba(90, 208, 255, .42); }
+#wesen-svg.show-causality .wesen-nerve { opacity: .18; }
+#wesen-svg.show-causality .wesen-nerve[data-organ="rueckkopplung"],
+#wesen-svg.show-causality .wesen-nerve[data-organ="sensorik"] { stroke: var(--b5-violet); opacity: .85; stroke-width: 3; }
+
+.wesen-organ { cursor: pointer; transform-box: fill-box; transform-origin: center; }
+.wesen-organ-halo { fill: rgba(36, 179, 239, 0.035); stroke: currentColor; stroke-opacity: .15; stroke-width: 1; }
+.wesen-organ-body { fill: rgba(5, 18, 30, 0.94); stroke: currentColor; stroke-width: 2; filter: drop-shadow(0 0 15px currentColor); }
+.wesen-organ-status { fill: var(--b5-green); filter: drop-shadow(0 0 6px var(--b5-green)); }
+.wesen-organ-icon { fill: currentColor; font-size: 28px; text-anchor: middle; font-weight: 700; }
+.wesen-organ-label { fill: var(--b5-text); font-size: 14px; text-anchor: middle; font-weight: 700; }
+.wesen-organ-value { fill: var(--b5-muted); font-size: 11px; text-anchor: middle; font-variant-numeric: tabular-nums; }
+.wesen-organ:hover .wesen-organ-body,
+.wesen-organ.selected .wesen-organ-body { stroke-width: 3.3; }
+.wesen-organ.selected .wesen-organ-halo { fill: currentColor; fill-opacity: .08; stroke-opacity: .5; }
+.wesen-organ.unknown .wesen-organ-status { fill: #718391; filter: none; }
+
+.wesen-core .wesen-organ-body { fill: url(#wesen-core-gradient); stroke: var(--b5-gold); }
+.wesen-core .wesen-organ-icon,
+.wesen-core .wesen-organ-label { fill: #17202a; }
+.wesen-core .wesen-organ-value { fill: #3a3020; font-weight: 700; }
+
+.wesen-hue-cyan { color: var(--b5-cyan); }
+.wesen-hue-rose { color: var(--b5-rose); }
+.wesen-hue-violet { color: var(--b5-violet); }
+.wesen-hue-green { color: var(--b5-green); }
+.wesen-hue-amber { color: var(--b5-amber); }
+.wesen-hue-blue { color: var(--b5-blue); }
+.wesen-hue-gold { color: var(--b5-gold); }
+
+.wesen-signal-dot { fill: #dffaff; filter: url(#wesen-glow); }
+.wesen-signal-echo { fill: var(--b5-violet); }
+
+.wesen-environment-caption,
+.wesen-adaptive-caption {
+  position: absolute;
+  bottom: 12px;
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--b5-line);
+  border-radius: 8px;
+  background: rgba(5, 18, 29, 0.78);
+  backdrop-filter: blur(9px);
+}
+.wesen-environment-caption { left: 12px; }
+.wesen-adaptive-caption { right: 12px; text-align: right; }
+.wesen-environment-caption span,
+.wesen-adaptive-caption span { color: var(--b5-muted); font-size: 0.63rem; letter-spacing: .1em; }
+.wesen-environment-caption strong,
+.wesen-adaptive-caption strong { font-size: .74rem; }
+#wesen-reaction-label[data-state="ok"] { color: var(--b5-green); }
+#wesen-reaction-label[data-state="warn"] { color: var(--b5-amber); }
+#wesen-reaction-label[data-state="critical"] { color: var(--b5-red); }
+
+.wesen-console { margin: 8px; box-shadow: none; }
+.wesen-console-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--b5-line); }
+#wesen-event-filters { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+#wesen-event-filters button { padding: 4px 6px; font-size: .65rem; }
+.wesen-events { min-height: 112px; max-height: 156px; overflow: auto; }
+.wesen-event-row { width: 100%; display: grid; grid-template-columns: 64px 8px minmax(120px, .75fr) 1fr; gap: 8px; align-items: center; text-align: left; border: 0; border-bottom: 1px solid rgba(130,190,224,.06); background: transparent; color: var(--b5-text); padding: 6px 9px; cursor: pointer; }
+.wesen-event-row:hover { background: rgba(44, 153, 211, .07); }
+.wesen-event-row time, .wesen-event-row em { color: var(--b5-muted); font-size: .69rem; font-style: normal; }
+.wesen-event-row strong { font-size: .72rem; }
+.wesen-event-kind { width: 7px; height: 7px; border-radius: 50%; background: var(--b5-blue); }
+.wesen-event-kind.sensorik { background: var(--b5-cyan); }
+.wesen-event-kind.innenzustand { background: var(--b5-rose); }
+.wesen-event-kind.rueckkopplung { background: var(--b5-violet); }
+.wesen-event-kind.struktur { background: var(--b5-green); }
+.wesen-event-kind.system { background: var(--b5-amber); }
+
+.wesen-inspector-title { display: flex; gap: 10px; align-items: center; padding: 12px; }
+.wesen-inspector-title > span { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid currentColor; border-radius: 50%; font-size: 21px; }
+.wesen-inspector-title > div { display: grid; gap: 2px; }
+.wesen-inspector-title strong { color: var(--b5-text); }
+.wesen-inspector-title small { color: var(--b5-muted); }
+.wesen-inspector-rows { padding: 0 12px 8px; }
+#wesen-inspector-status.ok { color: var(--b5-green); }
+#wesen-inspector-status.unknown { color: var(--b5-muted); }
+
+.wesen-connection-list { max-height: 250px; overflow: auto; }
+.wesen-connection-row { width: 100%; display: grid; grid-template-columns: 10px minmax(0,1fr) auto; gap: 9px; align-items: center; text-align: left; border: 0; border-bottom: 1px solid rgba(130,190,224,.06); background: transparent; color: var(--b5-text); padding: 7px 10px; cursor: pointer; }
+.wesen-connection-row:hover { background: rgba(44,153,211,.07); }
+.wesen-connection-row span:nth-child(2) { display: grid; gap: 1px; min-width: 0; }
+.wesen-connection-row strong { font-size: .72rem; overflow: hidden; text-overflow: ellipsis; }
+.wesen-connection-row small, .wesen-connection-row em { color: var(--b5-muted); font-size: .64rem; font-style: normal; }
+.wesen-empty { color: var(--b5-muted); font-size: .72rem; padding: 12px; margin: 0; }
+
+.wesen-self-model { padding: 8px 10px 12px; }
+#wesen-self-svg { width: 100%; height: 140px; display: block; border-radius: 7px; background: rgba(4,13,22,.46); }
+.wesen-self-primary circle { fill: none; stroke: var(--b5-violet); stroke-width: 1.3; }
+.wesen-self-echo circle { fill: none; stroke: var(--b5-cyan); stroke-width: 1.3; filter: drop-shadow(0 0 4px var(--b5-cyan)); }
+.wesen-self-arrow { stroke: var(--b5-muted); stroke-width: 1; marker-end: none; }
+#wesen-self-svg text { fill: var(--b5-muted); font-size: 9px; }
+.wesen-self-metrics { padding: 4px 2px 0; }
+
+/* Release is deliberately a compact footer action rather than a primary page. */
+.wesen-release-button {
+  margin-left: 8px;
+  border: 1px solid rgba(62, 183, 247, .36);
+  background: rgba(19, 91, 135, .34);
+  color: var(--b5-text);
+  padding: 6px 10px;
+  font-size: .7rem;
+  cursor: pointer;
+}
+
+/* Responsive behavior: the organism remains the primary surface. */
+@media (max-width: 1280px) {
+  .wesen-layout { grid-template-columns: 210px minmax(460px, 1fr) 265px; }
+}
+
+@media (max-width: 1050px) {
+  .wesen-layout { grid-template-columns: 1fr 300px; }
+  .wesen-sidebar-left { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); }
+  .wesen-stage-card { grid-column: 1; }
+  .wesen-sidebar-right { grid-column: 2; }
+}
+
+@media (max-width: 820px) {
+  .wesen-layout { display: block; }
+  .wesen-sidebar-left { display: grid; grid-template-columns: 1fr; margin-bottom: 8px; }
+  .wesen-sidebar-right { margin-top: 8px; }
+  .wesen-stage-card { min-height: auto; grid-template-rows: auto 520px auto; }
+  .wesen-stage { min-height: 520px; }
+  .wesen-header { align-items: flex-start; gap: 8px; }
+  .wesen-console-head { align-items: flex-start; flex-direction: column; }
+}
+
+body[data-theme="light"] {
+  --b5-bg-0: #e9f2f8;
+  --b5-bg-1: #f7fbfe;
+  --b5-panel: rgba(255,255,255,.9);
+  --b5-panel-strong: rgba(250,253,255,.97);
+  --b5-line: rgba(21, 79, 111, .18);
+  --b5-text: #142a38;
+  --b5-muted: #567183;
+}
+body[data-theme="light"] .wesen-card,
+body[data-theme="light"] .wesen-stage-card,
+body[data-theme="light"] .wesen-console { background: rgba(250,253,255,.94); }
+body[data-theme="light"] .wesen-stage { background: radial-gradient(circle at 50% 46%, rgba(65, 169, 222, .15), transparent 33%), #eef7fb; }
+body[data-theme="light"] .wesen-organ-body { fill: rgba(248,252,255,.96); }
