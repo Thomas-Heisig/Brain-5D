@@ -17,9 +17,10 @@ def test_clean_process_repeats_publish_digest_bound_data(tmp_path: Path) -> None
     )
 
     assert artifact.run_count == 3
-    assert artifact.data_digest == hashlib.sha256(
-        artifact.data_path.read_bytes()
-    ).hexdigest()
+    assert (
+        artifact.data_digest
+        == hashlib.sha256(artifact.data_path.read_bytes()).hexdigest()
+    )
     records = [
         json.loads(line)
         for line in artifact.data_path.read_text(encoding="utf-8").splitlines()

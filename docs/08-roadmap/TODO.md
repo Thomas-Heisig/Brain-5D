@@ -10,7 +10,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] `main` is the canonical development line.
 - [x] CI green across Python 3.11, 3.12 and 3.13.
-- [x] 714 tests collected; 709 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
+- [x] 716 tests collected; 711 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
 - [x] Fast-suite coverage currently 72%.
 - [x] Scientific Integrity Gate green.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.

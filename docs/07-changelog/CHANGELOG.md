@@ -556,7 +556,7 @@
   canonical version claims and the collected pytest baseline.
 - Added scheduled/manual CI coverage for the opt-in large `.b5d` and journal
   storage tests with archived JUnit results.
-- Refreshed the verified suite baseline to 714 collected, 709 passed and 5
+- Refreshed the verified suite baseline to 716 collected, 711 passed and 5
   skipped tests.
 - Extended `EXP-EMB-0001` DATA records with separate action-acceptance and
   observed-effect receipts.

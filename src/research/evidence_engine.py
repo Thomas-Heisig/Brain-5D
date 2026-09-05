@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any, cast
 
 from .registry import (
@@ -208,6 +209,18 @@ class EvidenceEngine:
             raise ValueError("Validated promotion requires a human review") from exc
         if not isinstance(review, dict):
             raise ValueError("Human review artifact is invalid")
+        if review.get("experiment_id") != experiment_id:
+            raise ValueError("Human review experiment identity does not match")
+        if (
+            not isinstance(review.get("reviewer"), str)
+            or not str(review["reviewer"]).strip()
+        ):
+            raise ValueError("Human review requires a reviewer")
+        if (
+            not isinstance(review.get("comments"), str)
+            or not str(review["comments"]).strip()
+        ):
+            raise ValueError("Human review requires comments")
         decision = review.get("decision")
         if decision not in {"supports", "refutes", "inconclusive"}:
             raise ValueError("Human review decision is invalid")
