@@ -105,7 +105,17 @@ export class ExperimentWorkflowPanel {
       ];
       if (result.evidence_id) lines.push(`Evidenz: ${result.evidence_id}`);
       if (result.data_id) lines.push(`Daten: ${result.data_id}`);
-      if (result.result) lines.push(`Tick: ${result.result.start.tick} -> ${result.result.end.tick}`);
+      const runResult = result.result;
+      if (runResult && typeof runResult === "object") {
+        if (runResult.start && runResult.end) {
+          lines.push(`Tick: ${runResult.start.tick} -> ${runResult.end.tick}`);
+        } else if (typeof runResult.run_count === "number") {
+          const duration = typeof runResult.duration_seconds === "number"
+            ? `; Dauer: ${runResult.duration_seconds.toFixed(3)} s`
+            : "";
+          lines.push(`Runs: ${runResult.run_count}${duration}`);
+        }
+      }
       if (result.ai_report) {
         lines.push(`KI-Bericht: ${result.ai_report.status}`);
         if (result.ai_report.json) lines.push(`KI JSON: research/${result.ai_report.json}`);
