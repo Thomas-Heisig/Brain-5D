@@ -29,24 +29,17 @@
   "simulation": {
     "seed": 42,
     "ticks": 1000,
-    "seeds": [
-      42,
-      43,
-      44
-    ],
+    "seeds": [42, 43, 44],
     "protocol": "science_suite_v1"
   },
   "artifacts": {
     "data": "DATA/runs.json",
     "workflow": "workflow.json",
-    "report": "report.md"
+    "report": "report.md",
+    "corrected_scientific_review": "reports/SCIENTIFIC-REVIEW.md"
   },
-  "research_questions": [
-    "RQ-TEMP-001"
-  ],
-  "hypotheses": [
-    "H-TEMP-001-A"
-  ],
+  "research_questions": ["RQ-TEMP-001"],
+  "hypotheses": ["H-TEMP-001-A"],
   "config": {
     "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
     "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
@@ -56,6 +49,23 @@
     "reason": null,
     "runtime_error_count": 0,
     "fatal_error_count": 0
+  },
+  "semantic_validation": {
+    "status": "RQ_PROTOCOL_MISMATCH",
+    "registered_question": "RQ-TEMP-001",
+    "registered_hypothesis": "H-TEMP-001-A",
+    "executed_conditions": ["recurrence_off", "recurrence_on"],
+    "expected_domain": "Temporal State / fast-medium-slow reference comparison",
+    "executed_domain": "Network impulse response / recurrence treatment",
+    "evidence_promotion_blocked": true,
+    "human_review_required": true,
+    "note": "Technically valid raw run, but not a valid test of the registered temporal-state hypothesis."
+  },
+  "ai_reporting": {
+    "status": "failed_after_analyst",
+    "reason": "Invalid AI analysis output field: confidence",
+    "raw_analysis_preserved": true,
+    "pipeline_fix_commit": "e53ae9d6f376e8d884c58c98efd1c68f8c576e77"
   },
   "runtime_errors": [],
   "research_run_mode": "EXPLORATORY",
