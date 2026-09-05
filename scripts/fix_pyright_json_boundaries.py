@@ -1,4 +1,4 @@
-"""Repair strict Pyright typing at JSON deserialization boundaries."""
+"""Repair strict JSON typing and verified stale test expectations."""
 
 from __future__ import annotations
 
@@ -110,11 +110,37 @@ def main() -> int:
         raise RuntimeError("clean worker returned an invalid result envelope")
     return payload''',
     )
-
     replace_once(
         Path("src/research/productive_learning.py"),
         "from typing import Any\n",
         "from typing import Any, cast\n",
+    )
+
+    # Causality rendering moved from the workspace controller into the organism
+    # module. Keep the behavioral assertion while following the current owner.
+    replace_once(
+        Path("tests/test_dashboard_wesen.py"),
+        '''    assert "renderEcho" in source
+    assert "show-causality" in source
+    assert "delayedClone" in organism''',
+        '''    assert "renderEcho" in source
+    assert "show-causality" in organism
+    assert "delayedClone" in organism''',
+    )
+
+    # The network contract clips requested weights to weight_max=0.5. The test
+    # must validate the projection of the actual stored synapses, not an
+    # impossible unclipped 0.8 value.
+    replace_once(
+        Path("tests/test_heatmap.py"),
+        '''    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
+    # no incoming weight (0.0); the second has mean incoming weight 0.6.
+    assert values[1, 2] == pytest.approx(0.3)  # type: ignore[reportUnknownMemberType]''',
+        '''    # Both neurons at X=1,Y=2 are averaged in the final XY cell. The first has
+    # no incoming weight (0.0); the second receives 0.4 and a requested 0.8,
+    # which is clipped by this test configuration to weight_max=0.5. Its actual
+    # mean incoming weight is therefore 0.45, yielding 0.225 for the XY cell.
+    assert values[1, 2] == pytest.approx(0.225)  # type: ignore[reportUnknownMemberType]''',
     )
     return 0
 
