@@ -20,7 +20,7 @@ from src.embodiment import (
     derive_regulatory_state,
     normalize_vital_signals,
 )
-from src.experiments.learning_lab import run_learning_experiment
+from src.experiments.learning_lab import _probe_response, _train, run_learning_experiment
 from src.research.canonical_state import canonical_state_digest
 from src.research.experiment_suite import ScientificRun
 from src.research.network_probe import NetworkImpulseProbe
@@ -141,40 +141,71 @@ def run_generalization(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
 ) -> list[ScientificRun]:
-    """Evaluate productive learning across matched probe-strength perturbations."""
+    """Train once, then evaluate frozen weights on registered perturbation probes.
+
+    Perturbation strength is changed only after adaptation. This prevents the
+    treatment from leaking into training and makes the off/sham/on comparison a
+    genuine held-out probe of the learned weight state.
+    """
     runs: list[ScientificRun] = []
     for seed in seeds:
+        values = dict(config)
+        values["seed"] = seed
+        exp = dict(values.get("learning_experiment", {}))
+        base_drive = float(exp.get("drive_current", 100.0))
+        pre_count = int(exp.get("presynaptic_neurons", 48))
+        initial_weight = float(exp.get("initial_weight", 0.05))
+        initial_weights = tuple(initial_weight for _ in range(pre_count))
+
         for condition in ("learning_on", "learning_off", "sham_replay"):
+            trained_weights, learning, partitions = _train(values, condition)
+            initial_mean = statistics.mean(initial_weights)
+            final_mean = statistics.mean(trained_weights)
+
             for drive_scale in (0.85, 1.0, 1.15):
-                values = dict(config)
-                values["seed"] = seed
-                exp = dict(values.get("learning_experiment", {}))
-                base_drive = float(exp.get("drive_current", 100.0))
-                exp["drive_current"] = base_drive * drive_scale
-                values["learning_experiment"] = exp
-                result = run_learning_experiment(values, condition=condition)
-                metrics = asdict(result)
-                metrics.update(
-                    {
-                        "probe_drive_scale": drive_scale,
-                        "held_out_perturbation": drive_scale != 1.0,
-                        "success_before": bool(result.baseline_target_spiked),
-                        "success_after": bool(result.trained_target_spiked),
-                        "generalization_success": bool(result.trained_target_spiked),
-                    }
+                probe_config = dict(values)
+                probe_exp = dict(exp)
+                probe_exp["drive_current"] = base_drive * drive_scale
+                probe_config["learning_experiment"] = probe_exp
+                baseline_spiked, baseline_peak_v, baseline_tick = _probe_response(
+                    probe_config, initial_weights
+                )
+                trained_spiked, trained_peak_v, trained_tick = _probe_response(
+                    probe_config, trained_weights
                 )
                 runs.append(
                     ScientificRun(
                         "EXP-GENL-0001",
                         f"{condition}_drive_{drive_scale:.2f}",
                         seed,
-                        metrics,
+                        {
+                            "probe_drive_scale": drive_scale,
+                            "held_out_perturbation": drive_scale != 1.0,
+                            "training_drive_scale": 1.0,
+                            "success_before": baseline_spiked,
+                            "success_after": trained_spiked,
+                            "p_success_before": float(baseline_spiked),
+                            "p_success_after": float(trained_spiked),
+                            "generalization_success": trained_spiked,
+                            "baseline_target_peak_v": baseline_peak_v,
+                            "trained_target_peak_v": trained_peak_v,
+                            "baseline_target_spike_tick": baseline_tick,
+                            "trained_target_spike_tick": trained_tick,
+                            "initial_mean_weight": initial_mean,
+                            "final_mean_weight": final_mean,
+                            "mean_weight_delta": final_mean - initial_mean,
+                            "rewards_received": learning.stats.rewards_received,
+                            "reward_weight_updates": learning.stats.reward_weight_updates,
+                            "train_trial_count": len(partitions["train"]),
+                            "validation_trial_count": len(partitions["validation"]),
+                            "holdout_trial_count": len(partitions["holdout"]),
+                            "probe_after_training_only": True,
+                        },
                         "",
                         "",
                     )
                 )
     return runs
-
 
 def run_replication(
     config: Config,
