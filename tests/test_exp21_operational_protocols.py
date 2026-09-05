@@ -22,8 +22,8 @@ EXPECTED = {
     "RQ-TEMP-002": ("H-TEMP-002-A", "temporal_order_spiking_v1", 20),
     "RQ-PERF-001": ("H-PERF-001-A", "subsystem_performance_v1", 10),
     "RQ-REC-002": ("H-REC-002-A", "recurrence_scale_v1", 20),
-    "RQ-LEARN-INTERF-001": (
-        "H-LEARN-INTERF-001-A",
+    "RQ-LIFE-001": (
+        "H-LIFE-001-A",
         "learning_interference_screen_v1",
         20,
     ),

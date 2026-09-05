@@ -294,7 +294,7 @@ def _semantic_status(
             "subsystem_profile" in plain,
             "PERF-001 erwartet subsystemaufgelöste Runtime-Messungen.",
         )
-    if question_id == "RQ-LEARN-INTERF-001":
+    if question_id == "RQ-LIFE-001":
         return classify(
             "sequential_three_task_screen" in plain,
             "LEARN-INTERF-001 v1 ist ein explizit als Vorläufer markierter Interferenz-Screen.",

@@ -660,13 +660,13 @@
     limitations: Version 1 operationalisiert zunächst Loop-Delay als kontrollierten Skalierungsparameter.
   created: '2026-09-05'
   updated: '2026-09-05'
-- id: RQ-LEARN-INTERF-001
+- id: RQ-LIFE-001
   domain: Lifelong Learning
   question: Bleibt zuvor erworbene Lernleistung bei sequenziellen Aufgaben erhalten oder entstehen messbare Interferenzeffekte?
   relevance: Das positive Single-Task-Learningsignal aus EXP-GEN-0021 motiviert Retentionstests.
   literature: []
   hypotheses:
-  - H-LEARN-INTERF-001-A
+  - H-LIFE-001-A
   evidence: []
   status: open
   answer:

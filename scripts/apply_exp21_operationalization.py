@@ -128,13 +128,13 @@ QUESTION_APPEND = r'''
     limitations: Version 1 operationalisiert zunächst Loop-Delay als kontrollierten Skalierungsparameter.
   created: '2026-09-05'
   updated: '2026-09-05'
-- id: RQ-LEARN-INTERF-001
+- id: RQ-LIFE-001
   domain: Lifelong Learning
   question: Bleibt zuvor erworbene Lernleistung bei sequenziellen Aufgaben erhalten oder entstehen messbare Interferenzeffekte?
   relevance: Das positive Single-Task-Learningsignal aus EXP-GEN-0021 motiviert Retentionstests.
   literature: []
   hypotheses:
-  - H-LEARN-INTERF-001-A
+  - H-LIFE-001-A
   evidence: []
   status: open
   answer:
@@ -203,8 +203,8 @@ HYPOTHESIS_APPEND = r'''
   evidence: []
   created: '2026-09-05'
   updated: '2026-09-05'
-- id: H-LEARN-INTERF-001-A
-  research_question: RQ-LEARN-INTERF-001
+- id: H-LIFE-001-A
+  research_question: RQ-LIFE-001
   hypothesis: Sequenzielle Lernaufgaben zeigen eine messbare Veränderung der Retentions- oder Gewichtssignatur gegenüber einer Single-Task-Baseline.
   status: untested
   evidence: []
@@ -317,7 +317,7 @@ def patch_workflow() -> None:
 def patch_summary_semantics() -> None:
     path = ROOT / "src/research/experiment_summary.py"
     anchor = '''    if question_id.startswith("RQ-PING-"):\n'''
-    addition = '''    if question_id == "RQ-REC-001":\n        return classify(\n            any(item.startswith("w0_") for item in plain)\n            and any(item.startswith("w100_") or item.startswith("w125_") for item in plain),\n            "REC-001 erwartet eine registrierte Rekurrenz-Gewicht/Delay-Karte mit Nullkontrolle.",\n        )\n    if question_id == "RQ-REC-002":\n        return classify(\n            {"loop_delay_1", "loop_delay_2", "loop_delay_4", "loop_delay_8"}.issubset(plain),\n            "REC-002 erwartet die registrierte Loop-Delay-Leiter.",\n        )\n    if question_id == "RQ-GEN-001":\n        return classify(\n            any(item.startswith("learning_on_drive_") for item in plain)\n            and any(item.startswith("learning_off_drive_") for item in plain)\n            and any(item.startswith("sham_replay_drive_") for item in plain),\n            "GEN-001 erwartet Learning-on, Learning-off und Sham-Replay über registrierte Perturbationsproben.",\n        )\n    if question_id == "RQ-REPL-001":\n        return classify(\n            {"recurrence_off", "recurrence_on"}.issubset(plain),\n            "REPL-001 erwartet beide Rekurrenzarme mit unabhängiger Seedstrategie.",\n        )\n    if question_id == "RQ-5D-005":\n        return classify(\n            {"1d", "2d", "3d", "5d"}.issubset(plain),\n            "5D-005 erwartet topology-matched 1D/2D/3D/5D-Einbettungen.",\n        )\n    if question_id == "RQ-REG-002":\n        return classify(\n            {"regulation_off", "regulation_on"}.issubset(plain),\n            "REG-002 erwartet Regulation-off und Regulation-on unter gleichem Perturbationsplan.",\n        )\n    if question_id == "RQ-TEMP-002":\n        return classify(\n            {"forward", "reverse", "simultaneous"}.issubset(plain),\n            "TEMP-002 erwartet Forward-, Reverse- und Simultankontrolle.",\n        )\n    if question_id == "RQ-PERF-001":\n        return classify(\n            "subsystem_profile" in plain,\n            "PERF-001 erwartet subsystemaufgelöste Runtime-Messungen.",\n        )\n    if question_id == "RQ-LEARN-INTERF-001":\n        return classify(\n            "sequential_three_task_screen" in plain,\n            "LEARN-INTERF-001 v1 ist ein explizit als Vorläufer markierter Interferenz-Screen.",\n        )\n'''
+    addition = '''    if question_id == "RQ-REC-001":\n        return classify(\n            any(item.startswith("w0_") for item in plain)\n            and any(item.startswith("w100_") or item.startswith("w125_") for item in plain),\n            "REC-001 erwartet eine registrierte Rekurrenz-Gewicht/Delay-Karte mit Nullkontrolle.",\n        )\n    if question_id == "RQ-REC-002":\n        return classify(\n            {"loop_delay_1", "loop_delay_2", "loop_delay_4", "loop_delay_8"}.issubset(plain),\n            "REC-002 erwartet die registrierte Loop-Delay-Leiter.",\n        )\n    if question_id == "RQ-GEN-001":\n        return classify(\n            any(item.startswith("learning_on_drive_") for item in plain)\n            and any(item.startswith("learning_off_drive_") for item in plain)\n            and any(item.startswith("sham_replay_drive_") for item in plain),\n            "GEN-001 erwartet Learning-on, Learning-off und Sham-Replay über registrierte Perturbationsproben.",\n        )\n    if question_id == "RQ-REPL-001":\n        return classify(\n            {"recurrence_off", "recurrence_on"}.issubset(plain),\n            "REPL-001 erwartet beide Rekurrenzarme mit unabhängiger Seedstrategie.",\n        )\n    if question_id == "RQ-5D-005":\n        return classify(\n            {"1d", "2d", "3d", "5d"}.issubset(plain),\n            "5D-005 erwartet topology-matched 1D/2D/3D/5D-Einbettungen.",\n        )\n    if question_id == "RQ-REG-002":\n        return classify(\n            {"regulation_off", "regulation_on"}.issubset(plain),\n            "REG-002 erwartet Regulation-off und Regulation-on unter gleichem Perturbationsplan.",\n        )\n    if question_id == "RQ-TEMP-002":\n        return classify(\n            {"forward", "reverse", "simultaneous"}.issubset(plain),\n            "TEMP-002 erwartet Forward-, Reverse- und Simultankontrolle.",\n        )\n    if question_id == "RQ-PERF-001":\n        return classify(\n            "subsystem_profile" in plain,\n            "PERF-001 erwartet subsystemaufgelöste Runtime-Messungen.",\n        )\n    if question_id == "RQ-LIFE-001":\n        return classify(\n            "sequential_three_task_screen" in plain,\n            "LEARN-INTERF-001 v1 ist ein explizit als Vorläufer markierter Interferenz-Screen.",\n        )\n'''
     replace_once(path, anchor, addition + anchor)
 
 

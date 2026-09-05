@@ -99,10 +99,10 @@
     },
     {
       "id": "learning_interference_screen_v1",
-      "research_question": "RQ-LEARN-INTERF-001",
-      "hypothesis": "H-LEARN-INTERF-001-A",
+      "research_question": "RQ-LIFE-001",
+      "hypothesis": "H-LIFE-001-A",
       "runner": "run_learning_interference",
-      "preregistration": "preregistrations/PREREG-LEARN-INTERF-001.json",
+      "preregistration": "preregistrations/PREREG-LIFE-001.json",
       "tick_aware": false,
       "primary_outcomes": ["retained_success_fraction", "weight_range", "task_successes"],
       "controls": ["single-task acquisition baseline"],
