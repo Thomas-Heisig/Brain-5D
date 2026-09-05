@@ -65,6 +65,7 @@ def _network(
     dimensions: Coord5D = (3, 1, 1, 1, 1),
     random_graph: bool = False,
 ) -> NeuralNetwork:
+    impulse_weight = 100.0
     values = dict(config)
     values["dimensions"] = list(dimensions)
     values["initial_neurons"] = 0
@@ -93,13 +94,13 @@ def _network(
     network.input_cells.add(neurons[0])
     network.output_cells.add(neurons[2])
     if random_graph:
-        network.connect(neurons[0], neurons[2], 1.0, 1)
-        network.connect(neurons[2], neurons[1], 0.25, 1)
+        network.connect(neurons[0], neurons[2], impulse_weight, 1)
+        network.connect(neurons[2], neurons[1], impulse_weight, 1)
     else:
-        network.connect(neurons[0], neurons[1], 1.0, 1)
-        network.connect(neurons[1], neurons[2], 1.0, 1)
+        network.connect(neurons[0], neurons[1], impulse_weight, 1)
+        network.connect(neurons[1], neurons[2], impulse_weight, 1)
     if recurrence:
-        network.connect(neurons[2], neurons[1], 0.25, 1)
+        network.connect(neurons[2], neurons[1], impulse_weight, 1)
     return network
 
 
