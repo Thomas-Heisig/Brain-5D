@@ -1,0 +1,80 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_report_json": "experiments/EXP-GEN-0014/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-GEN-0014/reports/AIRR-2026-0001.md",
+    "data": "DATA/runs.json",
+    "report": "report.md",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-05T17:18:08.315459+00:00",
+  "data_partitions": [],
+  "experiment_id": "EXP-GEN-0014",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "3fb83e7b933411578334d07386fddfb07005f431",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-TEMP-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "1ef672737d3006e1fb3ad45011e1b079c31771c751b98e2c3d409fa4dd43747d",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "85c9b4fa5b4f7d67250ade0c57086a3b5b5119a178789b1a81ec9239ecc63601",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-TEMP-001"
+  ],
+  "research_run_mode": "EXPLORATORY",
+  "results": {
+    "protocol": "science_suite_v1",
+    "run_count": 6
+  },
+  "runtime": {
+    "duration_seconds": 0.0064607999520376325
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "science_suite_v1",
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "ticks": 100
+  },
+  "software": {
+    "brain5d_version": "unknown",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "73732ddd26c7f2adec978ed3cf5be6233183890c2d43db1080ac7d28de90161f",
+  "timestamp": "2026-09-05T19:18:08.315450",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

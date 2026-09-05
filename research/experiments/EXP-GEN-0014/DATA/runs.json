@@ -1,0 +1,260 @@
+[
+  {
+    "condition": "recurrence_off",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 2,
+      "network_state_digest_after": "f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55",
+      "network_state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 1,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        }
+      ],
+      "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+      "total_spikes": 1
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55",
+    "state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6"
+  },
+  {
+    "condition": "recurrence_on",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 30,
+      "network_state_digest_after": "a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7",
+      "network_state_digest_before": "cb7f96124575ec0d3266e08c75a73906785872d979463ca347190e040687b358",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 29,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        },
+        {
+          "neuron_id": 2,
+          "tick": 4
+        },
+        {
+          "neuron_id": 2,
+          "tick": 8
+        },
+        {
+          "neuron_id": 2,
+          "tick": 12
+        },
+        {
+          "neuron_id": 2,
+          "tick": 16
+        },
+        {
+          "neuron_id": 2,
+          "tick": 20
+        },
+        {
+          "neuron_id": 2,
+          "tick": 24
+        },
+        {
+          "neuron_id": 2,
+          "tick": 30
+        }
+      ],
+      "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+      "total_spikes": 8
+    },
+    "runtime_error": null,
+    "seed": 42,
+    "state_digest_after": "a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7",
+    "state_digest_before": "cb7f96124575ec0d3266e08c75a73906785872d979463ca347190e040687b358"
+  },
+  {
+    "condition": "recurrence_off",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 2,
+      "network_state_digest_after": "356e49b4a76069428b39de3a3a79a59bd1de0ad9b7e89517c726360e2f65a9ee",
+      "network_state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 1,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        }
+      ],
+      "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+      "total_spikes": 1
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "356e49b4a76069428b39de3a3a79a59bd1de0ad9b7e89517c726360e2f65a9ee",
+    "state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d"
+  },
+  {
+    "condition": "recurrence_on",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 30,
+      "network_state_digest_after": "0186cd75cfc4b025faa61a27d824e143260596d0815b56ed2213a7ad6e8eac02",
+      "network_state_digest_before": "171a5bb93567f8f410cf7a825c936cd8d9df60ecf3fe4203069b089e3116509a",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 29,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        },
+        {
+          "neuron_id": 2,
+          "tick": 4
+        },
+        {
+          "neuron_id": 2,
+          "tick": 8
+        },
+        {
+          "neuron_id": 2,
+          "tick": 12
+        },
+        {
+          "neuron_id": 2,
+          "tick": 16
+        },
+        {
+          "neuron_id": 2,
+          "tick": 20
+        },
+        {
+          "neuron_id": 2,
+          "tick": 24
+        },
+        {
+          "neuron_id": 2,
+          "tick": 30
+        }
+      ],
+      "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+      "total_spikes": 8
+    },
+    "runtime_error": null,
+    "seed": 43,
+    "state_digest_after": "0186cd75cfc4b025faa61a27d824e143260596d0815b56ed2213a7ad6e8eac02",
+    "state_digest_before": "171a5bb93567f8f410cf7a825c936cd8d9df60ecf3fe4203069b089e3116509a"
+  },
+  {
+    "condition": "recurrence_off",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 2,
+      "network_state_digest_after": "a454b8e485787f908c5cf78f65c44a27f4194aa19f66aff3f3fd7d9d4640e81c",
+      "network_state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 1,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        }
+      ],
+      "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+      "total_spikes": 1
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "a454b8e485787f908c5cf78f65c44a27f4194aa19f66aff3f3fd7d9d4640e81c",
+    "state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6"
+  },
+  {
+    "condition": "recurrence_on",
+    "experiment_id": "EXP-GEN-0014",
+    "metrics": {
+      "activated_neurons": 1,
+      "first_response_latency": 2,
+      "last_response_latency": 30,
+      "network_state_digest_after": "63bd31063f96d3fd289d5ee569a8254560a974e61cbe88d06f4d6953a98bbb3e",
+      "network_state_digest_before": "bb6deaa0440044fa35a85a888d0f5477feddd47499085bc971ecc6975949cc44",
+      "peak_spike_rate": 1.0,
+      "propagation_depth": 29,
+      "recurrent_events": 0,
+      "reproducibility_sample_count": 3,
+      "reproducible_across_seeds": true,
+      "return_latency": null,
+      "spike_sequence": [
+        {
+          "neuron_id": 2,
+          "tick": 2
+        },
+        {
+          "neuron_id": 2,
+          "tick": 4
+        },
+        {
+          "neuron_id": 2,
+          "tick": 8
+        },
+        {
+          "neuron_id": 2,
+          "tick": 12
+        },
+        {
+          "neuron_id": 2,
+          "tick": 16
+        },
+        {
+          "neuron_id": 2,
+          "tick": 20
+        },
+        {
+          "neuron_id": 2,
+          "tick": 24
+        },
+        {
+          "neuron_id": 2,
+          "tick": 30
+        }
+      ],
+      "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+      "total_spikes": 8
+    },
+    "runtime_error": null,
+    "seed": 44,
+    "state_digest_after": "63bd31063f96d3fd289d5ee569a8254560a974e61cbe88d06f4d6953a98bbb3e",
+    "state_digest_before": "bb6deaa0440044fa35a85a888d0f5477feddd47499085bc971ecc6975949cc44"
+  }
+]

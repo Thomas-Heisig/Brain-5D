@@ -1,0 +1,78 @@
+{
+  "experiment_id": "EXP-GEN-0013",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-05T11:22:54.299861",
+  "created_at": "2026-09-05T09:22:54.299871+00:00",
+  "git": {
+    "commit": "3fb83e7b933411578334d07386fddfb07005f431",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "seed": 42,
+    "ticks": 8,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "protocol": "science_suite_v1"
+  },
+  "artifacts": {
+    "data": "DATA/runs.json",
+    "workflow": "workflow.json",
+    "report": "report.md"
+  },
+  "research_questions": [
+    "RQ-TEMP-001"
+  ],
+  "hypotheses": [
+    "H-TEMP-001-A"
+  ],
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "run_count": 6,
+    "protocol": "science_suite_v1"
+  },
+  "provenance_digests": {
+    "code": "1ef672737d3006e1fb3ad45011e1b079c31771c751b98e2c3d409fa4dd43747d",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14",
+    "data": "c0859ba92b277e46f88ffafed72e91c7dc61c568478ceb9fb8d921a8b34c7d52"
+  },
+  "source_freeze_sha": "e792aad687f970e830e9aa558a1297a78479e5fd1cb22125ddc1bb9c796a3847",
+  "runtime": {
+    "duration_seconds": 0.0030351000605151057
+  }
+}

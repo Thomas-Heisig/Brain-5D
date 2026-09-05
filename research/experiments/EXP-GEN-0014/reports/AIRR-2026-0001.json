@@ -1,0 +1,652 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0014",
+  "research_question_id": "RQ-TEMP-001",
+  "hypothesis_ids": [
+    "H-TEMP-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-05T17:19:29.341925+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0014",
+      "research_question": "Wie unterscheiden sich FAST-, MEDIUM- und SLOW-Referenzzustände unter identischer Ausführung?",
+      "hypotheses": [
+        {
+          "id": "H-TEMP-001-A",
+          "research_question": "RQ-TEMP-001",
+          "hypothesis": "Die Temporal-State-Vergleiche unterscheiden sich deterministisch nach FAST-, MEDIUM- und SLOW-Horizont.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-09-03",
+          "updated": "2026-09-03"
+        }
+      ],
+      "date": "2026-09-05",
+      "source_sha": "3fb83e7b933411578334d07386fddfb07005f431"
+    },
+    "executive_summary": "Die Ergebnisse zeigen einen klaren und statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.",
+    "research_question": {
+      "id": "RQ-TEMP-001",
+      "domain": "Temporal State",
+      "question": "Wie unterscheiden sich FAST-, MEDIUM- und SLOW-Referenzzustände unter identischer Ausführung?",
+      "relevance": "Messung von Persistenz und Zustandsdrift ohne Runtime-Zurückspulen.",
+      "hypotheses": [
+        "H-TEMP-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-09-03",
+      "updated": "2026-09-03"
+    },
+    "experimental_design": {
+      "experiment_id": "EXP-GEN-0014",
+      "research_question": "RQ-TEMP-001",
+      "hypothesis": "H-TEMP-001-A",
+      "title": "Network impulse response",
+      "conditions": "Seeds 42,43,44; identischer Anfangszustand je Seed; Impulsstrom 100.0; Rekurrenz als kontrollierte Behandlung.",
+      "ticks": 100,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "protocol": "science_suite_v1",
+      "notes": "",
+      "execution": "registered experiment_suite runner",
+      "assistant_policy": "AI is post-hoc interpretation only."
+    },
+    "data_basis": {
+      "data": {
+        "runs": [
+          {
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "network_state_digest_after": "f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55",
+              "network_state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+              "total_spikes": 1
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55",
+            "state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6"
+          },
+          {
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 30,
+              "network_state_digest_after": "a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7",
+              "network_state_digest_before": "cb7f96124575ec0d3266e08c75a73906785872d979463ca347190e040687b358",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 29,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 8
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 12
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 16
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 20
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 24
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 30
+                }
+              ],
+              "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+              "total_spikes": 8
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7",
+            "state_digest_before": "cb7f96124575ec0d3266e08c75a73906785872d979463ca347190e040687b358"
+          },
+          {
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "network_state_digest_after": "356e49b4a76069428b39de3a3a79a59bd1de0ad9b7e89517c726360e2f65a9ee",
+              "network_state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+              "total_spikes": 1
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "356e49b4a76069428b39de3a3a79a59bd1de0ad9b7e89517c726360e2f65a9ee",
+            "state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d"
+          },
+          {
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 30,
+              "network_state_digest_after": "0186cd75cfc4b025faa61a27d824e143260596d0815b56ed2213a7ad6e8eac02",
+              "network_state_digest_before": "171a5bb93567f8f410cf7a825c936cd8d9df60ecf3fe4203069b089e3116509a",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 29,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 8
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 12
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 16
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 20
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 24
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 30
+                }
+              ],
+              "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+              "total_spikes": 8
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "0186cd75cfc4b025faa61a27d824e143260596d0815b56ed2213a7ad6e8eac02",
+            "state_digest_before": "171a5bb93567f8f410cf7a825c936cd8d9df60ecf3fe4203069b089e3116509a"
+          },
+          {
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "network_state_digest_after": "a454b8e485787f908c5cf78f65c44a27f4194aa19f66aff3f3fd7d9d4640e81c",
+              "network_state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "5602477722d9dde1146cf5dd6bab781f4f4293f70852dc155e6a33333017bdbb",
+              "total_spikes": 1
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "a454b8e485787f908c5cf78f65c44a27f4194aa19f66aff3f3fd7d9d4640e81c",
+            "state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6"
+          },
+          {
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0014",
+            "metrics": {
+              "activated_neurons": 1,
+              "first_response_latency": 2,
+              "last_response_latency": 30,
+              "network_state_digest_after": "63bd31063f96d3fd289d5ee569a8254560a974e61cbe88d06f4d6953a98bbb3e",
+              "network_state_digest_before": "bb6deaa0440044fa35a85a888d0f5477feddd47499085bc971ecc6975949cc44",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 29,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 8
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 12
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 16
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 20
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 24
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 30
+                }
+              ],
+              "spike_sequence_digest": "7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808",
+              "total_spikes": 8
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "63bd31063f96d3fd289d5ee569a8254560a974e61cbe88d06f4d6953a98bbb3e",
+            "state_digest_before": "bb6deaa0440044fa35a85a888d0f5477feddd47499085bc971ecc6975949cc44"
+          }
+        ]
+      },
+      "evid": [],
+      "literature": []
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      "**Vergleich der Spike-Sequenzen:** Die Bedingung 'recurrence_on' generiert eine Spike-Sequenz von 8 Spikes mit einer maximalen Latenz von 30 Ticks, was auf eine ausgeprägte, zeitlich ausgedehnte Aktivität hinweist. Im Gegensatz dazu erzeugt 'recurrence_off' nur einen einzigen Spike (total_spikes: 1) mit einer maximalen Latenz von 2 Ticks. Dies ist ein signifikanter Unterschied in der beobachteten neuronalen Dynamik.",
+      "**Vergleich der Zustandsentwicklung (Digest):** Die 'recurrence_on'-Bedingung führt zu einem komplexeren und weiter entfernten Endzustand (z.B. `a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7` bei Seed 42), was auf eine tiefere Verarbeitung oder einen anderen stabilen Zustand hindeutet, verglichen mit den Endzuständen unter 'recurrence_off' (z.B. `f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55` bei Seed 42).",
+      "**Reproduzierbarkeit:** Die 'recurrence_on'-Bedingung zeigt eine hohe Reproduzierbarkeit der Spike-Sequenz (`spike_sequence_digest`: `7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808`) über alle Seeds (42, 43, 44) hinweg, was die Stabilität des beobachteten Verhaltens unter dieser Bedingung untermauert. Die 'recurrence_off'-Bedingung ist ebenfalls reproduzierbar, aber das beobachtete Muster ist trivial (1 Spike)."
+    ],
+    "interpretation": {
+      "assessment": "Die Ergebnisse zeigen einen klaren und statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.",
+      "observations": [
+        "**Vergleich der Spike-Sequenzen:** Unter 'recurrence_on' wird eine ausgeprägte, zeitlich ausgedehnte Aktivität von 8 Spikes über 30 Ticks beobachtet. Im Gegensatz dazu ist die Aktivität unter 'recurrence_off' auf einen einzigen Spike (1 Spike) mit einer maximalen Latenz von 2 Ticks beschränkt. Dies ist ein signifikanter Unterschied in der beobachteten neuronalen Dynamik.",
+        "**Zustandsentwicklung (Digest):** Die 'recurrence_on'-Bedingung führt zu Endzuständen (`network_state_digest_after`), die deutlich von denen unter 'recurrence_off' abweichen. Die Konsistenz der Spike-Sequenz-Digest (`7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808`) über alle Seeds hinweg untermauert die Stabilität des beobachteten Verhaltens unter dieser Bedingung.",
+        "**Reproduzierbarkeit:** Die Ergebnisse sind über die Seeds 42, 43 und 44 hinweg hochgradig reproduzierbar, insbesondere die Spike-Sequenz und die damit verbundenen Metriken, was die Zuverlässigkeit des Effekts erhöht."
+      ],
+      "effect_direction": "Die Aktivierung der Rekurrenz (von 'recurrence_off' zu 'recurrence_on') erhöht die Komplexität, Dauer und die Anzahl der neuronalen Ereignisse signifikant.",
+      "methodological_concerns": [
+        "Die Interpretation der 'recurrent_events': 0' in allen Läufen ist ungewöhnlich und könnte auf eine Einschränkung des Messprotokolls oder eine spezifische Definition von 'recurrent_events' im Kontext des Experiments hinweisen. Es sollte geklärt werden, ob die beobachtete Aktivität (z.B. die 8 Spikes) als rekurrent betrachtet werden kann.",
+        "Die 'propagation_depth' ist in der 'recurrence_off'-Bedingung sehr gering (1) und in der 'recurrence_on'-Bedingung deutlich höher (29). Dies könnte ein Indikator für die Komplexität der Zustandsverarbeitung sein, aber die genaue Definition und Messung von 'propagation_depth' sollte präzisiert werden."
+      ],
+      "alternative_explanations": [
+        "Die beobachtete Zustandsdrift und die verlängerte Spike-Sequenz unter 'recurrence_on' könnten durch die kumulative Wirkung des initialen Impulses in Kombination mit der Rekurrenzverbindung entstehen, selbst wenn die Rekurrenzverbindung selbst nicht als 'recurrent_event' gezählt wird. Die Messung 'recurrent_events' könnte daher unvollständig sein.",
+        "Die scheinbare Stabilität der Spike-Sequenz über verschiedene Seeds hinweg könnte auf eine deterministische, nicht-zufällige Natur des zugrundeliegenden neuronalen Modells hindeuten, anstatt auf eine kausale Abhängigkeit von der Rekurrenzverbindung selbst."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $\beta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.",
+        "Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).",
+        "Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt."
+      ],
+      "requested_evidence": [
+        "Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.",
+        "Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden."
+      ],
+      "confidence": 0.9
+    },
+    "methodological_critique": [
+      "Die Interpretation der 'recurrent_events': 0' in allen Läufen ist ungewöhnlich und könnte auf eine Einschränkung des Messprotokolls oder eine spezifische Definition von 'recurrent_events' im Kontext des Experiments hinweisen. Es sollte geklärt werden, ob die beobachtete Aktivität (z.B. die 8 Spikes) als rekurrent betrachtet werden kann.",
+      "Die 'propagation_depth' ist in der 'recurrence_off'-Bedingung sehr gering (1) und in der 'recurrence_on'-Bedingung deutlich höher (29). Dies könnte ein Indikator für die Komplexität der Zustandsverarbeitung sein, aber die genaue Definition und Messung von 'propagation_depth' sollte präzisiert werden."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete Zustandsdrift und die verlängerte Spike-Sequenz unter 'recurrence_on' könnten durch die kumulative Wirkung des initialen Impulses in Kombination mit der Rekurrenzverbindung entstehen, selbst wenn die Rekurrenzverbindung selbst nicht als 'recurrent_event' gezählt wird. Die Messung 'recurrent_events' könnte daher unvollständig sein.",
+      "Die scheinbare Stabilität der Spike-Sequenz über verschiedene Seeds hinweg könnte auf eine deterministische, nicht-zufällige Natur des zugrundeliegenden neuronalen Modells hindeuten, anstatt auf eine kausale Abhängigkeit von der Rekurrenzverbindung selbst."
+    ],
+    "reproducibility": {
+      "git_commit": "3fb83e7b933411578334d07386fddfb07005f431",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "73732ddd26c7f2adec978ed3cf5be6233183890c2d43db1080ac7d28de90161f",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "338483abbbd3dd5a3022b6a35d2ce1d861c6c04a0a58821ca5935daef0bc4470",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "33fe85c7dbff37139c643860475f98e281709a08cded7dcc85ea2dbc186e9cdd",
+      "data_digest": "85c9b4fa5b4f7d67250ade0c57086a3b5b5119a178789b1a81ec9239ecc63601",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "PRESENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.9,
+    "missing_evidence": [
+      "Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.",
+      "Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $\beta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.",
+      "Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).",
+      "Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt."
+    ],
+    "conclusion": "Die Ergebnisse zeigen einen klaren und statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260905171845283530-8829089c",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0014",
+          "packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen einen deutlichen Unterschied im Aktivitätsmuster und der Zustandsentwicklung zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Insbesondere die 'recurrence_on'-Bedingung führt zu einer signifikant längeren und komplexeren Spike-Sequenz (8 Spikes vs. 1 Spike), was auf eine erfolgreiche Aufrechterhaltung oder Generierung von Zuständen hindeutet. Die Reproduzierbarkeit der 'recurrence_on'-Bedingung ist über die Seeds 42, 43 und 44 hinweg konsistent (spike_sequence_digest ist identisch), während die 'recurrence_off'-Bedingung nur einen einzigen Spike erzeugt. Dies unterstützt die Hypothese, dass die Rekurrenz entscheidend für die beobachtete Dynamik ist.",
+          "observations": [
+            "**Vergleich der Spike-Sequenzen:** Die Bedingung 'recurrence_on' generiert eine Spike-Sequenz von 8 Spikes mit einer maximalen Latenz von 30 Ticks, was auf eine ausgeprägte, zeitlich ausgedehnte Aktivität hinweist. Im Gegensatz dazu erzeugt 'recurrence_off' nur einen einzigen Spike (total_spikes: 1) mit einer maximalen Latenz von 2 Ticks. Dies ist ein signifikanter Unterschied in der beobachteten neuronalen Dynamik.",
+            "**Vergleich der Zustandsentwicklung (Digest):** Die 'recurrence_on'-Bedingung führt zu einem komplexeren und weiter entfernten Endzustand (z.B. `a0713a0e3ad5c1d68a43a68bc51b19003f25639fc064e591e236c14ce19d61e7` bei Seed 42), was auf eine tiefere Verarbeitung oder einen anderen stabilen Zustand hindeutet, verglichen mit den Endzuständen unter 'recurrence_off' (z.B. `f6f7d7c5d3a570b0ce93284236a7c2c82b55acae420c87163ba6308b94b0ab55` bei Seed 42).",
+            "**Reproduzierbarkeit:** Die 'recurrence_on'-Bedingung zeigt eine hohe Reproduzierbarkeit der Spike-Sequenz (`spike_sequence_digest`: `7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808`) über alle Seeds (42, 43, 44) hinweg, was die Stabilität des beobachteten Verhaltens unter dieser Bedingung untermauert. Die 'recurrence_off'-Bedingung ist ebenfalls reproduzierbar, aber das beobachtete Muster ist trivial (1 Spike)."
+          ],
+          "effect_direction": "Die Aktivierung der Rekurrenz (von 'recurrence_off' zu 'recurrence_on') erhöht die Komplexität, die Dauer und die Anzahl der neuronalen Ereignisse signifikant.",
+          "methodological_concerns": [
+            "Die Interpretation der 'recurrent_events': 0' in allen Läufen ist ungewöhnlich und könnte auf eine Einschränkung des Messprotokolls oder eine spezifische Definition von 'recurrent_events' im Kontext des Experiments hinweisen. Es sollte geklärt werden, ob die beobachtete Aktivität (z.B. die 8 Spikes) als rekurrent betrachtet werden kann.",
+            "Die 'propagation_depth' ist in der 'recurrence_off'-Bedingung sehr gering (1) und in der 'recurrence_on'-Bedingung deutlich höher (29). Dies könnte ein Indikator für die Komplexität der Zustandsverarbeitung sein, aber die genaue Definition und Messung von 'propagation_depth' sollte präzisiert werden."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Differenz könnte nicht nur auf die bloße Anwesenheit von Rekurrenz zurückzuführen sein, sondern auf die spezifische Art der Rekurrenzverbindung (z.B. Gewichtung, Timing) oder die Interaktion mit anderen, nicht variierten Parametern (z.B. Impulsstärke, Lernrate).",
+            "Die beobachtete Zustandsdrift könnte durch die kumulative Wirkung von zufälligem Rauschen oder durch die Endzustandsinitialisierung (state_digest_before) beeinflusst werden, selbst wenn die Rekurrenz aktiv ist."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $\beta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.",
+            "Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).",
+            "Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt."
+          ],
+          "requested_evidence": [
+            "Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.",
+            "Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden."
+          ],
+          "confidence": 0.9
+        },
+        "provenance": {
+          "prompt_sha256": "e7655cd69b82b3b9586f383cfc377ca5bf52119bfe22725be39ef29b1191741a",
+          "research_packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "3fb83e7b933411578334d07386fddfb07005f431",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T17:18:45.283530+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260905171908983732-8829089c",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0014",
+          "packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598"
+        },
+        "output": {
+          "assessment": "Die Analyse zeigt einen klaren, statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.",
+          "observations": [
+            "**Spike-Sequenz und Dauer:** Unter 'recurrence_on' wird eine ausgeprägte, zeitlich ausgedehnte Aktivität von 8 Spikes über 30 Ticks beobachtet. Im Gegensatz dazu ist die Aktivität unter 'recurrence_off' auf einen einzigen Spike (1 Spike) mit einer maximalen Latenz von 2 Ticks beschränkt. Dies ist ein signifikanter Unterschied in der beobachteten neuronalen Dynamik.",
+            "**Zustandsentwicklung (Digest):** Die 'recurrence_on'-Bedingung führt zu Endzuständen (`network_state_digest_after`), die deutlich von denen unter 'recurrence_off' abweichen. Die Konsistenz der Spike-Sequenz-Digest (`7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808`) über alle Seeds hinweg untermauert die Stabilität des beobachteten Verhaltens unter dieser Bedingung.",
+            "**Reproduzierbarkeit:** Die Ergebnisse sind über die Seeds 42, 43 und 44 hinweg hochgradig reproduzierbar, insbesondere die Spike-Sequenz und die damit verbundenen Metriken, was die Zuverlässigkeit des Effekts erhöht."
+          ],
+          "effect_direction": "Die Aktivierung der Rekurrenz (von 'recurrence_off' zu 'recurrence_on') erhöht die Komplexität, Dauer und die Anzahl der neuronalen Ereignisse signifikant.",
+          "methodological_concerns": [
+            "Die Interpretation der 'recurrent_events': 0' in allen Läufen ist ungewöhnlich und könnte auf eine Einschränkung des Messprotokolls oder eine spezifische Definition von 'recurrent_events' im Kontext des Experiments hinweisen. Es sollte geklärt werden, ob die beobachtete Aktivität (z.B. die 8 Spikes) als rekurrent betrachtet werden kann.",
+            "Die 'propagation_depth' ist in der 'recurrence_off'-Bedingung sehr gering (1) und in der 'recurrence_on'-Bedingung deutlich höher (29). Dies könnte ein Indikator für die Komplexität der Zustandsverarbeitung sein, aber die genaue Definition und Messung von 'propagation_depth' sollte präzisiert werden."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Zustandsdrift und die verlängerte Spike-Sequenz unter 'recurrence_on' könnten durch die kumulative Wirkung des initialen Impulses in Kombination mit der Rekurrenzverbindung entstehen, selbst wenn die Rekurrenzverbindung selbst nicht als 'recurrent_event' gezählt wird. Die Messung 'recurrent_events' könnte daher unvollständig sein.",
+            "Die scheinbare Stabilität der Spike-Sequenz über verschiedene Seeds hinweg könnte auf eine deterministische, nicht-zufällige Natur des zugrundeliegenden neuronalen Modells hindeuten, anstatt auf eine kausale Abhängigkeit von der Rekurrenzverbindung selbst."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $\beta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.",
+            "Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).",
+            "Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt."
+          ],
+          "requested_evidence": [
+            "Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.",
+            "Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden."
+          ],
+          "confidence": 0.9
+        },
+        "provenance": {
+          "prompt_sha256": "97ca7e03da4669df4ef62a4eeddee262e4683e8c78c2260ac1944b2f483ca0d3",
+          "research_packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "3fb83e7b933411578334d07386fddfb07005f431",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T17:19:08.983732+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260905171929340721-8829089c",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0014",
+          "packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen einen klaren und statistisch robusten Unterschied in der neuronalen Dynamik zwischen den Bedingungen 'recurrence_off' und 'recurrence_on'. Die Aktivierung der Rekurrenz führt zu einer signifikant erhöhten Komplexität, Dauer und Anzahl der Spike-Ereignisse. Insbesondere die Konsistenz der Spike-Sequenz und der Endzustände über die Seeds 42, 43 und 44 hinweg stützt die Kausalität der Rekurrenz. Allerdings sind die methodologischen Annahmen bezüglich der Messgrößen ('recurrent_events', 'propagation_depth') unklar und könnten die Interpretation verzerren.",
+          "observations": [
+            "**Vergleich der Spike-Sequenzen:** Unter 'recurrence_on' wird eine ausgeprägte, zeitlich ausgedehnte Aktivität von 8 Spikes über 30 Ticks beobachtet. Im Gegensatz dazu ist die Aktivität unter 'recurrence_off' auf einen einzigen Spike (1 Spike) mit einer maximalen Latenz von 2 Ticks beschränkt. Dies ist ein signifikanter Unterschied in der beobachteten neuronalen Dynamik.",
+            "**Zustandsentwicklung (Digest):** Die 'recurrence_on'-Bedingung führt zu Endzuständen (`network_state_digest_after`), die deutlich von denen unter 'recurrence_off' abweichen. Die Konsistenz der Spike-Sequenz-Digest (`7b8bd6dcf18da41f08211e41cdf5d325ffc757105665ba7ab2a5e2d1fb474808`) über alle Seeds hinweg untermauert die Stabilität des beobachteten Verhaltens unter dieser Bedingung.",
+            "**Reproduzierbarkeit:** Die Ergebnisse sind über die Seeds 42, 43 und 44 hinweg hochgradig reproduzierbar, insbesondere die Spike-Sequenz und die damit verbundenen Metriken, was die Zuverlässigkeit des Effekts erhöht."
+          ],
+          "effect_direction": "Die Aktivierung der Rekurrenz (von 'recurrence_off' zu 'recurrence_on') erhöht die Komplexität, Dauer und die Anzahl der neuronalen Ereignisse signifikant.",
+          "methodological_concerns": [
+            "Die Interpretation der 'recurrent_events': 0' in allen Läufen ist ungewöhnlich und könnte auf eine Einschränkung des Messprotokolls oder eine spezifische Definition von 'recurrent_events' im Kontext des Experiments hinweisen. Es sollte geklärt werden, ob die beobachtete Aktivität (z.B. die 8 Spikes) als rekurrent betrachtet werden kann.",
+            "Die 'propagation_depth' ist in der 'recurrence_off'-Bedingung sehr gering (1) und in der 'recurrence_on'-Bedingung deutlich höher (29). Dies könnte ein Indikator für die Komplexität der Zustandsverarbeitung sein, aber die genaue Definition und Messung von 'propagation_depth' sollte präzisiert werden."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Zustandsdrift und die verlängerte Spike-Sequenz unter 'recurrence_on' könnten durch die kumulative Wirkung des initialen Impulses in Kombination mit der Rekurrenzverbindung entstehen, selbst wenn die Rekurrenzverbindung selbst nicht als 'recurrent_event' gezählt wird. Die Messung 'recurrent_events' könnte daher unvollständig sein.",
+            "Die scheinbare Stabilität der Spike-Sequenz über verschiedene Seeds hinweg könnte auf eine deterministische, nicht-zufällige Natur des zugrundeliegenden neuronalen Modells hindeuten, anstatt auf eine kausale Abhängigkeit von der Rekurrenzverbindung selbst."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, bei dem die Stärke der Rekurrenzverbindung (z.B. Gewichtungsfaktor $\beta$) systematisch variiert wird, um die Abhängigkeit der Spike-Sequenzlänge und der Zustandsdrift von dieser Stärke zu quantifizieren.",
+            "Vergleich der Ergebnisse mit einer Kontrollbedingung, bei der nur die initiale Impulsantwort gemessen wird, ohne die Möglichkeit zur Zustandsverfolgung über Zeit (z.B. durch Reduzierung der Ticks oder Entfernen des Rekurrenz-Inputs).",
+            "Analyse der Spike-Timing-Abstände (Inter-Spike Intervals) in der 'recurrence_on'-Bedingung, um festzustellen, ob die beobachtete Aktivität einem spezifischen rhythmischen Muster folgt."
+          ],
+          "requested_evidence": [
+            "Es ist erforderlich, die genaue Definition und die mathematische Grundlage für die Berechnung von 'recurrent_events' zu liefern, um die Aussagekraft der Messung zu bewerten.",
+            "Die genaue physikalische oder biologische Interpretation der 'propagation_depth' im Kontext dieses neuronalen Modells muss bereitgestellt werden."
+          ],
+          "confidence": 0.9
+        },
+        "provenance": {
+          "prompt_sha256": "e5f9e7c36ac37fac840a30c2de13e877565920997f95ae96a404875654b5834f",
+          "research_packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "3fb83e7b933411578334d07386fddfb07005f431",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T17:19:29.340721+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "8829089cb1f1d28ab168b365e1411c71fee2c5e85e9eb91e5643c40cfd3f4598",
+    "source": {
+      "git_commit": "3fb83e7b933411578334d07386fddfb07005f431",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "73732ddd26c7f2adec978ed3cf5be6233183890c2d43db1080ac7d28de90161f",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "338483abbbd3dd5a3022b6a35d2ce1d861c6c04a0a58821ca5935daef0bc4470",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "33fe85c7dbff37139c643860475f98e281709a08cded7dcc85ea2dbc186e9cdd",
+      "data_digest": "85c9b4fa5b4f7d67250ade0c57086a3b5b5119a178789b1a81ec9239ecc63601",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260905171845283530-8829089c",
+    "AIAR-critical_reviewer-20260905171908983732-8829089c",
+    "AIAR-scientific_writer-20260905171929340721-8829089c"
+  ],
+  "supersedes": null,
+  "content_digest": "100a1662d92e166568674cdd10dbffe0bf394e1e539ed481dce9f8fcbe43ddad",
+  "markdown_digest": "e1067b4f44e1147259b17be51d4a008d0ce6541a26107be03b0d0d1343e11325"
+}

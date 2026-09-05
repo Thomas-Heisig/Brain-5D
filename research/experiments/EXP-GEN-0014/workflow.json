@@ -1,0 +1,17 @@
+{
+  "experiment_id": "EXP-GEN-0014",
+  "research_question": "RQ-TEMP-001",
+  "hypothesis": "H-TEMP-001-A",
+  "title": "Network impulse response",
+  "conditions": "Seeds 42,43,44; identischer Anfangszustand je Seed; Impulsstrom 100.0; Rekurrenz als kontrollierte Behandlung.",
+  "ticks": 100,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "protocol": "science_suite_v1",
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}
