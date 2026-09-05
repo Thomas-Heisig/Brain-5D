@@ -539,3 +539,140 @@
     limitations: Omnibus-Diagnostik ist keine Primaerevidenz fuer die enthaltenen Fach-RQs.
   created: '2026-09-05'
   updated: '2026-09-05'
+
+- id: RQ-REC-001
+  domain: Recurrent Dynamics
+  question: Unter welchen Rekurrenzgewichten und Delays wechselt Brain-5D zwischen sofortigem Erlöschen, transienter rekurrenter Aktivität und bis zum Beobachtungsende persistierender Aktivität?
+  relevance: EXP-GEN-0021 zeigte einen klaren rekurrenzabhängigen Dynamikunterschied, aber noch keine Parametergrenze.
+  literature: []
+  hypotheses:
+  - H-REC-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Abgeleitet aus EXP-GEN-0021; persistente Aktivität ist nicht gleichbedeutend mit Gedächtnis oder Kognition.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-GEN-001
+  domain: Learning Generalization
+  question: Verbessert reward-moduliertes lokales Lernen die Leistung auf Holdout- und Perturbationsbedingungen, die nicht zur Anpassung verwendet wurden?
+  relevance: EXP-GEN-0021 zeigte funktionelle Änderung unter Learning-on, aber keine Generalisierung.
+  literature: []
+  hypotheses:
+  - H-GEN-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Generalisierung muss gegenüber Learning-off und Sham-Replay getrennt werden.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-REPL-001
+  domain: Replication
+  question: Bleiben die in EXP-GEN-0021 beobachteten Rekurrenz- und Learning-Effekte unter unabhängigen Initialisierungen und sauberem Prozess erhalten?
+  relevance: Identische Seedsignaturen zeigen Determinismus, aber keine statistisch unabhängige Replikation.
+  literature: []
+  hypotheses:
+  - H-REPL-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Replikation erfordert echte Variation der Initialisierung und einen Clean Freeze.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-5D-005
+  domain: 5D Topology
+  question: Verändert 5D-Geometrie Propagation, Robustheit oder Dynamik, wenn Neuronenzahl, Synapsenzahl, Grad- und Gewichtsmuster sowie Stimulusplan kontrolliert gleich bleiben?
+  relevance: Der kleine 5D-Test in EXP-GEN-0021 isolierte keinen dimensionsspezifischen Effekt.
+  literature: []
+  hypotheses:
+  - H-5D-005-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Der erste operationalisierte Test hält die Graphstruktur bewusst klein und identisch.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-REG-002
+  domain: Closed-loop Regulation
+  question: Verbessert aktive Regulation Stabilität und Recovery eines laufenden SNN unter identischen Ressourcen- oder Sensorperturbationen gegenüber deaktivierter Regulation?
+  relevance: EXP-GEN-0021 validierte Regulationszustände, aber noch keinen funktionalen Closed-loop-Nutzen.
+  literature: []
+  hypotheses:
+  - H-REG-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Der Feedbackpfad muss als technische Intervention und nicht als Emotion interpretiert werden.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-TEMP-002
+  domain: Temporal Learning
+  question: Reagiert Brain-5D auf spike-tragende zeitliche Reihenfolge anders als auf umgekehrte oder simultane Kontrollfolgen?
+  relevance: EXP-GEN-0021 zeigte Temporal-State-Diskrepanzen ohne Spike-Aktivität.
+  literature: []
+  hypotheses:
+  - H-TEMP-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Eine Reihenfolgenabhängigkeit ist zunächst nur eine dynamische Differenz, kein Gedächtnisnachweis.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-PERF-001
+  domain: Runtime Performance
+  question: Welche Subsysteme dominieren die Wall-Time wissenschaftlicher Läufe und welche Optimierungen erhöhen den Durchsatz bei erhaltener deterministischer Äquivalenz?
+  relevance: EXP-GEN-0021 zeigte eine große Differenz zwischen isoliertem Tick-Durchsatz und Suite-Laufzeit.
+  literature: []
+  hypotheses:
+  - H-PERF-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Performanceänderungen mit veränderter numerischer oder zeitlicher Semantik gelten als Protokolländerung.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-REC-002
+  domain: Recurrent Dynamics
+  question: Wie verändern Loop-Delay und skalierte Rekurrenzstruktur Persistenzdauer, Inter-Spike-Dynamik und Extinktionsverhalten?
+  relevance: Der Drei-Neuronen-Loop aus EXP-GEN-0021 reicht nicht für Skalierungsaussagen.
+  literature: []
+  hypotheses:
+  - H-REC-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Version 1 operationalisiert zunächst Loop-Delay als kontrollierten Skalierungsparameter.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: RQ-LEARN-INTERF-001
+  domain: Lifelong Learning
+  question: Bleibt zuvor erworbene Lernleistung bei sequenziellen Aufgaben erhalten oder entstehen messbare Interferenzeffekte?
+  relevance: Das positive Single-Task-Learningsignal aus EXP-GEN-0021 motiviert Retentionstests.
+  literature: []
+  hypotheses:
+  - H-LEARN-INTERF-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Der erste Runner ist ein Vorläufer-Screen; echte Catastrophic-Forgetting-Evidenz erfordert ein gemeinsames fortlaufend trainiertes Netzwerk.
+  created: '2026-09-05'
+  updated: '2026-09-05'
+

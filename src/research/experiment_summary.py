@@ -251,6 +251,54 @@ def _semantic_status(
             )
         return "DIRECT_MATCH", note
 
+    if question_id == "RQ-REC-001":
+        return classify(
+            any(item.startswith("w0_") for item in plain)
+            and any(item.startswith("w100_") or item.startswith("w125_") for item in plain),
+            "REC-001 erwartet eine registrierte Rekurrenz-Gewicht/Delay-Karte mit Nullkontrolle.",
+        )
+    if question_id == "RQ-REC-002":
+        return classify(
+            {"loop_delay_1", "loop_delay_2", "loop_delay_4", "loop_delay_8"}.issubset(plain),
+            "REC-002 erwartet die registrierte Loop-Delay-Leiter.",
+        )
+    if question_id == "RQ-GEN-001":
+        return classify(
+            any(item.startswith("learning_on_drive_") for item in plain)
+            and any(item.startswith("learning_off_drive_") for item in plain)
+            and any(item.startswith("sham_replay_drive_") for item in plain),
+            "GEN-001 erwartet Learning-on, Learning-off und Sham-Replay über registrierte Perturbationsproben.",
+        )
+    if question_id == "RQ-REPL-001":
+        return classify(
+            {"recurrence_off", "recurrence_on"}.issubset(plain),
+            "REPL-001 erwartet beide Rekurrenzarme mit unabhängiger Seedstrategie.",
+        )
+    if question_id == "RQ-5D-005":
+        return classify(
+            {"1d", "2d", "3d", "5d"}.issubset(plain),
+            "5D-005 erwartet topology-matched 1D/2D/3D/5D-Einbettungen.",
+        )
+    if question_id == "RQ-REG-002":
+        return classify(
+            {"regulation_off", "regulation_on"}.issubset(plain),
+            "REG-002 erwartet Regulation-off und Regulation-on unter gleichem Perturbationsplan.",
+        )
+    if question_id == "RQ-TEMP-002":
+        return classify(
+            {"forward", "reverse", "simultaneous"}.issubset(plain),
+            "TEMP-002 erwartet Forward-, Reverse- und Simultankontrolle.",
+        )
+    if question_id == "RQ-PERF-001":
+        return classify(
+            "subsystem_profile" in plain,
+            "PERF-001 erwartet subsystemaufgelöste Runtime-Messungen.",
+        )
+    if question_id == "RQ-LEARN-INTERF-001":
+        return classify(
+            "sequential_three_task_screen" in plain,
+            "LEARN-INTERF-001 v1 ist ein explizit als Vorläufer markierter Interferenz-Screen.",
+        )
     if question_id.startswith("RQ-PING-"):
         return classify(
             {"recurrence_off", "recurrence_on"}.issubset(plain),

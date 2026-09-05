@@ -133,6 +133,21 @@ class ResearchAssistant:
     def _data_for_manifest(
         self, experiment_id: str, manifest: dict[str, Any]
     ) -> dict[str, Any] | None:
+        # DATA v2: never parse the potentially large raw run archive for normal AI
+        # interpretation. The deterministic writer produces a bounded packet first.
+        ai_packet = (
+            self._root / "experiments" / experiment_id / "analysis" / "ai_packet.json"
+        )
+        if ai_packet.is_file():
+            if ai_packet.stat().st_size > 1_000_000:
+                raise ValueError("AI packet exceeds the 1 MB research-assistant limit.")
+            raw_packet: Any = json.loads(ai_packet.read_text(encoding="utf-8"))
+            if not isinstance(raw_packet, dict):
+                raise ValueError("AI packet must be a JSON object.")
+            return cast(dict[str, Any], raw_packet)
+
+        # Legacy experiments retain the bounded fallback. New experiments must use
+        # analysis/ai_packet.json and therefore avoid loading 100+ MB runs.json.
         path = _artifact_path(self._root, manifest, "data", experiment_id)
         if path is None or not path.is_file():
             return None
