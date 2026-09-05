@@ -33,6 +33,7 @@ The following capabilities are part of `main`:
 - simplified technical `Embodiment` workspace;
 - documentation link/version/test-count consistency checks and scheduled storage validation;
 - protocol-driven Research Experiment Runner with automatic/manual traceable IDs;
+- impulse-response suite with observable propagation and complete DATA provenance;
 - CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification as required release gates.
 
 ## Dashboard/Wesen direction

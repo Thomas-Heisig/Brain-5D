@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-05 — EXP-GEN-0007 Provenance and impulse response repair
+
+- Die kontrollierte Network-Impulse-Probe überträgt Impulse nun mit einem
+  explizit registrierten Synapsen-Gain; Synapsen respektieren dabei ihre
+  konfigurierte obere Gewichtsgrenze.
+- Science-Suite-Manifeste enthalten echte Konfigurations-, Code- und DATA-Digests.
+- Der Research Assistant liest experiment-lokale `DATA`- und Workflow-Artefakte
+  korrekt und markiert die vorhandenen Runs nicht mehr als fehlende Daten.
+
 ## 2026-09-05 — Research Experiment Runner IDs
 
 - Science-Runner werden jetzt durch das gewählte Protokoll bestimmt; automatische

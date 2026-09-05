@@ -41,6 +41,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Structural proposal → approval → mutation → journal → undo/recovery chain implemented and tested.
 - [x] Deterministic persistence/restore infrastructure implemented and tested.
 - [x] Research Experiment Runner separates execution protocol from automatic/manual experiment IDs.
+- [x] Science-suite impulse responses publish observable propagation and complete DATA/configuration provenance.
 
 ## P0 — engineering verification after current frontend integration
 

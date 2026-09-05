@@ -408,9 +408,11 @@ def create_synapse(
     Returns:
         A new Synapse instance.
     """
+    lower_bound = config.w_min if config is not None else 0.0
+    upper_bound = config.w_max if config is not None else 1.0
     synapse = Synapse(
         target_id=target_id,
-        weight=max(0.0, min(1.0, weight)),
+        weight=max(lower_bound, min(upper_bound, weight)),
         delay=max(1, delay),
     )
     if config is not None:
