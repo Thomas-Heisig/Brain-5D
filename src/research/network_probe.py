@@ -100,7 +100,9 @@ class NetworkImpulseProbe:
             ticks_executed = tick + 1
             raw_ids = result.get("spike_ids")
             if raw_ids is None:
-                raw_ids = result.get("output_spike_ids", ())
+                raw_ids = result.get("output_spike_ids")
+            if raw_ids is None:
+                raw_ids = ()
             spike_ids = tuple(int(value) for value in raw_ids)
             output_ids = tuple(
                 int(value) for value in result.get("output_spike_ids", spike_ids)
