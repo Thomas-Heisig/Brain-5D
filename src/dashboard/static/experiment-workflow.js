@@ -17,7 +17,8 @@ async function fetchJson(url, options = {}) {
 }
 
 export class ExperimentWorkflowPanel {
-  constructor() {
+  constructor({ onCompleted = null } = {}) {
+    this.onCompleted = onCompleted;
     this.questions = [];
     this.hypotheses = [];
     this.nextExperimentId = "";
@@ -124,6 +125,7 @@ export class ExperimentWorkflowPanel {
         if (result.ai_report.message) lines.push(`KI Fehler: ${result.ai_report.message}`);
       }
       this.elements.result.textContent = lines.join("\n");
+      if (this.onCompleted) await this.onCompleted();
     } catch (error) {
       this._setStatus(`Ausfuehrung abgebrochen: ${error.message}`, "error");
     } finally {

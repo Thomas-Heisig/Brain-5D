@@ -8,12 +8,41 @@ from threading import Thread
 from typing import cast
 
 from src.dashboard.docs_source import create_docs_source
+from src.dashboard.file_manager import FileManager
+from src.dashboard.research_source import ResearchSource
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
 
 
 class DummyBridge:
     pass
+
+
+def test_research_tree_orders_experiments_by_manifest_timestamp(tmp_path: Path) -> None:
+    research_root = tmp_path / "research"
+    experiments_root = research_root / "experiments"
+    for experiment_id, created_at in (
+        ("EXP-OLD", "2026-09-01T00:00:00+00:00"),
+        ("EXP-NEW", "2026-09-03T00:00:00+00:00"),
+    ):
+        directory = experiments_root / experiment_id
+        directory.mkdir(parents=True)
+        (directory / "manifest.json").write_text(
+            json.dumps({"created_at": created_at}), encoding="utf-8"
+        )
+
+    tree = FileManager(
+        ResearchSource(research_root), None, tmp_path / "docs"
+    ).get_tree("research")
+    experiments = next(
+        child for child in tree["children"] if child["name"] == "experiments"
+    )
+
+    assert [child["name"] for child in experiments["children"]] == [
+        "EXP-NEW",
+        "EXP-OLD",
+    ]
+    assert experiments["children"][0]["created_at"] == "2026-09-03T00:00:00+00:00"
 
 
 def _start_server(tmp_path: Path):

@@ -37,9 +37,14 @@ class TestExperimentModeFrontendWiring:
 
     def test_experiment_workflow_renders_science_suite_results(self) -> None:
         workflow_js = _read_static("experiment-workflow.js")
+        app_js = _read_static("app.js")
+        html = _read_static("index.html")
         assert "const runResult = result.result" in workflow_js
         assert "runResult.run_count" in workflow_js
         assert "result.result.start.tick" not in workflow_js
+        assert "onCompleted" in workflow_js
+        assert "refreshFileManager" in app_js
+        assert 'id="fm-experiment-sort"' in html
 
     def test_release_summary_uses_canonical_status_sections(self) -> None:
         html = _read_static("index.html")

@@ -1,0 +1,405 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0008",
+  "research_question_id": "RQ-SNN-001",
+  "hypothesis_ids": [
+    "H-SNN-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-05T08:46:23.047886+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0008",
+      "research_question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-001-A",
+          "research_question": "RQ-SNN-001",
+          "hypothesis": "Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken ohne numerische Drift.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-05",
+      "source_sha": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b"
+    },
+    "executive_summary": "Die Durchführung des Experiments war unvollständig, da die Simulationszeit (Ticks) extrem kurz war (100 Ticks). Dies ist nicht ausreichend, um die Stabilität von Spike-Dynamiken über die geforderte lange Simulationszeit zu beurteilen. Die Ergebnisse sind daher nicht interpretierbar.",
+    "research_question": {
+      "id": "RQ-SNN-001",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "relevance": "Grundvoraussetzung für alle weiteren Lern- und Selbstorganisationsexperimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      "Die Simulationszeit betrug nur 100 Ticks, was weit unter der in der Hypothese geforderten Mindestdauer von 100.000 Ticks liegt.",
+      "Die experimentellen Parameter (z.B. `ticks`: 100) sind zu niedrig angesetzt, um die Stabilität über lange Zeiträume zu testen.",
+      "Die Hypothese H-SNN-001-A postuliert die Stabilität über mindestens 100.000 Ticks, was eine signifikante Diskrepanz zur tatsächlichen Simulationslänge darstellt."
+    ],
+    "interpretation": {
+      "assessment": "Die Durchführung des Experiments war unvollständig, da die Simulationszeit (Ticks) extrem kurz war (100 Ticks). Dies ist nicht ausreichend, um die Stabilität von Spike-Dynamiken über die geforderte lange Simulationszeit zu beurteilen. Die Ergebnisse sind daher nicht interpretierbar.",
+      "observations": [
+        "Die Simulationszeit betrug nur 100 Ticks, was signifikant unter der in der Hypothese H-SNN-001-A geforderten Mindestdauer von 100.000 Ticks liegt.",
+        "Die experimentellen Parameter (`ticks`: 100) sind zu niedrig angesetzt, um die Langzeitstabilität von Spike-Dynamiken zu testen.",
+        "Die Hypothese H-SNN-001-A postuliert die Stabilität über mindestens 100.000 Ticks, was eine massive Diskrepanz zur tatsächlichen Simulationslänge darstellt."
+      ],
+      "effect_direction": "",
+      "methodological_concerns": [
+        "Die Simulationsdauer ist zu kurz, um die Langzeitstabilität von Spike-Dynamiken zu beurteilen.",
+        "Die Hypothese ist sehr spezifisch bezüglich der Mindestdauer (100.000 Ticks), was eine präzise Steuerung der Simulationsparameter erfordert."
+      ],
+      "alternative_explanations": [],
+      "recommended_experiments": [
+        "Die Simulationsdauer muss auf mindestens 100.000 Ticks erhöht werden, um die Hypothese H-SNN-001-A adäquat zu testen.",
+        "Es sollte eine systematische Untersuchung der Stabilität bei verschiedenen Spike-Frequenzen und Parametrisierungen durchgeführt werden, um die Robustheit des Modells zu bewerten."
+      ],
+      "requested_evidence": [
+        "Daten, die die Spike-Dynamik über einen Zeitraum von mindestens 100.000 Ticks zeigen, sind erforderlich, um die Stabilität zu beurteilen."
+      ],
+      "confidence": 0.1
+    },
+    "methodological_critique": [
+      "Die Simulationsdauer ist zu kurz, um die Langzeitstabilität von Spike-Dynamiken zu beurteilen.",
+      "Die Hypothese ist sehr spezifisch bezüglich der Mindestdauer (100.000 Ticks), was eine präzise Steuerung der Simulationsparameter erfordert."
+    ],
+    "alternative_explanations": [],
+    "reproducibility": {
+      "git_commit": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "450ca4a3bac712c0cff5d98759d4f6ddf646a7fd25f5e46f85683dc19d98bb7b",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.1,
+    "missing_evidence": [
+      "Daten, die die Spike-Dynamik über einen Zeitraum von mindestens 100.000 Ticks zeigen, sind erforderlich, um die Stabilität zu beurteilen."
+    ],
+    "recommended_follow_up": [
+      "Die Simulationsdauer muss auf mindestens 100.000 Ticks erhöht werden, um die Hypothese H-SNN-001-A adäquat zu testen.",
+      "Es sollte eine systematische Untersuchung der Stabilität bei verschiedenen Spike-Frequenzen und Parametrisierungen durchgeführt werden, um die Robustheit des Modells zu bewerten."
+    ],
+    "conclusion": "Die Durchführung des Experiments war unvollständig, da die Simulationszeit (Ticks) extrem kurz war (100 Ticks). Dies ist nicht ausreichend, um die Stabilität von Spike-Dynamiken über die geforderte lange Simulationszeit zu beurteilen. Die Ergebnisse sind daher nicht interpretierbar.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260905084607251811-fe8d50ad",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0008",
+          "packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0"
+        },
+        "output": {
+          "assessment": "Die Durchführung des Experiments war unvollständig, da die Simulationszeit (Ticks) extrem kurz war (100 Ticks). Dies ist nicht ausreichend, um die Stabilität von Spike-Dynamiken über die geforderte lange Simulationszeit zu beurteilen. Die Ergebnisse sind daher nicht interpretierbar.",
+          "observations": [
+            "Die Simulationszeit betrug nur 100 Ticks, was weit unter der in der Hypothese geforderten Mindestdauer von 100.000 Ticks liegt.",
+            "Die experimentellen Parameter (z.B. `ticks`: 100) sind zu niedrig angesetzt, um die Stabilität über lange Zeiträume zu testen.",
+            "Die Hypothese H-SNN-001-A postuliert die Stabilität über mindestens 100.000 Ticks, was eine signifikante Diskrepanz zur tatsächlichen Simulationslänge darstellt."
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Simulationsdauer ist zu kurz, um die Langzeitstabilität von Spike-Dynamiken zu beurteilen.",
+            "Die Hypothese ist sehr spezifisch bezüglich der Mindestdauer (100.000 Ticks), was eine präzise Steuerung der Simulationsparameter erfordert."
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [
+            "Die Simulationsdauer muss auf mindestens 100.000 Ticks erhöht werden, um die Hypothese H-SNN-001-A adäquat zu testen.",
+            "Es sollte eine systematische Untersuchung der Stabilität bei verschiedenen Spike-Frequenzen und Parametrisierungen durchgeführt werden, um die Robustheit des Modells zu bewerten."
+          ],
+          "requested_evidence": [
+            "Daten, die die Spike-Dynamik über einen Zeitraum von mindestens 100.000 Ticks zeigen, sind erforderlich, um die Stabilität zu beurteilen."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "157e5e8445f6a9b32ce49b67e5f3f7b51e0b617fc9b0da596e71879ce3626a5c",
+          "research_packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:46:07.251811+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260905084615106610-fe8d50ad",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0008",
+          "packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0"
+        },
+        "output": {
+          "assessment": "Die Analyse ist aufgrund der extrem kurzen Simulationsdauer nicht interpretierbar. Die Ergebnisse liefern keinen ausreichenden Beweis für die Stabilität von Spike-Dynamiken über die geforderte lange Zeitspanne.",
+          "observations": [
+            "Die Simulationszeit (Ticks) betrug nur 100 Ticks, was signifikant unter der in der Hypothese H-SNN-001-A geforderten Mindestdauer von 100.000 Ticks liegt.",
+            "Die experimentellen Parameter (`ticks`: 100) sind zu niedrig angesetzt, um die Langzeitstabilität von Spike-Dynamiken zu testen.",
+            "Die Hypothese H-SNN-001-A postuliert die Stabilität über mindestens 100.000 Ticks, was eine massive Diskrepanz zur tatsächlichen Simulationslänge darstellt."
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Simulationsdauer ist zu kurz, um die Langzeitstabilität von Spike-Dynamiken zu beurteilen.",
+            "Die Hypothese ist sehr spezifisch bezüglich der Mindestdauer (100.000 Ticks), was eine präzise Steuerung der Simulationsparameter erfordert."
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [
+            "Die Simulationsdauer muss auf mindestens 100.000 Ticks erhöht werden, um die Hypothese H-SNN-001-A adäquat zu testen.",
+            "Es sollte eine systematische Untersuchung der Stabilität bei verschiedenen Spike-Frequenzen und Parametrisierungen durchgeführt werden, um die Robustheit des Modells zu bewerten."
+          ],
+          "requested_evidence": [
+            "Daten, die die Spike-Dynamik über einen Zeitraum von mindestens 100.000 Ticks zeigen, sind erforderlich, um die Stabilität zu beurteilen."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "dee0755ae3c8cb12eace34a2e38e8ded4c4061b354ec5cf2512614591fd4f6fd",
+          "research_packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:46:15.106610+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260905084623046855-fe8d50ad",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0008",
+          "packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0"
+        },
+        "output": {
+          "assessment": "Die Durchführung des Experiments war unvollständig, da die Simulationszeit (Ticks) extrem kurz war (100 Ticks). Dies ist nicht ausreichend, um die Stabilität von Spike-Dynamiken über die geforderte lange Simulationszeit zu beurteilen. Die Ergebnisse sind daher nicht interpretierbar.",
+          "observations": [
+            "Die Simulationszeit betrug nur 100 Ticks, was signifikant unter der in der Hypothese H-SNN-001-A geforderten Mindestdauer von 100.000 Ticks liegt.",
+            "Die experimentellen Parameter (`ticks`: 100) sind zu niedrig angesetzt, um die Langzeitstabilität von Spike-Dynamiken zu testen.",
+            "Die Hypothese H-SNN-001-A postuliert die Stabilität über mindestens 100.000 Ticks, was eine massive Diskrepanz zur tatsächlichen Simulationslänge darstellt."
+          ],
+          "effect_direction": "",
+          "methodological_concerns": [
+            "Die Simulationsdauer ist zu kurz, um die Langzeitstabilität von Spike-Dynamiken zu beurteilen.",
+            "Die Hypothese ist sehr spezifisch bezüglich der Mindestdauer (100.000 Ticks), was eine präzise Steuerung der Simulationsparameter erfordert."
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [
+            "Die Simulationsdauer muss auf mindestens 100.000 Ticks erhöht werden, um die Hypothese H-SNN-001-A adäquat zu testen.",
+            "Es sollte eine systematische Untersuchung der Stabilität bei verschiedenen Spike-Frequenzen und Parametrisierungen durchgeführt werden, um die Robustheit des Modells zu bewerten."
+          ],
+          "requested_evidence": [
+            "Daten, die die Spike-Dynamik über einen Zeitraum von mindestens 100.000 Ticks zeigen, sind erforderlich, um die Stabilität zu beurteilen."
+          ],
+          "confidence": 0.1
+        },
+        "provenance": {
+          "prompt_sha256": "c71b400be5238d1ba6a0563cb3ba086c32d6ca62e8f6408e392693e5aaaa05a1",
+          "research_packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1",
+          "git_commit": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b",
+          "model_self_confidence": "0.1"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-05T08:46:23.046855+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "fe8d50ad6e5acdd8b11bdfafba3bf4d272e6fc2c119f49669b0e67657ac3ccf0",
+    "source": {
+      "git_commit": "107e81c8285988dbbfd78fd9acd8cbcbb442e18b",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "450ca4a3bac712c0cff5d98759d4f6ddf646a7fd25f5e46f85683dc19d98bb7b",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260905084607251811-fe8d50ad",
+    "AIAR-critical_reviewer-20260905084615106610-fe8d50ad",
+    "AIAR-scientific_writer-20260905084623046855-fe8d50ad"
+  ],
+  "supersedes": null,
+  "content_digest": "b8c914f43eabd15fde0cfb464ec6bf5210cab27cb099e5ab86299c162a6df3dc",
+  "markdown_digest": "4f7b9f232c859848ed2f32316dccb8e11b6f11b7878787bcf17ac425b20a5945"
+}

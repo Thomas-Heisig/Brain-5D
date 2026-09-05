@@ -6,6 +6,7 @@ with proper MIME type detection, binary file serving, and directory trees.
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 from http import HTTPStatus
@@ -327,7 +328,7 @@ class FileManager:
     def get_tree(self, source: str = "research") -> dict[str, Any]:
         """Return the full directory tree for a source."""
         try:
-            _obj, root, _ = self._resolve_source(source)
+            _obj, root, source_name = self._resolve_source(source)
         except FileManagerError as exc:
             return {"available": False, "error": str(exc), "children": []}
 
@@ -381,12 +382,26 @@ class FileManager:
                         }
                     )
 
-            return {
+            result: dict[str, Any] = {
                 "name": root.name if rel_prefix == "" else path.name,
                 "path": rel_prefix or ".",
                 "type": "directory",
                 "children": children,
             }
+            if source_name == "research":
+                manifest_path = path / "manifest.json"
+                if manifest_path.is_file():
+                    try:
+                        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                        if isinstance(manifest, dict):
+                            created_at = manifest.get("created_at") or manifest.get(
+                                "timestamp"
+                            )
+                            if created_at:
+                                result["created_at"] = str(created_at)
+                    except (OSError, json.JSONDecodeError):
+                        pass
+            return result
 
         tree = _build(root)
         tree["available"] = True

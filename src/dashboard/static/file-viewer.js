@@ -83,6 +83,7 @@ function fmLangFromExt(ext) {
 let fmInitialized = false;
 let fmCurrentSource = 'research';
 let fmActiveFilter = 'all';
+let fmExperimentSort = 'newest';
 let fmRecentFiles = [];
 const FM_RECENT_KEY = 'brain5d_fm_recent';
 const FM_RECENT_MAX = 20;
@@ -156,6 +157,7 @@ function initFileManager() {
   if (!fmInitialized) {
     loadFMRecent();
     setupFMSourceButtons();
+    setupFMExperimentSort();
     setupFMSearch();
     setupFMRefresh();
     setupFMFilters();
@@ -167,6 +169,10 @@ function initFileManager() {
     renderFMRecent();
     fmInitialized = true;
   }
+}
+
+async function refreshFileManager() {
+  await Promise.all([loadFMStats(), loadFMTree()]);
 }
 
 function updateFMBreadcrumb() {
@@ -183,11 +189,28 @@ function setupFMSourceButtons() {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       fmCurrentSource = btn.dataset.source;
+      updateFMExperimentSortControl();
       updateFMBreadcrumb();
       loadFMStats();
       loadFMTree();
     });
   });
+}
+
+function setupFMExperimentSort() {
+  const select = document.getElementById('fm-experiment-sort');
+  if (!select) return;
+  select.value = fmExperimentSort;
+  select.addEventListener('change', () => {
+    fmExperimentSort = select.value === 'oldest' ? 'oldest' : 'newest';
+    loadFMTree();
+  });
+  updateFMExperimentSortControl();
+}
+
+function updateFMExperimentSortControl() {
+  const select = document.getElementById('fm-experiment-sort');
+  if (select) select.disabled = fmCurrentSource !== 'research';
 }
 
 function setupFMRefresh() {
@@ -379,8 +402,18 @@ function renderFMTree(node, container, depth) {
     return;
   }
 
-  // Sort: directories first, then files alphabetically
+  // Keep the general tree alphabetical, but order experiment directories by manifest time.
   const sorted = [...node.children].sort((a, b) => {
+    if (node.path === 'experiments' && a.type === 'directory' && b.type === 'directory') {
+      const aTime = Date.parse(a.created_at || '');
+      const bTime = Date.parse(b.created_at || '');
+      const aHasTime = !Number.isNaN(aTime);
+      const bHasTime = !Number.isNaN(bTime);
+      if (aHasTime && bHasTime && aTime !== bTime) {
+        return fmExperimentSort === 'oldest' ? aTime - bTime : bTime - aTime;
+      }
+      if (aHasTime !== bHasTime) return aHasTime ? -1 : 1;
+    }
     if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
     return a.name.localeCompare(b.name);
   });
@@ -2056,4 +2089,4 @@ function renderPlantUML(path, content, viewer) {
 // EXPORTS
 // ================================================================
 
-export { initFileManager, initResearchBrowser, initDocumentationBrowser };
+export { initFileManager, initResearchBrowser, initDocumentationBrowser, refreshFileManager };

@@ -1,0 +1,17 @@
+{
+  "protocol": "science_suite_v1",
+  "experiment_id": "EXP-GEN-0009",
+  "research_question": "RQ-PING-001",
+  "hypothesis": "H-PING-001-A",
+  "title": "Network impulse response",
+  "conditions": "Identischer Zustand, Seed und Input-Spike; Rekurrenz kontrolliert. Test mit 100000 Ticks ausgef\u00fchrt",
+  "ticks": 100000,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

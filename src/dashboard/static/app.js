@@ -40,7 +40,7 @@
 
 import { ControlPanel } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
-import { initResearchBrowser, initDocumentationBrowser } from './file-viewer.js';
+import { initResearchBrowser, initDocumentationBrowser, refreshFileManager } from './file-viewer.js';
 import { dashboardStore } from './state-store.js';
 import { initHealthDrawer } from './health-drawer.js';
 import { consoleLog } from './console-log.js';
@@ -196,7 +196,9 @@ function setupTabs() {
     if (tabName === 'research' && !initialized.research) {
       initResearchBrowser();
       initDocumentationBrowser();
-      instances.experimentWorkflow = new ExperimentWorkflowPanel();
+      instances.experimentWorkflow = new ExperimentWorkflowPanel({
+        onCompleted: () => refreshFileManager(),
+      });
       instances.experimentWorkflow.refresh();
       initialized.research = true;
     }
