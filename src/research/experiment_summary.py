@@ -389,7 +389,7 @@ def write_detailed_experiment_summary(
     )
     for run in runs:
         metrics_value = run.get("metrics")
-        metrics: dict[str, Any] = (
+        run_metrics: dict[str, Any] = (
             dict(metrics_value) if isinstance(metrics_value, dict) else {}
         )
         lines.append(
@@ -398,12 +398,12 @@ def write_detailed_experiment_summary(
                 [
                     _fmt(run.get("seed")),
                     _fmt(run.get("condition")),
-                    _fmt(metrics.get("ticks_executed", metrics.get("ticks"))),
-                    _fmt(metrics.get("total_spikes")),
-                    _fmt(metrics.get("delivered_synaptic_events")),
-                    _fmt(metrics.get("activated_neurons")),
-                    _fmt(metrics.get("recurrent_events")),
-                    _fmt(metrics.get("propagation_depth")),
+                    _fmt(run_metrics.get("ticks_executed", run_metrics.get("ticks"))),
+                    _fmt(run_metrics.get("total_spikes")),
+                    _fmt(run_metrics.get("delivered_synaptic_events")),
+                    _fmt(run_metrics.get("activated_neurons")),
+                    _fmt(run_metrics.get("recurrent_events")),
+                    _fmt(run_metrics.get("propagation_depth")),
                     _fmt(run.get("runtime_error")),
                 ]
             )
