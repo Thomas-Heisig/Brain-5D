@@ -43,4 +43,35 @@ for old in old_variants:
     if old in text:
         text = text.replace(old, new, 1)
         break
+text = text.replace(
+    "        metrics = run.get(\"metrics\")\n        if not isinstance(metrics, dict):\n            continue\n        metrics_raw: object = run.get(\"metrics\")\n",
+    "        metrics_raw: object = run.get(\"metrics\")\n",
+)
+text = text.replace(
+    "data_digest=_sha256_files([data_path, *trace_paths]),",
+    "data_digest=_sha256_files([data_path, *trace_paths], output_dir),",
+)
+old_digest = '''def _sha256_files(paths: Sequence[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(paths, key=lambda item: item.as_posix()):
+        digest.update(
+            path.relative_to(path.parent.parent.parent).as_posix().encode("utf-8")
+        )
+        digest.update(b"\\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\\0")
+    return digest.hexdigest()
+'''
+new_digest = '''def _sha256_files(paths: Sequence[Path], root: Path) -> str:
+    """Hash a set of artifacts using experiment-relative names for portability."""
+    digest = hashlib.sha256()
+    for path in sorted(paths, key=lambda item: item.relative_to(root).as_posix()):
+        digest.update(path.relative_to(root).as_posix().encode("utf-8"))
+        digest.update(b"\\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\\0")
+    return digest.hexdigest()
+'''
+if old_digest in text:
+    text = text.replace(old_digest, new_digest, 1)
 workflow.write_text(text, encoding="utf-8")
