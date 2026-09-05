@@ -3,7 +3,6 @@
 **Experimental sparse 5D spiking-neural research framework with deterministic persistence, controlled plasticity, embodiment and scientific provenance.**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![CI](https://img.shields.io/badge/main-CI%20green-brightgreen.svg)](https://github.com/Thomas-Heisig/Brain-5D/actions)
 [![Version](https://img.shields.io/badge/version-0.5.0a7-orange.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
@@ -11,19 +10,20 @@ Brain-5D is a research framework for studying learning, self-organization and em
 
 > **Scientific status:** Brain-5D is an experimental engineering and research platform. Implementation, passing tests, dashboards and generated reports are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
 
-## Current verified baseline
+## Current main baseline
 
-As of **2026-09-04**, `main` is the canonical development line.
+As of **2026-09-05**, `main` is the canonical development line.
 
 - package version: `0.5.0a7`
-- CI: green on Python 3.11, 3.12 and 3.13
-- test collection: **700 tests**
-- unique full-suite outcome on Python 3.13: **698 passed, 2 opt-in large-storage tests skipped**
-- fast-suite coverage: **72%**
-- Scientific Integrity Gate: green
-- wheel build/install and Docker build/runtime verification: green
+- current test collection after the adaptive Wesen regression additions: **723 tests**
+- fast-suite coverage baseline: **72%**
+- Scientific Integrity Gate is part of the required CI path
+- wheel build/install and Docker verification remain part of release verification
+- current dashboard navigation: **Overview, Control, Research, Settings, Wesen, Embodiment**
+- `Network` is no longer a primary user-facing workspace
+- Release/Gate is opened from the footer rather than the primary navigation
 
-The latest dashboard work is part of `main`: seven full-width responsive workspaces, command palette, keyboard navigation, focus mode, explicit unknown-state rendering and a real-body embodiment view driven by observed host/device state.
+The dashboard uses explicit unknown-state rendering. Missing telemetry is never replaced with plausible-looking constants.
 
 ## Implemented system layers
 
@@ -37,12 +37,36 @@ The latest dashboard work is part of `main`: seven full-width responsive workspa
 | Embodiment | Typed sensors/actuators, authorization gates, audit trail, host interoception, device discovery, deterministic environments |
 | Experience loop | Sensor → encoding → SNN → action → observed outcome → reward path with explicit authorization |
 | Research | Registries, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
-| Dashboard | Overview, Network, Control, Research, Release, Settings, Embodiment workspaces; responsive operator experience |
+| Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |
 | AI boundary | Research AI / Language Organ / Cognitive Advisor contracts remain read-only or proposal-only unless explicitly registered as a treatment |
+
+## Wesen and Embodiment
+
+Brain-5D intentionally separates the technical body interface from the live body visualization:
+
+- **Embodiment** configures/observes real sensors, devices, actuators, permissions and body boundaries.
+- **Wesen** is a read-only live projection of the observed machine body.
+
+The `Wesen` page builds its morphology from currently published connections rather than from a fixed human-like anatomy. Sensor and actuator branches appear from observed connection data; unsupported or missing endpoints stay explicitly unavailable. Host CPU, memory, temperature, fan, disk and timing signals are treated as machine-native interoception where available.
+
+The body membrane changes with the observed connection envelope. The UI also provides node inspection, session-local morphology history, recurrence trend, signal animation, causal-path emphasis and a delayed self-model that mirrors the same current morphology.
+
+These visuals do **not** establish consciousness or causality. Recurrence and loopback are technical observables. Experimental causal claims still require controlled intervention/outcome evidence.
+
+See [`docs/02-architecture/WESEN_ADAPTIVE_BODY.md`](docs/02-architecture/WESEN_ADAPTIVE_BODY.md).
 
 ## What remains scientifically open
 
-Brain-5D already contains infrastructure and preliminary experiment artifacts, but the central scientific questions require clean, preregistered and independently repeated evidence runs. Priority areas are productive learning, closed-loop embodiment, time-scale calibration, 5D ablations, self-regulation/sensor loss, memory/world models and later multimodal knowledge grounding.
+The next scientific gains should come from evidence closure rather than feature volume. Priority areas remain:
+
+- productive-learning evidence;
+- closed-loop embodiment evidence;
+- time-scale/runtime calibration;
+- 5D ablations;
+- self-regulation and sensor-loss studies;
+- memory/world-model experiments;
+- multimodal grounding;
+- AI-as-treatment experiments.
 
 See:
 
@@ -79,7 +103,7 @@ Run with the integrated dashboard:
 python -m src.main --config configs/poc_config.yaml
 ```
 
-Or on Windows use the repository launcher:
+Or on Windows:
 
 ```powershell
 .\start.ps1
@@ -90,29 +114,30 @@ The dashboard defaults to `http://127.0.0.1:8765`.
 ## Testing and verification
 
 ```bash
-# fast regression suite
 python -m pytest -m "not slow"
-
-# slow suite
 python -m pytest -m "slow"
-
-# scientific integrity checks are also enforced by CI
 ```
 
-Large storage stress tests are intentionally opt-in and are not silently counted as executed when skipped.
+Large storage stress tests are intentionally opt-in. Scientific integrity, typing, lint, security and packaging checks are enforced through CI/release workflows.
 
 ## Architecture at a glance
 
 ```text
-Sensors / Environment / Host interoception
-                 |
-                 v
-       Signal / Experience boundary
-                 |
-                 v
+External environment
+        |
+        v
+Sensors / network / camera / audio / device inputs
+        |
+        v
+Embodiment adapters + authorization + quality
+        |
+        v
+Signal / Experience boundary
+        |
+        v
 +--------------------------------------------------+
 |           Sparse 5D Spiking Neural Core          |
-|  dynamics | STDP/eligibility | homeostasis       |
+| dynamics | STDP/eligibility | homeostasis       |
 +---------------------+----------------------------+
                       |
           +-----------+-----------+
@@ -126,14 +151,14 @@ Sensors / Environment / Host interoception
                       |
                 observed outcome
                       |
-                 reward signal
+                 feedback/reward
 
-Persistence + Research provenance surround the complete loop.
-The dashboard observes/operates through explicit contracts; AI components
-remain bounded by authority, treatment and provenance rules.
+Host interoception feeds the body state.
+Persistence + Research provenance surround the loop.
+Wesen visualizes published state read-only.
 ```
 
-Detailed architecture: [docs/02-architecture/ARCHITECTURE.md](docs/02-architecture/ARCHITECTURE.md).
+Detailed architecture: [`docs/02-architecture/ARCHITECTURE.md`](docs/02-architecture/ARCHITECTURE.md).
 
 ## Repository structure
 
@@ -144,14 +169,14 @@ src/                     runtime implementation
   homeostasis/           regulatory mechanisms
   self_organization/     proposal, approval, structural plasticity, morphology
   embodiment/            sensors, actuators, authorization, interoception
-  experience/             closed-loop experience composition
+  experience/            closed-loop experience composition
   storage/               snapshots, journals, checkpoint and recovery
   research/              experiment/evidence machinery
   research_assistant/    bounded AI research tooling
   dashboard/             operator/research UI and APIs
 research/                registries, protocols, DATA/EVID and generated research views
 docs/                    canonical + historical documentation
-tests/                   700 collected tests
+tests/                   current regression suite
 configs/                 runtime and experiment configuration
 scripts/                 verification and utility scripts
 releases/                machine-readable release registry
@@ -159,19 +184,19 @@ releases/                machine-readable release registry
 
 ## Documentation policy
 
-The authoritative current-state documents are listed in [docs/README.md](docs/README.md). Versioned Alpha/Sprint/Release documents are retained for traceability but must not override the current `main` state.
+The authoritative current-state documents are listed in [`docs/README.md`](docs/README.md). Versioned Alpha/Sprint/Release documents are retained for traceability but do not override current `main`.
 
-The hierarchy is deliberately strict:
+Hierarchy:
 
 1. current code and machine-readable contracts on `main`;
-2. CI/test results for engineering verification;
-3. experiment `DATA/` for measured run data;
-4. accepted `EVID` artifacts for scientific evidence;
-5. human/AI interpretations and narrative documentation.
+2. current CI/test results;
+3. experiment `DATA/`;
+4. accepted `EVID` artifacts;
+5. interpretation/narrative documentation.
 
 ## Security
 
-The dashboard binds to loopback by default. It exposes operator and file-management capabilities and must not be directly port-forwarded to the public Internet. See [docs/03-dashboard/DASHBOARD.md](docs/03-dashboard/DASHBOARD.md) and [SECURITY.md](SECURITY.md).
+The dashboard binds to loopback by default. It exposes operator and file-management capabilities and must not be directly port-forwarded to the public Internet. See [`docs/03-dashboard/DASHBOARD.md`](docs/03-dashboard/DASHBOARD.md) and [`SECURITY.md`](SECURITY.md).
 
 ## Citation
 
@@ -185,8 +210,6 @@ The dashboard binds to loopback by default. It exposes operator and file-managem
   license = {MIT}
 }
 ```
-
-See also [CITATION.cff](CITATION.cff).
 
 ## License
 
