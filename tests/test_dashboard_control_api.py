@@ -195,6 +195,21 @@ def _post(
         conn.close()
 
 
+def _get(host: str, port: int, path: str) -> tuple[int, dict[str, JSONValue] | str]:
+    """Send a GET request and return (status, parsed_body)."""
+    conn = HTTPConnection(host, port)
+    try:
+        conn.request("GET", path)
+        resp = conn.getresponse()
+        data = resp.read()
+        ct = resp.getheader("Content-Type", "")
+        if "application/json" in ct:
+            return resp.status, json.loads(data)
+        return resp.status, data.decode("utf-8", errors="replace")
+    finally:
+        conn.close()
+
+
 # ============================================================================
 # Canonical Contract Tests
 # ============================================================================
@@ -438,3 +453,25 @@ class TestControlStatus:
             assert "state" in body
         finally:
             conn.close()
+
+
+class TestUnknownApiRoutes:
+    """Unknown API routes remain JSON errors instead of SPA fallbacks."""
+
+    def test_unknown_get_route_returns_json_404(
+        self, server_and_client: tuple[DashboardServer, Thread, str, int]
+    ) -> None:
+        _, _, host, port = server_and_client
+        status, body = _get(host, port, "/api/does-not-exist")
+        assert status == 404
+        assert isinstance(body, dict)
+        assert body["error"] == "Unknown API endpoint: /api/does-not-exist"
+
+    def test_unknown_post_route_returns_json_404(
+        self, server_and_client: tuple[DashboardServer, Thread, str, int]
+    ) -> None:
+        _, _, host, port = server_and_client
+        status, body = _post(host, port, "/api/does-not-exist", {})
+        assert status == 404
+        assert isinstance(body, dict)
+        assert body["error"] == "Unknown API endpoint: /api/does-not-exist"

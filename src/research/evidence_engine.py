@@ -80,17 +80,28 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
         return None
 
     status = manifest.get("experiment_status", "not_started")
-    if status in _INVALID_EVIDENCE_STATUSES:
+    if status != "completed" or status in _INVALID_EVIDENCE_STATUSES:
         return None
 
     validity_raw = manifest.get("validity", {})
     if not isinstance(validity_raw, dict):
         return None
     validity = cast(dict[str, object], validity_raw)
-    valid = validity.get("valid", True)
-    if not isinstance(valid, bool) or not valid:
+    valid = validity.get("valid")
+    if valid is not True:
+        return None
+    runtime_error_count = validity.get("runtime_error_count")
+    fatal_error_count = validity.get("fatal_error_count")
+    if any(
+        not isinstance(count, int) or isinstance(count, bool) or count < 0
+        for count in (runtime_error_count, fatal_error_count)
+    ):
+        return None
+    if runtime_error_count != 0 or fatal_error_count != 0:
         return None
     causal_taint = manifest.get("causal_taint", "PURE")
+    if causal_taint not in {"PURE", "OBSERVED", "PROPOSED", "AI_INFLUENCED"}:
+        return None
     if causal_taint != "PURE":
         treatment_raw = manifest.get("ai_treatment")
         if not isinstance(treatment_raw, dict):
@@ -98,9 +109,11 @@ def _check_experiment_valid(experiment_id: str) -> dict[str, Any] | None:
         treatment = cast(dict[str, object], treatment_raw)
         protocol_id = treatment.get("protocol_id")
         if (
-            not treatment.get("registered")
+            treatment.get("registered") is not True
             or not isinstance(protocol_id, str)
             or not protocol_id.strip()
+            or treatment.get("mode", "confirmatory")
+            not in {"exploratory", "confirmatory"}
         ):
             return None
     git_raw = manifest.get("git", {})

@@ -233,4 +233,4 @@ Then run focused tests before the full suite.
 ### Security-sensitive issue
 
 Do not publish exploit details in a public bug report. Read
-[../SECURITY.md](../SECURITY.md).
+[../../SECURITY.md](../../SECURITY.md).

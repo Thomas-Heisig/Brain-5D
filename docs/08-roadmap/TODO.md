@@ -2,7 +2,7 @@
 
 **Canonical TODO for `main`**
 **Baseline:** `brain5d-core 0.5.0a7`
-**Updated:** 2026-09-04
+**Updated:** 2026-09-05
 
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
@@ -10,7 +10,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] `main` is the canonical development line.
 - [x] CI green across Python 3.11, 3.12 and 3.13.
-- [x] 700 tests collected; 698 unique tests pass in the full current suite; 2 large-storage tests are intentionally opt-in/skipped by default.
+- [x] 712 tests collected; 707 tests pass and 5 are skipped in the full current suite; the 2 large-storage tests are intentionally opt-in/skipped by default.
 - [x] Fast-suite coverage currently 72%.
 - [x] Scientific Integrity Gate green.
 - [x] Security, lint/pre-commit, Mypy/Pyright, wheel build/install and Docker verification green.
@@ -38,10 +38,10 @@ These tasks should produce the next scientific gain before broad feature expansi
 ### Closed-loop embodiment
 
 - [ ] Freeze a deterministic embodiment protocol for Sensor → SNN → Actuator → Outcome → Reward.
-- [ ] Store action acceptance and observed effect as separate receipts.
 - [ ] Add replay/open-loop control condition.
-- [ ] Add sensor-loss/degraded-quality condition.
-- [ ] Add actuator failure/no-effect condition.
+- [x] Store action acceptance and observed effect as separate receipts.
+- [x] Add sensor-loss/degraded-quality condition.
+- [x] Add actuator failure/no-effect condition.
 - [ ] Repeat across seeds and compare adaptation/stability metrics.
 - [ ] Promote validated results to evidence only after protocol checks.
 
@@ -52,7 +52,7 @@ These tasks should produce the next scientific gain before broad feature expansi
 - [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
 - [ ] Profile tick cost by subsystem: core, learning, homeostasis, structural, embodiment, dashboard telemetry and storage.
 - [ ] Profile increasing neuron/synapse counts before optimizing kernels.
-- [ ] Run the two opt-in large-storage tests in a scheduled/explicit large-test job and archive the results.
+- [x] Run the two opt-in large-storage tests in a scheduled/explicit large-test job and archive the results.
 
 ## P1 — 5D causal/ablation program
 
@@ -65,10 +65,10 @@ These tasks should produce the next scientific gain before broad feature expansi
 
 ## P1 — evidence and provenance hardening
 
-- [ ] Add automated documentation link checking to CI.
-- [ ] Add a current-doc consistency check so fixed version/test claims cannot drift silently.
-- [ ] Expand evidence-engine negative tests for incomplete/mismatched provenance.
-- [ ] Ensure all quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
+- [x] Add automated documentation link checking to CI.
+- [x] Add a current-doc consistency check so fixed version/test claims cannot drift silently.
+- [x] Expand evidence-engine negative tests for incomplete/mismatched provenance.
+- [x] Ensure all quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
 - [ ] Add a stable action/outcome provenance view to the dashboard only when backed by a verified endpoint.
 - [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
 

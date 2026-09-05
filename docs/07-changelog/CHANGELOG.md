@@ -545,6 +545,24 @@
 - Räume können eingeklappt, archiviert, wiederhergestellt und gelöscht werden; Unterchat-Kontext wird hierarchisch übergeben.
 - Ollama-Modelle werden entdeckt; Microsoft Copilot ist als OAuth-abhängige, derzeit nicht konfigurierte Option ausgewiesen.
 
+## 2026-09-05 — Evidence, documentation and storage validation
+
+- Hardened the evidence gate so only completed manifests with explicit,
+  consistent validity counters and registered AI-treatment modes can produce
+  scientific evidence.
+- Added regression coverage for incomplete provenance, inconsistent runtime
+  counters, unknown lifecycle states and unknown dashboard API routes.
+- Added a dependency-free documentation checker for local Markdown links,
+  canonical version claims and the collected pytest baseline.
+- Added scheduled/manual CI coverage for the opt-in large `.b5d` and journal
+  storage tests with archived JUnit results.
+- Refreshed the verified suite baseline to 712 collected, 707 passed and 5
+  skipped tests.
+- Extended `EXP-EMB-0001` DATA records with separate action-acceptance and
+  observed-effect receipts.
+- Added deterministic actuator-failure and sensor-loss control conditions;
+  rejected actions and sensor runtime errors remain visible in DATA.
+
 ## 2026-09-03 — AI Research Reports (AIRR)
 
 - Added `PROTOCOL-AIRR-001`, the AIRR schema, and an Analyst -> Critical Reviewer -> Writer pipeline.

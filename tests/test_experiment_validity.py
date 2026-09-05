@@ -532,6 +532,56 @@ class TestEvidenceRejection:
         self._create_manifest(exp_dir, "completed", valid=False)
         assert _check_experiment_valid("EXP-TEST-0001") is None
 
+    def test_unknown_status_rejected(self, tmp_path: Path) -> None:
+        """Only the completed lifecycle state may produce evidence."""
+        import src.research.evidence_engine as ee_module
+
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "paused", valid=True)
+        original_dir = ee_module.EXPERIMENTS_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            assert _check_experiment_valid("EXP-TEST-0001") is None
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+
+    def test_incomplete_validity_rejected(self, tmp_path: Path) -> None:
+        """Missing validity counters cannot be treated as a clean run."""
+        import src.research.evidence_engine as ee_module
+
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del manifest["validity"]["runtime_error_count"]
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        original_dir = ee_module.EXPERIMENTS_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            assert _check_experiment_valid("EXP-TEST-0001") is None
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+
+    def test_inconsistent_validity_counts_rejected(self, tmp_path: Path) -> None:
+        """A clean validity flag cannot override recorded runtime errors."""
+        import src.research.evidence_engine as ee_module
+
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["validity"]["runtime_error_count"] = 1
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        original_dir = ee_module.EXPERIMENTS_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            assert _check_experiment_valid("EXP-TEST-0001") is None
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+
     def test_ai_influenced_run_requires_registered_treatment(
         self, tmp_path: Path
     ) -> None:
@@ -555,6 +605,30 @@ class TestEvidenceRejection:
             }
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
             assert _check_experiment_valid("EXP-TEST-0001") is not None
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+
+    def test_ai_treatment_must_be_registered_with_valid_mode(
+        self, tmp_path: Path
+    ) -> None:
+        import src.research.evidence_engine as ee_module
+
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["causal_taint"] = "AI_INFLUENCED"
+        manifest["ai_treatment"] = {
+            "protocol_id": "PROTOCOL-AI-001",
+            "registered": True,
+            "mode": "unregistered-mode",
+        }
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        original_dir = ee_module.EXPERIMENTS_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            assert _check_experiment_valid("EXP-TEST-0001") is None
         finally:
             ee_module.EXPERIMENTS_DIR = original_dir
 

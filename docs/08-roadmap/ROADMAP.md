@@ -2,7 +2,7 @@
 
 **Canonical roadmap for current `main`**
 **Baseline:** `brain5d-core 0.5.0a7`
-**Updated:** 2026-09-04
+**Updated:** 2026-09-05
 
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
@@ -20,8 +20,11 @@ The following capabilities are already part of `main` and are covered by current
 - bounded Language Organ / Research Assistant contracts;
 - Learning Preparation Studio foundation;
 - typed embodiment, actuator authorization, audit chain and deterministic environment loop;
+- deterministic embodiment DATA controls with separate action/effect receipts,
+  sensor-loss and actuator-failure conditions;
 - real host interoception and dynamic device discovery without fabricated fallback values;
 - responsive seven-workspace operator/research dashboard;
+- documentation link/version/test-count consistency checks and scheduled storage validation;
 - CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification.
 
 ## Roadmap principle

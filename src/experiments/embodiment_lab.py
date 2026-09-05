@@ -59,9 +59,13 @@ class ProtocolRun:
     action_count: int
     network_steps: int
     runtime_error: str | None
+    action_acceptance_receipts: tuple[dict[str, Any], ...]
+    observed_effect_receipts: tuple[dict[str, Any], ...]
 
 
-def _agent(authorized: bool) -> ControlledEmbodimentAgent:
+def _agent(
+    authorized: bool, actuator_failure: bool = False
+) -> ControlledEmbodimentAgent:
     descriptor = ConnectionDescriptor(
         connection_id="target-actuator",
         name="Deterministic target actuator",
@@ -79,6 +83,8 @@ def _agent(authorized: bool) -> ControlledEmbodimentAgent:
         active = True
 
         def apply(self, command: ActionCommand) -> ActuatorResult:
+            if actuator_failure:
+                return ActuatorResult(False, "simulated actuator failure")
             return ActuatorResult(True, command.action)
 
     agent = ControlledEmbodimentAgent(
@@ -90,25 +96,48 @@ def _agent(authorized: bool) -> ControlledEmbodimentAgent:
 
 def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
     authorized = condition == "authorized"
+    sensor = SystemSensorAdapter(lambda tick: {"signal": tick})
+    if condition == "sensor_loss":
+        sensor._active = False
     network = _ProtocolNetwork()
     learning = _RewardRecorder()
     engine = ExperienceEngine(
-        sensor=SystemSensorAdapter(lambda tick: {"signal": tick}),
+        sensor=sensor,
         network=network,
         encoder=lambda frame: {0: float(cast(dict[str, int], frame.payload)["signal"])},
         decoder=lambda result, frame: ActionCommand(
             "target-actuator", frame.tick, "right"
         ),
-        embodiment=_agent(authorized),
+        embodiment=_agent(authorized, actuator_failure=condition == "actuator_failure"),
         learning=cast(Any, learning),
     )
 
     frames: list[dict[str, Any]] = []
+    action_acceptance_receipts: list[dict[str, Any]] = []
+    observed_effect_receipts: list[dict[str, Any]] = []
     try:
         engine.reset(seed=42)
         for tick in range(1, 4):
             record = engine.step(tick)
             frames.append({"tick": record.frame.tick, "payload": record.frame.payload})
+            receipt = engine.embodiment.last_receipt
+            if receipt is None:
+                raise RuntimeError("embodiment did not produce an action receipt")
+            action_acceptance_receipts.append(
+                {
+                    "command_id": receipt.command_id,
+                    "accepted": receipt.accepted,
+                    "error": receipt.error,
+                }
+            )
+            observed_effect_receipts.append(
+                {
+                    "command_id": receipt.command_id,
+                    "completed": receipt.completed,
+                    "effect_observed": receipt.effect_observed,
+                    "latency": receipt.latency,
+                }
+            )
         observation = engine.last_step.observation if engine.last_step else None
         return ProtocolRun(
             run_id=run_id,
@@ -122,6 +151,8 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
             action_count=len(engine.embodiment.audit.records),
             network_steps=network.steps,
             runtime_error=None,
+            action_acceptance_receipts=tuple(action_acceptance_receipts),
+            observed_effect_receipts=tuple(observed_effect_receipts),
         )
     except Exception as error:  # pragma: no cover - protocol records failures as data
         return ProtocolRun(
@@ -136,6 +167,8 @@ def _run_condition(run_id: str, condition: str, repetition: int) -> ProtocolRun:
             action_count=len(engine.embodiment.audit.records),
             network_steps=network.steps,
             runtime_error=f"{type(error).__name__}: {error}",
+            action_acceptance_receipts=tuple(action_acceptance_receipts),
+            observed_effect_receipts=tuple(observed_effect_receipts),
         )
 
 
@@ -146,7 +179,13 @@ def run_protocol(
     repetitions_per_condition: int = 3,
 ) -> dict[str, Any]:
     """Execute all registered conditions and write DATA artifacts."""
-    conditions = ("authorized", "unauthorized", "sensor_reproducibility")
+    conditions = (
+        "authorized",
+        "unauthorized",
+        "actuator_failure",
+        "sensor_loss",
+        "sensor_reproducibility",
+    )
     runs: list[ProtocolRun] = []
     for independent in range(independent_runs):
         for repetition in range(repetitions_per_condition):
@@ -185,6 +224,22 @@ def run_protocol(
                 ),
                 "runtime_errors": sum(
                     run.runtime_error is not None for run in condition_runs
+                ),
+                "accepted_action_count": sum(
+                    receipt["accepted"]
+                    for run in condition_runs
+                    for receipt in run.action_acceptance_receipts
+                ),
+                "observed_effect_count": sum(
+                    receipt["effect_observed"] is True
+                    for run in condition_runs
+                    for receipt in run.observed_effect_receipts
+                ),
+                "acceptance_receipts_complete": all(
+                    len(run.action_acceptance_receipts) == 3 for run in condition_runs
+                ),
+                "effect_receipts_complete": all(
+                    len(run.observed_effect_receipts) == 3 for run in condition_runs
                 ),
             }
             for condition, condition_runs in by_condition.items()
