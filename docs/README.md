@@ -1,6 +1,6 @@
 # Brain-5D Documentation
 
-This directory contains both **current canonical documentation** and **historical versioned records**. The distinction is intentional: historical Alpha, Sprint, Release and Update documents remain useful for traceability, but they must not be read as the current repository state.
+This directory contains both **current canonical documentation** and **historical versioned records**. Historical Alpha, Sprint, Release and Update documents remain useful for traceability, but they must not be read as the current repository state.
 
 ## Source of truth
 
@@ -21,6 +21,7 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 | --- | --- |
 | Project overview | [`../README.md`](../README.md) |
 | Architecture | [`02-architecture/ARCHITECTURE.md`](02-architecture/ARCHITECTURE.md) |
+| Adaptive Wesen body view | [`02-architecture/WESEN_ADAPTIVE_BODY.md`](02-architecture/WESEN_ADAPTIVE_BODY.md) |
 | Storage format | [`02-architecture/B5D_FORMAT.md`](02-architecture/B5D_FORMAT.md) |
 | Real-body embodiment | [`02-architecture/EMBODIMENT_REAL_BODY.md`](02-architecture/EMBODIMENT_REAL_BODY.md) |
 | Learning preparation | [`02-architecture/LEARNING_PREPARATION_STUDIO.md`](02-architecture/LEARNING_PREPARATION_STUDIO.md) |
@@ -34,15 +35,30 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 | Security | [`../SECURITY.md`](../SECURITY.md) |
 | Contribution workflow | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
+## Current dashboard terminology
+
+The canonical frontend terminology is:
+
+- **Overview** — summary/runtime context;
+- **Control** — explicit operator controls;
+- **Research** — research/evidence workflows;
+- **Settings** — configuration;
+- **Wesen** — adaptive read-only live machine-body visualization;
+- **Embodiment** — technical sensor/device/actuator/body-boundary surface;
+- **Release/Gate** — footer-accessed legacy release-readiness surface;
+- **Network** — no longer a primary user-facing workspace.
+
+`Wesen` must never be described as proof of consciousness or self-awareness. Its recurrence, loopback, morphology and body-state visuals are technical observations/derived presentation state only.
+
 ## Directory map
 
-- `01-guides/` — operator/developer guides. Version-specific installation and hotfix guides may be historical.
-- `02-architecture/` — architecture and subsystem contracts. Files with explicit Alpha/version suffixes describe those boundaries.
+- `01-guides/` — operator/developer guides. Version-specific installation/hotfix guides may be historical.
+- `02-architecture/` — architecture and subsystem contracts.
 - `03-dashboard/` — dashboard contracts and UI/API documentation.
 - `04-integration/` — integration notes, overlays and legacy patches.
 - `05-quality/` — quality and release-gate definitions.
-- `06-research/` — research notes, dissertations and conceptual documents. These are not automatically empirical evidence.
-- `07-changelog/` — changelog history.
+- `06-research/` — research notes, dissertations and conceptual documents; not automatically empirical evidence.
+- `07-changelog/` — changelog history, including dated current-change records.
 - `08-roadmap/` — current roadmap/TODO plus historical phase-specific roadmaps.
 - `09-sprints/` — time-boxed sprint records; historical unless explicitly referenced by current roadmap.
 - `10-releases/` — release checklists and release notes.
@@ -52,10 +68,12 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 
 ## Historical-document rule
 
-A filename containing a previous version, `ALPHA*`, `SPRINT*`, `V0*`, `UPDATE*`, `RELEASE_*`, or an entry under `99-archive/` is a historical record unless a canonical current document links to it as an active contract. Old test counts, commit hashes, milestones and implementation status inside those files are therefore not current project metadata.
+A filename containing a previous version, `ALPHA*`, `SPRINT*`, `V0*`, `UPDATE*`, `RELEASE_*`, or an entry under `99-archive/` is a historical record unless a canonical current document links to it as an active contract. Old test counts, commit hashes, milestones and implementation status inside those files are not current project metadata.
 
 ## Documentation maintenance
 
-Current-state facts should be stated once in canonical documents and linked elsewhere. Avoid copying fixed test counts or commit hashes into many files because they become stale quickly. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
+Current-state facts should be stated in canonical documents and linked elsewhere. Avoid copying fixed test counts or commit hashes into many files because they become stale quickly. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
+
+The 2026-09-05 adaptive Wesen redesign is recorded in [`07-changelog/2026-09-05_WESEN.md`](07-changelog/2026-09-05_WESEN.md).
 
 **Current development policy:** `main` is the canonical branch. Short-lived branches should be merged through reviewed/verified changes and deleted after merge. New work starts from current `origin/main`.
