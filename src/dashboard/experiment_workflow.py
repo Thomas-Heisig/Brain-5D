@@ -204,9 +204,12 @@ class ExperimentWorkflowService:
         self, body: dict[str, object], *, seeds: tuple[int, ...] | None = None
     ) -> dict[str, object]:
         """Execute a registered suite and persist DATA, manifest, and report."""
-        workflow = self._validate(body)
-        runner_name = self._science_runner(body, workflow.experiment_id)
+        science_body = dict(body)
+        science_body.setdefault("protocol", "science_suite_v1")
+        workflow = self._validate(science_body)
+        runner_name = self._science_runner(science_body, workflow.experiment_id)
         effective_seeds = seeds if seeds is not None else workflow.seeds
+        workflow = replace(workflow, seeds=effective_seeds)
         output_dir = self._research_root / "experiments" / workflow.experiment_id
         if (output_dir / "manifest.json").exists():
             raise WorkflowValidationError(

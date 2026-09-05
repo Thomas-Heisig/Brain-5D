@@ -23,3 +23,10 @@ Die Auswahl des Runners erfolgt ueber das gewaehlte Protokoll. Eine automatische
 oder manuelle `EXP-*`-ID ist nur die traceable Kennzeichnung des Laufs und muss
 nicht einer vorregistrierten Runner-ID entsprechen. Bereits publizierte IDs duerfen
 nicht wiederverwendet werden.
+
+Der Dashboard-Runner bietet pro Protokoll passende Voreinstellungen. Seeds können
+als CSV-Liste oder kompakter Bereich (`42,43,44` bzw. `0-29`) eingegeben werden.
+Das Tick-Budget wird für PING/5D als Messdauer und für TIME als obere Stufe der
+Tick-Leiter ausgeführt. Freitext-Bedingungen werden als Versuchsmetadaten
+persistiert; nur als ausführbar ausgewiesene Parameter (Seeds, Ticks und
+Protokoll) steuern den Lauf.

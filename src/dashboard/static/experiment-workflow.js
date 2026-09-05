@@ -22,6 +22,7 @@ export class ExperimentWorkflowPanel {
     this.questions = [];
     this.hypotheses = [];
     this.nextExperimentId = "";
+    this.activePreset = null;
     this.elements = {
       question: byId("workflow-question"),
       hypothesis: byId("workflow-hypothesis"),
@@ -140,21 +141,89 @@ export class ExperimentWorkflowPanel {
   _applyProtocol() {
     const protocol = this.elements.protocol?.value;
     const presets = {
-      science_suite_v1: ["RQ-PING-001", "H-PING-001-A", "Network impulse response", "Identischer Zustand, Seed und Input-Spike; Rekurrenz kontrolliert.", "8"],
-      science_time_v1: ["RQ-TIME-001", "H-TIME-001-A", "Learning timescale calibration", "Unabhängige Seeds; Tick-Leiter 100 bis 1.000.000; keine automatische Wiederholung.", "1000000"],
-      science_5d_v1: ["RQ-5D-001", "H-5D-001-A", "Dimensional ablation", "1D, 2D, 3D, 5D und Random-Graph; 30 Seeds je Bedingung.", "8"],
-      stdp_pair_timing_v1: ["RQ-STDP-001", "H-STDP-001-A", "Pair-Timing STDP", "Isolierte STDPSynapse; Seed 42; Startgewicht 0.5; Δt -50 bis +50 ms; 10 Replikationen pro Δt.", "11"],
+      science_suite_v1: {
+        question: "RQ-PING-001",
+        hypothesis: "H-PING-001-A",
+        title: "Network impulse response",
+        conditions: "Seeds 42,43,44; identischer Anfangszustand je Seed; Impulsstrom 100.0; Rekurrenz als kontrollierte Behandlung.",
+        ticks: "8",
+        seeds: "42,43,44",
+        profiles: {
+          standard: "Seeds 42,43,44; identischer Anfangszustand je Seed; Impulsstrom 100.0; Rekurrenz als kontrollierte Behandlung.",
+          replication: "Seeds 42,43,44; zwei identische Replikate je Behandlung; Response-Signatur und Zustands-Digest vergleichen.",
+          sensitivity: "Seeds 42,43,44; nur die Rekurrenzbehandlung variieren; alle übrigen Parameter konstant halten.",
+        },
+      },
+      science_time_v1: {
+        question: "RQ-TIME-001",
+        hypothesis: "H-TIME-001-A",
+        title: "Learning timescale calibration",
+        conditions: "Seeds 42,43,44; Tick-Leiter bis 1.000.000; Laufzeit pro Stufe messen.",
+        ticks: "1000000",
+        seeds: "42,43,44",
+        profiles: {
+          standard: "Seeds 42,43,44; Tick-Leiter bis 1.000.000; Laufzeit pro Stufe messen.",
+          short: "Seeds 42,43,44; Tick-Leiter bis 10.000; schneller Kalibrierungslauf vor dem Langzeittest.",
+        },
+      },
+      science_5d_v1: {
+        question: "RQ-5D-001",
+        hypothesis: "H-5D-001-A",
+        title: "Dimensional ablation",
+        conditions: "Seeds 0-29; 1D, 2D, 3D, 5D und Random-Graph; nur Dimension bzw. Topologie variieren.",
+        ticks: "8",
+        seeds: "0-29",
+        profiles: {
+          standard: "Seeds 0-29; 1D, 2D, 3D, 5D und Random-Graph; nur Dimension bzw. Topologie variieren.",
+          pilot: "Seeds 0-2; alle Dimensionen und Topologien als kostenguenstiger Pilotlauf.",
+        },
+      },
+      stdp_pair_timing_v1: {
+        question: "RQ-STDP-001",
+        hypothesis: "H-STDP-001-A",
+        title: "Pair-Timing STDP",
+        conditions: "Registriertes Protokoll: isolierte STDPSynapse; Startgewicht 0.5; Delta-t -50 bis +50 ms; 10 Replikationen je Delta-t.",
+        ticks: "11",
+        seeds: "42",
+        profiles: { standard: "Registriertes Protokoll; Eingaben werden durch protocol.json festgelegt." },
+      },
+      runtime_ticks_v1: {
+        question: "",
+        hypothesis: "",
+        title: "Kontrollierter Runtime-Lauf",
+        conditions: "Seed, Konfiguration, Replikate und Abbruchkriterien explizit dokumentieren.",
+        ticks: "100",
+        seeds: "42",
+        profiles: { standard: "Seed, Konfiguration, Replikate und Abbruchkriterien explizit dokumentieren." },
+      },
     };
     const preset = presets[protocol];
     if (!preset) return;
+    this.activePreset = preset;
     const question = this.elements.question;
     const hypothesis = this.elements.hypothesis;
-    if (question) question.value = preset[0];
+    if (question && preset.question) question.value = preset.question;
     this._renderHypotheses();
-    if (hypothesis) hypothesis.value = preset[1];
-    if (this.elements.title) this.elements.title.value = preset[2];
-    if (this.elements.conditions) this.elements.conditions.value = preset[3];
-    if (this.elements.ticks) this.elements.ticks.value = preset[4];
+    if (hypothesis && preset.hypothesis) hypothesis.value = preset.hypothesis;
+    if (this.elements.title) this.elements.title.value = preset.title;
+    if (this.elements.ticks) this.elements.ticks.value = preset.ticks;
+    if (this.elements.seeds) this.elements.seeds.value = preset.seeds;
+    if (this.elements.conditionProfile) this.elements.conditionProfile.value = "standard";
+    this._applyConditionProfile(preset);
+
+    const fixedProtocol = protocol === "stdp_pair_timing_v1";
+    [this.elements.question, this.elements.hypothesis, this.elements.title, this.elements.conditions, this.elements.seeds, this.elements.ticks, this.elements.conditionProfile].forEach((element) => {
+      if (element) element.disabled = fixedProtocol;
+    });
+  }
+
+  _applyConditionProfile(preset = this.activePreset) {
+    const profiles = preset?.profiles || {
+      standard: this.elements.conditions?.value || "",
+    };
+    const profile = this.elements.conditionProfile?.value || "standard";
+    const condition = profiles[profile] || profiles.standard || "";
+    if (this.elements.conditions && condition) this.elements.conditions.value = condition;
   }
 
   _setStatus(message, state) {

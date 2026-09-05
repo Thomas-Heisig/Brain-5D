@@ -45,6 +45,9 @@ class TestExperimentModeFrontendWiring:
         assert "onCompleted" in workflow_js
         assert "refreshFileManager" in app_js
         assert 'id="fm-experiment-sort"' in html
+        assert 'id="workflow-seeds"' in html
+        assert 'id="workflow-condition-profile"' in html
+        assert "0-29" in workflow_js
 
     def test_release_summary_uses_canonical_status_sections(self) -> None:
         html = _read_static("index.html")

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-05 — Experiment Runner inputs and conditions
+
+- Der Dashboard-Runner akzeptiert einzelne Seeds, CSV-Listen und Bereiche wie
+  `0-29`; Seeds werden validiert, dedupliziert und in Workflow/Manifest/Report
+  persistiert.
+- PING-, 5D- und TIME-Läufe verwenden das eingestellte Tick-Budget tatsächlich;
+  die bisherigen widersprüchlichen festen Messdauern entfallen.
+- Protokollspezifische Voreinstellungen und Bedingungsvorlagen für Standard-,
+  Replikations-, Sensitivitäts-, Pilot- und Kurzläufe wurden ergänzt.
+
 ## 2026-09-05 — EXP-GEN-0007 Provenance and impulse response repair
 
 - Die kontrollierte Network-Impulse-Probe überträgt Impulse nun mit einem

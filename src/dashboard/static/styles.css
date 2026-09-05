@@ -1812,6 +1812,7 @@ body .footer-segment {
   color: var(--text);
   font: inherit;
 }
+.workflow-field-hint { color: var(--muted); font-size: .65rem; }
 .workflow-wide { grid-column: 1 / -1; }
 .workflow-actions { align-items: flex-start; }
 .workflow-actions pre { flex: 1; min-width: 0; margin: 0; color: var(--muted); font: .72rem/1.4 var(--font-mono); white-space: pre-wrap; }

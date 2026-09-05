@@ -42,6 +42,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Deterministic persistence/restore infrastructure implemented and tested.
 - [x] Research Experiment Runner separates execution protocol from automatic/manual experiment IDs.
 - [x] Science-suite impulse responses publish observable propagation and complete DATA/configuration provenance.
+- [x] Experiment Runner exposes protocol-specific defaults, seed ranges and effective tick budgets in the persisted workflow.
 
 ## P0 — engineering verification after current frontend integration
 

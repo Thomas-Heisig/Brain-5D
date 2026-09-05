@@ -289,6 +289,36 @@ def test_science_suite_accepts_generated_experiment_id(tmp_path: Path) -> None:
     assert {run["experiment_id"] for run in runs} == {"EXP-GEN-0001"}
 
 
+def test_science_suite_uses_selected_seeds_and_ticks(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+
+    result = service.run_science(
+        {
+            "experiment_id": "EXP-GEN-0002",
+            "question_id": "RQ-SNN-001",
+            "hypothesis_id": "H-SNN-001-A",
+            "title": "Configured impulse response",
+            "conditions": "Seeds 7-8; measurement window 3 ticks",
+            "ticks": 3,
+            "seeds": "7-8",
+            "protocol": "science_suite_v1",
+        }
+    )
+
+    experiment_dir = tmp_path / "experiments" / "EXP-GEN-0002"
+    runs = json.loads(
+        (experiment_dir / "DATA" / "runs.json").read_text(encoding="utf-8")
+    )
+    workflow = json.loads(
+        (experiment_dir / "workflow.json").read_text(encoding="utf-8")
+    )
+    assert result["experiment_id"] == "EXP-GEN-0002"
+    assert {run["seed"] for run in runs} == {7, 8}
+    assert workflow["seeds"] == [7, 8]
+    assert workflow["ticks"] == 3
+
+
 def test_science_protocol_selection_overrides_manual_label_prefix(
     tmp_path: Path,
 ) -> None:
@@ -314,14 +344,8 @@ def test_science_protocol_selection_overrides_manual_label_prefix(
         )
     )
     assert result["experiment_id"] == "EXP-MANUAL-0001"
-    assert len(runs) == 5
-    assert {run["condition"] for run in runs} == {
-        "100",
-        "1000",
-        "10000",
-        "100000",
-        "1000000",
-    }
+    assert len(runs) == 1
+    assert {run["condition"] for run in runs} == {"100"}
 
 
 def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(

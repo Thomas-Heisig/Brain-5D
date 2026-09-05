@@ -493,12 +493,14 @@
           <li>Forschungsfrage</li><li>Bedingungen</li><li>Experiment</li><li>Ausfuehren</li><li>Bericht</li><li>Ergebnis</li>
         </ol>
         <div class="workflow-form-grid">
-          <label>Protokoll<select id="workflow-protocol"><option value="science_suite_v1">Science PING/TEMP/STDP (DATA + Manifest)</option><option value="science_time_v1">Science TIME v1 (DATA + Manifest)</option><option value="science_5d_v1">Science 5D v1 (DATA + Manifest)</option><option value="runtime_ticks_v1">Runtime-Ticks (Laufprotokoll)</option><option value="stdp_pair_timing_v1">STDP Pair-Timing v1 (registriert)</option></select></label>
+          <label>Protokoll<select id="workflow-protocol"><option value="science_suite_v1">Science PING: Impulsantwort</option><option value="science_time_v1">Science TIME: Tick-Leiter</option><option value="science_5d_v1">Science 5D: Dimensionsvergleich</option><option value="runtime_ticks_v1">Runtime-Ticks: kontrollierter Lauf</option><option value="stdp_pair_timing_v1">STDP Pair-Timing: registriert</option></select></label>
           <label>Forschungsfrage<select id="workflow-question"></select></label>
           <label>Hypothese<select id="workflow-hypothesis"></select></label>
           <label>Experiment-ID (optional)<input id="workflow-experiment-id" type="text" placeholder="automatisch: EXP-GEN-0001"></label>
           <label>Titel<input id="workflow-title" type="text" placeholder="Kurzer, reproduzierbarer Versuchstitel"></label>
-          <label>Ticks<input id="workflow-ticks" type="number" min="1" max="100000" value="100"></label>
+          <label>Mess-Ticks<input id="workflow-ticks" type="number" min="1" max="1000000" value="8"><small class="workflow-field-hint">PING/5D: Messdauer; TIME: oberste Tick-Stufe</small></label>
+          <label>Seeds<input id="workflow-seeds" type="text" inputmode="numeric" placeholder="42,43,44"><small class="workflow-field-hint">Kommagetrennt oder Bereich, z.B. 0-29</small></label>
+          <label>Bedingungsvorlage<select id="workflow-condition-profile"><option value="standard">Standard</option><option value="replication">Replikation</option><option value="sensitivity">Sensitivitaet</option><option value="pilot">Pilot</option><option value="short">Kurzlauf</option></select></label>
           <label class="workflow-wide">Bedingungen<textarea id="workflow-conditions" rows="3" placeholder="Seed, Konfiguration, Replikate und Abbruchkriterien"></textarea></label>
           <label class="workflow-wide">Beobachtung / Hinweise<textarea id="workflow-notes" rows="2" placeholder="Optionale Beobachtungen; keine KI-Ausgabe wird als Evidenz verwendet"></textarea></label>
         </div>
