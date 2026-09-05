@@ -29,7 +29,7 @@ class ResearchAssistant:
         question_id = _one_str(manifest, "research_questions")
         question = _by_id(questions, question_id)
         hypothesis_ids = _string_list(manifest, "hypotheses")
-        data = self._data_for_manifest(manifest)
+        data = self._data_for_manifest(experiment_id, manifest)
         statistics_path = (
             self._root / "experiments" / experiment_id / "analysis" / "statistics.json"
         )
@@ -39,7 +39,7 @@ class ResearchAssistant:
                 str(statistics_path.relative_to(self._root))
             )
         evidence = self._evidence_for_experiment(experiment_id)
-        protocol = self._protocol_for_manifest(manifest)
+        protocol = self._protocol_for_manifest(experiment_id, manifest)
         previous_analyses = self._previous_analyses(experiment_id)
         manifest_path = self._root / "experiments" / experiment_id / "manifest.json"
         manifest_digest = _file_digest(manifest_path)
@@ -48,12 +48,8 @@ class ResearchAssistant:
                 "path", "NOT_AVAILABLE"
             )
         )
-        config_file = (
-            self._root.parent / config_path
-            if config_path.startswith("research/")
-            else None
-        )
-        data_path = _artifact_path(self._root.parent, manifest, "data")
+        config_file = _config_path(self._root, config_path)
+        data_path = _artifact_path(self._root, manifest, "data", experiment_id)
         return ResearchPacket(
             experiment_id=experiment_id,
             research_question=question,
@@ -131,25 +127,30 @@ class ResearchAssistant:
         )
         return record
 
-    def _data_for_manifest(self, manifest: dict[str, Any]) -> dict[str, Any] | None:
-        artifacts_raw = manifest.get("artifacts", {})
-        if not isinstance(artifacts_raw, dict):
+    def _data_for_manifest(
+        self, experiment_id: str, manifest: dict[str, Any]
+    ) -> dict[str, Any] | None:
+        path = _artifact_path(self._root, manifest, "data", experiment_id)
+        if path is None or not path.is_file():
             return None
-        artifacts = cast(dict[str, Any], artifacts_raw)
-        path = artifacts.get("data")
-        if not isinstance(path, str) or not path.startswith("research/"):
-            return None
-        return self._read_json(path.removeprefix("research/"))
+        raw_data: Any = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(raw_data, list):
+            return {"runs": raw_data}
+        return cast(dict[str, Any], raw_data) if isinstance(raw_data, dict) else None
 
-    def _protocol_for_manifest(self, manifest: dict[str, Any]) -> dict[str, Any] | None:
-        config = manifest.get("config", {})
-        if not isinstance(config, dict):
-            return None
-        path = cast(dict[str, Any], config).get("path")
-        if not isinstance(path, str) or not path.startswith("research/"):
+    def _protocol_for_manifest(
+        self, experiment_id: str, manifest: dict[str, Any]
+    ) -> dict[str, Any] | None:
+        path = _artifact_path(self._root, manifest, "workflow", experiment_id)
+        if path is None or not path.is_file():
             return None
         try:
-            return self._read_json(path.removeprefix("research/"))
+            raw_protocol: Any = json.loads(path.read_text(encoding="utf-8"))
+            return (
+                cast(dict[str, Any], raw_protocol)
+                if isinstance(raw_protocol, dict)
+                else None
+            )
         except (FileNotFoundError, ValueError, json.JSONDecodeError):
             return None
 
@@ -266,15 +267,33 @@ def _file_digest(path: Path | None) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _artifact_path(root: Path, manifest: dict[str, Any], name: str) -> Path | None:
+def _artifact_path(
+    root: Path, manifest: dict[str, Any], name: str, experiment_id: str
+) -> Path | None:
     artifacts = manifest.get("artifacts")
     if not isinstance(artifacts, dict):
         return None
     artifact_map = cast(dict[str, Any], artifacts)
     value = artifact_map.get(name)
-    if not isinstance(value, str) or not value.startswith("research/"):
+    if not isinstance(value, str):
         return None
-    return root / value
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    if value.startswith("research/"):
+        return root / value.removeprefix("research/")
+    return root / "experiments" / experiment_id / value
+
+
+def _config_path(root: Path, value: str) -> Path | None:
+    if not value or value == "NOT_AVAILABLE":
+        return None
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    if value.startswith("research/"):
+        return root / value.removeprefix("research/")
+    return root.parent / value
 
 
 def _json_digest(value: dict[str, Any] | None) -> str:

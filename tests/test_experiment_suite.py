@@ -29,6 +29,8 @@ def test_ping_is_reproducible_for_identical_seed() -> None:
     second = run_ping(_config(), seeds=(42,))
     assert first == second
     assert {run.condition for run in first} == {"recurrence_off", "recurrence_on"}
+    assert all(run.metrics["total_spikes"] > 0 for run in first)
+    assert all(run.metrics["activated_neurons"] > 0 for run in first)
 
 
 def test_ping_v2_repeats_identical_initial_states_and_responses() -> None:

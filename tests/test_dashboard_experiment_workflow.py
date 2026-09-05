@@ -249,6 +249,9 @@ def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     assert manifest["artifacts"]["data"] == "DATA/runs.json"
     assert manifest["artifacts"]["workflow"] == "workflow.json"
     assert manifest["artifacts"]["report"] == "report.md"
+    assert len(manifest["config"]["sha256"]) == 64
+    assert len(manifest["source_freeze_sha"]) == 64
+    assert len(manifest["provenance_digests"]["data"]) == 64
     assert len(data) == 2
     assert (experiment_dir / "report.md").is_file()
     assert (experiment_dir / "summary.md").is_file()
@@ -362,3 +365,13 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     assert "Empfohlene Folgeexperimente:" in summary
     assert f"{report_id}.md" in summary
     assert "Post-hoc summary" in summary
+
+    report = json.loads(
+        (report_dir / f"{report_id}.json").read_text(encoding="utf-8")
+    )
+    assert report["content"]["epistemic_status"]["experiment_data"] == "PRESENT"
+    assert report["content"]["data_basis"]["data"]["runs"]
+    assert report["content"]["experimental_design"]["protocol"] == "science_suite_v1"
+    assert report["content"]["reproducibility"]["configuration_sha256"] != (
+        "NOT_AVAILABLE"
+    )

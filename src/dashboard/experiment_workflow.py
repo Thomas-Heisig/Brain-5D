@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
@@ -215,7 +216,9 @@ class ExperimentWorkflowService:
         )
         if not config_path.exists():
             config_path = Path("configs/learning_experiment.yaml")
+        config_path = config_path.resolve()
         config = _load_yaml(config_path)
+        config_digest = _sha256_file(config_path)
         started = perf_counter()
         runs = getattr(experiment_suite, runner_name)(config, seeds=seeds)
         runs = [replace(run, experiment_id=workflow.experiment_id) for run in runs]
@@ -232,7 +235,7 @@ class ExperimentWorkflowService:
         )
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
-        recorder.record_config(str(config_path), "")
+        recorder.record_config(str(config_path), config_digest)
         recorder.record_simulation_params(
             seed=seeds[0], ticks=workflow.ticks, seeds=list(seeds)
         )
@@ -265,6 +268,12 @@ class ExperimentWorkflowService:
             )
             + "\n",
             encoding="utf-8",
+        )
+        recorder.record_provenance_digests(
+            code_digest=_sha256_file(Path(cast(str, experiment_suite.__file__))),
+            config_digest=config_digest,
+            prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),
+            data_digest=_sha256_file(data_path),
         )
         recorder.record_runtime(duration).mark_completed().save()
         ai_report = self._append_ai_report(workflow.experiment_id)
@@ -555,3 +564,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(loaded, dict):
         raise WorkflowValidationError("Science configuration must be a mapping.")
     return cast(dict[str, Any], loaded)
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
