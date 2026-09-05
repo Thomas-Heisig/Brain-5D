@@ -15,7 +15,7 @@ Brain-5D is a research framework for studying learning, self-organization and em
 As of **2026-09-05**, `main` is the canonical development line.
 
 - package version: `0.5.0a7`
-- current test collection after the adaptive organism v2 regression additions: **725 tests**
+- current test collection after the Wesen anatomy v3 regression additions: **727 tests**
 - fast-suite coverage baseline: **72%**
 - Scientific Integrity Gate is part of the required CI path
 - wheel build/install and Docker verification remain part of release verification
@@ -49,9 +49,11 @@ Brain-5D intentionally separates the technical body interface from the live body
 
 The `Wesen` page builds its morphology from currently published connections rather than from a fixed human-like anatomy. Sensor and actuator branches appear from observed connection data; unsupported or missing endpoints stay explicitly unavailable. Host CPU, memory, temperature, fan, disk and timing signals are treated as machine-native interoception where available.
 
-Adaptive organism v2 adds a bounded force-directed presentation layout and a convex-hull membrane so the body can grow or retract asymmetrically when endpoints change. External services can appear as satellites outside the membrane. The body stage supports pointer-centered zoom, pan, focus fading and whole-body reset.
+Adaptive organism v2 provides semantic device icons, tooltips, camera pan/zoom, timeline, satellites and delayed self-model. Anatomy v3 adds a **body-like but machine-native scaffold**: a sensory head zone, central SNN core, torso interoception, a feedback/spine path and actuator branches that extend as arm-/leg-like output regions. The scaffold is presentation-only and does not imply biological homology.
 
-The body visualization is now **icon-first**. Device labels and metric strings are removed from the crowded SVG body and replaced by semantic symbols for camera, microphone, speaker, display, GPU, network, USB, storage, printer, robotics and related endpoint classes. Full labels/values remain available through SVG tooltips and the inspector. A scrollable icon dock below the body provides guaranteed mouse/keyboard access to every discovered endpoint even when the graph is dense.
+The body visualization is icon-first. Device labels and metric strings are removed from the crowded SVG body and replaced by semantic symbols for camera, microphone, speaker, display, GPU, network, USB, storage, printer, robotics and related endpoint classes. Full labels/values remain available through SVG tooltips and the inspector. A scrollable icon dock below the body provides guaranteed mouse/keyboard access to every discovered endpoint even when the body is dense.
+
+An empirical overlay now consumes additional read-only backend sources when available: `/api/embodiment/metrics`, `/api/embodiment/history`, `/api/embodiment/pipeline`, `/api/live/io-flow` and `/api/live/population`. It can display measured active fraction, spikes, input/output flow, quality, sensory integrity, resource pressure, continuity risk and pipeline availability. Missing values remain `—` and are never replaced by invented constants.
 
 The delayed self-model uses a bounded frame ring buffer and selects the earlier body frame matching reported loopback latency where available. Browser-local morphology snapshots can be inspected with a timeline scrubber. These snapshots are operator history only and are not scientific DATA/EVID.
 
