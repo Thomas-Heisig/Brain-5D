@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.1
+ * @version 1.4.2
  * @license MIT
  */
 
@@ -34,13 +34,18 @@ function formatTime(date = new Date()) {
 }
 
 function ensureWesenStylesheet() {
-  if (!document.querySelector('link[data-wesen-style="true"]')) {
+  const stylesheets = [
+    ["wesen-base", "/wesen.css"],
+    ["wesen-adaptive", "/wesen-adaptive.css"],
+  ];
+  stylesheets.forEach(([name, href]) => {
+    if (document.querySelector(`link[data-wesen-style="${name}"]`)) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/wesen.css";
-    link.dataset.wesenStyle = "true";
+    link.href = href;
+    link.dataset.wesenStyle = name;
     document.head.appendChild(link);
-  }
+  });
   if (!document.querySelector('style[data-wesen-navigation="true"]')) {
     const style = document.createElement("style");
     style.dataset.wesenNavigation = "true";
@@ -116,7 +121,7 @@ function simplifyEmbodimentCopy() {
   const note = document.createElement("div");
   note.dataset.simpleEmbodimentNote = "true";
   note.className = "dashboard-utility-bar";
-  note.innerHTML = '<span class="dashboard-utility-context">Embodiment bleibt die einfache technische Schnittstellen-Seite. Die lebendige Echtzeitdarstellung befindet sich unter <strong>Wesen</strong>.</span>';
+  note.innerHTML = '<span class="dashboard-utility-context">Embodiment bleibt die einfache technische Schnittstellen-Seite. Die adaptive Echtzeitdarstellung befindet sich unter <strong>Wesen</strong>.</span>';
   header?.insertAdjacentElement("afterend", note);
 }
 
@@ -182,25 +187,16 @@ export class ConsoleLog {
     }
   }
 
-  /**
-   * Clear the log.
-   */
+  /** Clear the log. */
   clear() {
-    if (this.container) {
-      this.container.innerHTML = "";
-    }
+    if (this.container) this.container.innerHTML = "";
     this.entries = [];
   }
 
-  /**
-   * Get all entries.
-   */
+  /** Get all entries. */
   getEntries() {
     return [...this.entries];
   }
 }
 
-/**
- * Shared console log instance.
- */
 export const consoleLog = new ConsoleLog("console-output");
