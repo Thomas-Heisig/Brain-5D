@@ -88,7 +88,7 @@ class AIAnalysisRecord:
                 "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
                 "research_packet_digest": packet.digest,
                 "prompt_protocol_version": "research_assistant_v1",
-                "assistant_schema_version": "1.1",
+                "assistant_schema_version": "1.2",
                 "git_commit": packet.provenance.get("git_commit", "unknown"),
                 "model_self_confidence": str(float(normalized_output["confidence"])),
             },
@@ -108,29 +108,51 @@ class AIAnalysisRecord:
 
 
 def _normalize_output(output: dict[str, Any]) -> dict[str, Any]:
-    """Normalize narrow, lossless model-format variations before validation.
+    """Normalize common model-format variations before schema validation.
 
-    LLM backends occasionally serialize a numeric confidence as a JSON string
-    (for example ``"0.85"`` or ``"85%"``). Rejecting an otherwise valid AIRR
-    because of that transport-level representation is not scientifically useful.
-    This function only normalizes unambiguous numeric representations; qualitative
-    labels such as ``"high"`` remain invalid.
+    Numeric strings and percentages are converted losslessly. If a model emits a
+    qualitative, missing, boolean, non-finite, or out-of-range confidence value,
+    the analysis itself is retained but its confidence is conservatively set to
+    0.0. The original representation is preserved in ``confidence_original`` and
+    the repair is recorded as a methodological concern. A formatting defect must
+    not destroy an otherwise auditable analyst/reviewer/writer chain.
     """
 
     normalized = dict(output)
-    confidence = normalized.get("confidence")
-    if isinstance(confidence, str):
-        text = confidence.strip().replace(",", ".")
+    raw_confidence = normalized.get("confidence")
+    parsed: float | None = None
+
+    if isinstance(raw_confidence, (int, float)) and not isinstance(raw_confidence, bool):
+        parsed = float(raw_confidence)
+    elif isinstance(raw_confidence, str):
+        text = raw_confidence.strip().replace(",", ".")
         percentage = text.endswith("%")
         if percentage:
             text = text[:-1].strip()
         try:
-            value = float(text)
+            parsed = float(text)
         except ValueError:
-            return normalized
-        if percentage:
-            value /= 100.0
-        normalized["confidence"] = value
+            parsed = None
+        if parsed is not None and percentage:
+            parsed /= 100.0
+
+    if parsed is not None and parsed == parsed and 0.0 <= parsed <= 1.0:
+        normalized["confidence"] = parsed
+        return normalized
+
+    normalized["confidence_original"] = raw_confidence
+    normalized["confidence"] = 0.0
+    concerns = normalized.get("methodological_concerns")
+    if not isinstance(concerns, list):
+        concerns = []
+    else:
+        concerns = list(concerns)
+    concerns.append(
+        "Die vom Modell ausgegebene confidence war schemawidrig oder ausserhalb "
+        "des Bereichs 0..1. Sie wurde fuer die AIRR-Provenienz konservativ auf "
+        "0.0 gesetzt; der Originalwert bleibt als confidence_original erhalten."
+    )
+    normalized["methodological_concerns"] = concerns
     return normalized
 
 
