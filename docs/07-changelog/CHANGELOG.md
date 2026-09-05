@@ -8,6 +8,8 @@
   publizierten Vorlagen-IDs.
 - Der registrierte STDP-Pair-Timing-Pfad akzeptiert ebenfalls generierte und
   manuelle IDs und schreibt diese konsistent in DATA, Manifest und Report.
+- Die Ergebnisanzeige verarbeitet nun sowohl Tick-Läufe als auch Science-Suite-
+  Antworten mit Run-Anzahl und Dauer.
 
 ## 2026-09-04 — Gate-Evidence aktualisiert
 
