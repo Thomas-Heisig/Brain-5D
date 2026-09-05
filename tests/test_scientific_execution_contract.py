@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 from __future__ import annotations
 
 import json
@@ -171,3 +172,33 @@ def test_detailed_summary_contains_data_formulas_runs_and_tick_contract(
     assert "Einzelne Läufe" in summary
     assert stats["generated_by"] == "deterministic_statistics_engine"
     assert stats["temporal_horizons"]["slow"]["discrepancy"]["mean"] == 1.1
+
+
+def test_summary_semantics_distinguish_direct_and_contained_matches() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    direct, _ = _semantic_status(
+        "RQ-TEMP-001", "science_suite_v1", {"fast_medium_slow"}
+    )
+    contained, _ = _semantic_status(
+        "RQ-TEMP-001",
+        "science_all_v1",
+        {"ping:recurrence_off", "temporal:fast_medium_slow", "5d:5d"},
+    )
+    mismatch, _ = _semantic_status(
+        "RQ-TEMP-001", "science_suite_v1", {"recurrence_off", "recurrence_on"}
+    )
+    assert direct == "DIRECT_MATCH"
+    assert contained == "CONTAINS_MATCH"
+    assert mismatch == "MISMATCH"
+
+
+def test_time_semantics_ignore_unrelated_science_all_conditions() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    status, _ = _semantic_status(
+        "RQ-TIME-001",
+        "science_all_v1",
+        {"ping:recurrence_on", "time:100", "time:1000", "temporal:fast_medium_slow"},
+    )
+    assert status == "CONTAINS_MATCH"

@@ -180,31 +180,48 @@ def write_statistics_artifact(experiment_dir: Path, runs: list[dict[str, Any]]) 
     return path
 
 
-def _semantic_status(question_id: str, conditions: set[str]) -> tuple[str, str]:
+def _semantic_status(
+    question_id: str, protocol: str, conditions: set[str]
+) -> tuple[str, str]:
+    """Classify direct RQ tests separately from matching substudies in a suite."""
     plain = {item.split(":", 1)[-1] for item in conditions}
+
+    def classify(found: bool, note: str) -> tuple[str, str]:
+        if not found:
+            return "MISMATCH", note
+        if protocol == "science_all_v1":
+            return (
+                "CONTAINS_MATCH",
+                note + " Die relevante Teilstudie ist in science_all_v1 enthalten; "
+                "nur diese Teilstudie ist primaer fuer die registrierte RQ auszuwerten.",
+            )
+        return "DIRECT_MATCH", note
+
     if question_id.startswith("RQ-PING-"):
-        ok = {"recurrence_off", "recurrence_on"}.issubset(plain)
-        return (
-            "MATCH" if ok else "MISMATCH",
+        return classify(
+            {"recurrence_off", "recurrence_on"}.issubset(plain),
             "PING erwartet recurrence_off und recurrence_on.",
         )
     if question_id.startswith("RQ-TEMP-"):
-        ok = "fast_medium_slow" in plain
-        return (
-            "MATCH" if ok else "MISMATCH",
+        return classify(
+            "fast_medium_slow" in plain,
             "TEMP erwartet fast_medium_slow mit FAST/MEDIUM/SLOW-Horizonten.",
         )
     if question_id.startswith("RQ-TIME-"):
-        ok = bool(plain) and all(item.isdigit() for item in plain)
-        return (
-            "MATCH" if ok else "MISMATCH",
+        time_conditions = {
+            item.split(":", 1)[1]
+            for item in conditions
+            if item.startswith("time:") and ":" in item
+        }
+        direct_conditions = {item for item in conditions if ":" not in item}
+        candidates = time_conditions or direct_conditions
+        return classify(
+            bool(candidates) and all(item.isdigit() for item in candidates),
             "TIME erwartet numerische Tick-Leiter-Bedingungen.",
         )
     if question_id.startswith("RQ-5D-"):
-        expected = {"1d", "2d", "3d", "5d", "random_graph"}
-        ok = expected.issubset(plain)
-        return (
-            "MATCH" if ok else "MISMATCH",
+        return classify(
+            {"1d", "2d", "3d", "5d", "random_graph"}.issubset(plain),
             "5D erwartet die registrierten Dimensions-/Topologiebedingungen.",
         )
     return (
@@ -251,7 +268,12 @@ def write_detailed_experiment_summary(
         else "NOT_AVAILABLE"
     )
     conditions = {str(run.get("condition", "unknown")) for run in runs}
-    semantic_status, semantic_note = _semantic_status(question_id, conditions)
+    protocol = str(
+        simulation.get("protocol", workflow.get("protocol", "NOT_AVAILABLE"))
+        if isinstance(simulation, dict)
+        else workflow.get("protocol", "NOT_AVAILABLE")
+    )
+    semantic_status, semantic_note = _semantic_status(question_id, protocol, conditions)
 
     requested_ticks = (
         simulation.get("ticks", workflow.get("ticks", "NOT_AVAILABLE"))
@@ -280,12 +302,14 @@ def write_detailed_experiment_summary(
         f"- Experimentstatus: `{manifest.get('experiment_status', 'unknown')}`",
         f"- Forschungsfrage: `{question_id}`",
         f"- Hypothese: `{hypothesis_ids[0] if isinstance(hypothesis_ids, list) and hypothesis_ids else 'NOT_AVAILABLE'}`",
-        f"- Protokoll: `{simulation.get('protocol', workflow.get('protocol', 'NOT_AVAILABLE')) if isinstance(simulation, dict) else workflow.get('protocol', 'NOT_AVAILABLE')}`",
+        f"- Protokoll: `{protocol}`",
         f"- Durchlaeufe: `{results.get('run_count', len(runs)) if isinstance(results, dict) else len(runs)}`",
         f"- Seeds: `{simulation.get('seeds', workflow.get('seeds', [])) if isinstance(simulation, dict) else workflow.get('seeds', [])}`",
         f"- Angeforderte Ticks: `{requested_ticks}`",
-        f"- Tatsächlich ausgeführte Ticks je Lauf: `{min(actual_ticks) if actual_ticks else 'nicht direkt messbar'} .. {max(actual_ticks) if actual_ticks else 'nicht direkt messbar'}`",
+        f"- Tickgebundene SNN-Läufe (PING/TEMP/5D): `{min(actual_ticks) if actual_ticks else 'nicht direkt messbar'} .. {max(actual_ticks) if actual_ticks else 'nicht direkt messbar'}` ausgeführte Ticks",
         f"- Tick-Vertrag: `{tick_contract}`",
+        "- TIME-Ladder: Der angeforderte Endpunkt wird je Seed separat validiert; Zwischenstufen duerfen kleiner sein.",
+        "- Trial-/Regulationsprotokolle: Interne Versuchszyklen sind nicht mit `ticks_executed` gleichzusetzen und werden nicht in die SNN-Tickspanne eingerechnet.",
         f"- Laufmodus: `{manifest.get('research_run_mode', 'unknown')}`",
         f"- Netzwerkmodus: `{manifest.get('network_mode', 'unknown')}`",
         "",
@@ -295,7 +319,7 @@ def write_detailed_experiment_summary(
         f"- Begründung: {semantic_note}",
         f"- Beobachtete Conditions: `{', '.join(sorted(conditions)) or 'keine'}`",
         "",
-        "Ein semantischer Mismatch blockiert die Nutzung des Laufs als Evidenz fuer die registrierte Forschungsfrage, auch wenn die technische Ausfuehrung fehlerfrei war.",
+        "`DIRECT_MATCH` bezeichnet einen gezielten RQ-spezifischen Lauf. `CONTAINS_MATCH` bedeutet, dass die passende Teilstudie innerhalb einer Gesamtsuite enthalten ist; nur diese Teilstudie ist primaer fuer die registrierte RQ auszuwerten. `MISMATCH` blockiert die Nutzung als Evidenz fuer die registrierte Forschungsfrage, auch wenn die technische Ausfuehrung fehlerfrei war.",
         "",
         "## 3. Ausfuehrungsparameter",
         "",
