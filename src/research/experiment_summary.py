@@ -63,6 +63,11 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
         "final_mean_weight",
         "rewards_received",
         "reward_weight_updates",
+        "p_success_before",
+        "p_success_after",
+        "train_trial_count",
+        "validation_trial_count",
+        "holdout_trial_count",
     )
     conditions: dict[str, Any] = {}
     for condition, condition_runs in sorted(by_condition.items()):
@@ -76,6 +81,48 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
             ]
             if values:
                 metric_stats[name] = _stats(values)
+        nested_paths = {
+            "functional_activation": ("functional_state", "activation"),
+            "functional_safety": ("functional_state", "safety"),
+            "functional_valence": ("functional_state", "valence"),
+            "functional_uncertainty": ("functional_state", "uncertainty"),
+            "regulatory_continuity_risk": (
+                "regulatory_state",
+                "values",
+                "continuity_risk",
+            ),
+            "regulatory_energy_reserve": (
+                "regulatory_state",
+                "values",
+                "energy_reserve",
+            ),
+            "regulatory_resource_pressure": (
+                "regulatory_state",
+                "values",
+                "resource_pressure",
+            ),
+            "regulatory_sensory_integrity": (
+                "regulatory_state",
+                "values",
+                "sensory_integrity",
+            ),
+            "regulatory_thermal_margin": (
+                "regulatory_state",
+                "values",
+                "thermal_margin",
+            ),
+        }
+        for name, path in nested_paths.items():
+            nested_values: list[float] = []
+            for run in condition_runs:
+                current: object = run.get("metrics") or {}
+                for part in path:
+                    current = current.get(part) if isinstance(current, dict) else None
+                value = _number(current)
+                if value is not None:
+                    nested_values.append(value)
+            if nested_values:
+                metric_stats[name] = _stats(nested_values)
         conditions[condition] = {
             "run_count": len(condition_runs),
             "seeds": sorted(
@@ -105,9 +152,16 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
             if comparison.get("reference_tick") is not None:
                 horizon_reference_counts[horizon] += 1
     for horizon in sorted(set(horizon_values) | set(horizon_reference_counts)):
+        horizon_all = horizon_values[horizon]
+        nonzero = [value for value in horizon_all if value != 0.0]
         temporal[horizon] = {
-            "discrepancy": _stats(horizon_values[horizon]),
+            "discrepancy": _stats(horizon_all),
             "reference_comparisons": horizon_reference_counts[horizon],
+            "nonzero_comparisons": len(nonzero),
+            "nonzero_fraction": (
+                (len(nonzero) / len(horizon_all)) if horizon_all else 0.0
+            ),
+            "nonzero_discrepancy": _stats(nonzero),
         }
 
     isi_by_condition: dict[str, Any] = {}
@@ -224,6 +278,29 @@ def _semantic_status(
             {"1d", "2d", "3d", "5d", "random_graph"}.issubset(plain),
             "5D erwartet die registrierten Dimensions-/Topologiebedingungen.",
         )
+    if question_id == "RQ-SUITE-001":
+        required_groups = {
+            "ping",
+            "temporal",
+            "stdp",
+            "learning",
+            "time",
+            "5d",
+            "regulation",
+        }
+        present_groups = {item.split(":", 1)[0] for item in conditions if ":" in item}
+        found = (
+            required_groups.issubset(present_groups) and protocol == "science_all_v1"
+        )
+        return (
+            "DIRECT_MATCH" if found else "MISMATCH",
+            "SUITE erwartet science_all_v1 und PING, TEMP, STDP, Learning, TIME, 5D sowie Regulation unter gemeinsamer Provenienz.",
+        )
+    if question_id == "RQ-SNN-001":
+        return (
+            "MISMATCH",
+            "RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. Ein einzelner Impuls bzw. science_all_v1 mit langer stiller Nachlaufphase ist dafuer keine ausreichende Primaerpruefung.",
+        )
     return (
         "NOT_AUTOMATICALLY_CLASSIFIED",
         "Keine automatische semantische Regel fuer diese RQ-Familie registriert.",
@@ -251,8 +328,16 @@ def write_detailed_experiment_summary(
         if isinstance(raw_runs, list)
         else []
     )
-    statistics = build_descriptive_statistics(runs)
-    statistics_path = write_statistics_artifact(experiment_dir, runs)
+    statistics_path = experiment_dir / "analysis" / "statistics.json"
+    stored_statistics = _read_json(statistics_path, None)
+    if (
+        isinstance(stored_statistics, dict)
+        and stored_statistics.get("generated_by") == "deterministic_statistics_engine"
+    ):
+        statistics = stored_statistics
+    else:
+        statistics = build_descriptive_statistics(runs)
+        statistics_path = write_statistics_artifact(experiment_dir, runs)
 
     simulation = manifest.get("simulation", {}) if isinstance(manifest, dict) else {}
     results = manifest.get("results", {}) if isinstance(manifest, dict) else {}
@@ -274,6 +359,18 @@ def write_detailed_experiment_summary(
         else workflow.get("protocol", "NOT_AVAILABLE")
     )
     semantic_status, semantic_note = _semantic_status(question_id, protocol, conditions)
+    git_info = manifest.get("git", {}) if isinstance(manifest, dict) else {}
+    git_dirty = bool(git_info.get("dirty")) if isinstance(git_info, dict) else True
+    if semantic_status == "MISMATCH":
+        evidence_readiness = "BLOCKED_SEMANTIC_MISMATCH"
+    elif semantic_status == "NOT_AUTOMATICALLY_CLASSIFIED":
+        evidence_readiness = "BLOCKED_UNCLASSIFIED_SEMANTICS"
+    elif git_dirty:
+        evidence_readiness = "BLOCKED_DIRTY_SOURCE_TREE"
+    elif question_id == "RQ-SUITE-001":
+        evidence_readiness = "DIAGNOSTIC_ONLY"
+    else:
+        evidence_readiness = "HUMAN_REVIEW_REQUIRED"
 
     requested_ticks = (
         simulation.get("ticks", workflow.get("ticks", "NOT_AVAILABLE"))
@@ -316,6 +413,7 @@ def write_detailed_experiment_summary(
         "## 2. Semantische Konsistenz",
         "",
         f"- RQ/Condition-Pruefung: `{semantic_status}`",
+        f"- Evidence Readiness: `{evidence_readiness}`",
         f"- Begründung: {semantic_note}",
         f"- Beobachtete Conditions: `{', '.join(sorted(conditions)) or 'keine'}`",
         "",
@@ -400,8 +498,13 @@ def write_detailed_experiment_summary(
             discrepancy = (
                 payload.get("discrepancy", {}) if isinstance(payload, dict) else {}
             )
+            nonzero = (
+                payload.get("nonzero_discrepancy", {})
+                if isinstance(payload, dict)
+                else {}
+            )
             lines.append(
-                f"- `{horizon}`: Referenzvergleiche={payload.get('reference_comparisons', 0) if isinstance(payload, dict) else 0}; discrepancy mean={_fmt(discrepancy.get('mean') if isinstance(discrepancy, dict) else None)}, max={_fmt(discrepancy.get('max') if isinstance(discrepancy, dict) else None)}."
+                f"- `{horizon}`: Referenzvergleiche={payload.get('reference_comparisons', 0) if isinstance(payload, dict) else 0}; discrepancy mean={_fmt(discrepancy.get('mean') if isinstance(discrepancy, dict) else None)}, max={_fmt(discrepancy.get('max') if isinstance(discrepancy, dict) else None)}; nonzero={payload.get('nonzero_comparisons', 0) if isinstance(payload, dict) else 0} ({_fmt(payload.get('nonzero_fraction') if isinstance(payload, dict) else None)}); mean(nonzero)={_fmt(nonzero.get('mean') if isinstance(nonzero, dict) else None)}."
             )
 
     lines.extend(

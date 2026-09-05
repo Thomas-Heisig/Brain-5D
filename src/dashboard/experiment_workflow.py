@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
+import marshal
+import re
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
+from types import CodeType
 from typing import Any, Callable, Protocol, Sequence, cast
 
 from src.research.experiment_recorder import ExperimentRecorder
@@ -156,6 +160,18 @@ class ExperimentWorkflowService:
         config_digest = _sha256_file(config_path)
         started = perf_counter()
         runner = getattr(experiment_suite, runner_name)
+        runtime_runner_digest, source_runner_digest = (
+            _assert_loaded_callable_matches_source(
+                runner, Path(experiment_suite.__file__).resolve(), runner_name
+            )
+        )
+        summary_runtime_digest, summary_source_digest = (
+            _assert_loaded_callable_matches_source(
+                write_detailed_experiment_summary,
+                Path(write_detailed_experiment_summary.__code__.co_filename).resolve(),
+                "write_detailed_experiment_summary",
+            )
+        )
         tick_aware_runners = {
             "run_all",
             "run_ping",
@@ -181,11 +197,15 @@ class ExperimentWorkflowService:
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
         serialized_runs = [asdict(run) for run in runs]
+        # Compute statistics from the complete in-memory observations first. Large
+        # per-tick traces are then moved to compressed sidecars so runs.json remains
+        # reviewable without discarding raw observations.
+        statistics_path = write_statistics_artifact(output_dir, serialized_runs)
+        trace_paths = _externalize_large_traces(output_dir, serialized_runs)
         data_path.write_text(
             json.dumps(serialized_runs, indent=2, sort_keys=True, default=list) + "\n",
             encoding="utf-8",
         )
-        statistics_path = write_statistics_artifact(output_dir, serialized_runs)
 
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
@@ -244,7 +264,7 @@ class ExperimentWorkflowService:
             code_digest=_sha256_file(Path(experiment_suite.__file__)),
             config_digest=config_digest,
             prompt_digest=hashlib.sha256(b"NO_PROMPT").hexdigest(),
-            data_digest=_sha256_file(data_path),
+            data_digest=_sha256_files([data_path, *trace_paths]),
         )
         recorder.record_runtime(duration).mark_completed().save()
 
@@ -262,7 +282,14 @@ class ExperimentWorkflowService:
             "question_id": workflow.question_id,
             "hypothesis_id": workflow.hypothesis_id,
             "protocol": workflow.protocol,
+            "runtime_runner_bytecode_sha256": runtime_runner_digest,
+            "source_runner_bytecode_sha256": source_runner_digest,
+            "runtime_summary_bytecode_sha256": summary_runtime_digest,
+            "source_summary_bytecode_sha256": summary_source_digest,
+            "source_runtime_consistency": "MATCH",
         }
+        if trace_paths:
+            artifacts["raw_trace_index"] = "DATA/traces/index.json"
         if ai_report.get("status") == "generated":
             artifacts["ai_report_json"] = str(ai_report["json"])
             artifacts["ai_report_markdown"] = str(ai_report["markdown"])
@@ -741,6 +768,133 @@ class ExperimentWorkflowService:
                 "",
             ]
         )
+
+
+def _find_named_code(code: CodeType, name: str) -> CodeType | None:
+    if code.co_name == name:
+        return code
+    for value in code.co_consts:
+        if not isinstance(value, CodeType):
+            continue
+        found = _find_named_code(value, name)
+        if found is not None:
+            return found
+    return None
+
+
+def _code_digest(code: CodeType) -> str:
+    return hashlib.sha256(marshal.dumps(code)).hexdigest()
+
+
+def _assert_loaded_callable_matches_source(
+    function: Callable[..., object], source_path: Path, function_name: str
+) -> tuple[str, str]:
+    """Block scientific runs when a long-lived process still holds stale code."""
+    runtime_digest = _code_digest(function.__code__)
+    compiled = compile(
+        source_path.read_text(encoding="utf-8"), str(source_path), "exec"
+    )
+    source_code = _find_named_code(compiled, function_name)
+    if source_code is None:
+        raise WorkflowValidationError(
+            f"Cannot verify runtime/source consistency for {function_name}."
+        )
+    source_digest = _code_digest(source_code)
+    if runtime_digest != source_digest:
+        raise WorkflowValidationError(
+            f"Running process contains stale code for {function_name}. Restart the Brain-5D "
+            "dashboard/runtime before creating a scientific experiment."
+        )
+    return runtime_digest, source_digest
+
+
+def _safe_trace_name(condition: object, seed: object) -> str:
+    label = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(condition)).strip("-") or "trace"
+    return f"{label}-seed-{seed}.jsonl.gz"
+
+
+def _externalize_large_traces(
+    output_dir: Path, serialized_runs: list[dict[str, Any]], threshold: int = 10_000
+) -> list[Path]:
+    """Keep complete large traces compressed and references inside compact DATA."""
+    trace_dir = output_dir / "DATA" / "traces"
+    trace_entries: list[dict[str, object]] = []
+    written: list[Path] = []
+    for run in serialized_runs:
+        metrics = run.get("metrics")
+        if not isinstance(metrics, dict):
+            continue
+        metrics_raw: object = run.get("metrics")
+        if not isinstance(metrics_raw, dict):
+            continue
+        metrics = cast(dict[str, object], metrics_raw)
+        comparison_value: object = metrics.get("comparisons")
+        if not isinstance(comparison_value, list):
+            continue
+        comparisons = cast(list[object], comparison_value)
+        if len(comparisons) <= threshold:
+            continue
+        trace_dir.mkdir(parents=True, exist_ok=True)
+        path = trace_dir / _safe_trace_name(run.get("condition"), run.get("seed"))
+        with gzip.open(
+            path, "wt", encoding="utf-8", newline="\n", compresslevel=9
+        ) as handle:
+            for item in comparisons:
+                handle.write(
+                    json.dumps(
+                        item,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                )
+                handle.write("\n")
+        digest = _sha256_file(path)
+        count = len(comparisons)
+        metrics["comparisons_artifact"] = {
+            "path": path.relative_to(output_dir).as_posix(),
+            "format": "jsonl.gz",
+            "count": count,
+            "sha256": digest,
+        }
+        metrics["comparisons_preview"] = comparisons[:8] + comparisons[-8:]
+        del metrics["comparisons"]
+        trace_entries.append(
+            {
+                "condition": run.get("condition"),
+                "seed": run.get("seed"),
+                "path": path.relative_to(output_dir).as_posix(),
+                "count": count,
+                "sha256": digest,
+                "size_bytes": path.stat().st_size,
+            }
+        )
+        written.append(path)
+    if trace_entries:
+        index_path = trace_dir / "index.json"
+        index_path.write_text(
+            json.dumps(
+                {"schema_version": "1.0", "traces": trace_entries},
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        written.append(index_path)
+    return written
+
+
+def _sha256_files(paths: Sequence[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(paths, key=lambda item: item.as_posix()):
+        digest.update(
+            path.relative_to(path.parent.parent.parent).as_posix().encode("utf-8")
+        )
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:

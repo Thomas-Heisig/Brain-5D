@@ -523,3 +523,19 @@
     limitations: null
   created: '2026-09-02'
   updated: '2026-09-02'
+
+- id: RQ-SUITE-001
+  domain: Research Infrastructure
+  question: Erzeugt der vollstaendige Science-Suite-Lauf unter gemeinsamer Provenienz vollstaendige und intern konsistente Diagnoseartefakte fuer alle registrierten Teilprotokolle?
+  relevance: Trennt technische Omnibus-Validierung von hypothesenspezifischer wissenschaftlicher Evidenz.
+  literature: []
+  hypotheses:
+  - H-SUITE-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Omnibus-Diagnostik ist keine Primaerevidenz fuer die enthaltenen Fach-RQs.
+  created: '2026-09-05'
+  updated: '2026-09-05'

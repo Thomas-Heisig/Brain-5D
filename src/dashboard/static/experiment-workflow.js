@@ -161,9 +161,9 @@ export class ExperimentWorkflowPanel {
     const protocol = this.elements.protocol?.value;
     const presets = {
       science_all_v1: {
-        question: "RQ-SNN-001",
-        hypothesis: "H-SNN-001-A",
-        title: "Complete science suite",
+        question: "RQ-SUITE-001",
+        hypothesis: "H-SUITE-001-A",
+        title: "Complete science suite diagnostic",
         conditions: "Seeds 42,43,44; PING, Temporal, STDP/Learning, TIME, 5D und Regulation in einem Lauf; gemeinsame Provenienz und gruppierte Bedingungen.",
         ticks: "1000",
         seeds: "42,43,44",

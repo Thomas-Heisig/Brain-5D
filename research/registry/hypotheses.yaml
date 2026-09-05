@@ -260,3 +260,11 @@
   evidence: []
   created: '2026-09-02'
   updated: '2026-09-02'
+
+- id: H-SUITE-001-A
+  research_question: RQ-SUITE-001
+  hypothesis: Alle Science-Suite-Teilprotokolle erfuellen in einem gemeinsamen Lauf ihre registrierten Ausfuehrungsvertraege und erzeugen auswertbare DATA-, Statistik- und Provenienzartefakte.
+  status: untested
+  evidence: []
+  created: '2026-09-05'
+  updated: '2026-09-05'

@@ -202,3 +202,34 @@ def test_time_semantics_ignore_unrelated_science_all_conditions() -> None:
         {"ping:recurrence_on", "time:100", "time:1000", "temporal:fast_medium_slow"},
     )
     assert status == "CONTAINS_MATCH"
+
+
+def test_suite_semantics_require_all_registered_groups() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    conditions = {
+        "ping:recurrence_off",
+        "temporal:fast_medium_slow",
+        "stdp:productive_reward_stdp",
+        "learning:learning_on",
+        "time:1000",
+        "5d:5d",
+        "regulation:nominal",
+    }
+    status, _ = _semantic_status("RQ-SUITE-001", "science_all_v1", conditions)
+    assert status == "DIRECT_MATCH"
+    conditions.remove("regulation:nominal")
+    status, _ = _semantic_status("RQ-SUITE-001", "science_all_v1", conditions)
+    assert status == "MISMATCH"
+
+
+def test_long_term_stability_is_not_claimed_from_ping_omnibus() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    status, note = _semantic_status(
+        "RQ-SNN-001",
+        "science_all_v1",
+        {"ping:recurrence_off", "ping:recurrence_on"},
+    )
+    assert status == "MISMATCH"
+    assert "langfristig" in note
