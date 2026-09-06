@@ -1,0 +1,35 @@
+- id: H-MSBA-E01-A
+  research_question: RQ-MSBA-E01
+  hypothesis: Unter kontrollierter Aufgabeninformation unterscheiden sich Audio-, Vision- und Digital-Gateways reproduzierbar in Energie- und Synapsenkosten pro korrekter Entscheidung.
+  status: untested
+  evidence: []
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: H-MSBA-E02-A
+  research_question: RQ-MSBA-E02
+  hypothesis: Adaptive Utility-minus-Cost-Allokation erzielt bei gleichem Ressourcenbudget hoehere Aufgabenleistung oder laengere funktionsfaehige Laufzeit als fixe und zufaellige Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: H-MSBA-E03-A
+  research_question: RQ-MSBA-E03
+  hypothesis: Adaptive visuelle ROI-Allokation konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Ressourceneinheit gegenueber einer zufaelligen ROI-Kontrolle.
+  status: untested
+  evidence: []
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: H-MSBA-E04-A
+  research_question: RQ-MSBA-E04
+  hypothesis: Ressourcen-Drosselung reduziert die zugelassene Symbolrate, erzeugt aber keine Mutation der digitalen Payload oder ihrer Checksumme.
+  status: untested
+  evidence: []
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: H-MSBA-E05-A
+  research_question: RQ-MSBA-E05
+  hypothesis: Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur bei guenstigem Utility-Kosten-Verhaeltnis und verbessert die Aufgaben-Recovery gegenueber fixen und No-Compensation-Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-06'
+  updated: '2026-09-06'
