@@ -9,13 +9,14 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 793 tests collected on the 2026-09-06 current-head baseline (788 passed, 5 skipped locally).
+- [x] 799 tests collected on the 2026-09-06 current-head baseline (793 passed, 5 skipped, 1 unrelated frontend-wiring failure locally).
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
 - [ ] Confirm the final current-head `main` CI after the documentation refresh before calling the refreshed head fully green.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
+- [x] Wissenschaft exposes four reachable views: Network, Research & Analysis, Parameter and live Summary; the retired global Network CSS hide was removed.
 - [x] Release/Gate moved to a footer action.
 - [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface and is integrated into Runtime & Wesen.
 - [x] Dedicated read-only `Wesen` workspace added.
@@ -28,6 +29,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
 - [x] Research Workspace includes a graphical timeline for Changelog, Roadmap and TODO with source filters and task progress.
 - [x] Release and Settings are utility popups; Release offers Summary, Timeline and Gate views with past/future/element switching.
+- [x] Release Summary exposes criteria coverage, live-profile count, blockers and next-decision context; Gate and Timeline share the full popup width.
+- [x] Dashboard surfaces share typography/color rules, avoid upper-content clipping dynamically, and support persistent minimize/maximize controls with one maximized box at a time.
 
 ## P0 — research catalog, hypotheses and experiment reachability
 
@@ -42,7 +45,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Route non-operational questions only to the existing exploratory `runtime_ticks_v1` path; never silently substitute an unrelated science runner or promote those runs to EVID.
 - [ ] Operationalize every still-unmapped canonical RQ/H with a dedicated protocol, controls, stopping rule, preregistration and runner before claiming that hypothesis can be confirmatorily tested.
 - [x] Add a CI report artifact from the repository-wide catalog audit.
-- [ ] Decide which historical-only identifiers belong on an explicit allow-list versus the canonical registry; keep unresolved findings visible in the report until decided.
+- [x] Classify explicit negative/test-only RQ/H references through a reasoned audit allow-list; keep unresolved findings visible in the report.
+- [ ] Decide which remaining historical-only identifiers belong on the canonical registry versus a historical allow-list.
 - [x] Add domain/status/evidence/experiment-progress facets to the Research Catalog and expose them through the workflow catalog API.
 - [ ] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
 

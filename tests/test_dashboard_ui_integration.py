@@ -71,6 +71,9 @@ def test_project_timeline_is_wired_to_canonical_project_documents() -> None:
     assert 'data-timeline-horizon="past"' in html
     assert 'data-timeline-horizon="future"' in html
     assert 'data-timeline-horizon="elements"' in html
+    assert 'id="release-summary-criteria"' in html
+    assert 'id="release-summary-blockers"' in html
+    assert 'id="release-summary-next"' in html
     assert 'data-timeline-filter="changelog"' in html
     assert 'data-timeline-filter="roadmap"' in html
     assert 'data-timeline-filter="todo"' in html
@@ -81,3 +84,17 @@ def test_project_timeline_is_wired_to_canonical_project_documents() -> None:
     assert 'data-timeline-horizon' in timeline
     assert 'gate: { kicker: "VERIFY", title: "Release" }' in popups
     assert 'settings: { kicker: "CONFIGURE", title: "Scientific Settings" }' in popups
+
+
+def test_dashboard_boxes_have_persistent_minimize_maximize_contract() -> None:
+    app = (STATIC / "app.js").read_text(encoding="utf-8")
+    controls = (STATIC / "box-controls.js").read_text(encoding="utf-8")
+    shell = (STATIC / "dashboard-shell.css").read_text(encoding="utf-8")
+    wesen = (STATIC / "wesen.js").read_text(encoding="utf-8")
+    assert "initBoxControls" in app
+    assert "localStorage" in controls
+    assert 'data-box-action="minimize"' in controls
+    assert 'data-box-action="maximize"' in controls
+    assert 'document.querySelectorAll(".b5d-box-maximized")' in controls
+    assert ".b5d-box-maximized" in shell
+    assert "wesen-technical-boundary-signals" in wesen

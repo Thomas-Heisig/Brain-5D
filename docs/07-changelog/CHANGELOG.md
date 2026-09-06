@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-06 - Reachable scientific workspaces and Summary view
+
+- Fixed the stale CSS rule that hid the Network workspace from the operator surface.
+- Wissenschaft now provides four direct views: Neuronales Netzwerk, Research & Analysis, Parameter and Summary.
+- Added a live Summary view for runtime, network, research evidence, gate/CI and parameter counts.
+
+## 2026-09-06 - RQ/H audit classification and live catalog status
+
+- Negative und Test-Fixtures werden über eine validierte
+  `catalog_audit_allowlist.yaml` mit `id`, `kind` und Begründung klassifiziert;
+  unbekannte echte Referenzen bleiben unresolved.
+- Präfixe aus Evidenz-IDs wie `EVID-H-...` werden nicht mehr als eigene
+  Hypothesenreferenzen gezählt.
+- Der Workflow-Katalog liefert Auditstatus und Allowlist-Begründungen; der
+  Research Catalog zeigt offene Befunde und klassifizierte Referenzen live.
+- Der Live-Endpunkt wurde nach Neustart mit 48 Katalogfragen und HTTP 200
+  geprüft; aktuelle offene Befunde bleiben report-only.
+
 ## 2026-09-06 - Three-column Runtime and Scientific Reader
 
 - Die Wesen Runtime bleibt bis zur mobilen Breakpoint in einer klaren Drei-
@@ -20,6 +38,14 @@
   current gate and next steps.
 - Release and Settings are opened as focused utility popups; Release switches
   between Summary, Timeline and Gate, with past/future/element timeline views.
+- Release Summary now includes criteria coverage, live-profile count, blockers,
+  current version and a next-decision message; Gate and release panels use the
+  full popup width, while timeline nodes share one continuous visual thread.
+- Dashboard surfaces now use a shared typography/color baseline, dynamic Wesen
+  height rules prevent upper-content clipping, and relevant boxes expose
+  persistent minimize/maximize controls with one-maximized-box enforcement.
+- The technical body boundary is integrated as an informative Wesen section for
+  sensors, actuators, adapters and runtime state.
 - Each timeline entry links back to the existing read-only Docs browser.
 
 ## 2026-09-06 — Wesen Runtime responsive surfaces

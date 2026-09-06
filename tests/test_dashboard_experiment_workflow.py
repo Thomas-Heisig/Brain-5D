@@ -321,9 +321,7 @@ def test_catalog_exposes_repository_audit_status(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    catalog = ExperimentWorkflowService(
-        research_root, repo_root=tmp_path
-    ).catalog()
+    catalog = ExperimentWorkflowService(research_root, repo_root=tmp_path).catalog()
 
     assert catalog["audit"] == {
         "clean": True,
@@ -331,6 +329,18 @@ def test_catalog_exposes_repository_audit_status(tmp_path: Path) -> None:
         "missing_hypotheses": [],
         "allowlisted_questions": ["RQ-UNRESOLVED-001"],
         "allowlisted_hypotheses": ["H-UNRESOLVED-001-A"],
+        "allowlist": [
+            {
+                "identifier": "RQ-UNRESOLVED-001",
+                "kind": "question",
+                "reason": "historical note",
+            },
+            {
+                "identifier": "H-UNRESOLVED-001-A",
+                "kind": "hypothesis",
+                "reason": "historical note",
+            },
+        ],
         "link_issues": [],
     }
 

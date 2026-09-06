@@ -19,8 +19,8 @@ import yaml
 
 from .registry import ResearchRegistry
 
-RQ_PATTERN = re.compile(r"\bRQ-[A-Z0-9]+(?:-[A-Z0-9]+)+\b")
-H_PATTERN = re.compile(r"\bH-[A-Z0-9]+(?:-[A-Z0-9]+)+\b")
+RQ_PATTERN = re.compile(r"(?<![A-Z0-9-])RQ-[A-Z0-9]+(?:-[A-Z0-9]+)+\b(?!-[A-Z0-9])")
+H_PATTERN = re.compile(r"(?<![A-Z0-9-])H-[A-Z0-9]+(?:-[A-Z0-9]+)+\b(?!-[A-Z0-9])")
 _TEXT_SUFFIXES = {
     ".md",
     ".txt",
@@ -72,6 +72,7 @@ class ResearchCatalogAudit:
     link_issues: tuple[dict[str, str], ...]
     allowlisted_questions: tuple[str, ...] = ()
     allowlisted_hypotheses: tuple[str, ...] = ()
+    allowlist: tuple[ResearchAuditAllowlistEntry, ...] = ()
 
     @property
     def clean(self) -> bool:
@@ -93,6 +94,7 @@ class ResearchCatalogAudit:
             "missing_hypotheses": list(self.missing_hypotheses),
             "allowlisted_questions": list(self.allowlisted_questions),
             "allowlisted_hypotheses": list(self.allowlisted_hypotheses),
+            "allowlist": [item.to_dict() for item in self.allowlist],
             "link_issues": list(self.link_issues),
             "question_references": question_refs,
             "hypothesis_references": hypothesis_refs,
@@ -155,6 +157,7 @@ def audit_research_catalog(
         link_issues=tuple(active_registry.link_issues()),
         allowlisted_questions=tuple(sorted(found_questions & allowed_questions)),
         allowlisted_hypotheses=tuple(sorted(found_hypotheses & allowed_hypotheses)),
+        allowlist=allowlist,
     )
 
 
@@ -168,7 +171,9 @@ def _load_allowlist(path: Path) -> tuple[ResearchAuditAllowlistEntry, ...]:
     seen: set[tuple[str, str]] = set()
     for item in raw:
         if not isinstance(item, dict):
-            raise ValueError(f"Research audit allowlist entry must be an object: {path}")
+            raise ValueError(
+                f"Research audit allowlist entry must be an object: {path}"
+            )
         mapping = cast(dict[str, Any], item)
         identifier = mapping.get("id")
         kind = mapping.get("kind")

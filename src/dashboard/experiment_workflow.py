@@ -10,6 +10,7 @@ from time import perf_counter
 from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
+from src.research.catalog_audit import audit_research_catalog
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -23,7 +24,6 @@ from src.research.protocol_registry import (
     protocol_catalog,
     validate_operational_protocol,
 )
-from src.research.catalog_audit import audit_research_catalog
 from src.research.registry import ResearchRegistry
 from src.research_assistant.airr import AIRRPipeline
 from src.research_assistant.assistant import AnalysisBackend
@@ -131,6 +131,7 @@ class ExperimentWorkflowService:
                     "missing_hypotheses": list(audit.missing_hypotheses),
                     "allowlisted_questions": list(audit.allowlisted_questions),
                     "allowlisted_hypotheses": list(audit.allowlisted_hypotheses),
+                    "allowlist": [item.to_dict() for item in audit.allowlist],
                     "link_issues": list(audit.link_issues),
                 },
             )

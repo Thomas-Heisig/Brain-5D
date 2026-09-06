@@ -213,6 +213,8 @@ def test_wesen_symbiosis_is_full_width_below_body_map_and_events() -> None:
     assert 'layout.insertAdjacentElement("afterend", panel)' in symbiosis
     assert "width: 100%" in styles
     assert "overflow-wrap: anywhere" in styles
+    assert "var(--wesen-surface" in styles
+    assert "var(--wesen-line" in styles
 
 
 def test_wesen_surface_visibility_is_persistent_and_resettable() -> None:

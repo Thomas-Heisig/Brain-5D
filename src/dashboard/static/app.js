@@ -53,6 +53,8 @@ import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceS
 import { initResearchChat } from './research-chat.js';
 import { initProjectTimeline } from './project-timeline.js';
 import { initUtilityPopups } from './utility-popups.js';
+import { initBoxControls } from './box-controls.js';
+import { initScientificReader } from './scientific-reader.js';
 
 // ================================================================
 // DOM HELPERS
@@ -1936,6 +1938,24 @@ async function refreshGateStatus() {
   const gateA = scientificGate.gate_a || data.gate_a;
   const gateB = scientificGate.gate_b || data.gate_b;
   const gateC = scientificGate.gate_c || data.gate_c;
+  const gateItems = [gateA, gateB, gateC].flatMap((gate) => gate?.items || []);
+  const passedCriteria = gateItems.filter((item) => item.status === 'passed').length;
+  const blockers = Array.isArray(data.release_readiness?.blockers)
+    ? data.release_readiness.blockers
+    : [];
+  setText('release-summary-criteria', `${passedCriteria} / ${gateItems.length}`);
+  setText('release-summary-live', Array.isArray(liveRuntime) ? liveRuntime.length : 0);
+  setText('release-summary-blockers', blockers.length);
+  setText('release-summary-version', document.getElementById('footer-version')?.textContent || '—');
+  const nextDecision = $('release-summary-next');
+  if (nextDecision) {
+    const message = blockers.length
+      ? `${blockers.length} blocker(s) keep the release decision open: ${blockers.slice(0, 2).join(' · ')}`
+      : readiness === 'ready'
+        ? 'All reported release signals are ready for the next controlled release step.'
+        : 'No blocker detail was reported; review the Gate view and current evidence before release.';
+    nextDecision.querySelector('strong').textContent = message;
+  }
   if (gateA?.items) {
     renderGateCriteria('gate-a-list', gateA.items);
   }
@@ -2399,6 +2419,7 @@ function init() {
   console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
 
   initUtilityPopups();
+  initBoxControls();
 
   // Setup tab navigation (also initializes components lazily)
   setupTabs();
@@ -2424,6 +2445,7 @@ function init() {
   setupThemeToggle();
   setupAccessibilityToggle();
   setupGlobalChrome();
+  initScientificReader();
 
   console.log('✅ Dashboard ready');
 }
