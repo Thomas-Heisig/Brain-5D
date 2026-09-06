@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 765 tests collected on the current main tree.
+- [x] 773 tests collected on the current main tree.
 - [x] Verified repair-suite result: 733 passed, 2 skipped, 0 failed.
 - [x] Latest completed GitHub Continuous Integration run on the repaired main baseline finished successfully.
 - [x] Python 3.11, 3.12 and 3.13 CI matrix passes.
@@ -62,7 +62,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] Require the latest `main` CI run to finish green across the complete job matrix.
 - [x] Fix only verified current-tree CI failures; no typing/scientific-integrity checks were masked.
-- [x] Documentation consistency updated to the 765-test current collection.
+- [x] Documentation consistency updated to the 773-test current collection.
 - [ ] Verify `/wesen-adaptive.css`, `/wesen-organism.css` and `/wesen-anatomy-v3.css` are served in integrated runtime and dashboard-only modes on a live host.
 - [ ] Verify anatomy v3 rendering in at least one live-host session with real connection inventory and populated empirical endpoints.
 - [ ] Add a browser/E2E check for pointer-centered camera pan/zoom, icon-dock navigation, anatomy placement and timeline scrubbing.
