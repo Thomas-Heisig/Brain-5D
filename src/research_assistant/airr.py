@@ -364,29 +364,85 @@ def write_human_review(
     if not report_path.is_file():
         raise ValueError("AIRR report does not exist")
     try:
-        payload = json.loads(report_path.read_text(encoding="utf-8"))
+        report = json.loads(report_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError("AIRR report is unreadable") from exc
-    if not isinstance(payload, dict):
-        raise ValueError("AIRR report must be a JSON object")
-    if payload.get("experiment_id") != experiment_id or payload.get("report_id") != report_id:
-        raise ValueError("AIRR report identity mismatch")
-    if payload.get("status") not in _STATUSES:
-        raise ValueError("AIRR report has invalid status")
-    review_payload = {
-        "status": "reviewed",
-        "reviewer": str(review.get("reviewer") or "").strip(),
+    if not isinstance(report, dict):
+        raise ValueError("AIRR report identity does not match")
+    report = cast(dict[str, Any], report)
+    if report.get("report_id") != report_id:
+        raise ValueError("AIRR report identity does not match")
+    if report.get("status") != "review_pending":
+        raise ValueError("AIRR report is not awaiting human review")
+    if report.get("scientific_evidence") is not False:
+        raise ValueError("AIRR review cannot grant scientific evidence")
+
+    status = review.get("review_status")
+    if status not in {"accepted_as_interpretation", "rejected"}:
+        raise ValueError("Human review must accept or reject the interpretation")
+    reviewer = review.get("reviewer")
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise ValueError("Human reviewer identity is required")
+    comments = review.get("comments")
+    if not isinstance(comments, str) or not comments.strip():
+        raise ValueError("Human review comments are required")
+    path = directory / f"{report_id}.review.json"
+    if path.exists():
+        raise FileExistsError(f"Human review already exists: {report_id}")
+    payload = {
+        "report_id": report_id,
+        "review_status": status,
+        "reviewer": reviewer.strip(),
         "reviewed_at": datetime.now(timezone.utc).isoformat(),
-        "disposition": review.get("disposition"),
-        "comments": review.get("comments"),
+        "comments": comments.strip(),
+        "report_content_digest": report.get("content_digest"),
     }
-    if not review_payload["reviewer"]:
-        raise ValueError("Human review requires a reviewer")
-    review_path = directory / f"{report_id}.review.json"
+    path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    return path
+
+
+def write_artifact_review(
+    research_root: Path, artifact_path: str, review: dict[str, Any]
+) -> Path:
+    """Write one append-only human review beside an experiment artifact."""
+    normalized = artifact_path.replace("\\", "/").lstrip("/")
+    parts = normalized.split("/")
+    if len(parts) < 3 or parts[0] != "experiments" or parts[2].endswith(".review.json"):
+        raise ValueError("Review target must be an experiment artifact")
+    target = (research_root / normalized).resolve()
+    experiment_dir = (research_root / "experiments" / parts[1]).resolve()
+    if not target.is_file() or experiment_dir not in target.parents:
+        raise ValueError("Review target does not exist in the experiment")
+    status = review.get("review_status")
+    if status not in {"accepted_as_interpretation", "rejected"}:
+        raise ValueError("Human review must accept or reject the interpretation")
+    reviewer = review.get("reviewer")
+    comments = review.get("comments")
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise ValueError("Human reviewer identity is required")
+    if not isinstance(comments, str) or not comments.strip():
+        raise ValueError("Human review comments are required")
+    review_path = target.with_name(f"{target.name}.review.json")
     if review_path.exists():
-        raise FileExistsError(f"Review already exists: {review_path.name}")
+        raise FileExistsError(f"Human review already exists: {normalized}")
     review_path.write_text(
-        json.dumps(review_payload, indent=2, ensure_ascii=False) + "\n",
+        json.dumps(
+            {
+                "artifact_path": normalized,
+                "review_status": status,
+                "reviewer": reviewer.strip(),
+                "reviewed_at": datetime.now(timezone.utc).isoformat(),
+                "comments": comments.strip(),
+                "artifact_content_digest": hashlib.sha256(
+                    target.read_bytes()
+                ).hexdigest(),
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
         encoding="utf-8",
     )
     return review_path
