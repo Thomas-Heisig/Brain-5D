@@ -2725,7 +2725,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             def metrics() -> dict[str, int]:
                 snapshot = state.snapshot().system
-                return {"tick": snapshot.tick, "neurons": snapshot.neurons, "synapses": snapshot.synapses}
+                network = getattr(bridge.controller, "network", None)
+                tick = getattr(network, "current_tick", snapshot.tick)
+                return {"tick": int(tick), "neurons": snapshot.neurons, "synapses": snapshot.synapses}
 
             run_ticks, before, after = step, metrics, metrics
         result = ExperimentWorkflowService(
