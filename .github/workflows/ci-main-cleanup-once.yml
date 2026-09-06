@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Repair canonical bindings, source-freeze digest and EOF hygiene
+      - name: Repair canonical bindings, source-freeze digest and CI hygiene
         shell: bash
         run: |
           python - <<'PY'
@@ -75,6 +75,17 @@ jobs:
                   raise SystemExit(
                       f'{experiment_id}: expected {expected} binding replacements, got {count}'
                   )
+          old_summary_assertions = (
+              '    assert "## Versuchsuebersicht" in summary\n'
+              '    assert "- Status: `completed`" in summary\n'
+          )
+          new_summary_assertions = (
+              '    assert "# EXP-PING-0001: Wissenschaftliche Zusammenfassung" in summary\n'
+              '    assert "- Experimentstatus: `completed`" in summary\n'
+          )
+          if old_summary_assertions not in text:
+              raise SystemExit('legacy summary assertion anchor not found')
+          text = text.replace(old_summary_assertions, new_summary_assertions, 1)
           test_path.write_text(text, encoding='utf-8')
 
           source_path = Path('src/dashboard/experiment_workflow.py')
