@@ -184,12 +184,55 @@ def validate_operational_protocol(
     return prereg
 
 
-def protocol_catalog(research_root: Path) -> list[dict[str, str]]:
-    catalog: list[dict[str, str]] = []
+def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
+    """Return operational protocols enriched with their frozen user-facing contract.
+
+    The dashboard uses this payload to show the scientific execution requirements
+    before a run starts. The data is read only from the registered protocol and its
+    frozen preregistration, so the UI cannot silently invent or weaken requirements.
+    """
+    catalog: list[dict[str, Any]] = []
     for protocol in load_operational_protocols(research_root):
         protocol_id = protocol.get("id")
         question_id = protocol.get("research_question")
+        hypothesis_id = protocol.get("hypothesis")
+        prereg_value = protocol.get("preregistration")
         if not isinstance(protocol_id, str) or not isinstance(question_id, str):
             raise PreregistrationError("Operational protocol ID/RQ must be strings.")
-        catalog.append({"id": protocol_id, "label": f"{protocol_id} — {question_id}"})
+        if not isinstance(hypothesis_id, str):
+            raise PreregistrationError("Operational protocol hypothesis must be a string.")
+        if not isinstance(prereg_value, str) or not prereg_value:
+            raise PreregistrationError("Operational protocol lacks preregistration path.")
+
+        prereg_path = research_root / prereg_value
+        prereg = _json_object(prereg_path)
+        _validate_prereg_object(prereg, protocol=protocol)
+        seed_strategy = cast(dict[str, Any], prereg["seed_strategy"])
+        analysis_plan = cast(dict[str, Any], prereg["analysis_plan"])
+
+        catalog.append(
+            {
+                "id": protocol_id,
+                "label": f"{protocol_id} — {question_id}",
+                "research_question": question_id,
+                "hypothesis": hypothesis_id,
+                "mode": prereg.get("mode"),
+                "preregistration": prereg_value,
+                "default_ticks": protocol.get("default_ticks"),
+                "tick_aware": protocol.get("tick_aware", False),
+                "minimum_independent_seeds": seed_strategy.get(
+                    "minimum_independent_seeds"
+                ),
+                "seed_rule": seed_strategy.get("rule"),
+                "conditions": prereg.get("conditions", []),
+                "controls": protocol.get("controls", []),
+                "treatments": protocol.get("treatments", []),
+                "primary_outcomes": prereg.get("primary_outcomes", []),
+                "secondary_outcomes": prereg.get("secondary_outcomes", []),
+                "inclusion_criteria": prereg.get("inclusion_criteria", []),
+                "exclusion_criteria": prereg.get("exclusion_criteria", []),
+                "inference_policy": analysis_plan.get("inference_policy"),
+                "freeze": prereg.get("freeze", {}),
+            }
+        )
     return catalog
