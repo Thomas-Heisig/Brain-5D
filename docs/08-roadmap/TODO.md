@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Full-page tabs and responsive box states
+
+- [x] Treat active workspaces as full-page tab surfaces.
+- [x] Add minimize, standard and maximize controls to dashboard boxes.
+- [x] Support dynamically created boxes and native-header-less containers.
+- [ ] Add browser viewport coverage for box-state controls and maximized overlays.
+
 ## 2026-09-06 Wissenschaft Network route restored
 
 - [x] Make `Wissenschaft → Neuronales Netzwerk` callable again.

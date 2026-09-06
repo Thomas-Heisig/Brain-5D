@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Full-page tabs and responsive box states
+
+- Added a shared box-state controller for minimize, standard and maximize actions.
+- Maximized panels use a full-page overlay; minimized panels retain their header and hide only their content.
+- Added responsive workspace minimum heights and Escape-to-standard behavior.
+
 ## 2026-09-06 — Restored Wissenschaft Network route
 
 - Fixed the `Neuronales Netzwerk` route under `Wissenschaft`.

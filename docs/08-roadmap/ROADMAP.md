@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Full-page tabs and responsive box states
+
+- Active workspaces now use the full available page area beneath the fixed application chrome.
+- Dashboard panels receive shared `minimized`, `standard` and `maximized` states with responsive controls and Escape-to-standard behavior.
+- Dynamically created panels and containers without a native header receive the same presentation controls without changing runtime data contracts.
+
 ## 2026-09-06 Wissenschaft Network route restored
 
 - The `Wissenschaft → Neuronales Netzwerk` context route now reveals the active Network workbench instead of being hidden by the retired-workspace CSS rule.
