@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Exploratory workflow execution
+
+- [x] Allow exploratory questions to start from the batch dialog.
+- [x] Route exploratory selections through bounded `runtime_ticks_v1` execution.
+- [x] Preserve explicit exploratory status and prevent evidence promotion.
+- [ ] Add browser E2E coverage for starting an exploratory selection and reading its report.
+
 ## 2026-09-06 Experiment workflow selection repair
 
 - [x] Show all Research Catalog questions in the batch dialog.

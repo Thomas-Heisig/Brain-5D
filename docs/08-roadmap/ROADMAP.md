@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Exploratory workflow execution
+
+- Exploratory research questions can now be selected and executed through the batch workflow as explicit `runtime_ticks_v1` diagnostic runs.
+- Questions without a registered hypothesis use the explicit `EXPLORATORY-UNSPECIFIED` marker; no evidence or confirmatory claim is implied.
+- The batch endpoint now attaches exploratory selections to the runtime controller instead of rejecting them as unknown operational protocols.
+
 ## 2026-09-06 Experiment workflow selection repair
 
 - The batch dialog now renders all Research Catalog questions, not only questions with an operational protocol.

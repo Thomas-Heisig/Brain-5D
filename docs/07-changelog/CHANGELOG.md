@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Exploratory workflow execution
+
+- Exploratory questions are no longer greyed out or hidden in the batch workflow.
+- They can run through the bounded Runtime-Ticks path and are explicitly recorded as exploratory.
+- Operational protocol execution remains unchanged and scientific evidence promotion stays blocked for exploratory runs.
+
 ## 2026-09-06 — Experiment workflow selection repair
 
 - Fixed the batch selection so all 48 Research Catalog questions are visible.
