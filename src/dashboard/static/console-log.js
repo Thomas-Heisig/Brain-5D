@@ -19,6 +19,7 @@ import "./embodiment-self-model.js";
 import "./wesen.js";
 import "./wesen-organism-v2.js";
 import "./wesen-anatomy-v3.js";
+import "./wesen-neural-symbiosis.js";
 
 function byId(id) {
   return document.getElementById(id);
@@ -41,6 +42,7 @@ function ensureWesenStylesheet() {
     ["wesen-adaptive", "/wesen-adaptive.css"],
     ["wesen-organism", "/wesen-organism.css"],
     ["wesen-anatomy", "/wesen-anatomy-v3.css"],
+    ["wesen-neural-symbiosis", "/wesen-neural-symbiosis.css"],
   ];
   stylesheets.forEach(([name, href]) => {
     if (document.querySelector(`link[data-wesen-style="${name}"]`)) return;
