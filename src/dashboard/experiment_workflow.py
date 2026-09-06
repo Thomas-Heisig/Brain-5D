@@ -880,17 +880,19 @@ def _code_digest(code: CodeType) -> str:
             return
         if isinstance(value, tuple):
             digest.update(b"tuple\0")
-            for item in value:
+            tuple_items = cast(tuple[object, ...], value)
+            for item in tuple_items:
                 update_value(item)
                 digest.update(b"\0")
             return
         if isinstance(value, frozenset):
             digest.update(b"frozenset\0")
+            set_items = cast(frozenset[object], value)
             encoded_items = sorted(
                 f"{type(item).__qualname__}:{item!r}".encode(
                     "utf-8", errors="backslashreplace"
                 )
-                for item in value
+                for item in set_items
             )
             for item in encoded_items:
                 digest.update(item)
