@@ -6,14 +6,15 @@
 
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
-## Current verified baseline
+## Current baseline
 
-At the 2026-09-06 verification point:
+At the 2026-09-06 research-catalog integration point:
 
-- **791 tests** are collected on the research-catalog integration branch;
-- post-MSBA `main` CI #598 completed successfully on `bf47018f39de615b418166ebbb46e92b1fd1d301`;
-- Python 3.11, 3.12 and 3.13 full/slow suites, Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity passed on that baseline;
-- wheel build/install and Docker build/runtime verification passed;
+- **791 tests** are collected on current `main`;
+- Research Catalog / variable-projection-dimension PR #21 is merged; merge commit `85e7209509b348bf7912dde01d3d9ebb078a2e61`;
+- the latest fully completed pre-merge `main` CI baseline was #598 and successful;
+- post-merge/current-head CI is the authoritative verification and must complete before the current head is described as fully green;
+- Python 3.11/3.12/3.13, Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security, Scientific Integrity, wheel and Docker remain mandatory gates;
 - historical experiment DATA remains immutable evidence history.
 
 Instrumentation repairs, registry repairs and new architecture produce new observations/experiments rather than rewriting prior DATA/EVID.
