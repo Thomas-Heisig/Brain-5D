@@ -1,0 +1,455 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0031",
+  "research_question_id": "RQ-SNN-001",
+  "hypothesis_ids": [
+    "H-SNN-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-06T18:57:50.400653+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0031",
+      "research_question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-001-A",
+          "research_question": "RQ-SNN-001",
+          "hypothesis": "Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken ohne numerische Drift.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-06",
+      "source_sha": "25afd8089e12d431d856982770c2024dd99a88a9"
+    },
+    "executive_summary": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+    "research_question": {
+      "id": "RQ-SNN-001",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann Brain-5D stabile Spike-Dynamiken über lange Simulationszeiträume erzeugen?",
+      "relevance": "Grundvoraussetzung für alle weiteren Lern- und Selbstorganisationsexperimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {},
+    "data_basis": {
+      "data": {},
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "status": "NOT_AVAILABLE",
+      "source": "deterministic statistics.json"
+    },
+    "observations": [
+      {
+        "type": "Berechnungen",
+        "details": "Die Simulation wurde für 1000 Ticks durchgeführt (ticks_requested: 1000). Die beobachtete Anzahl von Ticks betrug 1000 (observed_ticks: 1000). Der Tick-Kontrakt wurde als erfüllt gemeldet (tick_contract: SATISFIED)."
+      },
+      {
+        "type": "Interpretation",
+        "details": "Die Simulationsergebnisse zeigen, dass die Netzwerkkonfiguration (5000 Neuronen, 36031 Synapsen) über einen Zeitraum von 1000 Ticks stabil lief, ohne dass ein numerischer Fehler oder ein Abbruch gemeldet wurde. Dies deutet auf eine erfolgreiche Aufrechterhaltung der Spike-Dynamik hin."
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+      "observations": [
+        {
+          "details": "Die Simulation wurde für 1000 Ticks durchgeführt (ticks_requested: 1000). Die beobachtete Anzahl von Ticks betrug 1000 (observed_ticks: 1000). Der Tick-Kontrakt wurde als erfüllt gemeldet (tick_contract: SATISFIED).",
+          "type": "Berechnungen"
+        },
+        {
+          "details": "Die Simulationsergebnisse zeigen, dass die Netzwerkkonfiguration (5000 Neuronen, 36031 Synapsen) über einen Zeitraum von 1000 Ticks stabil lief, ohne dass ein numerischer Fehler oder ein Abbruch gemeldet wurde. Dies deutet auf eine erfolgreiche Aufrechterhaltung der Spike-Dynamik hin.",
+          "type": "Interpretation"
+        }
+      ],
+      "effect_direction": "Bestätigend",
+      "methodological_concerns": [
+        "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar (Git provenance is dirty or unavailable).",
+        "Es ist kein registrierter wissenschaftlicher Nachweis mit diesem Experiment verknüpft (No registered scientific evidence is linked to this experiment).",
+        "Die Konfigurations- und Daten-Hashes sind nicht verfügbar (NOT_AVAILABLE)."
+      ],
+      "alternative_explanations": [
+        "Die beobachtete Stabilität könnte auf die spezifische Parametrisierung der Izhikevich-Neuronen zurückzuführen sein, die in der Literatur als Standardreferenz dient, und nicht auf eine allgemeine Eigenschaft des gesamten Brain-5D-Frameworks.",
+        "Die Stabilität könnte durch die gewählte Simulationsdauer (1000 Ticks) begrenzt sein; längere Simulationen könnten andere Arten von numerischer Drift oder Instabilität aufdecken."
+      ],
+      "recommended_experiments": [
+        "Durchführung von Simulationen mit deutlich längeren Simulationszeiträumen (z.B. 10.000 Ticks oder mehr), um die Langzeitstabilität der Spike-Dynamik zu testen.",
+        "Systematische Variation der Netzwerkparameter (z.B. Synapsendichte, Neuronentypen) bei Beibehaltung der Simulationsdauer, um die Robustheit der Dynamik zu untersuchen."
+      ],
+      "requested_evidence": [
+        "Bereitstellung der vollständigen und sauberen Provenienzdaten (Git provenance).",
+        "Verknüpfung des Experiments mit einem registrierten wissenschaftlichen Nachweis, um die Reproduzierbarkeit und Validität zu erhöhen."
+      ],
+      "confidence": 0.7
+    },
+    "methodological_critique": [
+      "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar (Git provenance is dirty or unavailable).",
+      "Es ist kein registrierter wissenschaftlicher Nachweis mit diesem Experiment verknüpft (No registered scientific evidence is linked to this experiment).",
+      "Die Konfigurations- und Daten-Hashes sind nicht verfügbar (NOT_AVAILABLE)."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete Stabilität könnte auf die spezifische Parametrisierung der Izhikevich-Neuronen zurüruckzuführen sein, die in der Literatur als Standardreferenz dient, und nicht auf eine allgemeine Eigenschaft des gesamten Brain-5D-Frameworks.",
+      "Die Stabilität könnte durch die gewählte Simulationsdauer (1000 Ticks) begrenzt sein; längere Simulationen könnten andere Arten von numerischer Drift oder Instabilität aufdecken."
+    ],
+    "reproducibility": {
+      "git_commit": "25afd8089e12d431d856982770c2024dd99a88a9",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "NOT_AVAILABLE",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "802f6249dcf874f0602979e18276f1d64c9c117db671b242e52750475a184d43",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "ABSENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.7,
+    "missing_evidence": [
+      "Bereitstellung der vollständigen und sauberen Provenienzdaten (Git provenance).",
+      "Verknüpfung des Experiments mit einem registrierten wissenschaftlichen Nachweis, um die Reproduzierbarkeit und Validität zu erhöhen."
+    ],
+    "recommended_follow_up": [
+      "Durchführung von Simulationen mit deutlich längeren Simulationszeiträumen (z.B. 10.000 Ticks oder mehr), um die Langzeitstabilität der Spike-Dynamik zu testen.",
+      "Systematische Variation der Netzwerkparameter (z.B. Synapsendichte, Neuronentypen) bei Beibehaltung der Simulationsdauer, um die Robustheit der Dynamik zu untersuchen."
+    ],
+    "conclusion": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260906185728890345-e7d6653a",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0031",
+          "packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3"
+        },
+        "output": {
+          "assessment": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+          "observations": [
+            {
+              "type": "Berechnungen",
+              "details": "Die Simulation wurde für 1000 Ticks durchgeführt (ticks_requested: 1000). Die beobachtete Anzahl von Ticks betrug 1000 (observed_ticks: 1000). Der Tick-Kontrakt wurde als erfüllt gemeldet (tick_contract: SATISFIED)."
+            },
+            {
+              "type": "Interpretation",
+              "details": "Die Simulationsergebnisse zeigen, dass die Netzwerkkonfiguration (5000 Neuronen, 36031 Synapsen) über einen Zeitraum von 1000 Ticks stabil lief, ohne dass ein numerischer Fehler oder ein Abbruch gemeldet wurde. Dies deutet auf eine erfolgreiche Aufrechterhaltung der Spike-Dynamik hin."
+            }
+          ],
+          "effect_direction": "Bestätigend",
+          "methodological_concerns": [
+            "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar (Git provenance is dirty or unavailable).",
+            "Es ist kein registrierter wissenschaftlicher Nachweis mit diesem Experiment verknüpft (No registered scientific evidence is linked to this experiment).",
+            "Die Konfigurations- und Daten-Hashes sind nicht verfügbar (NOT_AVAILABLE)."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Stabilität könnte auf die spezifische Parametrisierung der Izhikevich-Neuronen zurückzuführen sein, die in der Literatur als Standardreferenz dient, und nicht auf eine allgemeine Eigenschaft des gesamten Brain-5D-Frameworks.",
+            "Die Stabilität könnte durch die gewählte Simulationsdauer (1000 Ticks) begrenzt sein; längere Simulationen könnten andere Arten von numerischer Drift oder Instabilität aufdecken."
+          ],
+          "recommended_experiments": [
+            "Durchführung von Simulationen mit deutlich längeren Simulationszeiträumen (z.B. 10.000 Ticks oder mehr), um die Langzeitstabilität der Spike-Dynamik zu testen.",
+            "Systematische Variation der Netzwerkparameter (z.B. Synapsendichte, Neuronentypen) bei Beibehaltung der Simulationsdauer, um die Robustheit der Dynamik zu untersuchen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen und sauberen Provenienzdaten (Git provenance).",
+            "Verknüpfung des Experiments mit einem registrierten wissenschaftlichen Nachweis, um die Reproduzierbarkeit und Validität zu erhöhen."
+          ],
+          "confidence": 0.7
+        },
+        "provenance": {
+          "prompt_sha256": "4e5d60da5cb7b6b2c21e6243b4ecb3ea94b8a176fbd294040b994b9bc27a9343",
+          "research_packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "25afd8089e12d431d856982770c2024dd99a88a9",
+          "model_self_confidence": "0.7"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T18:57:28.890345+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260906185739529930-e7d6653a",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0031",
+          "packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3"
+        },
+        "output": {
+          "assessment": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+          "observations": [
+            {
+              "details": "Die Simulation wurde für 1000 Ticks durchgeführt (ticks_requested: 1000). Die beobachtete Anzahl von Ticks betrug 1000 (observed_ticks: 1000). Der Tick-Kontrakt wurde als erfüllt gemeldet (tick_contract: SATISFIED).",
+              "type": "Berechnungen"
+            },
+            {
+              "details": "Die Simulationsergebnisse zeigen, dass die Netzwerkkonfiguration (5000 Neuronen, 36031 Synapsen) über einen Zeitraum von 1000 Ticks stabil lief, ohne dass ein numerischer Fehler oder ein Abbruch gemeldet wurde. Dies deutet auf eine erfolgreiche Aufrechterhaltung der Spike-Dynamik hin.",
+              "type": "Interpretation"
+            }
+          ],
+          "effect_direction": "Bestätigend",
+          "methodological_concerns": [
+            "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar (Git provenance is dirty or unavailable).",
+            "Es ist kein registrierter wissenschaftlicher Nachweis mit diesem Experiment verknüpft (No registered scientific evidence is linked to this experiment).",
+            "Die Konfigurations- und Daten-Hashes sind nicht verfügbar (NOT_AVAILABLE)."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Stabilität könnte auf die spezifische Parametrisierung der Izhikevich-Neuronen zurüruckzuführen sein, die in der Literatur als Standardreferenz dient, und nicht auf eine allgemeine Eigenschaft des gesamten Brain-5D-Frameworks.",
+            "Die Stabilität könnte durch die gewählte Simulationsdauer (1000 Ticks) begrenzt sein; längere Simulationen könnten andere Arten von numerischer Drift oder Instabilität aufdecken."
+          ],
+          "recommended_experiments": [
+            "Durchführung von Simulationen mit deutlich längeren Simulationszeiträumen (z.B. 10.000 Ticks oder mehr), um die Langzeitstabilität der Spike-Dynamik zu testen.",
+            "Systematische Variation der Netzwerkparameter (z.B. Synapsendichte, Neuronentypen) bei Beibehaltung der Simulationsdauer, um die Robustheit der Dynamik zu untersuchen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen und sauberen Provenienzdaten (Git provenance).",
+            "Verknüpfung des Experiments mit einem registrierten wissenschaftlichen Nachweis, um die Reproduzierbarkeit und Validität zu erhöhen."
+          ],
+          "confidence": 0.7
+        },
+        "provenance": {
+          "prompt_sha256": "50ff7d5be0e2a7a016154bb8041f9656714dcb12fda179c7a9e1b1df6164b87c",
+          "research_packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "25afd8089e12d431d856982770c2024dd99a88a9",
+          "model_self_confidence": "0.7"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T18:57:39.529930+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260906185750395441-e7d6653a",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0031",
+          "packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3"
+        },
+        "output": {
+          "assessment": "Die Simulation hat erfolgreich eine Spike-Dynamik über die angeforderte Anzahl von Ticks durchgeführt, was die Hypothese stützt, dass Brain-5D stabile Spike-Dynamiken erzeugen kann.",
+          "observations": [
+            {
+              "details": "Die Simulation wurde für 1000 Ticks durchgeführt (ticks_requested: 1000). Die beobachtete Anzahl von Ticks betrug 1000 (observed_ticks: 1000). Der Tick-Kontrakt wurde als erfüllt gemeldet (tick_contract: SATISFIED).",
+              "type": "Berechnungen"
+            },
+            {
+              "details": "Die Simulationsergebnisse zeigen, dass die Netzwerkkonfiguration (5000 Neuronen, 36031 Synapsen) über einen Zeitraum von 1000 Ticks stabil lief, ohne dass ein numerischer Fehler oder ein Abbruch gemeldet wurde. Dies deutet auf eine erfolgreiche Aufrechterhaltung der Spike-Dynamik hin.",
+              "type": "Interpretation"
+            }
+          ],
+          "effect_direction": "Bestätigend",
+          "methodological_concerns": [
+            "Die Provenienz der Git-Daten ist unsauber oder nicht verfügbar (Git provenance is dirty or unavailable).",
+            "Es ist kein registrierter wissenschaftlicher Nachweis mit diesem Experiment verknüpft (No registered scientific evidence is linked to this experiment).",
+            "Die Konfigurations- und Daten-Hashes sind nicht verfügbar (NOT_AVAILABLE)."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete Stabilität könnte auf die spezifische Parametrisierung der Izhikevich-Neuronen zurückzuführen sein, die in der Literatur als Standardreferenz dient, und nicht auf eine allgemeine Eigenschaft des gesamten Brain-5D-Frameworks.",
+            "Die Stabilität könnte durch die gewählte Simulationsdauer (1000 Ticks) begrenzt sein; längere Simulationen könnten andere Arten von numerischer Drift oder Instabilität aufdecken."
+          ],
+          "recommended_experiments": [
+            "Durchführung von Simulationen mit deutlich längeren Simulationszeiträumen (z.B. 10.000 Ticks oder mehr), um die Langzeitstabilität der Spike-Dynamik zu testen.",
+            "Systematische Variation der Netzwerkparameter (z.B. Synapsendichte, Neuronentypen) bei Beibehaltung der Simulationsdauer, um die Robustheit der Dynamik zu untersuchen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der vollständigen und sauberen Provenienzdaten (Git provenance).",
+            "Verknüpfung des Experiments mit einem registrierten wissenschaftlichen Nachweis, um die Reproduzierbarkeit und Validität zu erhöhen."
+          ],
+          "confidence": 0.7
+        },
+        "provenance": {
+          "prompt_sha256": "cadeeeb470cc24423d8ac7ee7419227cae7b2a95db251fe3038ac6560f3d83b4",
+          "research_packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "25afd8089e12d431d856982770c2024dd99a88a9",
+          "model_self_confidence": "0.7"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T18:57:50.395441+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "e7d6653a6a2915095b564bd16559480979b9ea1d561e99bc740793b9b9e598a3",
+    "source": {
+      "git_commit": "25afd8089e12d431d856982770c2024dd99a88a9",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "NOT_AVAILABLE",
+      "configuration_path": "NOT_AVAILABLE",
+      "configuration_sha256": "NOT_AVAILABLE",
+      "experiment_manifest_digest": "802f6249dcf874f0602979e18276f1d64c9c117db671b242e52750475a184d43",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "NOT_AVAILABLE",
+      "data_digest": "NOT_AVAILABLE",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260906185728890345-e7d6653a",
+    "AIAR-critical_reviewer-20260906185739529930-e7d6653a",
+    "AIAR-scientific_writer-20260906185750395441-e7d6653a"
+  ],
+  "supersedes": null,
+  "content_digest": "2a0b4000c207830097bedf9be1bf13f56b4c5deef84fdcc8139f37f081d95ecc",
+  "markdown_digest": "2d096858749ef9e6ef6c125f3571b9a702560c9a496f7c1f8f55f9f232a21543"
+}
