@@ -1,32 +1,55 @@
 # Brain-5D Scientific Evidence Framework (B5D-SEF)
 
-Ein automatisch geführtes wissenschaftliches Evidenzsystem für Brain-5D.
+Ein wissenschaftliches Evidenzsystem für Brain-5D, das technische Implementierung, Experimentdaten, akzeptierte Evidenz und Interpretation strikt trennt.
 
-## Aktueller Stand
+## Aktueller technischer Stand — 2026-09-06
 
-Die technische Forschungsinfrastruktur ist auf dem aktuellen `main` weitgehend implementiert und verifiziert: Scientific Integrity Gate, AI-Provenienz und Causal-Taint, Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischer Provenienzgraph, getrennte Operator-/Experiment-/Dev-Storage-Scopes sowie protocol-driven Science Runner sind vorhanden.
+Die Forschungsinfrastruktur auf `main` umfasst Scientific Integrity Gate, AI-Provenienz und Causal-Taint, Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischen Provenienzgraph, getrennte Operator-/Experiment-/Dev-Storage-Scopes sowie protocol-driven Science Runner.
 
-**Verifizierter Stand vom 2026-09-05:**
+Verifizierter Engineering-Snapshot:
 
-- 735 Tests werden aktuell gesammelt;
-- 733 Tests bestanden, 2 wurden in der verifizierten Repair-Vollsuite übersprungen, 0 schlugen fehl;
-- der anschließend vollständig durchgelaufene GitHub-CI-Run auf `main` war erfolgreich;
-- Python 3.11, 3.12 und 3.13, Mypy, Pyright, Black, Ruff, Pylint, Pre-Commit, Security und Scientific Integrity Gate sind im vollständigen CI erfolgreich gelaufen.
+- 773 Tests werden gesammelt;
+- Python 3.11, 3.12 und 3.13 Full-/Slow-Suites laufen grün;
+- Mypy, Pyright, Black, Ruff, Pylint und Pre-Commit laufen grün;
+- Security und Scientific Integrity Gate laufen grün;
+- Wheel Build/Install sowie Docker Build/Runtime Verify laufen grün;
+- der vollständige GitHub-CI-Run #583 auf dem Neural-Symbiosis-Merge-Commit war erfolgreich.
 
 Diese technischen Ergebnisse sind **kein wissenschaftlicher Wirksamkeitsnachweis**.
 
-## Aktuelle Korrektur der Network-Impulse-Beobachtung
+## Wissenschaftliche Grundhierarchie
 
-Bei der erneuten Prüfung von `EXP-GEN-0009` bis `EXP-GEN-0012` zeigte sich ein wichtiger methodischer Befund:
+```text
+Implementierung
+    ↓
+registrierte Forschungsfrage
+    ↓
+Hypothese
+    ↓
+preregistriertes Experiment
+    ↓
+DATA
+    ↓
+statistische / methodische Auswertung
+    ↓
+Human Review
+    ↓
+EVID
+    ↓
+Claim-Status / Antwort
+```
 
-- die Runs meldeten keine Runtime-Exception;
-- der gespeicherte Zustand änderte sich zwischen Vorher/Nachher;
-- dennoch wurden `activated_neurons = 0` und `total_spikes = 0` protokolliert;
-- Ursache war die damalige Messgrenze des Network-Impulse-Probes: ausgewertet wurde im Wesentlichen nur die Output-Spike-Projektion.
+Kurzform:
 
-Die historischen DATA-Dateien bleiben unverändert. Sie dokumentieren korrekt, was die damalige Instrumentierung beobachtet hat.
+```text
+implementation test != experiment data != accepted evidence != interpretation
+```
 
-Der aktuelle Probe-Vertrag erfasst nun zusätzlich:
+## Network-Impulse-Korrektur
+
+Die historischen `EXP-GEN-0009` bis `EXP-GEN-0012` bleiben unverändert. Sie dokumentieren korrekt, dass die damalige Output-orientierte Instrumentierung keine sichtbaren Spikes/Aktivierung aufgezeichnet hat.
+
+Der aktuelle Probe-Vertrag erfasst zusätzlich:
 
 - ausgeführte Ticks;
 - alle publizierten Spike-IDs;
@@ -39,74 +62,93 @@ Der aktuelle Probe-Vertrag erfasst nun zusätzlich:
 - erste/letzte Antwortlatenz;
 - Propagationstiefe;
 - Recurrent-/Return-Events und Return-Latenz;
-- State-Digests vor und nach dem Probe-Lauf.
+- State-Digests vor und nach dem Lauf.
 
-Zusätzlich wurde die Recurrence-Bedingung so korrigiert, dass tatsächlich ein Rückweg zum Source-Neuron existiert. Eine direkte Validierung gegen das reale `NeuralNetwork` bestätigte Tick-Ausführung, Neuronen-Spikes und synaptische Zustellung sowohl in der feed-forward- als auch in der recurrent-Bedingung. Die recurrent-Bedingung erzeugte in der Validierung zusätzliche wiederkehrende Aktivität.
+Wissenschaftlich korrekt ist ein **neues Multi-Seed-Experiment** auf der reparierten Instrumentierung, nicht das rückwirkende Umschreiben historischer DATA.
 
-Die wissenschaftlich korrekte Konsequenz ist **nicht**, `EXP-GEN-0009` bis `EXP-GEN-0012` rückwirkend umzuschreiben. Stattdessen ist ein neues registriertes, Multi-Seed-validiertes Experiment auf der reparierten Instrumentierung durchzuführen.
+## Experimentdaten und Kompaktierung
 
-## Persistenz neuer Experimentdaten
+Große Runs dürfen nicht dadurch wissenschaftlich unbrauchbar werden, dass Dashboard oder kleine lokale KI-Modelle eine sehr große `runs.json` vollständig laden müssen.
 
-Neue Science-Runner-Läufe persistieren die `NetworkResponseSignature` je Run nach:
+Daher gilt:
 
-`research/experiments/<EXP-ID>/DATA/runs.json`
+1. Rohbeobachtungen bleiben in immutable/compressed Raw-Artefakten erhalten.
+2. `runs.json` darf eine bounded aktuelle Projektion enthalten.
+3. `analysis/ai_packet.json` enthält eine kompakte, für KI-Review geeignete Projektion.
+4. Jede Projektion muss auf Raw-Artefakt, Digest und Provenienz zurückverweisen.
+5. Kompaktierung darf keine Rohdaten löschen oder Evidenz ersetzen.
+6. AI-Berichte dürfen nur aus den ihnen tatsächlich bereitgestellten Daten Schlüsse ziehen.
 
-Zusätzlich werden je nach Workflow u. a. Konfiguration, Workflow, Manifest, technische Reports und Review-/Evidence-Artefakte gespeichert. Dadurch sind Tick-, Spike-, Neuron-, Synapsen-, Latenz- und Recurrence-Metriken künftig Bestandteil der experimentlokalen DATA-Provenienz.
+## Neural Symbiosis als Forschungsbehandlung
 
-## Verifikation
+`Neural Symbiosis` erweitert den Embodiment-Rand um offene periphere neuronale und virtuelle Areale. Diese Ebene ist **keine wissenschaftliche Evidenz an sich**.
 
-```bash
-python -m pytest -q
-python research/generate_reports.py
-python scripts/verify_network_activity.py
-```
+Mögliche Areale umfassen u. a. CNN, Vision Transformer, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, Reservoir/ESN, MLP, VAE/GAN/Diffusion, Autoencoder, periphere SNNs, multimodale und neuro-symbolische Netzwerke sowie Custom Adapter. Virtuelle Systeme wie Logic Engines, Datenbanken, Knowledge Graphs oder externe Speicher können über explizite Adapter teilnehmen.
 
-`verify_network_activity.py` prüft gezielt, dass der reale Impuls-Pfad Ticks ausführt, Synapsen besitzt, Spikes beobachtet und synaptische Events ausliefert.
+Für wissenschaftliche Runs gelten zusätzliche Regeln:
 
-Die Report-Generierung verändert keine wissenschaftlichen Claims automatisch. Claims und Reviews bleiben versionierte, provenance-gebundene Artefakte mit expliziter Bewertung.
+- exakte Adapter-/Modell-/Framework-Version erfassen;
+- Modellartefakt und Hash erfassen;
+- Endpoint-Identität und Modalität erfassen;
+- Encoding/Decoding-Vertrag erfassen;
+- Gateway-Parameter und aktivierte Mechanismen erfassen;
+- RNG Seed/State persistieren;
+- Gateway-Zustand von Core-Synapsenzustand trennen;
+- Frozen-, Random-, Timing-Shuffle- und Information-Destroyed-Kontrollen vorsehen;
+- Pipeline-Erreichbarkeit niemals als gelerntes Tool Use interpretieren;
+- Gateway-Plastizität außerhalb eines expliziten preregistrierten Experimentpfads deaktiviert lassen.
+
+Der zunächst vorgeschlagene globale Homöostase-Reward
+
+\[
+R(t)=\frac{1}{N}\sum_i(\rho_{target}-\bar\rho_i)
+\]
+
+ist **keine validierte Standarddefinition**, weil gegenläufige Populationseffekte sich gegenseitig aufheben können. Künftige Experimente sollen signierte, absolute, quadratische und lokale Fehlermaße sowie getrennte Task-/Homöostase-Rewards vergleichen.
 
 ## Empfohlener Forschungsablauf
 
 1. Forschungsfrage, Hypothesen, Bedingungen, Seeds, Metriken und Ausschlussregeln registrieren.
-2. Source Freeze und sauberen Git-Baum herstellen; Netzwerkmodus und AI-Exposure explizit festlegen.
-3. Experiment unter `research/experiments/EXP-*/` ausführen und DATA-Artefakte mit Digest-Provenienz speichern.
-4. Prüfen, ob die verwendete Instrumentierung die für die Hypothese relevanten Zustände tatsächlich beobachtet.
-5. Deterministische Statistik aus der Statistics Engine erzeugen und Limitationen dokumentieren.
-6. EVID erst nach unabhängiger Wiederholung und Human Review registrieren.
-7. Historische negative oder unvollständige DATA niemals nachträglich an eine verbesserte Instrumentierung anpassen.
+2. Source Freeze und sauberen Git-Baum herstellen.
+3. Netzwerkmodus, AI-Exposure und periphere Modelle explizit deklarieren.
+4. Experiment unter `research/experiments/EXP-*/` ausführen.
+5. DATA-Artefakte mit Digest-Provenienz speichern.
+6. Prüfen, ob die Instrumentierung die hypothesenrelevanten Zustände tatsächlich beobachtet.
+7. Deterministische Statistik aus der Statistics Engine erzeugen.
+8. Limitationen und Ausschlüsse dokumentieren.
+9. EVID erst nach unabhängiger Wiederholung und Human Review registrieren.
+10. Historische negative oder unvollständige DATA niemals nachträglich an verbesserte Instrumentierung anpassen.
 
-Technische Reports dürfen den Status `implemented`, `integrated` oder `verified` tragen. `evidenced` ist ausschließlich für reproduzierbare, protokollierte und reviewte Forschungsergebnisse zulässig.
-
-## Unmittelbar nächster Forschungsbedarf
+## Unmittelbarer Forschungsbedarf
 
 ### 1. Post-Repair Network-Impulse-Validierung
 
-- neue Experiment-ID aus dem aktuellen Katalog verwenden;
-- recurrence-off gegen recurrence-on vergleichen;
+- recurrence-off gegen recurrence-on;
 - mehrere unabhängige Seeds;
-- vollständige Spike-/Synapsen-/Tick-Metriken persistieren;
-- Determinismus und Reproduzierbarkeit prüfen;
-- erst nach Review eine mögliche Propagations-/Recurrence-Aussage in EVID überführen.
+- vollständige Spike-/Synapsen-/Tick-Metriken;
+- Reproduzierbarkeit/Determinismus prüfen;
+- Review vor möglicher EVID-Promotion.
 
 ### 2. Closed-loop Embodiment EVID
 
-Die technische Closed-loop-Infrastruktur und Störbedingungen existieren. Noch erforderlich ist die saubere Evidence-Promotion nach den definierten Protokoll- und Reviewregeln.
+Die technische Closed-loop-Infrastruktur existiert. Erforderlich bleibt die kontrollierte Evidence-Promotion mit Replay/Open-Loop-, Sensor-Loss- und Actuator-No-Effect-Kontrollen.
 
-### 3. Runtime-/Zeitkalibrierung
+### 3. Neural Symbiosis Gateway Experiments
 
-Target-Hz, Achieved-Hz, Real-Time-Ratio, `dt` und Tick-Kosten müssen systematisch benchmarked werden. Eine Änderung des Wall-Clock-Pacings darf bei unverändertem `dt` und identischen Inputs nicht unbemerkt wissenschaftliche Simulationsergebnisse verändern.
+- experiment-only Runner Adapter;
+- frozen/random/shuffled Controls;
+- noisy-area suppression;
+- sensor-lesion compensation;
+- alternative homeostatische Reward-/Error-Formulierungen;
+- Multi-Seed-Validierung vor Tool-Use-Claims.
 
-### 4. 5D-Ablationen
+### 4. Runtime-/Zeitkalibrierung
 
-Aussagen über den funktionalen Beitrag der fünfdimensionalen Organisation bleiben offen, bis dimension-shuffled, reduced-dimensional und möglichst topology-matched non-spatial Kontrollen vorliegen.
+Target-Hz, Achieved-Hz, Real-Time-Ratio, `dt` und Tick-Kosten systematisch benchmarken. Pacing-Änderungen dürfen bei identischem `dt` und identischen Inputs nicht unbemerkt Simulationsergebnisse verändern.
 
-## Kernidee
+### 5. 5D-Ablationen
 
-Jede wissenschaftliche Aussage in Brain-5D bekommt eine **rückverfolgbare Identität**:
-
-```text
-Codeänderung → Wissenschaftliche Frage → Hypothese → Experiment → Messdaten → Auswertung → Evidenz → Antwort → Neue Fragen
-```
+Funktionale Aussagen über die fünfdimensionale Organisation bleiben offen, bis dimension-shuffled, reduced-dimensional und topology-matched Kontrollen vorliegen.
 
 ## Sechs feste Objekttypen
 
@@ -123,34 +165,19 @@ Codeänderung → Wissenschaftliche Frage → Hypothese → Experiment → Messd
 
 ```text
 research/
-├── registry/           # YAML-Register (Fragen, Hypothesen, Claims, Quellen, Methoden)
-├── experiments/        # Experiment-Manifeste, DATA, Reports und Reviews
-├── literature/         # BibTeX-Literaturdatenbank
-├── generated/          # Automatisch generierte Berichte (NICHT manuell bearbeiten)
-└── schemas/            # JSON-Schemata zur Validierung
+├── registry/           # YAML-Register
+├── experiments/        # Manifeste, DATA, Reports und Reviews
+├── literature/         # Literaturdatenbank
+├── generated/          # automatisch generierte Berichte
+└── schemas/            # JSON-Schemata
 ```
 
-## Automatisch generierte Berichte
-
-- **RESEARCH_CATALOG.md** — Vollständiger Forschungskatalog
-- **EVIDENCE_MATRIX.md** — Evidenzstatus pro Forschungsfrage
-- **OPEN_QUESTIONS.md** — Alle offenen Fragen
-- **CLAIM_REGISTER.md** — Alle Claims mit Status
-- **DISSERTATION_MAP.md** — Dissertationsstruktur
-- **LITERATURE_MATRIX.md** — Literaturrelevanz für Brain-5D
-
-## Generierung
+## Verifikation
 
 ```bash
+python -m pytest -q
 python research/generate_reports.py
+python scripts/verify_network_activity.py
 ```
 
-## Wichtige Grundsätze
-
-1. **THEORY** ≠ **OBSERVATION** ≠ **INTERPRETATION** — strikt getrennt.
-2. **Negative Ergebnisse** werden gespeichert und nie gelöscht oder rückwirkend umgedeutet.
-3. **Claims** benötigen ausreichende Evidenz vor Statuswechsel.
-4. **Automatisch erzeugte Fragen** sind zunächst `candidate` — der Mensch entscheidet.
-5. **Instrumentierungsgrenzen** müssen als Teil der wissenschaftlichen Interpretation dokumentiert werden.
-6. **UI-/Dashboard-Zustand** ist kein Ersatz für experimentelle DATA oder EVID.
-7. **AI-Beteiligung** bleibt provenance-gebunden und muss als Treatment registriert werden, wenn sie den experimentellen Pfad beeinflusst.
+Technische Reports dürfen `implemented`, `integrated` oder `verified` tragen. `evidenced` ist ausschließlich für reproduzierbare, protokollierte und reviewte Forschungsergebnisse vorgesehen.
