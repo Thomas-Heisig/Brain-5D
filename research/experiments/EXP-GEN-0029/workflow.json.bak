@@ -27,7 +27,7 @@
     "status": "READY",
     "reviewer": "Thomas Heisig",
     "decision": "ACCEPT_FOR_REVIEWED_RECORD",
-    "reviewed_at": "2026-09-06T10:52:43.254Z",
+    "reviewed_at": "2026-09-06T10:52:39.791Z",
     "notes": "weitere wiederholungen mit meer seeds",
     "checklist": {
       "experiment_contract": true,
