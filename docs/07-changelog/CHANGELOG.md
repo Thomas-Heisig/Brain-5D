@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Header and footer shell stabilization
+
+- Header sizing, status-cluster placement and responsive control wrapping are stabilized.
+- Footer Start/Pause/Stop controls and live input/output fields are restored in the current DOM.
+- Conflicting fixed Footer layout rules are replaced by a responsive two-row shell.
+
 ## 2026-09-05 — Experiment Runner inputs and conditions
 
 - Der Dashboard-Runner akzeptiert einzelne Seeds, CSV-Listen und Bereiche wie

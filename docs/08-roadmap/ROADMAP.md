@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Header and footer shell stabilization
+
+- Header sizing and responsive wrapping are centralized in the final Experience shell rules.
+- Footer markup includes global Runtime controls and live I/O while remaining compatible with the flat legacy DOM.
+- Footer and header no longer rely on fixed viewport positioning that can clip the document.
+
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
 ## Current baseline

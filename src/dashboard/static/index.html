@@ -678,11 +678,22 @@
     </div>
     <div class="footer-segment footer-runtime">
       <span>Runtime</span><strong class="status-pill" id="system-status">offline</strong>
+      <div class="footer-runtime-actions" aria-label="Runtime-Steuerung">
+        <button id="footer-runtime-start" type="button" title="Runtime starten" aria-label="Runtime starten">▶</button>
+        <button id="footer-runtime-pause" type="button" title="Runtime pausieren" aria-label="Runtime pausieren">Ⅱ</button>
+        <button id="footer-runtime-stop" type="button" title="Runtime stoppen" aria-label="Runtime stoppen">■</button>
+      </div>
     </div>
     <div class="footer-vitals" aria-label="Live Aktivität und Ressourcen">
       <div class="footer-vital"><span>Aktivität</span><strong id="footer-activity-value">—</strong><i><b id="footer-activity-bar"></b></i></div>
       <div class="footer-vital"><span>Spikes</span><strong id="footer-spikes-value">—</strong><i><b id="footer-spikes-bar"></b></i></div>
       <div class="footer-vital"><span>Ressourcendruck</span><strong id="footer-pressure-value">—</strong><i><b id="footer-pressure-bar"></b></i></div>
+    </div>
+    <div class="footer-io" aria-label="Runtime Input und Output" aria-live="polite">
+      <span class="footer-io-label">I/O</span>
+      <span><small>IN</small><strong id="footer-input-value">—</strong></span>
+      <span><small>OUT</small><strong id="footer-output-value">—</strong></span>
+      <em id="footer-io-state">warte auf Signal</em>
     </div>
     <div class="footer-segment footer-experiment" id="footer-experiment" data-active="false">
       <span class="footer-experiment-dot"></span>

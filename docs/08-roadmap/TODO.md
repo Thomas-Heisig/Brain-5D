@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Header and footer shell stabilization
+
+- [x] Stabilize Header sizing and responsive wrapping.
+- [x] Restore Footer Runtime controls and live I/O fields.
+- [x] Remove fixed Footer layout conflicts that clipped the document.
+
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
 ## Current engineering baseline
