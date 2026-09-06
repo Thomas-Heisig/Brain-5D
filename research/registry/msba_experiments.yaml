@@ -1,0 +1,185 @@
+programme:
+  id: MSBA-ENERGY-001
+  title: Modalitaets-spezifische Synaptische Bahn-Architektur und Ressourcenhomoeostase
+  status: proposed
+  created: '2026-09-06'
+  scope: neural_symbiosis.embodiment
+  scientific_boundary:
+    core_learning_rules_unchanged: true
+    historical_data_unchanged: true
+    gateway_learning_default: disabled
+    structural_growth_default: disabled
+    adaptive_allocation_default: disabled
+    activation_requires_preregistration: true
+    reachability_is_not_evidence: true
+    estimated_energy_is_not_measured_energy: true
+
+questions:
+- id: RQ-MSBA-E01
+  domain: Multimodal Energy Efficiency
+  question: Unterscheiden sich Audio-, Vision- und Digital-Gateways systematisch im Ressourcenverbrauch pro verwertbarer Information oder korrekter Entscheidung?
+  hypothesis: H-MSBA-E01-A
+  primary_metrics:
+  - normalized_energy_units_per_correct_decision
+  - joules_per_correct_decision
+  - synaptic_events_per_correct_decision
+  controls:
+  - modality_matched_task
+  - frozen_gateway
+  status: proposed
+- id: RQ-MSBA-E02
+  domain: Adaptive Resource Allocation
+  question: Erhaelt kostenadaptive Gateway-Allokation unter identischem Gesamtbudget mehr Aufgabenleistung als fixe oder zufaellige Allokation?
+  hypothesis: H-MSBA-E02-A
+  primary_metrics:
+  - task_accuracy
+  - resource_budget_consumed
+  - time_to_budget_exhaustion
+  controls:
+  - fixed_allocation
+  - random_allocation
+  - no_throttling_until_exhaustion
+  status: proposed
+- id: RQ-MSBA-E03
+  domain: Visual Resource Allocation
+  question: Kann sich eine nutzungsabhaengige visuelle ROI/Foveation ohne hart kodierte Zielregion entwickeln?
+  hypothesis: H-MSBA-E03-A
+  primary_metrics:
+  - roi_overlap_with_task_relevant_region
+  - task_accuracy
+  - visual_energy_units
+  controls:
+  - fixed_center_roi
+  - random_roi
+  - full_image
+  status: proposed
+- id: RQ-MSBA-E04
+  domain: Digital Gateway Integrity
+  question: Bleibt digitale Payload-Integritaet unter Ressourcen-Drosselung exakt erhalten, waehrend lediglich Durchsatz und Admission sinken?
+  hypothesis: H-MSBA-E04-A
+  primary_metrics:
+  - checksum_mismatches
+  - admitted_symbol_rate
+  - task_accuracy
+  controls:
+  - no_throttling
+  - deterministic_replay
+  status: proposed
+- id: RQ-MSBA-E05
+  domain: Multimodal Compensation
+  question: Erhoeht das System nach Ausfall oder Degradation einer Modalitaet gezielt die Allokation einer anderen Modalitaet, wenn deren erwarteter Nutzen die Mehrkosten rechtfertigt?
+  hypothesis: H-MSBA-E05-A
+  primary_metrics:
+  - compensatory_gate_change
+  - task_recovery
+  - incremental_energy_cost
+  controls:
+  - fixed_allocation
+  - shuffled_utility
+  - no_compensation
+  status: proposed
+
+hypotheses:
+- id: H-MSBA-E01-A
+  prediction: Unter kontrollierter Aufgabeninformation unterscheiden sich die drei Modalitaeten in Energie- und Synapsenkosten pro korrekter Entscheidung.
+  falsification: Keine reproduzierbare Differenz ueber unabhaengige Seeds und matched tasks.
+- id: H-MSBA-E02-A
+  prediction: Adaptive utility-minus-cost-Allokation erzielt bei gleichem Budget hoehere Leistung oder laengere funktionsfaehige Laufzeit als fixe und zufaellige Kontrollen.
+  falsification: Adaptive Allokation ist nicht besser als beide preregistrierten Kontrollen.
+- id: H-MSBA-E03-A
+  prediction: Adaptive ROI konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Energie gegenueber random ROI.
+  falsification: ROI-Konzentration oder Effizienzvorteil bleibt gegenueber random ROI aus.
+- id: H-MSBA-E04-A
+  prediction: Ressourcen-Drosselung reduziert Symbolrate, erzeugt aber null payload- oder checksum-Mutationen.
+  falsification: Mindestens eine reproduzierbare Payload-Mutation wird durch den SNN/Gateway-Pfad verursacht.
+- id: H-MSBA-E05-A
+  prediction: Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur dann, wenn deren Utility-Kosten-Verhaeltnis dies rechtfertigt, und verbessert die Aufgaben-Recovery.
+  falsification: Keine Recovery oder unspezifische Allokationssteigerung ohne Utility-Bezug.
+
+protocols:
+- id: PROTO-MSBA-AUDIO-001
+  modality: audio
+  projection_controls:
+  - structured_projection
+  - shuffled_projection
+  - random_projection
+  - reduced_dimension_projection
+  learning_treatment: phase_weighted_t_stdp
+  learning_default: disabled
+  notes: Phase coherence scales STDP magnitude without sign inversion.
+- id: PROTO-MSBA-VISION-001
+  modality: vision
+  initial_connectivity: fixed_target_degree
+  default_targets_per_input: 8
+  growth_signal:
+  - information_value
+  - 5d_locality
+  - resource_availability
+  growth_default: disabled
+  controls:
+  - adaptive_roi
+  - fixed_center_roi
+  - random_roi
+  - full_image
+- id: PROTO-MSBA-DIGITAL-001
+  modality: digital
+  payload_storage: exact_outside_snn
+  integrity: sha256
+  population_code: deterministic
+  learnable_fields:
+  - routing
+  - gain
+  - admission
+  - association
+  immutable_fields:
+  - payload
+  - checksum
+  - bit_values
+  meta_gating_default: disabled
+- id: PROTO-MSBA-ENERGY-001
+  states:
+  - NORMAL
+  - CONSERVE
+  - CRITICAL
+  - SURVIVAL
+  hard_overrides:
+  - fan_failure
+  - thermal_safety
+  - persistence_integrity
+  soft_policy_default: disabled
+  accounting_fields:
+  - normalized_energy_units
+  - estimated_joules
+  - measured_joules
+
+preregistration_schema:
+  required:
+  - experiment_id
+  - research_question_ids
+  - hypothesis_ids
+  - commit_sha
+  - environment_manifest
+  - independent_seed_plan
+  - gateway_configuration
+  - modality_adapter_versions
+  - model_hashes
+  - projection_mapping
+  - control_condition
+  - primary_metrics
+  - stopping_rule
+  - raw_data_path
+  - compact_ai_projection_path
+  - evidence_path
+  conditional_required:
+    digital:
+    - input_payload_checksums
+    - output_payload_checksums
+    energy:
+    - energy_source_type
+    - measurement_or_estimate_provenance
+    - calibration_parameters
+  prohibited_claims_without_evidence:
+  - learned_use_from_reachability
+  - biological_equivalence
+  - physical_joules_from_normalized_units
+  - supra_linear_integration_as_required_success
