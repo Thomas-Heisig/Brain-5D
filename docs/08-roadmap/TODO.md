@@ -9,15 +9,13 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 773 tests collected on the verified 2026-09-06 baseline.
-- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass.
-- [x] Black, Ruff, Pylint and Pre-Commit pass.
-- [x] Mypy and Pyright pass.
-- [x] Scientific Integrity Gate passes.
-- [x] Security checks pass.
-- [x] Wheel build/install and Docker build/runtime verification pass.
-- [x] No open pull requests remained at the verification point.
-- [x] All non-main work found at the verification point was already merged into `main`.
+- [x] 783 tests collected on the verified 2026-09-06 baseline.
+- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass on the pre-MSBA baseline; the MSBA branch must pass the same matrix before merge.
+- [x] Black, Ruff, Pylint and Pre-Commit pass on the pre-MSBA baseline.
+- [x] Mypy and Pyright pass on the pre-MSBA baseline.
+- [x] Scientific Integrity Gate passes on the pre-MSBA baseline.
+- [x] Security checks pass on the pre-MSBA baseline.
+- [x] Wheel build/install and Docker build/runtime verification pass on the pre-MSBA baseline.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] `Network` removed from primary frontend navigation.
 - [x] Release/Gate moved to a footer action.
@@ -27,20 +25,26 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Empirical overlays use backend observations and preserve unknown values.
 - [x] Neural Symbiosis added as an embodiment-only, read-only multi-network interface.
 - [x] Open-set `NetworkAreaAdapter` contract added for arbitrary peripheral network implementations.
-- [x] Built-in descriptors cover CNN, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoder, peripheral SNN, multimodal, neuro-symbolic and custom areas.
-- [x] Virtual logic/knowledge/database/memory areas are representable without being folded into canonical SNN state.
-- [x] Camera, microphone, web/API, database, logic, memory, audio, display, printer and robotics pipeline templates are represented.
 - [x] Gateway plasticity remains disabled by default.
 - [x] Candidate pair-STDP, homeostatic scaling, structural formation/pruning and reward-modulated gate math is implemented without hidden core mutation.
-- [x] Gateway RNG sampling is intentionally left to an explicit experiment runner.
 - [x] Pipeline reachability is explicitly not treated as evidence of learned use.
+- [x] MSBA added as a typed, fail-closed Neural-Symbiosis subarchitecture for audio, vision and digital pathways.
+- [x] MSBA does not assign fixed semantics to the five Brain-5D axes; modality features require explicit 5D projections and controls.
+- [x] Audio phase coherence scales candidate t-STDP without sign inversion.
+- [x] Vision defaults to fixed sparse target degree rather than percentage-dense connectivity and uses information/locality/resource candidate growth math.
+- [x] Digital `SymbolFrame` keeps exact payload/checksum outside the SNN while exposing deterministic population representations.
+- [x] MSBA energy accounting separates normalized energy units, estimated joules and measured joules.
+- [x] Resource-pressure states NORMAL / CONSERVE / CRITICAL / SURVIVAL are deterministic; fan failure is a hard survival override.
+- [x] Adaptive utility-minus-cost allocation exists only as candidate math and remains disabled by default.
+- [x] `Wesen` presents MSBA read-only and explicitly marks gateway learning/growth as inert/candidate-only.
+- [x] MSBA research programme, hypotheses, controls, protocols and preregistration schema are recorded in `research/registry/msba_experiments.yaml`.
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
 
 ## P0 — repository and frontend verification
 
-- [ ] Verify Neural Symbiosis CSS/JS is served in integrated runtime and dashboard-only modes on a live host.
-- [ ] Verify `Wesen` anatomy + Neural Symbiosis rendering with a real connection inventory.
-- [ ] Add browser/E2E checks for pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and Neural Symbiosis pipeline reachability.
+- [ ] Verify Neural Symbiosis/MSBA CSS/JS is served in integrated runtime and dashboard-only modes on a live host.
+- [ ] Verify `Wesen` anatomy + Neural Symbiosis/MSBA rendering with a real connection inventory.
+- [ ] Add browser/E2E checks for pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and pipeline reachability.
 - [ ] Keep automatic deletion of merged branches enabled/maintained when repository settings/tooling permit.
 
 ## P0 — propagation and recurrence evidence
@@ -60,27 +64,38 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [ ] Promote results to EVID only after protocol and review checks.
 - [ ] Expose receipt-linked action/outcome chains to `Wesen` only when backend verification exists.
 
-## P1 — Neural Symbiosis experiment runner
+## P1 — Neural Symbiosis / MSBA experiment runner
 
 - [ ] Add an experiment-only adapter that instantiates one declared peripheral network/virtual area.
 - [ ] Record adapter class, framework, model/version, artifact hash and endpoint identity.
 - [ ] Persist gateway state separately from canonical SNN synapse state.
-- [ ] Add frozen-gateway control.
-- [ ] Add random-gateway control.
-- [ ] Add timing-shuffle control.
-- [ ] Add activity-matched but information-destroyed control.
-- [ ] Add noisy-area suppression study.
-- [ ] Add sensor-lesion compensation study.
-- [ ] Compare signed, absolute, squared and local homeostatic error/reward formulations.
-- [ ] Require independent seeds and preregistration before enabling gateway plasticity.
+- [ ] Add frozen-gateway and random-gateway controls.
+- [ ] Add timing-shuffle and activity-matched information-destroyed controls.
+- [ ] Implement explicit structured/shuffled/random/reduced-dimensional 5D projection treatments for MSBA.
+- [ ] Run RQ-MSBA-E01 energy-per-useful-information comparisons with matched tasks.
+- [ ] Run RQ-MSBA-E02 adaptive-vs-fixed-vs-random resource allocation under equal budgets.
+- [ ] Run RQ-MSBA-E03 adaptive ROI/foveation against centre/random/full-image controls.
+- [ ] Run RQ-MSBA-E04 digital integrity tests with exact input/output checksums.
+- [ ] Run RQ-MSBA-E05 modality-loss compensation with fixed/shuffled/no-compensation controls.
+- [ ] Add noisy-area suppression and sensor-lesion compensation studies.
+- [ ] Compare signed, absolute, squared and local homeostatic error/reward formulations rather than assuming one default.
+- [ ] Require independent seeds and preregistration before enabling gateway plasticity, structural growth or adaptive allocation.
 - [ ] Keep production peripheral activation disabled until experiment controls are validated.
+
+## P1 — energy/resource calibration
+
+- [ ] Calibrate normalized MSBA energy units against measured CPU/GPU/system power where reliable telemetry exists.
+- [ ] Preserve `measured_joules`, `estimated_joules` and normalized units as separate fields and provenance classes.
+- [ ] Measure sensor, encoder, spike, synaptic-event, plasticity, structural, memory, I/O and adapter contributions separately where possible.
+- [ ] Verify that hard thermal/fan/persistence protection cannot be overridden by learned allocation.
+- [ ] Verify protection ordering: reduce/freeze plasticity before deleting learned structure or disabling safety-critical sensing.
 
 ## P1 — runtime/time semantics and performance
 
 - [ ] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
 - [ ] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
-- [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis, dashboard telemetry and storage as distinct measured phases.
+- [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage as distinct measured phases.
 - [ ] Profile increasing neuron/synapse counts before optimizing kernels.
 
 ## P1 — 5D causal/ablation program
@@ -97,9 +112,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Current-doc consistency checks for fixed version/test claims.
 - [x] Evidence-engine negative tests for incomplete/mismatched provenance.
 - [x] Compact AI-packet provenance and SHA-verified raw-run indexing.
-- [ ] Add stable action/outcome provenance views only when backed by verified endpoints.
-- [ ] Persist morphology/body-boundary change records when part of a scientific protocol.
-- [ ] Persist Neural Symbiosis adapter/gateway provenance whenever those components become experimental treatments.
+- [ ] Persist Neural Symbiosis/MSBA adapter, projection, gateway and energy provenance whenever these components become experimental treatments.
+- [ ] Persist exact digital checksums for every digital-path experiment.
 - [ ] Continue distinguishing UI state, DATA, EVID and interpretation in every workflow.
 
 ## P1 — high-risk test coverage
@@ -114,7 +128,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P2 — self-regulation and continuity experiments
 
-- [ ] Define non-anthropomorphic regulatory metrics for resource/continuity pressure.
+- [x] Define non-anthropomorphic resource/continuity pressure states in MSBA.
+- [ ] Integrate measured host telemetry into experiment-only resource observations with explicit missing/unknown values.
 - [ ] Test missing and uncertain sensor conditions.
 - [x] Register deterministic recovery comparison with regulation enabled/disabled.
 - [ ] Execute and review the recovery experiment across the required seed set.
@@ -130,10 +145,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P2 — multimodal and knowledge grounding
 
-- [ ] Define typed SignalFrames for camera/audio/document/network/knowledge inputs.
+- [ ] Define typed SignalFrames for camera/audio/document/network/knowledge inputs around the MSBA gateway boundary.
 - [ ] Store source, timestamp, digest and trust/provenance metadata.
 - [ ] Provide frozen/replayable snapshots for scientific runs.
-- [ ] Route peripheral models through Neural Symbiosis adapters rather than hidden direct core writes.
+- [ ] Route peripheral models through Neural Symbiosis/MSBA adapters rather than hidden direct core writes.
 - [ ] Compare raw sensory learning against externally structured knowledge conditions.
 - [ ] Keep LLM transformation outside causal SNN state unless explicitly registered as a treatment.
 
@@ -147,10 +162,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## Repository/documentation hygiene
 
-- [x] Canonical README, architecture, documentation index and roadmap updated after Neural Symbiosis merge.
+- [x] Canonical architecture documentation includes Neural Symbiosis and MSBA contracts.
 - [x] Historical dated experiment/changelog artifacts left unchanged.
-- [x] No open PRs remained at repository-cleanup verification point.
-- [x] No unmerged feature content remained outside `main`.
 - [ ] Delete already-merged feature refs when a branch-delete action is available in repository tooling.
 - [ ] Prefer one current test-count snapshot in canonical docs and avoid propagating fixed numbers into historical documents.
 
