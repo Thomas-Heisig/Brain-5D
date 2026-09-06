@@ -4,8 +4,8 @@ This module deliberately does not import or mutate the Brain-5D neural core.
 It describes peripheral neural/virtual processing areas, read-only topology
 publication and pure gateway mathematics that experiments may opt into later.
 
-The scientific boundary is intentional: cataloguing an area or calculating a
-candidate gateway update is not evidence that the core learned to use it.
+Cataloguing an area or calculating a candidate gateway update is not evidence
+that the core learned to use it.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ import math
 from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Protocol, runtime_checkable
+from typing import Protocol, cast, runtime_checkable
 
 from .models import JSONValue
 
@@ -36,23 +36,21 @@ class PipelineDirection(StrEnum):
 
 @runtime_checkable
 class NetworkAreaAdapter(Protocol):
-    """Framework-neutral adapter contract for any peripheral network type.
-
-    PyTorch, TensorFlow, JAX, ONNX Runtime, remote inference services and
-    custom implementations can satisfy this protocol without being imported
-    by the Brain-5D core package.
-    """
+    """Framework-neutral adapter contract for any peripheral network type."""
 
     @property
     def area_id(self) -> str:
         """Return the stable area identifier."""
+        ...
 
     @property
     def architecture(self) -> str:
         """Return an implementation-defined architecture/family label."""
+        ...
 
     def process(self, payload: JSONValue, tick: int) -> JSONValue:
         """Process one payload without direct access to Brain-5D core state."""
+        ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,11 +87,10 @@ class AreaDescriptor:
 
 @dataclass(frozen=True, slots=True)
 class PlasticGatewayConfig:
-    """Candidate plastic-gateway parameters for opt-in embodiment experiments.
+    """Candidate parameters for opt-in embodiment gateway experiments.
 
-    The defaults are deliberately inert. Enabling these mechanisms belongs in
-    a preregistered experiment and must not silently alter canonical core
-    learning rules or historical experiment data.
+    Defaults are deliberately inert. Enabling learning belongs in an explicit,
+    preregistered experiment and must not silently alter canonical core rules.
     """
 
     weight_min: float = 0.0
@@ -174,7 +171,9 @@ class PipelineTemplate:
     def _endpoint_reachable(endpoint: str | None, available: set[str]) -> bool:
         if endpoint is None or endpoint.startswith("virtual."):
             return True
-        return any(item == endpoint or item.startswith(f"{endpoint}.") for item in available)
+        return any(
+            item == endpoint or item.startswith(f"{endpoint}.") for item in available
+        )
 
 
 class NeuralSymbiosisCatalog:
@@ -221,16 +220,17 @@ class NeuralSymbiosisCatalog:
             if bool(getattr(item, "available", False))
             and getattr(item, "connection_id", None)
         }
-        pipelines = [
+        pipeline_payloads = [
             self._pipelines[key].to_json(available) for key in sorted(self._pipelines)
         ]
+        reachable = sum(bool(item["reachable"]) for item in pipeline_payloads)
         return {
             "name": "Neural Symbiosis",
             "scope": "embodiment",
             "status": "experimental_contract",
             "areas": [self._areas[key].to_json() for key in sorted(self._areas)],
-            "pipelines": pipelines,
-            "reachable_pipelines": sum(bool(item["reachable"]) for item in pipelines),
+            "pipelines": cast(list[JSONValue], pipeline_payloads),
+            "reachable_pipelines": reachable,
             "gateway": self.gateway.to_json(),
             "adapter_contract": {
                 "protocol": "NetworkAreaAdapter",
@@ -267,228 +267,230 @@ class NeuralSymbiosisCatalog:
         }
 
 
+def _area(
+    area_id: str,
+    name: str,
+    architecture: str,
+    roles: tuple[str, ...],
+    inputs: tuple[str, ...],
+    outputs: tuple[str, ...],
+    connections: tuple[str, ...] = (),
+    *,
+    kind: AreaKind = AreaKind.NEURAL,
+    status: str = "adapter_required",
+) -> AreaDescriptor:
+    return AreaDescriptor(
+        area_id=area_id,
+        name=name,
+        kind=kind,
+        architecture=architecture,
+        roles=roles,
+        input_modalities=inputs,
+        output_modalities=outputs,
+        dedicated_connections=connections,
+        implementation_status=status,
+    )
+
+
 def default_area_catalog() -> tuple[AreaDescriptor, ...]:
     """Return common network families while keeping architecture an open set."""
 
-    neural = AreaKind.NEURAL
-    virtual = AreaKind.VIRTUAL
     return (
-        AreaDescriptor(
+        _area(
             "vision.cnn",
             "Vision CNN",
-            neural,
             "CNN",
             ("perception", "feature_extraction"),
             ("image", "video"),
             ("features",),
             ("sensor.camera",),
         ),
-        AreaDescriptor(
+        _area(
             "vision.transformer",
             "Vision Transformer",
-            neural,
             "Vision Transformer",
             ("perception", "attention"),
             ("image", "features"),
             ("tokens", "features"),
             ("sensor.camera",),
         ),
-        AreaDescriptor(
+        _area(
             "audio.cnn",
             "Audio CNN",
-            neural,
             "CNN",
             ("perception", "spectral_features"),
             ("audio", "spectrogram"),
             ("features",),
             ("sensor.microphone",),
         ),
-        AreaDescriptor(
+        _area(
             "audio.transformer",
             "Audio Transformer",
-            neural,
             "Transformer",
             ("perception", "sequence"),
             ("audio", "features"),
             ("tokens", "features"),
             ("sensor.microphone",),
         ),
-        AreaDescriptor(
+        _area(
             "speech.transformer",
             "Speech Transformer",
-            neural,
             "Transformer",
             ("speech_recognition", "speech_synthesis"),
             ("audio", "text", "latent"),
             ("text", "audio", "latent"),
             ("sensor.microphone", "actuator.audio"),
         ),
-        AreaDescriptor(
+        _area(
             "language.transformer",
             "Language Transformer",
-            neural,
             "Transformer",
             ("language", "translation", "semantic_projection"),
             ("text", "tokens", "latent"),
             ("text", "tokens", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "sequence.lstm",
             "Sequence LSTM",
-            neural,
             "LSTM",
             ("sequence", "temporal_context"),
             ("sequence", "features"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "sequence.gru",
             "Sequence GRU",
-            neural,
             "GRU",
             ("sequence", "temporal_context"),
             ("sequence", "features"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "sequence.rnn",
             "Recurrent Network",
-            neural,
             "RNN",
             ("sequence", "recurrence"),
             ("sequence", "features"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "graph.gnn",
             "Graph Network",
-            neural,
             "GNN",
             ("graph_reasoning", "relational_projection"),
             ("graph", "records"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "memory.hopfield",
             "Associative Memory",
-            neural,
             "Modern Hopfield Network",
             ("associative_memory", "retrieval"),
             ("latent", "features"),
             ("latent", "features"),
         ),
-        AreaDescriptor(
+        _area(
             "reservoir.esn",
             "Reservoir Network",
-            neural,
             "Echo State Network",
             ("reservoir", "temporal_dynamics"),
             ("sequence", "features"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "control.mlp",
             "Control MLP",
-            neural,
             "MLP",
             ("control", "decoding"),
             ("latent", "features"),
             ("control",),
             ("actuator.robotics",),
         ),
-        AreaDescriptor(
+        _area(
             "generative.vae",
             "Variational Autoencoder",
-            neural,
             "VAE",
             ("compression", "generation", "imagination"),
             ("features", "latent"),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "generative.gan",
             "Generative Adversarial Network",
-            neural,
             "GAN",
             ("generation", "imagination"),
             ("latent",),
             ("image", "features"),
         ),
-        AreaDescriptor(
+        _area(
             "generative.diffusion",
             "Diffusion Network",
-            neural,
             "Diffusion",
             ("generation", "imagination"),
             ("latent", "text", "features"),
             ("image", "audio", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "autoencoder.generic",
             "Autoencoder",
-            neural,
             "Autoencoder",
             ("compression", "representation"),
             ("features",),
             ("features", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "spiking.peripheral",
             "Peripheral SNN",
-            neural,
             "SNN",
             ("spike_encoding", "event_processing"),
             ("events", "features"),
             ("spikes",),
         ),
-        AreaDescriptor(
+        _area(
             "multimodal.transformer",
             "Multimodal Transformer",
-            neural,
             "Multimodal Transformer",
             ("fusion", "cross_modal_attention"),
             ("image", "audio", "text", "features"),
             ("tokens", "latent"),
         ),
-        AreaDescriptor(
+        _area(
             "neurosymbolic.mlp",
             "Neuro-symbolic Projector",
-            neural,
             "MLP",
             ("symbol_projection", "encoding", "decoding"),
             ("symbols", "records", "latent"),
             ("features", "latent", "symbols"),
         ),
-        AreaDescriptor(
+        _area(
             "virtual.logic",
             "Logic Engine",
-            virtual,
             "symbolic",
             ("logic", "constraints"),
             ("symbols", "facts"),
             ("symbols", "facts"),
-            implementation_status="virtual_adapter_required",
+            kind=AreaKind.VIRTUAL,
+            status="virtual_adapter_required",
         ),
-        AreaDescriptor(
+        _area(
             "virtual.knowledge",
             "Knowledge Store",
-            virtual,
             "database_or_knowledge_graph",
             ("retrieval", "knowledge"),
             ("query", "records"),
             ("records", "graph"),
             ("data.database",),
-            implementation_status="virtual_adapter_required",
+            kind=AreaKind.VIRTUAL,
+            status="virtual_adapter_required",
         ),
-        AreaDescriptor(
+        _area(
             "custom.network",
             "Custom Neural Area",
-            neural,
             "open-set",
             ("custom",),
             ("any",),
             ("any",),
-            implementation_status="registration_contract",
+            status="registration_contract",
         ),
     )
 
@@ -501,7 +503,12 @@ def default_pipeline_catalog() -> tuple[PipelineTemplate, ...]:
             "camera.vision",
             "Camera → visual cortex → core",
             PipelineDirection.AFFERENT,
-            ("vision.cnn", "vision.transformer", "gateway.afferent", "brain5d.core"),
+            (
+                "vision.cnn",
+                "vision.transformer",
+                "gateway.afferent",
+                "brain5d.core",
+            ),
             source_connection="sensor.camera",
             purpose="Visual feature and attention pipeline.",
         ),
@@ -509,7 +516,12 @@ def default_pipeline_catalog() -> tuple[PipelineTemplate, ...]:
             "microphone.audio",
             "Microphone → auditory pipeline → core",
             PipelineDirection.AFFERENT,
-            ("audio.cnn", "audio.transformer", "gateway.afferent", "brain5d.core"),
+            (
+                "audio.cnn",
+                "audio.transformer",
+                "gateway.afferent",
+                "brain5d.core",
+            ),
             source_connection="sensor.microphone",
             purpose="Acoustic feature pipeline before the core boundary.",
         ),
@@ -635,8 +647,10 @@ def homeostatic_scale(
     """Return a bounded multiplicatively scaled candidate gateway weight."""
 
     safe_rate = max(observed_rate_hz, 1.0e-9)
-    factor = (config.target_rate_hz / safe_rate) ** config.homeostatic_alpha
-    return min(config.weight_max, max(config.weight_min, weight * factor))
+    ratio = config.target_rate_hz / safe_rate
+    factor = math.pow(ratio, config.homeostatic_alpha)
+    scaled = weight * factor
+    return float(min(config.weight_max, max(config.weight_min, scaled)))
 
 
 def gate_signal(drive: float, threshold: float) -> float:
@@ -664,11 +678,7 @@ def formation_probability(
     rho_max_hz: float,
     config: PlasticGatewayConfig,
 ) -> float:
-    """Return a clipped structural-formation probability.
-
-    Random sampling is deliberately left to the experiment runner so the RNG
-    stream can be explicit, seeded and included in reproducibility records.
-    """
+    """Return a clipped structural-formation probability without RNG sampling."""
 
     if rho_max_hz <= 0.0:
         raise ValueError("rho_max_hz must be positive")
@@ -684,7 +694,8 @@ def pruning_probability(weight: float, config: PlasticGatewayConfig) -> float:
     if span <= 0.0:
         raise ValueError("weight range must be positive")
     normalized = (weight - config.weight_min) / span
-    probability = config.pruning_eta * (1.0 - min(1.0, max(0.0, normalized)))
+    normalized = min(1.0, max(0.0, normalized))
+    probability = config.pruning_eta * (1.0 - normalized)
     return min(1.0, max(0.0, probability))
 
 
