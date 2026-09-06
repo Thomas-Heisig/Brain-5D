@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.4
+ * @version 1.4.5
  * @license MIT
  */
 
@@ -20,6 +20,8 @@ import "./wesen.js";
 import "./wesen-organism-v2.js";
 import "./wesen-anatomy-v3.js";
 import "./wesen-neural-symbiosis.js";
+import "./neuron-model-viewer.js";
+import "./frontend-architecture.js";
 
 function byId(id) {
   return document.getElementById(id);
@@ -79,130 +81,40 @@ function activateLegacyWorkspace(name) {
   document.body.dataset.experienceWorkspace = name;
 }
 
-function adaptDashboardNavigation() {
-  document.querySelector('.tab-btn[data-tab="network"]')?.remove();
-  document.querySelector('.tab-btn[data-tab="gate"]')?.remove();
-
-  document.querySelectorAll('.experience-command-item[data-command-id="workspace:network"], .experience-command-item[data-command-id="workspace:gate"]').forEach((node) => node.remove());
-  document.querySelectorAll('[data-jump-workspace="network"]').forEach((node) => {
-    node.dataset.jumpWorkspace = "wesen";
-    const strong = node.querySelector("strong");
-    const small = node.querySelector("small");
-    if (strong) strong.textContent = "Wesen beobachten";
-    if (small) small.textContent = "Körper, Zustände, Rückkopplung";
-  });
-  document.querySelectorAll('[data-jump-workspace="gate"]').forEach((node) => node.remove());
-
-  const bodyShortcut = document.querySelector('[data-overview-tab="embodiment"]');
-  if (bodyShortcut) {
-    bodyShortcut.dataset.overviewTab = "wesen";
-    bodyShortcut.textContent = "◉ Wesen öffnen";
-  }
-}
-
-function ensureReleaseFooterButton() {
-  const footer = document.querySelector("footer");
-  if (!footer || footer.querySelector("[data-footer-release]")) return;
-  const target = byId("footer-status") || footer.lastElementChild || footer;
+function ensureWesenNavigation() {
+  ensureWesenStylesheet();
+  const nav = document.querySelector(".tab-nav") || document.querySelector("nav");
+  if (!nav || document.querySelector('.tab-btn[data-tab="wesen"]')) return;
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "wesen-release-button";
-  button.dataset.footerRelease = "true";
-  button.textContent = "Release";
-  button.title = "Scientific Gate und Release Readiness öffnen";
-  button.addEventListener("click", () => activateLegacyWorkspace("gate"));
-  target.appendChild(button);
+  button.className = "tab-btn";
+  button.dataset.tab = "wesen";
+  button.textContent = "◉ WESEN";
+  button.addEventListener("click", () => activateLegacyWorkspace("wesen"));
+  nav.appendChild(button);
 }
 
-function simplifyEmbodimentCopy() {
-  const tab = byId("tab-embodiment");
-  if (!tab || tab.querySelector("[data-simple-embodiment-note]")) return;
-  const header = tab.querySelector(".workspace-header, .dashboard-generated-header");
-  if (header) {
-    const title = header.querySelector("h2");
-    const paragraph = header.querySelector("p");
-    if (title) title.textContent = "Embodiment";
-    if (paragraph) paragraph.textContent = "Reale Sensoren, Geräte, Aktoren und Körpergrenzen konfigurieren und beobachten.";
-  }
-  const note = document.createElement("div");
-  note.dataset.simpleEmbodimentNote = "true";
-  note.className = "dashboard-utility-bar";
-  note.innerHTML = '<span class="dashboard-utility-context">Embodiment bleibt die einfache technische Schnittstellen-Seite. Die adaptive Echtzeitdarstellung befindet sich unter <strong>Wesen</strong>.</span>';
-  header?.insertAdjacentElement("afterend", note);
-}
-
-function initWesenShellIntegration() {
-  ensureWesenStylesheet();
-  adaptDashboardNavigation();
-  ensureReleaseFooterButton();
-  simplifyEmbodimentCopy();
-  requestAnimationFrame(() => adaptDashboardNavigation());
-}
-
-ensureWesenStylesheet();
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initWesenShellIntegration, { once: true });
-} else {
-  initWesenShellIntegration();
-}
+ensureWesenNavigation();
 
 /**
- * Console log output controller.
+ * Append one formatted log message to the console output.
+ * @param {string} message
+ * @param {"info"|"success"|"warning"|"error"} level
  */
-export class ConsoleLog {
-  constructor(containerId, options = {}) {
-    this.container = byId(containerId);
-    this.entries = [];
-    this.maxEntries = options.maxEntries || 1000;
-    this.autoScroll = options.autoScroll !== false;
-  }
-
-  /**
-   * Log a message.
-   * @param {string} message
-   * @param {string} type - 'info', 'success', 'error', 'warning', 'debug'
-   */
-  log(message, type = "info") {
-    const entry = {
-      timestamp: new Date(),
-      message: String(message),
-      type,
-    };
-    this.entries.push(entry);
-    if (this.entries.length > this.maxEntries) {
-      this.entries.shift();
-    }
-    this.render(entry);
-  }
-
-  /**
-   * Render a single entry.
-   * @param {object} entry
-   */
-  render(entry) {
-    if (!this.container) return;
-    const div = document.createElement("div");
-    div.className = `log-entry log-${entry.type}`;
-    div.innerHTML = `<span class="log-time">[${formatTime(entry.timestamp)}]</span> ${escapeHtml(entry.message)}`;
-    this.container.appendChild(div);
-    if (this.autoScroll) {
-      this.container.scrollTop = this.container.scrollHeight;
-    }
-    while (this.container.children.length > this.maxEntries) {
-      this.container.removeChild(this.container.firstChild);
-    }
-  }
-
-  /** Clear the log. */
-  clear() {
-    if (this.container) this.container.innerHTML = "";
-    this.entries = [];
-  }
-
-  /** Get all entries. */
-  getEntries() {
-    return [...this.entries];
-  }
+function appendLog(message, level = "info") {
+  const output = byId("console-output");
+  if (!output) return;
+  const entry = document.createElement("div");
+  entry.className = `log-entry log-${level}`;
+  entry.innerHTML = `<span class="log-time">[${formatTime()}]</span> ${escapeHtml(message)}`;
+  output.appendChild(entry);
+  while (output.children.length > 1000) output.removeChild(output.firstChild);
+  output.scrollTop = output.scrollHeight;
 }
 
-export const consoleLog = new ConsoleLog("console-output");
+export const consoleLog = {
+  info(message) { appendLog(message, "info"); },
+  success(message) { appendLog(message, "success"); },
+  warning(message) { appendLog(message, "warning"); },
+  error(message) { appendLog(message, "error"); },
+};
