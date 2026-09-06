@@ -1,0 +1,1383 @@
+{
+  "conditions": {
+    "5d:1d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "5d:2d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "5d:3d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "5d:5d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "5d:random_graph": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "learning:learning_off": {
+      "metrics": {
+        "final_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "holdout_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "initial_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "mean_weight_delta": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_after": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_before": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "reward_weight_updates": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "rewards_received": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "train_trial_count": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "validation_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "learning:learning_on": {
+      "metrics": {
+        "final_mean_weight": {
+          "max": 0.517280469842843,
+          "mean": 0.517280469842843,
+          "median": 0.517280469842843,
+          "min": 0.517280469842843,
+          "n": 3,
+          "std": 0.0
+        },
+        "holdout_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "initial_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "mean_weight_delta": {
+          "max": 0.46728046984284305,
+          "mean": 0.46728046984284305,
+          "median": 0.46728046984284305,
+          "min": 0.46728046984284305,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_after": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_before": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "reward_weight_updates": {
+          "max": 576.0,
+          "mean": 576.0,
+          "median": 576.0,
+          "min": 576.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "rewards_received": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "train_trial_count": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "validation_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "learning:sham_replay": {
+      "metrics": {
+        "final_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "holdout_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "initial_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "mean_weight_delta": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_after": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "p_success_before": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "reward_weight_updates": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "rewards_received": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "train_trial_count": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "validation_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "ping:recurrence_off": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "ping:recurrence_on": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 33.0,
+          "mean": 33.0,
+          "median": 33.0,
+          "min": 33.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 62.0,
+          "mean": 62.0,
+          "median": 62.0,
+          "min": 62.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 61.0,
+          "mean": 61.0,
+          "median": 61.0,
+          "min": 61.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 10.0,
+          "mean": 10.0,
+          "median": 10.0,
+          "min": 10.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "return_latency": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 33.0,
+          "mean": 33.0,
+          "median": 33.0,
+          "min": 33.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 33.0,
+          "mean": 33.0,
+          "median": 33.0,
+          "min": 33.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "regulation:chronic_pressure": {
+      "metrics": {
+        "functional_activation": {
+          "max": 0.6666666666666666,
+          "mean": 0.6666666666666666,
+          "median": 0.6666666666666666,
+          "min": 0.6666666666666666,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_safety": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_uncertainty": {
+          "max": 0.42857142857142855,
+          "mean": 0.42857142857142855,
+          "median": 0.42857142857142855,
+          "min": 0.42857142857142855,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_valence": {
+          "max": -1.0,
+          "mean": -1.0,
+          "median": -1.0,
+          "min": -1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_continuity_risk": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_energy_reserve": {
+          "max": 0.33333333333333337,
+          "mean": 0.3333333333333333,
+          "median": 0.33333333333333337,
+          "min": 0.33333333333333337,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_resource_pressure": {
+          "max": 0.6666666666666666,
+          "mean": 0.6666666666666666,
+          "median": 0.6666666666666666,
+          "min": 0.6666666666666666,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_sensory_integrity": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_thermal_margin": {
+          "max": 0.33333333333333337,
+          "mean": 0.3333333333333333,
+          "median": 0.33333333333333337,
+          "min": 0.33333333333333337,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "regulation:nominal": {
+      "metrics": {
+        "functional_activation": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_safety": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_uncertainty": {
+          "max": 0.42857142857142855,
+          "mean": 0.42857142857142855,
+          "median": 0.42857142857142855,
+          "min": 0.42857142857142855,
+          "n": 3,
+          "std": 0.0
+        },
+        "functional_valence": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_continuity_risk": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_energy_reserve": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_resource_pressure": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_sensory_integrity": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_thermal_margin": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "regulation:telemetry_unknown": {
+      "metrics": {
+        "functional_uncertainty": {
+          "max": 0.8214285714285714,
+          "mean": 0.8214285714285715,
+          "median": 0.8214285714285714,
+          "min": 0.8214285714285714,
+          "n": 3,
+          "std": 0.0
+        },
+        "regulatory_sensory_integrity": {
+          "max": 0.25,
+          "mean": 0.25,
+          "median": 0.25,
+          "min": 0.25,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "stdp:productive_reward_stdp": {
+      "metrics": {
+        "final_mean_weight": {
+          "max": 0.517280469842843,
+          "mean": 0.517280469842843,
+          "median": 0.517280469842843,
+          "min": 0.517280469842843,
+          "n": 3,
+          "std": 0.0
+        },
+        "holdout_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "initial_mean_weight": {
+          "max": 0.05,
+          "mean": 0.05000000000000001,
+          "median": 0.05,
+          "min": 0.05,
+          "n": 3,
+          "std": 0.0
+        },
+        "mean_weight_delta": {
+          "max": 0.46728046984284305,
+          "mean": 0.46728046984284305,
+          "median": 0.46728046984284305,
+          "min": 0.46728046984284305,
+          "n": 3,
+          "std": 0.0
+        },
+        "reward_weight_updates": {
+          "max": 576.0,
+          "mean": 576.0,
+          "median": 576.0,
+          "min": 576.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "rewards_received": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "train_trial_count": {
+          "max": 12.0,
+          "mean": 12.0,
+          "median": 12.0,
+          "min": 12.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "validation_trial_count": {
+          "max": 4.0,
+          "mean": 4.0,
+          "median": 4.0,
+          "min": 4.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "temporal:fast_medium_slow": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 3,
+          "std": 0.0
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "time:100": {
+      "metrics": {
+        "duration_seconds": {
+          "max": 0.00039300008211284876,
+          "mean": 0.0003907333593815565,
+          "median": 0.00039039994589984417,
+          "min": 0.0003888000501319766,
+          "n": 3,
+          "std": 1.7307879847876376e-06
+        },
+        "ticks_per_second": {
+          "max": 257201.61292688982,
+          "mean": 255934.020816699,
+          "median": 256147.57647956916,
+          "min": 254452.87304363796,
+          "n": 3,
+          "std": 1132.283018890835
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "time:1000": {
+      "metrics": {
+        "duration_seconds": {
+          "max": 0.004267700016498566,
+          "mean": 0.004183966666460037,
+          "median": 0.0042508000042289495,
+          "min": 0.0040333999786525965,
+          "n": 3,
+          "std": 0.00010669004393305494
+        },
+        "ticks_per_second": {
+          "max": 247929.7875967316,
+          "mean": 239165.95761017533,
+          "median": 235249.8350910747,
+          "min": 234318.2501427197,
+          "n": 3,
+          "std": 6208.623017167193
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "time:10000": {
+      "metrics": {
+        "duration_seconds": {
+          "max": 0.043632699991576374,
+          "mean": 0.042187033337540925,
+          "median": 0.04291030007880181,
+          "min": 0.04001809994224459,
+          "n": 3,
+          "std": 0.0015617659797844106
+        },
+        "ticks_per_second": {
+          "max": 249886.92652655477,
+          "mean": 237372.37187340087,
+          "median": 233044.28031581437,
+          "min": 229185.9087778335,
+          "n": 3,
+          "std": 8988.226237931374
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "time:100000": {
+      "metrics": {
+        "duration_seconds": {
+          "max": 0.4280161999631673,
+          "mean": 0.4245801333260412,
+          "median": 0.42659089993685484,
+          "min": 0.41913330007810146,
+          "n": 3,
+          "std": 0.003895199127507087
+        },
+        "ticks_per_second": {
+          "max": 238587.58056533796,
+          "mean": 235546.74148865393,
+          "median": 234416.62729983756,
+          "min": 233636.01660078624,
+          "n": 3,
+          "std": 2173.685807345799
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "inter_spike_intervals": {
+    "5d:1d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "5d:2d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "5d:3d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "5d:5d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "5d:random_graph": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "ping:recurrence_off": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 6,
+      "std": 0.0
+    },
+    "ping:recurrence_on": {
+      "max": 4.0,
+      "mean": 1.9375,
+      "median": 2.0,
+      "min": 1.0,
+      "n": 96,
+      "std": 0.5555121510822243
+    }
+  },
+  "run_count": 57,
+  "schema_version": "2.0",
+  "temporal_horizons": {
+    "fast": {
+      "discrepancy": {
+        "max": 0.9520109699251881,
+        "mean": 2.625756624016953e-05,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 299994,
+        "std": 0.003455365917866527
+      },
+      "nonzero_comparisons": 3237,
+      "nonzero_discrepancy": {
+        "max": 0.9520109699251881,
+        "mean": 0.0024334607125898727,
+        "median": 1.3668795872945338e-08,
+        "min": 4.736951571734001e-15,
+        "n": 3237,
+        "std": 0.03317617869139413
+      },
+      "nonzero_fraction": 0.010790215804316087,
+      "reference_comparisons": 299994
+    },
+    "medium": {
+      "discrepancy": {
+        "max": 1.1589411090588584,
+        "mean": 3.783427242102845e-05,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 299988,
+        "std": 0.004178554678274577
+      },
+      "nonzero_comparisons": 3300,
+      "nonzero_discrepancy": {
+        "max": 1.1589411090588584,
+        "mean": 0.003439341731830146,
+        "median": 2.0000368768554228e-08,
+        "min": 4.736951571734001e-15,
+        "n": 3300,
+        "std": 0.039693063711026086
+      },
+      "nonzero_fraction": 0.011000440017600704,
+      "reference_comparisons": 299988
+    },
+    "slow": {
+      "discrepancy": {
+        "max": 1.1784193297739733,
+        "mean": 4.610938236103611e-05,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 299982,
+        "std": 0.0042703889111769125
+      },
+      "nonzero_comparisons": 3336,
+      "nonzero_discrepancy": {
+        "max": 1.1784193297739733,
+        "mean": 0.004146278399109213,
+        "median": 2.481197943401033e-08,
+        "min": 4.736951571734001e-15,
+        "n": 3336,
+        "std": 0.04028460168923322
+      },
+      "nonzero_fraction": 0.011120667240034403,
+      "reference_comparisons": 299982
+    }
+  }
+}
