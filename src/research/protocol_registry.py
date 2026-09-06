@@ -188,7 +188,9 @@ def validate_operational_protocol(
 def _condition_label(item: object) -> str:
     if isinstance(item, dict):
         mapping = cast(dict[str, Any], item)
-        condition_id = mapping.get("id") or mapping.get("condition_id") or mapping.get("name")
+        condition_id = (
+            mapping.get("id") or mapping.get("condition_id") or mapping.get("name")
+        )
         role = mapping.get("role")
         if condition_id:
             return f"{condition_id}{f' ({role})' if role else ''}"
