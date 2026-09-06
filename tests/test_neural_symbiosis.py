@@ -100,9 +100,7 @@ def test_catalog_accepts_arbitrary_network_area() -> None:
     )
 
     payload = catalog.to_json([])
-    area_ids = {
-        str(item["area_id"]) for item in _object_list(payload["areas"])
-    }
+    area_ids = {str(item["area_id"]) for item in _object_list(payload["areas"])}
     pipeline_ids = {
         str(item["pipeline_id"]) for item in _object_list(payload["pipelines"])
     }
