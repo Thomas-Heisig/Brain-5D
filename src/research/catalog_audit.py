@@ -101,9 +101,7 @@ def audit_research_catalog(
         relative = path.relative_to(root).as_posix()
         for identifier in sorted(set(RQ_PATTERN.findall(text))):
             found_questions.add(identifier)
-            question_refs.append(
-                ResearchReference(identifier, "question", relative)
-            )
+            question_refs.append(ResearchReference(identifier, "question", relative))
         for identifier in sorted(set(H_PATTERN.findall(text))):
             found_hypotheses.add(identifier)
             hypothesis_refs.append(
