@@ -38,7 +38,7 @@
 // IMPORTS — static ES module imports (no dynamic fallback)
 // ================================================================
 
-import { ControlPanel, ControlAPI } from './control-panel.js';
+import { ControlPanel } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
 import { initResearchBrowser, initDocumentationBrowser, refreshFileManager } from './file-viewer.js';
 import { dashboardStore } from './state-store.js';
@@ -998,31 +998,6 @@ async function refreshIOFlow() {
     setText('footer-input-value', '—');
     setText('footer-output-value', '—');
     setText('footer-io-state', 'I/O offline');
-  }
-}
-
-function initFooterRuntimeControls() {
-  const commands = {
-    'footer-runtime-start': () => ControlAPI.start(),
-    'footer-runtime-pause': () => ControlAPI.pause(),
-    'footer-runtime-stop': () => ControlAPI.stop(),
-  };
-  for (const [id, command] of Object.entries(commands)) {
-    const button = $(id);
-    if (!button || button.dataset.bound === 'true') continue;
-    button.dataset.bound = 'true';
-    button.addEventListener('click', async () => {
-      const buttons = Object.keys(commands).map((key) => $(key)).filter(Boolean);
-      buttons.forEach((item) => { item.disabled = true; });
-      try {
-        await command();
-        await dashboardStore.refresh();
-      } catch (error) {
-        setText('system-status', `Fehler: ${error.message}`);
-      } finally {
-        buttons.forEach((item) => { item.disabled = false; });
-      }
-    });
   }
 }
 
@@ -2424,7 +2399,6 @@ function setupGlobalShortcuts() {
 function init() {
   console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
 
-  initFooterRuntimeControls();
   sharedExperimentMode = new ExperimentMode();
   sharedExperimentMode.refresh();
 

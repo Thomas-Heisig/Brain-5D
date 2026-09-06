@@ -4,6 +4,36 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer 6/3 grid alignment
+
+- [x] Arrange the upper Footer row into six equal columns.
+- [x] Arrange the lower telemetry row into three equal columns.
+- [x] Unify Footer symbol and text sizes.
+
+## 2026-09-06 Compact Footer controls
+
+- [x] Reduce Footer symbols and text density for the 1080p/100% layout.
+- [x] Preserve usable Runtime control targets and accessible labels.
+
+## 2026-09-06 Fixed 1080p application shell
+
+- [x] Pin Header and primary menu at the top.
+- [x] Use the middle `main` region as the only scrollable display area.
+- [x] Keep Footer visible at the bottom for 1080p/100%.
+
+## 2026-09-06 Responsive viewport and footer flow
+
+- [x] Remove the fixed active-tab height tied to one viewport/zoom combination.
+- [x] Keep the complete Footer reachable across viewport sizes and zoom levels.
+- [x] Preserve the full content area between Header and Footer without horizontal overflow.
+
+## 2026-09-06 Frontend shell consolidation
+
+- [x] Prevent legacy/new navigation flash during load.
+- [x] Keep one Footer Runtime control implementation.
+- [x] Consolidate Footer CSS into the current Experience shell.
+- [x] Remove the obsolete MAX batch-yield note.
+
 ## 2026-09-06 Header and footer shell stabilization
 
 - [x] Stabilize Header sizing and responsive wrapping.

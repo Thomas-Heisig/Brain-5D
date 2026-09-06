@@ -4,6 +4,35 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer 6/3 grid alignment
+
+- Footer top row uses six equal columns for product, Runtime, I/O, experiment, mode and health.
+- Footer bottom row uses three equal telemetry columns for activity, spikes and resource pressure.
+- Symbols and Footer text share fixed compact sizing for consistent alignment.
+
+## 2026-09-06 Compact Footer controls
+
+- Footer symbols use compact 20px controls and reduced spacing.
+- Footer labels, vital values and I/O text use a denser 1080p/100% scale while remaining readable.
+
+## 2026-09-06 Fixed 1080p application shell
+
+- Header and the primary menu band are fixed shell regions at the top of the viewport.
+- `main` is the only vertically scrollable display area between the chrome regions.
+- Footer remains visible at the bottom and does not shrink away at 1080p/100%.
+
+## 2026-09-06 Responsive viewport and footer flow
+
+- Removed the fixed active-tab viewport canvas that only fit a narrow 1080p/67% combination.
+- Active workspaces now grow naturally and keep the complete Footer reachable at other resolutions and zoom levels.
+- The Experience shell prevents horizontal overflow while preserving the full content area between Header and Footer.
+
+## 2026-09-06 Frontend shell consolidation
+
+- The visible frontend shell now has one navigation owner; legacy tab buttons remain internal routing targets only.
+- Footer Runtime controls are static DOM elements with one controller and no dynamically appended duplicate panel.
+- Legacy footer CSS and the MAX batch-yield note were removed; current shell styling lives in the Experience stylesheet.
+
 ## 2026-09-06 Header and footer shell stabilization
 
 - Header sizing and responsive wrapping are centralized in the final Experience shell rules.

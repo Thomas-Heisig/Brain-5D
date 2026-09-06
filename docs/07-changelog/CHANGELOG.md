@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-09-06 — Footer 6/3 grid alignment
+
+- Rebalanced the Footer into six equal upper columns and three equal lower telemetry columns.
+- Unified symbol dimensions and Footer typography for consistent spacing.
+
+## 2026-09-06 — Compact Footer controls
+
+- Reduced Footer icon buttons, labels, metrics and internal spacing for clearer 1080p/100% alignment.
+- Preserved accessible titles and click targets on all Runtime controls.
+
+## 2026-09-06 — Fixed 1080p application shell
+
+- Header and primary menu are pinned above the display area.
+- Only the middle `main` area scrolls; the Footer stays visible below it.
+- The shell is tuned for 1920×1080 at 100% without reintroducing fixed tab heights.
+
+## 2026-09-06 — Responsive viewport and footer flow
+
+- Removed the fixed `calc(100vh - 241px)` active-tab height and nested scroll container.
+- Footer visibility no longer depends on 1080p at 67% zoom; workspaces use the complete document flow.
+- Added horizontal overflow protection to the current Experience shell.
+
+## 2026-09-06 — Frontend shell consolidation
+
+- Prevented the initial frontend flash between legacy tabs and the current three-area navigation.
+- Removed duplicate dynamically appended Footer controls and kept one static Runtime control surface.
+- Consolidated Footer CSS into the Experience shell and removed the MAX batch-yield note.
+
 ## 2026-09-06 — Header and footer shell stabilization
 
 - Header sizing, status-cluster placement and responsive control wrapping are stabilized.

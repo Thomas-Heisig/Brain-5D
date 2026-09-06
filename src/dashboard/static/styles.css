@@ -1329,11 +1329,6 @@ body.contrast-mode .overview-surface {
   border-color: #fff;
 }
 
-.site-footer {
-  min-height: 42px;
-  padding: 5px 24px;
-}
-
 @media (max-width: 1100px) {
   #tab-network.active,
   #tab-control.active {
@@ -1512,111 +1507,12 @@ body.contrast-mode .overview-surface {
   margin: 6px 10px 8px;
 }
 
-body {
-  padding-bottom: 50px;
-}
-
-body .site-footer {
-  display: grid;
-  grid-template-columns: auto minmax(180px, .7fr) minmax(260px, 1.2fr) auto minmax(180px, .7fr);
-  align-items: stretch;
-  gap: 1px;
-  min-height: 44px;
-  padding: 0;
-  border-top: 1px solid var(--line);
-  background: var(--line);
-}
-
-body .footer-segment {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 6px 12px;
-  background: rgba(7, 16, 25, .97);
-}
-
-.footer-segment > span,
-.footer-segment small {
-  color: var(--muted);
-  font-size: 9px;
-  text-transform: uppercase;
-}
-
-.footer-product strong {
-  color: var(--accent);
-  font-size: 12px;
-}
-
-.footer-runtime .status-pill {
-  overflow: hidden;
-  padding: 3px 7px;
-  border-radius: 3px;
-  font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.footer-experiment-dot {
-  width: 9px;
-  height: 9px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--muted);
-  box-shadow: 0 0 0 3px rgba(142, 178, 193, .1);
-}
-
-.footer-experiment[data-active="true"] .footer-experiment-dot {
-  background: var(--color-success);
-  box-shadow: 0 0 0 3px rgba(36, 180, 110, .16), 0 0 12px rgba(36, 180, 110, .7);
-}
-
-.footer-experiment[data-active="true"] #footer-experiment-state {
-  color: var(--color-success);
-}
-
-.footer-experiment div {
-  display: grid;
-}
-
-.footer-experiment strong {
-  font-size: 10px;
-  text-transform: uppercase;
-}
-
-#footer-experiment-id {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.footer-mode .experiment-mode-switcher {
-  padding: 2px;
-  border-radius: 4px;
-}
-
-.footer-mode .mode-btn {
-  padding: 3px 7px;
-  border-radius: 3px;
-}
-
-.footer-health {
-  justify-content: flex-end;
-}
-
 @media (max-width: 1200px) {
   #tab-control > #runtime-control-card,
   #tab-control > #operator-console {
     grid-column: 1 / -1;
   }
 
-  body .site-footer {
-    grid-template-columns: auto 1fr 1fr auto;
-  }
-
-  .footer-health {
-    display: none;
-  }
 }
 
 @media (max-width: 680px) {
@@ -1624,36 +1520,11 @@ body .footer-segment {
     grid-template-columns: 1fr;
   }
 
-  body .site-footer {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  .footer-runtime {
-    display: none;
-  }
-
-  .footer-experiment {
-    min-width: 0;
-  }
-
-  .footer-experiment > div {
-    display: none;
-  }
 }
 
 /* ============================================================================
    STABLE WORKSPACE CANVAS + LOGICAL SUBVIEWS
    ============================================================================ */
-
-@media (min-width: 1101px) {
-  .tab-content.active {
-    height: calc(100vh - 241px);
-    min-height: 720px;
-    max-height: 1029px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
 
 .workspace-view-tabs,
 .research-lanes {
@@ -3959,95 +3830,6 @@ body .footer-segment {
 .icon {
   font-size: 0.85em;
   line-height: 1;
-}
-
-/* ============================================================================
-   FOOTER
-   ============================================================================ */
-
-.site-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 24px;
-  background: rgba(7, 16, 25, 0.95);
-  border-top: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  z-index: 50;
-  font-size: 0.8rem;
-}
-
-.footer-left {
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.footer-center {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.footer-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 160px;
-}
-
-/* Experiment mode switcher in footer */
-.footer-center .experiment-mode-switcher {
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 3px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.footer-center .experiment-mode-switcher .mode-btn {
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-pill);
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 4px 10px;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.footer-center .experiment-mode-switcher .mode-btn.active {
-  background: rgba(74, 124, 247, 0.25);
-  color: var(--text);
-}
-
-.footer-center .config-badge {
-  color: var(--accent2);
-  font-weight: 600;
-  font-size: 0.8rem;
-}
-
-.footer-center .status-pill {
-  padding: 4px 10px;
-  font-size: 0.78rem;
-}
-
-/* Health bar when rendered inside footer */
-.footer-right .health-bar {
-  margin-left: 0;
-  padding: 4px 10px;
-  font-size: 0.78rem;
-}
-
-.footer-right .health-bar .health-toggle {
-  font-size: 0.75rem;
 }
 
 /* Accessibility mode */
@@ -8805,118 +8587,6 @@ body.accessibility-mode .health-bar {
 
 /* Network is retired from the operator surface; its key signals live in the footer. */
 #tab-network { display: none !important; }
-
-.footer-vitals {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(118px, 1fr));
-  gap: 12px;
-  min-width: min(430px, 42vw);
-}
-
-.footer-vital {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 3px 8px;
-  min-width: 0;
-  color: #8298a6;
-  font: 8px var(--font-mono);
-  text-transform: uppercase;
-}
-
-.footer-vital strong { color: #dffaff; font-size: 9px; font-weight: 700; }
-.footer-vital i {
-  grid-column: 1 / -1;
-  display: block;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: rgba(103, 211, 225, .12);
-}
-
-.footer-vital b {
-  display: block;
-  width: 0;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #4fe4d5, #ffad60);
-  transition: width .35s ease;
-}
-
-.footer-vitals.is-test-running .footer-vital:nth-child(1) strong,
-.footer-vitals.is-test-running .footer-vital:nth-child(2) strong {
-  color: #7ff1df;
-}
-
-.footer-vitals.is-test-running .footer-vital:nth-child(1) b,
-.footer-vitals.is-test-running .footer-vital:nth-child(2) b {
-  animation: footer-test-activity 1.1s ease-in-out infinite alternate;
-}
-
-@keyframes footer-test-activity {
-  from { opacity: .45; transform: scaleX(.72); transform-origin: left; }
-  to { opacity: 1; transform: scaleX(1); transform-origin: left; }
-}
-
-@media (max-width: 900px) {
-  .footer-vitals { min-width: 0; width: 100%; order: 5; }
-}
-
-@media (max-width: 560px) {
-  .footer-vitals { grid-template-columns: 1fr; gap: 6px; }
-  .footer-vital { grid-template-columns: 1fr auto; }
-}
-
-/* Keep the runtime readout as one quiet, scannable status row at every width. */
-body .site-footer {
-  grid-template-columns: auto auto minmax(240px, 1fr) auto auto minmax(64px, auto);
-  gap: 1px;
-  min-height: 42px;
-  overflow: hidden;
-  background: rgba(20, 31, 39, .92);
-}
-
-body .site-footer .footer-segment,
-body .site-footer .footer-vitals {
-  min-width: 0;
-  min-height: 42px;
-  padding: 5px 10px;
-  background: rgba(8, 17, 24, .82);
-}
-
-body .site-footer .footer-vitals {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(70px, 1fr));
-  align-items: center;
-  gap: 10px;
-  width: auto;
-}
-
-.footer-vital:nth-child(1) b { background: #5edbd0; }
-.footer-vital:nth-child(2) b { background: #e8b35e; }
-.footer-vital:nth-child(3) b { background: #df7777; }
-.footer-vital i { background: rgba(154, 177, 188, .12); }
-
-@media (max-width: 900px) {
-  body .site-footer {
-    grid-template-columns: auto auto minmax(180px, 1fr) auto auto auto;
-  }
-  body .site-footer .footer-health { display: flex; }
-  body .site-footer .footer-vitals { width: auto; order: initial; }
-}
-
-@media (max-width: 680px) {
-  body .site-footer {
-    grid-template-columns: auto auto minmax(170px, 1fr) auto auto auto;
-    padding: 0;
-  }
-  body .site-footer .footer-runtime { display: flex; }
-  body .site-footer .footer-vitals { grid-template-columns: repeat(3, minmax(56px, 1fr)); gap: 5px; }
-  body .site-footer .footer-segment,
-  body .site-footer .footer-vitals { padding: 4px 6px; }
-  body .site-footer .footer-product span,
-  body .site-footer .footer-experiment-id { display: none; }
-  body .site-footer .footer-mode > span { display: none; }
-}
 
 
 /* Brain-5D unified file viewer modal */
