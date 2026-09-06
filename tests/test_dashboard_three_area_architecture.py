@@ -76,10 +76,12 @@ def test_heavy_embeddings_and_unavailable_metrics_are_honestly_marked() -> None:
     viewer = _read("neuron-model-viewer.js")
 
     assert (
-        '<option value="tsne" disabled>t-SNE · Not implemented yet</option>' in viewer
+        '<option value="tsne" disabled>t-SNE · Not implemented yet</option>'
+        in viewer
     )
     assert (
-        '<option value="umap" disabled>UMAP · Not implemented yet</option>' in viewer
+        '<option value="umap" disabled>UMAP · Not implemented yet</option>'
+        in viewer
     )
     assert "Cluster-Kennzahl" in viewer
     assert "Not implemented yet · keine Clusterlabels" in viewer
