@@ -28,6 +28,17 @@ def test_experiment_workflow_wrapper_prefills_seed_and_condition_controls() -> N
     assert "<details" in source
 
 
+def test_experiment_workflow_batch_ui_is_bound_and_lists_all_questions() -> None:
+    source = (STATIC / "experiment-workflow-base.js").read_text(encoding="utf-8")
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    assert "_bindBatchWorkflow" in source
+    assert "_runBatchWorkflow" in source
+    assert "/api/experiment/workflow/batch" in source
+    assert "this.questions.map" in source
+    assert 'id="workflow-batch-open"' in html
+    assert 'id="workflow-batch-start"' in html
+
+
 def test_wesen_shell_merges_embodiment_and_moves_utilities_to_footer() -> None:
     source = (STATIC / "wesen.js").read_text(encoding="utf-8")
     assert 'import "./wesen-base.js"' in source

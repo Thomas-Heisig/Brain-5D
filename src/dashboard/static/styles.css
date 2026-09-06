@@ -2488,6 +2488,35 @@ body.contrast-mode .overview-surface {
 .workflow-progress-track.is-running b { width: 38% !important; background: var(--color-success); animation: workflow-progress-sweep 1.2s ease-in-out infinite; }
 @keyframes workflow-progress-sweep { 0%, 100% { transform: translateX(-105%); } 50% { transform: translateX(205%); } }
 
+.workflow-batch-dialog {
+  width: min(820px, calc(100vw - 24px));
+  max-width: 100%;
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid var(--line-soft, var(--line));
+  border-radius: var(--surface-radius, 8px);
+  background: var(--surface-1, var(--panel));
+  color: var(--text);
+}
+
+.workflow-batch-dialog::backdrop { background: rgba(0, 7, 13, .78); backdrop-filter: blur(6px); }
+.workflow-batch-dialog form { display: grid; gap: 12px; padding: 18px; }
+.workflow-batch-dialog header,
+.workflow-batch-dialog footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.workflow-batch-dialog header h2 { margin: 2px 0; }
+.workflow-batch-dialog fieldset { display: grid; gap: 6px; max-height: 42vh; overflow: auto; margin: 0; padding: 10px; border: 1px solid var(--line); }
+.workflow-batch-protocols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.workflow-batch-protocol { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 8px; padding: 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: var(--surface-2, rgba(255,255,255,.04)); }
+.workflow-batch-protocol span { display: grid; gap: 2px; min-width: 0; }
+.workflow-batch-protocol small { color: var(--muted); overflow-wrap: anywhere; }
+.workflow-batch-protocol-unavailable { opacity: .58; }
+.workflow-batch-dialog .modal-close { flex: 0 0 auto; }
+
+@media (max-width: 680px) {
+  .workflow-batch-protocols { grid-template-columns: 1fr; }
+  .workflow-batch-dialog form { padding: 12px; }
+}
+
 @media (max-width: 680px) {
   .workflow-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .workflow-form-grid { grid-template-columns: 1fr; }

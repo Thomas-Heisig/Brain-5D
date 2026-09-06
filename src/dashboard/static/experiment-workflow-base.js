@@ -257,15 +257,25 @@ export class ExperimentWorkflowPanel {
   _renderBatchProtocols() {
     const root = this.elements.batchProtocols;
     if (!root) return;
-    const registered = this.protocols.filter((protocol) => protocol.preregistration);
-    if (!registered.length) {
-      root.innerHTML = "<p>Keine registrierten operationalen Protokolle verfügbar.</p>";
+    const operationalByQuestion = new Map(
+      this.protocols
+        .filter((protocol) => protocol.preregistration && protocol.research_question)
+        .map((protocol) => [protocol.research_question, protocol]),
+    );
+    if (!this.questions.length) {
+      root.innerHTML = "<p>Keine Forschungsfragen aus dem Registry-Katalog verfügbar.</p>";
       return;
     }
-    root.replaceChildren(...registered.map((protocol) => {
+    root.replaceChildren(...this.questions.map((question) => {
+      const protocol = operationalByQuestion.get(question.id);
       const label = document.createElement("label");
       label.className = "workflow-batch-protocol";
-      label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(protocol.label || protocol.id)}</strong><small>${escapeHtml(protocol.research_question || "")}</small></span>`;
+      if (protocol) {
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small></span>`;
+      } else {
+        label.classList.add("workflow-batch-protocol-unavailable");
+        label.innerHTML = `<input type="checkbox" disabled><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · kein operationales Protokoll registriert</small></span>`;
+      }
       return label;
     }));
   }
