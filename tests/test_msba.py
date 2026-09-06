@@ -85,12 +85,8 @@ def test_resource_pressure_and_fan_failure_are_bounded_and_fail_safe() -> None:
 def test_allocation_gate_prefers_higher_utility_and_lower_cost() -> None:
     pressure = ResourcePressure(energy=0.4, compute=0.2)
     config = MSBAGatewayConfig(allocation_beta=4.0)
-    useful = allocation_gate(
-        utility=2.0, cost=0.2, pressure=pressure, config=config
-    )
-    costly = allocation_gate(
-        utility=0.5, cost=2.0, pressure=pressure, config=config
-    )
+    useful = allocation_gate(utility=2.0, cost=0.2, pressure=pressure, config=config)
+    costly = allocation_gate(utility=0.5, cost=2.0, pressure=pressure, config=config)
     assert 0.0 <= costly < useful <= 1.0
 
 
@@ -103,14 +99,10 @@ def test_phase_weighting_never_inverts_stdp_sign() -> None:
 
 def test_visual_growth_decreases_with_distance_and_resource_pressure() -> None:
     free = ResourcePressure()
-    constrained = ResourcePressure(
-        energy=1.0, thermal=1.0, compute=1.0, memory=1.0
-    )
+    constrained = ResourcePressure(energy=1.0, thermal=1.0, compute=1.0, memory=1.0)
     near = visual_growth_probability(10.0, 0.1, 1.0, free, eta_growth=0.1)
     far = visual_growth_probability(10.0, 3.0, 1.0, free, eta_growth=0.1)
-    pressured = visual_growth_probability(
-        10.0, 0.1, 1.0, constrained, eta_growth=0.1
-    )
+    pressured = visual_growth_probability(10.0, 0.1, 1.0, constrained, eta_growth=0.1)
     assert near > far
     assert near > pressured
 
