@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Fixed bottom Footer
+
+- Footer is fixed to the bottom edge of the viewport across desktop, tablet and mobile layouts.
+- Body and main reserve the responsive Footer height so the last workspace content remains reachable instead of being covered.
+- Safe-area padding is applied for mobile browser insets.
+
 ## 2026-09-06 Footer status-bar consolidation
 
 - Footer Runtime controls, tick, command feedback, I/O, experiment, mode and health now share one responsive semantic grid.

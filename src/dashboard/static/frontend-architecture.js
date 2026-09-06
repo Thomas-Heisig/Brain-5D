@@ -182,6 +182,16 @@ function observeWorkspaceChanges() {
   observer.observe(document.body, { attributes:true, childList:true, subtree:true, attributeFilter:["data-current-tab"] });
 }
 
+function syncFixedChrome() {
+  const topbar = document.querySelector(".topbar");
+  const primaryNav = document.querySelector(".brain5d-primary-nav");
+  if (!topbar || !primaryNav) return;
+  const headerHeight = Math.ceil(topbar.getBoundingClientRect().height);
+  const navHeight = Math.ceil(primaryNav.getBoundingClientRect().height);
+  document.body.style.setProperty("--dashboard-header-height", `${headerHeight}px`);
+  document.body.style.setProperty("--dashboard-primary-nav-height", `${navHeight}px`);
+}
+
 function init() {
   injectStyles();
   ensurePrimaryNavigation();
@@ -190,7 +200,17 @@ function init() {
   ensureRuntimeCapabilityBoard();
   observeWorkspaceChanges();
   syncNavigation();
-  setTimeout(() => { ensureRuntimeCapabilityBoard(); syncNavigation(); }, 0);
+  const refreshChrome = () => requestAnimationFrame(syncFixedChrome);
+  refreshChrome();
+  window.addEventListener("resize", refreshChrome, { passive: true });
+  if (typeof ResizeObserver !== "undefined") {
+    const observer = new ResizeObserver(refreshChrome);
+    const topbar = document.querySelector(".topbar");
+    const primaryNav = document.querySelector(".brain5d-primary-nav");
+    if (topbar) observer.observe(topbar);
+    if (primaryNav) observer.observe(primaryNav);
+  }
+  setTimeout(() => { ensureRuntimeCapabilityBoard(); syncNavigation(); refreshChrome(); }, 0);
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once:true }); else init();

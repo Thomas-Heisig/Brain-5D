@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Fixed bottom Footer
+
+- Fixed the coordinated Footer status bar to the bottom of the viewport.
+- Added responsive content reservation for the two-row desktop, three-row tablet and multi-row mobile Footer layouts.
+- Added safe-area handling for mobile devices.
+
 ## 2026-09-06 — Footer status-bar consolidation
 
 - Unified Footer Runtime, I/O, experiment, mode, health and live-vital regions into one responsive grid.

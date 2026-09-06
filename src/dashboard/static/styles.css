@@ -9510,6 +9510,44 @@ body.experience-ready .site-footer {
   :root { --dashboard-footer-space: 334px; }
 }
 
+/* Fixed application chrome: the header and the three primary areas stay
+   together at the top while only the workspace content scrolls. */
+:root {
+  --dashboard-header-height: 76px;
+  --dashboard-primary-nav-height: 78px;
+}
+
+body.experience-ready .topbar {
+  position: fixed !important;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+}
+
+body.experience-ready .brain5d-primary-nav {
+  position: fixed !important;
+  top: var(--dashboard-header-height);
+  right: 0;
+  left: 0;
+  z-index: 55;
+  width: 100%;
+  margin: 0;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+
+body.experience-ready main {
+  padding-top: calc(var(--dashboard-header-height) + var(--dashboard-primary-nav-height) + 16px);
+}
+
+@media (max-width: 680px) {
+  body.experience-ready main {
+    padding-top: calc(var(--dashboard-header-height) + var(--dashboard-primary-nav-height) + 10px);
+  }
+}
+
 @media (max-width: 680px) {
   #tab-research .fm-layout {
     height: min(72vh, 620px);

@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Fixed bottom Footer
+
+- [x] Fix the Footer to the bottom edge of the viewport.
+- [x] Reserve responsive Footer space so workspace content is not obscured.
+- [x] Support mobile safe-area insets.
+- [ ] Add browser viewport checks for fixed Footer overlap and mobile wrapping.
+
 ## 2026-09-06 Footer status-bar consolidation
 
 - [x] Use one responsive Footer grid for Runtime, I/O, Experiment, Mode, Health and vitals.
