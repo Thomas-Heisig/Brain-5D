@@ -353,7 +353,7 @@ export class ExperimentWorkflowPanel {
     this._renderContract();
     this.elements.run.disabled = true;
     this._setStatus("Ausfuehrung laeuft", "running");
-    this._setProgress(8, "Testlauf laeuft", true);
+    this._setProgress(8, "Testlauf laeuft", true, payload.experiment_id);
     this.elements.result.textContent = "";
     try {
       const result = await fetchJson("/api/experiment/workflow/run", {
@@ -392,7 +392,7 @@ export class ExperimentWorkflowPanel {
         if (result.ai_report.message) lines.push(`KI Fehler: ${result.ai_report.message}`);
       }
       this.elements.result.textContent = lines.join("\n");
-      this._setProgress(100, "Testlauf abgeschlossen", false);
+      this._setProgress(100, "Testlauf abgeschlossen", false, result.experiment_id || payload.experiment_id);
       byId("workflow-result-actions").hidden = false;
       byId("workflow-human-review").hidden = false;
       byId("workflow-rq-proposal").hidden = false;
@@ -401,7 +401,7 @@ export class ExperimentWorkflowPanel {
       if (this.onCompleted) await this.onCompleted();
     } catch (error) {
       this._setStatus(`Ausfuehrung abgebrochen: ${error.message}`, "error");
-      this._setProgress(0, "Testlauf fehlgeschlagen", false);
+      this._setProgress(0, "Testlauf fehlgeschlagen", false, payload.experiment_id);
     } finally {
       this.elements.run.disabled = false;
     }
@@ -694,7 +694,7 @@ export class ExperimentWorkflowPanel {
     this.elements.status.dataset.state = state;
   }
 
-  _setProgress(percent, label, active) {
+  _setProgress(percent, label, active, experimentId = "") {
     const value = Math.max(0, Math.min(100, percent));
     if (this.elements.progressBar) {
       this.elements.progressBar.style.width = `${value}%`;
@@ -703,7 +703,9 @@ export class ExperimentWorkflowPanel {
     }
     if (this.elements.progressLabel) this.elements.progressLabel.textContent = label;
     if (this.elements.progressValue) this.elements.progressValue.textContent = active ? "laufend" : `${value}%`;
-    document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", { detail: { active, progress: value, label } }));
+    document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
+      detail: { active, progress: value, label, experimentId },
+    }));
   }
 
   _installViewerEnhancements() {

@@ -1,0 +1,14 @@
+{
+  "title": "Controlled runtime run",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "conditions": "Explicitly document seed, configuration, replicates and stopping criteria.",
+  "ticks": 100,
+  "protocol": "runtime_ticks_v1",
+  "seeds": [
+    42
+  ],
+  "notes": "",
+  "execution": "controller.step",
+  "assistant_policy": "No AI-generated input is executed or used as evidence."
+}

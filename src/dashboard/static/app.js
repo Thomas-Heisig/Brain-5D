@@ -294,7 +294,16 @@ function renderExperimentRunFooter() {
 }
 
 document.addEventListener('brain5d:experiment-progress', (event) => {
-  experimentRunActive = Boolean(event.detail?.active);
+  const detail = event.detail || {};
+  experimentRunActive = Boolean(detail.active);
+  const footer = $('footer-experiment');
+  const state = $('footer-experiment-state');
+  const id = $('footer-experiment-id');
+  const progress = $('footer-experiment-progress');
+  if (footer) footer.dataset.active = String(experimentRunActive);
+  if (state) state.textContent = detail.active ? 'running' : detail.label || 'inactive';
+  if (id && detail.experimentId) id.textContent = detail.experimentId;
+  if (progress) progress.textContent = detail.active ? `${detail.progress ?? 0}% · ${detail.label || 'laufend'}` : detail.label || 'kein Lauf';
   renderExperimentRunFooter();
   if (!experimentRunActive) dashboardStore.refresh().catch(() => {});
 });
