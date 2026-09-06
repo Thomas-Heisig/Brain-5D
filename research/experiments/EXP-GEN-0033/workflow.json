@@ -1,0 +1,24 @@
+{
+  "experiment_id": "EXP-GEN-0033",
+  "research_question": "RQ-SUITE-001",
+  "hypothesis": "H-SUITE-001-A",
+  "title": "Complete science suite diagnostic",
+  "conditions": "Seeds 42,43,44; all registered science-suite runners; grouped conditions and common provenance.",
+  "ticks": 100000,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "protocol": "science_all_v1",
+  "resolved_runner": "run_all",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "mixed_protocol_tick_contract",
+    "requested_ticks": 100000
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

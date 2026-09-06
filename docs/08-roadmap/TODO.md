@@ -4,6 +4,15 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 RQ-SNN-001 operationalization
+
+- [x] Define a frozen sustained-activity protocol with explicit controls, metrics, thresholds and stopping rules.
+- [x] Execute 100,000 ticks over ten independent seeds and retain full raw traces.
+- [x] Produce deterministic run/statistics/manifests for `EXP-SNN-001-R2`.
+- [ ] Run the exact frozen protocol from a clean source tree.
+- [ ] Complete mandatory human review and decide whether `H-SNN-001-A` merits EVID promotion.
+- [ ] Update RQ/H evidence links only after clean-freeze and human-review gates pass.
+
 ## 2026-09-06 Live experiment footer status
 
 - [x] Show the active workflow experiment ID in the Footer.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-06 — RQ-SNN-001 operationalized and executed
+
+- Registered frozen `sustained_activity_stability_v1` / `PREREG-SNN-001` for `RQ-SNN-001` and `H-SNN-001-A`.
+- Added a dedicated long-horizon runner with full spike-per-tick traces, 1,000-tick windows, 10,000-tick burn-in, control/treatment arms and deterministic stability thresholds.
+- Executed `EXP-SNN-001-R2`: 20 runs, 10 seeds, 100,000 ticks each, 0 runtime errors, 20/20 stability passes.
+- Scientific evidence promotion remains blocked by dirty-tree provenance and required human review; no hypothesis status was auto-promoted.
+
 ## 2026-09-06 — Live experiment footer status
 
 - Added live experiment ID, running/completed state and progress text to the Footer.

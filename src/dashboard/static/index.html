@@ -496,7 +496,7 @@
           <li>Forschungsfrage</li><li>Bedingungen</li><li>Experiment</li><li>Ausfuehren</li><li>Bericht</li><li>Ergebnis</li>
         </ol>
         <div class="workflow-form-grid">
-          <label>Protokoll<select id="workflow-protocol"><option value="science_suite_v1">Science PING: Impulsantwort</option><option value="science_all_v1">Science ALL: gesamte Science-Suite</option><option value="science_time_v1">Science TIME: Tick-Leiter</option><option value="science_5d_v1">Science 5D: Dimensionsvergleich</option><option value="runtime_ticks_v1">Runtime-Ticks: kontrollierter Lauf</option><option value="stdp_pair_timing_v1">STDP Pair-Timing: registriert</option></select></label>
+          <label>Protokoll<select id="workflow-protocol"><option value="science_suite_v1">Science PING: Impulsantwort</option><option value="science_all_v1">Science ALL: gesamte Science-Suite</option><option value="science_time_v1">Science TIME: Tick-Leiter</option><option value="science_5d_v1">Science 5D: Dimensionsvergleich</option><option value="runtime_ticks_v1">Runtime-Ticks: kontrollierter Lauf</option><option value="stdp_pair_timing_v1">STDP Pair-Timing: registriert</option><option value="batch_workflow_v1">Experiment-Workflow: mehrere Protokolle</option></select></label>
           <label>Forschungsfrage<select id="workflow-question"></select></label>
           <label>Hypothese<select id="workflow-hypothesis"></select></label>
           <label>Experiment-ID (optional)<input id="workflow-experiment-id" type="text" placeholder="automatisch: EXP-GEN-0001"></label>
@@ -512,8 +512,20 @@
           <div id="workflow-progress-track" class="workflow-progress-track" role="progressbar" aria-label="Experimentfortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><b id="workflow-progress-bar"></b></div>
           <strong id="workflow-progress-value">0%</strong>
         </div>
-        <div class="workflow-actions"><button id="workflow-run" type="button" class="btn-success">Ausfuehren und Bericht eintragen</button><pre id="workflow-result" aria-live="polite"></pre></div>
+        <div class="workflow-actions"><button id="workflow-run" type="button" class="btn-success">Ausfuehren und Bericht eintragen</button><button id="workflow-batch-open" type="button" class="btn-secondary">Experiment-Workflow</button><pre id="workflow-result" aria-live="polite"></pre></div>
       </section>
+      <dialog id="workflow-batch-dialog" class="workflow-batch-dialog" aria-labelledby="workflow-batch-title">
+        <form method="dialog" id="workflow-batch-form">
+          <header><div><span class="workspace-kicker">CONTROLLED BATCH</span><h2 id="workflow-batch-title">Experiment-Workflow</h2><p>Protokolle auswählen, Optionen prüfen und den Gesamtbericht erzeugen.</p></div><button value="cancel" type="submit" class="modal-close" aria-label="Workflow schließen">&times;</button></header>
+          <label>Workflow-ID (optional)<input id="workflow-batch-id" placeholder="automatisch: EXP-BATCH-…"></label>
+          <label>Ticks je Protokoll<input id="workflow-batch-ticks" type="number" min="1" max="1000000" value="1000"></label>
+          <label>Seeds<input id="workflow-batch-seeds" value="42-44" placeholder="42-44"></label>
+          <label>Titelpräfix<input id="workflow-batch-title-prefix" value="Experiment workflow"></label>
+          <fieldset><legend>Protokolle</legend><div id="workflow-batch-protocols" class="workflow-batch-protocols"></div></fieldset>
+          <p id="workflow-batch-status" class="heatmap-meta" aria-live="polite"></p>
+          <footer><button value="cancel" type="submit" class="btn-secondary">Abbrechen</button><button id="workflow-batch-start" type="button" class="btn-success">Auswahl starten</button></footer>
+        </form>
+      </dialog>
       <!-- Source selector toolbar -->
       <div class="fm-toolbar">
         <div class="fm-source-selector">

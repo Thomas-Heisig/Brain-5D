@@ -65,6 +65,7 @@ from src.research_assistant.ollama_backend import OllamaBackend
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
+from .experiment_archive import ExperimentArchiveError, ExperimentArchiveService
 from .experiment_workflow import (
     ExperimentWorkflowService,
     write_experiment_summary,
@@ -484,6 +485,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._serve_research_experiments()
                 return
 
+            if path == "/api/research/experiments/archive":
+                self._serve_archived_experiments()
+                return
+
             if path.startswith("/api/research-files/"):
                 self._serve_research_file(path)
                 return
@@ -690,6 +695,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/experiment/workflow/run":
                 self._run_experiment_workflow(body)
+                return
+
+            if path == "/api/experiment/workflow/batch":
+                self._run_experiment_batch(body)
+                return
+
+            if path == "/api/research/experiments/archive":
+                self._archive_experiment(body)
                 return
 
             if path == "/api/research/ai-reports/generate":
@@ -2693,6 +2706,35 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self._require_research_source()
         service = ExperimentWorkflowService(source.root())
         self._send_json(service.catalog())
+
+    def _run_experiment_batch(self, body: dict[str, object]) -> None:
+        source = self._require_research_source()
+        result = ExperimentWorkflowService(
+            source.root(), self.dashboard_server.research_ai_backend
+        ).run_batch(body)
+        self._send_json(cast(dict[str, JSONValue], {"ok": True, **result}))
+
+    def _serve_archived_experiments(self) -> None:
+        source = self._require_research_source()
+        service = ExperimentArchiveService(source.root())
+        self._send_json({"experiments": cast(list[JSONValue], service.list_archived())})
+
+    def _archive_experiment(self, body: dict[str, object]) -> None:
+        source = self._require_research_source()
+        experiment_id = body.get("experiment_id")
+        action = str(body.get("action") or "archive")
+        if not isinstance(experiment_id, str) or not experiment_id:
+            raise InvalidRequestError("experiment_id is required")
+        service = ExperimentArchiveService(source.root())
+        try:
+            result = (
+                service.restore_experiment(experiment_id)
+                if action == "restore"
+                else service.archive_experiment(experiment_id, str(body.get("reason") or ""))
+            )
+        except ExperimentArchiveError as exc:
+            raise InvalidRequestError(str(exc)) from exc
+        self._send_json(cast(dict[str, JSONValue], {"ok": True, **result}))
 
     def _run_experiment_workflow(self, body: dict[str, object]) -> None:
         """Run bounded controller ticks and publish reproducible artifacts."""

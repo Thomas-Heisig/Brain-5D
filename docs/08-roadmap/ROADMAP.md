@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 RQ-SNN-001 operationalization and long-run result
+
+- Added frozen operational protocol `sustained_activity_stability_v1` with 100,000 ticks, ten independent seeds, no-input control, tonic-drive treatment, burn-in, windowed traces, finite-state/topology gates and explicit thresholds.
+- Final replication `EXP-SNN-001-R2` completed 20 runs with 0 runtime errors and 20/20 preregistered stability passes.
+- The result is operational and reviewable, but not promoted to scientific EVID: the recorded source tree is dirty and mandatory human review remains pending.
+
 ## 2026-09-06 Live experiment footer status
 
 - The Footer now receives the running workflow's real experiment ID, progress percentage and status label from `brain5d:experiment-progress`.

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
@@ -138,6 +139,101 @@ class ExperimentWorkflowService:
             "next_experiment_id": self._next_experiment_id(),
         }
 
+    def run_batch(self, body: dict[str, object]) -> dict[str, object]:
+        """Run selected registered protocols and publish one aggregate report."""
+        protocol_ids_value = body.get("protocols")
+        if not isinstance(protocol_ids_value, list) or not protocol_ids_value:
+            raise WorkflowValidationError("protocols must contain at least one protocol id")
+        protocol_ids = [item for item in protocol_ids_value if isinstance(item, str) and item]
+        catalog = {
+            str(item["id"]): item
+            for item in protocol_catalog(self._research_root)
+            if isinstance(item.get("id"), str)
+        }
+        unknown = [protocol_id for protocol_id in protocol_ids if protocol_id not in catalog]
+        if unknown:
+            raise WorkflowValidationError(f"Unknown operational protocols: {', '.join(unknown)}")
+        batch_id_value = body.get("batch_id")
+        batch_id = str(batch_id_value).strip() if isinstance(batch_id_value, str) else ""
+        if not batch_id:
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+            batch_id = f"EXP-BATCH-{stamp}"
+        if not batch_id.startswith("EXP-"):
+            raise WorkflowValidationError("batch_id must use the EXP-* convention")
+        ticks = body.get("ticks", 1000)
+        if not isinstance(ticks, int) or isinstance(ticks, bool) or ticks < 1:
+            raise WorkflowValidationError("ticks must be a positive integer")
+        seeds = body.get("seeds", "42-44")
+        title_prefix = str(body.get("title_prefix") or "Experiment workflow").strip()
+        conditions = str(body.get("conditions") or "Registered protocol conditions").strip()
+        notes = str(body.get("notes") or "").strip()
+        results: list[dict[str, object]] = []
+        for index, protocol_id in enumerate(protocol_ids, start=1):
+            contract = catalog[protocol_id]
+            experiment_id = f"{batch_id}-{index:02d}"
+            child = {
+                "experiment_id": experiment_id,
+                "question_id": contract["research_question"],
+                "hypothesis_id": contract["hypothesis"],
+                "title": f"{title_prefix}: {protocol_id}",
+                "conditions": conditions,
+                "ticks": ticks,
+                "seeds": seeds,
+                "notes": notes,
+                "protocol": protocol_id,
+            }
+            try:
+                result = self.run_science(child)
+                results.append({"protocol": protocol_id, "status": "completed", **result})
+            except Exception as exc:
+                results.append({
+                    "protocol": protocol_id,
+                    "experiment_id": experiment_id,
+                    "status": "failed",
+                    "error": f"{type(exc).__name__}: {exc}",
+                })
+        workflow_root = self._research_root / "workflows"
+        workflow_root.mkdir(parents=True, exist_ok=True)
+        report_path = workflow_root / f"{batch_id}.json"
+        completed = sum(item["status"] == "completed" for item in results)
+        failed = len(results) - completed
+        report = {
+            "workflow_id": batch_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "protocols": protocol_ids,
+            "requested_ticks": ticks,
+            "seeds": seeds,
+            "completed": completed,
+            "failed": failed,
+            "results": results,
+        }
+        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=True, default=str) + "\n", encoding="utf-8")
+        markdown_path = report_path.with_suffix(".md")
+        markdown_path.write_text(
+            "\n".join([
+                f"# {batch_id}: Experiment workflow",
+                "",
+                f"- Requested ticks: `{ticks}`",
+                f"- Seeds: `{seeds}`",
+                f"- Completed: `{completed}`",
+                f"- Failed: `{failed}`",
+                "",
+                "## Protocol results",
+                *[f"- `{item['protocol']}`: **{item['status']}**" + (f" — {item['error']}" if item.get("error") else "") for item in results],
+                "",
+                "The workflow report is an aggregate index; each completed protocol keeps its own manifest, raw data, statistics and report.",
+            ]) + "\n",
+            encoding="utf-8",
+        )
+        return {
+            "workflow_id": batch_id,
+            "report": f"workflows/{batch_id}.json",
+            "report_markdown": f"workflows/{batch_id}.md",
+            "completed": completed,
+            "failed": failed,
+            "results": results,
+        }
+
     def run_science(
         self, body: dict[str, object], *, seeds: tuple[int, ...] | None = None
     ) -> dict[str, object]:
@@ -204,6 +300,7 @@ class ExperimentWorkflowService:
             "run_temporal_order",
             "run_performance_profile",
             "run_recurrence_scale",
+            "run_sustained_stability",
         }
         if runner_name in tick_aware_runners:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
@@ -238,6 +335,18 @@ class ExperimentWorkflowService:
 
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
+        operational_protocol = protocol_by_id(self._research_root, workflow.protocol)
+        if operational_protocol is not None:
+            preregistration = validate_operational_protocol(
+                self._research_root,
+                question_id=workflow.question_id,
+                hypothesis_id=workflow.hypothesis_id,
+                protocol_id=workflow.protocol,
+                seed_count=len(effective_seeds),
+            )
+            recorder.record_research_run_mode(
+                str(preregistration.get("mode", "EXPLORATORY")).upper()
+            )
         recorder.record_config(str(config_path), config_digest)
         recorder.record_simulation_params(
             seed=effective_seeds[0],
@@ -333,7 +442,6 @@ class ExperimentWorkflowService:
         artifacts["current_run"] = "DATA/current_run.json"
         artifacts["ai_packet"] = "analysis/ai_packet.json"
         artifacts["ai_packet_digest"] = "analysis/ai_packet_digest.json"
-        operational_protocol = protocol_by_id(self._research_root, workflow.protocol)
         if operational_protocol is not None:
             artifacts["preregistration"] = str(operational_protocol["preregistration"])
         if ai_report.get("status") == "generated":
@@ -469,6 +577,33 @@ class ExperimentWorkflowService:
                 "requested_ticks": requested_ticks,
                 "observed_min": min(observed_ints),
                 "observed_max": max(observed_ints),
+            }
+
+        if runner_name == "run_sustained_stability":
+            observed_ints = [
+                run.metrics.get("ticks_executed")
+                for run in runs
+                if isinstance(run.metrics.get("ticks_executed"), int)
+            ]
+            if len(observed_ints) != len(runs) or not observed_ints:
+                raise WorkflowValidationError(
+                    "Sustained stability runner produced incomplete tick observations."
+                )
+            if min(observed_ints) < requested_ticks:
+                raise WorkflowValidationError(
+                    "Sustained stability runner did not execute the requested tick budget in every run."
+                )
+            if len(runs) != len(seeds) * 2:
+                raise WorkflowValidationError(
+                    "Sustained stability runner must produce control and treatment runs for every seed."
+                )
+            return {
+                "status": "SATISFIED",
+                "mode": "minimum_per_run_with_control_and_treatment",
+                "requested_ticks": requested_ticks,
+                "observed_min": min(observed_ints),
+                "observed_max": max(observed_ints),
+                "run_count": len(runs),
             }
 
         if runner_name == "run_time":
