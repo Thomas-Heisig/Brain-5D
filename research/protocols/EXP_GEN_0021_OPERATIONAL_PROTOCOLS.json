@@ -107,6 +107,18 @@
       "primary_outcomes": ["retained_success_fraction", "weight_range", "task_successes"],
       "controls": ["single-task acquisition baseline"],
       "treatments": ["sequential three-task perturbation screen"]
+    },
+    {
+      "id": "sustained_activity_stability_v1",
+      "research_question": "RQ-SNN-001",
+      "hypothesis": "H-SNN-001-A",
+      "runner": "run_sustained_stability",
+      "preregistration": "preregistrations/PREREG-SNN-001.json",
+      "tick_aware": true,
+      "default_ticks": 100000,
+      "primary_outcomes": ["spikes_per_tick", "post_burn_in_spike_cv", "post_burn_in_spike_relative_drift", "finite_state", "topology_unchanged"],
+      "controls": ["no_input_control"],
+      "treatments": ["tonic_drive=50.0"]
     }
   ]
 }

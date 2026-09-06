@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import random
+import statistics
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -119,6 +121,147 @@ def _network(
 
 def _digest(network: NeuralNetwork) -> str:
     return canonical_state_digest(network)
+
+
+def _synapses(network: NeuralNetwork) -> list[Any]:
+    return [synapse for bucket in network.synapses.values() for synapse in bucket]
+
+
+def _mean(values: list[float]) -> float:
+    return statistics.fmean(values) if values else 0.0
+
+
+def _relative_drift(values: list[float]) -> float:
+    if len(values) < 2:
+        return 0.0
+    baseline = max(abs(_mean(values)), 1e-12)
+    return abs(values[-1] - values[0]) / baseline
+
+
+def run_sustained_stability(
+    config: Config,
+    seeds: tuple[int, ...] = tuple(range(42, 52)),
+    ticks: int = 100_000,
+) -> list[ScientificRun]:
+    """Measure long-horizon activity and numerical/topological stability.
+
+    Each seed has a no-input control and a fixed tonic-drive condition. The
+    complete spike-count trace is retained; window summaries provide the
+    preregistered stability statistics without replacing raw observations.
+    """
+    if ticks < 1_000:
+        raise ValueError("sustained stability requires at least 1,000 ticks")
+    window_ticks = 1_000
+    burn_in_ticks = min(10_000, ticks // 10)
+    drive_current = 50.0
+    runs: list[ScientificRun] = []
+    for seed in seeds:
+        for condition in ("no_input_control", "tonic_drive"):
+            network = _network(config, seed)
+            before = _digest(network)
+            source = min(network.input_cells)
+            initial_neurons = len(network.neurons)
+            initial_synapses = len(_synapses(network))
+            spikes_per_tick: list[int] = []
+            mean_v_per_tick: list[float] = []
+            window_spikes: list[int] = []
+            window_mean_v: list[float] = []
+            current_window_spikes = 0
+            current_window_v: list[float] = []
+            runtime_error: str | None = None
+            for tick in range(1, ticks + 1):
+                if condition == "tonic_drive":
+                    network.inject_current_batch({source: drive_current})
+                try:
+                    result = network.step()
+                except Exception as exc:  # recorded as a scientific run failure
+                    runtime_error = f"{type(exc).__name__}: {exc}"
+                    break
+                values = [float(neuron.v) for neuron in network.neurons.values()]
+                spike_count = len(result.spike_ids)
+                spikes_per_tick.append(spike_count)
+                mean_v = _mean(values)
+                mean_v_per_tick.append(mean_v)
+                current_window_spikes += spike_count
+                current_window_v.append(mean_v)
+                if tick % window_ticks == 0:
+                    window_spikes.append(current_window_spikes)
+                    window_mean_v.append(_mean(current_window_v))
+                    current_window_spikes = 0
+                    current_window_v = []
+            if runtime_error is None and current_window_v:
+                window_spikes.append(current_window_spikes)
+                window_mean_v.append(_mean(current_window_v))
+
+            synapses = _synapses(network)
+            neuron_values = [float(neuron.v) for neuron in network.neurons.values()]
+            weights = [float(synapse.weight) for synapse in synapses]
+            burn_window = min(len(window_spikes), burn_in_ticks // window_ticks)
+            observed_spike_windows = window_spikes[burn_window:]
+            mean_spikes = _mean([float(value) for value in observed_spike_windows])
+            spike_cv = (
+                statistics.pstdev(observed_spike_windows) / mean_spikes
+                if mean_spikes > 0 and len(observed_spike_windows) > 1
+                else 0.0
+            )
+            finite_state = all(
+                math.isfinite(value) for value in (*neuron_values, *weights)
+            )
+            topology_unchanged = (
+                len(network.neurons) == initial_neurons
+                and len(synapses) == initial_synapses
+            )
+            if condition == "tonic_drive":
+                stability_pass = (
+                    runtime_error is None
+                    and finite_state
+                    and topology_unchanged
+                    and mean_spikes > 0
+                    and spike_cv <= 0.25
+                    and _relative_drift([float(value) for value in observed_spike_windows]) <= 0.25
+                )
+            else:
+                stability_pass = (
+                    runtime_error is None
+                    and finite_state
+                    and topology_unchanged
+                )
+            metrics = {
+                "ticks_requested": ticks,
+                "ticks_executed": len(spikes_per_tick),
+                "window_ticks": window_ticks,
+                "burn_in_ticks": burn_in_ticks,
+                "drive_current": drive_current if condition == "tonic_drive" else 0.0,
+                "spikes_per_tick": spikes_per_tick,
+                "mean_v_per_tick": mean_v_per_tick,
+                "window_spike_counts": window_spikes,
+                "window_mean_v": window_mean_v,
+                "post_burn_in_window_count": len(observed_spike_windows),
+                "post_burn_in_mean_spikes": mean_spikes,
+                "post_burn_in_spike_cv": spike_cv,
+                "post_burn_in_spike_relative_drift": _relative_drift(
+                    [float(value) for value in observed_spike_windows]
+                ),
+                "finite_state": finite_state,
+                "topology_unchanged": topology_unchanged,
+                "neuron_v_min": min(neuron_values) if neuron_values else 0.0,
+                "neuron_v_max": max(neuron_values) if neuron_values else 0.0,
+                "weight_min": min(weights) if weights else 0.0,
+                "weight_max": max(weights) if weights else 0.0,
+                "stability_pass": stability_pass,
+            }
+            runs.append(
+                ScientificRun(
+                    "EXP-SNN-001",
+                    condition,
+                    seed,
+                    metrics,
+                    before,
+                    _digest(network),
+                    runtime_error,
+                )
+            )
+    return runs
 
 
 def run_ping(

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "PREREG-SNN-001",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "protocol_id": "sustained_activity_stability_v1",
+  "mode": "CONFIRMATORY",
+  "primary_outcomes": [
+    "post_burn_in_spike_cv",
+    "post_burn_in_spike_relative_drift",
+    "finite_state",
+    "topology_unchanged"
+  ],
+  "secondary_outcomes": [
+    "spikes_per_tick",
+    "window_spike_counts",
+    "window_mean_v",
+    "neuron_v_min",
+    "neuron_v_max",
+    "weight_min",
+    "weight_max"
+  ],
+  "conditions": [
+    {
+      "id": "no_input_control",
+      "role": "negative_control",
+      "description": "Identical network and seed without external current injection."
+    },
+    {
+      "id": "tonic_drive",
+      "role": "stability_treatment",
+      "description": "Constant current 50.0 injected into the registered input neuron every tick."
+    }
+  ],
+  "seed_strategy": {
+    "minimum_independent_seeds": 10,
+    "seeds": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "rule": "Same frozen configuration, independent deterministic seeds, both conditions for every seed."
+  },
+  "stopping_rule": "Complete 100000 ticks for both conditions and all 10 seeds; stop only on runtime failure, non-finite state, or contract violation and record the failure.",
+  "inclusion_criteria": [
+    "100000 ticks executed per run",
+    "10000 tick burn-in excluded from primary stability statistics",
+    "1000 tick non-overlapping observation windows",
+    "complete spike-per-tick and window traces retained",
+    "source/runtime consistency match",
+    "clean frozen code and configuration provenance"
+  ],
+  "exclusion_criteria": [
+    "runtime error or incomplete tick budget",
+    "NaN or infinite membrane/weight value",
+    "unexpected neuron or synapse count change",
+    "missing raw trace or seed/condition record",
+    "dirty source tree or unreviewed protocol amendment"
+  ],
+  "analysis_plan": {
+    "stability_criteria": {
+      "tonic_drive_mean_spikes_per_window": "> 0",
+      "tonic_drive_post_burn_in_spike_cv": "<= 0.25",
+      "tonic_drive_post_burn_in_spike_relative_drift": "<= 0.25",
+      "all_runs_finite_state": true,
+      "all_runs_topology_unchanged": true
+    },
+    "descriptive_statistics": [
+      "per-tick spike count trace",
+      "per-window spike count mean and variation",
+      "membrane potential window means",
+      "final membrane and synaptic weight bounds",
+      "control-versus-tonic-drive condition summary across seeds"
+    ],
+    "inference_policy": "A confirmatory pass requires every registered run to satisfy execution, finiteness and topology criteria and the tonic-drive condition to satisfy all preregistered stability thresholds. A failed criterion is a negative result, not an omitted run.",
+    "planned_tests": []
+  },
+  "expected_failure_modes": [
+    "quiescent tonic-drive dynamics",
+    "rate drift or exploding/vanishing activity",
+    "non-finite membrane or weight values",
+    "unexpected structural mutation",
+    "runtime interruption before 100000 ticks"
+  ],
+  "ai_treatment": {
+    "role": "interpretation_only",
+    "authority_boundary": "AI may summarize completed raw results but cannot select seeds, alter thresholds, exclude runs, or promote evidence.",
+    "prompt_digest_required": true
+  },
+  "freeze": {
+    "immutable_after_first_run": true,
+    "human_review_required": true,
+    "status": "FROZEN",
+    "amendment_id": null
+  }
+}

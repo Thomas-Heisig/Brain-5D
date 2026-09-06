@@ -1,0 +1,31 @@
+{
+  "experiment_id": "EXP-SNN-001",
+  "research_question": "RQ-SNN-001",
+  "hypothesis": "H-SNN-001-A",
+  "title": "Sustained activity stability v1",
+  "conditions": "No-input control vs tonic drive 50.0; 100000 ticks; 10000 tick burn-in; 1000 tick windows.",
+  "ticks": 100000,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "protocol": "sustained_activity_stability_v1",
+  "resolved_runner": "run_sustained_stability",
+  "tick_validation": {
+    "status": "NOT_APPLICABLE",
+    "mode": "protocol_defined_internal_trials",
+    "requested_ticks": 100000
+  },
+  "notes": "Frozen confirmatory protocol PREREG-SNN-001. Full per-tick spike trace retained; AI post-hoc only.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

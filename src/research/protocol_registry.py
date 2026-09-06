@@ -34,6 +34,7 @@ OPERATIONAL_RUNNERS: dict[str, str] = {
     "subsystem_performance_v1": "run_performance_profile",
     "recurrence_scale_v1": "run_recurrence_scale",
     "learning_interference_screen_v1": "run_learning_interference",
+    "sustained_activity_stability_v1": "run_sustained_stability",
 }
 
 
