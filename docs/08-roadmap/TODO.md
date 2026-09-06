@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 773 tests are collected on the verified 2026-09-06 baseline.
+- [x] 773 tests collected on the verified 2026-09-06 baseline.
 - [x] Python 3.11, 3.12 and 3.13 full and slow suites pass.
 - [x] Black, Ruff, Pylint and Pre-Commit pass.
 - [x] Mypy and Pyright pass.
