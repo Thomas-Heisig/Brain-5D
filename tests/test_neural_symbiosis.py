@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 
@@ -24,6 +25,21 @@ class FakeConnection:
         self.available = available
 
 
+def _object(value: object) -> dict[str, Any]:
+    """Narrow a JSON object for structural assertions in type-checked tests."""
+
+    assert isinstance(value, dict)
+    return cast(dict[str, Any], value)
+
+
+def _object_list(value: object) -> list[dict[str, Any]]:
+    """Narrow a JSON array of objects for structural assertions."""
+
+    assert isinstance(value, list)
+    assert all(isinstance(item, dict) for item in value)
+    return cast(list[dict[str, Any]], value)
+
+
 def test_catalog_is_open_set_and_fail_closed() -> None:
     catalog = NeuralSymbiosisCatalog()
     payload = catalog.to_json(
@@ -36,15 +52,20 @@ def test_catalog_is_open_set_and_fail_closed() -> None:
 
     assert payload["name"] == "Neural Symbiosis"
     assert payload["scope"] == "embodiment"
-    assert payload["adapter_contract"]["architecture_open_set"] is True
-    assert payload["gateway"]["synaptic_plasticity_enabled"] is False
-    assert payload["gateway"]["structural_plasticity_enabled"] is False
-    assert payload["gateway"]["efferent_gating_enabled"] is False
-    assert payload["scientific_boundary"]["core_mutation"] is False
-    assert payload["scientific_boundary"]["historical_data_unchanged"] is True
-    assert payload["scientific_boundary"]["catalog_presence_is_not_evidence"] is True
+    adapter_contract = _object(payload["adapter_contract"])
+    gateway = _object(payload["gateway"])
+    boundary = _object(payload["scientific_boundary"])
+    assert adapter_contract["architecture_open_set"] is True
+    assert gateway["synaptic_plasticity_enabled"] is False
+    assert gateway["structural_plasticity_enabled"] is False
+    assert gateway["efferent_gating_enabled"] is False
+    assert boundary["core_mutation"] is False
+    assert boundary["historical_data_unchanged"] is True
+    assert boundary["catalog_presence_is_not_evidence"] is True
 
-    pipelines = {item["pipeline_id"]: item for item in payload["pipelines"]}
+    pipelines = {
+        str(item["pipeline_id"]): item for item in _object_list(payload["pipelines"])
+    }
     assert pipelines["camera.vision"]["reachable"] is True
     assert pipelines["camera.vision"]["enabled"] is False
     assert pipelines["microphone.audio"]["reachable"] is False
@@ -79,8 +100,12 @@ def test_catalog_accepts_arbitrary_network_area() -> None:
     )
 
     payload = catalog.to_json([])
-    area_ids = {item["area_id"] for item in payload["areas"]}
-    pipeline_ids = {item["pipeline_id"] for item in payload["pipelines"]}
+    area_ids = {
+        str(item["area_id"]) for item in _object_list(payload["areas"])
+    }
+    pipeline_ids = {
+        str(item["pipeline_id"]) for item in _object_list(payload["pipelines"])
+    }
     assert "research.custom-liquid-network" in area_ids
     assert "custom.cognitive" in pipeline_ids
 
