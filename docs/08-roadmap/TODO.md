@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Live experiment footer status
+
+- [x] Show the active workflow experiment ID in the Footer.
+- [x] Show running status, label and progress percentage.
+- [x] Prevent dashboard refreshes from resetting the active workflow display.
+- [ ] Add browser interaction coverage for the live Footer experiment state.
+
 ## 2026-09-06 Runtime & Wesen grid readability
 
 - [x] Place body map, state sidebar, inspector sidebar and technical interface in explicit grid areas.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Live experiment footer status
+
+- Added live experiment ID, running/completed state and progress text to the Footer.
+- Protected active workflow information from normal dashboard status refreshes.
+
 ## 2026-09-06 — Runtime & Wesen grid readability
 
 - Reworked Runtime & Wesen into explicit rows and columns for the body map, sidebars and technical interface.

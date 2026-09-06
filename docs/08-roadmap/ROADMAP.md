@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Live experiment footer status
+
+- The Footer now receives the running workflow's real experiment ID, progress percentage and status label from `brain5d:experiment-progress`.
+- Periodic dashboard refreshes no longer overwrite an active workflow with `inactive / no session`.
+
 ## 2026-09-06 Runtime & Wesen grid readability
 
 - Runtime & Wesen now uses explicit grid areas for left state controls, the central body map, right inspection controls and the full-width Neural Symbiosis row.
