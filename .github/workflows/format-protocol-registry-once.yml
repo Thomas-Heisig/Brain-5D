@@ -1,0 +1,29 @@
+name: Format Protocol Registry Once
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/format-protocol-registry-once.yml
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: |
+          python -m pip install black pyright
+          python -m black src/research/protocol_registry.py
+          python -m pyright src/research/protocol_registry.py
+          rm .github/workflows/format-protocol-registry-once.yml
+          git config user.name 'Thomas Heisig'
+          git config user.email 't_heisig@gmx.de'
+          git add -A
+          git commit -m 'ci: format typed protocol defaults'
+          git push origin HEAD:main
