@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-06 - Footer controls initialized globally
+
+- Fixed Footer Play/Pause/Stop binding being delayed until dashboard module initialization completed.
+- Fixed the footer mode switcher so it is usable from the initial Overview without opening Control first.
+
+## 2026-09-06 - Two-row telemetry footer and viewer toolbar
+
+- Reworked the footer into a two-row layout while preserving the existing dashboard design language.
+- Fixed empty Activity, Spikes and Ressourcendruck values by consuming current runtime/network telemetry and runtime-clock saturation.
+- Made Network Model Viewer controls wrap responsively and fixed the Embodiment self-model initialization error that blocked live rendering.
+
+## 2026-09-06 - Footer runtime controls and live I/O
+
+- Added footer buttons for canonical Runtime start, pause and stop commands.
+- Added live Runtime input/output counts and rates from `/api/live/io-flow`.
+- Fixed box-control title overlap and removed the fixed active-tab height that caused nested vertical clipping.
+
 ## 2026-09-06 - Reactive Operator inventory and responsive surfaces
 
 - The Overview now shows every connection returned by `/api/embodiment/connections`, including live availability, authorization, activity, source and backend message fields.

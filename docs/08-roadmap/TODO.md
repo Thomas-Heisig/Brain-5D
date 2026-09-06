@@ -4,6 +4,25 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer control initialization
+
+- [x] Bind Footer Runtime controls before optional workspace initialization.
+- [x] Initialize the Footer mode switcher on the initial Overview.
+
+## 2026-09-06 Footer telemetry and Network Viewer layout
+
+- [x] Redesign the Footer as two responsive design rows.
+- [x] Populate Activity, Spikes and Ressourcendruck from available live telemetry.
+- [x] Prevent Network Model Viewer toolbar buttons from being clipped.
+- [x] Repair the Embodiment self-model initialization error.
+
+## 2026-09-06 Operator runtime controls and I/O
+
+- [x] Add Footer controls for Runtime start, pause and stop.
+- [x] Show live Runtime input/output counts and rates.
+- [x] Prevent box-control icons from covering box titles.
+- [x] Remove nested active-tab clipping in height and width.
+
 ## 2026-09-06 Dashboard Operator refresh
 
 - [x] Render the complete backend-provided embodiment connection inventory in the Overview.

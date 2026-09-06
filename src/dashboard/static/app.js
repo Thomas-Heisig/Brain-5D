@@ -38,7 +38,7 @@
 // IMPORTS — static ES module imports (no dynamic fallback)
 // ================================================================
 
-import { ControlPanel } from './control-panel.js';
+import { ControlPanel, ControlAPI } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
 import { initResearchBrowser, initDocumentationBrowser, refreshFileManager } from './file-viewer.js';
 import { dashboardStore } from './state-store.js';
@@ -193,8 +193,8 @@ function setupTabs() {
     if (tabName === 'control' && !initialized.control) {
       instances.control = initControlPanel();
       instances.console = initOperatorConsole();
-      instances.experimentMode = new ExperimentMode();
-      instances.experimentMode.refresh();
+      instances.experimentMode = sharedExperimentMode || new ExperimentMode();
+      if (!sharedExperimentMode) instances.experimentMode.refresh();
       initialized.control = true;
     }
     if (tabName === 'research' && !initialized.research) {
@@ -281,6 +281,7 @@ let refreshInterval = null;
 let heatmapInterval = null;
 let liveProjectionInterval = null;
 let experimentRunActive = false;
+let sharedExperimentMode = null;
 
 function renderExperimentRunFooter() {
   const vitals = document.querySelector('.footer-vitals');
@@ -412,11 +413,17 @@ function renderStatus(state) {
   const activity = network.active_neurons != null && neuronCount
     ? Number(network.active_neurons) / Number(neuronCount)
     : null;
-  const spikesPerTick = network.spikes_per_tick != null ? Number(network.spikes_per_tick) : null;
+  const spikesPerTick = network.spikes_per_tick != null
+    ? Number(network.spikes_per_tick)
+    : (system.spikes_last_tick != null ? Number(system.spikes_last_tick) : null);
   const spikes = spikesPerTick != null ? spikesPerTick : (system.spikes_total != null ? Number(system.spikes_total) : null);
+  const runtimeClock = data.embodiment_detail?.metrics?.runtime_clock
+    || data.embodiment?.runtime_clock
+    || {};
   const pressureInputs = [system.cpu_percent, system.memory_percent]
     .filter((value) => value != null)
     .map(Number);
+  if (runtimeClock.compute_saturation != null) pressureInputs.push(Number(runtimeClock.compute_saturation) * 100);
   const pressure = pressureInputs.length ? Math.max(...pressureInputs) / 100 : null;
   setText('footer-activity-value', activity == null ? '—' : `${(activity * 100).toFixed(1)}%`);
   setText('footer-spikes-value', spikes == null ? '—' : formatNumber(spikes));
@@ -971,6 +978,10 @@ async function refreshIOFlow() {
     const outputFill = document.getElementById('io-output-fill');
     if (outputFill) outputFill.style.width = Math.min(100, data.output_mean_rate * 200) + '%';
 
+    setText('footer-input-value', `${formatNumber(data.input_count)} · ${formatFloat(data.input_mean_rate, 3)}`);
+    setText('footer-output-value', `${formatNumber(data.output_count)} · ${formatFloat(data.output_mean_rate, 3)}`);
+    setText('footer-io-state', data.propagation_active ? 'Signalfluss aktiv' : 'kein aktueller Signalfluss');
+
     // Badge
     const badge = document.getElementById('io-flow-badge');
     if (badge) {
@@ -996,6 +1007,34 @@ async function refreshIOFlow() {
     }
     const meta = document.getElementById('io-flow-meta');
     if (meta) meta.textContent = '⚠️ IO-Fluss nicht verfügbar';
+    setText('footer-input-value', '—');
+    setText('footer-output-value', '—');
+    setText('footer-io-state', 'I/O offline');
+  }
+}
+
+function initFooterRuntimeControls() {
+  const commands = {
+    'footer-runtime-start': () => ControlAPI.start(),
+    'footer-runtime-pause': () => ControlAPI.pause(),
+    'footer-runtime-stop': () => ControlAPI.stop(),
+  };
+  for (const [id, command] of Object.entries(commands)) {
+    const button = $(id);
+    if (!button || button.dataset.bound === 'true') continue;
+    button.dataset.bound = 'true';
+    button.addEventListener('click', async () => {
+      const buttons = Object.keys(commands).map((key) => $(key)).filter(Boolean);
+      buttons.forEach((item) => { item.disabled = true; });
+      try {
+        await command();
+        await dashboardStore.refresh();
+      } catch (error) {
+        setText('system-status', `Fehler: ${error.message}`);
+      } finally {
+        buttons.forEach((item) => { item.disabled = false; });
+      }
+    });
   }
 }
 
@@ -2417,6 +2456,11 @@ function setupGlobalShortcuts() {
 
 function init() {
   console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
+
+  // Critical footer controls must bind before optional workspace modules.
+  initFooterRuntimeControls();
+  sharedExperimentMode = new ExperimentMode();
+  sharedExperimentMode.refresh();
 
   initUtilityPopups();
   initBoxControls();

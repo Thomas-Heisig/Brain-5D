@@ -41,17 +41,18 @@ function injectStyles() {
   style.id = "neuron-model-viewer-styles";
   style.textContent = `
     .neuron-model-viewer { padding: 0; overflow: clip; }
-    .nmv-head { padding: 1rem 1.1rem .8rem; display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; border-bottom:1px solid var(--line,rgba(127,127,127,.2)); }
+    .nmv-head { padding: 1rem 1.1rem .8rem; display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; border-bottom:1px solid var(--line,rgba(127,127,127,.2)); min-width:0; }
+    .nmv-head > div { min-width:0; }
     .nmv-head h2 { margin:0; font-size:1.08rem; }
     .nmv-head p { margin:.3rem 0 0; opacity:.7; max-width:68ch; }
     .nmv-badge { display:inline-flex; align-items:center; padding:.24rem .5rem; border:1px solid rgba(77,212,172,.36); border-radius:999px; font-size:.7rem; letter-spacing:.05em; text-transform:uppercase; }
-    .nmv-toolbar { padding:.8rem 1.1rem; display:grid; grid-template-columns:repeat(5,minmax(130px,1fr)); gap:.7rem; background:rgba(127,127,127,.035); border-bottom:1px solid var(--line,rgba(127,127,127,.2)); }
-    .nmv-toolbar label { display:grid; gap:.3rem; font-size:.72rem; opacity:.86; }
-    .nmv-toolbar select,.nmv-toolbar button { min-height:36px; border:1px solid var(--line,rgba(127,127,127,.25)); border-radius:8px; background:var(--panel,#0d1822); color:inherit; padding:.35rem .55rem; }
-    .nmv-toolbar button { cursor:pointer; align-self:end; }
+    .nmv-toolbar { padding:.8rem 1.1rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:.7rem; background:rgba(127,127,127,.035); border-bottom:1px solid var(--line,rgba(127,127,127,.2)); min-width:0; }
+    .nmv-toolbar label { display:grid; min-width:0; gap:.3rem; font-size:.72rem; opacity:.86; }
+    .nmv-toolbar select,.nmv-toolbar button { width:100%; min-width:0; min-height:36px; border:1px solid var(--line,rgba(127,127,127,.25)); border-radius:8px; background:var(--panel,#0d1822); color:inherit; padding:.35rem .55rem; }
+    .nmv-toolbar button { cursor:pointer; align-self:end; white-space:normal; }
     .nmv-toolbar button:hover { background:rgba(127,127,127,.12); }
-    .nmv-view-tabs { display:flex; gap:.45rem; padding:.72rem 1.1rem 0; }
-    .nmv-view-tabs button { border:0; border-bottom:2px solid transparent; background:transparent; color:inherit; padding:.5rem .65rem; cursor:pointer; opacity:.68; }
+    .nmv-view-tabs { display:flex; flex-wrap:wrap; gap:.45rem; padding:.72rem 1.1rem 0; min-width:0; }
+    .nmv-view-tabs button { border:0; border-bottom:2px solid transparent; background:transparent; color:inherit; padding:.5rem .65rem; cursor:pointer; opacity:.68; white-space:normal; }
     .nmv-view-tabs button.active { opacity:1; border-bottom-color:currentColor; }
     .nmv-stage { position:relative; min-height:520px; padding:.6rem 1rem 0; }
     .nmv-stage canvas { width:100%; height:520px; display:block; border-radius:10px; background:rgba(2,7,12,.58); }

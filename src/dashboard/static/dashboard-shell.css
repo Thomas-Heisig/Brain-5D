@@ -90,6 +90,16 @@ main {
   opacity: 1;
 }
 
+.b5d-box-controlled > .panel-title,
+.b5d-box-controlled > .overview-surface-title,
+.b5d-box-controlled > .console-header,
+.b5d-box-controlled > header,
+.b5d-box-controlled > summary,
+.b5d-box-controlled > .wesen-stage-toolbar,
+.b5d-box-controlled > .wesen-console-head {
+  padding-right: 76px;
+}
+
 .b5d-box-controls button {
   display: grid;
   width: 24px;
@@ -134,10 +144,11 @@ main {
 }
 
 .b5d-box-maximized > .b5d-box-controls {
-  position: sticky;
-  top: 8px;
-  float: right;
-  margin-bottom: -24px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  float: none;
+  margin: 0;
 }
 
 body:has(.b5d-box-maximized) { overflow: hidden; }

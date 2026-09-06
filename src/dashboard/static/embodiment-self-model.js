@@ -230,7 +230,6 @@ function layoutOrgans(connections) {
 
   available.forEach((connection) => {
     const node = document.createElement("button");
-  if (!unavailableRoot) return;
     node.type = "button";
     node.className = "real-body-organ";
     node.dataset.kind = connection.kind || "resource";

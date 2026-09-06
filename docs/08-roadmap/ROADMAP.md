@@ -4,6 +4,23 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer control initialization
+
+- Footer Runtime controls bind before optional workspace modules and can start the canonical runtime immediately.
+- Experiment mode is initialized globally so footer mode buttons work without opening Control first.
+
+## 2026-09-06 Footer telemetry and Network Viewer layout
+
+- Footer telemetry is presented in two responsive rows with runtime controls above live metrics and I/O.
+- Activity, spikes and resource pressure use the available runtime/network telemetry fields without fabricated values.
+- Network Model Viewer controls wrap to available width instead of clipping at fixed toolbar minimums.
+
+## 2026-09-06 Operator runtime controls and I/O
+
+- Footer Runtime controls now call the canonical start/pause/stop API commands.
+- Runtime input/output counts and rates are visible from the live I/O endpoint.
+- Box controls reserve title space, and active workspaces grow with the document instead of clipping in nested scroll areas.
+
 ## 2026-09-06 Dashboard Operator refresh
 
 - Operator Overview now renders the complete live embodiment connection inventory from the backend contract.
