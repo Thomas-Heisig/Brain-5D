@@ -1,6 +1,6 @@
 # Brain-5D Documentation
 
-This directory contains both **current canonical documentation** and **historical versioned records**. Historical Alpha, Sprint, Release and Update documents remain useful for traceability, but they must not be read as the current repository state.
+This directory contains both **current canonical documentation** and **historical/versioned records**. Historical Alpha, Sprint, Release and dated change documents remain traceability artifacts and must not be read as the current repository state.
 
 ## Source of truth
 
@@ -15,19 +15,20 @@ When documents disagree, use this order:
 
 Passing tests prove engineering behavior covered by those tests; they do not automatically establish a scientific claim.
 
-## Verified current baseline — 2026-09-05
+## Verified current baseline — 2026-09-06
 
 - canonical branch: `main`
 - package version: `0.5.0a7`
-- current collection: **735 tests**
-- latest complete GitHub CI run: **success**
-- verified repair-suite result: **733 passed, 2 skipped, 0 failed**
+- current pytest collection: **773 tests**
+- latest complete GitHub CI on `main`: **success** (run #583)
 - Python matrix: **3.11 / 3.12 / 3.13**
-- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity checks: **green**
+- full and slow suites: **green**
+- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security and Scientific Integrity checks: **green**
+- wheel build/install and Docker build/runtime verification: **green**
 - open pull requests at verification point: **none**
-- `tmp-do-not-use`: obsolete branch, zero commits ahead of `main`; not a development source
+- no unmerged development work remained outside `main` at the verification point
 
-The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures all published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.
+Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.
 
 ## Canonical current documents
 
@@ -36,6 +37,7 @@ The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They
 | Project overview | [`../README.md`](../README.md) |
 | Architecture | [`02-architecture/ARCHITECTURE.md`](02-architecture/ARCHITECTURE.md) |
 | Adaptive Wesen body view | [`02-architecture/WESEN_ADAPTIVE_BODY.md`](02-architecture/WESEN_ADAPTIVE_BODY.md) |
+| Neural Symbiosis / multi-network embodiment | [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md) |
 | Storage format | [`02-architecture/B5D_FORMAT.md`](02-architecture/B5D_FORMAT.md) |
 | Real-body embodiment | [`02-architecture/EMBODIMENT_REAL_BODY.md`](02-architecture/EMBODIMENT_REAL_BODY.md) |
 | Learning preparation | [`02-architecture/LEARNING_PREPARATION_STUDIO.md`](02-architecture/LEARNING_PREPARATION_STUDIO.md) |
@@ -47,29 +49,10 @@ The historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They
 | Current TODO | [`08-roadmap/TODO.md`](08-roadmap/TODO.md) |
 | Research roadmap | [`08-roadmap/RESEARCH_ROADMAP.md`](08-roadmap/RESEARCH_ROADMAP.md) |
 | Research/evidence system | [`../research/README.md`](../research/README.md) |
-| Network observability/CI repair | [`07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md`](07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md) |
 | Security | [`../SECURITY.md`](../SECURITY.md) |
 | Contribution workflow | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
-## Current research direction
-
-The project is explicitly evidence-led rather than feature-led. The canonical research positioning defines:
-
-- classification and scientific scope;
-- distinguishing architectural characteristics;
-- benchmark and independent-replication strategy;
-- preregistration/Open-Science requirements;
-- intervention-based causal inference standards;
-- performance/scaling rules that preserve deterministic equivalence;
-- longitudinal research-dashboard requirements;
-- additional recurrence, generalization, lifelong-learning, self-model, latency, replication and AI-treatment research questions;
-- a staged publication pathway.
-
-These additions do not establish new scientific findings. They define how future findings must be produced and reported.
-
 ## Current dashboard terminology
-
-The canonical frontend terminology is:
 
 - **Overview** — summary/runtime context;
 - **Control** — explicit operator controls;
@@ -77,55 +60,56 @@ The canonical frontend terminology is:
 - **Settings** — configuration;
 - **Wesen** — adaptive read-only live machine-body visualization;
 - **Embodiment** — technical sensor/device/actuator/body-boundary surface;
-- **Release/Gate** — footer-accessed legacy release-readiness surface;
+- **Neural Symbiosis** — read-only multi-network/virtual-pipeline view inside `Wesen`;
+- **Release/Gate** — footer-accessed release-readiness surface;
 - **Network** — no longer a primary user-facing workspace.
 
-`Wesen` must never be described as proof of consciousness or self-awareness. Its recurrence, loopback, morphology and body-state visuals are technical observations/derived presentation state only.
+`Wesen` and Neural Symbiosis must never be described as proof of consciousness, self-awareness, causal tool use or learned sensor control. Reachability, recurrence, loopback, morphology, pipeline availability and gateway candidates are engineering/observation state until a preregistered experiment produces reviewable DATA/EVID.
 
-## Current experiment-observability contract
+## Scientific boundary for Neural Symbiosis
 
-New Science Runner impulse experiments persist network observables rather than only the output-neuron projection. The current response signature covers:
+The multi-network layer is part of Embodiment, not a rewrite of the SNN core. Peripheral CNN/Transformer/RNN/GNN/memory/generative/custom networks and virtual systems such as logic or knowledge databases are connected only through explicit adapter/gateway contracts.
 
-- `ticks_executed`;
-- activated neurons and total spikes;
-- complete observed spike sequence and deterministic digest;
-- delivered synaptic events;
-- ticks with synaptic activity;
-- maximum current-target count;
-- total synapse count;
-- first/last response latency;
-- propagation depth;
-- recurrent/return events and return latency where present;
-- before/after state digests.
+Current rules:
 
-This instrumentation makes runtime activity inspectable, but a nonzero spike count is still an observation, not a scientific causal conclusion.
+- open-set `NetworkAreaAdapter` contract;
+- framework-neutral peripheral implementations;
+- pipeline templates are disabled until explicitly instantiated;
+- gateway STDP, structural plasticity and efferent R-STDP are disabled by default;
+- gateway RNG belongs to an experiment runner and must be persisted;
+- endpoint reachability is not evidence of learned use;
+- historical DATA/EVID is never rewritten to reflect new adapters.
+
+See [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md).
+
+## Experiment-data compacting rule
+
+Large experiment series preserve raw observations in immutable/compressed artifacts. Bounded projections such as `runs.json` and `analysis/ai_packet.json` exist for UI/review/small-model consumption and must carry provenance back to the raw record. Compact files are not replacements for scientific raw DATA.
 
 ## Directory map
 
-- `01-guides/` — operator/developer guides. Version-specific installation/hotfix guides may be historical.
-- `02-architecture/` — architecture and subsystem contracts.
-- `03-dashboard/` — dashboard contracts and UI/API documentation.
-- `04-integration/` — integration notes, overlays and legacy patches.
-- `05-quality/` — quality and release-gate definitions.
-- `06-research/` — research notes, dissertations, conceptual documents and the canonical research-positioning/evidence program; not automatically empirical evidence.
-- `07-changelog/` — changelog history, including dated current-change records.
-- `08-roadmap/` — current roadmap/TODO plus historical phase-specific roadmaps.
-- `09-sprints/` — time-boxed sprint records; historical unless explicitly referenced by current roadmap.
-- `10-releases/` — release checklists and release notes.
-- `11-readme/` — historical README blocks retained for traceability.
-- `12-updates/` — update manifests and integration snapshots.
+- `01-guides/` — operator/developer guides;
+- `02-architecture/` — architecture and subsystem contracts;
+- `03-dashboard/` — dashboard contracts and UI/API documentation;
+- `04-integration/` — integration notes and overlays;
+- `05-quality/` — quality and release-gate definitions;
+- `06-research/` — research notes and canonical research-positioning documents;
+- `07-changelog/` — dated change records;
+- `08-roadmap/` — current roadmap/TODO plus historical phase-specific roadmaps;
+- `09-sprints/` — time-boxed sprint records;
+- `10-releases/` — release checklists and notes;
+- `11-readme/` — historical README blocks;
+- `12-updates/` — update manifests and integration snapshots;
 - `99-archive/` — explicitly archived legacy material.
 
 ## Historical-document rule
 
-A filename containing a previous version, `ALPHA*`, `SPRINT*`, `V0*`, `UPDATE*`, `RELEASE_*`, or an entry under `99-archive/` is a historical record unless a canonical current document links to it as an active contract. Old test counts, commit hashes, milestones and implementation status inside those files are not current project metadata.
+A filename containing a previous version, `ALPHA*`, `SPRINT*`, `V0*`, `UPDATE*`, `RELEASE_*`, or an entry under `99-archive/` is historical unless a canonical current document links to it as an active contract. Old test counts, commit hashes, milestones and implementation status in those files are not current project metadata.
 
-Historical experiment DATA must not be silently rewritten when instrumentation improves. Corrections belong in code, documentation and new versioned experiments so that negative and incomplete observations remain traceable.
+Historical experiment DATA must not be silently rewritten when instrumentation improves. Corrections belong in code, canonical documentation and new versioned experiments.
 
 ## Documentation maintenance
 
-Current-state facts should be stated in canonical documents and linked elsewhere. Avoid copying fixed test counts or commit hashes into many files because they become stale quickly. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
+Avoid copying fixed test counts or commit hashes into many current documents. Where a fixed number is useful, date it and treat it as a verified snapshot. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
 
-The 2026-09-05 adaptive Wesen redesign is recorded in [`07-changelog/2026-09-05_WESEN.md`](07-changelog/2026-09-05_WESEN.md). The network-observability and CI-repair pass is recorded in [`07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md`](07-changelog/2026-09-05_NETWORK_OBSERVABILITY_AND_CI.md).
-
-**Current development policy:** `main` is the canonical branch. Short-lived branches should be merged through reviewed/verified changes and deleted after merge. New work starts from current `origin/main`. Obsolete branches must not be merged merely to make the branch list empty; a branch with no commits ahead of `main` contains nothing to integrate.
+**Current development policy:** `main` is canonical. Short-lived branches start from current `origin/main`, are verified before merge, and should be deleted after merge when repository tooling permits. A branch with no commits ahead of `main` contains nothing to integrate and must not be merged merely to make the branch list empty.
