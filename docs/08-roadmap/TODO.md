@@ -4,6 +4,20 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer status-bar consolidation
+
+- [x] Use one responsive Footer grid for Runtime, I/O, Experiment, Mode, Health and vitals.
+- [x] Expose Runtime tick and command feedback in the Footer DOM.
+- [x] Remove the duplicate Settings/Release Footer row.
+- [ ] Add automated browser viewport checks for Footer wrapping and action reachability.
+
+## 2026-09-06 Dashboard CSS consolidation pass II
+
+- [x] Remove the unscoped white Topbar override.
+- [x] Reduce Overview to one coordinated header/status/data composition.
+- [x] Replace remaining fixed workbench heights with responsive viewport guardrails.
+- [x] Fix the Embodiment unavailable-connection initialization error.
+
 ## 2026-09-06 Canonical dashboard CSS and accessibility
 
 - [x] Route all dashboard component styles through one canonical `styles.css` entry point.

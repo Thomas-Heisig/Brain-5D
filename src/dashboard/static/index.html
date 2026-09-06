@@ -680,12 +680,16 @@
       <strong>Brain-5D</strong><span>v<span id="footer-version">loading</span></span>
     </div>
     <div class="footer-segment footer-runtime">
-      <span>Runtime</span><strong class="status-pill" id="system-status">offline</strong>
+      <div class="footer-runtime-copy">
+        <span>Runtime</span><strong class="status-pill" id="system-status">offline</strong>
+        <small>Tick <span id="footer-runtime-tick">—</span></small>
+      </div>
       <div class="footer-runtime-actions" aria-label="Runtime-Steuerung">
         <button id="footer-runtime-start" type="button" title="Runtime starten" aria-label="Runtime starten">▶</button>
         <button id="footer-runtime-pause" type="button" title="Runtime pausieren" aria-label="Runtime pausieren">Ⅱ</button>
         <button id="footer-runtime-stop" type="button" title="Runtime stoppen" aria-label="Runtime stoppen">■</button>
       </div>
+      <small class="footer-command-feedback" id="footer-command-feedback" aria-live="polite">bereit</small>
     </div>
     <div class="footer-vitals" aria-label="Live Aktivität und Ressourcen">
       <div class="footer-vital"><span>Aktivität</span><strong id="footer-activity-value">—</strong><i><b id="footer-activity-bar"></b></i></div>

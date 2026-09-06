@@ -4,6 +4,19 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Footer status-bar consolidation
+
+- Footer Runtime controls, tick, command feedback, I/O, experiment, mode and health now share one responsive semantic grid.
+- Settings and Release actions are nested in the existing Health area instead of being injected as an extra grid row.
+- Footer controls retain accessible click targets at desktop, tablet and mobile widths.
+
+## 2026-09-06 Dashboard CSS consolidation pass II
+
+- Removed the unscoped legacy white Topbar rule that overrode the coordinated shell theme.
+- Reduced the Overview chrome to one workspace header, one status rail and the actual data surfaces.
+- Replaced remaining fixed research/runtime workbench heights with viewport-aware guardrails and preserved local scrolling only where content requires it.
+- Fixed the Embodiment renderer initialization order so unavailable connection lists no longer raise a runtime error.
+
 ## 2026-09-06 Canonical dashboard CSS and accessible views
 
 - `src/dashboard/static/styles.css` is now the single CSS entry point and imports the component layers once; runtime stylesheet injection no longer duplicates the cascade.

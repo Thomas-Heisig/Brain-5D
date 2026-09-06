@@ -224,9 +224,11 @@ function layoutOrgans(connections) {
   setText("real-body-authorized-count", String(available.filter((item) => item.authorized).length));
   setText("real-body-unavailable-count", String(unavailable.length));
 
+  const unavailableRoot = byId("real-body-unavailable");
+  if (!unavailableRoot) return;
+
   available.forEach((connection) => {
     const node = document.createElement("button");
-  if (!unavailableRoot) return;
     node.type = "button";
     node.className = "real-body-organ";
     node.dataset.kind = connection.kind || "resource";
@@ -241,7 +243,6 @@ function layoutOrgans(connections) {
     organRoot.append(node);
   });
 
-  const unavailableRoot = byId("real-body-unavailable");
   unavailableRoot.replaceChildren();
   for (const connection of unavailable) {
     const item = document.createElement("span");

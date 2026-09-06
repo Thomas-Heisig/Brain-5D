@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-06 — Footer status-bar consolidation
+
+- Unified Footer Runtime, I/O, experiment, mode, health and live-vital regions into one responsive grid.
+- Added visible Runtime tick and command feedback targets required by the Footer controller.
+- Moved Settings/Release actions into Health and removed the duplicate injected Release row.
+
+## 2026-09-06 — Dashboard CSS consolidation pass II
+
+- Removed the legacy unscoped white Topbar override and restored coordinated dark/light shell theming.
+- Removed redundant Experience utility, ribbon and welcome surfaces from the default Overview composition.
+- Replaced remaining fixed workbench heights with responsive viewport guardrails.
+- Fixed `embodiment-self-model.js` initialization order for unavailable connection rendering.
+
 ## 2026-09-06 — Canonical dashboard CSS and accessibility
 
 - Consolidated the dashboard CSS entry path through `styles.css`, including shell, Experience, operator, Embodiment and Wesen layers, and removed duplicate dynamic stylesheet loading.

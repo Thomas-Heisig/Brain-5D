@@ -82,13 +82,13 @@ function ensureFooterTools() {
   const footer = document.querySelector(".site-footer");
   if (!footer || footer.querySelector(".footer-tools")) return;
   const tools = document.createElement("div");
-  tools.className = "footer-segment footer-tools";
+  tools.className = "footer-tools";
   tools.setAttribute("aria-label", "Systembereiche");
   tools.innerHTML = `
     <button type="button" class="footer-nav-btn" data-footer-tab="settings">⚙ Settings</button>
     <button type="button" class="footer-nav-btn" data-footer-tab="gate">🚀 Release</button>`;
   const health = byId("footer-status");
-  if (health) footer.insertBefore(tools, health);
+  if (health) health.insertBefore(tools, health.firstChild);
   else footer.appendChild(tools);
   tools.addEventListener("click", (event) => {
     const button = event.target.closest("[data-footer-tab]");
