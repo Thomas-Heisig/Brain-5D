@@ -20,15 +20,15 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Repair canonical test bindings and EOF hygiene
+      - name: Repair canonical bindings, source-freeze digest and EOF hygiene
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
-          path = Path('tests/test_dashboard_experiment_workflow.py')
-          text = path.read_text(encoding='utf-8')
+          test_path = Path('tests/test_dashboard_experiment_workflow.py')
+          text = test_path.read_text(encoding='utf-8')
 
           old_questions = (
               '        "- id: RQ-SNN-002\\n  domain: snn\\n  question: Does it link?\\n  relevance: test\\n",\n'
@@ -75,8 +75,16 @@ jobs:
                   raise SystemExit(
                       f'{experiment_id}: expected {expected} binding replacements, got {count}'
                   )
+          test_path.write_text(text, encoding='utf-8')
 
-          path.write_text(text, encoding='utf-8')
+          source_path = Path('src/dashboard/experiment_workflow.py')
+          source = source_path.read_text(encoding='utf-8')
+          source = source.replace('import json\nimport marshal\n', 'import json\n', 1)
+          old_digest = '''def _code_digest(code: CodeType) -> str:\n    return hashlib.sha256(marshal.dumps(code)).hexdigest()\n'''
+          new_digest = '''def _code_digest(code: CodeType) -> str:\n    """Hash executable code semantics while ignoring path/debug metadata.\n\n    Raw marshal bytes include interpreter- and compilation-specific metadata that\n    can differ between an imported function and the same freshly compiled source.\n    The source-freeze gate needs semantic identity instead: bytecode, exception\n    tables, signature/flags, referenced names and recursively hashed constants.\n    """\n    digest = hashlib.sha256()\n\n    def update_value(value: object) -> None:\n        if isinstance(value, CodeType):\n            digest.update(b"code\\0")\n            update_code(value)\n            return\n        if isinstance(value, tuple):\n            digest.update(b"tuple\\0")\n            for item in value:\n                update_value(item)\n                digest.update(b"\\0")\n            return\n        if isinstance(value, frozenset):\n            digest.update(b"frozenset\\0")\n            encoded_items = sorted(\n                f"{type(item).__qualname__}:{item!r}".encode(\n                    "utf-8", errors="backslashreplace"\n                )\n                for item in value\n            )\n            for item in encoded_items:\n                digest.update(item)\n                digest.update(b"\\0")\n            return\n        if isinstance(value, bytes):\n            digest.update(b"bytes\\0")\n            digest.update(value)\n            return\n        digest.update(type(value).__qualname__.encode("utf-8"))\n        digest.update(b":")\n        digest.update(repr(value).encode("utf-8", errors="backslashreplace"))\n\n    def update_code(item: CodeType) -> None:\n        for number in (\n            item.co_argcount,\n            item.co_posonlyargcount,\n            item.co_kwonlyargcount,\n            item.co_nlocals,\n            item.co_stacksize,\n            item.co_flags,\n        ):\n            digest.update(str(number).encode("ascii"))\n            digest.update(b"\\0")\n        digest.update(item.co_code)\n        digest.update(b"\\0")\n        digest.update(item.co_exceptiontable)\n        digest.update(b"\\0")\n        for values in (\n            item.co_names,\n            item.co_varnames,\n            item.co_freevars,\n            item.co_cellvars,\n        ):\n            update_value(tuple(values))\n            digest.update(b"\\0")\n        update_value(tuple(item.co_consts))\n\n    update_code(code)\n    return digest.hexdigest()\n'''
+          if old_digest not in source:
+              raise SystemExit('source-freeze digest anchor not found')
+          source_path.write_text(source.replace(old_digest, new_digest, 1), encoding='utf-8')
 
           for name in (
               'research/registry/questions.yaml',
@@ -108,5 +116,5 @@ jobs:
           git config user.email "t_heisig@gmx.de"
           git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "ci: align legacy science fixtures with canonical protocols"
+          git commit -m "ci: align science fixtures and stabilize source freeze"
           git push origin HEAD:main
