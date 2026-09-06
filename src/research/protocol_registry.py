@@ -231,12 +231,13 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
         default_seed_expression = (
             "101" if minimum_seeds <= 1 else f"101-{100 + minimum_seeds}"
         )
-        prereg_conditions = prereg.get("conditions", [])
-        condition_labels = (
-            [_condition_label(item) for item in prereg_conditions]
-            if isinstance(prereg_conditions, list)
+        prereg_conditions_value: object = prereg.get("conditions", [])
+        prereg_conditions = (
+            cast(list[object], prereg_conditions_value)
+            if isinstance(prereg_conditions_value, list)
             else []
         )
+        condition_labels = [_condition_label(item) for item in prereg_conditions]
         condition_labels = [item for item in condition_labels if item]
         controls = [str(item) for item in protocol.get("controls", [])]
         treatments = [str(item) for item in protocol.get("treatments", [])]
