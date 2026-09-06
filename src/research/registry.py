@@ -1,8 +1,10 @@
 """
 Research Registry — Load, save, and query the research registries.
 
-Provides typed access to questions.yaml, hypotheses.yaml, claims.yaml,
-sources.yaml, and methods.yaml.
+Provides typed access to questions, hypotheses, claims, and sources. Questions
+and hypotheses support canonical fragment files (for example
+``questions.msba.yaml``) so the registry can grow without turning one YAML file
+into an unmaintainable monolith. Duplicate identifiers fail closed.
 """
 
 from __future__ import annotations
@@ -222,7 +224,14 @@ class Source:
 
 
 class ResearchRegistry:
-    """Central registry for all research entities."""
+    """Central registry for all research entities.
+
+    ``questions.yaml`` and ``hypotheses.yaml`` remain the historical base files.
+    Additional canonical fragments named ``questions.<name>.yaml`` and
+    ``hypotheses.<name>.yaml`` are merged deterministically. A duplicate ID is an
+    error instead of a last-file-wins override, because silent replacement would
+    destroy provenance and can mis-route experiments.
+    """
 
     def __init__(self, registry_dir: Path = REGISTRY_DIR):
         self._registry_dir = registry_dir
@@ -232,28 +241,72 @@ class ResearchRegistry:
         self.sources: dict[str, Source] = {}
 
     def load_all(self) -> ResearchRegistry:
-        """Load all registry files from disk."""
-        self.questions = self._load_yaml("questions.yaml", ResearchQuestion)
-        self.hypotheses = self._load_yaml("hypotheses.yaml", Hypothesis)
+        """Load all canonical registry files from disk."""
+        self.questions = self._load_yaml_family(
+            "questions.yaml", "questions.*.yaml", ResearchQuestion
+        )
+        self.hypotheses = self._load_yaml_family(
+            "hypotheses.yaml", "hypotheses.*.yaml", Hypothesis
+        )
         self.claims = self._load_yaml("claims.yaml", Claim)
         self.sources = self._load_yaml("sources.yaml", Source)
         return self
+
+    def _load_yaml_family(
+        self, base_filename: str, fragment_pattern: str, cls: type
+    ) -> dict[str, Any]:
+        paths: list[Path] = []
+        base_path = self._registry_dir / base_filename
+        if base_path.is_file():
+            paths.append(base_path)
+        paths.extend(
+            path
+            for path in sorted(self._registry_dir.glob(fragment_pattern))
+            if path.name != base_filename and path.is_file()
+        )
+        merged: dict[str, Any] = {}
+        for path in paths:
+            entries = self._load_yaml_path(path, cls)
+            duplicates = sorted(set(merged).intersection(entries))
+            if duplicates:
+                raise ValueError(
+                    f"Duplicate research registry IDs in {path.name}: "
+                    + ", ".join(duplicates)
+                )
+            merged.update(entries)
+        return merged
 
     def _load_yaml(self, filename: str, cls: type) -> dict[str, Any]:
         path = self._registry_dir / filename
         if not path.exists():
             return {}
+        return self._load_yaml_path(path, cls)
+
+    @staticmethod
+    def _load_yaml_path(path: Path, cls: type) -> dict[str, Any]:
         with open(path, encoding="utf-8") as f:
             raw: Any = yaml.safe_load(f) or []
+        if not isinstance(raw, list):
+            raise ValueError(f"Registry file must contain a list: {path}")
         data: list[dict[str, Any]] = cast("list[dict[str, Any]]", raw)
-        return {item.get("id", item.get("source_id", "")): cls(item) for item in data}
+        result: dict[str, Any] = {}
+        for item in data:
+            identifier = item.get("id", item.get("source_id", ""))
+            if not identifier:
+                raise ValueError(f"Registry entry without identifier: {path}")
+            if identifier in result:
+                raise ValueError(f"Duplicate registry ID {identifier} in {path}")
+            result[identifier] = cls(item)
+        return result
 
     def save_questions(self) -> None:
+        """Write the historical base file only; fragments remain independent."""
         self._save_yaml(
             "questions.yaml", [q.to_dict() for q in self.questions.values()]
         )
 
     def save_hypotheses(self) -> None:
+        """Write the historical base file only; fragments remain independent."""
         self._save_yaml(
             "hypotheses.yaml", [h.to_dict() for h in self.hypotheses.values()]
         )
@@ -298,3 +351,36 @@ class ResearchRegistry:
         if not question:
             return []
         return [self.sources[sid] for sid in question.literature if sid in self.sources]
+
+    def link_issues(self) -> list[dict[str, str]]:
+        """Return referential-integrity problems without mutating scientific data."""
+        issues: list[dict[str, str]] = []
+        for question in self.questions.values():
+            for hypothesis_id in question.hypotheses:
+                hypothesis = self.hypotheses.get(hypothesis_id)
+                if hypothesis is None:
+                    issues.append(
+                        {
+                            "kind": "missing_hypothesis",
+                            "question_id": question.id,
+                            "hypothesis_id": hypothesis_id,
+                        }
+                    )
+                elif hypothesis.research_question != question.id:
+                    issues.append(
+                        {
+                            "kind": "hypothesis_question_mismatch",
+                            "question_id": question.id,
+                            "hypothesis_id": hypothesis_id,
+                        }
+                    )
+        for hypothesis in self.hypotheses.values():
+            if hypothesis.research_question not in self.questions:
+                issues.append(
+                    {
+                        "kind": "missing_question",
+                        "question_id": hypothesis.research_question,
+                        "hypothesis_id": hypothesis.id,
+                    }
+                )
+        return issues
