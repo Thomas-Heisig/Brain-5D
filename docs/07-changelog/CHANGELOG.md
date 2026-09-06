@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — AIRR missing-artifact recovery
+
+- Added fallback report generation when an AI analysis role returns an invalid schema or is unavailable.
+- Preserved existing valid role records and wrote explicit unavailable-role records for missing analysis stages.
+- Created the missing AIRR artifacts for `EXP-GEN-0033`; report status is `review_pending`, with no scientific evidence promotion.
+
 ## 2026-09-06 — RQ-SNN-001 operationalized and executed
 
 - Registered frozen `sustained_activity_stability_v1` / `PREREG-SNN-001` for `RQ-SNN-001` and `H-SNN-001-A`.

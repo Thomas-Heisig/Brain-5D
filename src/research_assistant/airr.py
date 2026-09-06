@@ -136,12 +136,28 @@ class AIRRPipeline:
         backend: AnalysisBackend,
         *analyses: AIAnalysisRecord,
     ) -> AIAnalysisRecord:
+        existing = self._existing_role(packet.experiment_id, role)
+        if existing is not None:
+            return existing
         prompt = _role_prompt(role, packet, analyses)
-        output, model = backend(prompt)
-        reject_model_statistics(output)
-        record = AIAnalysisRecord.create(
-            role=role, model=model, packet=packet, output=output, prompt=prompt
-        )
+        try:
+            output, model = backend(prompt)
+            # Model-owned quantitative values remain a hard failure. They must
+            # never be converted into a harmless-looking fallback record.
+            reject_model_statistics(output)
+            record = AIAnalysisRecord.create(
+                role=role, model=model, packet=packet, output=output, prompt=prompt
+            )
+        except ValueError as exc:
+            if "LLM must not generate quantitative statistics" in str(exc):
+                raise
+            record = self._unavailable_role(
+                role, packet, prompt, f"{type(exc).__name__}: {exc}"
+            )
+        except Exception as exc:
+            record = self._unavailable_role(
+                role, packet, prompt, f"{type(exc).__name__}: {exc}"
+            )
         directory = self._root / "experiments" / packet.experiment_id / "analysis"
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / f"{record.analysis_id}.json"
@@ -154,6 +170,60 @@ class AIRRPipeline:
             encoding="utf-8",
         )
         return record
+
+    def _existing_role(
+        self, experiment_id: str, role: str
+    ) -> AIAnalysisRecord | None:
+        directory = self._root / "experiments" / experiment_id / "analysis"
+        if not directory.is_dir():
+            return None
+        for path in sorted(directory.glob("AIAR-*.json")):
+            try:
+                raw = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(raw, dict) and raw.get("role") == role:
+                    return AIAnalysisRecord(**raw)
+            except (OSError, json.JSONDecodeError, TypeError):
+                continue
+        return None
+
+    @staticmethod
+    def _unavailable_role(
+        role: str,
+        packet: ResearchPacket,
+        prompt: str,
+        reason: str,
+    ) -> AIAnalysisRecord:
+        output: dict[str, Any] = {
+            "assessment": (
+                f"Die Rolle {role} konnte nicht ausgeführt werden. "
+                "Es liegt keine schema-konforme Modellanalyse vor."
+            ),
+            "observations": [],
+            "effect_direction": "not_determined",
+            "methodological_concerns": [
+                "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+                f"Technical reason: {reason}",
+            ],
+            "alternative_explanations": [],
+            "recommended_experiments": [],
+            "requested_evidence": [
+                "Run the role again with a schema-conforming backend response.",
+                "Complete mandatory human review before interpreting this report.",
+            ],
+            "confidence": 0.0,
+            "analysis_unavailable": True,
+        }
+        return AIAnalysisRecord.create(
+            role=role,
+            model={
+                "provider": "system-fallback",
+                "model": "unavailable",
+                "model_digest": "not_applicable",
+            },
+            packet=packet,
+            output=output,
+            prompt=prompt,
+        )
 
 
 def _role_prompt(

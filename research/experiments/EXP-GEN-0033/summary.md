@@ -160,17 +160,21 @@ Deterministische Statistikdatei: [`analysis/statistics.json`](analysis/statistic
 
 ## 8. AI Research Report
 
-- AIRR Status: `failed`
+- AIRR Status: `review_pending`
 - Wissenschaftliche Evidenz durch KI: `false`
 - Human Review: `PENDING`
 
-AIRR-Fehler: `Invalid AI analysis output field: assessment`. Die deterministische Datenauswertung oben bleibt davon unberuehrt.
+Die deterministische Datenauswertung oben bleibt unverändert. Die Rollen `critical_reviewer` und `scientific_writer` konnten wegen nicht schema-konformer Modellantworten nicht ausgeführt werden; dafür wurden nachvollziehbare `analysis_unavailable`-Fallback-Records erzeugt. Der AIRR-Bericht ist auswertbar, aber ohne wissenschaftliche Evidenz und bleibt bis zur Human Review interpretation-only.
 
 ## 9. Artefakte
 
 - [analysis/ai_packet.json](analysis/ai_packet.json)
 - [analysis/ai_packet_digest.json](analysis/ai_packet_digest.json)
 - [analysis/AIAR-scientific_analyst-20260906192133627422-7efb0fab.json](analysis/AIAR-scientific_analyst-20260906192133627422-7efb0fab.json)
+- [analysis/AIAR-critical_reviewer-20260906192912913066-1f034358.json](analysis/AIAR-critical_reviewer-20260906192912913066-1f034358.json)
+- [analysis/AIAR-scientific_writer-20260906192912924875-1f034358.json](analysis/AIAR-scientific_writer-20260906192912924875-1f034358.json)
+- [reports/AIRR-2026-0001.json](reports/AIRR-2026-0001.json)
+- [reports/AIRR-2026-0001.md](reports/AIRR-2026-0001.md)
 - [analysis/statistics.json](analysis/statistics.json)
 - [DATA/current_run.json](DATA/current_run.json)
 - [DATA/raw/run-0000-ping-recurrence_off-seed-42.json.gz](DATA/raw/run-0000-ping-recurrence_off-seed-42.json.gz)

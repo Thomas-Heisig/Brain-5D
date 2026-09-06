@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 AIRR missing-artifact recovery
+
+- Added a safe AIRR fallback for schema-invalid or unavailable AI role responses.
+- Existing valid role analyses are reused; missing reviewer/writer roles become explicit `analysis_unavailable` records instead of deleting the deterministic data analysis.
+- Repaired `EXP-GEN-0033` with a reviewable AIRR JSON/Markdown report while keeping scientific evidence disabled.
+
 ## 2026-09-06 RQ-SNN-001 operationalization and long-run result
 
 - Added frozen operational protocol `sustained_activity_stability_v1` with 100,000 ticks, ten independent seeds, no-input control, tonic-drive treatment, burn-in, windowed traces, finite-state/topology gates and explicit thresholds.

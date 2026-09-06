@@ -1,0 +1,56 @@
+{
+  "analysis_id": "AIAR-critical_reviewer-20260906192912913066-1f034358",
+  "role": "critical_reviewer",
+  "model": {
+    "provider": "system-fallback",
+    "model_name": "unavailable",
+    "model_digest": "not_applicable",
+    "quantization": "unknown",
+    "context_length": "unknown",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": "not_reported",
+    "backend_version": "unknown"
+  },
+  "inputs": {
+    "experiment_id": "EXP-GEN-0033",
+    "packet_digest": "1f0343583ee7036ee0884da4b98ef3dbfee4bfca105ba9787f10e458685624a2"
+  },
+  "output": {
+    "assessment": "Die Rolle critical_reviewer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+    "observations": [],
+    "effect_direction": "not_determined",
+    "methodological_concerns": [
+      "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+      "Technical reason: ValueError: Invalid AI analysis output field: assessment"
+    ],
+    "alternative_explanations": [],
+    "recommended_experiments": [],
+    "requested_evidence": [
+      "Run the role again with a schema-conforming backend response.",
+      "Complete mandatory human review before interpreting this report."
+    ],
+    "confidence": 0.0,
+    "analysis_unavailable": true
+  },
+  "provenance": {
+    "prompt_sha256": "318184a48b07da95bd1e78548ac4da03429cbd9112f4f25f680f98e4fbcda98b",
+    "research_packet_digest": "1f0343583ee7036ee0884da4b98ef3dbfee4bfca105ba9787f10e458685624a2",
+    "prompt_protocol_version": "research_assistant_v1",
+    "assistant_schema_version": "1.2",
+    "git_commit": "4cfcaf64e55b5c33f6fd818605a39da2c92871f9",
+    "model_self_confidence": "0.0"
+  },
+  "epistemic_status": {
+    "evidence": false,
+    "interpretation_only": true,
+    "human_review_required": true
+  },
+  "review": {
+    "status": "pending",
+    "reviewer": null,
+    "reviewed_at": null,
+    "disposition": null
+  },
+  "generated_at": "2026-09-06T19:29:12.913066+00:00"
+}

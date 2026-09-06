@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 AIRR missing-artifact recovery
+
+- [x] Generate missing reviewer/writer analysis records for `EXP-GEN-0033`.
+- [x] Generate its missing AIRR JSON/Markdown report files.
+- [x] Keep deterministic data authoritative and scientific evidence disabled when AI analysis is unavailable.
+- [ ] Re-run AI roles with a schema-conforming backend and complete human review.
+
 ## 2026-09-06 RQ-SNN-001 operationalization
 
 - [x] Define a frozen sustained-activity protocol with explicit controls, metrics, thresholds and stopping rules.
