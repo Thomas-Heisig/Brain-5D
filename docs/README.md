@@ -15,17 +15,17 @@ When documents disagree, use this order:
 
 Passing tests prove engineering behavior covered by those tests; they do not automatically establish a scientific claim.
 
-## Verified current baseline — 2026-09-06
+## Current baseline — 2026-09-06
 
 - canonical branch: `main`
 - package version: `0.5.0a7`
-- pre-MSBA verified collection: **773 tests**
-- MSBA branch collection target after adding 10 tests: **783 tests**
-- latest complete pre-MSBA GitHub CI on `main`: **success** (run #593)
+- current pytest collection: **791 tests**
+- Research Catalog / variable-projection-dimension merge: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
+- latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - Python matrix: **3.11 / 3.12 / 3.13**
-- full and slow suites: **green** on the pre-MSBA baseline
-- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security and Scientific Integrity checks: **green** on the pre-MSBA baseline
-- wheel build/install and Docker build/runtime verification: **green** on the pre-MSBA baseline
+- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security, Scientific Integrity, wheel and Docker checks remain mandatory CI gates
+- post-merge CI is authoritative for the merged baseline; do not describe it as fully green until the corresponding `main` run completes
+- historical experiment DATA/EVID remains unchanged by documentation or registry cleanup
 
 Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.
 
@@ -52,11 +52,24 @@ Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They rec
 | Security | [`../SECURITY.md`](../SECURITY.md) |
 | Contribution workflow | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
 
+## Current research-registry contract
+
+The normal research workflow loads canonical base registries plus deterministic fragments:
+
+- `research/registry/questions.yaml`
+- `research/registry/questions.*.yaml`
+- `research/registry/hypotheses.yaml`
+- `research/registry/hypotheses.*.yaml`
+
+Duplicate identifiers fail closed. MSBA questions/hypotheses are first-class entries rather than side documentation. The Experiment Workflow exposes them through a searchable Research Catalog and distinguishes questions with frozen/preregistered operational protocols from exploratory-only questions. Exploratory execution must not be confused with confirmatory evidence.
+
+The repository-wide RQ/H audit reports references that are not represented in the canonical registry without rewriting historical sources.
+
 ## Current dashboard terminology
 
 - **Overview** — summary/runtime context;
 - **Control** — explicit operator controls;
-- **Research** — research/evidence workflows;
+- **Research** — research/evidence workflows and searchable Research Catalog;
 - **Settings** — configuration;
 - **Wesen** — adaptive read-only live machine-body visualization;
 - **Embodiment** — technical sensor/device/actuator/body-boundary surface;
@@ -67,7 +80,7 @@ Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They rec
 
 `Wesen`, Neural Symbiosis and MSBA must never be described as proof of consciousness, self-awareness, causal tool use or learned sensor control. Reachability, recurrence, loopback, morphology, pipeline availability, energy allocation candidates and gateway candidates are engineering/observation state until a preregistered experiment produces reviewable DATA/EVID.
 
-## Scientific boundary for Neural Symbiosis and MSBA
+## Scientific boundary for Neural Symbiosis, MSBA and dimensions
 
 The multi-network layer is part of Embodiment, not a rewrite of the SNN core. Peripheral CNN/Transformer/RNN/GNN/memory/generative/custom networks and virtual systems such as logic or knowledge databases are connected only through explicit adapter/gateway contracts.
 
@@ -78,7 +91,14 @@ MSBA specializes those gateway contracts by modality:
 - digital: exact immutable payload outside the SNN, deterministic population representation and candidate meta-gating only;
 - resource pressure: normalized energy accounting, explicit estimate-vs-measurement provenance and deterministic NORMAL/CONSERVE/CRITICAL/SURVIVAL protection states.
 
-Current rules:
+Current dimension rule:
+
+- MSBA/external projection spaces may declare **1–32 dimensions**;
+- the productive persisted SNN core remains **5D** for compatibility;
+- productive core >5D requires a separately versioned neuron-ID/storage representation, generalized spatial indexing, `.b5d` migration, canonical state/equivalence tests and preregistered experiments;
+- increased-dimensional projection experiments must not be mislabeled as productive-core N-D evidence.
+
+Current gateway rules:
 
 - open-set `NetworkAreaAdapter` contract;
 - framework-neutral peripheral implementations;
