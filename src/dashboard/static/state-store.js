@@ -67,7 +67,6 @@ export class DashboardStateStore {
     this.lastError = null;
     this.fetching = false;
     this.lastSupplementalFetch = 0;
-    this.lastEmbodimentFetch = 0;
   }
 
   /**
@@ -188,27 +187,14 @@ export class DashboardStateStore {
         }
       }
 
-      const now = Date.now();
-      if (now - this.lastEmbodimentFetch >= 2000) {
-        const [embodimentResult, connectionResult] = await Promise.allSettled([
-          fetch("/api/embodiment/state", { cache: "no-store" }),
-          fetch("/api/embodiment/connections", { cache: "no-store" }),
-        ]);
-        if (embodimentResult.status === "fulfilled" && embodimentResult.value.ok) {
-          this.state.embodiment_detail = await embodimentResult.value.json();
-        }
-        if (connectionResult.status === "fulfilled" && connectionResult.value.ok) {
-          this.state.embodiment_connections = await connectionResult.value.json();
-        }
-        this.lastEmbodimentFetch = now;
-      }
-
-      if (now - this.lastSupplementalFetch >= 15000) {
-        const [gateResult, modeResult, researchResult, embodimentHistoryResult, pipelineResult] = await Promise.allSettled([
+      if (Date.now() - this.lastSupplementalFetch >= 15000) {
+        const [gateResult, modeResult, researchResult, embodimentResult, embodimentHistoryResult, connectionResult, pipelineResult] = await Promise.allSettled([
           fetch("/api/gate/status", { cache: "no-store" }),
           fetch("/api/experiment/mode", { cache: "no-store" }),
           fetch("/api/research", { cache: "no-store" }),
+          fetch("/api/embodiment/state", { cache: "no-store" }),
           fetch("/api/embodiment/history?limit=100", { cache: "no-store" }),
+          fetch("/api/embodiment/connections", { cache: "no-store" }),
           fetch("/api/embodiment/pipeline", { cache: "no-store" }),
         ]);
         if (gateResult.status === "fulfilled" && gateResult.value.ok) {
@@ -224,8 +210,14 @@ export class DashboardStateStore {
         if (researchResult.status === "fulfilled" && researchResult.value.ok) {
           this.state.research = await researchResult.value.json();
         }
+        if (embodimentResult.status === "fulfilled" && embodimentResult.value.ok) {
+          this.state.embodiment_detail = await embodimentResult.value.json();
+        }
         if (embodimentHistoryResult.status === "fulfilled" && embodimentHistoryResult.value.ok) {
           this.state.embodiment_history = await embodimentHistoryResult.value.json();
+        }
+        if (connectionResult.status === "fulfilled" && connectionResult.value.ok) {
+          this.state.embodiment_connections = await connectionResult.value.json();
         }
         if (pipelineResult.status === "fulfilled" && pipelineResult.value.ok) {
           this.state.embodiment_detail = {

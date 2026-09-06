@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.5
+ * @version 1.4.6
  * @license MIT
  */
 
@@ -22,6 +22,7 @@ import "./wesen-anatomy-v3.js";
 import "./wesen-neural-symbiosis.js";
 import "./neuron-model-viewer.js";
 import "./frontend-architecture.js";
+import "./footer-controller.js";
 
 function byId(id) {
   return document.getElementById(id);
@@ -85,7 +86,7 @@ function adaptDashboardNavigation() {
   // Keep legacy route buttons in the DOM so app.js remains the sole lifecycle
   // owner and can lazy-initialize Network/Release/Settings when contextual
   // navigation activates them. The three-area shell hides the legacy nav.
-  for (const name of ["network", "gate"] ) {
+  for (const name of ["network", "gate"]) {
     const button = document.querySelector(`.tab-btn[data-tab="${name}"]`);
     if (button) {
       button.classList.add("wesen-utility-hidden");
@@ -112,7 +113,7 @@ function adaptDashboardNavigation() {
 }
 
 function ensureReleaseFooterButton() {
-  const footer = document.querySelector("footer");
+  const footer = document.querySelector(".site-footer");
   if (!footer || footer.querySelector("[data-footer-release]")) return;
   const target = byId("footer-status") || footer.lastElementChild || footer;
   const button = document.createElement("button");
@@ -121,10 +122,7 @@ function ensureReleaseFooterButton() {
   button.dataset.footerRelease = "true";
   button.textContent = "Release";
   button.title = "Scientific Gate und Release Readiness öffnen";
-  button.addEventListener("click", () => {
-    if (window.Brain5DUtilityPopups?.open) window.Brain5DUtilityPopups.open("gate");
-    else activateLegacyWorkspace("gate");
-  });
+  button.addEventListener("click", () => activateLegacyWorkspace("gate"));
   target.appendChild(button);
 }
 

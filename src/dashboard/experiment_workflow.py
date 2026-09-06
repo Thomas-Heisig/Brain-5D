@@ -10,7 +10,6 @@ from time import perf_counter
 from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
-from src.research.catalog_audit import audit_research_catalog
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -29,7 +28,6 @@ from src.research_assistant.airr import AIRRPipeline
 from src.research_assistant.assistant import AnalysisBackend
 
 from .models import JSONValue
-from .research_source import ResearchSource
 
 
 class WorkflowValidationError(ValueError):
@@ -51,27 +49,6 @@ def write_experiment_summary(
 ) -> str:
     """Write the canonical detailed, data-first experiment summary."""
     return write_detailed_experiment_summary(research_root, experiment_id, ai_report)
-
-
-def _empty_progress() -> dict[str, int]:
-    return {"total": 0, "completed": 0, "failed": 0}
-
-
-def _string_list(value: object) -> list[str]:
-    if not isinstance(value, list):
-        return []
-    return [item for item in value if isinstance(item, str)]
-
-
-def _record_progress(
-    progress: dict[str, dict[str, int]], identifier: str, status: str
-) -> None:
-    counts = progress.setdefault(identifier, _empty_progress())
-    counts["total"] += 1
-    if status == "completed":
-        counts["completed"] += 1
-    elif status in {"failed", "invalid"}:
-        counts["failed"] += 1
 
 
 @dataclass(frozen=True, slots=True)
@@ -101,59 +78,18 @@ class ExperimentWorkflowService:
         self,
         research_root: Path,
         ai_backend: AnalysisBackend | None = None,
-        repo_root: Path | None = None,
     ) -> None:
         self._research_root = research_root
         self._ai_backend = ai_backend
-        self._repo_root = repo_root
 
     def catalog(self) -> dict[str, JSONValue]:
         """Return registry entries suitable for workflow selection."""
         registry = ResearchRegistry(self._research_root / "registry").load_all()
-        protocols = protocol_catalog(self._research_root)
-        operational_questions = {
-            item["research_question"]
-            for item in protocols
-            if item.get("preregistration")
-        }
-        operational_hypotheses = {
-            item["hypothesis"] for item in protocols if item.get("preregistration")
-        }
-        progress = self._catalog_progress()
-        audit_payload: JSONValue = {}
-        if self._repo_root is not None:
-            audit = audit_research_catalog(self._repo_root, registry)
-            audit_payload = cast(
-                JSONValue,
-                {
-                    "clean": audit.clean,
-                    "missing_questions": list(audit.missing_questions),
-                    "missing_hypotheses": list(audit.missing_hypotheses),
-                    "allowlisted_questions": list(audit.allowlisted_questions),
-                    "allowlisted_hypotheses": list(audit.allowlisted_hypotheses),
-                    "allowlist": [item.to_dict() for item in audit.allowlist],
-                    "link_issues": list(audit.link_issues),
-                },
-            )
         return {
             "questions": cast(
                 JSONValue,
                 [
-                    {
-                        "id": question.id,
-                        "label": question.question,
-                        "domain": question.domain,
-                        "status": question.status,
-                        "evidence": list(question.evidence),
-                        "evidence_count": len(question.evidence),
-                        "operational": question.id in operational_questions,
-                        "hypotheses_count": len(
-                            registry.hypotheses_for_question(question.id)
-                        ),
-                        "experiment_progress": progress["questions"].get(
-                            question.id, _empty_progress()
-                        ),
-                    }
+                    {"id": question.id, "label": question.question}
                     for question in registry.questions.values()
                 ],
             ),
@@ -164,13 +100,6 @@ class ExperimentWorkflowService:
                         "id": hypothesis.id,
                         "question_id": hypothesis.research_question,
                         "label": hypothesis.hypothesis,
-                        "status": hypothesis.status,
-                        "evidence": list(hypothesis.evidence),
-                        "evidence_count": len(hypothesis.evidence),
-                        "operational": hypothesis.id in operational_hypotheses,
-                        "experiment_progress": progress["hypotheses"].get(
-                            hypothesis.id, _empty_progress()
-                        ),
                     }
                     for hypothesis in registry.hypotheses.values()
                 ],
@@ -203,30 +132,11 @@ class ExperimentWorkflowService:
                         "id": "stdp_pair_timing_v1",
                         "label": "STDP Pair-Timing v1 (registriert)",
                     },
-                    *protocols,
+                    *protocol_catalog(self._research_root),
                 ],
             ),
             "next_experiment_id": self._next_experiment_id(),
-            "audit": audit_payload,
         }
-
-    def _catalog_progress(self) -> dict[str, dict[str, dict[str, int]]]:
-        progress: dict[str, dict[str, dict[str, int]]] = {
-            "questions": {},
-            "hypotheses": {},
-        }
-        for item in ResearchSource(self._research_root).list_experiments():
-            manifest = item.get("manifest")
-            if not isinstance(manifest, dict):
-                continue
-            status = str(manifest.get("experiment_status", "unknown"))
-            question_ids = _string_list(manifest.get("research_questions"))
-            hypothesis_ids = _string_list(manifest.get("hypotheses"))
-            for identifier in question_ids:
-                _record_progress(progress["questions"], identifier, status)
-            for identifier in hypothesis_ids:
-                _record_progress(progress["hypotheses"], identifier, status)
-        return progress
 
     def run_science(
         self, body: dict[str, object], *, seeds: tuple[int, ...] | None = None

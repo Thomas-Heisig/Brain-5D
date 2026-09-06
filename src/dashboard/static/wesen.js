@@ -15,6 +15,13 @@ function injectIntegrationStyles() {
   style.id = "wesen-integration-styles";
   style.textContent = `
     .tab-nav .wesen-utility-hidden { display: none !important; }
+    .wesen-technical-body { margin: 1.25rem 0 2rem; border: 1px solid var(--line, #1c4155); border-radius: 14px; overflow: clip; background: rgba(127,127,127,.035); }
+    .wesen-technical-body > summary { cursor: pointer; padding: 1rem 1.15rem; display: flex; justify-content: space-between; gap: 1rem; align-items: center; list-style: none; }
+    .wesen-technical-body > summary::-webkit-details-marker { display: none; }
+    .wesen-technical-body > summary div { display: grid; gap: .2rem; }
+    .wesen-technical-body > summary small { opacity: .68; }
+    .wesen-technical-body-content { padding: 0 1rem 1rem; }
+    .wesen-technical-body-content > .workspace-header { margin-top: .25rem; }
     .footer-tools { display: flex; gap: .45rem; align-items: center; }
     .footer-nav-btn { border: 1px solid var(--line, #1c4155); background: transparent; color: inherit; border-radius: 8px; padding: .45rem .7rem; cursor: pointer; font: inherit; }
     .footer-nav-btn:hover, .footer-nav-btn:focus-visible { background: rgba(127,127,127,.12); outline: none; }
@@ -32,9 +39,8 @@ function mergeEmbodimentIntoWesen() {
   details.className = "wesen-technical-body";
   details.innerHTML = `
     <summary>
-      <div class="wesen-technical-boundary-title"><span class="workspace-kicker">TECHNISCHE KÖRPERGRENZE</span><strong>Sensoren, Aktoren, Adapter & Runtime</strong><small>Beobachtete Schnittstelle zwischen Umwelt, Runtime und Körper</small></div>
-      <div class="wesen-technical-boundary-signals"><span>Sensoren<strong>live</strong></span><span>Aktoren<strong>guarded</strong></span><span>Runtime<strong>read-only</strong></span></div>
-      <span class="wesen-technical-boundary-toggle">Öffnen</span>
+      <div><span class="workspace-kicker">TECHNISCHE KÖRPERGRENZE</span><strong>Sensoren, Aktoren, Adapter & Runtime</strong></div>
+      <small>einklappbar · Basis für kommende Embodiment-Generationen</small>
     </summary>`;
 
   embodiment.classList.remove("tab-content", "active");
@@ -43,11 +49,6 @@ function mergeEmbodimentIntoWesen() {
   embodiment.removeAttribute("aria-hidden");
   details.appendChild(embodiment);
   wesen.appendChild(details);
-  const header = embodiment.querySelector(".workspace-header, .dashboard-generated-header");
-  const title = header?.querySelector("h2");
-  const description = header?.querySelector("p");
-  if (title) title.textContent = "Technische Körpergrenze";
-  if (description) description.textContent = "Sensoren, Aktoren, Adapter und Runtime als beobachtbare, autorisierte Schnittstelle.";
 }
 
 function configurePrimaryNavigation() {
@@ -73,10 +74,6 @@ function configurePrimaryNavigation() {
 }
 
 function activateUtilityTab(name) {
-  if (window.Brain5DUtilityPopups?.open) {
-    window.Brain5DUtilityPopups.open(name);
-    return;
-  }
   const hiddenButton = document.querySelector(`.tab-btn[data-tab="${name}"]`);
   if (hiddenButton) hiddenButton.click();
 }

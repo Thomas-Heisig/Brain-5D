@@ -12,7 +12,6 @@ const WORKSPACES = {
   research: { icon: "⌕", label: "Research", group: "Evidence", hint: "Experiments, provenance and files" },
   gate: { icon: "✓", label: "Release", group: "Verify", hint: "Scientific gate and release readiness" },
   settings: { icon: "⚙", label: "Settings", group: "Configure", hint: "Runtime-visible configuration" },
-  summary: { icon: "▦", label: "Scientific Summary", group: "Evidence", hint: "Runtime, network, evidence and parameters" },
   embodiment: { icon: "◈", label: "Embodiment", group: "Embody", hint: "Body, devices and interoception" },
 };
 

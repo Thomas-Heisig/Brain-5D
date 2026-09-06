@@ -60,7 +60,6 @@ function ensurePanel() {
   panel = document.createElement("section");
   panel.id = "wesen-neural-symbiosis";
   panel.className = "wesen-symbiosis-card";
-  panel.dataset.wesenPanel = "symbiosis";
   panel.innerHTML = `
     <header class="wesen-symbiosis-header">
       <div><span>EMBODIED MULTI-NETWORK INTERFACE</span><h3>Neural Symbiosis · MSBA</h3>
@@ -95,9 +94,8 @@ function ensurePanel() {
         <p>Aktivierung ausschließlich in einem expliziten preregistrierten Experiment mit RNG/Seed, Parametern, Controls, DATA und EVID.</p>
       </div></article>
     </div>`;
-  const layout = workspace.querySelector(".wesen-layout");
-  if (layout) layout.insertAdjacentElement("afterend", panel); else workspace.appendChild(panel);
-  window.Brain5DWesen?.registerPanel?.("symbiosis", "Embodied Multi-Network Interface");
+  const stage = workspace.querySelector(".wesen-stage-card");
+  if (stage) stage.insertAdjacentElement("afterend", panel); else workspace.appendChild(panel);
   renderPanel();
   return panel;
 }

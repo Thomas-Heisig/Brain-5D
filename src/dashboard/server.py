@@ -2691,9 +2691,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_experiment_workflow_catalog(self) -> None:
         """Serve valid registry links for a new controlled experiment."""
         source = self._require_research_source()
-        service = ExperimentWorkflowService(
-            source.root(), repo_root=source.root().parent
-        )
+        service = ExperimentWorkflowService(source.root())
         self._send_json(service.catalog())
 
     def _run_experiment_workflow(self, body: dict[str, object]) -> None:

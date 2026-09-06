@@ -1,12 +1,8 @@
 .wesen-symbiosis-card {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
   margin: 1rem 0 0;
-  border: 1px solid var(--wesen-line, rgba(148, 163, 184, 0.2));
+  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
   border-radius: 18px;
-  background: linear-gradient(145deg, var(--wesen-surface, rgba(15, 23, 42, 0.72)), var(--wesen-surface-alt, rgba(6, 18, 29, 0.95)));
-  color: var(--wesen-text, inherit);
+  background: var(--surface, rgba(15, 23, 42, 0.72));
   padding: 1rem;
 }
 
@@ -17,11 +13,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.wesen-symbiosis-header {
-  align-items: flex-start;
-  flex-wrap: wrap;
 }
 
 .wesen-symbiosis-header span,
@@ -60,7 +51,7 @@
   margin: 1rem 0;
   padding: 0.8rem 0.9rem;
   border-left: 3px solid currentColor;
-  background: var(--wesen-control, rgba(148, 163, 184, 0.07));
+  background: rgba(148, 163, 184, 0.07);
 }
 
 .wesen-symbiosis-boundary span {
@@ -76,10 +67,10 @@
 
 .wesen-symbiosis-card article {
   min-width: 0;
-  border: 1px solid var(--wesen-line-soft, rgba(148, 163, 184, 0.14));
+  border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 14px;
   padding: 0.8rem;
-  background: var(--wesen-surface-alt, rgba(2, 6, 23, 0.16));
+  background: rgba(2, 6, 23, 0.16);
 }
 
 .wesen-symbiosis-card article > header {
@@ -100,20 +91,13 @@
   align-items: start;
   padding: 0.5rem;
   border-radius: 10px;
-  background: var(--wesen-control, rgba(148, 163, 184, 0.06));
+  background: rgba(148, 163, 184, 0.06);
 }
 
 .wesen-symbiosis-item > div,
 .wesen-symbiosis-item strong,
 .wesen-symbiosis-item small {
   min-width: 0;
-}
-
-.wesen-symbiosis-item strong,
-.wesen-symbiosis-item small,
-.wesen-symbiosis-gateway strong,
-.wesen-symbiosis-gateway p {
-  overflow-wrap: anywhere;
 }
 
 .wesen-symbiosis-item strong,
@@ -145,7 +129,7 @@
 
 .wesen-symbiosis-gateway > div {
   padding-bottom: 0.45rem;
-  border-bottom: 1px solid var(--wesen-line-soft, rgba(148, 163, 184, 0.12));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .wesen-symbiosis-gateway p {
@@ -157,7 +141,7 @@
 
 @media (max-width: 1100px) {
   .wesen-symbiosis-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -169,15 +153,5 @@
 
   .wesen-symbiosis-state {
     text-align: left;
-  }
-
-  .wesen-symbiosis-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .wesen-symbiosis-gateway > div {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.2rem;
   }
 }

@@ -116,15 +116,6 @@ The frontend intentionally shows both present and planned capability classes:
 
 This maturity display follows the canonical TODO/roadmap and is not evidence that a planned feature exists.
 
-### Scientific Reader output
-
-The global `READER` button creates a text-based snapshot of the active
-workspace. It includes the current published status fields, readable workspace
-content, generation time and an explicit interpretation boundary. The output
-can be copied or downloaded as UTF-8 `.txt`. Missing values remain
-`nicht berichtet`; the reader is an observation aid and does not create DATA or
-EVID evidence.
-
 ### Adaptive organism v2
 
 The current presentation enhancement adds a bounded force-directed body layout. Core, internal, sensor, actuator and generic connection nodes are positioned according to their functional role while repelling each other to avoid a rigid circular anatomy.

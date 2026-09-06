@@ -380,55 +380,6 @@ function renderProblems(health) {
   }
 }
 
-function connectionStatusClass(connection) {
-  if (connection.status === 'error' || connection.status === 'failed') return 'error';
-  if (connection.available === false || connection.status === 'unavailable') return 'unavailable';
-  if (connection.active === true) return 'active';
-  if (connection.authorized === true) return 'authorized';
-  return 'available';
-}
-
-function renderConnectionInventory(payload) {
-  const count = $('overview-connection-count');
-  const summary = $('overview-connection-summary');
-  const container = $('overview-connection-grid');
-  if (!count || !summary || !container) return;
-
-  const connections = Array.isArray(payload?.connections) ? payload.connections : [];
-  const available = connections.filter((connection) => connection.available === true).length;
-  const authorized = connections.filter((connection) => connection.authorized === true).length;
-  const active = connections.filter((connection) => connection.active === true).length;
-  count.textContent = `${connections.length} erkannt`;
-  summary.replaceChildren();
-  for (const [label, value] of [['verfügbar', available], ['autorisiert', authorized], ['aktiv', active]]) {
-    const item = document.createElement('span');
-    item.textContent = `${label} ${value}`;
-    summary.appendChild(item);
-  }
-
-  container.replaceChildren();
-  if (!connections.length) {
-    const empty = document.createElement('span');
-    empty.className = 'overview-empty';
-    empty.textContent = 'Keine Verbindungsdaten vom Backend gemeldet';
-    container.appendChild(empty);
-    return;
-  }
-  for (const connection of connections) {
-    const item = document.createElement('article');
-    item.className = 'overview-connection';
-    item.dataset.status = connectionStatusClass(connection);
-    const title = document.createElement('strong');
-    title.textContent = connection.name || connection.connection_id || 'Unbenannte Verbindung';
-    const detail = document.createElement('span');
-    detail.textContent = [connection.kind, connection.status, connection.source].filter(Boolean).join(' · ') || '—';
-    const message = document.createElement('small');
-    message.textContent = connection.message || 'Keine Meldung publiziert';
-    item.append(title, detail, message);
-    container.appendChild(item);
-  }
-}
-
 export function renderOverviewCommandCenter(state) {
   const system = state.system || {};
   const network = state.network || {};
@@ -464,7 +415,6 @@ export function renderOverviewCommandCenter(state) {
 
   renderComponentGrid(state.components);
   renderProblems(health);
-  renderConnectionInventory(state.embodiment_connections);
 }
 
 export function setupOverviewActions() {

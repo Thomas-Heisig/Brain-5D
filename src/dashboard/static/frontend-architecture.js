@@ -17,7 +17,6 @@ const AREA_BY_WORKSPACE = {
   network: "science",
   research: "science",
   settings: "science",
-  summary: "science",
   embodiment: "wesen",
   wesen: "wesen",
 };
@@ -57,20 +56,7 @@ function injectStyles() {
     .runtime-capability-card li + li { margin-top:.2rem; }
     .not-implemented-yet { color:#efb45e; font-weight:650; }
     .architecture-route-note { margin:.55rem 0 0; font-size:.72rem; opacity:.65; }
-    .science-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.7rem; margin:1rem 0; }
-    .science-summary-card { display:grid; gap:.3rem; min-width:0; padding:1rem; border:1px solid var(--line,rgba(127,127,127,.2)); border-radius:11px; background:rgba(127,127,127,.035); }
-    .science-summary-card span { font-size:.66rem; letter-spacing:.08em; opacity:.68; }
-    .science-summary-card strong { font-size:1.45rem; line-height:1.1; }
-    .science-summary-card small, .science-summary-note { opacity:.68; font-size:.76rem; }
-    .science-summary-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
-    .science-summary-list { display:grid; gap:.55rem; margin:.8rem 0 0; }
-    .science-summary-list div { display:flex; justify-content:space-between; gap:1rem; padding-bottom:.45rem; border-bottom:1px solid var(--line,rgba(127,127,127,.14)); }
-    .science-summary-list dt { opacity:.68; }
-    .science-summary-list dd { margin:0; font-weight:650; text-align:right; }
-    .science-summary-actions { flex-wrap:wrap; }
-    .science-summary-actions button { cursor:pointer; }
-    @media(max-width:900px){.architecture-maturity-panel,.runtime-capability-grid,.science-summary-columns{grid-template-columns:1fr}.science-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.brain5d-primary-nav button{flex-direction:column;gap:.15rem}}
-    @media(max-width:620px){.science-summary-grid{grid-template-columns:1fr}}
+    @media(max-width:900px){.architecture-maturity-panel,.runtime-capability-grid{grid-template-columns:1fr}.brain5d-primary-nav button{flex-direction:column;gap:.15rem}}
     @media(max-width:620px){.brain5d-primary-nav{grid-template-columns:1fr 1fr 1fr;padding:.5rem}.brain5d-primary-nav button{min-height:54px;font-size:.7rem}.brain5d-primary-nav button span{display:none}}
   `;
   document.head.appendChild(style);
@@ -116,13 +102,12 @@ function ensurePrimaryNavigation() {
 function scienceNavigationMarkup(active) {
   return `
     <button type="button" data-science-route="network" class="${active === "network" ? "active" : ""}">Neuronales Netzwerk</button>
-    <button type="button" data-science-route="research" class="${active === "research" ? "active" : ""}">Research & Analysis</button>
-    <button type="button" data-science-route="settings" class="${active === "settings" ? "active" : ""}">Parameter</button>
-    <button type="button" data-science-route="summary" class="${active === "summary" ? "active" : ""}">Summary</button>`;
+    <button type="button" data-science-route="research" class="${active === "research" ? "active" : ""}">Experimente & Nachweise</button>
+    <button type="button" data-science-route="settings" class="${active === "settings" ? "active" : ""}">Parameter</button>`;
 }
 
 function ensureScienceNavigation() {
-  for (const name of ["network", "research", "settings", "summary"]) {
+  for (const name of ["network", "research", "settings"]) {
     const workspace = byId(`tab-${name}`);
     if (!workspace || workspace.querySelector(":scope > .science-context-nav")) continue;
     const nav = document.createElement("nav");

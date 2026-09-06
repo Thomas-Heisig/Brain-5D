@@ -282,28 +282,12 @@ export function renderWorkspaceSummaries(state) {
   const scientific = gate.scientific_gate?.overall || gate.overall || "unknown";
   const ci = gate.ci_status?.status || "unknown";
   const readiness = gate.release_readiness || {};
-  const values = Object.values(parameters);
-  setText("summary-scientific-gate", scientific);
-  setText("summary-ci-status", ci);
-  setText("summary-mode", experiment.current_mode || experiment.mode || "operator");
-  setText("summary-tick", formatNumber(system.tick));
-  setText("summary-neurons", formatNumber(system.neurons));
-  setText("summary-network-detail", `${formatNumber(system.neurons)} Neuronen · ${formatNumber(system.synapses)} Synapsen`);
-  setText("summary-experiments", formatNumber(research.experiments));
-  setText("summary-research-detail", `${formatNumber(research.experiments)} Experimente · ${formatNumber(research.generated)} generierte Nachweise`);
-  setText("summary-parameter-count", values.length);
-  setText("summary-parameter-detail", `${values.filter((item) => item.runtime_mutable).length} mutable Parameter`);
-  setText("summary-release-readiness", readiness.overall || "not_ready");
-  setText("summary-gate-detail", scientific);
-  setText("summary-registry", formatNumber(research.registry));
-  setText("summary-schemas", formatNumber(research.schemas));
-  setText("summary-blockers", Array.isArray(readiness.blockers) ? readiness.blockers.length : 0);
-
   setText("release-workspace-scientific", scientific);
   setText("release-workspace-ci", ci);
   setText("release-workspace-readiness", readiness.overall || "not_ready");
   setText("release-workspace-blockers", Array.isArray(readiness.blockers) ? readiness.blockers.length : 0);
 
+  const values = Object.values(parameters);
   setText("settings-parameter-count", values.length);
   setText("settings-sensitive-count", values.filter((item) => item.scientific_sensitive).length);
   setText("settings-mutable-count", values.filter((item) => item.runtime_mutable).length);

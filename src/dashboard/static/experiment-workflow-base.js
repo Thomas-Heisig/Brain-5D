@@ -232,7 +232,6 @@ export class ExperimentWorkflowPanel {
       this.questions = catalog.questions || [];
       this.hypotheses = catalog.hypotheses || [];
       this.protocols = catalog.protocols || [];
-      this.catalogAudit = catalog.audit || null;
       this.nextExperimentId = catalog.next_experiment_id || "";
       if (this.elements.experimentId && !this.elements.experimentId.value) {
         this.elements.experimentId.placeholder = this.nextExperimentId || "automatisch";
