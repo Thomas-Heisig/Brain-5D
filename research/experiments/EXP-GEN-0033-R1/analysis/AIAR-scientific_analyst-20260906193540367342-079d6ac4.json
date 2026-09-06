@@ -1,0 +1,56 @@
+{
+  "analysis_id": "AIAR-scientific_analyst-20260906193540367342-079d6ac4",
+  "role": "scientific_analyst",
+  "model": {
+    "provider": "system-fallback",
+    "model_name": "unavailable",
+    "model_digest": "not_applicable",
+    "quantization": "unknown",
+    "context_length": "unknown",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": "not_reported",
+    "backend_version": "unknown"
+  },
+  "inputs": {
+    "experiment_id": "EXP-GEN-0033-R1",
+    "packet_digest": "079d6ac4fe3f37ae0e249a9a855fe66e918f83794c8e59e957681c9f352c7e48"
+  },
+  "output": {
+    "assessment": "Die Rolle scientific_analyst konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+    "observations": [],
+    "effect_direction": "not_determined",
+    "methodological_concerns": [
+      "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+      "Technical reason: ValueError: Invalid AI analysis output field: assessment"
+    ],
+    "alternative_explanations": [],
+    "recommended_experiments": [],
+    "requested_evidence": [
+      "Run the role again with a schema-conforming backend response.",
+      "Complete mandatory human review before interpreting this report."
+    ],
+    "confidence": 0.0,
+    "analysis_unavailable": true
+  },
+  "provenance": {
+    "prompt_sha256": "f93209105c7f208a4d1a534810e6215b2ee5e441c8319635b506f1b7c866c02d",
+    "research_packet_digest": "079d6ac4fe3f37ae0e249a9a855fe66e918f83794c8e59e957681c9f352c7e48",
+    "prompt_protocol_version": "research_assistant_v1",
+    "assistant_schema_version": "1.2",
+    "git_commit": "0c64eb428430fcf0627715989857c875d674a74c",
+    "model_self_confidence": "0.0"
+  },
+  "epistemic_status": {
+    "evidence": false,
+    "interpretation_only": true,
+    "human_review_required": true
+  },
+  "review": {
+    "status": "pending",
+    "reviewer": null,
+    "reviewed_at": null,
+    "disposition": null
+  },
+  "generated_at": "2026-09-06T19:35:40.367342+00:00"
+}

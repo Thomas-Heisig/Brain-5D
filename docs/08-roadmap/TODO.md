@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 EXP-GEN-0033 replication
+
+- [x] Re-run the complete science suite under a new immutable experiment ID.
+- [x] Verify 57 runs, 100,000 ticks, satisfied tick contract and zero runtime errors.
+- [x] Preserve deterministic data and fallback report artifacts.
+- [ ] Complete human review and clean-freeze verification for the replication.
+
 ## 2026-09-06 AIRR missing-artifact recovery
 
 - [x] Generate missing reviewer/writer analysis records for `EXP-GEN-0033`.

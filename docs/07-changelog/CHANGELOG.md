@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — EXP-GEN-0033 replication
+
+- Re-ran the complete science suite as `EXP-GEN-0033-R1` with 57 runs and 100,000 ticks.
+- Tick validation passed and no runtime errors were recorded.
+- Added deterministic replication artifacts and a review-pending fallback AIRR report because no AI backend was configured.
+
 ## 2026-09-06 — AIRR missing-artifact recovery
 
 - Added fallback report generation when an AI analysis role returns an invalid schema or is unavailable.

@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 EXP-GEN-0033 replication
+
+- Re-ran the complete science suite as `EXP-GEN-0033-R1` without modifying the original experiment.
+- The replication completed 57 runs, 100,000 requested ticks, `SATISFIED` tick validation and zero runtime errors.
+- Deterministic data, statistics and a transparent fallback AIRR report are archived for the replication.
+
 ## 2026-09-06 AIRR missing-artifact recovery
 
 - Added a safe AIRR fallback for schema-invalid or unavailable AI role responses.
