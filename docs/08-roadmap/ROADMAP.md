@@ -10,21 +10,19 @@ This roadmap separates **implemented engineering capability** from **scientific 
 
 At the 2026-09-06 verification point:
 
-- **773 tests** are collected;
-- the full GitHub CI matrix on the Neural Symbiosis merge commit completed successfully;
-- Python 3.11, 3.12 and 3.13 full/slow suites passed;
-- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity passed;
+- **791 tests** are collected on the research-catalog integration branch;
+- post-MSBA `main` CI #598 completed successfully on `bf47018f39de615b418166ebbb46e92b1fd1d301`;
+- Python 3.11, 3.12 and 3.13 full/slow suites, Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity passed on that baseline;
 - wheel build/install and Docker build/runtime verification passed;
-- no open pull requests remained;
-- all development work found outside `main` was already merged; no unmerged branch content remained.
+- historical experiment DATA remains immutable evidence history.
 
-Historical experiment DATA remains historical evidence. Instrumentation repairs and new architecture produce new observations/experiments rather than rewriting prior DATA.
+Instrumentation repairs, registry repairs and new architecture produce new observations/experiments rather than rewriting prior DATA/EVID.
 
 ## Completed engineering foundation
 
-Current `main` contains:
+Current development contains:
 
-- sparse 5D spiking core with delayed event propagation and deterministic RNG/state;
+- sparse persisted 5D spiking core with delayed event propagation and deterministic RNG/state;
 - STDP, signed eligibility and reward-modulated learning;
 - homeostatic regulation;
 - structural proposal/approval/mutation/journal/undo/recovery;
@@ -39,17 +37,46 @@ Current `main` contains:
 - protocol-driven Research Experiment Runner and Science Suite;
 - network impulse response instrumentation for ticks, spikes, activated neurons, synaptic events, latency, recurrence and state digests;
 - compressed immutable raw-run preservation plus bounded `runs.json` / `analysis/ai_packet.json` projections;
-- **Neural Symbiosis** open-set peripheral network/virtual-area contracts at the embodiment boundary;
-- read-only Neural Symbiosis panel in `Wesen`;
-- inert candidate gateway math for STDP, homeostatic scaling, structural formation/pruning and efferent reward-modulated gating.
+- Neural Symbiosis open-set peripheral network/virtual-area contracts at the embodiment boundary;
+- MSBA modality-specific pathways, energy/resource accounting and fail-closed candidate allocation/plasticity;
+- fragmentable canonical RQ/H registry with duplicate-ID rejection;
+- canonical MSBA RQ/H integration into the normal Experiment Workflow;
+- searchable Research Catalog UI that distinguishes operational from exploratory questions;
+- repository-wide read-only RQ/H reference audit support;
+- configurable MSBA/external projection dimensionality from 1 through 32 while preserving the productive 5D persistence contract.
 
 ## Roadmap principle
 
-Development now prioritizes **evidence closure** and controlled experiments over feature accumulation.
+Development now prioritizes **evidence closure**, research-catalog completeness and controlled experiments over feature accumulation. Reachability in the UI is not evidence and an exploratory runtime run is not a substitute for a hypothesis-specific protocol.
 
 ---
 
-## R0 — Post-repair propagation and recurrence validation
+## R0 — Research catalog closure and experiment operationalization
+
+**Goal:** every canonical research question and hypothesis is discoverable, link-valid and explicitly classified by experiment readiness.
+
+Implemented foundation:
+
+1. load `questions.yaml` / `hypotheses.yaml` plus deterministic `questions.*.yaml` / `hypotheses.*.yaml` fragments;
+2. fail closed on duplicate identifiers;
+3. expose MSBA RQ/H entries through the existing Experiment Workflow;
+4. provide searchable RQ/H selection instead of relying on a long pulldown;
+5. allow exploratory runtime experiments for unmapped questions while preventing accidental EVID promotion;
+6. provide a repository-wide reference audit so documentation/code references can be compared with the canonical registry.
+
+Still required:
+
+1. assign every still-unmapped canonical RQ/H a dedicated runner or an explicit `design_pending` state;
+2. freeze controls, stopping rules, primary outcomes and preregistrations before confirmatory execution;
+3. expose domain/status/evidence/progress facets through the workflow catalog API;
+4. publish the registry audit as a CI artifact and maintain an explicit historical-reference allow-list where appropriate;
+5. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports.
+
+**Priority:** immediate.
+
+---
+
+## R1 — Post-repair propagation and recurrence validation
 
 **Goal:** establish a clean multi-seed baseline for propagation and recurrent return using the repaired instrumentation.
 
@@ -61,26 +88,17 @@ Tasks:
 - review before any EVID promotion;
 - never rewrite `EXP-GEN-0009` to `EXP-GEN-0012`.
 
-**Priority:** immediate.
-
 ---
 
-## R1 — Productive-learning evidence closure
+## R2 — Productive-learning evidence closure
 
 **Goal:** demonstrate whether learning changes later behavior rather than merely internal weights.
 
-Maintain:
-
-- frozen protocol/configuration;
-- train/validation/holdout separation;
-- pre/post behavior probes;
-- learning-off and sham/replay controls;
-- independent seeds and clean-process repeats;
-- human-review-gated EVID promotion.
+Maintain frozen protocol/configuration, train/validation/holdout separation, pre/post behavior probes, learning-off and sham/replay controls, independent seeds and human-review-gated EVID promotion.
 
 ---
 
-## R2 — Closed-loop embodiment evidence
+## R3 — Closed-loop embodiment evidence
 
 **Goal:** test Sensor → SNN → Actuator → Outcome → Reward as a controlled causal loop.
 
@@ -88,7 +106,7 @@ Required comparisons include replay/open-loop, sensor-loss, degraded-quality and
 
 ---
 
-## R3 — Neural Symbiosis experimental gateway program
+## R4 — Neural Symbiosis / MSBA experimental gateway program
 
 **Goal:** test whether the SNN can learn to select, weight or compensate across peripheral neural/virtual areas without compromising the canonical core.
 
@@ -101,57 +119,74 @@ Required work:
 3. persist gateway state independently from core synapse state;
 4. keep gateway plasticity disabled outside registered experiments;
 5. support matched frozen-gateway, random-gateway, timing-shuffle and information/activity controls;
-6. evaluate noisy-area suppression and sensor-lesion compensation;
-7. compare alternative homeostatic reward/error formulations rather than assuming a signed population mean is valid;
-8. require independent seeds and evidence review before claims of learned tool/area use.
-
-Candidate research hypotheses are documented in [`../02-architecture/NEURAL_SYMBIOSIS.md`](../02-architecture/NEURAL_SYMBIOSIS.md).
+6. support reduced-, native- and increased-dimensional projection treatments with explicit mappings;
+7. execute `RQ-MSBA-E01` through `RQ-MSBA-E05` only after their hypothesis-specific runners and preregistrations exist;
+8. evaluate noisy-area suppression and sensor-lesion compensation;
+9. compare alternative homeostatic reward/error formulations rather than assuming a signed population mean is valid;
+10. require independent seeds and evidence review before claims of learned tool/area use.
 
 ---
 
-## R4 — Time-scale and runtime calibration
+## R5 — Variable dimensionality and versioned N-D core research
+
+**Goal:** allow dimensionality to become an explicit experimental variable without breaking existing 5D evidence or persistence.
+
+### Implemented safe layer
+
+- MSBA/external projection spaces accept 1–32 dimensions;
+- schemas can record projection dimension count separately from productive core dimensions;
+- UI exposes the projection-dimension request and states the productive 5D limitation;
+- historical 5D neuron IDs and `.b5d` snapshots remain unchanged.
+
+### Required before productive core >5D
+
+1. design and freeze a versioned N-D neuron-ID/storage representation;
+2. define backward-compatible `.b5d` readers/migration and canonical state hashing;
+3. generalize spatial indexing, coordinate packing, neighbor generation, distances, topology diagnostics and structural locality;
+4. add combinatorial-growth/memory guards for high dimensions;
+5. prove bit-for-bit equivalence for unchanged 5D configurations;
+6. create a preregistered N-D projection sweep first, then a separate productive-core N-D experiment after storage migration;
+7. never reinterpret earlier 5D experiments as N-D evidence.
+
+---
+
+## R6 — Time-scale and runtime calibration
 
 Benchmark target Hz, achieved Hz, realtime ratio, `dt` and per-subsystem tick cost. Prove pacing-only changes do not alter deterministic simulated outcomes when `dt` and inputs remain unchanged.
 
 ---
 
-## R5 — Scientific test of the 5D organization
+## R7 — Scientific test of the 5D organization
 
-Compare full 5D organization against dimension-shuffled, reduced-dimensional and topology-matched non-spatial controls. Measure propagation, locality, learning efficiency, structural motifs, robustness and computational cost.
+Compare full 5D organization against dimension-shuffled, reduced-dimensional, increased-dimensional projection and topology-matched non-spatial controls. Measure propagation, locality, learning efficiency, structural motifs, robustness and computational cost. Increased-dimensional *projection* results must not be mislabeled as productive-core N-D results.
 
 ---
 
-## R6 — Self-regulation, continuity and sensor-loss studies
+## R8 — Self-regulation, continuity and sensor-loss studies
 
 Test homeostasis/interoception as functional control mechanisms without anthropomorphic interpretation. Persist body-boundary/sensor availability changes when they are experimental variables.
 
 ---
 
-## R7 — Memory and world-model layer
+## R9 — Memory and world-model layer
 
-Only after stable behavioral baselines exist:
-
-- define explicit memory-state contracts;
-- compare memory-on/off;
-- add prediction/recall metrics;
-- distinguish observation history, learned internal state and external knowledge;
-- require predictive/behavioral utility before using the term world model.
+Only after stable behavioral baselines exist: define explicit memory-state contracts, compare memory-on/off, add prediction/recall metrics, distinguish observation history from learned internal state and external knowledge, and require predictive/behavioral utility before using the term world model.
 
 ---
 
-## R8 — Multimodal grounding and knowledge intake
+## R10 — Multimodal grounding and knowledge intake
 
-Introduce camera/audio/document/network/knowledge observations through typed provenance-rich SignalFrames and Neural Symbiosis adapters. Scientific runs require frozen/replayable source snapshots and explicit treatment identity.
+Introduce camera/audio/document/network/knowledge observations through typed provenance-rich SignalFrames and Neural Symbiosis/MSBA adapters. Scientific runs require frozen/replayable source snapshots and explicit treatment identity.
 
 ---
 
-## R9 — AI-as-treatment research
+## R11 — AI-as-treatment research
 
 Compare no-AI, frozen replay, sham/random proposer and model-family conditions under identical research packets. AI involvement remains provenance-bound and cannot be silently mixed into controls.
 
 ---
 
-## R10 — Scaling and performance engineering
+## R12 — Scaling and performance engineering
 
 Scale only when evidence needs justify it. Profile network/tick cost, memory footprint, storage/journal backpressure and bounded telemetry before adding accelerator/native kernels. Any optimization requires semantic-equivalence tests.
 
@@ -166,8 +201,9 @@ Before a new major research milestone is declared:
 5. experiment artifacts are reproducible from recorded manifests;
 6. documentation source-of-truth is current;
 7. AI/peripheral-network involvement is registered as provenance/treatment where applicable;
-8. dashboard visualizations remain separated from scientific evidence;
-9. historical DATA has not been rewritten to fit newer instrumentation.
+8. dashboard/catalog visualization remains separated from scientific evidence;
+9. historical DATA has not been rewritten to fit newer instrumentation;
+10. any open research operationalization or N-D migration work remains explicitly listed in both TODO and this roadmap.
 
 ## Historical roadmaps
 
