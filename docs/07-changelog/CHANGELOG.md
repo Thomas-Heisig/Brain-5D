@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Experiment workflow UI activation
+
+- Fixed the unavailable Experiment-Workflow action in Research.
+- Wired protocol selection, popup options, start/cancel behavior and aggregate report output to the existing batch endpoint.
+
 ## 2026-09-06 — EXP-GEN-0033 replication
 
 - Re-ran the complete science suite as `EXP-GEN-0033-R1` with 57 runs and 100,000 ticks.

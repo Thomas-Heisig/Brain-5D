@@ -117,6 +117,16 @@ export class ExperimentWorkflowPanel {
       ticks: byId("workflow-ticks"),
       notes: byId("workflow-notes"),
       run: byId("workflow-run"),
+      batchOpen: byId("workflow-batch-open"),
+      batchDialog: byId("workflow-batch-dialog"),
+      batchForm: byId("workflow-batch-form"),
+      batchId: byId("workflow-batch-id"),
+      batchTicks: byId("workflow-batch-ticks"),
+      batchSeeds: byId("workflow-batch-seeds"),
+      batchTitlePrefix: byId("workflow-batch-title-prefix"),
+      batchProtocols: byId("workflow-batch-protocols"),
+      batchStatus: byId("workflow-batch-status"),
+      batchStart: byId("workflow-batch-start"),
       status: byId("workflow-status"),
       progressBar: byId("workflow-progress-bar"),
       progressLabel: byId("workflow-progress-label"),
@@ -125,6 +135,7 @@ export class ExperimentWorkflowPanel {
     };
     this._ensureResearchUX();
     this._bindEvents();
+    this._bindBatchWorkflow();
     this._installViewerEnhancements();
   }
 
@@ -221,9 +232,86 @@ export class ExperimentWorkflowPanel {
     this.elements.hypothesis?.addEventListener("change", () => this._renderContract());
     this.elements.seeds?.addEventListener("input", () => this._renderContract());
     this.elements.ticks?.addEventListener("input", () => this._renderContract());
-    this.elements.protocol?.addEventListener("change", () => this._applyProtocol());
+    this.elements.protocol?.addEventListener("change", () => {
+      this._applyProtocol();
+      if (this.elements.protocol.value === "batch_workflow_v1") this._openBatchWorkflow();
+    });
     this.elements.conditionProfile?.addEventListener("change", () => this._applyConditionProfile());
     this.elements.run?.addEventListener("click", () => this._run());
+  }
+
+  _bindBatchWorkflow() {
+    this.elements.batchOpen?.addEventListener("click", () => this._openBatchWorkflow());
+    this.elements.batchStart?.addEventListener("click", () => this._runBatchWorkflow());
+  }
+
+  _openBatchWorkflow() {
+    this._renderBatchProtocols();
+    if (typeof this.elements.batchDialog?.showModal === "function") {
+      this.elements.batchDialog.showModal();
+    } else if (this.elements.batchDialog) {
+      this.elements.batchDialog.setAttribute("open", "");
+    }
+  }
+
+  _renderBatchProtocols() {
+    const root = this.elements.batchProtocols;
+    if (!root) return;
+    const registered = this.protocols.filter((protocol) => protocol.preregistration);
+    if (!registered.length) {
+      root.innerHTML = "<p>Keine registrierten operationalen Protokolle verfügbar.</p>";
+      return;
+    }
+    root.replaceChildren(...registered.map((protocol) => {
+      const label = document.createElement("label");
+      label.className = "workflow-batch-protocol";
+      label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(protocol.label || protocol.id)}</strong><small>${escapeHtml(protocol.research_question || "")}</small></span>`;
+      return label;
+    }));
+  }
+
+  async _runBatchWorkflow() {
+    const selected = [...(this.elements.batchProtocols?.querySelectorAll("input:checked") || [])]
+      .map((input) => input.value)
+      .filter(Boolean);
+    if (!selected.length) {
+      if (this.elements.batchStatus) this.elements.batchStatus.textContent = "Mindestens ein Protokoll auswählen.";
+      return;
+    }
+    const payload = {
+      batch_id: this.elements.batchId?.value.trim() || undefined,
+      ticks: Number(this.elements.batchTicks?.value || 1000),
+      seeds: this.elements.batchSeeds?.value.trim() || "42-44",
+      title_prefix: this.elements.batchTitlePrefix?.value.trim() || "Experiment workflow",
+      protocols: selected,
+    };
+    if (this.elements.batchStart) this.elements.batchStart.disabled = true;
+    if (this.elements.batchStatus) this.elements.batchStatus.textContent = "Workflow läuft …";
+    try {
+      const result = await fetchJson("/api/experiment/workflow/batch", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (this.elements.batchStatus) {
+        this.elements.batchStatus.textContent = `Abgeschlossen: ${result.completed} erfolgreich, ${result.failed} fehlgeschlagen.`;
+      }
+      this.elements.batchDialog?.close?.();
+      if (this.elements.result) {
+        this.elements.result.textContent = [
+          `Workflow: ${result.workflow_id}`,
+          `Bericht: ${result.report}`,
+          `Markdown: ${result.report_markdown}`,
+          `Erfolgreich: ${result.completed}`,
+          `Fehlgeschlagen: ${result.failed}`,
+        ].join("\n");
+      }
+      this._setStatus("Workflow-Bericht erstellt", "completed");
+      if (typeof this.onCompleted === "function") await this.onCompleted();
+    } catch (error) {
+      if (this.elements.batchStatus) this.elements.batchStatus.textContent = `Workflow fehlgeschlagen: ${error.message}`;
+    } finally {
+      if (this.elements.batchStart) this.elements.batchStart.disabled = false;
+    }
   }
 
   async refresh() {

@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Experiment workflow UI activation
+
+- [x] Activate the Experiment-Workflow button.
+- [x] Open the options popup from the `batch_workflow_v1` protocol selection.
+- [x] Submit selected protocols and display the aggregate workflow report.
+- [ ] Add browser interaction coverage for popup start/cancel and report rendering.
+
 ## 2026-09-06 EXP-GEN-0033 replication
 
 - [x] Re-run the complete science suite under a new immutable experiment ID.
