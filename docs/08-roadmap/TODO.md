@@ -23,6 +23,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Neural Symbiosis and MSBA are embodiment-only/read-only by default and do not silently mutate the canonical SNN core.
 - [x] Place the Embodied Multi-Network Interface below the interactive body map and event console with full-width responsive reading.
 - [x] Persist Wesen surface visibility choices locally and provide a resettable show/hide control for all major Wesen panels.
+- [x] Keep Wesen Runtime in three readable columns through tablet widths and apply shared Light/Contrast visibility tokens.
+- [x] Add a global Scientific Reader button that opens and downloads a text-based current-workspace observation snapshot.
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
 - [x] Research Workspace includes a graphical timeline for Changelog, Roadmap and TODO with source filters and task progress.
 - [x] Release and Settings are utility popups; Release offers Summary, Timeline and Gate views with past/future/element switching.

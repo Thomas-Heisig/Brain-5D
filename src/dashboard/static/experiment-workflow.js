@@ -41,6 +41,7 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
         </div>
         <span id="workflow-research-count" class="gate-badge pending">0 RQs</span>
       </div>
+        <div id="workflow-research-audit" class="research-catalog-audit" role="status" hidden></div>
       <div class="research-catalog-controls">
         <input id="workflow-research-search" type="search" placeholder="RQ, Hypothese oder Begriff suchen …" autocomplete="off">
         <select id="workflow-research-domain" aria-label="Domain filtern"><option value="">alle Domains</option></select>
@@ -183,6 +184,7 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     results.querySelectorAll("[data-rq-id]").forEach((button) => {
       button.addEventListener("click", () => this._selectResearchQuestion(button.dataset.rqId));
     });
+      this._renderResearchAudit();
   }
 
   _selectResearchQuestion(questionId) {
@@ -196,6 +198,17 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     }
     this._renderContract();
     this._renderResearchCatalog();
+    const target = byId("workflow-research-audit");
+    const audit = this.catalogAudit;
+    if (!target || !audit || typeof audit.clean !== "boolean") return;
+    const missingQuestions = audit.missing_questions || [];
+    const missingHypotheses = audit.missing_hypotheses || [];
+    const allowlisted = (audit.allowlisted_questions || []).length + (audit.allowlisted_hypotheses || []).length;
+    target.hidden = false;
+    target.className = `research-catalog-audit ${audit.clean ? "clean" : ""}`;
+    target.innerHTML = audit.clean
+      ? `Catalog audit: clean · ${allowlisted} bewusst klassifizierte Referenzen`
+      : `Catalog audit offen: ${missingQuestions.length} RQs, ${missingHypotheses.length} Hypothesen unresolved · ${allowlisted} klassifiziert`;
   }
 
   _syncProjectionDimensions(value) {

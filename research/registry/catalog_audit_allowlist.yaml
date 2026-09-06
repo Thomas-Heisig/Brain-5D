@@ -1,0 +1,37 @@
+# Explicitly classified non-canonical references. Every entry needs a reason.
+- id: H-BASE-001-A
+  kind: hypothesis
+  reason: test fixture for fragment loading
+- id: H-EXTRA-E01-A
+  kind: hypothesis
+  reason: test fixture for fragment loading
+- id: H-MISSING-001
+  kind: hypothesis
+  reason: negative fixture for missing-reference detection
+- id: H-MSBA-E
+  kind: hypothesis
+  reason: negative fixture for extensible MSBA identifier validation
+- id: H-TEST-001
+  kind: hypothesis
+  reason: dashboard workflow test fixture
+- id: H-TEST-001-A
+  kind: hypothesis
+  reason: negative fixture for catalog audit and validation tests
+- id: RQ-BASE-001
+  kind: question
+  reason: test fixture for fragment loading
+- id: RQ-DUP-001
+  kind: question
+  reason: negative fixture for duplicate-ID detection
+- id: RQ-EXTRA-E01
+  kind: question
+  reason: test fixture for fragment loading
+- id: RQ-MISSING-001
+  kind: question
+  reason: negative fixture for missing-reference detection
+- id: RQ-MSBA-E
+  kind: question
+  reason: negative fixture for extensible MSBA identifier validation
+- id: RQ-TEST-001
+  kind: question
+  reason: dashboard workflow and catalog audit test fixture

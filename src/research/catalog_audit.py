@@ -13,6 +13,9 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, cast
+
+import yaml
 
 from .registry import ResearchRegistry
 
@@ -47,12 +50,28 @@ class ResearchReference:
 
 
 @dataclass(frozen=True, slots=True)
+class ResearchAuditAllowlistEntry:
+    identifier: str
+    kind: str
+    reason: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "identifier": self.identifier,
+            "kind": self.kind,
+            "reason": self.reason,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class ResearchCatalogAudit:
     question_references: tuple[ResearchReference, ...]
     hypothesis_references: tuple[ResearchReference, ...]
     missing_questions: tuple[str, ...]
     missing_hypotheses: tuple[str, ...]
     link_issues: tuple[dict[str, str], ...]
+    allowlisted_questions: tuple[str, ...] = ()
+    allowlisted_hypotheses: tuple[str, ...] = ()
 
     @property
     def clean(self) -> bool:
@@ -72,6 +91,8 @@ class ResearchCatalogAudit:
             "hypothesis_reference_count": len(self.hypothesis_references),
             "missing_questions": list(self.missing_questions),
             "missing_hypotheses": list(self.missing_hypotheses),
+            "allowlisted_questions": list(self.allowlisted_questions),
+            "allowlisted_hypotheses": list(self.allowlisted_hypotheses),
             "link_issues": list(self.link_issues),
             "question_references": question_refs,
             "hypothesis_references": hypothesis_refs,
@@ -113,20 +134,68 @@ def audit_research_catalog(
 
     known_questions = set(active_registry.questions)
     known_hypotheses = set(active_registry.hypotheses)
-    missing_questions = tuple(sorted(found_questions - known_questions))
-    missing_hypotheses = tuple(sorted(found_hypotheses - known_hypotheses))
+    allowlist = _load_allowlist(registry_dir / "catalog_audit_allowlist.yaml")
+    allowed_questions = {
+        item.identifier for item in allowlist if item.kind == "question"
+    }
+    allowed_hypotheses = {
+        item.identifier for item in allowlist if item.kind == "hypothesis"
+    }
+    missing_questions = tuple(
+        sorted(found_questions - known_questions - allowed_questions)
+    )
+    missing_hypotheses = tuple(
+        sorted(found_hypotheses - known_hypotheses - allowed_hypotheses)
+    )
     return ResearchCatalogAudit(
         question_references=tuple(question_refs),
         hypothesis_references=tuple(hypothesis_refs),
         missing_questions=missing_questions,
         missing_hypotheses=missing_hypotheses,
         link_issues=tuple(active_registry.link_issues()),
+        allowlisted_questions=tuple(sorted(found_questions & allowed_questions)),
+        allowlisted_hypotheses=tuple(sorted(found_hypotheses & allowed_hypotheses)),
     )
+
+
+def _load_allowlist(path: Path) -> tuple[ResearchAuditAllowlistEntry, ...]:
+    if not path.is_file():
+        return ()
+    raw: Any = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    if not isinstance(raw, list):
+        raise ValueError(f"Research audit allowlist must be a list: {path}")
+    entries: list[ResearchAuditAllowlistEntry] = []
+    seen: set[tuple[str, str]] = set()
+    for item in raw:
+        if not isinstance(item, dict):
+            raise ValueError(f"Research audit allowlist entry must be an object: {path}")
+        mapping = cast(dict[str, Any], item)
+        identifier = mapping.get("id")
+        kind = mapping.get("kind")
+        reason = mapping.get("reason")
+        if (
+            not isinstance(identifier, str)
+            or not identifier.strip()
+            or kind not in {"question", "hypothesis"}
+            or not isinstance(reason, str)
+            or not reason.strip()
+        ):
+            raise ValueError(
+                "Research audit allowlist entries require non-empty id/reason "
+                "and kind question|hypothesis."
+            )
+        key = (identifier, kind)
+        if key in seen:
+            raise ValueError(f"Duplicate research audit allowlist entry: {identifier}")
+        seen.add(key)
+        entries.append(ResearchAuditAllowlistEntry(identifier, kind, reason))
+    return tuple(entries)
 
 
 __all__ = [
     "H_PATTERN",
     "RQ_PATTERN",
+    "ResearchAuditAllowlistEntry",
     "ResearchCatalogAudit",
     "ResearchReference",
     "audit_research_catalog",

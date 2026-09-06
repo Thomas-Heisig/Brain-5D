@@ -48,6 +48,7 @@ Current development contains:
 - graphical Research Workspace timeline combining the canonical Changelog, Roadmap and TODO.
 - Release and Settings utility popups with selectable Summary, Timeline and Gate views.
 - responsive Wesen Runtime surface with the Embodied Multi-Network Interface below the body map/event console and persistent panel visibility controls.
+- stable three-column Wesen Runtime presentation with shared Dark/Light/Contrast color tokens and a global text-based Scientific Reader export.
 
 ## Roadmap principle
 

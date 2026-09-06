@@ -23,6 +23,7 @@ from src.research.protocol_registry import (
     protocol_catalog,
     validate_operational_protocol,
 )
+from src.research.catalog_audit import audit_research_catalog
 from src.research.registry import ResearchRegistry
 from src.research_assistant.airr import AIRRPipeline
 from src.research_assistant.assistant import AnalysisBackend
@@ -100,9 +101,11 @@ class ExperimentWorkflowService:
         self,
         research_root: Path,
         ai_backend: AnalysisBackend | None = None,
+        repo_root: Path | None = None,
     ) -> None:
         self._research_root = research_root
         self._ai_backend = ai_backend
+        self._repo_root = repo_root
 
     def catalog(self) -> dict[str, JSONValue]:
         """Return registry entries suitable for workflow selection."""
@@ -117,6 +120,20 @@ class ExperimentWorkflowService:
             item["hypothesis"] for item in protocols if item.get("preregistration")
         }
         progress = self._catalog_progress()
+        audit_payload: JSONValue = {}
+        if self._repo_root is not None:
+            audit = audit_research_catalog(self._repo_root, registry)
+            audit_payload = cast(
+                JSONValue,
+                {
+                    "clean": audit.clean,
+                    "missing_questions": list(audit.missing_questions),
+                    "missing_hypotheses": list(audit.missing_hypotheses),
+                    "allowlisted_questions": list(audit.allowlisted_questions),
+                    "allowlisted_hypotheses": list(audit.allowlisted_hypotheses),
+                    "link_issues": list(audit.link_issues),
+                },
+            )
         return {
             "questions": cast(
                 JSONValue,
@@ -189,6 +206,7 @@ class ExperimentWorkflowService:
                 ],
             ),
             "next_experiment_id": self._next_experiment_id(),
+            "audit": audit_payload,
         }
 
     def _catalog_progress(self) -> dict[str, dict[str, dict[str, int]]]:

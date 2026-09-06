@@ -58,3 +58,30 @@ def test_catalog_audit_cli_writes_machine_readable_report(tmp_path: Path) -> Non
     assert '"clean": true' in report
     assert '"missing_questions": []' in report
     assert '"missing_hypotheses": []' in report
+
+
+def test_catalog_audit_allowlist_requires_kind_and_reason(tmp_path: Path) -> None:
+    registry_dir = tmp_path / "research" / "registry"
+    registry_dir.mkdir(parents=True)
+    _write(
+        registry_dir / "questions.yaml",
+        "- id: RQ-TEST-001\n  domain: Test\n  question: Registered?\n  relevance: test\n",
+    )
+    _write(
+        registry_dir / "hypotheses.yaml",
+        "- id: H-TEST-001-A\n  research_question: RQ-TEST-001\n  hypothesis: Registered\n",
+    )
+    _write(tmp_path / "docs" / "notes.md", "RQ-HIST-001 H-HIST-001-A")
+    _write(
+        registry_dir / "catalog_audit_allowlist.yaml",
+        "- id: RQ-HIST-001\n  kind: question\n  reason: historical fixture\n"
+        "- id: H-HIST-001-A\n  kind: hypothesis\n  reason: negative fixture\n",
+    )
+
+    audit = audit_research_catalog(tmp_path)
+
+    assert audit.clean
+    assert audit.missing_questions == ()
+    assert audit.missing_hypotheses == ()
+    assert audit.allowlisted_questions == ("RQ-HIST-001",)
+    assert audit.allowlisted_hypotheses == ("H-HIST-001-A",)

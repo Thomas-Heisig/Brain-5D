@@ -39,6 +39,22 @@ def test_wesen_shell_merges_embodiment_and_moves_utilities_to_footer() -> None:
     assert "embodimentButton?.remove()" in source
 
 
+def test_dashboard_has_theme_safe_three_column_wesen_and_scientific_reader() -> None:
+    app = (STATIC / "app.js").read_text(encoding="utf-8")
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    wesen = (STATIC / "wesen.css").read_text(encoding="utf-8")
+    reader = (STATIC / "scientific-reader.js").read_text(encoding="utf-8")
+    assert 'import { initScientificReader } from \'./scientific-reader.js\';' in app
+    assert "initScientificReader();" in app
+    assert 'id="scientific-reader-toggle"' in html
+    assert "grid-template-columns: minmax(165px, .8fr) minmax(360px, 1.7fr) minmax(190px, .9fr)" in wesen
+    assert "body[data-theme=\"light\"]" in wesen
+    assert "body.contrast-mode" in wesen
+    assert "buildReaderText" in reader
+    assert "text/plain;charset=utf-8" in reader
+    assert "DATA-Artefakt" in reader
+
+
 def test_project_timeline_is_wired_to_canonical_project_documents() -> None:
     app = (STATIC / "app.js").read_text(encoding="utf-8")
     html = (STATIC / "index.html").read_text(encoding="utf-8")

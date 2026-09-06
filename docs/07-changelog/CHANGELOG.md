@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-06 - Three-column Runtime and Scientific Reader
+
+- Die Wesen Runtime bleibt bis zur mobilen Breakpoint in einer klaren Drei-
+  Spalten-Struktur für Körperzustand, Körperkarte/Ereignisse sowie Inspektion
+  und Selbst-Modell.
+- Wesen-Farben verwenden gemeinsame Theme-Tokens und explizite Light-/Contrast-
+  Overrides für Text, Flächen, Linien, Controls und Statusanzeigen.
+- Der globale `READER`-Button erzeugt eine textbasierte, kopier- und als UTF-8-
+  TXT speicherbare Momentaufnahme des aktiven Workspaces mit
+  Interpretationsgrenze.
+
 ## 2026-09-06 - Graphical project timeline in the dashboard
 
 - The Research Workspace now renders Changelog entries as a graphical timeline.

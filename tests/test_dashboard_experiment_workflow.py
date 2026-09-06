@@ -308,6 +308,33 @@ def test_catalog_exposes_facets_and_manifest_progress(tmp_path: Path) -> None:
     }
 
 
+def test_catalog_exposes_repository_audit_status(tmp_path: Path) -> None:
+    research_root = tmp_path / "research"
+    _write_registry(research_root)
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "notes.md").write_text(
+        "RQ-UNRESOLVED-001 H-UNRESOLVED-001-A", encoding="utf-8"
+    )
+    (research_root / "registry" / "catalog_audit_allowlist.yaml").write_text(
+        "- id: RQ-UNRESOLVED-001\n  kind: question\n  reason: historical note\n"
+        "- id: H-UNRESOLVED-001-A\n  kind: hypothesis\n  reason: historical note\n",
+        encoding="utf-8",
+    )
+
+    catalog = ExperimentWorkflowService(
+        research_root, repo_root=tmp_path
+    ).catalog()
+
+    assert catalog["audit"] == {
+        "clean": True,
+        "missing_questions": [],
+        "missing_hypotheses": [],
+        "allowlisted_questions": ["RQ-UNRESOLVED-001"],
+        "allowlisted_hypotheses": ["H-UNRESOLVED-001-A"],
+        "link_issues": [],
+    }
+
+
 def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     tmp_path: Path,
 ) -> None:
