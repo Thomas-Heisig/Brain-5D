@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Experiment workflow selection repair
+
+- [x] Show all Research Catalog questions in the batch dialog.
+- [x] Mark non-operational questions explicitly as exploratory.
+- [x] Show batch progress/errors/results in the dialog and workflow output.
+- [ ] Add browser E2E coverage for the batch dialog interaction.
+
 ## 2026-09-06 Experiment workflow UI activation
 
 - [x] Activate the Experiment-Workflow button.

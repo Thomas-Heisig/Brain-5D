@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Experiment workflow selection repair
+
+- Fixed the batch selection so all 48 Research Catalog questions are visible.
+- Marked questions without an operational protocol as exploratory and non-runnable instead of hiding them.
+- Improved visible batch dialog status and result handling.
+
 ## 2026-09-06 — Experiment workflow UI activation
 
 - Fixed the unavailable Experiment-Workflow action in Research.

@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Experiment workflow selection repair
+
+- The batch dialog now renders all Research Catalog questions, not only questions with an operational protocol.
+- Questions without a frozen operational protocol remain visible as disabled `EXPLORATORY` entries rather than disappearing.
+- Batch start errors and completion results are shown in the dialog/workflow output.
+
 ## 2026-09-06 Experiment workflow UI activation
 
 - Activated the existing Experiment-Workflow button and dialog in the Research workspace.
