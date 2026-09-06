@@ -39,7 +39,10 @@ def test_future_runtime_capabilities_are_visible_but_not_claimed_live() -> None:
     shell = _read("frontend-architecture.js")
 
     assert "Einzelne Sinne aktivieren/deaktivieren: Not implemented yet" in shell
-    assert "Produktive Gateway-Aktivierung und Gateway-Plastizität: Not implemented yet" in shell
+    assert (
+        "Produktive Gateway-Aktivierung und Gateway-Plastizität: Not implemented yet"
+        in shell
+    )
     assert "Profil laden/speichern/exportieren/löschen: Not implemented yet" in shell
     assert "Memory-/World-Model-Layer: Not implemented yet" in shell
 
@@ -72,8 +75,12 @@ def test_neuron_model_viewer_uses_bounded_real_data_and_client_pca() -> None:
 def test_heavy_embeddings_and_unavailable_metrics_are_honestly_marked() -> None:
     viewer = _read("neuron-model-viewer.js")
 
-    assert '<option value="tsne" disabled>t-SNE · Not implemented yet</option>' in viewer
-    assert '<option value="umap" disabled>UMAP · Not implemented yet</option>' in viewer
+    assert (
+        '<option value="tsne" disabled>t-SNE · Not implemented yet</option>' in viewer
+    )
+    assert (
+        '<option value="umap" disabled>UMAP · Not implemented yet</option>' in viewer
+    )
     assert "Cluster-Kennzahl" in viewer
     assert "Not implemented yet · keine Clusterlabels" in viewer
     assert "Per-neuron Hz" in viewer
