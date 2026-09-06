@@ -28,22 +28,13 @@ def _parse_date(d: Any) -> date | None:
     return None
 
 
-# ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_DIR = REPO_ROOT / "research" / "registry"
 
 
-# ---------------------------------------------------------------------------
-# Data types
-# ---------------------------------------------------------------------------
-
-
 class Answer:
     current: str | None
-    confidence: str  # none | low | medium | high | very_high
+    confidence: str
     limitations: str | None
 
     def __init__(self, data: dict[str, Any]) -> None:
@@ -60,7 +51,7 @@ class ResearchQuestion:
     literature: list[str]
     hypotheses: list[str]
     evidence: list[str]
-    status: str  # open | in_progress | answered | superseded
+    status: str
     answer: Answer
     created: date | None
     updated: date | None
@@ -102,7 +93,7 @@ class Hypothesis:
     id: str
     research_question: str
     hypothesis: str
-    status: str  # untested | inconclusive | supported | refuted
+    status: str
     evidence: list[str]
     created: date | None
     updated: date | None
@@ -136,7 +127,7 @@ class Claim:
     evidence: list[str]
     experiments: list[str]
     sources: list[str]
-    status: str  # untested | inconclusive | supported | refuted
+    status: str
     confidence: str
     required_evidence: list[str]
     minimum_runs: int
@@ -218,19 +209,14 @@ class Source:
         }
 
 
-# ---------------------------------------------------------------------------
-# Registry loader
-# ---------------------------------------------------------------------------
-
-
 class ResearchRegistry:
     """Central registry for all research entities.
 
     ``questions.yaml`` and ``hypotheses.yaml`` remain the historical base files.
     Additional canonical fragments named ``questions.<name>.yaml`` and
-    ``hypotheses.<name>.yaml`` are merged deterministically. A duplicate ID is an
-    error instead of a last-file-wins override, because silent replacement would
-    destroy provenance and can mis-route experiments.
+    ``hypotheses.<name>.yaml`` are merged deterministically. Duplicate IDs fail
+    closed. Save operations preserve the source fragment of existing entries so
+    evidence/status updates cannot collapse fragments back into the base file.
     """
 
     def __init__(self, registry_dir: Path = REGISTRY_DIR):
@@ -252,9 +238,7 @@ class ResearchRegistry:
         self.sources = self._load_yaml("sources.yaml", Source)
         return self
 
-    def _load_yaml_family(
-        self, base_filename: str, fragment_pattern: str, cls: type
-    ) -> dict[str, Any]:
+    def _family_paths(self, base_filename: str, fragment_pattern: str) -> list[Path]:
         paths: list[Path] = []
         base_path = self._registry_dir / base_filename
         if base_path.is_file():
@@ -264,8 +248,13 @@ class ResearchRegistry:
             for path in sorted(self._registry_dir.glob(fragment_pattern))
             if path.name != base_filename and path.is_file()
         )
+        return paths
+
+    def _load_yaml_family(
+        self, base_filename: str, fragment_pattern: str, cls: type
+    ) -> dict[str, Any]:
         merged: dict[str, Any] = {}
-        for path in paths:
+        for path in self._family_paths(base_filename, fragment_pattern):
             entries = self._load_yaml_path(path, cls)
             duplicates = sorted(set(merged).intersection(entries))
             if duplicates:
@@ -283,45 +272,89 @@ class ResearchRegistry:
         return self._load_yaml_path(path, cls)
 
     @staticmethod
-    def _load_yaml_path(path: Path, cls: type) -> dict[str, Any]:
+    def _read_yaml_items(path: Path) -> list[dict[str, Any]]:
         with open(path, encoding="utf-8") as f:
             raw: Any = yaml.safe_load(f) or []
         if not isinstance(raw, list):
             raise ValueError(f"Registry file must contain a list: {path}")
-        data: list[dict[str, Any]] = cast("list[dict[str, Any]]", raw)
+        return cast("list[dict[str, Any]]", raw)
+
+    @classmethod
+    def _load_yaml_path(cls, path: Path, entry_cls: type) -> dict[str, Any]:
         result: dict[str, Any] = {}
-        for item in data:
+        for item in cls._read_yaml_items(path):
             identifier = item.get("id", item.get("source_id", ""))
             if not identifier:
                 raise ValueError(f"Registry entry without identifier: {path}")
             if identifier in result:
                 raise ValueError(f"Duplicate registry ID {identifier} in {path}")
-            result[identifier] = cls(item)
+            result[identifier] = entry_cls(item)
         return result
 
     def save_questions(self) -> None:
-        """Write the historical base file only; fragments remain independent."""
-        self._save_yaml(
-            "questions.yaml", [q.to_dict() for q in self.questions.values()]
+        """Persist question updates to their original canonical fragment."""
+        self._save_yaml_family(
+            "questions.yaml",
+            "questions.*.yaml",
+            {identifier: item.to_dict() for identifier, item in self.questions.items()},
         )
 
     def save_hypotheses(self) -> None:
-        """Write the historical base file only; fragments remain independent."""
-        self._save_yaml(
-            "hypotheses.yaml", [h.to_dict() for h in self.hypotheses.values()]
+        """Persist hypothesis updates to their original canonical fragment."""
+        self._save_yaml_family(
+            "hypotheses.yaml",
+            "hypotheses.*.yaml",
+            {identifier: item.to_dict() for identifier, item in self.hypotheses.items()},
         )
 
     def save_claims(self) -> None:
         self._save_yaml("claims.yaml", [c.to_dict() for c in self.claims.values()])
 
+    def _save_yaml_family(
+        self,
+        base_filename: str,
+        fragment_pattern: str,
+        entries: dict[str, dict[str, Any]],
+    ) -> None:
+        """Save entries while preserving existing file ownership by identifier.
+
+        Identifiers already present in a base/fragment file are written back to
+        that same file. Newly created identifiers are appended to the base file.
+        This prevents a fragment-aware load followed by ``save_*`` from creating
+        duplicate IDs in the historical base registry.
+        """
+        paths = self._family_paths(base_filename, fragment_pattern)
+        base_path = self._registry_dir / base_filename
+        if base_path not in paths:
+            paths.insert(0, base_path)
+
+        ownership: dict[Path, list[str]] = {path: [] for path in paths}
+        assigned: set[str] = set()
+        for path in paths:
+            if not path.is_file():
+                continue
+            for raw in self._read_yaml_items(path):
+                identifier = raw.get("id", raw.get("source_id", ""))
+                if identifier in entries:
+                    ownership[path].append(identifier)
+                    assigned.add(identifier)
+
+        ownership[base_path].extend(sorted(set(entries) - assigned))
+        for path, identifiers in ownership.items():
+            if not identifiers and not path.exists():
+                continue
+            self._save_yaml_path(path, [entries[identifier] for identifier in identifiers])
+
     def _save_yaml(self, filename: str, data: list[Any]) -> None:
-        path = self._registry_dir / filename
+        self._save_yaml_path(self._registry_dir / filename, data)
+
+    @staticmethod
+    def _save_yaml_path(path: Path, data: list[Any]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             yaml.dump(
                 data, f, default_flow_style=False, allow_unicode=True, sort_keys=False
             )
-
-    # -- Queries ------------------------------------------------------------
 
     def questions_by_domain(self, domain: str) -> list[ResearchQuestion]:
         return [
