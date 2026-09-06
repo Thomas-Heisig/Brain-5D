@@ -1,0 +1,29 @@
+name: Fix Format Docs Once
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-format-docs-once.yml
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: |
+          python -m pip install black
+          python -m black src/research/protocol_registry.py
+          sed -i 's/762 tests collected/765 tests collected/g; s/762-test current collection/765-test current collection/g' docs/08-roadmap/TODO.md
+          rm .github/workflows/fix-format-docs-once.yml
+          git config user.name 'Thomas Heisig'
+          git config user.email 't_heisig@gmx.de'
+          git add -A
+          git commit -m 'ci: format protocol defaults and update test baseline'
+          git push origin HEAD:main
