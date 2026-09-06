@@ -9,11 +9,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 791 tests collected on the 2026-09-06 research-catalog integration baseline.
-- [x] Post-MSBA `main` CI #598 completed successfully on merge commit `bf47018f39de615b418166ebbb46e92b1fd1d301`.
-- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass on the verified post-MSBA baseline.
-- [x] Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity pass on the verified post-MSBA baseline.
-- [x] Wheel build/install and Docker build/runtime verification pass on the verified post-MSBA baseline.
+- [x] 791 tests collected on the 2026-09-06 merged research-catalog baseline.
+- [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
+- [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
+- [ ] Confirm the final current-head `main` CI after the documentation refresh before calling the refreshed head fully green.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] `Network` removed from primary frontend navigation.
 - [x] Release/Gate moved to a footer action.
