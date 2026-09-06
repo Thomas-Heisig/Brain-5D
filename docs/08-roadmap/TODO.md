@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Batch execution options and exploratory start
+
+- [x] Allow operational batches to start without an attached Runtime Bridge.
+- [x] Provide independent seed and tick settings per selected protocol.
+- [x] Keep all exploratory questions selectable and route them through Runtime-Ticks.
+- [ ] Add browser E2E coverage for batch start and per-protocol option editing.
+
 ## 2026-09-06 Exploratory workflow execution
 
 - [x] Allow exploratory questions to start from the batch dialog.

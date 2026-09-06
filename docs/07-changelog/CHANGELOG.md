@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Batch execution options and exploratory start
+
+- Fixed batch start by removing the unconditional Runtime Bridge requirement for operational protocol batches.
+- Added independent seeds/ticks per selected protocol.
+- Exploratory questions can now be selected and started through bounded Runtime-Ticks execution.
+
 ## 2026-09-06 — Exploratory workflow execution
 
 - Exploratory questions are no longer greyed out or hidden in the batch workflow.

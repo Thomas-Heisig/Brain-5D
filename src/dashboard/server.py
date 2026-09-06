@@ -2709,19 +2709,28 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
     def _run_experiment_batch(self, body: dict[str, object]) -> None:
         source = self._require_research_source()
-        bridge = self._require_bridge()
-        step = getattr(bridge.controller, "step", None)
-        if not callable(step):
-            raise BridgeNotConfiguredError("Runtime controller does not support step().")
-        state = self.dashboard_server.dashboard_state
+        selected = body.get("protocols", [])
+        exploratory_selected = isinstance(selected, list) and any(
+            isinstance(item, str) and item.startswith("exploratory:") for item in selected
+        )
+        run_ticks = None
+        before = None
+        after = None
+        if exploratory_selected:
+            bridge = self._require_bridge()
+            step = getattr(bridge.controller, "step", None)
+            if not callable(step):
+                raise BridgeNotConfiguredError("Runtime controller does not support step().")
+            state = self.dashboard_server.dashboard_state
 
-        def metrics() -> dict[str, int]:
-            snapshot = state.snapshot().system
-            return {"tick": snapshot.tick, "neurons": snapshot.neurons, "synapses": snapshot.synapses}
+            def metrics() -> dict[str, int]:
+                snapshot = state.snapshot().system
+                return {"tick": snapshot.tick, "neurons": snapshot.neurons, "synapses": snapshot.synapses}
 
+            run_ticks, before, after = step, metrics, metrics
         result = ExperimentWorkflowService(
             source.root(), self.dashboard_server.research_ai_backend
-        ).run_batch(body, run_ticks=step, before=metrics, after=metrics)
+        ).run_batch(body, run_ticks=run_ticks, before=before, after=after)
         self._send_json(cast(dict[str, JSONValue], {"ok": True, **result}))
 
     def _serve_archived_experiments(self) -> None:

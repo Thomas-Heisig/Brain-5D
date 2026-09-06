@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Batch execution options and exploratory start
+
+- Batch execution now accepts per-protocol seed and tick settings from the dialog.
+- Operational-only batches no longer require a runtime bridge; exploratory selections require it and use bounded runtime ticks.
+- The dialog shows all 48 catalog questions, provides all/none selection, and no longer disables exploratory entries.
+
 ## 2026-09-06 Exploratory workflow execution
 
 - Exploratory research questions can now be selected and executed through the batch workflow as explicit `runtime_ticks_v1` diagnostic runs.

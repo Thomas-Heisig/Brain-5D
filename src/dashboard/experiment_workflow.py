@@ -183,11 +183,19 @@ class ExperimentWorkflowService:
         if not isinstance(ticks, int) or isinstance(ticks, bool) or ticks < 1:
             raise WorkflowValidationError("ticks must be a positive integer")
         seeds = body.get("seeds", "42-44")
+        options_value = body.get("protocol_options", {})
+        protocol_options = options_value if isinstance(options_value, dict) else {}
         title_prefix = str(body.get("title_prefix") or "Experiment workflow").strip()
         conditions = str(body.get("conditions") or "Registered protocol conditions").strip()
         notes = str(body.get("notes") or "").strip()
         results: list[dict[str, object]] = []
         for index, protocol_id in enumerate(protocol_ids, start=1):
+            option_value = protocol_options.get(protocol_id)
+            option = option_value if isinstance(option_value, dict) else {}
+            child_ticks = option.get("ticks", ticks)
+            child_seeds = option.get("seeds", seeds)
+            if not isinstance(child_ticks, int) or isinstance(child_ticks, bool) or child_ticks < 1:
+                raise WorkflowValidationError(f"Invalid ticks for {protocol_id}")
             if protocol_id in exploratory:
                 question_id, hypothesis_id = exploratory[protocol_id]
                 protocol = "runtime_ticks_v1"
@@ -205,8 +213,8 @@ class ExperimentWorkflowService:
                 "hypothesis_id": hypothesis_id,
                 "title": title,
                 "conditions": conditions,
-                "ticks": ticks,
-                "seeds": seeds,
+                "ticks": child_ticks,
+                "seeds": child_seeds,
                 "notes": notes,
                 "protocol": protocol,
                 "exploratory": protocol_id in exploratory,
@@ -220,10 +228,12 @@ class ExperimentWorkflowService:
                     result = self.run(child, run_ticks, before(), after)
                 else:
                     result = self.run_science(child)
-                results.append({"protocol": protocol_id, "status": "completed", **result})
+                results.append({"protocol": protocol_id, "ticks": child_ticks, "seeds": child_seeds, "status": "completed", **result})
             except Exception as exc:
                 results.append({
                     "protocol": protocol_id,
+                    "ticks": child_ticks,
+                    "seeds": child_seeds,
                     "experiment_id": experiment_id,
                     "status": "failed",
                     "error": f"{type(exc).__name__}: {exc}",

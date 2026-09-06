@@ -266,18 +266,26 @@ export class ExperimentWorkflowPanel {
       root.innerHTML = "<p>Keine Forschungsfragen aus dem Registry-Katalog verfügbar.</p>";
       return;
     }
-    root.replaceChildren(...this.questions.map((question) => {
+    const controls = document.createElement("div");
+    controls.className = "workflow-batch-selection-tools";
+    controls.innerHTML = '<button type="button" class="btn-small" data-batch-select="all">Alle auswählen</button><button type="button" class="btn-small" data-batch-select="none">Keine auswählen</button>';
+    controls.addEventListener("click", (event) => {
+      const action = event.target.closest("[data-batch-select]")?.dataset.batchSelect;
+      if (!action) return;
+      root.querySelectorAll("input[type=checkbox]:not(:disabled)").forEach((input) => { input.checked = action === "all"; });
+    });
+    root.replaceChildren(controls, ...this.questions.map((question) => {
       const protocol = operationalByQuestion.get(question.id);
       const label = document.createElement("label");
       label.className = "workflow-batch-protocol";
       if (protocol) {
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small><em>Seeds <input type="text" data-batch-seeds value="${escapeHtml(protocol.default_seed_expression || "42-44")}"> Ticks <input type="number" data-batch-ticks min="1" value="${escapeHtml(protocol.default_ticks || 1000)}"></em></span>`;
       } else {
         const hypothesis = this.hypotheses.find((item) => item.question_id === question.id);
         const hypothesisId = hypothesis?.id || "EXPLORATORY-UNSPECIFIED";
         const selection = `exploratory:${question.id}:${hypothesisId}`;
         label.classList.add("workflow-batch-protocol-exploratory");
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small><em>Seeds <input type="text" data-batch-seeds value="42-44"> Ticks <input type="number" data-batch-ticks min="1" value="1000"></em></span>`;
       }
       return label;
     }));
@@ -297,6 +305,15 @@ export class ExperimentWorkflowPanel {
       seeds: this.elements.batchSeeds?.value.trim() || "42-44",
       title_prefix: this.elements.batchTitlePrefix?.value.trim() || "Experiment workflow",
       protocols: selected,
+      protocol_options: Object.fromEntries(selected.map((protocol) => {
+        const input = [...(this.elements.batchProtocols?.querySelectorAll("input[type=checkbox]:checked") || [])]
+          .find((candidate) => candidate.value === protocol);
+        const row = input?.closest(".workflow-batch-protocol");
+        return [protocol, {
+          seeds: row?.querySelector("[data-batch-seeds]")?.value.trim() || this.elements.batchSeeds?.value.trim() || "42-44",
+          ticks: Number(row?.querySelector("[data-batch-ticks]")?.value || this.elements.batchTicks?.value || 1000),
+        }];
+      })),
     };
     if (this.elements.batchStart) this.elements.batchStart.disabled = true;
     if (this.elements.batchStatus) this.elements.batchStatus.textContent = "Workflow läuft …";

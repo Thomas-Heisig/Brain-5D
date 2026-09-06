@@ -2514,6 +2514,9 @@ body.contrast-mode .overview-surface {
 }
 
 .workflow-batch-protocol-exploratory small { color: var(--status-warn); }
+.workflow-batch-selection-tools { display: flex; gap: 6px; flex-wrap: wrap; grid-column: 1 / -1; }
+.workflow-batch-protocol em { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--muted); font-size: .65rem; font-style: normal; }
+.workflow-batch-protocol em input { width: 86px; min-width: 0; padding: 3px 5px; font: .65rem var(--font-mono); }
 .workflow-batch-dialog .modal-close { flex: 0 0 auto; }
 
 @media (max-width: 680px) {
