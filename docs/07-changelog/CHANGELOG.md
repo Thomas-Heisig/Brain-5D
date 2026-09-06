@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Runtime & Wesen grid readability
+
+- Reworked Runtime & Wesen into explicit rows and columns for the body map, sidebars and technical interface.
+- Made the Embodied Multi-Network Interface full-width and responsive so its labels and status values remain readable.
+
 ## 2026-09-06 — Full-page tabs and responsive box states
 
 - Added a shared box-state controller for minimize, standard and maximize actions.

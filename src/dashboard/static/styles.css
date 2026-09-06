@@ -9570,6 +9570,84 @@ body.experience-ready main {
   }
 }
 
+/* Runtime & Wesen raster. The symbiosis interface is a full-width row instead
+   of being squeezed into the next available grid column. */
+#tab-wesen .wesen-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, .8fr) minmax(0, 1.8fr) minmax(220px, .8fr);
+  grid-template-areas:
+    "left stage right"
+    "symbiosis symbiosis symbiosis";
+  gap: var(--content-gap);
+  align-items: start;
+}
+
+#tab-wesen .wesen-layout > .wesen-sidebar:first-child { grid-area: left; }
+#tab-wesen .wesen-layout > .wesen-stage-card { grid-area: stage; min-width: 0; }
+#tab-wesen .wesen-layout > .wesen-sidebar:nth-child(3) { grid-area: right; }
+#tab-wesen .wesen-layout > .wesen-symbiosis-card {
+  grid-area: symbiosis;
+  min-width: 0;
+  width: 100%;
+}
+
+#tab-wesen .wesen-symbiosis-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+#tab-wesen .wesen-symbiosis-card article,
+#tab-wesen .wesen-symbiosis-list,
+#tab-wesen .wesen-symbiosis-gateway {
+  min-width: 0;
+  overflow: hidden;
+}
+
+#tab-wesen .wesen-symbiosis-card strong,
+#tab-wesen .wesen-symbiosis-card small,
+#tab-wesen .wesen-symbiosis-card p,
+#tab-wesen .wesen-symbiosis-card span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1180px) {
+  #tab-wesen .wesen-layout {
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+    grid-template-areas:
+      "stage stage"
+      "left right"
+      "symbiosis symbiosis";
+  }
+
+  #tab-wesen .wesen-symbiosis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  #tab-wesen .wesen-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "stage"
+      "left"
+      "right"
+      "symbiosis";
+  }
+
+  #tab-wesen .wesen-symbiosis-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #tab-wesen .wesen-stage-card {
+    min-height: 0;
+  }
+
+  #tab-wesen .wesen-stage {
+    min-height: min(560px, 70vh);
+  }
+}
+
 /* Full-page workspaces and shared box sizing controls. */
 body.experience-ready .tab-content.active {
   min-height: calc(100dvh - var(--dashboard-header-height) - var(--dashboard-primary-nav-height) - var(--dashboard-footer-space));

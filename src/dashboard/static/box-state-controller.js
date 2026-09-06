@@ -12,6 +12,7 @@ const BOX_SELECTOR = [
   ".wesen-card",
   ".wesen-stage-card",
   ".wesen-console",
+  ".wesen-symbiosis-card",
   ".experiment-workflow",
   ".release-board",
   ".connection-manager",

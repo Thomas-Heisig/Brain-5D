@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Runtime & Wesen grid readability
+
+- [x] Place body map, state sidebar, inspector sidebar and technical interface in explicit grid areas.
+- [x] Keep Neural Symbiosis full-width instead of squeezing it into a single column.
+- [x] Reflow technical cards for desktop, tablet and mobile.
+- [ ] Add browser screenshots for Runtime & Wesen at desktop, tablet and mobile widths.
+
 ## 2026-09-06 Full-page tabs and responsive box states
 
 - [x] Treat active workspaces as full-page tab surfaces.

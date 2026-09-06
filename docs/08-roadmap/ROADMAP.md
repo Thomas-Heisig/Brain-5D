@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Runtime & Wesen grid readability
+
+- Runtime & Wesen now uses explicit grid areas for left state controls, the central body map, right inspection controls and the full-width Neural Symbiosis row.
+- The Embodied Multi-Network Interface is no longer squeezed into a single leftover column.
+- Symbiosis cards reflow from three to two to one column across desktop, tablet and mobile widths.
+
 ## 2026-09-06 Full-page tabs and responsive box states
 
 - Active workspaces now use the full available page area beneath the fixed application chrome.
