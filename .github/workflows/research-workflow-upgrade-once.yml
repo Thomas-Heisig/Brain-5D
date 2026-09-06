@@ -1,0 +1,499 @@
+name: Research Workflow Upgrade Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/research-workflow-upgrade-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  implement:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Implement research workflow upgrade
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          root = Path('.')
+
+          # ------------------------------------------------------------
+          # 1. Backend research contract + review helpers
+          # ------------------------------------------------------------
+          p = root / 'src/dashboard/experiment_workflow.py'
+          text = p.read_text(encoding='utf-8')
+          if 'def build_research_contract(' not in text:
+              insert_at = text.find('\nclass WorkflowValidationError')
+              helpers = r'''
+
+
+def build_research_contract(
+    research_root: Path,
+    *,
+    question_id: str,
+    hypothesis_id: str,
+    protocol_id: str,
+    requested_seeds: Sequence[int],
+    requested_ticks: int | None,
+    git_dirty: bool = False,
+    brain5d_version: str | None = None,
+) -> dict[str, Any]:
+    """Build a user-visible execution contract before an experiment starts."""
+    protocol = protocol_by_id(research_root, protocol_id)
+    prereg_path = research_root / str(protocol.get("preregistration", ""))
+    prereg = json.loads(prereg_path.read_text(encoding="utf-8"))
+    seed_strategy = prereg.get("seed_strategy", {})
+    minimum_seeds = int(seed_strategy.get("minimum_independent_seeds", 1))
+    default_ticks = protocol.get("default_ticks")
+    effective_ticks = requested_ticks if requested_ticks is not None else default_ticks
+    seed_count = len({int(seed) for seed in requested_seeds})
+    violations: list[str] = []
+    warnings: list[str] = []
+    if seed_count < minimum_seeds:
+        violations.append(
+            f"Seed count {seed_count} is below preregistered minimum {minimum_seeds}."
+        )
+    if git_dirty:
+        violations.append("Git working tree is dirty; confirmatory execution is not eligible.")
+    if not brain5d_version or brain5d_version == "unknown":
+        violations.append("Brain-5D version is unknown; confirmatory execution is not eligible.")
+    if requested_ticks is not None and default_ticks is not None and requested_ticks != default_ticks:
+        warnings.append(
+            f"Requested ticks ({requested_ticks}) differ from protocol default ({default_ticks})."
+        )
+    mode = str(prereg.get("mode", "EXPLORATORY"))
+    eligibility = "CONFIRMATORY_ELIGIBLE"
+    if violations:
+        eligibility = "EXPLORATORY_ONLY"
+    return {
+        "question_id": question_id,
+        "hypothesis_id": hypothesis_id,
+        "protocol_id": protocol_id,
+        "mode": mode,
+        "eligibility": eligibility,
+        "requested_seeds": list(requested_seeds),
+        "seed_count": seed_count,
+        "minimum_independent_seeds": minimum_seeds,
+        "seed_rule": seed_strategy.get("rule"),
+        "ticks": effective_ticks,
+        "default_ticks": default_ticks,
+        "conditions": prereg.get("conditions", []),
+        "primary_outcomes": prereg.get("primary_outcomes", []),
+        "secondary_outcomes": prereg.get("secondary_outcomes", []),
+        "inclusion_criteria": prereg.get("inclusion_criteria", []),
+        "exclusion_criteria": prereg.get("exclusion_criteria", []),
+        "inference_policy": (prereg.get("analysis_plan") or {}).get("inference_policy"),
+        "freeze": prereg.get("freeze", {}),
+        "controls": protocol.get("controls", []),
+        "treatments": protocol.get("treatments", []),
+        "warnings": warnings,
+        "violations": violations,
+    }
+
+
+def write_human_review(
+    experiment_dir: Path,
+    *,
+    reviewer: str,
+    decision: str,
+    notes: str,
+    checklist: dict[str, bool],
+    reviewed_at: str,
+) -> Path:
+    """Write an immutable human-review record bound to current experiment artefacts."""
+    allowed = {
+        "ACCEPT_FOR_REVIEWED_RECORD",
+        "ACCEPT_AS_EXPLORATORY",
+        "REQUEST_FOLLOW_UP",
+        "REJECT",
+    }
+    if decision not in allowed:
+        raise WorkflowValidationError(f"Unsupported human review decision: {decision}")
+    import hashlib
+    def digest_file(path: Path) -> str | None:
+        return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+    review_dir = experiment_dir / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    existing = sorted(review_dir.glob("HUMAN-REVIEW-*.json"))
+    review_id = f"HUMAN-REVIEW-{len(existing)+1:04d}"
+    target = review_dir / f"{review_id}.json"
+    payload = {
+        "schema_version": "1.0",
+        "review_id": review_id,
+        "experiment_id": experiment_dir.name,
+        "reviewer": reviewer.strip(),
+        "decision": decision,
+        "status": "REVIEWED",
+        "reviewed_at": reviewed_at,
+        "notes": notes,
+        "checklist": checklist,
+        "digests": {
+            "manifest": digest_file(experiment_dir / "manifest.json"),
+            "statistics": digest_file(experiment_dir / "analysis" / "statistics.json"),
+            "summary": digest_file(experiment_dir / "summary.md"),
+        },
+    }
+    target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return target
+'''
+              text = text[:insert_at] + helpers + text[insert_at:]
+              p.write_text(text, encoding='utf-8')
+
+          # ------------------------------------------------------------
+          # 2. File viewer: relative Markdown links, Mermaid, help tooltips
+          # ------------------------------------------------------------
+          p = root / 'src/dashboard/static/file-viewer.js'
+          js = p.read_text(encoding='utf-8')
+          if 'function resolveFMRelativePath' not in js:
+              marker = '// ================================================================\n// Module state'
+              helper = r'''
+// ================================================================
+// Research-document links and Mermaid rendering
+// ================================================================
+
+function resolveFMRelativePath(currentPath, href) {
+  if (!href || /^(?:[a-z]+:|#|\/)/i.test(href)) return href;
+  const cleaned = href.replace(/\\_/g, '_').split('#')[0].split('?')[0];
+  const base = (currentPath || '').split('/').slice(0, -1);
+  const parts = [...base, ...cleaned.split('/')];
+  const stack = [];
+  for (const part of parts) {
+    if (!part || part === '.') continue;
+    if (part === '..') {
+      if (!stack.length) return null;
+      stack.pop();
+      continue;
+    }
+    stack.push(part);
+  }
+  return stack.join('/');
+}
+
+async function renderMermaidBlocks(container) {
+  const blocks = container.querySelectorAll('pre code.language-mermaid, code.language-mermaid');
+  if (!blocks.length) return;
+  if (!window.mermaid) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+    script.onload = () => {
+      window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict' });
+      renderMermaidBlocks(container);
+    };
+    document.head.appendChild(script);
+    return;
+  }
+  let idx = 0;
+  for (const code of blocks) {
+    const source = code.textContent || '';
+    const pre = code.closest('pre') || code;
+    const host = document.createElement('div');
+    host.className = 'fm-mermaid';
+    try {
+      const id = `fm-mermaid-${Date.now()}-${idx++}`;
+      const result = await window.mermaid.render(id, source);
+      host.innerHTML = result.svg;
+    } catch (err) {
+      host.innerHTML = `<div class="fm-error">Mermaid render error: ${escapeHtml(err.message || String(err))}</div>`;
+    }
+    pre.replaceWith(host);
+  }
+}
+
+function wireMarkdownRelativeLinks(container, currentPath) {
+  container.querySelectorAll('a[href]').forEach(anchor => {
+    const href = anchor.getAttribute('href');
+    if (!href || /^(?:https?:|mailto:|#)/i.test(href)) return;
+    const resolved = resolveFMRelativePath(currentPath, href);
+    if (!resolved) {
+      anchor.classList.add('fm-link-invalid');
+      anchor.title = 'Blocked unsafe relative path';
+      return;
+    }
+    anchor.addEventListener('click', event => {
+      event.preventDefault();
+      openFMFile(resolved);
+    });
+  });
+}
+'''
+              js = js.replace(marker, helper + '\n' + marker, 1)
+
+          if 'let fmCurrentPath' not in js:
+              js = js.replace("let fmCurrentSource = 'research';", "let fmCurrentSource = 'research';\nlet fmCurrentPath = '';", 1)
+          # Track opened path.
+          js = js.replace('async function openFMFile(path) {', "async function openFMFile(path) {\n  fmCurrentPath = path;", 1)
+          # Apply relative links / mermaid after rendered markdown if possible.
+          if 'wireMarkdownRelativeLinks(viewer' not in js:
+              js = js.replace(
+                  "viewer.innerHTML = html;",
+                  "viewer.innerHTML = html;\n    wireMarkdownRelativeLinks(viewer, path);\n    renderMermaidBlocks(viewer);",
+              )
+          p.write_text(js, encoding='utf-8')
+
+          # ------------------------------------------------------------
+          # 3. Experiment mode UI: contract, report button, review form, tooltips
+          # ------------------------------------------------------------
+          candidates = [
+              root / 'src/dashboard/static/experiment-mode.js',
+              root / 'src/dashboard/static/app.js',
+          ]
+          for p in candidates:
+              if not p.is_file():
+                  continue
+              js = p.read_text(encoding='utf-8')
+              if 'RESEARCH_HELP' not in js:
+                  js = """const RESEARCH_HELP = Object.freeze({
+  seeds: 'Seeds initialise deterministic random processes. Reusing the same seed set across control and treatment enables paired comparisons; multiple independent seeds test robustness.',
+  ticks: 'Ticks are simulated time steps. More ticks do not automatically create stronger evidence; the protocol defines the required observation budget.',
+  preregistration: 'A frozen preregistration binds research question, hypothesis, outcomes, controls and seed strategy before confirmatory execution.',
+  humanReview: 'Human review records that a person checked the artefacts and interpretation. It does not automatically confirm the hypothesis.',
+  eligibility: 'Confirmatory eligibility requires compliance with the frozen contract, clean source provenance and the preregistered minimum seed count.'
+});
+
+""" + js
+              p.write_text(js, encoding='utf-8')
+
+          # HTML component or index enhancements.
+          html_files = list((root / 'src/dashboard/static').glob('*.html')) + list((root / 'src/dashboard/static/html').glob('*.html'))
+          for p in html_files:
+              html = p.read_text(encoding='utf-8')
+              if ('experiment' not in p.name.lower() and 'experiment' not in html.lower()):
+                  continue
+              if 'research-contract-panel' not in html:
+                  anchor = re.search(r'(<[^>]+id=["\']experiment[^>]*>)', html, flags=re.I)
+                  panel = '''
+<section id="research-contract-panel" class="research-contract-panel" aria-live="polite">
+  <div class="panel-header"><h3>Research Contract</h3><span id="research-eligibility" title="Confirmatory eligibility is derived from the frozen preregistration.">Not evaluated</span></div>
+  <div id="research-contract-content">Select a research question and protocol to preview seeds, ticks, controls, treatments and measured outcomes before start.</div>
+</section>
+<section id="experiment-result-actions" class="experiment-result-actions" hidden>
+  <button type="button" id="experiment-open-report">Open Scientific Report</button>
+  <button type="button" id="experiment-open-summary">Open Summary</button>
+  <button type="button" id="experiment-open-statistics">Open Statistics</button>
+  <button type="button" id="experiment-open-raw-index">Raw Data</button>
+</section>
+<section id="human-review-panel" class="human-review-panel" hidden>
+  <h3>Human Review <span title="Human review verifies artefacts and interpretation; it does not itself confirm the hypothesis.">ⓘ</span></h3>
+  <label>Reviewer <input id="human-review-reviewer" type="text" autocomplete="name"></label>
+  <label>Decision
+    <select id="human-review-decision">
+      <option value="ACCEPT_FOR_REVIEWED_RECORD">Accept for reviewed record</option>
+      <option value="ACCEPT_AS_EXPLORATORY">Accept as exploratory only</option>
+      <option value="REQUEST_FOLLOW_UP">Request follow-up</option>
+      <option value="REJECT">Reject</option>
+    </select>
+  </label>
+  <div class="human-review-checklist">
+    <label><input type="checkbox" data-review-check="experiment_contract"> Experiment contract checked</label>
+    <label><input type="checkbox" data-review-check="raw_data"> Raw data checked</label>
+    <label><input type="checkbox" data-review-check="statistics"> Statistics checked</label>
+    <label><input type="checkbox" data-review-check="ai_analysis"> AI interpretation checked</label>
+    <label><input type="checkbox" data-review-check="limitations"> Limitations accepted</label>
+  </div>
+  <label>Notes <textarea id="human-review-notes" rows="3"></textarea></label>
+  <button type="button" id="human-review-complete">Complete Human Review</button>
+</section>
+'''
+                  if anchor:
+                      pos = anchor.end()
+                      html = html[:pos] + panel + html[pos:]
+                  else:
+                      html += panel
+                  p.write_text(html, encoding='utf-8')
+                  break
+
+          # ------------------------------------------------------------
+          # 4. Add experiment report diagrams + proposed RQ provenance to summaries
+          # ------------------------------------------------------------
+          p = root / 'src/research/experiment_summary.py'
+          if p.is_file():
+              s = p.read_text(encoding='utf-8')
+              if '## Experimental schema' not in s and 'mermaid' not in s.lower():
+                  # Append deterministic schema helper to generated report text if a simple return/join anchor exists.
+                  marker = 'def write_detailed_experiment_summary'
+                  if marker in s and 'def _experimental_schema_mermaid' not in s:
+                      idx = s.find(marker)
+                      helper = r'''
+
+def _experimental_schema_mermaid(
+    question_id: str,
+    hypothesis_id: str,
+    protocol_id: str,
+    controls: Sequence[str],
+    treatments: Sequence[str],
+    outcomes: Sequence[str],
+) -> str:
+    """Return a deterministic Mermaid representation of an experiment contract."""
+    lines = [
+        "```mermaid",
+        "graph TD",
+        f'    RQ["{question_id}"] --> H["{hypothesis_id}"]',
+        f'    H --> P["{protocol_id}"]',
+    ]
+    for i, item in enumerate(controls):
+        lines.append(f'    P --> C{i}["Control: {item}"]')
+    for i, item in enumerate(treatments):
+        lines.append(f'    P --> T{i}["Treatment: {item}"]')
+    lines.append('    P --> M["Measured outcomes"]')
+    for i, item in enumerate(outcomes):
+        lines.append(f'    M --> O{i}["{item}"]')
+    lines.append("```")
+    return "\n".join(lines)
+
+'''
+                      s = s[:idx] + helper + s[idx:]
+                      p.write_text(s, encoding='utf-8')
+
+          # ------------------------------------------------------------
+          # 5. Tests for path resolution contract data + immutable review
+          # ------------------------------------------------------------
+          test = root / 'tests/test_research_workflow_upgrade.py'
+          test.write_text(r'''from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from src.dashboard.experiment_workflow import build_research_contract, write_human_review
+
+
+def _research_root(tmp_path: Path) -> Path:
+    root = tmp_path / "research"
+    (root / "preregistrations").mkdir(parents=True)
+    (root / "protocols").mkdir(parents=True)
+    (root / "protocols" / "EXP_GEN_0021_OPERATIONAL_PROTOCOLS.json").write_text(
+        json.dumps({
+            "schema_version": "1.0",
+            "protocols": [{
+                "id": "topology_matched_5d_v1",
+                "research_question": "RQ-5D-005",
+                "hypothesis": "H-5D-005-A",
+                "runner": "run_5d_matched",
+                "preregistration": "preregistrations/PREREG-5D-005.json",
+                "default_ticks": 64,
+                "controls": ["1d", "2d", "3d"],
+                "treatments": ["5d"],
+            }],
+        }), encoding="utf-8")
+    (root / "preregistrations" / "PREREG-5D-005.json").write_text(
+        json.dumps({
+            "mode": "CONFIRMATORY",
+            "primary_outcomes": ["total_spikes"],
+            "secondary_outcomes": ["activated_neurons"],
+            "conditions": [{"id": "1d", "role": "control"}, {"id": "5d", "role": "treatment"}],
+            "seed_strategy": {"minimum_independent_seeds": 30, "rule": "same seed set"},
+            "freeze": {"status": "FROZEN"},
+            "analysis_plan": {"inference_policy": "Matched controls required."},
+        }), encoding="utf-8")
+    return root
+
+
+def test_research_contract_exposes_preregistered_execution_requirements(tmp_path: Path) -> None:
+    root = _research_root(tmp_path)
+    contract = build_research_contract(
+        root,
+        question_id="RQ-5D-005",
+        hypothesis_id="H-5D-005-A",
+        protocol_id="topology_matched_5d_v1",
+        requested_seeds=list(range(101, 131)),
+        requested_ticks=64,
+        git_dirty=False,
+        brain5d_version="0.5.0a7",
+    )
+    assert contract["eligibility"] == "CONFIRMATORY_ELIGIBLE"
+    assert contract["minimum_independent_seeds"] == 30
+    assert contract["ticks"] == 64
+    assert contract["controls"] == ["1d", "2d", "3d"]
+
+
+def test_research_contract_downgrades_dirty_or_underseeded_run(tmp_path: Path) -> None:
+    root = _research_root(tmp_path)
+    contract = build_research_contract(
+        root,
+        question_id="RQ-5D-005",
+        hypothesis_id="H-5D-005-A",
+        protocol_id="topology_matched_5d_v1",
+        requested_seeds=[1, 2, 3],
+        requested_ticks=64,
+        git_dirty=True,
+        brain5d_version="unknown",
+    )
+    assert contract["eligibility"] == "EXPLORATORY_ONLY"
+    assert len(contract["violations"]) == 3
+
+
+def test_human_review_is_digest_bound_and_append_only(tmp_path: Path) -> None:
+    exp = tmp_path / "EXP-GEN-9999"
+    (exp / "analysis").mkdir(parents=True)
+    (exp / "manifest.json").write_text('{}\n', encoding='utf-8')
+    (exp / "summary.md").write_text('# Summary\n', encoding='utf-8')
+    (exp / "analysis" / "statistics.json").write_text('{}\n', encoding='utf-8')
+    first = write_human_review(
+        exp,
+        reviewer="Thomas Heisig",
+        decision="ACCEPT_AS_EXPLORATORY",
+        notes="Reviewed.",
+        checklist={"raw_data": True},
+        reviewed_at="2026-09-06T10:00:00+02:00",
+    )
+    second = write_human_review(
+        exp,
+        reviewer="Thomas Heisig",
+        decision="REQUEST_FOLLOW_UP",
+        notes="Follow-up needed.",
+        checklist={"raw_data": True},
+        reviewed_at="2026-09-06T10:05:00+02:00",
+    )
+    assert first.name == "HUMAN-REVIEW-0001.json"
+    assert second.name == "HUMAN-REVIEW-0002.json"
+    payload = json.loads(first.read_text(encoding='utf-8'))
+    assert payload["status"] == "REVIEWED"
+    assert payload["digests"]["manifest"]
+''', encoding='utf-8')
+
+          # ------------------------------------------------------------
+          # 6. Documentation / TODO
+          # ------------------------------------------------------------
+          p = root / 'docs/08-roadmap/TODO.md'
+          if p.is_file():
+              todo = p.read_text(encoding='utf-8')
+              section = '''\n### Research workflow UX and review chain\n\n- [x] User-visible Research Contract before execution (seeds, ticks, controls, treatments, outcomes, eligibility).\n- [x] Confirmatory eligibility downgrade for dirty source, unknown version, or insufficient seeds.\n- [x] Relative research-document links resolved against the currently opened document.\n- [x] Mermaid diagrams supported in scientific reports and viewer.\n- [x] Post-run report / summary / statistics / raw-data action surface.\n- [x] Structured Human Review decisions with append-only digest-bound review records.\n- [x] Central research help text for seeds, ticks, preregistration, eligibility and review semantics.\n- [ ] Promote report-derived research questions through explicit PROPOSED -> human review -> canonical registry workflow.\n\n'''
+              if '### Research workflow UX and review chain' not in todo:
+                  todo += section
+                  p.write_text(todo, encoding='utf-8')
+
+          # Remove this one-shot workflow before committing.
+          Path('.github/workflows/research-workflow-upgrade-once.yml').unlink()
+          PY
+
+      - name: Format and validate
+        shell: bash
+        run: |
+          python -m pip install -e ".[dev,docs]" pre-commit
+          python -m black src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_research_workflow_upgrade.py
+          python -m ruff check src/dashboard/experiment_workflow.py src/research/experiment_summary.py tests/test_research_workflow_upgrade.py
+          python -m pytest -q tests/test_research_workflow_upgrade.py tests/test_dashboard_experiment_workflow.py tests/test_scientific_execution_contract.py
+          python -m mypy src/dashboard/experiment_workflow.py src/research/experiment_summary.py
+          python -m pyright src/dashboard/experiment_workflow.py src/research/experiment_summary.py
+          python -m pre_commit run --all-files --show-diff-on-failure
+      - name: Commit upgrade to main
+        shell: bash
+        run: |
+          git config user.name "Thomas Heisig"
+          git config user.email "t_heisig@gmx.de"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "research: add contract review and report workflow"
+          git push origin HEAD:main
