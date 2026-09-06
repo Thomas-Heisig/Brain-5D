@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-REC-002","research_question":"RQ-REC-002","hypothesis":"H-REC-002-A","protocol_id":"recurrence_scale_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["last_response_latency","recurrent_events","propagation_depth"],
+  "secondary_outcomes":["total_spikes","inter_spike_intervals"],
+  "conditions":[{"id":"loop_delay_1","role":"control"},{"id":"loop_delay_2_4_8","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"same seeds for every registered loop-delay condition"},
+  "stopping_rule":"complete all delays and all seeds",
+  "inclusion_criteria":["identical topology and weights apart from loop delay","tick contract satisfied"],
+  "exclusion_criteria":["post-hoc delay additions","invalid provenance","fatal runtime error"],
+  "analysis_plan":{"descriptive_statistics":["latency distribution","depth distribution","condition ratios"],"inference_policy":"Scaling claims are restricted to the registered delay intervention and observation window.","planned_tests":[]},
+  "expected_failure_modes":["delay has no measurable effect","all recurrent activity extinguishes immediately"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot change loop delays, weights or exclusion rules.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}

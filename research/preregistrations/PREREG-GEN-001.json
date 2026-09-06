@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-GEN-001","research_question":"RQ-GEN-001","hypothesis":"H-GEN-001-A","protocol_id":"learning_generalization_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["generalization_success","p_success_after","mean_weight_delta"],
+  "secondary_outcomes":["trained_target_peak_v","reward_weight_updates"],
+  "conditions":[{"id":"learning_off","role":"control"},{"id":"sham_replay","role":"sham"},{"id":"learning_on","role":"treatment"},{"id":"drive_perturbations","role":"comparison"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"predeclared integer seeds with frozen train/validation/holdout partitions"},
+  "stopping_rule":"complete all learning conditions and registered probe perturbations for every seed",
+  "inclusion_criteria":["valid disjoint train/validation/holdout partitions","clean source freeze","no fatal runtime error"],
+  "exclusion_criteria":["partition overlap","post-hoc trial reassignment","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["condition success fraction","weight delta","peak-v distribution"],"inference_policy":"Generalization requires improvement on held-out/perturbed probes relative to both controls; no significance claim without preregistered test.","planned_tests":[]},
+  "expected_failure_modes":["training-only gain","sham matches learning","seed-insensitive deterministic pseudo-replication"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot alter partitions, rewards, protocol, DATA or evidence.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}

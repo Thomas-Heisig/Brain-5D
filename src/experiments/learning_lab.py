@@ -276,6 +276,20 @@ def _probe_response(
     return spike_tick is not None, peak_v, spike_tick
 
 
+def train_learning_weights(
+    config: Config, condition: str
+) -> tuple[tuple[float, ...], LearningEngine, TrialPartitions]:
+    """Public deterministic training boundary for registered research protocols."""
+    return _train(config, condition)
+
+
+def probe_learning_response(
+    config: Config, weights: Sequence[float]
+) -> tuple[bool, float, int | None]:
+    """Public deterministic post-training probe boundary."""
+    return _probe_response(config, weights)
+
+
 def run_learning_experiment(
     config: Config, condition: str = "learning_on"
 ) -> LearningExperimentResult:

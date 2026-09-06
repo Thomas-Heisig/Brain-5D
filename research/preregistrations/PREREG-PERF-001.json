@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-PERF-001","research_question":"RQ-PERF-001","hypothesis":"H-PERF-001-A","protocol_id":"subsystem_performance_v1","mode":"EXPLORATORY",
+  "primary_outcomes":["construction_seconds","core_step_seconds","digest_seconds","ticks_per_second"],
+  "secondary_outcomes":["measured_total_seconds"],
+  "conditions":[{"id":"subsystem_profile","role":"comparison"}],
+  "seed_strategy":{"minimum_independent_seeds":10,"rule":"fixed seed set for before/after optimization comparisons"},
+  "stopping_rule":"complete all registered seeds and the full tick budget",
+  "inclusion_criteria":["same hardware/runtime for paired comparisons","source/runtime consistency match"],
+  "exclusion_criteria":["hardware change without separate stratum","background benchmark contamination documented as invalid"],
+  "analysis_plan":{"descriptive_statistics":["phase time fractions","ticks per second","before/after deterministic equivalence"],"inference_policy":"Optimization claims require unchanged deterministic state/output digests and same protocol.","planned_tests":[]},
+  "expected_failure_modes":["measurement noise dominates","optimization changes numerical/event ordering semantics"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot select benchmark samples or alter profiler timing.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}
