@@ -19,14 +19,13 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 
 - canonical branch: `main`
 - package version: `0.5.0a7`
-- current pytest collection: **773 tests**
-- latest complete GitHub CI on `main`: **success** (run #583)
+- pre-MSBA verified collection: **773 tests**
+- MSBA branch collection target after adding 10 tests: **783 tests**
+- latest complete pre-MSBA GitHub CI on `main`: **success** (run #593)
 - Python matrix: **3.11 / 3.12 / 3.13**
-- full and slow suites: **green**
-- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security and Scientific Integrity checks: **green**
-- wheel build/install and Docker build/runtime verification: **green**
-- open pull requests at verification point: **none**
-- no unmerged development work remained outside `main` at the verification point
+- full and slow suites: **green** on the pre-MSBA baseline
+- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security and Scientific Integrity checks: **green** on the pre-MSBA baseline
+- wheel build/install and Docker build/runtime verification: **green** on the pre-MSBA baseline
 
 Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.
 
@@ -38,6 +37,7 @@ Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They rec
 | Architecture | [`02-architecture/ARCHITECTURE.md`](02-architecture/ARCHITECTURE.md) |
 | Adaptive Wesen body view | [`02-architecture/WESEN_ADAPTIVE_BODY.md`](02-architecture/WESEN_ADAPTIVE_BODY.md) |
 | Neural Symbiosis / multi-network embodiment | [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md) |
+| MSBA / modality-specific pathways and energy homeostasis | [`02-architecture/MSBA.md`](02-architecture/MSBA.md) |
 | Storage format | [`02-architecture/B5D_FORMAT.md`](02-architecture/B5D_FORMAT.md) |
 | Real-body embodiment | [`02-architecture/EMBODIMENT_REAL_BODY.md`](02-architecture/EMBODIMENT_REAL_BODY.md) |
 | Learning preparation | [`02-architecture/LEARNING_PREPARATION_STUDIO.md`](02-architecture/LEARNING_PREPARATION_STUDIO.md) |
@@ -61,26 +61,36 @@ Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They rec
 - **Wesen** — adaptive read-only live machine-body visualization;
 - **Embodiment** — technical sensor/device/actuator/body-boundary surface;
 - **Neural Symbiosis** — read-only multi-network/virtual-pipeline view inside `Wesen`;
+- **MSBA** — modality-specific audio/vision/digital gateway contract plus resource/energy model inside Neural Symbiosis;
 - **Release/Gate** — footer-accessed release-readiness surface;
 - **Network** — no longer a primary user-facing workspace.
 
-`Wesen` and Neural Symbiosis must never be described as proof of consciousness, self-awareness, causal tool use or learned sensor control. Reachability, recurrence, loopback, morphology, pipeline availability and gateway candidates are engineering/observation state until a preregistered experiment produces reviewable DATA/EVID.
+`Wesen`, Neural Symbiosis and MSBA must never be described as proof of consciousness, self-awareness, causal tool use or learned sensor control. Reachability, recurrence, loopback, morphology, pipeline availability, energy allocation candidates and gateway candidates are engineering/observation state until a preregistered experiment produces reviewable DATA/EVID.
 
-## Scientific boundary for Neural Symbiosis
+## Scientific boundary for Neural Symbiosis and MSBA
 
 The multi-network layer is part of Embodiment, not a rewrite of the SNN core. Peripheral CNN/Transformer/RNN/GNN/memory/generative/custom networks and virtual systems such as logic or knowledge databases are connected only through explicit adapter/gateway contracts.
+
+MSBA specializes those gateway contracts by modality:
+
+- audio: temporal-coherence features and candidate phase-weighted t-STDP;
+- vision: spatial multiplexing, fixed sparse target degree and candidate locality/information/resource structural growth;
+- digital: exact immutable payload outside the SNN, deterministic population representation and candidate meta-gating only;
+- resource pressure: normalized energy accounting, explicit estimate-vs-measurement provenance and deterministic NORMAL/CONSERVE/CRITICAL/SURVIVAL protection states.
 
 Current rules:
 
 - open-set `NetworkAreaAdapter` contract;
 - framework-neutral peripheral implementations;
 - pipeline templates are disabled until explicitly instantiated;
-- gateway STDP, structural plasticity and efferent R-STDP are disabled by default;
+- Neural-Symbiosis and MSBA gateway learning/growth/allocation are disabled by default;
 - gateway RNG belongs to an experiment runner and must be persisted;
 - endpoint reachability is not evidence of learned use;
+- fixed semantics are not imposed on the five Brain-5D axes;
+- measured joules are never inferred from normalized units without explicit calibration/provenance;
 - historical DATA/EVID is never rewritten to reflect new adapters.
 
-See [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md).
+See [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md) and [`02-architecture/MSBA.md`](02-architecture/MSBA.md).
 
 ## Experiment-data compacting rule
 
