@@ -8,6 +8,8 @@ tags:
   - STDP
   - structural-plasticity
   - homeostasis
+  - embodiment
+  - multimodal
   - neuromorphic
   - simulation
   - 5D
@@ -18,19 +20,22 @@ pipeline_tag: reinforcement-learning
 
 # Brain-5D
 
-**Sparse 5D spiking-neural research framework with controlled plasticity, embodiment and scientific provenance.**
+**Sparse 5D spiking-neural research framework with controlled plasticity, embodiment, peripheral multi-network integration and scientific provenance.**
 
-Brain-5D is an experimental framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network. The SNN remains the primary adaptive system; language models and research assistants are bounded interpretation/proposal components unless explicitly registered as experimental treatments.
+Brain-5D is an experimental framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network. The SNN remains the primary adaptive system; language models, research assistants and peripheral neural networks are bounded interpretation/proposal/adapter components unless explicitly registered as experimental treatments.
 
-> Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests is not the same as scientific evidence.
+> Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests, reachable devices or available neural pipelines are not the same as scientific evidence.
 
-## Current baseline
+## Current verified baseline — 2026-09-06
 
 - version: `0.5.0a7`
 - Python: 3.11–3.13
-- 700 tests collected; current full suite: 698 passed, 2 intentionally opt-in large-storage tests skipped
-- fast-suite coverage: 72%
-- Scientific Integrity, typing, security, wheel and Docker CI gates: green on the verified `main` baseline
+- pytest collection: **773 tests**
+- full and slow CI suites: green
+- Black, Ruff, Pylint, Pre-Commit, Mypy and Pyright: green
+- Scientific Integrity and security gates: green
+- wheel build/install and Docker build/runtime verification: green
+- latest completed full `main` CI before the documentation-cleanup commits: run #583, success
 
 ## Capabilities
 
@@ -41,8 +46,25 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 - `.b5d` snapshots, delta journals, checkpoints and deterministic restore/continue;
 - typed embodiment, actuator authorization, audit trails and deterministic environments;
 - real host telemetry/device discovery without fabricated fallback values;
+- **Neural Symbiosis**: open-set peripheral neural/virtual area contracts and read-only pipeline reachability;
 - research registries, manifests, DATA/EVID separation and AI provenance;
-- responsive seven-workspace dashboard: Overview, Network, Control, Research, Release, Settings and Embodiment.
+- responsive dashboard centered on Overview, Control, Research, Settings, Wesen and Embodiment.
+
+## Neural Symbiosis
+
+The embodiment layer can represent dedicated processing stages between endpoints and the 5D-SNN:
+
+```text
+Camera → CNN / Vision Transformer → gateway → 5D-SNN
+Microphone → Audio/Speech Transformer → gateway → 5D-SNN
+Database / Knowledge Graph → GNN/projector → gateway → 5D-SNN
+Logic engine → neuro-symbolic projector → gateway → 5D-SNN
+5D-SNN → gateway → speech/control network → audio/robotics output
+```
+
+The adapter model is open-set and framework-neutral. CNN, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoder, peripheral SNN, multimodal, neuro-symbolic and custom architectures can be represented without importing their runtime frameworks into the Brain-5D core.
+
+Gateway plasticity is **disabled by default**. Pipeline reachability or area registration is not evidence that the SNN learned to use an external area. Plastic gateway experiments require explicit preregistration, persisted RNG/model/version provenance, matched controls and the normal DATA/EVID review path.
 
 ## Quick start
 
@@ -69,22 +91,25 @@ The dashboard defaults to `http://127.0.0.1:8765`.
 
 The engineering foundation is broad enough that the next priority is **evidence closure rather than feature accumulation**:
 
-1. productive learning with holdout and matched controls;
-2. closed-loop embodiment versus replay/open-loop controls;
-3. simulation-time versus wall-clock pacing calibration;
-4. causal ablations of the 5D organization;
-5. self-regulation/sensor-loss studies;
-6. later memory/world-model and multimodal grounding;
-7. AI-as-treatment comparisons with frozen provenance.
+1. post-repair propagation/recurrence validation across independent seeds;
+2. productive learning with holdout and matched controls;
+3. closed-loop embodiment versus replay/open-loop controls;
+4. experiment-only Neural Symbiosis gateway studies with frozen/random/shuffled controls;
+5. simulation-time versus wall-clock pacing calibration;
+6. causal ablations of the 5D organization;
+7. self-regulation/sensor-loss studies;
+8. later memory/world-model and multimodal grounding;
+9. AI-as-treatment comparisons with frozen provenance.
 
 ## Documentation
 
 - [Project README](README.md)
 - [Architecture](docs/02-architecture/ARCHITECTURE.md)
+- [Neural Symbiosis](docs/02-architecture/NEURAL_SYMBIOSIS.md)
+- [Wesen](docs/02-architecture/WESEN_ADAPTIVE_BODY.md)
 - [Dashboard](docs/03-dashboard/DASHBOARD.md)
 - [Roadmap](docs/08-roadmap/ROADMAP.md)
 - [TODO](docs/08-roadmap/TODO.md)
-- [Research roadmap](docs/08-roadmap/RESEARCH_ROADMAP.md)
 - [Research/evidence framework](research/README.md)
 
 Versioned Alpha/Sprint/Release documents are historical traceability records and should not be used as the current project status unless linked by a canonical document.
@@ -95,7 +120,7 @@ Versioned Alpha/Sprint/Release documents are historical traceability records and
 implementation test != experiment data != accepted evidence != interpretation
 ```
 
-Observed values remain distinct from inferred values. Missing telemetry remains unknown. Device availability is not authorization. AI output is not empirical measurement.
+Observed values remain distinct from inferred values. Missing telemetry remains unknown. Device availability is not authorization. AI output is not empirical measurement. Pipeline reachability is not learned tool use.
 
 ## License and citation
 
