@@ -1,0 +1,157 @@
+.wesen-symbiosis-card {
+  margin: 1rem 0 0;
+  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
+  border-radius: 18px;
+  background: var(--surface, rgba(15, 23, 42, 0.72));
+  padding: 1rem;
+}
+
+.wesen-symbiosis-header,
+.wesen-symbiosis-card article > header,
+.wesen-symbiosis-gateway > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wesen-symbiosis-header span,
+.wesen-symbiosis-card article > header span,
+.wesen-symbiosis-state small,
+.wesen-symbiosis-item small {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  opacity: 0.72;
+}
+
+.wesen-symbiosis-header h3 {
+  margin: 0.2rem 0;
+  font-size: 1.35rem;
+}
+
+.wesen-symbiosis-header p {
+  margin: 0;
+  max-width: 72ch;
+  opacity: 0.82;
+}
+
+.wesen-symbiosis-state {
+  min-width: 120px;
+  text-align: right;
+}
+
+.wesen-symbiosis-state strong,
+.wesen-symbiosis-state small {
+  display: block;
+}
+
+.wesen-symbiosis-boundary {
+  display: grid;
+  gap: 0.25rem;
+  margin: 1rem 0;
+  padding: 0.8rem 0.9rem;
+  border-left: 3px solid currentColor;
+  background: rgba(148, 163, 184, 0.07);
+}
+
+.wesen-symbiosis-boundary span {
+  font-size: 0.86rem;
+  opacity: 0.82;
+}
+
+.wesen-symbiosis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.wesen-symbiosis-card article {
+  min-width: 0;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 14px;
+  padding: 0.8rem;
+  background: rgba(2, 6, 23, 0.16);
+}
+
+.wesen-symbiosis-card article > header {
+  margin-bottom: 0.65rem;
+}
+
+.wesen-symbiosis-list {
+  display: grid;
+  gap: 0.45rem;
+  max-height: 390px;
+  overflow: auto;
+}
+
+.wesen-symbiosis-item {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  padding: 0.5rem;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.wesen-symbiosis-item > div,
+.wesen-symbiosis-item strong,
+.wesen-symbiosis-item small {
+  min-width: 0;
+}
+
+.wesen-symbiosis-item strong,
+.wesen-symbiosis-item small {
+  display: block;
+}
+
+.wesen-symbiosis-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 0.35rem;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.wesen-symbiosis-item.reachable .wesen-symbiosis-dot {
+  opacity: 1;
+}
+
+.wesen-symbiosis-item.unreachable {
+  opacity: 0.58;
+}
+
+.wesen-symbiosis-gateway {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.wesen-symbiosis-gateway > div {
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.wesen-symbiosis-gateway p {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0.78;
+}
+
+@media (max-width: 1100px) {
+  .wesen-symbiosis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .wesen-symbiosis-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .wesen-symbiosis-state {
+    text-align: left;
+  }
+}

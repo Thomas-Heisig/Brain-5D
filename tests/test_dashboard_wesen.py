@@ -5,9 +5,11 @@ STATIC = Path(__file__).parents[1] / "src" / "dashboard" / "static"
 
 def test_wesen_workspace_is_loaded_from_dashboard_module_graph() -> None:
     console = (STATIC / "console-log.js").read_text(encoding="utf-8")
+    shell = (STATIC / "wesen.js").read_text(encoding="utf-8")
     assert 'import "./wesen.js"' in console
     assert 'import "./wesen-organism-v2.js"' in console
     assert 'import "./wesen-anatomy-v3.js"' in console
+    assert 'import "./wesen-base.js"' in shell
     assert '"/wesen.css"' in console
     assert '"/wesen-adaptive.css"' in console
     assert '"/wesen-organism.css"' in console
@@ -15,12 +17,13 @@ def test_wesen_workspace_is_loaded_from_dashboard_module_graph() -> None:
 
 
 def test_wesen_is_read_only_and_uses_real_observation_endpoints() -> None:
-    source = (STATIC / "wesen.js").read_text(encoding="utf-8")
+    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
+    shell = (STATIC / "wesen.js").read_text(encoding="utf-8")
     organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
     anatomy = (STATIC / "wesen-anatomy-v3.js").read_text(encoding="utf-8")
-    assert 'wesenReadJson("/api/status"' in source
-    assert 'wesenReadJson("/api/embodiment/state"' in source
-    assert 'wesenReadJson("/api/embodiment/connections"' in source
+    assert 'wesenReadJson("/api/status"' in base
+    assert 'wesenReadJson("/api/embodiment/state"' in base
+    assert 'wesenReadJson("/api/embodiment/connections"' in base
     for endpoint in (
         "/api/embodiment/metrics",
         "/api/embodiment/history?limit=24",
@@ -29,7 +32,7 @@ def test_wesen_is_read_only_and_uses_real_observation_endpoints() -> None:
         "/api/live/population",
     ):
         assert endpoint in anatomy
-    combined = source + organism + anatomy
+    combined = base + shell + organism + anatomy
     assert 'method: "POST"' not in combined
     assert 'method: "PUT"' not in combined
     assert 'method: "DELETE"' not in combined
@@ -37,7 +40,7 @@ def test_wesen_is_read_only_and_uses_real_observation_endpoints() -> None:
 
 
 def test_wesen_has_dynamic_machine_native_morphology() -> None:
-    source = (STATIC / "wesen.js").read_text(encoding="utf-8")
+    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
     organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
     for token in (
         "dynamicNodes",
@@ -46,7 +49,7 @@ def test_wesen_has_dynamic_machine_native_morphology() -> None:
         'kind: "sensor"',
         'kind: "actuator"',
     ):
-        assert token in source
+        assert token in base
     for token in (
         "function layout",
         "function hullPath",
@@ -55,9 +58,9 @@ def test_wesen_has_dynamic_machine_native_morphology() -> None:
         "minDistance",
     ):
         assert token in organism
-    assert "WESEN_POLL_MS = 750" in source
-    assert "sensor-placeholder" in source
-    assert "actuator-placeholder" in source
+    assert "WESEN_POLL_MS = 750" in base
+    assert "sensor-placeholder" in base
+    assert "actuator-placeholder" in base
 
 
 def test_wesen_has_icon_first_collision_safe_accessibility() -> None:
@@ -124,10 +127,10 @@ def test_wesen_empirical_overlay_uses_backend_data_without_fallback_values() -> 
 
 
 def test_wesen_has_loopback_causality_camera_and_time_travel() -> None:
-    source = (STATIC / "wesen.js").read_text(encoding="utf-8")
+    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
     organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
     styles = (STATIC / "wesen-organism.css").read_text(encoding="utf-8")
-    assert "renderEcho" in source
+    assert "renderEcho" in base
     assert "show-causality" in organism
     assert "delayedClone" in organism
     assert "brain5d.wesen.morphology.v2" in organism

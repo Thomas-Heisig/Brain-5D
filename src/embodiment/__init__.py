@@ -33,6 +33,21 @@ from .models import (
     EnvironmentObservation,
     SensorFrame,
 )
+from .neural_symbiosis import (
+    AreaDescriptor,
+    AreaKind,
+    NetworkAreaAdapter,
+    NeuralSymbiosisCatalog,
+    PipelineDirection,
+    PipelineTemplate,
+    PlasticGatewayConfig,
+    formation_probability,
+    gate_signal,
+    homeostatic_scale,
+    pair_stdp_delta,
+    pruning_probability,
+    reward_modulated_delta,
+)
 from .pipeline import EmbodimentPipeline
 from .real_body import ConnectionManager
 from .registry import EmbodimentRegistry
@@ -53,6 +68,8 @@ __all__ = [
     "ActuatorResult",
     "ActionAuditRecord",
     "ActionAuditTrail",
+    "AreaDescriptor",
+    "AreaKind",
     "ConnectionDescriptor",
     "ConnectionKind",
     "ConnectionManager",
@@ -69,6 +86,11 @@ __all__ = [
     "DriveState",
     "FunctionalState",
     "InteroceptionFrame",
+    "NetworkAreaAdapter",
+    "NeuralSymbiosisCatalog",
+    "PipelineDirection",
+    "PipelineTemplate",
+    "PlasticGatewayConfig",
     "RegulatoryState",
     "EmbodimentPipeline",
     "RelationshipClass",
@@ -81,7 +103,13 @@ __all__ = [
     "derive_drives",
     "derive_functional_state",
     "derive_regulatory_state",
+    "formation_probability",
+    "gate_signal",
+    "homeostatic_scale",
     "host_system_readings",
-    "wall_clock_readings",
     "normalize_vital_signals",
+    "pair_stdp_delta",
+    "pruning_probability",
+    "reward_modulated_delta",
+    "wall_clock_readings",
 ]
