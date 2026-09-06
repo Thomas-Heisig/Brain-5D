@@ -296,6 +296,7 @@ function renderExperimentRunFooter() {
 document.addEventListener('brain5d:experiment-progress', (event) => {
   const detail = event.detail || {};
   experimentRunActive = Boolean(detail.active);
+  document.body.dataset.experimentWorkflowActive = String(experimentRunActive);
   const footer = $('footer-experiment');
   const state = $('footer-experiment-state');
   const id = $('footer-experiment-id');
