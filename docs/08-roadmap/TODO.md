@@ -9,7 +9,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 746 tests collected on the current main tree.
+- [x] 762 tests collected on the current main tree.
 - [x] Verified repair-suite result: 733 passed, 2 skipped, 0 failed.
 - [x] Latest completed GitHub Continuous Integration run on the repaired main baseline finished successfully.
 - [x] Python 3.11, 3.12 and 3.13 CI matrix passes.
@@ -55,12 +55,14 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Recurrence impulse topology contains a true return path to the source neuron.
 - [x] Direct runtime validation confirmed nonzero neuron and synaptic activity in feed-forward and recurrent conditions.
 - [x] Historical `EXP-GEN-0009` to `EXP-GEN-0012` remain unchanged as traceable zero-observation artifacts from the older probe contract.
+- [x] EXP-GEN-0021 follow-up RQs/Hs are promoted into the canonical registries with executable protocol mappings and frozen preregistrations.
+- [x] Research DATA v2 preserves full raw runs as compressed immutable artifacts while providing bounded `runs.json` and `analysis/ai_packet.json` projections for review and small/local AI models.
 
 ## P0 — engineering verification after current frontend/runtime integration
 
 - [x] Require the latest `main` CI run to finish green across the complete job matrix.
 - [x] Fix only verified current-tree CI failures; no typing/scientific-integrity checks were masked.
-- [x] Documentation consistency updated to the 735-test current collection.
+- [x] Documentation consistency updated to the 762-test current collection.
 - [ ] Verify `/wesen-adaptive.css`, `/wesen-organism.css` and `/wesen-anatomy-v3.css` are served in integrated runtime and dashboard-only modes on a live host.
 - [ ] Verify anatomy v3 rendering in at least one live-host session with real connection inventory and populated empirical endpoints.
 - [ ] Add a browser/E2E check for pointer-centered camera pan/zoom, icon-dock navigation, anatomy placement and timeline scrubbing.
@@ -84,7 +86,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Persist tick, neuron, synapse and recurrence metrics in new DATA.
 - [x] Add a direct verification script that fails if ticks, spikes or synaptic delivery are absent.
 - [x] Keep historical zero-observation experiments immutable.
-- [ ] Run a new registered multi-seed validation experiment on the repaired probe/topology and evaluate it independently rather than retroactively editing `EXP-GEN-0009` to `EXP-GEN-0012`.
+- [x] Register the recurrence parameter-map and recurrence-scaling protocols with frozen preregistrations and independent-seed requirements.
+- [ ] Execute the new registered multi-seed validation experiment and evaluate it independently rather than retroactively editing `EXP-GEN-0009` to `EXP-GEN-0012`.
 - [ ] Promote a recurrence/propagation claim only if the new controlled experiment and review support it.
 
 ### Closed-loop embodiment
@@ -95,6 +98,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Add sensor-loss/degraded-quality condition.
 - [x] Add actuator failure/no-effect condition.
 - [x] Repeat across seeds and compare adaptation/stability metrics.
+- [x] Register a regulation-on/off recovery protocol with frozen perturbation schedule and preregistration.
 - [ ] Promote validated results to evidence only after protocol checks.
 - [ ] Expose receipt-linked action/outcome chains to `Wesen` only when a backend endpoint can verify them.
 
@@ -103,17 +107,18 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [ ] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
 - [ ] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
-- [ ] Profile tick cost by subsystem: core, learning, homeostasis, structural, embodiment, dashboard telemetry and storage.
+- [x] Add an executable preregistered subsystem-performance profiler covering construction, core stepping and digest cost.
+- [ ] Extend profiling to learning, homeostasis, structural, embodiment, dashboard telemetry and storage as distinct measured phases.
 - [ ] Profile increasing neuron/synapse counts before optimizing kernels.
 - [x] Run the two opt-in large-storage tests in a scheduled/explicit large-test job and archive the results.
 
 ## P1 — 5D causal/ablation program
 
-- [ ] Define a preregistered 5D-vs-control experiment.
+- [x] Define a preregistered topology-matched 5D-vs-control experiment.
 - [ ] Implement dimension-shuffled control.
-- [ ] Implement reduced-dimensional ablations.
-- [ ] Add topology-matched non-spatial control where feasible.
-- [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost.
+- [x] Implement reduced-dimensional matched embeddings for the initial 1D/2D/3D/5D comparison.
+- [x] Add topology-matched control for neuron count, synapse count, degree pattern, weight pattern and stimulus schedule in the initial protocol.
+- [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost at larger scale.
 - [ ] Keep dimensionality claims open until the ablation evidence exists.
 
 ## P1 — evidence and provenance hardening
@@ -122,6 +127,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Add current-doc consistency checks for fixed version/test claims.
 - [x] Expand evidence-engine negative tests for incomplete/mismatched provenance.
 - [x] Ensure quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
+- [x] Add frozen preregistration validation to operational EXP-GEN-0021 follow-up protocols, including minimum independent-seed requirements.
+- [x] Add compact AI-packet provenance and SHA-verified raw-run indexing without deleting raw observations.
 - [ ] Add a stable action/outcome provenance view only when backed by a verified endpoint.
 - [ ] Persist morphology/body-boundary change records when they are part of a scientific protocol instead of relying on browser-local UI history.
 - [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
@@ -139,8 +146,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [ ] Define non-anthropomorphic regulatory metrics for resource/continuity pressure.
 - [ ] Test missing sensor and uncertain sensor conditions.
-- [ ] Test recovery after resource pressure in deterministic environments.
-- [ ] Compare homeostasis/interoception enabled vs disabled under matched conditions.
+- [x] Register a deterministic recovery experiment comparing regulation enabled vs disabled under matched pressure conditions.
+- [ ] Execute and review the registered regulation recovery experiment across the required seed set.
 - [ ] Test whether body-boundary changes predictably alter behavior under matched conditions.
 - [ ] Avoid emotion labels as primary measured variables; keep them, if used, as interpretation layers.
 

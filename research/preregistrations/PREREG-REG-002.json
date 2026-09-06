@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-REG-002","research_question":"RQ-REG-002","hypothesis":"H-REG-002-A","protocol_id":"closed_loop_regulation_v1","mode":"CONFIRMATORY",
+  "primary_outcomes":["pressure_phase_spikes","recovery_phase_spikes","recovery_ratio"],
+  "secondary_outcomes":["total_spikes"],
+  "conditions":[{"id":"regulation_off","role":"control"},{"id":"regulation_on","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"same seeds and perturbation schedule in both arms"},
+  "stopping_rule":"complete nominal-pressure-recovery schedule for all seeds and both arms",
+  "inclusion_criteria":["identical perturbation schedule","tick contract satisfied","feedback definition frozen"],
+  "exclusion_criteria":["missing telemetry contract","feedback changed after first run","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["phase spike counts","recovery ratio","paired arm differences"],"inference_policy":"A regulation benefit requires preregistered recovery improvement without hiding unknown telemetry.","planned_tests":[]},
+  "expected_failure_modes":["feedback suppresses activity without recovery benefit","no arm difference","unknown telemetry contaminates treatment"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot control telemetry, feedback or perturbation schedule.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}

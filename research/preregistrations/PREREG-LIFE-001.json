@@ -1,0 +1,14 @@
+{
+  "schema_version":"1.0","preregistration_id":"PREREG-LIFE-001","research_question":"RQ-LIFE-001","hypothesis":"H-LIFE-001-A","protocol_id":"learning_interference_screen_v1","mode":"EXPLORATORY",
+  "primary_outcomes":["retained_success_fraction","weight_range","task_successes"],
+  "secondary_outcomes":["task_final_mean_weights"],
+  "conditions":[{"id":"single_task_baseline","role":"control"},{"id":"sequential_three_task_screen","role":"treatment"}],
+  "seed_strategy":{"minimum_independent_seeds":20,"rule":"fixed seed set with frozen task order and perturbations"},
+  "stopping_rule":"complete all registered tasks for all seeds",
+  "inclusion_criteria":["task order frozen","same learning rule across tasks","clean source freeze"],
+  "exclusion_criteria":["post-hoc task reordering","seed replacement after outcome inspection","invalid provenance"],
+  "analysis_plan":{"descriptive_statistics":["retained success fraction","weight range","task-wise success"],"inference_policy":"This v1 protocol is a precursor screen; it must not be described as catastrophic-forgetting evidence until a shared-network sequential-learning protocol is registered.","planned_tests":[]},
+  "expected_failure_modes":["independent task instances mask interference","all tasks succeed identically"],
+  "ai_treatment":{"role":"interpretation_only","authority_boundary":"AI cannot alter task order, seeds or inclusion rules.","prompt_digest_required":true},
+  "freeze":{"immutable_after_first_run":true,"human_review_required":true,"status":"FROZEN","amendment_id":null}
+}
