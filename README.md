@@ -12,20 +12,16 @@ Brain-5D is a research framework for studying learning, self-organization and em
 
 ## Current `main` baseline
 
-Verified on **2026-09-06** after the Neural Symbiosis merge and repository cleanup pass:
+Updated on **2026-09-06** after the Research Catalog / variable-projection-dimension merge:
 
 - package version: `0.5.0a7`
-- current pytest collection: **773 tests**
-- latest completed full GitHub CI on `main`: **success** (run #583)
-- Python verification: **3.11, 3.12 and 3.13**
-- full and slow suites: **green**
-- Black, Ruff, Pylint and Pre-Commit: **green**
-- Mypy and Pyright: **green**
-- Scientific Integrity Gate: **green**
-- Security checks including Bandit and pip-audit: **green**
-- wheel build/install and Docker build/runtime verification: **green**
-- no open pull requests at the verification point
-- all non-main development work found at the verification point was already merged into `main`; no unmerged branch content remained
+- current pytest collection: **791 tests**
+- Research Catalog / variable-dimension merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
+- latest fully completed pre-merge `main` CI baseline: **success** (run #598)
+- the merge-triggered `main` CI is the authoritative verification for the new baseline; do not infer success until that run completes
+- Python verification matrix: **3.11, 3.12 and 3.13**
+- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Scientific Integrity, security, wheel and Docker are mandatory CI gates
+- PR #21 is merged; no scientific DATA/EVID was rewritten by the integration
 
 The dashboard uses explicit unknown-state rendering. Missing telemetry is never replaced with plausible-looking constants.
 
@@ -40,11 +36,20 @@ The dashboard uses explicit unknown-state rendering. Missing telemetry is never 
 | Persistence | `.b5d` snapshots, delta journal, structural journal, checkpoints, deterministic restore/continue |
 | Embodiment | Typed sensors/actuators, authorization gates, audit trail, host interoception, device discovery, deterministic environments |
 | Neural Symbiosis | Open-set peripheral neural/virtual areas, disabled pipeline templates and inert plastic-gateway candidate math at the embodiment boundary |
+| MSBA | Modality-specific audio/vision/digital gateway contracts, energy/resource accounting and configurable external projection spaces from 1–32 dimensions |
 | Experience loop | Sensor → encoding → SNN → action → observed outcome → reward path with explicit authorization |
-| Research | Registries, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
+| Research | Fragmentable RQ/H registries, searchable Research Catalog, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
 | Experiment observability | Tick, spike, neuron, synapse, latency, recurrence and digest measurements persisted per run |
 | Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |
 | AI boundary | Research AI / Language Organ / Cognitive Advisor contracts remain read-only or proposal-only unless explicitly registered as a treatment |
+
+## Research Catalog and variable dimensions
+
+The research workflow now loads canonical base registries plus deterministic fragments such as `questions.*.yaml` and `hypotheses.*.yaml`. Duplicate IDs fail closed. `RQ-MSBA-E01` through `RQ-MSBA-E05` and their matching hypotheses are first-class registry entries and visible through the normal Experiment Workflow.
+
+The frontend uses a searchable Research Catalog rather than relying on a single long pulldown. Questions are marked `OPERATIONAL` when a matching frozen/preregistered protocol exists and `EXPLORATORY` otherwise. Exploratory questions may run through the bounded runtime path but must not be promoted as confirmatory EVID.
+
+MSBA/external projection spaces can declare **1–32 dimensions**. This does **not** yet change the persisted productive SNN core: neuron IDs, `.b5d` persistence and the canonical spatial core remain 5D until a separately versioned N-D storage/ID migration is designed, tested and preregistered. The remaining work is explicitly tracked in both [`TODO`](docs/08-roadmap/TODO.md) and [`ROADMAP`](docs/08-roadmap/ROADMAP.md).
 
 ## Neural Symbiosis — embodied multi-network interface
 
@@ -115,10 +120,12 @@ See:
 
 The next gains should come from evidence closure rather than feature volume:
 
+- dedicated protocols/preregistrations for every still-unmapped canonical RQ/H;
 - post-repair multi-seed propagation/recurrence validation;
 - productive-learning evidence and independent replication;
 - closed-loop embodiment evidence and EVID promotion;
-- experiment-only Neural Symbiosis gateway studies with frozen/random/shuffled controls;
+- experiment-only Neural Symbiosis/MSBA gateway studies with frozen/random/shuffled controls;
+- preregistered N-D projection sweeps and later versioned productive-core N-D migration;
 - time-scale/runtime calibration;
 - 5D ablations;
 - self-regulation and sensor-loss studies;
@@ -234,10 +241,10 @@ src/                     runtime implementation
   learning/              STDP, eligibility, reward learning, preparation contracts
   homeostasis/           regulatory mechanisms
   self_organization/     proposal, approval, structural plasticity, morphology
-  embodiment/            sensors, actuators, authorization, interoception, Neural Symbiosis contracts
+  embodiment/            sensors, actuators, authorization, interoception, Neural Symbiosis/MSBA contracts
   experience/            closed-loop experience composition
   storage/               snapshots, journals, checkpoint and recovery
-  research/              experiment/evidence machinery
+  research/              experiment/evidence machinery and registry audit
   research_assistant/    bounded AI research tooling
   dashboard/             operator/research UI and APIs
 research/                registries, protocols, DATA/EVID and generated research views
