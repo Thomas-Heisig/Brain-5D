@@ -21,12 +21,7 @@ const STORAGE = {
 };
 
 function ensureStylesheet() {
-  if (document.querySelector('link[data-dashboard-experience="true"]')) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "/dashboard-experience.css";
-  link.dataset.dashboardExperience = "true";
-  document.head.appendChild(link);
+  // The canonical stylesheet imports the experience layer once.
 }
 
 function activeWorkspaceName() {

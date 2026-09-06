@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-06 — Canonical dashboard CSS and accessibility
+
+- Consolidated the dashboard CSS entry path through `styles.css`, including shell, Experience, operator, Embodiment and Wesen layers, and removed duplicate dynamic stylesheet loading.
+- Added a shared responsive surface system for 4K, 1080p, tablet and mobile with semantic green/orange/red status states, visible focus rings, contrast mode and reduced-motion support.
+- Added a persisted Reader view, full-size modal sizing and tab/`hidden` rules that reduce nested scrollbars without clipping workspace content.
+- Restored early Wesen timeline creation so the morphology history control remains visible before the first observed frame.
+
 ## 2026-09-06 — Footer 6/3 grid alignment
 
 - Rebalanced the Footer into six equal upper columns and three equal lower telemetry columns.

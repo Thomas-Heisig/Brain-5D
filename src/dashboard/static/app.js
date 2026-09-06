@@ -2270,6 +2270,7 @@ function setupQuickActions() {
 const THEME_KEY = 'b5d-theme';
 const ACCESSIBILITY_KEY = 'b5d-accessibility';
 const CONTRAST_KEY = 'b5d-contrast';
+const READER_KEY = 'b5d-reader';
 
 function getSavedTheme() {
   try {
@@ -2320,6 +2321,26 @@ function setupAccessibilityToggle() {
     }
   } catch {
     // ignore storage errors
+  }
+}
+
+function setupReaderToggle() {
+  const btn = $('reader-toggle');
+  if (!btn) return;
+  const setReaderMode = (enabled) => {
+    document.body.classList.toggle('reader-mode', enabled);
+    btn.setAttribute('aria-pressed', String(enabled));
+    try {
+      localStorage.setItem(READER_KEY, String(enabled));
+    } catch {
+      // ignore storage errors
+    }
+  };
+  btn.addEventListener('click', () => setReaderMode(!document.body.classList.contains('reader-mode')));
+  try {
+    setReaderMode(localStorage.getItem(READER_KEY) === 'true');
+  } catch {
+    setReaderMode(false);
   }
 }
 
@@ -2425,6 +2446,7 @@ function init() {
   // Setup header controls
   setupThemeToggle();
   setupAccessibilityToggle();
+  setupReaderToggle();
   setupGlobalChrome();
 
   console.log('✅ Dashboard ready');

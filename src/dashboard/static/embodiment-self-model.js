@@ -10,11 +10,7 @@ function byId(id) {
 }
 
 function addStylesheet() {
-  if (document.querySelector('link[href="/embodiment-self-model.css"]')) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "/embodiment-self-model.css";
-  document.head.append(link);
+  // The canonical stylesheet imports the embodiment layer once.
 }
 
 function text(value, fallback = "—") {

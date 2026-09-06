@@ -9,12 +9,7 @@ const TAB_META = {
 };
 
 function ensureStylesheet() {
-  if (document.querySelector('link[data-dashboard-shell="true"]')) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "/dashboard-shell.css";
-  link.dataset.dashboardShell = "true";
-  document.head.appendChild(link);
+  // The canonical stylesheet imports the shell layer once.
 }
 
 function currentTab() {

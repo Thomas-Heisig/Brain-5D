@@ -24,6 +24,14 @@ import "./neuron-model-viewer.js";
 import "./frontend-architecture.js";
 import "./footer-controller.js";
 
+const CANONICAL_WESEN_STYLES = Object.freeze([
+  "/wesen.css",
+  "/wesen-adaptive.css",
+  "/wesen-organism.css",
+  "/wesen-anatomy-v3.css",
+  "/wesen-neural-symbiosis.css",
+]);
+
 function byId(id) {
   return document.getElementById(id);
 }
@@ -40,30 +48,7 @@ function formatTime(date = new Date()) {
 }
 
 function ensureWesenStylesheet() {
-  const stylesheets = [
-    ["wesen-base", "/wesen.css"],
-    ["wesen-adaptive", "/wesen-adaptive.css"],
-    ["wesen-organism", "/wesen-organism.css"],
-    ["wesen-anatomy", "/wesen-anatomy-v3.css"],
-    ["wesen-neural-symbiosis", "/wesen-neural-symbiosis.css"],
-  ];
-  stylesheets.forEach(([name, href]) => {
-    if (document.querySelector(`link[data-wesen-style="${name}"]`)) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    link.dataset.wesenStyle = name;
-    document.head.appendChild(link);
-  });
-  if (!document.querySelector('style[data-wesen-navigation="true"]')) {
-    const style = document.createElement("style");
-    style.dataset.wesenNavigation = "true";
-    style.textContent = `
-      .experience-command-item[data-command-id="workspace:network"],
-      .experience-command-item[data-command-id="workspace:gate"] { display: none !important; }
-    `;
-    document.head.appendChild(style);
-  }
+  return CANONICAL_WESEN_STYLES;
 }
 
 function activateLegacyWorkspace(name) {

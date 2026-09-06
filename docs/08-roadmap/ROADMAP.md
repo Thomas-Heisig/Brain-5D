@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Canonical dashboard CSS and accessible views
+
+- `src/dashboard/static/styles.css` is now the single CSS entry point and imports the component layers once; runtime stylesheet injection no longer duplicates the cascade.
+- Shared tokens, fixed typography roles, surface types and green/orange/red status semantics now cover 4K, 1080p, tablet and mobile layouts.
+- Tabs and `hidden` state are authoritative for dense workspaces; tables/logs retain local scrolling and dialogs use the available viewport as a full-size overlay.
+- Contrast, reduced motion, larger controls and a persisted Reader view are available from the header; the Wesen morphology timeline is initialized before telemetry arrives.
+
 ## 2026-09-06 Footer 6/3 grid alignment
 
 - Footer top row uses six equal columns for product, Runtime, I/O, experiment, mode and health.

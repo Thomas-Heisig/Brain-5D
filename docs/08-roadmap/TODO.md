@@ -4,6 +4,15 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Canonical dashboard CSS and accessibility
+
+- [x] Route all dashboard component styles through one canonical `styles.css` entry point.
+- [x] Normalize typography, surfaces, status colors and responsive behavior across 4K, 1080p, tablet and mobile.
+- [x] Provide full-size popup/dialog behavior, tab-driven visibility and limited local scrolling for dense content.
+- [x] Add Reader view, contrast mode, larger controls, focus visibility and reduced-motion support.
+- [x] Initialize the Wesen timeline before the first telemetry frame.
+- [ ] Add browser/E2E viewport checks once a Chromium runtime is available in the development environment.
+
 ## 2026-09-06 Footer 6/3 grid alignment
 
 - [x] Arrange the upper Footer row into six equal columns.

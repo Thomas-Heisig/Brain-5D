@@ -312,6 +312,7 @@ function tracer() {
 }
 
 function enhance() {
+  ensureTimeline();
   const list = nodes(); if (!list.length) return;
   decorateNodes(list);
   const anatomyOwnsLayout = Boolean(q("#wesen-anatomy-layer") || window.Brain5DWesenAnatomyV3);

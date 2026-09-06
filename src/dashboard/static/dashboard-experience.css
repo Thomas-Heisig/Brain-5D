@@ -44,7 +44,7 @@
 }
 
 /* Light Theme Overrides */
-[data-theme="light"] {
+body[data-theme="light"] {
   --exp-bg-0: #eef5f7;
   --exp-bg-1: #f9fcfd;
   --exp-panel: rgba(255, 255, 255, 0.91);

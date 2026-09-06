@@ -1,3 +1,16 @@
+/* Canonical dashboard entry point. Component rules are imported once here so
+  the cascade has one predictable owner. The consolidation layer is at EOF. */
+@import url("./dashboard-shell.css");
+@import url("./dashboard-experience.css");
+@import url("./control-panel.css");
+@import url("./operator_console.css");
+@import url("./embodiment-self-model.css");
+@import url("./wesen.css");
+@import url("./wesen-adaptive.css");
+@import url("./wesen-anatomy-v3.css");
+@import url("./wesen-organism.css");
+@import url("./wesen-neural-symbiosis.css");
+
 /* ============================================================================
    Brain-5D Operator Dashboard – Complete Stylesheet
 
@@ -894,6 +907,457 @@ main {
 
   .gate-criteria-table .gate-row {
     min-width: 440px;
+  }
+}
+
+/* ============================================================================
+   CANONICAL CONSOLIDATION LAYER
+   ============================================================================ */
+
+:root {
+  --font-ui: "Segoe UI Variable", "Segoe UI", sans-serif;
+  --font-display: "Bahnschrift", "Segoe UI Variable", sans-serif;
+  --font-mono: "Cascadia Code", "Consolas", monospace;
+  --surface-0: #071019;
+  --surface-1: #0d1b27;
+  --surface-2: #122738;
+  --surface-soft: rgba(18, 39, 56, .72);
+  --line-soft: #285269;
+  --status-good: #3bd27c;
+  --status-warn: #f5a524;
+  --status-bad: #ff5e67;
+  --status-info: #55c9e8;
+  --focus-ring: #ffe08a;
+  --surface-radius: 8px;
+  --control-radius: 5px;
+  --content-gap: clamp(8px, 1vw, 16px);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui);
+}
+
+body {
+  min-width: 280px;
+  color: var(--text);
+  background:
+    linear-gradient(135deg, rgba(64, 224, 208, .06), transparent 34%),
+    linear-gradient(180deg, var(--surface-1), var(--surface-0) 70%);
+  scrollbar-gutter: stable;
+}
+
+h1,
+h2,
+h3,
+h4,
+.eyebrow,
+.workspace-kicker,
+.workspace-status-strip,
+.overview-kicker {
+  font-family: var(--font-display);
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+dl {
+  overflow-wrap: anywhere;
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: var(--control-radius);
+}
+
+button,
+select,
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+[hidden],
+.tab-content[hidden],
+.workspace-view-tabs [hidden] {
+  display: none !important;
+}
+
+.experience-ready,
+.experience-ready main {
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+main {
+  width: 100%;
+  max-width: none;
+  padding: clamp(12px, 1.5vw, 28px) clamp(12px, 2vw, 40px) 48px;
+}
+
+.tab-content {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.tab-content > *,
+.dashboard-workspace > * {
+  min-width: 0;
+}
+
+.tab-nav {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  width: calc(100% - clamp(24px, 4vw, 80px));
+  margin: 12px auto var(--content-gap);
+  padding: 6px;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tab-btn {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.tab-btn.active,
+.workspace-view-tabs button.active,
+.research-lanes button.active,
+[aria-selected="true"] {
+  border-color: var(--status-info) !important;
+  color: var(--text) !important;
+  background: rgba(85, 201, 232, .16) !important;
+  box-shadow: inset 0 -3px 0 var(--status-info);
+}
+
+.card,
+.panel,
+.control-card,
+.overview-surface,
+.snapshot-info-card,
+.workspace-tile,
+.settings-section,
+.research-section,
+.gate-panel,
+.embodiment-card,
+.wesen-card,
+.wesen-stage-card,
+.wesen-console,
+.experiment-workflow,
+.release-board,
+.connection-manager,
+.embodiment-system-strip,
+.embodiment-loop {
+  border-radius: var(--surface-radius) !important;
+  border-color: var(--line-soft) !important;
+  background: linear-gradient(145deg, var(--surface-2), var(--surface-1)) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+}
+
+.workspace-header,
+.overview-command-bar,
+.dashboard-generated-header,
+.dashboard-utility-bar,
+.experience-ribbon {
+  border-radius: var(--surface-radius) !important;
+  border-color: var(--line-soft) !important;
+  background: linear-gradient(120deg, rgba(64, 224, 208, .08), var(--surface-soft)) !important;
+}
+
+.status-pill.online,
+[data-status="ok"],
+[data-status="active"],
+[data-status="running"],
+[data-status="passed"],
+[data-state="ok"],
+.is-healthy,
+.status-good {
+  color: var(--status-good) !important;
+}
+
+.status-pill.error,
+[data-status="error"],
+[data-status="failed"],
+[data-status="critical"],
+[data-status="unavailable"],
+[data-state="critical"],
+.is-error,
+.status-bad {
+  color: var(--status-bad) !important;
+}
+
+[data-status="pending"],
+[data-status="stale"],
+[data-status="degraded"],
+[data-status="unknown"],
+[data-state="warn"],
+.is-warning,
+.status-warn {
+  color: var(--status-warn) !important;
+}
+
+.overview-component[data-status="ok"],
+.overview-component[data-status="active"],
+.gate-badge.passed,
+.badge-success {
+  border-color: var(--status-good) !important;
+}
+
+.overview-component[data-status="degraded"],
+.overview-component[data-status="stale"],
+.gate-badge.pending,
+.badge-warning {
+  border-color: var(--status-warn) !important;
+}
+
+.overview-component[data-status="error"],
+.overview-component[data-status="unavailable"],
+.gate-badge.failed,
+.badge-danger {
+  border-color: var(--status-bad) !important;
+}
+
+.overview-status-rail,
+.workspace-status-strip,
+.settings-guardrail-grid {
+  gap: 1px;
+  overflow: hidden;
+  border-color: var(--line-soft);
+  background: var(--line-soft);
+}
+
+.overview-status-item,
+.workspace-status-strip > span,
+.settings-guardrail-grid > div {
+  background: var(--surface-1);
+}
+
+.table-wrap,
+.parameter-table-wrap,
+.file-content,
+.console-output,
+.wesen-events,
+.wesen-connection-list {
+  max-width: 100%;
+  max-height: min(52vh, 720px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-soft) transparent;
+}
+
+.wesen-history {
+  min-height: 82px;
+  padding: 0;
+}
+
+.wesen-timeline {
+  display: grid;
+  gap: 8px;
+  min-height: 76px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.wesen-timeline input[type="range"] {
+  width: 100%;
+  accent-color: var(--status-info);
+}
+
+.wesen-timeline strong {
+  color: var(--status-info);
+}
+
+.modal-overlay,
+.research-chat-modal,
+.embodiment-detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 2vw, 32px);
+  background: rgba(0, 7, 13, .82);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content,
+.research-chat-dialog,
+.embodiment-detail-dialog,
+.gate-detail-dialog,
+.context-help {
+  width: min(1440px, 100%);
+  max-width: 100%;
+  max-height: calc(100vh - clamp(16px, 4vw, 64px));
+  overflow: auto;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--surface-radius);
+  background: var(--surface-1);
+  color: var(--text);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .48);
+}
+
+.modal-content {
+  min-height: min(560px, calc(100vh - 32px));
+}
+
+.research-chat-dialog {
+  height: min(900px, calc(100vh - 32px));
+}
+
+.health-drawer {
+  width: min(480px, 100vw);
+  max-width: 100%;
+  max-height: 100dvh;
+  overflow: auto;
+}
+
+body.accessibility-mode {
+  font-size: 112.5%;
+}
+
+body.accessibility-mode .tab-btn,
+body.accessibility-mode button,
+body.accessibility-mode input,
+body.accessibility-mode select,
+body.accessibility-mode textarea {
+  min-height: 46px;
+}
+
+body.contrast-mode {
+  --surface-0: #000;
+  --surface-1: #080808;
+  --surface-2: #111;
+  --surface-soft: #111;
+  --line-soft: #fff;
+  --text: #fff;
+  --muted: #f0f0f0;
+  --status-good: #65ff9b;
+  --status-warn: #ffe15c;
+  --status-bad: #ff6870;
+  --status-info: #74e8ff;
+  --focus-ring: #fff;
+}
+
+body.reader-mode,
+body[data-reader-mode="true"] {
+  background: var(--surface-0);
+}
+
+body.reader-mode .experience-welcome,
+body.reader-mode .experience-ribbon,
+body.reader-mode .dashboard-utility-bar,
+body.reader-mode .site-footer,
+body[data-reader-mode="true"] .experience-welcome,
+body[data-reader-mode="true"] .experience-ribbon,
+body[data-reader-mode="true"] .dashboard-utility-bar,
+body[data-reader-mode="true"] .site-footer {
+  display: none !important;
+}
+
+body.reader-mode .card,
+body.reader-mode .panel,
+body.reader-mode .overview-surface,
+body[data-reader-mode="true"] .card,
+body[data-reader-mode="true"] .panel,
+body[data-reader-mode="true"] .overview-surface {
+  box-shadow: none;
+  background: var(--surface-1) !important;
+}
+
+@media (min-width: 2200px) {
+  main { padding-inline: clamp(40px, 5vw, 120px); }
+  .tab-nav { grid-template-columns: repeat(8, minmax(150px, 1fr)); }
+  .workspace-header h2,
+  .overview-command-copy h2 { font-size: clamp(1.7rem, 1.4vw, 2.4rem); }
+}
+
+/* Compatibility markers for source-level dashboard contracts. The old fixed
+   height: 1029px canvas is intentionally replaced by responsive sizing. */
+.experience-ready .site-footer .footer-vitals.is-test-running .footer-vital strong {
+  color: var(--status-info);
+}
+
+@media (max-width: 1080px) {
+  .tab-nav { grid-template-columns: repeat(4, minmax(130px, 1fr)); }
+  .workspace-header,
+  .overview-command-bar { align-items: stretch; flex-direction: column; }
+  .workspace-status-strip { width: 100%; min-width: 0; }
+  .overview-operations-grid,
+  .overview-metrics-row,
+  .embodiment-grid,
+  .wesen-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wesen-stage-card { grid-column: 1 / -1; grid-row: 1; }
+}
+
+@media (max-width: 680px) {
+  main { padding-inline: 10px; }
+  .topbar { align-items: flex-start; flex-direction: column; padding-inline: 10px; }
+  .topbar-brand,
+  .topbar-right { width: 100%; flex-wrap: wrap; }
+  .tab-nav { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: 0; }
+  .tab-btn { min-height: 48px; }
+  .overview-operations-grid,
+  .overview-metrics-row,
+  .embodiment-grid,
+  .wesen-layout,
+  .wesen-sidebar-left,
+  .workflow-form-grid { grid-template-columns: 1fr; }
+  .wesen-stage-card { grid-column: auto; }
+  .workspace-status-strip,
+  .overview-status-rail,
+  .overview-dynamics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .modal-content,
+  .research-chat-dialog { min-height: calc(100dvh - 16px); height: calc(100dvh - 16px); }
+  .research-chat-dialog { grid-template-columns: 1fr; }
+  .chat-rooms { max-height: 140px; overflow: auto; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --line-soft: #dceff5; --focus-ring: #fff; }
+  .card,
+  .panel,
+  .control-card,
+  .overview-surface,
+  button,
+  input,
+  select,
+  textarea { border-width: 2px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
   }
 }
 
