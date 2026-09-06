@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Fixed application header and primary areas
+
+- [x] Fix Header and `Dashboard` / `Wissenschaft` / `Runtime & Wesen` navigation to the top edge.
+- [x] Reserve measured header/navigation height in the workspace.
+- [ ] Add browser viewport checks for wrapped primary navigation and content offset.
+
 ## 2026-09-06 Fixed bottom Footer
 
 - [x] Fix the Footer to the bottom edge of the viewport.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Fixed application header and primary areas
+
+- Fixed the Header and the three-area primary navigation as one top application chrome.
+- Added runtime height measurement so wrapped tablet/mobile navigation does not cover workspace content.
+
 ## 2026-09-06 — Fixed bottom Footer
 
 - Fixed the coordinated Footer status bar to the bottom of the viewport.

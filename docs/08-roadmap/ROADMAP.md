@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Fixed application header and primary areas
+
+- Header and the three primary areas `Dashboard`, `Wissenschaft` and `Runtime & Wesen` remain fixed together at the top of the viewport.
+- The frontend architecture measures their actual wrapped heights and reserves the matching workspace offset for tablet and mobile layouts.
+- Only the active workspace content scrolls; the fixed Footer remains independently reserved at the bottom.
+
 ## 2026-09-06 Fixed bottom Footer
 
 - Footer is fixed to the bottom edge of the viewport across desktop, tablet and mobile layouts.
