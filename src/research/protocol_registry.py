@@ -179,7 +179,8 @@ def validate_operational_protocol(
         raise PreregistrationError("Invalid minimum independent seed count.")
     if seed_count < minimum_value:
         raise PreregistrationError(
-            f"Protocol '{protocol_id}' requires at least {minimum_value} independent seeds; got {seed_count}."
+            f"Protocol '{protocol_id}' requires at least {minimum_value} independent "
+            f"seeds; got {seed_count}."
         )
     return prereg
 
@@ -200,9 +201,13 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
         if not isinstance(protocol_id, str) or not isinstance(question_id, str):
             raise PreregistrationError("Operational protocol ID/RQ must be strings.")
         if not isinstance(hypothesis_id, str):
-            raise PreregistrationError("Operational protocol hypothesis must be a string.")
+            raise PreregistrationError(
+                "Operational protocol hypothesis must be a string."
+            )
         if not isinstance(prereg_value, str) or not prereg_value:
-            raise PreregistrationError("Operational protocol lacks preregistration path.")
+            raise PreregistrationError(
+                "Operational protocol lacks preregistration path."
+            )
 
         prereg_path = research_root / prereg_value
         prereg = _json_object(prereg_path)
