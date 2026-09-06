@@ -2518,6 +2518,18 @@ body.contrast-mode .overview-surface {
 .workflow-batch-protocol em { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--muted); font-size: .65rem; font-style: normal; }
 .workflow-batch-protocol em input { width: 86px; min-width: 0; padding: 3px 5px; font: .65rem var(--font-mono); }
 .workflow-batch-dialog .modal-close { flex: 0 0 auto; }
+.workflow-batch-result {
+  min-height: 1.5rem;
+  max-height: 180px;
+  margin: 0;
+  padding: 8px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, .18);
+  color: var(--text);
+  font: .72rem/1.4 var(--font-mono);
+  white-space: pre-wrap;
+}
 
 @media (max-width: 680px) {
   .workflow-batch-protocols { grid-template-columns: 1fr; }

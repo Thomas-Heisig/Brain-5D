@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Batch result visibility
+
+- Fixed the batch dialog so successful runs close after rendering workflow/report results.
+- Added visible running state and persistent error/result output instead of silently generating files.
+
 ## 2026-09-06 — Exploratory experiment artifacts
 
 - Exploratory runs now appear as complete experiments with data and summary artifacts instead of only creating loose files.

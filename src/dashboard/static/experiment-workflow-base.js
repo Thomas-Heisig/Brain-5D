@@ -126,6 +126,7 @@ export class ExperimentWorkflowPanel {
       batchTitlePrefix: byId("workflow-batch-title-prefix"),
       batchProtocols: byId("workflow-batch-protocols"),
       batchStatus: byId("workflow-batch-status"),
+      batchResult: byId("workflow-batch-result"),
       batchStart: byId("workflow-batch-start"),
       status: byId("workflow-status"),
       progressBar: byId("workflow-progress-bar"),
@@ -316,6 +317,7 @@ export class ExperimentWorkflowPanel {
       })),
     };
     if (this.elements.batchStart) this.elements.batchStart.disabled = true;
+    if (this.elements.batchStart) this.elements.batchStart.textContent = "Läuft …";
     if (this.elements.batchStatus) this.elements.batchStatus.textContent = "Workflow läuft …";
     try {
       const result = await fetchJson("/api/experiment/workflow/batch", {
@@ -325,22 +327,30 @@ export class ExperimentWorkflowPanel {
       if (this.elements.batchStatus) {
         this.elements.batchStatus.textContent = `Abgeschlossen: ${result.completed} erfolgreich, ${result.failed} fehlgeschlagen.`;
       }
-      this.elements.batchDialog?.close?.();
-      if (this.elements.result) {
-        this.elements.result.textContent = [
+      const resultText = [
           `Workflow: ${result.workflow_id}`,
           `Bericht: ${result.report}`,
           `Markdown: ${result.report_markdown}`,
           `Erfolgreich: ${result.completed}`,
           `Fehlgeschlagen: ${result.failed}`,
         ].join("\n");
-      }
+      if (this.elements.batchResult) this.elements.batchResult.textContent = resultText;
+      if (this.elements.result) this.elements.result.textContent = resultText;
       this._setStatus("Workflow-Bericht erstellt", "completed");
       if (typeof this.onCompleted === "function") await this.onCompleted();
+      const dialog = this.elements.batchDialog;
+      if (dialog) {
+        try { if (dialog.open) dialog.close("completed"); } catch (_) { /* keep result visible */ }
+        dialog.removeAttribute("open");
+      }
     } catch (error) {
       if (this.elements.batchStatus) this.elements.batchStatus.textContent = `Workflow fehlgeschlagen: ${error.message}`;
+      if (this.elements.batchResult) this.elements.batchResult.textContent = `Fehler: ${error.message}`;
     } finally {
-      if (this.elements.batchStart) this.elements.batchStart.disabled = false;
+      if (this.elements.batchStart) {
+        this.elements.batchStart.disabled = false;
+        this.elements.batchStart.textContent = "Auswahl starten";
+      }
     }
   }
 

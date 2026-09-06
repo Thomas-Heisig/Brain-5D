@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Batch result visibility
+
+- [x] Show immediate running feedback after `Auswahl starten`.
+- [x] Show aggregate workflow ID and report paths in the main workflow output.
+- [x] Close the dialog robustly after successful report rendering.
+- [ ] Add browser E2E coverage for batch completion UI.
+
 ## 2026-09-06 Exploratory experiment artifacts
 
 - [x] Write DATA and summary artifacts for exploratory Runtime-Ticks runs.

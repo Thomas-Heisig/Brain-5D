@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Batch result visibility
+
+- Batch start now shows immediate running state, persistent result text and explicit errors in the workflow dialog/output area.
+- Successful batch dialogs close only after the aggregate workflow report has been rendered.
+
 ## 2026-09-06 Exploratory experiment artifacts
 
 - Exploratory Runtime-Ticks runs now write the same visible experiment artifacts as normal runs: manifest, report, `DATA/runs.json` and `summary.md`.
