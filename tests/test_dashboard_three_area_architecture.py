@@ -28,11 +28,11 @@ def test_science_area_preserves_network_research_and_settings_routes() -> None:
     console = _read("console-log.js")
 
     for route in ("network", "research", "settings"):
-        assert f'data-science-route=\\"{route}\\"' in shell
+        assert f'data-science-route="{route}"' in shell
     assert 'for (const name of ["network", "gate"] )' in console
     assert 'button.classList.add("wesen-utility-hidden")' in console
-    assert '.tab-btn[data-tab="network"]\')?.remove()' not in console
-    assert '.tab-btn[data-tab="gate"]\')?.remove()' not in console
+    assert "querySelector('.tab-btn[data-tab=\"network\"]')?.remove()" not in console
+    assert "querySelector('.tab-btn[data-tab=\"gate\"]')?.remove()" not in console
 
 
 def test_future_runtime_capabilities_are_visible_but_not_claimed_live() -> None:
@@ -49,7 +49,7 @@ def test_neuron_model_viewer_replaces_legacy_projection_without_deleting_it() ->
     viewer = _read("neuron-model-viewer.js")
 
     assert 'import "./neuron-model-viewer.js"' in console
-    assert 'id = "neuron-model-viewer"' in viewer
+    assert 'section.id = "neuron-model-viewer"' in viewer
     assert 'byId("network-projection")' in viewer
     assert "legacy.hidden = true" in viewer
     assert 'legacy.dataset.replacedBy = "neuron-model-viewer"' in viewer
@@ -62,7 +62,7 @@ def test_neuron_model_viewer_uses_bounded_real_data_and_client_pca() -> None:
     assert "/api/network/synapses?limit=${MAX_DENSITY_SYNAPSES}&offset=0" in viewer
     assert "function computePca" in viewer
     assert "function jacobiEigen" in viewer
-    assert 'sampleCount: 500' in viewer
+    assert "sampleCount: 500" in viewer
     assert '<option value="500" selected>500 Neuronen</option>' in viewer
     assert '<option value="0" selected>Manuell</option>' in viewer
     assert 'data-nmv-view="correlation"' in viewer
