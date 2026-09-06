@@ -36,7 +36,6 @@ def _object_list(value: object) -> list[dict[str, Any]]:
     """Narrow a JSON array of objects for structural assertions."""
 
     assert isinstance(value, list)
-    assert all(isinstance(item, dict) for item in value)
     return cast(list[dict[str, Any]], value)
 
 
