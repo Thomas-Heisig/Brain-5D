@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 - Reactive Operator inventory and responsive surfaces
+
+- The Overview now shows every connection returned by `/api/embodiment/connections`, including live availability, authorization, activity, source and backend message fields.
+- Embodiment state and connection data refresh every 2 seconds through the central dashboard store instead of waiting for the slower supplemental refresh.
+- Overview actions, live inventory cards and the Wesen workspace now constrain their widths across desktop, tablet and mobile layouts.
+
 ## 2026-09-06 - Reachable scientific workspaces and Summary view
 
 - Fixed the stale CSS rule that hid the Network workspace from the operator surface.

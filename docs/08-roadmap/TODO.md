@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Dashboard Operator refresh
+
+- [x] Render the complete backend-provided embodiment connection inventory in the Overview.
+- [x] Refresh embodiment state and connections independently from slower gate/research data.
+- [x] Remove horizontal overflow from the responsive Overview and Wesen surfaces.
+
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
 ## Current engineering baseline

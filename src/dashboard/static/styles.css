@@ -9343,3 +9343,30 @@ body.fm-viewer-open { overflow: hidden; }
   white-space: nowrap;
 }
 .workflow-popup-actions { display: inline-flex; gap: 0.3rem; align-items: center; }
+
+/* Live overview data remains readable when the available width changes. */
+.topbar-right { min-width: 0; flex-wrap: wrap; }
+.overview-connections-card { margin-top: 10px; }
+.overview-connection-summary { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; color: var(--muted); font-size: 10px; text-transform: uppercase; }
+.overview-connection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 6px; max-height: 260px; margin-top: 10px; overflow: auto; padding-right: 3px; }
+.overview-connection { display: grid; min-width: 0; gap: 3px; padding: 8px 10px; border-left: 2px solid var(--muted); background: rgba(255, 255, 255, .025); }
+.overview-connection[data-status="available"], .overview-connection[data-status="authorized"], .overview-connection[data-status="active"] { border-left-color: var(--success); }
+.overview-connection[data-status="unavailable"] { border-left-color: var(--warning); }
+.overview-connection[data-status="error"] { border-left-color: var(--danger); }
+.overview-connection strong, .overview-connection span, .overview-connection small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.overview-connection strong { font-size: 11px; }
+.overview-connection span, .overview-connection small { color: var(--muted); font-size: 10px; }
+.overview-command-copy, .overview-actions { min-width: 0; }
+.overview-command-copy { flex: 1 1 auto; }
+.overview-actions { width: min(470px, 100%); flex: 0 1 470px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.overview-action { min-width: 0; overflow-wrap: anywhere; }
+html, body { max-width: 100%; overflow-x: hidden; }
+main, .topbar, .tab-nav, .tab-content, .overview-command-bar, .overview-operations-grid, .experience-welcome { min-width: 0; max-width: 100%; }
+body.experience-ready .experience-status-cluster, body.experience-ready .topbar-right, body .site-footer, body .site-footer .footer-segment, body .site-footer .footer-vitals { min-width: 0; }
+@media (max-width: 900px) {
+  .topbar-right { width: 100%; justify-content: flex-start; }
+  .overview-connection-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+}
+@media (max-width: 680px) {
+  .overview-connection-grid { grid-template-columns: 1fr; max-height: 320px; }
+}

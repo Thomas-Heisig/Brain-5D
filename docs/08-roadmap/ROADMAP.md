@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Dashboard Operator refresh
+
+- Operator Overview now renders the complete live embodiment connection inventory from the backend contract.
+- Embodiment state and connection polling runs independently at a 2-second cadence; slower gate/research supplements remain on their existing cadence.
+- Overview and Wesen surfaces now collapse cleanly for tablet/mobile widths without horizontal page overflow.
+
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
 ## Current baseline

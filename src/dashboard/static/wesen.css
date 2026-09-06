@@ -566,12 +566,12 @@ button:focus-visible,
 
 /* Responsive behavior: the organism remains the primary surface. */
 @media (max-width: 1050px) {
-  .wesen-layout { grid-template-columns: minmax(165px, .8fr) minmax(360px, 1.7fr) minmax(190px, .9fr); }
+  .wesen-layout { grid-template-columns: minmax(0, .8fr) minmax(0, 1.7fr) minmax(0, .9fr); }
   .wesen-card > header { gap: 6px; }
   .wesen-card > header small { font-size: .62rem; }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 940px) {
   .wesen-layout { display: block; }
   .wesen-sidebar-left { display: grid; grid-template-columns: 1fr; margin-bottom: 8px; }
   .wesen-sidebar-right { margin-top: 8px; }
@@ -582,6 +582,18 @@ button:focus-visible,
   .wesen-console-head { align-items: flex-start; flex-direction: column; }
   .wesen-technical-body > summary { grid-template-columns: 1fr; gap: 10px; }
   .wesen-technical-boundary-signals { width: 100%; }
+}
+
+@media (max-width: 560px) {
+  .wesen-workspace { padding-inline: 0; }
+  .wesen-header { padding-inline: 10px !important; }
+  .wesen-stage-card { grid-template-rows: auto clamp(360px, 88vw, 500px) auto; }
+  .wesen-stage { min-height: clamp(360px, 88vw, 500px); }
+  .wesen-stage-toolbar { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .wesen-stage-actions { width: 100%; }
+  .wesen-stage-actions button { flex: 1; }
+  .wesen-event-row { grid-template-columns: 54px 8px minmax(0, .8fr); }
+  .wesen-event-row em { display: none; }
 }
 
 body[data-theme="light"] {
