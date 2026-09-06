@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Wissenschaft Network route restored
+
+- [x] Make `Wissenschaft → Neuronales Netzwerk` callable again.
+- [x] Restore Network subview tabs without showing hidden panels simultaneously.
+- [ ] Add browser interaction coverage for the Wissenschaft route.
+
 ## 2026-09-06 Fixed application header and primary areas
 
 - [x] Fix Header and `Dashboard` / `Wissenschaft` / `Runtime & Wesen` navigation to the top edge.

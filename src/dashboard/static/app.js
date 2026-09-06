@@ -51,6 +51,7 @@ import { renderOverviewCommandCenter, setupOverviewActions } from './overview-pa
 import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
 import { initResearchChat } from './research-chat.js';
+import { initBoxStates } from './box-state-controller.js';
 
 // ================================================================
 // DOM HELPERS
@@ -2428,6 +2429,7 @@ function init() {
   setupOverviewActions();
   setupWorkspaceViews();
   setupResearchLanes();
+  initBoxStates();
   initEmbodimentDetails();
   initEmbodimentPipelineControls();
 

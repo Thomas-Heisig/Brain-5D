@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Wissenschaft Network route restored
+
+- The `Wissenschaft → Neuronales Netzwerk` context route now reveals the active Network workbench instead of being hidden by the retired-workspace CSS rule.
+- Network view tabs are available again and continue to respect JavaScript-controlled `hidden` panels.
+
 ## 2026-09-06 Fixed application header and primary areas
 
 - Header and the three primary areas `Dashboard`, `Wissenschaft` and `Runtime & Wesen` remain fixed together at the top of the viewport.

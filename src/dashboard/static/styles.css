@@ -9542,9 +9542,127 @@ body.experience-ready main {
   padding-top: calc(var(--dashboard-header-height) + var(--dashboard-primary-nav-height) + 16px);
 }
 
+/* Wissenschaft routes the Network workbench contextually. Keep inactive tabs
+   hidden, but never hide the selected Network workspace itself. */
+#tab-network:not(.active) {
+  display: none !important;
+}
+
+#tab-network.active {
+  display: grid !important;
+}
+
+#tab-network.active .workspace-view-tabs {
+  display: flex !important;
+}
+
+#tab-network.active > [data-network-view="dynamics"]:not([hidden]),
+#tab-network.active > [data-network-view="inspect"]:not([hidden]),
+#tab-network.active > [data-network-view="data"]:not([hidden]),
+#tab-network.active #network-flow,
+#tab-network.active #network-populations {
+  display: block !important;
+}
+
 @media (max-width: 680px) {
   body.experience-ready main {
     padding-top: calc(var(--dashboard-header-height) + var(--dashboard-primary-nav-height) + 10px);
+  }
+}
+
+/* Full-page workspaces and shared box sizing controls. */
+body.experience-ready .tab-content.active {
+  min-height: calc(100dvh - var(--dashboard-header-height) - var(--dashboard-primary-nav-height) - var(--dashboard-footer-space));
+}
+
+body.experience-ready .box-state-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.box-state-tools {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.box-state-button {
+  display: inline-grid;
+  width: 27px;
+  height: 27px;
+  min-width: 27px;
+  min-height: 27px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--control-radius);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+  font: 700 .8rem/1 var(--font-ui);
+}
+
+.box-state-button:hover,
+.box-state-button:focus-visible,
+.box-state-button[aria-pressed="true"] {
+  border-color: var(--status-info);
+  color: var(--status-info);
+  background: rgba(85, 201, 232, .14);
+}
+
+.box-state-minimized {
+  min-height: 0 !important;
+}
+
+.box-state-minimized > .box-state-content {
+  display: none !important;
+}
+
+body.box-state-lock {
+  overflow: hidden !important;
+}
+
+.box-state-maximized {
+  position: fixed !important;
+  top: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  left: 12px !important;
+  z-index: 90 !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  background: var(--surface-1) !important;
+  box-shadow: 0 0 0 100vmax rgba(0, 7, 13, .74), 0 24px 80px rgba(0, 0, 0, .5) !important;
+}
+
+.box-state-maximized > .box-state-content {
+  min-width: 0;
+}
+
+@media (max-width: 680px) {
+  .box-state-maximized {
+    top: 8px !important;
+    right: 8px !important;
+    bottom: 8px !important;
+    left: 8px !important;
+  }
+
+  .box-state-tools {
+    gap: 2px;
+  }
+
+  .box-state-button {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
   }
 }
 

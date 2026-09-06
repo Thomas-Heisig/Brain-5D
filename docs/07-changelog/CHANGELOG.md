@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Restored Wissenschaft Network route
+
+- Fixed the `Neuronales Netzwerk` route under `Wissenschaft`.
+- Re-enabled Network subview tabs while preserving exclusive `hidden` panel switching.
+
 ## 2026-09-06 — Fixed application header and primary areas
 
 - Fixed the Header and the three-area primary navigation as one top application chrome.
