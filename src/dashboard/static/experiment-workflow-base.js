@@ -280,13 +280,13 @@ export class ExperimentWorkflowPanel {
       const label = document.createElement("label");
       label.className = "workflow-batch-protocol";
       if (protocol) {
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small><em>Seeds <input type="text" data-batch-seeds value="${escapeHtml(protocol.default_seed_expression || "42-44")}"> Ticks <input type="number" data-batch-ticks min="1" value="${escapeHtml(protocol.default_ticks || 1000)}"></em></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small><em><span>Seeds</span><input type="text" data-batch-seeds value="${escapeHtml(protocol.default_seed_expression || "42-44")}"><span>Ticks</span><input type="number" data-batch-ticks min="1" value="${escapeHtml(protocol.default_ticks || 1000)}"></em></span>`;
       } else {
         const hypothesis = this.hypotheses.find((item) => item.question_id === question.id);
         const hypothesisId = hypothesis?.id || "EXPLORATORY-UNSPECIFIED";
         const selection = `exploratory:${question.id}:${hypothesisId}`;
         label.classList.add("workflow-batch-protocol-exploratory");
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small><em>Seeds <input type="text" data-batch-seeds value="42-44"> Ticks <input type="number" data-batch-ticks min="1" value="1000"></em></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small><em><span>Seeds</span><input type="text" data-batch-seeds value="42-44"><span>Ticks</span><input type="number" data-batch-ticks min="1" value="1000"></em></span>`;
       }
       return label;
     }));
@@ -319,6 +319,9 @@ export class ExperimentWorkflowPanel {
     if (this.elements.batchStart) this.elements.batchStart.disabled = true;
     if (this.elements.batchStart) this.elements.batchStart.textContent = "Läuft …";
     if (this.elements.batchStatus) this.elements.batchStatus.textContent = "Workflow läuft …";
+    document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
+      detail: { active: true, progress: 0, label: "Experiment-Workflow läuft", experimentId: payload.batch_id || "Batch" },
+    }));
     try {
       const result = await fetchJson("/api/experiment/workflow/batch", {
         method: "POST",
@@ -333,10 +336,14 @@ export class ExperimentWorkflowPanel {
           `Markdown: ${result.report_markdown}`,
           `Erfolgreich: ${result.completed}`,
           `Fehlgeschlagen: ${result.failed}`,
+          ...(result.results || []).map((item) => `${item.protocol}: ${item.status}${item.error ? ` — ${item.error}` : ""}`),
         ].join("\n");
       if (this.elements.batchResult) this.elements.batchResult.textContent = resultText;
       if (this.elements.result) this.elements.result.textContent = resultText;
       this._setStatus("Workflow-Bericht erstellt", "completed");
+      document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
+        detail: { active: false, preserveFooter: true, progress: 100, label: "Experiment-Workflow abgeschlossen", experimentId: result.workflow_id },
+      }));
       if (typeof this.onCompleted === "function") await this.onCompleted();
       const dialog = this.elements.batchDialog;
       if (dialog) {
@@ -346,6 +353,9 @@ export class ExperimentWorkflowPanel {
     } catch (error) {
       if (this.elements.batchStatus) this.elements.batchStatus.textContent = `Workflow fehlgeschlagen: ${error.message}`;
       if (this.elements.batchResult) this.elements.batchResult.textContent = `Fehler: ${error.message}`;
+      document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
+        detail: { active: false, preserveFooter: true, progress: 0, label: "Experiment-Workflow fehlgeschlagen", experimentId: payload.batch_id || "Batch" },
+      }));
     } finally {
       if (this.elements.batchStart) {
         this.elements.batchStart.disabled = false;

@@ -306,7 +306,7 @@ document.addEventListener('brain5d:experiment-progress', (event) => {
   if (id && detail.experimentId) id.textContent = detail.experimentId;
   if (progress) progress.textContent = detail.active ? `${detail.progress ?? 0}% · ${detail.label || 'laufend'}` : detail.label || 'kein Lauf';
   renderExperimentRunFooter();
-  if (!experimentRunActive) dashboardStore.refresh().catch(() => {});
+  if (!experimentRunActive && !detail.preserveFooter) dashboardStore.refresh().catch(() => {});
 });
 
 /**

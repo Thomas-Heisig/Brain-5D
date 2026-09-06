@@ -4,6 +4,7 @@
 
 - Fixed the batch dialog so successful runs close after rendering workflow/report results.
 - Added visible running state and persistent error/result output instead of silently generating files.
+- Connected batch progress and completion to the Footer experiment/test-run status.
 
 ## 2026-09-06 — Exploratory experiment artifacts
 

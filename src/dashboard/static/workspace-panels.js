@@ -269,7 +269,7 @@ export function renderWorkspaceSummaries(state) {
   setText("runtime-last-ms", Number(state.runtime?.batch_duration_ms ?? system.core_step_ms ?? 0).toFixed(2));
 
   const activeSession = experiment.active_session || null;
-  if (document.body.dataset.experimentWorkflowActive === "true") return;
+  if (["true", "completed"].includes(document.body.dataset.experimentWorkflowActive)) return;
   const footerExperiment = byId("footer-experiment");
   if (footerExperiment) footerExperiment.dataset.active = String(activeSession !== null);
   setText("footer-experiment-state", activeSession ? "running" : "inactive");

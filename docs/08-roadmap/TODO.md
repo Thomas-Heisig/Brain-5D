@@ -9,6 +9,7 @@
 - [x] Show immediate running feedback after `Auswahl starten`.
 - [x] Show aggregate workflow ID and report paths in the main workflow output.
 - [x] Close the dialog robustly after successful report rendering.
+- [x] Show batch running/completed/failed state in the Footer.
 - [ ] Add browser E2E coverage for batch completion UI.
 
 ## 2026-09-06 Exploratory experiment artifacts

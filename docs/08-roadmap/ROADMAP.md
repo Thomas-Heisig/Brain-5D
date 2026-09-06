@@ -8,6 +8,7 @@
 
 - Batch start now shows immediate running state, persistent result text and explicit errors in the workflow dialog/output area.
 - Successful batch dialogs close only after the aggregate workflow report has been rendered.
+- Footer status now shows the batch as a live test run and preserves the completed workflow result.
 
 ## 2026-09-06 Exploratory experiment artifacts
 
