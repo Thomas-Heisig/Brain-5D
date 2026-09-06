@@ -293,19 +293,17 @@ class ResearchRegistry:
 
     def save_questions(self) -> None:
         """Persist question updates to their original canonical fragment."""
-        self._save_yaml_family(
-            "questions.yaml",
-            "questions.*.yaml",
-            {identifier: item.to_dict() for identifier, item in self.questions.items()},
-        )
+        entries = {
+            identifier: item.to_dict() for identifier, item in self.questions.items()
+        }
+        self._save_yaml_family("questions.yaml", "questions.*.yaml", entries)
 
     def save_hypotheses(self) -> None:
         """Persist hypothesis updates to their original canonical fragment."""
-        self._save_yaml_family(
-            "hypotheses.yaml",
-            "hypotheses.*.yaml",
-            {identifier: item.to_dict() for identifier, item in self.hypotheses.items()},
-        )
+        entries = {
+            identifier: item.to_dict() for identifier, item in self.hypotheses.items()
+        }
+        self._save_yaml_family("hypotheses.yaml", "hypotheses.*.yaml", entries)
 
     def save_claims(self) -> None:
         self._save_yaml("claims.yaml", [c.to_dict() for c in self.claims.values()])
@@ -343,7 +341,8 @@ class ResearchRegistry:
         for path, identifiers in ownership.items():
             if not identifiers and not path.exists():
                 continue
-            self._save_yaml_path(path, [entries[identifier] for identifier in identifiers])
+            data = [entries[identifier] for identifier in identifiers]
+            self._save_yaml_path(path, data)
 
     def _save_yaml(self, filename: str, data: list[Any]) -> None:
         self._save_yaml_path(self._registry_dir / filename, data)
