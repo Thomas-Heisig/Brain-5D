@@ -1,11 +1,11 @@
 """Modality-Specific Synaptic Pathway Architecture (MSBA).
 
-MSBA is an embodiment-only, fail-closed contract below Neural Symbiosis.  It
+MSBA is an embodiment-only, fail-closed contract below Neural Symbiosis. It
 models modality-specific gateway geometry, candidate plasticity mathematics,
 resource/energy accounting and adaptive allocation without importing or
 mutating the Brain-5D neural core.
 
-All learning and structural growth flags default to disabled.  The functions in
+All learning and structural growth flags default to disabled. The functions in
 this module calculate candidate values only; applying them to a live gateway
 requires an explicit preregistered experiment.
 """
@@ -18,6 +18,9 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from .models import JSONValue
+
+MIN_PROJECTION_DIMENSIONS = 1
+MAX_PROJECTION_DIMENSIONS = 32
 
 
 class Modality(StrEnum):
@@ -33,9 +36,28 @@ class EnergyState(StrEnum):
     SURVIVAL = "survival"
 
 
+def validate_projection_dimensions(value: int) -> int:
+    """Validate an MSBA projection-space dimensionality without touching core IDs."""
+
+    if isinstance(value, bool):
+        raise ValueError("projection_dimensions must be an integer")
+    if not MIN_PROJECTION_DIMENSIONS <= value <= MAX_PROJECTION_DIMENSIONS:
+        raise ValueError(
+            f"projection_dimensions must be between {MIN_PROJECTION_DIMENSIONS} "
+            f"and {MAX_PROJECTION_DIMENSIONS}"
+        )
+    return value
+
+
 @dataclass(frozen=True, slots=True)
 class MSBAGatewayConfig:
-    """Fail-closed configuration for modality-specific gateway experiments."""
+    """Fail-closed configuration for modality-specific gateway experiments.
+
+    ``projection_dimensions`` describes the external/adaptor projection space.
+    It may be increased above five without changing the persisted 5D neuron-ID
+    format. A future versioned core-format migration is required before the
+    productive SNN itself can store more than five spatial coordinates.
+    """
 
     audio_bands: int = 32
     audio_max_delay_ms: int = 20
@@ -43,6 +65,7 @@ class MSBAGatewayConfig:
     vision_height: int = 100
     vision_targets_per_input: int = 8
     digital_population_size: int = 8
+    projection_dimensions: int = 5
     allocation_beta: float = 5.0
     base_energy_price: float = 0.1
     pressure_energy_weight: float = 0.4
@@ -54,6 +77,9 @@ class MSBAGatewayConfig:
     meta_gating_enabled: bool = False
     adaptive_allocation_enabled: bool = False
 
+    def __post_init__(self) -> None:
+        validate_projection_dimensions(self.projection_dimensions)
+
     def to_json(self) -> dict[str, JSONValue]:
         return {
             "audio_bands": self.audio_bands,
@@ -62,6 +88,9 @@ class MSBAGatewayConfig:
             "vision_height": self.vision_height,
             "vision_targets_per_input": self.vision_targets_per_input,
             "digital_population_size": self.digital_population_size,
+            "projection_dimensions": self.projection_dimensions,
+            "projection_dimensions_min": MIN_PROJECTION_DIMENSIONS,
+            "projection_dimensions_max": MAX_PROJECTION_DIMENSIONS,
             "allocation_beta": self.allocation_beta,
             "base_energy_price": self.base_energy_price,
             "synaptic_plasticity_enabled": self.synaptic_plasticity_enabled,
@@ -165,7 +194,7 @@ class ModalityProfile:
 
 
 def default_modality_profiles() -> tuple[ModalityProfile, ...]:
-    """Return MSBA profiles without assigning semantics to fixed 5D axes."""
+    """Return MSBA profiles without assigning semantics to fixed axes."""
 
     return (
         ModalityProfile(
@@ -381,11 +410,19 @@ def msba_contract() -> dict[str, JSONValue]:
         "topology": {
             "fixed_axis_semantics": False,
             "projection_required": True,
+            "projection_dimensions": config.projection_dimensions,
+            "projection_dimensions_range": [
+                MIN_PROJECTION_DIMENSIONS,
+                MAX_PROJECTION_DIMENSIONS,
+            ],
+            "productive_core_dimensions": 5,
+            "core_dimension_migration_required_above_five": True,
             "controls": [
                 "structured_projection",
                 "shuffled_projection",
                 "random_projection",
                 "reduced_dimension_projection",
+                "increased_dimension_projection",
             ],
         },
         "scientific_boundary": {
@@ -418,6 +455,8 @@ __all__ = [
     "EnergyEstimate",
     "EnergyObservation",
     "EnergyState",
+    "MAX_PROJECTION_DIMENSIONS",
+    "MIN_PROJECTION_DIMENSIONS",
     "MSBAGatewayConfig",
     "Modality",
     "ModalityProfile",
@@ -433,5 +472,6 @@ __all__ = [
     "phase_weighted_stdp",
     "recommended_protection_policy",
     "resource_pressure",
+    "validate_projection_dimensions",
     "visual_growth_probability",
 ]

@@ -9,42 +9,51 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 783 tests collected on the verified 2026-09-06 baseline.
-- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass on the pre-MSBA baseline; the MSBA branch must pass the same matrix before merge.
-- [x] Black, Ruff, Pylint and Pre-Commit pass on the pre-MSBA baseline.
-- [x] Mypy and Pyright pass on the pre-MSBA baseline.
-- [x] Scientific Integrity Gate passes on the pre-MSBA baseline.
-- [x] Security checks pass on the pre-MSBA baseline.
-- [x] Wheel build/install and Docker build/runtime verification pass on the pre-MSBA baseline.
+- [x] 791 tests collected on the 2026-09-06 research-catalog integration baseline.
+- [x] Post-MSBA `main` CI #598 completed successfully on merge commit `bf47018f39de615b418166ebbb46e92b1fd1d301`.
+- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass on the verified post-MSBA baseline.
+- [x] Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity pass on the verified post-MSBA baseline.
+- [x] Wheel build/install and Docker build/runtime verification pass on the verified post-MSBA baseline.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] `Network` removed from primary frontend navigation.
 - [x] Release/Gate moved to a footer action.
 - [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface.
 - [x] Dedicated read-only `Wesen` workspace added.
-- [x] `Wesen` morphology derives dynamically from observed embodiment connections.
-- [x] Empirical overlays use backend observations and preserve unknown values.
-- [x] Neural Symbiosis added as an embodiment-only, read-only multi-network interface.
-- [x] Open-set `NetworkAreaAdapter` contract added for arbitrary peripheral network implementations.
-- [x] Gateway plasticity remains disabled by default.
-- [x] Candidate pair-STDP, homeostatic scaling, structural formation/pruning and reward-modulated gate math is implemented without hidden core mutation.
-- [x] Pipeline reachability is explicitly not treated as evidence of learned use.
-- [x] MSBA added as a typed, fail-closed Neural-Symbiosis subarchitecture for audio, vision and digital pathways.
-- [x] MSBA does not assign fixed semantics to the five Brain-5D axes; modality features require explicit 5D projections and controls.
-- [x] Audio phase coherence scales candidate t-STDP without sign inversion.
-- [x] Vision defaults to fixed sparse target degree rather than percentage-dense connectivity and uses information/locality/resource candidate growth math.
-- [x] Digital `SymbolFrame` keeps exact payload/checksum outside the SNN while exposing deterministic population representations.
-- [x] MSBA energy accounting separates normalized energy units, estimated joules and measured joules.
-- [x] Resource-pressure states NORMAL / CONSERVE / CRITICAL / SURVIVAL are deterministic; fan failure is a hard survival override.
-- [x] Adaptive utility-minus-cost allocation exists only as candidate math and remains disabled by default.
-- [x] `Wesen` presents MSBA read-only and explicitly marks gateway learning/growth as inert/candidate-only.
-- [x] MSBA research programme, hypotheses, controls, protocols and preregistration schema are recorded in `research/registry/msba_experiments.yaml`.
+- [x] Neural Symbiosis and MSBA are embodiment-only/read-only by default and do not silently mutate the canonical SNN core.
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
+
+## P0 — research catalog, hypotheses and experiment reachability
+
+- [x] Make the canonical research registry extensible through deterministic `questions.*.yaml` and `hypotheses.*.yaml` fragments.
+- [x] Fail closed on duplicate research IDs across registry fragments.
+- [x] Canonically register `RQ-MSBA-E01` through `RQ-MSBA-E05` and `H-MSBA-E01-A` through `H-MSBA-E05-A` so they are visible to the existing Experiment Workflow.
+- [x] Preserve `research/registry/msba_experiments.yaml` as the detailed MSBA programme/falsification source rather than rewriting it as historical evidence.
+- [x] Generalize research/experiment schema ID validation so extensible families such as `RQ-MSBA-E01` are valid first-class identifiers.
+- [x] Add a repository-wide, read-only RQ/H reference audit that reports unregistered identifiers and broken registry links without rewriting historical documents.
+- [x] Replace the long research-question pulldown as the primary UX with a searchable Research Catalog, full-text RQ/H matching and an operational-only filter while retaining the underlying select as an accessibility/compatibility fallback.
+- [x] Visibly distinguish `OPERATIONAL` frozen/preregistered questions from `EXPLORATORY` questions.
+- [x] Route non-operational questions only to the existing exploratory `runtime_ticks_v1` path; never silently substitute an unrelated science runner or promote those runs to EVID.
+- [ ] Operationalize every still-unmapped canonical RQ/H with a dedicated protocol, controls, stopping rule, preregistration and runner before claiming that hypothesis can be confirmatorily tested.
+- [ ] Add a CI report artifact from the repository-wide catalog audit and decide which historical-only identifiers belong on an explicit allow-list versus the canonical registry.
+- [ ] Add domain/status/evidence/experiment-progress facets to the Research Catalog once those fields are exposed by the workflow catalog API.
+- [ ] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
+
+## P0 — variable dimensionality
+
+- [x] Add configurable MSBA/external projection dimensionality from 1 through 32 dimensions without changing productive core neuron IDs.
+- [x] Expose the projection-dimension range and the current productive-core 5D limitation explicitly in the MSBA contract and experiment UI.
+- [x] Extend experiment schema metadata to distinguish generic/projection dimensions from the persisted productive 5D core.
+- [ ] Add a dedicated preregistered N-D projection-sweep experiment so selected dimension counts are causal experiment parameters rather than documentation-only requests.
+- [ ] Design a versioned neuron-ID/storage format for productive SNN dimensions above five, including `.b5d` migration, reader compatibility, canonical state digests and rollback.
+- [ ] Generalize productive spatial indexing, neighborhood generation, distance functions, topology diagnostics, visualizations and structural-plasticity locality from fixed 5D to N-D only after the versioned format is frozen.
+- [ ] Add equivalence tests proving the generalized implementation reproduces legacy 5D behavior bit-for-bit for unchanged 5D configurations.
+- [ ] Add scaling guards for combinatorial N-D neighborhood growth and memory cost before enabling high dimensions in productive runtime.
 
 ## P0 — repository and frontend verification
 
-- [ ] Verify Neural Symbiosis/MSBA CSS/JS is served in integrated runtime and dashboard-only modes on a live host.
+- [ ] Verify Neural Symbiosis/MSBA CSS/JS and the Research Catalog are served in integrated runtime and dashboard-only modes on a live host.
 - [ ] Verify `Wesen` anatomy + Neural Symbiosis/MSBA rendering with a real connection inventory.
-- [ ] Add browser/E2E checks for pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and pipeline reachability.
+- [ ] Add browser/E2E checks for Research Catalog search/filter/selection, pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and pipeline reachability.
 - [ ] Keep automatic deletion of merged branches enabled/maintained when repository settings/tooling permit.
 
 ## P0 — propagation and recurrence evidence
@@ -71,7 +80,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [ ] Persist gateway state separately from canonical SNN synapse state.
 - [ ] Add frozen-gateway and random-gateway controls.
 - [ ] Add timing-shuffle and activity-matched information-destroyed controls.
-- [ ] Implement explicit structured/shuffled/random/reduced-dimensional 5D projection treatments for MSBA.
+- [ ] Implement explicit structured/shuffled/random/reduced-dimensional/increased-dimensional projection treatments for MSBA.
 - [ ] Run RQ-MSBA-E01 energy-per-useful-information comparisons with matched tasks.
 - [ ] Run RQ-MSBA-E02 adaptive-vs-fixed-vs-random resource allocation under equal budgets.
 - [ ] Run RQ-MSBA-E03 adaptive ROI/foveation against centre/random/full-image controls.
@@ -103,6 +112,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Define preregistered topology-matched 5D-vs-control experiments.
 - [ ] Implement dimension-shuffled control.
 - [x] Implement reduced-dimensional matched embeddings for initial comparisons.
+- [ ] Add preregistered increased-dimensional projection controls without conflating them with productive-core N-D support.
 - [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost at larger scale.
 - [ ] Keep dimensionality claims open until ablation evidence exists.
 
@@ -164,6 +174,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [x] Canonical architecture documentation includes Neural Symbiosis and MSBA contracts.
 - [x] Historical dated experiment/changelog artifacts left unchanged.
+- [x] Canonical RQ/H registry can grow through independent fragments without rewriting the historical base files.
 - [ ] Delete already-merged feature refs when a branch-delete action is available in repository tooling.
 - [ ] Prefer one current test-count snapshot in canonical docs and avoid propagating fixed numbers into historical documents.
 
@@ -179,4 +190,4 @@ A milestone is not complete because a UI card is green. It is complete only when
 - [ ] evidence artifacts are accepted by the evidence gate;
 - [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
 - [ ] documentation records what was actually shown, not what was expected;
-- [ ] dashboard visualization or pipeline reachability is not substituted for experimental evidence.
+- [ ] dashboard visualization, catalog reachability or pipeline reachability is not substituted for experimental evidence.

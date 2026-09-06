@@ -4,43 +4,29 @@
   "title": "Brain-5D Research Question",
   "description": "Schema for a single research question entry in the questions registry.",
   "type": "object",
-  "required": [
-    "id",
-    "domain",
-    "question",
-    "relevance",
-    "status"
-  ],
+  "required": ["id", "domain", "question", "relevance", "status"],
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^RQ-[A-Z]+-[0-9]{3}$"
+      "pattern": "^RQ-[A-Z0-9]+(?:-[A-Z0-9]+)+$",
+      "description": "Extensible family identifier, e.g. RQ-SNN-001 or RQ-MSBA-E01."
     },
-    "domain": {
-      "type": "string",
-      "description": "Scientific domain of the question."
-    },
-    "question": {
-      "type": "string",
-      "description": "The research question text."
-    },
-    "relevance": {
-      "type": "string",
-      "description": "Why this question matters for Brain-5D."
-    },
+    "domain": {"type": "string", "description": "Scientific domain of the question."},
+    "question": {"type": "string", "description": "The research question text."},
+    "relevance": {"type": "string", "description": "Why this question matters for Brain-5D."},
     "literature": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^SRC-" },
+      "items": {"type": "string", "pattern": "^SRC-"},
       "description": "Relevant literature source IDs."
     },
     "hypotheses": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^H-" },
+      "items": {"type": "string", "pattern": "^H-"},
       "description": "Testable hypotheses derived from this question."
     },
     "evidence": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^EVID-" },
+      "items": {"type": "string", "pattern": "^EVID-"},
       "description": "Evidence IDs supporting the answer."
     },
     "registry_status": {
@@ -66,28 +52,12 @@
     "answer": {
       "type": "object",
       "properties": {
-        "current": {
-          "type": ["string", "null"],
-          "description": "Current best answer based on evidence."
-        },
-        "confidence": {
-          "type": "string",
-          "enum": ["none", "low", "medium", "high", "very_high"],
-          "description": "Confidence in the current answer."
-        },
-        "limitations": {
-          "type": "string",
-          "description": "Known limitations of the current answer."
-        }
+        "current": {"type": ["string", "null"], "description": "Current best answer based on evidence."},
+        "confidence": {"type": "string", "enum": ["none", "low", "medium", "high", "very_high"]},
+        "limitations": {"type": ["string", "null"], "description": "Known limitations of the current answer."}
       }
     },
-    "created": {
-      "type": "string",
-      "format": "date"
-    },
-    "updated": {
-      "type": "string",
-      "format": "date"
-    }
+    "created": {"type": "string", "format": "date"},
+    "updated": {"type": "string", "format": "date"}
   }
 }

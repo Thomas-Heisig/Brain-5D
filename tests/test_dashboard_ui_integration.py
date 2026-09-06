@@ -24,7 +24,7 @@ def test_experiment_workflow_wrapper_prefills_seed_and_condition_controls() -> N
     assert "default_seed_expression" in source
     assert "condition_profiles" in source
     assert "_configureConditionProfiles" in source
-    assert "Legacy / diagnostic protocol" in source
+    assert "Exploratory / diagnostic protocol" in source
     assert "<details" in source
 
 

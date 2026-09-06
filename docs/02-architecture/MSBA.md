@@ -10,7 +10,11 @@ MSBA does **not** change the canonical Brain-5D SNN core, its neuron model, cano
 
 The architecture uses modality-specific engineering constraints without claiming a one-to-one cortical mapping. Audio is strongly temporal but not exclusively phase-coded. Vision is massively parallel but still temporal and hierarchical. The prefrontal cortex is not a biological digital bus. Therefore MSBA treats the three pathways as engineering abstractions whose value must be experimentally established.
 
-The five Brain-5D axes are **not assigned fixed semantics** such as time, x, y or frequency. Each modality defines a feature tuple that is projected into 5D by an explicit mapping. Experiments must compare structured, shuffled, random and reduced-dimensional projections.
+The persisted productive Brain-5D core remains **five-dimensional**. MSBA does not assign fixed semantics such as time, x, y or frequency to those axes. Modality adapters instead define explicit feature tuples and a projection mapping. The external/MSBA projection space now supports **1 through 32 dimensions** via `MSBAGatewayConfig.projection_dimensions`; increasing this value does not mutate the productive 5D neuron-ID/storage format.
+
+This distinction is scientific and technical: an increased-dimensional MSBA projection is **not** evidence that the productive SNN core is N-D. A future versioned neuron-ID/`.b5d` migration is required before the core itself can persist more than five coordinates. Experiments must keep projection dimensionality, productive core dimensionality and mapping provenance separate.
+
+Projection experiments must compare structured, shuffled, random, reduced-dimensional and, where preregistered, increased-dimensional mappings.
 
 ## Pathways
 
@@ -18,14 +22,14 @@ The five Brain-5D axes are **not assigned fixed semantics** such as time, x, y o
 
 Feature coordinates:
 
-`band × phase-or-envelope × channel × lag × feature`
+`band × phase-or-envelope × channel × lag × feature × optional additional projection features`
 
 Candidate processing:
 
 1. filter-bank decomposition (default contract: 32 bands);
 2. phase/envelope-aware event representation;
 3. fixed bounded delay taps;
-4. explicit projection into 5D;
+4. explicit mapping into the declared MSBA projection space;
 5. candidate phase-weighted temporal STDP.
 
 The phase term is non-negative:
@@ -40,13 +44,15 @@ Candidate MSBA learning is inert unless an experiment enables it.
 
 Feature coordinates:
 
-`x × y × feature × scale × frame`
+`x × y × feature × scale × frame × optional additional projection features`
 
 The default contract is 100 × 100 input resolution with a **fixed sparse target degree** rather than a fixed percentage. With `k=8`, 10,000 inputs imply 80,000 candidate gateway edges rather than a 2.5-million-edge 5% graph.
 
-Candidate structural growth uses information value, 5D locality and resource availability:
+Candidate structural growth uses information value, projected locality and resource availability:
 
-`p_grow = eta × information_value × exp(-d_5D^2/(2 sigma^2)) × (1 - resource_pressure)`
+`p_grow = eta × information_value × exp(-d_projection^2/(2 sigma^2)) × (1 - resource_pressure)`
+
+The current helper retains the historical parameter name `distance_5d` for API compatibility; increased-dimensional projection experiments must compute and record the distance metric used rather than silently treating it as core 5D distance.
 
 High firing rate alone is not accepted as a growth signal because noise could otherwise create self-reinforcing connectivity.
 
@@ -118,6 +124,15 @@ This computes a candidate value only. It does not activate a gateway.
 - preserve emergency actuator paths;
 - disable non-essential expensive paths unless safety-critical.
 
+## Research registry and experiment reachability
+
+The canonical Experiment Workflow loads `research/registry/questions.yaml` plus `questions.*.yaml` fragments and the corresponding hypothesis files. MSBA therefore registers its first-class entries in:
+
+- `research/registry/questions.msba.yaml`;
+- `research/registry/hypotheses.msba.yaml`.
+
+`research/registry/msba_experiments.yaml` remains the detailed programme/falsification source. The dashboard Research Catalog makes all canonical RQs searchable. Questions without a dedicated frozen/preregistered protocol remain **EXPLORATORY** and may only use the generic runtime experiment path; that reachability is not confirmatory evidence.
+
 ## Research programme
 
 ### RQ-MSBA-E01 — information/task value per energy
@@ -159,13 +174,16 @@ Any activated MSBA experiment must record:
 - seeds/RNG state;
 - gateway configuration;
 - modality adapter/model/version hashes;
+- projection dimension count;
+- productive core dimension count;
 - projection mapping and its control condition;
 - raw DATA and compact AI projection separately;
 - frozen-gateway control;
 - random/shuffled mapping controls where applicable;
+- reduced/increased-dimensional mapping controls where applicable;
 - information-destroyed or timing-shuffled controls where applicable;
 - measured vs estimated energy provenance;
 - exact digital checksums for digital-path experiments;
 - EVID review separate from exploratory summaries.
 
-No historical experiment artifact may be rewritten to make MSBA appear previously active.
+No historical experiment artifact may be rewritten to make MSBA appear previously active or to relabel a 5D core experiment as N-D evidence.

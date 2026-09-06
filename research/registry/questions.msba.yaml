@@ -1,0 +1,70 @@
+- id: RQ-MSBA-E01
+  domain: Multimodal Energy Efficiency
+  question: Unterscheiden sich Audio-, Vision- und Digital-Gateways systematisch im Ressourcenverbrauch pro verwertbarer Information oder korrekter Entscheidung?
+  relevance: Prueft die Ressourcenökonomie modalitaetsspezifischer Neural-Symbiosis-Gateways unter vergleichbaren Aufgabenbedingungen.
+  literature: []
+  hypotheses: [H-MSBA-E01-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Noch keine preregistrierten bestaetigenden MSBA-Laeufe.
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: RQ-MSBA-E02
+  domain: Adaptive Resource Allocation
+  question: Erhaelt kostenadaptive Gateway-Allokation unter identischem Gesamtbudget mehr Aufgabenleistung als fixe oder zufaellige Allokation?
+  relevance: Operationalisiert die Frage, ob Ressourcenhomoeostase funktionalen Nutzen statt nur Verbrauchsreduktion erzeugt.
+  literature: []
+  hypotheses: [H-MSBA-E02-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Adaptive Allokation ist ausserhalb preregistrierter Experimente deaktiviert.
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: RQ-MSBA-E03
+  domain: Visual Resource Allocation
+  question: Kann sich eine nutzungsabhaengige visuelle ROI/Foveation ohne hart kodierte Zielregion entwickeln?
+  relevance: Trennt adaptive visuelle Ressourcenlenkung von fest programmierten Zentrum- oder Vollbildstrategien.
+  literature: []
+  hypotheses: [H-MSBA-E03-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Der adaptive ROI-Lernpfad ist noch nicht als bestaetigender Runner operationalisiert.
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: RQ-MSBA-E04
+  domain: Digital Gateway Integrity
+  question: Bleibt digitale Payload-Integritaet unter Ressourcen-Drosselung exakt erhalten, waehrend lediglich Durchsatz und Admission sinken?
+  relevance: Sichert die wissenschaftliche und technische Trennung zwischen lernbarer Weiterleitung und unveraenderlicher digitaler Nutzlast.
+  literature: []
+  hypotheses: [H-MSBA-E04-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Mechanismus-Tests ersetzen noch keine preregistrierte End-to-End-Validierung.
+  created: '2026-09-06'
+  updated: '2026-09-06'
+- id: RQ-MSBA-E05
+  domain: Multimodal Compensation
+  question: Erhoeht das System nach Ausfall oder Degradation einer Modalitaet gezielt die Allokation einer anderen Modalitaet, wenn deren erwarteter Nutzen die Mehrkosten rechtfertigt?
+  relevance: Prueft adaptive Kompensation unter kontrolliertem Modalitaetsausfall und gleichen Ressourcenbudgets.
+  literature: []
+  hypotheses: [H-MSBA-E05-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Kompensationslernen ist derzeit nur als experimentelles Ziel spezifiziert.
+  created: '2026-09-06'
+  updated: '2026-09-06'
