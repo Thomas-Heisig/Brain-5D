@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Exploratory experiment artifacts
+
+- Exploratory Runtime-Ticks runs now write the same visible experiment artifacts as normal runs: manifest, report, `DATA/runs.json` and `summary.md`.
+- Batch results include the child summary path and explicit `EXPLORATORY` / `test_run` markers.
+
 ## 2026-09-06 Batch execution options and exploratory start
 
 - Batch execution now accepts per-protocol seed and tick settings from the dialog.

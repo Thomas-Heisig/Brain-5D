@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-06 — Exploratory experiment artifacts
+
+- Exploratory runs now appear as complete experiments with data and summary artifacts instead of only creating loose files.
+- Batch result entries now link each exploratory child summary and identify the run as a test run.
+
 ## 2026-09-06 — Batch execution options and exploratory start
 
 - Fixed batch start by removing the unconditional Runtime Bridge requirement for operational protocol batches.

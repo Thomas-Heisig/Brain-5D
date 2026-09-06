@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Exploratory experiment artifacts
+
+- [x] Write DATA and summary artifacts for exploratory Runtime-Ticks runs.
+- [x] Mark exploratory child results as `EXPLORATORY` and `test_run`.
+- [ ] Add browser E2E coverage for the visible experiment list refresh after a batch run.
+
 ## 2026-09-06 Batch execution options and exploratory start
 
 - [x] Allow operational batches to start without an attached Runtime Bridge.

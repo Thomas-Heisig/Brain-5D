@@ -121,6 +121,8 @@ def test_exploratory_batch_runs_through_runtime_ticks(tmp_path: Path) -> None:
     manifest = json.loads((child / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["research_run_mode"] == "EXPLORATORY"
     assert manifest["results"]["observed_ticks"] == 5
+    assert (child / "DATA" / "runs.json").is_file()
+    assert (child / "summary.md").is_file()
 
 
 def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> None:

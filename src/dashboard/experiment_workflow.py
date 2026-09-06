@@ -226,6 +226,14 @@ class ExperimentWorkflowService:
                             "Exploratory batch runs require an attached runtime controller."
                         )
                     result = self.run(child, run_ticks, before(), after)
+                    summary = write_experiment_summary(
+                        self._research_root,
+                        experiment_id,
+                        {"status": "unavailable", "reason": "Exploratory runtime run; AI post-hoc analysis not required.", "scientific_evidence": False},
+                    )
+                    result["summary"] = summary
+                    result["research_run_mode"] = "EXPLORATORY"
+                    result["test_run"] = True
                 else:
                     result = self.run_science(child)
                 results.append({"protocol": protocol_id, "ticks": child_ticks, "seeds": child_seeds, "status": "completed", **result})
@@ -782,6 +790,8 @@ class ExperimentWorkflowService:
         ).record_artifact(
             "workflow", str(relative_root / plan_path.name).replace("\\", "/")
         )
+        data_path = output_dir / "DATA" / "runs.json"
+        data_path.parent.mkdir(parents=True, exist_ok=True)
 
         started = perf_counter()
         try:
@@ -819,7 +829,30 @@ class ExperimentWorkflowService:
             observed_ticks=observed_ticks,
             ticks_requested=workflow.ticks,
             tick_contract="SATISFIED",
-        ).record_runtime(duration).mark_completed().save()
+        ).record_artifact("data", "DATA/runs.json").record_runtime(duration).mark_completed().save()
+
+        data_path.write_text(
+            json.dumps(
+                [{
+                    "experiment_id": workflow.experiment_id,
+                    "condition": "exploratory_runtime_ticks",
+                    "seed": workflow.seeds[0],
+                    "metrics": {
+                        "ticks_requested": workflow.ticks,
+                        "ticks_executed": observed_ticks,
+                        "start_tick": before["tick"],
+                        "end_tick": runtime["tick"],
+                        "neurons": runtime["neurons"],
+                        "synapses": runtime["synapses"],
+                    },
+                    "runtime_error": None,
+                }],
+                indent=2,
+                ensure_ascii=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
 
         report_path = output_dir / "report.md"
         report_path.write_text(
