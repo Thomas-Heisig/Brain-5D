@@ -9478,6 +9478,38 @@ body[data-theme="light"] .experience-ready .topbar-right > .header-context {
   text-shadow: none;
 }
 
+/* Fixed footer contract: reserve its responsive height in the document while
+   keeping the live status bar attached to the viewport edge. */
+:root {
+  --dashboard-footer-space: 116px;
+}
+
+body.experience-ready {
+  padding-bottom: var(--dashboard-footer-space);
+}
+
+body.experience-ready main {
+  padding-bottom: calc(48px + var(--dashboard-footer-space));
+}
+
+body.experience-ready .site-footer {
+  position: fixed !important;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  margin: 0 !important;
+  padding-bottom: max(1px, env(safe-area-inset-bottom));
+}
+
+@media (max-width: 1080px) {
+  :root { --dashboard-footer-space: 174px; }
+}
+
+@media (max-width: 680px) {
+  :root { --dashboard-footer-space: 334px; }
+}
+
 @media (max-width: 680px) {
   #tab-research .fm-layout {
     height: min(72vh, 620px);
