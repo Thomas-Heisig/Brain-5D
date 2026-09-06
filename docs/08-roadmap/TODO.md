@@ -2,158 +2,127 @@
 
 **Canonical TODO for `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-05
+**Updated:** 2026-09-06
 
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 773 tests collected on the current main tree.
-- [x] Verified repair-suite result: 733 passed, 2 skipped, 0 failed.
-- [x] Latest completed GitHub Continuous Integration run on the repaired main baseline finished successfully.
-- [x] Python 3.11, 3.12 and 3.13 CI matrix passes.
+- [x] 773 tests are collected on the verified 2026-09-06 baseline.
+- [x] Python 3.11, 3.12 and 3.13 full and slow suites pass.
 - [x] Black, Ruff, Pylint and Pre-Commit pass.
 - [x] Mypy and Pyright pass.
-- [x] Scientific Integrity Gate remains a required release check and passes on the repaired baseline.
-- [x] Security checks remain required and pass on the repaired baseline.
-- [x] Fast-suite coverage baseline is 72%.
+- [x] Scientific Integrity Gate passes.
+- [x] Security checks pass.
+- [x] Wheel build/install and Docker build/runtime verification pass.
+- [x] No open pull requests remained at the verification point.
+- [x] All non-main work found at the verification point was already merged into `main`.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] `Network` removed from primary frontend navigation.
 - [x] Release/Gate moved to a footer action.
-- [x] `Embodiment` simplified to the technical sensor/device/actuator/body-boundary surface.
+- [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface.
 - [x] Dedicated read-only `Wesen` workspace added.
-- [x] `Wesen` morphology derived dynamically from observed embodiment connections.
-- [x] Sensor and actuator branches appear from real connection inventory; missing capabilities remain explicit placeholders.
-- [x] Icon-first endpoint rendering, semantic device symbols and guaranteed icon-dock access implemented.
-- [x] Anatomy v3 adds a body-like machine-native scaffold with sensory head zone, central SNN core, torso interoception, feedback/spine path and actuator limb regions.
-- [x] Anatomy v3 is the sole owner of body positions; organism v2 no longer overrides anatomical placement.
-- [x] Empirical overlay reads `/api/embodiment/metrics`, `/api/embodiment/history`, `/api/embodiment/pipeline`, `/api/live/io-flow` and `/api/live/population` read-only.
-- [x] Empirical display can expose available active fraction, spike count, input/output flow, quality, sensory integrity, resource pressure and continuity risk.
-- [x] Missing empirical values remain explicit `—`/unknown; no fabricated constants are introduced.
-- [x] External environment satellites represent real reported external sources/services where available.
-- [x] Machine-native interoception represented from available CPU/RAM/temperature/fan/storage/runtime telemetry.
-- [x] Adaptive visual states cover resource/thermal pressure and reported sensor/actuator/network degradation, recovery and unknown telemetry.
-- [x] Node inspection, pointer-centered zoom, pan, reset, focus fading and event filtering implemented.
-- [x] Recurrence trend and delayed same-morphology self-model implemented where telemetry exists.
-- [x] Delayed self-model uses a bounded frame ring buffer and measured loopback latency when available.
-- [x] Browser-local morphology snapshots and timeline scrubber implemented for operator time-travel inspection.
-- [x] Causal-path emphasis can surface observed event/decision/action/receipt IDs without inventing missing identifiers.
-- [x] Central neutral terminology constants added for SNN core, endpoints, interoception, environment and feedback.
-- [x] `Wesen` remains read-only: no learning execution, language output, actuator writes or `/api/control` calls.
-- [x] Real-body host telemetry/device discovery integrated without fabricated fallback values.
-- [x] Learning Preparation Studio foundation and AI proposal-only boundary implemented.
-- [x] Structural proposal → approval → mutation → journal → undo/recovery chain implemented and tested.
-- [x] Deterministic persistence/restore infrastructure implemented and tested.
-- [x] Research Experiment Runner separates execution protocol from automatic/manual experiment IDs.
-- [x] Science-suite impulse responses publish observable propagation and complete DATA/configuration provenance.
-- [x] Experiment Runner exposes protocol-specific defaults, seed ranges and effective tick budgets in the persisted workflow.
-- [x] Running experiments expose progress state in the Runner and a clearly labelled test-activity state in the footer.
-- [x] `science_all_v1` executes all registered Science-Suite runner groups with grouped conditions in one DATA/Manifest run.
-- [x] Network impulse DATA persists observed spike sequences and cross-seed reproducibility metrics without changing historical experiments.
-- [x] Network impulse observability now includes executed ticks, all published spike IDs, activated neurons, delivered synaptic events, synaptic-activity ticks and total synapses.
-- [x] Recurrence impulse topology contains a true return path to the source neuron.
-- [x] Direct runtime validation confirmed nonzero neuron and synaptic activity in feed-forward and recurrent conditions.
-- [x] Historical `EXP-GEN-0009` to `EXP-GEN-0012` remain unchanged as traceable zero-observation artifacts from the older probe contract.
-- [x] EXP-GEN-0021 follow-up RQs/Hs are promoted into the canonical registries with executable protocol mappings and frozen preregistrations.
-- [x] Research DATA v2 preserves full raw runs as compressed immutable artifacts while providing bounded `runs.json` and `analysis/ai_packet.json` projections for review and small/local AI models.
+- [x] `Wesen` morphology derives dynamically from observed embodiment connections.
+- [x] Empirical overlays use backend observations and preserve unknown values.
+- [x] Neural Symbiosis added as an embodiment-only, read-only multi-network interface.
+- [x] Open-set `NetworkAreaAdapter` contract added for arbitrary peripheral network implementations.
+- [x] Built-in descriptors cover CNN, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoder, peripheral SNN, multimodal, neuro-symbolic and custom areas.
+- [x] Virtual logic/knowledge/database/memory areas are representable without being folded into canonical SNN state.
+- [x] Camera, microphone, web/API, database, logic, memory, audio, display, printer and robotics pipeline templates are represented.
+- [x] Gateway plasticity remains disabled by default.
+- [x] Candidate pair-STDP, homeostatic scaling, structural formation/pruning and reward-modulated gate math is implemented without hidden core mutation.
+- [x] Gateway RNG sampling is intentionally left to an explicit experiment runner.
+- [x] Pipeline reachability is explicitly not treated as evidence of learned use.
+- [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
 
-## P0 — engineering verification after current frontend/runtime integration
+## P0 — repository and frontend verification
 
-- [x] Require the latest `main` CI run to finish green across the complete job matrix.
-- [x] Fix only verified current-tree CI failures; no typing/scientific-integrity checks were masked.
-- [x] Documentation consistency updated to the 773-test current collection.
-- [ ] Verify `/wesen-adaptive.css`, `/wesen-organism.css` and `/wesen-anatomy-v3.css` are served in integrated runtime and dashboard-only modes on a live host.
-- [ ] Verify anatomy v3 rendering in at least one live-host session with real connection inventory and populated empirical endpoints.
-- [ ] Add a browser/E2E check for pointer-centered camera pan/zoom, icon-dock navigation, anatomy placement and timeline scrubbing.
+- [ ] Verify Neural Symbiosis CSS/JS is served in integrated runtime and dashboard-only modes on a live host.
+- [ ] Verify `Wesen` anatomy + Neural Symbiosis rendering with a real connection inventory.
+- [ ] Add browser/E2E checks for pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and Neural Symbiosis pipeline reachability.
+- [ ] Keep automatic deletion of merged branches enabled/maintained when repository settings/tooling permit.
 
-## P0 — scientific evidence closure
-
-### Productive learning
-
-- [x] Freeze a canonical productive-learning protocol and configuration.
-- [x] Bind every run to code/config/prompt/data digests.
-- [x] Enforce train/validation/holdout partition separation in the final protocol.
-- [x] Add matched learning-off and sham/replay controls.
-- [x] Persist pre/post behavioral probes together with weight/reward changes.
-- [x] Execute independent multi-seed repeats in clean processes.
-- [x] Promote only valid runs from `DATA` to `EVID` through the evidence gate.
-- [x] Human-review the resulting claim status: supported, rejected or inconclusive.
-
-### Network impulse observability / recurrence
+## P0 — propagation and recurrence evidence
 
 - [x] Measure complete published spike sequences instead of only output spikes.
 - [x] Persist tick, neuron, synapse and recurrence metrics in new DATA.
-- [x] Add a direct verification script that fails if ticks, spikes or synaptic delivery are absent.
+- [x] Add direct verification that fails when ticks, spikes or synaptic delivery are absent.
 - [x] Keep historical zero-observation experiments immutable.
-- [x] Register the recurrence parameter-map and recurrence-scaling protocols with frozen preregistrations and independent-seed requirements.
-- [ ] Execute the new registered multi-seed validation experiment and evaluate it independently rather than retroactively editing `EXP-GEN-0009` to `EXP-GEN-0012`.
-- [ ] Promote a recurrence/propagation claim only if the new controlled experiment and review support it.
+- [ ] Execute the registered multi-seed recurrence/propagation validation experiment.
+- [ ] Independently review the result before any EVID promotion.
 
-### Closed-loop embodiment
+## P0 — closed-loop embodiment evidence
 
-- [x] Freeze a deterministic embodiment protocol for Sensor → SNN → Actuator → Outcome → Reward.
-- [x] Add replay/open-loop control condition.
-- [x] Store action acceptance and observed effect as separate receipts.
-- [x] Add sensor-loss/degraded-quality condition.
-- [x] Add actuator failure/no-effect condition.
-- [x] Repeat across seeds and compare adaptation/stability metrics.
-- [x] Register a regulation-on/off recovery protocol with frozen perturbation schedule and preregistration.
-- [ ] Promote validated results to evidence only after protocol checks.
-- [ ] Expose receipt-linked action/outcome chains to `Wesen` only when a backend endpoint can verify them.
+- [x] Freeze deterministic Sensor → SNN → Actuator → Outcome → Reward protocols.
+- [x] Retain replay/open-loop, sensor-loss and actuator-no-effect controls.
+- [x] Store action acceptance and observed effect separately.
+- [ ] Promote results to EVID only after protocol and review checks.
+- [ ] Expose receipt-linked action/outcome chains to `Wesen` only when backend verification exists.
+
+## P1 — Neural Symbiosis experiment runner
+
+- [ ] Add an experiment-only adapter that instantiates one declared peripheral network/virtual area.
+- [ ] Record adapter class, framework, model/version, artifact hash and endpoint identity.
+- [ ] Persist gateway state separately from canonical SNN synapse state.
+- [ ] Add frozen-gateway control.
+- [ ] Add random-gateway control.
+- [ ] Add timing-shuffle control.
+- [ ] Add activity-matched but information-destroyed control.
+- [ ] Add noisy-area suppression study.
+- [ ] Add sensor-lesion compensation study.
+- [ ] Compare signed, absolute, squared and local homeostatic error/reward formulations.
+- [ ] Require independent seeds and preregistration before enabling gateway plasticity.
+- [ ] Keep production peripheral activation disabled until experiment controls are validated.
 
 ## P1 — runtime/time semantics and performance
 
 - [ ] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
 - [ ] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
-- [x] Add an executable preregistered subsystem-performance profiler covering construction, core stepping and digest cost.
-- [ ] Extend profiling to learning, homeostasis, structural, embodiment, dashboard telemetry and storage as distinct measured phases.
+- [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis, dashboard telemetry and storage as distinct measured phases.
 - [ ] Profile increasing neuron/synapse counts before optimizing kernels.
-- [x] Run the two opt-in large-storage tests in a scheduled/explicit large-test job and archive the results.
 
 ## P1 — 5D causal/ablation program
 
-- [x] Define a preregistered topology-matched 5D-vs-control experiment.
+- [x] Define preregistered topology-matched 5D-vs-control experiments.
 - [ ] Implement dimension-shuffled control.
-- [x] Implement reduced-dimensional matched embeddings for the initial 1D/2D/3D/5D comparison.
-- [x] Add topology-matched control for neuron count, synapse count, degree pattern, weight pattern and stimulus schedule in the initial protocol.
+- [x] Implement reduced-dimensional matched embeddings for initial comparisons.
 - [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost at larger scale.
-- [ ] Keep dimensionality claims open until the ablation evidence exists.
+- [ ] Keep dimensionality claims open until ablation evidence exists.
 
 ## P1 — evidence and provenance hardening
 
-- [x] Add automated documentation link checking to CI.
-- [x] Add current-doc consistency checks for fixed version/test claims.
-- [x] Expand evidence-engine negative tests for incomplete/mismatched provenance.
-- [x] Ensure quantitative AI-facing reports reject model-owned statistics unless statistics provenance exists.
-- [x] Add frozen preregistration validation to operational EXP-GEN-0021 follow-up protocols, including minimum independent-seed requirements.
-- [x] Add compact AI-packet provenance and SHA-verified raw-run indexing without deleting raw observations.
-- [ ] Add a stable action/outcome provenance view only when backed by a verified endpoint.
-- [ ] Persist morphology/body-boundary change records when they are part of a scientific protocol instead of relying on browser-local UI history.
-- [ ] Continue distinguishing UI log, DATA artifact, EVID artifact and interpretation in every workflow.
+- [x] Automated documentation link checking in CI.
+- [x] Current-doc consistency checks for fixed version/test claims.
+- [x] Evidence-engine negative tests for incomplete/mismatched provenance.
+- [x] Compact AI-packet provenance and SHA-verified raw-run indexing.
+- [ ] Add stable action/outcome provenance views only when backed by verified endpoints.
+- [ ] Persist morphology/body-boundary change records when part of a scientific protocol.
+- [ ] Persist Neural Symbiosis adapter/gateway provenance whenever those components become experimental treatments.
+- [ ] Continue distinguishing UI state, DATA, EVID and interpretation in every workflow.
 
-## P1 — test coverage on high-risk surfaces
+## P1 — high-risk test coverage
 
-- [ ] Increase coverage of dashboard server routing/error paths.
+- [ ] Increase dashboard server routing/error-path coverage.
 - [ ] Increase evidence-engine rejection/edge-path coverage.
-- [ ] Increase operator bridge and control boundary coverage.
+- [ ] Increase operator bridge and control-boundary coverage.
 - [ ] Increase real-body platform-specific failure-path coverage.
 - [ ] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
-- [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance in `Wesen`.
+- [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance.
+- [ ] Add negative tests proving peripheral adapters cannot silently mutate canonical core/research state.
 
 ## P2 — self-regulation and continuity experiments
 
 - [ ] Define non-anthropomorphic regulatory metrics for resource/continuity pressure.
-- [ ] Test missing sensor and uncertain sensor conditions.
-- [x] Register a deterministic recovery experiment comparing regulation enabled vs disabled under matched pressure conditions.
-- [ ] Execute and review the registered regulation recovery experiment across the required seed set.
+- [ ] Test missing and uncertain sensor conditions.
+- [x] Register deterministic recovery comparison with regulation enabled/disabled.
+- [ ] Execute and review the recovery experiment across the required seed set.
 - [ ] Test whether body-boundary changes predictably alter behavior under matched conditions.
-- [ ] Avoid emotion labels as primary measured variables; keep them, if used, as interpretation layers.
 
 ## P2 — memory/world model
 
-- [ ] Specify memory state and persistence contracts.
+- [ ] Specify memory-state and persistence contracts.
 - [ ] Define memory-on / memory-off controls.
 - [ ] Add temporal prediction/recall metrics.
 - [ ] Separate observation history, learned internal state and external knowledge.
@@ -161,33 +130,29 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P2 — multimodal and knowledge grounding
 
-- [ ] Define typed SignalFrames for camera/audio/document/network inputs.
+- [ ] Define typed SignalFrames for camera/audio/document/network/knowledge inputs.
 - [ ] Store source, timestamp, digest and trust/provenance metadata.
 - [ ] Provide frozen/replayable snapshots for scientific runs.
+- [ ] Route peripheral models through Neural Symbiosis adapters rather than hidden direct core writes.
 - [ ] Compare raw sensory learning against externally structured knowledge conditions.
-- [ ] Keep LLM transformation outside the causal SNN state unless explicitly registered as a treatment.
+- [ ] Keep LLM transformation outside causal SNN state unless explicitly registered as a treatment.
 
 ## P2 — AI treatment experiments
 
 - [ ] Standardize identical research packets for multi-model comparisons.
 - [ ] Add no-AI, frozen replay, sham/random and model-family conditions.
-- [ ] Measure proposal/topology fingerprints without allowing direct hidden writes.
+- [ ] Measure proposal/topology fingerprints without allowing hidden writes.
 - [ ] Keep AI self-confidence separate from empirical performance metrics.
 - [ ] Require treatment identity/provenance in every AI-influenced scientific run.
 
 ## Repository/documentation hygiene
 
-- [x] Consolidate canonical README, architecture, dashboard, roadmap and research roadmap.
-- [x] Add documentation source-of-truth index.
-- [x] Add canonical `WESEN_ADAPTIVE_BODY.md` architecture contract.
-- [x] Add dated changelog record for the 2026-09-05 Wesen redesign.
-- [x] Remove superseded unreferenced organism prototype from `main` after review.
-- [x] Classify versioned Alpha/Sprint/Release documents as historical rather than current state.
-- [x] Identify accidental package snapshot and temporary JSON artifacts for removal.
-- [x] Confirm there are no open pull requests requiring merge at the current verification point.
-- [x] Confirm `tmp-do-not-use` is zero commits ahead and therefore contains nothing to merge.
-- [ ] Delete obsolete `tmp-do-not-use` when branch-delete capability/permissions are available.
-- [ ] Enable/maintain automatic deletion of merged PR branches when repository settings permit.
+- [x] Canonical README, architecture, documentation index and roadmap updated after Neural Symbiosis merge.
+- [x] Historical dated experiment/changelog artifacts left unchanged.
+- [x] No open PRs remained at repository-cleanup verification point.
+- [x] No unmerged feature content remained outside `main`.
+- [ ] Delete already-merged feature refs when a branch-delete action is available in repository tooling.
+- [ ] Prefer one current test-count snapshot in canonical docs and avoid propagating fixed numbers into historical documents.
 
 ## Definition of done for a scientific milestone
 
@@ -196,9 +161,9 @@ A milestone is not complete because a UI card is green. It is complete only when
 - [ ] protocol is frozen/preregistered;
 - [ ] implementation and controls are tested;
 - [ ] runs are reproducible from manifests;
-- [ ] data partitions and AI treatments are explicit;
+- [ ] data partitions and AI/peripheral-network treatments are explicit;
 - [ ] runtime errors/provenance checks pass;
 - [ ] evidence artifacts are accepted by the evidence gate;
 - [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
 - [ ] documentation records what was actually shown, not what was expected;
-- [ ] dashboard visualization is not substituted for experimental evidence.
+- [ ] dashboard visualization or pipeline reachability is not substituted for experimental evidence.
