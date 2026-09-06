@@ -101,7 +101,7 @@ def test_wesen_has_body_like_machine_anatomy() -> None:
         '"torso"',
     ):
         assert token in anatomy or token in styles
-    assert "Sinneszone" not in anatomy  # visual semantics, not biological labeling
+    assert "Sinneszone" not in anatomy
     assert "pointer-events: none" in styles
 
 
@@ -174,7 +174,7 @@ def test_primary_frontend_uses_three_areas_and_keeps_utility_routes() -> None:
     assert 'data-primary-area="dashboard"' in architecture
     assert 'data-primary-area="science"' in architecture
     assert 'data-primary-area="wesen"' in architecture
-    assert 'for (const name of ["network", "gate"] )' in console
+    assert 'for (const name of ["network", "gate"])' in console
     assert 'button.classList.add("wesen-utility-hidden")' in console
     assert "dataset.footerRelease" in console
     assert "wesen-release-button" in console
