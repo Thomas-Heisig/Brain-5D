@@ -540,12 +540,11 @@ export class ExperimentWorkflowPanel {
     if (!questionId || !this.elements.protocol) return;
     const operational = this.protocols.find(item => item.research_question === questionId && item.preregistration);
     if (operational) {
-      const currentSeeds = this.elements.seeds?.value;
-      const currentTicks = this.elements.ticks?.value;
+      // A newly selected RQ/protocol must load its frozen defaults. Stale values
+      // from the previously selected experiment must not silently survive. Users
+      // can still edit seeds/ticks explicitly after this contract has been loaded.
       this.elements.protocol.value = operational.id;
       this._applyProtocol();
-      if (this.elements.seeds && currentSeeds) this.elements.seeds.value = currentSeeds;
-      if (this.elements.ticks && currentTicks) this.elements.ticks.value = currentTicks;
       this._renderContract();
       return;
     }
@@ -554,7 +553,20 @@ export class ExperimentWorkflowPanel {
       // suite as an executable diagnostic rather than aborting, while preserving
       // the selected RQ/H and retaining MISMATCH evidence semantics server-side.
       this.elements.protocol.value = "science_all_v1";
-      this.activePreset = null;
+      this.activePreset = {
+        title: "Long-term stability diagnostic suite",
+        conditions: "Diagnostic bundle: PING/Recurrence, Temporal, STDP/Learning, TIME, 5D and Regulation. Not primary long-term stability evidence.",
+        ticks: "1000",
+        seeds: "42,43,44",
+        profiles: {
+          standard: "Seeds 42,43,44; complete diagnostic suite; RQ-SNN-001 remains evidence-blocked until a sustained-activity protocol exists.",
+        },
+      };
+      if (this.elements.title) this.elements.title.value = this.activePreset.title;
+      if (this.elements.ticks) this.elements.ticks.value = this.activePreset.ticks;
+      if (this.elements.seeds) this.elements.seeds.value = this.activePreset.seeds;
+      if (this.elements.conditionProfile) this.elements.conditionProfile.value = "standard";
+      this._applyConditionProfile(this.activePreset);
       this._renderContract();
     }
   }
