@@ -1,47 +1,84 @@
 # Brain-5D
 
-**Experimental sparse 5D spiking-neural research framework with deterministic persistence, controlled plasticity, embodiment and scientific provenance.**
+**Experimental sparse 5D spiking-neural research framework with deterministic persistence, controlled plasticity, embodiment, multi-network peripheral integration and scientific provenance.**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/version-0.5.0a7-orange.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-Brain-5D is a research framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network (SNN). The SNN remains the primary adaptive system. Language models and research assistants are bounded interpretation/proposal components and do not acquire implicit authority over neural, reward, memory or evidence state.
+Brain-5D is a research framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network (SNN). The SNN remains the primary adaptive system. Language models, research assistants and peripheral neural networks are bounded components and do not acquire implicit authority over canonical neural state, reward, memory, experiment DATA or accepted EVID.
 
-> **Scientific status:** Brain-5D is an experimental engineering and research platform. Implementation, passing tests, dashboards and generated reports are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
+> **Scientific status:** Brain-5D is an experimental engineering and research platform. Implementation, passing tests, dashboards, reachable devices, generated reports or available AI/network adapters are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
 
-## Current main baseline
+## Current `main` baseline
 
-As of **2026-09-05**, `main` is the canonical development line and the latest completed full GitHub CI run is green.
+Verified on **2026-09-06** after the Neural Symbiosis merge and repository cleanup pass:
 
 - package version: `0.5.0a7`
-- current collection: **735 tests**
-- verified full-suite result during the repair cycle: **733 passed, 2 skipped, 0 failed**
-- latest complete GitHub CI matrix: **success**
+- current pytest collection: **773 tests**
+- latest completed full GitHub CI on `main`: **success** (run #583)
 - Python verification: **3.11, 3.12 and 3.13**
-- Mypy and Pyright: **green**
+- full and slow suites: **green**
 - Black, Ruff, Pylint and Pre-Commit: **green**
+- Mypy and Pyright: **green**
 - Scientific Integrity Gate: **green**
 - Security checks including Bandit and pip-audit: **green**
-- fast-suite coverage baseline: **72%**
-- current dashboard navigation: **Overview, Control, Research, Settings, Wesen, Embodiment**
-- `Network` is no longer a primary user-facing workspace
-- Release/Gate is opened from the footer rather than the primary navigation
-- no open pull requests were present at the verification point
-- the remaining `tmp-do-not-use` branch is obsolete, contains no commits ahead of `main`, and must not be used as a development base
+- wheel build/install and Docker build/runtime verification: **green**
+- no open pull requests at the verification point
+- all non-main development work found at the verification point was already merged into `main`; no unmerged branch content remained
 
 The dashboard uses explicit unknown-state rendering. Missing telemetry is never replaced with plausible-looking constants.
 
+## Implemented system layers
+
+| Layer | Current capability |
+| --- | --- |
+| SNN core | Sparse 5D coordinates, Izhikevich RS neurons, delayed event propagation, deterministic RNG state |
+| Learning | STDP, signed eligibility traces, delayed reward / three-factor learning, productive-learning protocols |
+| Homeostasis | Firing-rate, threshold and energy regulation with explicit telemetry |
+| Structural plasticity | Proposal → approval/rejection → bounded mutation → journal → undo/recovery |
+| Persistence | `.b5d` snapshots, delta journal, structural journal, checkpoints, deterministic restore/continue |
+| Embodiment | Typed sensors/actuators, authorization gates, audit trail, host interoception, device discovery, deterministic environments |
+| Neural Symbiosis | Open-set peripheral neural/virtual areas, disabled pipeline templates and inert plastic-gateway candidate math at the embodiment boundary |
+| Experience loop | Sensor → encoding → SNN → action → observed outcome → reward path with explicit authorization |
+| Research | Registries, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
+| Experiment observability | Tick, spike, neuron, synapse, latency, recurrence and digest measurements persisted per run |
+| Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |
+| AI boundary | Research AI / Language Organ / Cognitive Advisor contracts remain read-only or proposal-only unless explicitly registered as a treatment |
+
+## Neural Symbiosis — embodied multi-network interface
+
+`Neural Symbiosis` is the international-facing name for the peripheral multi-network layer inside Embodiment/Wesen. It allows dedicated neural or virtual processing stages to be placed between physical/digital endpoints and the 5D-SNN without redefining the scientific core.
+
+Examples:
+
+```text
+Camera → CNN / Vision Transformer → afferent gateway → 5D-SNN
+Microphone → Audio/Speech Transformer → gateway → 5D-SNN
+Database → Knowledge adapter / GNN → gateway → 5D-SNN
+Logic engine → neuro-symbolic projector → gateway → 5D-SNN
+5D-SNN → gateway → Speech/Language network → audio output
+5D-SNN → gateway → GRU / control MLP → robotics adapter
+```
+
+The adapter contract is deliberately open-set and framework-neutral. CNNs, Transformers, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoders, peripheral SNNs, multimodal/neuro-symbolic networks and future custom architectures can be represented through `NetworkAreaAdapter` without importing their implementation framework into the Brain-5D core.
+
+Virtual cognitive systems such as logic engines, databases, knowledge graphs, retrieval systems or external memory stores can participate through explicit virtual-area adapters.
+
+**Scientific boundary:** all gateway learning is disabled by default. Endpoint reachability, area registration or a visible pipeline is not evidence that the SNN learned to use that area. Synaptic/structural/efferent gateway plasticity must first be enabled only inside an explicit preregistered experiment with its own RNG, model/version hashes, controls, DATA and EVID path.
+
+See [`docs/02-architecture/NEURAL_SYMBIOSIS.md`](docs/02-architecture/NEURAL_SYMBIOSIS.md).
+
 ## Runtime and experiment observability
 
-The September 5 repair of the generated experiment path established an important distinction between **runtime execution** and **observable network activity**.
+The generated experiment path distinguishes **runtime execution** from **observable network activity**.
 
-Historical `EXP-GEN-0009` through `EXP-GEN-0012` completed without runtime exceptions but recorded zero visible spikes/activated neurons because the impulse probe observed only the output-spike projection. Those historical artifacts remain unchanged for scientific traceability.
+Historical `EXP-GEN-0009` through `EXP-GEN-0012` completed without runtime exceptions but recorded zero visible spikes/activated neurons because the older impulse probe observed only the output-spike projection. Those historical artifacts remain unchanged for scientific traceability.
 
-The current probe now records the complete observed network response:
+The current probe records the complete observed network response:
 
 - executed ticks;
-- all published neuron spike IDs and the spike sequence;
+- all published neuron spike IDs and spike sequence;
 - activated-neuron count;
 - total spike count and peak spike rate;
 - delivered synaptic events;
@@ -52,55 +89,36 @@ The current probe now records the complete observed network response:
 - recurrence/return events;
 - state digest before and after the probe.
 
-The recurrence topology used by the impulse experiment now contains an actual return path to the source neuron. A direct runtime validation demonstrated active ticks, neuron spikes and synaptic delivery in both feed-forward and recurrent conditions; recurrence increased the observed spike and synaptic-event counts in the validation run.
+New Science Runner experiments persist these observables in `research/experiments/<EXP-ID>/DATA/` together with workflow, manifest, configuration/provenance and report artifacts. Historical experiments are never rewritten to match newer instrumentation.
 
-New Science Runner experiments persist these observables in `research/experiments/<EXP-ID>/DATA/runs.json` together with workflow, manifest, configuration/provenance and report artifacts. Historical experiments are never rewritten to make them match newer instrumentation.
-
-## Implemented system layers
-
-| Layer | Current capability |
-| --- | --- |
-| SNN core | Sparse 5D coordinates, Izhikevich RS neurons, delayed event propagation, deterministic RNG state |
-| Learning | STDP, signed eligibility traces, delayed reward / three-factor learning, productive learning experiments |
-| Homeostasis | Firing-rate, threshold and energy regulation with explicit telemetry |
-| Structural plasticity | Proposal → approval/rejection → bounded mutation → journal → undo/recovery |
-| Persistence | `.b5d` snapshots, delta journal, structural journal, checkpoints, deterministic restore/continue |
-| Embodiment | Typed sensors/actuators, authorization gates, audit trail, host interoception, device discovery, deterministic environments |
-| Experience loop | Sensor → encoding → SNN → action → observed outcome → reward path with explicit authorization |
-| Research | Registries, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
-| Experiment observability | Tick, spike, neuron, synapse, latency, recurrence and digest measurements persisted per run |
-| Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |
-| AI boundary | Research AI / Language Organ / Cognitive Advisor contracts remain read-only or proposal-only unless explicitly registered as a treatment |
+Large raw run series are preserved as immutable/compressed artifacts while bounded projections such as `runs.json` and `analysis/ai_packet.json` can be used for dashboards and small/local AI review. Compact projections never replace the raw scientific record.
 
 ## Wesen and Embodiment
 
 Brain-5D intentionally separates the technical body interface from the live body visualization:
 
-- **Embodiment** configures/observes real sensors, devices, actuators, permissions and body boundaries.
+- **Embodiment** configures/observes sensors, devices, actuators, permissions, connection quality and body boundaries.
 - **Wesen** is a read-only live projection of the observed machine body.
+- **Neural Symbiosis** is shown inside `Wesen` as a read-only view of possible peripheral network/virtual pipelines and endpoint reachability.
 
-The `Wesen` page builds its morphology from currently published connections rather than from a fixed human-like anatomy. Sensor and actuator branches appear from observed connection data; unsupported or missing endpoints stay explicitly unavailable. Host CPU, memory, temperature, fan, disk and timing signals are treated as machine-native interoception where available.
+The `Wesen` page builds its morphology from published connections rather than from a fixed human-like anatomy. Sensor and actuator branches appear from observed connection data; unsupported or missing endpoints stay explicitly unavailable. Host CPU, memory, temperature, fan, disk and timing signals are treated as machine-native interoception where available.
 
-Adaptive organism v2 provides semantic device icons, tooltips, camera pan/zoom, timeline, satellites and delayed self-model. Anatomy v3 adds a **body-like but machine-native scaffold**: a sensory head zone, central SNN core, torso interoception, a feedback/spine path and actuator branches that extend as arm-/leg-like output regions. The scaffold is presentation-only and does not imply biological homology.
+Adaptive organism/anatomy layers provide semantic device icons, tooltips, camera pan/zoom, timeline, delayed self-model, body-like machine-native scaffold, empirical overlays and causal-tracer presentation. These are operator/research views only and do **not** establish consciousness or causality.
 
-The body visualization is icon-first. Device labels and metric strings are removed from the crowded SVG body and replaced by semantic symbols for camera, microphone, speaker, display, GPU, network, USB, storage, printer, robotics and related endpoint classes. Full labels/values remain available through SVG tooltips and the inspector. A scrollable icon dock below the body provides guaranteed mouse/keyboard access to every discovered endpoint even when the body is dense.
+See:
 
-An empirical overlay consumes additional read-only backend sources when available: `/api/embodiment/metrics`, `/api/embodiment/history`, `/api/embodiment/pipeline`, `/api/live/io-flow` and `/api/live/population`. It can display measured active fraction, spikes, input/output flow, quality, sensory integrity, resource pressure, continuity risk and pipeline availability. Missing values remain `—` and are never replaced by invented constants.
-
-The delayed self-model uses a bounded frame ring buffer and selects the earlier body frame matching reported loopback latency where available. Browser-local morphology snapshots can be inspected with a timeline scrubber. These snapshots are operator history only and are not scientific DATA/EVID.
-
-The UI can also surface existing event/decision/action/receipt identifiers as causal tracer labels. It never manufactures missing IDs, and visual path highlighting remains distinct from experimentally established causality.
-
-These visuals do **not** establish consciousness or causality. Recurrence and loopback are technical observables. Experimental causal claims still require controlled intervention/outcome evidence.
-
-See [`docs/02-architecture/WESEN_ADAPTIVE_BODY.md`](docs/02-architecture/WESEN_ADAPTIVE_BODY.md).
+- [`docs/02-architecture/WESEN_ADAPTIVE_BODY.md`](docs/02-architecture/WESEN_ADAPTIVE_BODY.md)
+- [`docs/02-architecture/NEURAL_SYMBIOSIS.md`](docs/02-architecture/NEURAL_SYMBIOSIS.md)
+- [`docs/02-architecture/EMBODIMENT_REAL_BODY.md`](docs/02-architecture/EMBODIMENT_REAL_BODY.md)
 
 ## What remains scientifically open
 
-The next scientific gains should come from evidence closure rather than feature volume. Priority areas remain:
+The next gains should come from evidence closure rather than feature volume:
 
+- post-repair multi-seed propagation/recurrence validation;
 - productive-learning evidence and independent replication;
 - closed-loop embodiment evidence and EVID promotion;
+- experiment-only Neural Symbiosis gateway studies with frozen/random/shuffled controls;
 - time-scale/runtime calibration;
 - 5D ablations;
 - self-regulation and sensor-loss studies;
@@ -164,23 +182,24 @@ python -m ruff check src tests scripts
 python -m pre_commit run --all-files
 ```
 
-Large storage stress tests are intentionally opt-in. Scientific integrity, typing, lint, security and packaging checks are enforced through CI/release workflows.
+Large storage stress tests are intentionally opt-in/scheduled. Scientific integrity, typing, lint, security, packaging and Docker checks are enforced through CI/release workflows.
 
 ## Architecture at a glance
 
 ```text
-External environment
+External / simulated / virtual environment
         |
         v
-Sensors / network / camera / audio / device inputs
+Sensors / network / camera / audio / database / logic / devices
         |
         v
-Embodiment adapters + authorization + quality
+Embodiment adapters + authorization + provenance
         |
-        v
-Signal / Experience boundary
-        |
-        v
+        +---- optional dedicated neural/virtual areas
+        |        CNN / Transformer / RNN / GNN / memory / logic / custom
+        |                       |
+        |                 explicit gateway
+        v                       v
 +--------------------------------------------------+
 |           Sparse 5D Spiking Neural Core          |
 | dynamics | STDP/eligibility | homeostasis       |
@@ -191,17 +210,18 @@ Signal / Experience boundary
  Structural self-organization   Action proposals
           |                       |
           v                       v
- Approval / safety gates       Actuator hub
-          |                       |
-          +-----------+-----------+
-                      |
-                observed outcome
-                      |
-                 feedback/reward
+ Approval / safety gates       explicit gateway
+                                  |
+                           optional decoder/control area
+                                  |
+                              Actuator hub
+                                  |
+                           observed outcome
+                                  |
+                             feedback/reward
 
-Host interoception feeds the body state.
-Persistence + Research provenance surround the loop.
-Wesen visualizes published state read-only.
+Persistence + research provenance surround the loop.
+Wesen visualizes published state and Neural Symbiosis reachability read-only.
 ```
 
 Detailed architecture: [`docs/02-architecture/ARCHITECTURE.md`](docs/02-architecture/ARCHITECTURE.md).
@@ -214,7 +234,7 @@ src/                     runtime implementation
   learning/              STDP, eligibility, reward learning, preparation contracts
   homeostasis/           regulatory mechanisms
   self_organization/     proposal, approval, structural plasticity, morphology
-  embodiment/            sensors, actuators, authorization, interoception
+  embodiment/            sensors, actuators, authorization, interoception, Neural Symbiosis contracts
   experience/            closed-loop experience composition
   storage/               snapshots, journals, checkpoint and recovery
   research/              experiment/evidence machinery
