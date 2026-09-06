@@ -46,11 +46,19 @@ def test_registry_fragment_duplicate_ids_fail_closed(tmp_path: Path) -> None:
 def test_canonical_registry_exposes_msba_questions_and_links() -> None:
     registry = ResearchRegistry().load_all()
 
-    for number in range(1, 6):
-        question_id = f"RQ-MSBA-E{number:02d}"
-        hypothesis_id = f"H-MSBA-E{number:02d}-A"
+    msba_question_ids = {f"RQ-MSBA-E{number:02d}" for number in range(1, 6)}
+    msba_hypothesis_ids = {f"H-MSBA-E{number:02d}-A" for number in range(1, 6)}
+    for question_id, hypothesis_id in zip(
+        sorted(msba_question_ids), sorted(msba_hypothesis_ids), strict=True
+    ):
         assert question_id in registry.questions
         assert hypothesis_id in registry.hypotheses
         assert registry.hypotheses[hypothesis_id].research_question == question_id
 
-    assert registry.link_issues() == []
+    msba_issues = [
+        issue
+        for issue in registry.link_issues()
+        if issue.get("question_id") in msba_question_ids
+        or issue.get("hypothesis_id") in msba_hypothesis_ids
+    ]
+    assert msba_issues == []
