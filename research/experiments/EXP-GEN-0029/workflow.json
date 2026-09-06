@@ -1,0 +1,26 @@
+{
+  "experiment_id": "EXP-GEN-0029",
+  "research_question": "RQ-SNN-002",
+  "hypothesis": "H-SNN-002-A",
+  "title": "Network impulse response",
+  "conditions": "Seeds 42,43,44; identical initial state per seed; impulse current 100.0; recurrence as controlled treatment.",
+  "ticks": 8,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "protocol": "science_suite_v1",
+  "resolved_runner": "run_ping",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 8,
+    "observed_min": 8,
+    "observed_max": 8
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}
