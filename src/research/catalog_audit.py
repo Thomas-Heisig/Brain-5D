@@ -36,7 +36,11 @@ class ResearchReference:
     path: str
 
     def to_dict(self) -> dict[str, str]:
-        return {"identifier": self.identifier, "kind": self.kind, "path": self.path}
+        return {
+            "identifier": self.identifier,
+            "kind": self.kind,
+            "path": self.path,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,7 +53,11 @@ class ResearchCatalogAudit:
 
     @property
     def clean(self) -> bool:
-        return not self.missing_questions and not self.missing_hypotheses and not self.link_issues
+        return (
+            not self.missing_questions
+            and not self.missing_hypotheses
+            and not self.link_issues
+        )
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -59,8 +67,12 @@ class ResearchCatalogAudit:
             "missing_questions": list(self.missing_questions),
             "missing_hypotheses": list(self.missing_hypotheses),
             "link_issues": list(self.link_issues),
-            "question_references": [item.to_dict() for item in self.question_references],
-            "hypothesis_references": [item.to_dict() for item in self.hypothesis_references],
+            "question_references": [
+                item.to_dict() for item in self.question_references
+            ],
+            "hypothesis_references": [
+                item.to_dict() for item in self.hypothesis_references
+            ],
         }
 
 
@@ -71,7 +83,9 @@ def audit_research_catalog(
     """Scan repository text and compare discovered identifiers with the registry."""
 
     root = repo_root.resolve()
-    active_registry = registry or ResearchRegistry(root / "research" / "registry").load_all()
+    active_registry = registry or ResearchRegistry(
+        root / "research" / "registry"
+    ).load_all()
     question_refs: list[ResearchReference] = []
     hypothesis_refs: list[ResearchReference] = []
     found_questions: set[str] = set()
@@ -98,7 +112,9 @@ def audit_research_catalog(
         question_references=tuple(question_refs),
         hypothesis_references=tuple(hypothesis_refs),
         missing_questions=tuple(sorted(found_questions - set(active_registry.questions))),
-        missing_hypotheses=tuple(sorted(found_hypotheses - set(active_registry.hypotheses))),
+        missing_hypotheses=tuple(
+            sorted(found_hypotheses - set(active_registry.hypotheses))
+        ),
         link_issues=tuple(active_registry.link_issues()),
     )
 
