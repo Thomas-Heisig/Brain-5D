@@ -1,0 +1,207 @@
+{
+  "run_count": 20,
+  "runs": [
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-no_input_control-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "bfb3206a7c2f3f692bb89a11c383728373f3498b2ce3157efa40041e5faa6065",
+      "size_bytes": 12773,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-tonic_drive-seed-101.json.gz",
+      "run_index": 1,
+      "seed": 101,
+      "sha256": "07c08c5448a08ac94b4270079d071fa5f0831469587afdebd5b0b4b74be5af36",
+      "size_bytes": 24790,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-no_input_control-seed-102.json.gz",
+      "run_index": 2,
+      "seed": 102,
+      "sha256": "cc103e62de8614128e1eb170224deddf94cd3abcb5515930dbad387baa3895bf",
+      "size_bytes": 12772,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-tonic_drive-seed-102.json.gz",
+      "run_index": 3,
+      "seed": 102,
+      "sha256": "48d636ebe6da7beb940871617d1ff6592c84c402304c1f6f3ff6fa70bdd57c54",
+      "size_bytes": 24786,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-no_input_control-seed-103.json.gz",
+      "run_index": 4,
+      "seed": 103,
+      "sha256": "85d33d5fbe562748e0c56834a7d3e2b758139b761c5c44cc863db122076d9d70",
+      "size_bytes": 12774,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-tonic_drive-seed-103.json.gz",
+      "run_index": 5,
+      "seed": 103,
+      "sha256": "d5cc76e41480ffa4aeefbff178671edfc651f91ac7472ecf57359b3bd15be007",
+      "size_bytes": 24789,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-no_input_control-seed-104.json.gz",
+      "run_index": 6,
+      "seed": 104,
+      "sha256": "903f9b8d3208536275fe1164dd9e9b0062efa5fc5d2e639685f0efeff72f4140",
+      "size_bytes": 12773,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-tonic_drive-seed-104.json.gz",
+      "run_index": 7,
+      "seed": 104,
+      "sha256": "ac7589ff738939ad025866dfc2627c20e789aed3d99293e788163401c6a4dc4d",
+      "size_bytes": 24788,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-no_input_control-seed-105.json.gz",
+      "run_index": 8,
+      "seed": 105,
+      "sha256": "3768dc1e8452e64406a29f1491d8c49da903f6522da5e9d6e3f3924abc0fe5e1",
+      "size_bytes": 12774,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-tonic_drive-seed-105.json.gz",
+      "run_index": 9,
+      "seed": 105,
+      "sha256": "4733a1b607b2972818ca7f82c4feacd80380490640d05c44c865c7fb3fd3d345",
+      "size_bytes": 24786,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0010-no_input_control-seed-106.json.gz",
+      "run_index": 10,
+      "seed": 106,
+      "sha256": "60df6eec920df3791a61585b0b133155a54d09cf592ef265f7732229824f0d91",
+      "size_bytes": 12772,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0011-tonic_drive-seed-106.json.gz",
+      "run_index": 11,
+      "seed": 106,
+      "sha256": "f99ed3c950cb7ce00c0a0b5e00a2977d7ac1557ad6b06d9b7dcbe5725edda710",
+      "size_bytes": 24789,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0012-no_input_control-seed-107.json.gz",
+      "run_index": 12,
+      "seed": 107,
+      "sha256": "85efd736d1a801c19c1261229b416faafda4549325771ddc0fc46bbf86ad8da2",
+      "size_bytes": 12771,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0013-tonic_drive-seed-107.json.gz",
+      "run_index": 13,
+      "seed": 107,
+      "sha256": "367b7f4df440a3e3fa9156b4fb94e8008014f621940b7f10f9e931e9de4d7bdd",
+      "size_bytes": 24789,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0014-no_input_control-seed-108.json.gz",
+      "run_index": 14,
+      "seed": 108,
+      "sha256": "a77e52de406021595162d5e020af6e81f36518f7043a2ab077382e3100e2c61f",
+      "size_bytes": 12775,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0015-tonic_drive-seed-108.json.gz",
+      "run_index": 15,
+      "seed": 108,
+      "sha256": "29afa894f3a473e10166341be94f47a5af3539dbb675b2a81a772b75a340c4af",
+      "size_bytes": 24787,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0016-no_input_control-seed-109.json.gz",
+      "run_index": 16,
+      "seed": 109,
+      "sha256": "2af07b5c35ec7e02b2905088d957ee6862bab7f1ee55cdbaa370766b3e0f95a3",
+      "size_bytes": 12776,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0017-tonic_drive-seed-109.json.gz",
+      "run_index": 17,
+      "seed": 109,
+      "sha256": "c23c9908299ef5415ab1e03821b645e24587c85c1b8a608fdbdb3b03ae0d8652",
+      "size_bytes": 24789,
+      "uncompressed_bytes": 2102897
+    },
+    {
+      "condition": "no_input_control",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0018-no_input_control-seed-110.json.gz",
+      "run_index": 18,
+      "seed": 110,
+      "sha256": "7cc77583de8faca01ce3217186daac72c3266f56d4505b353f462036688d1a13",
+      "size_bytes": 12778,
+      "uncompressed_bytes": 2102718
+    },
+    {
+      "condition": "tonic_drive",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0019-tonic_drive-seed-110.json.gz",
+      "run_index": 19,
+      "seed": 110,
+      "sha256": "5098142997a8453504728dfcee4617284f1ce8fdc21be79ac8c92b6a21bda2ca",
+      "size_bytes": 24791,
+      "uncompressed_bytes": 2102897
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

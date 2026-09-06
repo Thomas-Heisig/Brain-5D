@@ -1,0 +1,99 @@
+{
+  "experiment_id": "EXP-BATCH-20260906195506-01",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-06T21:55:19.137599",
+  "created_at": "2026-09-06T19:55:19.137610+00:00",
+  "git": {
+    "commit": "c217e72226eb00c1ef5aa97af0bc21cbc16d4057",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "seed": 101,
+    "ticks": 100000,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110
+    ],
+    "protocol": "sustained_activity_stability_v1"
+  },
+  "artifacts": {
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json",
+    "report": "report.md"
+  },
+  "research_questions": [
+    "RQ-SNN-001"
+  ],
+  "hypotheses": [
+    "H-SNN-001-A"
+  ],
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "CONFIRMATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "run_count": 20,
+    "protocol": "sustained_activity_stability_v1",
+    "runner": "run_sustained_stability",
+    "ticks_requested": 100000,
+    "tick_contract": {
+      "status": "SATISFIED",
+      "mode": "minimum_per_run_with_control_and_treatment",
+      "requested_ticks": 100000,
+      "observed_min": 100000,
+      "observed_max": 100000,
+      "run_count": 20
+    }
+  },
+  "provenance_digests": {
+    "code": "824a8ef8529a5cc6a61601b5becbc8c932a7b33870a738c5d840ed38193b977a",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14",
+    "data": "43f2d9c638727589546e29652ed88ecd424edd1bcdfc14e3183f6059917d6c61"
+  },
+  "source_freeze_sha": "6f4524262e0e06f163674473b3fbc393f7ab59d7c5afd62cfe50878691eb50a0",
+  "runtime": {
+    "duration_seconds": 10.605126700014807
+  }
+}
