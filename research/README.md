@@ -6,16 +6,29 @@ Ein wissenschaftliches Evidenzsystem für Brain-5D, das technische Implementieru
 
 Die Forschungsinfrastruktur auf `main` umfasst Scientific Integrity Gate, AI-Provenienz und Causal-Taint, Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischen Provenienzgraph, getrennte Operator-/Experiment-/Dev-Storage-Scopes sowie protocol-driven Science Runner.
 
-Verifizierter Engineering-Snapshot:
+Aktueller Engineering-Snapshot:
 
-- 773 Tests werden gesammelt;
-- Python 3.11, 3.12 und 3.13 Full-/Slow-Suites laufen grün;
-- Mypy, Pyright, Black, Ruff, Pylint und Pre-Commit laufen grün;
-- Security und Scientific Integrity Gate laufen grün;
-- Wheel Build/Install sowie Docker Build/Runtime Verify laufen grün;
-- der vollständige GitHub-CI-Run #583 auf dem Neural-Symbiosis-Merge-Commit war erfolgreich.
+- **791 Tests** werden gesammelt;
+- Research Catalog / variable-projection-dimension integration ist nach `main` gemergt;
+- Merge-Commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`;
+- der letzte vollständig abgeschlossene `main`-CI-Baseline-Lauf vor diesem Merge war #598 und erfolgreich;
+- die nachfolgenden `main`-CI-Läufe sind die maßgebliche Verifikation für den neuen Stand und dürfen erst nach Abschluss als grün bezeichnet werden;
+- Python 3.11, 3.12 und 3.13, Typprüfung, Format/Lint, Security, Scientific Integrity, Wheel und Docker bleiben verpflichtende Gates.
 
 Diese technischen Ergebnisse sind **kein wissenschaftlicher Wirksamkeitsnachweis**.
+
+## Forschungsfragen- und Hypothesen-Registry
+
+Der normale Forschungsworkflow lädt die Basiseinträge plus deterministische Registry-Fragmente:
+
+- `research/registry/questions.yaml` und `questions.*.yaml`;
+- `research/registry/hypotheses.yaml` und `hypotheses.*.yaml`.
+
+Doppelte IDs werden fail-closed abgelehnt. MSBA-Fragen und -Hypothesen sind dadurch normale, im Experiment Workflow erreichbare Forschungsobjekte. Die UI bietet einen durchsuchbaren Research Catalog statt einer einzigen langen Pulldown-Liste und unterscheidet `OPERATIONAL` von `EXPLORATORY`.
+
+`OPERATIONAL` bedeutet, dass ein passender eingefrorener/preregistrierter Experimentvertrag existiert. `EXPLORATORY` darf einen protokollierten Lauf erzeugen, aber **keine bestätigende Evidenz vortäuschen oder automatisch nach EVID promoten**. Noch nicht operationalisierte RQ/H bleiben in TODO und Roadmap, bis Hypothese, Kontrollen, Stopping Rule, Preregistration und Runner vollständig vorhanden sind.
+
+Der Repository-Audit kann `RQ-*`- und `H-*`-Referenzen repo-weit gegen die kanonische Registry prüfen, ohne historische Dokumente umzuschreiben.
 
 ## Wissenschaftliche Grundhierarchie
 
@@ -79,11 +92,13 @@ Daher gilt:
 5. Kompaktierung darf keine Rohdaten löschen oder Evidenz ersetzen.
 6. AI-Berichte dürfen nur aus den ihnen tatsächlich bereitgestellten Daten Schlüsse ziehen.
 
-## Neural Symbiosis als Forschungsbehandlung
+## Neural Symbiosis und MSBA als Forschungsbehandlung
 
-`Neural Symbiosis` erweitert den Embodiment-Rand um offene periphere neuronale und virtuelle Areale. Diese Ebene ist **keine wissenschaftliche Evidenz an sich**.
+`Neural Symbiosis` erweitert den Embodiment-Rand um offene periphere neuronale und virtuelle Areale. MSBA spezialisiert diese Grenze für Audio, Vision, Digitalpfade sowie Energie-/Ressourcensteuerung. Diese Ebenen sind **keine wissenschaftliche Evidenz an sich**.
 
 Mögliche Areale umfassen u. a. CNN, Vision Transformer, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, Reservoir/ESN, MLP, VAE/GAN/Diffusion, Autoencoder, periphere SNNs, multimodale und neuro-symbolische Netzwerke sowie Custom Adapter. Virtuelle Systeme wie Logic Engines, Datenbanken, Knowledge Graphs oder externe Speicher können über explizite Adapter teilnehmen.
+
+MSBA/externe Projektionsräume dürfen aktuell **1–32 Dimensionen** deklarieren. Der produktive persistierte SNN-Core bleibt jedoch 5D. Eine echte Core-N-D-Erweiterung benötigt ein separates versioniertes Neuron-ID-/Storage-Format, `.b5d`-Migration, generalisierte Spatial-Indizes und 5D-Äquivalenztests. Projektions-N-D darf daher nicht als produktives Core-N-D-Evidenzresultat bezeichnet werden.
 
 Für wissenschaftliche Runs gelten zusätzliche Regeln:
 
@@ -121,7 +136,14 @@ ist **keine validierte Standarddefinition**, weil gegenläufige Populationseffek
 
 ## Unmittelbarer Forschungsbedarf
 
-### 1. Post-Repair Network-Impulse-Validierung
+### 1. Registry-Operationalisierung
+
+- alle noch nicht gemappten kanonischen RQ/H einem dedizierten Runner oder explizitem `design_pending`-Status zuordnen;
+- Kontrollen, Stopping Rules, Outcomes und Preregistrations vor confirmatory execution einfrieren;
+- Audit als CI-Artefakt veröffentlichen;
+- aktuelle generierte Katalog-/Evidence-/Open-Question-Ansichten nach Registry-Änderungen neu erzeugen, historische Experimentberichte aber nicht umschreiben.
+
+### 2. Post-Repair Network-Impulse-Validierung
 
 - recurrence-off gegen recurrence-on;
 - mehrere unabhängige Seeds;
@@ -129,26 +151,30 @@ ist **keine validierte Standarddefinition**, weil gegenläufige Populationseffek
 - Reproduzierbarkeit/Determinismus prüfen;
 - Review vor möglicher EVID-Promotion.
 
-### 2. Closed-loop Embodiment EVID
+### 3. Closed-loop Embodiment EVID
 
 Die technische Closed-loop-Infrastruktur existiert. Erforderlich bleibt die kontrollierte Evidence-Promotion mit Replay/Open-Loop-, Sensor-Loss- und Actuator-No-Effect-Kontrollen.
 
-### 3. Neural Symbiosis Gateway Experiments
+### 4. Neural Symbiosis / MSBA Gateway Experiments
 
 - experiment-only Runner Adapter;
 - frozen/random/shuffled Controls;
+- `RQ-MSBA-E01` bis `RQ-MSBA-E05` mit hypothesenspezifischen Protokollen durchführen;
 - noisy-area suppression;
 - sensor-lesion compensation;
 - alternative homeostatische Reward-/Error-Formulierungen;
 - Multi-Seed-Validierung vor Tool-Use-Claims.
 
-### 4. Runtime-/Zeitkalibrierung
+### 5. Dimensionsforschung
+
+- preregistrierten N-D-Projektions-Sweep implementieren;
+- dimension-shuffled/reduced/increased/topology-matched Kontrollen vergleichen;
+- produktives Core-N-D erst nach versionierter Storage-/ID-Migration untersuchen;
+- frühere 5D-Experimente nicht als N-D-Evidenz reinterpretieren.
+
+### 6. Runtime-/Zeitkalibrierung
 
 Target-Hz, Achieved-Hz, Real-Time-Ratio, `dt` und Tick-Kosten systematisch benchmarken. Pacing-Änderungen dürfen bei identischem `dt` und identischen Inputs nicht unbemerkt Simulationsergebnisse verändern.
-
-### 5. 5D-Ablationen
-
-Funktionale Aussagen über die fünfdimensionale Organisation bleiben offen, bis dimension-shuffled, reduced-dimensional und topology-matched Kontrollen vorliegen.
 
 ## Sechs feste Objekttypen
 
@@ -165,7 +191,7 @@ Funktionale Aussagen über die fünfdimensionale Organisation bleiben offen, bis
 
 ```text
 research/
-├── registry/           # YAML-Register
+├── registry/           # YAML-Register und Fragmente
 ├── experiments/        # Manifeste, DATA, Reports und Reviews
 ├── literature/         # Literaturdatenbank
 ├── generated/          # automatisch generierte Berichte
