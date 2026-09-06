@@ -185,6 +185,19 @@ def validate_operational_protocol(
     return prereg
 
 
+def _condition_label(item: object) -> str:
+    if isinstance(item, dict):
+        mapping = cast(dict[str, Any], item)
+        condition_id = (
+            mapping.get("id") or mapping.get("condition_id") or mapping.get("name")
+        )
+        role = mapping.get("role")
+        if condition_id:
+            return f"{condition_id}{f' ({role})' if role else ''}"
+        return ""
+    return str(item) if item else ""
+
+
 def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
     """Return operational protocols enriched with their frozen user-facing contract.
 
@@ -214,6 +227,24 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
         _validate_prereg_object(prereg, protocol=protocol)
         seed_strategy = cast(dict[str, Any], prereg["seed_strategy"])
         analysis_plan = cast(dict[str, Any], prereg["analysis_plan"])
+        minimum_seeds = int(seed_strategy.get("minimum_independent_seeds", 1))
+        default_seed_expression = (
+            "101" if minimum_seeds <= 1 else f"101-{100 + minimum_seeds}"
+        )
+        prereg_conditions = prereg.get("conditions", [])
+        condition_labels = (
+            [_condition_label(item) for item in prereg_conditions]
+            if isinstance(prereg_conditions, list)
+            else []
+        )
+        condition_labels = [item for item in condition_labels if item]
+        controls = [str(item) for item in protocol.get("controls", [])]
+        treatments = [str(item) for item in protocol.get("treatments", [])]
+        condition_profiles = {
+            "standard": "; ".join(condition_labels),
+            "controls": "; ".join(controls),
+            "treatments": "; ".join(treatments),
+        }
 
         catalog.append(
             {
@@ -225,11 +256,11 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
                 "preregistration": prereg_value,
                 "default_ticks": protocol.get("default_ticks"),
                 "tick_aware": protocol.get("tick_aware", False),
-                "minimum_independent_seeds": seed_strategy.get(
-                    "minimum_independent_seeds"
-                ),
+                "minimum_independent_seeds": minimum_seeds,
+                "default_seed_expression": default_seed_expression,
                 "seed_rule": seed_strategy.get("rule"),
-                "conditions": prereg.get("conditions", []),
+                "condition_profiles": condition_profiles,
+                "conditions": prereg_conditions,
                 "controls": protocol.get("controls", []),
                 "treatments": protocol.get("treatments", []),
                 "primary_outcomes": prereg.get("primary_outcomes", []),
