@@ -8917,3 +8917,45 @@ body .site-footer .footer-vitals {
   body .site-footer .footer-experiment-id { display: none; }
   body .site-footer .footer-mode > span { display: none; }
 }
+
+
+/* Brain-5D unified file viewer modal */
+body.fm-viewer-open { overflow: hidden; }
+.fm-viewer.fm-viewer-modal:not(.fm-viewer-hidden) {
+  position: fixed !important;
+  inset: 3vh 3vw !important;
+  z-index: 20000 !important;
+  display: flex !important;
+  flex-direction: column;
+  width: auto !important;
+  max-width: none !important;
+  height: 94vh !important;
+  max-height: 94vh !important;
+  background: var(--panel-bg, #10151f);
+  border: 1px solid var(--border, #334155);
+  border-radius: 14px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.68), 0 24px 80px rgba(0, 0, 0, 0.55);
+  overflow: hidden !important;
+}
+.fm-viewer.fm-viewer-modal .fm-content,
+.fm-viewer.fm-viewer-modal .fm-docx-viewer,
+.fm-viewer.fm-viewer-modal .fm-sheet-viewer,
+.fm-viewer.fm-viewer-modal .fm-pdf-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.fm-viewer.fm-viewer-modal .fm-file-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.fm-math {
+  display: inline-block;
+  padding: 0.08rem 0.28rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: rgba(127, 127, 127, 0.12);
+  white-space: nowrap;
+}
+.workflow-popup-actions { display: inline-flex; gap: 0.3rem; align-items: center; }

@@ -348,10 +348,15 @@ def _semantic_status(
             "DIRECT_MATCH" if found else "MISMATCH",
             "SUITE erwartet science_all_v1 und PING, TEMP, STDP, Learning, TIME, 5D sowie Regulation unter gemeinsamer Provenienz.",
         )
+    if question_id == "RQ-SNN-002":
+        return classify(
+            {"recurrence_off", "recurrence_on"}.issubset(plain),
+            "RQ-SNN-002 erwartet einen kontrollierten Impulsantwort-Vergleich mit recurrence_off und recurrence_on.",
+        )
     if question_id == "RQ-SNN-001":
         return (
             "MISMATCH",
-            "RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. Ein einzelner Impuls bzw. science_all_v1 mit langer stiller Nachlaufphase ist dafuer keine ausreichende Primaerpruefung.",
+            "RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. science_suite_v1/science_all_v1 bleiben dafuer diagnostisch; eine Primaerpruefung erfordert weiterhin ein dediziertes Sustained-Activity-Protokoll.",
         )
     return (
         "NOT_AUTOMATICALLY_CLASSIFIED",

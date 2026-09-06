@@ -478,11 +478,13 @@ function renderFMTree(node, container, depth) {
   container.appendChild(ul);
 }
 
-async function openFMFile(path) {
+export async function openFMFile(path) {
   const viewer = document.getElementById('fm-viewer');
   if (!viewer) return;
   // Show viewer (it may be hidden in overlay mode)
   viewer.classList.remove('fm-viewer-hidden');
+  viewer.classList.add('fm-viewer-modal');
+  document.body.classList.add('fm-viewer-open');
   viewer.innerHTML = '<div class="fm-loading">📂 Loading file…</div>';
 
   // Extract name from path for recent files
@@ -912,6 +914,22 @@ async function loadFMMeta(path, source, container) {
   }
 }
 
+function closeFMViewer() {
+  const viewer = document.getElementById('fm-viewer');
+  if (!viewer) return;
+  viewer.classList.add('fm-viewer-hidden');
+  viewer.classList.remove('fm-viewer-modal');
+  document.body.classList.remove('fm-viewer-open');
+}
+
+document.addEventListener('click', event => {
+  if (event.target.closest?.('#fm-close-viewer')) closeFMViewer();
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.body.classList.contains('fm-viewer-open')) closeFMViewer();
+});
+
 function renderFMContent(content, ext, path = '') {
   if (!content) return '<div class="fm-empty">(empty file)</div>';
 
@@ -1085,7 +1103,8 @@ function renderFMMarkdown(content, currentPath = '') {
   // Code blocks (```...```) with language label
   html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => {
     const langLabel = lang ? `<span class="fm-code-lang">${escapeHtml(lang)}</span>` : '';
-    return `<div class="fm-code-wrapper">${langLabel}<button class="fm-copy-btn" data-content="${escapeHtml(code.trim())}">📋 Copy</button><pre class="fm-code fm-code-block"><code>${escapeHtml(code.trim())}</code></pre></div>`;
+    const languageClass = lang ? ` language-${escapeHtml(lang.toLowerCase())}` : '';
+    return `<div class="fm-code-wrapper">${langLabel}<button class="fm-copy-btn" data-content="${escapeHtml(code.trim())}">📋 Copy</button><pre class="fm-code fm-code-block"><code class="${languageClass.trim()}">${escapeHtml(code.trim())}</code></pre></div>`;
   });
 
   // Inline code (`...`)
@@ -1105,14 +1124,25 @@ function renderFMMarkdown(content, currentPath = '') {
     if (/^(https?:|mailto:|#)/i.test(target)) {
       return `<a href="${escapeHtml(target)}" target="_blank" rel="noopener" class="fm-md-link">${label}</a>`;
     }
+    const normalizedTarget = target.replace(/\\_/g, '_').split('#')[0].split('?')[0];
     const base = currentPath.split('/').slice(0, -1);
-    target.split('/').forEach(part => {
+    let safe = true;
+    normalizedTarget.split('/').forEach(part => {
       if (!part || part === '.') return;
-      if (part === '..') base.pop();
-      else base.push(part);
+      if (part === '..') {
+        if (!base.length) safe = false;
+        else base.pop();
+      } else base.push(part);
     });
+    if (!safe) return `<span class="fm-link-invalid" title="Blocked unsafe relative path">${label}</span>`;
     return `<a href="#" data-fm-path="${escapeHtml(base.join('/'))}" class="fm-md-link">${label}</a>`;
   });
+
+  // Scientific inline formulas. Keep a readable textual representation in
+  // the document DOM/copy buffer instead of an opaque SVG-only accessibility node.
+  html = html.replace(/\$([^$\n]+)\$/g, (_, formula) =>
+    `<span class="fm-math" role="math" aria-label="${escapeHtml(formula)}">${escapeHtml(formula)}</span>`
+  );
 
   // Headings (### → h4, ## → h3, # → h2)
   html = html.replace(/^### (.+)$/gm, '<h4 class="fm-md-h3">$1</h4>');

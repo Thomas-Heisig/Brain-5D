@@ -362,6 +362,7 @@ class ExperimentWorkflowService:
                 "duration_seconds": duration,
                 "runner": runner_name,
                 "ticks_requested": workflow.ticks,
+                "seeds_executed": list(effective_seeds),
                 "tick_validation": tick_validation,
             },
         }
@@ -410,10 +411,11 @@ class ExperimentWorkflowService:
             if question_id.startswith(prefix):
                 return runner_name
         if question_id == "RQ-SNN-001":
-            raise WorkflowValidationError(
-                "RQ-SNN-001 requires a dedicated long-term stability protocol with sustained activity; "
-                "run_ping is not valid primary evidence for this research question."
-            )
+            # Keep the UI workflow executable, but never relabel an impulse-response
+            # PING run as primary evidence for long-term stability. The complete
+            # suite is diagnostic only; _semantic_status deliberately keeps this RQ
+            # at MISMATCH until a dedicated sustained-activity protocol exists.
+            return "run_all"
         if question_id == "RQ-SNN-002":
             return "run_ping"
         if question_id == "RQ-SNN-005":

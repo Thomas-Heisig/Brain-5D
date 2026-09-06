@@ -241,3 +241,12 @@ def test_reproducibility_question_keeps_ping_runner() -> None:
         )
         == "run_ping"
     )
+
+
+def test_snn_002_recurrence_is_direct_semantic_match() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    status, _ = _semantic_status(
+        "RQ-SNN-002", "science_suite_v1", {"recurrence_off", "recurrence_on"}
+    )
+    assert status == "DIRECT_MATCH"

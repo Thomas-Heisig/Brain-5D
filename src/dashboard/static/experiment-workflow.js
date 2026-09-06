@@ -1,5 +1,7 @@
 "use strict";
 
+import { openFMFile } from "./file-viewer.js";
+
 function byId(id) {
   return document.getElementById(id);
 }
@@ -163,8 +165,7 @@ export class ExperimentWorkflowPanel {
           <button type="button" id="workflow-open-summary" class="btn-secondary">Open Summary</button>
           <button type="button" id="workflow-open-statistics" class="btn-secondary">Open Statistics</button>
           <button type="button" id="workflow-open-raw" class="btn-secondary">Raw Data Index</button>
-        </div>
-        <div id="workflow-inline-report" class="workflow-inline-report" hidden></div>`;
+        </div>`;
       this.elements.result?.parentElement?.appendChild(actions);
       byId("workflow-open-report")?.addEventListener("click", () => this._openArtifact(this.lastResult?.report));
       byId("workflow-open-summary")?.addEventListener("click", () => this._openArtifact(this.lastResult?.summary));
@@ -214,6 +215,7 @@ export class ExperimentWorkflowPanel {
   _bindEvents() {
     this.elements.question?.addEventListener("change", () => {
       this._renderHypotheses();
+      this._alignProtocolWithQuestion();
       this._renderContract();
     });
     this.elements.hypothesis?.addEventListener("change", () => this._renderContract());
@@ -374,6 +376,7 @@ export class ExperimentWorkflowPanel {
       if (runResult && typeof runResult === "object") {
         if (runResult.runner) lines.push(`Runner: ${runResult.runner}`);
         if (typeof runResult.ticks_requested === "number") lines.push(`Ticks angefordert: ${runResult.ticks_requested}`);
+        if (Array.isArray(runResult.seeds_executed)) lines.push(`Seeds ausgeführt: ${runResult.seeds_executed.join(", ")}`);
         if (runResult.tick_validation?.status) lines.push(`Tick-Vertrag: ${runResult.tick_validation.status}`);
         if (runResult.start && runResult.end) lines.push(`Tick: ${runResult.start.tick} -> ${runResult.end.tick}`);
         else if (typeof runResult.run_count === "number") {
@@ -446,28 +449,31 @@ export class ExperimentWorkflowPanel {
 
   async _openArtifact(path) {
     if (!path) return;
-    const inline = byId("workflow-inline-report");
-    if (!inline) return;
-    inline.hidden = false;
-    inline.innerHTML = `<div class="fm-loading">Loading ${escapeHtml(path)}…</div>`;
-    try {
-      const file = await this._readResearchFile(path);
-      if (file.is_binary) {
-        inline.innerHTML = `<p>Binary artefact: <a target="_blank" rel="noopener" href="/api/files/content/${encodeURIComponent(path)}?source=research">${escapeHtml(path)}</a></p>`;
-        return;
-      }
-      const content = file.content || "";
-      if (/\.json$/i.test(path)) {
-        let formatted = content;
-        try { formatted = JSON.stringify(JSON.parse(content), null, 2); } catch { /* keep source */ }
-        inline.innerHTML = `<div class="inline-report-header"><strong>${escapeHtml(path)}</strong></div><pre>${escapeHtml(formatted)}</pre>`;
-      } else {
-        inline.innerHTML = `<div class="inline-report-header"><strong>${escapeHtml(path)}</strong></div><pre class="inline-markdown-source">${escapeHtml(content)}</pre>`;
-      }
-      this.currentViewerPath = path;
-    } catch (error) {
-      inline.innerHTML = `<div class="workflow-warning">⚠ ${escapeHtml(error.message)}</div>`;
-    }
+    this.currentViewerPath = path;
+    await openFMFile(path);
+    this._installExperimentPopupActions(path);
+  }
+
+  _installExperimentPopupActions(path) {
+    const viewer = byId("fm-viewer");
+    const header = viewer?.querySelector(".fm-file-header-actions");
+    if (!viewer || !header || header.querySelector("[data-experiment-popup-actions]")) return;
+    const group = document.createElement("span");
+    group.dataset.experimentPopupActions = "true";
+    group.className = "workflow-popup-actions";
+    group.innerHTML = `
+      <button type="button" class="fm-file-action-btn" data-popup-artifact="report">Report</button>
+      <button type="button" class="fm-file-action-btn" data-popup-artifact="summary">Summary</button>
+      <button type="button" class="fm-file-action-btn" data-popup-artifact="statistics">Statistics</button>
+      <button type="button" class="fm-file-action-btn" data-popup-artifact="raw">Raw Index</button>`;
+    header.prepend(group);
+    group.querySelectorAll("[data-popup-artifact]").forEach(button => {
+      button.addEventListener("click", () => {
+        const kind = button.dataset.popupArtifact;
+        const target = kind === "raw" ? this._experimentArtifact("DATA/runs_index.json") : this.lastResult?.[kind];
+        if (target && target !== path) this._openArtifact(target);
+      });
+    });
   }
 
   async _completeHumanReview() {
@@ -529,6 +535,30 @@ export class ExperimentWorkflowPanel {
     }
   }
 
+  _alignProtocolWithQuestion() {
+    const questionId = this.elements.question?.value || "";
+    if (!questionId || !this.elements.protocol) return;
+    const operational = this.protocols.find(item => item.research_question === questionId && item.preregistration);
+    if (operational) {
+      const currentSeeds = this.elements.seeds?.value;
+      const currentTicks = this.elements.ticks?.value;
+      this.elements.protocol.value = operational.id;
+      this._applyProtocol();
+      if (this.elements.seeds && currentSeeds) this.elements.seeds.value = currentSeeds;
+      if (this.elements.ticks && currentTicks) this.elements.ticks.value = currentTicks;
+      this._renderContract();
+      return;
+    }
+    if (questionId === "RQ-SNN-001" && this.elements.protocol.value === "science_suite_v1") {
+      // Long-term stability has no dedicated primary protocol yet. Use the complete
+      // suite as an executable diagnostic rather than aborting, while preserving
+      // the selected RQ/H and retaining MISMATCH evidence semantics server-side.
+      this.elements.protocol.value = "science_all_v1";
+      this.activePreset = null;
+      this._renderContract();
+    }
+  }
+
   _applyProtocol() {
     const protocol = this.elements.protocol?.value;
     const operational = this._protocolContract(protocol);
@@ -561,8 +591,8 @@ export class ExperimentWorkflowPanel {
         },
       },
       science_suite_v1: {
-        question: "RQ-PING-001",
-        hypothesis: "H-PING-001-A",
+        question: "RQ-SNN-002",
+        hypothesis: "H-SNN-002-A",
         title: "Network impulse response",
         conditions: "Seeds 42,43,44; identical initial state per seed; impulse current 100.0; recurrence as controlled treatment.",
         ticks: "8",
