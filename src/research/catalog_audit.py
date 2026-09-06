@@ -53,13 +53,16 @@ class ResearchCatalogAudit:
 
     @property
     def clean(self) -> bool:
-        return (
-            not self.missing_questions
-            and not self.missing_hypotheses
-            and not self.link_issues
+        problems = (
+            self.missing_questions,
+            self.missing_hypotheses,
+            self.link_issues,
         )
+        return not any(problems)
 
     def to_dict(self) -> dict[str, object]:
+        question_refs = [item.to_dict() for item in self.question_references]
+        hypothesis_refs = [item.to_dict() for item in self.hypothesis_references]
         return {
             "clean": self.clean,
             "question_reference_count": len(self.question_references),
@@ -67,12 +70,8 @@ class ResearchCatalogAudit:
             "missing_questions": list(self.missing_questions),
             "missing_hypotheses": list(self.missing_hypotheses),
             "link_issues": list(self.link_issues),
-            "question_references": [
-                item.to_dict() for item in self.question_references
-            ],
-            "hypothesis_references": [
-                item.to_dict() for item in self.hypothesis_references
-            ],
+            "question_references": question_refs,
+            "hypothesis_references": hypothesis_refs,
         }
 
 
@@ -83,9 +82,8 @@ def audit_research_catalog(
     """Scan repository text and compare discovered identifiers with the registry."""
 
     root = repo_root.resolve()
-    active_registry = registry or ResearchRegistry(
-        root / "research" / "registry"
-    ).load_all()
+    registry_dir = root / "research" / "registry"
+    active_registry = registry or ResearchRegistry(registry_dir).load_all()
     question_refs: list[ResearchReference] = []
     hypothesis_refs: list[ResearchReference] = []
     found_questions: set[str] = set()
@@ -108,13 +106,15 @@ def audit_research_catalog(
             found_hypotheses.add(identifier)
             hypothesis_refs.append(ResearchReference(identifier, "hypothesis", relative))
 
+    known_questions = set(active_registry.questions)
+    known_hypotheses = set(active_registry.hypotheses)
+    missing_questions = tuple(sorted(found_questions - known_questions))
+    missing_hypotheses = tuple(sorted(found_hypotheses - known_hypotheses))
     return ResearchCatalogAudit(
         question_references=tuple(question_refs),
         hypothesis_references=tuple(hypothesis_refs),
-        missing_questions=tuple(sorted(found_questions - set(active_registry.questions))),
-        missing_hypotheses=tuple(
-            sorted(found_hypotheses - set(active_registry.hypotheses))
-        ),
+        missing_questions=missing_questions,
+        missing_hypotheses=missing_hypotheses,
         link_issues=tuple(active_registry.link_issues()),
     )
 
