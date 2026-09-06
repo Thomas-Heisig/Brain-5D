@@ -17,17 +17,15 @@ def test_msba_projection_dimensions_can_exceed_five_without_core_mutation() -> N
 
 def test_msba_projection_dimension_bounds_fail_closed() -> None:
     assert validate_projection_dimensions(1) == 1
-    assert (
-        validate_projection_dimensions(MAX_PROJECTION_DIMENSIONS)
-        == MAX_PROJECTION_DIMENSIONS
-    )
+    upper = validate_projection_dimensions(MAX_PROJECTION_DIMENSIONS)
+    assert upper == MAX_PROJECTION_DIMENSIONS
     with pytest.raises(ValueError, match="projection_dimensions"):
         MSBAGatewayConfig(projection_dimensions=0)
     with pytest.raises(ValueError, match="projection_dimensions"):
         MSBAGatewayConfig(projection_dimensions=MAX_PROJECTION_DIMENSIONS + 1)
 
 
-def test_msba_contract_distinguishes_projection_and_productive_core_dimensions() -> None:
+def test_msba_contract_reports_projection_and_core_dimensions() -> None:
     topology = msba_contract()["topology"]
 
     assert isinstance(topology, dict)
