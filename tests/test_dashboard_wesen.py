@@ -166,12 +166,16 @@ def test_wesen_has_neutral_terminology_and_differentiated_states() -> None:
         assert state in styles
 
 
-def test_primary_frontend_hides_network_and_moves_release_to_footer() -> None:
+def test_primary_frontend_uses_three_areas_and_keeps_utility_routes() -> None:
     console = (STATIC / "console-log.js").read_text(encoding="utf-8")
+    architecture = (STATIC / "frontend-architecture.js").read_text(encoding="utf-8")
     styles = (STATIC / "wesen.css").read_text(encoding="utf-8")
-    assert 'data-tab="network"' in console
-    assert 'data-tab="gate"' in console
-    assert ".remove()" in console
+    assert 'import "./frontend-architecture.js"' in console
+    assert 'data-primary-area="dashboard"' in architecture
+    assert 'data-primary-area="science"' in architecture
+    assert 'data-primary-area="wesen"' in architecture
+    assert 'for (const name of ["network", "gate"] )' in console
+    assert 'button.classList.add("wesen-utility-hidden")' in console
     assert "dataset.footerRelease" in console
     assert "wesen-release-button" in console
     assert '.tab-btn[data-tab="network"]' in styles
