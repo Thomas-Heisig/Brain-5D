@@ -2,31 +2,31 @@
 
 ## Purpose
 
-Brain-5D is a modular research framework around a sparse five-dimensional spiking neural network. Its architecture separates **neural dynamics**, **learning**, **structural adaptation**, **embodiment**, **persistence**, **research evidence**, **AI interpretation** and **operator tooling** so that changes in one layer do not silently redefine the scientific meaning of another.
+Brain-5D is a modular research framework around a sparse five-dimensional spiking neural network. Its architecture separates **neural dynamics**, **learning**, **structural adaptation**, **embodiment**, **peripheral multi-network processing**, **persistence**, **research evidence**, **AI interpretation** and **operator tooling** so that changes in one layer do not silently redefine the scientific meaning of another.
 
-The SNN is the primary adaptive system. External AI components may observe, interpret or propose within explicit contracts, but they do not gain implicit authority to write neural state, rewards, memory or scientific evidence.
+The SNN is the primary adaptive system. External AI components and peripheral neural networks may observe, interpret, transform or propose within explicit contracts, but they do not gain implicit authority to write canonical neural state, rewards, memory or scientific evidence.
 
 ## System map
 
 ```text
-External / simulated environment
+External / simulated / virtual environment
             |
             v
-Sensors / network / camera / audio / device inputs
+Sensors / network / camera / audio / database / logic / devices
             |
             v
-+-----------------------------+
-| Embodiment / adapters       |
-| auth + audit + quality      |
-+--------------+--------------+
-               |
-               v
-+-----------------------------+
-| Signal / Experience         |
-| encoding + outcome          |
-+--------------+--------------+
-               |
-               v
++---------------------------------------------+
+| Embodiment adapters                         |
+| authorization + audit + quality + provenance|
++----------------------+----------------------+
+                       |
+              optional peripheral area(s)
+        CNN / Transformer / RNN / GNN / memory
+         logic/projector / custom open-set area
+                       |
+                explicit gateway
+                       |
+                       v
 +------------------------------------------------------------+
 | Sparse 5D SNN Core                                         |
 | neurons | synapses | event queue | deterministic RNG | I/O |
@@ -51,14 +51,19 @@ Sensors / network / camera / audio / device inputs
                                   v
                          controlled topology
 
-Action proposal -> authorization/safety -> ActuatorHub -> observed outcome
-                                         |
-                                         +-> feedback / reward
+SNN action proposal
+        |
+        v
+explicit efferent gateway
+        |
+optional peripheral decoder/control area
+        |
+        v
+authorization/safety -> ActuatorHub -> observed outcome -> feedback/reward
 
-Host interoception feeds regulatory/body state.
 Persistence surrounds mutable state.
 Research provenance surrounds execution.
-Dashboard observes/operates only through explicit contracts.
+Wesen observes published state read-only.
 ```
 
 ## 1. Sparse 5D neural core
@@ -67,7 +72,7 @@ Brain-5D does not materialize a full five-dimensional tensor. Existing neurons a
 
 Core responsibilities include deterministic neuron integration, delayed event delivery, spike propagation, topology accounting, I/O boundaries, deterministic RNG state capture and bounded post-step integrations.
 
-The core must not depend on dashboard rendering, language models or research prose.
+The core must not depend on dashboard rendering, language models or peripheral ANN frameworks.
 
 ## 2. Tick and time semantics
 
@@ -77,7 +82,7 @@ Scientific protocols must record `dt`, pacing mode and timing parameters. Changi
 
 ## 3. Learning
 
-The learning layer contains pair-based STDP, signed eligibility traces, delayed reward handling, reward-modulated/three-factor updates, productive learning experiments and preparation contracts.
+The learning layer contains pair-based STDP, signed eligibility traces, delayed reward handling, reward-modulated/three-factor updates, productive-learning experiments and preparation contracts.
 
 A preparation plan is not a neural write. AI-generated preparation is proposal-only and provenance-bound.
 
@@ -120,11 +125,40 @@ observation -> encoding -> SNN -> action proposal -> authorization
 
 Reward should be derived from an observed/verifiable outcome contract, not merely from an accepted action command.
 
-The real-body subsystem may expose CPU, memory, temperatures/fans, storage/network data and discovered camera/audio/display/printer/external actuator capabilities where the host provides them. Unavailable telemetry remains unknown.
+## 7. Neural Symbiosis — peripheral multi-network boundary
 
-## 7. Adaptive machine-native body view (`Wesen`)
+`Neural Symbiosis` is part of **Embodiment**. It is not a replacement core and does not redefine canonical SNN learning.
 
-`Wesen` is a **dashboard projection**, not a new runtime subsystem. It consumes published status, embodiment and connection state and renders a machine-native body whose visible morphology changes with observed endpoints.
+The open-set `NetworkAreaAdapter` contract allows dedicated processing stages to be inserted between endpoints and the SNN. Built-in descriptors cover common families such as CNN, Vision Transformer, Transformer, LSTM, GRU, RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE, GAN, diffusion, autoencoder, peripheral SNN, multimodal and neuro-symbolic networks. Custom architectures remain possible.
+
+Virtual areas can represent symbolic logic engines, databases, knowledge graphs, retrieval systems, external memory stores or other non-neural services. When needed, an explicit neural projector can bridge a virtual representation into the SNN boundary.
+
+Typical paths are:
+
+```text
+Camera -> CNN / ViT -> afferent gateway -> 5D-SNN
+Microphone -> Audio/Speech Transformer -> gateway -> 5D-SNN
+Database -> Knowledge adapter / GNN -> gateway -> 5D-SNN
+Logic engine -> neuro-symbolic projector -> gateway -> 5D-SNN
+5D-SNN -> gateway -> Speech/Language network -> audio output
+5D-SNN -> gateway -> GRU / control MLP -> robotics
+```
+
+Scientific invariants for this layer:
+
+- pipeline availability/reachability is not evidence of learned use;
+- gateway plasticity is disabled by default;
+- candidate STDP/homeostatic/structural/efferent-gating math does not mutate the core automatically;
+- experiment RNG must be owned and persisted by the experiment runner;
+- model/version hashes, controls and gateway parameters must be recorded for experiments;
+- historical DATA/EVID remains unchanged when adapters or instrumentation evolve;
+- scientific activation requires an explicit preregistered experiment.
+
+Detailed contract: [`NEURAL_SYMBIOSIS.md`](NEURAL_SYMBIOSIS.md).
+
+## 8. Adaptive machine-native body view (`Wesen`)
+
+`Wesen` is a **dashboard projection**, not a new runtime subsystem. It consumes published status, embodiment, connection and selected read-only pipeline state and renders a machine-native body whose visible morphology changes with observed endpoints.
 
 Architecture rules:
 
@@ -133,23 +167,23 @@ Architecture rules:
 - discovered sensor endpoints become input branches;
 - discovered actuator endpoints become output branches;
 - feedback/loopback remains a distinct return structure;
-- the body envelope is recomputed from observed body nodes;
+- Neural Symbiosis is displayed as a read-only peripheral-pipeline layer;
 - missing sensors/actuators remain explicit placeholders/unavailable states;
-- the visualization is read-only and does not write `/api/control` or actuator state;
-- visual connectivity is not automatically causal evidence;
+- the visualization does not write `/api/control` or actuator state;
+- visual connectivity or reachability is not automatically causal evidence;
 - recurrence/loopback is not interpreted as consciousness.
-
-The Self-Model panel renders a delayed copy of the same current morphology using published recurrence/latency values where available. Morphology changes are retained only as a browser-session observation history unless separately persisted by a research protocol.
 
 Detailed contract: [`WESEN_ADAPTIVE_BODY.md`](WESEN_ADAPTIVE_BODY.md).
 
-## 8. Persistence and deterministic recovery
+## 9. Persistence and deterministic recovery
 
 Persistence includes `.b5d` snapshots, append/commit delta journal, structural journal, runtime checkpoints, canonical state digests, restore-and-continue verification and structural undo/replay.
 
 Scientific value depends on causal-state completeness and deterministic continuation, not merely successful file loading.
 
-## 9. Research and evidence architecture
+Large experiment run sets may use immutable/compressed raw artifacts plus bounded projections for dashboards or small/local AI review. Any compact projection must preserve provenance to the raw record and must never replace scientific raw DATA.
+
+## 10. Research and evidence architecture
 
 Research state is separated from runtime state. Registries define questions, hypotheses, claims, methods and sources. Experiments produce manifests and `DATA`; evidence promotion occurs through explicit validity checks.
 
@@ -157,9 +191,9 @@ Research state is separated from runtime state. Registries define questions, hyp
 implementation test != experiment result != accepted evidence != interpretation
 ```
 
-Dashboard animations, self-model views and UI logs are interpretation/inspection surfaces unless a protocol explicitly records their source data.
+Dashboard animations, self-model views, pipeline reachability and UI logs are interpretation/inspection surfaces unless a protocol explicitly records their source data.
 
-## 10. AI boundaries
+## 11. AI boundaries
 
 Authority is fail-closed:
 
@@ -170,7 +204,7 @@ Authority is fail-closed:
 
 Scientific runs reject uncontrolled AI influence where reproducibility cannot be established.
 
-## 11. Dashboard boundary
+## 12. Dashboard boundary
 
 The dashboard is the operator/research interface, not a second simulation engine. Runtime mutations continue through explicit domain services.
 
@@ -185,18 +219,19 @@ Current primary navigation is:
 
 `Network` is not a primary user-facing workspace. Release/Gate is accessed from the footer. Unknown measurements remain visibly unknown.
 
-## 12. Architectural invariants
+## 13. Architectural invariants
 
 1. **Determinism where claimed** — identical controlled inputs/seeds/configuration must be testable for identical state evolution.
-2. **No hidden scientific writes** — UI/LLM interpretation cannot mutate evidence or neural state by implication.
+2. **No hidden scientific writes** — UI/LLM/peripheral interpretation cannot mutate evidence or neural state by implication.
 3. **Fail closed** — missing permissions, provenance or data do not default to success.
 4. **Observed ≠ inferred** — measured state and derived interpretation remain separate.
 5. **Availability ≠ authorization** — especially for devices/actuators.
-6. **DATA ≠ EVID** — output requires validity/evidence promotion before claim support.
-7. **Simulation time ≠ wall time** — pacing is separate from model time semantics.
-8. **Recovery is part of correctness** — persistence must preserve causal state.
-9. **Visualization ≠ causality** — highlighted paths are not causal proof without intervention/outcome evidence.
-10. **Recurrence ≠ consciousness** — recurrence/loopback metrics are technical observables only.
+6. **Reachability ≠ learned use** — a reachable Neural Symbiosis pipeline is not evidence that the SNN selected or benefited from it.
+7. **DATA ≠ EVID** — output requires validity/evidence promotion before claim support.
+8. **Simulation time ≠ wall time** — pacing is separate from model time semantics.
+9. **Recovery is part of correctness** — persistence must preserve causal state.
+10. **Visualization ≠ causality** — highlighted paths are not causal proof without intervention/outcome evidence.
+11. **Recurrence ≠ consciousness** — recurrence/loopback metrics are technical observables only.
 
 ## Detailed subsystem documents
 
@@ -205,6 +240,7 @@ Current primary navigation is:
 - [`STRUCTURAL_PLASTICITY_ALPHA5.md`](STRUCTURAL_PLASTICITY_ALPHA5.md)
 - [`EMBODIMENT_FOUNDATION.md`](EMBODIMENT_FOUNDATION.md)
 - [`EMBODIMENT_REAL_BODY.md`](EMBODIMENT_REAL_BODY.md)
+- [`NEURAL_SYMBIOSIS.md`](NEURAL_SYMBIOSIS.md)
 - [`WESEN_ADAPTIVE_BODY.md`](WESEN_ADAPTIVE_BODY.md)
 - [`LEARNING_PREPARATION_STUDIO.md`](LEARNING_PREPARATION_STUDIO.md)
 - [`RECURSIVE_CAUSAL_LOOPBACKS.md`](RECURSIVE_CAUSAL_LOOPBACKS.md)
