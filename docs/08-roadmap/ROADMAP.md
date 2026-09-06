@@ -10,7 +10,7 @@ This roadmap separates **implemented engineering capability** from **scientific 
 
 At the 2026-09-06 research-catalog integration point:
 
-- **791 tests** are collected on current `main`;
+- **793 tests** are collected on current `main` (**788 passed, 5 skipped** locally);
 - Research Catalog / variable-projection-dimension PR #21 is merged; merge commit `85e7209509b348bf7912dde01d3d9ebb078a2e61`;
 - the latest fully completed pre-merge `main` CI baseline was #598 and successful;
 - post-merge/current-head CI is the authoritative verification and must complete before the current head is described as fully green;
@@ -45,6 +45,9 @@ Current development contains:
 - searchable Research Catalog UI that distinguishes operational from exploratory questions;
 - repository-wide read-only RQ/H reference audit support;
 - configurable MSBA/external projection dimensionality from 1 through 32 while preserving the productive 5D persistence contract.
+- graphical Research Workspace timeline combining the canonical Changelog, Roadmap and TODO.
+- Release and Settings utility popups with selectable Summary, Timeline and Gate views.
+- responsive Wesen Runtime surface with the Embodied Multi-Network Interface below the body map/event console and persistent panel visibility controls.
 
 ## Roadmap principle
 
@@ -69,9 +72,10 @@ Still required:
 
 1. assign every still-unmapped canonical RQ/H a dedicated runner or an explicit `design_pending` state;
 2. freeze controls, stopping rules, primary outcomes and preregistrations before confirmatory execution;
-3. expose domain/status/evidence/progress facets through the workflow catalog API;
-4. publish the registry audit as a CI artifact and maintain an explicit historical-reference allow-list where appropriate;
-5. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports.
+3. expose domain/status/evidence/progress facets through the workflow catalog API; **implemented 2026-09-06**;
+4. publish the registry audit as a CI artifact; **implemented 2026-09-06**;
+5. decide which historical-only identifiers belong on an explicit allow-list versus the canonical registry;
+6. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports.
 
 **Priority:** immediate.
 

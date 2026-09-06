@@ -51,6 +51,8 @@ import { renderOverviewCommandCenter, setupOverviewActions } from './overview-pa
 import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
 import { initResearchChat } from './research-chat.js';
+import { initProjectTimeline } from './project-timeline.js';
+import { initUtilityPopups } from './utility-popups.js';
 
 // ================================================================
 // DOM HELPERS
@@ -203,6 +205,7 @@ function setupTabs() {
       initialized.research = true;
     }
     if (tabName === 'gate' && !initialized.gate) {
+      initProjectTimeline();
       initGateBoard();
       initialized.gate = true;
     }
@@ -1906,12 +1909,14 @@ async function refreshGateStatus() {
     scientificEl.textContent = scientificStatus;
     scientificEl.className = `gate-badge gate-${scientificStatus}`;
   }
+  setText('release-summary-scientific', scientificStatus);
 
   const ciEl = $('gate-ci');
   if (ciEl) {
     ciEl.textContent = ciStatus;
     ciEl.className = `gate-badge gate-${ciStatus}`;
   }
+  setText('release-summary-ci', ciStatus);
 
   // Overall release-readiness badge
   const overallEl = $('gate-overall');
@@ -1919,6 +1924,7 @@ async function refreshGateStatus() {
     overallEl.textContent = readiness;
     overallEl.className = `gate-badge gate-${readiness === 'ready' ? 'passed' : 'pending'}`;
   }
+  setText('release-summary-readiness', readiness);
 
   // Live Runtime Profile
   const liveRuntime = scientificGate.live_runtime || data.live_runtime;
@@ -2391,6 +2397,8 @@ function setupGlobalShortcuts() {
 
 function init() {
   console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
+
+  initUtilityPopups();
 
   // Setup tab navigation (also initializes components lazily)
   setupTabs();

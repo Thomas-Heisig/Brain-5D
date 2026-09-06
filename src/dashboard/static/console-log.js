@@ -121,7 +121,10 @@ function ensureReleaseFooterButton() {
   button.dataset.footerRelease = "true";
   button.textContent = "Release";
   button.title = "Scientific Gate und Release Readiness öffnen";
-  button.addEventListener("click", () => activateLegacyWorkspace("gate"));
+  button.addEventListener("click", () => {
+    if (window.Brain5DUtilityPopups?.open) window.Brain5DUtilityPopups.open("gate");
+    else activateLegacyWorkspace("gate");
+  });
   target.appendChild(button);
 }
 

@@ -201,3 +201,30 @@ def test_wesen_design_is_theme_responsive_and_reduced_motion_safe() -> None:
     assert "prefers-reduced-motion" in adaptive
     assert "prefers-reduced-motion" in organism
     assert "prefers-reduced-motion" in anatomy
+
+
+def test_wesen_symbiosis_is_full_width_below_body_map_and_events() -> None:
+    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
+    symbiosis = (STATIC / "wesen-neural-symbiosis.js").read_text(encoding="utf-8")
+    styles = (STATIC / "wesen-neural-symbiosis.css").read_text(encoding="utf-8")
+    assert 'data-wesen-panel="body-map"' in base
+    assert 'panel.dataset.wesenPanel = "symbiosis"' in symbiosis
+    assert 'const layout = workspace.querySelector(".wesen-layout")' in symbiosis
+    assert 'layout.insertAdjacentElement("afterend", panel)' in symbiosis
+    assert "width: 100%" in styles
+    assert "overflow-wrap: anywhere" in styles
+
+
+def test_wesen_surface_visibility_is_persistent_and_resettable() -> None:
+    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
+    styles = (STATIC / "wesen.css").read_text(encoding="utf-8")
+    for token in (
+        'brain5d.wesen.visibility.v1',
+        'data-wesen-visibility-toggle',
+        'data-wesen-panel-toggle',
+        'localStorage.setItem',
+        'data-wesen-visibility-reset',
+        'registerPanel:(key,label)',
+    ):
+        assert token in base
+    assert ".wesen-visibility-menu[hidden]" in styles

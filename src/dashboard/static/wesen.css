@@ -146,6 +146,15 @@ button:focus-visible,
   color: var(--b5-muted);
 }
 
+.wesen-header-tools { display: flex; align-items: center; gap: 10px; }
+.wesen-visibility { position: relative; }
+.wesen-visibility-toggle { border: 1px solid var(--b5-line); border-radius: 8px; background: rgba(12, 38, 58, .6); color: var(--b5-text); padding: 8px 10px; cursor: pointer; }
+.wesen-visibility-menu { position: absolute; z-index: 12; top: calc(100% + 8px); right: 0; width: min(300px, calc(100vw - 32px)); padding: 10px; border: 1px solid var(--b5-line-strong); border-radius: 10px; background: var(--b5-panel-strong); box-shadow: var(--b5-shadow); }
+.wesen-visibility-menu[hidden] { display: none; }
+.wesen-visibility-menu label { display: flex; gap: 8px; align-items: center; padding: 7px 4px; color: var(--b5-text); font-size: .76rem; cursor: pointer; }
+.wesen-visibility-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 7px; border-bottom: 1px solid var(--b5-line); font-size: .76rem; }
+.wesen-visibility-heading button { border: 0; background: transparent; color: var(--b5-cyan); cursor: pointer; font: inherit; }
+
 .wesen-live-state {
   display: inline-flex;
   align-items: center;
@@ -173,7 +182,7 @@ button:focus-visible,
 
 .wesen-layout {
   display: grid;
-  grid-template-columns: minmax(210px, 255px) minmax(520px, 1fr) minmax(255px, 315px);
+  grid-template-columns: minmax(190px, 255px) minmax(0, 1fr) minmax(220px, 315px);
   gap: 9px;
   align-items: start;
 }
@@ -491,7 +500,7 @@ button:focus-visible,
 
 /* Responsive behavior: the organism remains the primary surface. */
 @media (max-width: 1280px) {
-  .wesen-layout { grid-template-columns: 210px minmax(460px, 1fr) 265px; }
+  .wesen-layout { grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(220px, 265px); }
 }
 
 @media (max-width: 1050px) {
@@ -507,7 +516,8 @@ button:focus-visible,
   .wesen-sidebar-right { margin-top: 8px; }
   .wesen-stage-card { min-height: auto; grid-template-rows: auto 520px auto; }
   .wesen-stage { min-height: 520px; }
-  .wesen-header { align-items: flex-start; gap: 8px; }
+  .wesen-header { align-items: flex-start; gap: 8px; flex-direction: column; }
+  .wesen-header-tools { width: 100%; justify-content: space-between; }
   .wesen-console-head { align-items: flex-start; flex-direction: column; }
 }
 

@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-09-06 - Graphical project timeline in the dashboard
+
+- The Research Workspace now renders Changelog entries as a graphical timeline.
+- Roadmap and TODO are loaded from the canonical Markdown files and shown with
+  completion counts, progress bars and source filters.
+- The timeline is located in the Release Workspace as release context for the
+  current gate and next steps.
+- Release and Settings are opened as focused utility popups; Release switches
+  between Summary, Timeline and Gate, with past/future/element timeline views.
+- Each timeline entry links back to the existing read-only Docs browser.
+
+## 2026-09-06 — Wesen Runtime responsive surfaces
+
+- Das `EMBODIED MULTI-NETWORK INTERFACE` steht jetzt vollbreit unter der
+  interaktiven Körperkarte und der Ereigniskonsole statt innerhalb der engen
+  Drei-Spalten-Ansicht.
+- Network areas, Pipelines, MSBA pathways und die weiteren Symbiosis-Bereiche
+  umbrechen responsiv und bleiben auf Desktop, Tablet und Mobil vollständig
+  lesbar.
+- Major-Wesen-Bereiche lassen sich über `Oberflächen` ein-/ausblenden; der
+  Zustand wird browserlokal persistent gespeichert und kann gesammelt
+  zurückgesetzt werden.
+
+## 2026-09-06 — Research Catalog facets and CI audit report
+
+- Der Workflow-Katalog liefert Domain, Status, Evidenzanzahl, Operationalität
+  sowie abgeschlossene/fehlgeschlagene Experimentläufe aus echten Manifesten.
+- Die Research-Catalog-Auswahl filtert nach Domain, Status, Evidenz und
+  Experimentfortschritt und zeigt diese Facets pro Forschungsfrage an.
+- Der repositoryweite RQ/H-Audit kann als JSON ausgegeben werden und wird im
+  Scientific-Integrity-CI als `research-catalog-audit`-Artefakt hochgeladen.
+- Ungeklärte historische, negative Test- und noch nicht kanonisch registrierte
+  Referenzen bleiben report-only sichtbar; es gibt keine stille Allowlist.
+
 ## 2026-09-05 — Experiment Runner inputs and conditions
 
 - Der Dashboard-Runner akzeptiert einzelne Seeds, CSV-Listen und Bereiche wie

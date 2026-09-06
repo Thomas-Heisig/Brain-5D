@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.research.catalog_audit import audit_research_catalog
+from src.research.catalog_audit import audit_research_catalog, main
 from src.research.registry import ResearchRegistry
 
 
@@ -36,3 +36,25 @@ def test_repo_audit_recognizes_canonical_msba_entries() -> None:
 
     assert "RQ-MSBA-E01" not in audit.missing_questions
     assert "H-MSBA-E01-A" not in audit.missing_hypotheses
+
+
+def test_catalog_audit_cli_writes_machine_readable_report(tmp_path: Path) -> None:
+    registry_dir = tmp_path / "research" / "registry"
+    registry_dir.mkdir(parents=True)
+    _write(
+        registry_dir / "questions.yaml",
+        "- id: RQ-TEST-001\n  domain: Test\n  question: Registered?\n  relevance: test\n",
+    )
+    _write(
+        registry_dir / "hypotheses.yaml",
+        "- id: H-TEST-001-A\n  research_question: RQ-TEST-001\n  hypothesis: Registered\n",
+    )
+    _write(tmp_path / "docs" / "notes.md", "RQ-TEST-001 H-TEST-001-A")
+    output = tmp_path / "artifacts" / "research-catalog-audit.json"
+
+    assert main(["--repo-root", str(tmp_path), "--output", str(output)]) == 0
+
+    report = output.read_text(encoding="utf-8")
+    assert '"clean": true' in report
+    assert '"missing_questions": []' in report
+    assert '"missing_hypotheses": []' in report

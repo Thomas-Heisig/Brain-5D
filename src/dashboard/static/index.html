@@ -595,20 +595,50 @@
           <span>Blockers<strong id="release-workspace-blockers">0</strong></span>
         </div>
       </header>
-      <nav class="workspace-view-tabs" data-workspace-views="release" aria-label="Release views">
-        <button type="button" class="active" data-workspace-view="summary">Summary</button>
-        <button type="button" data-workspace-view="gate-a">Gate A</button>
-        <button type="button" data-workspace-view="gate-b">Gate B</button>
-        <button type="button" data-workspace-view="gate-c">Gate C</button>
+      <nav class="workspace-view-tabs release-popup-views" data-utility-release-views aria-label="Release views">
+        <button type="button" class="active" data-utility-release-view="summary">Summary</button>
+        <button type="button" data-utility-release-view="timeline">Timeline</button>
+        <button type="button" data-utility-release-view="gate">Gate</button>
       </nav>
       <div class="release-board">
-        <div class="release-header">
-          <h2>Release History</h2>
-          <p class="release-subtitle">Immutable release records and current development gate. Historical releases are never re-evaluated against newer source trees.</p>
-        </div>
-        <div class="release-tree" id="release-tree"></div>
+        <section class="release-summary-panel" data-release-panel="summary">
+          <div class="release-header">
+            <h2>Release Summary</h2>
+            <p class="release-subtitle">Historische Releases und die aktuelle Entscheidungszusammenfassung für den nächsten Release-Schritt.</p>
+          </div>
+          <div class="release-summary-status" aria-label="Release summary status">
+            <div><span>Scientific Gate</span><strong id="release-summary-scientific">pending</strong></div>
+            <div><span>Continuous Integration</span><strong id="release-summary-ci">unknown</strong></div>
+            <div><span>Readiness</span><strong id="release-summary-readiness">not_ready</strong></div>
+          </div>
+          <div class="release-tree" id="release-tree"></div>
+        </section>
 
-        <div class="gate-board">
+        <section class="project-timeline release-timeline" data-release-panel="timeline" id="project-timeline" aria-labelledby="project-timeline-title" hidden>
+          <header class="project-timeline-header">
+            <div>
+              <span class="workspace-kicker">RELEASE CONTEXT</span>
+              <h3 id="project-timeline-title">Release-Verlauf und nächste Schritte</h3>
+              <p>Historische Änderungen, Roadmap-Meilensteine und offene TODOs als gemeinsame Entscheidungsgrundlage.</p>
+            </div>
+            <div class="timeline-stats" id="timeline-stats" aria-live="polite"><span><strong>—</strong> Releases</span><span><strong>—</strong> erledigt</span><span><strong>—</strong> offen</span></div>
+          </header>
+          <nav class="timeline-filters" aria-label="Release-Verlauf filtern">
+            <button type="button" class="active" data-timeline-filter="all">Alles</button>
+            <button type="button" data-timeline-filter="changelog">Changelog</button>
+            <button type="button" data-timeline-filter="roadmap">Roadmap</button>
+            <button type="button" data-timeline-filter="todo">TODO</button>
+          </nav>
+          <nav class="timeline-horizons" aria-label="Zeitraum der Timeline">
+            <button type="button" class="active" data-timeline-horizon="timeline">Timeline</button>
+            <button type="button" data-timeline-horizon="past">Vergangenheit</button>
+            <button type="button" data-timeline-horizon="future">Zukunft</button>
+            <button type="button" data-timeline-horizon="elements">Elemente</button>
+          </nav>
+          <div class="project-timeline-list" id="project-timeline-list" aria-live="polite"></div>
+        </section>
+
+        <div class="gate-board" data-release-panel="gate" hidden>
           <div class="gate-header">
             <h2>Current Gate</h2>
             <p class="gate-subtitle">Scientific evidence, source-freeze CI and release readiness are evaluated independently.</p>

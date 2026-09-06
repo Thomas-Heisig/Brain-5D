@@ -74,6 +74,10 @@ function configurePrimaryNavigation() {
 }
 
 function activateUtilityTab(name) {
+  if (window.Brain5DUtilityPopups?.open) {
+    window.Brain5DUtilityPopups.open(name);
+    return;
+  }
   const hiddenButton = document.querySelector(`.tab-btn[data-tab="${name}"]`);
   if (hiddenButton) hiddenButton.click();
 }

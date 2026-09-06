@@ -37,3 +37,31 @@ def test_wesen_shell_merges_embodiment_and_moves_utilities_to_footer() -> None:
     assert 'data-footer-tab="gate"' in source
     assert 'data-tab="embodiment"' in source
     assert "embodimentButton?.remove()" in source
+
+
+def test_project_timeline_is_wired_to_canonical_project_documents() -> None:
+    app = (STATIC / "app.js").read_text(encoding="utf-8")
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    timeline = (STATIC / "project-timeline.js").read_text(encoding="utf-8")
+    popups = (STATIC / "utility-popups.js").read_text(encoding="utf-8")
+    assert "initProjectTimeline" in app
+    assert "initUtilityPopups" in app
+    assert 'id="tab-gate"' in html
+    assert '<section class="project-timeline release-timeline"' in html
+    assert html.index('id="tab-gate"') < html.index('id="project-timeline"')
+    assert 'data-utility-release-view="summary"' in html
+    assert 'data-utility-release-view="timeline"' in html
+    assert 'data-utility-release-view="gate"' in html
+    assert 'data-timeline-horizon="past"' in html
+    assert 'data-timeline-horizon="future"' in html
+    assert 'data-timeline-horizon="elements"' in html
+    assert 'data-timeline-filter="changelog"' in html
+    assert 'data-timeline-filter="roadmap"' in html
+    assert 'data-timeline-filter="todo"' in html
+    assert 'path: "07-changelog/CHANGELOG.md"' in timeline
+    assert 'path: "08-roadmap/ROADMAP.md"' in timeline
+    assert 'path: "08-roadmap/TODO.md"' in timeline
+    assert 'activeHorizon: "timeline"' in timeline
+    assert 'data-timeline-horizon' in timeline
+    assert 'gate: { kicker: "VERIFY", title: "Release" }' in popups
+    assert 'settings: { kicker: "CONFIGURE", title: "Scientific Settings" }' in popups

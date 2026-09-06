@@ -1,4 +1,7 @@
 .wesen-symbiosis-card {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   margin: 1rem 0 0;
   border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
   border-radius: 18px;
@@ -13,6 +16,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.wesen-symbiosis-header {
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .wesen-symbiosis-header span,
@@ -101,6 +109,13 @@
 }
 
 .wesen-symbiosis-item strong,
+.wesen-symbiosis-item small,
+.wesen-symbiosis-gateway strong,
+.wesen-symbiosis-gateway p {
+  overflow-wrap: anywhere;
+}
+
+.wesen-symbiosis-item strong,
 .wesen-symbiosis-item small {
   display: block;
 }
@@ -141,7 +156,7 @@
 
 @media (max-width: 1100px) {
   .wesen-symbiosis-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -153,5 +168,15 @@
 
   .wesen-symbiosis-state {
     text-align: left;
+  }
+
+  .wesen-symbiosis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wesen-symbiosis-gateway > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.2rem;
   }
 }

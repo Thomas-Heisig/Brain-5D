@@ -7,7 +7,10 @@ reported as references but are never rewritten or promoted automatically.
 
 from __future__ import annotations
 
+import argparse
+import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,7 +29,7 @@ _TEXT_SUFFIXES = {
     ".html",
     ".toml",
 }
-_SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__"}
+_SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", "build"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -128,3 +131,50 @@ __all__ = [
     "ResearchReference",
     "audit_research_catalog",
 ]
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Write a repository-wide catalog audit report for CI or local review."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Repository root to scan (default: current directory).",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="JSON report path to write.",
+    )
+    parser.add_argument(
+        "--fail-on-findings",
+        action="store_true",
+        help="Return a non-zero exit code when the audit is not clean.",
+    )
+    args = parser.parse_args(argv)
+    repo_root = args.repo_root.resolve()
+    audit = audit_research_catalog(repo_root)
+    report = {
+        "repo_root": str(repo_root),
+        "audit": audit.to_dict(),
+    }
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        json.dumps(report, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        "Research catalog audit: "
+        f"clean={audit.clean}, missing_questions={len(audit.missing_questions)}, "
+        f"missing_hypotheses={len(audit.missing_hypotheses)}, "
+        f"link_issues={len(audit.link_issues)}"
+    )
+    if args.fail_on_findings and not audit.clean:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

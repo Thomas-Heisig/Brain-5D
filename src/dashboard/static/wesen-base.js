@@ -213,27 +213,115 @@ function ensureWorkspace() {
   section.className = "tab-content dashboard-workspace wesen-workspace";
   section.hidden = true;
   section.innerHTML = `
-    <header class="dashboard-generated-header wesen-header"><div><span class="dashboard-workspace-kicker">LIVE BODY</span><h2>Wesen</h2><p>Maschinen-native Echtzeitansicht aus beobachteten Sensoren, Interozeption, SNN, Aktoren und Rückkopplung.</p></div><div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div></header>
+    <header class="dashboard-generated-header wesen-header"><div><span class="dashboard-workspace-kicker">LIVE BODY</span><h2>Wesen</h2><p>Maschinen-native Echtzeitansicht aus beobachteten Sensoren, Interozeption, SNN, Aktoren und Rückkopplung.</p></div><div class="wesen-header-tools"><div class="wesen-visibility"><button type="button" class="wesen-visibility-toggle" data-wesen-visibility-toggle aria-expanded="false">Oberflächen</button><div class="wesen-visibility-menu" data-wesen-visibility-menu hidden></div></div><div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div></div></header>
     <div class="wesen-layout">
-      <aside class="wesen-sidebar">
-        <section class="wesen-card"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
-        <section class="wesen-card"><header><span>ANSICHT</span><small>interaktiv</small></header><div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div><p class="wesen-hint">Klick: Fokus · Mausrad: Zoom · Doppelklick: Gesamtansicht</p></section>
-        <section class="wesen-card"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
+      <aside class="wesen-sidebar wesen-sidebar-left">
+        <section class="wesen-card" data-wesen-panel="body-state"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
+        <section class="wesen-card" data-wesen-panel="body-view"><header><span>ANSICHT</span><small>interaktiv</small></header><div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div><p class="wesen-hint">Klick: Fokus · Mausrad: Zoom · Doppelklick: Gesamtansicht</p></section>
+        <section class="wesen-card" data-wesen-panel="adaptation"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
       </aside>
-      <section class="wesen-stage-card">
+      <section class="wesen-stage-card" data-wesen-panel="body-map">
         <div class="wesen-stage-toolbar"><div><strong>Adaptive Körperkarte</strong><span id="wesen-stage-subtitle">Körperform entsteht aus real verfügbaren Verbindungen.</span></div><div class="wesen-stage-actions"><button data-wesen-action="reset-view">⌂ Gesamt</button><button data-wesen-action="pause-visual">Ⅱ Visualisierung</button></div></div>
         <div class="wesen-stage" id="wesen-stage"><svg id="wesen-svg" viewBox="0 0 900 700"><defs><filter id="wesen-glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g id="wesen-camera"><path id="wesen-membrane" class="wesen-membrane"/><g id="wesen-environment-layer"></g><g id="wesen-connection-layer"></g><g id="wesen-signal-layer"></g><g id="wesen-organ-layer"></g><g id="wesen-pin-layer"></g></g></svg><div class="wesen-environment-caption"><span>UMWELT</span><strong id="wesen-environment-label">nicht beobachtet</strong></div><div class="wesen-adaptive-caption"><span>REAKTION</span><strong id="wesen-reaction-label">warte auf Telemetrie</strong></div></div>
         <div class="wesen-console"><div class="wesen-console-head"><strong>Ereignisse & Kausalität</strong><div id="wesen-event-filters"><button class="active" data-wesen-filter="all">Alle</button><button data-wesen-filter="sensor">Sensorik</button><button data-wesen-filter="actuator">Aktorik</button><button data-wesen-filter="feedback">Loop</button><button data-wesen-filter="structure">Morphologie</button><button data-wesen-filter="system">System</button></div></div><div id="wesen-events" class="wesen-events"></div></div>
       </section>
-      <aside class="wesen-sidebar">
-        <section class="wesen-card wesen-inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
-        <section class="wesen-card"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
-        <section class="wesen-card"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></section>
-        <section class="wesen-card"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
+      <aside class="wesen-sidebar wesen-sidebar-right">
+        <section class="wesen-card wesen-inspector" data-wesen-panel="inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
+        <section class="wesen-card" data-wesen-panel="boundary"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
+        <section class="wesen-card" data-wesen-panel="self-model"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></section>
+        <section class="wesen-card" data-wesen-panel="morphology"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
       </aside>
     </div>`;
   main.appendChild(section);
   bindInteractions();
+  initVisibilityControls();
+}
+
+const WESEN_VISIBILITY_KEY = "brain5d.wesen.visibility.v1";
+const WESEN_PANEL_LABELS = new Map([
+  ["body-state", "Körperzustand"],
+  ["body-view", "Interaktive Ansichten"],
+  ["adaptation", "Automatische Anpassung"],
+  ["body-map", "Körperkarte und Ereignisse"],
+  ["inspector", "Inspektion"],
+  ["boundary", "Körpergrenze"],
+  ["self-model", "Selbst-Modell"],
+  ["morphology", "Morphologie-Historie"],
+  ["symbiosis", "Embodied Multi-Network Interface"],
+]);
+let wesenVisibility = {};
+
+function loadVisibility() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(WESEN_VISIBILITY_KEY) || "{}");
+    if (stored && typeof stored === "object") wesenVisibility = stored;
+  } catch (_) {
+    wesenVisibility = {};
+  }
+}
+
+function saveVisibility() {
+  try { localStorage.setItem(WESEN_VISIBILITY_KEY, JSON.stringify(wesenVisibility)); } catch (_) { /* optional browser storage */ }
+}
+
+function applyVisibility() {
+  document.querySelectorAll("[data-wesen-panel]").forEach((panel) => {
+    const key = panel.dataset.wesenPanel;
+    panel.hidden = key ? wesenVisibility[key] === false : false;
+  });
+}
+
+function renderVisibilityMenu() {
+  const menu = document.querySelector("[data-wesen-visibility-menu]");
+  if (!menu) return;
+  const panels = [...document.querySelectorAll("[data-wesen-panel]")]
+    .map((panel) => panel.dataset.wesenPanel)
+    .filter((key, index, keys) => key && keys.indexOf(key) === index);
+  menu.innerHTML = `<div class="wesen-visibility-heading"><strong>Bereiche ein-/ausblenden</strong><button type="button" data-wesen-visibility-reset>Alle</button></div>${panels.map((key) => `<label><input type="checkbox" data-wesen-panel-toggle="${key}" ${wesenVisibility[key] === false ? "" : "checked"}> <span>${WESEN_PANEL_LABELS.get(key) || key}</span></label>`).join("")}`;
+}
+
+function initVisibilityControls() {
+  loadVisibility();
+  renderVisibilityMenu();
+  applyVisibility();
+  const root = document.getElementById("tab-wesen");
+  if (!root || root.dataset.visibilityBound) return;
+  root.dataset.visibilityBound = "1";
+  root.addEventListener("click", (event) => {
+    const toggle = event.target.closest("[data-wesen-visibility-toggle]");
+    if (toggle) {
+      const menu = root.querySelector("[data-wesen-visibility-menu]");
+      const open = menu?.hidden !== false;
+      if (menu) menu.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      event.stopPropagation();
+      return;
+    }
+    const reset = event.target.closest("[data-wesen-visibility-reset]");
+    if (reset) {
+      wesenVisibility = {};
+      saveVisibility();
+      renderVisibilityMenu();
+      applyVisibility();
+      return;
+    }
+    if (event.target.closest("[data-wesen-visibility-menu]")) event.stopPropagation();
+  });
+  root.addEventListener("change", (event) => {
+    const input = event.target.closest("[data-wesen-panel-toggle]");
+    if (!input) return;
+    wesenVisibility[input.dataset.wesenPanelToggle] = input.checked;
+    saveVisibility();
+    applyVisibility();
+  });
+  document.addEventListener("click", (event) => {
+    if (!root.querySelector("[data-wesen-visibility-menu]")?.contains(event.target) && !event.target.closest("[data-wesen-visibility-toggle]")) {
+      const menu = root.querySelector("[data-wesen-visibility-menu]");
+      const toggle = root.querySelector("[data-wesen-visibility-toggle]");
+      if (menu) menu.hidden = true;
+      toggle?.setAttribute("aria-expanded", "false");
+    }
+  });
 }
 function ensureNav() {
   if (document.querySelector('.tab-btn[data-tab="wesen"]')) return;
@@ -471,5 +559,5 @@ function bindInteractions() {
   document.getElementById("wesen-stage")?.addEventListener("dblclick",()=>{ state.zoom=1; state.selected="kern"; renderBody(); });
 }
 function initWesenWorkspace() { ensureWorkspace(); ensureNav(); if (!state.timer) poll(); }
-window.Brain5DWesen={init:initWesenWorkspace,activate,refresh:poll};
+window.Brain5DWesen={init:initWesenWorkspace,activate,refresh:poll,registerPanel:(key,label)=>{ WESEN_PANEL_LABELS.set(key,label); renderVisibilityMenu(); applyVisibility(); }};
 if (document.readyState==="loading") document.addEventListener("DOMContentLoaded",initWesenWorkspace,{once:true}); else initWesenWorkspace();
