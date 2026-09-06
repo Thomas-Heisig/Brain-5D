@@ -40,11 +40,16 @@ def _write_registry(root: Path) -> None:
     registry.mkdir(parents=True)
     (registry / "questions.yaml").write_text(
         "- id: RQ-SNN-001\n  domain: snn\n  question: Does it run?\n  relevance: test\n"
-        "- id: RQ-SNN-002\n  domain: snn\n  question: Does it link?\n  relevance: test\n",
+        "- id: RQ-SNN-002\n  domain: snn\n  question: Does it link?\n  relevance: test\n"
+        "- id: RQ-TIME-001\n  domain: timing\n  question: Does timing scale?\n  relevance: test\n"
+        "- id: RQ-SUITE-001\n  domain: research-infrastructure\n  question: Does the suite execute?\n  relevance: test\n",
         encoding="utf-8",
     )
     (registry / "hypotheses.yaml").write_text(
-        "- id: H-SNN-001-A\n  research_question: RQ-SNN-001\n  hypothesis: It advances ticks.\n",
+        "- id: H-SNN-001-A\n  research_question: RQ-SNN-001\n  hypothesis: It advances ticks.\n"
+        "- id: H-SNN-002-A\n  research_question: RQ-SNN-002\n  hypothesis: It produces an impulse response.\n"
+        "- id: H-TIME-001-A\n  research_question: RQ-TIME-001\n  hypothesis: Timing execution is measurable.\n"
+        "- id: H-SUITE-001-A\n  research_question: RQ-SUITE-001\n  hypothesis: The registered suite executes consistently.\n",
         encoding="utf-8",
     )
     (registry / "claims.yaml").write_text("[]\n", encoding="utf-8")
@@ -268,8 +273,8 @@ def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(
     result = service.run_science(
         {
             "experiment_id": "EXP-PING-0001",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SNN-002",
+            "hypothesis_id": "H-SNN-002-A",
             "title": "Impulse response",
             "conditions": "seed=42; recurrence controlled",
             "ticks": 8,
@@ -309,8 +314,8 @@ def test_science_suite_accepts_generated_experiment_id(tmp_path: Path) -> None:
     result = service.run_science(
         {
             "experiment_id": "EXP-GEN-0001",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SNN-002",
+            "hypothesis_id": "H-SNN-002-A",
             "title": "Generated impulse response",
             "conditions": "seed=42",
             "ticks": 8,
@@ -336,8 +341,8 @@ def test_science_suite_uses_selected_seeds_and_ticks(tmp_path: Path) -> None:
     result = service.run_science(
         {
             "experiment_id": "EXP-GEN-0002",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SNN-002",
+            "hypothesis_id": "H-SNN-002-A",
             "title": "Configured impulse response",
             "conditions": "Seeds 7-8; measurement window 3 ticks",
             "ticks": 3,
@@ -368,8 +373,8 @@ def test_science_suite_persists_deterministic_spike_sequence_evidence(
     service.run_science(
         {
             "experiment_id": "EXP-GEN-0003",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SNN-002",
+            "hypothesis_id": "H-SNN-002-A",
             "title": "Observable impulse response",
             "conditions": "Seeds 42,43,44; identical impulse conditions",
             "ticks": 1000,
@@ -396,8 +401,8 @@ def test_science_all_covers_every_registered_suite_group(tmp_path: Path) -> None
     result = service.run_science(
         {
             "experiment_id": "EXP-GEN-ALL-0001",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SUITE-001",
+            "hypothesis_id": "H-SUITE-001-A",
             "title": "Complete science suite",
             "conditions": "All registered science-suite runners",
             "ticks": 2,
@@ -436,8 +441,8 @@ def test_science_protocol_selection_overrides_manual_label_prefix(
     result = service.run_science(
         {
             "experiment_id": "EXP-MANUAL-0001",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-TIME-001",
+            "hypothesis_id": "H-TIME-001-A",
             "title": "Manual time calibration",
             "conditions": "seed=42",
             "ticks": 100,
@@ -465,8 +470,8 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     result = service.run_science(
         {
             "experiment_id": "EXP-PING-0001",
-            "question_id": "RQ-SNN-001",
-            "hypothesis_id": "H-SNN-001-A",
+            "question_id": "RQ-SNN-002",
+            "hypothesis_id": "H-SNN-002-A",
             "title": "Impulse response with AIRR",
             "conditions": "seed=42",
             "ticks": 8,
@@ -491,16 +496,20 @@ def test_science_suite_generates_post_hoc_ai_report_with_explicit_backend(
     summary = (tmp_path / "experiments" / "EXP-PING-0001" / "summary.md").read_text(
         encoding="utf-8"
     )
-    assert "## Versuchsuebersicht" in summary
-    assert "- Status: `completed`" in summary
-    assert "Angeforderte zusaetzliche Nachweise:" in summary
-    assert "Empfohlene Folgeexperimente:" in summary
+    assert "# EXP-PING-0001: Wissenschaftliche Zusammenfassung" in summary
+    assert "- Experimentstatus: `completed`" in summary
+    assert "### Fehlende Nachweise" in summary
+    assert "### Empfohlene Folgeexperimente" in summary
     assert f"{report_id}.md" in summary
-    assert "Post-hoc summary" in summary
+    assert "wissenschaftliche Evidenz `false`" in summary
 
     report = json.loads((report_dir / f"{report_id}.json").read_text(encoding="utf-8"))
     assert report["content"]["epistemic_status"]["experiment_data"] == "PRESENT"
-    assert report["content"]["data_basis"]["data"]["runs"]
+    ai_data = report["content"]["data_basis"]["data"]
+    assert ai_data["run_count"] >= 1
+    assert ai_data["ai_input_policy"] == (
+        "compact_only_raw_on_explicit_deterministic_extract"
+    )
     assert report["content"]["experimental_design"]["protocol"] == "science_suite_v1"
     assert report["content"]["reproducibility"]["configuration_sha256"] != (
         "NOT_AVAILABLE"

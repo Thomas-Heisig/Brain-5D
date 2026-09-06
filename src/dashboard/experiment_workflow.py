@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import marshal
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
@@ -865,7 +864,73 @@ def _find_named_code(code: CodeType, name: str) -> CodeType | None:
 
 
 def _code_digest(code: CodeType) -> str:
-    return hashlib.sha256(marshal.dumps(code)).hexdigest()
+    """Hash executable code semantics while ignoring path/debug metadata.
+
+    Raw marshal bytes include interpreter- and compilation-specific metadata that
+    can differ between an imported function and the same freshly compiled source.
+    The source-freeze gate needs semantic identity instead: bytecode, exception
+    tables, signature/flags, referenced names and recursively hashed constants.
+    """
+    digest = hashlib.sha256()
+
+    def update_value(value: object) -> None:
+        if isinstance(value, CodeType):
+            digest.update(b"code\0")
+            update_code(value)
+            return
+        if isinstance(value, tuple):
+            digest.update(b"tuple\0")
+            for item in value:
+                update_value(item)
+                digest.update(b"\0")
+            return
+        if isinstance(value, frozenset):
+            digest.update(b"frozenset\0")
+            encoded_items = sorted(
+                f"{type(item).__qualname__}:{item!r}".encode(
+                    "utf-8", errors="backslashreplace"
+                )
+                for item in value
+            )
+            for item in encoded_items:
+                digest.update(item)
+                digest.update(b"\0")
+            return
+        if isinstance(value, bytes):
+            digest.update(b"bytes\0")
+            digest.update(value)
+            return
+        digest.update(type(value).__qualname__.encode("utf-8"))
+        digest.update(b":")
+        digest.update(repr(value).encode("utf-8", errors="backslashreplace"))
+
+    def update_code(item: CodeType) -> None:
+        for number in (
+            item.co_argcount,
+            item.co_posonlyargcount,
+            item.co_kwonlyargcount,
+            item.co_nlocals,
+            item.co_stacksize,
+            item.co_flags,
+        ):
+            digest.update(str(number).encode("ascii"))
+            digest.update(b"\0")
+        digest.update(item.co_code)
+        digest.update(b"\0")
+        digest.update(item.co_exceptiontable)
+        digest.update(b"\0")
+        for values in (
+            item.co_names,
+            item.co_varnames,
+            item.co_freevars,
+            item.co_cellvars,
+        ):
+            update_value(tuple(values))
+            digest.update(b"\0")
+        update_value(tuple(item.co_consts))
+
+    update_code(code)
+    return digest.hexdigest()
 
 
 def _assert_loaded_callable_matches_source(
