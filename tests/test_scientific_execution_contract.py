@@ -178,42 +178,32 @@ def test_summary_semantics_distinguish_direct_and_contained_matches() -> None:
     from src.research.experiment_summary import _semantic_status
 
     direct, _ = _semantic_status(
-        "RQ-TEMP-001", "science_suite_v1", {"fast_medium_slow"}
+        "RQ-PING-001", "science_suite_v1", {"recurrence_off", "recurrence_on"}
     )
     contained, _ = _semantic_status(
-        "RQ-TEMP-001",
+        "RQ-PING-001",
         "science_all_v1",
-        {"ping:recurrence_off", "temporal:fast_medium_slow", "5d:5d"},
+        {"ping:recurrence_off", "ping:recurrence_on"},
     )
     mismatch, _ = _semantic_status(
-        "RQ-TEMP-001", "science_suite_v1", {"recurrence_off", "recurrence_on"}
+        "RQ-PING-001", "science_suite_v1", {"fast_medium_slow"}
     )
     assert direct == "DIRECT_MATCH"
     assert contained == "CONTAINS_MATCH"
     assert mismatch == "MISMATCH"
 
 
-def test_time_semantics_ignore_unrelated_science_all_conditions() -> None:
-    from src.research.experiment_summary import _semantic_status
-
-    status, _ = _semantic_status(
-        "RQ-TIME-001",
-        "science_all_v1",
-        {"ping:recurrence_on", "time:100", "time:1000", "temporal:fast_medium_slow"},
-    )
-    assert status == "CONTAINS_MATCH"
-
-
-def test_suite_semantics_require_all_registered_groups() -> None:
+def test_suite_semantics_require_all_substudies() -> None:
     from src.research.experiment_summary import _semantic_status
 
     conditions = {
         "ping:recurrence_off",
+        "ping:recurrence_on",
         "temporal:fast_medium_slow",
-        "stdp:productive_reward_stdp",
+        "stdp:delta_-10",
         "learning:learning_on",
-        "time:1000",
-        "5d:5d",
+        "time:100",
+        "5d:1d",
         "regulation:nominal",
     }
     status, _ = _semantic_status("RQ-SUITE-001", "science_all_v1", conditions)
@@ -235,17 +225,13 @@ def test_long_term_stability_is_not_claimed_from_ping_omnibus() -> None:
     assert "langfristig" in note
 
 
-def test_long_term_stability_question_rejects_ping_runner() -> None:
-    import pytest
-
-    from src.dashboard.experiment_workflow import WorkflowValidationError
-
-    with pytest.raises(
-        WorkflowValidationError, match="dedicated long-term stability protocol"
-    ):
+def test_long_term_stability_question_uses_diagnostic_suite() -> None:
+    assert (
         ExperimentWorkflowService._science_runner(
             {"protocol": "science_suite_v1"}, _workflow("RQ-SNN-001")
         )
+        == "run_all"
+    )
 
 
 def test_reproducibility_question_keeps_ping_runner() -> None:
@@ -255,3 +241,12 @@ def test_reproducibility_question_keeps_ping_runner() -> None:
         )
         == "run_ping"
     )
+
+
+def test_snn_002_recurrence_is_direct_semantic_match() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    status, _ = _semantic_status(
+        "RQ-SNN-002", "science_suite_v1", {"recurrence_off", "recurrence_on"}
+    )
+    assert status == "DIRECT_MATCH"
