@@ -273,8 +273,11 @@ export class ExperimentWorkflowPanel {
       if (protocol) {
         label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small></span>`;
       } else {
-        label.classList.add("workflow-batch-protocol-unavailable");
-        label.innerHTML = `<input type="checkbox" disabled><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · kein operationales Protokoll registriert</small></span>`;
+        const hypothesis = this.hypotheses.find((item) => item.question_id === question.id);
+        const hypothesisId = hypothesis?.id || "EXPLORATORY-UNSPECIFIED";
+        const selection = `exploratory:${question.id}:${hypothesisId}`;
+        label.classList.add("workflow-batch-protocol-exploratory");
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small></span>`;
       }
       return label;
     }));

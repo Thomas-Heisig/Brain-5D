@@ -95,6 +95,34 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     assert "KI-Ausgaben" in report
 
 
+def test_exploratory_batch_runs_through_runtime_ticks(tmp_path: Path) -> None:
+    _write_registry(tmp_path)
+    service = ExperimentWorkflowService(tmp_path)
+    state = {"tick": 0, "neurons": 3, "synapses": 2}
+
+    def run_ticks(ticks: int) -> None:
+        state["tick"] += ticks
+
+    result = service.run_batch(
+        {
+            "batch_id": "EXP-EXPLORATORY-0001",
+            "protocols": ["exploratory:RQ-SNN-001:H-SNN-001-A"],
+            "ticks": 5,
+            "seeds": "42",
+        },
+        run_ticks=run_ticks,
+        before=lambda: dict(state),
+        after=lambda: dict(state),
+    )
+
+    assert result["completed"] == 1
+    assert result["failed"] == 0
+    child = tmp_path / "experiments" / "EXP-EXPLORATORY-0001-01"
+    manifest = json.loads((child / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["research_run_mode"] == "EXPLORATORY"
+    assert manifest["results"]["observed_ticks"] == 5
+
+
 def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> None:
     _write_registry(tmp_path)
     service = ExperimentWorkflowService(tmp_path)

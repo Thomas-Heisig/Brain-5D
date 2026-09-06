@@ -2509,7 +2509,11 @@ body.contrast-mode .overview-surface {
 .workflow-batch-protocol { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 8px; padding: 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: var(--surface-2, rgba(255,255,255,.04)); }
 .workflow-batch-protocol span { display: grid; gap: 2px; min-width: 0; }
 .workflow-batch-protocol small { color: var(--muted); overflow-wrap: anywhere; }
-.workflow-batch-protocol-unavailable { opacity: .58; }
+.workflow-batch-protocol-exploratory {
+  border-color: color-mix(in srgb, var(--status-warn) 45%, var(--line));
+}
+
+.workflow-batch-protocol-exploratory small { color: var(--status-warn); }
 .workflow-batch-dialog .modal-close { flex: 0 0 auto; }
 
 @media (max-width: 680px) {

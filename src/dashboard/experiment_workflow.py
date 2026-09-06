@@ -139,18 +139,37 @@ class ExperimentWorkflowService:
             "next_experiment_id": self._next_experiment_id(),
         }
 
-    def run_batch(self, body: dict[str, object]) -> dict[str, object]:
+    def run_batch(
+        self,
+        body: dict[str, object],
+        *,
+        run_ticks: Callable[[int], object] | None = None,
+        before: Callable[[], dict[str, int]] | None = None,
+        after: Callable[[], dict[str, int]] | None = None,
+    ) -> dict[str, object]:
         """Run selected registered protocols and publish one aggregate report."""
         protocol_ids_value = body.get("protocols")
         if not isinstance(protocol_ids_value, list) or not protocol_ids_value:
             raise WorkflowValidationError("protocols must contain at least one protocol id")
         protocol_ids = [item for item in protocol_ids_value if isinstance(item, str) and item]
+        if not protocol_ids:
+            raise WorkflowValidationError("protocols must contain valid protocol selections")
         catalog = {
             str(item["id"]): item
             for item in protocol_catalog(self._research_root)
             if isinstance(item.get("id"), str)
         }
-        unknown = [protocol_id for protocol_id in protocol_ids if protocol_id not in catalog]
+        exploratory: dict[str, tuple[str, str]] = {}
+        known_protocols: list[str] = []
+        for protocol_id in protocol_ids:
+            if protocol_id.startswith("exploratory:"):
+                parts = protocol_id.split(":", 2)
+                if len(parts) != 3 or not parts[1] or not parts[2]:
+                    raise WorkflowValidationError(f"Invalid exploratory selection: {protocol_id}")
+                exploratory[protocol_id] = (parts[1], parts[2])
+            else:
+                known_protocols.append(protocol_id)
+        unknown = [protocol_id for protocol_id in known_protocols if protocol_id not in catalog]
         if unknown:
             raise WorkflowValidationError(f"Unknown operational protocols: {', '.join(unknown)}")
         batch_id_value = body.get("batch_id")
@@ -169,21 +188,38 @@ class ExperimentWorkflowService:
         notes = str(body.get("notes") or "").strip()
         results: list[dict[str, object]] = []
         for index, protocol_id in enumerate(protocol_ids, start=1):
-            contract = catalog[protocol_id]
+            if protocol_id in exploratory:
+                question_id, hypothesis_id = exploratory[protocol_id]
+                protocol = "runtime_ticks_v1"
+                title = f"{title_prefix}: exploratory {question_id}"
+            else:
+                contract = catalog[protocol_id]
+                question_id = str(contract["research_question"])
+                hypothesis_id = str(contract["hypothesis"])
+                protocol = protocol_id
+                title = f"{title_prefix}: {protocol_id}"
             experiment_id = f"{batch_id}-{index:02d}"
             child = {
                 "experiment_id": experiment_id,
-                "question_id": contract["research_question"],
-                "hypothesis_id": contract["hypothesis"],
-                "title": f"{title_prefix}: {protocol_id}",
+                "question_id": question_id,
+                "hypothesis_id": hypothesis_id,
+                "title": title,
                 "conditions": conditions,
                 "ticks": ticks,
                 "seeds": seeds,
                 "notes": notes,
-                "protocol": protocol_id,
+                "protocol": protocol,
+                "exploratory": protocol_id in exploratory,
             }
             try:
-                result = self.run_science(child)
+                if protocol_id in exploratory:
+                    if run_ticks is None or before is None or after is None:
+                        raise WorkflowValidationError(
+                            "Exploratory batch runs require an attached runtime controller."
+                        )
+                    result = self.run(child, run_ticks, before(), after)
+                else:
+                    result = self.run_science(child)
                 results.append({"protocol": protocol_id, "status": "completed", **result})
             except Exception as exc:
                 results.append({
@@ -821,7 +857,10 @@ class ExperimentWorkflowService:
         hypothesis = registry.hypotheses.get(hypothesis_id)
         if question is None:
             raise WorkflowValidationError(f"Unknown research question '{question_id}'.")
-        if hypothesis is None or hypothesis.research_question != question.id:
+        exploratory_runtime = protocol == "runtime_ticks_v1" and body.get("exploratory") is True
+        if exploratory_runtime and hypothesis_id == "EXPLORATORY-UNSPECIFIED":
+            hypothesis = None
+        elif hypothesis is None or hypothesis.research_question != question.id:
             raise WorkflowValidationError(
                 "The selected hypothesis does not belong to the research question."
             )
