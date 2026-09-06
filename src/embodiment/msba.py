@@ -39,7 +39,7 @@ class EnergyState(StrEnum):
 def validate_projection_dimensions(value: int) -> int:
     """Validate an MSBA projection-space dimensionality without touching core IDs."""
 
-    if isinstance(value, bool) or not isinstance(value, int):
+    if isinstance(value, bool):
         raise ValueError("projection_dimensions must be an integer")
     if not MIN_PROJECTION_DIMENSIONS <= value <= MAX_PROJECTION_DIMENSIONS:
         raise ValueError(
