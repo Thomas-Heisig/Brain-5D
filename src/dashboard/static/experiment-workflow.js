@@ -41,16 +41,9 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
         </div>
         <span id="workflow-research-count" class="gate-badge pending">0 RQs</span>
       </div>
-      <div id="workflow-research-audit" class="research-catalog-audit" role="status" hidden></div>
       <div class="research-catalog-controls">
         <input id="workflow-research-search" type="search" placeholder="RQ, Hypothese oder Begriff suchen …" autocomplete="off">
-        <select id="workflow-research-domain" aria-label="Domain filtern"><option value="">alle Domains</option></select>
-        <select id="workflow-research-status" aria-label="Status filtern"><option value="">alle Status</option></select>
-        <select id="workflow-research-progress" aria-label="Experimentfortschritt filtern">
-          <option value="">jeder Fortschritt</option><option value="not_started">noch kein Lauf</option><option value="started">Lauf vorhanden</option><option value="completed">abgeschlossen</option>
-        </select>
         <label class="research-catalog-check"><input id="workflow-research-operational" type="checkbox"> nur operational</label>
-        <label class="research-catalog-check"><input id="workflow-research-evidence" type="checkbox"> nur mit Evidenz</label>
       </div>
       <div id="workflow-research-results" class="research-catalog-results" role="listbox" aria-label="Forschungsfragen"></div>
       <div class="research-dimension-control">
@@ -65,20 +58,14 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     style.dataset.researchCatalogStyle = "true";
     style.textContent = `
       .research-catalog-selector{grid-column:1/-1;border:1px solid var(--border-color,#30363d);border-radius:12px;padding:14px;margin-bottom:10px}
-      .research-catalog-audit{margin:8px 0;padding:8px 10px;border-left:3px solid #d29922;background:rgba(210,153,34,.08);font-size:.8rem}
-      .research-catalog-audit.clean{border-left-color:#3fb950;background:rgba(63,185,80,.08)}
       .research-catalog-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
       .research-catalog-controls input[type=search]{flex:1 1 320px;min-width:220px}
-      .research-catalog-controls select{min-width:150px;max-width:220px}
       .research-catalog-check{display:flex!important;gap:7px;align-items:center!important;white-space:nowrap}
       .research-catalog-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px;max-height:330px;overflow:auto;padding:2px}
       .research-rq-card{appearance:none;text-align:left;border:1px solid var(--border-color,#30363d);border-radius:9px;padding:10px;background:transparent;color:inherit;cursor:pointer}
       .research-rq-card:hover,.research-rq-card.is-selected{border-color:var(--accent,#58a6ff);background:rgba(88,166,255,.08)}
       .research-rq-head{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:6px}
       .research-rq-card p{margin:0;font-size:.88rem;line-height:1.35}
-      .research-rq-meta{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0 5px}
-      .research-rq-meta span{font-size:.72rem;padding:2px 6px;border-radius:999px;background:color-mix(in srgb,currentColor 10%,transparent)}
-      .research-rq-progress{font-size:.76rem;opacity:.8}
       .research-rq-badge{font-size:.72rem;padding:2px 6px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
       .research-rq-badge.operational{color:#3fb950}.research-rq-badge.exploratory{color:#d29922}
       .research-dimension-control{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--border-color,#30363d)}
@@ -87,11 +74,7 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     document.head.appendChild(style);
 
     byId("workflow-research-search")?.addEventListener("input", () => this._renderResearchCatalog());
-    byId("workflow-research-domain")?.addEventListener("change", () => this._renderResearchCatalog());
-    byId("workflow-research-status")?.addEventListener("change", () => this._renderResearchCatalog());
-    byId("workflow-research-progress")?.addEventListener("change", () => this._renderResearchCatalog());
     byId("workflow-research-operational")?.addEventListener("change", () => this._renderResearchCatalog());
-    byId("workflow-research-evidence")?.addEventListener("change", () => this._renderResearchCatalog());
     byId("workflow-projection-dimensions")?.addEventListener("change", (event) => {
       const value = Math.max(1, Math.min(32, Number(event.target.value) || 5));
       event.target.value = String(value);
@@ -127,80 +110,37 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     return this.hypotheses.filter((item) => item.question_id === questionId);
   }
 
-  _renderResearchFacetOptions() {
-    const values = (key) => [...new Set(this.questions.map((item) => item[key]).filter(Boolean))].sort();
-    const update = (id, placeholder, options) => {
-      const select = byId(id);
-      if (!select) return;
-      const current = select.value;
-      select.replaceChildren(new Option(placeholder, ""));
-      options.forEach((value) => select.add(new Option(value, value)));
-      if (options.includes(current)) select.value = current;
-    };
-    update("workflow-research-domain", "alle Domains", values("domain"));
-    update("workflow-research-status", "alle Status", values("status"));
-  }
-
-  _renderResearchAudit() {
-    const target = byId("workflow-research-audit");
-    const audit = this.catalogAudit;
-    if (!target || !audit || typeof audit.clean !== "boolean") return;
-    const missingQuestions = audit.missing_questions || [];
-    const missingHypotheses = audit.missing_hypotheses || [];
-    const allowlisted = (audit.allowlisted_questions || []).length + (audit.allowlisted_hypotheses || []).length;
-    target.hidden = false;
-    target.className = `research-catalog-audit ${audit.clean ? "clean" : ""}`;
-    target.textContent = audit.clean
-      ? `Catalog audit: clean · ${allowlisted} bewusst klassifizierte Referenzen`
-      : `Catalog audit offen: ${missingQuestions.length} RQs, ${missingHypotheses.length} Hypothesen unresolved · ${allowlisted} klassifiziert`;
-  }
-
   _renderResearchCatalog() {
     const results = byId("workflow-research-results");
     const count = byId("workflow-research-count");
     if (!results) return;
     const search = (byId("workflow-research-search")?.value || "").trim().toLowerCase();
-    this._renderResearchFacetOptions();
-    const domain = byId("workflow-research-domain")?.value || "";
-    const status = byId("workflow-research-status")?.value || "";
-    const progressFilter = byId("workflow-research-progress")?.value || "";
     const operationalOnly = Boolean(byId("workflow-research-operational")?.checked);
-    const evidenceOnly = Boolean(byId("workflow-research-evidence")?.checked);
     const selected = this.elements.question?.value || "";
     const visible = this.questions.filter((question) => {
       const hypotheses = this._matchingHypotheses(question.id);
-      const progress = question.experiment_progress || {};
       const haystack = [question.id, question.label, ...hypotheses.map((item) => `${item.id} ${item.label}`)]
         .join(" ")
         .toLowerCase();
       if (search && !haystack.includes(search)) return false;
-      if (domain && question.domain !== domain) return false;
-      if (status && question.status !== status) return false;
-      if (operationalOnly && !(question.operational ?? this._isOperational(question.id))) return false;
-      if (evidenceOnly && Number(question.evidence_count || 0) === 0) return false;
-      if (progressFilter === "not_started" && Number(progress.total || 0) > 0) return false;
-      if (progressFilter === "started" && Number(progress.total || 0) === 0) return false;
-      if (progressFilter === "completed" && Number(progress.completed || 0) === 0) return false;
+      if (operationalOnly && !this._isOperational(question.id)) return false;
       return true;
     });
     if (count) count.textContent = `${visible.length} / ${this.questions.length} RQs`;
     results.innerHTML = visible
       .map((question) => {
-        const operational = question.operational ?? this._isOperational(question.id);
+        const operational = this._isOperational(question.id);
         const hypotheses = this._matchingHypotheses(question.id);
-        const progress = question.experiment_progress || {};
         return `<button type="button" class="research-rq-card ${selected === question.id ? "is-selected" : ""}" data-rq-id="${escapeHtml(question.id)}" role="option" aria-selected="${selected === question.id}">
           <div class="research-rq-head"><strong>${escapeHtml(question.id)}</strong><span class="research-rq-badge ${operational ? "operational" : "exploratory"}">${operational ? "OPERATIONAL" : "EXPLORATORY"}</span></div>
           <p>${escapeHtml(question.label)}</p>
-          <div class="research-rq-meta"><span>${escapeHtml(question.domain || "ohne Domain")}</span><span>${escapeHtml(question.status || "unbekannt")}</span><span>${Number(question.evidence_count || 0)} Evidenz</span></div>
-          <small>${hypotheses.length} Hypothese${hypotheses.length === 1 ? "" : "n"} · ${Number(progress.completed || 0)} / ${Number(progress.total || 0)} Läufe abgeschlossen</small>
+          <small>${hypotheses.length} Hypothese${hypotheses.length === 1 ? "" : "n"}</small>
         </button>`;
       })
       .join("");
     results.querySelectorAll("[data-rq-id]").forEach((button) => {
       button.addEventListener("click", () => this._selectResearchQuestion(button.dataset.rqId));
     });
-    this._renderResearchAudit();
   }
 
   _selectResearchQuestion(questionId) {

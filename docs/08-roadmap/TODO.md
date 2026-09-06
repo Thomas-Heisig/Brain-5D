@@ -4,58 +4,24 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
-## 2026-09-06 Footer control initialization
-
-- [x] Bind Footer Runtime controls before optional workspace initialization.
-- [x] Initialize the Footer mode switcher on the initial Overview.
-
-## 2026-09-06 Footer telemetry and Network Viewer layout
-
-- [x] Redesign the Footer as two responsive design rows.
-- [x] Populate Activity, Spikes and Ressourcendruck from available live telemetry.
-- [x] Prevent Network Model Viewer toolbar buttons from being clipped.
-- [x] Repair the Embodiment self-model initialization error.
-
-## 2026-09-06 Operator runtime controls and I/O
-
-- [x] Add Footer controls for Runtime start, pause and stop.
-- [x] Show live Runtime input/output counts and rates.
-- [x] Prevent box-control icons from covering box titles.
-- [x] Remove nested active-tab clipping in height and width.
-
-## 2026-09-06 Dashboard Operator refresh
-
-- [x] Render the complete backend-provided embodiment connection inventory in the Overview.
-- [x] Refresh embodiment state and connections independently from slower gate/research data.
-- [x] Remove horizontal overflow from the responsive Overview and Wesen surfaces.
-
 This file contains active work only. Historical Alpha/Sprint TODO files remain traceability records and are not the current backlog.
 
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 799 tests collected on the 2026-09-06 current-head baseline (793 passed, 5 skipped, 1 unrelated frontend-wiring failure locally).
+- [x] 791 tests collected on the 2026-09-06 merged research-catalog baseline.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
 - [ ] Confirm the final current-head `main` CI after the documentation refresh before calling the refreshed head fully green.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
-- [x] Wissenschaft exposes four reachable views: Network, Research & Analysis, Parameter and live Summary; the retired global Network CSS hide was removed.
 - [x] Release/Gate moved to a footer action.
 - [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface and is integrated into Runtime & Wesen.
 - [x] Dedicated read-only `Wesen` workspace added.
 - [x] PCA-based bounded Neuron Model Viewer, correlation heatmap and parallel-coordinate view added to the scientific Network Workbench.
 - [x] Neural Symbiosis and MSBA are embodiment-only/read-only by default and do not silently mutate the canonical SNN core.
-- [x] Place the Embodied Multi-Network Interface below the interactive body map and event console with full-width responsive reading.
-- [x] Persist Wesen surface visibility choices locally and provide a resettable show/hide control for all major Wesen panels.
-- [x] Keep Wesen Runtime in three readable columns through tablet widths and apply shared Light/Contrast visibility tokens.
-- [x] Add a global Scientific Reader button that opens and downloads a text-based current-workspace observation snapshot.
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
-- [x] Research Workspace includes a graphical timeline for Changelog, Roadmap and TODO with source filters and task progress.
-- [x] Release and Settings are utility popups; Release offers Summary, Timeline and Gate views with past/future/element switching.
-- [x] Release Summary exposes criteria coverage, live-profile count, blockers and next-decision context; Gate and Timeline share the full popup width.
-- [x] Dashboard surfaces share typography/color rules, avoid upper-content clipping dynamically, and support persistent minimize/maximize controls with one maximized box at a time.
 
 ## P0 — research catalog, hypotheses and experiment reachability
 
@@ -69,10 +35,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Visibly distinguish `OPERATIONAL` frozen/preregistered questions from `EXPLORATORY` questions.
 - [x] Route non-operational questions only to the existing exploratory `runtime_ticks_v1` path; never silently substitute an unrelated science runner or promote those runs to EVID.
 - [ ] Operationalize every still-unmapped canonical RQ/H with a dedicated protocol, controls, stopping rule, preregistration and runner before claiming that hypothesis can be confirmatorily tested.
-- [x] Add a CI report artifact from the repository-wide catalog audit.
-- [x] Classify explicit negative/test-only RQ/H references through a reasoned audit allow-list; keep unresolved findings visible in the report.
-- [ ] Decide which remaining historical-only identifiers belong on the canonical registry versus a historical allow-list.
-- [x] Add domain/status/evidence/experiment-progress facets to the Research Catalog and expose them through the workflow catalog API.
+- [ ] Add a CI report artifact from the repository-wide catalog audit and decide which historical-only identifiers belong on an explicit allow-list versus the canonical registry.
+- [ ] Add domain/status/evidence/experiment-progress facets to the Research Catalog once those fields are exposed by the workflow catalog API.
 - [ ] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
 
 ## P0 — variable dimensionality

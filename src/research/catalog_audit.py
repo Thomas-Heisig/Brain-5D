@@ -7,20 +7,14 @@ reported as references but are never rewritten or promoted automatically.
 
 from __future__ import annotations
 
-import argparse
-import json
 import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, cast
-
-import yaml
 
 from .registry import ResearchRegistry
 
-RQ_PATTERN = re.compile(r"(?<![A-Z0-9-])RQ-[A-Z0-9]+(?:-[A-Z0-9]+)+\b(?!-[A-Z0-9])")
-H_PATTERN = re.compile(r"(?<![A-Z0-9-])H-[A-Z0-9]+(?:-[A-Z0-9]+)+\b(?!-[A-Z0-9])")
+RQ_PATTERN = re.compile(r"\bRQ-[A-Z0-9]+(?:-[A-Z0-9]+)+\b")
+H_PATTERN = re.compile(r"\bH-[A-Z0-9]+(?:-[A-Z0-9]+)+\b")
 _TEXT_SUFFIXES = {
     ".md",
     ".txt",
@@ -32,7 +26,7 @@ _TEXT_SUFFIXES = {
     ".html",
     ".toml",
 }
-_SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", "build"}
+_SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,29 +44,12 @@ class ResearchReference:
 
 
 @dataclass(frozen=True, slots=True)
-class ResearchAuditAllowlistEntry:
-    identifier: str
-    kind: str
-    reason: str
-
-    def to_dict(self) -> dict[str, str]:
-        return {
-            "identifier": self.identifier,
-            "kind": self.kind,
-            "reason": self.reason,
-        }
-
-
-@dataclass(frozen=True, slots=True)
 class ResearchCatalogAudit:
     question_references: tuple[ResearchReference, ...]
     hypothesis_references: tuple[ResearchReference, ...]
     missing_questions: tuple[str, ...]
     missing_hypotheses: tuple[str, ...]
     link_issues: tuple[dict[str, str], ...]
-    allowlisted_questions: tuple[str, ...] = ()
-    allowlisted_hypotheses: tuple[str, ...] = ()
-    allowlist: tuple[ResearchAuditAllowlistEntry, ...] = ()
 
     @property
     def clean(self) -> bool:
@@ -92,9 +69,6 @@ class ResearchCatalogAudit:
             "hypothesis_reference_count": len(self.hypothesis_references),
             "missing_questions": list(self.missing_questions),
             "missing_hypotheses": list(self.missing_hypotheses),
-            "allowlisted_questions": list(self.allowlisted_questions),
-            "allowlisted_hypotheses": list(self.allowlisted_hypotheses),
-            "allowlist": [item.to_dict() for item in self.allowlist],
             "link_issues": list(self.link_issues),
             "question_references": question_refs,
             "hypothesis_references": hypothesis_refs,
@@ -136,119 +110,21 @@ def audit_research_catalog(
 
     known_questions = set(active_registry.questions)
     known_hypotheses = set(active_registry.hypotheses)
-    allowlist = _load_allowlist(registry_dir / "catalog_audit_allowlist.yaml")
-    allowed_questions = {
-        item.identifier for item in allowlist if item.kind == "question"
-    }
-    allowed_hypotheses = {
-        item.identifier for item in allowlist if item.kind == "hypothesis"
-    }
-    missing_questions = tuple(
-        sorted(found_questions - known_questions - allowed_questions)
-    )
-    missing_hypotheses = tuple(
-        sorted(found_hypotheses - known_hypotheses - allowed_hypotheses)
-    )
+    missing_questions = tuple(sorted(found_questions - known_questions))
+    missing_hypotheses = tuple(sorted(found_hypotheses - known_hypotheses))
     return ResearchCatalogAudit(
         question_references=tuple(question_refs),
         hypothesis_references=tuple(hypothesis_refs),
         missing_questions=missing_questions,
         missing_hypotheses=missing_hypotheses,
         link_issues=tuple(active_registry.link_issues()),
-        allowlisted_questions=tuple(sorted(found_questions & allowed_questions)),
-        allowlisted_hypotheses=tuple(sorted(found_hypotheses & allowed_hypotheses)),
-        allowlist=allowlist,
     )
-
-
-def _load_allowlist(path: Path) -> tuple[ResearchAuditAllowlistEntry, ...]:
-    if not path.is_file():
-        return ()
-    raw: Any = yaml.safe_load(path.read_text(encoding="utf-8")) or []
-    if not isinstance(raw, list):
-        raise ValueError(f"Research audit allowlist must be a list: {path}")
-    entries: list[ResearchAuditAllowlistEntry] = []
-    seen: set[tuple[str, str]] = set()
-    for item in raw:
-        if not isinstance(item, dict):
-            raise ValueError(
-                f"Research audit allowlist entry must be an object: {path}"
-            )
-        mapping = cast(dict[str, Any], item)
-        identifier = mapping.get("id")
-        kind = mapping.get("kind")
-        reason = mapping.get("reason")
-        if (
-            not isinstance(identifier, str)
-            or not identifier.strip()
-            or kind not in {"question", "hypothesis"}
-            or not isinstance(reason, str)
-            or not reason.strip()
-        ):
-            raise ValueError(
-                "Research audit allowlist entries require non-empty id/reason "
-                "and kind question|hypothesis."
-            )
-        key = (identifier, kind)
-        if key in seen:
-            raise ValueError(f"Duplicate research audit allowlist entry: {identifier}")
-        seen.add(key)
-        entries.append(ResearchAuditAllowlistEntry(identifier, kind, reason))
-    return tuple(entries)
 
 
 __all__ = [
     "H_PATTERN",
     "RQ_PATTERN",
-    "ResearchAuditAllowlistEntry",
     "ResearchCatalogAudit",
     "ResearchReference",
     "audit_research_catalog",
 ]
-
-
-def main(argv: list[str] | None = None) -> int:
-    """Write a repository-wide catalog audit report for CI or local review."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--repo-root",
-        type=Path,
-        default=Path.cwd(),
-        help="Repository root to scan (default: current directory).",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        required=True,
-        help="JSON report path to write.",
-    )
-    parser.add_argument(
-        "--fail-on-findings",
-        action="store_true",
-        help="Return a non-zero exit code when the audit is not clean.",
-    )
-    args = parser.parse_args(argv)
-    repo_root = args.repo_root.resolve()
-    audit = audit_research_catalog(repo_root)
-    report = {
-        "repo_root": str(repo_root),
-        "audit": audit.to_dict(),
-    }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(report, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    print(
-        "Research catalog audit: "
-        f"clean={audit.clean}, missing_questions={len(audit.missing_questions)}, "
-        f"missing_hypotheses={len(audit.missing_hypotheses)}, "
-        f"link_issues={len(audit.link_issues)}"
-    )
-    if args.fail_on_findings and not audit.clean:
-        return 1
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())

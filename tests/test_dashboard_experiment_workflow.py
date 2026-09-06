@@ -39,14 +39,14 @@ def _write_registry(root: Path) -> None:
     registry = root / "registry"
     registry.mkdir(parents=True)
     (registry / "questions.yaml").write_text(
-        "- id: RQ-SNN-001\n  domain: snn\n  question: Does it run?\n  relevance: test\n  status: open\n  evidence: [EVID-TEST-001]\n"
+        "- id: RQ-SNN-001\n  domain: snn\n  question: Does it run?\n  relevance: test\n"
         "- id: RQ-SNN-002\n  domain: snn\n  question: Does it link?\n  relevance: test\n"
         "- id: RQ-TIME-001\n  domain: timing\n  question: Does timing scale?\n  relevance: test\n"
         "- id: RQ-SUITE-001\n  domain: research-infrastructure\n  question: Does the suite execute?\n  relevance: test\n",
         encoding="utf-8",
     )
     (registry / "hypotheses.yaml").write_text(
-        "- id: H-SNN-001-A\n  research_question: RQ-SNN-001\n  hypothesis: It advances ticks.\n  status: untested\n  evidence: [EVID-H-TEST-001]\n"
+        "- id: H-SNN-001-A\n  research_question: RQ-SNN-001\n  hypothesis: It advances ticks.\n"
         "- id: H-SNN-002-A\n  research_question: RQ-SNN-002\n  hypothesis: It produces an impulse response.\n"
         "- id: H-TIME-001-A\n  research_question: RQ-TIME-001\n  hypothesis: Timing execution is measurable.\n"
         "- id: H-SUITE-001-A\n  research_question: RQ-SUITE-001\n  hypothesis: The registered suite executes consistently.\n",
@@ -262,87 +262,6 @@ def test_catalog_publishes_the_next_generated_experiment_id(tmp_path: Path) -> N
     catalog = ExperimentWorkflowService(tmp_path).catalog()
 
     assert catalog["next_experiment_id"] == "EXP-GEN-0001"
-
-
-def test_catalog_exposes_facets_and_manifest_progress(tmp_path: Path) -> None:
-    _write_registry(tmp_path)
-    for experiment_id, status in (
-        ("EXP-CATALOG-DONE", "completed"),
-        ("EXP-CATALOG-FAILED", "failed"),
-    ):
-        directory = tmp_path / "experiments" / experiment_id
-        directory.mkdir(parents=True)
-        (directory / "manifest.json").write_text(
-            json.dumps(
-                {
-                    "experiment_status": status,
-                    "research_questions": ["RQ-SNN-001"],
-                    "hypotheses": ["H-SNN-001-A"],
-                }
-            ),
-            encoding="utf-8",
-        )
-
-    catalog = ExperimentWorkflowService(tmp_path).catalog()
-    question = next(item for item in catalog["questions"] if item["id"] == "RQ-SNN-001")
-    hypothesis = next(
-        item for item in catalog["hypotheses"] if item["id"] == "H-SNN-001-A"
-    )
-
-    assert question["domain"] == "snn"
-    assert question["status"] == "open"
-    assert question["evidence"] == ["EVID-TEST-001"]
-    assert question["evidence_count"] == 1
-    assert question["operational"] is False
-    assert question["experiment_progress"] == {
-        "total": 2,
-        "completed": 1,
-        "failed": 1,
-    }
-    assert hypothesis["status"] == "untested"
-    assert hypothesis["evidence_count"] == 1
-    assert hypothesis["experiment_progress"] == {
-        "total": 2,
-        "completed": 1,
-        "failed": 1,
-    }
-
-
-def test_catalog_exposes_repository_audit_status(tmp_path: Path) -> None:
-    research_root = tmp_path / "research"
-    _write_registry(research_root)
-    (tmp_path / "docs").mkdir()
-    (tmp_path / "docs" / "notes.md").write_text(
-        "RQ-UNRESOLVED-001 H-UNRESOLVED-001-A", encoding="utf-8"
-    )
-    (research_root / "registry" / "catalog_audit_allowlist.yaml").write_text(
-        "- id: RQ-UNRESOLVED-001\n  kind: question\n  reason: historical note\n"
-        "- id: H-UNRESOLVED-001-A\n  kind: hypothesis\n  reason: historical note\n",
-        encoding="utf-8",
-    )
-
-    catalog = ExperimentWorkflowService(research_root, repo_root=tmp_path).catalog()
-
-    assert catalog["audit"] == {
-        "clean": True,
-        "missing_questions": [],
-        "missing_hypotheses": [],
-        "allowlisted_questions": ["RQ-UNRESOLVED-001"],
-        "allowlisted_hypotheses": ["H-UNRESOLVED-001-A"],
-        "allowlist": [
-            {
-                "identifier": "RQ-UNRESOLVED-001",
-                "kind": "question",
-                "reason": "historical note",
-            },
-            {
-                "identifier": "H-UNRESOLVED-001-A",
-                "kind": "hypothesis",
-                "reason": "historical note",
-            },
-        ],
-        "link_issues": [],
-    }
 
 
 def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(

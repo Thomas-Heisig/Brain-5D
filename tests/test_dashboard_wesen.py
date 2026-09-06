@@ -101,7 +101,7 @@ def test_wesen_has_body_like_machine_anatomy() -> None:
         '"torso"',
     ):
         assert token in anatomy or token in styles
-    assert "Sinneszone" not in anatomy  # visual semantics, not biological labeling
+    assert "Sinneszone" not in anatomy
     assert "pointer-events: none" in styles
 
 
@@ -174,7 +174,7 @@ def test_primary_frontend_uses_three_areas_and_keeps_utility_routes() -> None:
     assert 'data-primary-area="dashboard"' in architecture
     assert 'data-primary-area="science"' in architecture
     assert 'data-primary-area="wesen"' in architecture
-    assert 'for (const name of ["network", "gate"] )' in console
+    assert 'for (const name of ["network", "gate"])' in console
     assert 'button.classList.add("wesen-utility-hidden")' in console
     assert "dataset.footerRelease" in console
     assert "wesen-release-button" in console
@@ -201,32 +201,3 @@ def test_wesen_design_is_theme_responsive_and_reduced_motion_safe() -> None:
     assert "prefers-reduced-motion" in adaptive
     assert "prefers-reduced-motion" in organism
     assert "prefers-reduced-motion" in anatomy
-
-
-def test_wesen_symbiosis_is_full_width_below_body_map_and_events() -> None:
-    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
-    symbiosis = (STATIC / "wesen-neural-symbiosis.js").read_text(encoding="utf-8")
-    styles = (STATIC / "wesen-neural-symbiosis.css").read_text(encoding="utf-8")
-    assert 'data-wesen-panel="body-map"' in base
-    assert 'panel.dataset.wesenPanel = "symbiosis"' in symbiosis
-    assert 'const layout = workspace.querySelector(".wesen-layout")' in symbiosis
-    assert 'layout.insertAdjacentElement("afterend", panel)' in symbiosis
-    assert "width: 100%" in styles
-    assert "overflow-wrap: anywhere" in styles
-    assert "var(--wesen-surface" in styles
-    assert "var(--wesen-line" in styles
-
-
-def test_wesen_surface_visibility_is_persistent_and_resettable() -> None:
-    base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
-    styles = (STATIC / "wesen.css").read_text(encoding="utf-8")
-    for token in (
-        'brain5d.wesen.visibility.v1',
-        'data-wesen-visibility-toggle',
-        'data-wesen-panel-toggle',
-        'localStorage.setItem',
-        'data-wesen-visibility-reset',
-        'registerPanel:(key,label)',
-    ):
-        assert token in base
-    assert ".wesen-visibility-menu[hidden]" in styles

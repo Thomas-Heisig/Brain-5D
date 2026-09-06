@@ -38,7 +38,7 @@
 // IMPORTS — static ES module imports (no dynamic fallback)
 // ================================================================
 
-import { ControlPanel, ControlAPI } from './control-panel.js';
+import { ControlPanel } from './control-panel.js';
 import { OperatorConsole } from './operator_console.js';
 import { initResearchBrowser, initDocumentationBrowser, refreshFileManager } from './file-viewer.js';
 import { dashboardStore } from './state-store.js';
@@ -51,10 +51,6 @@ import { renderOverviewCommandCenter, setupOverviewActions } from './overview-pa
 import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
 import { initResearchChat } from './research-chat.js';
-import { initProjectTimeline } from './project-timeline.js';
-import { initUtilityPopups } from './utility-popups.js';
-import { initBoxControls } from './box-controls.js';
-import { initScientificReader } from './scientific-reader.js';
 
 // ================================================================
 // DOM HELPERS
@@ -193,8 +189,8 @@ function setupTabs() {
     if (tabName === 'control' && !initialized.control) {
       instances.control = initControlPanel();
       instances.console = initOperatorConsole();
-      instances.experimentMode = sharedExperimentMode || new ExperimentMode();
-      if (!sharedExperimentMode) instances.experimentMode.refresh();
+      instances.experimentMode = new ExperimentMode();
+      instances.experimentMode.refresh();
       initialized.control = true;
     }
     if (tabName === 'research' && !initialized.research) {
@@ -207,7 +203,6 @@ function setupTabs() {
       initialized.research = true;
     }
     if (tabName === 'gate' && !initialized.gate) {
-      initProjectTimeline();
       initGateBoard();
       initialized.gate = true;
     }
@@ -281,7 +276,6 @@ let refreshInterval = null;
 let heatmapInterval = null;
 let liveProjectionInterval = null;
 let experimentRunActive = false;
-let sharedExperimentMode = null;
 
 function renderExperimentRunFooter() {
   const vitals = document.querySelector('.footer-vitals');
@@ -413,17 +407,11 @@ function renderStatus(state) {
   const activity = network.active_neurons != null && neuronCount
     ? Number(network.active_neurons) / Number(neuronCount)
     : null;
-  const spikesPerTick = network.spikes_per_tick != null
-    ? Number(network.spikes_per_tick)
-    : (system.spikes_last_tick != null ? Number(system.spikes_last_tick) : null);
+  const spikesPerTick = network.spikes_per_tick != null ? Number(network.spikes_per_tick) : null;
   const spikes = spikesPerTick != null ? spikesPerTick : (system.spikes_total != null ? Number(system.spikes_total) : null);
-  const runtimeClock = data.embodiment_detail?.metrics?.runtime_clock
-    || data.embodiment?.runtime_clock
-    || {};
   const pressureInputs = [system.cpu_percent, system.memory_percent]
     .filter((value) => value != null)
     .map(Number);
-  if (runtimeClock.compute_saturation != null) pressureInputs.push(Number(runtimeClock.compute_saturation) * 100);
   const pressure = pressureInputs.length ? Math.max(...pressureInputs) / 100 : null;
   setText('footer-activity-value', activity == null ? '—' : `${(activity * 100).toFixed(1)}%`);
   setText('footer-spikes-value', spikes == null ? '—' : formatNumber(spikes));
@@ -978,10 +966,6 @@ async function refreshIOFlow() {
     const outputFill = document.getElementById('io-output-fill');
     if (outputFill) outputFill.style.width = Math.min(100, data.output_mean_rate * 200) + '%';
 
-    setText('footer-input-value', `${formatNumber(data.input_count)} · ${formatFloat(data.input_mean_rate, 3)}`);
-    setText('footer-output-value', `${formatNumber(data.output_count)} · ${formatFloat(data.output_mean_rate, 3)}`);
-    setText('footer-io-state', data.propagation_active ? 'Signalfluss aktiv' : 'kein aktueller Signalfluss');
-
     // Badge
     const badge = document.getElementById('io-flow-badge');
     if (badge) {
@@ -1007,34 +991,6 @@ async function refreshIOFlow() {
     }
     const meta = document.getElementById('io-flow-meta');
     if (meta) meta.textContent = '⚠️ IO-Fluss nicht verfügbar';
-    setText('footer-input-value', '—');
-    setText('footer-output-value', '—');
-    setText('footer-io-state', 'I/O offline');
-  }
-}
-
-function initFooterRuntimeControls() {
-  const commands = {
-    'footer-runtime-start': () => ControlAPI.start(),
-    'footer-runtime-pause': () => ControlAPI.pause(),
-    'footer-runtime-stop': () => ControlAPI.stop(),
-  };
-  for (const [id, command] of Object.entries(commands)) {
-    const button = $(id);
-    if (!button || button.dataset.bound === 'true') continue;
-    button.dataset.bound = 'true';
-    button.addEventListener('click', async () => {
-      const buttons = Object.keys(commands).map((key) => $(key)).filter(Boolean);
-      buttons.forEach((item) => { item.disabled = true; });
-      try {
-        await command();
-        await dashboardStore.refresh();
-      } catch (error) {
-        setText('system-status', `Fehler: ${error.message}`);
-      } finally {
-        buttons.forEach((item) => { item.disabled = false; });
-      }
-    });
   }
 }
 
@@ -1950,14 +1906,12 @@ async function refreshGateStatus() {
     scientificEl.textContent = scientificStatus;
     scientificEl.className = `gate-badge gate-${scientificStatus}`;
   }
-  setText('release-summary-scientific', scientificStatus);
 
   const ciEl = $('gate-ci');
   if (ciEl) {
     ciEl.textContent = ciStatus;
     ciEl.className = `gate-badge gate-${ciStatus}`;
   }
-  setText('release-summary-ci', ciStatus);
 
   // Overall release-readiness badge
   const overallEl = $('gate-overall');
@@ -1965,7 +1919,6 @@ async function refreshGateStatus() {
     overallEl.textContent = readiness;
     overallEl.className = `gate-badge gate-${readiness === 'ready' ? 'passed' : 'pending'}`;
   }
-  setText('release-summary-readiness', readiness);
 
   // Live Runtime Profile
   const liveRuntime = scientificGate.live_runtime || data.live_runtime;
@@ -1977,24 +1930,6 @@ async function refreshGateStatus() {
   const gateA = scientificGate.gate_a || data.gate_a;
   const gateB = scientificGate.gate_b || data.gate_b;
   const gateC = scientificGate.gate_c || data.gate_c;
-  const gateItems = [gateA, gateB, gateC].flatMap((gate) => gate?.items || []);
-  const passedCriteria = gateItems.filter((item) => item.status === 'passed').length;
-  const blockers = Array.isArray(data.release_readiness?.blockers)
-    ? data.release_readiness.blockers
-    : [];
-  setText('release-summary-criteria', `${passedCriteria} / ${gateItems.length}`);
-  setText('release-summary-live', Array.isArray(liveRuntime) ? liveRuntime.length : 0);
-  setText('release-summary-blockers', blockers.length);
-  setText('release-summary-version', document.getElementById('footer-version')?.textContent || '—');
-  const nextDecision = $('release-summary-next');
-  if (nextDecision) {
-    const message = blockers.length
-      ? `${blockers.length} blocker(s) keep the release decision open: ${blockers.slice(0, 2).join(' · ')}`
-      : readiness === 'ready'
-        ? 'All reported release signals are ready for the next controlled release step.'
-        : 'No blocker detail was reported; review the Gate view and current evidence before release.';
-    nextDecision.querySelector('strong').textContent = message;
-  }
   if (gateA?.items) {
     renderGateCriteria('gate-a-list', gateA.items);
   }
@@ -2457,14 +2392,6 @@ function setupGlobalShortcuts() {
 function init() {
   console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
 
-  // Critical footer controls must bind before optional workspace modules.
-  initFooterRuntimeControls();
-  sharedExperimentMode = new ExperimentMode();
-  sharedExperimentMode.refresh();
-
-  initUtilityPopups();
-  initBoxControls();
-
   // Setup tab navigation (also initializes components lazily)
   setupTabs();
   setupOverviewActions();
@@ -2489,7 +2416,6 @@ function init() {
   setupThemeToggle();
   setupAccessibilityToggle();
   setupGlobalChrome();
-  initScientificReader();
 
   console.log('✅ Dashboard ready');
 }

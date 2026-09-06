@@ -263,31 +263,6 @@ jobs:
           tests/test_ai_boundaries.py
           tests/test_ai_governance.py
           tests/test_experiment_validity.py
-      - name: Research Catalog audit report
-        if: always()
-        run: |
-          python -m src.research.catalog_audit \
-            --output research-catalog-audit.json
-      - name: Upload Research Catalog audit
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: research-catalog-audit
-          path: research-catalog-audit.json
-      - name: Research Catalog audit summary
-        if: always()
-        run: |
-          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
-          import json
-          from pathlib import Path
-          report = json.loads(Path("research-catalog-audit.json").read_text())
-          audit = report["audit"]
-          print("### Research Catalog audit")
-          print(f"- clean: `{audit['clean']}`")
-          print(f"- missing questions: `{len(audit['missing_questions'])}`")
-          print(f"- missing hypotheses: `{len(audit['missing_hypotheses'])}`")
-          print(f"- link issues: `{len(audit['link_issues'])}`")
-          PY
       - name: Summary
         if: always()
         run: echo "### Scientific Integrity Gate completed" >> $GITHUB_STEP_SUMMARY
