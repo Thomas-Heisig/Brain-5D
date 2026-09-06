@@ -1,0 +1,1724 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0026",
+  "research_question_id": "RQ-SNN-002",
+  "hypothesis_ids": [
+    "H-SNN-002-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-06T08:03:30.044614+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0026",
+      "research_question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-002-A",
+          "research_question": "RQ-SNN-002",
+          "hypothesis": "Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare Spikefolgen.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-06",
+      "source_sha": "3807a721b233e9e727d221345168dad1e0941804"
+    },
+    "executive_summary": "Die Ergebnisse zeigen einen sehr starken, konsistenten Effekt der Rekurrenzverbindung auf die Netzwerkdynamik. Die Metriken 'delivered_synaptic_events', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Die Reproduzierbarkeit der Ergebnisse über die Seeds 42, 43 und 44 hinweg ist gegeben, da die Mittelwerte und die Streuung der Schlüsselmetriken (z.B. 'delivered_synaptic_events': 33.0 vs 2.0; 'propagation_depth': 61.0 vs 1.0) konstant sind. Dies stützt die Hypothese, dass die Rekurrenzverbindung die Netzwerkaktivität und die Komplexität der Spike-Propagation maßgeblich erhöht. Allerdings ist die Interpretation der *Ursache* dieses Effekts (ob es nur die Rekurrenzverbindung ist oder auch die Interaktion mit anderen Komponenten) noch spekulativ.",
+    "research_question": {
+      "id": "RQ-SNN-002",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "relevance": "Basis für deterministische Reproduzierbarkeit aller Experimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-002-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {
+      "experiment_id": "EXP-GEN-0026",
+      "research_question": "RQ-SNN-002",
+      "hypothesis": "H-SNN-002-A",
+      "title": "Network impulse response",
+      "conditions": "Seeds 42,43,44; identical initial state per seed; impulse current 100.0; recurrence as controlled treatment.",
+      "ticks": 1000,
+      "ticks_contract": "minimum requested observation window",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "protocol": "science_suite_v1",
+      "resolved_runner": "run_ping",
+      "tick_validation": {
+        "status": "SATISFIED",
+        "mode": "minimum_per_run",
+        "requested_ticks": 1000,
+        "observed_min": 1000,
+        "observed_max": 1000
+      },
+      "notes": "",
+      "execution": "registered experiment_suite runner",
+      "assistant_policy": "AI is post-hoc interpretation only."
+    },
+    "data_basis": {
+      "data": {
+        "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+        "generated_by": "deterministic_research_data_v2",
+        "limits": {
+          "ai_packet_max_bytes": 1000000,
+          "run_summary_max_bytes": 5000000,
+          "sequence_preview_items": 16
+        },
+        "raw_index": {
+          "path": "DATA/runs_index.json",
+          "run_count": 6,
+          "sha256": "86e0e753ae4165cc5554e39777752a4f4b08593caf94281f829fde6785d55c45"
+        },
+        "run_count": 6,
+        "run_preview": [
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0000-recurrence_off-seed-42.json.gz",
+              "sha256": "1fb2ef9daefefb278c34fbbc3c0d30b5279fc934c55c865d3be70911511be48e",
+              "size_bytes": 573,
+              "uncompressed_bytes": 1089
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "c754d08bd33815fe948d5eb24c6032c8f503273cc31977e2fece03cff37111a2",
+              "network_state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "c754d08bd33815fe948d5eb24c6032c8f503273cc31977e2fece03cff37111a2",
+            "state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0001-recurrence_on-seed-42.json.gz",
+              "sha256": "dc02ce16dfe095c96ab927b439afb26a884fc60f3890d6f35b8936232d27f401",
+              "size_bytes": 675,
+              "uncompressed_bytes": 1866
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 33,
+              "first_response_latency": 2,
+              "last_response_latency": 62,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "a3ae0c55895e7b67735e87603eac03371d94471b7ef5066fcacf35c3beedd6ac",
+              "network_state_digest_before": "0a8ad1a7fb422030d84c0c2b79bb4aaa9a365de2f1561a3cab47e7c869f23874",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 61,
+              "recurrent_events": 10,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": {
+                "_projection": "bounded_sequence",
+                "head": [
+                  {
+                    "neuron_id": 0,
+                    "tick": 0
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 1
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 2
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 3
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 4
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 5
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 7
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 9
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 11
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 13
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 15
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 17
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 19
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 21
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 23
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 25
+                  }
+                ],
+                "item_count": 33,
+                "tail": [
+                  {
+                    "neuron_id": 2,
+                    "tick": 29
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 31
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 33
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 35
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 37
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 39
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 41
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 43
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 45
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 47
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 50
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 52
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 54
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 58
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 60
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 62
+                  }
+                ]
+              },
+              "spike_sequence_digest": "792fba51d8342fb746ee823018199857abbb23f3538ef983796cec9cbb3c8035",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 33,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 33,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "a3ae0c55895e7b67735e87603eac03371d94471b7ef5066fcacf35c3beedd6ac",
+            "state_digest_before": "0a8ad1a7fb422030d84c0c2b79bb4aaa9a365de2f1561a3cab47e7c869f23874"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0002-recurrence_off-seed-43.json.gz",
+              "sha256": "beaa3b17214761d74c562c8bed34c01d316a6288227abcc3315b85e4e88326ea",
+              "size_bytes": 574,
+              "uncompressed_bytes": 1089
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "dd42cc41f1498b512bc3b933efd1d9f29e00e080d0e45f064caa25ae3fb34e8b",
+              "network_state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "dd42cc41f1498b512bc3b933efd1d9f29e00e080d0e45f064caa25ae3fb34e8b",
+            "state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0003-recurrence_on-seed-43.json.gz",
+              "sha256": "cdcc6c0f65ffd9247862abe93424a91ddd7a2121746251c370ff645362f0cffa",
+              "size_bytes": 673,
+              "uncompressed_bytes": 1866
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 33,
+              "first_response_latency": 2,
+              "last_response_latency": 62,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "805d56457abf4d8cc99688dd5c8ee7cbe305ed02ae685e605ef307c0a080184d",
+              "network_state_digest_before": "c10c3887580e114ae492a7ccdcffe32fab38635f6ee73fcf8f7d7d5938618b50",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 61,
+              "recurrent_events": 10,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": {
+                "_projection": "bounded_sequence",
+                "head": [
+                  {
+                    "neuron_id": 0,
+                    "tick": 0
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 1
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 2
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 3
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 4
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 5
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 7
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 9
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 11
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 13
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 15
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 17
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 19
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 21
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 23
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 25
+                  }
+                ],
+                "item_count": 33,
+                "tail": [
+                  {
+                    "neuron_id": 2,
+                    "tick": 29
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 31
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 33
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 35
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 37
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 39
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 41
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 43
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 45
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 47
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 50
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 52
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 54
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 58
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 60
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 62
+                  }
+                ]
+              },
+              "spike_sequence_digest": "792fba51d8342fb746ee823018199857abbb23f3538ef983796cec9cbb3c8035",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 33,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 33,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "805d56457abf4d8cc99688dd5c8ee7cbe305ed02ae685e605ef307c0a080184d",
+            "state_digest_before": "c10c3887580e114ae492a7ccdcffe32fab38635f6ee73fcf8f7d7d5938618b50"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0004-recurrence_off-seed-44.json.gz",
+              "sha256": "b3ee657c9c803fac7f27e69461f0b13446a2e9b48b7ace7d946c5959f24a97f7",
+              "size_bytes": 574,
+              "uncompressed_bytes": 1089
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "b76b7c26bf168a7d7faba1a90c9e9df75f06dfa3d89c9a76879fcad612752c77",
+              "network_state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "b76b7c26bf168a7d7faba1a90c9e9df75f06dfa3d89c9a76879fcad612752c77",
+            "state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0005-recurrence_on-seed-44.json.gz",
+              "sha256": "84661260cc2d1b8929964a1e412168fd4364a8fbbe2f6c4666bf880bb244c171",
+              "size_bytes": 676,
+              "uncompressed_bytes": 1866
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0026",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 33,
+              "first_response_latency": 2,
+              "last_response_latency": 62,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "3340e8033f7e3bcd374689029676f21d9ba43548684d694d522401c344157bdc",
+              "network_state_digest_before": "57ae9847ec97986b82bd27956de09c6827806196b4cc2880af3b6bb4d2170e3f",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 61,
+              "recurrent_events": 10,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": {
+                "_projection": "bounded_sequence",
+                "head": [
+                  {
+                    "neuron_id": 0,
+                    "tick": 0
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 1
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 2
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 3
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 4
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 5
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 7
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 9
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 11
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 13
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 15
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 17
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 19
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 21
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 23
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 25
+                  }
+                ],
+                "item_count": 33,
+                "tail": [
+                  {
+                    "neuron_id": 2,
+                    "tick": 29
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 31
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 33
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 35
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 37
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 39
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 41
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 43
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 45
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 47
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 50
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 52
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 54
+                  },
+                  {
+                    "neuron_id": 0,
+                    "tick": 58
+                  },
+                  {
+                    "neuron_id": 1,
+                    "tick": 60
+                  },
+                  {
+                    "neuron_id": 2,
+                    "tick": 62
+                  }
+                ]
+              },
+              "spike_sequence_digest": "792fba51d8342fb746ee823018199857abbb23f3538ef983796cec9cbb3c8035",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 33,
+              "ticks_executed": 1000,
+              "ticks_requested": 1000,
+              "total_spikes": 33,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "3340e8033f7e3bcd374689029676f21d9ba43548684d694d522401c344157bdc",
+            "state_digest_before": "57ae9847ec97986b82bd27956de09c6827806196b4cc2880af3b6bb4d2170e3f"
+          }
+        ],
+        "schema_version": "2.0",
+        "statistics": {
+          "conditions": {
+            "recurrence_off": {
+              "metrics": {
+                "activated_neurons": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "delivered_synaptic_events": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "first_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "last_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "propagation_depth": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "recurrent_events": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "synaptic_activity_ticks": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_executed": {
+                  "max": 1000.0,
+                  "mean": 1000.0,
+                  "median": 1000.0,
+                  "min": 1000.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                }
+              },
+              "run_count": 3,
+              "seeds": [
+                42,
+                43,
+                44
+              ]
+            },
+            "recurrence_on": {
+              "metrics": {
+                "activated_neurons": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "delivered_synaptic_events": {
+                  "max": 33.0,
+                  "mean": 33.0,
+                  "median": 33.0,
+                  "min": 33.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "first_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "last_response_latency": {
+                  "max": 62.0,
+                  "mean": 62.0,
+                  "median": 62.0,
+                  "min": 62.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "propagation_depth": {
+                  "max": 61.0,
+                  "mean": 61.0,
+                  "median": 61.0,
+                  "min": 61.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "recurrent_events": {
+                  "max": 10.0,
+                  "mean": 10.0,
+                  "median": 10.0,
+                  "min": 10.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "return_latency": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "synaptic_activity_ticks": {
+                  "max": 33.0,
+                  "mean": 33.0,
+                  "median": 33.0,
+                  "min": 33.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_executed": {
+                  "max": 1000.0,
+                  "mean": 1000.0,
+                  "median": 1000.0,
+                  "min": 1000.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 33.0,
+                  "mean": 33.0,
+                  "median": 33.0,
+                  "min": 33.0,
+                  "n": 3,
+                  "std": 0.0
+                }
+              },
+              "run_count": 3,
+              "seeds": [
+                42,
+                43,
+                44
+              ]
+            }
+          },
+          "formulas": {
+            "difference": "Delta_x = mean(x_B) - mean(x_A)",
+            "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+            "mean": "mean(x) = (1/n) * sum_i x_i",
+            "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+            "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+          },
+          "generated_by": "deterministic_statistics_engine",
+          "inter_spike_intervals": {
+            "recurrence_off": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 6,
+              "std": 0.0
+            },
+            "recurrence_on": {
+              "max": 4.0,
+              "mean": 1.9375,
+              "median": 2.0,
+              "min": 1.0,
+              "n": 96,
+              "std": 0.5555121510822243
+            }
+          },
+          "run_count": 6,
+          "schema_version": "2.0",
+          "two_condition_effects": {
+            "activated_neurons": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "delivered_synaptic_events": {
+              "absolute_difference": 31.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 16.5,
+              "reference_condition": "recurrence_off"
+            },
+            "first_response_latency": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "last_response_latency": {
+              "absolute_difference": 60.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 31.0,
+              "reference_condition": "recurrence_off"
+            },
+            "propagation_depth": {
+              "absolute_difference": 60.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 61.0,
+              "reference_condition": "recurrence_off"
+            },
+            "recurrent_events": {
+              "absolute_difference": 10.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": null,
+              "reference_condition": "recurrence_off"
+            },
+            "synaptic_activity_ticks": {
+              "absolute_difference": 31.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 16.5,
+              "reference_condition": "recurrence_off"
+            },
+            "ticks_executed": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "total_spikes": {
+              "absolute_difference": 30.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 11.0,
+              "reference_condition": "recurrence_off"
+            }
+          }
+        }
+      },
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "conditions": {
+        "recurrence_off": {
+          "metrics": {
+            "activated_neurons": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "delivered_synaptic_events": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "first_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "last_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "propagation_depth": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "recurrent_events": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "synaptic_activity_ticks": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_executed": {
+              "max": 1000.0,
+              "mean": 1000.0,
+              "median": 1000.0,
+              "min": 1000.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            }
+          },
+          "run_count": 3,
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "recurrence_on": {
+          "metrics": {
+            "activated_neurons": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "delivered_synaptic_events": {
+              "max": 33.0,
+              "mean": 33.0,
+              "median": 33.0,
+              "min": 33.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "first_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "last_response_latency": {
+              "max": 62.0,
+              "mean": 62.0,
+              "median": 62.0,
+              "min": 62.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "propagation_depth": {
+              "max": 61.0,
+              "mean": 61.0,
+              "median": 61.0,
+              "min": 61.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "recurrent_events": {
+              "max": 10.0,
+              "mean": 10.0,
+              "median": 10.0,
+              "min": 10.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "return_latency": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "synaptic_activity_ticks": {
+              "max": 33.0,
+              "mean": 33.0,
+              "median": 33.0,
+              "min": 33.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_executed": {
+              "max": 1000.0,
+              "mean": 1000.0,
+              "median": 1000.0,
+              "min": 1000.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 33.0,
+              "mean": 33.0,
+              "median": 33.0,
+              "min": 33.0,
+              "n": 3,
+              "std": 0.0
+            }
+          },
+          "run_count": 3,
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        }
+      },
+      "formulas": {
+        "difference": "Delta_x = mean(x_B) - mean(x_A)",
+        "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+        "mean": "mean(x) = (1/n) * sum_i x_i",
+        "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+        "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+      },
+      "generated_by": "deterministic_statistics_engine",
+      "inter_spike_intervals": {
+        "recurrence_off": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 6,
+          "std": 0.0
+        },
+        "recurrence_on": {
+          "max": 4.0,
+          "mean": 1.9375,
+          "median": 2.0,
+          "min": 1.0,
+          "n": 96,
+          "std": 0.5555121510822243
+        }
+      },
+      "run_count": 6,
+      "schema_version": "2.0",
+      "two_condition_effects": {
+        "activated_neurons": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "delivered_synaptic_events": {
+          "absolute_difference": 31.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 16.5,
+          "reference_condition": "recurrence_off"
+        },
+        "first_response_latency": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "last_response_latency": {
+          "absolute_difference": 60.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 31.0,
+          "reference_condition": "recurrence_off"
+        },
+        "propagation_depth": {
+          "absolute_difference": 60.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 61.0,
+          "reference_condition": "recurrence_off"
+        },
+        "recurrent_events": {
+          "absolute_difference": 10.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": null,
+          "reference_condition": "recurrence_off"
+        },
+        "synaptic_activity_ticks": {
+          "absolute_difference": 31.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 16.5,
+          "reference_condition": "recurrence_off"
+        },
+        "ticks_executed": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "total_spikes": {
+          "absolute_difference": 30.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 11.0,
+          "reference_condition": "recurrence_off"
+        }
+      }
+    },
+    "observations": [
+      {
+        "type": "Zusammenfassung der Ergebnisse",
+        "content": "Die statistische Analyse vergleicht die Leistung des Neuronenmodells unter zwei Bedingungen: 'recurrence_off' und 'recurrence_on'. Die Metriken 'delivered_synaptic_events', 'last_response_latency', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Beispielsweise beträgt der durchschnittliche Wert für 'delivered_synaptic_events' 33.0 in 'recurrence_on' gegenüber 2.0 in 'recurrence_off'. Die 'propagation_depth' steigt von einem Durchschnitt von 1.0 auf 61.0. Diese Unterschiede sind konsistent über die Seeds 42, 43 und 44 beobachtbar."
+      },
+      {
+        "type": "Berechnung",
+        "content": "Der absolute Unterschied in 'delivered_synaptic_events' beträgt 31.0 (33.0 - 2.0). Das Verhältnis beträgt 16.5 (33.0 / 2.0). Dies quantifiziert den Effekt der Rekurrenzverbindung auf die synaptische Aktivität."
+      },
+      {
+        "type": "Interpretation",
+        "content": "Die signifikanten Unterschiede in den Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') zwischen den beiden Bedingungen deuten darauf hin, dass die Rekurrenzverbindung eine entscheidende Rolle bei der Aufrechterhaltung und Erweiterung der Netzwerkaktivität spielt. Die erhöhte 'propagation_depth' von 61.0 im Vergleich zu 1.0 zeigt, dass die Information über eine viel größere Anzahl von Zeitschritten propagiert wird, was auf eine komplexere und länger anhaltende Netzwerkdynamik hindeutet."
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die Ergebnisse zeigen einen sehr starken, konsistenten Effekt der Rekurrenzverbindung auf die Netzwerkdynamik. Die Metriken 'delivered_synaptic_events', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Die Reproduzierbarkeit der Ergebnisse über die Seeds 42, 43 und 44 hinweg ist gegeben, da die Mittelwerte und die Streuung der Schlüsselmetriken (z.B. 'delivered_synaptic_events': 33.0 vs 2.0; 'propagation_depth': 61.0 vs 1.0) konstant sind. Dies stützt die Hypothese, dass die Rekurrenzverbindung die Netzwerkaktivität und die Komplexität der Spike-Propagation maßgeblich erhöht. Allerdings ist die Interpretation der *Ursache* dieses Effekts (ob es nur die Rekurrenzverbindung ist oder auch die Interaktion mit anderen Komponenten) noch spekulativ.",
+      "observations": [
+        {
+          "content": "Die statistische Analyse vergleicht die Leistung des Neuronenmodells unter zwei Bedingungen: 'recurrence_off' und 'recurrence_on'. Die Metriken 'delivered_synaptic_events', 'last_response_latency', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Beispielsweise beträgt der durchschnittliche Wert für 'delivered_synaptic_events' 33.0 in 'recurrence_on' gegenüber 2.0 in 'recurrence_off'. Die 'propagation_depth' steigt von einem Durchschnitt von 1.0 auf 61.0. Diese Unterschiede sind konsistent über die Seeds 42, 43 und 44 beobachtbar.",
+          "type": "Zusammenfassung der Ergebnisse"
+        },
+        {
+          "content": "Der absolute Unterschied in 'delivered_synaptic_events' beträgt 31.0 (33.0 - 2.0). Das Verhältnis beträgt 16.5 (33.0 / 2.0). Dies quantifiziert den Effekt der Rekurrenzverbindung auf die synaptische Aktivität.",
+          "type": "Berechnung"
+        },
+        {
+          "content": "Die signifikanten Unterschiede in den Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') zwischen den beiden Bedingungen deuten darauf hin, dass die Rekurrenzverbindung eine entscheidende Rolle bei der Aufrechterhaltung und Erweiterung der Netzwerkaktivität spielt. Die erhöhte 'propagation_depth' von 61.0 im Vergleich zu 1.0 zeigt, dass die Information über eine viel größere Anzahl von Zeitschritten propagiert wird, was auf eine komplexere und länger anhaltende Netzwerkdynamik hindeutet.",
+          "type": "Interpretation"
+        }
+      ],
+      "effect_direction": "Erhöhend (Increase)",
+      "methodological_concerns": [
+        "Die Analyse basiert auf einer begrenzten Anzahl von Seeds (n=3), was die statistische Aussagekraft der Mittelwerte einschränken könnte.",
+        "Die experimentellen Bedingungen sind sehr spezifisch (Impulsstrom 100.0, Ticks 1000), was die Generalisierbarkeit der Ergebnisse auf andere neuronale oder biologische Systeme einschränkt.",
+        "Die Vergleichsbedingungen ('recurrence_on' vs. 'recurrence_off') sind binär und könnten die Komplexität der tatsächlichen neuronalen Netzwerke nicht adäquat abbilden. Es fehlt ein Kontroll-Setup, das die Wirkung der Rekurrenzverbindung *allein* von anderen potenziellen Interaktionen trennt.",
+        "Die Verwendung eines festen Zeitfensters (1000 Ticks) könnte die beobachteten hohen Werte künstlich aufrechterhalten, ohne die tatsächliche biologische Dauer der Aktivität zu berücksichtigen."
+      ],
+      "alternative_explanations": [
+        "Die beobachtete erhöhte Komplexität könnte nicht nur auf die Rekurrenzverbindung selbst zurückzuführen sein, sondern auch auf die Art der verwendeten Synapsen und die spezifische Parametrisierung des Izhikevich-Modells, die eine hohe intrinsische Dynamik zulässt.",
+        "Die beobachtete erhöhte Aktivität könnte ein Artefakt der Simulationsgrenzen (z.B. die 1000 Ticks) sein, bei denen die Netzwerkaktivität aufgrund des festen Zeitfensters künstlich hoch gehalten wird, anstatt eine biologisch plausible Langzeitdynamik darzustellen."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines erweiterten Parameter-Scans, um die Abhängigkeit der Netzwerkdynamik von verschiedenen Impulsstromstärken zu untersuchen.",
+        "Vergleich der Ergebnisse mit anderen neuronalen Modellen (z.B. Hodgkin-Huxley) unter identischen Bedingungen, um die Spezifität des Izhikevich-Modells zu bewerten.",
+        "Analyse der zeitlichen Entwicklung der Spike-Aktivität (Spike-Timing-Dependent Plasticity) über längere Zeiträume, um die Langzeitstabilität der erzeugten Muster zu testen."
+      ],
+      "requested_evidence": [
+        "Bereitstellung der Rohdaten der Spike-Sequenzen für eine detaillierte Analyse der Spike-Timing-Abhängigkeiten (STDP) in beiden Bedingungen.",
+        "Bestätigung, ob die Rekurrenzverbindung die einzige Quelle für die beobachteten Spike-Interaktionen ist oder ob andere Verbindungen beteiligt sind."
+      ],
+      "confidence": 0.0
+    },
+    "methodological_critique": [
+      "Die Analyse basiert auf einer begrenzten Anzahl von Seeds (n=3), was die statistische Aussagekraft der Mittelwerte einschränken könnte.",
+      "Die experimentellen Bedingungen sind sehr spezifisch (Impulsstrom 100.0, Ticks 1000), was die Generalisierbarkeit der Ergebnisse auf andere neuronale oder biologische Systeme einschränkt.",
+      "Die Vergleichsbedingungen ('recurrence_on' vs. 'recurrence_off') sind binär und könnten die Komplexität der tatsächlichen neuronalen Netzwerke nicht adäquat abbilden. Es fehlt ein Kontroll-Setup, das die Wirkung der Rekurrenzverbindung *allein* von anderen potenziellen Interaktionen trennt.",
+      "Die vom Modell ausgegebene confidence war schemawidrig oder ausserhalb des Bereichs 0..1. Sie wurde fuer die AIRR-Provenienz konservativ auf 0.0 gesetzt; der Originalwert bleibt als confidence_original erhalten."
+    ],
+    "alternative_explanations": [
+      "Die beobachtete erhöhte Komplexität könnte nicht nur auf die Rekurrenzverbindung selbst zurückzuführen sein, sondern auch auf die Art der verwendeten Synapsen und die spezifische Parametrisierung des Izhikevich-Modells, die eine hohe intrinsische Dynamik zulässt.",
+      "Die beobachtete erhöhte Aktivität könnte ein Artefakt der Simulationsgrenzen (z.B. die 1000 Ticks) sein, bei denen die Netzwerkaktivität aufgrund des festen Zeitfensters künstlich hoch gehalten wird, anstatt eine biologisch plausible Langzeitdynamik darzustellen."
+    ],
+    "reproducibility": {
+      "git_commit": "3807a721b233e9e727d221345168dad1e0941804",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "36d9868d2ef58192cbffb507554cbee8ee913943a5f76367d1df6d400828afc6",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "a7eaa88cac39410b37e92f9a0a733ae4a6cca610db9b01c0d460cbc94700cea1",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "64cf1105d5e88a13ee07b658d52ae3bce772fcc53ced79a24cf8bc61c0f4f767",
+      "data_digest": "7b82ae5e69fcb03b12e5d31039606c043efafa956a567f054ae5acf719c2a008",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "PRESENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.0,
+    "missing_evidence": [
+      "Bereitstellung der Rohdaten der Spike-Sequenzen für eine detaillierte Analyse der Spike-Timing-Abhängigkeiten (STDP) in beiden Bedingungen.",
+      "Bestätigung, ob die Rekurrenzverbindung die einzige Quelle für die beobachteten Spike-Interaktionen ist oder ob andere Verbindungen beteiligt sind."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines erweiterten Parameter-Scans, um die Abhängigkeit der Netzwerkdynamik von verschiedenen Impulsstromstärken zu untersuchen.",
+      "Vergleich der Ergebnisse mit anderen neuronalen Modellen (z.B. Hodgkin-Huxley) unter identischen Bedingungen, um die Spezifität des Izhikevich-Modells zu bewerten.",
+      "Analyse der zeitlichen Entwicklung der Spike-Aktivität (Spike-Timing-Dependent Plasticity) über längere Zeiträume, um die Langzeitstabilität der erzeugten Muster zu testen."
+    ],
+    "conclusion": "Die Ergebnisse zeigen einen sehr starken, konsistenten Effekt der Rekurrenzverbindung auf die Netzwerkdynamik. Die Metriken 'delivered_synaptic_events', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Die Reproduzierbarkeit der Ergebnisse über die Seeds 42, 43 und 44 hinweg ist gegeben, da die Mittelwerte und die Streuung der Schlüsselmetriken (z.B. 'delivered_synaptic_events': 33.0 vs 2.0; 'propagation_depth': 61.0 vs 1.0) konstant sind. Dies stützt die Hypothese, dass die Rekurrenzverbindung die Netzwerkaktivität und die Komplexität der Spike-Propagation maßgeblich erhöht. Allerdings ist die Interpretation der *Ursache* dieses Effekts (ob es nur die Rekurrenzverbindung ist oder auch die Interaktion mit anderen Komponenten) noch spekulativ.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260906080236743428-c4d55c2e",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0026",
+          "packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen einen signifikanten Unterschied in der Netzwerkaktivität und der Spike-Propagation zwischen den Bedingungen 'recurrence_on' und 'recurrence_off'. Insbesondere die Metriken 'delivered_synaptic_events', 'last_response_latency' und 'propagation_depth' sind in der 'recurrence_on'-Bedingung deutlich höher. Dies deutet darauf hin, dass die Rekurrenzverbindung die Netzwerkdynamik erheblich verstärkt und die Komplexität der Spike-Sequenzen erhöht. Die Reproduzierbarkeit der Ergebnisse über verschiedene Seeds (42, 43, 44) hinweg ist gegeben, da die entsprechenden Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') in allen Läufen konsistent sind. Die Hypothese H-SNN-002-A, dass das Izhikevich-Neuronenmodell bei identischem Input reproduzierbare Spikefolgen erzeugt, wird durch die beobachtete Konsistenz der Ergebnisse gestützt, da die Spike-Sequenzen und die statistischen Metriken über die Seeds hinweg sehr ähnlich sind.",
+          "observations": [
+            {
+              "type": "Zusammenfassung der Ergebnisse",
+              "content": "Die statistische Analyse vergleicht die Leistung des Neuronenmodells unter zwei Bedingungen: 'recurrence_off' und 'recurrence_on'. Die Metriken 'delivered_synaptic_events', 'last_response_latency', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Beispielsweise beträgt der durchschnittliche Wert für 'delivered_synaptic_events' 33.0 in 'recurrence_on' gegenüber 2.0 in 'recurrence_off'. Die 'propagation_depth' steigt von einem Durchschnitt von 1.0 auf 61.0. Diese Unterschiede sind konsistent über die Seeds 42, 43 und 44 beobachtbar."
+            },
+            {
+              "type": "Berechnung",
+              "content": "Der absolute Unterschied in 'delivered_synaptic_events' beträgt 31.0 (33.0 - 2.0). Das Verhältnis beträgt 16.5 (33.0 / 2.0). Dies quantifiziert den Effekt der Rekurrenzverbindung auf die synaptische Aktivität."
+            },
+            {
+              "type": "Interpretation",
+              "content": "Die signifikanten Unterschiede in den Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') zwischen den beiden Bedingungen deuten darauf hin, dass die Rekurrenzverbindung eine entscheidende Rolle bei der Aufrechterhaltung und Erweiterung der Netzwerkaktivität spielt. Die erhöhte 'propagation_depth' von 61.0 im Vergleich zu 1.0 zeigt, dass die Information über eine viel größere Anzahl von Zeitschritten propagiert wird, was auf eine komplexere und länger anhaltende Netzwerkdynamik hindeutet."
+            }
+          ],
+          "effect_direction": "Erhöhend (Increase)",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer begrenzten Anzahl von Seeds (n=3), was die statistische Aussagekraft der Mittelwerte einschränken könnte.",
+            "Die experimentellen Bedingungen sind sehr spezifisch (Impulsstrom 100.0, Ticks 1000), was die Generalisierbarkeit der Ergebnisse auf andere neuronale oder biologische Systeme einschränkt."
+          ],
+          "alternative_explanations": [
+            "Die beobachteten Unterschiede könnten auf eine nicht-lineare Interaktion zwischen der Rekurrenzverbindung und dem spezifischen Impulsstrom zurückzuführen sein, die über die einfache lineare Addition hinausgeht.",
+            "Die beobachtete erhöhte Komplexität könnte auch durch die spezifische Parametrisierung des Izhikevich-Modells und die Art der verwendeten Synapsen (nicht nur die reine Rekurrenz) bedingt sein, und nicht ausschließlich durch die Rekurrenzverbindung selbst."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Parameter-Scans, um die Abhängigkeit der Netzwerkdynamik von verschiedenen Impulsstromstärken zu untersuchen.",
+            "Vergleich der Ergebnisse mit anderen neuronalen Modellen (z.B. Hodgkin-Huxley) unter identischen Bedingungen, um die Spezifität des Izhikevich-Modells zu bewerten.",
+            "Analyse der zeitlichen Entwicklung der Spike-Aktivität (Spike-Timing-Dependent Plasticity) über längere Zeiträume, um die Langzeitstabilität der erzeugten Muster zu testen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der Rohdaten der Spike-Sequenzen für eine detaillierte Analyse der Spike-Timing-Abhängigkeiten (STDP) in beiden Bedingungen.",
+            "Bestätigung, ob die Rekurrenzverbindung die einzige Quelle für die beobachteten Spike-Interaktionen ist oder ob andere Verbindungen beteiligt sind."
+          ],
+          "confidence": 0.95
+        },
+        "provenance": {
+          "prompt_sha256": "8a604a837766f10250bdd5634aba40efb63dd77edaec71ee7f19d445445803f5",
+          "research_packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "3807a721b233e9e727d221345168dad1e0941804",
+          "model_self_confidence": "0.95"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T08:02:36.743428+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260906080304355414-c4d55c2e",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0026",
+          "packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen einen sehr starken, konsistenten Effekt der Rekurrenzverbindung auf die Netzwerkdynamik. Die Metriken 'delivered_synaptic_events', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Die Reproduzierbarkeit der Ergebnisse über die Seeds 42, 43 und 44 hinweg ist gegeben, da die Mittelwerte und die Streuung der Schlüsselmetriken (z.B. 'delivered_synaptic_events': 33.0 vs 2.0; 'propagation_depth': 61.0 vs 1.0) konstant sind. Dies stützt die Hypothese, dass die Rekurrenzverbindung die Netzwerkaktivität und die Komplexität der Spike-Propagation maßgeblich erhöht. Allerdings ist die Interpretation der *Ursache* dieses Effekts (ob es nur die Rekurrenzverbindung ist oder auch die Interaktion mit anderen Komponenten) noch spekulativ.",
+          "observations": [
+            {
+              "content": "Die statistische Analyse vergleicht die Leistung des Neuronenmodells unter zwei Bedingungen: 'recurrence_off' und 'recurrence_on'. Die Metriken 'delivered_synaptic_events', 'last_response_latency', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Beispielsweise beträgt der durchschnittliche Wert für 'delivered_synaptic_events' 33.0 in 'recurrence_on' gegenüber 2.0 in 'recurrence_off'. Die 'propagation_depth' steigt von einem Durchschnitt von 1.0 auf 61.0. Diese Unterschiede sind konsistent über die Seeds 42, 43 und 44 beobachtbar.",
+              "type": "Zusammenfassung der Ergebnisse"
+            },
+            {
+              "content": "Der absolute Unterschied in 'delivered_synaptic_events' beträgt 31.0 (33.0 - 2.0). Das Verhältnis beträgt 16.5 (33.0 / 2.0). Dies quantifiziert den Effekt der Rekurrenzverbindung auf die synaptische Aktivität.",
+              "type": "Berechnung"
+            },
+            {
+              "content": "Die signifikanten Unterschiede in den Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') zwischen den beiden Bedingungen deuten darauf hin, dass die Rekurrenzverbindung eine entscheidende Rolle bei der Aufrechterhaltung und Erweiterung der Netzwerkaktivität spielt. Die erhöhte 'propagation_depth' von 61.0 im Vergleich zu 1.0 zeigt, dass die Information ¾r eine viel größere Anzahl von Zeitschritten propagiert wird, was auf eine komplexere und länger anhaltende Netzwerkdynamik hindeutet.",
+              "type": "Interpretation"
+            }
+          ],
+          "effect_direction": "Erhöhend (Increase)",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer begrenzten Anzahl von Seeds (n=3), was die statistische Aussagekraft der Mittelwerte einschränken könnte.",
+            "Die experimentellen Bedingungen sind sehr spezifisch (Impulsstrom 100.0, Ticks 1000), was die Generalisierbarkeit der Ergebnisse auf andere neuronale oder biologische Systeme einschränkt.",
+            "Die Vergleichsbedingungen ('recurrence_on' vs. 'recurrence_off') sind binär und könnten die Komplexität der tatsächlichen neuronalen Netzwerke nicht adäquat abbilden. Es fehlt ein Kontroll-Setup, das die Wirkung der Rekurrenzverbindung *allein* von anderen potenziellen Interaktionen trennt.",
+            "Die vom Modell ausgegebene confidence war schemawidrig oder ausserhalb des Bereichs 0..1. Sie wurde fuer die AIRR-Provenienz konservativ auf 0.0 gesetzt; der Originalwert bleibt als confidence_original erhalten."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete erhöhte Komplexität könnte nicht nur auf die Rekurrenzverbindung selbst zurückzuführen sein, sondern auch auf die Art der verwendeten Synapsen und die spezifische Parametrisierung des Izhikevich-Modells, die eine hohe intrinsische Dynamik zulässt.",
+            "Die beobachtete erhöhte Aktivität könnte ein Artefakt der Simulationsgrenzen (z.B. die 1000 Ticks) sein, bei denen die Netzwerkaktivität aufgrund des festen Zeitfensters künstlich hoch gehalten wird, anstatt eine biologisch plausible Langzeitdynamik darzustellen."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Parameter-Scans, um die Abhängigkeit der Netzwerkdynamik von verschiedenen Impulsstromstärken zu untersuchen.",
+            "Vergleich der Ergebnisse mit anderen neuronalen Modellen (z.B. Hodgkin-Huxley) unter identischen Bedingungen, um die Spezifität des Izhikevich-Modells zu bewerten.",
+            "Analyse der zeitlichen Entwicklung der Spike-Aktivität (Spike-Timing-Dependent Plasticity) ¾r längere Zeiträume, um die Langzeitstabilität der erzeugten Muster zu testen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der Rohdaten der Spike-Sequenzen für eine detaillierte Analyse der Spike-Timing-Abhängigkeiten (STDP) in beiden Bedingungen.",
+            "Bestätigung, ob die Rekurrenzverbindung die einzige Quelle für die beobachteten Spike-Interaktionen ist oder ob andere Verbindungen beteiligt sind."
+          ],
+          "confounders": [
+            "Die Analyse ignoriert die mögliche Interaktion zwischen der Rekurrenzverbindung und anderen, nicht gemessenen Verbindungen im Netzwerk. Die beobachtete Steigerung könnte daher nicht *allein* der Rekurrenzverbindung zuzuschreiben sein.",
+            "Die Verwendung eines festen Zeitfensters (1000 Ticks) könnte die beobachteten hohen Werte künstlich aufrechterhalten, ohne die tatsächliche biologische Dauer der Aktivität zu berücksichtigen."
+          ],
+          "leakage": [],
+          "dependence": [],
+          "missing_controls": [
+            "Es fehlt ein Kontroll-Setup, das die Wirkung der Rekurrenzverbindung *allein* von anderen potenziellen Interaktionen trennt (z.B. durch die Deaktivierung anderer, nicht-rekurrenter Verbindungen)."
+          ],
+          "mismatched_statistics": [],
+          "confidence_original": null,
+          "confidence": 0.0
+        },
+        "provenance": {
+          "prompt_sha256": "f028e0d0314c3e217cfea422d96a94286f7c1181a2d4ca911c2a8b13d3230a9c",
+          "research_packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "3807a721b233e9e727d221345168dad1e0941804",
+          "model_self_confidence": "0.0"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T08:03:04.355414+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260906080330043053-c4d55c2e",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0026",
+          "packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen einen sehr starken, konsistenten Effekt der Rekurrenzverbindung auf die Netzwerkdynamik. Die Metriken 'delivered_synaptic_events', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Die Reproduzierbarkeit der Ergebnisse über die Seeds 42, 43 und 44 hinweg ist gegeben, da die Mittelwerte und die Streuung der Schlüsselmetriken (z.B. 'delivered_synaptic_events': 33.0 vs 2.0; 'propagation_depth': 61.0 vs 1.0) konstant sind. Dies stützt die Hypothese, dass die Rekurrenzverbindung die Netzwerkaktivität und die Komplexität der Spike-Propagation maßgeblich erhöht. Allerdings ist die Interpretation der *Ursache* dieses Effekts (ob es nur die Rekurrenzverbindung ist oder auch die Interaktion mit anderen Komponenten) noch spekulativ.",
+          "observations": [
+            {
+              "content": "Die statistische Analyse vergleicht die Leistung des Neuronenmodells unter zwei Bedingungen: 'recurrence_off' und 'recurrence_on'. Die Metriken 'delivered_synaptic_events', 'last_response_latency', 'propagation_depth' und 'total_spikes' sind in der 'recurrence_on'-Bedingung signifikant höher als in der 'recurrence_off'-Bedingung. Beispielsweise beträgt der durchschnittliche Wert für 'delivered_synaptic_events' 33.0 in 'recurrence_on' gegenüber 2.0 in 'recurrence_off'. Die 'propagation_depth' steigt von einem Durchschnitt von 1.0 auf 61.0. Diese Unterschiede sind konsistent über die Seeds 42, 43 und 44 beobachtbar.",
+              "type": "Zusammenfassung der Ergebnisse"
+            },
+            {
+              "content": "Der absolute Unterschied in 'delivered_synaptic_events' beträgt 31.0 (33.0 - 2.0). Das Verhältnis beträgt 16.5 (33.0 / 2.0). Dies quantifiziert den Effekt der Rekurrenzverbindung auf die synaptische Aktivität.",
+              "type": "Berechnung"
+            },
+            {
+              "content": "Die signifikanten Unterschiede in den Metriken (z.B. 'delivered_synaptic_events', 'propagation_depth') zwischen den beiden Bedingungen deuten darauf hin, dass die Rekurrenzverbindung eine entscheidende Rolle bei der Aufrechterhaltung und Erweiterung der Netzwerkaktivität spielt. Die erhöhte 'propagation_depth' von 61.0 im Vergleich zu 1.0 zeigt, dass die Information über eine viel größere Anzahl von Zeitschritten propagiert wird, was auf eine komplexere und länger anhaltende Netzwerkdynamik hindeutet.",
+              "type": "Interpretation"
+            }
+          ],
+          "effect_direction": "Erhöhend (Increase)",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer begrenzten Anzahl von Seeds (n=3), was die statistische Aussagekraft der Mittelwerte einschränken könnte.",
+            "Die experimentellen Bedingungen sind sehr spezifisch (Impulsstrom 100.0, Ticks 1000), was die Generalisierbarkeit der Ergebnisse auf andere neuronale oder biologische Systeme einschränkt.",
+            "Die Vergleichsbedingungen ('recurrence_on' vs. 'recurrence_off') sind binär und könnten die Komplexität der tatsächlichen neuronalen Netzwerke nicht adäquat abbilden. Es fehlt ein Kontroll-Setup, das die Wirkung der Rekurrenzverbindung *allein* von anderen potenziellen Interaktionen trennt.",
+            "Die Verwendung eines festen Zeitfensters (1000 Ticks) könnte die beobachteten hohen Werte künstlich aufrechterhalten, ohne die tatsächliche biologische Dauer der Aktivität zu berücksichtigen."
+          ],
+          "alternative_explanations": [
+            "Die beobachtete erhöhte Komplexität könnte nicht nur auf die Rekurrenzverbindung selbst zurückzuführen sein, sondern auch auf die Art der verwendeten Synapsen und die spezifische Parametrisierung des Izhikevich-Modells, die eine hohe intrinsische Dynamik zulässt.",
+            "Die beobachtete erhöhte Aktivität könnte ein Artefakt der Simulationsgrenzen (z.B. die 1000 Ticks) sein, bei denen die Netzwerkaktivität aufgrund des festen Zeitfensters künstlich hoch gehalten wird, anstatt eine biologisch plausible Langzeitdynamik darzustellen."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines erweiterten Parameter-Scans, um die Abhängigkeit der Netzwerkdynamik von verschiedenen Impulsstromstärken zu untersuchen.",
+            "Vergleich der Ergebnisse mit anderen neuronalen Modellen (z.B. Hodgkin-Huxley) unter identischen Bedingungen, um die Spezifität des Izhikevich-Modells zu bewerten.",
+            "Analyse der zeitlichen Entwicklung der Spike-Aktivität (Spike-Timing-Dependent Plasticity) über längere Zeiträume, um die Langzeitstabilität der erzeugten Muster zu testen."
+          ],
+          "requested_evidence": [
+            "Bereitstellung der Rohdaten der Spike-Sequenzen für eine detaillierte Analyse der Spike-Timing-Abhängigkeiten (STDP) in beiden Bedingungen.",
+            "Bestätigung, ob die Rekurrenzverbindung die einzige Quelle für die beobachteten Spike-Interaktionen ist oder ob andere Verbindungen beteiligt sind."
+          ],
+          "confidence": 0.0
+        },
+        "provenance": {
+          "prompt_sha256": "ea32057d85b2a7c746c511d0a007d4af8166a73b898190be264f3344db7853ce",
+          "research_packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "3807a721b233e9e727d221345168dad1e0941804",
+          "model_self_confidence": "0.0"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T08:03:30.043053+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "c4d55c2edbe9ee8ca8efff070d46abcb6600359f239d2fcf2584da0a0c04b060",
+    "source": {
+      "git_commit": "3807a721b233e9e727d221345168dad1e0941804",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "36d9868d2ef58192cbffb507554cbee8ee913943a5f76367d1df6d400828afc6",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "a7eaa88cac39410b37e92f9a0a733ae4a6cca610db9b01c0d460cbc94700cea1",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "64cf1105d5e88a13ee07b658d52ae3bce772fcc53ced79a24cf8bc61c0f4f767",
+      "data_digest": "7b82ae5e69fcb03b12e5d31039606c043efafa956a567f054ae5acf719c2a008",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260906080236743428-c4d55c2e",
+    "AIAR-critical_reviewer-20260906080304355414-c4d55c2e",
+    "AIAR-scientific_writer-20260906080330043053-c4d55c2e"
+  ],
+  "supersedes": null,
+  "content_digest": "723f413709fd4304406e77e1706b3f8c29b2ca32dc6bc6a977e16fda388deb9f",
+  "markdown_digest": "7f9aace8fcd32cac8b0c48c7c2519f393a2b660e54f6947a3f9406ad01283ecb"
+}
