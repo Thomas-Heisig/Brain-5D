@@ -95,6 +95,20 @@ jobs:
           if old_summary_assertions not in text:
               raise SystemExit('legacy summary assertion block not found')
           text = text.replace(old_summary_assertions, new_summary_assertions, 1)
+
+          old_data_assertion = (
+              '    assert report["content"]["data_basis"]["data"]["runs"]\n'
+          )
+          new_data_assertion = (
+              '    ai_data = report["content"]["data_basis"]["data"]\n'
+              '    assert ai_data["run_count"] >= 1\n'
+              '    assert ai_data["ai_input_policy"] == (\n'
+              '        "compact_only_raw_on_explicit_deterministic_extract"\n'
+              '    )\n'
+          )
+          if old_data_assertion not in text:
+              raise SystemExit('legacy AIRR runs assertion not found')
+          text = text.replace(old_data_assertion, new_data_assertion, 1)
           test_path.write_text(text, encoding='utf-8')
 
           source_path = Path('src/dashboard/experiment_workflow.py')
