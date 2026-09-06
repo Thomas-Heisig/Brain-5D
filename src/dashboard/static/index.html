@@ -518,8 +518,9 @@
         <form method="dialog" id="workflow-batch-form">
           <header><div><span class="workspace-kicker">CONTROLLED BATCH</span><h2 id="workflow-batch-title">Experiment-Workflow</h2><p>Protokolle auswählen, Optionen prüfen und den Gesamtbericht erzeugen.</p></div><button value="cancel" type="submit" class="modal-close" aria-label="Workflow schließen">&times;</button></header>
           <label>Workflow-ID (optional)<input id="workflow-batch-id" placeholder="automatisch: EXP-BATCH-…"></label>
-          <label>Ticks je Protokoll<input id="workflow-batch-ticks" type="number" min="1" max="1000000" value="1000"></label>
-          <label>Seeds<input id="workflow-batch-seeds" value="42-44" placeholder="42-44"></label>
+          <p class="workflow-batch-plan-note">Der Workflow führt die ausgewählten Experimente nacheinander aus und verwendet automatisch die registrierten Seeds/Ticks. Explorative Läufe nutzen die Runtime-Diagnosevorgaben.</p>
+          <label>Fallback-Ticks<input id="workflow-batch-ticks" type="number" min="1" max="1000000" value="1000"></label>
+          <label>Fallback-Seeds<input id="workflow-batch-seeds" value="42-44" placeholder="42-44"></label>
           <label>Titelpräfix<input id="workflow-batch-title-prefix" value="Experiment workflow"></label>
           <fieldset><legend>Protokolle</legend><div id="workflow-batch-protocols" class="workflow-batch-protocols"></div></fieldset>
           <p id="workflow-batch-status" class="heatmap-meta" aria-live="polite"></p>

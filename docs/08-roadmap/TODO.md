@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Registry-driven sequential workflow
+
+- [x] Execute selected experiments sequentially.
+- [x] Derive Seeds/Ticks from each registered protocol.
+- [x] Preselect the complete experiment plan while allowing deselection.
+- [ ] Add browser E2E coverage for the full sequential workflow.
+
 ## 2026-09-06 Batch result visibility
 
 - [x] Show immediate running feedback after `Auswahl starten`.

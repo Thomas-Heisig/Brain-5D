@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-06 — Registry-driven sequential workflow
+
+- Batch execution now follows the protocol registry instead of one global seed/tick setting.
+- All catalog experiments are preselected with their required parameters; users can deselect entries before starting.
+- Exploratory experiments use explicit automatic Runtime-Ticks defaults.
+
 ## 2026-09-06 — Batch result visibility
 
 - Fixed the batch dialog so successful runs close after rendering workflow/report results.

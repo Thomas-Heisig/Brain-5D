@@ -280,13 +280,13 @@ export class ExperimentWorkflowPanel {
       const label = document.createElement("label");
       label.className = "workflow-batch-protocol";
       if (protocol) {
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)}</small><em><span>Seeds</span><input type="text" data-batch-seeds value="${escapeHtml(protocol.default_seed_expression || "42-44")}"><span>Ticks</span><input type="number" data-batch-ticks min="1" value="${escapeHtml(protocol.default_ticks || 1000)}"></em></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(protocol.id)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${escapeHtml(protocol.label || protocol.id)} · registrierte Vorgaben</small><em><span>Seeds</span><input type="text" data-batch-seeds value="${escapeHtml(protocol.default_seed_expression || "42-44")}" readonly><span>Ticks</span><input type="number" data-batch-ticks min="1" value="${escapeHtml(protocol.default_ticks || 1000)}" readonly></em></span>`;
       } else {
         const hypothesis = this.hypotheses.find((item) => item.question_id === question.id);
         const hypothesisId = hypothesis?.id || "EXPLORATORY-UNSPECIFIED";
         const selection = `exploratory:${question.id}:${hypothesisId}`;
         label.classList.add("workflow-batch-protocol-exploratory");
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}"><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"}</small><em><span>Seeds</span><input type="text" data-batch-seeds value="42-44"><span>Ticks</span><input type="number" data-batch-ticks min="1" value="1000"></em></span>`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"} · automatische Diagnosevorgaben</small><em><span>Seeds</span><input type="text" data-batch-seeds value="42-44" readonly><span>Ticks</span><input type="number" data-batch-ticks min="1" value="1000" readonly></em></span>`;
       }
       return label;
     }));

@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-06 Registry-driven sequential workflow
+
+- The Experiment-Workflow now plans all catalog entries by default and executes selected experiments sequentially.
+- Operational protocols use their registered seed expressions and tick budgets automatically.
+- Exploratory entries use bounded Runtime-Ticks diagnostic defaults; per-entry plan values are visible and read-only.
+
 ## 2026-09-06 Batch result visibility
 
 - Batch start now shows immediate running state, persistent result text and explicit errors in the workflow dialog/output area.
