@@ -14,10 +14,12 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
 - [ ] Confirm the final current-head `main` CI after the documentation refresh before calling the refreshed head fully green.
 - [x] Unified responsive dashboard design applied across the system.
-- [x] `Network` removed from primary frontend navigation.
+- [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
+- [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
 - [x] Release/Gate moved to a footer action.
-- [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface.
+- [x] `Embodiment` remains the technical sensor/device/actuator/body-boundary surface and is integrated into Runtime & Wesen.
 - [x] Dedicated read-only `Wesen` workspace added.
+- [x] PCA-based bounded Neuron Model Viewer, correlation heatmap and parallel-coordinate view added to the scientific Network Workbench.
 - [x] Neural Symbiosis and MSBA are embodiment-only/read-only by default and do not silently mutate the canonical SNN core.
 - [x] Research DATA v2 preserves raw runs while exposing bounded `runs.json` and `analysis/ai_packet.json` projections.
 
@@ -52,7 +54,11 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [ ] Verify Neural Symbiosis/MSBA CSS/JS and the Research Catalog are served in integrated runtime and dashboard-only modes on a live host.
 - [ ] Verify `Wesen` anatomy + Neural Symbiosis/MSBA rendering with a real connection inventory.
-- [ ] Add browser/E2E checks for Research Catalog search/filter/selection, pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and pipeline reachability.
+- [ ] Add browser/E2E checks for three-area routing, Neuron Model Viewer 2D/3D interaction, Research Catalog search/filter/selection, pan/zoom, icon-dock navigation, anatomy placement, timeline scrubbing and pipeline reachability.
+- [ ] Add a provenance-bound backend projection-job contract before implementing t-SNE/UMAP, cluster scores or cluster export in the Neuron Model Viewer.
+- [ ] Expose a true bounded per-neuron firing-rate-Hz field if scientific colour encoding requires Hz rather than the current inspector activity proxy.
+- [ ] Implement mutable per-sense controls only after explicit authorization/state-transition contracts exist; keep current connection inventory read-only.
+- [ ] Implement holistic Wesen profile load/save/export/delete only after the persisted profile/state contract is versioned.
 - [ ] Keep automatic deletion of merged branches enabled/maintained when repository settings/tooling permit.
 
 ## P0 — propagation and recurrence evidence

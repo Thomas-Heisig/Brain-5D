@@ -7,7 +7,7 @@
  * The dashboard shell, operator experience, real-body embodiment view and
  * Wesen workspace are imported for presentation/read-only side effects.
  *
- * @version 1.4.4
+ * @version 1.4.5
  * @license MIT
  */
 
@@ -20,6 +20,8 @@ import "./wesen.js";
 import "./wesen-organism-v2.js";
 import "./wesen-anatomy-v3.js";
 import "./wesen-neural-symbiosis.js";
+import "./neuron-model-viewer.js";
+import "./frontend-architecture.js";
 
 function byId(id) {
   return document.getElementById(id);
@@ -80,8 +82,17 @@ function activateLegacyWorkspace(name) {
 }
 
 function adaptDashboardNavigation() {
-  document.querySelector('.tab-btn[data-tab="network"]')?.remove();
-  document.querySelector('.tab-btn[data-tab="gate"]')?.remove();
+  // Keep legacy route buttons in the DOM so app.js remains the sole lifecycle
+  // owner and can lazy-initialize Network/Release/Settings when contextual
+  // navigation activates them. The three-area shell hides the legacy nav.
+  for (const name of ["network", "gate"] ) {
+    const button = document.querySelector(`.tab-btn[data-tab="${name}"]`);
+    if (button) {
+      button.classList.add("wesen-utility-hidden");
+      button.setAttribute("aria-hidden", "true");
+      button.tabIndex = -1;
+    }
+  }
 
   document.querySelectorAll('.experience-command-item[data-command-id="workspace:network"], .experience-command-item[data-command-id="workspace:gate"]').forEach((node) => node.remove());
   document.querySelectorAll('[data-jump-workspace="network"]').forEach((node) => {
