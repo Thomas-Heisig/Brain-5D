@@ -2,273 +2,158 @@
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-05
+**Updated:** 2026-09-06
 
 This roadmap separates **implemented engineering capability** from **scientific evidence still required**. A feature can be technically complete without its scientific hypothesis being confirmed.
 
 ## Current verified baseline
 
-The repaired main baseline has:
+At the 2026-09-06 verification point:
 
-- **735 collected tests**;
-- **733 passed, 2 skipped, 0 failed** in the verified repair-suite run;
-- successful completed GitHub CI across Python 3.11, 3.12 and 3.13;
-- green Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity checks;
-- no open pull requests at the verification point;
-- one obsolete `tmp-do-not-use` branch with zero commits ahead of `main`, therefore nothing to merge.
+- **773 tests** are collected;
+- the full GitHub CI matrix on the Neural Symbiosis merge commit completed successfully;
+- Python 3.11, 3.12 and 3.13 full/slow suites passed;
+- Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, security and Scientific Integrity passed;
+- wheel build/install and Docker build/runtime verification passed;
+- no open pull requests remained;
+- all development work found outside `main` was already merged; no unmerged branch content remained.
 
-Historical experiment DATA remains historical evidence. Instrumentation repairs create new observations and new experiments rather than rewriting previous DATA.
+Historical experiment DATA remains historical evidence. Instrumentation repairs and new architecture produce new observations/experiments rather than rewriting prior DATA.
 
-## Current baseline — completed engineering foundation
+## Completed engineering foundation
 
-The following capabilities are part of `main`:
+Current `main` contains:
 
-- sparse 5D spiking core with delayed event propagation;
-- deterministic RNG/state capture and restore/continue infrastructure;
+- sparse 5D spiking core with delayed event propagation and deterministic RNG/state;
 - STDP, signed eligibility and reward-modulated learning;
 - homeostatic regulation;
-- structural proposal/approval/mutation/journal/undo/recovery chain;
+- structural proposal/approval/mutation/journal/undo/recovery;
 - `.b5d` storage, delta journaling and checkpoints;
 - research registries, manifests, DATA/EVID separation and scientific integrity gates;
-- bounded Language Organ / Research Assistant contracts;
-- Learning Preparation Studio foundation;
+- bounded Language Organ / Research Assistant / Cognitive Advisor contracts;
 - typed embodiment, actuator authorization, audit chain and deterministic environment loop;
-- deterministic embodiment controls with separate action/effect receipts, sensor-loss, actuator-failure and replay/open-loop conditions;
-- source-freeze binding across protocol code, configuration, prompt sentinel and DATA digests;
-- productive-learning controls with learning-on, learning-off and sham-replay conditions;
-- canonical train/validation/holdout partition enforcement;
-- clean-process repeats and human-review-gated EVID promotion;
+- source-freeze binding across protocol code, configuration and DATA digests;
+- productive-learning controls and train/validation/holdout partition enforcement;
 - real host interoception and dynamic device discovery without fabricated fallback values;
-- unified responsive dashboard design;
-- dedicated adaptive `Wesen` workspace with machine-native dynamic morphology;
-- `Network` removed from primary frontend navigation;
-- Release/Gate moved to the footer;
-- simplified technical `Embodiment` workspace;
-- documentation link/version/test-count consistency checks and scheduled storage validation;
-- protocol-driven Research Experiment Runner with automatic/manual traceable IDs;
-- protocol-specific Runner presets with validated seed lists/ranges, effective tick budgets and documented condition templates;
-- visible running-test progress in the Experiment Runner and explicit test activity in the dashboard footer;
-- one `science_all_v1` protocol covering all registered Science-Suite runner groups;
-- raw impulse spike sequences and deterministic cross-seed response digests persisted in DATA;
-- network impulse response signatures that persist executed ticks, all observed spike IDs, activated neurons, delivered synaptic events, synaptic-activity ticks and total synapses;
-- true recurrent impulse topology with a return edge to the source neuron;
-- direct activity verification that fails if tick execution, neuron spikes or synaptic delivery are absent;
-- CI across Python 3.11/3.12/3.13, security, typing, wheel and Docker verification as required release gates.
-
-## Experiment interpretation after the observability repair
-
-`EXP-GEN-0009` through `EXP-GEN-0012` are intentionally retained unchanged. Their zero-spike/zero-activation records describe what the older output-only probe observed, not a rewritten reconstruction of what the runtime may have done internally.
-
-The current network probe observes complete published spike IDs and synaptic delivery. Direct validation on the actual runtime showed:
-
-- ticks execute;
-- all three neurons in the impulse chain can become active;
-- feed-forward propagation produces observable spikes and synaptic events;
-- the recurrent condition produces a return path and additional repeated activity;
-- all new metrics are serializable into future experiment `DATA/runs.json` artifacts.
-
-The next scientific step is therefore a **new registered multi-seed validation experiment**, not modification of the historical runs.
-
-## Dashboard/Wesen direction
-
-The frontend architecture is intentionally split:
-
-- `Embodiment` = technical connection/configuration surface;
-- `Wesen` = read-only live body projection;
-- `Release` = footer access;
-- `Network` = no primary workspace.
-
-The `Wesen` body is not a fixed biological analogy. Its visible sensor and actuator branches are derived from observed connection data. Host telemetry is treated as machine-native interoception. The body envelope changes when endpoints appear/disappear.
-
-Current visualization capabilities include:
-
-- dynamic sensor/actuator morphology;
-- adaptive membrane/body state;
-- data pins;
-- node inspection;
-- signal animation;
-- recurrence trend;
-- delayed same-morphology self-model;
-- session-local morphology history;
-- candidate causal-path emphasis;
-- explicit unknown-state rendering.
-
-These remain operator/research visualizations and are not evidence of consciousness or causality by themselves.
+- adaptive read-only `Wesen` workspace;
+- protocol-driven Research Experiment Runner and Science Suite;
+- network impulse response instrumentation for ticks, spikes, activated neurons, synaptic events, latency, recurrence and state digests;
+- compressed immutable raw-run preservation plus bounded `runs.json` / `analysis/ai_packet.json` projections;
+- **Neural Symbiosis** open-set peripheral network/virtual-area contracts at the embodiment boundary;
+- read-only Neural Symbiosis panel in `Wesen`;
+- inert candidate gateway math for STDP, homeostatic scaling, structural formation/pruning and efferent reward-modulated gating.
 
 ## Roadmap principle
 
-Development now moves away from simply adding more modules. The next scientific gain comes from **closing causal and evidential loops on the capabilities already built**.
+Development now prioritizes **evidence closure** and controlled experiments over feature accumulation.
 
 ---
 
-## R0 — Revalidate network propagation on repaired instrumentation
+## R0 — Post-repair propagation and recurrence validation
 
-**Goal:** Establish a clean post-repair baseline for propagation and recurrence without changing historical DATA.
+**Goal:** establish a clean multi-seed baseline for propagation and recurrent return using the repaired instrumentation.
 
-Engineering/scientific tasks:
+Tasks:
 
-- register a new experiment ID from the current catalog;
-- freeze current code/configuration and probe contract;
-- run feed-forward and recurrence conditions over multiple independent seeds;
-- persist complete spike sequences, latencies, tick counts, synaptic events, synapse counts and before/after digests;
-- verify cross-seed determinism where the protocol expects deterministic equality;
-- compare recurrence-on against recurrence-off using predefined metrics;
-- independently review the run before any EVID promotion.
-
-Scientific deliverable:
-
-- a defensible post-repair baseline showing whether propagation and recurrent return are reproducibly observable under the registered impulse protocol.
+- execute the registered recurrence/propagation protocol over independent seeds;
+- persist complete spike, synapse, latency and digest metrics;
+- compare recurrence-on/off using preregistered metrics;
+- review before any EVID promotion;
+- never rewrite `EXP-GEN-0009` to `EXP-GEN-0012`.
 
 **Priority:** immediate.
 
 ---
 
-## R1 — Evidence closure for productive learning
+## R1 — Productive-learning evidence closure
 
-**Goal:** Demonstrate, under preregistered conditions, that learning changes later network behavior rather than only internal weights.
+**Goal:** demonstrate whether learning changes later behavior rather than merely internal weights.
 
-Engineering tasks:
+Maintain:
 
-- maintain the frozen reproducible learning protocol/configuration;
-- enforce train/validation/holdout separation and leakage checks;
-- capture pre-training and post-training response probes;
-- persist reward accounting, weight deltas and behavior deltas in the same manifest-bound run;
-- retain matched learning-off / sham controls;
-- repeat across independent seeds and clean processes when replication is required.
-
-Scientific deliverable:
-
-- evidence supporting, rejecting or leaving inconclusive the claim that reward-modulated local learning produces reproducible task-relevant behavioral change.
-
-**Priority:** highest after R0 validation.
+- frozen protocol/configuration;
+- train/validation/holdout separation;
+- pre/post behavior probes;
+- learning-off and sham/replay controls;
+- independent seeds and clean-process repeats;
+- human-review-gated EVID promotion.
 
 ---
 
 ## R2 — Closed-loop embodiment evidence
 
-**Goal:** Turn the existing Sensor → SNN → Actuator → Outcome → Reward infrastructure into controlled evidence.
+**Goal:** test Sensor → SNN → Actuator → Outcome → Reward as a controlled causal loop.
 
-Engineering tasks:
-
-- standardize episode manifests and terminal-state verification;
-- persist observation/action/outcome/reward receipts;
-- compare deterministic simulated environments before relying on real devices;
-- retain sensor-loss, actuator-loss and degraded-quality conditions;
-- distinguish command acceptance from measured physical/logical effect;
-- expose receipt-linked causal paths to `Wesen` only when the backend can verify the chain.
-
-Scientific deliverable:
-
-- evidence on whether the network adapts differently when consequences are closed-loop versus replayed/open-loop.
+Required comparisons include replay/open-loop, sensor-loss, degraded-quality and actuator-no-effect conditions. Action acceptance and measured effect must remain separate receipts.
 
 ---
 
-## R3 — Time-scale and runtime calibration
+## R3 — Neural Symbiosis experimental gateway program
 
-**Goal:** Make simulation time, wall-clock pacing and experiment timing explicit and independently controllable.
+**Goal:** test whether the SNN can learn to select, weight or compensate across peripheral neural/virtual areas without compromising the canonical core.
 
-Engineering tasks:
+The first implementation stage is **experiment-only**. Production peripheral activation remains out of scope until controls are validated.
 
-- benchmark target-Hz controller from slow real-time through unlimited mode;
-- profile per-tick cost by network size and enabled subsystem;
-- expose achieved Hz, target Hz and realtime ratio consistently;
-- verify pacing changes do not alter deterministic simulation outcomes when `dt` and inputs are unchanged;
-- define experiment-specific timing profiles.
+Required work:
 
-Scientific deliverable:
+1. add an experiment-runner adapter that constructs explicitly declared peripheral areas;
+2. persist exact adapter/model/version/artifact hashes;
+3. persist gateway state independently from core synapse state;
+4. keep gateway plasticity disabled outside registered experiments;
+5. support matched frozen-gateway, random-gateway, timing-shuffle and information/activity controls;
+6. evaluate noisy-area suppression and sensor-lesion compensation;
+7. compare alternative homeostatic reward/error formulations rather than assuming a signed population mean is valid;
+8. require independent seeds and evidence review before claims of learned tool/area use.
 
-- defensible mapping between configured simulation time and experimental protocol time, without claiming biological equivalence.
-
----
-
-## R4 — Scientific test of the 5D organization
-
-**Goal:** Determine whether the five-dimensional spatial organization contributes measurable function or is only an indexing/design choice.
-
-Required comparisons:
-
-- full 5D organization;
-- dimension-shuffled controls;
-- reduced-dimensional ablations;
-- topology-matched non-spatial controls where feasible.
-
-Metrics should include propagation, locality, learning efficiency, structural motifs, robustness and storage/runtime cost.
+Candidate research hypotheses are documented in [`../02-architecture/NEURAL_SYMBIOSIS.md`](../02-architecture/NEURAL_SYMBIOSIS.md).
 
 ---
 
-## R5 — Self-regulation, continuity and sensor-loss studies
+## R4 — Time-scale and runtime calibration
 
-**Goal:** Test homeostasis/interoception as control mechanisms without anthropomorphic interpretation.
-
-Engineering tasks:
-
-- formalize bounded drive/regulatory-state observables;
-- preregister thermal/resource/continuity perturbations in deterministic environments;
-- measure adaptation under missing/unreliable sensors;
-- persist body-boundary/sensor availability changes when they are part of an experiment;
-- keep functional-state metrics separate from emotion labels.
-
-Scientific deliverable:
-
-- evidence on whether internal regulatory signals improve stability, recovery or task continuity.
+Benchmark target Hz, achieved Hz, realtime ratio, `dt` and per-subsystem tick cost. Prove pacing-only changes do not alter deterministic simulated outcomes when `dt` and inputs remain unchanged.
 
 ---
 
-## R6 — Memory and world-model layer
+## R5 — Scientific test of the 5D organization
 
-**Goal:** Add persistent learned temporal/world state only after R1–R5 provide clear behavioral baselines.
-
-Planned work:
-
-- explicit short/medium/long temporal state contracts;
-- causal comparison of memory-on versus memory-off conditions;
-- recall/reconstruction metrics;
-- separation of stored observation, learned representation and external knowledge;
-- deterministic persistence/replay of memory state.
-
-No memory mechanism should be labelled a world model merely because it stores history; predictive utility must be measured.
+Compare full 5D organization against dimension-shuffled, reduced-dimensional and topology-matched non-spatial controls. Measure propagation, locality, learning efficiency, structural motifs, robustness and computational cost.
 
 ---
 
-## R7 — Multimodal grounding and knowledge intake
+## R6 — Self-regulation, continuity and sensor-loss studies
 
-**Goal:** Introduce camera/audio/network/document observations through typed, provenance-rich intake rather than direct LLM-to-SNN writes.
-
-Planned work:
-
-- deterministic SignalFrame/feature contracts for multimodal input;
-- source identity, timestamp, digest and trust metadata;
-- frozen/replayable knowledge snapshots for scientific runs;
-- comparison of raw sensory learning versus externally structured knowledge conditions.
+Test homeostasis/interoception as functional control mechanisms without anthropomorphic interpretation. Persist body-boundary/sensor availability changes when they are experimental variables.
 
 ---
 
-## R8 — AI-as-treatment research
+## R7 — Memory and world-model layer
 
-**Goal:** Study AI participation itself as an experimental variable.
+Only after stable behavioral baselines exist:
 
-Conditions may include no AI, frozen replay AI, sham/random proposer, different LLM families under an identical research packet, and proposal accepted versus rejected by the same governance path.
+- define explicit memory-state contracts;
+- compare memory-on/off;
+- add prediction/recall metrics;
+- distinguish observation history, learned internal state and external knowledge;
+- require predictive/behavioral utility before using the term world model.
 
-AI involvement must remain provenance-bound and cannot be silently mixed into control runs.
+---
+
+## R8 — Multimodal grounding and knowledge intake
+
+Introduce camera/audio/document/network/knowledge observations through typed provenance-rich SignalFrames and Neural Symbiosis adapters. Scientific runs require frozen/replayable source snapshots and explicit treatment identity.
 
 ---
 
-## R9 — Scaling and performance engineering
+## R9 — AI-as-treatment research
 
-Scaling should follow evidence needs rather than headline neuron counts.
-
-Work includes:
-
-- storage/journal stress tests;
-- network/tick profiling at increasing neuron/synapse counts;
-- async persistence backpressure characterization;
-- bounded telemetry sampling;
-- memory footprint profiling;
-- optional accelerator/native kernels only after semantic equivalence tests exist.
-
-A larger network is not automatically a more valid model.
+Compare no-AI, frozen replay, sham/random proposer and model-family conditions under identical research packets. AI involvement remains provenance-bound and cannot be silently mixed into controls.
 
 ---
+
+## R10 — Scaling and performance engineering
+
+Scale only when evidence needs justify it. Profile network/tick cost, memory footprint, storage/journal backpressure and bounded telemetry before adding accelerator/native kernels. Any optimization requires semantic-equivalence tests.
 
 ## Release direction
 
@@ -280,8 +165,8 @@ Before a new major research milestone is declared:
 4. new causal capabilities have matched controls;
 5. experiment artifacts are reproducible from recorded manifests;
 6. documentation source-of-truth is current;
-7. AI involvement is registered as provenance/treatment where applicable;
-8. dashboard visualizations remain clearly separated from scientific evidence;
+7. AI/peripheral-network involvement is registered as provenance/treatment where applicable;
+8. dashboard visualizations remain separated from scientific evidence;
 9. historical DATA has not been rewritten to fit newer instrumentation.
 
 ## Historical roadmaps
