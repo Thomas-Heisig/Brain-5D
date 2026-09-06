@@ -26,16 +26,15 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 
 > Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests, reachable devices or available neural pipelines are not the same as scientific evidence.
 
-## Current verified baseline — 2026-09-06
+## Current baseline — 2026-09-06
 
 - version: `0.5.0a7`
 - Python: 3.11–3.13
-- pytest collection: **773 tests**
-- full and slow CI suites: green
-- Black, Ruff, Pylint, Pre-Commit, Mypy and Pyright: green
-- Scientific Integrity and security gates: green
-- wheel build/install and Docker build/runtime verification: green
-- latest completed full `main` CI before the documentation-cleanup commits: run #583, success
+- pytest collection: **791 tests**
+- Research Catalog / variable-projection-dimension integration is merged to `main`
+- merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
+- latest fully completed pre-merge `main` CI baseline: run #598, success
+- the post-merge CI run is authoritative for the merged baseline and must complete before that baseline is described as fully green
 
 ## Capabilities
 
@@ -47,8 +46,18 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 - typed embodiment, actuator authorization, audit trails and deterministic environments;
 - real host telemetry/device discovery without fabricated fallback values;
 - **Neural Symbiosis**: open-set peripheral neural/virtual area contracts and read-only pipeline reachability;
+- **MSBA**: modality-specific pathways, energy/resource accounting and external projection dimensionality from 1–32 dimensions;
+- fragmentable canonical research-question/hypothesis registries with duplicate-ID rejection;
+- searchable Research Catalog with operational/exploratory distinction;
+- repository-wide read-only RQ/H reference audit;
 - research registries, manifests, DATA/EVID separation and AI provenance;
 - responsive dashboard centered on Overview, Control, Research, Settings, Wesen and Embodiment.
+
+## Research Catalog and dimensions
+
+Canonical `questions.yaml` / `hypotheses.yaml` can be extended through deterministic `questions.*.yaml` / `hypotheses.*.yaml` fragments. MSBA research questions and hypotheses are normal experiment-workflow entries. A question is marked operational only when an appropriate frozen/preregistered protocol exists; otherwise it remains exploratory and cannot be silently promoted to evidence.
+
+MSBA/external projection spaces may use 1–32 dimensions. The persisted productive SNN core remains 5D for backward compatibility until a separately versioned N-D neuron-ID, spatial-index and `.b5d` migration has been implemented and verified.
 
 ## Neural Symbiosis
 
@@ -91,21 +100,23 @@ The dashboard defaults to `http://127.0.0.1:8765`.
 
 The engineering foundation is broad enough that the next priority is **evidence closure rather than feature accumulation**:
 
-1. post-repair propagation/recurrence validation across independent seeds;
-2. productive learning with holdout and matched controls;
-3. closed-loop embodiment versus replay/open-loop controls;
-4. experiment-only Neural Symbiosis gateway studies with frozen/random/shuffled controls;
-5. simulation-time versus wall-clock pacing calibration;
-6. causal ablations of the 5D organization;
-7. self-regulation/sensor-loss studies;
-8. later memory/world-model and multimodal grounding;
-9. AI-as-treatment comparisons with frozen provenance.
+1. operationalize every still-unmapped canonical RQ/H with dedicated protocols and preregistrations;
+2. post-repair propagation/recurrence validation across independent seeds;
+3. productive learning with holdout and matched controls;
+4. closed-loop embodiment versus replay/open-loop controls;
+5. experiment-only Neural Symbiosis/MSBA gateway studies with frozen/random/shuffled controls;
+6. preregistered N-D projection sweeps before any productive-core N-D migration;
+7. simulation-time versus wall-clock pacing calibration;
+8. causal ablations of the 5D organization;
+9. self-regulation/sensor-loss studies;
+10. later memory/world-model, multimodal grounding and AI-as-treatment studies.
 
 ## Documentation
 
 - [Project README](README.md)
 - [Architecture](docs/02-architecture/ARCHITECTURE.md)
 - [Neural Symbiosis](docs/02-architecture/NEURAL_SYMBIOSIS.md)
+- [MSBA](docs/02-architecture/MSBA.md)
 - [Wesen](docs/02-architecture/WESEN_ADAPTIVE_BODY.md)
 - [Dashboard](docs/03-dashboard/DASHBOARD.md)
 - [Roadmap](docs/08-roadmap/ROADMAP.md)
