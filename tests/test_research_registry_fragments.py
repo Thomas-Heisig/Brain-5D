@@ -33,6 +33,17 @@ def test_registry_loads_question_and_hypothesis_fragments(tmp_path: Path) -> Non
     assert set(registry.hypotheses) == {"H-BASE-001-A", "H-EXTRA-E01-A"}
     assert registry.link_issues() == []
 
+    registry.questions["RQ-EXTRA-E01"].status = "in_progress"
+    registry.hypotheses["H-EXTRA-E01-A"].status = "inconclusive"
+    registry.save_questions()
+    registry.save_hypotheses()
+
+    reloaded = ResearchRegistry(tmp_path).load_all()
+    assert set(reloaded.questions) == {"RQ-BASE-001", "RQ-EXTRA-E01"}
+    assert set(reloaded.hypotheses) == {"H-BASE-001-A", "H-EXTRA-E01-A"}
+    assert reloaded.questions["RQ-EXTRA-E01"].status == "in_progress"
+    assert reloaded.hypotheses["H-EXTRA-E01-A"].status == "inconclusive"
+
 
 def test_registry_fragment_duplicate_ids_fail_closed(tmp_path: Path) -> None:
     base = "- id: RQ-DUP-001\n  domain: Test\n  question: Test?\n  relevance: test\n  status: open\n"
