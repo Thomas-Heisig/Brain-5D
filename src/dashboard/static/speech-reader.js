@@ -105,13 +105,12 @@ export function speakText(value, { onState = () => {}, lang = "de-DE" } = {}) {
   return true;
 }
 
-export function createSpeechControls(mount, getText, { label = "Text vorlesen" } = {}) {
+export function createSpeechControls(mount, getText, { label = "Text vorlesen", includeStart = true } = {}) {
   const controls = document.createElement("div");
   controls.className = "speech-reader-controls";
   controls.setAttribute("role", "group");
   controls.setAttribute("aria-label", label);
-  controls.innerHTML = `
-    <button type="button" class="speech-reader-start" title="${label}">Vorlesen</button>
+  controls.innerHTML = `${includeStart ? `<button type="button" class="speech-reader-start" title="${label}">Vorlesen</button>` : ""}
     <button type="button" class="speech-reader-pause" title="Vorlesen pausieren" disabled>Pause</button>
     <button type="button" class="speech-reader-stop" title="Vorlesen anhalten" disabled>Stopp</button>
     <span class="speech-reader-status" role="status" aria-live="polite"></span>`;
@@ -136,13 +135,13 @@ export function createSpeechControls(mount, getText, { label = "Text vorlesen" }
   };
 
   const startReading = () => speakText(getText(), { onState: setState });
-  start.addEventListener("click", startReading);
+  start?.addEventListener("click", startReading);
   pause.addEventListener("click", () => {
     if (!supported()) return;
     if (paused) { window.speechSynthesis.resume(); setState("speaking"); }
     else { window.speechSynthesis.pause(); setState("paused"); }
   });
   stop.addEventListener("click", stopSpeech);
-  if (!supported()) start.disabled = true;
+  if (!supported() && start) start.disabled = true;
   return { start: startReading, stop: stopSpeech, element: controls };
 }

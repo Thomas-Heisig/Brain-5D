@@ -1,6 +1,7 @@
 "use strict";
 
 import { renderMessage } from "./file-renderer.js";
+import { createSpeechControls } from "./speech-reader.js";
 
 function escapeChat(value) {
   const node = document.createElement('div');
@@ -288,6 +289,15 @@ function renderInteractionTrace(metadata) {
   if (speechInput && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
     speechInput.addEventListener('click', () => { const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new Recognition(); recognition.lang = 'de-DE'; recognition.onresult = (event) => { input.value = event.results[0][0].transcript; input.focus(); }; recognition.start(); });
   } else if (speechInput) speechInput.disabled = true;
-  if (speechOutput) speechOutput.addEventListener('click', () => { const last = [...activeRoom().messages].reverse().find((message) => message.role === 'assistant'); if (last && 'speechSynthesis' in window) speechSynthesis.speak(new SpeechSynthesisUtterance(last.content)); });
+  if (speechOutput) {
+    const speechMount = document.createElement('span');
+    speechOutput.insertAdjacentElement('afterend', speechMount);
+    const speechControls = createSpeechControls(
+      speechMount,
+      () => [...activeRoom().messages].reverse().find((message) => message.role === 'assistant')?.content || '',
+      { label: 'Letzte Antwort vorlesen', includeStart: false },
+    );
+    speechOutput.addEventListener('click', () => speechControls.start());
+  }
   render();
 }

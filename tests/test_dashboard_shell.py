@@ -70,4 +70,14 @@ def test_bibtex_year_columns_reserve_four_digit_width() -> None:
     assert "min-width: 5.5rem" in css
     assert "font-variant-numeric: tabular-nums" in css
     assert ".file-renderer-bibtex td:nth-child(4)" in css
+
+
+def test_shared_speech_reader_covers_viewer_and_chat() -> None:
+    speech = (STATIC / "speech-reader.js").read_text(encoding="utf-8")
+    renderer = (STATIC / "file-renderer.js").read_text(encoding="utf-8")
+    chat = (STATIC / "research-chat.js").read_text(encoding="utf-8")
+    assert 'lang = "de-DE"' in speech
+    assert "createSpeechControls" in renderer
+    assert "createSpeechControls" in chat
+    assert "speech-reader-status" in speech
 # fmt: on

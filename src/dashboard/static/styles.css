@@ -10278,6 +10278,16 @@ body.box-state-lock {
 .file-renderer-bib-links { white-space: nowrap; }
 .file-renderer-bib-link { color: var(--accent, #7aabff); margin-right: .6rem; text-decoration: none; border-bottom: 1px solid rgba(122, 171, 255, .35); }
 .file-renderer-bib-link:hover { color: var(--text, #fff); border-bottom-color: currentColor; }
+.speech-reader-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  flex-wrap: wrap;
+  margin-left: .35rem;
+}
+.speech-reader-controls button { min-height: 2rem; padding: .25rem .55rem; }
+.speech-reader-controls button:disabled { opacity: .5; cursor: not-allowed; }
+.speech-reader-status { color: var(--muted-text, #9aa7b8); font-size: .78rem; white-space: nowrap; }
 .file-renderer-json-node { margin: .25rem 0; }
 .file-renderer-json-node > summary { cursor: pointer; padding: .3rem .45rem; border-radius: .3rem; background: rgba(255, 255, 255, .04); }
 .file-renderer-json-children { margin-left: 1rem; padding-left: .7rem; border-left: 1px solid var(--border-color, #394452); }

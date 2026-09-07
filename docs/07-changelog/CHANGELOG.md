@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — Natural-language read-aloud
+
+- Added shared German speech controls with start, pause, resume and stop behavior.
+- Enabled read-aloud for file previews, expanded chat file cards and the latest Research Chat answer.
+- Cleans Markdown links, formatting markers and URLs before speech synthesis.
+
 ## 2026-09-07 — BibTeX year column layout
 
 - Reserved a stable, tabular-numeric year column in both BibTeX table previews so four-digit years remain readable.

@@ -22,6 +22,7 @@
 
 - [x] Add a viewer back button and cross-module `openBrain5DFile` API.
 - [x] Add read-only central LLM analysis to the viewer.
+- [x] Add natural-language read-aloud controls to the viewer, shared file cards and Research Chat.
 - [x] Restore sanitized DOCX layout rendering through Mammoth.
 - [x] Add safe multicolor syntax rendering for common source formats.
 - [ ] Add a richer split-pane editor with language-aware preview and conflict diff.

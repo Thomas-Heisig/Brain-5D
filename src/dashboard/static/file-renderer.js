@@ -3,6 +3,7 @@
  * remain explicit research/docs references. Preview and mutation are separate.
  */
 import { parseBibTeX } from './bibtex-viewer.js';
+import { createSpeechControls } from './speech-reader.js';
 
 const requests = new WeakMap();
 const renderers = new Map();
@@ -518,6 +519,8 @@ export async function renderFile(container, reference, options = {}) {
       try { await navigator.clipboard.writeText(data.raw_content ?? data.content); notice.textContent = 'Text kopiert.'; }
       catch { notice.textContent = 'Zwischenablage nicht verfuegbar.'; }
     }));
+    const speechText = () => body.innerText || body.textContent || data.content || data.raw_content || '';
+    if (speechText().trim()) createSpeechControls(actions, speechText, { label: 'Datei vorlesen' });
     options.onReady?.(data, { body, actions, notice });
     return data;
   } catch (error) {
