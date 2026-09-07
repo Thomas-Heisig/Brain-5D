@@ -4,6 +4,10 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Experiment-only host telemetry observations
+
+- Added an opt-in provider to the regulation runner so host telemetry is recorded only as an explicit `host_telemetry` experiment condition, with raw readings, typed signals and missing-value semantics preserved.
+
 ## 2026-09-07 Missing and uncertain sensor conditions
 
 - Classified malformed numeric/boolean sensor values as `unknown` and propagated uncertainty through thermal and continuity drives without treating raw presence as valid telemetry.

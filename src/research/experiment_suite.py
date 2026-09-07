@@ -11,7 +11,7 @@ import statistics
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Mapping, cast
+from typing import Any, Callable, Mapping, cast
 
 import yaml
 
@@ -443,8 +443,13 @@ def run_5d(
 def run_regulation(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
+    experiment_telemetry: Callable[[int], Mapping[str, Any]] | None = None,
 ) -> list[ScientificRun]:
-    """Measure bounded regulation outputs under pressure and unknown inputs."""
+    """Measure bounded regulation outputs under pressure and unknown inputs.
+
+    ``experiment_telemetry`` is opt-in so live host observations never become
+    hidden inputs to the deterministic baseline conditions.
+    """
     del config
     readings_by_condition: dict[str, dict[str, Any]] = {
         "nominal": {
@@ -461,6 +466,8 @@ def run_regulation(
         },
         "telemetry_unknown": {},
     }
+    if experiment_telemetry is not None:
+        readings_by_condition["host_telemetry"] = dict(experiment_telemetry(0))
     runs: list[ScientificRun] = []
     for seed in seeds:
         for condition, readings in readings_by_condition.items():
@@ -477,6 +484,21 @@ def run_regulation(
                         "drives": drives.to_json(),
                         "regulatory_state": regulatory.to_json(),
                         "functional_state": functional.to_json(),
+                        **(
+                            {
+                                "experiment_telemetry": {
+                                    "source": "injected_host_provider",
+                                    "tick": 0,
+                                    "raw_readings": readings,
+                                    "signals": [
+                                        signal.to_json() for signal in frame.signals
+                                    ],
+                                    "missing_values_are_unknown": True,
+                                }
+                            }
+                            if condition == "host_telemetry"
+                            else {}
+                        ),
                     },
                     "",
                     "",

@@ -345,7 +345,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## P2 — self-regulation and continuity experiments
 
 - [x] Define non-anthropomorphic resource/continuity pressure states in MSBA.
-- [ ] Integrate measured host telemetry into experiment-only resource observations with explicit missing/unknown values.
+- [x] Integrate measured host telemetry into experiment-only resource observations with explicit missing/unknown values.
 - [x] Test missing and uncertain sensor conditions, including malformed numeric and boolean readings.
 - [x] Register deterministic recovery comparison with regulation enabled/disabled.
 - [x] Execute the recovery experiment across the required seed set: `EXP-REG-0002-R1`, 40 runs, 20 seeds, 0 runtime errors.

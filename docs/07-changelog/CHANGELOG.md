@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Experiment-only host telemetry observations
+
+- Added opt-in host telemetry capture to regulation experiments.
+- Preserved deterministic baseline conditions and explicit unknown values for missing or invalid readings.
+
 ## 2026-09-07 — Missing and uncertain sensor conditions
 
 - Added regression coverage for malformed sensor values.

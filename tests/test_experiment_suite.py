@@ -66,6 +66,29 @@ def test_regulation_runner_is_reproducible_and_fail_closed() -> None:
     assert pressure.metrics["drives"]["drives"]["resource_pressure"] is not None
 
 
+def test_regulation_runner_keeps_host_telemetry_experiment_only_and_explicitly_unknown() -> None:
+    runs = run_regulation(
+        _config(),
+        seeds=(42,),
+        experiment_telemetry=lambda _tick: {
+            "cpu_percent": 42.0,
+            "temperature_c": None,
+            "network_up": "unavailable",
+        },
+    )
+
+    host_run = next(run for run in runs if run.condition == "host_telemetry")
+    telemetry = host_run.metrics["experiment_telemetry"]
+    assert telemetry["source"] == "injected_host_provider"
+    assert telemetry["raw_readings"]["cpu_percent"] == 42.0
+    assert telemetry["missing_values_are_unknown"] is True
+    signals = {item["name"]: item for item in telemetry["signals"]}
+    assert signals["temperature_c"]["status"] == "unknown"
+    assert signals["network_up"]["status"] == "unknown"
+    assert host_run.metrics["drives"]["drives"]["thermal_threat"] is None
+    assert host_run.metrics["drives"]["uncertainty"]["continuity_risk"] == 1.0
+
+
 def test_productive_stdp_and_learning_repeat_use_real_result() -> None:
     stdp = run_stdp(_config(), seeds=(42,))
     repeat = run_learning_repeat(_config(), seeds=(42,))
