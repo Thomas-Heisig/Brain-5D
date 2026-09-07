@@ -12,6 +12,27 @@
 | Hebb (1949) | Neurons that fire together, wire together. | RQ-SNN-004, RQ-SELF-001 | open |
 | Watts (1998) | Small-world networks combine high clustering with short path lengths. | RQ-SNN-003 | open |
 | Barabási (1999) | Preferential attachment produces scale-free network degree distributions. | RQ-SNN-003 | open |
+| others (2026) |  | RQ-CNS-101, RQ-CNS-112, RQ-CNS-113, RQ-EPI-102, RQ-WEL-102 | open |
+| others (2025) |  | RQ-CNS-101, RQ-EPI-101 | open |
+| Naccache (2025) |  | RQ-CNS-101 | open |
+| Seth (2025) |  | RQ-CNS-101, RQ-CNS-113 | open |
+| others (2024) |  | RQ-WEL-101, RQ-WEL-102, RQ-WEL-103 | open |
+| others (2009) |  | RQ-CNS-102, RQ-CNS-103, RQ-CNS-104 | open |
+| others (2013) |  | RQ-CNS-108 | open |
+| Lau (2012) |  | RQ-CNS-106 | open |
+| others (2015) |  | RQ-CNS-107 | open |
+| others (2024) |  | RQ-CNS-109 | open |
+| contributors (2026) |  | RQ-CNS-105, RQ-CNS-106, RQ-CNS-111, RQ-CNS-112 | open |
+| Turing (1950) |  | RQ-CNS-115 | open |
+| Chollet (2019) |  | RQ-CNS-116 | open |
+| others (2018) |  | RQ-CNS-114, RQ-CNS-117 | open |
+| others (2009) |  | RQ-CNS-117 | open |
+| Lakens (2017) |  | RQ-CNS-107, RQ-CNS-117, RQ-EPI-102 | open |
+| Arnell (1992) |  | RQ-CNS-110 | open |
+| others (2019) |  | RQ-CNS-111 | open |
+| Deutschland (2026) |  | RQ-WEL-103 | open |
+| Deutschland (2026) |  | RQ-WEL-103 | open |
+| Deutschland (2026) |  | RQ-WEL-103 | open |
 
 ---
 *Automatisch generiert am 2026-09-07*

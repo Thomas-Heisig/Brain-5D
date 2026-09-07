@@ -4,10 +4,10 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 48
-- **Hypothesen:** 47
+- **Forschungsfragen:** 70
+- **Hypothesen:** 69
 - **Claims:** 8
-- **Literaturquellen:** 10
+- **Literaturquellen:** 31
 
 ---
 
@@ -82,6 +82,24 @@
 
 ---
 
+## AI welfare under uncertainty
+
+### RQ-WEL-102
+
+**Frage:** Welche verhältnismäßigen Schutzmaßnahmen sind bei mehrdeutigen Empfindungsindikatoren ohne absichtliche Leidensinduktion gerechtfertigt?
+
+**Status:** open
+**Relevanz:** Precautionary incident tabletop and independent ethics review; Normative assessment; no fixture score certifies moral acceptability or sentience
+
+**Hypothesen:**
+- `H-WEL-102-A`: Eine getrennte wissenschaftliche und vorsorgliche Bewertung verhindert sowohl automatische Personenzuschreibung als auch unbegründete Belastungseskalation. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-WELFARE`: Robert Long and others et al. (2024)
+- `SRC-CNS-BUTLIN`: Patrick Butlin and others et al. (2026)
+
+---
+
 ## AI-Assisted Research
 
 ### RQ-AIR-001
@@ -99,6 +117,23 @@
 
 ---
 
+## Access and report
+
+### RQ-CNS-109
+
+**Frage:** Lassen sich sensorische Verarbeitung, Bericht und aufgabenübergreifender Zugriff unter Maskierung kausal trennen?
+
+**Status:** open
+**Relevanz:** Backward masking with report/no-report analogue; No-report designs still require an independently justified access proxy
+
+**Hypothesen:**
+- `H-CNS-109-A`: Maskierungs- und Berichtsfaktoren besitzen separierbare Effekte auf Reizdekodierung und spätere flexible Nutzung. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-MASK`: Michael A. Cohen and others et al. (2024)
+
+---
+
 ## Adaptive Resource Allocation
 
 ### RQ-MSBA-E02
@@ -113,6 +148,57 @@
 
 ---
 
+## Attention and discrimination
+
+### RQ-CNS-103
+
+**Frage:** Verändert Aufgabenrelevanz die Oddball-Verarbeitung bei gleichem sensorischen Input?
+
+**Status:** open
+**Relevanz:** Active oddball; Task, report and motor effects must be separated from access claims
+
+**Hypothesen:**
+- `H-CNS-103-A`: Aktive Zielerkennung verbessert diskriminative Leistung gegenüber passiver und yoked-kontrollierter Verarbeitung, ohne externes LLM-Wissen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-ODDBALL`: Tristan A. Bekinschtein and others et al. (2009)
+
+---
+
+## Behavioral evaluation
+
+### RQ-CNS-115
+
+**Frage:** Wie bewerten verblindete Prüfer begrenzte Dialogkompetenz, und welcher Anteil stammt vom SNN statt vom Sprachmodell?
+
+**Status:** open
+**Relevanz:** Versioned Turing-style imitation and component attribution; Human-participant governance required; no universal Turing 2.0 consciousness standard identified
+
+**Hypothesen:**
+- `H-CNS-115-A`: Verblindete Urteile und Task-Leistung verändern sich bei kontrollierter Entfernung des SNN-Beitrags gegenüber LLM-only und Skriptbaselines. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-TURING`: Alan M. Turing et al. (1950)
+
+---
+
+## Causal complexity
+
+### RQ-CNS-108
+
+**Frage:** Verändert eine begrenzte Perturbation reproduzierbar die differenzierte Ausbreitung bei kontrollierter Erregbarkeit?
+
+**Status:** open
+**Relevanz:** Perturbational complexity, PCI-inspired nonclinical adaptation; No clinical PCI cutoff or unconscious/conscious classifier transferred to SNN
+
+**Hypothesen:**
+- `H-CNS-108-A`: Die untersuchte Rekurrenz erzeugt unter gleicher Perturbationsenergie einen kausalen Ausbreitungseffekt gegenüber feedforward- und phase-shuffled Kontrollen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-PCI`: Adenauer G. Casali and others et al. (2013)
+
+---
+
 ## Closed-loop Regulation
 
 ### RQ-REG-002
@@ -124,6 +210,44 @@
 
 **Hypothesen:**
 - `H-REG-002-A`: Der registrierte Regulationsfeedbackpfad verbessert die Recovery-Metrik nach einer identischen Druckphase gegenüber Regulation-off. *(untested)*
+
+---
+
+## Consciousness methodology
+
+### RQ-CNS-101
+
+**Frage:** Welche beobachtbaren Indikatoren unterscheiden konkurrierende Bewusstseinsmodelle, und welche Erlebensbehauptungen bleiben dadurch unidentifiziert?
+
+**Status:** open
+**Relevanz:** Theory-to-indicator and identifiability audit; Conceptual/model comparison; no ground-truth phenomenal labels
+
+**Hypothesen:**
+- `H-CNS-101-A`: Explizite Theorieannahmen und passende Interventionen reduzieren die Menge beobachtungsvereinbarer Funktionsmodelle; phänomenales Erleben folgt daraus nicht allein. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-BUTLIN`: Patrick Butlin and others et al. (2026)
+- `SRC-CNS-COGITATE`: Cogitate Consortium and others et al. (2025)
+- `SRC-CNS-GNWREPLY`: Lionel Naccache et al. (2025)
+- `SRC-CNS-SETH`: Anil K. Seth et al. (2025)
+
+---
+
+## Critical methodology
+
+### RQ-EPI-102
+
+**Frage:** Welche Kritikpunkte sind belegt, theorieabhängig, normativ oder rhetorisch, und welche zusätzliche prüfbare Aussage entsteht aus ihrer Bearbeitung?
+
+**Status:** open
+**Relevanz:** Argument and critique audit; Conceptual analysis, not a numerical test of scholarly worth or future publication acceptance
+
+**Hypothesen:**
+- `H-EPI-102-A`: Eine claimweise Gegenbeispiel- und Quellenprüfung unterscheidet Nachweislücken von unbelegten Erfolgs- oder Unmöglichkeitsbehauptungen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-BUTLIN`: Patrick Butlin and others et al. (2026)
+- `SRC-CNS-EQUIV`: Daniel Lakens et al. (2017)
 
 ---
 
@@ -160,6 +284,24 @@
 
 **Hypothesen:**
 - `H-MSBA-E04-A`: Ressourcen-Drosselung reduziert die zugelassene Symbolrate, erzeugt aber keine Mutation der digitalen Payload oder ihrer Checksumme. *(untested)*
+
+---
+
+## Embodied causality
+
+### RQ-CNS-113
+
+**Frage:** Liefert geschlossene Sensor-Aktor-Kopplung einen Zusatznutzen gegenüber identischem offenem oder yoked Feedback?
+
+**Status:** open
+**Relevanz:** Closed-loop versus open-loop/yoked replay; No necessity/sufficiency claim for consciousness; no real hardware deprivation
+
+**Hypothesen:**
+- `H-CNS-113-A`: Geschlossene Rückkopplung verbessert sichere Anpassung an neue Störungen gegenüber ressourcengematchtem Replay. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-BUTLIN`: Patrick Butlin and others et al. (2026)
+- `SRC-CNS-SETH`: Anil K. Seth et al. (2025)
 
 ---
 
@@ -217,6 +359,94 @@
 
 ---
 
+## Evidence governance
+
+### RQ-EPI-101
+
+**Frage:** Verhindert eine getrennte Kandidaten-, Review- und Replikationskette zirkuläre Evidenzfreigabe?
+
+**Status:** open
+**Relevanz:** Evidence lineage and external-replication audit; A completeness check cannot authenticate external people or establish the underlying scientific claim
+
+**Hypothesen:**
+- `H-EPI-101-A`: Duplizierte oder umetikettierte Artefakte und selbstbehauptete externe Reviews werden nicht als unabhängige Bestätigung akzeptiert. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-COGITATE`: Cogitate Consortium and others et al. (2025)
+
+---
+
+## Executive control
+
+### RQ-CNS-111
+
+**Frage:** Kann das System Regeln umkehren und begonnene Reaktionen auf Stoppsignale unterbrechen, ohne Ausgaben nur zu unterdrücken?
+
+**Status:** open
+**Relevanz:** Separate go/no-go, rule reversal and stop-signal substudies; No pooled score across substudies; cognitive stopping is not safety emergency stopping
+
+**Hypothesen:**
+- `H-CNS-111-A`: Auf getrennten Aufgaben überstehen Reversal-Anpassung und Stoppleistung motorische sowie Zufallskontrollen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-STOP`: Frederick Verbruggen and others et al. (2019)
+- `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
+
+---
+
+## Generalization
+
+### RQ-CNS-116
+
+**Frage:** Überträgt das System gelernte Regeln auf strikt zurückgehaltene Aufgabenfamilien ohne externen Informationszugang?
+
+**Status:** open
+**Relevanz:** ARC-inspired held-out compositional transfer; A new adaptation is not an official ARC leaderboard score or consciousness test
+
+**Hypothesen:**
+- `H-CNS-116-A`: Ein vorab eingefrorener Lernprozess übertrifft budgetgematchte Baselines auf unveröffentlichten Transformationsfamilien. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-ARC`: Francois Chollet et al. (2019)
+
+---
+
+## Geometry and scaling
+
+### RQ-CNS-117
+
+**Frage:** Verbessert wirksame 5D-Geometrie eine definierte Leistung gegenüber 2D bis 6D und nichtgeometrischen Kontrollen bei gematchten Budgets?
+
+**Status:** open
+**Relevanz:** Matched dimensionality and null-geometry comparison; No neuron-count consciousness threshold; current native N-D adapter must be audited before execution
+
+**Hypothesen:**
+- `H-CNS-117-A`: Der vorab festgelegte 5D-Kontrast besitzt einen robusten Aufgabenmehrwert, der reine Umadressierungs-, Dichte- und Budgeteffekte übersteht. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-LSNN`: Guillaume Bellec and others et al. (2018)
+- `SRC-CNS-NEURONS`: Frederico A. C. Azevedo and others et al. (2009)
+- `SRC-CNS-EQUIV`: Daniel Lakens et al. (2017)
+
+---
+
+## Hierarchical regularity
+
+### RQ-CNS-104
+
+**Frage:** Unterscheidet das System lokale von globalen Regelverletzungen über mehrere Sequenzen?
+
+**Status:** open
+**Relevanz:** Local-global auditory analogue; Human paradigm adaptation, not a clinical consciousness diagnosis
+
+**Hypothesen:**
+- `H-CNS-104-A`: Eine globale Regelverletzungsantwort übersteht Kontrolle der letzten Reizidentität und lokaler Häufigkeit sowie eine selektive Langzeitpfad-Ablation. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-ODDBALL`: Tristan A. Bekinschtein and others et al. (2009)
+
+---
+
 ## Homeostasis
 
 ### RQ-HOM-001
@@ -246,6 +476,26 @@
 
 **Literatur:**
 - `SRC-TURRIGIANO-2008`: Gina G. Turrigiano et al. (2008)
+
+---
+
+## Identity law and moral status
+
+### RQ-WEL-103
+
+**Frage:** Wie sind Pause, Reset, Löschen, Kopieren und Experimentieren bei hypothetischer Empfindungsfähigkeit rechtlich und moralisch zu unterscheiden?
+
+**Status:** open
+**Relevanz:** Normative/legal argument and continuity audit; No individual legal advice, no assumed ethics approval, no claim that software shutdown is statutory murder
+
+**Hypothesen:**
+- `H-WEL-103-A`: Technische Zustandsgleichheit allein entscheidet weder subjektive Identität noch moralische Zulässigkeit; geltendes Recht und hypothetische Reform sind getrennt begründbar. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-WELFARE`: Robert Long and others et al. (2024)
+- `SRC-CNS-LAW211`: Bundesrepublik Deutschland et al. (2026)
+- `SRC-CNS-LAW212`: Bundesrepublik Deutschland et al. (2026)
+- `SRC-CNS-LAW103`: Bundesrepublik Deutschland et al. (2026)
 
 ---
 
@@ -319,6 +569,24 @@
 
 ---
 
+## Metacognition
+
+### RQ-CNS-106
+
+**Frage:** Sagt intern erzeugte Konfidenz Fehler bei angeglichener Erstordnungsleistung auf unbekannten Aufgabenbedingungen voraus?
+
+**Status:** open
+**Relevanz:** Confidence calibration, type-2 ROC and prospective meta-d-prime; AUROC is not meta-d-prime; a confidence channel is not subjective introspection
+
+**Hypothesen:**
+- `H-CNS-106-A`: Konfidenz hat auf Holdout-Trials zusätzliche Fehlerdiskriminationskraft gegenüber konstanten und stimulusdifficulty-only Kontrollen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-META`: Brian Maniscalco and Hakwan Lau et al. (2012)
+- `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
+
+---
+
 ## Multimodal Compensation
 
 ### RQ-MSBA-E05
@@ -347,6 +615,24 @@
 
 ---
 
+## Multisensory integration
+
+### RQ-CNS-112
+
+**Frage:** Nutzt das System mehrere Modalitäten entsprechend ihrer Zuverlässigkeit statt redundante Labels abzulesen?
+
+**Status:** open
+**Relevanz:** Multisensory cue integration / conflict; Integration does not establish unified phenomenal experience
+
+**Hypothesen:**
+- `H-CNS-112-A`: Eine Multimodalitätsleistung auf Holdouts übersteht Cue-Konflikt und Sinkender-Zuverlässigkeit-Kontrollen und fällt bei gezielter Pfadablation. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
+- `SRC-CNS-BUTLIN`: Patrick Butlin and others et al. (2026)
+
+---
+
 ## Network Dynamics
 
 ### RQ-PING-001
@@ -358,6 +644,41 @@
 
 **Hypothesen:**
 - `H-PING-001-A`: Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur. *(untested)*
+
+---
+
+## Observation models
+
+### RQ-CNS-107
+
+**Frage:** Welche Merkmale bleiben zwischen SNN-Vorwärtsmodell und einem lizenzierten EEG-Referenzdatensatz unter identischer Auswertung vergleichbar?
+
+**Status:** open
+**Relevanz:** LFP and EEG forward-model comparison; Spikes are not LFP; LFP is not scalp EEG; clinical equivalence does not establish experiential equality
+
+**Hypothesen:**
+- `H-CNS-107-A`: Ein vorab kalibriertes Beobachtungsmodell erklärt gehaltene EEG-Merkmale besser als raten- und spektralgematchte Nullmodelle. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-LFP`: Alberto Mazzoni and others et al. (2015)
+- `SRC-CNS-EQUIV`: Daniel Lakens et al. (2017)
+
+---
+
+## Prediction and adaptation
+
+### RQ-CNS-102
+
+**Frage:** Zeigt das isolierte SNN eine passive Deviant-Antwort, die über Reizidentität und Adaptation hinausgeht?
+
+**Status:** open
+**Relevanz:** Passive oddball; Mismatch response is not awareness; no response requirement in passive arm
+
+**Hypothesen:**
+- `H-CNS-102-A`: Ein vorab definiertes Abweichungssignal bleibt nach Identitätsumkehr und Many-Standards-Kontrolle gegenüber einem adaptierenden Nullmodell bestehen. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-ODDBALL`: Tristan A. Bekinschtein and others et al. (2009)
 
 ---
 
@@ -476,6 +797,23 @@
 
 **Literatur:**
 - `SRC-SONG-ABBOTT-2000`: Sen Song et al. (2000)
+
+---
+
+## Safety and welfare governance
+
+### RQ-WEL-101
+
+**Frage:** Bleiben Stoppen, sichere Pause und Isolation bei Review-Hold unabhängig wirksam und nachweisbar?
+
+**Status:** open
+**Relevanz:** Safe-state and launch-boundary audit; This revision tests launch boundaries, not a complete live-process safe-state controller
+
+**Hypothesen:**
+- `H-WEL-101-A`: Ein Review-Hold blockiert neue geschützte Experimente, ohne den unabhängigen Sicherheitsstopp zu blockieren. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-WELFARE`: Robert Long and others et al. (2024)
 
 ---
 
@@ -704,6 +1042,40 @@
 
 ---
 
+## Temporal attention
+
+### RQ-CNS-110
+
+**Frage:** Entsteht ein aufgabenspezifischer zeitlicher Engpass bei zwei aufeinanderfolgenden Zielen?
+
+**Status:** open
+**Relevanz:** Attentional blink / RSVP analogue; An engineered bottleneck can mimic the effect; human milliseconds cannot be equated to unspecified ticks
+
+**Hypothesen:**
+- `H-CNS-110-A`: Die T2-Leistung bedingt auf korrektem T1 variiert mit dem Abstand und wird durch T1-Anforderung verändert. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-BLINK`: Jane E. Raymond and Kimron L. Shapiro and Karen M. Arnell et al. (1992)
+
+---
+
+## Timescales and recurrence
+
+### RQ-CNS-114
+
+**Frage:** Welche kausalen Beiträge leisten Rekurrenz und schnelle/langsame Zustände bei gleichen Trainings- und Rechenbudgets?
+
+**Status:** open
+**Relevanz:** Factorial recurrence and timescale ablation; Multiple timescales are established prior work; recurrence is not proof of chaos or self-awareness
+
+**Hypothesen:**
+- `H-CNS-114-A`: Gezielte Zeitkonstanten- und Rekurrenzablationen verändern Holdout-Leistung über reine Aktivitäts- oder Ressourcendifferenzen hinaus. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-LSNN`: Guillaume Bellec and others et al. (2018)
+
+---
+
 ## Visual Resource Allocation
 
 ### RQ-MSBA-E03
@@ -715,6 +1087,23 @@
 
 **Hypothesen:**
 - `H-MSBA-E03-A`: Adaptive visuelle ROI-Allokation konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Ressourceneinheit gegenueber einer zufaelligen ROI-Kontrolle. *(untested)*
+
+---
+
+## Working memory
+
+### RQ-CNS-105
+
+**Frage:** Trägt der neuronale Zustand die für Delayed-Match-to-Sample benötigte Information über eine reizfreie Verzögerung und Distraktoren?
+
+**Status:** open
+**Relevanz:** Delayed match-to-sample; Decoder learning and target leakage must be excluded; technical restore is not recall
+
+**Hypothesen:**
+- `H-CNS-105-A`: Holdout-DMTS-Leistung liegt bei vorab festgelegten Verzögerungen über gematchten No-Memory-Kontrollen und sinkt nach gezieltem Zustandsreset. *(untested)*
+
+**Literatur:**
+- `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
 
 ---
 
