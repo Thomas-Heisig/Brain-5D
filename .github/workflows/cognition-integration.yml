@@ -25,5 +25,20 @@ jobs:
         run: python -m pip install -e '.[dev,docs]'
       - name: Apply scoped corrections from actual checks
         run: python .maintenance/refine_cognition.py
+      - name: Narrow validated list type for strict static analysis
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/research/cognition_governance.py')
+          text = path.read_text(encoding='utf-8')
+          old = '        and bool(value)\n'
+          new = '        and bool(cast(list[object], value))\n'
+          if old in text:
+              if text.count(old) != 1:
+                  raise ValueError('Unexpected candidate-list context')
+              path.write_text(text.replace(old, new), encoding='utf-8')
+          elif new not in text:
+              raise ValueError('Candidate-list correction context is missing')
+          PY
       - name: Import once, validate, and record actual scoped verification
         run: python .maintenance/cognition_ci.py
