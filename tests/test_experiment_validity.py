@@ -128,6 +128,24 @@ class TestRuntimeErrorsInManifest:
         assert manifest["ai_exposure"] == "none"
         assert manifest["ai_reproducibility"] == "R0"
 
+    def test_recorder_captures_git_state_before_creating_artifact_directory(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import src.research.experiment_recorder as recorder_module
+
+        output_dir = tmp_path / "research" / "experiments" / "EXP-CLEAN-0001"
+        observed_existence: list[bool] = []
+
+        def capture_git_state() -> dict[str, object]:
+            observed_existence.append(output_dir.exists())
+            return {"commit": "a" * 40, "dirty": False, "branch": "main"}
+
+        monkeypatch.setattr(recorder_module, "get_git_info", capture_git_state)
+        recorder = ExperimentRecorder("EXP-CLEAN-0001", output_dir=output_dir)
+
+        assert observed_existence == [False]
+        assert recorder.manifest["git"]["dirty"] is False
+
     def test_recorder_binds_provenance_digests(self, tmp_experiment_dir: Path) -> None:
         recorder = ExperimentRecorder("EXP-DIGEST-0001", output_dir=tmp_experiment_dir)
         digest = "a" * 64

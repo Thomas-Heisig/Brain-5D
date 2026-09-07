@@ -137,9 +137,10 @@ class ExperimentRecorder:
     ):
         self.experiment_id = experiment_id
         self.output_dir = output_dir or (EXPERIMENTS_DIR / experiment_id)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
         self.fail_fast = fail_fast
         self._runtime_errors: list[dict[str, Any]] = []
+        git_info = get_git_info()
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         self._manifest: dict[str, Any] = {
             "experiment_id": experiment_id,
             "experiment_status": "not_started",
@@ -155,7 +156,7 @@ class ExperimentRecorder:
             },
             "timestamp": datetime.now().isoformat(),
             "created_at": datetime.now(timezone.utc).isoformat(),
-            "git": get_git_info(),
+            "git": git_info,
             "software": get_software_info(),
             "simulation": {},
             "artifacts": {},
