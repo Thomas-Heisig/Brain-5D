@@ -340,7 +340,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Increase real-body platform-specific failure-path coverage for missing optional host APIs.
 - [x] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
 - [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance.
-- [ ] Add negative tests proving peripheral adapters cannot silently mutate canonical core/research state.
+- [x] Add negative tests proving peripheral adapters cannot silently mutate canonical core/research state.
 
 ## P2 — self-regulation and continuity experiments
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Peripheral adapter mutation boundary coverage
+
+- Added a negative test for non-executing peripheral adapter registration and catalog publication.
+- Verified canonical core and research state digests remain unchanged.
+
 ## 2026-09-07 — Real-body platform failure-path coverage
 
 - Added coverage for hosts without optional temperature, fan and load-average APIs.

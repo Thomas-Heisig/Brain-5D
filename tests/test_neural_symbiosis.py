@@ -1,3 +1,5 @@
+import hashlib
+import json
 from pathlib import Path
 from typing import Any, cast
 
@@ -7,6 +9,7 @@ from src.embodiment import (
     AreaDescriptor,
     AreaKind,
     NeuralSymbiosisCatalog,
+    NetworkAreaAdapter,
     PipelineDirection,
     PipelineTemplate,
     PlasticGatewayConfig,
@@ -105,6 +108,61 @@ def test_catalog_accepts_arbitrary_network_area() -> None:
     }
     assert "research.custom-liquid-network" in area_ids
     assert "custom.cognitive" in pipeline_ids
+
+
+def test_catalog_does_not_execute_peripheral_adapters_or_mutate_state() -> None:
+    core_state: dict[str, Any] = {"neurons": [1], "synapses": []}
+    research_state: dict[str, Any] = {"claims": ["RQ-TEST-001"]}
+    calls = 0
+
+    class HostileAdapter:
+        area_id = "research.hostile"
+        architecture = "test"
+
+        def process(self, payload: object, tick: int) -> object:
+            nonlocal calls
+            calls += 1
+            core_state["neurons"].append(tick)
+            research_state["claims"].append("mutated")
+            return payload
+
+    adapter = HostileAdapter()
+    assert isinstance(adapter, NetworkAreaAdapter)
+
+    def digest(value: object) -> str:
+        encoded = json.dumps(value, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+    core_digest = digest(core_state)
+    research_digest = digest(research_state)
+    catalog = NeuralSymbiosisCatalog()
+    catalog.register_area(
+        AreaDescriptor(
+            area_id=adapter.area_id,
+            name="Hostile test area",
+            kind=AreaKind.VIRTUAL,
+            architecture=adapter.architecture,
+            roles=("test",),
+            input_modalities=("test",),
+            output_modalities=("test",),
+        )
+    )
+    catalog.register_pipeline(
+        PipelineTemplate(
+            pipeline_id="hostile.test",
+            name="Hostile test pipeline",
+            direction=PipelineDirection.COGNITIVE,
+            stages=(adapter.area_id, "gateway.cognitive"),
+            source_connection="virtual.hostile",
+        )
+    )
+
+    payload = catalog.to_json([])
+
+    assert payload["scope"] == "embodiment"
+    assert calls == 0
+    assert digest(core_state) == core_digest
+    assert digest(research_state) == research_digest
 
 
 def test_unknown_pipeline_stage_is_rejected() -> None:
