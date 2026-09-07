@@ -9,6 +9,7 @@
 - Executed frozen `recurrence_map_v1` / `PREREG-REC-001` as `EXP-REC-0001-R1`.
 - Completed 300 runs across 20 seeds, five recurrent weights including the zero control, and three delays at 256 ticks.
 - Observed immediate decay, transient recurrence and persistent-to-window classes without runtime errors; human review and EVID promotion remain open.
+- Added regression coverage for the registered grid and its persistence classifications.
 
 ## 2026-09-07 Dashboard batch HTTP contract coverage
 
@@ -26,7 +27,7 @@
 
 - Fixed the stale frontend ExperimentMode lifecycle contract.
 - Updated the operational protocol contract test for the new frozen `RQ-SNN-001` stability protocol.
-- Current head verification: 795 passed, 5 skipped, 0 failed.
+- Current head verification: 796 passed, 5 skipped, 0 failed.
 
 ## 2026-09-07 Batch route verification
 

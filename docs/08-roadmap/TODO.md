@@ -209,10 +209,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 795 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
+- [x] 796 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
-- [x] Confirm the final current-head `main` CI after the documentation refresh: 795 passed, 5 skipped, 0 failed.
+- [x] Confirm the final current-head `main` CI after the documentation refresh: 796 passed, 5 skipped, 0 failed.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
@@ -268,6 +268,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Add direct verification that fails when ticks, spikes or synaptic delivery are absent.
 - [x] Keep historical zero-observation experiments immutable.
 - [x] Execute the registered multi-seed recurrence/propagation validation experiment: `EXP-REC-0001-R1`, 300 runs, 20 seeds, full weight×delay grid, 0 runtime errors.
+- [x] Add an automated contract test for the recurrence weight×delay grid, seed coverage, tick budget and persistence classes.
 - [ ] Independently review the result before any EVID promotion.
 
 ## P0 — closed-loop embodiment evidence
