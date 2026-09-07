@@ -326,3 +326,43 @@ def test_active_content_download_is_sandboxed(
     assert "attachment" in headers["Content-Disposition"]
     assert "sandbox" in headers["Content-Security-Policy"]
     assert headers["X-Content-Type-Options"] == "nosniff"
+
+
+def test_internal_symlink_cannot_bypass_research_protection(
+    service: FilePreviewService,
+) -> None:
+    original = service.roots["research"] / "experiments" / "result.json"
+    original.parent.mkdir()
+    original.write_text("{}")
+    alias = service.roots["research"] / "alias.json"
+    try:
+        alias.symlink_to(original)
+    except OSError:
+        pytest.skip("Host cannot create symlinks")
+    with pytest.raises(FileContractError):
+        service.preview("research", "alias.json")
+    with pytest.raises(FileContractError):
+        service.mutate(
+            "research", "alias.json", {"content": "changed", "action": "write"}
+        )
+    assert original.read_text() == "{}"
+
+
+def test_remote_file_writes_require_explicit_authorization(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from types import SimpleNamespace
+
+    from src.dashboard.file_rendering import validate_file_write_access
+
+    request = SimpleNamespace(
+        client_address=("192.0.2.1", 1234), headers={"Host": "example.test"}
+    )
+    monkeypatch.delenv("BRAIN5D_FILE_WRITE_TOKEN", raising=False)
+    with pytest.raises(FileContractError):
+        validate_file_write_access(request)
+    monkeypatch.setenv("BRAIN5D_FILE_WRITE_TOKEN", "explicit-test-credential")
+    with pytest.raises(FileContractError):
+        validate_file_write_access(request)
+    request.headers["Authorization"] = "Bearer explicit-test-credential"
+    validate_file_write_access(request)

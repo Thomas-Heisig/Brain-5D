@@ -122,14 +122,15 @@ function renderInteractionTrace(metadata) {
 
   function closeChat() {
     modal.hidden = true;
-    document.addEventListener('brain5d:chat-file', (event) => {
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  document.addEventListener('brain5d:chat-file', (event) => {
     const reference = event.detail;
     if (!reference || !['docs', 'research'].includes(reference.source) || typeof reference.path !== 'string') return;
     activeRoom().messages.push({ role: 'user', content: `Datei: ${reference.source}/${reference.path}`, files: [reference] });
     saveState(state); render(); open();
   });
-  toggle.setAttribute('aria-expanded', 'false');
-  }
 
   toggle.setAttribute('aria-expanded', 'false');
   toggle.addEventListener('click', open);

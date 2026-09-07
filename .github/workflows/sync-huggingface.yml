@@ -48,6 +48,8 @@ jobs:
             cp "$mirror_dir/HF_README.md" "$mirror_dir/README.md"
           fi
 
+          cp "$mirror_dir/.huggingface/lfs.gitattributes" "$mirror_dir/.gitattributes"
+
           git -C "$mirror_dir" init --initial-branch=main
           git -C "$mirror_dir" lfs install --local
           git -C "$mirror_dir" config user.email "github-actions[bot]@users.noreply.github.com"

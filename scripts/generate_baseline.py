@@ -7,9 +7,11 @@ or a source tree that changes while verification is running.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import tempfile
@@ -61,7 +63,16 @@ def main() -> int:
         failed = sum(int(suite.get("failures", "0")) for suite in suites)
         errors = sum(int(suite.get("errors", "0")) for suite in suites)
         skipped = sum(int(suite.get("skipped", "0")) for suite in suites)
-        passed = tests - failed - errors - skipped
+        expected_failures = sum(
+            1
+            for item in ElementTree.parse(report).getroot().iter("skipped")
+            if item.get("type") == "pytest.xfail"
+        )
+        unexpected_pass_counts = re.findall(r"(\d+) xpassed", result.stdout)
+        unexpected_passes = (
+            int(unexpected_pass_counts[-1]) if unexpected_pass_counts else 0
+        )
+        passed = tests - failed - errors - skipped - unexpected_passes
         unchanged = compute_source_tree_digest(REPO_ROOT) == digest
         success = (
             result.returncode == 0
@@ -98,15 +109,24 @@ def main() -> int:
                 "passed": passed,
                 "failed": failed,
                 "errors": errors,
-                "skipped": skipped,
-                "xfailed": 0,
-                "xpassed": 0,
+                "skipped": skipped - expected_failures,
+                "xfailed": expected_failures,
+                "xpassed": unexpected_passes,
                 "skipped_reasons": [
                     element.text or ""
                     for element in ElementTree.parse(report).getroot().iter("skipped")
                 ],
             },
         }
+    baseline["source_files"] = {
+        str(path.relative_to(REPO_ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for prefix in ("src", "configs", "research/schemas", "tests")
+        for path in sorted((REPO_ROOT / prefix).rglob("*"))
+        if path.is_file()
+        and "__pycache__" not in path.parts
+        and path != BASELINE_PATH
+        and path.suffix not in {".pyc", ".pyo"}
+    }
     BASELINE_PATH.write_text(
         json.dumps(baseline, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

@@ -16,7 +16,13 @@ from typing import Any, Iterator, cast
 from urllib.parse import unquote
 
 from .docs_source import DocumentationSource, create_docs_source
-from .file_rendering import atomic_write, file_is_read_only, handle_file_rendering
+from .file_rendering import (
+    FileContractError,
+    atomic_write,
+    file_is_read_only,
+    handle_file_rendering,
+    validate_file_write_access,
+)
 from .research_source import ResearchSource
 
 # ---------------------------------------------------------------------------
@@ -528,6 +534,12 @@ class FileManager:
             candidate.relative_to(root.resolve())
         except ValueError:
             raise PathTraversalError("Path traversal detected.")
+        if candidate != root.resolve() / file_path or any(
+            part.startswith(".") for part in Path(file_path).parts
+        ):
+            raise PathTraversalError(
+                "Symbolic or hidden file references are not allowed."
+            )
         return candidate
 
     def save_content(
@@ -1048,6 +1060,12 @@ def register_file_manager_routes(
     docs_source: DocumentationSource | None,
 ) -> bool:
     """Try to handle a file manager API route. Returns True if handled."""
+    if path.startswith("/api/files/") and handler.command == "PUT":
+        try:
+            validate_file_write_access(handler)
+        except FileContractError as exc:
+            handler._send_json({"error": str(exc)}, exc.status)
+            return True
     fm = FileManager(research_source, docs_source, _DEFAULT_DOCS_ROOT)
     roots = {"docs": docs_source.docs_root if docs_source else _DEFAULT_DOCS_ROOT}
     if research_source is not None:

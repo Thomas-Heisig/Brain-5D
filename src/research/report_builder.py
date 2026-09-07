@@ -32,6 +32,8 @@ class EvidenceRecord:
         self.hypothesis_id = data.get("hypothesis_id")
         self.status = data.get("status", "untested")
         self.result_summary = data.get("result_summary", "")
+        # Legacy status strings are not proof of modern human/gate acceptance.
+        self.review_status = "requires_independent_review"
 
 
 class ReportBuilder:
@@ -445,7 +447,13 @@ class ReportBuilder:
         paths: dict[str, Path] = {}
         for name, builder in reports.items():
             path = out / name
-            path.write_text(builder(), encoding="utf-8")
+            notice = (
+                "\n\n> Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. "
+                "Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung "
+                "einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. "
+                "Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.\n"
+            )
+            path.write_text(builder() + notice, encoding="utf-8")
             paths[name] = path
 
         return paths

@@ -11,6 +11,7 @@ from time import perf_counter
 from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
+from src.research.catalog_status import question_facets
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -97,10 +98,7 @@ class ExperimentWorkflowService:
         return {
             "questions": cast(
                 JSONValue,
-                [
-                    {"id": question.id, "label": question.question}
-                    for question in registry.questions.values()
-                ],
+                question_facets(self._research_root, registry),
             ),
             "hypotheses": cast(
                 JSONValue,

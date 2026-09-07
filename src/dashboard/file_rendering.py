@@ -9,10 +9,12 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import ipaddress
 import json
 import mimetypes
 import os
 import re
+import secrets
 import shutil
 import tempfile
 import threading
@@ -69,6 +71,30 @@ def file_is_read_only(source: str, path: str) -> bool:
     return source == "research" and bool(parts and parts[0] in _PROTECTED_RESEARCH)
 
 
+def validate_file_write_access(handler: Any) -> None:
+    """Remote deployments are read-only unless an explicit bearer token is used."""
+    origin = handler.headers.get("Origin")
+    if origin and urlparse(str(origin)).netloc != handler.headers.get("Host"):
+        raise FileContractError(
+            "Cross-origin file changes are forbidden", HTTPStatus.FORBIDDEN
+        )
+    peer = str(handler.client_address[0])
+    local = ipaddress.ip_address(peer).is_loopback
+    proxied = any(
+        handler.headers.get(name)
+        for name in ("Forwarded", "X-Forwarded-For", "X-Real-IP")
+    )
+    if local and not proxied:
+        return
+    token = os.environ.get("BRAIN5D_FILE_WRITE_TOKEN", "")
+    supplied = str(handler.headers.get("Authorization", ""))
+    if not token or not secrets.compare_digest(supplied, "Bearer " + token):
+        raise FileContractError(
+            "Remote file management requires explicit authorization",
+            HTTPStatus.FORBIDDEN,
+        )
+
+
 def atomic_write(path: Path, data: bytes) -> None:
     """Replace a file on its own filesystem without a missing-file window."""
     mode = path.stat().st_mode & 0o777 if path.is_file() else None
@@ -112,6 +138,10 @@ class FilePreviewService:
         candidate = (root / path).resolve()
         if not candidate.is_relative_to(root):
             raise FileContractError("Path escapes file source", HTTPStatus.FORBIDDEN)
+        if candidate != root.joinpath(*parts):
+            raise FileContractError(
+                "Symbolic file references are not allowed", HTTPStatus.FORBIDDEN
+            )
         if must_exist and not candidate.is_file():
             raise FileContractError("File not found", HTTPStatus.NOT_FOUND)
         return candidate
@@ -376,6 +406,7 @@ def handle_file_rendering(
     service = FilePreviewService(roots)
     try:
         if kind == "document" and handler.command == "PUT":
+            validate_file_write_access(handler)
             origin = handler.headers.get("Origin")
             if origin and urlparse(str(origin)).netloc != handler.headers.get("Host"):
                 raise FileContractError(

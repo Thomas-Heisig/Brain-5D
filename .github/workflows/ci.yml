@@ -74,7 +74,8 @@ jobs:
           ! grep -rP '^(<<<<<<< |>>>>>>> )|^=======$' src/ tests/ scripts/ --include='*.py' --include='*.md' --include='*.yaml' --include='*.yml'
       - name: Summary
         if: always()
-        run: echo "### Lint & Format: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "### Lint & Format: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
 
   type-check:
     runs-on: ubuntu-latest
@@ -117,7 +118,8 @@ jobs:
             src/visualization/structural_heatmap.py
       - name: Summary
         if: always()
-        run: echo "### Type Check: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "### Type Check: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
 
   security:
     runs-on: ubuntu-latest
