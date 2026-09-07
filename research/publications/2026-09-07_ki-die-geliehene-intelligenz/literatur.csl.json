@@ -1,0 +1,5715 @@
+[
+  {
+    "id": "Adams2008",
+    "type": "document",
+    "title": "The bounds of cognition",
+    "author": [
+      {
+        "literal": "Adams, F., & Aizawa, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Adams, F., & Aizawa, K. (2008). The bounds of cognition. Wiley-Blackwell.",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Alur1993",
+    "type": "article-journal",
+    "title": "Hybrid Automata: An Algorithmic Approach to the Specification and Verification of Hybrid Systems",
+    "author": [
+      {
+        "literal": "Alur, R., Courcoubetis, C., Henzinger, T. A., & Ho, P.-H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Alur, R., Courcoubetis, C., Henzinger, T. A., & Ho, P.-H. (1993). Hybrid Automata: An Algorithmic Approach to the Specification and Verification of Hybrid Systems. Hybrid Systems, 209--229. https://doi.org/10.1007/3-540-57318-6_30",
+    "issued": {
+      "date-parts": [
+        [
+          1993
+        ]
+      ]
+    },
+    "DOI": "10.1007/3-540-57318-6_30"
+  },
+  {
+    "id": "Amari2016",
+    "type": "article-journal",
+    "title": "Information Geometry and Its Applications",
+    "author": [
+      {
+        "literal": "Amari, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Amari, S. (2016). Information Geometry and Its Applications. Springer. https://doi.org/10.1007/978-4-431-55978-8",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-4-431-55978-8"
+  },
+  {
+    "id": "Ames2017",
+    "type": "article-journal",
+    "title": "Control Barrier Function Based Quadratic Programs for Safety Critical Systems",
+    "author": [
+      {
+        "literal": "Ames, A. D., Xu, X., Grizzle, J. W., & Tabuada, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ames, A. D., Xu, X., Grizzle, J. W., & Tabuada, P. (2017). Control Barrier Function Based Quadratic Programs for Safety Critical Systems. IEEE Transactions on Automatic Control, 62(8), 3861--3876. https://doi.org/10.1109/TAC.2016.2638961",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1109/TAC.2016.2638961"
+  },
+  {
+    "id": "Amodei2016",
+    "type": "document",
+    "title": "Concrete Problems in AI Safety",
+    "author": [
+      {
+        "literal": "Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schulman, J., & Mané, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schulman, J., & Mané, D. (2016). Concrete Problems in AI Safety. arXiv preprint arXiv:1606.06565. https://doi.org/10.48550/arXiv.1606.06565",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.1606.06565"
+  },
+  {
+    "id": "Anderson2011",
+    "type": "document",
+    "title": "Machine ethics",
+    "author": [
+      {
+        "literal": "Anderson, M., & Anderson, S. L. (Eds.)"
+      }
+    ],
+    "note": "CORPUS_METADATA; Anderson, M., & Anderson, S. L. (Eds.). (2011). Machine ethics. Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Apollodorusnd",
+    "type": "document",
+    "title": "Bibliotheca (1.9.26)",
+    "author": [
+      {
+        "literal": "Apollodorus"
+      }
+    ],
+    "note": "CORPUS_METADATA; Apollodorus. (n.d.). Bibliotheca (1.9.26)."
+  },
+  {
+    "id": "ApolloniusRhodiusnd",
+    "type": "document",
+    "title": "Argonautica (Book 4, 1638--1688)",
+    "author": [
+      {
+        "literal": "Apollonius Rhodius"
+      }
+    ],
+    "note": "CORPUS_METADATA; Apollonius Rhodius. (n.d.). Argonautica (Book 4, 1638--1688)."
+  },
+  {
+    "id": "Aristotlend",
+    "type": "document",
+    "title": "Politics (Book I, Chapter 4, 1253b33--1254a1)",
+    "author": [
+      {
+        "literal": "Aristotle"
+      }
+    ],
+    "note": "CORPUS_METADATA; Aristotle. (n.d.). Politics (Book I, Chapter 4, 1253b33--1254a1)."
+  },
+  {
+    "id": "Ashby1956",
+    "type": "document",
+    "title": "An introduction to cybernetics",
+    "author": [
+      {
+        "literal": "Ashby, W. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ashby, W. R. (1956). An introduction to cybernetics. Chapman & Hall.",
+    "issued": {
+      "date-parts": [
+        [
+          1956
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Asimov1950",
+    "type": "document",
+    "title": "I, robot",
+    "author": [
+      {
+        "literal": "Asimov, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Asimov, I. (1950). I, robot. Gnome Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1950
+        ]
+      ]
+    }
+  },
+  {
+    "id": "AulusGellius",
+    "type": "document",
+    "title": "Noctes Atticae",
+    "author": [
+      {
+        "literal": "Aulus Gellius"
+      }
+    ],
+    "note": "CORPUS_METADATA; Aulus Gellius. Noctes Atticae, 10.12. Bericht über die mechanische Taube des Archytas."
+  },
+  {
+    "id": "Baars1988",
+    "type": "document",
+    "title": "A cognitive theory of consciousness",
+    "author": [
+      {
+        "literal": "Baars, B. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Baars, B. J. (1988). A cognitive theory of consciousness. Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1988
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Babbage1832",
+    "type": "document",
+    "title": "On the economy of machinery and manufactures",
+    "author": [
+      {
+        "literal": "Babbage, C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Babbage, C. (1832). On the economy of machinery and manufactures. Charles Knight.",
+    "issued": {
+      "date-parts": [
+        [
+          1832
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Bai2022",
+    "type": "document",
+    "title": "Constitutional AI: Harmlessness from AI feedback",
+    "author": [
+      {
+        "literal": "Bai, Y., Kadavath, S., Kundu, S., Askell, A., Kernion, J., Jones, A., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bai, Y., Kadavath, S., Kundu, S., Askell, A., Kernion, J., Jones, A., et al. (2022). Constitutional AI: Harmlessness from AI feedback. arXiv. https://doi.org/10.48550/arXiv.2212.08073",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2212.08073"
+  },
+  {
+    "id": "Bainbridge1983",
+    "type": "article-journal",
+    "title": "Ironies of automation",
+    "author": [
+      {
+        "literal": "Bainbridge, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bainbridge, L. (1983). Ironies of automation. Automatica, 19(6), 775--779. https://doi.org/10.1016/0005-1098(83)90046-8",
+    "issued": {
+      "date-parts": [
+        [
+          1983
+        ]
+      ]
+    },
+    "DOI": "10.1016/0005-1098(83)90046-8"
+  },
+  {
+    "id": "Barabasi1999",
+    "type": "article-journal",
+    "title": "Emergence of Scaling in Random Networks",
+    "author": [
+      {
+        "literal": "Barabási, A.-L., & Albert, R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Barabási, A.-L., & Albert, R. (1999). Emergence of Scaling in Random Networks. Science, 286(5439), 509--512. https://doi.org/10.1126/science.286.5439.509",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.286.5439.509"
+  },
+  {
+    "id": "Barad2007",
+    "type": "document",
+    "title": "Meeting the universe halfway",
+    "author": [
+      {
+        "literal": "Barad, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Barad, K. (2007). Meeting the universe halfway. Duke University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Barsalou2008",
+    "type": "article-journal",
+    "title": "Grounded cognition",
+    "author": [
+      {
+        "literal": "Barsalou, L. W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Barsalou, L. W. (2008). Grounded cognition. Annual Review of Psychology, 59, 617--645. https://doi.org/10.1146/annurev.psych.59.103006.093639",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "DOI": "10.1146/annurev.psych.59.103006.093639"
+  },
+  {
+    "id": "Bassett2017",
+    "type": "article-journal",
+    "title": "Network Neuroscience",
+    "author": [
+      {
+        "literal": "Bassett, D. S., & Sporns, O"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bassett, D. S., & Sporns, O. (2017). Network Neuroscience. Nature Neuroscience, 20, 353--364. https://doi.org/10.1038/nn.4502",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1038/nn.4502"
+  },
+  {
+    "id": "Bedau1997",
+    "type": "article-journal",
+    "title": "Weak Emergence",
+    "author": [
+      {
+        "literal": "Bedau, M. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bedau, M. A. (1997). Weak Emergence. Philosophical Perspectives, 11, 375--399. https://doi.org/10.1111/0029-4624.31.s11.17",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    },
+    "DOI": "10.1111/0029-4624.31.s11.17"
+  },
+  {
+    "id": "Beer1990",
+    "type": "document",
+    "title": "Intelligence as adaptive behavior",
+    "author": [
+      {
+        "literal": "Beer, R. D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Beer, R. D. (1990). Intelligence as adaptive behavior. Academic Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Beer1995",
+    "type": "article-journal",
+    "title": "A Dynamical Systems Perspective on Agent-Environment Interaction",
+    "author": [
+      {
+        "literal": "Beer, R. D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Beer, R. D. (1995). A Dynamical Systems Perspective on Agent-Environment Interaction. Artificial Intelligence, 72(1--2), 173--215. https://doi.org/10.1016/0004-3702(94)00005-L",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "DOI": "10.1016/0004-3702(94)00005-L"
+  },
+  {
+    "id": "Beggs2003",
+    "type": "article-journal",
+    "title": "Neuronal Avalanches in Neocortical Circuits",
+    "author": [
+      {
+        "literal": "Beggs, J. M., & Plenz, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Beggs, J. M., & Plenz, D. (2003). Neuronal Avalanches in Neocortical Circuits. The Journal of Neuroscience, 23(35), 11167--11177. https://doi.org/10.1523/JNEUROSCI.23-35-11167.2003",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "DOI": "10.1523/JNEUROSCI.23-35-11167.2003"
+  },
+  {
+    "id": "Belkin2003",
+    "type": "article-journal",
+    "title": "Laplacian Eigenmaps for Dimensionality Reduction and Data Representation",
+    "author": [
+      {
+        "literal": "Belkin, M., & Niyogi, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Belkin, M., & Niyogi, P. (2003). Laplacian Eigenmaps for Dimensionality Reduction and Data Representation. Neural Computation, 15(6), 1373--1396. https://doi.org/10.1162/089976603321780317",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "DOI": "10.1162/089976603321780317"
+  },
+  {
+    "id": "Bender2020",
+    "type": "article-journal",
+    "title": "Climbing towards NLU: On meaning, form, and understanding in the age of data",
+    "author": [
+      {
+        "literal": "Bender, E. M., & Koller, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bender, E. M., & Koller, A. (2020). Climbing towards NLU: On meaning, form, and understanding in the age of data. In Proceedings of ACL 2020 (pp. 5185--5198). https://doi.org/10.18653/v1/2020.acl-main.463",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.18653/v1/2020.acl-main.463"
+  },
+  {
+    "id": "Bender2021",
+    "type": "article-journal",
+    "title": "On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency, 610--623",
+    "author": [
+      {
+        "literal": "Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency, 610--623. https://doi.org/10.1145/3442188.3445922",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "DOI": "10.1145/3442188.3445922"
+  },
+  {
+    "id": "Benna2016",
+    "type": "article-journal",
+    "title": "Computational Principles of Synaptic Memory Consolidation",
+    "author": [
+      {
+        "literal": "Benna, M. K., & Fusi, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Benna, M. K., & Fusi, S. (2016). Computational Principles of Synaptic Memory Consolidation. Nature Neuroscience, 19, 1697--1706. https://doi.org/10.1038/nn.4401",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1038/nn.4401"
+  },
+  {
+    "id": "Bi1998",
+    "type": "article-journal",
+    "title": "Synaptic Modifications in Cultured Hippocampal Neurons: Dependence on Spike Timing, Synaptic Strength, and Postsynaptic Cell Type",
+    "author": [
+      {
+        "literal": "Bi, G.-Q., & Poo, M.-M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bi, G.-Q., & Poo, M.-M. (1998). Synaptic Modifications in Cultured Hippocampal Neurons: Dependence on Spike Timing, Synaptic Strength, and Postsynaptic Cell Type. The Journal of Neuroscience, 18(24), 10464--10472. https://doi.org/10.1523/JNEUROSCI.18-24-10464.1998",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "DOI": "10.1523/JNEUROSCI.18-24-10464.1998"
+  },
+  {
+    "id": "Bienenstock1982",
+    "type": "article-journal",
+    "title": "Theory for the Development of Neuron Selectivity: Orientation Specificity and Binocular Interaction in Visual Cortex",
+    "author": [
+      {
+        "literal": "Bienenstock, E. L., Cooper, L. N., & Munro, P. W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bienenstock, E. L., Cooper, L. N., & Munro, P. W. (1982). Theory for the Development of Neuron Selectivity: Orientation Specificity and Binocular Interaction in Visual Cortex. The Journal of Neuroscience, 2(1), 32--48. https://doi.org/10.1523/JNEUROSCI.02-01-00032.1982",
+    "issued": {
+      "date-parts": [
+        [
+          1982
+        ]
+      ]
+    },
+    "DOI": "10.1523/JNEUROSCI.02-01-00032.1982"
+  },
+  {
+    "id": "Bisk2020",
+    "type": "article-journal",
+    "title": "Experience grounds language",
+    "author": [
+      {
+        "literal": "Bisk, Y., Holtzman, A., Thomason, J., Andreas, J., Bengio, Y., Chai, J., Lapata, M., Lazaridou, A., May, J., Nisnevich, A., Pinto, N., & Turian, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bisk, Y., Holtzman, A., Thomason, J., Andreas, J., Bengio, Y., Chai, J., Lapata, M., Lazaridou, A., May, J., Nisnevich, A., Pinto, N., & Turian, J. (2020). Experience grounds language. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (pp. 8718--8735). Association for Computational Linguistics. https://doi.org/10.18653/v1/2020.emnlp-main.703",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.18653/v1/2020.emnlp-main.703"
+  },
+  {
+    "id": "Block1995",
+    "type": "article-journal",
+    "title": "On a confusion about a function of consciousness",
+    "author": [
+      {
+        "literal": "Block, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Block, N. (1995). On a confusion about a function of consciousness. Behavioral and Brain Sciences, 18(2), 227--247. https://doi.org/10.1017/S0140525X00038188",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "DOI": "10.1017/S0140525X00038188"
+  },
+  {
+    "id": "Boden2016",
+    "type": "document",
+    "title": "AI: Its nature and future",
+    "author": [
+      {
+        "literal": "Boden, M. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Boden, M. A. (2016). AI: Its nature and future. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Bommasani2021",
+    "type": "document",
+    "title": "On the opportunities and risks of foundation models",
+    "author": [
+      {
+        "literal": "Bommasani, R., Hudson, D. A., Adeli, E., Altman, R., Arora, S., von Arx, S., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bommasani, R., Hudson, D. A., Adeli, E., Altman, R., Arora, S., von Arx, S., et al. (2021). On the opportunities and risks of foundation models. arXiv. https://doi.org/10.48550/arXiv.2108.07258",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2108.07258"
+  },
+  {
+    "id": "Bostrom2014",
+    "type": "document",
+    "title": "Superintelligence: Paths, dangers, strategies",
+    "author": [
+      {
+        "literal": "Bostrom, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bostrom, N. (2014). Superintelligence: Paths, dangers, strategies. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Bostrom2014_2",
+    "type": "document",
+    "title": "The ethics of artificial intelligence",
+    "author": [
+      {
+        "literal": "Bostrom, N., & Yudkowsky, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bostrom, N., & Yudkowsky, E. (2014). The ethics of artificial intelligence. In K. Frankish & W. M. Ramsey (Eds.), The Cambridge handbook of artificial intelligence (pp. 316--334). Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Bratman1987",
+    "type": "document",
+    "title": "Intention, plans, and practical reason",
+    "author": [
+      {
+        "literal": "Bratman, M. E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bratman, M. E. (1987). Intention, plans, and practical reason. Harvard University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1987
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Breakspear2017",
+    "type": "article-journal",
+    "title": "Dynamic Models of Large-Scale Brain Activity",
+    "author": [
+      {
+        "literal": "Breakspear, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Breakspear, M. (2017). Dynamic Models of Large-Scale Brain Activity. Nature Neuroscience, 20, 340--352. https://doi.org/10.1038/nn.4497",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1038/nn.4497"
+  },
+  {
+    "id": "Brette2005",
+    "type": "article-journal",
+    "title": "Adaptive Exponential Integrate-and-Fire Model as an Effective Description of Neuronal Activity",
+    "author": [
+      {
+        "literal": "Brette, R., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Brette, R., & Gerstner, W. (2005). Adaptive Exponential Integrate-and-Fire Model as an Effective Description of Neuronal Activity. Journal of Neurophysiology, 94(5), 3637--3642. https://doi.org/10.1152/jn.00686.2005",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "DOI": "10.1152/jn.00686.2005"
+  },
+  {
+    "id": "Brohan2023",
+    "type": "document",
+    "title": "RT-2: Vision-language-action models transfer web knowledge to robotic control",
+    "author": [
+      {
+        "literal": "Brohan, A., Brown, N., Carbajal, J., Chebotar, Y., Dabis, X., Finn, C., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Brohan, A., Brown, N., Carbajal, J., Chebotar, Y., Dabis, X., Finn, C., et al. (2023). RT-2: Vision-language-action models transfer web knowledge to robotic control. arXiv. https://doi.org/10.48550/arXiv.2307.15818",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2307.15818"
+  },
+  {
+    "id": "Bronstein2017",
+    "type": "article-journal",
+    "title": "Geometric Deep Learning: Going Beyond Euclidean Data",
+    "author": [
+      {
+        "literal": "Bronstein, M. M., Bruna, J., LeCun, Y., Szlam, A., & Vandergheynst, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bronstein, M. M., Bruna, J., LeCun, Y., Szlam, A., & Vandergheynst, P. (2017). Geometric Deep Learning: Going Beyond Euclidean Data. IEEE Signal Processing Magazine, 34(4), 18--42. https://doi.org/10.1109/MSP.2017.2693418",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1109/MSP.2017.2693418"
+  },
+  {
+    "id": "Brooks1991",
+    "type": "article-journal",
+    "title": "Intelligence without Representation",
+    "author": [
+      {
+        "literal": "Brooks, R. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Brooks, R. A. (1991). Intelligence without Representation. Artificial Intelligence, 47(1--3), 139--159. https://doi.org/10.1016/0004-3702(91)90053-M",
+    "issued": {
+      "date-parts": [
+        [
+          1991
+        ]
+      ]
+    },
+    "DOI": "10.1016/0004-3702(91)90053-M"
+  },
+  {
+    "id": "Brown2020",
+    "type": "document",
+    "title": "Language models are few-shot learners",
+    "author": [
+      {
+        "literal": "Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., et al. (2020). Language models are few-shot learners. Advances in Neural Information Processing Systems, 33, 1877--1901.",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Brunel2000",
+    "type": "article-journal",
+    "title": "Dynamics of Sparsely Connected Networks of Excitatory and Inhibitory Spiking Neurons",
+    "author": [
+      {
+        "literal": "Brunel, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Brunel, N. (2000). Dynamics of Sparsely Connected Networks of Excitatory and Inhibitory Spiking Neurons. Journal of Computational Neuroscience, 8, 183--208. https://doi.org/10.1023/A:1008925309027",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "DOI": "10.1023/A:1008925309027"
+  },
+  {
+    "id": "Bryson2010",
+    "type": "document",
+    "title": "Robots should be slaves",
+    "author": [
+      {
+        "literal": "Bryson, J. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bryson, J. J. (2010). Robots should be slaves. In Y. Wilks (Ed.), Close engagements with artificial companions (pp. 63--74). John Benjamins.",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Bullmore2009",
+    "type": "article-journal",
+    "title": "Complex Brain Networks: Graph Theoretical Analysis of Structural and Functional Systems",
+    "author": [
+      {
+        "literal": "Bullmore, E., & Sporns, O"
+      }
+    ],
+    "note": "CORPUS_METADATA; Bullmore, E., & Sporns, O. (2009). Complex Brain Networks: Graph Theoretical Analysis of Structural and Functional Systems. Nature Reviews Neuroscience, 10, 186--198. https://doi.org/10.1038/nrn2575",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn2575"
+  },
+  {
+    "id": "BundesrepublikDeutschland2026",
+    "type": "document",
+    "title": "Gesetz über Urheberrecht und verwandte Schutzrechte (Urheberrechtsgesetz)",
+    "author": [
+      {
+        "literal": "Bundesrepublik Deutschland"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Bundesrepublik Deutschland (2026). Gesetz über Urheberrecht und verwandte Schutzrechte (Urheberrechtsgesetz). Konsolidierte amtliche Fassung; insbesondere Paragrafen 2 und 7. https://www.gesetze-im-internet.de/urhg/BJNR012730965.html",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://www.gesetze-im-internet.de/urhg/BJNR012730965.html"
+  },
+  {
+    "id": "Buneman2001",
+    "type": "article-journal",
+    "title": "Why and Where: A Characterization of Data Provenance",
+    "author": [
+      {
+        "literal": "Buneman, P., Khanna, S., & Tan, W.-C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Buneman, P., Khanna, S., & Tan, W.-C. (2001). Why and Where: A Characterization of Data Provenance. Database Theory -- ICDT 2001, 316--330. https://doi.org/10.1007/3-540-44503-X_20",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "DOI": "10.1007/3-540-44503-X_20"
+  },
+  {
+    "id": "Burrell2016",
+    "type": "article-journal",
+    "title": "How the machine 'thinks': Understanding opacity in machine learning algorithms",
+    "author": [
+      {
+        "literal": "Burrell, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Burrell, J. (2016). How the machine 'thinks': Understanding opacity in machine learning algorithms. Big Data & Society, 3(1). https://doi.org/10.1177/2053951715622512",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1177/2053951715622512"
+  },
+  {
+    "id": "Butler1863",
+    "type": "document",
+    "title": "Darwin among the machines",
+    "author": [
+      {
+        "literal": "Butler, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Butler, S. (1863, June 13). Darwin among the machines. The Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1863
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Butlin2023",
+    "type": "document",
+    "title": "Consciousness in artificial intelligence: Insights from the science of consciousness",
+    "author": [
+      {
+        "literal": "Butlin, P., Long, R., Elmoznino, E., Bengio, Y., Birch, J., Constant, A., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Butlin, P., Long, R., Elmoznino, E., Bengio, Y., Birch, J., Constant, A., et al. (2023). Consciousness in artificial intelligence: Insights from the science of consciousness. arXiv. https://doi.org/10.48550/arXiv.2308.08708",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2308.08708"
+  },
+  {
+    "id": "Butz2009",
+    "type": "article-journal",
+    "title": "Activity-Dependent Structural Plasticity",
+    "author": [
+      {
+        "literal": "Butz, M., Wörgötter, F., & Ooyen, A. van"
+      }
+    ],
+    "note": "CORPUS_METADATA; Butz, M., Wörgötter, F., & Ooyen, A. van. (2009). Activity-Dependent Structural Plasticity. Brain Research Reviews, 60(2), 287--305. https://doi.org/10.1016/j.brainresrev.2008.12.023",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.brainresrev.2008.12.023"
+  },
+  {
+    "id": "Canty2026",
+    "type": "document",
+    "title": "The past, present and future of self-driving laboratories",
+    "author": [
+      {
+        "literal": "Canty, R. B., & Abolhasani, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Canty, R. B., & Abolhasani, M. (2026). The past, present and future of self-driving laboratories. Nature Reviews Chemistry.",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Capek19201921",
+    "type": "document",
+    "title": "R.U.R",
+    "author": [
+      {
+        "literal": "Čapek, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Čapek, K. (1920/1921). R.U.R. (Rossum's Universal Robots).",
+    "issued": {
+      "date-parts": [
+        [
+          1920
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Capek1921",
+    "type": "document",
+    "title": "R.U.R",
+    "author": [
+      {
+        "literal": "Čapek, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Čapek, K. (1921). R.U.R. (Rossum's universal robots). Aventinum.",
+    "issued": {
+      "date-parts": [
+        [
+          1921
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Carnevale2006",
+    "type": "article-journal",
+    "title": "The NEURON Book",
+    "author": [
+      {
+        "literal": "Carnevale, N. T., & Hines, M. L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Carnevale, N. T., & Hines, M. L. (2006). The NEURON Book. Cambridge University Press. https://doi.org/10.1017/CBO9780511541612",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1017/CBO9780511541612"
+  },
+  {
+    "id": "Chalmers1996",
+    "type": "document",
+    "title": "The conscious mind",
+    "author": [
+      {
+        "literal": "Chalmers, D. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Chalmers, D. J. (1996). The conscious mind. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1996
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Chalmers2023",
+    "type": "document",
+    "title": "Could a large language model be conscious? Boston Review",
+    "author": [
+      {
+        "literal": "Chalmers, D. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Chalmers, D. J. (2023). Could a large language model be conscious? Boston Review.",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Chandy1985",
+    "type": "article-journal",
+    "title": "Distributed Snapshots: Determining Global States of Distributed Systems",
+    "author": [
+      {
+        "literal": "Chandy, K. M., & Lamport, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Chandy, K. M., & Lamport, L. (1985). Distributed Snapshots: Determining Global States of Distributed Systems. ACM Transactions on Computer Systems, 3(1), 63--75. https://doi.org/10.1145/214451.214456",
+    "issued": {
+      "date-parts": [
+        [
+          1985
+        ]
+      ]
+    },
+    "DOI": "10.1145/214451.214456"
+  },
+  {
+    "id": "Che2024",
+    "type": "article-journal",
+    "title": "Auto-Spikformer: Spikformer architecture search",
+    "author": [
+      {
+        "literal": "Che, K., Zhou, Z., Niu, J., Ma, Z., Fang, W., Chen, Y., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Che, K., Zhou, Z., Niu, J., Ma, Z., Fang, W., Chen, Y., et al. (2024). Auto-Spikformer: Spikformer architecture search. Frontiers in Neuroscience, 18, 1372257. https://doi.org/10.3389/fnins.2024.1372257",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.3389/fnins.2024.1372257"
+  },
+  {
+    "id": "Chemero2009",
+    "type": "document",
+    "title": "Radical embodied cognitive science",
+    "author": [
+      {
+        "literal": "Chemero, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Chemero, A. (2009). Radical embodied cognitive science. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Christiano2017",
+    "type": "document",
+    "title": "Deep reinforcement learning from human preferences",
+    "author": [
+      {
+        "literal": "Christiano, P. F., Leike, J., Brown, T., Martic, M., Legg, S., & Amodei, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Christiano, P. F., Leike, J., Brown, T., Martic, M., Legg, S., & Amodei, D. (2017). Deep reinforcement learning from human preferences. Advances in Neural Information Processing Systems, 30.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Chung1997",
+    "type": "document",
+    "title": "Spectral Graph Theory",
+    "author": [
+      {
+        "literal": "Chung, F. R. K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Chung, F. R. K. (1997). Spectral Graph Theory. American Mathematical Society.",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Clark1997",
+    "type": "document",
+    "title": "Being there: Putting brain, body, and world together again",
+    "author": [
+      {
+        "literal": "Clark, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Clark, A. (1997). Being there: Putting brain, body, and world together again. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Clark1998",
+    "type": "article-journal",
+    "title": "The extended mind",
+    "author": [
+      {
+        "literal": "Clark, A., & Chalmers, D. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Clark, A., & Chalmers, D. J. (1998). The extended mind. Analysis, 58(1), 7--19. https://doi.org/10.1093/analys/58.1.7",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "DOI": "10.1093/analys/58.1.7"
+  },
+  {
+    "id": "Clark2013",
+    "type": "article-journal",
+    "title": "Whatever next? Predictive brains, situated agents, and the future of cognitive science",
+    "author": [
+      {
+        "literal": "Clark, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Clark, A. (2013). Whatever next? Predictive brains, situated agents, and the future of cognitive science. Behavioral and Brain Sciences, 36(3), 181--204. https://doi.org/10.1017/S0140525X12000477",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1017/S0140525X12000477"
+  },
+  {
+    "id": "Clopath2010",
+    "type": "article-journal",
+    "title": "Connectivity Reflects Coding: A Model of Voltage-Based STDP with Homeostasis",
+    "author": [
+      {
+        "literal": "Clopath, C., Büsing, L., Vasilaki, E., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Clopath, C., Büsing, L., Vasilaki, E., & Gerstner, W. (2010). Connectivity Reflects Coding: A Model of Voltage-Based STDP with Homeostasis. Nature Neuroscience, 13, 344--352. https://doi.org/10.1038/nn.2479",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1038/nn.2479"
+  },
+  {
+    "id": "Coeckelbergh2020",
+    "type": "document",
+    "title": "AI ethics",
+    "author": [
+      {
+        "literal": "Coeckelbergh, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Coeckelbergh, M. (2020). AI ethics. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Coifman2006",
+    "type": "article-journal",
+    "title": "Diffusion Maps",
+    "author": [
+      {
+        "literal": "Coifman, R. R., & Lafon, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Coifman, R. R., & Lafon, S. (2006). Diffusion Maps. Applied and Computational Harmonic Analysis, 21(1), 5--30. https://doi.org/10.1016/j.acha.2006.04.006",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.acha.2006.04.006"
+  },
+  {
+    "id": "CouncilofEurope2024",
+    "type": "document",
+    "title": "Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law (CETS No",
+    "author": [
+      {
+        "literal": "Council of Europe"
+      }
+    ],
+    "note": "CORPUS_METADATA; Council of Europe. (2024). Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law (CETS No. 225).",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    }
+  },
+  {
+    "id": "CouncilofEurope2026",
+    "type": "document",
+    "title": "European Union ratifies the Council of Europe Framework Convention on Artificial Intelligence",
+    "author": [
+      {
+        "literal": "Council of Europe"
+      }
+    ],
+    "note": "CORPUS_METADATA; Council of Europe. (2026, May 15). European Union ratifies the Council of Europe Framework Convention on Artificial Intelligence. Council of Europe.",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    }
+  },
+  {
+    "id": "CouncilofEuropeTreatyOffice2026",
+    "type": "document",
+    "title": "Status and declarations concerning CETS No",
+    "author": [
+      {
+        "literal": "Council of Europe Treaty Office"
+      }
+    ],
+    "note": "CORPUS_METADATA; Council of Europe Treaty Office (2026). Status and declarations concerning CETS No. 225, status August 2026.",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Cover2006",
+    "type": "article-journal",
+    "title": "Elements of Information Theory (2",
+    "author": [
+      {
+        "literal": "Cover, T. M., & Thomas, J. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Cover, T. M., & Thomas, J. A. (2006). Elements of Information Theory (2. Aufl.). Wiley. https://doi.org/10.1002/047174882X",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1002/047174882X"
+  },
+  {
+    "id": "Crawford2021",
+    "type": "document",
+    "title": "Atlas of AI",
+    "author": [
+      {
+        "literal": "Crawford, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Crawford, K. (2021). Atlas of AI. Yale University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Damasio1994",
+    "type": "document",
+    "title": "Descartes' error",
+    "author": [
+      {
+        "literal": "Damasio, A. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Damasio, A. R. (1994). Descartes' error. Putnam.",
+    "issued": {
+      "date-parts": [
+        [
+          1994
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Davies2018",
+    "type": "article-journal",
+    "title": "Loihi: A Neuromorphic Manycore Processor with On-Chip Learning",
+    "author": [
+      {
+        "literal": "Davies, M., Srinivasa, N., Lin, T.-H., Chinya, G., Cao, Y., Choday, S. H., Dimou, G., Joshi, P., Imam, N., Jain, S., Liao, Y., Lin, C.-K., Lines, A., Liu, R., Mathaikutty, D., McCoy, S., Paul, A., Tse, J., Venkataramanan, G., ... Wang, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Davies, M., Srinivasa, N., Lin, T.-H., Chinya, G., Cao, Y., Choday, S. H., Dimou, G., Joshi, P., Imam, N., Jain, S., Liao, Y., Lin, C.-K., Lines, A., Liu, R., Mathaikutty, D., McCoy, S., Paul, A., Tse, J., Venkataramanan, G., ... Wang, H. (2018). Loihi: A Neuromorphic Manycore Processor with On-Chip Learning. IEEE Micro, 38(1), 82--99. https://doi.org/10.1109/MM.2018.112130359",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1109/MM.2018.112130359"
+  },
+  {
+    "id": "Deco2011",
+    "type": "article-journal",
+    "title": "Emerging Concepts for the Dynamical Organization of Resting-State Activity in the Brain",
+    "author": [
+      {
+        "literal": "Deco, G., Jirsa, V. K., & McIntosh, A. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Deco, G., Jirsa, V. K., & McIntosh, A. R. (2011). Emerging Concepts for the Dynamical Organization of Resting-State Activity in the Brain. Nature Reviews Neuroscience, 12, 43--56. https://doi.org/10.1038/nrn2961",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn2961"
+  },
+  {
+    "id": "Dehaene2014",
+    "type": "document",
+    "title": "Consciousness and the brain",
+    "author": [
+      {
+        "literal": "Dehaene, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Dehaene, S. (2014). Consciousness and the brain. Viking.",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Dennett1987",
+    "type": "document",
+    "title": "The intentional stance",
+    "author": [
+      {
+        "literal": "Dennett, D. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Dennett, D. C. (1987). The intentional stance. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1987
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Descartes1637",
+    "type": "document",
+    "title": "Discours de la méthode",
+    "author": [
+      {
+        "literal": "Descartes, R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Descartes, R. (1637). Discours de la méthode. Jan Maire.",
+    "issued": {
+      "date-parts": [
+        [
+          1637
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Dignum2019",
+    "type": "article-journal",
+    "title": "Responsible artificial intelligence",
+    "author": [
+      {
+        "literal": "Dignum, V"
+      }
+    ],
+    "note": "CORPUS_METADATA; Dignum, V. (2019). Responsible artificial intelligence. Springer. https://doi.org/10.1007/978-3-030-30371-6",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-3-030-30371-6"
+  },
+  {
+    "id": "DiPaolo2017",
+    "type": "document",
+    "title": "Sensorimotor life",
+    "author": [
+      {
+        "literal": "Di Paolo, E. A., Buhrmann, T., & Barandiaran, X. E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Di Paolo, E. A., Buhrmann, T., & Barandiaran, X. E. (2017). Sensorimotor life. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "DoshiVelez2017",
+    "type": "document",
+    "title": "Towards a rigorous science of interpretable machine learning",
+    "author": [
+      {
+        "literal": "Doshi-Velez, F., & Kim, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Doshi-Velez, F., & Kim, B. (2017). Towards a rigorous science of interpretable machine learning. arXiv. https://doi.org/10.48550/arXiv.1702.08608",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.1702.08608"
+  },
+  {
+    "id": "Dreyfus1972",
+    "type": "document",
+    "title": "What computers can't do",
+    "author": [
+      {
+        "literal": "Dreyfus, H. L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Dreyfus, H. L. (1972). What computers can't do. Harper & Row.",
+    "issued": {
+      "date-parts": [
+        [
+          1972
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Dreyfus1992",
+    "type": "document",
+    "title": "What computers still can't do",
+    "author": [
+      {
+        "literal": "Dreyfus, H. L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Dreyfus, H. L. (1992). What computers still can't do. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1992
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Driess2023",
+    "type": "document",
+    "title": "PaLM-E: An embodied multimodal language model",
+    "author": [
+      {
+        "literal": "Driess, D., Xia, F., Sajjadi, M. S. M., Lynch, C., Chowdhery, A., Ichter, B., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Driess, D., Xia, F., Sajjadi, M. S. M., Lynch, C., Chowdhery, A., Ichter, B., et al. (2023). PaLM-E: An embodied multimodal language model. arXiv. https://doi.org/10.48550/arXiv.2303.03378",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2303.03378"
+  },
+  {
+    "id": "Ellul19541964",
+    "type": "document",
+    "title": "The Technological Society",
+    "author": [
+      {
+        "literal": "Ellul, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ellul, J. (1954/1964). The Technological Society. Vintage.",
+    "issued": {
+      "date-parts": [
+        [
+          1954
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ellul1964",
+    "type": "document",
+    "title": "The technological society",
+    "author": [
+      {
+        "literal": "Ellul, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ellul, J. (1964). The technological society. Vintage. (Original work published 1954)",
+    "issued": {
+      "date-parts": [
+        [
+          1964
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Elsken2019",
+    "type": "document",
+    "title": "Neural architecture search: A survey",
+    "author": [
+      {
+        "literal": "Elsken, T., Metzen, J. H., & Hutter, F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Elsken, T., Metzen, J. H., & Hutter, F. (2019). Neural architecture search: A survey. Journal of Machine Learning Research, 20(55), 1--21.",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ermentrout2010",
+    "type": "article-journal",
+    "title": "Mathematical Foundations of Neuroscience",
+    "author": [
+      {
+        "literal": "Ermentrout, G. B., & Terman, D. H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ermentrout, G. B., & Terman, D. H. (2010). Mathematical Foundations of Neuroscience. Springer. https://doi.org/10.1007/978-0-387-87708-2",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-0-387-87708-2"
+  },
+  {
+    "id": "Eshraghian2023",
+    "type": "article-journal",
+    "title": "Training Spiking Neural Networks Using Lessons From Deep Learning",
+    "author": [
+      {
+        "literal": "Eshraghian, J. K., Ward, M., Neftci, E. O., Wang, X., Lenz, G., Dwivedi, G., Bennamoun, M., Jeong, D. S., & Lu, W. D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Eshraghian, J. K., Ward, M., Neftci, E. O., Wang, X., Lenz, G., Dwivedi, G., Bennamoun, M., Jeong, D. S., & Lu, W. D. (2023). Training Spiking Neural Networks Using Lessons From Deep Learning. Proceedings of the IEEE, 111(9), 1016--1054. https://doi.org/10.1109/JPROC.2023.3308088",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "DOI": "10.1109/JPROC.2023.3308088"
+  },
+  {
+    "id": "EuropeanCommission2026",
+    "type": "document",
+    "title": "AI Omnibus enters into force",
+    "author": [
+      {
+        "literal": "European Commission"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; European Commission (2026). AI Omnibus enters into force. 27 July 2026; updated 31 July 2026. https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force"
+  },
+  {
+    "id": "EuropeanCommission2026_2",
+    "type": "document",
+    "title": "Article 14: Human oversight",
+    "author": [
+      {
+        "literal": "European Commission, AI Act Service Desk"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; European Commission, AI Act Service Desk (2026). Article 14: Human oversight. AI Act Explorer; underlying Regulation (EU) 2024/1689. https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14"
+  },
+  {
+    "id": "EuropeanUnion2024",
+    "type": "document",
+    "title": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act), especially Art",
+    "author": [
+      {
+        "literal": "European Union"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Union (2024). Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act), especially Art. 14. EUR-Lex.",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanParliamentCouncilofthe2016",
+    "type": "document",
+    "title": "Regulation (EU) 2016/679 (General Data Protection Regulation)",
+    "author": [
+      {
+        "literal": "European Parliament & Council of the European Union"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Parliament & Council of the European Union. (2016). Regulation (EU) 2016/679 (General Data Protection Regulation). Official Journal of the European Union.",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanParliamentCouncilofthe2024a",
+    "type": "document",
+    "title": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act)",
+    "author": [
+      {
+        "literal": "European Parliament & Council of the European Union"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Parliament & Council of the European Union. (2024a). Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act). Official Journal of the European Union.",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanParliamentCouncilofthe2024b",
+    "type": "document",
+    "title": "Directive (EU) 2024/2853 on liability for defective products",
+    "author": [
+      {
+        "literal": "European Parliament & Council of the European Union"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Parliament & Council of the European Union. (2024b). Directive (EU) 2024/2853 on liability for defective products. Official Journal of the European Union.",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanParliamentCouncilofthe2026",
+    "type": "document",
+    "title": "Regulation (EU) 2026/1744 of 8 July 2026 amending Regulation (EU) 2024/1689",
+    "author": [
+      {
+        "literal": "European Parliament & Council of the European Union"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Parliament & Council of the European Union. (2026). Regulation (EU) 2026/1744 of 8 July 2026 amending Regulation (EU) 2024/1689. Official Journal of the European Union.",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanPatentOffice2021",
+    "type": "document",
+    "title": "J 0008/20: Designation of inventor / DABUS",
+    "author": [
+      {
+        "literal": "European Patent Office, Boards of Appeal"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; European Patent Office, Boards of Appeal (2021). J 0008/20: Designation of inventor / DABUS. Decision of 21 December 2021; ECLI:EP:BA:2021:J000820.20211221. https://www.epo.org/en/boards-of-appeal/decisions/j200008eu1",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "URL": "https://www.epo.org/en/boards-of-appeal/decisions/j200008eu1"
+  },
+  {
+    "id": "EuropeanPatentOffice2021_2",
+    "type": "document",
+    "title": "J 0009/20 (Designation of inventor/DABUS II), decision of 21 December 2021",
+    "author": [
+      {
+        "literal": "European Patent Office, Legal Board of Appeal"
+      }
+    ],
+    "note": "CORPUS_METADATA; European Patent Office, Legal Board of Appeal. (2021). J 0009/20 (Designation of inventor/DABUS II), decision of 21 December 2021.",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    }
+  },
+  {
+    "id": "EuropeanPatentOffice2026",
+    "type": "document",
+    "title": "T 0528/25: Designation of inventor / DABUS",
+    "author": [
+      {
+        "literal": "European Patent Office, Boards of Appeal"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; European Patent Office, Boards of Appeal (2026). T 0528/25: Designation of inventor / DABUS. Decision of 5 February 2026; ECLI:EP:BA:2026:T052825.20260205. https://www.epo.org/en/boards-of-appeal/decisions/t250528eu1",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://www.epo.org/en/boards-of-appeal/decisions/t250528eu1"
+  },
+  {
+    "id": "Floridi2004",
+    "type": "article-journal",
+    "title": "On the morality of artificial agents",
+    "author": [
+      {
+        "literal": "Floridi, L., & Sanders, J. W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Floridi, L., & Sanders, J. W. (2004). On the morality of artificial agents. Minds and Machines, 14, 349--379. https://doi.org/10.1023/B:MIND.0000035461.63578.9d",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1023/B:MIND.0000035461.63578.9d"
+  },
+  {
+    "id": "Floridi2013",
+    "type": "document",
+    "title": "The ethics of information",
+    "author": [
+      {
+        "literal": "Floridi, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Floridi, L. (2013). The ethics of information. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Floridi2018",
+    "type": "article-journal",
+    "title": "AI4People---An ethical framework for a good AI society",
+    "author": [
+      {
+        "literal": "Floridi, L., Cowls, J., Beltrametti, M., Chatila, R., Chazerand, P., Dignum, V., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Floridi, L., Cowls, J., Beltrametti, M., Chatila, R., Chazerand, P., Dignum, V., et al. (2018). AI4People---An ethical framework for a good AI society. Minds and Machines, 28, 689--707. https://doi.org/10.1007/s11023-018-9482-5",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1007/s11023-018-9482-5"
+  },
+  {
+    "id": "Floridi2019",
+    "type": "article-journal",
+    "title": "A unified framework of five principles for AI in society",
+    "author": [
+      {
+        "literal": "Floridi, L., & Cowls, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Floridi, L., & Cowls, J. (2019). A unified framework of five principles for AI in society. Harvard Data Science Review, 1(1). https://doi.org/10.1162/99608f92.8cd550d1",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1162/99608f92.8cd550d1"
+  },
+  {
+    "id": "Fodor1983",
+    "type": "document",
+    "title": "The modularity of mind",
+    "author": [
+      {
+        "literal": "Fodor, J. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Fodor, J. A. (1983). The modularity of mind. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1983
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Folk2011",
+    "type": "article-journal",
+    "title": "An Overview of the HDF5 Technology Suite and Its Applications",
+    "author": [
+      {
+        "literal": "Folk, M., Heber, G., Koziol, Q., Pourmal, E., & Robinson, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Folk, M., Heber, G., Koziol, Q., Pourmal, E., & Robinson, D. (2011). An Overview of the HDF5 Technology Suite and Its Applications. Proceedings of the EDBT/ICDT 2011 Workshop on Array Databases, 36--47. https://doi.org/10.1145/1966895.1966900",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "DOI": "10.1145/1966895.1966900"
+  },
+  {
+    "id": "Fortunato2010",
+    "type": "article-journal",
+    "title": "Community Detection in Graphs",
+    "author": [
+      {
+        "literal": "Fortunato, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Fortunato, S. (2010). Community Detection in Graphs. Physics Reports, 486(3--5), 75--174. https://doi.org/10.1016/j.physrep.2009.11.002",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.physrep.2009.11.002"
+  },
+  {
+    "id": "Fremaux2016",
+    "type": "article-journal",
+    "title": "Neuromodulated Spike-Timing-Dependent Plasticity, and Theory of Three-Factor Learning Rules",
+    "author": [
+      {
+        "literal": "Frémaux, N., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Frémaux, N., & Gerstner, W. (2016). Neuromodulated Spike-Timing-Dependent Plasticity, and Theory of Three-Factor Learning Rules. Frontiers in Neural Circuits, 9, 85. https://doi.org/10.3389/fncir.2015.00085",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.3389/fncir.2015.00085"
+  },
+  {
+    "id": "French1999",
+    "type": "article-journal",
+    "title": "Catastrophic Forgetting in Connectionist Networks",
+    "author": [
+      {
+        "literal": "French, R. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; French, R. M. (1999). Catastrophic Forgetting in Connectionist Networks. Trends in Cognitive Sciences, 3(4), 128--135. https://doi.org/10.1016/S1364-6613(99)01294-2",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    },
+    "DOI": "10.1016/S1364-6613(99)01294-2"
+  },
+  {
+    "id": "Friedman2019",
+    "type": "document",
+    "title": "Value sensitive design",
+    "author": [
+      {
+        "literal": "Friedman, B., & Hendry, D. G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Friedman, B., & Hendry, D. G. (2019). Value sensitive design. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Friston2010",
+    "type": "article-journal",
+    "title": "The Free-Energy Principle: A Unified Brain Theory? Nature Reviews Neuroscience, 11, 127--138",
+    "author": [
+      {
+        "literal": "Friston, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Friston, K. (2010). The Free-Energy Principle: A Unified Brain Theory? Nature Reviews Neuroscience, 11, 127--138. https://doi.org/10.1038/nrn2787",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn2787"
+  },
+  {
+    "id": "Fuller2020",
+    "type": "article-journal",
+    "title": "Digital Twin: Enabling Technologies, Challenges and Open Research",
+    "author": [
+      {
+        "literal": "Fuller, A., Fan, Z., Day, C., & Barlow, C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Fuller, A., Fan, Z., Day, C., & Barlow, C. (2020). Digital Twin: Enabling Technologies, Challenges and Open Research. IEEE Access, 8, 108952--108971. https://doi.org/10.1109/ACCESS.2020.2998358",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.1109/ACCESS.2020.2998358"
+  },
+  {
+    "id": "Furber2016",
+    "type": "article-journal",
+    "title": "Large-Scale Neuromorphic Computing Systems",
+    "author": [
+      {
+        "literal": "Furber, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Furber, S. (2016). Large-Scale Neuromorphic Computing Systems. Journal of Neural Engineering, 13(5), 051001. https://doi.org/10.1088/1741-2560/13/5/051001",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1088/1741-2560/13/5/051001"
+  },
+  {
+    "id": "Fusi2005",
+    "type": "article-journal",
+    "title": "Cascade Models of Synaptically Stored Memories",
+    "author": [
+      {
+        "literal": "Fusi, S., Drew, P. J., & Abbott, L. F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Fusi, S., Drew, P. J., & Abbott, L. F. (2005). Cascade Models of Synaptically Stored Memories. Neuron, 45(4), 599--611. https://doi.org/10.1016/j.neuron.2005.02.001",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neuron.2005.02.001"
+  },
+  {
+    "id": "Gabriel2020",
+    "type": "article-journal",
+    "title": "Artificial intelligence, values, and alignment",
+    "author": [
+      {
+        "literal": "Gabriel, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gabriel, I. (2020). Artificial intelligence, values, and alignment. Minds and Machines, 30, 411--437. https://doi.org/10.1007/s11023-020-09539-2",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.1007/s11023-020-09539-2"
+  },
+  {
+    "id": "Gallagher2005",
+    "type": "document",
+    "title": "How the body shapes the mind",
+    "author": [
+      {
+        "literal": "Gallagher, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gallagher, S. (2005). How the body shapes the mind. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Garcez2009",
+    "type": "article-journal",
+    "title": "Neural-Symbolic Cognitive Reasoning",
+    "author": [
+      {
+        "literal": "Garcez, A. S. d'Avila, Lamb, L. C., & Gabbay, D. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Garcez, A. S. d'Avila, Lamb, L. C., & Gabbay, D. M. (2009). Neural-Symbolic Cognitive Reasoning. Springer. https://doi.org/10.1007/978-3-540-73246-4",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-3-540-73246-4"
+  },
+  {
+    "id": "Gebru2021",
+    "type": "article-journal",
+    "title": "Datasheets for Datasets",
+    "author": [
+      {
+        "literal": "Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé III, H., & Crawford, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé III, H., & Crawford, K. (2021). Datasheets for Datasets. Communications of the ACM, 64(12), 86--92. https://doi.org/10.1145/3458723",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "DOI": "10.1145/3458723"
+  },
+  {
+    "id": "Gerstner2014",
+    "type": "article-journal",
+    "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+    "author": [
+      {
+        "literal": "Gerstner, W., Kistler, W. M., Naud, R., & Paninski, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gerstner, W., Kistler, W. M., Naud, R., & Paninski, L. (2014). Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition. Cambridge University Press. https://doi.org/10.1017/CBO9781107447615",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "DOI": "10.1017/CBO9781107447615"
+  },
+  {
+    "id": "Gerstner2018eligibility",
+    "type": "article-journal",
+    "title": "Eligibility Traces and Plasticity on Behavioral Time Scales: Experimental Support of NeoHebbian Three-Factor Learning Rules",
+    "author": [
+      {
+        "literal": "Gerstner, W., Lehmann, M., Liakoni, V., Corneil, D., & Brea, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gerstner, W., Lehmann, M., Liakoni, V., Corneil, D., & Brea, J. (2018). Eligibility Traces and Plasticity on Behavioral Time Scales: Experimental Support of NeoHebbian Three-Factor Learning Rules. Neuron, 100(2), 276--293. https://doi.org/10.1016/j.neuron.2018.10.020",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neuron.2018.10.020"
+  },
+  {
+    "id": "Gewaltig2007",
+    "type": "article-journal",
+    "title": "NEST (Neural Simulation Tool)",
+    "author": [
+      {
+        "literal": "Gewaltig, M.-O., & Diesmann, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gewaltig, M.-O., & Diesmann, M. (2007). NEST (Neural Simulation Tool). Scholarpedia, 2(4), 1430. https://doi.org/10.4249/scholarpedia.1430",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "DOI": "10.4249/scholarpedia.1430"
+  },
+  {
+    "id": "Ghareeb2026",
+    "type": "article-journal",
+    "title": "A multi-agent system for automating scientific discovery",
+    "author": [
+      {
+        "literal": "Ghareeb, A. E., Chang, B., Mitchener, L., Yiu, A., Szostkiewicz, C. J., Shved, D., Gyimesi, G. J., Laurent, J. M., Wright, S. M., Razzak, M. T., White, A. D., Finnemann, S. C., Hinks, M. M., & Rodriques, S. G."
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Ghareeb, A. E., Chang, B., Mitchener, L., Yiu, A., Szostkiewicz, C. J., Shved, D., Gyimesi, G. J., Laurent, J. M., Wright, S. M., Razzak, M. T., White, A. D., Finnemann, S. C., Hinks, M. M., & Rodriques, S. G. (2026). A multi-agent system for automating scientific discovery. Nature, 655, 497-505. https://doi.org/10.1038/s41586-026-10652-y",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41586-026-10652-y",
+    "URL": "https://www.nature.com/articles/s41586-026-10652-y"
+  },
+  {
+    "id": "GodfreySmith2016",
+    "type": "document",
+    "title": "Other minds",
+    "author": [
+      {
+        "literal": "Godfrey-Smith, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Godfrey-Smith, P. (2016). Other minds. Farrar, Straus and Giroux.",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Goebel2012Hybrid",
+    "type": "article-journal",
+    "title": "Hybrid Dynamical Systems: Modeling, Stability, and Robustness",
+    "author": [
+      {
+        "literal": "Goebel, R., Sanfelice, R. G., & Teel, A. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Goebel, R., Sanfelice, R. G., & Teel, A. R. (2012). Hybrid Dynamical Systems: Modeling, Stability, and Robustness. Princeton University Press. https://doi.org/10.1515/9781400842636",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "DOI": "10.1515/9781400842636"
+  },
+  {
+    "id": "GoogleDeepMind2025",
+    "type": "document",
+    "title": "AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms",
+    "author": [
+      {
+        "literal": "Google DeepMind"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Google DeepMind (2025). AlphaEvolve: A Gemini-powered coding agent for designing advanced algorithms. Technical blog, 14 May 2025. https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/",
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "URL": "https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/"
+  },
+  {
+    "id": "Graupner2012",
+    "type": "article-journal",
+    "title": "Calcium-Based Plasticity Model Explains Sensitivity of Synaptic Changes to Spike Pattern, Rate, and Dendritic Location",
+    "author": [
+      {
+        "literal": "Graupner, M., & Brunel, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Graupner, M., & Brunel, N. (2012). Calcium-Based Plasticity Model Explains Sensitivity of Synaptic Changes to Spike Pattern, Rate, and Dendritic Location. Proceedings of the National Academy of Sciences, 109(10), 3991--3996. https://doi.org/10.1073/pnas.1109359109",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "DOI": "10.1073/pnas.1109359109"
+  },
+  {
+    "id": "Grieves2017",
+    "type": "article-journal",
+    "title": "Digital Twin: Mitigating Unpredictable, Undesirable Emergent Behavior in Complex Systems",
+    "author": [
+      {
+        "literal": "Grieves, M., & Vickers, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Grieves, M., & Vickers, J. (2017). Digital Twin: Mitigating Unpredictable, Undesirable Emergent Behavior in Complex Systems. In F.-J. Kahlen, S. Flumerfelt, & A. Alves (Hrsg.), Transdisciplinary Perspectives on Complex Systems (S. 85--113). Springer. https://doi.org/10.1007/978-3-319-38756-7_4",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-3-319-38756-7_4"
+  },
+  {
+    "id": "Gunkel2012",
+    "type": "document",
+    "title": "The machine question",
+    "author": [
+      {
+        "literal": "Gunkel, D. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gunkel, D. J. (2012). The machine question. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Gunkel2018",
+    "type": "document",
+    "title": "Robot rights",
+    "author": [
+      {
+        "literal": "Gunkel, D. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Gunkel, D. J. (2018). Robot rights. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ha2018",
+    "type": "document",
+    "title": "World Models",
+    "author": [
+      {
+        "literal": "Ha, D., & Schmidhuber, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ha, D., & Schmidhuber, J. (2018). World Models. arXiv preprint arXiv:1803.10122. https://doi.org/10.48550/arXiv.1803.10122",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.1803.10122"
+  },
+  {
+    "id": "Habermas1991",
+    "type": "document",
+    "title": "Erläuterungen zur Diskursethik",
+    "author": [
+      {
+        "literal": "Habermas, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Habermas, J. (1991). Erläuterungen zur Diskursethik. Suhrkamp.",
+    "issued": {
+      "date-parts": [
+        [
+          1991
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Hafner2020",
+    "type": "document",
+    "title": "Dream to Control: Learning Behaviors by Latent Imagination",
+    "author": [
+      {
+        "literal": "Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to Control: Learning Behaviors by Latent Imagination. International Conference on Learning Representations.",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Haraway19851991",
+    "type": "document",
+    "title": "A Cyborg Manifesto",
+    "author": [
+      {
+        "literal": "Haraway, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Haraway, D. (1985/1991). A Cyborg Manifesto. In Simians, Cyborgs, and Women. Routledge.",
+    "issued": {
+      "date-parts": [
+        [
+          1985
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Haraway1991",
+    "type": "document",
+    "title": "A cyborg manifesto",
+    "author": [
+      {
+        "literal": "Haraway, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Haraway, D. (1991). A cyborg manifesto. In Simians, cyborgs, and women (pp. 149--181). Routledge. (Original work published 1985)",
+    "issued": {
+      "date-parts": [
+        [
+          1991
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Harnad1990",
+    "type": "article-journal",
+    "title": "The symbol grounding problem",
+    "author": [
+      {
+        "literal": "Harnad, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Harnad, S. (1990). The symbol grounding problem. Physica D, 42(1--3), 335--346. https://doi.org/10.1016/0167-2789(90)90087-6",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "DOI": "10.1016/0167-2789(90)90087-6"
+  },
+  {
+    "id": "Hayles1999",
+    "type": "document",
+    "title": "How we became posthuman",
+    "author": [
+      {
+        "literal": "Hayles, N. K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hayles, N. K. (1999). How we became posthuman. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Hebb1949",
+    "type": "document",
+    "title": "The organization of behavior",
+    "author": [
+      {
+        "literal": "Hebb, D. O"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hebb, D. O. (1949). The organization of behavior. Wiley.",
+    "issued": {
+      "date-parts": [
+        [
+          1949
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Heidegger1954",
+    "type": "document",
+    "title": "Die Frage nach der Technik",
+    "author": [
+      {
+        "literal": "Heidegger, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Heidegger, M. (1954). Die Frage nach der Technik. In Vorträge und Aufsätze. Neske.",
+    "issued": {
+      "date-parts": [
+        [
+          1954
+        ]
+      ]
+    }
+  },
+  {
+    "id": "HeronofAlexandriand",
+    "type": "document",
+    "title": "Pneumatica and Automata",
+    "author": [
+      {
+        "literal": "Heron of Alexandria"
+      }
+    ],
+    "note": "CORPUS_METADATA; Heron of Alexandria. (n.d.). Pneumatica and Automata."
+  },
+  {
+    "id": "HeronvonAlexandria",
+    "type": "document",
+    "title": "Pneumatika / Automata",
+    "author": [
+      {
+        "literal": "Heron von Alexandria"
+      }
+    ],
+    "note": "CORPUS_METADATA; Heron von Alexandria. Pneumatika / Automata. Antike technische Quellen zu pneumatischen und mechanischen Automaten."
+  },
+  {
+    "id": "Hobbes1651",
+    "type": "document",
+    "title": "Leviathan",
+    "author": [
+      {
+        "literal": "Hobbes, T"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hobbes, T. (1651). Leviathan. Andrew Crooke.",
+    "issued": {
+      "date-parts": [
+        [
+          1651
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Hodgkin1952",
+    "type": "article-journal",
+    "title": "A Quantitative Description of Membrane Current and Its Application to Conduction and Excitation in Nerve",
+    "author": [
+      {
+        "literal": "Hodgkin, A. L., & Huxley, A. F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hodgkin, A. L., & Huxley, A. F. (1952). A Quantitative Description of Membrane Current and Its Application to Conduction and Excitation in Nerve. The Journal of Physiology, 117(4), 500--544. https://doi.org/10.1113/jphysiol.1952.sp004764",
+    "issued": {
+      "date-parts": [
+        [
+          1952
+        ]
+      ]
+    },
+    "DOI": "10.1113/jphysiol.1952.sp004764"
+  },
+  {
+    "id": "Hoel2013",
+    "type": "article-journal",
+    "title": "Quantifying Causal Emergence Shows That Macro Can Beat Micro",
+    "author": [
+      {
+        "literal": "Hoel, E. P., Albantakis, L., & Tononi, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hoel, E. P., Albantakis, L., & Tononi, G. (2013). Quantifying Causal Emergence Shows That Macro Can Beat Micro. Proceedings of the National Academy of Sciences, 110(49), 19790--19795. https://doi.org/10.1073/pnas.1314922110",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1073/pnas.1314922110"
+  },
+  {
+    "id": "Holtmaat2009",
+    "type": "article-journal",
+    "title": "Experience-Dependent Structural Synaptic Plasticity in the Mammalian Brain",
+    "author": [
+      {
+        "literal": "Holtmaat, A., & Svoboda, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Holtmaat, A., & Svoboda, K. (2009). Experience-Dependent Structural Synaptic Plasticity in the Mammalian Brain. Nature Reviews Neuroscience, 10(9), 647--658. https://doi.org/10.1038/nrn2699",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn2699"
+  },
+  {
+    "id": "Homernd",
+    "type": "document",
+    "title": "Iliad (Book 18, 369--420)",
+    "author": [
+      {
+        "literal": "Homer"
+      }
+    ],
+    "note": "CORPUS_METADATA; Homer. (n.d.). Iliad (Book 18, 369--420)."
+  },
+  {
+    "id": "Hopfield1982",
+    "type": "article-journal",
+    "title": "Neural Networks and Physical Systems with Emergent Collective Computational Abilities",
+    "author": [
+      {
+        "literal": "Hopfield, J. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hopfield, J. J. (1982). Neural Networks and Physical Systems with Emergent Collective Computational Abilities. Proceedings of the National Academy of Sciences, 79(8), 2554--2558. https://doi.org/10.1073/pnas.79.8.2554",
+    "issued": {
+      "date-parts": [
+        [
+          1982
+        ]
+      ]
+    },
+    "DOI": "10.1073/pnas.79.8.2554"
+  },
+  {
+    "id": "Hutchins1995",
+    "type": "document",
+    "title": "Cognition in the wild",
+    "author": [
+      {
+        "literal": "Hutchins, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hutchins, E. (1995). Cognition in the wild. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Hutto2013",
+    "type": "document",
+    "title": "Radicalizing enactivism",
+    "author": [
+      {
+        "literal": "Hutto, D. D., & Myin, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Hutto, D. D., & Myin, E. (2013). Radicalizing enactivism. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Izhikevich2003",
+    "type": "article-journal",
+    "title": "Simple Model of Spiking Neurons",
+    "author": [
+      {
+        "literal": "Izhikevich, E. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Izhikevich, E. M. (2003). Simple Model of Spiking Neurons. IEEE Transactions on Neural Networks, 14(6), 1569--1572. https://doi.org/10.1109/TNN.2003.820440",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "DOI": "10.1109/TNN.2003.820440"
+  },
+  {
+    "id": "Izhikevich2007book",
+    "type": "document",
+    "title": "Dynamical Systems in Neuroscience: The Geometry of Excitability and Bursting",
+    "author": [
+      {
+        "literal": "Izhikevich, E. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Izhikevich, E. M. (2007a). Dynamical Systems in Neuroscience: The Geometry of Excitability and Bursting. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Izhikevich2007reward",
+    "type": "article-journal",
+    "title": "Solving the Distal Reward Problem through Linkage of STDP and Dopamine Signaling",
+    "author": [
+      {
+        "literal": "Izhikevich, E. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Izhikevich, E. M. (2007b). Solving the Distal Reward Problem through Linkage of STDP and Dopamine Signaling. Cerebral Cortex, 17(10), 2443--2452. https://doi.org/10.1093/cercor/bhl152",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "DOI": "10.1093/cercor/bhl152"
+  },
+  {
+    "id": "Jobin2019",
+    "type": "article-journal",
+    "title": "The global landscape of AI ethics guidelines",
+    "author": [
+      {
+        "literal": "Jobin, A., Ienca, M., & Vayena, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Jobin, A., Ienca, M., & Vayena, E. (2019). The global landscape of AI ethics guidelines. Nature Machine Intelligence, 1, 389--399. https://doi.org/10.1038/s42256-019-0088-2",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1038/s42256-019-0088-2"
+  },
+  {
+    "id": "Jonas1979",
+    "type": "document",
+    "title": "Das Prinzip Verantwortung",
+    "author": [
+      {
+        "literal": "Jonas, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Jonas, H. (1979). Das Prinzip Verantwortung. Insel.",
+    "issued": {
+      "date-parts": [
+        [
+          1979
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Jonas2017",
+    "type": "article-journal",
+    "title": "Could a Neuroscientist Understand a Microprocessor? PLOS Computational Biology, 13(1), e1005268",
+    "author": [
+      {
+        "literal": "Jonas, E., & Kording, K. P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Jonas, E., & Kording, K. P. (2017). Could a Neuroscientist Understand a Microprocessor? PLOS Computational Biology, 13(1), e1005268. https://doi.org/10.1371/journal.pcbi.1005268",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1371/journal.pcbi.1005268"
+  },
+  {
+    "id": "Jones2020",
+    "type": "article-journal",
+    "title": "Characterising the Digital Twin: A Systematic Literature Review",
+    "author": [
+      {
+        "literal": "Jones, D., Snider, C., Nassehi, A., Yon, J., & Hicks, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Jones, D., Snider, C., Nassehi, A., Yon, J., & Hicks, B. (2020). Characterising the Digital Twin: A Systematic Literature Review. CIRP Journal of Manufacturing Science and Technology, 29, 36--52. https://doi.org/10.1016/j.cirpj.2020.02.002",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.cirpj.2020.02.002"
+  },
+  {
+    "id": "Kant1785",
+    "type": "document",
+    "title": "Grundlegung zur Metaphysik der Sitten",
+    "author": [
+      {
+        "literal": "Kant, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kant, I. (1785). Grundlegung zur Metaphysik der Sitten.",
+    "issued": {
+      "date-parts": [
+        [
+          1785
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Kaster2024",
+    "type": "article-journal",
+    "title": "Building a Realistic, Scalable Memory Model with Independent Engrams Using a Homeostatic Mechanism",
+    "author": [
+      {
+        "literal": "Kaster, M., Czappa, F., Butz-Ostendorf, M., & Wolf, F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kaster, M., Czappa, F., Butz-Ostendorf, M., & Wolf, F. (2024). Building a Realistic, Scalable Memory Model with Independent Engrams Using a Homeostatic Mechanism. Frontiers in Neuroinformatics, 18, 1323203. https://doi.org/10.3389/fninf.2024.1323203",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.3389/fninf.2024.1323203"
+  },
+  {
+    "id": "King2014",
+    "type": "article-journal",
+    "title": "Characterizing the Dynamics of Mental Representations: The Temporal Generalization Method",
+    "author": [
+      {
+        "literal": "King, J.-R., & Dehaene, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; King, J.-R., & Dehaene, S. (2014). Characterizing the Dynamics of Mental Representations: The Temporal Generalization Method. Trends in Cognitive Sciences, 18(4), 203--210. https://doi.org/10.1016/j.tics.2014.01.002",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.tics.2014.01.002"
+  },
+  {
+    "id": "Kirkpatrick2017",
+    "type": "article-journal",
+    "title": "Overcoming Catastrophic Forgetting in Neural Networks",
+    "author": [
+      {
+        "literal": "Kirkpatrick, J., Pascanu, R., Rabinowitz, N., Veness, J., Desjardins, G., Rusu, A. A., Milan, K., Quan, J., Ramalho, T., Grabska-Barwinska, A., Hassabis, D., Clopath, C., Kumaran, D., & Hadsell, R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kirkpatrick, J., Pascanu, R., Rabinowitz, N., Veness, J., Desjardins, G., Rusu, A. A., Milan, K., Quan, J., Ramalho, T., Grabska-Barwinska, A., Hassabis, D., Clopath, C., Kumaran, D., & Hadsell, R. (2017). Overcoming Catastrophic Forgetting in Neural Networks. Proceedings of the National Academy of Sciences, 114(13), 3521--3526. https://doi.org/10.1073/pnas.1611835114",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1073/pnas.1611835114"
+  },
+  {
+    "id": "Kosow2008",
+    "type": "document",
+    "title": "Methoden der Zukunfts- und Szenarioanalyse",
+    "author": [
+      {
+        "literal": "Kosow, H., & Gaßner, R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kosow, H., & Gaßner, R. (2008). Methoden der Zukunfts- und Szenarioanalyse. Institut für Zukunftsstudien und Technologiebewertung.",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Kriegeskorte2008",
+    "type": "article-journal",
+    "title": "Representational Similarity Analysis: Connecting the Branches of Systems Neuroscience",
+    "author": [
+      {
+        "literal": "Kriegeskorte, N., Mur, M., & Bandettini, P. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kriegeskorte, N., Mur, M., & Bandettini, P. A. (2008). Representational Similarity Analysis: Connecting the Branches of Systems Neuroscience. Frontiers in Systems Neuroscience, 2, 4. https://doi.org/10.3389/neuro.06.004.2008",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "DOI": "10.3389/neuro.06.004.2008"
+  },
+  {
+    "id": "Kritzinger2018",
+    "type": "article-journal",
+    "title": "Digital Twin in Manufacturing: A Categorical Literature Review and Classification",
+    "author": [
+      {
+        "literal": "Kritzinger, W., Karner, M., Traar, G., Henjes, J., & Sihn, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kritzinger, W., Karner, M., Traar, G., Henjes, J., & Sihn, W. (2018). Digital Twin in Manufacturing: A Categorical Literature Review and Classification. IFAC-PapersOnLine, 51(11), 1016--1022. https://doi.org/10.1016/j.ifacol.2018.08.474",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.ifacol.2018.08.474"
+  },
+  {
+    "id": "Kroll2017",
+    "type": "document",
+    "title": "Accountable algorithms",
+    "author": [
+      {
+        "literal": "Kroll, J. A., Huey, J., Barocas, S., Felten, E. W., Reidenberg, J. R., Robinson, D. G., & Yu, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kroll, J. A., Huey, J., Barocas, S., Felten, E. W., Reidenberg, J. R., Robinson, D. G., & Yu, H. (2017). Accountable algorithms. University of Pennsylvania Law Review, 165, 633--705.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Kuhn1962",
+    "type": "document",
+    "title": "The structure of scientific revolutions",
+    "author": [
+      {
+        "literal": "Kuhn, T. S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kuhn, T. S. (1962). The structure of scientific revolutions. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1962
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Kumaran2016",
+    "type": "article-journal",
+    "title": "What Learning Systems Do Intelligent Agents Need? Complementary Learning Systems Theory Updated",
+    "author": [
+      {
+        "literal": "Kumaran, D., Hassabis, D., & McClelland, J. L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kumaran, D., Hassabis, D., & McClelland, J. L. (2016). What Learning Systems Do Intelligent Agents Need? Complementary Learning Systems Theory Updated. Trends in Cognitive Sciences, 20(7), 512--534. https://doi.org/10.1016/j.tics.2016.05.004",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.tics.2016.05.004"
+  },
+  {
+    "id": "Kuznetsov2004",
+    "type": "article-journal",
+    "title": "Elements of Applied Bifurcation Theory (3",
+    "author": [
+      {
+        "literal": "Kuznetsov, Y. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Kuznetsov, Y. A. (2004). Elements of Applied Bifurcation Theory (3. Aufl.). Springer. https://doi.org/10.1007/978-1-4757-3978-7",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1007/978-1-4757-3978-7"
+  },
+  {
+    "id": "Lakatos1978",
+    "type": "document",
+    "title": "The methodology of scientific research programmes",
+    "author": [
+      {
+        "literal": "Lakatos, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lakatos, I. (1978). The methodology of scientific research programmes. Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1978
+        ]
+      ]
+    }
+  },
+  {
+    "id": "LaMettrie1748",
+    "type": "document",
+    "title": "L'homme machine",
+    "author": [
+      {
+        "literal": "La Mettrie, J. O. de"
+      }
+    ],
+    "note": "CORPUS_METADATA; La Mettrie, J. O. de. (1748). L'homme machine. Elie Luzac.",
+    "issued": {
+      "date-parts": [
+        [
+          1748
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Lamport1978",
+    "type": "article-journal",
+    "title": "Time, Clocks, and the Ordering of Events in a Distributed System",
+    "author": [
+      {
+        "literal": "Lamport, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lamport, L. (1978). Time, Clocks, and the Ordering of Events in a Distributed System. Communications of the ACM, 21(7), 558--565. https://doi.org/10.1145/359545.359563",
+    "issued": {
+      "date-parts": [
+        [
+          1978
+        ]
+      ]
+    },
+    "DOI": "10.1145/359545.359563"
+  },
+  {
+    "id": "Latour2005",
+    "type": "document",
+    "title": "Reassembling the social",
+    "author": [
+      {
+        "literal": "Latour, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Latour, B. (2005). Reassembling the social. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    }
+  },
+  {
+    "id": "LeCun2015",
+    "type": "article-journal",
+    "title": "Deep learning",
+    "author": [
+      {
+        "literal": "LeCun, Y., Bengio, Y., & Hinton, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature, 521, 436--444. https://doi.org/10.1038/nature14539",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "DOI": "10.1038/nature14539"
+  },
+  {
+    "id": "Lee2024",
+    "type": "article-journal",
+    "title": "How well do large language models truly ground? In Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Vol",
+    "author": [
+      {
+        "literal": "Lee, H., Joo, S. J., Kim, C., Jang, J., Kim, D., On, K.-W., & Seo, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lee, H., Joo, S. J., Kim, C., Jang, J., Kim, D., On, K.-W., & Seo, M. (2024). How well do large language models truly ground? In Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Vol. 1, pp. 2437--2465). Association for Computational Linguistics. https://doi.org/10.18653/v1/2024.naacl-long.135",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.18653/v1/2024.naacl-long.135"
+  },
+  {
+    "id": "Leibniz",
+    "type": "document",
+    "title": "Characteristica universalis und calculus ratiocinator (verschiedene Schriften)",
+    "author": [
+      {
+        "literal": "Leibniz, G. W."
+      }
+    ],
+    "note": "CORPUS_METADATA; Leibniz, G. W. (versch. Schriften). Characteristica universalis und calculus ratiocinator; vgl. Couturat-Ausgaben."
+  },
+  {
+    "id": "Leibniznd",
+    "type": "document",
+    "title": "Writings on characteristica universalis and calculus ratiocinator",
+    "author": [
+      {
+        "literal": "Leibniz, G. W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Leibniz, G. W. (n.d.). Writings on characteristica universalis and calculus ratiocinator."
+  },
+  {
+    "id": "Leike2018",
+    "type": "document",
+    "title": "Scalable agent alignment via reward modeling",
+    "author": [
+      {
+        "literal": "Leike, J., Krueger, D., Everitt, T., Martic, M., Maini, V., & Legg, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Leike, J., Krueger, D., Everitt, T., Martic, M., Maini, V., & Legg, S. (2018). Scalable agent alignment via reward modeling. arXiv. https://doi.org/10.48550/arXiv.1811.07871",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.1811.07871"
+  },
+  {
+    "id": "Lewis2020",
+    "type": "document",
+    "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+    "author": [
+      {
+        "literal": "Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W., Rocktäschel, T., Riedel, S., & Kiela, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W., Rocktäschel, T., Riedel, S., & Kiela, D. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. Advances in Neural Information Processing Systems 33, 9459--9474.",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Li2024rewiring",
+    "type": "article-journal",
+    "title": "Adaptive Rewiring: A General Principle for Neural Network Development",
+    "author": [
+      {
+        "literal": "Li, J., Bauer, R., Rentzeperis, I., & Leeuwen, C. van"
+      }
+    ],
+    "note": "CORPUS_METADATA; Li, J., Bauer, R., Rentzeperis, I., & Leeuwen, C. van. (2024). Adaptive Rewiring: A General Principle for Neural Network Development. Frontiers in Network Physiology, 4, 1410092. https://doi.org/10.3389/fnetp.2024.1410092",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.3389/fnetp.2024.1410092"
+  },
+  {
+    "id": "Lipton2018",
+    "type": "article-journal",
+    "title": "The mythos of model interpretability",
+    "author": [
+      {
+        "literal": "Lipton, Z. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lipton, Z. C. (2018). The mythos of model interpretability. Communications of the ACM, 61(10), 36--43. https://doi.org/10.1145/3233231",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1145/3233231"
+  },
+  {
+    "id": "Littman2001",
+    "type": "document",
+    "title": "Predictive Representations of State",
+    "author": [
+      {
+        "literal": "Littman, M. L., Sutton, R. S., & Singh, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Littman, M. L., Sutton, R. S., & Singh, S. (2001). Predictive Representations of State. Advances in Neural Information Processing Systems 14, 1555--1561.",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    }
+  },
+  {
+    "id": "LitwinKumar2014",
+    "type": "article-journal",
+    "title": "Formation and Maintenance of Neuronal Assemblies through Synaptic Plasticity",
+    "author": [
+      {
+        "literal": "Litwin-Kumar, A., & Doiron, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Litwin-Kumar, A., & Doiron, B. (2014). Formation and Maintenance of Neuronal Assemblies through Synaptic Plasticity. Nature Communications, 5, 5319. https://doi.org/10.1038/ncomms6319",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "DOI": "10.1038/ncomms6319"
+  },
+  {
+    "id": "LopezPaz2017",
+    "type": "document",
+    "title": "Gradient Episodic Memory for Continual Learning",
+    "author": [
+      {
+        "literal": "Lopez-Paz, D., & Ranzato, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lopez-Paz, D., & Ranzato, M. (2017). Gradient Episodic Memory for Continual Learning. Advances in Neural Information Processing Systems 30.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Lovelace1843",
+    "type": "document",
+    "title": "Notes on L",
+    "author": [
+      {
+        "literal": "Lovelace, A. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lovelace, A. A. (1843). Notes on L. F. Menabrea's sketch of the analytical engine. Scientific Memoirs, 3, 666--731.",
+    "issued": {
+      "date-parts": [
+        [
+          1843
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Lu2026",
+    "type": "article-journal",
+    "title": "Towards end-to-end automation of AI research",
+    "author": [
+      {
+        "literal": "Lu, C., Lu, C., Lange, R. T., Yamada, Y., Hu, S., Foerster, J., Ha, D., & Clune, J."
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Lu, C., Lu, C., Lange, R. T., Yamada, Y., Hu, S., Foerster, J., Ha, D., & Clune, J. (2026). Towards end-to-end automation of AI research. Nature, 651, 914-919. https://doi.org/10.1038/s41586-026-10265-5",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41586-026-10265-5",
+    "URL": "https://www.nature.com/articles/s41586-026-10265-5"
+  },
+  {
+    "id": "Lukosevicius2009",
+    "type": "article-journal",
+    "title": "Reservoir Computing Approaches to Recurrent Neural Network Training",
+    "author": [
+      {
+        "literal": "Lukoševičius, M., & Jaeger, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Lukoševičius, M., & Jaeger, H. (2009). Reservoir Computing Approaches to Recurrent Neural Network Training. Computer Science Review, 3(3), 127--149. https://doi.org/10.1016/j.cosrev.2009.03.005",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.cosrev.2009.03.005"
+  },
+  {
+    "id": "Maass1997",
+    "type": "article-journal",
+    "title": "Networks of Spiking Neurons: The Third Generation of Neural Network Models",
+    "author": [
+      {
+        "literal": "Maass, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Maass, W. (1997). Networks of Spiking Neurons: The Third Generation of Neural Network Models. Neural Networks, 10(9), 1659--1671. https://doi.org/10.1016/S0893-6080(97)00011-7",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    },
+    "DOI": "10.1016/S0893-6080(97)00011-7"
+  },
+  {
+    "id": "Maass2002LSM",
+    "type": "article-journal",
+    "title": "Real-Time Computing without Stable States: A New Framework for Neural Computation Based on Perturbations",
+    "author": [
+      {
+        "literal": "Maass, W., Natschläger, T., & Markram, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Maass, W., Natschläger, T., & Markram, H. (2002). Real-Time Computing without Stable States: A New Framework for Neural Computation Based on Perturbations. Neural Computation, 14(11), 2531--2560. https://doi.org/10.1162/089976602760407955",
+    "issued": {
+      "date-parts": [
+        [
+          2002
+        ]
+      ]
+    },
+    "DOI": "10.1162/089976602760407955"
+  },
+  {
+    "id": "Mahowald2024",
+    "type": "article-journal",
+    "title": "Dissociating language and thought in large language models",
+    "author": [
+      {
+        "literal": "Mahowald, K., Ivanova, A. A., Blank, I. A., Kanwisher, N., Tenenbaum, J. B., & Fedorenko, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mahowald, K., Ivanova, A. A., Blank, I. A., Kanwisher, N., Tenenbaum, J. B., & Fedorenko, E. (2024). Dissociating language and thought in large language models. Trends in Cognitive Sciences, 28(6), 517--540. https://doi.org/10.1016/j.tics.2024.01.011",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.tics.2024.01.011"
+  },
+  {
+    "id": "Markram1997",
+    "type": "article-journal",
+    "title": "Regulation of Synaptic Efficacy by Coincidence of Postsynaptic APs and EPSPs",
+    "author": [
+      {
+        "literal": "Markram, H., Lübke, J., Frotscher, M., & Sakmann, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Markram, H., Lübke, J., Frotscher, M., & Sakmann, B. (1997). Regulation of Synaptic Efficacy by Coincidence of Postsynaptic APs and EPSPs. Science, 275(5297), 213--215. https://doi.org/10.1126/science.275.5297.213",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.275.5297.213"
+  },
+  {
+    "id": "Marr1971",
+    "type": "article-journal",
+    "title": "Simple Memory: A Theory for Archicortex",
+    "author": [
+      {
+        "literal": "Marr, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Marr, D. (1971). Simple Memory: A Theory for Archicortex. Philosophical Transactions of the Royal Society B, 262(841), 23--81. https://doi.org/10.1098/rstb.1971.0078",
+    "issued": {
+      "date-parts": [
+        [
+          1971
+        ]
+      ]
+    },
+    "DOI": "10.1098/rstb.1971.0078"
+  },
+  {
+    "id": "Maslov2002",
+    "type": "article-journal",
+    "title": "Specificity and Stability in Topology of Protein Networks",
+    "author": [
+      {
+        "literal": "Maslov, S., & Sneppen, K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Maslov, S., & Sneppen, K. (2002). Specificity and Stability in Topology of Protein Networks. Science, 296(5569), 910--913. https://doi.org/10.1126/science.1065103",
+    "issued": {
+      "date-parts": [
+        [
+          2002
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.1065103"
+  },
+  {
+    "id": "Matthias2004",
+    "type": "article-journal",
+    "title": "The responsibility gap",
+    "author": [
+      {
+        "literal": "Matthias, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Matthias, A. (2004). The responsibility gap. Ethics and Information Technology, 6, 175--183. https://doi.org/10.1007/s10676-004-3422-1",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1007/s10676-004-3422-1"
+  },
+  {
+    "id": "Maturana1980",
+    "type": "document",
+    "title": "Autopoiesis and cognition",
+    "author": [
+      {
+        "literal": "Maturana, H. R., & Varela, F. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Maturana, H. R., & Varela, F. J. (1980). Autopoiesis and cognition. Reidel.",
+    "issued": {
+      "date-parts": [
+        [
+          1980
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Mayor2018",
+    "type": "document",
+    "title": "Gods and robots",
+    "author": [
+      {
+        "literal": "Mayor, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mayor, A. (2018). Gods and robots. Princeton University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    }
+  },
+  {
+    "id": "McCarthy1955",
+    "type": "document",
+    "title": "A proposal for the Dartmouth Summer Research Project on Artificial Intelligence",
+    "author": [
+      {
+        "literal": "McCarthy, J., Minsky, M. L., Rochester, N., & Shannon, C. E"
+      }
+    ],
+    "note": "CORPUS_METADATA; McCarthy, J., Minsky, M. L., Rochester, N., & Shannon, C. E. (1955). A proposal for the Dartmouth Summer Research Project on Artificial Intelligence.",
+    "issued": {
+      "date-parts": [
+        [
+          1955
+        ]
+      ]
+    }
+  },
+  {
+    "id": "McClelland1995",
+    "type": "article-journal",
+    "title": "Why There Are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory",
+    "author": [
+      {
+        "literal": "McClelland, J. L., McNaughton, B. L., & O'Reilly, R. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; McClelland, J. L., McNaughton, B. L., & O'Reilly, R. C. (1995). Why There Are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory. Psychological Review, 102(3), 419--457. https://doi.org/10.1037/0033-295X.102.3.419",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "DOI": "10.1037/0033-295X.102.3.419"
+  },
+  {
+    "id": "McCloskey1989",
+    "type": "article-journal",
+    "title": "Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem",
+    "author": [
+      {
+        "literal": "McCloskey, M., & Cohen, N. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; McCloskey, M., & Cohen, N. J. (1989). Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem. In G. H. Bower (Hrsg.), Psychology of Learning and Motivation (Bd. 24, S. 109--165). Academic Press. https://doi.org/10.1016/S0079-7421(08)60536-8",
+    "issued": {
+      "date-parts": [
+        [
+          1989
+        ]
+      ]
+    },
+    "DOI": "10.1016/S0079-7421(08)60536-8"
+  },
+  {
+    "id": "McCulloch1943",
+    "type": "article-journal",
+    "title": "A logical calculus of the ideas immanent in nervous activity",
+    "author": [
+      {
+        "literal": "McCulloch, W. S., & Pitts, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; McCulloch, W. S., & Pitts, W. (1943). A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics, 5, 115--133. https://doi.org/10.1007/BF02478259",
+    "issued": {
+      "date-parts": [
+        [
+          1943
+        ]
+      ]
+    },
+    "DOI": "10.1007/BF02478259"
+  },
+  {
+    "id": "Minsky1967",
+    "type": "document",
+    "title": "Computation: Finite and infinite machines",
+    "author": [
+      {
+        "literal": "Minsky, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Minsky, M. (1967). Computation: Finite and infinite machines. Prentice-Hall.",
+    "issued": {
+      "date-parts": [
+        [
+          1967
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Minsky1969",
+    "type": "document",
+    "title": "Perceptrons",
+    "author": [
+      {
+        "literal": "Minsky, M., & Papert, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Minsky, M., & Papert, S. (1969). Perceptrons. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1969
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Mitchell2019",
+    "type": "article-journal",
+    "title": "Model Cards for Model Reporting",
+    "author": [
+      {
+        "literal": "Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., & Gebru, T"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., & Gebru, T. (2019). Model Cards for Model Reporting. Proceedings of the Conference on Fairness, Accountability, and Transparency, 220--229. https://doi.org/10.1145/3287560.3287596",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1145/3287560.3287596"
+  },
+  {
+    "id": "Mittelstadt2016",
+    "type": "article-journal",
+    "title": "The ethics of algorithms",
+    "author": [
+      {
+        "literal": "Mittelstadt, B. D., Allo, P., Taddeo, M., Wachter, S., & Floridi, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mittelstadt, B. D., Allo, P., Taddeo, M., Wachter, S., & Floridi, L. (2016). The ethics of algorithms. Big Data & Society, 3(2). https://doi.org/10.1177/2053951716679679",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1177/2053951716679679"
+  },
+  {
+    "id": "Mittelstadt2019",
+    "type": "article-journal",
+    "title": "Principles alone cannot guarantee ethical AI",
+    "author": [
+      {
+        "literal": "Mittelstadt, B. D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mittelstadt, B. D. (2019). Principles alone cannot guarantee ethical AI. Nature Machine Intelligence, 1, 501--507. https://doi.org/10.1038/s42256-019-0114-4",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1038/s42256-019-0114-4"
+  },
+  {
+    "id": "Mongillo2008",
+    "type": "article-journal",
+    "title": "Synaptic Theory of Working Memory",
+    "author": [
+      {
+        "literal": "Mongillo, G., Barak, O., & Tsodyks, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Mongillo, G., Barak, O., & Tsodyks, M. (2008). Synaptic Theory of Working Memory. Science, 319(5869), 1543--1546. https://doi.org/10.1126/science.1150769",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.1150769"
+  },
+  {
+    "id": "Moor2006",
+    "type": "article-journal",
+    "title": "The nature, importance, and difficulty of machine ethics",
+    "author": [
+      {
+        "literal": "Moor, J. H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Moor, J. H. (2006). The nature, importance, and difficulty of machine ethics. IEEE Intelligent Systems, 21(4), 18--21. https://doi.org/10.1109/MIS.2006.80",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1109/MIS.2006.80"
+  },
+  {
+    "id": "Moreau2013",
+    "type": "document",
+    "title": "PROV-DM: The PROV Data Model",
+    "author": [
+      {
+        "literal": "Moreau, L., Missier, P., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Moreau, L., Missier, P., et al. (2013). PROV-DM: The PROV Data Model. https://www.w3.org/TR/prov-dm/",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Munafo2017",
+    "type": "article-journal",
+    "title": "A Manifesto for Reproducible Science",
+    "author": [
+      {
+        "literal": "Munafò, M. R., Nosek, B. A., Bishop, D. V. M., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Munafò, M. R., Nosek, B. A., Bishop, D. V. M., et al. (2017). A Manifesto for Reproducible Science. Nature Human Behaviour, 1, 0021. https://doi.org/10.1038/s41562-016-0021",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41562-016-0021"
+  },
+  {
+    "id": "NationalInstituteofStandardsan2026",
+    "type": "document",
+    "title": "AI Risk Management Framework",
+    "author": [
+      {
+        "literal": "National Institute of Standards and Technology"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; National Institute of Standards and Technology (2026). AI Risk Management Framework. Official framework portal; AI RMF 1.0 and revision context. https://www.nist.gov/itl/ai-risk-management-framework",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://www.nist.gov/itl/ai-risk-management-framework"
+  },
+  {
+    "id": "Neftci2019",
+    "type": "article-journal",
+    "title": "Surrogate gradient learning in spiking neural networks",
+    "author": [
+      {
+        "literal": "Neftci, E. O., Mostafa, H., & Zenke, F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Neftci, E. O., Mostafa, H., & Zenke, F. (2019). Surrogate gradient learning in spiking neural networks. IEEE Signal Processing Magazine, 36(6), 51--63. https://doi.org/10.1109/MSP.2019.2931595",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1109/MSP.2019.2931595"
+  },
+  {
+    "id": "Newell1976",
+    "type": "article-journal",
+    "title": "Computer science as empirical inquiry",
+    "author": [
+      {
+        "literal": "Newell, A., & Simon, H. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Newell, A., & Simon, H. A. (1976). Computer science as empirical inquiry. Communications of the ACM, 19(3), 113--126. https://doi.org/10.1145/360018.360022",
+    "issued": {
+      "date-parts": [
+        [
+          1976
+        ]
+      ]
+    },
+    "DOI": "10.1145/360018.360022"
+  },
+  {
+    "id": "Newman2003",
+    "type": "article-journal",
+    "title": "The Structure and Function of Complex Networks",
+    "author": [
+      {
+        "literal": "Newman, M. E. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Newman, M. E. J. (2003). The Structure and Function of Complex Networks. SIAM Review, 45(2), 167--256. https://doi.org/10.1137/S003614450342480",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "DOI": "10.1137/S003614450342480"
+  },
+  {
+    "id": "NewmanGirvan2004",
+    "type": "article-journal",
+    "title": "Finding and Evaluating Community Structure in Networks",
+    "author": [
+      {
+        "literal": "Newman, M. E. J., & Girvan, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Newman, M. E. J., & Girvan, M. (2004). Finding and Evaluating Community Structure in Networks. Physical Review E, 69, 026113. https://doi.org/10.1103/PhysRevE.69.026113",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1103/PhysRevE.69.026113"
+  },
+  {
+    "id": "Newman2010",
+    "type": "article-journal",
+    "title": "Networks: An Introduction",
+    "author": [
+      {
+        "literal": "Newman, M. E. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Newman, M. E. J. (2010). Networks: An Introduction. Oxford University Press. https://doi.org/10.1093/acprof:oso/9780199206650.001.0001",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1093/acprof:oso/9780199206650.001.0001"
+  },
+  {
+    "id": "NIST2023",
+    "type": "article-journal",
+    "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0) (NIST AI 100-1)",
+    "author": [
+      {
+        "literal": "NIST"
+      }
+    ],
+    "note": "CORPUS_METADATA; NIST. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0) (NIST AI 100-1). https://doi.org/10.6028/NIST.AI.100-1",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "DOI": "10.6028/NIST.AI.100-1"
+  },
+  {
+    "id": "NIST2024",
+    "type": "article-journal",
+    "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (NIST AI 600-1)",
+    "author": [
+      {
+        "literal": "NIST"
+      }
+    ],
+    "note": "CORPUS_METADATA; NIST. (2024). Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (NIST AI 600-1). https://doi.org/10.6028/NIST.AI.600-1",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.6028/NIST.AI.600-1"
+  },
+  {
+    "id": "Noe2004",
+    "type": "document",
+    "title": "Action in perception",
+    "author": [
+      {
+        "literal": "Noë, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Noë, A. (2004). Action in perception. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Nosek2018",
+    "type": "article-journal",
+    "title": "The Preregistration Revolution",
+    "author": [
+      {
+        "literal": "Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T"
+      }
+    ],
+    "note": "CORPUS_METADATA; Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T. (2018). The Preregistration Revolution. Proceedings of the National Academy of Sciences, 115(11), 2600--2606. https://doi.org/10.1073/pnas.1708274114",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1073/pnas.1708274114"
+  },
+  {
+    "id": "Nunes2022",
+    "type": "article-journal",
+    "title": "Spiking neural networks: A survey",
+    "author": [
+      {
+        "literal": "Nunes, J. D., Carvalho, M., Carneiro, D., & Cardoso, J. S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Nunes, J. D., Carvalho, M., Carneiro, D., & Cardoso, J. S. (2022). Spiking neural networks: A survey. IEEE Access, 10, 60738--60764. https://doi.org/10.1109/ACCESS.2022.3179968",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "DOI": "10.1109/ACCESS.2022.3179968"
+  },
+  {
+    "id": "Nussbaum2011",
+    "type": "document",
+    "title": "Creating capabilities",
+    "author": [
+      {
+        "literal": "Nussbaum, M. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Nussbaum, M. C. (2011). Creating capabilities. Harvard University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ocker2015",
+    "type": "article-journal",
+    "title": "Self-Organization of Microcircuits in Networks of Spiking Neurons with Plastic Synapses",
+    "author": [
+      {
+        "literal": "Ocker, G. K., Litwin-Kumar, A., & Doiron, B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ocker, G. K., Litwin-Kumar, A., & Doiron, B. (2015). Self-Organization of Microcircuits in Networks of Spiking Neurons with Plastic Synapses. PLOS Computational Biology, 11(8), e1004458. https://doi.org/10.1371/journal.pcbi.1004458",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "DOI": "10.1371/journal.pcbi.1004458"
+  },
+  {
+    "id": "OECD2024",
+    "type": "document",
+    "title": "OECD principles on artificial intelligence",
+    "author": [
+      {
+        "literal": "OECD"
+      }
+    ],
+    "note": "CORPUS_METADATA; OECD. (2024). OECD principles on artificial intelligence. OECD.",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    }
+  },
+  {
+    "id": "ORegan2001",
+    "type": "article-journal",
+    "title": "A Sensorimotor Account of Vision and Visual Consciousness",
+    "author": [
+      {
+        "literal": "O'Regan, J. K., & Noë, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; O'Regan, J. K., & Noë, A. (2001). A Sensorimotor Account of Vision and Visual Consciousness. Behavioral and Brain Sciences, 24(5), 939--973. https://doi.org/10.1017/S0140525X01000115",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "DOI": "10.1017/S0140525X01000115"
+  },
+  {
+    "id": "Ovidnd",
+    "type": "document",
+    "title": "Metamorphoses (Book 10, 243--297)",
+    "author": [
+      {
+        "literal": "Ovid"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ovid. (n.d.). Metamorphoses (Book 10, 243--297)."
+  },
+  {
+    "id": "Page2021",
+    "type": "article-journal",
+    "title": "The PRISMA 2020 Statement: An Updated Guideline for Reporting Systematic Reviews",
+    "author": [
+      {
+        "literal": "Page, M. J., McKenzie, J. E., Bossuyt, P. M., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Page, M. J., McKenzie, J. E., Bossuyt, P. M., et al. (2021). The PRISMA 2020 Statement: An Updated Guideline for Reporting Systematic Reviews. BMJ, 372, n71. https://doi.org/10.1136/bmj.n71",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "DOI": "10.1136/bmj.n71"
+  },
+  {
+    "id": "Panzeri2007",
+    "type": "article-journal",
+    "title": "Correcting for the Sampling Bias Problem in Spike Train Information Measures",
+    "author": [
+      {
+        "literal": "Panzeri, S., Senatore, R., Montemurro, M. A., & Petersen, R. S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Panzeri, S., Senatore, R., Montemurro, M. A., & Petersen, R. S. (2007). Correcting for the Sampling Bias Problem in Spike Train Information Measures. Journal of Neurophysiology, 98(3), 1064--1072. https://doi.org/10.1152/jn.00559.2007",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "DOI": "10.1152/jn.00559.2007"
+  },
+  {
+    "id": "Parasuraman1997",
+    "type": "article-journal",
+    "title": "Humans and automation: Use, misuse, disuse, abuse",
+    "author": [
+      {
+        "literal": "Parasuraman, R., & Riley, V"
+      }
+    ],
+    "note": "CORPUS_METADATA; Parasuraman, R., & Riley, V. (1997). Humans and automation: Use, misuse, disuse, abuse. Human Factors, 39(2), 230--253. https://doi.org/10.1518/001872097778543886",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    },
+    "DOI": "10.1518/001872097778543886"
+  },
+  {
+    "id": "Parisi2019",
+    "type": "article-journal",
+    "title": "Continual Lifelong Learning with Neural Networks: A Review",
+    "author": [
+      {
+        "literal": "Parisi, G. I., Kemker, R., Part, J. L., Kanan, C., & Wermter, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Parisi, G. I., Kemker, R., Part, J. L., Kanan, C., & Wermter, S. (2019). Continual Lifelong Learning with Neural Networks: A Review. Neural Networks, 113, 54--71. https://doi.org/10.1016/j.neunet.2019.01.012",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neunet.2019.01.012"
+  },
+  {
+    "id": "Pasquale2015",
+    "type": "document",
+    "title": "The black box society",
+    "author": [
+      {
+        "literal": "Pasquale, F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Pasquale, F. (2015). The black box society. Harvard University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Pearl2009",
+    "type": "document",
+    "title": "Causality: Models, Reasoning, and Inference (2",
+    "author": [
+      {
+        "literal": "Pearl, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Pearl, J. (2009). Causality: Models, Reasoning, and Inference (2. Aufl.). Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Penrose2003",
+    "type": "article-journal",
+    "title": "Random Geometric Graphs",
+    "author": [
+      {
+        "literal": "Penrose, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Penrose, M. (2003). Random Geometric Graphs. Oxford University Press. https://doi.org/10.1093/acprof:oso/9780198506263.001.0001",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "DOI": "10.1093/acprof:oso/9780198506263.001.0001"
+  },
+  {
+    "id": "Pfeifer1999",
+    "type": "document",
+    "title": "Understanding intelligence",
+    "author": [
+      {
+        "literal": "Pfeifer, R., & Scheier, C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Pfeifer, R., & Scheier, C. (1999). Understanding intelligence. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Pfeifer2006",
+    "type": "document",
+    "title": "How the Body Shapes the Way We Think: A New View of Intelligence",
+    "author": [
+      {
+        "literal": "Pfeifer, R., & Bongard, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Pfeifer, R., & Bongard, J. (2006). How the Body Shapes the Way We Think: A New View of Intelligence. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Pfister2006",
+    "type": "article-journal",
+    "title": "Triplets of Spikes in a Model of Spike Timing-Dependent Plasticity",
+    "author": [
+      {
+        "literal": "Pfister, J.-P., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Pfister, J.-P., & Gerstner, W. (2006). Triplets of Spikes in a Model of Spike Timing-Dependent Plasticity. The Journal of Neuroscience, 26(38), 9673--9682. https://doi.org/10.1523/JNEUROSCI.1425-06.2006",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1523/JNEUROSCI.1425-06.2006"
+  },
+  {
+    "id": "Poldrack2006",
+    "type": "article-journal",
+    "title": "Can Cognitive Processes Be Inferred from Neuroimaging Data? Trends in Cognitive Sciences, 10(2), 59--63",
+    "author": [
+      {
+        "literal": "Poldrack, R. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Poldrack, R. A. (2006). Can Cognitive Processes Be Inferred from Neuroimaging Data? Trends in Cognitive Sciences, 10(2), 59--63. https://doi.org/10.1016/j.tics.2005.12.004",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.tics.2005.12.004"
+  },
+  {
+    "id": "Popper19341959",
+    "type": "document",
+    "title": "The Logic of Scientific Discovery",
+    "author": [
+      {
+        "literal": "Popper, K. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Popper, K. R. (1934/1959). The Logic of Scientific Discovery. Hutchinson.",
+    "issued": {
+      "date-parts": [
+        [
+          1934
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Popper1959",
+    "type": "document",
+    "title": "The logic of scientific discovery",
+    "author": [
+      {
+        "literal": "Popper, K. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Popper, K. R. (1959). The logic of scientific discovery. Hutchinson. (Original work published 1934)",
+    "issued": {
+      "date-parts": [
+        [
+          1959
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Putnam1967",
+    "type": "document",
+    "title": "Psychological predicates",
+    "author": [
+      {
+        "literal": "Putnam, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Putnam, H. (1967). Psychological predicates. In W. H. Capitan & D. D. Merrill (Eds.), Art, mind, and religion. University of Pittsburgh Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1967
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Quiroga2009",
+    "type": "article-journal",
+    "title": "Extracting Information from Neuronal Populations: Information Theory and Decoding Approaches",
+    "author": [
+      {
+        "literal": "Quiroga, R. Q., & Panzeri, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Quiroga, R. Q., & Panzeri, S. (2009). Extracting Information from Neuronal Populations: Information Theory and Decoding Approaches. Nature Reviews Neuroscience, 10, 173--185. https://doi.org/10.1038/nrn2578",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn2578"
+  },
+  {
+    "id": "Rabinovich2008",
+    "type": "article-journal",
+    "title": "Transient Cognitive Dynamics, Metastability, and Decision Making",
+    "author": [
+      {
+        "literal": "Rabinovich, M. I., Huerta, R., Varona, P., & Afraimovich, V. S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rabinovich, M. I., Huerta, R., Varona, P., & Afraimovich, V. S. (2008). Transient Cognitive Dynamics, Metastability, and Decision Making. Reviews of Modern Physics, 80(4), 1213--1265. https://doi.org/10.1103/RevModPhys.80.1213",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "DOI": "10.1103/RevModPhys.80.1213"
+  },
+  {
+    "id": "Rahman2025",
+    "type": "article-journal",
+    "title": "An automated multi parameter neural architecture discovery framework using ChatGPT in the backend",
+    "author": [
+      {
+        "literal": "Rahman, M. H., Haider, Z., & Chakraborty, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rahman, M. H., Haider, Z., & Chakraborty, P. (2025). An automated multi parameter neural architecture discovery framework using ChatGPT in the backend. Scientific Reports, 15, 16871. https://doi.org/10.1038/s41598-025-97378-5",
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41598-025-97378-5"
+  },
+  {
+    "id": "Rahwan2018",
+    "type": "article-journal",
+    "title": "Society-in-the-loop",
+    "author": [
+      {
+        "literal": "Rahwan, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rahwan, I. (2018). Society-in-the-loop. Ethics and Information Technology, 20, 5--14. https://doi.org/10.1007/s10676-017-9430-8",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.1007/s10676-017-9430-8"
+  },
+  {
+    "id": "Raji2020",
+    "type": "article-journal",
+    "title": "Closing the AI accountability gap",
+    "author": [
+      {
+        "literal": "Raji, I. D., Smart, A., White, R. N., Mitchell, M., Gebru, T., Hutchinson, B., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Raji, I. D., Smart, A., White, R. N., Mitchell, M., Gebru, T., Hutchinson, B., et al. (2020). Closing the AI accountability gap. In Proceedings of FAccT '20 (pp. 33--44). https://doi.org/10.1145/3351095.3372873",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.1145/3351095.3372873"
+  },
+  {
+    "id": "Rawls1971",
+    "type": "document",
+    "title": "A theory of justice",
+    "author": [
+      {
+        "literal": "Rawls, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rawls, J. (1971). A theory of justice. Harvard University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1971
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ren2021",
+    "type": "article-journal",
+    "title": "A comprehensive survey of neural architecture search",
+    "author": [
+      {
+        "literal": "Ren, P., Xiao, Y., Chang, X., Huang, P.-Y., Li, Z., Gupta, B. B., Chen, X., & Wang, X"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ren, P., Xiao, Y., Chang, X., Huang, P.-Y., Li, Z., Gupta, B. B., Chen, X., & Wang, X. (2021). A comprehensive survey of neural architecture search. ACM Computing Surveys, 54(4). https://doi.org/10.1145/3447582",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "DOI": "10.1145/3447582"
+  },
+  {
+    "id": "Ribeiro2016",
+    "type": "article-journal",
+    "title": "'Why should I trust you?' In Proceedings of KDD '16 (pp",
+    "author": [
+      {
+        "literal": "Ribeiro, M. T., Singh, S., & Guestrin, C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). 'Why should I trust you?' In Proceedings of KDD '16 (pp. 1135--1144). https://doi.org/10.1145/2939672.2939778",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1145/2939672.2939778"
+  },
+  {
+    "id": "Riskin2016",
+    "type": "document",
+    "title": "The restless clock",
+    "author": [
+      {
+        "literal": "Riskin, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Riskin, J. (2016). The restless clock. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Rosenblatt1958",
+    "type": "article-journal",
+    "title": "The perceptron",
+    "author": [
+      {
+        "literal": "Rosenblatt, F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rosenblatt, F. (1958). The perceptron. Psychological Review, 65(6), 386--408. https://doi.org/10.1037/h0042519",
+    "issued": {
+      "date-parts": [
+        [
+          1958
+        ]
+      ]
+    },
+    "DOI": "10.1037/h0042519"
+  },
+  {
+    "id": "Roy2019",
+    "type": "article-journal",
+    "title": "Towards Spike-Based Machine Intelligence with Neuromorphic Computing",
+    "author": [
+      {
+        "literal": "Roy, K., Jaiswal, A., & Panda, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Roy, K., Jaiswal, A., & Panda, P. (2019). Towards Spike-Based Machine Intelligence with Neuromorphic Computing. Nature, 575, 607--617. https://doi.org/10.1038/s41586-019-1677-2",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41586-019-1677-2"
+  },
+  {
+    "id": "Rubinov2010",
+    "type": "article-journal",
+    "title": "Complex Network Measures of Brain Connectivity: Uses and Interpretations",
+    "author": [
+      {
+        "literal": "Rubinov, M., & Sporns, O"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rubinov, M., & Sporns, O. (2010). Complex Network Measures of Brain Connectivity: Uses and Interpretations. NeuroImage, 52(3), 1059--1069. https://doi.org/10.1016/j.neuroimage.2009.10.003",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neuroimage.2009.10.003"
+  },
+  {
+    "id": "Rumelhart1986",
+    "type": "article-journal",
+    "title": "Learning representations by back-propagating errors",
+    "author": [
+      {
+        "literal": "Rumelhart, D. E., Hinton, G. E., & Williams, R. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning representations by back-propagating errors. Nature, 323, 533--536. https://doi.org/10.1038/323533a0",
+    "issued": {
+      "date-parts": [
+        [
+          1986
+        ]
+      ]
+    },
+    "DOI": "10.1038/323533a0"
+  },
+  {
+    "id": "Russell2015",
+    "type": "article-journal",
+    "title": "Research priorities for robust and beneficial artificial intelligence",
+    "author": [
+      {
+        "literal": "Russell, S., Dewey, D., & Tegmark, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Russell, S., Dewey, D., & Tegmark, M. (2015). Research priorities for robust and beneficial artificial intelligence. AI Magazine, 36(4), 105--114. https://doi.org/10.1609/aimag.v36i4.2577",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "DOI": "10.1609/aimag.v36i4.2577"
+  },
+  {
+    "id": "Russell2019",
+    "type": "document",
+    "title": "Human compatible",
+    "author": [
+      {
+        "literal": "Russell, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Russell, S. (2019). Human compatible. Viking.",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Russell2021",
+    "type": "document",
+    "title": "Artificial intelligence: A modern approach (4th ed.)",
+    "author": [
+      {
+        "literal": "Russell, S., & Norvig, P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Russell, S., & Norvig, P. (2021). Artificial intelligence: A modern approach (4th ed.). Pearson.",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Ryle1949",
+    "type": "document",
+    "title": "The concept of mind",
+    "author": [
+      {
+        "literal": "Ryle, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Ryle, G. (1949). The concept of mind. Hutchinson.",
+    "issued": {
+      "date-parts": [
+        [
+          1949
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Sandve2013",
+    "type": "article-journal",
+    "title": "Ten Simple Rules for Reproducible Computational Research",
+    "author": [
+      {
+        "literal": "Sandve, G. K., Nekrutenko, A., Taylor, J., & Hovig, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Sandve, G. K., Nekrutenko, A., Taylor, J., & Hovig, E. (2013). Ten Simple Rules for Reproducible Computational Research. PLOS Computational Biology, 9(10), e1003285. https://doi.org/10.1371/journal.pcbi.1003285",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1371/journal.pcbi.1003285"
+  },
+  {
+    "id": "SantonideSio2018",
+    "type": "article-journal",
+    "title": "Meaningful human control over autonomous systems: A philosophical account",
+    "author": [
+      {
+        "literal": "Santoni de Sio, F., & van den Hoven, J."
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Santoni de Sio, F., & van den Hoven, J. (2018). Meaningful human control over autonomous systems: A philosophical account. Frontiers in Robotics and AI, 5, 15. https://doi.org/10.3389/frobt.2018.00015",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "DOI": "10.3389/frobt.2018.00015",
+    "URL": "https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2018.00015/full"
+  },
+  {
+    "id": "Schreiber2000",
+    "type": "article-journal",
+    "title": "Measuring Information Transfer",
+    "author": [
+      {
+        "literal": "Schreiber, T"
+      }
+    ],
+    "note": "CORPUS_METADATA; Schreiber, T. (2000). Measuring Information Transfer. Physical Review Letters, 85(2), 461--464. https://doi.org/10.1103/PhysRevLett.85.461",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "DOI": "10.1103/PhysRevLett.85.461"
+  },
+  {
+    "id": "Schrittwieser2020",
+    "type": "article-journal",
+    "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+    "author": [
+      {
+        "literal": "Schrittwieser, J., Antonoglou, I., Hubert, T., Simonyan, K., Sifre, L., Schmitt, S., Guez, A., Lockhart, E., Hassabis, D., Graepel, T., Lillicrap, T., & Silver, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Schrittwieser, J., Antonoglou, I., Hubert, T., Simonyan, K., Sifre, L., Schmitt, S., Guez, A., Lockhart, E., Hassabis, D., Graepel, T., Lillicrap, T., & Silver, D. (2020). Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model. Nature, 588, 604--609. https://doi.org/10.1038/s41586-020-03051-4",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41586-020-03051-4"
+  },
+  {
+    "id": "Searle1980",
+    "type": "article-journal",
+    "title": "Minds, brains, and programs",
+    "author": [
+      {
+        "literal": "Searle, J. R"
+      }
+    ],
+    "note": "CORPUS_METADATA; Searle, J. R. (1980). Minds, brains, and programs. Behavioral and Brain Sciences, 3(3), 417--457. https://doi.org/10.1017/S0140525X00005756",
+    "issued": {
+      "date-parts": [
+        [
+          1980
+        ]
+      ]
+    },
+    "DOI": "10.1017/S0140525X00005756"
+  },
+  {
+    "id": "Sen1999",
+    "type": "document",
+    "title": "Development as freedom",
+    "author": [
+      {
+        "literal": "Sen, A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Sen, A. (1999). Development as freedom. Knopf.",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Seth2022",
+    "type": "article-journal",
+    "title": "Theories of consciousness",
+    "author": [
+      {
+        "literal": "Seth, A. K., & Bayne, T"
+      }
+    ],
+    "note": "CORPUS_METADATA; Seth, A. K., & Bayne, T. (2022). Theories of consciousness. Nature Reviews Neuroscience, 23, 439--452. https://doi.org/10.1038/s41583-022-00587-4",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "DOI": "10.1038/s41583-022-00587-4"
+  },
+  {
+    "id": "Shannon1948",
+    "type": "article-journal",
+    "title": "A Mathematical Theory of Communication",
+    "author": [
+      {
+        "literal": "Shannon, C. E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Shannon, C. E. (1948). A Mathematical Theory of Communication. Bell System Technical Journal, 27, 379--423, 623--656. https://doi.org/10.1002/j.1538-7305.1948.tb01338.x",
+    "issued": {
+      "date-parts": [
+        [
+          1948
+        ]
+      ]
+    },
+    "DOI": "10.1002/j.1538-7305.1948.tb01338.x"
+  },
+  {
+    "id": "Shen2024",
+    "type": "article-journal",
+    "title": "Evolutionary spiking neural networks: A survey",
+    "author": [
+      {
+        "literal": "Shen, S., Zhang, R., Wang, C., Huang, R., Tuerhong, A., Guo, Q., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Shen, S., Zhang, R., Wang, C., Huang, R., Tuerhong, A., Guo, Q., et al. (2024). Evolutionary spiking neural networks: A survey. Journal of Membrane Computing, 6(4), 335--346. https://doi.org/10.1007/s41965-024-00156-x",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.1007/s41965-024-00156-x"
+  },
+  {
+    "id": "Shew2013",
+    "type": "article-journal",
+    "title": "The Functional Benefits of Criticality in the Cortex",
+    "author": [
+      {
+        "literal": "Shew, W. L., & Plenz, D"
+      }
+    ],
+    "note": "CORPUS_METADATA; Shew, W. L., & Plenz, D. (2013). The Functional Benefits of Criticality in the Cortex. The Neuroscientist, 19(1), 88--100. https://doi.org/10.1177/1073858412445487",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1177/1073858412445487"
+  },
+  {
+    "id": "Simon1962",
+    "type": "document",
+    "title": "The architecture of complexity",
+    "author": [
+      {
+        "literal": "Simon, H. A"
+      }
+    ],
+    "note": "CORPUS_METADATA; Simon, H. A. (1962). The architecture of complexity. Proceedings of the American Philosophical Society, 106(6), 467--482.",
+    "issued": {
+      "date-parts": [
+        [
+          1962
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Simondon1958",
+    "type": "document",
+    "title": "Du mode d'existence des objets techniques",
+    "author": [
+      {
+        "literal": "Simondon, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Simondon, G. (1958). Du mode d'existence des objets techniques. Aubier.",
+    "issued": {
+      "date-parts": [
+        [
+          1958
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Smith2016",
+    "type": "article-journal",
+    "title": "Software Citation Principles",
+    "author": [
+      {
+        "literal": "Smith, A. M., Katz, D. S., Niemeyer, K. E., & Group, F. S. C. W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Smith, A. M., Katz, D. S., Niemeyer, K. E., & Group, F. S. C. W. (2016). Software Citation Principles. PeerJ Computer Science, 2, e86. https://doi.org/10.7717/peerj-cs.86",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.7717/peerj-cs.86"
+  },
+  {
+    "id": "Snyder2019",
+    "type": "article-journal",
+    "title": "Literature review as a research methodology",
+    "author": [
+      {
+        "literal": "Snyder, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Snyder, H. (2019). Literature review as a research methodology. Journal of Business Research, 104, 333--339. https://doi.org/10.1016/j.jbusres.2019.07.039",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.jbusres.2019.07.039"
+  },
+  {
+    "id": "Song2000",
+    "type": "article-journal",
+    "title": "Competitive Hebbian Learning Through Spike-Timing-Dependent Synaptic Plasticity",
+    "author": [
+      {
+        "literal": "Song, S., Miller, K. D., & Abbott, L. F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Song, S., Miller, K. D., & Abbott, L. F. (2000). Competitive Hebbian Learning Through Spike-Timing-Dependent Synaptic Plasticity. Nature Neuroscience, 3, 919--926. https://doi.org/10.1038/78829",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "DOI": "10.1038/78829"
+  },
+  {
+    "id": "StanfordInstituteforHumanCente2026",
+    "type": "document",
+    "title": "The 2026 AI Index Report",
+    "author": [
+      {
+        "literal": "Stanford Institute for Human-Centered Artificial Intelligence"
+      }
+    ],
+    "note": "PRIMARY_SOURCE_CHECKED; Stanford Institute for Human-Centered Artificial Intelligence (2026). The 2026 AI Index Report. Stanford HAI, official report portal. https://hai.stanford.edu/ai-index/2026-ai-index-report",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://hai.stanford.edu/ai-index/2026-ai-index-report"
+  },
+  {
+    "id": "Stimberg2019",
+    "type": "article-journal",
+    "title": "Brian 2, an Intuitive and Efficient Neural Simulator",
+    "author": [
+      {
+        "literal": "Stimberg, M., Brette, R., & Goodman, D. F. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Stimberg, M., Brette, R., & Goodman, D. F. M. (2019). Brian 2, an Intuitive and Efficient Neural Simulator. eLife, 8, e47314. https://doi.org/10.7554/eLife.47314",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.7554/eLife.47314"
+  },
+  {
+    "id": "Strogatz2015",
+    "type": "document",
+    "title": "Nonlinear Dynamics and Chaos: With Applications to Physics, Biology, Chemistry, and Engineering (2",
+    "author": [
+      {
+        "literal": "Strogatz, S. H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Strogatz, S. H. (2015). Nonlinear Dynamics and Chaos: With Applications to Physics, Biology, Chemistry, and Engineering (2. Aufl.). Westview Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Suchman2007",
+    "type": "document",
+    "title": "Human-machine reconfigurations (2nd ed.)",
+    "author": [
+      {
+        "literal": "Suchman, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Suchman, L. (2007). Human-machine reconfigurations (2nd ed.). Cambridge University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Sussillo2009",
+    "type": "article-journal",
+    "title": "Generating Coherent Patterns of Activity from Chaotic Neural Networks",
+    "author": [
+      {
+        "literal": "Sussillo, D., & Abbott, L. F"
+      }
+    ],
+    "note": "CORPUS_METADATA; Sussillo, D., & Abbott, L. F. (2009). Generating Coherent Patterns of Activity from Chaotic Neural Networks. Neuron, 63(4), 544--557. https://doi.org/10.1016/j.neuron.2009.07.018",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neuron.2009.07.018"
+  },
+  {
+    "id": "Sutton1991",
+    "type": "article-journal",
+    "title": "Dyna, an Integrated Architecture for Learning, Planning, and Reacting",
+    "author": [
+      {
+        "literal": "Sutton, R. S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Sutton, R. S. (1991). Dyna, an Integrated Architecture for Learning, Planning, and Reacting. ACM SIGART Bulletin, 2(4), 160--163. https://doi.org/10.1145/122344.122377",
+    "issued": {
+      "date-parts": [
+        [
+          1991
+        ]
+      ]
+    },
+    "DOI": "10.1145/122344.122377"
+  },
+  {
+    "id": "SuttonBarto2018",
+    "type": "document",
+    "title": "Reinforcement Learning: An Introduction (2",
+    "author": [
+      {
+        "literal": "Sutton, R. S., & Barto, A. G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning: An Introduction (2. Aufl.). MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Tabassi2023",
+    "type": "document",
+    "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+    "author": [
+      {
+        "literal": "Tabassi, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Tabassi, E. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0). NIST AI 100-1.",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Thompson2001",
+    "type": "article-journal",
+    "title": "Radical embodiment",
+    "author": [
+      {
+        "literal": "Thompson, E., & Varela, F. J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Thompson, E., & Varela, F. J. (2001). Radical embodiment. Trends in Cognitive Sciences, 5(10), 418--425. https://doi.org/10.1016/S1364-6613(00)01750-2",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "DOI": "10.1016/S1364-6613(00)01750-2"
+  },
+  {
+    "id": "Thompson2007",
+    "type": "document",
+    "title": "Mind in life",
+    "author": [
+      {
+        "literal": "Thompson, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Thompson, E. (2007). Mind in life. Harvard University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Tononi2004",
+    "type": "article-journal",
+    "title": "An information integration theory of consciousness",
+    "author": [
+      {
+        "literal": "Tononi, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Tononi, G. (2004). An information integration theory of consciousness. BMC Neuroscience, 5, 42. https://doi.org/10.1186/1471-2202-5-42",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1186/1471-2202-5-42"
+  },
+  {
+    "id": "Tresch2012",
+    "type": "document",
+    "title": "The Romantic Machine: Utopian Science and Technology after Napoleon",
+    "author": [
+      {
+        "literal": "Tresch, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Tresch, J. (2012). The Romantic Machine: Utopian Science and Technology after Napoleon. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Tronto1993",
+    "type": "document",
+    "title": "Moral boundaries",
+    "author": [
+      {
+        "literal": "Tronto, J. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Tronto, J. C. (1993). Moral boundaries. Routledge.",
+    "issued": {
+      "date-parts": [
+        [
+          1993
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Turing1950",
+    "type": "article-journal",
+    "title": "Computing machinery and intelligence",
+    "author": [
+      {
+        "literal": "Turing, A. M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Turing, A. M. (1950). Computing machinery and intelligence. Mind, 59(236), 433--460. https://doi.org/10.1093/mind/LIX.236.433",
+    "issued": {
+      "date-parts": [
+        [
+          1950
+        ]
+      ]
+    },
+    "DOI": "10.1093/mind/LIX.236.433"
+  },
+  {
+    "id": "Turrigiano1998",
+    "type": "article-journal",
+    "title": "Activity-Dependent Scaling of Quantal Amplitude in Neocortical Neurons",
+    "author": [
+      {
+        "literal": "Turrigiano, G. G., Leslie, K. R., Desai, N. S., Rutherford, L. C., & Nelson, S. B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Turrigiano, G. G., Leslie, K. R., Desai, N. S., Rutherford, L. C., & Nelson, S. B. (1998). Activity-Dependent Scaling of Quantal Amplitude in Neocortical Neurons. Nature, 391, 892--896. https://doi.org/10.1038/36103",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "DOI": "10.1038/36103"
+  },
+  {
+    "id": "Turrigiano2004",
+    "type": "article-journal",
+    "title": "Homeostatic Plasticity in the Developing Nervous System",
+    "author": [
+      {
+        "literal": "Turrigiano, G. G., & Nelson, S. B"
+      }
+    ],
+    "note": "CORPUS_METADATA; Turrigiano, G. G., & Nelson, S. B. (2004). Homeostatic Plasticity in the Developing Nervous System. Nature Reviews Neuroscience, 5, 97--107. https://doi.org/10.1038/nrn1327",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "DOI": "10.1038/nrn1327"
+  },
+  {
+    "id": "UNESCO2021",
+    "type": "document",
+    "title": "Recommendation on the ethics of artificial intelligence",
+    "author": [
+      {
+        "literal": "UNESCO"
+      }
+    ],
+    "note": "CORPUS_METADATA; UNESCO. (2021). Recommendation on the ethics of artificial intelligence. UNESCO.",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    }
+  },
+  {
+    "id": "USCopyrightOffice2025",
+    "type": "document",
+    "title": "Copyright and artificial intelligence, Part 2: Copyrightability",
+    "author": [
+      {
+        "literal": "U.S. Copyright Office"
+      }
+    ],
+    "note": "CORPUS_METADATA; U.S. Copyright Office. (2025). Copyright and artificial intelligence, Part 2: Copyrightability. Library of Congress.",
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Varela1991",
+    "type": "document",
+    "title": "The embodied mind",
+    "author": [
+      {
+        "literal": "Varela, F. J., Thompson, E., & Rosch, E"
+      }
+    ],
+    "note": "CORPUS_METADATA; Varela, F. J., Thompson, E., & Rosch, E. (1991). The embodied mind. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1991
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Vaswani2017",
+    "type": "document",
+    "title": "Attention Is All You Need",
+    "author": [
+      {
+        "literal": "Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I"
+      }
+    ],
+    "note": "CORPUS_METADATA; Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. Advances in Neural Information Processing Systems 30, 5998--6008.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Verbeek2011",
+    "type": "document",
+    "title": "Moralizing technology",
+    "author": [
+      {
+        "literal": "Verbeek, P.-P"
+      }
+    ],
+    "note": "CORPUS_METADATA; Verbeek, P.-P. (2011). Moralizing technology. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Vitolo2024",
+    "type": "article-journal",
+    "title": "Natural language to Verilog: Design of a recurrent spiking neural network using large language models and ChatGPT",
+    "author": [
+      {
+        "literal": "Vitolo, P., Psaltakis, G., Tomlinson, M., Licciardo, G. D., & Andreou, A. G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Vitolo, P., Psaltakis, G., Tomlinson, M., Licciardo, G. D., & Andreou, A. G. (2024). Natural language to Verilog: Design of a recurrent spiking neural network using large language models and ChatGPT. In IEEE/ACM International Conference on Neuromorphic Systems. https://doi.org/10.1109/ICONS62911.2024.00024",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.1109/ICONS62911.2024.00024"
+  },
+  {
+    "id": "Vogels2011",
+    "type": "article-journal",
+    "title": "Inhibitory Plasticity Balances Excitation and Inhibition in Sensory Pathways and Memory Networks",
+    "author": [
+      {
+        "literal": "Vogels, T. P., Sprekeler, H., Zenke, F., Clopath, C., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Vogels, T. P., Sprekeler, H., Zenke, F., Clopath, C., & Gerstner, W. (2011). Inhibitory Plasticity Balances Excitation and Inhibition in Sensory Pathways and Memory Networks. Science, 334(6062), 1569--1573. https://doi.org/10.1126/science.1211095",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.1211095"
+  },
+  {
+    "id": "VanVreeswijk1996",
+    "type": "article-journal",
+    "title": "Chaos in Neuronal Networks with Balanced Excitatory and Inhibitory Activity",
+    "author": [
+      {
+        "literal": "Vreeswijk, C. van, & Sompolinsky, H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Vreeswijk, C. van, & Sompolinsky, H. (1996). Chaos in Neuronal Networks with Balanced Excitatory and Inhibitory Activity. Science, 274(5293), 1724--1726. https://doi.org/10.1126/science.274.5293.1724",
+    "issued": {
+      "date-parts": [
+        [
+          1996
+        ]
+      ]
+    },
+    "DOI": "10.1126/science.274.5293.1724"
+  },
+  {
+    "id": "Wallach2009",
+    "type": "document",
+    "title": "Moral machines",
+    "author": [
+      {
+        "literal": "Wallach, W., & Allen, C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wallach, W., & Allen, C. (2009). Moral machines. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Watts1998",
+    "type": "article-journal",
+    "title": "Collective Dynamics of 'Small-World' Networks",
+    "author": [
+      {
+        "literal": "Watts, D. J., & Strogatz, S. H"
+      }
+    ],
+    "note": "CORPUS_METADATA; Watts, D. J., & Strogatz, S. H. (1998). Collective Dynamics of 'Small-World' Networks. Nature, 393, 440--442. https://doi.org/10.1038/30918",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "DOI": "10.1038/30918"
+  },
+  {
+    "id": "Weinberger2009",
+    "type": "document",
+    "title": "Distance Metric Learning for Large Margin Nearest Neighbor Classification",
+    "author": [
+      {
+        "literal": "Weinberger, K. Q., & Saul, L. K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Weinberger, K. Q., & Saul, L. K. (2009). Distance Metric Learning for Large Margin Nearest Neighbor Classification. Journal of Machine Learning Research, 10, 207--244.",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Wiener1948",
+    "type": "document",
+    "title": "Cybernetics",
+    "author": [
+      {
+        "literal": "Wiener, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wiener, N. (1948). Cybernetics. MIT Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1948
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Wiener1950",
+    "type": "document",
+    "title": "The human use of human beings",
+    "author": [
+      {
+        "literal": "Wiener, N"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wiener, N. (1950). The human use of human beings. Houghton Mifflin.",
+    "issued": {
+      "date-parts": [
+        [
+          1950
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Wilkinson2016",
+    "type": "article-journal",
+    "title": "The FAIR Guiding Principles for Scientific Data Management and Stewardship",
+    "author": [
+      {
+        "literal": "Wilkinson, M. D., Dumontier, M., Aalbersberg, Ij. J., et al"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wilkinson, M. D., Dumontier, M., Aalbersberg, Ij. J., et al. (2016). The FAIR Guiding Principles for Scientific Data Management and Stewardship. Scientific Data, 3, 160018. https://doi.org/10.1038/sdata.2016.18",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "DOI": "10.1038/sdata.2016.18"
+  },
+  {
+    "id": "Wilson2002",
+    "type": "article-journal",
+    "title": "Six views of embodied cognition",
+    "author": [
+      {
+        "literal": "Wilson, M"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wilson, M. (2002). Six views of embodied cognition. Psychonomic Bulletin & Review, 9, 625--636. https://doi.org/10.3758/BF03196322",
+    "issued": {
+      "date-parts": [
+        [
+          2002
+        ]
+      ]
+    },
+    "DOI": "10.3758/BF03196322"
+  },
+  {
+    "id": "Wilson2017",
+    "type": "article-journal",
+    "title": "Good Enough Practices in Scientific Computing",
+    "author": [
+      {
+        "literal": "Wilson, G., Bryan, J., Cranston, K., Kitzes, J., Nederbragt, L., & Teal, T. K"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wilson, G., Bryan, J., Cranston, K., Kitzes, J., Nederbragt, L., & Teal, T. K. (2017). Good Enough Practices in Scientific Computing. PLOS Computational Biology, 13(6), e1005510. https://doi.org/10.1371/journal.pcbi.1005510",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1371/journal.pcbi.1005510"
+  },
+  {
+    "id": "Wilting2019",
+    "type": "article-journal",
+    "title": "25 Years of Criticality in Neuroscience: Established Results, Open Controversies, Novel Concepts",
+    "author": [
+      {
+        "literal": "Wilting, J., & Priesemann, V"
+      }
+    ],
+    "note": "CORPUS_METADATA; Wilting, J., & Priesemann, V. (2019). 25 Years of Criticality in Neuroscience: Established Results, Open Controversies, Novel Concepts. Trends in Neurosciences, 42(8), 518--528. https://doi.org/10.1016/j.tins.2019.04.002",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.tins.2019.04.002"
+  },
+  {
+    "id": "Winner1986",
+    "type": "document",
+    "title": "The whale and the reactor",
+    "author": [
+      {
+        "literal": "Winner, L"
+      }
+    ],
+    "note": "CORPUS_METADATA; Winner, L. (1986). The whale and the reactor. University of Chicago Press.",
+    "issued": {
+      "date-parts": [
+        [
+          1986
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Woodward2003",
+    "type": "document",
+    "title": "Making Things Happen: A Theory of Causal Explanation",
+    "author": [
+      {
+        "literal": "Woodward, J"
+      }
+    ],
+    "note": "CORPUS_METADATA; Woodward, J. (2003). Making Things Happen: A Theory of Causal Explanation. Oxford University Press.",
+    "issued": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Yan2024",
+    "type": "article-journal",
+    "title": "Efficient spiking neural network design via neural architecture search",
+    "author": [
+      {
+        "literal": "Yan, J., Liu, Q., Zhang, M., Feng, L., Ma, D., Li, H., & Pan, G"
+      }
+    ],
+    "note": "CORPUS_METADATA; Yan, J., Liu, Q., Zhang, M., Feng, L., Ma, D., Li, H., & Pan, G. (2024). Efficient spiking neural network design via neural architecture search. Neural Networks, 173, 106172. https://doi.org/10.1016/j.neunet.2024.106172",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "DOI": "10.1016/j.neunet.2024.106172"
+  },
+  {
+    "id": "Zenke2013",
+    "type": "article-journal",
+    "title": "Synaptic Plasticity in Neural Networks Needs Homeostasis with a Fast Rate Detector",
+    "author": [
+      {
+        "literal": "Zenke, F., Hennequin, G., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zenke, F., Hennequin, G., & Gerstner, W. (2013). Synaptic Plasticity in Neural Networks Needs Homeostasis with a Fast Rate Detector. PLOS Computational Biology, 9(11), e1003330. https://doi.org/10.1371/journal.pcbi.1003330",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1371/journal.pcbi.1003330"
+  },
+  {
+    "id": "Zenke2015",
+    "type": "article-journal",
+    "title": "Diverse Synaptic Plasticity Mechanisms Orchestrated to Form and Retrieve Memories in Spiking Neural Networks",
+    "author": [
+      {
+        "literal": "Zenke, F., Agnes, E. J., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zenke, F., Agnes, E. J., & Gerstner, W. (2015). Diverse Synaptic Plasticity Mechanisms Orchestrated to Form and Retrieve Memories in Spiking Neural Networks. Nature Communications, 6, 6922. https://doi.org/10.1038/ncomms7922",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "DOI": "10.1038/ncomms7922"
+  },
+  {
+    "id": "Zenke2017CL",
+    "type": "document",
+    "title": "Continual Learning through Synaptic Intelligence",
+    "author": [
+      {
+        "literal": "Zenke, F., Poole, B., & Ganguli, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zenke, F., Poole, B., & Ganguli, S. (2017). Continual Learning through Synaptic Intelligence. Proceedings of the 34th International Conference on Machine Learning, 70, 3987--3995.",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    }
+  },
+  {
+    "id": "Zenke2017homeostasis",
+    "type": "article-journal",
+    "title": "Hebbian Plasticity Requires Compensatory Processes on Multiple Timescales",
+    "author": [
+      {
+        "literal": "Zenke, F., & Gerstner, W"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zenke, F., & Gerstner, W. (2017). Hebbian Plasticity Requires Compensatory Processes on Multiple Timescales. Philosophical Transactions of the Royal Society B, 372(1715), 20160259. https://doi.org/10.1098/rstb.2016.0259",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.1098/rstb.2016.0259"
+  },
+  {
+    "id": "Zhou2025",
+    "type": "article-journal",
+    "title": "Design principle transfer in neural architecture search via large language models",
+    "author": [
+      {
+        "literal": "Zhou, X., Wu, X., Feng, L., Lu, Z., & Tan, K. C"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zhou, X., Wu, X., Feng, L., Lu, Z., & Tan, K. C. (2025). Design principle transfer in neural architecture search via large language models. Proceedings of the AAAI Conference on Artificial Intelligence, 39(21), 23000--23008. https://doi.org/10.1609/aaai.v39i21.34463",
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "DOI": "10.1609/aaai.v39i21.34463"
+  },
+  {
+    "id": "Zuboff2019",
+    "type": "document",
+    "title": "The age of surveillance capitalism",
+    "author": [
+      {
+        "literal": "Zuboff, S"
+      }
+    ],
+    "note": "CORPUS_METADATA; Zuboff, S. (2019). The age of surveillance capitalism. PublicAffairs.",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    }
+  }
+]

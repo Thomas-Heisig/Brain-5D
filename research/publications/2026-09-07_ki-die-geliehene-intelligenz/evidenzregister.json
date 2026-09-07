@@ -1,0 +1,346 @@
+{
+  "date": "2026-09-07",
+  "repository_snapshot": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+  "scope": "selected_reports_and_registry_entries_not_exhaustive_repository_audit",
+  "config_sha256_reported": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+  "records": [
+    {
+      "record_id": "RESTORE-2026-15",
+      "record_type": "technical_test_record",
+      "source_ids": [
+        "R7",
+        "R8"
+      ],
+      "reported_results": {
+        "tests_passed": 7,
+        "returncode": 0,
+        "test_stdout_duration_seconds": 1.98,
+        "wrapper_duration_seconds": 2.3497252464294434
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-DET-0001",
+      "hypothesis_id": "H-SNN-003-A",
+      "registry_hypothesis_status": "supported",
+      "registry_evidence_status": "supports",
+      "evidence_id": "EVID-2026-15",
+      "framework_interpretation": "E1: documented technical verification within tested cases; not cognitive E2/E3",
+      "limits": "Sieben Tests sind keine sieben unabhängigen Lernexperimente. Keine neue Ausführung in dieser Bearbeitung."
+    },
+    {
+      "record_id": "STORAGE-2026-16",
+      "record_type": "technical_test_record",
+      "source_ids": [
+        "R9",
+        "R10"
+      ],
+      "reported_results": {
+        "tests_passed": 15,
+        "tests_skipped": 1,
+        "returncode": 0,
+        "test_stdout_duration_seconds": 0.25,
+        "wrapper_duration_seconds": 0.5763115882873535,
+        "skipped_case": "50k storage smoke test; BRAIN5D_RUN_LARGE_STORAGE_TEST=1 required"
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-STOR-0001",
+      "hypothesis_id": "H-STOR-001-A",
+      "registry_hypothesis_status": "supported",
+      "registry_evidence_status": "supports",
+      "evidence_id": "EVID-2026-16",
+      "framework_interpretation": "E1: documented storage tests; not functional memory evidence",
+      "limits": "Der uebersprungene 50k-Test belegt keine Skalierung. EVID-Metadaten enthalten leere Felder für Effektgröße und statistische Signifikanz."
+    },
+    {
+      "record_id": "GEN-0021",
+      "record_type": "secondary_ai_interpretation",
+      "source_ids": [
+        "R11"
+      ],
+      "reported_results": {
+        "subruns": 57,
+        "seed_labels": [
+          42,
+          43,
+          44
+        ],
+        "learning_on_weight_initial": 0.05,
+        "learning_on_weight_final": 0.5172804698,
+        "success_reported_before": 0,
+        "success_reported_after": 1,
+        "temporal_spikes": 0,
+        "temporal_discrepancy_means": {
+          "fast": 2.62576e-05,
+          "medium": 3.78343e-05,
+          "slow": 4.61094e-05
+        }
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-GEN-0021",
+      "dirty_tree": true,
+      "run_mode": "EXPLORATORY",
+      "readiness": "NOT_AUTOMATICALLY_CLASSIFIED / no promotion",
+      "limits": "Kennzahlen hier aus einem als KI-generiert und interpretation_only gekennzeichneten Post-hoc-Bericht; keine lokale Prüfung der zugrunde liegenden Rohereignisse. Omnibus-Zuordnung passt nicht als Primärevidenz für RQ-SNN-001."
+    },
+    {
+      "record_id": "SNN-001-R2",
+      "record_type": "report_and_manuscript_addendum",
+      "source_ids": [
+        "K3",
+        "R3",
+        "R14"
+      ],
+      "reported_results": {
+        "runs": 20,
+        "seeds": [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51
+        ],
+        "ticks_per_run": 100000,
+        "burn_in_ticks": 10000,
+        "window_ticks": 1000,
+        "tonic_drive": 50.0,
+        "stability_passes_addendum": 20,
+        "finite_topology_passes_addendum": 20,
+        "tonic_spikes_per_window_addendum": 300,
+        "cv_addendum": 0,
+        "relative_drift_addendum": 0,
+        "no_input_quiet_runs_addendum": 10,
+        "runtime_seconds": 11.832557399990037
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-SNN-001-R2",
+      "hypothesis_id": "H-SNN-001-A",
+      "run_mode": "CONFIRMATORY",
+      "protocol": "sustained_activity_stability_v1",
+      "run_commit": "4cfcaf64e55b5c33f6fd818605a39da2c92871f9",
+      "dirty_tree": true,
+      "tick_contract": "SATISFIED",
+      "semantic_status": "MISMATCH",
+      "readiness": "BLOCKED_SEMANTIC_MISMATCH",
+      "human_review": "PENDING",
+      "limits": "Spezialisierte Kennzahlen stammen aus K3. Generische Summary-Felder sind teilweise fehlend; nicht Null. Protokollname und semantische Begründung stehen in Spannung. Keine automatische Korrektur der Freigabe."
+    },
+    {
+      "record_id": "REPL-0001-R1",
+      "record_type": "deterministic_summary",
+      "source_ids": [
+        "R4"
+      ],
+      "reported_results": {
+        "runs": 40,
+        "seeds": [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "ticks_per_run": 256,
+        "per_condition_n": 20,
+        "recurrence_off": {
+          "total_spikes": 3,
+          "delivered_synaptic_events": 2,
+          "activated_neurons": 3,
+          "recurrent_events": 0,
+          "propagation_depth": 1
+        },
+        "recurrence_on": {
+          "total_spikes": 33,
+          "delivered_synaptic_events": 33,
+          "activated_neurons": 3,
+          "recurrent_events": 10,
+          "propagation_depth": 61
+        },
+        "isi_ticks": {
+          "off": {
+            "n_intervals": 40,
+            "mean": 1
+          },
+          "on": {
+            "n_intervals": 640,
+            "mean": 1.9375,
+            "median": 2,
+            "min": 1,
+            "max": 4
+          }
+        },
+        "runtime_seconds": 0.08962029998656362
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-REPL-0001-R1",
+      "hypothesis_id": "H-REPL-001-A",
+      "protocol": "independent_replication_v1",
+      "run_mode": "REPLICATION",
+      "run_commit": "48dacb9ce26e68f39d2d63f1b82c8a9192ee8185",
+      "dirty_tree": true,
+      "tick_contract": "SATISFIED",
+      "semantic_status": "DIRECT_MATCH",
+      "readiness": "BLOCKED_DIRTY_SOURCE_TREE",
+      "limits": "Identische Ergebnisse bei verschiedenen Seed-Labels beweisen keine wirksame unabhängige Anfangsvariation. ISI-Zahlen sind Intervalle, keine unabhängigen Runs. Propagation Depth ist keine Zahl verschiedener anatomischer Schichten."
+    },
+    {
+      "record_id": "LIFE-0001-R1",
+      "record_type": "report_and_manuscript_addendum",
+      "source_ids": [
+        "K3",
+        "R12"
+      ],
+      "reported_results": {
+        "runs": 20,
+        "seeds": [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "tasks": 3,
+        "retained_success_fraction_addendum": 1.0,
+        "requested_ticks": 1,
+        "runtime_seconds": 5.140379299991764
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-LIFE-0001-R1",
+      "hypothesis_id": "H-LIFE-001-A",
+      "protocol": "learning_interference_screen_v1",
+      "run_mode": "EXPLORATORY",
+      "run_commit": "48dacb9ce26e68f39d2d63f1b82c8a9192ee8185",
+      "dirty_tree": true,
+      "tick_contract": "NOT_APPLICABLE",
+      "semantic_status": "DIRECT_MATCH",
+      "readiness": "BLOCKED_DIRTY_SOURCE_TREE",
+      "limits": "Vorläuferscreen mit Task-/Zustandsreset. Kein belegter Continual-Learning-Test in einem gemeinsam fortlaufend trainierten Netz. Erfolgsspezifika aus K3; Trialzahl nicht mit Ticks gleichsetzen."
+    },
+    {
+      "record_id": "GEN-0033-R1",
+      "record_type": "deterministic_omnibus_summary",
+      "source_ids": [
+        "R5"
+      ],
+      "reported_results": {
+        "subruns": 57,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "requested_ticks": 100000,
+        "snn_arms_ticks": 100000,
+        "time_ladder_ticks": [
+          100,
+          1000,
+          10000,
+          100000
+        ],
+        "dimensions_compared": [
+          "1d",
+          "2d",
+          "3d",
+          "5d",
+          "random_graph"
+        ],
+        "each_dimension": {
+          "total_spikes": 3,
+          "delivered_synaptic_events": 2,
+          "activated_neurons": 3,
+          "recurrent_events": 0,
+          "propagation_depth": 1
+        },
+        "temporal_spikes": 0,
+        "runtime_seconds": 204.51168389990926
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "experiment_id": "EXP-GEN-0033-R1",
+      "hypothesis_id": "H-SUITE-001-A",
+      "protocol": "science_all_v1",
+      "run_mode": "EXPLORATORY",
+      "run_commit": "0c64eb428430fcf0627715989857c875d674a74c",
+      "dirty_tree": true,
+      "tick_contract": "SATISFIED for applicable arms",
+      "semantic_status": "DIRECT_MATCH",
+      "readiness": "BLOCKED_DIRTY_SOURCE_TREE",
+      "limits": "57 Teilruns sind nicht 57 unabhängige Bestaetigungen aller Fachhypothesen. Zeit-Leiter und Trial-/Regulationsarme besitzen andere Ausführungsverträge. Gleiche kleine Geometrie-Outcomes sind keine allgemeine Widerlegung von 5D."
+    },
+    {
+      "record_id": "MSBA-E01-E05",
+      "record_type": "registered_open_research",
+      "source_ids": [
+        "R1",
+        "R13"
+      ],
+      "reported_results": {
+        "research_questions": [
+          "RQ-MSBA-E01",
+          "RQ-MSBA-E02",
+          "RQ-MSBA-E03",
+          "RQ-MSBA-E04",
+          "RQ-MSBA-E05"
+        ],
+        "question_status": "open",
+        "evidence_references": [],
+        "external_projection_dimensions": [
+          1,
+          32
+        ],
+        "persisted_core_dimensions": 5
+      },
+      "assessment_authority": "secondary_analysis_no_evidence_promotion",
+      "new_experiment": false,
+      "raw_reanalysis": false,
+      "limits": "Projektionsdimension und Core-Dimension strikt trennen. Fehlende bestätigende Läufe und teilweise nicht operationalisierte adaptive Runner."
+    }
+  ],
+  "all_new_evidence_promotions": []
+}

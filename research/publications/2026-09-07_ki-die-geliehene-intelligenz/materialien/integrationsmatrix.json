@@ -1,0 +1,667 @@
+{
+  "chapter_map": [
+    {
+      "source": "K3",
+      "source_chapter": 1,
+      "target_chapter": 1,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 4,
+      "target_chapter": 1,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 1,
+      "target_chapter": 1,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 2,
+      "target_chapter": 1,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 3,
+      "target_chapter": 2,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 5,
+      "target_chapter": 2,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 7,
+      "target_chapter": 2,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 2,
+      "target_chapter": 3,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 5,
+      "target_chapter": 4,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 6,
+      "target_chapter": 4,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 22,
+      "target_chapter": 5,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 9,
+      "target_chapter": 6,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 10,
+      "target_chapter": 6,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 11,
+      "target_chapter": 7,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 16,
+      "target_chapter": 7,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 13,
+      "target_chapter": 8,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 14,
+      "target_chapter": 8,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 15,
+      "target_chapter": 8,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 12,
+      "target_chapter": 9,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 24,
+      "target_chapter": 9,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 17,
+      "target_chapter": 10,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 18,
+      "target_chapter": 10,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 19,
+      "target_chapter": 10,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 20,
+      "target_chapter": 11,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 26,
+      "target_chapter": 12,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 27,
+      "target_chapter": 12,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 21,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 3,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 4,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 6,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 25,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 26,
+      "target_chapter": 13,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 8,
+      "target_chapter": 14,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 9,
+      "target_chapter": 14,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 10,
+      "target_chapter": 15,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 11,
+      "target_chapter": 15,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 12,
+      "target_chapter": 16,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 13,
+      "target_chapter": 17,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 14,
+      "target_chapter": 17,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 15,
+      "target_chapter": 18,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 18,
+      "target_chapter": 18,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 16,
+      "target_chapter": 19,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 17,
+      "target_chapter": 19,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 19,
+      "target_chapter": 19,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 20,
+      "target_chapter": 20,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 21,
+      "target_chapter": 20,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 22,
+      "target_chapter": 20,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 23,
+      "target_chapter": 21,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 44,
+      "target_chapter": 21,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 24,
+      "target_chapter": 26,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 23,
+      "target_chapter": 29,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 27,
+      "target_chapter": 29,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 28,
+      "target_chapter": 29,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 29,
+      "target_chapter": 29,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 30,
+      "target_chapter": 29,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 31,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 32,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 33,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 34,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 35,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 36,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 37,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 38,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 39,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 40,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 41,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 42,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 43,
+      "target_chapter": 30,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 25,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 29,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 45,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 47,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 48,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 49,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 50,
+      "target_chapter": 32,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K2",
+      "source_chapter": 11,
+      "target_chapter": 34,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K2",
+      "source_chapter": 21,
+      "target_chapter": 34,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 8,
+      "target_chapter": 34,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 28,
+      "target_chapter": 35,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 46,
+      "target_chapter": 35,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K3",
+      "source_chapter": 30,
+      "target_chapter": 36,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    },
+    {
+      "source": "K1",
+      "source_chapter": 51,
+      "target_chapter": 36,
+      "mode": "integrated_reordered_with_documented_editorial_normalization"
+    }
+  ],
+  "verbatim_deduplications": [],
+  "mathematical_edits": [
+    {
+      "original_tex": "\\text{SourceRecord} \\rightarrow \\text{KnowledgeItem} \\rightarrow \\text{StimulusPlan} \\rightarrow \\text{Episode} \\rightarrow X_{t} \\rightarrow \\text{SignalFrame} \\rightarrow \\text{Interpretation} \\rightarrow \\text{Response}.",
+      "edited_tex": "\\begin{gathered}\\text{SourceRecord}\\to\\text{KnowledgeItem}\\to\\text{StimulusPlan}\\to\\text{Episode}\\\\ \\to X_t\\to\\text{SignalFrame}\\to\\text{Interpretation}\\to\\text{Response}\\end{gathered}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "E_{\\Delta t} = d\\left( O_{\\Delta t},O_{\\Delta\\frac{t}{2}}ight), \\right)",
+      "edited_tex": "E_{\\Delta t}=d\\!\\left(O_{\\Delta t},O_{\\Delta t/2}\\right)",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\overset{˙}{x} = f_{q}(x,u,\\xi;\\theta),x \\in C_{q},",
+      "edited_tex": "\\dot{x} = f_{q}(x,u,\\xi;\\theta),x \\in C_{q},",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\left| A_{5} \\right) = L^{5}.",
+      "edited_tex": "\\left| A_{5} \\right| = L^{5}.",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "N_{t} \\subseteq A_{5},\\left| N_{t} \\right) \\ll \\left| A_{5} \\right)",
+      "edited_tex": "N_{t} \\subseteq A_{5},\\left| N_{t} \\right| \\ll \\left| A_{5} \\right|",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "d_{M}\\left( p_{i},p_{j} \\right)\\text{\\textbackslash(Umgebungs- oder Metrikdistanz\\textbackslash)}",
+      "edited_tex": "d_{M}\\left( p_{i},p_{j} \\right)\\quad\\text{(Umgebungs- oder Metrikdistanz)}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "C\\overset{˙}{V} = - g_{L}\\left( V - E_{L} \\right) + g_{L}\\Delta_{T}\\exp\\left( \\frac{V - V_{T}}{\\Delta_{T}} \\right) - w + I(t),",
+      "edited_tex": "C\\dot{V} = - g_{L}\\left( V - E_{L} \\right) + g_{L}\\Delta_{T}\\exp\\left( \\frac{V - V_{T}}{\\Delta_{T}} \\right) - w + I(t),",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\tau_{w}\\overset{˙}{w} = a\\left( V - E_{L} \\right) - w.",
+      "edited_tex": "\\tau_{w}\\dot{w} = a\\left( V - E_{L} \\right) - w.",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "I_{i}(t) = I_{i}^{ext}(t) + \\sum_{j}^{}w_{ji}(t)k_{ji}\\left( t - t_{j}^{spike} - \\delta_{ji} \\right) + I_{i}^{mod}(t) + \\eta_{i}(t),",
+      "edited_tex": "I_{i}(t) = I_{i}^{ext}(t) + \\sum_jw_{ji}(t)k_{ji}\\left( t - t_{j}^{spike} - \\delta_{ji} \\right) + I_{i}^{mod}(t) + \\eta_{i}(t),",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "B_{EI}(t) = \\frac{\\sum_{(i,j) \\in E_{exc}}^{}\\left| w_{ij}(t) \\right)}{\\sum_{(i,j) \\in E_{inh}}^{}\\left| w_{ij}(t) \\right) + \\epsilon}",
+      "edited_tex": "B_{EI}(t) = \\frac{\\sum_{(i,j)\\in E_{exc}}\\left| w_{ij}(t) \\right|}{\\sum_{(i,j)\\in E_{inh}}\\left| w_{ij}(t) \\right| + \\epsilon}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\tau_{e}{\\overset{˙}{e}}_{ij} = - e_{ij} + \\phi\\left( s_{i}^{pre},s_{j}^{post} \\right)",
+      "edited_tex": "\\tau_{e}{\\dot{e}}_{ij} = - e_{ij} + \\phi\\left( s_{i}^{pre},s_{j}^{post} \\right)",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "{\\overset{˙}{w}}_{ij} = \\eta m(t)e_{ij}(t)",
+      "edited_tex": "{\\dot{w}}_{ij} = \\eta m(t)e_{ij}(t)",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\theta_{i}(t + \\Delta t) = \\theta_{i}(t) + \\eta_{h}\\left( {\\acute{r}}_{i}(t) - r_{i}^{} \\right).",
+      "edited_tex": "\\theta_{i}(t + \\Delta t) = \\theta_{i}(t) + \\eta_{h}\\left( \\bar{r}_{i}(t) - r_i^{\\star} \\right).",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\tau_{\\theta}{\\overset{˙}{\\theta}}_{i} = {\\acute{r}}_{i}^{2} - \\theta_{i},",
+      "edited_tex": "\\tau_{\\theta}{\\dot{\\theta}}_{i} = \\bar{r}_{i}^{2} - \\theta_{i},",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\text{create}_{ij} = 1\\left\\lbrack d_{M}(i,j) < d_{max} \\right)1\\left\\lbrack B_{t}^{syn} > 0 \\right)1\\left\\lbrack C_{ij} > C_{min} \\right) \\cdot Bernoulli\\left( P_{ij} \\right).",
+      "edited_tex": "\\text{create}_{ij} = 1\\left\\lbrack d_{M}(i,j) < d_{max} \\right\\rbrack1\\left\\lbrack B_{t}^{syn} > 0 \\right\\rbrack1\\left\\lbrack C_{ij} > C_{min} \\right\\rbrack \\cdot Bernoulli\\left( P_{ij} \\right).",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\left| w_{ij}(t) \\right) < w_{prune},U_{ij}(t) < u_{min},age_{ij} > T_{grace}",
+      "edited_tex": "\\left| w_{ij}(t) \\right| < w_{prune},U_{ij}(t) < u_{min},age_{ij} > T_{grace}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "C_{t} = c_{N}\\left| V_{t} \\right) + c_{E}\\left| E_{t} \\right) + c_{P}N_{spike}(t) + c_{U}N_{update}(t) + c_{G}N_{struct}(t) + c_{IO}B_{IO}(t).",
+      "edited_tex": "C_{t} = c_{N}\\left| V_{t} \\right| + c_{E}\\left| E_{t} \\right| + c_{P}N_{spike}(t) + c_{U}N_{update}(t) + c_{G}N_{struct}(t) + c_{IO}B_{IO}(t).",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "C_{t} \\leq C_{max},\\left| V_{t} \\right) \\leq N_{max},\\left| E_{t} \\right) \\leq S_{max}.",
+      "edited_tex": "C_{t} \\leq C_{max},\\left| V_{t} \\right| \\leq N_{max},\\left| E_{t} \\right| \\leq S_{max}.",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\rho\\left( J_{F}\\left( x^{} \\right) \\right) < 1,",
+      "edited_tex": "\\rho\\left( J_{F}\\left( x^{\\star} \\right) \\right) < 1,",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "D(\\tau) = E\\left\\lbrack \\parallel \\Phi_{\\tau}\\left( X_{t} + \\delta \\right) - \\Phi_{\\tau}\\left( X_{t} \\right) \\parallel \\right),",
+      "edited_tex": "D(\\tau) = E\\left\\lbrack \\parallel \\Phi_{\\tau}\\left( X_{t} + \\delta \\right) - \\Phi_{\\tau}\\left( X_{t} \\right) \\parallel \\right\\rbrack,",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "{ACE}_{C} = E\\left\\lbrack Q|do(C = 1) \\right) - E\\left\\lbrack Q|do(C = 0) \\right).",
+      "edited_tex": "{ACE}_{C} = E\\left\\lbrack Q|do(C = 1) \\right\\rbrack - E\\left\\lbrack Q|do(C = 0) \\right\\rbrack.",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "S_{v}:\\left( \\text{SpikeEvents},X_{\\left\\lbrack t_{0},t_{1} \\right)},\\text{RegionSchema} \\right) \\rightarrow \\text{SignalFrame}_{v},",
+      "edited_tex": "S_{v}:\\left( \\text{SpikeEvents},X_{\\left\\lbrack t_{0},t_{1} \\right\\rbrack},\\text{RegionSchema} \\right) \\rightarrow \\text{SignalFrame}_{v},",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "x^{}",
+      "edited_tex": "x^{\\star}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "F\\left( x^{} \\right) = x^{}",
+      "edited_tex": "F\\left( x^{\\star} \\right) = x^{\\star}",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    },
+    {
+      "original_tex": "\\left| {\\acute{r}}_{i} - r_{i}^{} \\right)",
+      "edited_tex": "\\left| \\bar{r}_{i} - r_i^{\\star} \\right|",
+      "reason": "documented notation/paired delimiter/line-wrap correction"
+    }
+  ],
+  "original_sources_unmodified": true,
+  "substantive_model_additions": [
+    {
+      "source": "K1",
+      "location": "hybrid system jump equation",
+      "source_state": "empty OMML equation",
+      "added_model": "(x_post,q_post)=g_q(x,u,xi;theta), x in D_q",
+      "status": "explicit editorial model proposal, not recovered source or implementation claim"
+    }
+  ],
+  "additional_mathematical_edits": [
+    {
+      "source": "K1",
+      "location": "graph ambient and shortest path distances",
+      "change": "separated literal escaped prose from inline math; no semantic change"
+    },
+    {
+      "source": "K1",
+      "location": "modulus and cardinality bars",
+      "change": "native editable math runs for vertical bars; renderer replaced closing delimiter incorrectly; no mathematical content change"
+    },
+    {
+      "source": "K1",
+      "location": "forgetting definition",
+      "source_formula": "F_i = max_{j<i} Q_{i,j} - Q_{i,K}",
+      "new_proposal": "F_i_post = max_{i<=j<=K} Q_{i,j} - Q_{i,K}, i<K",
+      "status": "source formula retained and critiqued; separate explicit definition proposal, not a reanalysis"
+    },
+    {
+      "source": "K1",
+      "location": "pair-based STDP display",
+      "source_state": "OMML contained only Delta w = without right-hand side",
+      "new_proposal": "potentiation A_p exp(-Delta t/tau_p), Delta t>0; depression -A_d exp(Delta t/tau_d), Delta t<0; same-time rule unspecified",
+      "status": "explicit editorial model family, not recovered original equation, not code or evidence claim"
+    }
+  ],
+  "final_consolidation": {
+    "removed_duplicate_k1_bibliography_blocks": 130,
+    "bibliography_preserved_in": "Anhang E; literatur.bib; original K1",
+    "source_appendix_headings": "prefixed as inherited templates; original labels retained",
+    "msba_hypotheses": "5 full texts/status from additional source R15",
+    "source_files_unchanged": true
+  }
+}
