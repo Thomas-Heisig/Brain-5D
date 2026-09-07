@@ -4,6 +4,19 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Functional viewer restoration
+
+- [x] Add a viewer back button and cross-module `openBrain5DFile` API.
+- [x] Add read-only central LLM analysis to the viewer.
+- [x] Restore sanitized DOCX layout rendering through Mammoth.
+- [x] Add safe multicolor syntax rendering for common source formats.
+- [ ] Add a richer split-pane editor with language-aware preview and conflict diff.
+
+## 2026-09-07 Viewer regression restoration
+
+- [x] Restore full-width Markdown rendering.
+- [x] Preserve Human Review and workflow artifact actions when the Docs source was opened previously.
+
 ## 2026-09-07 Viewer path compatibility
 
 - [x] Normalize Windows-style separators for preview, raw and document requests.

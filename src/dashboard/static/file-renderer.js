@@ -8,6 +8,9 @@ const requests = new WeakMap();
 const renderers = new Map();
 const TEXT_LIMIT = 262144;
 const MERMAID_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+const CODE_EXTENSIONS = new Set(['.py', '.c', '.h', '.cpp', '.hpp', '.js', '.mjs', '.ts', '.tsx', '.jsx', '.java', '.kt', '.rs', '.go', '.r', '.sql', '.sh', '.ps1', '.css', '.html', '.xml']);
+const CODE_KEYWORDS = new Set('as async await break case catch class const continue def delete do elif else export extends finally for from function if import in interface let match namespace new null of package private protected public return static struct switch this throw try type typeof using var void while with yield True False None and or not'.split(' '));
+const CODE_TYPES = new Set('bool char double float int long short size_t string uint8_t uint16_t uint32_t uint64_t void auto dict list object str bytes tuple Optional Result Vec'.split(' '));
 let mermaidPromise = null;
 
 function node(tag, text = '', className = '') {
@@ -172,6 +175,67 @@ function renderTable(container, data) {
   container.append(table);
 }
 
+function renderHighlightedCode(container, data) {
+  const pre = node('pre', '', 'fm-code-block');
+  const code = node('code', '', `fm-code fm-code-${(data.ext || '').slice(1)}`);
+  const source = String(data.content || '');
+  const tokenPattern = /(#.*$|\/\/.*$|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+(?:\.\d+)?\b|\b[A-Za-z_]\w*\b)/gm;
+  let offset = 0;
+  for (const match of source.matchAll(tokenPattern)) {
+    code.append(document.createTextNode(source.slice(offset, match.index)));
+    const token = match[0];
+    const span = node('span', token);
+    if (/^(#|\/\/|\/\*)/.test(token)) span.className = 'fm-syntax-comment';
+    else if (/^["'`]/.test(token)) span.className = 'fm-syntax-string';
+    else if (/^\d/.test(token)) span.className = 'fm-syntax-number';
+    else if (CODE_KEYWORDS.has(token)) span.className = 'fm-syntax-keyword';
+    else if (CODE_TYPES.has(token)) span.className = 'fm-syntax-type';
+    code.append(span);
+    offset = match.index + token.length;
+  }
+  code.append(document.createTextNode(source.slice(offset)));
+  pre.append(code); container.append(pre);
+}
+
+function safeDocumentFragment(html) {
+  const parsed = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
+  const root = parsed.body.firstElementChild;
+  if (!root) return document.createDocumentFragment();
+  root.querySelectorAll('script, iframe, object, embed, link, meta, style').forEach((element) => element.remove());
+  root.querySelectorAll('*').forEach((element) => {
+    [...element.attributes].forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      const value = attribute.value.trim();
+      if (name.startsWith('on')) element.removeAttribute(attribute.name);
+      if (name === 'href' && !/^(?:https?:|#)/i.test(value)) element.removeAttribute(attribute.name);
+      if (name === 'src' && !/^data:image\/(?:png|jpeg|gif|webp);/i.test(value)) element.removeAttribute(attribute.name);
+    });
+  });
+  const fragment = document.createDocumentFragment();
+  while (root.firstChild) fragment.append(root.firstChild);
+  return fragment;
+}
+
+async function renderDocx(container, data) {
+  if (!window.mammoth || !data.safeRawUrl) {
+    container.append(node('pre', data.content || '', 'file-renderer-source'));
+    container.append(node('p', 'Formatierte DOCX-Vorschau ist nicht verfuegbar; der extrahierte Text bleibt sichtbar.', 'file-renderer-notice'));
+    return;
+  }
+  try {
+    const response = await fetch(data.safeRawUrl);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await window.mammoth.convertToHtml({ arrayBuffer: await response.arrayBuffer() });
+    const article = node('article', '', 'fm-docx-content');
+    article.append(safeDocumentFragment(result.value));
+    container.append(article);
+    if (result.messages?.length) container.append(node('p', result.messages.map((message) => message.message).join(' '), 'fm-docx-messages'));
+  } catch (error) {
+    container.append(node('pre', data.content || '', 'file-renderer-source'));
+    container.append(node('p', `DOCX-Layout konnte nicht geladen werden: ${error.message}`, 'file-renderer-notice'));
+  }
+}
+
 function renderJsonValue(value, label, state, depth = 0) {
   state.nodes += 1;
   if (state.nodes > 5000 || depth > 32) return node('p', 'JSON-Vorschau begrenzt.', 'file-renderer-notice');
@@ -221,7 +285,11 @@ function renderArchive(container, data) {
   });
 }
 
-function renderSource(container, data, options = {}) {
+async function renderSource(container, data, options = {}) {
+  if (data.ext === '.docx') {
+    await renderDocx(container, data);
+    return;
+  }
   if (data.ext === '.bib') {
     const entries = parseBibTeX(data.content || '');
     if (entries.length) {
@@ -259,6 +327,10 @@ function renderSource(container, data, options = {}) {
         return;
       }
     } catch { /* Malformed notebooks remain visible as source; never execute. */ }
+  }
+  if (CODE_EXTENSIONS.has(data.ext)) {
+    renderHighlightedCode(container, data);
+    return;
   }
   container.append(node('pre', data.content || '', 'file-renderer-source'));
 }
@@ -374,6 +446,7 @@ export async function renderFile(container, reference, options = {}) {
     notice.textContent = [data.read_only ? 'Schreibgeschuetztes Forschungsartefakt.' : '', data.truncated ? 'Begrenzte Vorschau; Original ist vollstaendig.' : '', data.notice || ''].filter(Boolean).join(' ');
     const renderOptions = { ...options, onOpen: options.onOpen || (ref => renderFile(container, ref, options)) };
     await (renderers.get(data.kind) || renderers.get('binary'))(body, data, renderOptions);
+    if (options.onBack) actions.append(button('Zurueck', options.onBack));
     if (options.onClose) actions.append(button('Schliessen', options.onClose));
     if (options.chat !== true) actions.append(button('Im Chat anzeigen', () => {
       document.dispatchEvent(new CustomEvent('brain5d:chat-file', { detail: { source, path } }));
@@ -409,6 +482,7 @@ export async function renderFile(container, reference, options = {}) {
     container.dataset.renderState = 'error';
     const errorNode = node('p', error.message, 'file-renderer-error'); errorNode.setAttribute('role', 'alert');
     container.replaceChildren(errorNode, button('Erneut laden', () => renderFile(container, reference, options)));
+    if (options.onBack) container.append(button('Zurueck', options.onBack));
     if (options.onClose) container.append(button('Schliessen', options.onClose));
     return null;
   }

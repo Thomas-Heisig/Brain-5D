@@ -587,6 +587,8 @@ export class ExperimentWorkflowPanel {
 
   async _openArtifact(path) {
     if (!path) return;
+    const researchButton = document.querySelector('.fm-source-btn[data-source="research"]');
+    if (researchButton && !researchButton.classList.contains("active")) researchButton.click();
     this.currentViewerPath = path;
     await openFMFile(path);
     this._installExperimentPopupActions(path);
@@ -868,6 +870,8 @@ export class ExperimentWorkflowPanel {
   }
 
   async _openResolvedViewerFile(path) {
+    const researchButton = document.querySelector('.fm-source-btn[data-source="research"]');
+    if (researchButton && !researchButton.classList.contains("active")) researchButton.click();
     this.currentViewerPath = path;
     await openFMFile(path);
   }

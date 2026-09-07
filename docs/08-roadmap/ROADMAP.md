@@ -4,6 +4,18 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Functional viewer restoration
+
+- Restored viewer back navigation and exposed `window.openBrain5DFile(source, path)` plus the `brain5d:open-file` event for cross-module file opening.
+- Added central read-only LLM analysis from the viewer through the existing Research Chat backend.
+- Reconnected Mammoth DOCX rendering with sanitized HTML fallback and added bounded multicolor syntax rendering for Python, C++, JavaScript and related source files.
+- Existing text edit mode remains optimistic-lock protected and is available wherever the preview contract marks a file editable.
+
+## 2026-09-07 Viewer regression restoration
+
+- Restored full-width Markdown layout in the shared file viewer.
+- Kept workflow artifact actions, including Human Review, report, summary, statistics and raw-data access, bound to the research source regardless of the last selected file-manager source.
+
 ## 2026-09-07 Viewer path compatibility
 
 - Normalized Windows backslashes at the browser and API preview boundaries so workflow artifacts such as `experiments\\EXP-SNN-001-R5\\summary.md` resolve to the canonical repository path.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-07 — Functional viewer restoration
+
+- Added viewer back navigation and the public `window.openBrain5DFile(source, path)` / `brain5d:open-file` integration points.
+- Added a read-only `KI-Analyse` action using the configured central Research Chat LLM.
+- Restored sanitized Mammoth DOCX rendering and multicolor syntax rendering for common source files.
+- Preserved the existing optimistic-lock edit mode for editable text previews.
+
+## 2026-09-07 — Viewer regression restoration
+
+- Restored full-width Markdown rendering in the shared viewer.
+- Fixed workflow artifact actions so Human Review and report links always resolve against the research source.
+
 ## 2026-09-07 — Viewer path compatibility
 
 - Fixed preview failures for workflow artifact paths containing Windows backslashes.

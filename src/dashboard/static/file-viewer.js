@@ -21,7 +21,7 @@
 // BibTeX Viewer import (for structured .bib file display)
 // ================================================================
 
-import { renderFile, createTextFile } from './file-renderer.js';
+import { renderFile, createTextFile, renderMessage } from './file-renderer.js';
 
 // ================================================================
 // Local helpers (mirrored from app.js to keep this module standalone)
@@ -59,6 +59,9 @@ let fmCurrentSource = 'research';
 let fmActiveFilter = 'all';
 let fmExperimentSort = 'newest';
 let fmRecentFiles = [];
+let fmCurrentPath = '';
+let fmCurrentFileSource = '';
+let fmViewerHistory = [];
 const FM_RECENT_KEY = 'brain5d_fm_recent';
 const FM_RECENT_MAX = 20;
 
@@ -464,16 +467,23 @@ function renderFMTree(node, container, depth) {
   container.appendChild(ul);
 }
 
-export async function openFMFile(path) {
+export async function openFMFile(path, { recordHistory = true } = {}) {
   const viewer = document.getElementById('fm-viewer');
   if (!viewer) return;
+  path = String(path || '').replaceAll('\\', '/');
   const source = fmCurrentSource;
+  if (recordHistory && fmCurrentPath && (fmCurrentPath !== path || fmCurrentFileSource !== source)) {
+    fmViewerHistory.push({ source: fmCurrentFileSource || source, path: fmCurrentPath });
+  }
+  fmCurrentPath = path;
+  fmCurrentFileSource = source;
   viewer.classList.remove('fm-viewer-hidden');
   viewer.classList.add('fm-viewer-modal');
   document.body.classList.add('fm-viewer-open');
   addFMRecent(path, path.split('/').pop() || path, source);
   await renderFile(viewer, { source, path }, {
     onClose: closeFMViewer,
+    onBack: goBackFMViewer,
     onChange: refreshFileManager,
     onOpen: (reference) => { fmCurrentSource = reference.source; updateFMBreadcrumb(); openFMFile(reference.path); },
     onReady: (data, { actions }) => {
@@ -483,14 +493,28 @@ export async function openFMFile(path) {
         const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
         button.addEventListener('click', () => loader(path, source, panel)); actions.append(button);
       }
+      const aiPanel = document.createElement('div'); aiPanel.style.display = 'none'; viewer.append(aiPanel);
+      const aiButton = document.createElement('button'); aiButton.type = 'button'; aiButton.textContent = 'KI-Analyse';
+      aiButton.addEventListener('click', () => loadFMAIAnalysis(path, source, aiPanel, data)); actions.append(aiButton);
       const exportButton = document.createElement('button'); exportButton.type = 'button'; exportButton.textContent = 'Export';
       exportButton.addEventListener('click', () => {
         const format = window.prompt('Export: html, docx oder md', 'html');
         if (['html', 'docx', 'md'].includes(format)) window.open(`/api/files/export/${encodeURIComponent(path)}?source=${encodeURIComponent(source)}&format=${format}`, '_blank', 'noopener');
       });
-      if (!data.truncated && ['text', 'markdown', 'json', 'table'].includes(data.kind)) actions.append(exportButton);
+      if (!data.truncated && ['text', 'markdown', 'json', 'table', 'formula'].includes(data.kind)) actions.append(exportButton);
     }
   });
+}
+
+async function goBackFMViewer() {
+  const previous = fmViewerHistory.pop();
+  if (!previous) { closeFMViewer(); return; }
+  fmCurrentSource = previous.source;
+  document.querySelectorAll('.fm-source-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.source === fmCurrentSource);
+  });
+  updateFMBreadcrumb();
+  await openFMFile(previous.path, { recordHistory: false });
 }
 
 async function loadFMHistory(path, source, container) {
@@ -590,6 +614,35 @@ async function loadFMAnalyze(path, source, container) {
   }
 }
 
+async function loadFMAIAnalysis(path, source, container, data) {
+  container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  if (container.style.display === 'none' || container.dataset.loaded) return;
+  container.replaceChildren(document.createElement('p'));
+  container.firstChild.textContent = 'Zentrale KI analysiert das Dokument ...';
+  const content = String(data?.raw_content ?? data?.content ?? '').slice(0, 16000);
+  try {
+    const response = await fetch('/api/research/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Analysiere die Datei ${source}/${path}. Fuehre keinen Code aus. Trenne Beobachtung, technische Einordnung, Risiken, offene Fragen und naechste menschliche Pruefung. Zitiere den exakten Dateipfad.`,
+        response_mode: 'scientific',
+        conversation_context: `GEZIELTE DATEI FUER DIE ANALYSE:\n[${source}/${path}]\n${content}`,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+    container.replaceChildren();
+    renderMessage(container, payload.answer || 'Keine Analyse erhalten.', []);
+    container.dataset.loaded = 'true';
+  } catch (error) {
+    const errorNode = document.createElement('p');
+    errorNode.className = 'fm-analyze-empty';
+    errorNode.textContent = `KI-Analyse nicht verfuegbar: ${error.message}`;
+    container.replaceChildren(errorNode);
+  }
+}
+
 async function loadFMMeta(path, source, container) {
   container.style.display = container.style.display === 'none' ? 'block' : 'none';
   if (container.style.display === 'none' || container.dataset.loaded) return;
@@ -656,6 +709,9 @@ function closeFMViewer() {
   viewer.classList.add('fm-viewer-hidden');
   viewer.classList.remove('fm-viewer-modal');
   document.body.classList.remove('fm-viewer-open');
+  fmViewerHistory = [];
+  fmCurrentPath = '';
+  fmCurrentFileSource = '';
 }
 
 document.addEventListener('click', event => {
@@ -678,6 +734,23 @@ export function openDocumentationFile(path) {
   updateFMBreadcrumb();
   return openFMFile(path);
 }
+
+export function openBrain5DFile(source, path) {
+  if (!['docs', 'research'].includes(source) || typeof path !== 'string') return Promise.resolve(null);
+  initFileManager();
+  fmCurrentSource = source;
+  document.querySelectorAll('.fm-source-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.source === source);
+  });
+  updateFMBreadcrumb();
+  return openFMFile(path);
+}
+
+window.openBrain5DFile = openBrain5DFile;
+document.addEventListener('brain5d:open-file', (event) => {
+  const detail = event.detail || {};
+  openBrain5DFile(detail.source, detail.path);
+});
 
 // ================================================================
 // Markdown / CSV rendering helpers
