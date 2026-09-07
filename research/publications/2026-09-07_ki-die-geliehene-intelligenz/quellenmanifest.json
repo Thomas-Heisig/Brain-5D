@@ -1,0 +1,30 @@
+{
+  "date": "2026-09-07",
+  "repository": "Thomas-Heisig/Brain-5D",
+  "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+  "uploaded_sources": [
+    {
+      "source_id": "K1",
+      "file": "Brain-5D_Scientific_Framework_v0.2(1).docx",
+      "sha256": "1377f631bc4017a9856eb3294892a7707e485f83faf7ae6636f0367f35a9e6ea",
+      "size_bytes": 810563,
+      "role": "framework_2026_08_16"
+    },
+    {
+      "source_id": "K2",
+      "file": "KI_Die_geliehene_Intelligenz_Dissertation(1).docx",
+      "sha256": "42e43749f7faa69a5c7f48da7bd48f480499e8b5fe18ec87a2b5c4bcf53928e6",
+      "size_bytes": 72167,
+      "role": "genealogy_2026_08_18"
+    },
+    {
+      "source_id": "K3",
+      "file": "KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx",
+      "sha256": "c9ef2942fa86b97d73b1b86e6c1456e0d81a6d5e8efe385501f6ab386941998b",
+      "size_bytes": 1437429,
+      "role": "control_embodiment_2026_08_21_addendum_2026_09_07"
+    }
+  ],
+  "raw_reexecution": false,
+  "repository_original_raw_downloaded": false
+}

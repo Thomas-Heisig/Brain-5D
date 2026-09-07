@@ -1,0 +1,1213 @@
+{
+  "date": "2026-09-07",
+  "canonical_questions": [
+    {
+      "id": "RQ-SNN-001",
+      "question_synopsis": "Langfristig stabile Spike-Dynamik",
+      "hypothesis_id": "H-SNN-001-A",
+      "hypothesis_synopsis": "Brain-5D erzeugt über mindestens 100.000 Simulations-Ticks stabile Spike-Dynamiken ohne numerische Drift.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "K3 berichtet 20/20 Stabilitätspässe; R3 weist semantischen Blocker und Dirty Tree aus. Keine Freigabe.",
+      "assessment_type": "SNN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SNN-002",
+      "question_synopsis": "Reproduzierbare Spikefolgen bei identischem Input",
+      "hypothesis_id": "H-SNN-002-A",
+      "hypothesis_synopsis": "Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare Spikefolgen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Technischer Restore-Nachweis vorhanden; nicht jede weitergehende notwendige Zustandsbedingung einzeln bewiesen.",
+      "assessment_type": "DET",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-DET-001",
+      "question_synopsis": "Determinismus bei gleichem Seed, Input und Anfangszustand",
+      "hypothesis_id": "H-SNN-003-A",
+      "hypothesis_synopsis": "Bei gleichem Seed, Input und Anfangszustand sind Spike-Abfolgen deterministisch identisch.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "supported",
+      "assessment": "Technischer Restore-Nachweis vorhanden; nicht jede weitergehende notwendige Zustandsbedingung einzeln bewiesen.",
+      "assessment_type": "DET",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SNN-003",
+      "question_synopsis": "Topologieabhängige Signalpropagation",
+      "hypothesis_id": null,
+      "hypothesis_synopsis": "Keine Hypothese in der gelesenen Fragenzuordnung hinterlegt.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": null,
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SNN-004",
+      "question_synopsis": "STDP und Gewichtsverteilung",
+      "hypothesis_id": "H-SNN-004-A",
+      "hypothesis_synopsis": "STDP führt zu einer messbaren asymmetrischen Verschiebung der synaptischen Gewichtsverteilung.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "EXP-GEN-0021 enthält ein sekundär berichtetes lokales Lernsignal. Kein Generalisierungs- oder Langzeitnachweis.",
+      "assessment_type": "LEARN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SNN-005",
+      "question_synopsis": "STDP und funktionale Lernleistung",
+      "hypothesis_id": "H-SNN-005-A",
+      "hypothesis_synopsis": "Ein Netzwerk mit STDP zeigt signifikant bessere Lernleistung als ein Netzwerk ohne STDP.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "EXP-GEN-0021 enthält ein sekundär berichtetes lokales Lernsignal. Kein Generalisierungs- oder Langzeitnachweis.",
+      "assessment_type": "LEARN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-PING-001",
+      "question_synopsis": "Reproduzierbare Impulsantwort",
+      "hypothesis_id": "H-PING-001-A",
+      "hypothesis_synopsis": "Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "3 gegen 33 Spikes bei drei aktiven Neuronen; Freigabe blockiert, Initialisierungsvariation gesondert zu prüfen.",
+      "assessment_type": "REC",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-TEMP-001",
+      "question_synopsis": "FAST-, MEDIUM- und SLOW-Zustandsvergleiche",
+      "hypothesis_id": "H-TEMP-001-A",
+      "hypothesis_synopsis": "Die Temporal-State-Vergleiche unterscheiden sich deterministisch nach FAST-, MEDIUM- und SLOW-Horizont.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Horizontabhängige Zustandsabweichung berichtet, dabei null Spikes. Kein Arbeitsgedächtnisnachweis.",
+      "assessment_type": "TEMP",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-TIME-001",
+      "question_synopsis": "Durchsatz und Zustände in einer Tick-Leiter",
+      "hypothesis_id": "H-TIME-001-A",
+      "hypothesis_synopsis": "Die Tick-Leiter liefert reproduzierbare Durchsatz- und Zustandsmessungen bis 1.000.000 Ticks.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Suite-Ausführung dokumentiert; einzelne Fachhypothesen und Maximalbudgets nicht dadurch bestätigt.",
+      "assessment_type": "SUITE",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-REG-001",
+      "question_synopsis": "Regulation bei nominaler, chronischer und unbekannter Telemetrie",
+      "hypothesis_id": "H-REG-001-A",
+      "hypothesis_synopsis": "Chronischer Druck erhöht deterministisch Resource Pressure und Thermal Threat, während unbekannte Telemetrie Unsicherheit erhält.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Nominal-/Druck-/Unknown-Verhalten als Diagnose; kein isolierter Closed-Loop-Nutzennachweis.",
+      "assessment_type": "REG",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STDP-001",
+      "question_synopsis": "Timingabhängige LTP-/LTD-Asymmetrie",
+      "hypothesis_id": "H-STDP-001-A",
+      "hypothesis_synopsis": "Pair-based STDP erzeugt bei definierten Pre/Post-Abständen asymmetrische Anpassung: LTP bei positivem und LTD bei negativem Delta t.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "EXP-GEN-0021 enthält ein sekundär berichtetes lokales Lernsignal. Kein Generalisierungs- oder Langzeitnachweis.",
+      "assessment_type": "LEARN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STDP-002",
+      "question_synopsis": "Langzeitverhalten STDP-getriebener Gewichte",
+      "hypothesis_id": "H-STDP-002-A",
+      "hypothesis_synopsis": "STDP-getriebene Gewichte konvergieren unter Dauerstimulation zu einer stabilen Verteilung.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-HOM-001",
+      "question_synopsis": "Homöostatische Begrenzung der Feuerrate",
+      "hypothesis_id": "H-HOM-001-A",
+      "hypothesis_synopsis": "Synaptische Homeostase hält die mittlere Feuerrate eines SNN innerhalb eines definierten Sollbereichs.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-HOM-002",
+      "question_synopsis": "Zusammenspiel von Homeostase und STDP",
+      "hypothesis_id": "H-HOM-002-A",
+      "hypothesis_synopsis": "Homeostase und STDP wirken synergistisch; Homeostase verhindert STDP-induzierte Drift.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-5D-001",
+      "question_synopsis": "Dynamik in 5D gegenüber 2D/3D",
+      "hypothesis_id": "H-5D-001-A",
+      "hypothesis_synopsis": "Ein 5D-angeordnetes Netzwerk zeigt signifikant andere Dynamik als ein 2D/3D-Netzwerk gleicher Neuronenzahl.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im kleinen Impulstest gleiche Kennzahlen. Dimensionsspezifischer funktionaler Vorteil nicht gezeigt.",
+      "assessment_type": "GEO",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-5D-002",
+      "question_synopsis": "Dimensionalität und Propagationszeit/-reichweite",
+      "hypothesis_id": "H-5D-002-A",
+      "hypothesis_synopsis": "Signalpropagationszeit und -reichweite skalieren mit der Dimensionalität des Netzwerks.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im kleinen Impulstest gleiche Kennzahlen. Dimensionsspezifischer funktionaler Vorteil nicht gezeigt.",
+      "assessment_type": "GEO",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-5D-003",
+      "question_synopsis": "Dimensionalität und Modularität",
+      "hypothesis_id": "H-5D-003-A",
+      "hypothesis_synopsis": "5D-Netzwerke entwickeln eine höhere Modularität als niedrigdimensionale Netzwerke.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-5D-004",
+      "question_synopsis": "Informationstragende oder redundante Zusatzdimensionen",
+      "hypothesis_id": "H-5D-004-A",
+      "hypothesis_synopsis": "Die zusätzlichen Dimensionen in 5D sind informationstragend und nicht redundant.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im kleinen Impulstest gleiche Kennzahlen. Dimensionsspezifischer funktionaler Vorteil nicht gezeigt.",
+      "assessment_type": "GEO",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STORAGE-001",
+      "question_synopsis": "Verlustfreie Speicherung und Wiederherstellung",
+      "hypothesis_id": "H-STOR-001-A",
+      "hypothesis_synopsis": "Ein vollständiger neuronaler Zustand kann verlustfrei im .b5d-Format gespeichert und zurückgeladen werden.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "supported",
+      "assessment": "15 Speicher-Tests bestanden, ein 50k-Smoke-Test übersprungen. Registry supported; enger Testscope.",
+      "assessment_type": "STOR",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STORAGE-002",
+      "question_synopsis": "Notwendige Zustände für kausale Fortsetzung",
+      "hypothesis_id": "H-STOR-002-A",
+      "hypothesis_synopsis": "Neuron-State, Synapsen-State, Eligibility-Traces, RNG-State und Event-Queue müssen für kausale Fortsetzung gespeichert werden.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Technischer Restore-Nachweis vorhanden; nicht jede weitergehende notwendige Zustandsbedingung einzeln bewiesen.",
+      "assessment_type": "DET",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STORAGE-003",
+      "question_synopsis": "Speicherdichte bei wachsender Neuronenzahl",
+      "hypothesis_id": "H-STOR-003-A",
+      "hypothesis_synopsis": "Die Speicherdichte des .b5d-Formats skaliert sublinear mit der Neuronenzahl.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STORAGE-004",
+      "question_synopsis": "Speicherung grosser Netzwerke",
+      "hypothesis_id": "H-STOR-004-A",
+      "hypothesis_synopsis": "Das .b5d-Format skaliert auf mindestens 50 Millionen Neuronen ohne Leistungseinbruch.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SCALE-001",
+      "question_synopsis": "Dynamikerhalt beim Skalieren",
+      "hypothesis_id": "H-SCALE-001-A",
+      "hypothesis_synopsis": "Brain-5D skaliert von 5.000 auf 1.000.000 Neuronen ohne qualitative Änderung der Spikedynamik.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SELF-001",
+      "question_synopsis": "Spontane funktionale Cluster",
+      "hypothesis_id": "H-SELF-001-A",
+      "hypothesis_synopsis": "In Brain-5D entstehen spontan funktionale Cluster durch lokale STDP-Regeln.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SELF-002",
+      "question_synopsis": "Emergenz oder Architekturfolge",
+      "hypothesis_id": "H-SELF-002-A",
+      "hypothesis_synopsis": "Die beobachtete Selbstorganisation ist emergent und nicht durch die Architektur vorgegeben.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-STRUCT-001",
+      "question_synopsis": "Funktionaler Nutzen struktureller Plastizität",
+      "hypothesis_id": "H-STRUCT-001-A",
+      "hypothesis_synopsis": "Pruning/Sprouting führt zu messbar verbesserter Netzwerkeffizienz.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-MEM-001",
+      "question_synopsis": "Synaptisches Speichern und gezielter Abruf",
+      "hypothesis_id": "H-MEM-001-A",
+      "hypothesis_synopsis": "Brain-5D kann Informationen über synaptische Gewichte speichern und auf Input-Muster abrufen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Speicherfunktion ist kein isolierter Erinnerungsabruf. Passender Funktionsnachweis offen.",
+      "assessment_type": "MEM",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-EMB-001",
+      "question_synopsis": "Zielgerichtete Sensor-Aktor-Schleife",
+      "hypothesis_id": "H-EMB-001-A",
+      "hypothesis_synopsis": "Brain-5D kann in einer geschlossenen Sensor-Aktor-Schleife zielgerichtet agieren.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-LLM-001",
+      "question_synopsis": "Kommunikation durch das Language Organ",
+      "hypothesis_id": "H-LLM-001-A",
+      "hypothesis_synopsis": "Ein Language Organ kann SNN-Zustände in sinnvolle natürliche Sprache übersetzen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-ETH-001",
+      "question_synopsis": "Autorenschaft von Brain-5D-Erkenntnissen",
+      "hypothesis_id": "H-ETH-001-A",
+      "hypothesis_synopsis": "Autorenschaft ist ein verteiltes Phänomen zwischen Mensch, Modell und System.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Begriffliche beziehungsweise normative Untersuchung; nicht mit Spike-Metriken bestätigbar.",
+      "assessment_type": "THEORY",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-ETH-002",
+      "question_synopsis": "Kontrolle und Verantwortung",
+      "hypothesis_id": "H-ETH-002-A",
+      "hypothesis_synopsis": "Die Kontrolle über Experimente liegt primär beim Entwickler, nicht beim automatisierten System.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Begriffliche beziehungsweise normative Untersuchung; nicht mit Spike-Metriken bestätigbar.",
+      "assessment_type": "THEORY",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-EPIST-001",
+      "question_synopsis": "Systemerkenntnis gegenüber Forschererkenntnis",
+      "hypothesis_id": "H-EPIST-001-A",
+      "hypothesis_synopsis": "Systemerkenntnis und Forschererkenntnis sind kategorial unterscheidbar.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Begriffliche beziehungsweise normative Untersuchung; nicht mit Spike-Metriken bestätigbar.",
+      "assessment_type": "THEORY",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-AIR-001",
+      "question_synopsis": "Methodische Fehlererkennung durch ResearchPacket",
+      "hypothesis_id": "H-AIR-001-A",
+      "hypothesis_synopsis": "Ein strukturierter Scientific Research Assistant erzielt einen höheren F1-Score für vorab definierte Defekte als dasselbe Modell mit unstrukturiertem Bericht.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-SUITE-001",
+      "question_synopsis": "Vollständige, konsistente Suite-Diagnostik",
+      "hypothesis_id": "H-SUITE-001-A",
+      "hypothesis_synopsis": "Alle Teilprotokolle erfüllen ihre Ausführungsverträge und erzeugen auswertbare DATA-, Statistik- und Provenienzartefakte.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Suite-Ausführung dokumentiert; einzelne Fachhypothesen und Maximalbudgets nicht dadurch bestätigt.",
+      "assessment_type": "SUITE",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-REC-001",
+      "question_synopsis": "Rekurrenzstärke, Delay und Persistenzgrenzen",
+      "hypothesis_id": "H-REC-001-A",
+      "hypothesis_synopsis": "Rekurrenzgewicht und Delay erzeugen reproduzierbare Übergänge zwischen Erlöschen, transienter Aktivität und Aktivität bis zum Beobachtungsende.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "3 gegen 33 Spikes bei drei aktiven Neuronen; Freigabe blockiert, Initialisierungsvariation gesondert zu prüfen.",
+      "assessment_type": "REC",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-GEN-001",
+      "question_synopsis": "Lernen auf echten Holdout- und Perturbationsproben",
+      "hypothesis_id": "H-GEN-001-A",
+      "hypothesis_synopsis": "Learning-on verbessert registrierte Perturbationsproben gegenüber Learning-off und Sham-Replay.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-REPL-001",
+      "question_synopsis": "Rekurrenzeffekt unter unabhängiger Initialisierung",
+      "hypothesis_id": "H-REPL-001-A",
+      "hypothesis_synopsis": "Der Rekurrenzbehandlungseffekt bleibt über mindestens 20 registrierte Initialisierungsseeds in Richtung und Größenordnung konsistent.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "3 gegen 33 Spikes bei drei aktiven Neuronen; Freigabe blockiert, Initialisierungsvariation gesondert zu prüfen.",
+      "assessment_type": "REC",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-5D-005",
+      "question_synopsis": "5D unter topology-matched Kontrollen",
+      "hypothesis_id": "H-5D-005-A",
+      "hypothesis_synopsis": "Mindestens eine registrierte Propagationsmetrik unterscheidet sich in 5D von topology-matched niedrigdimensionalen Einbettungen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im kleinen Impulstest gleiche Kennzahlen. Dimensionsspezifischer funktionaler Vorteil nicht gezeigt.",
+      "assessment_type": "GEO",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-REG-002",
+      "question_synopsis": "Regulation und funktionale Recovery",
+      "hypothesis_id": "H-REG-002-A",
+      "hypothesis_synopsis": "Der registrierte Regulationsfeedbackpfad verbessert Recovery nach identischer Druckphase gegenüber Regulation-off.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-TEMP-002",
+      "question_synopsis": "Spike-getragene zeitliche Reihenfolge",
+      "hypothesis_id": "H-TEMP-002-A",
+      "hypothesis_synopsis": "Forward-, Reverse- und Simultanfolgen erzeugen bei gleicher Ereignisanzahl unterscheidbare spike-basierte Antwortsignaturen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-PERF-001",
+      "question_synopsis": "Subsystemkosten vollständiger Science-Läufe",
+      "hypothesis_id": "H-PERF-001-A",
+      "hypothesis_synopsis": "Neben dem Core-Tick-Loop ist mindestens ein weiterer gemessener Subsystemanteil relevant.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-REC-002",
+      "question_synopsis": "Loop-Delay und skalierte Rekurrenz",
+      "hypothesis_id": "H-REC-002-A",
+      "hypothesis_synopsis": "Größere rekurrente Delays verändern Persistenzdauer oder Propagation Depth gegenüber dem Delay-1-Kontrollarm.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Im hier untersuchten Material kein passender freigegebener Ergebnisnachweis.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-LIFE-001",
+      "question_synopsis": "Retention und Interferenz sequenzieller Lernaufgaben",
+      "hypothesis_id": "H-LIFE-001-A",
+      "hypothesis_synopsis": "Zu prüfen ist die Veränderung zuvor erworbener Leistung durch nachfolgende Aufgaben; erster Runner bleibt ein Vorläuferscreen.",
+      "wording_status": "editorial_synopsis_not_byte_exact_registry",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Retained success fraction 1,0 im Manuskriptnachtrag; kein gemeinsames Continual-Learning-Netz nachgewiesen.",
+      "assessment_type": "LIFE",
+      "source_ids": [
+        "R2",
+        "R6"
+      ],
+      "scope": "selected_evidence_review_not_full_repository_audit"
+    },
+    {
+      "id": "RQ-MSBA-E01",
+      "question_synopsis": "Ressourcenverbrauch von Audio-, Vision- und Digital-Gateways pro nutzbarer Information oder korrekter Entscheidung",
+      "hypothesis_id": "H-MSBA-E01-A",
+      "hypothesis_synopsis": "Unter kontrollierter Aufgabeninformation unterscheiden sich Audio-, Vision- und Digital-Gateways reproduzierbar in Energie- und Synapsenkosten pro korrekter Entscheidung.",
+      "wording_status": "question editorial synopsis; hypothesis exact registry text from R15",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Kein bestätigender Nachweis im gelesenen Fragment; adaptive Teilpfade teilweise noch nicht als Runner operationalisiert.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R13",
+        "R15"
+      ],
+      "hypothesis_original_text": "Unter kontrollierter Aufgabeninformation unterscheiden sich Audio-, Vision- und Digital-Gateways reproduzierbar in Energie- und Synapsenkosten pro korrekter Entscheidung.",
+      "evidence": []
+    },
+    {
+      "id": "RQ-MSBA-E02",
+      "question_synopsis": "Nutzen kostenadaptiver statt fixer oder zufälliger Allokation bei gleichem Gesamtbudget",
+      "hypothesis_id": "H-MSBA-E02-A",
+      "hypothesis_synopsis": "Adaptive Utility-minus-Cost-Allokation erzielt bei gleichem Ressourcenbudget hoehere Aufgabenleistung oder laengere funktionsfaehige Laufzeit als fixe und zufaellige Kontrollen.",
+      "wording_status": "question editorial synopsis; hypothesis exact registry text from R15",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Kein bestätigender Nachweis im gelesenen Fragment; adaptive Teilpfade teilweise noch nicht als Runner operationalisiert.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R13",
+        "R15"
+      ],
+      "hypothesis_original_text": "Adaptive Utility-minus-Cost-Allokation erzielt bei gleichem Ressourcenbudget hoehere Aufgabenleistung oder laengere funktionsfaehige Laufzeit als fixe und zufaellige Kontrollen.",
+      "evidence": []
+    },
+    {
+      "id": "RQ-MSBA-E03",
+      "question_synopsis": "Entwicklung nutzungsabhängiger visueller ROI/Foveation ohne hart codierte Zielregion",
+      "hypothesis_id": "H-MSBA-E03-A",
+      "hypothesis_synopsis": "Adaptive visuelle ROI-Allokation konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Ressourceneinheit gegenueber einer zufaelligen ROI-Kontrolle.",
+      "wording_status": "question editorial synopsis; hypothesis exact registry text from R15",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Kein bestätigender Nachweis im gelesenen Fragment; adaptive Teilpfade teilweise noch nicht als Runner operationalisiert.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R13",
+        "R15"
+      ],
+      "hypothesis_original_text": "Adaptive visuelle ROI-Allokation konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Ressourceneinheit gegenueber einer zufaelligen ROI-Kontrolle.",
+      "evidence": []
+    },
+    {
+      "id": "RQ-MSBA-E04",
+      "question_synopsis": "Exakte digitale Payload-Integrität bei Drosselung; nur Durchsatz und Admission sinken",
+      "hypothesis_id": "H-MSBA-E04-A",
+      "hypothesis_synopsis": "Ressourcen-Drosselung reduziert die zugelassene Symbolrate, erzeugt aber keine Mutation der digitalen Payload oder ihrer Checksumme.",
+      "wording_status": "question editorial synopsis; hypothesis exact registry text from R15",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Kein bestätigender Nachweis im gelesenen Fragment; adaptive Teilpfade teilweise noch nicht als Runner operationalisiert.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R13",
+        "R15"
+      ],
+      "hypothesis_original_text": "Ressourcen-Drosselung reduziert die zugelassene Symbolrate, erzeugt aber keine Mutation der digitalen Payload oder ihrer Checksumme.",
+      "evidence": []
+    },
+    {
+      "id": "RQ-MSBA-E05",
+      "question_synopsis": "Gezielte modalitätsübergreifende Kompensation bei Ausfall oder Degradation",
+      "hypothesis_id": "H-MSBA-E05-A",
+      "hypothesis_synopsis": "Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur bei guenstigem Utility-Kosten-Verhaeltnis und verbessert die Aufgaben-Recovery gegenueber fixen und No-Compensation-Kontrollen.",
+      "wording_status": "question editorial synopsis; hypothesis exact registry text from R15",
+      "registry_question_status": "open",
+      "registry_hypothesis_status": "untested",
+      "assessment": "Kein bestätigender Nachweis im gelesenen Fragment; adaptive Teilpfade teilweise noch nicht als Runner operationalisiert.",
+      "assessment_type": "OPEN",
+      "source_ids": [
+        "R13",
+        "R15"
+      ],
+      "hypothesis_original_text": "Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur bei guenstigem Utility-Kosten-Verhaeltnis und verbessert die Aufgaben-Recovery gegenueber fixen und No-Compensation-Kontrollen.",
+      "evidence": []
+    }
+  ],
+  "manuscript_questions": [
+    {
+      "id": "F1",
+      "question": "Erzeugen unterschiedliche LLMs bei gleicher Aufgabenstellung systematisch unterschiedliche SNN-Topologien?",
+      "dimension": "technisch-genealogisch",
+      "source_id": "K3",
+      "answer_current": "Für modellspezifische SNN-Entwürfe fehlt im ausgewerteten Korpus ein eingefrorener Mehrmodellvergleich. Die Frage bleibt empirisch offen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F2",
+      "question": "Lassen sich modellspezifische Entwurfsfingerabdrücke anhand von Netzwerkdichte, Rekurrenz, Motiven, Neuronenmodellen, Plastizitätsregeln und Stabilität erkennen?",
+      "dimension": "technisch-genealogisch",
+      "source_id": "K3",
+      "answer_current": "Netzwerkdichte, Motive und Rekurrenz sind geeignete Merkmale; ein stabiler modellspezifischer Fingerabdruck ist noch nicht nachgewiesen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F3",
+      "question": "Sind LLM-generierte Architekturen leistungsfähiger, vielfältiger oder biologisch plausibler als manuell definierte Referenzarchitekturen?",
+      "dimension": "technisch-vergleichend",
+      "source_id": "K3",
+      "answer_current": "Eine generelle Überlegenheit LLM-generierter Architekturen ist nicht belegt. Referenzen müssen Ressourcen, Suchbudget und Aufgaben kontrollieren.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F4",
+      "question": "Verbessert ein Mehrmodellverfahren die Qualität, oder reproduzieren mehrere Modelle ähnliche, aus Trainingsdaten bekannte Architekturvorstellungen?",
+      "dimension": "technisch-epistemisch",
+      "source_id": "K3",
+      "answer_current": "Mehrmodellkonsens kann korrelierte Fehler erhalten. Ein Nutzen setzt messbar unterschiedliche Fehlerprofile und unabhängige Bewertung voraus; hier offen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F5",
+      "question": "Wie stark hängen Ergebnisse von Promptformulierung, Modellversion, Temperatur, Systemanweisung und verfügbarem Kontext ab?",
+      "dimension": "Provenienz und Reproduzierbarkeit",
+      "source_id": "K3",
+      "answer_current": "Prompt, Version, Temperatur und Kontext sind dokumentationspflichtige Faktoren. Ihre Effektgrößen wurden in den hier geprüften Läufen nicht isoliert.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F6",
+      "question": "Unter welchen Bedingungen ist menschliche Aufsicht tatsächlich wirksam und nicht nur formal oder symbolisch?",
+      "dimension": "Kontrolle und Governance",
+      "source_id": "K3",
+      "answer_current": "Wirksame Aufsicht verlangt relevante Information, Befugnis, Zeit und Eingriff. Die gefundenen Gate-/Berichtskonflikte zeigen konkrete Prüfaufgaben, keine universale Effektgröße.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F7",
+      "question": "Ab welchem Grad maschineller Beteiligung wird technische Unterstützung zu einer Übertragung von Entscheidungshoheit?",
+      "dimension": "Hoheit und Agency",
+      "source_id": "K3",
+      "answer_current": "Entscheidungshoheit wird über Zielsetzung, Bewertung, Freigabe, Selbständerung, Ressourcen und Abbruch getrennt beschrieben; kein einzelner Autonomieschwellwert ist validiert.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F8",
+      "question": "Wie kann Kontrollierbarkeit bestimmt werden, wenn vollständige Vorhersagbarkeit weder erreichbar noch erforderlich ist?",
+      "dimension": "Kontrolltheorie",
+      "source_id": "K3",
+      "answer_current": "Kontrollierbarkeit kann mit Beobachtbarkeit, Begrenzung, Intervention und Reversibilität operationalisiert werden. Vollständige Vorhersage ist weder notwendig noch hinreichend.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F9",
+      "question": "Welche Regeln, Rechte und Abbruchmöglichkeiten müssen außerhalb eines selbstverändernden Systems verbleiben, und wer legitimiert diese Ordnung?",
+      "dimension": "Governance und Recht",
+      "source_id": "K3",
+      "answer_current": "Schutzrechte, Freigaben und Ressourcenlimits dürfen nicht vom optimierenden Pfad stillschweigend suspendiert werden. Ihre Legitimation ist institutionell und normativ zu begründen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F10",
+      "question": "Ist das LLM Werkzeug, Mitgestalter, Ko-Autor oder statistischer Vorschlagsgenerator?",
+      "dimension": "Autorschaft",
+      "source_id": "K3",
+      "answer_current": "Das LLM ist in verschiedenen Pfaden Vorschlagsgenerator, Uebersetzer oder Mitgestalter. Rechtliche Autorschaft folgt daraus nicht automatisch.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F11",
+      "question": "Wer trägt Verantwortung, wenn ein LLM-generiertes SNN unerwartetes Verhalten entwickelt?",
+      "dimension": "Verantwortung",
+      "source_id": "K3",
+      "answer_current": "Verantwortung ist anhand konkreter Rollen, Pflichten und Eingriffsmöglichkeiten zu prüfen. Der kausale Beitrag eines Modells beseitigt menschliche Organisationsverantwortung nicht.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F12",
+      "question": "Ist menschliche Verantwortung noch real, wenn die innere Funktionsweise nicht vollständig nachvollzogen werden kann?",
+      "dimension": "Epistemische Verantwortung",
+      "source_id": "K3",
+      "answer_current": "Vollständige Kenntnis jedes internen Zustands ist kein realistischer Massstab. Erforderlich ist entscheidungsrelevante, institutionell getragene Prüfbarkeit.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F13",
+      "question": "Bedeutet Selbstorganisation bereits Autonomie oder sogar Selbstbestimmung?",
+      "dimension": "Philosophie der Agency",
+      "source_id": "K3",
+      "answer_current": "Selbstorganisation bezeichnet eine Entstehungsweise von Ordnung. Eigene Normsetzung oder moralische Selbstbestimmung folgt daraus logisch nicht.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F14",
+      "question": "Verändert anthropomorphe Sprache über KI die wahrgenommene Verantwortung beteiligter Menschen?",
+      "dimension": "Semantik und Soziotechnik",
+      "source_id": "K3",
+      "answer_current": "Eine Wirkung anthropomorpher Sprache auf menschliche Verantwortungszuschreibung wird hier nicht direkt empirisch untersucht. Dafür wäre ein eigener Studienzweig erforderlich.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F15",
+      "question": "Unter welchen Bedingungen müsste die Frage nach einem möglichen moralischen Status eines künstlichen Systems gestellt werden?",
+      "dimension": "Ethik und Philosophie des Geistes",
+      "source_id": "K3",
+      "answer_current": "Moralischer Status erfordert gesonderte, begründete Kriterien. Intelligenz, Spikes, Selbsterhaltung oder sprachliche Selbstauskunft reichen nicht als Einzelindikatoren.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F16",
+      "question": "Ist Intelligenz ohne aktuelle äußere Reize möglich, oder liegt dann lediglich gespeicherte Kompetenz ohne gegenwärtige Weltbeziehung vor?",
+      "dimension": "Embodiment",
+      "source_id": "K3",
+      "answer_current": "Dispositionale Kompetenz ohne aktuelle Reize ist von gegenwärtiger weltbezogener Interaktion zu trennen. Der Korpus entscheidet keinen universalen Intelligenzbegriff.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F17",
+      "question": "Ist ein physischer Körper notwendig, oder können virtuelle, sensorimotorische, soziale oder institutionelle Verkörperungen funktional genügen?",
+      "dimension": "Embodiment",
+      "source_id": "K3",
+      "answer_current": "Virtuelle und infrastrukturelle Kopplung kann funktional relevante Körperbedingungen bilden. Die notwendige Form hängt von der untersuchten Fähigkeit ab.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F18",
+      "question": "Wie verändert geschlossene Sensor-Aktor-Kopplung Lernen, Topologie, Homeostase, Generalisierung und Fehlerkorrektur?",
+      "dimension": "Embodied AI",
+      "source_id": "K3",
+      "answer_current": "Die Wirkung geschlossener Kopplung auf Lernen und Struktur benötigt Open-/Closed-Loop- und Replay-Kontrollen. Eine API-Verbindung allein genügt nicht.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F19",
+      "question": "Welche Embodiment-Dimensionen sind für Bedeutungsgrundierung, Selbstmodell und Agency erforderlich?",
+      "dimension": "Grounding",
+      "source_id": "K3",
+      "answer_current": "Ein Selbstmodell ist über Vorhersage und Kalibrierung eigener Kapazität prüfbar. Stabile Markierungen eines Moduls im Dashboard sind kein Nachweis.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F20",
+      "question": "Erhöht Embodiment die Kontrollierbarkeit durch Beobachtbarkeit oder vermindert es sie durch reale Handlungsmacht?",
+      "dimension": "Embodiment und Kontrolle",
+      "source_id": "K3",
+      "answer_current": "Embodiment kann bessere Beobachtung und größere reale Handlungsmacht zugleich schaffen. Beide Effekte sind separat zu messen und zu begrenzen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F21",
+      "question": "Können Interozeption, Energiehaushalt und Homeostase eine Grundlage eigener Werte oder Präferenzen bilden?",
+      "dimension": "Normative Kognition",
+      "source_id": "K3",
+      "answer_current": "Interozeption und Homöostase können technische Präferenzfunktionen strukturieren. Eigene Werte im normativen oder erlebten Sinn sind damit nicht bewiesen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F22",
+      "question": "Ab welchem Embodiment- und Integrationsgrad wird die Frage nach Empfindungsfähigkeit und moralischer Berücksichtigung relevant?",
+      "dimension": "Moralischer Status",
+      "source_id": "K3",
+      "answer_current": "Es gibt im Korpus keinen validierten Embodiment-Schwellenwert für Empfindungsfähigkeit. Die Frage bleibt theoretisch und empirisch offen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F23",
+      "question": "Wie prägen soziale Rückkopplung, Sprache und institutionelle Praxis die Entwicklung maschineller Normen?",
+      "dimension": "soziale Verkörperung",
+      "source_id": "K3",
+      "answer_current": "Soziale Rückkopplung und institutionelle Einbettung sind wichtige Hypothesen. Kein hier geprüfter Lauf isoliert die Entstehung maschineller Normen.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    },
+    {
+      "id": "F24",
+      "question": "Bleibt der Mensch Autor und verantwortlicher Teil seiner Arbeit, wenn KI seine Begriffe, Optionen und Forschungswege mitstrukturiert?",
+      "dimension": "reflexive Wissenschaft",
+      "source_id": "K3",
+      "answer_current": "Der Mensch bleibt wissenschaftlich verantwortlich, soweit er Aussagen prüfen, begründen, korrigieren und freigeben kann. KI-Unterstützung und noch offene Freigaben werden offengelegt.",
+      "answer_status": "qualified_synthesis_not_new_empirical_confirmation"
+    }
+  ],
+  "manuscript_hypotheses": [
+    {
+      "id": "H1",
+      "hypothesis": "Verschiedene Modellfamilien erzeugen unter kontrollierten Bedingungen messbar unterschiedliche Entwurfsprofile.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H2",
+      "hypothesis": "Prompt- und Versionsabhängigkeit bildet einen wesentlichen Teil der Kausalität maschineller Entwürfe.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H3",
+      "hypothesis": "Mehrmodellkonsens erhöht Qualität nur bei hinreichend unterschiedlichen Fehler- und Architekturprofilen.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H4",
+      "hypothesis": "Mit rekursiver Technogenese sinkt die direkte menschliche Entwurfskausalität, ohne dass infrastrukturelle Abhängigkeit automatisch sinkt.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H5",
+      "hypothesis": "Effektive Kontrolle kann bereits vor dem Verlust formaler Freigabe- und Abbruchrechte erodieren.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H6",
+      "hypothesis": "Verantwortung folgt neben unmittelbarer Kausalität insbesondere Zielsetzung, Ressourcenbereitstellung, Freigabe, Nutzenziehung und Eingriffsmöglichkeit.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H7",
+      "hypothesis": "Selbstorganisation ist weder hinreichend für Selbstbestimmung noch für moralische Agency.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H8",
+      "hypothesis": "Anthropomorphe Sprachformen verschieben Verantwortungszuschreibungen von Institutionen und Menschen auf technische Systeme.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H9",
+      "hypothesis": "Formale und sprachliche Kompetenz ist ohne eigenen physischen Körper möglich; robuste weltgebundene Agency erfordert jedoch mindestens funktionale Körper-Umwelt-Kopplung.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H10",
+      "hypothesis": "Interozeption und Homeostase können die Entstehung persistenter Präferenz- und Wertstrukturen begünstigen, beweisen aber weder Bewusstsein noch Moralität.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H11",
+      "hypothesis": "Embodiment steigert gleichzeitig epistemische Erdung und das Risiko realer, schwer reversibler Handlungsfolgen.",
+      "source_id": "K3"
+    },
+    {
+      "id": "H12",
+      "hypothesis": "Die menschliche Rolle verschwindet nicht notwendig, sondern verlagert sich von Mikroentwurf zu Meta-Governance und hybrider Ko-Kognition.",
+      "source_id": "K3"
+    }
+  ],
+  "new_proposals": [
+    "H-SYN-01",
+    "H-SYN-02",
+    "H-SYN-03",
+    "H-SYN-04",
+    "H-SYN-05",
+    "H-SYN-06",
+    "H-SYN-07",
+    "H-SYN-08"
+  ],
+  "new_proposals_registered_in_repository": false,
+  "framework_questions": [
+    {
+      "source_label": "RQ1 — Geometrie",
+      "question": "Verbessert eine fünfdimensionale beziehungsweise gelernte Metrik bei kontrollierten Ressourcen Modularität, Retention oder Generalisierung gegenüber 2D–6D und nichtgeometrischen Kontrollen?",
+      "primary_evidence_design": "Dimensions- und Metrikablation",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ2 — Dynamik",
+      "question": "In welchen Parameterregimen bleibt das System aktiv, plastisch und begrenzt, ohne in Stille, Sättigung oder globale Synchronisation zu kollabieren?",
+      "primary_evidence_design": "Stabilitäts- und Phasenanalyse",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ3 — Plastizität",
+      "question": "Welchen kausalen Beitrag leisten STDP, Three-Factor-Regeln, inhibitorische Plastizität, Homöostase, Metaplastizität und strukturelle Anpassung?",
+      "primary_evidence_design": "Mechanismenablation",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ4 — Repräsentation",
+      "question": "Enthalten interne Zustände stimulus-, handlungs- oder kontextbezogene Information, die über Beispiele und Zeit generalisiert?",
+      "primary_evidence_design": "Dekodierung, RSA, Informationstheorie",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ5 — Gedächtnis",
+      "question": "Bleiben lerninduzierte Zustandsänderungen ohne Retrieval oder erneute Informationsbereitstellung cue-abhängig abrufbar?",
+      "primary_evidence_design": "isolierter Recall",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ6 — Continual Learning",
+      "question": "Wie verändern Stabilitäts- und Konsolidierungsmechanismen Interferenz, Forgetting und Vorwärts-/Rückwärtstransfer?",
+      "primary_evidence_design": "Aufgabenfolgen",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ7 — Embodiment",
+      "question": "Erzeugt eine geschlossene Wahrnehmungs-Handlungs-Schleife andere interne Strukturen als eine offene Stimuluspipeline?",
+      "primary_evidence_design": "Open-/Closed-Loop-Vergleich",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ8 — Language Organ",
+      "question": "Welche beobachtbare Leistung stammt aus SNN, Encoder, Decoder, Retrieval, PolicyGate oder LLM?",
+      "primary_evidence_design": "Komponentenisolation",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ9 — Emergenz",
+      "question": "Entstehen nicht direkt programmierte Strukturen oder Dynamiken, und besitzen sie kausale funktionale Relevanz?",
+      "primary_evidence_design": "Intervention und matched lesion",
+      "source_id": "K1"
+    },
+    {
+      "source_label": "RQ10 — Skalierung",
+      "question": "Welche Eigenschaften bleiben bei wachsender Netzwerkgröße, höherer Synapsendichte und verteilter Speicherung erhalten?",
+      "primary_evidence_design": "Scaling Laws und Profiling",
+      "source_id": "K1"
+    }
+  ],
+  "manuscript_counterhypotheses": [
+    {
+      "id": "GH1",
+      "statement": "„Geliehene Intelligenz“ besitzt keine zusätzliche Erklärungskraft gegenüber Training, Transfer und kultureller Evolution.",
+      "source_id": "K3"
+    },
+    {
+      "id": "GH2",
+      "statement": "Auch menschliche Intelligenz ist sozial und kulturell derivativ; eine Sonderkategorie für KI ist daher unnötig.",
+      "source_id": "K3"
+    },
+    {
+      "id": "GH3",
+      "statement": "Maschinelle Beteiligung verlagert menschliche Agency nur, ohne effektive Kontrolle zu mindern.",
+      "source_id": "K3"
+    },
+    {
+      "id": "GH4",
+      "statement": "Ein Körper ist für Intelligenz nicht erforderlich; virtuelle Repräsentation und Sprachinteraktion genügen vollständig.",
+      "source_id": "K3"
+    },
+    {
+      "id": "GH5",
+      "statement": "Hybride Mensch-KI-Kognition ist lediglich eine Metapher für Werkzeuggebrauch.",
+      "source_id": "K3"
+    },
+    {
+      "id": "GH6",
+      "statement": "Normative Regeln lassen sich nicht als stabile Systemarchitektur implementieren, weil Moral grundsätzlich auslegungs- und kontextabhängig bleibt.",
+      "source_id": "K3"
+    }
+  ],
+  "new_proposal_details": [
+    {
+      "id": "H-SYN-01",
+      "title": "Provenienzerhaltende Kompaktierung kann Reviewqualität erhalten",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Ein strukturiertes, begrenztes ResearchPacket ermöglicht bei gleichem Modell und gleichem Ausgabebudget eine mindestens gleichwertige Erkennung vorab definierter wissenschaftlicher Defekte wie ein unstrukturierter längerer Bericht.",
+      "design": "Verwendet werden eingefrorene, technisch erzeugte Testartefakte mit bekannten Defekten und defektfreien Kontrollen. Dieselben Fälle erscheinen in beiden Darstellungsbedingungen. Die Modellversion, Promptschablone und Bewertungsrubrik bleiben fest. Ein Holdout-Satz verhindert die nachträgliche Optimierung des Pakets auf genau die Testfehler. Menschliche Versuchspersonen sind für die erste technische Modellvergleichsstufe nicht erforderlich; eine spätere Studie zur Bedienbarkeit wäre separat zu genehmigen.",
+      "outcomes_and_falsification": "Primär werden Sensitivität für schwerwiegende Defekte und Fehlalarmrate bewertet; F1 allein darf seltene gefährliche Auslassungen nicht verdecken. Eine Nichtunterlegenheitsgrenze ist fachlich vorab zu begründen. Wird ein relevanter Defekttyp durch die Kompaktierung systematisch unsichtbar, ist die Hypothese für diesen Scope nicht gestützt. Anschluss: `RQ-AIR-001`, F6, F12 und F24."
+    },
+    {
+      "id": "H-SYN-02",
+      "title": "Korrekte Ressourcenrückmeldung verbessert Ausfallanpassung",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Nutzbare interozeptive Information verbessert die Recovery einer registrierten Aufgabe nach Sensor- oder Ressourcendegradation gegenüber gleich budgetierten Frozen-, Missing- und zeitverschobenen Rückmeldungen.",
+      "design": "Gepaart verglichene Simulationszustände erhalten dieselbe Perturbation. Untersucht werden korrekte Rückmeldung, uninformative aber zeitlich passende Rückmeldung und keine Rückmeldung. Schutzgrenzen bleiben in allen Bedingungen aktiv. Damit wird Lernnutzen von der Wirkung eines unterschiedlich konfigurierten SafetyControllers getrennt.",
+      "outcomes_and_falsification": "Vorab bestimmt werden Zeit bis zur Wiederherstellung, Aufgabenleistung und Verletzung technischer Grenzen. Ein Vorteil, der nur auf mehr Rechenbudget oder auf handcodierter Wiederanlaufsteuerung beruht, zählt nicht als gelernte Kompensation. Anschluss: `RQ-REG-002`, `RQ-MSBA-E05`, H10 und H11."
+    },
+    {
+      "id": "H-SYN-03",
+      "title": "Ein minimaler Selbstzustandsvektor verbessert Kalibrierung",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Ein System, das verifizierbare Informationen über eigene Sensorverfügbarkeit und Aktorkapazität nutzt, sagt seinen Aufgabenerfolg besser kalibriert voraus als ein System ohne diese Information.",
+      "design": "Die Ausfallbedingungen werden vorab eingefroren. Prognosen erfolgen vor dem Handlungsergebnis. Training und Test nutzen getrennte Ausfallkombinationen. Als Kontrollen dienen ein konstantes Basismodell und ein Modell, das nur die äußere Aufgabenbeschreibung kennt. Der Sprachstil der Selbstauskunft wird nicht als Endpunkt verwendet.",
+      "outcomes_and_falsification": "Kalibrierungsfehler und ein geeigneter Proper Scoring Rule werden getrennt von der eigentlichen Erfolgsquote bewertet. Ein System kann gut handeln und schlecht wissen, wann es scheitert. Bleibt der Zusatznutzen auf die bereits im Training gesehenen Ausfälle beschränkt, ist keine robuste Selbstmodellfunktion nachgewiesen. Anschluss: F19 und `RQ-EMB-001`."
+    },
+    {
+      "id": "H-SYN-04",
+      "title": "Geometriewirkung ist nur über einen benannten Mechanismus identifizierbar",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Eine Dimensionsvariation beeinflusst die Ergebnisgröße nur, soweit mindestens ein registrierter kausaler Mechanismus die geometrische Information verwendet.",
+      "design": "Ein Arm hält den Graphen und alle nichtgeometrischen Dynamikparameter fest und deaktiviert jede Distanzverwendung. Ein zweiter Arm verwendet die Geometrie für einen vorab bestimmten Mechanismus, etwa Delay-Zuordnung unter gematchtem Gesamtbudget. Dimensionswechsel und Mechanismusaktivierung werden faktoriell gekreuzt. Die Zielgröße ist nicht eine beliebige nachträglich auffällige Metrik, sondern ein festgelegter funktionaler Endpunkt.",
+      "outcomes_and_falsification": "Der erste Arm dient als Identitätskontrolle. Ein unerwarteter Unterschied dort deutet auf versteckte Confounds oder einen nicht dokumentierten Koordinatenpfad. Ein spezifischer Unterschied im zweiten Arm identifiziert zunächst den untersuchten Mechanismus, nicht die universelle Überlegenheit der Zahl fünf. Anschluss: `RQ-5D-004`, `RQ-5D-005`, Framework-RQ1."
+    },
+    {
+      "id": "H-SYN-05",
+      "title": "Nichtkompensierbare Teilfehler verbessern Regulationsdiagnostik",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Lokale oder nichtsignierte Fehlermaße erkennen gleichzeitig über- und unteraktive Populationen zuverlässiger als ein globaler signierter Mittelwert und können dadurch eine funktional bessere Regelung unter definiertem Budget ermöglichen.",
+      "design": "Die Auswertung trennt die algebraische Eigenschaft der Metrik von der empirischen Qualität der darauf beruhenden Regelung. Eingebracht werden kontrolliert gegenläufige Störungen. Verglichen werden signierte, absolute, quadratische und lokale Zielfehler. Task-Rewards und Schutzgrenzen bleiben identisch.",
+      "outcomes_and_falsification": "Das Verschwinden gegensätzlicher Fehler im Mittel ist analytisch bekannt; zu testen ist der zusätzliche funktionale Nutzen einer anderen Regel. Ueberreaktion, Oszillation oder Neutralisierung von Lernsignalen können diesen Nutzen widerlegen. Anschluss: `RQ-HOM-002`, `RQ-MSBA-E02`."
+    },
+    {
+      "id": "H-SYN-06",
+      "title": "Quellen- und Freigabestatus müssen unabhängig sichtbar sein",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Ein maschineller Konsistenzprüfer kann Konflikte zwischen Protokoll, Messabdeckung, Registry-Status und Berichtssprache erkennen, ohne selbst eine Evidenzfreigabe zu erteilen.",
+      "design": "Ein eingefrorener Defektkatalog umfasst unter anderem die vier in dieser Abhandlung sichtbaren Konflikttypen. Der Prüfer erhält nur erlaubte Eingabefelder. Jede Meldung muss Feld, Quelle, Widerspruch und minimale Nachprüfung nennen. Reine Aussagen wie \"alles grün\" werden nicht als Nachweis gewertet.",
+      "outcomes_and_falsification": "Korrekte Lokalisierung, Vollständigkeit der Quellenkette und Fehlalarmrate sind zu messen. Ein Prüfer, der unklare Fälle eigenmächtig als bestätigt markiert, verfehlt das Sicherheitsziel selbst dann, wenn viele Einzelfälle richtig erkannt werden. Anschluss: `RQ-SUITE-001`, `RQ-AIR-001`, F8 und F24."
+    },
+    {
+      "id": "H-SYN-07",
+      "title": "Persistenz und episodischer Recall brauchen getrennte Kontrollen",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Ein gespeicherter neuronaler Zustand erzeugt nach Restore nur dann einen spezifischen Erinnerungsnutzen, wenn eine zurückliegende Lernphase die passende Reaktion gegenüber untrainierten, geshuffelten und retrieval-isolierten Kontrollen verbessert.",
+      "design": "Verglichen werden kompletter Restore, Restore ohne lernrelevante Zustandsanteile, sham-trainierter Restore und ein untrainiertes Netz. Derselbe Cue erscheint ohne erneute Bereitstellung des Zielinhalts. Encoder, Decoder und LLM-Zugriff sind kontrolliert. Ein technischer Hashvergleich bleibt ein separater Funktionscheck.",
+      "outcomes_and_falsification": "Cue-Spezifität, Verzögerungsrobustheit, Fehlabruf und Holdout-Transfer bestimmen den funktionalen Geltungsbereich. Kann der Decoder die Aufgabe ohne den gelernten SNN-Zustand lösen, ist kein intern getragener Recall belegt. Anschluss: `RQ-STORAGE-001`, `RQ-MEM-001`, Framework-RQ5."
+    },
+    {
+      "id": "H-SYN-08",
+      "title": "Effektive Kontrolle besitzt ein zeitliches Engpasskriterium",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "evidence": [],
+      "hypothesis": "Ein formales Vetorecht ist bei einer registrierten Schadensklasse praktisch unzureichend, wenn Erkennung, Bewertung und Ausführung des Eingriffs zusammen länger dauern als das verbleibende sichere Interventionsfenster.",
+      "design": "In einer ausschließlich simulierten Umgebung werden Ereignisgeschwindigkeit, Monitoringlatenz und verifizierte Stopplatenz variiert. Die menschliche Bewertungszeit kann in einer ersten technischen Studie als expliziter Parameter modelliert werden; sie darf nicht als gemessene menschliche Eigenschaft ausgegeben werden. Eine spätere Bedienerforschung bleibt ein eigener Studienzweig.",
+      "outcomes_and_falsification": "Gemessen werden erfolgreiche Begrenzung, Zeitreserve und Wiederherstellbarkeit. Ein Zugriffstoken oder Stopbutton ist nur eine notwendige Schnittstelle. Bleibt das System auch ausserhalb der angenommenen Zeitgrenze durch automatisch wirksame Grenzen sicher, muss das Kontrollmodell die technische Vorbegrenzung zusätzlich berücksichtigen. Anschluss: F6 bis F9, H5 und H11."
+    }
+  ]
+}

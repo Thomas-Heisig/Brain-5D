@@ -1,0 +1,442 @@
+% Brain-5D: extracted display-equation snippets, not a standalone document.
+% Use with amsmath and read each equation together with its status in the treatise.
+
+% Formula 1 | Closed-Loop-System
+\[
+o_{t} = h\left( e_{t} \right),x_{t + 1} = F\left( x_{t},o_{t},r_{t} \right),a_{t} = \pi\left( x_{t} \right),e_{t + 1} = G\left( e_{t},a_{t},\omega_{t} \right).
+\]
+
+% Formula 2 | Beziehungen
+\[
+\begin{gathered}\text{SourceRecord}\to\text{KnowledgeItem}\to\text{StimulusPlan}\to\text{Episode}\\ \to X_t\to\text{SignalFrame}\to\text{Interpretation}\to\text{Response}\end{gathered}
+\]
+
+% Formula 3 | Kausale Architektur des Language Organs
+\[
+\text{SNN} \rightarrow \text{SignalFrame} \rightarrow \text{Monitor} \rightarrow \text{Logging}
+\]
+
+% Formula 4 | Kausale Architektur des Language Organs
+\[
+\text{SignalFrame} \rightarrow \text{LLM} \rightarrow \text{FeedbackProposal} \rightarrow \text{PolicyGate} \rightarrow \text{StimulusPlan} \rightarrow \text{SNN}.
+\]
+
+% Formula 5 | Autoritätshierarchie
+\[
+\text{Sensor} < \text{Interpreter} < \text{RuntimeController} < \text{PolicyGate} < \text{SafetyController}.
+\]
+
+% Formula 6 | Failure Containment
+\[
+{Failure}_{external} \nRightarrow {Failure}_{SNN}.
+\]
+
+% Formula 7 | Wohldefiniertheit und numerische Konvergenz
+\[
+E_{\Delta t}=d\!\left(O_{\Delta t},O_{\Delta t/2}\right)
+\]
+
+% Formula 8 | Zustandsraum
+\[
+X_{t} = \left( X_{t}^{N},X_{t}^{S},X_{t}^{P},X_{t}^{H},X_{t}^{E},X_{t}^{A},X_{t}^{R},X_{t}^{M} \right)
+\]
+
+% Formula 9 | Flüsse und Sprünge
+\[
+\dot{x} = f_{q}(x,u,\xi;\theta),x \in C_{q},
+\]
+
+% Formula 10 | Flüsse und Sprünge
+\[
+(x_{\mathrm{post}},q_{\mathrm{post}})=g_q(x,u,\xi;\theta),\quad x\in D_q
+\]
+
+% Formula 11 | Flüsse und Sprünge
+\[
+X_{t + 1} = F_{q_{t}}\left( X_{t},U_{t},\Xi_{t};\Theta \right),q_{t + 1} = G\left( q_{t},X_{t},E_{t} \right)
+\]
+
+% Formula 12 | Zeitbegriffe
+\[
+t_{n}
+\]
+
+% Formula 13 | Zeitbegriffe
+\[
+t_{p}
+\]
+
+% Formula 14 | Zeitbegriffe
+\[
+t_{s}
+\]
+
+% Formula 15 | Zeitbegriffe
+\[
+t_{e}
+\]
+
+% Formula 16 | Zeitbegriffe
+\[
+t_{w}
+\]
+
+% Formula 17 | Adressraum und Materialisierung
+\[
+p_{i} = \left( x_{i},y_{i},z_{i},a_{i},b_{i} \right) \in A_{5}.
+\]
+
+% Formula 18 | Adressraum und Materialisierung
+\[
+\left| A_{5} \right| = L^{5}.
+\]
+
+% Formula 19 | Adressraum und Materialisierung
+\[
+N_{t} \subseteq A_{5},\left| N_{t} \right| \ll \left| A_{5} \right|
+\]
+
+% Formula 20 | Allgemeine Metrik
+\[
+d_{M}\left( p_{i},p_{j} \right) = \sqrt{\delta_{ij}^{\top}M\delta_{ij}}.
+\]
+
+% Formula 21 | Allgemeine Metrik
+\[
+d_{ij} = \sqrt{\lambda_{x}\Delta x^{2} + \lambda_{y}\Delta y^{2} + \lambda_{z}\Delta z^{2} + \lambda_{a}\Delta a^{2} + \lambda_{b}\Delta b^{2}}
+\]
+
+% Formula 22 | Allgemeine Metrik
+\[
+M = diag\left( \lambda_{x},\lambda_{y},\lambda_{z},\lambda_{a},\lambda_{b} \right).
+\]
+
+% Formula 23 | Lernbare Metrik
+\[
+M = L^{\top}L + \varepsilon I,\varepsilon > 0.
+\]
+
+% Formula 24 | Lernbare Metrik
+\[
+L_{metric} = L_{task} + \alpha tr(M) + \beta \parallel M - I \parallel_{F}^{2} - \gamma\log\det(M).
+\]
+
+% Formula 25 | Formale Graphdefinition
+\[
+G_{t} = \left( V_{t},E_{t},W_{t},D_{t},T_{t},R_{t} \right),
+\]
+
+% Formula 26 | Verbindungswahrscheinlichkeit
+\[
+P_{t}(i \rightarrow j) = \sigma\left( \beta_{0} - \beta_{d}d_{M}\left( p_{i},p_{j} \right) + \beta_{c}C_{ij}(t) + \beta_{h}H_{ij}(t) + \beta_{r}R_{ij}(t) \right),
+\]
+
+% Formula 27 | Verbindungswahrscheinlichkeit
+\[
+P(i \rightarrow j) = P_{0}e^{- \frac{d_{M}}{\sigma_{d}}}
+\]
+
+% Formula 28 | Izhikevich-Modell
+\[
+\frac{dv_{i}}{dt} = 0.04v_{i}^{2} + 5v_{i} + 140 - u_{i} + I_{i}(t),
+\]
+
+% Formula 29 | Izhikevich-Modell
+\[
+\frac{du_{i}}{dt} = a_{i}\left( b_{i}v_{i} - u_{i} \right).
+\]
+
+% Formula 30 | Izhikevich-Modell
+\[
+v_{i} \leftarrow c_{i},u_{i} \leftarrow u_{i} + d_{i}.
+\]
+
+% Formula 31 | Leaky Integrate-and-Fire
+\[
+\tau_{m}\frac{dV_{i}}{dt} = - \left( V_{i} - E_{L} \right) + R_{m}I_{i}(t).
+\]
+
+% Formula 32 | Adaptive Exponential Integrate-and-Fire
+\[
+C\dot{V} = - g_{L}\left( V - E_{L} \right) + g_{L}\Delta_{T}\exp\left( \frac{V - V_{T}}{\Delta_{T}} \right) - w + I(t),
+\]
+
+% Formula 33 | Adaptive Exponential Integrate-and-Fire
+\[
+\tau_{w}\dot{w} = a\left( V - E_{L} \right) - w.
+\]
+
+% Formula 34 | Eingangsströme, Verzögerungen und Synapsentypen
+\[
+I_{i}(t) = I_{i}^{ext}(t) + \sum_jw_{ji}(t)k_{ji}\left( t - t_{j}^{spike} - \delta_{ji} \right) + I_{i}^{mod}(t) + \eta_{i}(t),
+\]
+
+% Formula 35 | Populationsstabilität und E/I-Balance
+\[
+B_{EI}(t) = \frac{\sum_{(i,j)\in E_{exc}}\left| w_{ij}(t) \right|}{\sum_{(i,j)\in E_{inh}}\left| w_{ij}(t) \right| + \epsilon}
+\]
+
+% Formula 36 | Pair-based STDP
+\[
+\Delta w(\Delta t)=A_p\exp(-\Delta t/\tau_p),\qquad \Delta t>0
+\]
+
+% Formula 37 | Pair-based STDP
+\[
+\Delta w(\Delta t)=-A_d\exp(\Delta t/\tau_d),\qquad \Delta t<0
+\]
+
+% Formula 38 | Gewichtsgrenzen und Soft Bounds
+\[
+w_{ij} \leftarrow clip\left( w_{ij} + \Delta w,w_{min},w_{max} \right).
+\]
+
+% Formula 39 | Eligibility und Three-Factor Learning
+\[
+\tau_{e}{\dot{e}}_{ij} = - e_{ij} + \phi\left( s_{i}^{pre},s_{j}^{post} \right)
+\]
+
+% Formula 40 | Eligibility und Three-Factor Learning
+\[
+{\dot{w}}_{ij} = \eta m(t)e_{ij}(t)
+\]
+
+% Formula 41 | Intrinsische Plastizität
+\[
+\theta_{i}(t + \Delta t) = \theta_{i}(t) + \eta_{h}\left( \bar{r}_{i}(t) - r_i^{\star} \right).
+\]
+
+% Formula 42 | Metaplastizität
+\[
+\tau_{\theta}{\dot{\theta}}_{i} = \bar{r}_{i}^{2} - \theta_{i},
+\]
+
+% Formula 43 | Synapsenentstehung
+\[
+\text{create}_{ij} = 1\left\lbrack d_{M}(i,j) < d_{max} \right\rbrack1\left\lbrack B_{t}^{syn} > 0 \right\rbrack1\left\lbrack C_{ij} > C_{min} \right\rbrack \cdot Bernoulli\left( P_{ij} \right).
+\]
+
+% Formula 44 | Pruning
+\[
+\left| w_{ij}(t) \right| < w_{prune},U_{ij}(t) < u_{min},age_{ij} > T_{grace}
+\]
+
+% Formula 45 | Neurogenese
+\[
+G_{r} = \alpha O_{r} + \beta E_{r} + \gamma D_{r} + \zeta U_{r} - \delta C_{r},
+\]
+
+% Formula 46 | Ressourcenmodell
+\[
+C_{t} = c_{N}\left| V_{t} \right| + c_{E}\left| E_{t} \right| + c_{P}N_{spike}(t) + c_{U}N_{update}(t) + c_{G}N_{struct}(t) + c_{IO}B_{IO}(t).
+\]
+
+% Formula 47 | Ressourcenmodell
+\[
+C_{t} \leq C_{max},\left| V_{t} \right| \leq N_{max},\left| E_{t} \right| \leq S_{max}.
+\]
+
+% Formula 48 | Lokale lineare Analyse
+\[
+\rho\left( J_{F}\left( x^{\star} \right) \right) < 1,
+\]
+
+% Formula 49 | Empirische Perturbationsanalyse
+\[
+D(\tau) = E\left\lbrack \parallel \Phi_{\tau}\left( X_{t} + \delta \right) - \Phi_{\tau}\left( X_{t} \right) \parallel \right\rbrack,
+\]
+
+% Formula 50 | Bifurkations- und Phasenkarten
+\[
+\Pi(\vartheta) \in \{\text{silent},\text{irregular},\text{metastable},\text{synchronous},\text{runaway},\text{resource-collapse}\}.
+\]
+
+% Formula 51 | Emergenz ist keine Erklärung
+\[
+Y = f\left( X_{1},\ldots,X_{n} \right)
+\]
+
+% Formula 52 | Interventionelle Prüfung
+\[
+{ACE}_{C} = E\left\lbrack Q|do(C = 1) \right\rbrack - E\left\lbrack Q|do(C = 0) \right\rbrack.
+\]
+
+% Formula 53 | Kausalgraph des Gesamtsystems
+\[
+\text{Stimulus} \rightarrow X_{t} \rightarrow \text{Action} \rightarrow \text{Environment}_{t + 1},
+\]
+
+% Formula 54 | Entropie und Mutual Information
+\[
+H(Y) = - \sum_{y}^{}p(y)\log p(y).
+\]
+
+% Formula 55 | Entropie und Mutual Information
+\[
+I(Z;Y) = \sum_{z,y}^{}p(z,y)\log\frac{p(z,y)}{p(z)p(y)}.
+\]
+
+% Formula 56 | Bedingte Information und Confounds
+\[
+I\left( Z;Y|X \right).
+\]
+
+% Formula 57 | Gedächtnisdefinition
+\[
+M_{K} = \left( R_{K},C_{K},S_{K},G_{K} \right)
+\]
+
+% Formula 58 | Gedächtnisdefinition
+\[
+Q_{M} = \left( R_{K}C_{K}S_{K}G_{K} \right)^{\frac{1}{4}}
+\]
+
+% Formula 59 | Continual-Learning-Metriken
+\[
+F_{i} = \max_{j < i}Q_{i,j} - Q_{i,K}.
+\]
+
+% Formula 60 | Continual-Learning-Metriken
+\[
+F_i^{\mathrm{post}}=\max_{i\leq j\leq K}Q_{i,j}-Q_{i,K}.
+\]
+
+% Formula 61 | Continual-Learning-Metriken
+\[
+\text{BWT} = \frac{1}{K - 1}\sum_{i = 1}^{K - 1}\left( Q_{i,K} - Q_{i,i} \right),
+\]
+
+% Formula 62 | Continual-Learning-Metriken
+\[
+\text{FWT} = \frac{1}{K - 1}\sum_{i = 2}^{K}\left( Q_{i,i - 1} - b_{i} \right),
+\]
+
+% Formula 63 | Minimalmodell
+\[
+{\hat{s}}_{t + 1} = f_{\psi}\left( s_{t},a_{t} \right),
+\]
+
+% Formula 64 | Minimalmodell
+\[
+{\hat{o}}_{t + 1} = g_{\omega}\left( s_{t},a_{t} \right).
+\]
+
+% Formula 65 | Wissenschaftliche Funktion
+\[
+S_{v}:\left( \text{SpikeEvents},X_{\left\lbrack t_{0},t_{1} \right\rbrack},\text{RegionSchema} \right) \rightarrow \text{SignalFrame}_{v},
+\]
+
+% Formula 66 | Metrikdefinitionen
+\[
+r_{pop} = \frac{N_{spike}}{N_{neurons}\left( t_{1} - t_{0} \right)}.
+\]
+
+% Formula 67 | Rolle und Nicht-Rolle
+\[
+\text{Language Organ} ≢ \text{Brain-5D Core}.
+\]
+
+% Formula 68 | Decoder als Hypothesengenerator
+\[
+\text{SpikeEvents} \rightarrow \text{SignalFrame} \rightarrow \text{Decoder} \rightarrow \text{Interpretation}
+\]
+
+% Formula 69 | Encoder und StimulusPlan
+\[
+\text{Text} \rightarrow \text{SemanticObject} \rightarrow \text{StimulusPlan} \rightarrow \text{InputEvents}.
+\]
+
+% Formula 70 | Speichergrößen
+\[
+S_{N} = Nb_{N}.
+\]
+
+% Formula 71 | Speichergrößen
+\[
+S_{edges} = Nk.
+\]
+
+% Formula 72 | Checkpoint plus Delta
+\[
+X_{t} = Replay\left( C_{t_{0}},\{\Delta_{t_{0} + 1},\ldots,\Delta_{t}\} \right),
+\]
+
+% Formula 73 | Checkpoint plus Delta
+\[
+S(T) = n_{C}S_{C} + \sum_{e \in E_{T}}^{}S_{e} + S_{index} + S_{provenance}.
+\]
+
+% Formula 74 | Fidelity-Dimensionen
+\[
+E_{state} = \frac{\parallel X_{t} - {\hat{X}}_{t} \parallel_{W}}{\parallel X_{t} \parallel_{W} + \epsilon}
+\]
+
+% Formula 75 | EXP-GEN-0021 als explorativer Ausgangspunkt
+\[
+\Delta w=0{,}5172804698-0{,}05=0{,}4672804698.
+\]
+
+% Formula 76 | EXP-GEN-0021 als explorativer Ausgangspunkt
+\[
+100\cdot\Delta w/0{,}05=934{,}5609396\,\%.
+\]
+
+% Formula 77 | Ressourcenmodell ohne Scheingenauigkeit
+\[
+U(a)=\widehat{Q}(a)-\lambda_C C(a)-\lambda_L L(a)-\lambda_R R(a),
+\]
+
+% Formula 78 | Gemeinsames Versuchsschema
+\[
+\text{Baseline} \rightarrow \text{Intervention} \rightarrow \text{Learning} \rightarrow \text{Consolidation} \rightarrow \text{Isolation} \rightarrow \text{Evaluation} \rightarrow \text{Ablation}.
+\]
+
+% Formula 79 | Outcome-Zerlegung
+\[
+Q_{total} = Q_{retrieval} + Q_{decoder} + Q_{SNN} + Q_{interaction} + \varepsilon
+\]
+
+% Formula 80 | Komplexitätsmodell
+\[
+T_{tick} = O\left( N_{integrated} \right) + O\left( S_{event} \right) + O\left( P_{plasticity} \right) + O\left( G_{structural} \right) + O\left( IO_{dirty} \right).
+\]
+
+% Formula 81 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+X_{t}
+\]
+
+% Formula 82 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+p_{i}
+\]
+
+% Formula 83 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+M
+\]
+
+% Formula 84 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+G_{t}
+\]
+
+% Formula 85 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+d_{M}
+\]
+
+% Formula 86 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+d_{G}
+\]
+
+% Formula 87 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+e_{ij}
+\]
+
+% Formula 88 | Übernommene Vorlage: Anhang E — Abkürzungen und Symbole
+\[
+Q
+\]

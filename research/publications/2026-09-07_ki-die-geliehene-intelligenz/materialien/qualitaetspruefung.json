@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-07",
+  "scope": "document/file validation; not scientific peer review",
+  "rendered_pages": 165,
+  "page_bounds_issues": 0,
+  "visual_review": "Page images reviewed across the production renders; changed sections rechecked after correction. No known clipping or missing table rows remains.",
+  "word_bookmarks": 1025,
+  "word_internal_targets_missing": [],
+  "markdown_explicit_anchors": 981,
+  "markdown_internal_targets_missing": [],
+  "markdown_local_assets_missing": [],
+  "original_file_sha256": [
+    {
+      "id": "K1",
+      "match": true
+    },
+    {
+      "id": "K2",
+      "match": true
+    },
+    {
+      "id": "K3",
+      "match": true
+    }
+  ],
+  "parseable_json_files_before_quality_report": 12,
+  "bibtex_records_parsed_by_pandoc": 311,
+  "duplicate_bibtex_ids": false,
+  "table_cell_texts_checked": 612,
+  "table_cell_texts_not_matched": [],
+  "native_math_objects": 235,
+  "figures_in_word": 8,
+  "new_brain5d_experiments": false,
+  "raw_event_reanalysis": false,
+  "full_external_literature_verification": false,
+  "human_author_final_approval_asserted": false,
+  "note": "Page count is reference-render dependent. An invisible refs bookmark was restored at the consolidated bibliography without changing layout."
+}
