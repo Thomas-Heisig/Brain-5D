@@ -15,16 +15,18 @@ When documents disagree, use this order:
 
 Passing tests prove engineering behavior covered by those tests; they do not automatically establish a scientific claim.
 
-## Current baseline — 2026-09-06
+## Current baseline — 2026-09-07
 
 - canonical branch: `main`
 - package version: `0.5.0a7`
-- current pytest collection: **791 tests**
+- latest verified Python suite: **825 passed, 5 skipped**
+- latest verified browser suite: **5 passed** with Chromium
 - Research Catalog / variable-projection-dimension merge: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - Python matrix: **3.11 / 3.12 / 3.13**
 - Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security, Scientific Integrity, wheel and Docker checks remain mandatory CI gates
 - post-merge CI is authoritative for the merged baseline; do not describe it as fully green until the corresponding `main` run completes
+- GitHub `main` is canonical; the configured Hugging Face mirror is synchronized from this branch after repository changes
 - historical experiment DATA/EVID remains unchanged by documentation or registry cleanup
 
 Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.

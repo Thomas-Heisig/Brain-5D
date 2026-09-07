@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 GitHub/Hugging Face mirror synchronization
+
+- [x] Refresh the current baseline in `README.md`, `docs/README.md` and `HF_README.md`.
+- [x] Document GitHub `main` as canonical and Hugging Face as the derived mirror.
+- [x] Configure the optional mirror workflow to publish Git LFS objects with the source tree.
+
 ## 2026-09-07 Chromium browser checks
 
 - [x] Provide a reproducible Playwright + Chromium installation path.

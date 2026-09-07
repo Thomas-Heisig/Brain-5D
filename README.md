@@ -12,13 +12,15 @@ Brain-5D is a research framework for studying learning, self-organization and em
 
 ## Current `main` baseline
 
-Updated on **2026-09-06** after the Research Catalog / variable-projection-dimension merge:
+Updated on **2026-09-07** after the dashboard release workflow, runtime profiling and repository verification updates:
 
 - package version: `0.5.0a7`
-- current pytest collection: **791 tests**
+- latest verified Python suite: **825 passed, 5 skipped**
+- latest verified browser suite: **5 passed** with Chromium
 - Research Catalog / variable-dimension merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - the merge-triggered `main` CI is the authoritative verification for the new baseline; do not infer success until that run completes
+- GitHub `main` is the canonical source; the configured Hugging Face mirror is updated from this branch after repository changes
 - Python verification matrix: **3.11, 3.12 and 3.13**
 - Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Scientific Integrity, security, wheel and Docker are mandatory CI gates
 - PR #21 is merged; no scientific DATA/EVID was rewritten by the integration

@@ -2,7 +2,13 @@
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-06
+**Updated:** 2026-09-07
+
+## 2026-09-07 GitHub/Hugging Face mirror synchronization
+
+- Refreshed the current baseline in the project, documentation and Hugging Face READMEs.
+- Kept GitHub `main` as the canonical source and documented the Hugging Face mirror as a derived publication target.
+- Updated the optional mirror workflow to include Git LFS objects when publishing the current source tree.
 
 ## 2026-09-07 Full-stack dashboard E2E verification
 

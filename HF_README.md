@@ -26,15 +26,17 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 
 > Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests, reachable devices or available neural pipelines are not the same as scientific evidence.
 
-## Current baseline — 2026-09-06
+## Current baseline — 2026-09-07
 
 - version: `0.5.0a7`
 - Python: 3.11–3.13
-- pytest collection: **791 tests**
+- latest verified Python suite: **825 passed, 5 skipped**
+- latest verified browser suite: **5 passed** with Chromium
 - Research Catalog / variable-projection-dimension integration is merged to `main`
 - merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: run #598, success
 - the post-merge CI run is authoritative for the merged baseline and must complete before that baseline is described as fully green
+- GitHub `main` is canonical; this file is published as the Hugging Face repository README during mirror synchronization
 
 ## Capabilities
 

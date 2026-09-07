@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — GitHub/Hugging Face mirror synchronization
+
+- Refreshed the project and Hugging Face baseline documentation to the current `main` status.
+- Kept GitHub `main` canonical while publishing `HF_README.md` as the Hugging Face repository README.
+- Updated the optional mirror workflow to include Git LFS objects during synchronization.
+
 ## 2026-09-07 — Repository catalog audit CI report
 
 - Added a reproducible repository-wide RQ/H audit report in Markdown and JSON.
