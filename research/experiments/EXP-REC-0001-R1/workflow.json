@@ -1,0 +1,43 @@
+{
+  "experiment_id": "EXP-REC-0001-R1",
+  "research_question": "RQ-REC-001",
+  "hypothesis": "H-REC-001-A",
+  "title": "Recurrence map v1 full registered grid",
+  "conditions": "Recurrent weight x delay grid with zero-weight control; frozen seeds 42-61.",
+  "ticks": 256,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "protocol": "recurrence_map_v1",
+  "resolved_runner": "run_recurrence_map",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 256,
+    "observed_min": 256,
+    "observed_max": 256
+  },
+  "notes": "Full PREREG-REC-001 weight x delay x seed grid.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

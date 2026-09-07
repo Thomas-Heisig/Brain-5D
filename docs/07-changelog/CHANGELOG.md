@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-07 — Recurrence/propagation validation executed
+
+- Ran the registered multi-seed recurrence map: 300 runs, 20 seeds, full weight×delay grid, 256 ticks per run, zero runtime errors.
+- Results are stored in `research/experiments/EXP-REC-0001-R1` with deterministic statistics and review-pending evidence status.
+
+## 2026-09-07 — Dashboard batch HTTP contract coverage
+
+- Added an end-to-end HTTP contract test for workflow catalog and batch routes.
+- Verified structured batch responses independently of browser availability.
+
 ## 2026-09-07 — Batch service contract coverage
 
 - Added tests for sequential batch execution, individual protocol parameters and partial child failures.
@@ -9,7 +19,8 @@
 
 - Restored the explicit ExperimentMode lifecycle branch required by the frontend contract.
 - Added the frozen RQ-SNN-001 stability protocol to the operational protocol test expectations.
-- Full current-head test suite is green: 793 passed, 5 skipped, 0 failed.
+- Full current-head test suite is green: 795 passed, 5 skipped, 0 failed.
+- Added HTTP coverage for workflow catalog and batch routes.
 
 ## 2026-09-07 — Dissertation results synchronization
 

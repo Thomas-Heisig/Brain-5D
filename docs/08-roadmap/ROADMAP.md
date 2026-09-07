@@ -4,6 +4,18 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Recurrence/propagation validation executed
+
+- Executed frozen `recurrence_map_v1` / `PREREG-REC-001` as `EXP-REC-0001-R1`.
+- Completed 300 runs across 20 seeds, five recurrent weights including the zero control, and three delays at 256 ticks.
+- Observed immediate decay, transient recurrence and persistent-to-window classes without runtime errors; human review and EVID promotion remain open.
+
+## 2026-09-07 Dashboard batch HTTP contract coverage
+
+- Added HTTP coverage for the experiment workflow catalog route and batch POST route.
+- The route contract now verifies structured workflow responses independently of browser automation.
+- Batch service tests cover sequential order, per-protocol parameters and partial failure isolation.
+
 ## 2026-09-07 Batch service contract coverage
 
 - Added automated coverage for sequential protocol order, per-protocol Seeds/Ticks and child failure isolation.
@@ -14,7 +26,12 @@
 
 - Fixed the stale frontend ExperimentMode lifecycle contract.
 - Updated the operational protocol contract test for the new frozen `RQ-SNN-001` stability protocol.
-- Current head verification: 793 passed, 5 skipped, 0 failed.
+- Current head verification: 795 passed, 5 skipped, 0 failed.
+
+## 2026-09-07 Batch route verification
+
+- Added an HTTP contract test for the workflow catalog and batch POST routes.
+- Current head verifies structured batch responses independently of browser availability.
 
 ## 2026-09-07 Dissertation results synchronization
 

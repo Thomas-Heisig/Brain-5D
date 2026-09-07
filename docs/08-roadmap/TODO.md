@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dashboard batch HTTP contract coverage
+
+- [x] Test workflow catalog GET route.
+- [x] Test batch POST route and structured workflow response.
+- [x] Keep browser-independent route coverage for the batch workflow.
+- [ ] Add browser E2E coverage for the interactive batch dialog.
+
 ## 2026-09-07 Batch service contract coverage
 
 - [x] Test sequential protocol execution order.
@@ -202,10 +209,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 793 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
+- [x] 795 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
-- [x] Confirm the final current-head `main` CI after the documentation refresh: 793 passed, 5 skipped, 0 failed.
+- [x] Confirm the final current-head `main` CI after the documentation refresh: 795 passed, 5 skipped, 0 failed.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
@@ -260,7 +267,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Persist tick, neuron, synapse and recurrence metrics in new DATA.
 - [x] Add direct verification that fails when ticks, spikes or synaptic delivery are absent.
 - [x] Keep historical zero-observation experiments immutable.
-- [ ] Execute the registered multi-seed recurrence/propagation validation experiment.
+- [x] Execute the registered multi-seed recurrence/propagation validation experiment: `EXP-REC-0001-R1`, 300 runs, 20 seeds, full weight×delay grid, 0 runtime errors.
 - [ ] Independently review the result before any EVID promotion.
 
 ## P0 — closed-loop embodiment evidence
