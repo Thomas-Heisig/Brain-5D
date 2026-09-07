@@ -2,8 +2,8 @@
   "status": "clean",
   "audit": {
     "clean": false,
-    "question_reference_count": 971,
-    "hypothesis_reference_count": 794,
+    "question_reference_count": 1149,
+    "hypothesis_reference_count": 983,
     "missing_questions": [
       "RQ-AI-DESIGN-001",
       "RQ-AI-EFF-001",
@@ -42,6 +42,14 @@
       "H-GW-06",
       "H-MISSING-001",
       "H-MSBA-E",
+      "H-SYN-01",
+      "H-SYN-02",
+      "H-SYN-03",
+      "H-SYN-04",
+      "H-SYN-05",
+      "H-SYN-06",
+      "H-SYN-07",
+      "H-SYN-08",
       "H-TEST-001-A"
     ],
     "link_issues": []
@@ -316,7 +324,90 @@
         "tests/test_experiment_validity.py",
         "tests/test_neural_symbiosis.py",
         "tests/test_research_catalog_audit.py",
-        "tests/test_research_question_maturity.py"
+        "tests/test_research_question_maturity.py",
+        "tests/test_research_report_generation.py"
+      ]
+    }
+  },
+  "publication_proposals": {
+    "H-SYN-01": {
+      "reason": "Review-packet compaction proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-02": {
+      "reason": "Resource-feedback recovery proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-03": {
+      "reason": "Self-state calibration proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-04": {
+      "reason": "Geometry-mechanism proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-05": {
+      "reason": "Local regulation-error proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-06": {
+      "reason": "Source and approval-status consistency proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-07": {
+      "reason": "Persistence versus episodic-recall proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-SYN-08": {
+      "reason": "Intervention-window proposal; not preregistered and no evidence.",
+      "status": "PROPOSED_NOT_REGISTERED",
+      "references": [
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json",
+        "research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+        "research/publications/reader/section-035.md",
+        "research/registry/catalog_audit_allow_list.yaml"
       ]
     }
   },

@@ -5,10 +5,10 @@
 The canonical ResearchRegistry remains authoritative. Historical/design references and test-only fixtures are listed with explicit reasons; an unknown missing identifier fails CI.
 
 ## Summary
-- Question references: 971
-- Hypothesis references: 794
+- Question references: 1149
+- Hypothesis references: 983
 - Missing questions: 24
-- Missing hypotheses: 12
+- Missing hypotheses: 20
 - Registry link issues: 0
 - Disallowed missing identifiers: 0
 
@@ -52,7 +52,18 @@ The canonical ResearchRegistry remains authoritative. Historical/design referenc
 - `RQ-DUP-001`: Duplicate-registry test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_registry_fragments.py`
 - `RQ-EXTRA-E01`: Registry-fragment test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_registry_fragments.py`
 - `RQ-MISSING-001`: Catalog-audit negative test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_catalog_audit.py`
-- `RQ-TEST-001`: Catalog-audit test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_dashboard_batch_routes.py`, `tests/test_experiment_validity.py`, `tests/test_neural_symbiosis.py`, `tests/test_research_catalog_audit.py`, `tests/test_research_question_maturity.py`
+- `RQ-TEST-001`: Catalog-audit test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_dashboard_batch_routes.py`, `tests/test_experiment_validity.py`, `tests/test_neural_symbiosis.py`, `tests/test_research_catalog_audit.py`, `tests/test_research_question_maturity.py`, `tests/test_research_report_generation.py`
+
+## Publication proposals - not registered or executed
+
+- `H-SYN-01`: Review-packet compaction proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-02`: Resource-feedback recovery proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-03`: Self-state calibration proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-04`: Geometry-mechanism proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-05`: Local regulation-error proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-06`: Source and approval-status consistency proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-07`: Persistence versus episodic-recall proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
+- `H-SYN-08`: Intervention-window proposal; not preregistered and no evidence. Sources: `research/publications/2026-09-07_ki-die-geliehene-intelligenz/forschungsfragen_hypothesen.json`, `research/publications/2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md`, `research/publications/reader/section-035.md`, `research/registry/catalog_audit_allow_list.yaml`
 
 ## Failures
 
