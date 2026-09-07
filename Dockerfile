@@ -46,5 +46,5 @@ COPY scripts/ scripts/
 # Expose dashboard port
 EXPOSE 8765
 
-# Default: show help
-CMD ["python", "-m", "src.main", "--help"]
+# Hugging Face Spaces starts the integrated dashboard from this command.
+CMD ["python", "-m", "src.main", "--config", "configs/poc_config.yaml", "--dashboard-host", "0.0.0.0", "--dashboard-port", "8765"]

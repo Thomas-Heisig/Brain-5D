@@ -384,9 +384,9 @@ class RuntimeController:
         if elapsed_ms < 0.0:
             raise ValueError("elapsed_ms must be non-negative")
         with self._lock:
-            self._phase_totals_ms[phase] = (
-                self._phase_totals_ms.get(phase, 0.0) + float(elapsed_ms)
-            )
+            self._phase_totals_ms[phase] = self._phase_totals_ms.get(
+                phase, 0.0
+            ) + float(elapsed_ms)
 
     def remove_hook(self, hook: PostTickHook) -> bool:
         """Remove a previously registered hook.

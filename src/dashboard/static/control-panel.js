@@ -21,6 +21,8 @@
 
 "use strict";
 
+import { readJson } from "./api-client.js";
+
 // ============================================================================
 // DOM Helpers
 // ============================================================================
@@ -138,7 +140,7 @@ export class ControlAPI {
         ...(options.headers || {}),
       },
     });
-    const data = await response.json();
+    const data = await readJson(response);
     if (!response.ok || data.ok === false) {
       throw new Error(data.error || data.message || `HTTP ${response.status}`);
     }
@@ -496,7 +498,7 @@ export class ControlPanel {
     try {
       const r = await fetch('/api/structural/status', { cache: 'no-store' });
       if (r.ok) {
-        const d = await r.json();
+        const d = await readJson(r);
         configured = d.configured === true;
       }
     } catch {
@@ -506,7 +508,7 @@ export class ControlPanel {
       try {
         const r = await fetch('/api/structural/config', { cache: 'no-store' });
         if (r.ok) {
-          const d = await r.json();
+          const d = await readJson(r);
           configEnabled = d.enabled === true;
         }
       } catch {
@@ -655,7 +657,7 @@ export class ControlPanel {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
-        const data = await response.json();
+        const data = await readJson(response);
         if (!response.ok || data.ok === false) {
           throw new Error(data.error || data.message || `HTTP ${response.status}`);
         }
@@ -679,7 +681,7 @@ export class ControlPanel {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ enabled: nextEnabled }),
         });
-        const data = await response.json();
+        const data = await readJson(response);
         if (!response.ok || data.ok === false) {
           throw new Error(data.error || data.message || `HTTP ${response.status}`);
         }

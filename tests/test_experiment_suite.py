@@ -7,8 +7,8 @@ import pytest
 import yaml
 
 from src.research.experiment_suite import (
-    run_learning_repeat,
     run_5d,
+    run_learning_repeat,
     run_ping,
     run_ping_v2,
     run_regulation,
@@ -80,7 +80,9 @@ def test_regulation_runner_is_reproducible_and_fail_closed() -> None:
     assert pressure.metrics["drives"]["drives"]["resource_pressure"] is not None
 
 
-def test_regulation_runner_keeps_host_telemetry_experiment_only_and_explicitly_unknown() -> None:
+def test_regulation_runner_keeps_host_telemetry_experiment_only_and_explicitly_unknown() -> (
+    None
+):
     runs = run_regulation(
         _config(),
         seeds=(42,),

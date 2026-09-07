@@ -27,6 +27,7 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 - Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Security, Scientific Integrity, wheel and Docker checks remain mandatory CI gates
 - post-merge CI is authoritative for the merged baseline; do not describe it as fully green until the corresponding `main` run completes
 - GitHub `main` is canonical; the configured Hugging Face mirror is synchronized from this branch after repository changes
+- Live dashboard Space: https://huggingface.co/spaces/superdigger/Brain-5D-Space
 - historical experiment DATA/EVID remains unchanged by documentation or registry cleanup
 
 Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They recorded zero observable activity under the older probe contract. Current instrumentation measures published spike IDs plus tick, neuron and synaptic-event activity and persists those fields in new experiment DATA.

@@ -6,6 +6,7 @@ import json
 import re
 import subprocess
 from pathlib import Path
+from typing import Any, NotRequired, TypedDict, cast
 
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$")
 _DATED_TITLE_RE = re.compile(
@@ -19,86 +20,107 @@ _SOURCE_SPECS = (
 )
 
 
-def _parse_document(path: Path, source: str) -> list[dict[str, object]]:
-    entries: list[dict[str, object]] = []
-    current: dict[str, object] | None = None
+class TimelineItem(TypedDict):
+    """A documented milestone, not an inferred scientific finding."""
 
-    def flush() -> None:
-        if current is not None:
-            entries.append(current.copy())
+    text: str
+    done: bool | None
 
+
+class TimelineEntry(TypedDict):
+    """A release milestone with explicit document provenance."""
+
+    date: str | None
+    title: str
+    sources: list[str]
+    items: list[TimelineItem]
+    phase: NotRequired[str]
+
+
+class TimelineSource(TypedDict):
+    """Availability of a canonical timeline document."""
+
+    name: str
+    path: str
+    available: bool
+
+
+class ReleaseTimeline(TypedDict):
+    """JSON-serializable release timeline API response."""
+
+    entries: list[TimelineEntry]
+    sources: list[TimelineSource]
+    as_of: str
+
+
+def _parse_document(path: Path, source: str) -> list[TimelineEntry]:
+    entries: list[TimelineEntry] = []
+    current: TimelineEntry | None = None
     for line in path.read_text(encoding="utf-8").splitlines():
         heading = _HEADING_RE.match(line)
         if heading:
-            flush()
+            if current is not None:
+                entries.append(current)
             heading_text = heading.group(1).strip()
             dated = _DATED_TITLE_RE.match(heading_text)
             current = {
                 "date": dated.group("date") if dated else None,
                 "title": dated.group("title").strip() if dated else heading_text,
-                "source": source,
+                "sources": [source],
                 "items": [],
             }
-            continue
-
-        if current is None:
-            continue
-        bullet = _BULLET_RE.match(line.strip())
-        if not bullet:
-            continue
-        items = current["items"]
-        if not isinstance(items, list):
-            continue
-        checked = bullet.group("checked")
-        items.append(
-            {
-                "text": bullet.group("text").strip(),
-                "done": None if checked is None else checked.lower() == "x",
-            }
-        )
-
-    flush()
+        elif current is not None and (bullet := _BULLET_RE.match(line.strip())):
+            checked = bullet.group("checked")
+            current["items"].append(
+                {
+                    "text": bullet.group("text").strip(),
+                    "done": None if checked is None else checked.lower() == "x",
+                }
+            )
+    if current is not None:
+        entries.append(current)
     return entries
 
 
-def _release_entries(repo_root: Path) -> list[dict[str, object]]:
+def _release_entries(repo_root: Path) -> list[TimelineEntry]:
     releases_dir = repo_root / "releases"
     if not releases_dir.is_dir():
         return []
-
-    entries: list[dict[str, object]] = []
+    entries: list[TimelineEntry] = []
     known_versions: set[str] = set()
     for path in sorted(releases_dir.glob("*.json")):
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            raw: object = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        if not isinstance(data, dict):
+        if not isinstance(raw, dict):
             continue
-
+        data = cast(dict[str, Any], raw)
         version = str(data.get("version") or path.stem)
         known_versions.add(version)
         title = str(data.get("title") or "Release")
         status = str(data.get("status") or "unknown")
-        items: list[dict[str, object]] = []
-        scope = data.get("scope")
+        items: list[TimelineItem] = []
+        scope: object = data.get("scope")
         if isinstance(scope, list):
-            items.extend({"text": str(item), "done": status == "released"} for item in scope)
+            items.extend(
+                {"text": str(item), "done": status == "released"}
+                for item in cast(list[object], scope)
+            )
         for field in ("subtitle", "note"):
-            value = data.get(field)
+            value: object = data.get(field)
             if isinstance(value, str) and value:
                 items.append({"text": value, "done": status == "released"})
-
+        date: object = data.get("date")
         entries.append(
             {
-                "date": data.get("date") if isinstance(data.get("date"), str) else None,
-                "title": f"{version} · {title}",
+                "date": date if isinstance(date, str) else None,
+                "title": f"{version} \u00b7 {title}",
                 "sources": ["RELEASE"],
                 "items": items,
                 "phase": "current" if status == "development" else "past",
             }
         )
-
     try:
         tags = subprocess.run(
             [
@@ -111,10 +133,11 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=10,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         tags = None
-    if tags is not None:
+    if tags is not None and tags.returncode == 0:
         for line in tags.stdout.splitlines():
             tag, commit, date = (line.split("|", 2) + ["", "", ""])[:3]
             version = tag.removeprefix("brain5d-core-").removeprefix("v")
@@ -123,9 +146,11 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
             entries.append(
                 {
                     "date": date or None,
-                    "title": f"{version} · Historical tagged release",
+                    "title": f"{version} \u00b7 Historical tagged release",
                     "sources": ["RELEASE"],
-                    "items": [{"text": f"Tag {tag} · commit {commit}", "done": True}],
+                    "items": [
+                        {"text": f"Tag {tag} \u00b7 commit {commit}", "done": True}
+                    ],
                     "phase": "past",
                 }
             )
@@ -133,108 +158,71 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
     return entries
 
 
-def _entry_phase(entry: dict[str, object], as_of: str) -> str:
+def _entry_phase(entry: TimelineEntry, as_of: str) -> str:
     explicit_phase = entry.get("phase")
     if explicit_phase in {"past", "current", "future"}:
         return str(explicit_phase)
-
-    date = entry.get("date")
-    if not isinstance(date, str) or not date:
-        title = str(entry.get("title") or "")
-        return "current" if title == "Current engineering baseline" else "future"
+    date = entry["date"]
+    if not date:
+        return (
+            "current" if entry["title"] == "Current engineering baseline" else "future"
+        )
     if date > as_of:
         return "future"
-    if date < as_of:
+    if date < as_of or "TODO" not in entry["sources"]:
         return "past"
-
-    sources = entry.get("sources")
-    source_names = set(sources) if isinstance(sources, list) else set()
-    if "TODO" not in source_names:
-        return "past"
-
-    items = entry.get("items")
-    checks = (
-        [item for item in items if isinstance(item, dict) and isinstance(item.get("done"), bool)]
-        if isinstance(items, list)
-        else []
+    return (
+        "current" if any(item["done"] is False for item in entry["items"]) else "past"
     )
-    return "current" if any(item.get("done") is False for item in checks) else "past"
 
 
-def build_release_timeline(repo_root: Path) -> dict[str, object]:
-    """Return merged timeline entries and their document provenance.
-
-    Matching date/title sections are merged so the same release milestone
-    documented in ROADMAP and CHANGELOG appears once with both sources.
-    """
-
-    sources: list[dict[str, object]] = []
-    merged: dict[tuple[str, str], dict[str, object]] = {}
-
+def build_release_timeline(repo_root: Path) -> ReleaseTimeline:
+    """Merge matching date/title sections without losing source provenance."""
+    sources: list[TimelineSource] = []
+    merged: dict[tuple[str, str], TimelineEntry] = {}
     for source, relative_path in _SOURCE_SPECS:
         path = repo_root / relative_path
-        available = path.is_file()
-        sources.append({"name": source, "path": relative_path, "available": available})
-        if not available:
+        sources.append(
+            {"name": source, "path": relative_path, "available": path.is_file()}
+        )
+        if not path.is_file():
             continue
-
         for entry in _parse_document(path, source):
-            date = str(entry["date"] or "")
-            title = str(entry["title"])
-            key = (date, re.sub(r"\s+", " ", title).casefold())
+            key = (entry["date"] or "", re.sub(r"\s+", " ", entry["title"]).casefold())
             existing = merged.get(key)
             if existing is None:
-                existing = {
-                    "date": entry["date"],
-                    "title": title,
-                    "sources": [source],
-                    "items": [],
-                }
-                merged[key] = existing
-            else:
-                existing_sources = existing["sources"]
-                if isinstance(existing_sources, list) and source not in existing_sources:
-                    existing_sources.append(source)
-
-            existing_items = existing["items"]
-            entry_items = entry["items"]
-            if not isinstance(existing_items, list) or not isinstance(entry_items, list):
+                merged[key] = entry
                 continue
-            for item in entry_items:
-                if not isinstance(item, dict):
-                    continue
-                item_text = str(item.get("text", ""))
+            if source not in existing["sources"]:
+                existing["sources"].append(source)
+            for item in entry["items"]:
                 matching = next(
                     (
                         candidate
-                        for candidate in existing_items
-                        if isinstance(candidate, dict) and candidate.get("text") == item_text
+                        for candidate in existing["items"]
+                        if candidate["text"] == item["text"]
                     ),
                     None,
                 )
                 if matching is None:
-                    existing_items.append(dict(item))
-                elif item.get("done") is True:
+                    existing["items"].append(item.copy())
+                elif item["done"] is True:
                     matching["done"] = True
-
-    release_source = repo_root / "releases"
-    sources.append({"name": "RELEASE", "path": "releases/", "available": release_source.is_dir()})
+    sources.append(
+        {
+            "name": "RELEASE",
+            "path": "releases/",
+            "available": (repo_root / "releases").is_dir(),
+        }
+    )
     for entry in _release_entries(repo_root):
-        key = (str(entry.get("date") or ""), str(entry.get("title") or "").casefold())
-        merged[key] = entry
-
-    dated_entries = [
-        str(entry["date"])
-        for entry in merged.values()
-        if isinstance(entry.get("date"), str) and entry["date"]
-    ]
-    as_of = max(dated_entries) if dated_entries else ""
+        merged[(entry["date"] or "", entry["title"].casefold())] = entry
+    as_of = max((entry["date"] or "" for entry in merged.values()), default="")
     for entry in merged.values():
         entry["phase"] = _entry_phase(entry, as_of)
-
     entries = sorted(
         merged.values(),
-        key=lambda entry: (str(entry.get("date") or ""), str(entry.get("title") or "")),
+        key=lambda entry: (entry["date"] or "", entry["title"]),
         reverse=True,
     )
     return {"entries": entries, "sources": sources, "as_of": as_of}

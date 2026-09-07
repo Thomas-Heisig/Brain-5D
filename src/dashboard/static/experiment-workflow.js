@@ -53,6 +53,17 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
         <small>1–32 Dimensionen für externe/MSBA-Projektionsräume. Der persistierte produktive SNN-Core bleibt aus Kompatibilitätsgründen derzeit 5D.</small>
       </div>`;
     host.insertAdjacentElement("beforebegin", catalog);
+    for (const [field, label] of Object.entries({domain: "Domain", status: "Status", evidence_status: "Evidenzpruefung", experiment_progress: "Versuchsfortschritt"})) {
+      const wrapper = document.createElement("label");
+      wrapper.textContent = label;
+      const select = document.createElement("select");
+      select.dataset.catalogFacet = field;
+      select.setAttribute("aria-label", label);
+      select.add(new Option("Alle", ""));
+      select.addEventListener("change", () => this._renderResearchCatalog());
+      wrapper.appendChild(select);
+      catalog.querySelector(".research-catalog-controls").appendChild(wrapper);
+    }
 
     const style = document.createElement("style");
     style.dataset.researchCatalogStyle = "true";
@@ -117,11 +128,19 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     const search = (byId("workflow-research-search")?.value || "").trim().toLowerCase();
     const operationalOnly = Boolean(byId("workflow-research-operational")?.checked);
     const selected = this.elements.question?.value || "";
+    const facets = [...document.querySelectorAll("[data-catalog-facet]")];
+    for (const select of facets) {
+      const value = select.value;
+      const options = [...new Set(this.questions.map((item) => item[select.dataset.catalogFacet]).filter(Boolean))].sort();
+      select.replaceChildren(new Option("Alle", ""), ...options.map((item) => new Option(item, item)));
+      select.value = options.includes(value) ? value : "";
+    }
     const visible = this.questions.filter((question) => {
       const hypotheses = this._matchingHypotheses(question.id);
       const haystack = [question.id, question.label, ...hypotheses.map((item) => `${item.id} ${item.label}`)]
         .join(" ")
         .toLowerCase();
+      if (facets.some((select) => select.value && question[select.dataset.catalogFacet] !== select.value)) return false;
       if (search && !haystack.includes(search)) return false;
       if (operationalOnly && !this._isOperational(question.id)) return false;
       return true;

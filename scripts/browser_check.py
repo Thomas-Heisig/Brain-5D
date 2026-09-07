@@ -21,7 +21,9 @@ def _free_port() -> int:
         return int(probe.getsockname()[1])
 
 
-def _wait_for_server(url: str, process: subprocess.Popen[bytes], timeout: float) -> None:
+def _wait_for_server(
+    url: str, process: subprocess.Popen[bytes], timeout: float
+) -> None:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if process.poll() is not None:
@@ -67,21 +69,26 @@ def _stop_dashboard(process: subprocess.Popen[bytes]) -> None:
         process.wait(timeout=5)
 
 
-def _run_check(url: str, timeout_ms: int, screenshot: Path | None, headed: bool) -> None:
+def _run_check(
+    url: str, timeout_ms: int, screenshot: Path | None, headed: bool
+) -> None:
     try:
         from playwright.sync_api import Error as PlaywrightError
         from playwright.sync_api import sync_playwright
     except ModuleNotFoundError as error:
         raise RuntimeError(
-            'Browser tooling is missing. Install with '
+            "Browser tooling is missing. Install with "
             'python -m pip install -e ".[browser]" and '
-            'python -m playwright install chromium.'
+            "python -m playwright install chromium."
         ) from error
 
     page_errors: list[str] = []
     with sync_playwright() as playwright:
         try:
-            browser = playwright.chromium.launch(headless=not headed)
+            browser = playwright.chromium.launch(
+                headless=not headed,
+                executable_path=os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE"),
+            )
         except PlaywrightError as error:
             raise RuntimeError(
                 "Chromium is not installed. Run: "
@@ -98,9 +105,7 @@ def _run_check(url: str, timeout_ms: int, screenshot: Path | None, headed: bool)
                 page.locator('[data-primary-area="science"]').wait_for(
                     state="visible", timeout=timeout_ms
                 )
-                page.locator('[data-primary-area="science"]').click(
-                    timeout=timeout_ms
-                )
+                page.locator('[data-primary-area="science"]').click(timeout=timeout_ms)
                 page.locator("#tab-research").wait_for(
                     state="visible", timeout=timeout_ms
                 )

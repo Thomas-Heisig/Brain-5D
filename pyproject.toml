@@ -55,13 +55,13 @@ browser = [
   "playwright>=1.55.0",
 ]
 dev = [
-  "black>=24.0",
-  "mypy>=1.10",
-  "pylint>=3.2",
-  "pyright>=1.1.400",
+  "black==26.5.1",
+  "mypy==2.3.1",
+  "pylint==4.0.8",
+  "pyright==1.1.411",
   "pytest>=8.0",
   "pytest-cov>=5.0",
-  "ruff>=0.5.0",
+  "ruff==0.16.6",
   "types-PyYAML>=6.0",
   "types-psutil>=7.0",
 ]

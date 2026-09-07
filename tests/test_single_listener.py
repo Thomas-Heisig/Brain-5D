@@ -354,7 +354,7 @@ def test_exactly_one_listener_owns_port() -> None:
 # =========================================================================
 
 
-def test_write_single_listener_verification_artifact() -> None:
+def test_write_single_listener_verification_artifact(tmp_path: Path) -> None:
     """Write a machine-readable single listener verification artifact.
 
     The artifact is written to
@@ -427,6 +427,8 @@ def test_write_single_listener_verification_artifact() -> None:
     }
 
     verification_dir = repo_root / "research" / "generated" / "verification"
+    if os.environ.get("BRAIN5D_WRITE_VERIFICATION_ARTIFACTS") != "1":
+        verification_dir = tmp_path / "verification"
     verification_dir.mkdir(parents=True, exist_ok=True)
     artifact_path = verification_dir / "single_listener.json"
     artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")

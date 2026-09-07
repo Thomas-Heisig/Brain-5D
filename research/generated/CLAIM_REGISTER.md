@@ -1,6 +1,6 @@
 # Brain-5D Claim Register
 
-*Generiert am 2026-09-02*
+*Generiert am 2026-09-07*
 
 | Claim | Status | Konfidenz | Evidenzen | Experimente |
 |-------|--------|-----------|-----------|-------------|
@@ -12,3 +12,6 @@
 | `CLAIM-DET-001`: Brain-5D erzeugt bei identischem Seed, Input und Anfangszustand deterministisch ... | 🔄 inconclusive | low | 8 | 10 |
 | `CLAIM-SELF-001`: In Brain-5D entstehen spontan funktionale Module ohne explizite Programmierung.... | ⬜ untested | none | 0 | 0 |
 | `CLAIM-AIR-001`: Ein standardisiertes ResearchPacket verbessert die Identifikation vorab definier... | ⬜ untested | none | 0 | 0 |
+
+
+> Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.

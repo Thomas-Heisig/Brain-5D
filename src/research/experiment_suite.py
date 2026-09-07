@@ -221,13 +221,14 @@ def run_sustained_stability(
                     and topology_unchanged
                     and mean_spikes > 0
                     and spike_cv <= 0.25
-                    and _relative_drift([float(value) for value in observed_spike_windows]) <= 0.25
+                    and _relative_drift(
+                        [float(value) for value in observed_spike_windows]
+                    )
+                    <= 0.25
                 )
             else:
                 stability_pass = (
-                    runtime_error is None
-                    and finite_state
-                    and topology_unchanged
+                    runtime_error is None and finite_state and topology_unchanged
                 )
             metrics = {
                 "ticks_requested": ticks,

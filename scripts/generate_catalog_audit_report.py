@@ -23,7 +23,7 @@ MARKDOWN_PATH = REPORT_DIR / "CATALOG_AUDIT_REPORT.md"
 JSON_PATH = REPORT_DIR / "CATALOG_AUDIT_REPORT.json"
 
 
-def _load_allow_list(path: Path) -> dict[str, dict[str, str]]:
+def load_allow_list(path: Path) -> dict[str, dict[str, str]]:
     raw: Any = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise ValueError("Catalog audit allow-list must be a mapping")
@@ -47,7 +47,7 @@ def _references_for(audit: ResearchCatalogAudit, identifier: str) -> list[str]:
     return sorted({item.path for item in references if item.identifier == identifier})
 
 
-def _report_data(
+def report_data(
     audit: ResearchCatalogAudit, allow_list: dict[str, dict[str, str]]
 ) -> dict[str, Any]:
     missing = set(audit.missing_questions) | set(audit.missing_hypotheses)
@@ -142,9 +142,9 @@ def generate_report(
     report_dir: Path = REPORT_DIR,
 ) -> int:
     """Write Markdown/JSON reports and return a CI-compatible exit code."""
-    allow_list = _load_allow_list(allow_list_path)
+    allow_list = load_allow_list(allow_list_path)
     audit = audit_research_catalog(repo_root)
-    data = _report_data(audit, allow_list)
+    data = report_data(audit, allow_list)
     report_dir.mkdir(parents=True, exist_ok=True)
     (report_dir / MARKDOWN_PATH.name).write_text(
         _markdown_report(data), encoding="utf-8"

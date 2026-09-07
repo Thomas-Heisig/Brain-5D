@@ -4,11 +4,54 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Functional viewer restoration
+
+- Restored viewer back navigation and exposed `window.openBrain5DFile(source, path)` plus the `brain5d:open-file` event for cross-module file opening.
+- Added central read-only LLM analysis from the viewer through the existing Research Chat backend.
+- Reconnected Mammoth DOCX rendering with sanitized HTML fallback and added bounded multicolor syntax rendering for Python, C++, JavaScript and related source files.
+- Existing text edit mode remains optimistic-lock protected and is available wherever the preview contract marks a file editable.
+
+## 2026-09-07 Viewer regression restoration
+
+- Restored full-width Markdown layout in the shared file viewer.
+- Kept workflow artifact actions, including Human Review, report, summary, statistics and raw-data access, bound to the research source regardless of the last selected file-manager source.
+
+## 2026-09-07 Viewer path compatibility
+
+- Normalized Windows backslashes at the browser and API preview boundaries so workflow artifacts such as `experiments\\EXP-SNN-001-R5\\summary.md` resolve to the canonical repository path.
+- Added an HTTP regression test covering the encoded Windows-style path.
+
+## 2026-09-07 Structured archive and JSON previews
+
+- ZIP-compatible containers (`.zip`, `.epub`, `.whl`, `.jar`, `.cbz`) now expose a bounded member manifest without extracting or executing entries.
+- Archive previews mark suspicious `..` or absolute member paths and reject archives above the member-count or uncompressed-size budget.
+- JSON previews now provide an expandable, bounded tree while retaining the original content for copy/edit operations.
+- Remaining viewer gaps are media metadata, PDF text extraction, older binary Office formats, and local Graphviz/PlantUML conversion.
+
+## 2026-09-07 File Viewer format and rendering pass
+
+- Unified Markdown rendering now preserves fenced-language classes, renders Mermaid diagrams lazily in strict mode, and routes relative document links through the canonical viewer.
+- Markdown and notebook cells expose a formula-aware surface for MathJax, including bounded notebook PNG/JPEG outputs.
+- `.tex`/`.latex` files are classified as formula sources; `.mmd`/`.mermaid` as Mermaid diagrams; `.dot`/`.gv` and `.puml`/`.plantuml` as safe source previews.
+- BibTeX previews now show the structured table without appending a duplicate raw source block.
+- Graphviz and PlantUML source-to-SVG conversion remains intentionally open because the viewer has no local converter and remote rendering would disclose research content.
+
 ## 2026-09-07 GitHub/Hugging Face mirror synchronization
 
 - Refreshed the current baseline in the project, documentation and Hugging Face READMEs.
 - Kept GitHub `main` as the canonical source and documented the Hugging Face mirror as a derived publication target.
 - Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
+
+## 2026-09-07 Hugging Face Space
+
+- Prepared the Docker entrypoint for the integrated dashboard on `0.0.0.0:8765`.
+- Added Docker Space metadata and published the live dashboard as `superdigger/Brain-5D-Space`.
+- Added the Space repository to the automatic GitHub-to-Hugging-Face synchronization workflow.
+
+## 2026-09-07 Space API rate-limit handling
+
+- Added a shared JSON response parser that reports HTML/429 proxy responses as API errors.
+- Reduced dashboard polling frequency automatically on `*.hf.space` deployments.
 
 ## 2026-09-07 Full-stack dashboard E2E verification
 

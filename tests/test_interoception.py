@@ -183,3 +183,19 @@ def test_functional_state_is_unknown_without_observable_drives() -> None:
     assert state.activation is None
     assert state.safety is None
     assert state.uncertainty > 0.8
+
+
+def test_optional_host_api_failures_are_unknown(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import psutil
+
+    def unavailable() -> None:
+        raise OSError("Sensor API not exposed by this host")
+
+    for name in ("sensors_battery", "sensors_fans", "sensors_temperatures", "cpu_freq"):
+        monkeypatch.setattr(psutil, name, unavailable, raising=False)
+    readings = host_system_readings(1)
+    assert readings["temperature_c"] is None
+    assert readings["fan_rpm"] is None
+    assert readings["cpu_frequency_mhz"] is None

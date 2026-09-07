@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -85,15 +86,19 @@ def check_collected_test_count() -> list[str]:
     if actual_match is None:
         return ["pytest collection did not report a collected test count"]
 
-    declared_text = (DOCS_ROOT / "08-roadmap" / "TODO.md").read_text(encoding="utf-8")
-    declared_match = re.search(r"- \[x\] (\d+) tests collected", declared_text)
-    if declared_match is None:
-        return ["docs/08-roadmap/TODO.md: collected-test claim is missing"]
-    if declared_match.group(1) != actual_match.group(1):
+    if result.returncode != 0:
+        return ["pytest collection failed; a partial count is not a valid baseline"]
+    baseline_path = REPO_ROOT / "tests" / "test_baseline.json"
+    try:
+        baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+        declared = baseline["full_collection"]["collected"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return ["tests/test_baseline.json: canonical collected-test snapshot missing"]
+    if declared != int(actual_match.group(1)):
         return [
-            "docs/08-roadmap/TODO.md: collected-test claim "
-            f"{declared_match.group(1)} does not match pytest ({actual_match.group(1)})"
+            f"tests/test_baseline.json: collected {declared}, pytest reports {actual_match.group(1)}"
         ]
+
     return []
 
 

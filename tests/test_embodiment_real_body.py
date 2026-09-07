@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from src.embodiment import ConnectionManager
 import src.embodiment.system_sensor as system_sensor
+from src.embodiment import ConnectionManager
 from src.embodiment.system_sensor import host_system_readings
 
 STATIC = Path("src/dashboard/static")

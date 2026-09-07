@@ -4,11 +4,58 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Functional viewer restoration
+
+- [x] Add a viewer back button and cross-module `openBrain5DFile` API.
+- [x] Add read-only central LLM analysis to the viewer.
+- [x] Restore sanitized DOCX layout rendering through Mammoth.
+- [x] Add safe multicolor syntax rendering for common source formats.
+- [ ] Add a richer split-pane editor with language-aware preview and conflict diff.
+
+## 2026-09-07 Viewer regression restoration
+
+- [x] Restore full-width Markdown rendering.
+- [x] Preserve Human Review and workflow artifact actions when the Docs source was opened previously.
+
+## 2026-09-07 Viewer path compatibility
+
+- [x] Normalize Windows-style separators for preview, raw and document requests.
+- [x] Cover encoded workflow artifact paths with an HTTP regression test.
+
+## 2026-09-07 Structured archive and JSON previews
+
+- [x] Add bounded ZIP-compatible archive manifests without extraction.
+- [x] Mark unsafe archive member paths in the preview.
+- [x] Add a bounded expandable JSON tree to the shared renderer.
+- [ ] Add browser media metadata (dimensions, duration and codec) without decoding full files.
+- [ ] Add bounded PDF text/page metadata and optional local Graphviz/PlantUML conversion.
+
+## 2026-09-07 File Viewer format and rendering pass
+
+- [x] Give Mermaid, Graphviz, PlantUML and LaTeX source files explicit preview kinds.
+- [x] Render Markdown fenced Mermaid blocks through the shared safe viewer path.
+- [x] Improve formula-aware Markdown and notebook cell rendering, including bounded image outputs.
+- [x] Keep BibTeX structured previews free of duplicate raw source output.
+- [ ] Add an optional local Graphviz/PlantUML to SVG converter without sending research sources to a remote service.
+
 ## 2026-09-07 GitHub/Hugging Face mirror synchronization
 
 - [x] Refresh the current baseline in `README.md`, `docs/README.md` and `HF_README.md`.
 - [x] Document GitHub `main` as canonical and Hugging Face as the derived mirror.
 - [x] Configure the optional mirror workflow to publish a fresh LFS-normalized source snapshot.
+
+## 2026-09-07 Hugging Face Space
+
+- [x] Configure the Docker image to start the integrated dashboard on the Space port.
+- [x] Publish the dashboard as `superdigger/Brain-5D-Space`.
+- [x] Synchronize future GitHub updates to both the model repository and the Space repository.
+- [x] Add a Space-specific smoke check against the local Docker dashboard API.
+- [ ] Re-run the public Space browser smoke check after HF proxy rate limits clear.
+
+## 2026-09-07 Space API rate-limit handling
+
+- [x] Handle HTML/429 responses without surfacing `Unexpected token '<'`.
+- [x] Increase polling intervals automatically for Hugging Face Space deployments.
 
 ## 2026-09-07 Chromium browser checks
 

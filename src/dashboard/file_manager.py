@@ -16,6 +16,13 @@ from typing import Any, Iterator, cast
 from urllib.parse import unquote
 
 from .docs_source import DocumentationSource, create_docs_source
+from .file_rendering import (
+    FileContractError,
+    atomic_write,
+    file_is_read_only,
+    handle_file_rendering,
+    validate_file_write_access,
+)
 from .research_source import ResearchSource
 
 # ---------------------------------------------------------------------------
@@ -496,7 +503,7 @@ class FileManager:
 
         candidate = (root / file_path).resolve()
         try:
-            candidate.relative_to(root)
+            candidate.relative_to(root.resolve())
         except ValueError:
             raise PathTraversalError("Path traversal detected.")
 
@@ -524,9 +531,15 @@ class FileManager:
 
         candidate = (root / file_path).resolve()
         try:
-            candidate.relative_to(root)
+            candidate.relative_to(root.resolve())
         except ValueError:
             raise PathTraversalError("Path traversal detected.")
+        if candidate != root.resolve() / file_path or any(
+            part.startswith(".") for part in Path(file_path).parts
+        ):
+            raise PathTraversalError(
+                "Symbolic or hidden file references are not allowed."
+            )
         return candidate
 
     def save_content(
@@ -545,6 +558,10 @@ class FileManager:
             Dict with success status and path information.
         """
         candidate = self._resolve_file(source, file_path)
+        if file_is_read_only(source, file_path):
+            raise PathTraversalError(
+                "Scientific artifacts are read-only in the File Viewer."
+            )
 
         # Only allow saving to existing files for safety. New files can be
         # created explicitly later if needed.
@@ -560,9 +577,11 @@ class FileManager:
             # Remove stale backup to avoid collision
             if backup_path.exists():
                 backup_path.unlink()
-            candidate.rename(backup_path)
+            import shutil
 
-        candidate.write_text(content, encoding="utf-8")
+            shutil.copyfile(candidate, backup_path)
+
+        atomic_write(candidate, content.encode("utf-8"))
         return {
             "success": True,
             "path": file_path,
@@ -573,7 +592,10 @@ class FileManager:
     def _meta_path(self, source: str, file_path: str) -> Path:
         """Return the sidecar metadata path for a file."""
         candidate = self._resolve_file(source, file_path)
-        return candidate.parent / (candidate.name + ".meta.yaml")
+        sidecar = candidate.parent / (candidate.name + ".meta.yaml")
+        if sidecar.is_symlink():
+            raise PathTraversalError("Symlink metadata is not allowed.")
+        return sidecar
 
     def get_meta(self, source: str, file_path: str) -> dict[str, Any]:
         """Load sidecar metadata for a file.
@@ -616,6 +638,10 @@ class FileManager:
         if not candidate.is_file():
             raise FileNotFoundError(f"File not found: {file_path}")
 
+        if file_is_read_only(source, file_path):
+            raise PathTraversalError(
+                "Scientific artifacts are read-only in the File Viewer."
+            )
         meta_path = self._meta_path(source, file_path)
         if backup and meta_path.exists():
             backup_path = meta_path.with_suffix(".meta.yaml.bak")
@@ -623,7 +649,7 @@ class FileManager:
                 backup_path.unlink()
             meta_path.rename(backup_path)
 
-        meta_path.write_text(content, encoding="utf-8")
+        atomic_write(meta_path, content.encode("utf-8"))
         return {
             "success": True,
             "path": file_path,
@@ -973,7 +999,7 @@ class FileManager:
             return []
 
         try:
-            rel = candidate.relative_to(root)
+            rel = candidate.relative_to(root.resolve())
         except ValueError:
             return []
 
@@ -1034,7 +1060,18 @@ def register_file_manager_routes(
     docs_source: DocumentationSource | None,
 ) -> bool:
     """Try to handle a file manager API route. Returns True if handled."""
+    if path.startswith("/api/files/") and handler.command == "PUT":
+        try:
+            validate_file_write_access(handler)
+        except FileContractError as exc:
+            handler._send_json({"error": str(exc)}, exc.status)
+            return True
     fm = FileManager(research_source, docs_source, _DEFAULT_DOCS_ROOT)
+    roots = {"docs": docs_source.docs_root if docs_source else _DEFAULT_DOCS_ROOT}
+    if research_source is not None:
+        roots["research"] = research_source.root()
+    if handle_file_rendering(handler, path, query, roots):
+        return True
 
     if path == "/api/files/tree":
         source = query.get("source", ["research"])[0]

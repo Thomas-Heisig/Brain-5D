@@ -4,7 +4,6 @@ from pathlib import Path
 
 from src.dashboard.release_timeline import build_release_timeline
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -19,12 +18,15 @@ def test_release_timeline_reads_all_canonical_sources() -> None:
     ]
     assert all(source["available"] for source in payload["sources"])
     assert payload["entries"]
-    assert {entry["phase"] for entry in payload["entries"]} == {
+    assert {entry.get("phase") for entry in payload["entries"]} == {
         "past",
         "current",
         "future",
     }
-    assert any(entry["title"] == "0.1.0 · Historical tagged release" for entry in payload["entries"])
+    assert any(
+        entry["title"] == "0.1.0 · Historical tagged release"
+        for entry in payload["entries"]
+    )
 
 
 def test_release_timeline_merges_same_milestone_and_keeps_checklist_state() -> None:

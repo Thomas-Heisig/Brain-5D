@@ -21,6 +21,7 @@ Updated on **2026-09-07** after the dashboard release workflow, runtime profilin
 - latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - the merge-triggered `main` CI is the authoritative verification for the new baseline; do not infer success until that run completes
 - GitHub `main` is the canonical source; the configured Hugging Face mirror is updated from this branch after repository changes
+- Live dashboard Space: https://huggingface.co/spaces/superdigger/Brain-5D-Space
 - Python verification matrix: **3.11, 3.12 and 3.13**
 - Black, Ruff, Pylint, Pre-Commit, Mypy, Pyright, Scientific Integrity, security, wheel and Docker are mandatory CI gates
 - PR #21 is merged; no scientific DATA/EVID was rewritten by the integration

@@ -1,5 +1,9 @@
 ---
 license: mit
+sdk: docker
+app_port: 8765
+title: Brain-5D
+short_description: Sparse 5D spiking-neural research dashboard
 language:
   - en
 library_name: brain5d-core
@@ -37,6 +41,12 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 - latest fully completed pre-merge `main` CI baseline: run #598, success
 - the post-merge CI run is authoritative for the merged baseline and must complete before that baseline is described as fully green
 - GitHub `main` is canonical; this file is published as the Hugging Face repository README during mirror synchronization
+
+## Live dashboard Space
+
+The interactive operator and research dashboard is published separately as a Docker Space:
+
+https://huggingface.co/spaces/superdigger/Brain-5D-Space
 
 ## Capabilities
 

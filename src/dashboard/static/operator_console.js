@@ -17,6 +17,8 @@
 
 "use strict";
 
+import { readJson } from "./api-client.js";
+
 import { StructuralProposalPanel } from './structural-proposal-panel.js';
 
 // ============================================================================
@@ -129,7 +131,7 @@ export class OperatorAPI {
 
     let data;
     try {
-      data = await response.json();
+      data = await readJson(response);
     } catch {
       throw new Error(`Invalid JSON response from ${url}`);
     }

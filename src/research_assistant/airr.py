@@ -177,9 +177,7 @@ class AIRRPipeline:
         )
         return record
 
-    def _existing_role(
-        self, experiment_id: str, role: str
-    ) -> AIAnalysisRecord | None:
+    def _existing_role(self, experiment_id: str, role: str) -> AIAnalysisRecord | None:
         directory = self._root / "experiments" / experiment_id / "analysis"
         if not directory.is_dir():
             return None

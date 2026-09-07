@@ -1,10 +1,54 @@
 # Changelog
 
+## 2026-09-07 — Functional viewer restoration
+
+- Added viewer back navigation and the public `window.openBrain5DFile(source, path)` / `brain5d:open-file` integration points.
+- Added a read-only `KI-Analyse` action using the configured central Research Chat LLM.
+- Restored sanitized Mammoth DOCX rendering and multicolor syntax rendering for common source files.
+- Preserved the existing optimistic-lock edit mode for editable text previews.
+
+## 2026-09-07 — Viewer regression restoration
+
+- Restored full-width Markdown rendering in the shared viewer.
+- Fixed workflow artifact actions so Human Review and report links always resolve against the research source.
+
+## 2026-09-07 — Viewer path compatibility
+
+- Fixed preview failures for workflow artifact paths containing Windows backslashes.
+- Canonicalized separators in both the shared browser renderer and file-preview API handler.
+- Added HTTP regression coverage for encoded Windows-style paths.
+
+## 2026-09-07 — Structured archive and JSON previews
+
+- Added safe, metadata-only previews for ZIP-compatible containers: `.zip`, `.epub`, `.whl`, `.jar` and `.cbz`.
+- Added member-count and uncompressed-size limits, plus unsafe archive-path indicators, without extracting archive entries.
+- Replaced JSON-only pretty text previews with bounded expandable JSON trees while preserving the exact source for editing and copying.
+- Documented remaining media metadata, PDF extraction, legacy Office and local diagram-conversion work.
+
+## 2026-09-07 — File Viewer formats and scientific rendering
+
+- Added explicit preview contracts for Mermaid, Graphviz, PlantUML and LaTeX sources.
+- Improved Markdown and notebook rendering for fenced code, MathJax formulas and bounded PNG/JPEG outputs.
+- Centralized Mermaid rendering in the shared file renderer with strict security mode and source disclosure fallback.
+- Routed relative research-document links through the canonical viewer and removed duplicate BibTeX raw output.
+- Documented Graphviz/PlantUML SVG conversion as a remaining local capability rather than using a remote renderer for research content.
+
 ## 2026-09-07 — GitHub/Hugging Face mirror synchronization
 
 - Refreshed the project and Hugging Face baseline documentation to the current `main` status.
 - Kept GitHub `main` canonical while publishing `HF_README.md` as the Hugging Face repository README.
 - Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
+
+## 2026-09-07 — Hugging Face Space
+
+- Configured the Docker image to start the integrated dashboard on `0.0.0.0:8765`.
+- Published the live dashboard as `superdigger/Brain-5D-Space`.
+- Added automatic synchronization to the Space repository alongside the model mirror.
+
+## 2026-09-07 — Space API rate-limit handling
+
+- Added shared non-JSON response handling so HTML/429 proxy pages no longer surface as `Unexpected token '<'`.
+- Reduced dashboard polling frequency automatically on Hugging Face Space hosts.
 
 ## 2026-09-07 — Repository catalog audit CI report
 

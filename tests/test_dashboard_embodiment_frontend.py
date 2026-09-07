@@ -108,5 +108,5 @@ def test_real_body_clears_stale_selection_when_connection_disappears() -> None:
 
     assert "function clearDetail()" in source
     assert 'setText("real-body-detail-name", "Systemkern")' in source
-    assert 'list.replaceChildren()' in source
+    assert "list.replaceChildren()" in source
     assert "else clearDetail();" in source

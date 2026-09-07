@@ -28,6 +28,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
           HF_REPO: Brain-5D
+          HF_SPACE_REPO: Brain-5D-Space
         run: |
           set -e
 
@@ -47,14 +48,20 @@ jobs:
             cp "$mirror_dir/HF_README.md" "$mirror_dir/README.md"
           fi
 
+          cp "$mirror_dir/.huggingface/lfs.gitattributes" "$mirror_dir/.gitattributes"
+
           git -C "$mirror_dir" init --initial-branch=main
           git -C "$mirror_dir" lfs install --local
           git -C "$mirror_dir" config user.email "github-actions[bot]@users.noreply.github.com"
           git -C "$mirror_dir" config user.name "github-actions[bot]"
           git -C "$mirror_dir" remote add huggingface \
             "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
+          git -C "$mirror_dir" remote add huggingface-space \
+            "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/${HF_SPACE_REPO}"
           git -C "$mirror_dir" add --all --force
           git -C "$mirror_dir" commit -m "Sync: mirror GitHub main"
 
           git -C "$mirror_dir" push huggingface HEAD:main --force
           git -C "$mirror_dir" lfs push --all huggingface HEAD
+          git -C "$mirror_dir" push huggingface-space HEAD:main --force
+          git -C "$mirror_dir" lfs push --all huggingface-space HEAD

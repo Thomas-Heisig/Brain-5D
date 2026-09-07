@@ -61,9 +61,19 @@ def wall_clock_readings(tick: int) -> Mapping[str, JSONValue]:
     return {"tick": tick, "unix_time": time()}
 
 
+def _optional_sensor(name: str) -> Any:
+    """Missing host APIs and inaccessible devices mean unknown, not zero."""
+    reader = getattr(psutil, name, None)
+    if not callable(reader):
+        return None
+    try:
+        return reader()
+    except (OSError, RuntimeError, NotImplementedError, psutil.Error):
+        return None
+
+
 def _temperature_readings() -> tuple[float | None, dict[str, JSONValue]]:
-    reader = getattr(psutil, "sensors_temperatures", None)
-    raw = cast(dict[str, list[Any]], reader() if callable(reader) else {})
+    raw = cast(dict[str, list[Any]], _optional_sensor("sensors_temperatures") or {})
     groups: dict[str, JSONValue] = {}
     first: float | None = None
     for group, entries in raw.items():
@@ -95,8 +105,7 @@ def _temperature_readings() -> tuple[float | None, dict[str, JSONValue]]:
 
 
 def _fan_readings() -> tuple[float | None, dict[str, JSONValue]]:
-    reader = getattr(psutil, "sensors_fans", None)
-    raw = cast(Mapping[str, list[Any]], reader() if callable(reader) else {})
+    raw = cast(Mapping[str, list[Any]], _optional_sensor("sensors_fans") or {})
     groups: dict[str, JSONValue] = {}
     first: float | None = None
     for group, entries in raw.items():
@@ -159,9 +168,8 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
         for value in interfaces.values()
         if isinstance(value, dict)
     )
-    battery_reader = getattr(psutil, "sensors_battery", None)
-    battery = cast(Any, battery_reader() if callable(battery_reader) else None)
-    frequency = cast(Any, psutil.cpu_freq())
+    battery = _optional_sensor("sensors_battery")
+    frequency = _optional_sensor("cpu_freq")
     per_cpu = psutil.cpu_percent(interval=None, percpu=True)
 
     load_average_reader = cast(

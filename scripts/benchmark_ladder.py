@@ -31,9 +31,7 @@ DEFAULT_TIERS = (5_000, 25_000, 100_000, 1_000_000)
 LARGE_TIER_LIMIT = 100_000
 
 
-def build_network(
-    neuron_count: int, seed: int, connections_per_neuron: int = 0
-) -> Any:
+def build_network(neuron_count: int, seed: int, connections_per_neuron: int = 0) -> Any:
     from src.core.network import Brain5DConfig, NeuralNetwork
     from src.core.spatial_index import linear_to_5d
 

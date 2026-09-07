@@ -14,4 +14,4 @@
 | Barabási (1999) | Preferential attachment produces scale-free network degree distributions. | RQ-SNN-003 | open |
 
 ---
-*Automatisch generiert am 2026-09-02*
+*Automatisch generiert am 2026-09-07*

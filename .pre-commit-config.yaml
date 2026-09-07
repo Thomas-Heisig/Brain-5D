@@ -1,51 +1,42 @@
-# Pre-commit hooks for Brain-5D.
-#
-# Install:  pip install pre-commit && pre-commit install
-# Run all:  pre-commit run --all-files
-#
-# Documentation: https://pre-commit.com
-
+# Hooks use the same pinned development tools as CI; no formatter version drift.
 repos:
-  # Auto-format: Black
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+  - repo: local
     hooks:
       - id: black
-        language_version: python3.13
-        args: [--check]
-
-  # Lint: Ruff
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.0
-    hooks:
-      - id: ruff
-        args: [--fix]
-
-  # Type check: mypy
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
-    hooks:
-      - id: mypy
-        args: [src/]
+        name: black (canonical toolchain)
+        entry: python -m black --check src tests scripts
+        language: system
         pass_filenames: false
-        additional_dependencies:
-          - types-PyYAML
-          - types-psutil
-          - numpy>=1.26
-          - matplotlib>=3.8
-          - python-docx>=1.2.0
-          - PyPDF2>=3.0.1
-
+        types: [python]
+      - id: ruff
+        name: ruff (canonical toolchain)
+        entry: python -m ruff check src tests scripts
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: mypy
+        name: mypy (full src)
+        entry: python -m mypy src/
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: pyright
+        name: pyright (strict source and tests)
+        entry: python -m pyright
+        language: system
+        pass_filenames: false
+        types: [python]
   # Trailing whitespace, EOF newline, merge conflicts
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^(research/(experiments/|registry/evidence/|generated/data/)|docs/99-archive/)
         args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
         # Frozen experiment manifests are evidence artifacts and must not be
         # byte-rewritten by an automatic formatting hook.
-        exclude: ^(research/generated/verification/(restore_determinism|single_listener|structural_e2e|structural_live_loop)\.json|research/experiments/.+/manifest\.json)$
+        exclude: ^research/(experiments/|registry/evidence/|generated/data/|generated/verification/)
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml

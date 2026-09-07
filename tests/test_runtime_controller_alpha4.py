@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 
 import pytest
@@ -74,11 +75,15 @@ def test_runtime_clock_none_is_unlimited_max_mode() -> None:
 
 def test_runtime_profile_exposes_all_full_stack_phase_slots() -> None:
     controller = RuntimeController(Network())
-    controller.add_hook(lambda _tick, _result: controller.record_phase("learning", 1.25))
+    controller.add_hook(
+        lambda _tick, _result: controller.record_phase("learning", 1.25)
+    )
     telemetry = controller.run_ticks(1)
 
     assert telemetry.tick_profile is not None
-    assert telemetry.tick_profile["learning"] == pytest.approx(1.25)
+    assert math.isclose(
+        telemetry.tick_profile["learning"], 1.25, rel_tol=1e-6, abs_tol=1e-12
+    )
     assert telemetry.tick_profile["homeostasis"] == 0.0
     assert telemetry.tick_profile["structural"] == 0.0
     assert telemetry.tick_profile["embodiment"] == 0.0

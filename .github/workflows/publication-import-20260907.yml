@@ -16,42 +16,24 @@ concurrency:
 
 jobs:
   integrate:
+    if: github.repository == 'Thomas-Heisig/Brain-5D'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
-      - name: Materialize the three existing source manuscripts
-        run: |
-          git lfs pull --include='docs/06-research/*.docx' --exclude=''
-          python - <<'PY'
-          import hashlib
-          from pathlib import Path
-          root = Path('docs/06-research')
-          sources = {
-              'Brain-5D_Scientific_Framework_v0.2.docx': '1377f631bc4017a9856eb3294892a7707e485f83faf7ae6636f0367f35a9e6ea',
-              'KI_Die_geliehene_Intelligenz_Dissertation.docx': '42e43749f7faa69a5c7f48da7bd48f480499e8b5fe18ec87a2b5c4bcf53928e6',
-              'KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx': 'c9ef2942fa86b97d73b1b86e6c1456e0d81a6d5e8efe385501f6ab386941998b',
-          }
-          for name, expected in sources.items():
-              actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
-              if actual != expected:
-                  raise SystemExit('Source identity mismatch: ' + name)
-              print('SOURCE VERIFIED: ' + name)
-          PY
-      - name: Restore and validate publication
-        if: hashFiles('.publication-import/READY.json') != ''
-        run: |
-          command -v zstd
-          python .publication-import/assemble.py
-      - name: Commit only publication integration files
-        if: hashFiles('.publication-import/READY.json') != ''
+      - name: Materialize original source documents
+        run: git lfs pull --include='docs/06-research/*.docx' --exclude=''
+      - name: Restore all publication files with byte-exact checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .publication-import/assemble.py
+      - name: Commit verified publication using Git LFS
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/publications research/README.md README.md .pre-commit-config.yaml src/dashboard/research_source.py tests/test_publication_integration.py
-          git diff --cached --check
-          git commit -m 'docs(research): import complete scientific treatment and verified companion files'
+          git add research/publications
+          git commit -m 'docs(research): restore 41 verified publication files and complete original archive'
           git push origin HEAD:refs/heads/integration/scientific-publication-20260907
           echo "Publication commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"

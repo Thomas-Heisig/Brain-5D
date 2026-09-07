@@ -587,6 +587,8 @@ export class ExperimentWorkflowPanel {
 
   async _openArtifact(path) {
     if (!path) return;
+    const researchButton = document.querySelector('.fm-source-btn[data-source="research"]');
+    if (researchButton && !researchButton.classList.contains("active")) researchButton.click();
     this.currentViewerPath = path;
     await openFMFile(path);
     this._installExperimentPopupActions(path);
@@ -865,65 +867,13 @@ export class ExperimentWorkflowPanel {
       this._openResolvedViewerFile(resolved);
     }, true);
 
-    const viewer = byId("fm-viewer");
-    if (viewer) {
-      const observer = new MutationObserver(() => this._renderMermaidIn(viewer));
-      observer.observe(viewer, { childList: true, subtree: true });
-    }
   }
 
   async _openResolvedViewerFile(path) {
-    const matching = [...document.querySelectorAll("#fm-tree [data-path]")].find((node) => node.dataset.path === path);
-    if (matching) {
-      matching.click();
-      return;
-    }
-    try {
-      const file = await this._readResearchFile(path);
-      if (file.is_binary) {
-        window.open(`/api/files/content/${encodeURIComponent(path)}?source=research`, "_blank", "noopener");
-        return;
-      }
-      const viewer = byId("fm-viewer");
-      if (viewer) {
-        viewer.innerHTML = `<div class="fm-file-header"><strong>${escapeHtml(path)}</strong></div><pre>${escapeHtml(file.content || "")}</pre>`;
-      }
-    } catch (error) {
-      const viewer = byId("fm-viewer");
-      if (viewer) viewer.innerHTML = `<div class="fm-error">⚠ ${escapeHtml(error.message)}</div>`;
-    }
+    const researchButton = document.querySelector('.fm-source-btn[data-source="research"]');
+    if (researchButton && !researchButton.classList.contains("active")) researchButton.click();
+    this.currentViewerPath = path;
+    await openFMFile(path);
   }
 
-  async _renderMermaidIn(container) {
-    const candidates = [...container.querySelectorAll("pre code.language-mermaid, code.language-mermaid")];
-    if (!candidates.length) return;
-    if (!window.mermaid) {
-      if (document.querySelector("script[data-brain5d-mermaid]")) return;
-      const script = document.createElement("script");
-      script.dataset.brain5dMermaid = "true";
-      script.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
-      script.onload = () => {
-        window.mermaid?.initialize({ startOnLoad: false, securityLevel: "strict" });
-        this._renderMermaidIn(container);
-      };
-      script.onerror = () => console.warn("Mermaid CDN unavailable; source block remains visible.");
-      document.head.appendChild(script);
-      return;
-    }
-    let index = 0;
-    for (const code of candidates) {
-      if (code.dataset.rendered === "true") continue;
-      code.dataset.rendered = "true";
-      const host = document.createElement("div");
-      host.className = "fm-mermaid";
-      try {
-        const rendered = await window.mermaid.render(`brain5d-mermaid-${Date.now()}-${index++}`, code.textContent || "");
-        host.innerHTML = rendered.svg;
-        (code.closest("pre") || code).replaceWith(host);
-      } catch (error) {
-        code.dataset.rendered = "false";
-        console.warn("Mermaid render failed", error);
-      }
-    }
-  }
 }

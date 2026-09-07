@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from scripts.generate_catalog_audit_report import _load_allow_list, _report_data
+from scripts.generate_catalog_audit_report import load_allow_list, report_data
 from src.research.catalog_audit import audit_research_catalog
 from src.research.registry import ResearchRegistry
 
@@ -28,7 +28,7 @@ def test_catalog_audit_report_accepts_explicit_historical_and_fixture_ids(
     )
 
     audit = audit_research_catalog(tmp_path, ResearchRegistry(registry_dir).load_all())
-    data = _report_data(audit, _load_allow_list(allow_path))
+    data = report_data(audit, load_allow_list(allow_path))
 
     assert data["status"] == "clean"
     assert data["disallowed_missing"] == {}
@@ -45,7 +45,7 @@ def test_catalog_audit_report_keeps_unknown_ids_blocking(tmp_path: Path) -> None
     allow_path.write_text("historical_only: {}\ntest_fixtures: {}\n", encoding="utf-8")
 
     audit = audit_research_catalog(tmp_path, ResearchRegistry(registry_dir).load_all())
-    data = _report_data(audit, _load_allow_list(allow_path))
+    data = report_data(audit, load_allow_list(allow_path))
 
     assert data["status"] == "failed"
     assert data["disallowed_missing"] == {unknown_id: ["notes.md"]}

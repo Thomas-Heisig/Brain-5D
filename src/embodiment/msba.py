@@ -37,10 +37,10 @@ class EnergyState(StrEnum):
     SURVIVAL = "survival"
 
 
-def validate_projection_dimensions(value: int) -> int:
+def validate_projection_dimensions(value: object) -> int:
     """Validate an MSBA projection-space dimensionality without touching core IDs."""
 
-    if isinstance(value, bool):
+    if isinstance(value, bool) or not isinstance(value, int):
         raise ValueError("projection_dimensions must be an integer")
     if not MIN_PROJECTION_DIMENSIONS <= value <= MAX_PROJECTION_DIMENSIONS:
         raise ValueError(
@@ -157,7 +157,9 @@ class EnergyEstimate:
             "normalized_energy_units": self.normalized_energy_units,
             "estimated_joules": self.estimated_joules,
             "measured_joules": self.measured_joules,
-            "component_units": self.component_units or {},
+            "component_units": {
+                key: value for key, value in (self.component_units or {}).items()
+            },
             "provenance": {
                 "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
                 "estimated_joules": (

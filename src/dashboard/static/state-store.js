@@ -12,7 +12,9 @@
 
 "use strict";
 
-const POLL_INTERVAL_MS = 1000;
+import { pollInterval, readJson } from "./api-client.js";
+
+const POLL_INTERVAL_MS = pollInterval(1000);
 
 /**
  * Deep-merge two objects (shallow merge for arrays).
@@ -150,7 +152,7 @@ export class DashboardStateStore {
     try {
       const statusRes = await fetch("/api/status", { cache: "no-store" });
       if (!statusRes.ok) throw new Error(`HTTP ${statusRes.status}`);
-      const status = await statusRes.json();
+      const status = await readJson(statusRes);
       this._updateFromStatus(status);
 
       // Health and components may already be embedded; if not, fetch them.
@@ -158,7 +160,7 @@ export class DashboardStateStore {
         try {
           const healthRes = await fetch("/api/health", { cache: "no-store" });
           if (healthRes.ok) {
-            this.state.health = await healthRes.json();
+            this.state.health = await readJson(healthRes);
           }
         } catch (e) {
           // ignore — status already has best-effort health
@@ -168,7 +170,7 @@ export class DashboardStateStore {
         try {
           const compRes = await fetch("/api/components", { cache: "no-store" });
           if (compRes.ok) {
-            const compData = await compRes.json();
+            const compData = await readJson(compRes);
             this.state.components = compData.components || {};
           }
         } catch (e) {
@@ -179,7 +181,7 @@ export class DashboardStateStore {
         try {
           const paramRes = await fetch("/api/parameters", { cache: "no-store" });
           if (paramRes.ok) {
-            const paramData = await paramRes.json();
+            const paramData = await readJson(paramRes);
             this.state.parameters = paramData.parameters || {};
           }
         } catch (e) {
@@ -198,31 +200,31 @@ export class DashboardStateStore {
           fetch("/api/embodiment/pipeline", { cache: "no-store" }),
         ]);
         if (gateResult.status === "fulfilled" && gateResult.value.ok) {
-          this.state.gate = await gateResult.value.json();
+          this.state.gate = await readJson(gateResult.value);
         }
         if (modeResult.status === "fulfilled" && modeResult.value.ok) {
-          const modeData = await modeResult.value.json();
+          const modeData = await readJson(modeResult.value);
           this.state.experiment_state = {
             ...this.state.experiment_state,
             ...modeData,
           };
         }
         if (researchResult.status === "fulfilled" && researchResult.value.ok) {
-          this.state.research = await researchResult.value.json();
+          this.state.research = await readJson(researchResult.value);
         }
         if (embodimentResult.status === "fulfilled" && embodimentResult.value.ok) {
-          this.state.embodiment_detail = await embodimentResult.value.json();
+          this.state.embodiment_detail = await readJson(embodimentResult.value);
         }
         if (embodimentHistoryResult.status === "fulfilled" && embodimentHistoryResult.value.ok) {
-          this.state.embodiment_history = await embodimentHistoryResult.value.json();
+          this.state.embodiment_history = await readJson(embodimentHistoryResult.value);
         }
         if (connectionResult.status === "fulfilled" && connectionResult.value.ok) {
-          this.state.embodiment_connections = await connectionResult.value.json();
+          this.state.embodiment_connections = await readJson(connectionResult.value);
         }
         if (pipelineResult.status === "fulfilled" && pipelineResult.value.ok) {
           this.state.embodiment_detail = {
             ...this.state.embodiment_detail,
-            pipeline: await pipelineResult.value.json(),
+            pipeline: await readJson(pipelineResult.value),
           };
         }
         this.lastSupplementalFetch = Date.now();
@@ -232,7 +234,7 @@ export class DashboardStateStore {
       try {
         const errorsRes = await fetch("/api/structural/errors", { cache: "no-store" });
         if (errorsRes.ok) {
-          const errorsData = await errorsRes.json();
+          const errorsData = await readJson(errorsRes);
           this.state.structural_errors = { errors: errorsData.errors || [] };
         }
       } catch (e) {
