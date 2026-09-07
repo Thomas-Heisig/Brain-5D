@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Preregistered increased-dimensional projection controls
+
+- Added the MSBA projection ablation protocol for 5D, 8D and 16D external projection spaces.
+- Kept productive core dimensions fixed at 5 and prohibited implicit N-D core claims.
+
 ## 2026-09-07 — Dimension-shuffled 5D control
 
 - Added the reproducible topology-matched `5d_shuffled` ablation arm.

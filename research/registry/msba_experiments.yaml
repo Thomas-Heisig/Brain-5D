@@ -97,6 +97,22 @@ hypotheses:
   falsification: Keine Recovery oder unspezifische Allokationssteigerung ohne Utility-Bezug.
 
 protocols:
+- id: PROTO-MSBA-PROJECTION-001
+  scope: external_projection_ablation
+  productive_core_dimensions: 5
+  projection_dimensions:
+  - 5
+  - 8
+  - 16
+  controls:
+  - structured_projection_5d_baseline
+  - increased_dimension_projection_8d
+  - increased_dimension_projection_16d
+  projection_mapping_required: true
+  core_dimension_migration: prohibited
+  learning_default: disabled
+  structural_growth_default: disabled
+  notes: Increased dimensions are external/adaptor projection controls only; they do not claim productive N-D core support.
 - id: PROTO-MSBA-AUDIO-001
   modality: audio
   projection_controls:

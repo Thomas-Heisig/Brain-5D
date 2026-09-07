@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+import yaml
 
 from src.embodiment.msba import (
     MAX_PROJECTION_DIMENSIONS,
@@ -33,3 +36,19 @@ def test_msba_contract_reports_projection_and_core_dimensions() -> None:
     assert topology["projection_dimensions_range"] == [1, 32]
     assert topology["productive_core_dimensions"] == 5
     assert topology["core_dimension_migration_required_above_five"] is True
+
+
+def test_increased_projection_controls_are_preregistered_and_core_separate() -> None:
+    path = Path("research/registry/msba_experiments.yaml")
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    protocols = payload["protocols"]
+    protocol = next(
+        item for item in protocols if item["id"] == "PROTO-MSBA-PROJECTION-001"
+    )
+
+    assert protocol["productive_core_dimensions"] == 5
+    assert protocol["projection_dimensions"] == [5, 8, 16]
+    assert protocol["projection_mapping_required"] is True
+    assert protocol["core_dimension_migration"] == "prohibited"
+    assert "increased_dimension_projection_8d" in protocol["controls"]
+    assert "increased_dimension_projection_16d" in protocol["controls"]

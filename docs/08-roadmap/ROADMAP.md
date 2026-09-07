@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Preregistered increased-dimensional projection controls
+
+- Added `PROTO-MSBA-PROJECTION-001` with structured 5D baseline and external 8D/16D projection controls.
+- Required explicit projection mapping and prohibited productive-core dimension migration in the protocol contract.
+
 ## 2026-09-07 Dimension-shuffled 5D control
 
 - Added a deterministic `5d_shuffled` control arm that preserves dimensions, graph topology, seed and tick contract while permuting the three-node coordinate embedding.

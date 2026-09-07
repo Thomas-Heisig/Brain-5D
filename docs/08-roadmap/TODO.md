@@ -318,7 +318,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Define preregistered topology-matched 5D-vs-control experiments.
 - [x] Implement dimension-shuffled control with a deterministic topology-matched 5D coordinate permutation.
 - [x] Implement reduced-dimensional matched embeddings for initial comparisons.
-- [ ] Add preregistered increased-dimensional projection controls without conflating them with productive-core N-D support.
+- [x] Add preregistered increased-dimensional projection controls without conflating them with productive-core N-D support.
 - [ ] Measure locality, propagation, learning efficiency, structural motifs, robustness and cost at larger scale.
 - [ ] Keep dimensionality claims open until ablation evidence exists.
 
