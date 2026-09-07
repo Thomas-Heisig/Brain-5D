@@ -26,7 +26,19 @@ _TEXT_SUFFIXES = {
     ".html",
     ".toml",
 }
-_SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__"}
+_SKIP_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "generated",
+    "node_modules",
+    "venv",
+}
 
 
 @dataclass(frozen=True, slots=True)

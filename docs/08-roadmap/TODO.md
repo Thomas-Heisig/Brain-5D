@@ -10,6 +10,13 @@
 - [x] Add a self-starting dashboard browser smoke check.
 - [x] Run the Chromium smoke check in CI.
 
+## 2026-09-07 Release timeline restoration
+
+- [x] Restore the Release workspace timeline from the canonical TODO, ROADMAP and CHANGELOG documents.
+- [x] Merge duplicate dated milestones while preserving their source labels and checklist state.
+- [x] Add regression coverage for the timeline data contract and frontend wiring.
+- [x] Show one complete past/present/future timeline, including the current release registry and open P0 backlog.
+
 ## 2026-09-07 Dashboard batch HTTP contract coverage
 
 - [x] Test workflow catalog GET route.
@@ -215,10 +222,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 825 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
+- [x] 835 tests collected on the current head; 800 fast tests passed, 3 platform tests skipped, 32 slow tests deselected, 0 failed.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
-- [x] Confirm the final current-head `main` CI after the documentation refresh: 825 passed, 5 skipped, 0 failed.
+- [x] Confirm the current-head fast suite after the documentation refresh: 800 passed, 3 skipped, 32 slow tests deselected, 0 failed.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
@@ -240,8 +247,9 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Replace the long research-question pulldown as the primary UX with a searchable Research Catalog, full-text RQ/H matching and an operational-only filter while retaining the underlying select as an accessibility/compatibility fallback.
 - [x] Visibly distinguish `OPERATIONAL` frozen/preregistered questions from `EXPLORATORY` questions.
 - [x] Route non-operational questions only to the existing exploratory `runtime_ticks_v1` path; never silently substitute an unrelated science runner or promote those runs to EVID.
+- [x] Publish a CI Markdown/JSON report from the repository-wide catalog audit and maintain a reasoned historical/test-fixture allow-list; unknown missing IDs fail the job.
 - [ ] Operationalize every still-unmapped canonical RQ/H with a dedicated protocol, controls, stopping rule, preregistration and runner before claiming that hypothesis can be confirmatorily tested.
-- [ ] Add a CI report artifact from the repository-wide catalog audit and decide which historical-only identifiers belong on an explicit allow-list versus the canonical registry.
+- [x] Decide which non-canonical references remain explicit historical/design references or test fixtures; canonical registry entries remain authoritative.
 - [ ] Add domain/status/evidence/experiment-progress facets to the Research Catalog once those fields are exposed by the workflow catalog API.
 - [ ] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
 

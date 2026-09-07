@@ -1,11 +1,24 @@
 # Changelog
 
+## 2026-09-07 — Repository catalog audit CI report
+
+- Added a reproducible repository-wide RQ/H audit report in Markdown and JSON.
+- Added explicit reasons for historical/design references and negative-test fixtures; unknown missing identifiers fail CI.
+- Excluded generated/build/cache outputs from the primary-source scan so reports remain stable and self-contained.
+
 ## 2026-09-07 — Full-stack dashboard E2E verification
 
 - Added a reproducible Chromium Playwright suite for batch selection, per-protocol Seeds/Ticks editing, workflow completion output and Footer progress.
 - Added browser coverage for workspace routing, box-state controls and responsive desktop/tablet/mobile shell behavior.
 - Enabled operator editing of the individual Seeds/Ticks fields rendered for selected batch protocols.
 - Verified 5 browser tests and 825 Python tests; 5 Python tests remain intentionally skipped for platform/large-run conditions.
+
+## 2026-09-07 — Release timeline restoration
+
+- Added a Release workspace Product Timeline backed by TODO, ROADMAP and CHANGELOG.
+- Merged repeated milestones and exposed source labels plus checklist completion in the frontend.
+- Added backend and frontend regression coverage for the documentation timeline contract.
+- Added a complete `Was war` / `Was ist` / `Was wird` view including release-registry history and open P0 work.
 
 ## 2026-09-07 — Full-stack runtime phase profiling
 

@@ -1,0 +1,325 @@
+{
+  "status": "clean",
+  "audit": {
+    "clean": false,
+    "question_reference_count": 967,
+    "hypothesis_reference_count": 794,
+    "missing_questions": [
+      "RQ-AI-DESIGN-001",
+      "RQ-AI-EFF-001",
+      "RQ-AUTO-CANDIDATE",
+      "RQ-BASE-001",
+      "RQ-BROWSER-001",
+      "RQ-BROWSER-002",
+      "RQ-CAUSAL-001",
+      "RQ-DUP-001",
+      "RQ-EXTRA-E01",
+      "RQ-LAT-001",
+      "RQ-LEARN-INTERF-001",
+      "RQ-MISSING-001",
+      "RQ-MSBA-E",
+      "RQ-PHIL-001",
+      "RQ-PHIL-002",
+      "RQ-PHIL-003",
+      "RQ-PHIL-004",
+      "RQ-PHIL-005",
+      "RQ-PHIL-006",
+      "RQ-PHIL-007",
+      "RQ-PHIL-008",
+      "RQ-PHIL-009",
+      "RQ-SELFMDL-001",
+      "RQ-TEST-001"
+    ],
+    "missing_hypotheses": [
+      "H-BASE-001-A",
+      "H-BROWSER-001-A",
+      "H-EXTRA-E01-A",
+      "H-GW-01",
+      "H-GW-02",
+      "H-GW-03",
+      "H-GW-04",
+      "H-GW-05",
+      "H-GW-06",
+      "H-MISSING-001",
+      "H-MSBA-E",
+      "H-TEST-001-A"
+    ],
+    "link_issues": []
+  },
+  "historical_only": {
+    "H-GW-01": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-GW-02": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-GW-03": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-GW-04": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-GW-05": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-GW-06": {
+      "reason": "Neural Symbiosis design hypothesis without a canonical protocol.",
+      "references": [
+        "docs/02-architecture/NEURAL_SYMBIOSIS.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "H-MSBA-E": {
+      "reason": "MSBA programme family shorthand, not a canonical hypothesis ID.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "RQ-AI-DESIGN-001": {
+      "reason": "Research-positioning design question without a canonical protocol.",
+      "references": [
+        "docs/06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "RQ-AI-EFF-001": {
+      "reason": "Research-positioning efficiency question without a canonical protocol.",
+      "references": [
+        "docs/06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "RQ-AUTO-CANDIDATE": {
+      "reason": "Legacy evidence-engine candidate identifier.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "src/research/evidence_engine.py"
+      ]
+    },
+    "RQ-CAUSAL-001": {
+      "reason": "Research-positioning causal question without a canonical protocol.",
+      "references": [
+        "docs/06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "RQ-LAT-001": {
+      "reason": "Research-positioning latency question without a canonical protocol.",
+      "references": [
+        "docs/06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "RQ-LEARN-INTERF-001": {
+      "reason": "Follow-up programme question pending canonical registration.",
+      "references": [
+        "research/protocols/EXP_GEN_0021_FOLLOWUP_PROGRAM.yaml",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    },
+    "RQ-MSBA-E": {
+      "reason": "MSBA programme family shorthand, not a canonical question ID.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "RQ-PHIL-001": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "docs/08-roadmap/TODO_SELF_MODEL_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-002": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-003": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-004": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-005": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-006": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-007": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-008": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-PHIL-009": {
+      "reason": "Philosophical design question kept in its dedicated source file.",
+      "references": [
+        "docs/06-research/PHILOSOPHICAL_SELF_MODEL_AND_THINKING.md",
+        "docs/08-roadmap/TODO_SELF_MODEL_THINKING.md",
+        "research/registry/catalog_audit_allow_list.yaml",
+        "research/registry/philosophical_questions_claims.yaml"
+      ]
+    },
+    "RQ-SELFMDL-001": {
+      "reason": "Research-positioning self-model question without a canonical protocol.",
+      "references": [
+        "docs/06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md",
+        "research/registry/catalog_audit_allow_list.yaml"
+      ]
+    }
+  },
+  "test_fixtures": {
+    "H-BASE-001-A": {
+      "reason": "Registry-fragment test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "H-BROWSER-001-A": {
+      "reason": "Browser test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/browser/dashboard.spec.js"
+      ]
+    },
+    "H-EXTRA-E01-A": {
+      "reason": "Registry-fragment test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "H-MISSING-001": {
+      "reason": "Catalog-audit negative test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_catalog_audit.py"
+      ]
+    },
+    "H-TEST-001-A": {
+      "reason": "Catalog-audit test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_experiment_validity.py",
+        "tests/test_research_catalog_audit.py",
+        "tests/test_research_question_maturity.py",
+        "tests/test_scientific_execution_contract.py"
+      ]
+    },
+    "RQ-BASE-001": {
+      "reason": "Registry-fragment test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "RQ-BROWSER-001": {
+      "reason": "Browser test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/browser/dashboard.spec.js"
+      ]
+    },
+    "RQ-BROWSER-002": {
+      "reason": "Browser test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/browser/dashboard.spec.js"
+      ]
+    },
+    "RQ-DUP-001": {
+      "reason": "Duplicate-registry test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "RQ-EXTRA-E01": {
+      "reason": "Registry-fragment test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_registry_fragments.py"
+      ]
+    },
+    "RQ-MISSING-001": {
+      "reason": "Catalog-audit negative test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_research_catalog_audit.py"
+      ]
+    },
+    "RQ-TEST-001": {
+      "reason": "Catalog-audit test fixture.",
+      "references": [
+        "research/registry/catalog_audit_allow_list.yaml",
+        "tests/test_dashboard_batch_routes.py",
+        "tests/test_experiment_validity.py",
+        "tests/test_neural_symbiosis.py",
+        "tests/test_research_catalog_audit.py",
+        "tests/test_research_question_maturity.py"
+      ]
+    }
+  },
+  "disallowed_missing": {},
+  "stale_allow_list": []
+}

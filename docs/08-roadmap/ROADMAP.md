@@ -11,6 +11,13 @@
 - Made the registered per-protocol batch Seeds/Ticks inputs editable so the tested workflow contract is available to operators.
 - Verified `npm run test:e2e`: 5 passed and `python -m pytest tests -q`: 825 passed, 5 skipped.
 
+## 2026-09-07 Release timeline restoration
+
+- Restored a documentation-backed Product Timeline in the Release workspace.
+- The dashboard merges dated milestones from TODO, ROADMAP and CHANGELOG and keeps source provenance visible.
+- Checklist completion remains derived from the source Markdown rather than copied into frontend code.
+- The Release workspace now separates completed history, current Alpha.7 work and planned backlog into three timeline lanes.
+
 ## 2026-09-07 Full-stack runtime phase profiling
 
 - Added canonical RuntimeTelemetry phase slots for learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage.
@@ -378,7 +385,7 @@ Still required:
 1. assign every still-unmapped canonical RQ/H a dedicated runner or an explicit `design_pending` state;
 2. freeze controls, stopping rules, primary outcomes and preregistrations before confirmatory execution;
 3. expose domain/status/evidence/progress facets through the workflow catalog API;
-4. publish the registry audit as a CI artifact and maintain an explicit historical-reference allow-list where appropriate;
+4. publish the registry audit as a CI Markdown/JSON artifact and maintain an explicit, reasoned historical/test-fixture allow-list where appropriate;
 5. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports.
 
 **Priority:** immediate.

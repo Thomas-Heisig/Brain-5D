@@ -1,0 +1,44 @@
+# Identifiers referenced by historical/design material but not loaded by the
+# canonical ResearchRegistry. Each entry requires a reason so the exception is
+# reviewable and cannot become an untracked second registry.
+historical_only:
+  RQ-AI-DESIGN-001: "Research-positioning design question without a canonical protocol."
+  RQ-AI-EFF-001: "Research-positioning efficiency question without a canonical protocol."
+  RQ-AUTO-CANDIDATE: "Legacy evidence-engine candidate identifier."
+  RQ-CAUSAL-001: "Research-positioning causal question without a canonical protocol."
+  RQ-LAT-001: "Research-positioning latency question without a canonical protocol."
+  RQ-LEARN-INTERF-001: "Follow-up programme question pending canonical registration."
+  RQ-MSBA-E: "MSBA programme family shorthand, not a canonical question ID."
+  RQ-PHIL-001: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-002: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-003: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-004: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-005: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-006: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-007: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-008: "Philosophical design question kept in its dedicated source file."
+  RQ-PHIL-009: "Philosophical design question kept in its dedicated source file."
+  RQ-SELFMDL-001: "Research-positioning self-model question without a canonical protocol."
+  H-GW-01: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-GW-02: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-GW-03: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-GW-04: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-GW-05: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-GW-06: "Neural Symbiosis design hypothesis without a canonical protocol."
+  H-MSBA-E: "MSBA programme family shorthand, not a canonical hypothesis ID."
+
+# These identifiers intentionally exist only in tests that exercise rejection
+# and duplicate-detection paths. They are not research records.
+test_fixtures:
+  RQ-BASE-001: "Registry-fragment test fixture."
+  RQ-BROWSER-001: "Browser test fixture."
+  RQ-BROWSER-002: "Browser test fixture."
+  RQ-DUP-001: "Duplicate-registry test fixture."
+  RQ-EXTRA-E01: "Registry-fragment test fixture."
+  RQ-MISSING-001: "Catalog-audit negative test fixture."
+  RQ-TEST-001: "Catalog-audit test fixture."
+  H-BASE-001-A: "Registry-fragment test fixture."
+  H-BROWSER-001-A: "Browser test fixture."
+  H-EXTRA-E01-A: "Registry-fragment test fixture."
+  H-MISSING-001: "Catalog-audit negative test fixture."
+  H-TEST-001-A: "Catalog-audit test fixture."
