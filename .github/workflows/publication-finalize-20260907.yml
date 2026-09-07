@@ -1,0 +1,112 @@
+name: Finalize publication research integration
+
+on:
+  push:
+    branches: [fix/publication-research-integration-20260907]
+    paths: ['.github/workflows/publication-finalize-20260907.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Materialize complete publication
+        run: git lfs pull --include='research/publications/**' --exclude=''
+      - name: Integrate and verify research publication
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          results = []
+          def run(name, command):
+              result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              print(name, result.returncode, result.stdout[-8000:], flush=True)
+              results.append({'check': name, 'exit_code': result.returncode, 'tail': result.stdout[-4000:]})
+              return result.returncode == 0
+
+          def replace_once(name, old, new):
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              if new in text:
+                  return
+              if old not in text:
+                  raise ValueError('Integration anchor missing: ' + name)
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          run('identity_name', ['git', 'config', 'user.name', 'github-actions[bot]'])
+          run('identity_email', ['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+          try:
+              replace_once('src/dashboard/research_source.py', '        "literature",\n', '        "literature",\n        "publications",\n')
+              replace_once('src/dashboard/file_rendering.py', '        "experiments",\n', '        "experiments",\n        "publications",\n')
+              replace_once('.pre-commit-config.yaml', '\nrepos:\n', '\n# Frozen publication bytes are verified by Publication Integrity CI.\nexclude: ^research/publications/2026-09-07_ki-die-geliehene-intelligenz/\n\nrepos:\n')
+              for name, link in [('README.md', 'research/publications/README.md'), ('research/README.md', 'publications/README.md')]:
+                  path = Path(name)
+                  text = path.read_text(encoding='utf-8')
+                  heading = '## Wissenschaftliche Abhandlung und Publikationsarchiv'
+                  if heading not in text:
+                      text = text.rstrip() + '\n\n' + heading + '\n\n'
+                      text += '[KI - Die geliehene Intelligenz: vollstaendige wissenschaftliche Abhandlung](' + link + ')\n\n'
+                      text += 'Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forschungsfragen, Hypothesen, Ergebnisdarstellungen, Originalmanuskripte und alle Begleitdateien. Die kapitelweise Lesefassung ist im zentralen File Viewer vollstaendig zugaenglich. Datierte Originale bleiben unveraendert und schreibgeschuetzt; kanonische Register und Evidenzfreigaben werden nicht ersetzt.\n'
+                      path.write_text(text, encoding='utf-8')
+              path = Path('scripts/publication_bundle.py')
+              text = path.read_text(encoding='utf-8')
+              old = 'LINK.sub(rewrite, content).rstrip()'
+              if old in text:
+                  text = text.replace(old, 'clean_reader_text(LINK.sub(rewrite, content)).rstrip()')
+                  helper = '\n'.join([
+                      'def clean_reader_text(text: str) -> str:',
+                      '    """Normalize derived views only; preserve Markdown hard breaks."""',
+                      '    output: list[str] = []',
+                      '    fence: str | None = None',
+                      '    for line in text.splitlines():',
+                      '        marker = re.match(r"^\\s*(`{3,}|~{3,})", line)',
+                      '        if marker:',
+                      '            token = marker.group(1)',
+                      '            if fence is None:',
+                      '                fence = token',
+                      '            elif token[0] == fence[0] and len(token) >= len(fence):',
+                      '                fence = None',
+                      '            output.append(line.rstrip())',
+                      '            continue',
+                      '        hard_break = fence is None and line.endswith("  ") and bool(line.strip())',
+                      '        output.append(line.rstrip() + ("<br>" if hard_break else ""))',
+                      '    return "\\n".join(output)', '', '',
+                  ])
+                  text = text.replace('def reader_files(', helper + '\ndef reader_files(', 1)
+                  path.write_text(text, encoding='utf-8')
+              if not run('reader_build', ['python', 'scripts/publication_bundle.py', '--build-reader']):
+                  raise ValueError('Reader build failed')
+              if not run('complete_integrity', ['python', 'scripts/publication_bundle.py']):
+                  raise ValueError('Frozen bundle or complete reader verification failed')
+              run('dependencies', ['python', '-m', 'pip', 'install', '-e', '.[dev,docs]'])
+              run('format', ['python', '-m', 'black', 'scripts/publication_bundle.py', 'tests/test_publication_integration.py'])
+              run('lint', ['python', '-m', 'ruff', 'check', 'scripts/publication_bundle.py', 'tests/test_publication_integration.py'])
+              run('integration_tests', ['python', '-m', 'pytest', 'tests/test_publication_integration.py', 'tests/test_dashboard_file_manager.py', '-q'])
+              run('type_check', ['python', '-m', 'pyright'])
+              paths = ['research/publications/reader', 'research/README.md', 'README.md', '.pre-commit-config.yaml', 'src/dashboard/research_source.py', 'src/dashboard/file_rendering.py', 'scripts/publication_bundle.py', 'tests/test_publication_integration.py']
+              run('stage', ['git', 'add', *paths])
+              clean = run('diff_check', ['git', 'diff', '--cached', '--check'])
+              if clean and subprocess.run(['git', 'diff', '--cached', '--quiet']).returncode:
+                  run('commit', ['git', 'commit', '-m', 'feat(research): integrate immutable publication and complete verified chapter reader'])
+                  run('push', ['git', 'push', 'origin', 'HEAD:refs/heads/fix/publication-research-integration-20260907'])
+          except Exception as exc:
+              results.append({'check': 'integration', 'exit_code': 1, 'tail': str(exc)})
+          report = {'status': 'success' if all(r['exit_code'] == 0 for r in results) else 'failure', 'checks': results}
+          Path('.publication-integration-result.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          subprocess.run(['git', 'reset'], check=True)
+          subprocess.run(['git', 'add', '.publication-integration-result.json'], check=True)
+          if subprocess.run(['git', 'diff', '--cached', '--quiet']).returncode:
+              subprocess.run(['git', 'commit', '-m', 'chore(research): record publication integration verification status'], check=True)
+              subprocess.run(['git', 'push', 'origin', 'HEAD:refs/heads/fix/publication-research-integration-20260907'], check=True)
+          if report['status'] != 'success':
+              raise SystemExit(1)
+          PY
