@@ -3,7 +3,10 @@ name: Verify consolidated main
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/repository-maintenance.yml, '.maintenance/**']
+    paths:
+      - .github/workflows/repository-maintenance.yml
+      - .github/workflows/research-registry-reports.yml
+      - '.maintenance/**'
   workflow_dispatch:
 
 permissions:
