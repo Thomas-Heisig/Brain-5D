@@ -338,6 +338,9 @@ export function renderWorkspaceSummaries(state) {
   const profile = runtimeClock.tick_profile || {};
   const topPhase = Object.entries(profile).sort((left, right) => Number(right[1]) - Number(left[1]))[0];
   setText("runtime-clock-phase", topPhase ? `${topPhase[0]} ${Number(topPhase[1]).toFixed(2)} ms` : "—");
+  const profileEntries = Object.entries(profile);
+  const activePhases = profileEntries.filter((entry) => Number(entry[1]) > 0).length;
+  setText("runtime-clock-phases", `${activePhases}/${profileEntries.length} phases`);
   setText("embodiment-action-detail", embodiment.last_action || "—");
   setText("embodiment-sensor-state", sensors > 0 ? `${sensors} active` : "Not connected");
   setText("embodiment-actuator-state", actuators > 0 ? `${actuators} active` : "Not connected");

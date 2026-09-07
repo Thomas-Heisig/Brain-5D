@@ -70,3 +70,21 @@ def test_runtime_clock_none_is_unlimited_max_mode() -> None:
 
     assert telemetry.target_hz is None
     assert telemetry.runtime_mode == "MAX"
+
+
+def test_runtime_profile_exposes_all_full_stack_phase_slots() -> None:
+    controller = RuntimeController(Network())
+    controller.add_hook(lambda _tick, _result: controller.record_phase("learning", 1.25))
+    telemetry = controller.run_ticks(1)
+
+    assert telemetry.tick_profile is not None
+    assert telemetry.tick_profile["learning"] == pytest.approx(1.25)
+    assert telemetry.tick_profile["homeostasis"] == 0.0
+    assert telemetry.tick_profile["structural"] == 0.0
+    assert telemetry.tick_profile["embodiment"] == 0.0
+    assert telemetry.tick_profile["neural_symbiosis_msba"] == 0.0
+    assert telemetry.tick_profile["dashboard_telemetry"] == 0.0
+    assert telemetry.tick_profile["storage"] == 0.0
+
+    with pytest.raises(ValueError, match="unknown runtime profile phase"):
+        controller.record_phase("unknown", 1.0)

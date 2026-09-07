@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Full-stack runtime phase profiling
+
+- Added canonical RuntimeTelemetry phase slots for learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage.
+- Added an external phase-recording API for runtime hooks and exposed active/total phase coverage in the Runtime dashboard panel.
+- Inactive subsystem phases remain explicit `0.0` DATA rather than inferred measurements.
+
 ## 2026-09-07 Neuron/synapse scaling profile
 
 - Extended `scripts/benchmark_ladder.py` with explicit connections-per-neuron, actual synapse counts and synapse throughput.

@@ -35,6 +35,19 @@ from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any, Protocol, cast
 
+PROFILE_PHASES = (
+    "network_step",
+    "tick_segment",
+    "post_tick_hooks",
+    "learning",
+    "homeostasis",
+    "structural",
+    "embodiment",
+    "neural_symbiosis_msba",
+    "dashboard_telemetry",
+    "storage",
+)
+
 # ============================================================================
 # Protocols (Minimal contracts for loose coupling)
 # ============================================================================
@@ -311,7 +324,9 @@ class RuntimeController:
         self._completed_ticks: int = 0
         self._last_tick_latency_ms: float = 0.0
         self._tick_latency_samples: list[float] = []
-        self._phase_totals_ms: dict[str, float] = {}
+        self._phase_totals_ms: dict[str, float] = {
+            phase: 0.0 for phase in PROFILE_PHASES
+        }
         self._telemetry: RuntimeTelemetry = self._make_telemetry(0.0, 0.0, 0)
 
     # ========================================================================
@@ -361,6 +376,17 @@ class RuntimeController:
         with self._lock:
             if hook not in self._hooks:
                 self._hooks.append(hook)
+
+    def record_phase(self, phase: str, elapsed_ms: float) -> None:
+        """Record an externally measured subsystem phase for runtime telemetry."""
+        if phase not in PROFILE_PHASES:
+            raise ValueError(f"unknown runtime profile phase: {phase}")
+        if elapsed_ms < 0.0:
+            raise ValueError("elapsed_ms must be non-negative")
+        with self._lock:
+            self._phase_totals_ms[phase] = (
+                self._phase_totals_ms.get(phase, 0.0) + float(elapsed_ms)
+            )
 
     def remove_hook(self, hook: PostTickHook) -> bool:
         """Remove a previously registered hook.
@@ -672,7 +698,7 @@ class RuntimeController:
     def _execute_ticks(self, count: int) -> int:
         """Execute a number of ticks and return total spikes."""
         spikes_total = 0
-        self._phase_totals_ms = {}
+        self._phase_totals_ms = {phase: 0.0 for phase in PROFILE_PHASES}
 
         with self._lock:
             pre_hooks = tuple(self._pre_hooks)

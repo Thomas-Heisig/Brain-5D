@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Full-stack runtime phase profiling
+
+- Added canonical runtime phase slots and external hook recording for subsystem profiling.
+- Exposed phase coverage in the Runtime dashboard while preserving explicit zero values for inactive phases.
+
 ## 2026-09-07 — Neuron/synapse scaling profile
 
 - Extended the scaling benchmark to profile actual synapse counts and throughput alongside neuron counts.

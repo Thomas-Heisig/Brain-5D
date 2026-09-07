@@ -114,6 +114,7 @@ def run_pacing_case(
         "dt_ms": dt_ms,
         "tick_cost_ms": telemetry.tick_latency_ms,
         "tick_profile_ms": dict(telemetry.tick_profile),
+        "profile_phase_contract": sorted(telemetry.tick_profile or {}),
         "controller_runtime_mode": telemetry.runtime_mode,
         "simulation_tick": network.current_tick,
     }

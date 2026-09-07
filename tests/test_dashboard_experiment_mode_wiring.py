@@ -145,6 +145,14 @@ class TestExperimentModeFrontendWiring:
         assert "this.runtime?.completed_ticks" in control_js
         assert "this.runtime?.batch_duration_ms" in control_js
 
+    def test_runtime_phase_profile_is_visible_in_dashboard_contract(self) -> None:
+        html = _read_static("index.html")
+        workspace_js = _read_static("workspace-panels.js")
+
+        assert 'id="runtime-clock-phases"' in html
+        assert "runtimeClock.tick_profile" in workspace_js
+        assert "activePhases" in workspace_js
+
     def test_control_structural_strip_and_experiment_footer_are_wired(self) -> None:
         html = _read_static("index.html")
         experiment_js = _read_static("experiment-mode.js")

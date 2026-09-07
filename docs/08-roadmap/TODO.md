@@ -310,7 +310,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
 - [x] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [x] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
-- [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage as distinct measured phases.
+- [x] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage as distinct measured phases through the canonical RuntimeTelemetry phase contract and external hook API.
 - [x] Profile increasing neuron/synapse counts before optimizing kernels.
 
 ## P1 — 5D causal/ablation program
