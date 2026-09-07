@@ -13,6 +13,7 @@ requires an explicit preregistered experiment.
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 from dataclasses import dataclass
 from enum import StrEnum
@@ -115,6 +116,20 @@ class EnergyCoefficients:
     io_byte: float = 0.0002
     adapter_base: float = 1.0
 
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return the normalized accounting coefficients as provenance data."""
+
+        return {
+            "spike": self.spike,
+            "synaptic_event": self.synaptic_event,
+            "plasticity_update": self.plasticity_update,
+            "structural_event": self.structural_event,
+            "memory_byte": self.memory_byte,
+            "io_byte": self.io_byte,
+            "adapter_base": self.adapter_base,
+            "units_are_not_physical_joules": True,
+        }
+
 
 @dataclass(frozen=True, slots=True)
 class EnergyObservation:
@@ -183,6 +198,55 @@ class SymbolFrame:
             "checksum_algorithm": "sha256",
             "checksum": self.checksum,
         }
+
+
+@dataclass(frozen=True, slots=True)
+class EmbodimentTreatmentProvenance:
+    """Immutable DATA record for an explicit adapter/gateway treatment."""
+
+    adapter_id: str
+    adapter_architecture: str
+    projection_mode: str = "structured"
+    projection_dimensions: int = 5
+    gateway: MSBAGatewayConfig = MSBAGatewayConfig()
+    energy: EnergyCoefficients = EnergyCoefficients()
+
+    def __post_init__(self) -> None:
+        if not self.adapter_id.strip():
+            raise ValueError("adapter_id must not be empty")
+        if not self.adapter_architecture.strip():
+            raise ValueError("adapter_architecture must not be empty")
+        if not self.projection_mode.strip():
+            raise ValueError("projection_mode must not be empty")
+        validate_projection_dimensions(self.projection_dimensions)
+
+    def to_json(self) -> dict[str, JSONValue]:
+        """Return a deterministic, non-EVID treatment provenance record."""
+
+        record: dict[str, JSONValue] = {
+            "schema_version": 1,
+            "record_type": "embodiment_treatment_provenance",
+            "status": "DATA_ONLY",
+            "adapter": {
+                "id": self.adapter_id,
+                "architecture": self.adapter_architecture,
+            },
+            "projection": {
+                "mode": self.projection_mode,
+                "dimensions": self.projection_dimensions,
+                "productive_core_dimensions": 5,
+            },
+            "gateway": self.gateway.to_json(),
+            "energy": self.energy.to_json(),
+            "scientific_boundary": {
+                "requires_preregistration": True,
+                "requires_human_review": True,
+                "does_not_promote_to_evid": True,
+            },
+        }
+        canonical = json.dumps(record, sort_keys=True, separators=(",", ":"))
+        record["record_sha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        return record
 
 
 @dataclass(frozen=True, slots=True)

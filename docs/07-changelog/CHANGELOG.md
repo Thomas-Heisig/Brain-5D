@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Embodiment treatment provenance
+
+- Added deterministic provenance serialization for adapter, projection, gateway and energy treatment parameters.
+- Kept these records explicitly `DATA_ONLY` with no automatic EVID promotion.
+
 ## 2026-09-07 — Digital payload checksum persistence
 
 - Persisted exact SHA-256 checksums and metadata for digital `SymbolFrame` payloads.

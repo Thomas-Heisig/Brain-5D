@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Embodiment treatment provenance
+
+- Added deterministic `DATA_ONLY` provenance records binding adapter identity, projection mode/dimensions, gateway configuration and normalized energy coefficients.
+- Provenance records require preregistration and human review and cannot promote themselves to EVID.
+
 ## 2026-09-07 Digital payload checksum persistence
 
 - Added JSON provenance persistence for digital `SymbolFrame` payloads with SHA-256 checksum, payload size, codec, sequence and source provenance.

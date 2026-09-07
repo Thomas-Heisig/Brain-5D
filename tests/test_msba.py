@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from src.embodiment import (
+    EmbodimentTreatmentProvenance,
     EnergyObservation,
     EnergyState,
     MSBAGatewayConfig,
@@ -128,3 +129,31 @@ def test_msba_contract_requires_digital_checksum_persistence() -> None:
     assert isinstance(boundary, dict)
     assert boundary["digital_payload_outside_snn"] is True
     assert boundary["digital_checksum_persisted"] is True
+
+
+def test_treatment_provenance_binds_adapter_projection_gateway_and_energy() -> None:
+    record = EmbodimentTreatmentProvenance(
+        adapter_id="vision.adapter.test",
+        adapter_architecture="onnx-runtime",
+        projection_mode="shuffled",
+        projection_dimensions=8,
+    ).to_json()
+
+    assert record["record_type"] == "embodiment_treatment_provenance"
+    assert record["status"] == "DATA_ONLY"
+    assert record["adapter"] == {
+        "id": "vision.adapter.test",
+        "architecture": "onnx-runtime",
+    }
+    assert record["projection"]["mode"] == "shuffled"
+    assert record["projection"]["dimensions"] == 8
+    assert record["gateway"]["requires_preregistration"] is True
+    assert record["energy"]["units_are_not_physical_joules"] is True
+    assert record["scientific_boundary"]["does_not_promote_to_evid"] is True
+    assert len(record["record_sha256"]) == 64
+    assert record == EmbodimentTreatmentProvenance(
+        adapter_id="vision.adapter.test",
+        adapter_architecture="onnx-runtime",
+        projection_mode="shuffled",
+        projection_dimensions=8,
+    ).to_json()
