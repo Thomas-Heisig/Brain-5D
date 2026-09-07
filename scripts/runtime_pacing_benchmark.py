@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import platform
 import sys
@@ -35,6 +36,31 @@ class _BenchmarkNetwork:
     def step(self) -> _StepResult:
         self.current_tick += 1
         return _StepResult()
+
+
+def run_deterministic_batch(
+    target_hz: float | None,
+    *,
+    ticks: int,
+    dt_ms: float = 1.0,
+) -> dict[str, Any]:
+    """Run identical synchronous simulation work under one pacing setting."""
+    if ticks <= 0:
+        raise ValueError("ticks must be positive")
+    network = _BenchmarkNetwork()
+    telemetry = RuntimeController(network, target_hz=target_hz).run_ticks(ticks)
+    state = json.dumps(
+        {"tick": network.current_tick, "dt_ms": dt_ms},
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return {
+        "target_hz": target_hz,
+        "ticks": telemetry.completed_ticks,
+        "spikes": telemetry.spikes_this_batch,
+        "state_digest": hashlib.sha256(state.encode("utf-8")).hexdigest(),
+        "dt_ms": dt_ms,
+    }
 
 
 def run_pacing_case(

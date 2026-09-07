@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from scripts.runtime_pacing_benchmark import build_report, run_pacing_case
+from scripts.runtime_pacing_benchmark import (
+    build_report,
+    run_deterministic_batch,
+    run_pacing_case,
+)
 
 
 def test_pacing_case_records_controller_measurements() -> None:
@@ -25,3 +29,15 @@ def test_pacing_report_covers_targeted_and_unlimited_modes() -> None:
     assert report["cases"][0]["realtime_ratio"] is not None
     assert report["cases"][1]["realtime_ratio"] is None
     assert all(case["ticks"] > 0 for case in report["cases"])
+
+
+def test_pacing_only_changes_do_not_change_deterministic_batch_results() -> None:
+    unlimited = run_deterministic_batch(None, ticks=25, dt_ms=1.0)
+    targeted = run_deterministic_batch(10.0, ticks=25, dt_ms=1.0)
+
+    assert unlimited["target_hz"] is None
+    assert targeted["target_hz"] == 10.0
+    assert unlimited["dt_ms"] == targeted["dt_ms"] == 1.0
+    assert unlimited["ticks"] == targeted["ticks"] == 25
+    assert unlimited["spikes"] == targeted["spikes"]
+    assert unlimited["state_digest"] == targeted["state_digest"]

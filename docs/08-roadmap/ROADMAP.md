@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Pacing-only determinism proof
+
+- Added a deterministic controller batch comparison proving target-Hz configuration does not alter ticks, spikes or state digest when simulated inputs and `dt` are identical.
+- The proof uses synchronous bounded batches, isolating pacing configuration from simulation semantics.
+
 ## 2026-09-07 Runtime pacing benchmark
 
 - Added `scripts/runtime_pacing_benchmark.py` for bounded low-rate, targeted and unlimited RuntimeController measurements.

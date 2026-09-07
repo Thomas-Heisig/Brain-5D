@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-07 — Pacing-only determinism proof
+
+- Added regression coverage showing target-Hz versus unlimited configuration produces identical deterministic batch results for equal inputs and `dt`.
+
 ## 2026-09-07 — Runtime pacing benchmark
 
 - Added a bounded RuntimeController pacing benchmark for targeted and unlimited modes.
