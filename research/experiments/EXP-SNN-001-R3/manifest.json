@@ -1,0 +1,128 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "preregistration": "preregistrations/PREREG-SNN-001.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "C:\\Users\\T_hei\\AppData\\Local\\Temp\\brain5d-clean-snn-r3\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-07T14:09:01.933323+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "execution_contract": {
+    "hypothesis_id": "H-SNN-001-A",
+    "protocol": "sustained_activity_stability_v1",
+    "question_id": "RQ-SNN-001",
+    "resolved_runner": "run_sustained_stability",
+    "runtime_runner_bytecode_sha256": "5d72d56b50f32859bde16ee622629877e97a65c534109b5215a4dd20da46e025",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "5d72d56b50f32859bde16ee622629877e97a65c534109b5215a4dd20da46e025",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "minimum_per_run_with_control_and_treatment",
+      "observed_max": 100000,
+      "observed_min": 100000,
+      "requested_ticks": 100000,
+      "run_count": 20,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 100000
+  },
+  "experiment_id": "EXP-SNN-001-R3",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "HEAD",
+    "commit": "23dbbd2607d8d6075b57474184d6e6cc3e217b85",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-SNN-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "2e69185c8d5e78e204d592620b6946eedce5c3fe2d51f2cc09e171790f9dc92d",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "242d72dde8c16637f8ebda383292bc4fbd03a90a780ca63931a1a17c940e7306",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-SNN-001"
+  ],
+  "research_run_mode": "CONFIRMATORY",
+  "results": {
+    "protocol": "sustained_activity_stability_v1",
+    "run_count": 20,
+    "runner": "run_sustained_stability",
+    "tick_contract": {
+      "mode": "minimum_per_run_with_control_and_treatment",
+      "observed_max": 100000,
+      "observed_min": 100000,
+      "requested_ticks": 100000,
+      "run_count": 20,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 100000
+  },
+  "runtime": {
+    "duration_seconds": 10.707760399905965
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "sustained_activity_stability_v1",
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "ticks": 100000
+  },
+  "software": {
+    "brain5d_version": "unknown",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "75c6ee0d7614a47f00540dc5d29b19aba3e4062b0b3cd4f6b8747f23f943ba87",
+  "timestamp": "2026-09-07T16:09:01.933291",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}
