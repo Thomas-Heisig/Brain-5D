@@ -1,0 +1,407 @@
+{
+  "run_count": 40,
+  "runs": [
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-recurrence_off-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "8af176fb23ea9d9a43fe354818543f8a479495818cdd18b5147c56af77398591",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-recurrence_on-seed-101.json.gz",
+      "run_index": 1,
+      "seed": 101,
+      "sha256": "a5b1c751a6238ca0d1d6ec58e16f511bf055c7bebb94f6892cee7f6cf72a41c6",
+      "size_bytes": 618,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-recurrence_off-seed-102.json.gz",
+      "run_index": 2,
+      "seed": 102,
+      "sha256": "adea3b1e20bb8ce8646262918926b3307a11e55e26d847483c2f0ec1429768cc",
+      "size_bytes": 518,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-recurrence_on-seed-102.json.gz",
+      "run_index": 3,
+      "seed": 102,
+      "sha256": "83060f11da323db6dac9bdc7abbed855cb5f09440a3fdc1fc4e1b6e0225107e1",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-recurrence_off-seed-103.json.gz",
+      "run_index": 4,
+      "seed": 103,
+      "sha256": "06cde9196271656a7579be8e10eb8bcd9314316a4f752eb505a69373696b4555",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-recurrence_on-seed-103.json.gz",
+      "run_index": 5,
+      "seed": 103,
+      "sha256": "e963db80c5771004a54c030e1f75731e06a48ec7ca18015bd3a472a212574a4f",
+      "size_bytes": 619,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-recurrence_off-seed-104.json.gz",
+      "run_index": 6,
+      "seed": 104,
+      "sha256": "e0778f03f74581b622cfc7e13753b9de1918ceae77f29b848c34439d3b1bbc47",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-recurrence_on-seed-104.json.gz",
+      "run_index": 7,
+      "seed": 104,
+      "sha256": "da6ee7dacaaed5bcf993a09a2bdc18490bb23ce8d7a3dd5ed23cf30e181a60b8",
+      "size_bytes": 618,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-recurrence_off-seed-105.json.gz",
+      "run_index": 8,
+      "seed": 105,
+      "sha256": "e8a1e49b2f7d7e6cdcbd58dfabe55633c348f15fee479cc494bc9d45dffa7764",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-recurrence_on-seed-105.json.gz",
+      "run_index": 9,
+      "seed": 105,
+      "sha256": "0734401e060deb83f60199a7b1c666bc4b0a36ac2da89e4b4d19174fc44c1ec8",
+      "size_bytes": 619,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0010-recurrence_off-seed-106.json.gz",
+      "run_index": 10,
+      "seed": 106,
+      "sha256": "16e6ae55cea5b2e181406a63829ac0774441846574242d21ea4794cbc337ee0a",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0011-recurrence_on-seed-106.json.gz",
+      "run_index": 11,
+      "seed": 106,
+      "sha256": "d0db8e49fa9d085a072222e1344db11e3bb0f8febc8bf6c78723fa952aecac29",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0012-recurrence_off-seed-107.json.gz",
+      "run_index": 12,
+      "seed": 107,
+      "sha256": "292652bf8be9193ba1f253ca16bc3eaf6c0e95693f1101d79c0bf002d8bcee2c",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0013-recurrence_on-seed-107.json.gz",
+      "run_index": 13,
+      "seed": 107,
+      "sha256": "3418338ac84fcb21d5d03962348237afe1d2ab4d332d1c5ca49505128f2e6519",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0014-recurrence_off-seed-108.json.gz",
+      "run_index": 14,
+      "seed": 108,
+      "sha256": "79d41e346bcd95debf53684ab74ea840a7ede3b6132035d1ff6d060315c6bfba",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0015-recurrence_on-seed-108.json.gz",
+      "run_index": 15,
+      "seed": 108,
+      "sha256": "750ab09870d05ba69d4bc139bea9d5e480dce1a204f7c5d1085ed56b3c594243",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0016-recurrence_off-seed-109.json.gz",
+      "run_index": 16,
+      "seed": 109,
+      "sha256": "ad1a9a6152a4700acfedbcf90cc86d1bc67b8f1596e4ba40e5a44f73dd468231",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0017-recurrence_on-seed-109.json.gz",
+      "run_index": 17,
+      "seed": 109,
+      "sha256": "45844994336da5133dacc67c4fb2e38f7aad79db1d32a0ce3732d8f65d733b7a",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0018-recurrence_off-seed-110.json.gz",
+      "run_index": 18,
+      "seed": 110,
+      "sha256": "19cd0d026584f2158ce82850dde28f1452b558917ae568f3d0908c6101ebea38",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0019-recurrence_on-seed-110.json.gz",
+      "run_index": 19,
+      "seed": 110,
+      "sha256": "d5e920cb596ffb82526c988cc74ae8dda57224fd1742887e2a1bb3f523292932",
+      "size_bytes": 619,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0020-recurrence_off-seed-111.json.gz",
+      "run_index": 20,
+      "seed": 111,
+      "sha256": "b1811b368613ca6a3661c4746264c0f931481d3221c8b29215a22718aab572ff",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0021-recurrence_on-seed-111.json.gz",
+      "run_index": 21,
+      "seed": 111,
+      "sha256": "94a97fbf5d29000d22d16eb572be43b9e20b9c45ba664d681e2145e6f1a2ec84",
+      "size_bytes": 619,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0022-recurrence_off-seed-112.json.gz",
+      "run_index": 22,
+      "seed": 112,
+      "sha256": "0c94bda4164bf9a8731bb69f1f59aafeebea4f10852250b65396d4491de00c51",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0023-recurrence_on-seed-112.json.gz",
+      "run_index": 23,
+      "seed": 112,
+      "sha256": "b85c5e9dc72a8f8b202e22c429e715e7d4dd7a0f3201bff90d2694e2f4920896",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0024-recurrence_off-seed-113.json.gz",
+      "run_index": 24,
+      "seed": 113,
+      "sha256": "95bbbb0e80d17b7c3970fdda51239fba0f5f1ab960698efea7c9351905c87588",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0025-recurrence_on-seed-113.json.gz",
+      "run_index": 25,
+      "seed": 113,
+      "sha256": "df445a9f43aabb85013fd6b5e2ff09f1410343b8169da380eb13d524ff6ebf7c",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0026-recurrence_off-seed-114.json.gz",
+      "run_index": 26,
+      "seed": 114,
+      "sha256": "852ab66a9119a267e611fa5c8bcbfd163b9aee36f7988f8c8bb9473e68c01330",
+      "size_bytes": 522,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0027-recurrence_on-seed-114.json.gz",
+      "run_index": 27,
+      "seed": 114,
+      "sha256": "cadd0878f9c0c96ba92de714bef6d043f59b7365e0331158208cffaa50ecbe13",
+      "size_bytes": 619,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0028-recurrence_off-seed-115.json.gz",
+      "run_index": 28,
+      "seed": 115,
+      "sha256": "52c2e3bbb3ddd56a501959e1b7b0b4b86a34683fa37761952c1c72088eaa7b71",
+      "size_bytes": 522,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0029-recurrence_on-seed-115.json.gz",
+      "run_index": 29,
+      "seed": 115,
+      "sha256": "74690efcd6614c943f87a7b17d625f1aed989ed6e9a3530b195fe8c34a2c5983",
+      "size_bytes": 621,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0030-recurrence_off-seed-116.json.gz",
+      "run_index": 30,
+      "seed": 116,
+      "sha256": "b8ec6e4f011acb56a2dfb20a4e8d935d0e961505cd76ca66287214162fdac7cf",
+      "size_bytes": 521,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0031-recurrence_on-seed-116.json.gz",
+      "run_index": 31,
+      "seed": 116,
+      "sha256": "da84bfea55f99765942e2c2028a6350483f8e7b47efcd564e3fee4b2531f0f55",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0032-recurrence_off-seed-117.json.gz",
+      "run_index": 32,
+      "seed": 117,
+      "sha256": "4031b4d9de22f772e249352ba73ccd62dca1dbb4f584b882251ea739099bb67a",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0033-recurrence_on-seed-117.json.gz",
+      "run_index": 33,
+      "seed": 117,
+      "sha256": "fffa07f08cd63c59451b0dda9fe90182c47aa4515644c1c80f8025597cee5ea5",
+      "size_bytes": 621,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0034-recurrence_off-seed-118.json.gz",
+      "run_index": 34,
+      "seed": 118,
+      "sha256": "5f29cf6adb3883dc4557ec0c6f4bccfdc9166114efa11328e410bcae6a74c0ee",
+      "size_bytes": 517,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0035-recurrence_on-seed-118.json.gz",
+      "run_index": 35,
+      "seed": 118,
+      "sha256": "8fc69cb657b885555753428cef279726cda994b2f4fa3400b0bbf0f7b3d9dd37",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0036-recurrence_off-seed-119.json.gz",
+      "run_index": 36,
+      "seed": 119,
+      "sha256": "03eb808357f4b055c4399c012ccedd8f0c003abbaf389f773dc24f6593762bf9",
+      "size_bytes": 520,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0037-recurrence_on-seed-119.json.gz",
+      "run_index": 37,
+      "seed": 119,
+      "sha256": "b5365a18c87b69d62e9b4afccfe548ddcb9c8e0c6e5d1ceeb1023e07d4bda1ae",
+      "size_bytes": 620,
+      "uncompressed_bytes": 1774
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0038-recurrence_off-seed-120.json.gz",
+      "run_index": 38,
+      "seed": 120,
+      "sha256": "6ae6d55f9c71a17fabdc4287a75f7439044a7b0550bb1ca7fe7cff9b568a715a",
+      "size_bytes": 517,
+      "uncompressed_bytes": 998
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0039-recurrence_on-seed-120.json.gz",
+      "run_index": 39,
+      "seed": 120,
+      "sha256": "82acf17ab673635bf40ed2230f131269ec0e9a83af63de00f3c88a726e49f4c7",
+      "size_bytes": 621,
+      "uncompressed_bytes": 1774
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

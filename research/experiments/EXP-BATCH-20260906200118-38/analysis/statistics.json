@@ -1,0 +1,484 @@
+{
+  "conditions": {
+    "1d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 64.0,
+          "mean": 64.0,
+          "median": 64.0,
+          "min": 64.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        }
+      },
+      "run_count": 30,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ]
+    },
+    "2d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 64.0,
+          "mean": 64.0,
+          "median": 64.0,
+          "min": 64.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        }
+      },
+      "run_count": 30,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ]
+    },
+    "3d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 64.0,
+          "mean": 64.0,
+          "median": 64.0,
+          "min": 64.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        }
+      },
+      "run_count": 30,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ]
+    },
+    "5d": {
+      "metrics": {
+        "activated_neurons": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "delivered_synaptic_events": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "first_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "last_response_latency": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "propagation_depth": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "recurrent_events": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "synaptic_activity_ticks": {
+          "max": 2.0,
+          "mean": 2.0,
+          "median": 2.0,
+          "min": 2.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "ticks_executed": {
+          "max": 64.0,
+          "mean": 64.0,
+          "median": 64.0,
+          "min": 64.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 30,
+          "std": 0.0
+        }
+      },
+      "run_count": 30,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "inter_spike_intervals": {
+    "1d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 60,
+      "std": 0.0
+    },
+    "2d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 60,
+      "std": 0.0
+    },
+    "3d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 60,
+      "std": 0.0
+    },
+    "5d": {
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "n": 60,
+      "std": 0.0
+    }
+  },
+  "run_count": 120,
+  "schema_version": "2.0"
+}

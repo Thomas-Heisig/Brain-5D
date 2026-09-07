@@ -1,0 +1,43 @@
+{
+  "experiment_id": "EXP-BATCH-20260906200118-35",
+  "research_question": "RQ-REC-001",
+  "hypothesis": "H-REC-001-A",
+  "title": "Experiment workflow: recurrence_map_v1",
+  "conditions": "Registered protocol conditions",
+  "ticks": 256,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+  ],
+  "protocol": "recurrence_map_v1",
+  "resolved_runner": "run_recurrence_map",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 256,
+    "observed_min": 256,
+    "observed_max": 256
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

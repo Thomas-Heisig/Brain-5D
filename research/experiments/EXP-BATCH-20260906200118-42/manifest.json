@@ -1,0 +1,132 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "ai_report_json": "experiments/EXP-BATCH-20260906200118-42/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-BATCH-20260906200118-42/reports/AIRR-2026-0001.md",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "preregistration": "preregistrations/PREREG-REC-002.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-06T23:00:47.286837+00:00",
+  "data_partitions": [],
+  "execution_contract": {
+    "hypothesis_id": "H-REC-002-A",
+    "protocol": "recurrence_scale_v1",
+    "question_id": "RQ-REC-002",
+    "resolved_runner": "run_recurrence_scale",
+    "runtime_runner_bytecode_sha256": "61f3b24ed4ed423d1348aac6ecc220f15853f9c6e7d008a623f21296cb041984",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "61f3b24ed4ed423d1348aac6ecc220f15853f9c6e7d008a623f21296cb041984",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "minimum_per_run",
+      "observed_max": 256,
+      "observed_min": 256,
+      "requested_ticks": 256,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 256
+  },
+  "experiment_id": "EXP-BATCH-20260906200118-42",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-REC-002-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "824a8ef8529a5cc6a61601b5becbc8c932a7b33870a738c5d840ed38193b977a",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "b3c3486a315b7e4cdb3b61a8d413e905cbe40b7391ae8dd60398893641a6f1b1",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-REC-002"
+  ],
+  "research_run_mode": "CONFIRMATORY",
+  "results": {
+    "protocol": "recurrence_scale_v1",
+    "run_count": 80,
+    "runner": "run_recurrence_scale",
+    "tick_contract": {
+      "mode": "minimum_per_run",
+      "observed_max": 256,
+      "observed_min": 256,
+      "requested_ticks": 256,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 256
+  },
+  "runtime": {
+    "duration_seconds": 0.16889940004330128
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "recurrence_scale_v1",
+    "seed": 101,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "ticks": 256
+  },
+  "software": {
+    "brain5d_version": "unknown",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "0303505f3320a6b72d4ffa05db30164b6348056032ac987422775474aa07a6ef",
+  "timestamp": "2026-09-07T01:00:47.286830",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

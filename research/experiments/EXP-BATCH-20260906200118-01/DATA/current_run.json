@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 19,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0019-tonic_drive-seed-110.json.gz",
+    "sha256": "2a5cfda27d69bd76949e4df530cf54e00f0926fd929fc1143780cd1174906535",
+    "size_bytes": 24796,
+    "uncompressed_bytes": 2102897
+  },
+  "status": "idle"
+}

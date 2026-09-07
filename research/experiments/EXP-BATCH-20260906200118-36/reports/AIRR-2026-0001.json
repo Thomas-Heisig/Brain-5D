@@ -1,0 +1,3065 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-BATCH-20260906200118-36",
+  "research_question_id": "RQ-GEN-001",
+  "hypothesis_ids": [
+    "H-GEN-001-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-06T22:56:22.337322+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-BATCH-20260906200118-36",
+      "research_question": "Verbessert reward-moduliertes lokales Lernen die Leistung auf Holdout- und Perturbationsbedingungen, die nicht zur Anpassung verwendet wurden?",
+      "hypotheses": [
+        {
+          "id": "H-GEN-001-A",
+          "research_question": "RQ-GEN-001",
+          "hypothesis": "Learning-on verbessert die Erfolgsrate auf vorab registrierten Perturbationsproben gegenüber Learning-off und Sham-Replay.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-09-05",
+          "updated": "2026-09-05"
+        }
+      ],
+      "date": "2026-09-06",
+      "source_sha": "275f3b77df6e89cc224d8542454434ff7e84d7a4"
+    },
+    "executive_summary": "Die Ergebnisse zeigen, dass die Bedingungen 'learning_on_drive_X.XX' durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0) aufweisen. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Metriken 'p_success_after' und 'generalization_success' sind in den 'learning_on_drive'-Bedingungen durchweg 1.0 bzw. true, während sie in den Kontrollbedingungen 0.0 bzw. false sind. Die statistische Signifikanz wurde nicht getestet.",
+    "research_question": {
+      "id": "RQ-GEN-001",
+      "domain": "Learning Generalization",
+      "question": "Verbessert reward-moduliertes lokales Lernen die Leistung auf Holdout- und Perturbationsbedingungen, die nicht zur Anpassung verwendet wurden?",
+      "relevance": "EXP-GEN-0021 zeigte funktionelle Änderung unter Learning-on, aber keine Generalisierung.",
+      "literature": [],
+      "hypotheses": [
+        "H-GEN-001-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": "Generalisierung muss gegenüber Learning-off und Sham-Replay getrennt werden."
+      },
+      "created": "2026-09-05",
+      "updated": "2026-09-05"
+    },
+    "experimental_design": {
+      "experiment_id": "EXP-BATCH-20260906200118-36",
+      "research_question": "RQ-GEN-001",
+      "hypothesis": "H-GEN-001-A",
+      "title": "Experiment workflow: learning_generalization_v1",
+      "conditions": "Registered protocol conditions",
+      "ticks": 1000,
+      "ticks_contract": "minimum requested observation window",
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ],
+      "protocol": "learning_generalization_v1",
+      "resolved_runner": "run_generalization",
+      "tick_validation": {
+        "status": "NOT_APPLICABLE",
+        "mode": "protocol_defined_internal_trials",
+        "requested_ticks": 1000
+      },
+      "notes": "",
+      "execution": "registered experiment_suite runner",
+      "assistant_policy": "AI is post-hoc interpretation only."
+    },
+    "data_basis": {
+      "data": {
+        "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+        "generated_by": "deterministic_research_data_v2",
+        "limits": {
+          "ai_packet_max_bytes": 1000000,
+          "run_summary_max_bytes": 5000000,
+          "sequence_preview_items": 16
+        },
+        "raw_index": {
+          "path": "DATA/runs_index.json",
+          "run_count": 180,
+          "sha256": "faee92ff620766e037fcb7eb32cce923911356df238fe9ec9a796f90663d891f"
+        },
+        "run_count": 180,
+        "run_preview": {
+          "_projection": "bounded_sequence",
+          "head": [
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0000-learning_on_drive_0.85-seed-101.json.gz",
+                "sha256": "292ce4b9716c19982ab4d04224fa0ca3c991920f9052bbf16b671d511f206571",
+                "size_bytes": 462,
+                "uncompressed_bytes": 777
+              },
+              "condition": "learning_on_drive_0.85",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.517280469842843,
+                "generalization_success": true,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.46728046984284305,
+                "p_success_after": 1.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 0.85,
+                "reward_weight_updates": 576,
+                "rewards_received": 12,
+                "success_after": true,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": 26.239795413974708,
+                "trained_target_spike_tick": 4,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0001-learning_on_drive_1.00-seed-101.json.gz",
+                "sha256": "19a2aab568bd6a19fd76025486367deeb33c44c73baaf1bbad505f19a039bb7e",
+                "size_bytes": 457,
+                "uncompressed_bytes": 777
+              },
+              "condition": "learning_on_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.517280469842843,
+                "generalization_success": true,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.46728046984284305,
+                "p_success_after": 1.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 576,
+                "rewards_received": 12,
+                "success_after": true,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": 26.239795413974708,
+                "trained_target_spike_tick": 4,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0002-learning_on_drive_1.15-seed-101.json.gz",
+                "sha256": "cc09756811a96c4f0b748af50807d03d6bed5afb3dc5ded047f7d485e8ea087a",
+                "size_bytes": 461,
+                "uncompressed_bytes": 777
+              },
+              "condition": "learning_on_drive_1.15",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.517280469842843,
+                "generalization_success": true,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.46728046984284305,
+                "p_success_after": 1.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.15,
+                "reward_weight_updates": 576,
+                "rewards_received": 12,
+                "success_after": true,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": 26.239795413974708,
+                "trained_target_spike_tick": 4,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0003-learning_off_drive_0.85-seed-101.json.gz",
+                "sha256": "11603d8897d7dffab77129e7ce6f8b694d935f7bd714c567cb31ff752f0c1af7",
+                "size_bytes": 419,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_0.85",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 0.85,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0004-learning_off_drive_1.00-seed-101.json.gz",
+                "sha256": "fd33e2fafe082ed3096b7a3c4d294de347ca1fdd047d4c307677840c9dd35232",
+                "size_bytes": 415,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0005-learning_off_drive_1.15-seed-101.json.gz",
+                "sha256": "e6c3677946471cb9451596a2c6f944e37e2a0f3e7398f8af0bb20e200b5b7363",
+                "size_bytes": 418,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_1.15",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.15,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0006-sham_replay_drive_0.85-seed-101.json.gz",
+                "sha256": "9c3681be22fc79c18ec7437921b8a4c25dc4feecef63148eeb400834b9e391e1",
+                "size_bytes": 422,
+                "uncompressed_bytes": 738
+              },
+              "condition": "sham_replay_drive_0.85",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 0.85,
+                "reward_weight_updates": 0,
+                "rewards_received": 12,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0007-sham_replay_drive_1.00-seed-101.json.gz",
+                "sha256": "4c60a721e5b6e794a5911d0ec5c971a007af86a692597efa3293bcfbaaf022d6",
+                "size_bytes": 418,
+                "uncompressed_bytes": 738
+              },
+              "condition": "sham_replay_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 0,
+                "rewards_received": 12,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            }
+          ],
+          "item_count": 180,
+          "tail": [
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0172-learning_on_drive_1.00-seed-120.json.gz",
+                "sha256": "24ee5442be1ec99f63f19d344e4d4f4564b75679bde3310863e361fee71dd409",
+                "size_bytes": 456,
+                "uncompressed_bytes": 777
+              },
+              "condition": "learning_on_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.517280469842843,
+                "generalization_success": true,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.46728046984284305,
+                "p_success_after": 1.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 576,
+                "rewards_received": 12,
+                "success_after": true,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": 26.239795413974708,
+                "trained_target_spike_tick": 4,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0173-learning_on_drive_1.15-seed-120.json.gz",
+                "sha256": "0c4a55a4e698c607348ec6819dafdd26ca8fc5334a5f93c1e08a7f3781494e14",
+                "size_bytes": 461,
+                "uncompressed_bytes": 777
+              },
+              "condition": "learning_on_drive_1.15",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.517280469842843,
+                "generalization_success": true,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.46728046984284305,
+                "p_success_after": 1.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.15,
+                "reward_weight_updates": 576,
+                "rewards_received": 12,
+                "success_after": true,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": 26.239795413974708,
+                "trained_target_spike_tick": 4,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0174-learning_off_drive_0.85-seed-120.json.gz",
+                "sha256": "2f9c56e8f3eec8fe9c585d3fe2961e40bccea8154a88746b468b91a978d08869",
+                "size_bytes": 419,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_0.85",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 0.85,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0175-learning_off_drive_1.00-seed-120.json.gz",
+                "sha256": "a12833ab4ae865e90ce02302bebf3cf9ae48e465bc446a4f9a17db0a03218d63",
+                "size_bytes": 415,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0176-learning_off_drive_1.15-seed-120.json.gz",
+                "sha256": "83a424ea64adbd4c24654230c63c38605b6f9423e5b6d855031d423534d3986f",
+                "size_bytes": 418,
+                "uncompressed_bytes": 738
+              },
+              "condition": "learning_off_drive_1.15",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.15,
+                "reward_weight_updates": 0,
+                "rewards_received": 0,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0177-sham_replay_drive_0.85-seed-120.json.gz",
+                "sha256": "4b9c96360060922d1428e43c0195f3c5282f22becbd0c50ac964dd202cbaac80",
+                "size_bytes": 421,
+                "uncompressed_bytes": 738
+              },
+              "condition": "sham_replay_drive_0.85",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 0.85,
+                "reward_weight_updates": 0,
+                "rewards_received": 12,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0178-sham_replay_drive_1.00-seed-120.json.gz",
+                "sha256": "bc6566633c87f6c57921e8a1159f9c78f1fb045ae2c650f760fad96bff386608",
+                "size_bytes": 417,
+                "uncompressed_bytes": 738
+              },
+              "condition": "sham_replay_drive_1.00",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": false,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.0,
+                "reward_weight_updates": 0,
+                "rewards_received": 12,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0179-sham_replay_drive_1.15-seed-120.json.gz",
+                "sha256": "9aa90dfcd7d24afa1d264f0ce140bd0f920bb4d075bd6a5db1a221b55a248a9a",
+                "size_bytes": 420,
+                "uncompressed_bytes": 738
+              },
+              "condition": "sham_replay_drive_1.15",
+              "experiment_id": "EXP-BATCH-20260906200118-36",
+              "metrics": {
+                "baseline_target_peak_v": -65.0,
+                "baseline_target_spike_tick": null,
+                "final_mean_weight": 0.05,
+                "generalization_success": false,
+                "held_out_perturbation": true,
+                "holdout_trial_count": 4,
+                "initial_mean_weight": 0.05,
+                "mean_weight_delta": 0.0,
+                "p_success_after": 0.0,
+                "p_success_before": 0.0,
+                "probe_after_training_only": true,
+                "probe_drive_scale": 1.15,
+                "reward_weight_updates": 0,
+                "rewards_received": 12,
+                "success_after": false,
+                "success_before": false,
+                "train_trial_count": 12,
+                "trained_target_peak_v": -65.0,
+                "trained_target_spike_tick": null,
+                "training_drive_scale": 1.0,
+                "validation_trial_count": 4
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "",
+              "state_digest_before": ""
+            }
+          ]
+        },
+        "schema_version": "2.0",
+        "statistics": {
+          "conditions": {
+            "learning_off_drive_0.85": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "learning_off_drive_1.00": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "learning_off_drive_1.15": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "learning_on_drive_0.85": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.517280469842843,
+                  "mean": 0.517280469842843,
+                  "median": 0.517280469842843,
+                  "min": 0.517280469842843,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.46728046984284305,
+                  "mean": 0.4672804698428431,
+                  "median": 0.46728046984284305,
+                  "min": 0.46728046984284305,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 576.0,
+                  "mean": 576.0,
+                  "median": 576.0,
+                  "min": 576.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "learning_on_drive_1.00": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.517280469842843,
+                  "mean": 0.517280469842843,
+                  "median": 0.517280469842843,
+                  "min": 0.517280469842843,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.46728046984284305,
+                  "mean": 0.4672804698428431,
+                  "median": 0.46728046984284305,
+                  "min": 0.46728046984284305,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 576.0,
+                  "mean": 576.0,
+                  "median": 576.0,
+                  "min": 576.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "learning_on_drive_1.15": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.517280469842843,
+                  "mean": 0.517280469842843,
+                  "median": 0.517280469842843,
+                  "min": 0.517280469842843,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.46728046984284305,
+                  "mean": 0.4672804698428431,
+                  "median": 0.46728046984284305,
+                  "min": 0.46728046984284305,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 576.0,
+                  "mean": 576.0,
+                  "median": 576.0,
+                  "min": 576.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "sham_replay_drive_0.85": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "sham_replay_drive_1.00": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "sham_replay_drive_1.15": {
+              "metrics": {
+                "final_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "holdout_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "initial_mean_weight": {
+                  "max": 0.05,
+                  "mean": 0.05,
+                  "median": 0.05,
+                  "min": 0.05,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "mean_weight_delta": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_after": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "p_success_before": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "reward_weight_updates": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "rewards_received": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "train_trial_count": {
+                  "max": 12.0,
+                  "mean": 12.0,
+                  "median": 12.0,
+                  "min": 12.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "validation_trial_count": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            }
+          },
+          "formulas": {
+            "difference": "Delta_x = mean(x_B) - mean(x_A)",
+            "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+            "mean": "mean(x) = (1/n) * sum_i x_i",
+            "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+            "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+          },
+          "generated_by": "deterministic_statistics_engine",
+          "run_count": 180,
+          "schema_version": "2.0"
+        }
+      },
+      "evid": [],
+      "literature": []
+    },
+    "quantitative_results": {
+      "conditions": {
+        "learning_off_drive_0.85": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "learning_off_drive_1.00": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "learning_off_drive_1.15": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "learning_on_drive_0.85": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.517280469842843,
+              "mean": 0.517280469842843,
+              "median": 0.517280469842843,
+              "min": 0.517280469842843,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.46728046984284305,
+              "mean": 0.4672804698428431,
+              "median": 0.46728046984284305,
+              "min": 0.46728046984284305,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 576.0,
+              "mean": 576.0,
+              "median": 576.0,
+              "min": 576.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "learning_on_drive_1.00": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.517280469842843,
+              "mean": 0.517280469842843,
+              "median": 0.517280469842843,
+              "min": 0.517280469842843,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.46728046984284305,
+              "mean": 0.4672804698428431,
+              "median": 0.46728046984284305,
+              "min": 0.46728046984284305,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 576.0,
+              "mean": 576.0,
+              "median": 576.0,
+              "min": 576.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "learning_on_drive_1.15": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.517280469842843,
+              "mean": 0.517280469842843,
+              "median": 0.517280469842843,
+              "min": 0.517280469842843,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.46728046984284305,
+              "mean": 0.4672804698428431,
+              "median": 0.46728046984284305,
+              "min": 0.46728046984284305,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 576.0,
+              "mean": 576.0,
+              "median": 576.0,
+              "min": 576.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "sham_replay_drive_0.85": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "sham_replay_drive_1.00": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "sham_replay_drive_1.15": {
+          "metrics": {
+            "final_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "holdout_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "initial_mean_weight": {
+              "max": 0.05,
+              "mean": 0.05,
+              "median": 0.05,
+              "min": 0.05,
+              "n": 20,
+              "std": 0.0
+            },
+            "mean_weight_delta": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_after": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "p_success_before": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "reward_weight_updates": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "rewards_received": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "train_trial_count": {
+              "max": 12.0,
+              "mean": 12.0,
+              "median": 12.0,
+              "min": 12.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "validation_trial_count": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        }
+      },
+      "formulas": {
+        "difference": "Delta_x = mean(x_B) - mean(x_A)",
+        "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+        "mean": "mean(x) = (1/n) * sum_i x_i",
+        "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+        "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+      },
+      "generated_by": "deterministic_statistics_engine",
+      "run_count": 180,
+      "schema_version": "2.0"
+    },
+    "observations": [
+      {
+        "type": "Zusammenfassung der Daten",
+        "content": "Für die Metrik 'mean_weight_delta' ist der Mittelwert (mean) über alle 20 Seeds für 'learning_on_drive_0.85' 0.4672804698428431, während er für 'learning_off_drive_0.85' 0.0 ist. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Werte für 'reward_weight_updates' und 'rewards_received' sind in den 'learning_on_drive'-Bedingungen (Mittelwert: 576.0 bzw. 12.0) signifikant höher als in den Kontrollbedingungen (Mittelwert: 0.0 bzw. 0.0). Die 'p_success_after' ist in den 'learning_on_drive'-Bedingungen 1.0, während sie in den Kontrollbedingungen 0.0 beträgt. Die 'generalization_success' ist in den 'learning_on_drive'-Bedingungen true, während sie in den Kontrollbedingungen false ist."
+      },
+      {
+        "type": "Vergleich der Bedingungen",
+        "content": "Die Bedingungen 'learning_on_drive_X.XX' zeigen durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0). Dies gilt für alle Drive-Skalen (0.85, 1.00, 1.15)."
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die Ergebnisse zeigen, dass die Bedingungen 'learning_on_drive_X.XX' durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0) aufweisen. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Metriken 'p_success_after' und 'generalization_success' sind in den 'learning_on_drive'-Bedingungen durchweg 1.0 bzw. true, während sie in den Kontrollbedingungen 0.0 bzw. false sind. Die statistische Signifikanz wurde nicht getestet.",
+      "observations": [
+        {
+          "content": "Für die Metrik 'mean_weight_delta' ist der Mittelwert (mean) über alle 20 Seeds für 'learning_on_drive_0.85' 0.4672804698428431, während er für 'learning_off_drive_0.85' 0.0 ist. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Werte für 'reward_weight_updates' und 'rewards_received' sind in den 'learning_on_drive'-Bedingungen (Mittelwert: 576.0 bzw. 12.0) höher als in den Kontrollbedingungen (Mittelwert: 0.0 bzw. 0.0). Die 'p_success_after' ist in den 'learning_on_drive'-Bedingungen 1.0, während sie in den Kontrollbedingungen 0.0 beträgt. Die 'generalization_success' ist in den 'learning_on_drive'-Bedingungen true, während sie in den Kontrollbedingungen false ist.",
+          "type": "Zusammenfassung der Daten"
+        },
+        {
+          "content": "Die Bedingungen 'learning_on_drive_X.XX' zeigen durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0). Dies gilt für alle Drive-Skalen (0.85, 1.00, 1.15).",
+          "type": "Vergleich der Bedingungen"
+        }
+      ],
+      "effect_direction": "Erhöhung",
+      "methodological_concerns": [
+        "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+        "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+      ],
+      "alternative_explanations": [
+        "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+        "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+        "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+      ],
+      "requested_evidence": [
+        "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+        "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+      ],
+      "confidence": 0.9
+    },
+    "methodological_critique": [
+      "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+      "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+    ],
+    "alternative_explanations": [
+      "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+      "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+    ],
+    "reproducibility": {
+      "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "97a70a632bea89e243b65918dc7e4ca223c57a5ab44c02151aa178f54b14e889",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "81adbfb6a0807b76c18f964cce93b6b9c3209be133b0f719fb7ddd8795850305",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "9bcff9c670b77f642ce65ff70c8b9eed479055e4d0a6098fdc737b30ab833d74",
+      "data_digest": "62da63d5960c8e9ff9548c46c2bfb14016763f016a6c16f0cf5a1c882ee86b58",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "PRESENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.9,
+    "missing_evidence": [
+      "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+      "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+      "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+    ],
+    "conclusion": "Die Ergebnisse zeigen, dass die Bedingungen 'learning_on_drive_X.XX' durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0) aufweisen. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Metriken 'p_success_after' und 'generalization_success' sind in den 'learning_on_drive'-Bedingungen durchweg 1.0 bzw. true, während sie in den Kontrollbedingungen 0.0 bzw. false sind. Die statistische Signifikanz wurde nicht getestet.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260906225518218821-ee0af4bd",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-36",
+          "packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen, dass das Lernen auf dem Drive (learning_on_drive) zu einer deutlichen Steigerung des mittleren Gewichts (mean_weight_delta) führt, verglichen mit den Bedingungen, bei denen kein Lernen auf dem Drive stattfindet (learning_off_drive oder sham_replay_drive). Diese Steigerung ist in allen getesteten Drive-Skalen (0.85, 1.00, 1.15) konsistent. Die Leistung auf den Perturbationsbedingungen (held_out_perturbation) ist in den 'learning_on_drive'-Bedingungen durchweg besser als in den Kontrollbedingungen. Die statistische Signifikanz wurde nicht getestet.",
+          "observations": [
+            {
+              "type": "Zusammenfassung der Daten",
+              "content": "Für die Metrik 'mean_weight_delta' ist der Mittelwert (mean) über alle 20 Seeds für 'learning_on_drive_0.85' 0.4672804698428431, während er für 'learning_off_drive_0.85' 0.0 ist. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Werte für 'reward_weight_updates' und 'rewards_received' sind in den 'learning_on_drive'-Bedingungen (Mittelwert: 576.0 bzw. 12.0) signifikant höher als in den Kontrollbedingungen (Mittelwert: 0.0 bzw. 0.0). Die 'p_success_after' ist in den 'learning_on_drive'-Bedingungen 1.0, während sie in den Kontrollbedingungen 0.0 beträgt. Die 'generalization_success' ist in den 'learning_on_drive'-Bedingungen true, während sie in den Kontrollbedingungen false ist."
+            },
+            {
+              "type": "Vergleich der Bedingungen",
+              "content": "Die Bedingungen 'learning_on_drive_X.XX' zeigen durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0). Dies gilt für alle Drive-Skalen (0.85, 1.00, 1.15)."
+            }
+          ],
+          "effect_direction": "Erhöhung",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+            "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+          ],
+          "alternative_explanations": [
+            "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+            "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+          ],
+          "requested_evidence": [
+            "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+            "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+          ],
+          "confidence": 0.9,
+          "alternative_explanations_german": [
+            "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+          ],
+          "methodological_concerns_german": [
+            "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+            "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+          ],
+          "recommended_experiments_german": [
+            "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+            "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+          ],
+          "requested_evidence_german": [
+            "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+            "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+          ]
+        },
+        "provenance": {
+          "prompt_sha256": "0c08c25f493e300e30cbf8e4c10e70d1dd535778138dbb1dd30740b7746cedc7",
+          "research_packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:55:18.218821+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260906225555320016-ee0af4bd",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-36",
+          "packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen, dass die Bedingungen 'learning_on_drive_X.XX' durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0) aufweisen. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Metriken 'p_success_after' und 'generalization_success' sind in den 'learning_on_drive'-Bedingungen durchweg 1.0 bzw. true, während sie in den Kontrollbedingungen 0.0 bzw. false sind. Die statistische Signifikanz wurde nicht getestet.",
+          "observations": [
+            {
+              "content": "Für die Metrik 'mean_weight_delta' ist der Mittelwert (mean) über alle 20 Seeds für 'learning_on_drive_0.85' 0.4672804698428431, während er für 'learning_off_drive_0.85' 0.0 ist. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Werte für 'reward_weight_updates' und 'rewards_received' sind in den 'learning_on_drive'-Bedingungen (Mittelwert: 576.0 bzw. 12.0) höher als in den Kontrollbedingungen (Mittelwert: 0.0 bzw. 0.0). Die 'p_success_after' ist in den 'learning_on_drive'-Bedingungen 1.0, während sie in den Kontrollbedingungen 0.0 beträgt. Die 'generalization_success' ist in den 'learning_on_drive'-Bedingungen true, während sie in den Kontrollbedingungen false ist.",
+              "type": "Zusammenfassung der Daten"
+            },
+            {
+              "content": "Die Bedingungen 'learning_on_drive_X.XX' zeigen durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0). Dies gilt für alle Drive-Skalen (0.85, 1.00, 1.15).",
+              "type": "Vergleich der Bedingungen"
+            }
+          ],
+          "effect_direction": "Erhöhung",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+            "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+          ],
+          "methodological_concerns_german": [
+            "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+            "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+          ],
+          "alternative_explanations": [
+            "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+          ],
+          "alternative_explanations_german": [
+            "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+            "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+          ],
+          "recommended_experiments_german": [
+            "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+            "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+          ],
+          "requested_evidence": [
+            "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+            "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+          ],
+          "requested_evidence_german": [
+            "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+            "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+          ],
+          "confounders": [
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, da sie zwar die Wiederholung von Daten beinhaltet, aber nicht klar definiert, ob sie alle Aspekte des Lernprozesses (z.B. Gewichts-Updates) ausschließt, die in 'learning_on_drive' stattfinden.",
+            "Die 'learning_off_drive'-Bedingung könnte die Wirkung des reinen Fehlen von Drive-Lernen nicht vollständig isolieren, wenn die Baseline-Prozesse selbst subtile, nicht gemessene Lernmechanismen beinhalten."
+          ],
+          "leakage": [
+            "Es ist unklar, ob die 'learning_on_drive' Bedingung zu einer Art von 'Overfitting' führt, das die Generalisierung auf ungesehene Daten (die durch 'generalization_success' gemessen werden sollen) künstlich verbessert, anstatt echtes, robustes Lernen zu bewirken."
+          ],
+          "dependence": [
+            "Die Ergebnisse zeigen eine starke Korrelation zwischen 'learning_on_drive' und den verbesserten Metriken ('mean_weight_delta', 'p_success_after', 'generalization_success'). Es ist jedoch nicht ersichtlich, ob diese Verbesserungen kausal auf das 'learning_on_drive' zurückzuführen sind, oder ob ein allgemeiner, nicht gemessener Effekt des gesamten Lernprozesses vorliegt."
+          ],
+          "missing_controls": [
+            "Es fehlt eine Kontrollgruppe, die einen Prozess darstellt, bei dem die Daten lediglich wiederholt, aber ohne jegliche Art von Modifikation oder Update des Lernprozesses (weder 'on' noch 'off') verarbeitet werden, um die Spezifität des 'learning_on_drive' zu isolieren."
+          ],
+          "mismatched_statistics": [
+            "Die statistischen Vergleiche sind rein deskriptiv (Mittelwerte und Standardabweichungen) und zeigen nur Unterschiede. Es wurde keine statistische Hypothesentestung durchgeführt, um festzustellen, ob die beobachteten Unterschiede zwischen den Bedingungen (z.B. 'learning_on_drive' vs. 'learning_off_drive') über die Stichprobe von 20 Seeds hinweg tatsächlich von der Null-Hypothese abweichen."
+          ],
+          "confidence": 0.9
+        },
+        "provenance": {
+          "prompt_sha256": "349fb8e5023b8d46fa3f51061ee4182c6f24e926fbb1d9570baf161e849c2e3e",
+          "research_packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:55:55.320016+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260906225622334643-ee0af4bd",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-36",
+          "packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen, dass die Bedingungen 'learning_on_drive_X.XX' durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0) aufweisen. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Metriken 'p_success_after' und 'generalization_success' sind in den 'learning_on_drive'-Bedingungen durchweg 1.0 bzw. true, während sie in den Kontrollbedingungen 0.0 bzw. false sind. Die statistische Signifikanz wurde nicht getestet.",
+          "observations": [
+            {
+              "content": "Für die Metrik 'mean_weight_delta' ist der Mittelwert (mean) über alle 20 Seeds für 'learning_on_drive_0.85' 0.4672804698428431, während er für 'learning_off_drive_0.85' 0.0 ist. Dies gilt für alle getesteten Drive-Skalen (0.85, 1.00, 1.15). Die Werte für 'reward_weight_updates' und 'rewards_received' sind in den 'learning_on_drive'-Bedingungen (Mittelwert: 576.0 bzw. 12.0) höher als in den Kontrollbedingungen (Mittelwert: 0.0 bzw. 0.0). Die 'p_success_after' ist in den 'learning_on_drive'-Bedingungen 1.0, während sie in den Kontrollbedingungen 0.0 beträgt. Die 'generalization_success' ist in den 'learning_on_drive'-Bedingungen true, während sie in den Kontrollbedingungen false ist.",
+              "type": "Zusammenfassung der Daten"
+            },
+            {
+              "content": "Die Bedingungen 'learning_on_drive_X.XX' zeigen durchweg höhere Werte für 'mean_weight_delta' (Mittelwert: 0.4672804698428431) und 'reward_weight_updates' (Mittelwert: 576.0) im Vergleich zu den Kontrollbedingungen 'learning_off_drive_X.XX' und 'sham_replay_drive_X.XX' (Mittelwert: 0.0). Dies gilt für alle Drive-Skalen (0.85, 1.00, 1.15).",
+              "type": "Vergleich der Bedingungen"
+            }
+          ],
+          "effect_direction": "Erhöhung",
+          "methodological_concerns": [
+            "Die Analyse basiert auf einer Stichprobe von 20 Seeds, was die Verallgemeinerbarkeit der Ergebnisse einschränken könnte.",
+            "Es wird nicht angegeben, ob die 'generalization_success' oder 'success_after' Metriken auf einer ausreichenden Anzahl von unabhängigen Tests basieren."
+          ],
+          "alternative_explanations": [
+            "Die beobachteten Unterschiede könnten auf andere, nicht gemessene Lernmechanismen zurückzuführen sein, die durch die 'learning_on_drive'-Bedingung aktiviert werden.",
+            "Die 'sham_replay'-Bedingung könnte nicht ausreichend als Negativkontrolle dienen, um sicherzustellen, dass die beobachteten Effekte ausschließlich auf das Lernen auf dem Drive zurückzuführen sind."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Interaktion zwischen der Drive-Skala und der Art des Lernens (on vs. off) untersucht, um die Abhängigkeit zu quantifizieren.",
+            "Vergleich der Leistung mit einer weiteren Kontrollgruppe, die nur die Wiederholung von Daten ohne spezifische Modifikation des Lernprozesses durchführt, um die Spezifität des 'learning_on_drive' zu erhöhen."
+          ],
+          "requested_evidence": [
+            "Detaillierte Protokolle der 'learning_on_drive' und 'learning_off_drive' Bedingungen, um die genauen Mechanismen des Gewichts-Updates zu verstehen.",
+            "Bestätigung, dass die 'generalization_success' Metrik tatsächlich die Fähigkeit misst, auf völlig neue, ungesehene Daten zu generalisieren, und nicht nur eine Wiederholung bekannter Muster."
+          ],
+          "confidence": 0.9
+        },
+        "provenance": {
+          "prompt_sha256": "2d908752e7d716f337f631b3832b07b8d563c629fef43f7ddc5e4528b9f50572",
+          "research_packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.9"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:56:22.334643+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "ee0af4bd4dd3fa788854d25e1e3b997cb5fc998e1cdb679cc4f99f8289a806dc",
+    "source": {
+      "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "97a70a632bea89e243b65918dc7e4ca223c57a5ab44c02151aa178f54b14e889",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "81adbfb6a0807b76c18f964cce93b6b9c3209be133b0f719fb7ddd8795850305",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "9bcff9c670b77f642ce65ff70c8b9eed479055e4d0a6098fdc737b30ab833d74",
+      "data_digest": "62da63d5960c8e9ff9548c46c2bfb14016763f016a6c16f0cf5a1c882ee86b58",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260906225518218821-ee0af4bd",
+    "AIAR-critical_reviewer-20260906225555320016-ee0af4bd",
+    "AIAR-scientific_writer-20260906225622334643-ee0af4bd"
+  ],
+  "supersedes": null,
+  "content_digest": "0ee87fee66a63fa91c9f26567b98c6096e590d88d321a48ecda9b0a5c0ac7e7f",
+  "markdown_digest": "826c129bf80592e0d8a5b8830b133e57d54e3a98782ed03b291d7eb35969ee01"
+}

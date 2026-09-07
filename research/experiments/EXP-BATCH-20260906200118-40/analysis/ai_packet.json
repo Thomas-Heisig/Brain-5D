@@ -1,0 +1,566 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 60,
+    "sha256": "bb3c885d0088674aa0d2476b5bce97d37dd154b9eb0346ab2eb74de5dd5b9743"
+  },
+  "run_count": 60,
+  "run_preview": {
+    "_projection": "bounded_sequence",
+    "head": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0000-forward-seed-101.json.gz",
+          "sha256": "18abd25cdc9075b04eda41fda56347dc2e05571e75ba3cee203eb98af136d0e2",
+          "size_bytes": 333,
+          "uncompressed_bytes": 452
+        },
+        "condition": "forward",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            0,
+            4
+          ],
+          "sequence_digest": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 101,
+        "state_digest_after": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+        "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0001-reverse-seed-101.json.gz",
+          "sha256": "e13e81122892b8374507796f675a0ac982dc4f6f0e37a35f412f73a6b3f954b3",
+          "size_bytes": 333,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 101,
+        "state_digest_after": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+        "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0002-simultaneous-seed-101.json.gz",
+          "sha256": "82cb4a11a577bdd33de4261ff074bf825b8625d1da1b60435d503743d168917f",
+          "size_bytes": 337,
+          "uncompressed_bytes": 457
+        },
+        "condition": "simultaneous",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 1,
+          "schedule": [
+            0,
+            0
+          ],
+          "sequence_digest": "11b7cd861d78dbe13830ab65e30c2de1ad09b7193dcb68f99232d10d2ba4303d",
+          "ticks_executed": 32,
+          "total_spikes": 3
+        },
+        "runtime_error": null,
+        "seed": 101,
+        "state_digest_after": "11b7cd861d78dbe13830ab65e30c2de1ad09b7193dcb68f99232d10d2ba4303d",
+        "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0003-forward-seed-102.json.gz",
+          "sha256": "df9cdfe216e4d70123dbe288f0c462feba2e9c6d8d037d8d0b2c5b0494046ed5",
+          "size_bytes": 328,
+          "uncompressed_bytes": 452
+        },
+        "condition": "forward",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            0,
+            4
+          ],
+          "sequence_digest": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 102,
+        "state_digest_after": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+        "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0004-reverse-seed-102.json.gz",
+          "sha256": "57cf8b8cbb42b594ed61c9b2c0ba233cf1101a21e8138d7c40b4d831a4776614",
+          "size_bytes": 327,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 102,
+        "state_digest_after": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+        "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0005-simultaneous-seed-102.json.gz",
+          "sha256": "de76781a5a77b74640a59f5bba2fc3996385b25dd7aeffc573a4a894d7878c3b",
+          "size_bytes": 337,
+          "uncompressed_bytes": 457
+        },
+        "condition": "simultaneous",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 1,
+          "schedule": [
+            0,
+            0
+          ],
+          "sequence_digest": "0e56e9d9ec7a460e2696d6ab19bff378b514a4ca78961cd6702fad9216e7d41c",
+          "ticks_executed": 32,
+          "total_spikes": 3
+        },
+        "runtime_error": null,
+        "seed": 102,
+        "state_digest_after": "0e56e9d9ec7a460e2696d6ab19bff378b514a4ca78961cd6702fad9216e7d41c",
+        "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0006-forward-seed-103.json.gz",
+          "sha256": "1be1b78389516e2b8590e6091eee090e882d3103b3fd1cd379b6d2eeb65d4190",
+          "size_bytes": 333,
+          "uncompressed_bytes": 452
+        },
+        "condition": "forward",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            0,
+            4
+          ],
+          "sequence_digest": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 103,
+        "state_digest_after": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+        "state_digest_before": "9de84571ead9f21e68a65636aba8ca24658f562322755aa7c976905a4682bf6e"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0007-reverse-seed-103.json.gz",
+          "sha256": "97174914d7412014d29cdde79e7d537e39ddacae54590fbfc1bf704fd24ddcf0",
+          "size_bytes": 330,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 103,
+        "state_digest_after": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+        "state_digest_before": "9de84571ead9f21e68a65636aba8ca24658f562322755aa7c976905a4682bf6e"
+      }
+    ],
+    "item_count": 60,
+    "tail": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0052-reverse-seed-118.json.gz",
+          "sha256": "815ee01b57ca122b0875d59c6c9c8e68ef1a83f41025a5ef98e1c8454db33449",
+          "size_bytes": 330,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "94a1158b623e7283879ae9113aacff78c676bbe9111f49ac06431db62ffe65ff",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 118,
+        "state_digest_after": "94a1158b623e7283879ae9113aacff78c676bbe9111f49ac06431db62ffe65ff",
+        "state_digest_before": "00c3c96efab6f4828dec997dbe305ef1e3931da329eae20b9fc5ef2cb4e1a0ef"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0053-simultaneous-seed-118.json.gz",
+          "sha256": "d34dc827083a037ba8df6d879491a2779a46c109b4068d83bf2213250d1f2974",
+          "size_bytes": 336,
+          "uncompressed_bytes": 457
+        },
+        "condition": "simultaneous",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 1,
+          "schedule": [
+            0,
+            0
+          ],
+          "sequence_digest": "00a84a5eeef3e078b18c896226e20b99f1b7f942b06b8ba60d7566ad31139d89",
+          "ticks_executed": 32,
+          "total_spikes": 3
+        },
+        "runtime_error": null,
+        "seed": 118,
+        "state_digest_after": "00a84a5eeef3e078b18c896226e20b99f1b7f942b06b8ba60d7566ad31139d89",
+        "state_digest_before": "00c3c96efab6f4828dec997dbe305ef1e3931da329eae20b9fc5ef2cb4e1a0ef"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0054-forward-seed-119.json.gz",
+          "sha256": "5ab605c34a8f86c50fb1e52867462dfde64b694dfeec903a144ba3ea740a2638",
+          "size_bytes": 332,
+          "uncompressed_bytes": 452
+        },
+        "condition": "forward",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            0,
+            4
+          ],
+          "sequence_digest": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 119,
+        "state_digest_after": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+        "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0055-reverse-seed-119.json.gz",
+          "sha256": "290905607e415b7588341e3dc1389cb2e6700a26fe5e4860bf56ed317d85d314",
+          "size_bytes": 332,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 119,
+        "state_digest_after": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+        "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0056-simultaneous-seed-119.json.gz",
+          "sha256": "cccd55b9ac56937f41e222775bf50ffca42544fc365816f1fb59652df5cd02f1",
+          "size_bytes": 338,
+          "uncompressed_bytes": 457
+        },
+        "condition": "simultaneous",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 1,
+          "schedule": [
+            0,
+            0
+          ],
+          "sequence_digest": "9f25085ce1422a5e7361084a5bf0612de86f777b571b2e789b4269c924cbd0f0",
+          "ticks_executed": 32,
+          "total_spikes": 3
+        },
+        "runtime_error": null,
+        "seed": 119,
+        "state_digest_after": "9f25085ce1422a5e7361084a5bf0612de86f777b571b2e789b4269c924cbd0f0",
+        "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0057-forward-seed-120.json.gz",
+          "sha256": "a3cb3457fb9ec3b8bce46b5ab42a29a361171ef9ff690becee23cc382d973974",
+          "size_bytes": 331,
+          "uncompressed_bytes": 452
+        },
+        "condition": "forward",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            0,
+            4
+          ],
+          "sequence_digest": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 120,
+        "state_digest_after": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+        "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0058-reverse-seed-120.json.gz",
+          "sha256": "ae34a055f12568c785191eaa5283928029733535a5564ca525afec5e8939c1e7",
+          "size_bytes": 331,
+          "uncompressed_bytes": 452
+        },
+        "condition": "reverse",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 2,
+          "schedule": [
+            4,
+            0
+          ],
+          "sequence_digest": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+          "ticks_executed": 32,
+          "total_spikes": 6
+        },
+        "runtime_error": null,
+        "seed": 120,
+        "state_digest_after": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+        "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0059-simultaneous-seed-120.json.gz",
+          "sha256": "876d82dae4d5c0b33092b6a1815f8018d818e79594fd1881d49bb4ac75dd1da4",
+          "size_bytes": 340,
+          "uncompressed_bytes": 457
+        },
+        "condition": "simultaneous",
+        "experiment_id": "EXP-BATCH-20260906200118-40",
+        "metrics": {
+          "output_spike_count": 1,
+          "schedule": [
+            0,
+            0
+          ],
+          "sequence_digest": "3633700b09becaa588e956014099d7f90e5c7abdb835a6709f8078fe9c81598e",
+          "ticks_executed": 32,
+          "total_spikes": 3
+        },
+        "runtime_error": null,
+        "seed": 120,
+        "state_digest_after": "3633700b09becaa588e956014099d7f90e5c7abdb835a6709f8078fe9c81598e",
+        "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+      }
+    ]
+  },
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "forward": {
+        "metrics": {
+          "ticks_executed": {
+            "max": 32.0,
+            "mean": 32.0,
+            "median": 32.0,
+            "min": 32.0,
+            "n": 20,
+            "std": 0.0
+          },
+          "total_spikes": {
+            "max": 6.0,
+            "mean": 6.0,
+            "median": 6.0,
+            "min": 6.0,
+            "n": 20,
+            "std": 0.0
+          }
+        },
+        "run_count": 20,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ]
+      },
+      "reverse": {
+        "metrics": {
+          "ticks_executed": {
+            "max": 32.0,
+            "mean": 32.0,
+            "median": 32.0,
+            "min": 32.0,
+            "n": 20,
+            "std": 0.0
+          },
+          "total_spikes": {
+            "max": 6.0,
+            "mean": 6.0,
+            "median": 6.0,
+            "min": 6.0,
+            "n": 20,
+            "std": 0.0
+          }
+        },
+        "run_count": 20,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ]
+      },
+      "simultaneous": {
+        "metrics": {
+          "ticks_executed": {
+            "max": 32.0,
+            "mean": 32.0,
+            "median": 32.0,
+            "min": 32.0,
+            "n": 20,
+            "std": 0.0
+          },
+          "total_spikes": {
+            "max": 3.0,
+            "mean": 3.0,
+            "median": 3.0,
+            "min": 3.0,
+            "n": 20,
+            "std": 0.0
+          }
+        },
+        "run_count": 20,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 60,
+    "schema_version": "2.0"
+  }
+}

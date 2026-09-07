@@ -1,0 +1,16 @@
+{
+  "title": "Experiment workflow: exploratory RQ-MSBA-E02",
+  "research_question": "RQ-MSBA-E02",
+  "hypothesis": "H-MSBA-E02-A",
+  "conditions": "Registered protocol conditions",
+  "ticks": 1000,
+  "protocol": "runtime_ticks_v1",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "notes": "",
+  "execution": "controller.step",
+  "assistant_policy": "No AI-generated input is executed or used as evidence."
+}

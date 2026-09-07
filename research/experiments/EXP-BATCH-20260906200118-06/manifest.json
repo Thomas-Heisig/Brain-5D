@@ -1,0 +1,79 @@
+{
+  "experiment_id": "EXP-BATCH-20260906200118-06",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-06T22:32:15.888059",
+  "created_at": "2026-09-06T20:32:15.888068+00:00",
+  "git": {
+    "commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+    "dirty": true,
+    "branch": "main"
+  },
+  "software": {
+    "python": "3.13.14",
+    "os": "Windows 11",
+    "brain5d_version": "unknown"
+  },
+  "simulation": {
+    "ticks": 1000,
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "protocol": "runtime_ticks_v1"
+  },
+  "artifacts": {
+    "workflow": "experiments/EXP-BATCH-20260906200118-06/workflow.json",
+    "data": "DATA/runs.json"
+  },
+  "research_questions": [
+    "RQ-SNN-005"
+  ],
+  "hypotheses": [
+    "H-SNN-005-A"
+  ],
+  "config": {},
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "passed": true,
+    "start": {
+      "tick": 4000,
+      "neurons": 5000,
+      "synapses": 36031
+    },
+    "end": {
+      "tick": 5000,
+      "neurons": 5000,
+      "synapses": 36031
+    },
+    "observed_ticks": 1000,
+    "ticks_requested": 1000,
+    "tick_contract": "SATISFIED"
+  },
+  "runtime": {
+    "duration_seconds": 511.1487693999661
+  }
+}

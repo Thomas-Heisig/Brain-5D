@@ -1,0 +1,1479 @@
+{
+  "workflow_id": "EXP-BATCH-20260906200118",
+  "created_at": "2026-09-06T23:18:04.351658+00:00",
+  "protocols": [
+    "sustained_activity_stability_v1",
+    "exploratory:RQ-SNN-002:H-SNN-002-A",
+    "exploratory:RQ-DET-001:H-SNN-003-A",
+    "exploratory:RQ-SNN-003:EXPLORATORY-UNSPECIFIED",
+    "exploratory:RQ-SNN-004:H-SNN-004-A",
+    "exploratory:RQ-SNN-005:H-SNN-005-A",
+    "exploratory:RQ-PING-001:H-PING-001-A",
+    "exploratory:RQ-TEMP-001:H-TEMP-001-A",
+    "exploratory:RQ-TIME-001:H-TIME-001-A",
+    "exploratory:RQ-REG-001:H-REG-001-A",
+    "exploratory:RQ-STDP-001:H-STDP-001-A",
+    "exploratory:RQ-STDP-002:H-STDP-002-A",
+    "exploratory:RQ-HOM-001:H-HOM-001-A",
+    "exploratory:RQ-HOM-002:H-HOM-002-A",
+    "exploratory:RQ-5D-001:H-5D-001-A",
+    "exploratory:RQ-5D-002:H-5D-002-A",
+    "exploratory:RQ-5D-003:H-5D-003-A",
+    "exploratory:RQ-5D-004:H-5D-004-A",
+    "exploratory:RQ-STORAGE-001:H-STOR-001-A",
+    "exploratory:RQ-STORAGE-002:H-STOR-002-A",
+    "exploratory:RQ-STORAGE-003:H-STOR-003-A",
+    "exploratory:RQ-STORAGE-004:H-STOR-004-A",
+    "exploratory:RQ-SCALE-001:H-SCALE-001-A",
+    "exploratory:RQ-SELF-001:H-SELF-001-A",
+    "exploratory:RQ-SELF-002:H-SELF-002-A",
+    "exploratory:RQ-STRUCT-001:H-STRUCT-001-A",
+    "exploratory:RQ-MEM-001:H-MEM-001-A",
+    "exploratory:RQ-EMB-001:H-EMB-001-A",
+    "exploratory:RQ-LLM-001:H-LLM-001-A",
+    "exploratory:RQ-ETH-001:H-ETH-001-A",
+    "exploratory:RQ-ETH-002:H-ETH-002-A",
+    "exploratory:RQ-EPIST-001:H-EPIST-001-A",
+    "exploratory:RQ-AIR-001:H-AIR-001-A",
+    "exploratory:RQ-SUITE-001:H-SUITE-001-A",
+    "recurrence_map_v1",
+    "learning_generalization_v1",
+    "independent_replication_v1",
+    "topology_matched_5d_v1",
+    "closed_loop_regulation_v1",
+    "temporal_order_spiking_v1",
+    "subsystem_performance_v1",
+    "recurrence_scale_v1",
+    "learning_interference_screen_v1",
+    "exploratory:RQ-MSBA-E01:H-MSBA-E01-A",
+    "exploratory:RQ-MSBA-E02:H-MSBA-E02-A",
+    "exploratory:RQ-MSBA-E03:H-MSBA-E03-A",
+    "exploratory:RQ-MSBA-E04:H-MSBA-E04-A",
+    "exploratory:RQ-MSBA-E05:H-MSBA-E05-A"
+  ],
+  "requested_ticks": 1000,
+  "seeds": "42-44",
+  "completed": 46,
+  "failed": 2,
+  "results": [
+    {
+      "protocol": "sustained_activity_stability_v1",
+      "ticks": 100000,
+      "seeds": "101-110",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-01",
+      "manifest": "experiments/EXP-BATCH-20260906200118-01/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-01/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-01/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-01/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-01/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-01/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-01",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-01/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-01/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-01/summary.md",
+      "result": {
+        "run_count": 20,
+        "duration_seconds": 10.872093599988148,
+        "runner": "run_sustained_stability",
+        "ticks_requested": 100000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run_with_control_and_treatment",
+          "requested_ticks": 100000,
+          "observed_min": 100000,
+          "observed_max": 100000,
+          "run_count": 20
+        }
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-002:H-SNN-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-02",
+      "manifest": "experiments/EXP-BATCH-20260906200118-02/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-02/report.md",
+      "result": {
+        "start": {
+          "tick": 0,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 1000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 230.66342440003064
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-02/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-DET-001:H-SNN-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-03",
+      "manifest": "experiments/EXP-BATCH-20260906200118-03/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-03/report.md",
+      "result": {
+        "start": {
+          "tick": 1000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 2000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 477.5694942000555
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-03/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-003:EXPLORATORY-UNSPECIFIED",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-04",
+      "manifest": "experiments/EXP-BATCH-20260906200118-04/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-04/report.md",
+      "result": {
+        "start": {
+          "tick": 2000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 3000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 505.84508979995735
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-04/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-004:H-SNN-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-05",
+      "manifest": "experiments/EXP-BATCH-20260906200118-05/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-05/report.md",
+      "result": {
+        "start": {
+          "tick": 3000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 4000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 508.46560320002027
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-05/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-005:H-SNN-005-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-06",
+      "manifest": "experiments/EXP-BATCH-20260906200118-06/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-06/report.md",
+      "result": {
+        "start": {
+          "tick": 4000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 5000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 511.1487693999661
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-06/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-PING-001:H-PING-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-07",
+      "manifest": "experiments/EXP-BATCH-20260906200118-07/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-07/report.md",
+      "result": {
+        "start": {
+          "tick": 5000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 6000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 508.0000394000672
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-07/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-TEMP-001:H-TEMP-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-08",
+      "manifest": "experiments/EXP-BATCH-20260906200118-08/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-08/report.md",
+      "result": {
+        "start": {
+          "tick": 6000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 7000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 503.52629529999103
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-08/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-TIME-001:H-TIME-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-09",
+      "manifest": "experiments/EXP-BATCH-20260906200118-09/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-09/report.md",
+      "result": {
+        "start": {
+          "tick": 7000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 8000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 502.82280960003845
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-09/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-REG-001:H-REG-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-10",
+      "manifest": "experiments/EXP-BATCH-20260906200118-10/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-10/report.md",
+      "result": {
+        "start": {
+          "tick": 8000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 9000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 499.7490587000502
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-10/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STDP-001:H-STDP-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-11",
+      "manifest": "experiments/EXP-BATCH-20260906200118-11/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-11/report.md",
+      "result": {
+        "start": {
+          "tick": 9000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 10000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 500.91823149996344
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-11/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STDP-002:H-STDP-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-12",
+      "manifest": "experiments/EXP-BATCH-20260906200118-12/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-12/report.md",
+      "result": {
+        "start": {
+          "tick": 10000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 11000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 509.49081709992606
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-12/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-HOM-001:H-HOM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-13",
+      "manifest": "experiments/EXP-BATCH-20260906200118-13/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-13/report.md",
+      "result": {
+        "start": {
+          "tick": 11000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 12000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 519.6871013999917
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-13/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-HOM-002:H-HOM-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-14",
+      "manifest": "experiments/EXP-BATCH-20260906200118-14/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-14/report.md",
+      "result": {
+        "start": {
+          "tick": 12000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 13000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 518.1424422001
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-14/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-001:H-5D-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-15",
+      "manifest": "experiments/EXP-BATCH-20260906200118-15/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-15/report.md",
+      "result": {
+        "start": {
+          "tick": 13000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 14000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 343.1793111000443
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-15/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-002:H-5D-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-16",
+      "manifest": "experiments/EXP-BATCH-20260906200118-16/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-16/report.md",
+      "result": {
+        "start": {
+          "tick": 14000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 15000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 182.23547630000394
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-16/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-003:H-5D-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-17",
+      "manifest": "experiments/EXP-BATCH-20260906200118-17/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-17/report.md",
+      "result": {
+        "start": {
+          "tick": 15000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 16000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 183.19542320002802
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-17/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-004:H-5D-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-18",
+      "manifest": "experiments/EXP-BATCH-20260906200118-18/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-18/report.md",
+      "result": {
+        "start": {
+          "tick": 16000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 17000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 183.68767560005654
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-18/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-001:H-STOR-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-19",
+      "manifest": "experiments/EXP-BATCH-20260906200118-19/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-19/report.md",
+      "result": {
+        "start": {
+          "tick": 17000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 18000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 183.32252260006499
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-19/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-002:H-STOR-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-20",
+      "manifest": "experiments/EXP-BATCH-20260906200118-20/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-20/report.md",
+      "result": {
+        "start": {
+          "tick": 18000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 19000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.19160589994863
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-20/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-003:H-STOR-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-21",
+      "manifest": "experiments/EXP-BATCH-20260906200118-21/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-21/report.md",
+      "result": {
+        "start": {
+          "tick": 19000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 20000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 178.09098149999045
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-21/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-004:H-STOR-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-22",
+      "manifest": "experiments/EXP-BATCH-20260906200118-22/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-22/report.md",
+      "result": {
+        "start": {
+          "tick": 20000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 21000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 184.73520300001837
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-22/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SCALE-001:H-SCALE-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-23",
+      "manifest": "experiments/EXP-BATCH-20260906200118-23/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-23/report.md",
+      "result": {
+        "start": {
+          "tick": 21000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 22000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 183.1853045000462
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-23/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SELF-001:H-SELF-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-24",
+      "manifest": "experiments/EXP-BATCH-20260906200118-24/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-24/report.md",
+      "result": {
+        "start": {
+          "tick": 22000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 23000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.25438820000272
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-24/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SELF-002:H-SELF-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-25",
+      "manifest": "experiments/EXP-BATCH-20260906200118-25/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-25/report.md",
+      "result": {
+        "start": {
+          "tick": 23000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 24000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 182.3885579999769
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-25/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STRUCT-001:H-STRUCT-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-26",
+      "manifest": "experiments/EXP-BATCH-20260906200118-26/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-26/report.md",
+      "result": {
+        "start": {
+          "tick": 24000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 25000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.30100119998679
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-26/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MEM-001:H-MEM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-27",
+      "manifest": "experiments/EXP-BATCH-20260906200118-27/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-27/report.md",
+      "result": {
+        "start": {
+          "tick": 25000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 26000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 181.92968280008063
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-27/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-EMB-001:H-EMB-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-28",
+      "manifest": "experiments/EXP-BATCH-20260906200118-28/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-28/report.md",
+      "result": {
+        "start": {
+          "tick": 26000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 27000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.06508740002755
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-28/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-LLM-001:H-LLM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-29",
+      "manifest": "experiments/EXP-BATCH-20260906200118-29/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-29/report.md",
+      "result": {
+        "start": {
+          "tick": 27000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 28000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 182.8040769000072
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-29/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-ETH-001:H-ETH-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-30",
+      "manifest": "experiments/EXP-BATCH-20260906200118-30/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-30/report.md",
+      "result": {
+        "start": {
+          "tick": 28000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 29000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 184.9708505999297
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-30/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-ETH-002:H-ETH-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-31",
+      "manifest": "experiments/EXP-BATCH-20260906200118-31/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-31/report.md",
+      "result": {
+        "start": {
+          "tick": 29000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 30000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 184.14346799999475
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-31/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-EPIST-001:H-EPIST-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-32",
+      "manifest": "experiments/EXP-BATCH-20260906200118-32/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-32/report.md",
+      "result": {
+        "start": {
+          "tick": 30000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 31000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 184.87760799995158
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-32/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-AIR-001:H-AIR-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-33",
+      "manifest": "experiments/EXP-BATCH-20260906200118-33/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-33/report.md",
+      "result": {
+        "start": {
+          "tick": 31000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 32000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.73356540000532
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-33/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SUITE-001:H-SUITE-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-34",
+      "manifest": "experiments/EXP-BATCH-20260906200118-34/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-34/report.md",
+      "result": {
+        "start": {
+          "tick": 32000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 33000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 183.3659394000424
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-34/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "recurrence_map_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-35",
+      "manifest": "experiments/EXP-BATCH-20260906200118-35/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-35/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-35/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-35/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-35/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-35/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-35",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-35/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-35/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-35/summary.md",
+      "result": {
+        "run_count": 300,
+        "duration_seconds": 0.6899207000387833,
+        "runner": "run_recurrence_map",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      }
+    },
+    {
+      "protocol": "learning_generalization_v1",
+      "ticks": 1000,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-36",
+      "manifest": "experiments/EXP-BATCH-20260906200118-36/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-36/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-36/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-36/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-36/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-36/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-36",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-36/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-36/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-36/summary.md",
+      "result": {
+        "run_count": 180,
+        "duration_seconds": 1.2457530000247061,
+        "runner": "run_generalization",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 1000
+        }
+      }
+    },
+    {
+      "protocol": "independent_replication_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "experiment_id": "EXP-BATCH-20260906200118-37",
+      "status": "failed",
+      "error": "ValueError: 'REPLICATION' is not a valid ResearchRunMode"
+    },
+    {
+      "protocol": "topology_matched_5d_v1",
+      "ticks": 64,
+      "seeds": "101-130",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-38",
+      "manifest": "experiments/EXP-BATCH-20260906200118-38/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-38/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-38/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-38/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-38/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-38/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-38",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-38/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-38/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-38/summary.md",
+      "result": {
+        "run_count": 120,
+        "duration_seconds": 0.11743480002041906,
+        "runner": "run_5d_matched",
+        "ticks_requested": 64,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 64,
+          "observed_min": 64,
+          "observed_max": 64
+        }
+      }
+    },
+    {
+      "protocol": "closed_loop_regulation_v1",
+      "ticks": 128,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-39",
+      "manifest": "experiments/EXP-BATCH-20260906200118-39/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-39/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-39/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-39/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-39/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-39/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-39",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-39/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-39/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-39/summary.md",
+      "result": {
+        "run_count": 40,
+        "duration_seconds": 0.19570639997255057,
+        "runner": "run_regulation_recovery",
+        "ticks_requested": 128,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 128,
+          "observed_min": 128,
+          "observed_max": 128
+        }
+      }
+    },
+    {
+      "protocol": "temporal_order_spiking_v1",
+      "ticks": 32,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-40",
+      "manifest": "experiments/EXP-BATCH-20260906200118-40/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-40/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-40/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-40/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-40/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-40/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-40",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-40/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-40/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-40/summary.md",
+      "result": {
+        "run_count": 60,
+        "duration_seconds": 0.029941299930214882,
+        "runner": "run_temporal_order",
+        "ticks_requested": 32,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 32,
+          "observed_min": 32,
+          "observed_max": 32
+        }
+      }
+    },
+    {
+      "protocol": "subsystem_performance_v1",
+      "ticks": 10000,
+      "seeds": "101-110",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-41",
+      "manifest": "experiments/EXP-BATCH-20260906200118-41/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-41/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-41/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-41/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-41/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-41/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-41",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-41/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-41/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-41/summary.md",
+      "result": {
+        "run_count": 10,
+        "duration_seconds": 0.4669908999931067,
+        "runner": "run_performance_profile",
+        "ticks_requested": 10000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 10000,
+          "observed_min": 10000,
+          "observed_max": 10000
+        }
+      }
+    },
+    {
+      "protocol": "recurrence_scale_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-42",
+      "manifest": "experiments/EXP-BATCH-20260906200118-42/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-42/report.md",
+      "workflow": "experiments/EXP-BATCH-20260906200118-42/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260906200118-42/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260906200118-42/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260906200118-42/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260906200118-42",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260906200118-42/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260906200118-42/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-42/summary.md",
+      "result": {
+        "run_count": 80,
+        "duration_seconds": 0.16889940004330128,
+        "runner": "run_recurrence_scale",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      }
+    },
+    {
+      "protocol": "learning_interference_screen_v1",
+      "ticks": 1000,
+      "seeds": "101-120",
+      "experiment_id": "EXP-BATCH-20260906200118-43",
+      "status": "failed",
+      "error": "RuntimeError: training drive failed to spike all presynaptic neurons"
+    },
+    {
+      "protocol": "exploratory:RQ-MSBA-E01:H-MSBA-E01-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-44",
+      "manifest": "experiments/EXP-BATCH-20260906200118-44/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-44/report.md",
+      "result": {
+        "start": {
+          "tick": 33000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 34000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 187.04600610001944
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-44/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MSBA-E02:H-MSBA-E02-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-45",
+      "manifest": "experiments/EXP-BATCH-20260906200118-45/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-45/report.md",
+      "result": {
+        "start": {
+          "tick": 34000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 35000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.01318549993448
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-45/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MSBA-E03:H-MSBA-E03-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-46",
+      "manifest": "experiments/EXP-BATCH-20260906200118-46/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-46/report.md",
+      "result": {
+        "start": {
+          "tick": 35000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 36000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 182.20430149999447
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-46/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MSBA-E04:H-MSBA-E04-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-47",
+      "manifest": "experiments/EXP-BATCH-20260906200118-47/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-47/report.md",
+      "result": {
+        "start": {
+          "tick": 36000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 37000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 185.28688799997326
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-47/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MSBA-E05:H-MSBA-E05-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260906200118-48",
+      "manifest": "experiments/EXP-BATCH-20260906200118-48/manifest.json",
+      "report": "experiments/EXP-BATCH-20260906200118-48/report.md",
+      "result": {
+        "start": {
+          "tick": 37000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 38000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 184.12308060005307
+      },
+      "summary": "experiments/EXP-BATCH-20260906200118-48/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    }
+  ]
+}

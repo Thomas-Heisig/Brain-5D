@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 119,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0119-5d-seed-130.json.gz",
+    "sha256": "883e7ce77cf6c75ba455dbe9c3aab8acac5c5abf34d7c203aab883558d43f459",
+    "size_bytes": 564,
+    "uncompressed_bytes": 1095
+  },
+  "status": "idle"
+}

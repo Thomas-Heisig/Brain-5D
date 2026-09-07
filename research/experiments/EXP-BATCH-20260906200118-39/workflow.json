@@ -1,0 +1,43 @@
+{
+  "experiment_id": "EXP-BATCH-20260906200118-39",
+  "research_question": "RQ-REG-002",
+  "hypothesis": "H-REG-002-A",
+  "title": "Experiment workflow: closed_loop_regulation_v1",
+  "conditions": "Registered protocol conditions",
+  "ticks": 128,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+  ],
+  "protocol": "closed_loop_regulation_v1",
+  "resolved_runner": "run_regulation_recovery",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 128,
+    "observed_min": 128,
+    "observed_max": 128
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

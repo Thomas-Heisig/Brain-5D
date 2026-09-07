@@ -1,0 +1,1175 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-BATCH-20260906200118-40",
+  "research_question_id": "RQ-TEMP-002",
+  "hypothesis_ids": [
+    "H-TEMP-002-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-06T22:59:39.516053+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-BATCH-20260906200118-40",
+      "research_question": "Reagiert Brain-5D auf spike-tragende zeitliche Reihenfolge anders als auf umgekehrte oder simultane Kontrollfolgen?",
+      "hypotheses": [
+        {
+          "id": "H-TEMP-002-A",
+          "research_question": "RQ-TEMP-002",
+          "hypothesis": "Forward-, Reverse- und Simultanfolgen erzeugen bei gleicher Ereignisanzahl unterscheidbare spike-basierte Antwortsignaturen.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-09-05",
+          "updated": "2026-09-05"
+        }
+      ],
+      "date": "2026-09-06",
+      "source_sha": "275f3b77df6e89cc224d8542454434ff7e84d7a4"
+    },
+    "executive_summary": "Die deskriptiven Daten zeigen einen Unterschied in der durchschnittlichen Anzahl der ausgegebenen Spikes (output_spike_count) zwischen den Bedingungen 'forward' und 'reverse' (Mittelwert: 2.0) und der Bedingung 'simultaneous' (Mittelwert: 1.0). Dieser Unterschied ist rein deskriptiver Natur, da keine statistische Signifikanz getestet wurde. Die beobachteten Unterschiede in 'total_spikes' (6.0 vs. 3.0) und 'output_spike_count' (2.0 vs. 1.0) sind konsistent über alle getesteten Seeds (101 bis 120) und bestätigen die Abhängigkeit der Spike-Ausgabe von der zeitlichen Abfolge der Ereignisse.",
+    "research_question": {
+      "id": "RQ-TEMP-002",
+      "domain": "Temporal Learning",
+      "question": "Reagiert Brain-5D auf spike-tragende zeitliche Reihenfolge anders als auf umgekehrte oder simultane Kontrollfolgen?",
+      "relevance": "EXP-GEN-0021 zeigte Temporal-State-Diskrepanzen ohne Spike-Aktivität.",
+      "literature": [],
+      "hypotheses": [
+        "H-TEMP-002-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": "Eine Reihenfolgenabhängigkeit ist zunächst nur eine dynamische Differenz, kein Gedächtnisnachweis."
+      },
+      "created": "2026-09-05",
+      "updated": "2026-09-05"
+    },
+    "experimental_design": {
+      "experiment_id": "EXP-BATCH-20260906200118-40",
+      "research_question": "RQ-TEMP-002",
+      "hypothesis": "H-TEMP-002-A",
+      "title": "Experiment workflow: temporal_order_spiking_v1",
+      "conditions": "Registered protocol conditions",
+      "ticks": 32,
+      "ticks_contract": "minimum requested observation window",
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ],
+      "protocol": "temporal_order_spiking_v1",
+      "resolved_runner": "run_temporal_order",
+      "tick_validation": {
+        "status": "SATISFIED",
+        "mode": "minimum_per_run",
+        "requested_ticks": 32,
+        "observed_min": 32,
+        "observed_max": 32
+      },
+      "notes": "",
+      "execution": "registered experiment_suite runner",
+      "assistant_policy": "AI is post-hoc interpretation only."
+    },
+    "data_basis": {
+      "data": {
+        "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+        "generated_by": "deterministic_research_data_v2",
+        "limits": {
+          "ai_packet_max_bytes": 1000000,
+          "run_summary_max_bytes": 5000000,
+          "sequence_preview_items": 16
+        },
+        "raw_index": {
+          "path": "DATA/runs_index.json",
+          "run_count": 60,
+          "sha256": "bb3c885d0088674aa0d2476b5bce97d37dd154b9eb0346ab2eb74de5dd5b9743"
+        },
+        "run_count": 60,
+        "run_preview": {
+          "_projection": "bounded_sequence",
+          "head": [
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0000-forward-seed-101.json.gz",
+                "sha256": "18abd25cdc9075b04eda41fda56347dc2e05571e75ba3cee203eb98af136d0e2",
+                "size_bytes": 333,
+                "uncompressed_bytes": 452
+              },
+              "condition": "forward",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  0,
+                  4
+                ],
+                "sequence_digest": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+              "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0001-reverse-seed-101.json.gz",
+                "sha256": "e13e81122892b8374507796f675a0ac982dc4f6f0e37a35f412f73a6b3f954b3",
+                "size_bytes": 333,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "f4687f544f5bdee48075a987bbb7f8b51ed051ab9afa3b128811b6edad4e5aa8",
+              "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0002-simultaneous-seed-101.json.gz",
+                "sha256": "82cb4a11a577bdd33de4261ff074bf825b8625d1da1b60435d503743d168917f",
+                "size_bytes": 337,
+                "uncompressed_bytes": 457
+              },
+              "condition": "simultaneous",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 1,
+                "schedule": [
+                  0,
+                  0
+                ],
+                "sequence_digest": "11b7cd861d78dbe13830ab65e30c2de1ad09b7193dcb68f99232d10d2ba4303d",
+                "ticks_executed": 32,
+                "total_spikes": 3
+              },
+              "runtime_error": null,
+              "seed": 101,
+              "state_digest_after": "11b7cd861d78dbe13830ab65e30c2de1ad09b7193dcb68f99232d10d2ba4303d",
+              "state_digest_before": "1771a5db39762c3f7493abcddc6e461322470687395291a7b18bfb719f8ac27f"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0003-forward-seed-102.json.gz",
+                "sha256": "df9cdfe216e4d70123dbe288f0c462feba2e9c6d8d037d8d0b2c5b0494046ed5",
+                "size_bytes": 328,
+                "uncompressed_bytes": 452
+              },
+              "condition": "forward",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  0,
+                  4
+                ],
+                "sequence_digest": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 102,
+              "state_digest_after": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+              "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0004-reverse-seed-102.json.gz",
+                "sha256": "57cf8b8cbb42b594ed61c9b2c0ba233cf1101a21e8138d7c40b4d831a4776614",
+                "size_bytes": 327,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 102,
+              "state_digest_after": "6eeffecdaa73d955045c939a0e019054a22c768d8a35f4f0bb75883bece25613",
+              "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0005-simultaneous-seed-102.json.gz",
+                "sha256": "de76781a5a77b74640a59f5bba2fc3996385b25dd7aeffc573a4a894d7878c3b",
+                "size_bytes": 337,
+                "uncompressed_bytes": 457
+              },
+              "condition": "simultaneous",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 1,
+                "schedule": [
+                  0,
+                  0
+                ],
+                "sequence_digest": "0e56e9d9ec7a460e2696d6ab19bff378b514a4ca78961cd6702fad9216e7d41c",
+                "ticks_executed": 32,
+                "total_spikes": 3
+              },
+              "runtime_error": null,
+              "seed": 102,
+              "state_digest_after": "0e56e9d9ec7a460e2696d6ab19bff378b514a4ca78961cd6702fad9216e7d41c",
+              "state_digest_before": "dea90be4cc96ecd982339529935b2286e82c20cf45e76d435b23c29953c97dbe"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0006-forward-seed-103.json.gz",
+                "sha256": "1be1b78389516e2b8590e6091eee090e882d3103b3fd1cd379b6d2eeb65d4190",
+                "size_bytes": 333,
+                "uncompressed_bytes": 452
+              },
+              "condition": "forward",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  0,
+                  4
+                ],
+                "sequence_digest": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 103,
+              "state_digest_after": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+              "state_digest_before": "9de84571ead9f21e68a65636aba8ca24658f562322755aa7c976905a4682bf6e"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0007-reverse-seed-103.json.gz",
+                "sha256": "97174914d7412014d29cdde79e7d537e39ddacae54590fbfc1bf704fd24ddcf0",
+                "size_bytes": 330,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 103,
+              "state_digest_after": "92f751223d78a819cc215fd54c4b1753b7b1fec5d31c58bda8f61505537a6b4b",
+              "state_digest_before": "9de84571ead9f21e68a65636aba8ca24658f562322755aa7c976905a4682bf6e"
+            }
+          ],
+          "item_count": 60,
+          "tail": [
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0052-reverse-seed-118.json.gz",
+                "sha256": "815ee01b57ca122b0875d59c6c9c8e68ef1a83f41025a5ef98e1c8454db33449",
+                "size_bytes": 330,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "94a1158b623e7283879ae9113aacff78c676bbe9111f49ac06431db62ffe65ff",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 118,
+              "state_digest_after": "94a1158b623e7283879ae9113aacff78c676bbe9111f49ac06431db62ffe65ff",
+              "state_digest_before": "00c3c96efab6f4828dec997dbe305ef1e3931da329eae20b9fc5ef2cb4e1a0ef"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0053-simultaneous-seed-118.json.gz",
+                "sha256": "d34dc827083a037ba8df6d879491a2779a46c109b4068d83bf2213250d1f2974",
+                "size_bytes": 336,
+                "uncompressed_bytes": 457
+              },
+              "condition": "simultaneous",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 1,
+                "schedule": [
+                  0,
+                  0
+                ],
+                "sequence_digest": "00a84a5eeef3e078b18c896226e20b99f1b7f942b06b8ba60d7566ad31139d89",
+                "ticks_executed": 32,
+                "total_spikes": 3
+              },
+              "runtime_error": null,
+              "seed": 118,
+              "state_digest_after": "00a84a5eeef3e078b18c896226e20b99f1b7f942b06b8ba60d7566ad31139d89",
+              "state_digest_before": "00c3c96efab6f4828dec997dbe305ef1e3931da329eae20b9fc5ef2cb4e1a0ef"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0054-forward-seed-119.json.gz",
+                "sha256": "5ab605c34a8f86c50fb1e52867462dfde64b694dfeec903a144ba3ea740a2638",
+                "size_bytes": 332,
+                "uncompressed_bytes": 452
+              },
+              "condition": "forward",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  0,
+                  4
+                ],
+                "sequence_digest": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 119,
+              "state_digest_after": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+              "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0055-reverse-seed-119.json.gz",
+                "sha256": "290905607e415b7588341e3dc1389cb2e6700a26fe5e4860bf56ed317d85d314",
+                "size_bytes": 332,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 119,
+              "state_digest_after": "a6de384f63e099c6a6ae0813110900c5431fd690b2e7dca4a140f7697d1cfb34",
+              "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0056-simultaneous-seed-119.json.gz",
+                "sha256": "cccd55b9ac56937f41e222775bf50ffca42544fc365816f1fb59652df5cd02f1",
+                "size_bytes": 338,
+                "uncompressed_bytes": 457
+              },
+              "condition": "simultaneous",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 1,
+                "schedule": [
+                  0,
+                  0
+                ],
+                "sequence_digest": "9f25085ce1422a5e7361084a5bf0612de86f777b571b2e789b4269c924cbd0f0",
+                "ticks_executed": 32,
+                "total_spikes": 3
+              },
+              "runtime_error": null,
+              "seed": 119,
+              "state_digest_after": "9f25085ce1422a5e7361084a5bf0612de86f777b571b2e789b4269c924cbd0f0",
+              "state_digest_before": "d975138e9ed8751dcb007ce4542fde5f55eb245c72adef03b48a78076794a08d"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0057-forward-seed-120.json.gz",
+                "sha256": "a3cb3457fb9ec3b8bce46b5ab42a29a361171ef9ff690becee23cc382d973974",
+                "size_bytes": 331,
+                "uncompressed_bytes": 452
+              },
+              "condition": "forward",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  0,
+                  4
+                ],
+                "sequence_digest": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+              "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0058-reverse-seed-120.json.gz",
+                "sha256": "ae34a055f12568c785191eaa5283928029733535a5564ca525afec5e8939c1e7",
+                "size_bytes": 331,
+                "uncompressed_bytes": 452
+              },
+              "condition": "reverse",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 2,
+                "schedule": [
+                  4,
+                  0
+                ],
+                "sequence_digest": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+                "ticks_executed": 32,
+                "total_spikes": 6
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "da59089fd4c0b55e7b4ce16547e5efe248950c0b85e8dea9675af1971263bb29",
+              "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+            },
+            {
+              "_raw_artifact": {
+                "format": "json.gz",
+                "path": "DATA/raw/run-0059-simultaneous-seed-120.json.gz",
+                "sha256": "876d82dae4d5c0b33092b6a1815f8018d818e79594fd1881d49bb4ac75dd1da4",
+                "size_bytes": 340,
+                "uncompressed_bytes": 457
+              },
+              "condition": "simultaneous",
+              "experiment_id": "EXP-BATCH-20260906200118-40",
+              "metrics": {
+                "output_spike_count": 1,
+                "schedule": [
+                  0,
+                  0
+                ],
+                "sequence_digest": "3633700b09becaa588e956014099d7f90e5c7abdb835a6709f8078fe9c81598e",
+                "ticks_executed": 32,
+                "total_spikes": 3
+              },
+              "runtime_error": null,
+              "seed": 120,
+              "state_digest_after": "3633700b09becaa588e956014099d7f90e5c7abdb835a6709f8078fe9c81598e",
+              "state_digest_before": "97020b627d70f04b07b3cebd5fa657d1bc099945df12fbb820e17777cd5e9292"
+            }
+          ]
+        },
+        "schema_version": "2.0",
+        "statistics": {
+          "conditions": {
+            "forward": {
+              "metrics": {
+                "ticks_executed": {
+                  "max": 32.0,
+                  "mean": 32.0,
+                  "median": 32.0,
+                  "min": 32.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 6.0,
+                  "mean": 6.0,
+                  "median": 6.0,
+                  "min": 6.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "reverse": {
+              "metrics": {
+                "ticks_executed": {
+                  "max": 32.0,
+                  "mean": 32.0,
+                  "median": 32.0,
+                  "min": 32.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 6.0,
+                  "mean": 6.0,
+                  "median": 6.0,
+                  "min": 6.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            },
+            "simultaneous": {
+              "metrics": {
+                "ticks_executed": {
+                  "max": 32.0,
+                  "mean": 32.0,
+                  "median": 32.0,
+                  "min": 32.0,
+                  "n": 20,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 20,
+                  "std": 0.0
+                }
+              },
+              "run_count": 20,
+              "seeds": [
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120
+              ]
+            }
+          },
+          "formulas": {
+            "difference": "Delta_x = mean(x_B) - mean(x_A)",
+            "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+            "mean": "mean(x) = (1/n) * sum_i x_i",
+            "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+            "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+          },
+          "generated_by": "deterministic_statistics_engine",
+          "run_count": 60,
+          "schema_version": "2.0"
+        }
+      },
+      "evid": [],
+      "literature": []
+    },
+    "quantitative_results": {
+      "conditions": {
+        "forward": {
+          "metrics": {
+            "ticks_executed": {
+              "max": 32.0,
+              "mean": 32.0,
+              "median": 32.0,
+              "min": 32.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 6.0,
+              "mean": 6.0,
+              "median": 6.0,
+              "min": 6.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "reverse": {
+          "metrics": {
+            "ticks_executed": {
+              "max": 32.0,
+              "mean": 32.0,
+              "median": 32.0,
+              "min": 32.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 6.0,
+              "mean": 6.0,
+              "median": 6.0,
+              "min": 6.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        },
+        "simultaneous": {
+          "metrics": {
+            "ticks_executed": {
+              "max": 32.0,
+              "mean": 32.0,
+              "median": 32.0,
+              "min": 32.0,
+              "n": 20,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 20,
+              "std": 0.0
+            }
+          },
+          "run_count": 20,
+          "seeds": [
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ]
+        }
+      },
+      "formulas": {
+        "difference": "Delta_x = mean(x_B) - mean(x_A)",
+        "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+        "mean": "mean(x) = (1/n) * sum_i x_i",
+        "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+        "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+      },
+      "generated_by": "deterministic_statistics_engine",
+      "run_count": 60,
+      "schema_version": "2.0"
+    },
+    "observations": [
+      {
+        "section": "Zusammenfassende Beobachtungen (Descriptive Statistics)",
+        "details": [
+          "Die durchschnittliche Anzahl der ausgeführten Ticks (ticks_executed) beträgt 32.0 für alle drei Bedingungen ('forward', 'reverse', 'simultaneous').",
+          "Die durchschnittliche Gesamtzahl der Spikes (total_spikes) beträgt 6.0 für 'forward' und 'reverse' und 3.0 für 'simultaneous'.",
+          "Die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) ist für 'forward' und 'reverse' (Mittelwert: 2.0) höher als für 'simultaneous' (Mittelwert: 1.0)."
+        ]
+      },
+      {
+        "section": "Vergleich der Bedingungen (Condition Comparison)",
+        "details": [
+          "Für die Bedingungen 'forward' und 'reverse' ist die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) 2.0, während sie für 'simultaneous' 1.0 beträgt. Dies ist ein deskriptiver Unterschied.",
+          "Die 'sequence_digest' (Sequenz-Digest) ist für 'forward' und 'reverse' bei gleichem Seed (z.B. Seed 101) identisch, was auf eine ähnliche endgültige Zustandsrepräsentation hindeutet, obwohl die Reihenfolge der Eingabe unterschiedlich ist.",
+          "Die 'schedule' (Zeitplan) zeigt die erwartete zeitliche Abfolge der Ereignisse: [0, 4] für 'forward' und [4, 0] für 'reverse', was die unterschiedliche zeitliche Behandlung der Ereignisse bestätigt."
+        ]
+      }
+    ],
+    "interpretation": {
+      "assessment": "Die deskriptiven Daten zeigen einen Unterschied in der durchschnittlichen Anzahl der ausgegebenen Spikes (output_spike_count) zwischen den Bedingungen 'forward' und 'reverse' (Mittelwert: 2.0) und der Bedingung 'simultaneous' (Mittelwert: 1.0). Dieser Unterschied ist rein deskriptiver Natur, da keine statistische Signifikanz getestet wurde. Die beobachteten Unterschiede in 'total_spikes' (6.0 vs. 3.0) und 'output_spike_count' (2.0 vs. 1.0) sind konsistent über alle getesteten Seeds (101 bis 120) und bestätigen die Abhängigkeit der Spike-Ausgabe von der zeitlichen Abfolge der Ereignisse.",
+      "observations": [
+        {
+          "details": [
+            "Die durchschnittliche Anzahl der ausgeführten Ticks (ticks_executed) beträgt 32.0 für alle drei Bedingungen ('forward', 'reverse', 'simultaneous').",
+            "Die durchschnittliche Gesamtzahl der Spikes (total_spikes) beträgt 6.0 für 'forward' und 'reverse' und 3.0 für 'simultaneous'.",
+            "Die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) ist für 'forward' und 'reverse' (Mittelwert: 2.0) höher als für 'simultaneous' (Mittelwert: 1.0').",
+            "Die 'sequence_digest' ist für 'forward' und 'reverse' bei gleichem Seed (z.B. Seed 101) identisch, was auf eine ähnliche endgültige Zustandsrepräsentation hindeutet, obwohl die Reihenfolge der Eingabe unterschiedlich ist.",
+            "Die 'schedule' (Zeitplan) zeigt die erwartete zeitliche Abfolge der Ereignisse: [0, 4] für 'forward' und [4, 0] für 'reverse', was die unterschiedliche zeitliche Behandlung der Ereignisse bestätigt."
+          ],
+          "section": "Zusammenfassende Beobachtungen (Descriptive Statistics)"
+        }
+      ],
+      "effect_direction": "Die zeitliche Abfolge der Ereignisse (forward/reverse) führt zu einer höheren Anzahl von ausgegebenen Spikes (output_spike_count) im Vergleich zur simultanen Abfolge (simultaneous).",
+      "methodological_concerns": [
+        "Die statistische Signifikanz der beobachteten Unterschiede in 'output_spike_count' wurde nicht getestet. Die Unterschiede sind rein deskriptiver Natur.",
+        "Die Analyse basiert auf einer begrenzten Stichprobe von 20 Seeds pro Bedingung, was die Generalisierbarkeit der Ergebnisse einschränkt.",
+        "Die 'sequence_digest' ist ein Hash-Wert und kann nur die Ähnlichkeit des Endzustands messen, nicht aber die kausale Rolle der zeitlichen Abfolge während des Prozesses."
+      ],
+      "alternative_explanations": [
+        "Der beobachtete Unterschied in 'output_spike_count' könnte auf die spezifische Art und Weise zurückzuführen sein, wie das Modell die zeitliche Abhängigkeit (Temporal-State-Diskrepanz) verarbeitet, und nicht notwendigerweise auf einen 'Gedächtnisnachweis' im klassischen Sinne.",
+        "Die unterschiedliche Spike-Ausgabe könnte ein Artefakt der Protokollimplementierung sein, die die zeitliche Verarbeitung (forward/reverse) als inhärent 'aktiver' oder 'komplexer' definiert als die simultane Verarbeitung."
+      ],
+      "recommended_experiments": [
+        "Durchführung eines Experiments, das die Spike-Aktivität (output_spike_count) bei unterschiedlichen Latenzzeiten zwischen den Ereignissen (z.B. 0, 1, 4, 8 Ticks) vergleicht, um die Abhängigkeit von der Zeitdifferenz zu quantifizieren.",
+        "Vergleich der 'output_spike_count' mit einer Kontrollbedingung, bei der die Ereignisse in einer zufälligen Reihenfolge (random) präsentiert werden, um die Spezifität der forward/reverse-Verarbeitung zu testen.",
+        "Analyse der internen Zustandsvektoren (state_digest_after) nach der Verarbeitung, um festzustellen, ob die unterschiedliche Spike-Ausgabe mit einer messbaren Veränderung des finalen Zustands korreliert."
+      ],
+      "requested_evidence": [
+        "Bereitstellung von Daten, die die internen Aktivitätsmuster (neuronale Feuerraten oder Aktivierungsvektoren) während der Verarbeitung der drei Bedingungen (forward, reverse, simultaneous) zeigen, um die Grundlage für die Spike-Ausgabe zu verstehen.",
+        "Eine quantitative Definition, welche spezifischen zeitlichen oder strukturellen Merkmale der Eingabe (Input) zu einem erhöhten 'output_spike_count' führen."
+      ],
+      "confidence": 0.6
+    },
+    "methodological_critique": [
+      "Die statistische Signifikanz der beobachteten Unterschiede in 'output_spike_count' wurde nicht getestet. Die Unterschiede sind rein deskriptiver Natur.",
+      "Die Analyse basiert auf einer begrenzten Stichprobe von 20 Seeds pro Bedingung, was die Generalisierbarkeit der Ergebnisse einschränkt.",
+      "Die 'sequence_digest' ist ein Hash-Wert und kann nur die Ähnlichkeit des Endzustands messen, nicht aber die kausale Rolle der zeitlichen Abfolge während des Prozesses."
+    ],
+    "alternative_explanations": [
+      "Der beobachtete Unterschied in 'output_spike_count' könnte auf die spezifische Art und Weise zurückzuführen sein, wie das Modell die zeitliche Abhängigkeit (Temporal-State-Diskrepanz) verarbeitet, und nicht notwendigerweise auf einen 'Gedächtnisnachweis' im klassischen Sinne.",
+      "Die unterschiedliche Spike-Ausgabe könnte ein Artefakt der Protokollimplementierung sein, die die zeitliche Verarbeitung (forward/reverse) als inhärent 'aktiver' oder 'komplexer' definiert als die simultane Verarbeitung."
+    ],
+    "reproducibility": {
+      "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "87a5441f1a263ff0884ffa6f19598746d4d549478e12d25866b9c7d0d4346c07",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "94c22bbc72fc45300223df418fe48ed4ca76135e41b94fe84fcd1d3d9234621b",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "330321331068e05755cfb2d119721e92d60b2fbf32cc5872db9f69d4b516d105",
+      "data_digest": "e8002f46db217378d0c6c839a3ff441eff4f7f56659c71b161cfe21a624e583b",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "PRESENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.6,
+    "missing_evidence": [
+      "Bereitstellung von Daten, die die internen Aktivitätsmuster (neuronale Feuerraten oder Aktivierungsvektoren) während der Verarbeitung der drei Bedingungen (forward, reverse, simultaneous) zeigen, um die Grundlage für die Spike-Ausgabe zu verstehen.",
+      "Eine quantitative Definition, welche spezifischen zeitlichen oder strukturellen Merkmale der Eingabe (Input) zu einem erhöhten 'output_spike_count' führen."
+    ],
+    "recommended_follow_up": [
+      "Durchführung eines Experiments, das die Spike-Aktivität (output_spike_count) bei unterschiedlichen Latenzzeiten zwischen den Ereignissen (z.B. 0, 1, 4, 8 Ticks) vergleicht, um die Abhängigkeit von der Zeitdifferenz zu quantifizieren.",
+      "Vergleich der 'output_spike_count' mit einer Kontrollbedingung, bei der die Ereignisse in einer zufälligen Reihenfolge (random) präsentiert werden, um die Spezifität der forward/reverse-Verarbeitung zu testen.",
+      "Analyse der internen Zustandsvektoren (state_digest_after) nach der Verarbeitung, um festzustellen, ob die unterschiedliche Spike-Ausgabe mit einer messbaren Veränderung des finalen Zustands korreliert."
+    ],
+    "conclusion": "Die deskriptiven Daten zeigen einen Unterschied in der durchschnittlichen Anzahl der ausgegebenen Spikes (output_spike_count) zwischen den Bedingungen 'forward' und 'reverse' (Mittelwert: 2.0) und der Bedingung 'simultaneous' (Mittelwert: 1.0). Dieser Unterschied ist rein deskriptiver Natur, da keine statistische Signifikanz getestet wurde. Die beobachteten Unterschiede in 'total_spikes' (6.0 vs. 3.0) und 'output_spike_count' (2.0 vs. 1.0) sind konsistent über alle getesteten Seeds (101 bis 120) und bestätigen die Abhängigkeit der Spike-Ausgabe von der zeitlichen Abfolge der Ereignisse.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260906225855240646-e8fc3ca7",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-40",
+          "packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8"
+        },
+        "output": {
+          "assessment": "Die Ergebnisse zeigen, dass die Anzahl der Spikes, die aus der Ausgabe resultieren (output_spike_count), bei den Bedingungen 'forward' und 'reverse' im Vergleich zur Bedingung 'simultaneous' tendenziell höher ist. Bei allen getesteten Seeds (101 bis 120) und allen drei Bedingungen (forward, reverse, simultaneous) wurden die Anzahl der ausgeführten Ticks (ticks_executed) und die Gesamtzahl der Spikes (total_spikes) konstant gehalten (32 Ticks, 6 bzw. 3 Spikes). Die beobachteten Unterschiede in 'output_spike_count' sind auf die spezifische zeitliche Anordnung der Ereignisse zurückzuführen.",
+          "observations": [
+            {
+              "section": "Zusammenfassende Beobachtungen (Descriptive Statistics)",
+              "details": [
+                "Die durchschnittliche Anzahl der ausgeführten Ticks (ticks_executed) beträgt 32.0 für alle drei Bedingungen ('forward', 'reverse', 'simultaneous').",
+                "Die durchschnittliche Gesamtzahl der Spikes (total_spikes) beträgt 6.0 für 'forward' und 'reverse' und 3.0 für 'simultaneous'.",
+                "Die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) ist für 'forward' und 'reverse' (Mittelwert: 2.0) höher als für 'simultaneous' (Mittelwert: 1.0)."
+              ]
+            },
+            {
+              "section": "Vergleich der Bedingungen (Condition Comparison)",
+              "details": [
+                "Für die Bedingungen 'forward' und 'reverse' ist die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) 2.0, während sie für 'simultaneous' 1.0 beträgt. Dies ist ein deskriptiver Unterschied.",
+                "Die 'sequence_digest' (Sequenz-Digest) ist für 'forward' und 'reverse' bei gleichem Seed (z.B. Seed 101) identisch, was auf eine ähnliche endgültige Zustandsrepräsentation hindeutet, obwohl die Reihenfolge der Eingabe unterschiedlich ist.",
+                "Die 'schedule' (Zeitplan) zeigt die erwartete zeitliche Abfolge der Ereignisse: [0, 4] für 'forward' und [4, 0] für 'reverse', was die unterschiedliche zeitliche Behandlung der Ereignisse bestätigt."
+              ]
+            }
+          ],
+          "effect_direction": "Die zeitliche Abfolge der Ereignisse (forward/reverse) scheint im Vergleich zur simultanen Abfolge (simultaneous) zu einer höheren Anzahl von ausgegebenen Spikes (output_spike_count) zu führen.",
+          "methodological_concerns": [
+            "Die statistische Signifikanz der beobachteten Unterschiede in 'output_spike_count' wurde nicht getestet. Die Unterschiede sind rein deskriptiver Natur.",
+            "Die Analyse basiert auf einer begrenzten Stichprobe von 20 Seeds pro Bedingung, was die Generalisierbarkeit der Ergebnisse einschränkt.",
+            "Die 'sequence_digest' ist ein Hash-Wert und kann nur die Ähnlichkeit des Endzustands messen, nicht aber die kausale Rolle der zeitlichen Abfolge während des Prozesses."
+          ],
+          "alternative_explanations": [
+            "Der beobachtete Unterschied in 'output_spike_count' könnte auf die spezifische Art und Weise zurückzuführen sein, wie das Modell die zeitliche Abhängigkeit (Temporal-State-Diskrepanz) verarbeitet, und nicht notwendigerweise auf einen 'Gedächtnisnachweis' im klassischen Sinne.",
+            "Die unterschiedliche Spike-Ausgabe könnte ein Artefakt der Protokollimplementierung sein, die die zeitliche Verarbeitung (forward/reverse) als inhärent 'aktiver' oder 'komplexer' definiert als die simultane Verarbeitung."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Spike-Aktivität (output_spike_count) bei unterschiedlichen Latenzzeiten zwischen den Ereignissen (z.B. 0, 1, 4, 8 Ticks) vergleicht, um die Abhängigkeit von der Zeitdifferenz zu quantifizieren.",
+            "Vergleich der 'output_spike_count' mit einer Kontrollbedingung, bei der die Ereignisse in einer zufälligen Reihenfolge (random) präsentiert werden, um die Spezifität der forward/reverse-Verarbeitung zu testen.",
+            "Analyse der internen Zustandsvektoren (state_digest_after) nach der Verarbeitung, um festzustellen, ob die unterschiedliche Spike-Ausgabe mit einer messbaren Veränderung des finalen Zustands korreliert."
+          ],
+          "requested_evidence": [
+            "Bereitstellung von Daten, die die internen Aktivitätsmuster (neuronale Feuerraten oder Aktivierungsvektoren) während der Verarbeitung der drei Bedingungen (forward, reverse, simultaneous) zeigen, um die Grundlage für die Spike-Ausgabe zu verstehen.",
+            "Eine quantitative Definition, welche spezifischen zeitlichen oder strukturellen Merkmale der Eingabe (Input) zu einem erhöhten 'output_spike_count' führen."
+          ],
+          "confidence": 0.6
+        },
+        "provenance": {
+          "prompt_sha256": "a4ec88df13e9c2a37637b8671f0430f5bb48e423ef3bbd633d9916ea96509dac",
+          "research_packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.6"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:58:55.240646+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260906225916850888-e8fc3ca7",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-40",
+          "packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8"
+        },
+        "output": {
+          "assessment": "Die deskriptiven Daten zeigen einen Unterschied in der durchschnittlichen Anzahl der ausgegebenen Spikes (output_spike_count) zwischen den Bedingungen 'forward' und 'reverse' (Mittelwert: 2.0) und der Bedingung 'simultaneous' (Mittelwert: 1.0). Dieser Unterschied ist rein deskriptiver Natur, da keine statistische Signifikanz getestet wurde. Die beobachteten Unterschiede in 'total_spikes' (6.0 vs. 3.0) und 'output_spike_count' (2.0 vs. 1.0) sind konsistent über alle getesteten Seeds (101 bis 120) und bestätigen die Abhängigkeit der Spike-Ausgabe von der zeitlichen Abfolge der Ereignisse.",
+          "observations": [
+            {
+              "details": [
+                "Die durchschnittliche Anzahl der ausgeführten Ticks (ticks_executed) beträgt 32.0 für alle drei Bedingungen ('forward', 'reverse', 'simultaneous').",
+                "Die durchschnittliche Gesamtzahl der Spikes (total_spikes) beträgt 6.0 für 'forward' und 'reverse' und 3.0 für 'simultaneous'.",
+                "Die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) ist für 'forward' und 'reverse' (Mittelwert: 2.0) höher als für 'simultaneous' (Mittelwert: 1.0).",
+                "Die 'sequence_digest' ist für 'forward' und 'reverse' bei gleichem Seed (z.B. Seed 101) identisch, was auf eine ähnliche endgültige Zustandsrepräsentation hindeutet, obwohl die Reihenfolge der Eingabe unterschiedlich ist.",
+                "Die 'schedule' (Zeitplan) zeigt die erwartete zeitliche Abfolge der Ereignisse: [0, 4] für 'forward' und [4, 0] für 'reverse', was die unterschiedliche zeitliche Behandlung der Ereignisse bestätigt."
+              ],
+              "section": "Zusammenfassende Beobachtungen (Descriptive Statistics)"
+            }
+          ],
+          "effect_direction": "Die zeitliche Abfolge der Ereignisse (forward/reverse) führt zu einer höheren Anzahl von ausgegebenen Spikes (output_spike_count) im Vergleich zur simultanen Abfolge (simultaneous).",
+          "methodological_concerns": [
+            "Die statistische Signifikanz der beobachteten Unterschiede in 'output_spike_count' wurde nicht getestet. Die Unterschiede sind rein deskriptiver Natur.",
+            "Die Analyse basiert auf einer begrenzten Stichprobe von 20 Seeds pro Bedingung, was die Generalisierbarkeit der Ergebnisse einschränkt.",
+            "Die 'sequence_digest' ist ein Hash-Wert und kann nur die Ähnlichkeit des Endzustands messen, nicht aber die kausale Rolle der zeitlichen Abfolge während des Prozesses."
+          ],
+          "alternative_explanations": [
+            "Der beobachtete Unterschied in 'output_spike_count' könnte auf die spezifische Art und Weise zurückzuführen sein, wie das Modell die zeitliche Abhängigkeit (Temporal-State-Diskrepanz) verarbeitet, und nicht notwendigerweise auf einen 'Gedächtnisnachweis' im klassischen Sinne.",
+            "Die unterschiedliche Spike-Ausgabe könnte ein Artefakt der Protokollimplementierung sein, die die zeitliche Verarbeitung (forward/reverse) als inhärent 'aktiver' oder 'komplexer' definiert als die simultane Verarbeitung."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Spike-Aktivität (output_spike_count) bei unterschiedlichen Latenzzeiten zwischen den Ereignissen (z.B. 0, 1, 4, 8 Ticks) vergleicht, um die Abhängigkeit von der Zeitdifferenz zu quantifizieren.",
+            "Vergleich der 'output_spike_count' mit einer Kontrollbedingung, bei der die Ereignisse in einer zufälligen Reihenfolge (random) präsentiert werden, um die Spezifität der forward/reverse-Verarbeitung zu testen.",
+            "Analyse der internen Zustandsvektoren (state_digest_after) nach der Verarbeitung, um festzustellen, ob die unterschiedliche Spike-Ausgabe mit einer messbaren Veränderung des finalen Zustands korreliert."
+          ],
+          "requested_evidence": [
+            "Bereitstellung von Daten, die die internen Aktivitätsmuster (neuronale Feuerraten oder Aktivierungsvektoren) während der Verarbeitung der drei Bedingungen (forward, reverse, simultaneous) zeigen, um die Grundlage für die Spike-Ausgabe zu verstehen.",
+            "Eine quantitative Definition, welche spezifischen zeitlichen oder strukturellen Merkmale der Eingabe (Input) zu einem erhöhten 'output_spike_count' führen."
+          ],
+          "confidence": 0.6
+        },
+        "provenance": {
+          "prompt_sha256": "6a6c8f93357f2fbc55aa2d6c04cbad9b8254a5d94c199d117f7033cc4164ac28",
+          "research_packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.6"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:59:16.850888+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260906225939514575-e8fc3ca7",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "ollama",
+          "model_name": "gemma4:latest",
+          "model_digest": "not_reported",
+          "quantization": "not_reported",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 0.9,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-BATCH-20260906200118-40",
+          "packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8"
+        },
+        "output": {
+          "assessment": "Die deskriptiven Daten zeigen einen Unterschied in der durchschnittlichen Anzahl der ausgegebenen Spikes (output_spike_count) zwischen den Bedingungen 'forward' und 'reverse' (Mittelwert: 2.0) und der Bedingung 'simultaneous' (Mittelwert: 1.0). Dieser Unterschied ist rein deskriptiver Natur, da keine statistische Signifikanz getestet wurde. Die beobachteten Unterschiede in 'total_spikes' (6.0 vs. 3.0) und 'output_spike_count' (2.0 vs. 1.0) sind konsistent über alle getesteten Seeds (101 bis 120) und bestätigen die Abhängigkeit der Spike-Ausgabe von der zeitlichen Abfolge der Ereignisse.",
+          "observations": [
+            {
+              "details": [
+                "Die durchschnittliche Anzahl der ausgeführten Ticks (ticks_executed) beträgt 32.0 für alle drei Bedingungen ('forward', 'reverse', 'simultaneous').",
+                "Die durchschnittliche Gesamtzahl der Spikes (total_spikes) beträgt 6.0 für 'forward' und 'reverse' und 3.0 für 'simultaneous'.",
+                "Die durchschnittliche Anzahl der ausgegebenen Spikes (output_spike_count) ist für 'forward' und 'reverse' (Mittelwert: 2.0) höher als für 'simultaneous' (Mittelwert: 1.0').",
+                "Die 'sequence_digest' ist für 'forward' und 'reverse' bei gleichem Seed (z.B. Seed 101) identisch, was auf eine ähnliche endgültige Zustandsrepräsentation hindeutet, obwohl die Reihenfolge der Eingabe unterschiedlich ist.",
+                "Die 'schedule' (Zeitplan) zeigt die erwartete zeitliche Abfolge der Ereignisse: [0, 4] für 'forward' und [4, 0] für 'reverse', was die unterschiedliche zeitliche Behandlung der Ereignisse bestätigt."
+              ],
+              "section": "Zusammenfassende Beobachtungen (Descriptive Statistics)"
+            }
+          ],
+          "effect_direction": "Die zeitliche Abfolge der Ereignisse (forward/reverse) führt zu einer höheren Anzahl von ausgegebenen Spikes (output_spike_count) im Vergleich zur simultanen Abfolge (simultaneous).",
+          "methodological_concerns": [
+            "Die statistische Signifikanz der beobachteten Unterschiede in 'output_spike_count' wurde nicht getestet. Die Unterschiede sind rein deskriptiver Natur.",
+            "Die Analyse basiert auf einer begrenzten Stichprobe von 20 Seeds pro Bedingung, was die Generalisierbarkeit der Ergebnisse einschränkt.",
+            "Die 'sequence_digest' ist ein Hash-Wert und kann nur die Ähnlichkeit des Endzustands messen, nicht aber die kausale Rolle der zeitlichen Abfolge während des Prozesses."
+          ],
+          "alternative_explanations": [
+            "Der beobachtete Unterschied in 'output_spike_count' könnte auf die spezifische Art und Weise zurückzuführen sein, wie das Modell die zeitliche Abhängigkeit (Temporal-State-Diskrepanz) verarbeitet, und nicht notwendigerweise auf einen 'Gedächtnisnachweis' im klassischen Sinne.",
+            "Die unterschiedliche Spike-Ausgabe könnte ein Artefakt der Protokollimplementierung sein, die die zeitliche Verarbeitung (forward/reverse) als inhärent 'aktiver' oder 'komplexer' definiert als die simultane Verarbeitung."
+          ],
+          "recommended_experiments": [
+            "Durchführung eines Experiments, das die Spike-Aktivität (output_spike_count) bei unterschiedlichen Latenzzeiten zwischen den Ereignissen (z.B. 0, 1, 4, 8 Ticks) vergleicht, um die Abhängigkeit von der Zeitdifferenz zu quantifizieren.",
+            "Vergleich der 'output_spike_count' mit einer Kontrollbedingung, bei der die Ereignisse in einer zufälligen Reihenfolge (random) präsentiert werden, um die Spezifität der forward/reverse-Verarbeitung zu testen.",
+            "Analyse der internen Zustandsvektoren (state_digest_after) nach der Verarbeitung, um festzustellen, ob die unterschiedliche Spike-Ausgabe mit einer messbaren Veränderung des finalen Zustands korreliert."
+          ],
+          "requested_evidence": [
+            "Bereitstellung von Daten, die die internen Aktivitätsmuster (neuronale Feuerraten oder Aktivierungsvektoren) während der Verarbeitung der drei Bedingungen (forward, reverse, simultaneous) zeigen, um die Grundlage für die Spike-Ausgabe zu verstehen.",
+            "Eine quantitative Definition, welche spezifischen zeitlichen oder strukturellen Merkmale der Eingabe (Input) zu einem erhöhten 'output_spike_count' führen."
+          ],
+          "confidence": 0.6
+        },
+        "provenance": {
+          "prompt_sha256": "92612e55644a900a90e97f7ba1f58b12e0af01d7eb8717a8be58ce1d214c86b6",
+          "research_packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+          "model_self_confidence": "0.6"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-06T22:59:39.514575+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "e8fc3ca7d6f587ced361d4ba7eccbd476203e8b861cb613492c32555d89e07d8",
+    "source": {
+      "git_commit": "275f3b77df6e89cc224d8542454434ff7e84d7a4",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "True",
+      "source_freeze_sha": "87a5441f1a263ff0884ffa6f19598746d4d549478e12d25866b9c7d0d4346c07",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "94c22bbc72fc45300223df418fe48ed4ca76135e41b94fe84fcd1d3d9234621b",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "330321331068e05755cfb2d119721e92d60b2fbf32cc5872db9f69d4b516d105",
+      "data_digest": "e8002f46db217378d0c6c839a3ff441eff4f7f56659c71b161cfe21a624e583b",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260906225855240646-e8fc3ca7",
+    "AIAR-critical_reviewer-20260906225916850888-e8fc3ca7",
+    "AIAR-scientific_writer-20260906225939514575-e8fc3ca7"
+  ],
+  "supersedes": null,
+  "content_digest": "5e66a53567937c24002ec4c1952d20b2f62122a9dc96ff1e3de3e2fca275c095",
+  "markdown_digest": "8f05df26a3ed4e7885d668f16e4fce790825163a78bb067bd4081d7e3fff25c5"
+}

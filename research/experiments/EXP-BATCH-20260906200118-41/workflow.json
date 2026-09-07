@@ -1,0 +1,33 @@
+{
+  "experiment_id": "EXP-BATCH-20260906200118-41",
+  "research_question": "RQ-PERF-001",
+  "hypothesis": "H-PERF-001-A",
+  "title": "Experiment workflow: subsystem_performance_v1",
+  "conditions": "Registered protocol conditions",
+  "ticks": 10000,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110
+  ],
+  "protocol": "subsystem_performance_v1",
+  "resolved_runner": "run_performance_profile",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 10000,
+    "observed_min": 10000,
+    "observed_max": 10000
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

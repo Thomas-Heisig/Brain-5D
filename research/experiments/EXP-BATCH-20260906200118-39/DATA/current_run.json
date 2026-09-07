@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 39,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0039-regulation_on-seed-120.json.gz",
+    "sha256": "95c93933caa3e02dade2455de21f63413c61351572748a819bc0b9f054880c0f",
+    "size_bytes": 370,
+    "uncompressed_bytes": 486
+  },
+  "status": "idle"
+}
