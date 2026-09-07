@@ -175,32 +175,114 @@ def test_promotion_guard() -> None:
     guard_cognition_promotion("H-SNN-001-A", "CLAIM-SNN-001")
 
 
+def complete_candidate() -> dict[str, object]:
+    """Constructed metadata, never real raw-data or review verification."""
+    review: dict[str, object] = {
+        "status": "PENDING",
+        "reviewer": None,
+        "artifact": None,
+        "independence": "not established",
+        "authentication": "not performed",
+    }
+    return {
+        "schema_version": "1.0",
+        "candidate_id": "CAND-CNS-FIXTURE",
+        "protocol_id": "cog_cns_105_v1",
+        "question_id": "RQ-CNS-105",
+        "hypothesis_id": "H-CNS-105-A",
+        "source_commit": "0" * 40,
+        "analysis_hash": "0" * 64,
+        "raw_artifacts": [
+            {"path": "fixture.json", "sha256": "0" * 64, "role": "primary_observation"}
+        ],
+        "claim_scope": "functional_or_theory_conditional",
+        "consciousness_verdict": "not_established",
+        "limitations": ["constructed"],
+        "alternatives": ["null model"],
+        "theory_assumptions": ["none about phenomenal experience"],
+        "measurement_validity": {
+            "observation_model": "fixture",
+            "units": "dimensionless",
+            "holdout": "not a native study",
+            "independent_unit": "fixture",
+            "uncertainty": "not empirical",
+            "controls": ["negative fixture"],
+        },
+        "replication": dict(review),
+        "human_review": dict(review),
+        "ethics_review": dict(review),
+    }
+
+
 def test_candidate_never_accepts_or_authenticates() -> None:
     assert assess_candidate({})["status"] == "INCOMPLETE"
-    fields = [
-        "candidate_id",
-        "protocol_id",
-        "question_id",
-        "hypothesis_id",
-        "source_commit",
-        "raw_artifacts",
-        "analysis_hash",
-        "limitations",
-        "alternatives",
-        "replication",
-        "ethics_review",
-        "theory_assumptions",
-        "measurement_validity",
-        "human_review",
-    ]
-    candidate: dict[str, object] = {key: "declared-not-authenticated" for key in fields}
-    candidate["claim_scope"] = "functional_or_theory_conditional"
+    candidate = complete_candidate()
     result = assess_candidate(candidate)
     assert result["status"] == "READY_FOR_EXTERNAL_REVIEW"
     assert result["accepted_evidence"] is False
     assert result["reviewer_identity_authenticated"] is False
+    assert result["raw_artifact_bytes_verified"] is False
     candidate["consciousness_verdict"] = "conscious"
     assert assess_candidate(candidate)["status"] == "INCOMPLETE"
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "source_commit",
+        "raw_artifacts",
+        "measurement_validity",
+        "human_review",
+        "limitations",
+    ],
+)
+def test_candidate_malformed_field_cannot_pass(field: str) -> None:
+    candidate = complete_candidate()
+    candidate[field] = "fake-approval"
+    assert assess_candidate(candidate)["status"] == "INCOMPLETE"
+
+
+def test_candidate_cannot_self_accept() -> None:
+    candidate = complete_candidate()
+    candidate["accepted_evidence"] = True
+    assert assess_candidate(candidate)["status"] == "INCOMPLETE"
+    candidate = complete_candidate()
+    candidate["hypothesis_id"] = "H-CNS-106-A"
+    assert assess_candidate(candidate)["status"] == "INCOMPLETE"
+
+
+def test_missing_installed_ethics_state_fails_closed(tmp_path: Path) -> None:
+    program = tmp_path / "protocols/COGNITION_CONSCIOUSNESS_V1.json"
+    program.parent.mkdir()
+    program.write_text("{}", encoding="utf-8")
+    with pytest.raises(CognitionGovernanceError, match="state missing"):
+        guard_cognition_launch(tmp_path, "RQ-SNN-001", "runtime_ticks_v1")
+
+
+def test_malformed_ethics_state_fails_closed(tmp_path: Path) -> None:
+    state = tmp_path / "ethics/operational_state.json"
+    state.parent.mkdir()
+    state.write_text('{"state": []}', encoding="utf-8")
+    with pytest.raises(CognitionGovernanceError):
+        guard_cognition_launch(tmp_path, "RQ-SNN-001", "runtime_ticks_v1")
+
+
+def test_instrument_resource_budgets() -> None:
+    with pytest.raises(ValueError, match="budget"):
+        dmts_trials(1, repeats=100001)
+    with pytest.raises(ValueError, match="budget"):
+        oddball_schedule(1, trials=100001)
+
+
+def test_auc_matches_pairwise_reference_with_ties() -> None:
+    labels = [0, 1, 0, 1, 1, 0]
+    probabilities = [0.2, 0.7, 0.7, 0.5, 0.7, 0.1]
+    positive = [p for p, y in zip(probabilities, labels) if y]
+    negative = [p for p, y in zip(probabilities, labels) if not y]
+    expected = sum((p > n) + 0.5 * (p == n) for p in positive for n in negative) / (
+        len(positive) * len(negative)
+    )
+    assert confidence_scores(labels, probabilities)["type2_auroc"] == expected
 
 
 def test_registry_program_links_and_sources() -> None:
@@ -239,7 +321,7 @@ def test_dashboard_boundary_and_visible_catalog() -> None:
         "ethics_approved": True,
     }
     with pytest.raises(WorkflowValidationError, match="ADAPTER_NOT_VALIDATED"):
-        service._validate(body)
+        service.run_science(body)
 
 
 @pytest.mark.parametrize(

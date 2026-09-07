@@ -39,6 +39,9 @@ run("cognition_edition_integrity", [PY, "scripts/publication_cognition.py"])
 run("cognition_and_publication_tests", [PY, "-m", "pytest", "tests/test_cognition_program.py", "tests/test_publication_revision.py", "tests/test_publication_integration.py", "-q"])
 run("pyright", [PY, "-m", "pyright"])
 run("fast_regressions", [PY, "-m", "pytest", "-m", "not slow", "-q"])
+run("browser_dependencies", ["npm", "ci"])
+run("chromium", ["npx", "playwright", "install", "--with-deps", "chromium"])
+run("publication_browser", ["npx", "playwright", "test", "tests/browser/publication.spec.js"])
 # Hash exact tested source files. This is a test report, not a source-frozen SNN run.
 hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in files}
 report = {"generated_at": datetime.now(timezone.utc).isoformat(), "base_head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(), "workflow_run_id": os.environ.get("GITHUB_RUN_ID"), "tested_sources_sha256": hashes, "checks": checks, "all_passed": all(check["exit_code"] == 0 for check in checks), "authority": "software_verification_only", "empirical_brain5d_consciousness_experiments": False, "external_ethics_approval": False}

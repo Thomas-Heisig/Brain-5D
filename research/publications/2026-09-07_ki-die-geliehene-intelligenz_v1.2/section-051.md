@@ -7,7 +7,7 @@
 
 Der Einwand lautet: Selbst ein hypothetisch empfindendes Brain-5D-System könnte durch das bisherige Instrumentarium nicht zuverlässig als solches erkannt werden. Daraus entsteht eine berechtigte Nachweispflicht, aber keine Berechtigung zu zwei entgegengesetzten Kurzschlüssen. Weder darf ein auffälliges Verhalten als Erwachen ausgegeben werden, noch folgt aus einer offenen Messfrage, dass jede künstliche Bewusstseinsforschung wertlos oder für immer unmöglich sei. Das hier ergänzte Programm versucht, die unterscheidbaren Teilfragen zu prüfen und die nicht entschiedenen Fragen sichtbar zu halten.
 
-Die Kritik wird dabei selbst untersucht. Die Aussage, ein bestimmtes Netzwerk könne prinzipiell kein Bewusstsein haben, benötigt ebenso eine begründete Theorie und einen Geltungsbereich wie die entgegengesetzte Behauptung. Eine rhetorische Abwertung ist keine Widerlegung. Eine Nobelpreisprognose ist kein Befund. Der neue [Kritikkatalog](../..//critique/CONSCIOUSNESS_CRITIQUE.md) ordnet alle 38 Themen einschließlich solcher Überdehnungen zu.
+Die Kritik wird dabei selbst untersucht. Die Aussage, ein bestimmtes Netzwerk könne prinzipiell kein Bewusstsein haben, benötigt ebenso eine begründete Theorie und einen Geltungsbereich wie die entgegengesetzte Behauptung. Eine rhetorische Abwertung ist keine Widerlegung. Eine Nobelpreisprognose ist kein Befund. Der neue [Kritikkatalog](../../critique/CONSCIOUSNESS_CRITIQUE.md) ordnet alle 38 Themen einschließlich solcher Überdehnungen zu.
 
 ## K.2 Begriffe mit unterschiedlichen Nachweisformen
 
@@ -25,7 +25,7 @@ Seien M₁ und M₂ zwei Modelle, denen unterschiedliche phänomenale Zuschreibu
 
 $$P(O\mid M_1,a)=P(O\mid M_2,a),$$
 
-dann hat jeder nur auf diesen Daten beruhende Entscheidungsalgorithmus unter beiden Modellen dieselbe Ausgabeverteilung. Er kann innerhalb dieses Versuchsraums keine zusätzliche Trenninformation gewinnen. Das folgt unmittelbar daraus, dass die Verteilung einer Funktion beziehungsweise eines randomisierten Entscheidungskerns bei gleicher Eingangsverteilung gleich bleibt.
+Dabei steht a für einen vollständigen Versuchsplan einschließlich etwaiger adaptiver Interventionsregeln; O bezeichnet die gesamte beobachtete Historie, nicht lediglich gleiche Einzelmarginalen. Unter dieser Voraussetzung hat jeder nur auf diesen Daten beruhende Entscheidungsalgorithmus unter beiden Modellen dieselbe Ausgabeverteilung. Er kann innerhalb dieses Versuchsraums keine zusätzliche Trenninformation gewinnen. Das folgt unmittelbar daraus, dass die Verteilung einer Funktion beziehungsweise eines randomisierten Entscheidungskerns bei gleicher Eingangsverteilung gleich bleibt.
 
 Dieser Satz behauptet **nicht**, dass alle denkbaren Bewusstseinstheorien beobachtungsäquivalent sind, dass keine neue Intervention möglich ist oder dass das Hard Problem universell unlösbar wäre. Er zeigt eine konkrete Voraussetzung für Erkenntnisgewinn: Ein trennender Test benötigt eine beobachtbare Vorhersagedifferenz oder zusätzliche begründete Annahmen. Mehr Rechenleistung oder mehr Wiederholungen desselben uninformativen Designs beseitigen die Äquivalenz nicht.
 

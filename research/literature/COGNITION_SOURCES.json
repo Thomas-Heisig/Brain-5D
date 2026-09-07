@@ -25,13 +25,13 @@
   },
   {
     "source_id": "SRC-CNS-GNWREPLY",
-    "authors_literal": "Global neuronal workspace proponents",
+    "authors_literal": "Lionel Naccache and Claire Sergent and Stanislas Dehaene and Xia-Jing Wang and Michele Farisco and Jean-Pierre Changeux",
     "year": 2025,
     "title": "GNW theoretical framework and the adversarial testing of global neuronal workspace and integrated information theories of consciousness",
     "doi": "10.1093/nc/niaf037",
     "url": "https://doi.org/10.1093/nc/niaf037",
     "accessed": "2026-09-07",
-    "reading_scope": "Publisher abstract and bibliographic record; author list not fully normalized",
+    "reading_scope": "Publisher HTML; author list, theoretical objections and competing-interest declaration checked",
     "argumentative_use": "Records a substantive objection to interpretation of the adversarial test; not an independent replication.",
     "brain5d_data_validated": false
   },

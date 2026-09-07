@@ -29,11 +29,11 @@ https://www.nature.com/articles/s41586-025-08888-1
 <a id="src-cns-gnwreply"></a>
 ## SRC-CNS-GNWREPLY
 
-Global neuronal workspace proponents (2025). *GNW theoretical framework and the adversarial testing of global neuronal workspace and integrated information theories of consciousness*.
+Lionel Naccache and Claire Sergent and Stanislas Dehaene and Xia-Jing Wang and Michele Farisco and Jean-Pierre Changeux (2025). *GNW theoretical framework and the adversarial testing of global neuronal workspace and integrated information theories of consciousness*.
 
 https://doi.org/10.1093/nc/niaf037
 
-**Gelesener Umfang:** Publisher abstract and bibliographic record; author list not fully normalized.
+**Gelesener Umfang:** Publisher HTML; author list, theoretical objections and competing-interest declaration checked.
 
 **Verwendung und Grenze:** Records a substantive objection to interpretation of the adversarial test; not an independent replication.
 

@@ -24,7 +24,7 @@ class Stimulus:
 
 
 def _positive_int(value: int, name: str) -> None:
-    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+    if type(value) is not int or value < 1:
         raise ValueError(f"{name} must be a positive integer")
 
 
@@ -46,11 +46,15 @@ def dmts_trials(
     expose the key, future probe, trial seed, or whole schedule to the system.
     Present sample, blank delay, then probe via the registered event interface.
     """
+    if type(seed) is not int or seed < 0:
+        raise ValueError("seed must be a non-negative integer")
+    if 2 * repeats * symbols * len(delays) > 100000:
+        raise ValueError("DMTS instrument budget exceeded")
     _positive_int(repeats, "repeats")
     _positive_int(symbols, "symbols")
     if symbols < 2 or not delays or len(set(delays)) != len(delays):
         raise ValueError("At least two symbols and distinct delays are required")
-    if any(isinstance(d, bool) or not isinstance(d, int) or d < 0 for d in delays):
+    if any(type(d) is not int or d < 0 for d in delays):
         raise ValueError("Delays must be non-negative integers")
     rng = random.Random(seed)
     raw: list[tuple[int, int, int, int]] = []
@@ -58,8 +62,9 @@ def dmts_trials(
         for sample in range(symbols):
             for _ in range(repeats):
                 raw.append((sample, sample, delay, 1))
-                choices = [v for v in range(symbols) if v != sample]
-                raw.append((sample, rng.choice(choices), delay, 0))
+                alternative = rng.randrange(symbols - 1)
+                probe = alternative + int(alternative >= sample)
+                raw.append((sample, probe, delay, 0))
     rng.shuffle(raw)
     stimuli = [Stimulus(i, s, p, d) for i, (s, p, d, _) in enumerate(raw)]
     return stimuli, {i: y for i, (_, _, _, y) in enumerate(raw)}
@@ -79,8 +84,12 @@ def oddball_schedule(
     required by the protocol. Consecutive deviants are allowed and recorded;
     no refractory scheduling rule or clinical timing is silently assumed.
     """
+    if type(seed) is not int or seed < 0:
+        raise ValueError("seed must be a non-negative integer")
+    if trials > 100000:
+        raise ValueError("Oddball instrument budget exceeded")
     _positive_int(trials, "trials")
-    if isinstance(deviants, bool) or not isinstance(deviants, int):
+    if type(deviants) is not int:
         raise ValueError("deviants must be an integer")
     if not 0 < deviants < trials or standard == deviant:
         raise ValueError("Both distinct stimulus classes are required")
@@ -155,13 +164,24 @@ def confidence_scores(
         raise ValueError("Aligned binary correctness values are required")
     if any(not 0 <= p <= 1 for p in confidence):
         raise ValueError("Confidence probabilities must lie in [0, 1]")
-    positive = [p for y, p in zip(correct, confidence) if y == 1]
-    negative = [p for y, p in zip(correct, confidence) if y == 0]
+    positives = sum(correct)
+    negatives = len(correct) - positives
     auc = None
-    if positive and negative:
-        auc = sum((p > n) + 0.5 * (p == n) for p in positive for n in negative) / (
-            len(positive) * len(negative)
-        )
+    if positives and negatives:
+        ordered = sorted(zip(confidence, correct))
+        wins = 0.0
+        negatives_before = 0
+        index = 0
+        while index < len(ordered):
+            stop = index + 1
+            while stop < len(ordered) and ordered[stop][0] == ordered[index][0]:
+                stop += 1
+            group_positives = sum(label for _, label in ordered[index:stop])
+            group_negatives = stop - index - group_positives
+            wins += group_positives * (negatives_before + 0.5 * group_negatives)
+            negatives_before += group_negatives
+            index = stop
+        auc = wins / (positives * negatives)
     return {
         "brier": mean((p - y) ** 2 for y, p in zip(correct, confidence)),
         "type2_auroc": auc,
