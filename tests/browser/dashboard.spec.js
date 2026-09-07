@@ -61,6 +61,40 @@ async function openDashboard(page, batchResponse = null) {
       });
       return;
     }
+    if (url.pathname === "/api/gate/status") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          overall: "pending",
+          live_runtime: [],
+          gate_a: { items: [] },
+          gate_b: { items: [] },
+          gate_c: { items: [] },
+        }),
+      });
+      return;
+    }
+    if (url.pathname === "/api/releases/timeline") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          sources: [
+            { name: "TODO", available: true },
+            { name: "ROADMAP", available: true },
+            { name: "CHANGELOG", available: true },
+          ],
+          entries: [{
+            date: "2026-09-07",
+            title: "Release timeline restoration",
+            sources: ["TODO", "ROADMAP", "CHANGELOG"],
+            items: [{ text: "Timeline is visible in Release", done: true }],
+          }],
+        }),
+      });
+      return;
+    }
     if (url.pathname === "/api/experiment/workflow/batch" && request.method() === "POST") {
       const body = JSON.parse(request.postData() || "{}");
       if (batchResponse) batchResponse.body = body;
@@ -122,6 +156,23 @@ test("navigation and box-state controls remain usable", async ({ page }) => {
   await expect(box).toHaveClass(/box-state-maximized/);
   await page.keyboard.press("Escape");
   await expect(box).not.toHaveClass(/box-state-maximized/);
+});
+
+test("Release workspace renders the documentation timeline", async ({ page }) => {
+  await openDashboard(page);
+  await page.locator('[data-tab="gate"]').evaluate((button) => button.click());
+  await expect(page.locator("#release-timeline-list .release-timeline-entry")).toHaveCount(1);
+  await expect(page.locator("#release-timeline-list")).toContainText("Release timeline restoration");
+  await expect(page.locator("#release-timeline-sources")).toContainText("TODO");
+  await expect(page.locator("[data-timeline-phase]")).toHaveCount(3);
+  await expect(page.locator('[data-timeline-phase="past"]')).toContainText("Was war");
+  await expect(page.locator('[data-timeline-phase="current"]')).toContainText("Was ist");
+  await expect(page.locator('[data-timeline-phase="future"]')).toContainText("Was wird");
+
+  for (const view of ["releases", "preview", "timeline", "documents", "gate"]) {
+    await page.locator(`[data-workspace-view="${view}"]`).click();
+    await expect(page.locator(`[data-release-view="${view}"]`)).toBeVisible();
+  }
 });
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {

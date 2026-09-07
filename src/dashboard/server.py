@@ -92,6 +92,7 @@ from .models import (
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
 from .research_source import ResearchSource, create_research_source
+from .release_timeline import build_release_timeline
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -544,6 +545,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/releases":
                 self._serve_releases()
+                return
+
+            if path == "/api/releases/timeline":
+                self._serve_release_timeline()
                 return
 
             if path == "/api/releases/current":
@@ -1289,6 +1294,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                     "error": str(exc),
                 }
             )
+
+    def _serve_release_timeline(self) -> None:
+        """Serve the merged release timeline from the canonical Markdown docs."""
+        repo_root = Path(__file__).resolve().parents[2]
+        self._send_json(build_release_timeline(repo_root))
 
     # ========================================================================
     # Structural / runtime POST dispatch

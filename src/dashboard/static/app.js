@@ -52,6 +52,7 @@ import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
 import { initResearchChat } from './research-chat.js';
 import { initBoxStates } from './box-state-controller.js';
+import { renderGateBoard } from './gate-board.js';
 
 // ================================================================
 // DOM HELPERS
@@ -238,7 +239,7 @@ function setupWorkspaceViews() {
       navigation.querySelectorAll('[data-workspace-view]').forEach((item) => {
         item.classList.toggle('active', item === button);
       });
-      document.querySelectorAll(`[data-${workspace}-view]`).forEach((panel) => {
+      document.querySelectorAll(`[data-${workspace}-view][data-workspace-panel]`).forEach((panel) => {
         panel.hidden = panel.dataset[`${workspace}View`] !== view;
       });
     });
@@ -1900,6 +1901,8 @@ async function refreshGateStatus() {
   } catch {
     // The store publishes its error state; keep the last truthful gate data.
   }
+
+  renderGateBoard(dashboardStore.state);
 
   // The browser never infers scientific completion. GateStatusBuilder owns
   // the evidence-based result and the store is the single request path.

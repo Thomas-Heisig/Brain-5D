@@ -67,6 +67,20 @@ class TestExperimentModeFrontendWiring:
         assert "data.ci_status?.status" in app_js
         assert "data.release_readiness?.overall" in app_js
 
+    def test_release_workspace_renders_documentation_timeline(self) -> None:
+        html = _read_static("index.html")
+        gate_board = _read_static("gate-board.js")
+        app_js = _read_static("app.js")
+        assert 'id="release-timeline-list"' in html
+        assert 'id="release-timeline-sources"' in html
+        assert "api/releases/timeline" in gate_board
+        assert "renderReleaseTimeline" in gate_board
+        assert "TIMELINE_PHASES" in gate_board
+        for phase in ("past", "current", "future"):
+            assert f"key: '{phase}'" in gate_board
+        assert "./gate-board.js" in app_js
+        assert "renderGateBoard(dashboardStore.state)" in app_js
+
     def test_plantuml_encoder_uses_existing_distribution(self) -> None:
         html = _read_static("index.html")
         assert "cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0" in html
@@ -176,7 +190,7 @@ class TestExperimentModeFrontendWiring:
         for view in ("visual", "dynamics", "inspect", "data"):
             assert f'data-workspace-view="{view}"' in html
             assert f'data-network-view="{view}"' in html
-        for view in ("summary", "gate-a", "gate-b", "gate-c"):
+        for view in ("gate", "releases", "preview", "timeline", "documents"):
             assert f'data-workspace-view="{view}"' in html
             assert f'data-release-view="{view}"' in html
         for query in ("EVID", "EXP", "MATRIX"):

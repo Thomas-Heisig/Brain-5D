@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from http.client import HTTPConnection
 from pathlib import Path
 from threading import Thread
@@ -67,6 +68,17 @@ def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> No
         catalog_status, catalog_body = _request(server, "GET", "/api/experiment/workflow/catalog")
         assert catalog_status == 200
         assert '"questions"' in catalog_body
+
+        timeline_status, timeline_body = _request(server, "GET", "/api/releases/timeline")
+        assert timeline_status == 200
+        timeline = json.loads(timeline_body)
+        assert {source["name"] for source in timeline["sources"]} == {
+            "TODO",
+            "ROADMAP",
+            "CHANGELOG",
+            "RELEASE",
+        }
+        assert timeline["entries"]
 
         batch_status, batch_body = _request(
             server,

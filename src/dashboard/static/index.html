@@ -613,19 +613,58 @@
         </div>
       </header>
       <nav class="workspace-view-tabs" data-workspace-views="release" aria-label="Release views">
-        <button type="button" class="active" data-workspace-view="summary">Summary</button>
-        <button type="button" data-workspace-view="gate-a">Gate A</button>
-        <button type="button" data-workspace-view="gate-b">Gate B</button>
-        <button type="button" data-workspace-view="gate-c">Gate C</button>
+        <button type="button" class="active" data-workspace-view="gate">Gate</button>
+        <button type="button" data-workspace-view="releases">Releases 0.1 bis jetzt</button>
+        <button type="button" data-workspace-view="preview">Aktuelle Vorschau</button>
+        <button type="button" data-workspace-view="timeline">Timeline chronologisch</button>
+        <button type="button" data-workspace-view="documents">TODO / CHANGELOG / ROADMAP</button>
       </nav>
       <div class="release-board">
-        <div class="release-header">
-          <h2>Release History</h2>
-          <p class="release-subtitle">Immutable release records and current development gate. Historical releases are never re-evaluated against newer source trees.</p>
-        </div>
-        <div class="release-tree" id="release-tree"></div>
+        <section class="release-view-panel" data-release-view="releases" data-workspace-panel hidden>
+          <div class="release-header">
+            <h2>Releases <span id="release-range">0.1 bis aktuell</span></h2>
+            <p class="release-subtitle">Registrierte Releases vom frühesten verfügbaren Versionsstand bis zum aktuellen Entwicklungsstand.</p>
+          </div>
+          <div class="release-tree" id="release-tree"></div>
+        </section>
 
-        <div class="gate-board">
+        <section class="release-view-panel release-preview-panel" data-release-view="preview" data-workspace-panel hidden aria-labelledby="release-preview-title">
+          <div class="release-header">
+            <span class="workspace-kicker">CURRENT RELEASE</span>
+            <h2 id="release-preview-title">Aktuelle Release-Vorschau</h2>
+            <p class="release-subtitle">Der offene Release-Knoten mit Scope, Hinweis und nächstem Abschlusskriterium.</p>
+          </div>
+          <div id="release-preview" class="release-preview-content"><p class="release-timeline-empty">Loading...</p></div>
+        </section>
+
+        <section class="release-view-panel release-timeline-panel" data-release-view="timeline" data-workspace-panel hidden aria-labelledby="release-timeline-title">
+          <div class="release-timeline-header">
+            <div>
+              <span class="workspace-kicker">PROJECT RECORD</span>
+              <h2 id="release-timeline-title">Product Timeline</h2>
+              <p class="release-subtitle">Chronologisch vom frühesten dokumentierten Release bis zum aktuellen Stand und offenen Backlog.</p>
+            </div>
+            <span class="release-timeline-count" id="release-timeline-count">Loading...</span>
+          </div>
+          <div class="release-timeline-sources" id="release-timeline-sources" aria-label="Timeline sources"></div>
+          <div class="release-timeline-list" id="release-timeline-list" aria-live="polite"></div>
+        </section>
+
+        <section class="release-view-panel release-documents-panel" data-release-view="documents" data-workspace-panel hidden aria-labelledby="release-documents-title">
+          <div class="release-header">
+            <span class="workspace-kicker">PROJECT SOURCES</span>
+            <h2 id="release-documents-title">TODO, CHANGELOG und ROADMAP</h2>
+            <p class="release-subtitle">Die Release-Ansicht bleibt mit den kanonischen Quelldokumenten verknüpft.</p>
+          </div>
+          <div class="release-documents-grid">
+            <article class="release-document-card"><header><h3>TODO</h3><a href="/api/files/content/08-roadmap%2FTODO.md?source=docs" target="_blank" rel="noreferrer">Quelle öffnen</a></header><pre id="release-doc-todo">Loading...</pre></article>
+            <article class="release-document-card"><header><h3>CHANGELOG</h3><a href="/api/files/content/07-changelog%2FCHANGELOG.md?source=docs" target="_blank" rel="noreferrer">Quelle öffnen</a></header><pre id="release-doc-changelog">Loading...</pre></article>
+            <article class="release-document-card"><header><h3>ROADMAP</h3><a href="/api/files/content/08-roadmap%2FROADMAP.md?source=docs" target="_blank" rel="noreferrer">Quelle öffnen</a></header><pre id="release-doc-roadmap">Loading...</pre></article>
+          </div>
+        </section>
+
+        <section class="release-view-panel release-gate-panel" data-release-view="gate" data-workspace-panel aria-labelledby="release-gate-title">
+        <div class="gate-board" id="release-gate-title">
           <div class="gate-header">
             <h2>Current Gate</h2>
             <p class="gate-subtitle">Scientific evidence, source-freeze CI and release readiness are evaluated independently.</p>
@@ -637,13 +676,14 @@
             <div class="gate-overall-row"><strong>Continuous Integration</strong><span class="gate-badge pending" id="gate-ci">unknown</span></div>
             <div class="gate-overall-row"><strong>Release Readiness</strong><span class="gate-badge pending" id="gate-overall">not_ready</span></div>
           </div>
-          <div class="gate-section gate-section-live" data-release-view="summary"><h3>Live Runtime Profile <span class="gate-section-hint">current config</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
+          <div class="gate-section gate-section-live" data-gate-section="summary"><h3>Live Runtime Profile <span class="gate-section-hint">current config</span></h3><div id="gate-live-list" class="gate-live-grid"></div></div>
           <div class="gate-sections-grid">
-            <section class="gate-section" data-release-view="gate-a"><h3>Gate A <span class="gate-section-hint">Technical Integration</span></h3><div id="gate-a-list" class="gate-criteria-table"></div></section>
-            <section class="gate-section" data-release-view="gate-b"><h3>Gate B <span class="gate-section-hint">Verification</span></h3><div id="gate-b-list" class="gate-criteria-table"></div></section>
-            <section class="gate-section" data-release-view="gate-c"><h3>Gate C <span class="gate-section-hint">Scientific Baseline</span></h3><div id="gate-c-list" class="gate-criteria-table"></div></section>
+            <section class="gate-section" data-gate-section="gate-a"><h3>Gate A <span class="gate-section-hint">Technical Integration</span></h3><div id="gate-a-list" class="gate-criteria-table"></div></section>
+            <section class="gate-section" data-gate-section="gate-b"><h3>Gate B <span class="gate-section-hint">Verification</span></h3><div id="gate-b-list" class="gate-criteria-table"></div></section>
+            <section class="gate-section" data-gate-section="gate-c"><h3>Gate C <span class="gate-section-hint">Scientific Baseline</span></h3><div id="gate-c-list" class="gate-criteria-table"></div></section>
           </div>
         </div>
+        </section>
       </div>
     </section> <!-- /tab-gate -->
 
