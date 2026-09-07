@@ -53,6 +53,7 @@ import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceS
 import { initResearchChat } from './research-chat.js';
 import { initBoxStates } from './box-state-controller.js';
 import { renderGateBoard } from './gate-board.js';
+import { pollInterval, readJson } from './api-client.js';
 
 // ================================================================
 // DOM HELPERS
@@ -476,7 +477,7 @@ async function refreshLiveLoopStatus() {
   try {
     const r = await fetch('/api/structural/live-loop', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
 
     const available = data.available === true;
     const proofs = data.proofs || {};
@@ -599,7 +600,7 @@ async function refreshIntegrationStatus() {
   try {
     const r = await fetch('/api/integration/status', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
     const items = data.items || [];
 
     let passed = 0;
@@ -652,7 +653,7 @@ async function refreshSnapshotInfo() {
   try {
     const response = await fetch('/api/snapshot-info', { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const info = await response.json();
+    const info = await readJson(response);
     if (info.active) {
       setText('snapshot-file', info.path || '—');
       setText('snapshot-tick', info.tick != null ? formatNumber(info.tick) : '—');
@@ -682,11 +683,11 @@ async function refreshHeatmap() {
       { cache: 'no-store' }
     );
     if (!response.ok) {
-      const data = await response.json();
+      const data = await readJson(response);
       setText('heatmap-meta', data.error || `Heatmap HTTP ${response.status}`);
       return;
     }
-    drawHeatmap(await response.json());
+    drawHeatmap(await readJson(response));
   } catch (error) {
     setText('heatmap-meta', '⚠️ Heatmap nicht erreichbar.');
   }
@@ -778,7 +779,7 @@ async function refreshLiveProjection() {
       }
       return;
     }
-    const data = await response.json();
+    const data = await readJson(response);
     drawHeatmap(data);
     updateSourceBadge(data.telemetry?.status);
   } catch {
@@ -963,7 +964,7 @@ async function refreshIOFlow() {
   try {
     const r = await fetch('/api/live/io-flow', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
 
     // Input layer
     setText('io-input-count', formatNumber(data.input_count));
@@ -1030,7 +1031,7 @@ async function refreshPopulation() {
   try {
     const r = await fetch('/api/live/population', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
 
     // E/I ratio badge
     const badge = document.getElementById('ei-ratio-badge');
@@ -1123,13 +1124,13 @@ function initDashboard() {
   if (ioFlowInterval) clearInterval(ioFlowInterval);
   if (populationInterval) clearInterval(populationInterval);
 
-  heatmapInterval = setInterval(refreshHeatmap, 5000);
-  liveProjectionInterval = setInterval(refreshLiveProjection, 500);
-  setInterval(refreshSnapshotInfo, 3000);
-  setInterval(refreshLiveLoopStatus, 5000);
+  heatmapInterval = setInterval(refreshHeatmap, pollInterval(5000));
+  liveProjectionInterval = setInterval(refreshLiveProjection, pollInterval(500));
+  setInterval(refreshSnapshotInfo, pollInterval(3000));
+  setInterval(refreshLiveLoopStatus, pollInterval(5000));
 
-  ioFlowInterval = setInterval(refreshIOFlow, 2000);
-  populationInterval = setInterval(refreshPopulation, 2000);
+  ioFlowInterval = setInterval(refreshIOFlow, pollInterval(2000));
+  populationInterval = setInterval(refreshPopulation, pollInterval(2000));
 
   // Heatmap kind buttons
   $$('button[data-kind]').forEach(button => {
@@ -1178,9 +1179,9 @@ function initDynamicsTab() {
   // Set up intervals
   if (dynamicsInterval) clearInterval(dynamicsInterval);
   if (layerExplorerInterval) clearInterval(layerExplorerInterval);
-  dynamicsInterval = setInterval(refreshSpikeRaster, 2000);
-  dynamicsInterval = setInterval(refreshRateHistogram, 2000);
-  layerExplorerInterval = setInterval(refreshLayerExplorer, 3000);
+  dynamicsInterval = setInterval(refreshSpikeRaster, pollInterval(2000));
+  dynamicsInterval = setInterval(refreshRateHistogram, pollInterval(2000));
+  layerExplorerInterval = setInterval(refreshLayerExplorer, pollInterval(3000));
 
   // Layer slider controls
   const slider = document.getElementById('layer-slider');
@@ -1219,7 +1220,7 @@ async function refreshSpikeRaster() {
   try {
     const r = await fetch('/api/live/raster', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
     drawSpikeRaster(data);
     const badge = document.getElementById('raster-badge');
     if (badge) {
@@ -1314,7 +1315,7 @@ async function refreshRateHistogram() {
     const bins = $('histogram-bins')?.value || '30';
     const r = await fetch(`/api/live/histogram?bins=${encodeURIComponent(bins)}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
     drawRateHistogram(data);
     const stats = document.getElementById('histogram-stats');
     if (stats) {
@@ -1410,7 +1411,7 @@ async function refreshLayerExplorer() {
 
     const r = await fetch(`/api/live/projection?kind=${encodeURIComponent(kind)}&resolution=40`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const data = await readJson(r);
     drawLayerSlice(data, dim, layerVal);
 
     const badge = document.getElementById('layer-badge');
@@ -1507,7 +1508,7 @@ function initInspectTab() {
 
   // Auto-refresh summary every 2s while inspect tab is active
   if (inspectInterval) clearInterval(inspectInterval);
-  inspectInterval = setInterval(refreshNetworkSummary, 2000);
+  inspectInterval = setInterval(refreshNetworkSummary, pollInterval(2000));
   console.log('✅ Inspect tab ready');
 }
 
@@ -1515,7 +1516,7 @@ async function refreshNetworkSummary() {
   try {
     const r = await fetch('/api/network/summary', { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
+    const d = await readJson(r);
     setText('inspect-dimensions', (d.dimensions || []).join(' × '));
     setText('inspect-neuron-count', formatNumber(d.neuron_count));
     setText('inspect-synapse-count', formatNumber(d.synapse_count));
@@ -1545,7 +1546,7 @@ async function loadNeuronPage() {
     if (activeOnly) params.set('active_only', 'true');
     const r = await fetch(`/api/network/neurons?${params}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
+    const d = await readJson(r);
     const body = $('neuron-table-body');
     if (!body) return;
     const rows = d.neurons || [];
@@ -1580,7 +1581,7 @@ async function loadSynapsePage() {
     if (minWeightRaw) params.set('min_weight', minWeightRaw);
     const r = await fetch(`/api/network/synapses?${params}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
+    const d = await readJson(r);
     const body = $('synapse-table-body');
     if (!body) return;
     const rows = d.synapses || [];
@@ -1609,7 +1610,7 @@ async function loadProjection() {
   try {
     const r = await fetch(`/api/network/projection?limit=${encodeURIComponent(limit)}&mode=${encodeURIComponent(mode)}`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const d = await r.json();
+    const d = await readJson(r);
     drawInspectProjection(canvas, d);
     setText('projection-meta',
       `${d.label} · ${d.sample_count}/${d.total_count} samples · ${d.sampling_method} · source: ${d.source}`);
@@ -1724,7 +1725,7 @@ async function refreshConsoleStatus() {
   try {
     const response = await fetch('/api/status', { cache: 'no-store' });
     if (!response.ok) return;
-    const data = await response.json();
+    const data = await readJson(response);
 
     // Update console status badge
     const badge = $('b5d-state-badge');
@@ -1763,7 +1764,7 @@ async function loadProposals() {
   try {
     const response = await fetch('/api/structural/proposals', { cache: 'no-store' });
     if (!response.ok) return;
-    const data = await response.json();
+    const data = await readJson(response);
     const proposals = data.proposals || [];
 
     // Update badge count
@@ -1831,7 +1832,7 @@ async function handleProposal(proposalId, action) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ proposal_id: proposalId }),
     });
-    const data = await response.json();
+    const data = await readJson(response);
     if (!response.ok || data.ok === false) {
       throw new Error(data.message || data.error || `HTTP ${response.status}`);
     }
@@ -2116,34 +2117,34 @@ function getVersionChecks() {
   return {
     'v0.4 (Persistenz)': [
       { label: 'Delta-Journal', icon: '💾', check: async () => { try { const r = await fetch('/api/status'); return r.ok; } catch { return false; } }},
-      { label: 'Storage Pipeline', icon: '📦', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.storage?.deltas_written !== undefined; } catch { return false; } }},
+      { label: 'Storage Pipeline', icon: '📦', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return d.storage?.deltas_written !== undefined; } catch { return false; } }},
       { label: 'Crash Recovery', icon: '🛡️', check: async () => { try { const r = await fetch('/api/status'); return r.ok; } catch { return false; } }},
     ],
     'v0.5 (Integration Hardening)': [
-      { label: 'OperatorBridge', icon: '🌉', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.bridge_exists === true; } catch { return false; } }},
-      { label: 'Controller', icon: '🎮', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await r.json(); return d.controller_exists === true; } catch { return false; } }},
+      { label: 'OperatorBridge', icon: '🌉', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await readJson(r); return d.bridge_exists === true; } catch { return false; } }},
+      { label: 'Controller', icon: '🎮', check: async () => { try { const r = await fetch('/api/debug/bridge'); const d = await readJson(r); return d.controller_exists === true; } catch { return false; } }},
       { label: 'Structural API', icon: '🧠', check: async () => { try { const r = await fetch('/api/structural/status'); return r.ok; } catch { return false; } }},
       { label: 'Snapshots', icon: '💾', check: async () => { try { const r = await fetch('/api/snapshots'); return r.ok; } catch { return false; } }},
-      { label: 'Research (B5D-SEF)', icon: '🔬', check: async () => { try { const r = await fetch('/api/research'); const d = await r.json(); return d.available === true; } catch { return false; } }},
+      { label: 'Research (B5D-SEF)', icon: '🔬', check: async () => { try { const r = await fetch('/api/research'); const d = await readJson(r); return d.available === true; } catch { return false; } }},
       { label: 'Heatmaps', icon: '🔥', check: async () => { try { const r = await fetch('/api/heatmap?kind=activity'); return r.ok; } catch { return false; } }},
       { label: 'Docs Browser', icon: '📄', check: async () => { try { const r = await fetch('/api/docs'); return r.ok; } catch { return false; } }},
     ],
     'v0.5α6 (Morphological Self-Reg)': [
-      { label: 'Self-Organization', icon: '🧬', check: async () => { try { const r = await fetch('/api/gate/status'); const d = await r.json(); const struct = (d.live_runtime || []).find(i => i.key === 'structural'); const s = struct?.live_status; return s === 'active' ? 'passed' : s === 'disabled' ? 'disabled' : s === 'error' ? 'failed' : s === 'unavailable' ? 'unavailable' : 'unknown'; } catch { return false; } }},
+      { label: 'Self-Organization', icon: '🧬', check: async () => { try { const r = await fetch('/api/gate/status'); const d = await readJson(r); const struct = (d.live_runtime || []).find(i => i.key === 'structural'); const s = struct?.live_status; return s === 'active' ? 'passed' : s === 'disabled' ? 'disabled' : s === 'error' ? 'failed' : s === 'unavailable' ? 'unavailable' : 'unknown'; } catch { return false; } }},
       { label: 'Proposals', icon: '📋', check: async () => { try { const r = await fetch('/api/structural/proposals'); return r.ok ? 'passed' : false; } catch { return false; } }},
-      { label: 'Homeostasis', icon: '⚖️', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); const e = d.homeostasis?.enabled; return e === true ? 'passed' : e === false ? 'disabled' : 'unknown'; } catch { return false; } }},
+      { label: 'Homeostasis', icon: '⚖️', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); const e = d.homeostasis?.enabled; return e === true ? 'passed' : e === false ? 'disabled' : 'unknown'; } catch { return false; } }},
     ],
     'v0.6 (Skalierung)': [
-      { label: 'Large Network', icon: '🌐', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return (d.system?.neurons || 0) > 100 ? 'passed' : 'pending'; } catch { return false; } }},
+      { label: 'Large Network', icon: '🌐', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return (d.system?.neurons || 0) > 100 ? 'passed' : 'pending'; } catch { return false; } }},
       { label: 'Performance', icon: '⚡', check: async () => { try { const r = await fetch('/api/status'); return r.ok ? 'passed' : false; } catch { return false; } }},
     ],
     'v0.7 (Learning Env.)': [
-      { label: 'STDP', icon: '🧪', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.learning?.stdp_updates !== undefined; } catch { return false; } }},
-      { label: 'Reward System', icon: '🏆', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.learning?.reward_updates !== undefined; } catch { return false; } }},
+      { label: 'STDP', icon: '🧪', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return d.learning?.stdp_updates !== undefined; } catch { return false; } }},
+      { label: 'Reward System', icon: '🏆', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return d.learning?.reward_updates !== undefined; } catch { return false; } }},
     ],
     'v0.8+ (Embodiment → HMI → KI)': [
-      { label: 'Embodiment', icon: '🤖', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.embodiment !== undefined; } catch { return false; } }},
-      { label: 'Signal Bridge', icon: '📡', check: async () => { try { const r = await fetch('/api/status'); const d = await r.json(); return d.signal_metrics !== undefined; } catch { return false; } }},
+      { label: 'Embodiment', icon: '🤖', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return d.embodiment !== undefined; } catch { return false; } }},
+      { label: 'Signal Bridge', icon: '📡', check: async () => { try { const r = await fetch('/api/status'); const d = await readJson(r); return d.signal_metrics !== undefined; } catch { return false; } }},
     ],
   };
 }
@@ -2265,8 +2266,8 @@ function setupAutoRefreshToggle() {
       heatmapInterval = null;
       statusEl.textContent += ' (paused)';
     } else {
-      refreshInterval = setInterval(refreshStatus, 1000);
-      heatmapInterval = setInterval(refreshHeatmap, 5000);
+      refreshInterval = setInterval(refreshStatus, pollInterval(1000));
+      heatmapInterval = setInterval(refreshHeatmap, pollInterval(5000));
       statusEl.textContent = statusEl.textContent.replace(' (paused)', '');
     }
   });

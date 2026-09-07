@@ -10,6 +10,8 @@
 
 "use strict";
 
+import { readJson } from "./api-client.js";
+
 function byId(id) {
   return document.getElementById(id);
 }
@@ -34,7 +36,7 @@ export class ExperimentAPI {
         ...(options.headers || {}),
       },
     });
-    const data = await response.json();
+    const data = await readJson(response);
     if (!response.ok || data.ok === false) {
       throw new Error(data.error || data.message || `HTTP ${response.status}`);
     }

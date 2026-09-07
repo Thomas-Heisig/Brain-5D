@@ -14,6 +14,12 @@
 
 - Prepared the Docker entrypoint for the integrated dashboard on `0.0.0.0:8765`.
 - Added Docker Space metadata and published the live dashboard as `superdigger/Brain-5D-Space`.
+- Added the Space repository to the automatic GitHub-to-Hugging-Face synchronization workflow.
+
+## 2026-09-07 Space API rate-limit handling
+
+- Added a shared JSON response parser that reports HTML/429 proxy responses as API errors.
+- Reduced dashboard polling frequency automatically on `*.hf.space` deployments.
 
 ## 2026-09-07 Full-stack dashboard E2E verification
 

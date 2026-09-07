@@ -10,6 +10,12 @@
 
 - Configured the Docker image to start the integrated dashboard on `0.0.0.0:8765`.
 - Published the live dashboard as `superdigger/Brain-5D-Space`.
+- Added automatic synchronization to the Space repository alongside the model mirror.
+
+## 2026-09-07 — Space API rate-limit handling
+
+- Added shared non-JSON response handling so HTML/429 proxy pages no longer surface as `Unexpected token '<'`.
+- Reduced dashboard polling frequency automatically on Hugging Face Space hosts.
 
 ## 2026-09-07 — Repository catalog audit CI report
 

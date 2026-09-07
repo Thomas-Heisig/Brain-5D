@@ -4,6 +4,8 @@
  */
 "use strict";
 
+import { readJson } from "./api-client.js";
+
 import { dashboardStore } from "./state-store.js";
 
 const COMMANDS = {
@@ -54,7 +56,7 @@ async function json(url, options = {}) {
   });
   let data = {};
   try {
-    data = await response.json();
+    data = await readJson(response);
   } catch (_) {
     data = {};
   }

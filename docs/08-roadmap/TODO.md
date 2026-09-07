@@ -14,7 +14,14 @@
 
 - [x] Configure the Docker image to start the integrated dashboard on the Space port.
 - [x] Publish the dashboard as `superdigger/Brain-5D-Space`.
-- [ ] Add a Space-specific smoke check against the public dashboard URL.
+- [x] Synchronize future GitHub updates to both the model repository and the Space repository.
+- [x] Add a Space-specific smoke check against the local Docker dashboard API.
+- [ ] Re-run the public Space browser smoke check after HF proxy rate limits clear.
+
+## 2026-09-07 Space API rate-limit handling
+
+- [x] Handle HTML/429 responses without surfacing `Unexpected token '<'`.
+- [x] Increase polling intervals automatically for Hugging Face Space deployments.
 
 ## 2026-09-07 Chromium browser checks
 
