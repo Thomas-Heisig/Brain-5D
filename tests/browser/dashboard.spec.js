@@ -173,6 +173,11 @@ test("Release workspace renders the documentation timeline", async ({ page }) =>
     await page.locator(`[data-workspace-view="${view}"]`).click();
     await expect(page.locator(`[data-release-view="${view}"]`)).toBeVisible();
   }
+
+  await page.locator('[data-workspace-view="documents"]').click();
+  await page.locator('[data-release-document="08-roadmap/TODO.md"]').click();
+  await expect(page.locator("#tab-research")).toHaveClass(/active/);
+  await expect(page.locator("#fm-viewer")).not.toHaveClass(/fm-viewer-hidden/);
 });
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {

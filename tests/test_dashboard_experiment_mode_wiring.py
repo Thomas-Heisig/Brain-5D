@@ -70,12 +70,17 @@ class TestExperimentModeFrontendWiring:
     def test_release_workspace_renders_documentation_timeline(self) -> None:
         html = _read_static("index.html")
         gate_board = _read_static("gate-board.js")
+        file_viewer = _read_static("file-viewer.js")
         app_js = _read_static("app.js")
         assert 'id="release-timeline-list"' in html
         assert 'id="release-timeline-sources"' in html
         assert "api/releases/timeline" in gate_board
         assert "renderReleaseTimeline" in gate_board
         assert "TIMELINE_PHASES" in gate_board
+        assert 'data-release-document="08-roadmap/TODO.md"' in html
+        assert "openDocumentationFile" in gate_board
+        assert "export function openDocumentationFile" in file_viewer
+        assert "loadReleaseDocuments" not in gate_board
         for phase in ("past", "current", "future"):
             assert f"key: '{phase}'" in gate_board
         assert "./gate-board.js" in app_js

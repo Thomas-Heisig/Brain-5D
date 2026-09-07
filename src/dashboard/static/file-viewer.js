@@ -1093,6 +1093,16 @@ function parseFMYamlList(text) {
 function initResearchBrowser() { initFileManager(); }
 function initDocumentationBrowser() { initFileManager(); }
 
+export function openDocumentationFile(path) {
+  initFileManager();
+  fmCurrentSource = 'docs';
+  document.querySelectorAll('.fm-source-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.source === 'docs');
+  });
+  updateFMBreadcrumb();
+  return openFMFile(path);
+}
+
 // ================================================================
 // Markdown / CSV rendering helpers
 // ================================================================

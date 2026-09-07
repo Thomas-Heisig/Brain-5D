@@ -19,6 +19,7 @@
 - The Release workspace now separates completed history, current Alpha.7 work and planned backlog into three timeline lanes.
 - Release navigation now separates Gate, version history, current preview, chronological Timeline, and the three canonical project documents.
 - Historical Git tags extend the visible release range from 0.1.0 through the current development node.
+- Release document actions delegate to the existing File Viewer so Markdown, text, JSON and other supported formats keep one rendering path.
 
 ## 2026-09-07 Full-stack runtime phase profiling
 

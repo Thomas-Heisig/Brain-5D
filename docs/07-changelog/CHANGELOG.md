@@ -21,6 +21,7 @@
 - Added a complete `Was war` / `Was ist` / `Was wird` view including release-registry history and open P0 work.
 - Reorganized the Release workspace into Gate, Releases, current preview, chronological Timeline, and TODO/CHANGELOG/ROADMAP tabs.
 - Added historical tagged release nodes from `0.1.0` through the current development release.
+- Routed Release document opening through the shared File Viewer and removed the duplicate Release-side Markdown preview path.
 
 ## 2026-09-07 — Full-stack runtime phase profiling
 

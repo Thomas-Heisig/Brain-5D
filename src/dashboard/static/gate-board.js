@@ -10,6 +10,8 @@
 
 "use strict";
 
+import { openDocumentationFile } from './file-viewer.js';
+
 const $ = (id) => document.getElementById(id);
 
 const GATE_STATUS_ICON = {
@@ -192,14 +194,6 @@ const TIMELINE_PHASES = [
   { key: 'future', label: 'Was wird', hint: 'offen / geplant' },
 ];
 
-const RELEASE_DOCUMENTS = [
-  { key: 'todo', path: '08-roadmap/TODO.md' },
-  { key: 'changelog', path: '07-changelog/CHANGELOG.md' },
-  { key: 'roadmap', path: '08-roadmap/ROADMAP.md' },
-];
-
-let releaseDocumentsLoaded = false;
-
 function renderTimelineEntry(entry) {
   const phase = TIMELINE_PHASES.find((item) => item.key === entry.phase) || TIMELINE_PHASES[1];
   const items = Array.isArray(entry.items)
@@ -280,21 +274,17 @@ function renderReleaseTimeline(entries, sources, asOf) {
   `;
 }
 
-async function loadReleaseDocuments() {
-  if (releaseDocumentsLoaded) return;
-  releaseDocumentsLoaded = true;
-  await Promise.all(RELEASE_DOCUMENTS.map(async (document) => {
-    const target = $(`release-doc-${document.key}`);
-    if (!target) return;
-    try {
-      const response = await fetch(`/api/files/content/${encodeURIComponent(document.path)}?source=docs`, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const content = await response.text();
-      target.textContent = content.length > 12000 ? `${content.slice(0, 12000)}\n\n[Preview gekürzt]` : content;
-    } catch (err) {
-      target.textContent = 'Dokument konnte nicht geladen werden.';
-    }
-  }));
+let releaseDocumentLinksBound = false;
+
+function bindReleaseDocumentLinks() {
+  if (releaseDocumentLinksBound) return;
+  releaseDocumentLinksBound = true;
+  document.querySelectorAll('[data-release-document]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelector('[data-tab="research"]')?.click();
+      openDocumentationFile(button.dataset.releaseDocument || '');
+    });
+  });
 }
 
 async function loadReleaseTimeline() {
@@ -346,5 +336,5 @@ export function renderGateBoard(state) {
   // Load immutable release history once per render cycle.
   loadReleaseTree();
   loadReleaseTimeline();
-  loadReleaseDocuments();
+  bindReleaseDocumentLinks();
 }
