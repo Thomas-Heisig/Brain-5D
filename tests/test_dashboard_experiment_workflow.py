@@ -89,7 +89,13 @@ def test_run_writes_traceable_manifest_plan_and_report(tmp_path: Path) -> None:
     assert manifest["hypotheses"] == ["H-SNN-001-A"]
     assert manifest["results"]["observed_ticks"] == 25
     assert manifest["created_at"]
+    assert manifest["epistemic_layers"]["ui_state"].startswith("operator/dashboard")
+    assert manifest["epistemic_layers"]["data"].startswith("DATA artifacts")
+    assert manifest["epistemic_layers"]["evid"].startswith("not_created")
+    assert manifest["epistemic_layers"]["interpretation"].startswith("post-hoc")
+    assert result["epistemic_layers"] == manifest["epistemic_layers"]
     assert "## Ergebnis" in report
+    assert "## Epistemische Ebenen" in report
     assert "## Reproduzierbarkeit" in report
     assert "## Evidenzstatus" in report
     assert "KI-Ausgaben" in report

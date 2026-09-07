@@ -330,7 +330,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Compact AI-packet provenance and SHA-verified raw-run indexing.
 - [x] Persist Neural Symbiosis/MSBA adapter, projection, gateway and energy provenance whenever these components become experimental treatments.
 - [x] Persist exact digital checksums for every digital-path experiment.
-- [ ] Continue distinguishing UI state, DATA, EVID and interpretation in every workflow.
+- [x] Continue distinguishing UI state, DATA, EVID and interpretation in every workflow.
 
 ## P1 — high-risk test coverage
 

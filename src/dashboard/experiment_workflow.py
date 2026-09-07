@@ -35,6 +35,14 @@ class WorkflowValidationError(ValueError):
     """Raised when a workflow submission is not scientifically traceable."""
 
 
+EPISTEMIC_LAYERS: dict[str, JSONValue] = {
+    "ui_state": "operator/dashboard progress only; not a scientific result",
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+}
+
+
 class _ScientificRunLike(Protocol):
     """Typed read boundary used only for post-run execution validation."""
 
@@ -448,6 +456,7 @@ class ExperimentWorkflowService:
                     "notes": workflow.notes,
                     "execution": "registered experiment_suite runner",
                     "assistant_policy": "AI is post-hoc interpretation only.",
+                    "epistemic_layers": EPISTEMIC_LAYERS,
                 },
                 indent=2,
                 ensure_ascii=True,
@@ -492,6 +501,7 @@ class ExperimentWorkflowService:
             "source_summary_bytecode_sha256": summary_source_digest,
             "source_runtime_consistency": "MATCH",
         }
+        manifest["epistemic_layers"] = EPISTEMIC_LAYERS
         artifacts["raw_run_index"] = "DATA/runs_index.json"
         artifacts["current_run"] = "DATA/current_run.json"
         artifacts["ai_packet"] = "analysis/ai_packet.json"
@@ -527,6 +537,7 @@ class ExperimentWorkflowService:
                 "seeds_executed": list(effective_seeds),
                 "tick_validation": tick_validation,
             },
+            "epistemic_layers": EPISTEMIC_LAYERS,
         }
 
     @staticmethod
@@ -771,6 +782,7 @@ class ExperimentWorkflowService:
                     "notes": workflow.notes,
                     "execution": "controller.step",
                     "assistant_policy": "No AI-generated input is executed or used as evidence.",
+                    "epistemic_layers": EPISTEMIC_LAYERS,
                 },
                 indent=2,
                 ensure_ascii=True,
@@ -854,6 +866,12 @@ class ExperimentWorkflowService:
             encoding="utf-8",
         )
 
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["epistemic_layers"] = EPISTEMIC_LAYERS
+        manifest_path.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
         report_path = output_dir / "report.md"
         report_path.write_text(
             self._render_report(workflow, before, runtime, duration), encoding="utf-8"
@@ -863,6 +881,7 @@ class ExperimentWorkflowService:
             "manifest": str(relative_root / manifest_path.name).replace("\\", "/"),
             "report": str(relative_root / report_path.name).replace("\\", "/"),
             "result": {"start": before, "end": runtime, "duration_seconds": duration},
+            "epistemic_layers": EPISTEMIC_LAYERS,
         }
 
     def _validate(self, body: dict[str, object]) -> ExperimentWorkflow:
@@ -1012,6 +1031,12 @@ class ExperimentWorkflowService:
                 "Deterministische deskriptive Statistik: `analysis/statistics.json`",
                 "Die Summary verbindet Rohdaten, Formeln, Einzelruns, Bedingungen, Reproduzierbarkeit und AIRR ohne KI-generierte Statistik.",
                 "",
+                "## Epistemische Ebenen",
+                "UI-Zustand: Dashboard-Steuerung und Fortschritt; kein wissenschaftliches Ergebnis.",
+                "DATA: Rohdaten, Run-Index und deterministische Statistik.",
+                "EVID: nicht erzeugt; Clean Freeze, semantische Zuordnung und Human Review erforderlich.",
+                "Interpretation: nachgelagerte KI-/Human-Interpretation; keine Ausfuehrungseingabe.",
+                "",
                 "## Evidenzstatus",
                 "DATA, Manifest, Workflow und deterministische Statistik sind erzeugt. Wissenschaftliche EVID entsteht erst nach passender semantischer Zuordnung, Clean Freeze und Human Review.",
                 "",
@@ -1054,6 +1079,12 @@ class ExperimentWorkflowService:
                 f"Angeforderte Ticks: {workflow.ticks}",
                 f"Beobachtete Ticks: {observed_ticks}",
                 f"Tick-Vertrag: {'SATISFIED' if observed_ticks >= workflow.ticks else 'VIOLATED'}",
+                "",
+                "## Epistemische Ebenen",
+                "UI-Zustand ist nur Dashboard-Steuerung und Fortschritt.",
+                "DATA sind Manifest, Workflow und gemessene Laufwerte.",
+                "EVID wurde nicht erzeugt.",
+                "Interpretation bleibt nachgelagert und hat keine Ausfuehrungsautoritaet.",
                 "",
                 "## Reproduzierbarkeit",
                 "Git-Commit, Laufzeitumgebung und Runtime-Parameter stehen im Manifest.",

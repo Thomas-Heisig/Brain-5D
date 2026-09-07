@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Epistemic layer separation in workflows
+
+- Added a shared machine-readable `epistemic_layers` contract to workflow JSON, manifests and API results.
+- Reports now separate UI state, DATA, EVID and post-hoc interpretation; EVID remains explicitly uncreated until its gates pass.
+
 ## 2026-09-07 Embodiment treatment provenance
 
 - Added deterministic `DATA_ONLY` provenance records binding adapter identity, projection mode/dimensions, gateway configuration and normalized energy coefficients.

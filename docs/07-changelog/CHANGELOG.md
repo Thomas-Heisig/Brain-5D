@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Epistemic layer separation in workflows
+
+- Added explicit UI state, DATA, EVID and interpretation fields to experiment workflow artifacts and reports.
+- Kept interpretation outside execution authority and EVID promotion outside ordinary workflow completion.
+
 ## 2026-09-07 — Embodiment treatment provenance
 
 - Added deterministic provenance serialization for adapter, projection, gateway and energy treatment parameters.
