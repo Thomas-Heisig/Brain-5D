@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dissertation results synchronization
+
+- [x] Insert verified Brain-5D experiment results into the dissertation-basis DOCX.
+- [x] Preserve dirty-source and human-review limitations in the document.
+- [x] Keep the DOCX update repeatable through `scripts/update_dissertation_results.py`.
+- [ ] Synchronize future reviewed EVID records into the DOCX after human approval.
+
 ## 2026-09-07 Failed experiment retries repaired
 
 - [x] Support frozen `REPLICATION` run mode in manifests.

@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dissertation results synchronization
+
+- Added the verified Brain-5D experiment results to `KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx`.
+- The DOCX now distinguishes technical completion, exploratory/replication status, dirty-tree provenance and pending human review.
+- A repeatable updater is retained at `scripts/update_dissertation_results.py`.
+
 ## 2026-09-07 Failed experiment retries repaired
 
 - `independent_replication_v1` failed because the valid preregistration mode `REPLICATION` was missing from the manifest governance enum; this is now supported.

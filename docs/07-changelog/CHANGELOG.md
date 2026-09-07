@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Dissertation results synchronization
+
+- Added a data-first Brain-5D empirical-results appendix to the comprehensive dissertation basis DOCX.
+- Included RQ-SNN-001, RQ-REPL-001, RQ-LIFE-001 and RQ-SUITE-001 with correct limitations and evidence status.
+
 ## 2026-09-07 — Failed experiment retries repaired
 
 - Added `REPLICATION` as a valid scientific run mode for frozen replication protocols.
