@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — Dynamic embodiment connection coverage
+
+- Added backend coverage for runtime sensor appearance/disappearance.
+- Cleared stale frontend organ selection when a previously selected connection becomes unavailable.
+- Browser E2E remains pending because the local Chromium binary is unavailable.
+
 ## 2026-09-07 — Experiment-only host telemetry observations
 
 - Added opt-in host telemetry capture to regulation experiments.

@@ -193,6 +193,18 @@ function detailRows(connection) {
   ];
 }
 
+function clearDetail() {
+  selectedConnectionId = null;
+  setText("real-body-detail-name", "Systemkern");
+  setText(
+    "real-body-detail-message",
+    "Wähle ein erkanntes Organ, um Herkunft, Fähigkeiten, Berechtigungen und Zustand zu sehen."
+  );
+  const list = byId("real-body-detail-fields");
+  if (list) list.replaceChildren();
+  document.querySelectorAll(".real-body-organ[data-selected]").forEach((node) => delete node.dataset.selected);
+}
+
 function showDetail(connection) {
   selectedConnectionId = connection.connection_id;
   setText("real-body-detail-name", connection.name || connection.connection_id);
@@ -254,7 +266,7 @@ function layoutOrgans(connections) {
   if (selectedConnectionId) {
     const stillPresent = available.find((item) => item.connection_id === selectedConnectionId);
     if (stillPresent) showDetail(stillPresent);
-    else selectedConnectionId = null;
+    else clearDetail();
   }
   requestAnimationFrame(drawLinks);
 }

@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dynamic embodiment connection coverage
+
+- Added API transition coverage for a sensor changing from available/active to unavailable/inactive.
+- Added frontend contract coverage that clears stale organ details when a selected connection disappears; real browser E2E remains open because Chromium is unavailable in this environment.
+
 ## 2026-09-07 Experiment-only host telemetry observations
 
 - Added an opt-in provider to the regulation runner so host telemetry is recorded only as an explicit `host_telemetry` experiment condition, with raw readings, typed signals and missing-value semantics preserved.

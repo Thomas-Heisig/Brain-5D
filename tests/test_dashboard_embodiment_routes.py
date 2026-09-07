@@ -193,3 +193,69 @@ def test_embodiment_connections_are_read_only_and_explicitly_authorized() -> Non
         assert camera["permissions"] == ["capture"]
     finally:
         _stop(server, thread)
+
+
+def test_embodiment_connections_reflect_runtime_appearance_change() -> None:
+    state = DashboardStateStore()
+    manager = ConnectionManager(cache_seconds=60)
+    available = ConnectionDescriptor(
+        connection_id="sensor.dynamic-test",
+        name="Dynamic test sensor",
+        kind=ConnectionKind.SENSOR,
+        relationship=RelationshipClass.USABLE,
+        status=ConnectionStatus.CONNECTED,
+        capabilities=("sample",),
+        available=True,
+        authorized=True,
+        active=True,
+        source="test_adapter",
+    )
+    manager.register(available)
+    server = DashboardServer(
+        ("127.0.0.1", 0),
+        state,
+        heatmaps=None,
+        connection_manager=manager,
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    host, port = server.server_address[:2]
+    assert isinstance(host, str)
+    try:
+        first = _get(host, port, "/api/embodiment/connections")
+        dynamic = next(
+            item
+            for item in first["connections"]
+            if item["connection_id"] == "sensor.dynamic-test"
+        )
+        assert dynamic["available"] is True
+        assert dynamic["active"] is True
+
+        manager.register(
+            ConnectionDescriptor(
+                connection_id=available.connection_id,
+                name=available.name,
+                kind=available.kind,
+                relationship=RelationshipClass.PERCEIVABLE,
+                status=ConnectionStatus.UNAVAILABLE,
+                capabilities=available.capabilities,
+                available=False,
+                authorized=False,
+                active=False,
+                source="system_discovery",
+                message="Device disappeared during discovery.",
+            )
+        )
+
+        second = _get(host, port, "/api/embodiment/connections")
+        dynamic = next(
+            item
+            for item in second["connections"]
+            if item["connection_id"] == "sensor.dynamic-test"
+        )
+        assert dynamic["available"] is False
+        assert dynamic["authorized"] is False
+        assert dynamic["active"] is False
+        assert dynamic["message"] == "Device disappeared during discovery."
+    finally:
+        _stop(server, thread)

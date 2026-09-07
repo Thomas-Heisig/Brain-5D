@@ -101,3 +101,12 @@ def test_connection_manager_is_store_driven_and_has_no_control_actions() -> None
     assert "connection.authorized" in workspace_js
     assert "connect-button" not in html
     assert "activate-connection" not in workspace_js
+
+
+def test_real_body_clears_stale_selection_when_connection_disappears() -> None:
+    source = _read("embodiment-self-model.js")
+
+    assert "function clearDetail()" in source
+    assert 'setText("real-body-detail-name", "Systemkern")' in source
+    assert 'list.replaceChildren()' in source
+    assert "else clearDetail();" in source

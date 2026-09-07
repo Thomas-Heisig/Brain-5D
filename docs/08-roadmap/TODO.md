@@ -339,6 +339,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Increase operator bridge and control-boundary coverage for unknown proposals and commands.
 - [x] Increase real-body platform-specific failure-path coverage for missing optional host APIs.
 - [x] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
+- [x] Add browser-independent API and static UI coverage for dynamic sensor appearance/disappearance.
 - [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance.
 - [x] Add negative tests proving peripheral adapters cannot silently mutate canonical core/research state.
 
