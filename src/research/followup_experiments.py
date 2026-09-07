@@ -499,6 +499,7 @@ def run_learning_interference(
             values["seed"] = seed + task_index * 10_000
             exp = dict(values.get("learning_experiment", {}))
             exp["drive_current"] = float(exp.get("drive_current", 100.0)) * drive_scale
+            exp["reset_trial_dynamics"] = True
             values["learning_experiment"] = exp
             result = run_learning_experiment(values, condition="learning_on")
             outcomes.append(bool(result.trained_target_spiked))

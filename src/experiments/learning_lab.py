@@ -176,6 +176,34 @@ def _advance_to_tick(network: NeuralNetwork, tick: int) -> None:
         network.step()
 
 
+def _reset_trial_dynamics(network: NeuralNetwork) -> None:
+    """Reset transient neuron/event state while preserving learned weights.
+
+    Learning trials are declared independent timing episodes. Previously only
+    the learning traces were reset, leaving refractory/adaptation state from
+    the preceding task and causing valid lower-drive trials to fail.
+    """
+    network.current_tick = 0
+    network.total_spikes = 0
+    network.total_events_processed = 0
+    network.pending_currents.clear()
+    network.event_slots = [[] for _ in range(network.max_delay + 1)]
+    network._queued_event_count = 0
+    for neuron in network.neurons.values():
+        neuron.v = neuron.c
+        neuron.u = neuron.b * neuron.v
+        neuron.spike_counter = 0
+        neuron.last_spike_tick = -1
+        neuron.threshold_adaptation = 0.0
+        neuron.last_external_current = 0.0
+        neuron.last_synaptic_current = 0.0
+        neuron.pre_trace = 0.0
+        neuron.post_trace = 0.0
+        neuron.firing_rate_estimate = 0.0
+        neuron._spike_count_window = 0
+        neuron._last_update_tick = 0
+
+
 def _train(
     config: Config, condition: str
 ) -> tuple[tuple[float, ...], LearningEngine, TrialPartitions]:
@@ -184,6 +212,7 @@ def _train(
         raise ValueError(f"Unsupported learning condition: {condition}")
     exp = _experiment_config(config)
     partitions = _validated_trial_partitions(config)
+    reset_trial_dynamics = bool(exp.get("reset_trial_dynamics", False))
     trials = int(exp.get("training_trials", 20))
     spacing = int(exp.get("trial_spacing_ticks", 25))
     pair_delay = int(exp.get("pair_delay_ticks", 5))
@@ -218,6 +247,9 @@ def _train(
     learning.attach()
 
     for trial in partitions["train"]:
+        if reset_trial_dynamics:
+            _reset_trial_dynamics(network)
+            learning.reset_state()
         pre_tick = trial * spacing
         post_tick = pre_tick + pair_delay
         _advance_to_tick(network, pre_tick)

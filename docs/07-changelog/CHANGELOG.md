@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — Failed experiment retries repaired
+
+- Added `REPLICATION` as a valid scientific run mode for frozen replication protocols.
+- Isolated transient neuron/event reset to the learning-interference protocol so independent tasks start from a clean dynamic state without discarding learned weights.
+- Re-ran both failed protocols successfully: `EXP-REPL-0001-R1` and `EXP-LIFE-0001-R1`.
+
 ## 2026-09-06 — Registry-driven sequential workflow
 
 - Batch execution now follows the protocol registry instead of one global seed/tick setting.

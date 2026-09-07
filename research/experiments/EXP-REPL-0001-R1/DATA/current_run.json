@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 39,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0039-recurrence_on-seed-61.json.gz",
+    "sha256": "44b7fc588fb682808e674a4a128a255c0cd91beac86aed0e22adfe24d46c5db0",
+    "size_bytes": 604,
+    "uncompressed_bytes": 1761
+  },
+  "status": "idle"
+}

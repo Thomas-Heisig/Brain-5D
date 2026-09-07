@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Failed experiment retries repaired
+
+- `independent_replication_v1` failed because the valid preregistration mode `REPLICATION` was missing from the manifest governance enum; this is now supported.
+- `learning_interference_screen_v1` failed because neuronal transient state was not reset between declared independent task episodes; the reset is now protocol-scoped and preserves learned weights.
+- Retries completed successfully as `EXP-REPL-0001-R1` and `EXP-LIFE-0001-R1` with zero runtime errors.
+
 ## 2026-09-06 Registry-driven sequential workflow
 
 - The Experiment-Workflow now plans all catalog entries by default and executes selected experiments sequentially.

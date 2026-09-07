@@ -1,0 +1,43 @@
+{
+  "experiment_id": "EXP-REPL-0001-R1",
+  "research_question": "RQ-REPL-001",
+  "hypothesis": "H-REPL-001-A",
+  "title": "Independent replication retry after run-mode fix",
+  "conditions": "Recurrence off control vs recurrence on treatment; frozen seed set 42-61.",
+  "ticks": 256,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "protocol": "independent_replication_v1",
+  "resolved_runner": "run_replication",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 256,
+    "observed_min": 256,
+    "observed_max": 256
+  },
+  "notes": "Retry after accepting REPLICATION run mode in manifest governance.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

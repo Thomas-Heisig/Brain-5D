@@ -4,6 +4,14 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Failed experiment retries repaired
+
+- [x] Support frozen `REPLICATION` run mode in manifests.
+- [x] Reset transient neuron/event state between independent Learning-Interference tasks.
+- [x] Re-run `independent_replication_v1` successfully.
+- [x] Re-run `learning_interference_screen_v1` successfully.
+- [ ] Complete human review and clean-freeze checks for both retry experiments.
+
 ## 2026-09-06 Registry-driven sequential workflow
 
 - [x] Execute selected experiments sequentially.

@@ -23,6 +23,7 @@ class ResearchRunMode(StrEnum):
 
     EXPLORATORY = "EXPLORATORY"
     CONFIRMATORY = "CONFIRMATORY"
+    REPLICATION = "REPLICATION"
 
 
 class DataPartition(StrEnum):

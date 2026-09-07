@@ -1,0 +1,543 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 20,
+    "sha256": "8af0a95953f85cce9b0f3a6a0a465f76e97417351b67da056c2514a9c7bd9497"
+  },
+  "run_count": 20,
+  "run_preview": {
+    "_projection": "bounded_sequence",
+    "head": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0000-sequential_three_task_screen-seed-42.json.gz",
+          "sha256": "fb21f96a75602d2113a6197b2fc0ebb6250846e37847149e20a585dbfa610199",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 42,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0001-sequential_three_task_screen-seed-43.json.gz",
+          "sha256": "30f1c8c40925cfa3d32451e078dc1995c80623d4d00739b47881432d40c81c1a",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 43,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0002-sequential_three_task_screen-seed-44.json.gz",
+          "sha256": "9b09b267d23cb215f492524b2149e2188fe0b5c5129e59bdf5228abc97ee5a7d",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 44,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0003-sequential_three_task_screen-seed-45.json.gz",
+          "sha256": "04621e36a3473b73b77843ff36719289350d32ace0471e64a78612bba8209163",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 45,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0004-sequential_three_task_screen-seed-46.json.gz",
+          "sha256": "b6288b8bb80a50e5f292dbcd3c8f5a852fe0d7dbc49a81c3f6d9143e6509fdfe",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 46,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0005-sequential_three_task_screen-seed-47.json.gz",
+          "sha256": "0537345e2865efdc4a176afe8ef3954a7aa09eee7dd35e3bf6e82ae3dc81911f",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 47,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0006-sequential_three_task_screen-seed-48.json.gz",
+          "sha256": "2801727e40a0829d43ed7c02e04ee4ac652aa0afb547aae3f675ba56fc8a7b38",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 48,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0007-sequential_three_task_screen-seed-49.json.gz",
+          "sha256": "fd824dca862721f593e372f548a524cfcc555aca5054c59c218c1dadcfbacd75",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 49,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      }
+    ],
+    "item_count": 20,
+    "tail": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0012-sequential_three_task_screen-seed-54.json.gz",
+          "sha256": "57b29dd10ee4c5895e77142d7a1ffd9445f76ee2d42fd7af9ad2150757b1bd5d",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 54,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0013-sequential_three_task_screen-seed-55.json.gz",
+          "sha256": "afa94bd69a22259bed245cc3020a2a2dda1259ed9f0d7dc687040ff00b9f8805",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 55,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0014-sequential_three_task_screen-seed-56.json.gz",
+          "sha256": "19414021a7afbd562c04ea43b9f736de7732b4f3a234772e9f19e1f42e6117e9",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 56,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0015-sequential_three_task_screen-seed-57.json.gz",
+          "sha256": "7d3a20b7ea33ab007b6062ac81a085533c5cbd51177e096f55eb7560361b2777",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 57,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0016-sequential_three_task_screen-seed-58.json.gz",
+          "sha256": "fd55a504338a2c5cdcea091b009ba4e6a2a5926fdefd56b0fb76a3ed9535a883",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 58,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0017-sequential_three_task_screen-seed-59.json.gz",
+          "sha256": "f533f2deebfb4aad59748ad56c85e06a6455c160f9dabe6d61d1905567e73b23",
+          "size_bytes": 363,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 59,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0018-sequential_three_task_screen-seed-60.json.gz",
+          "sha256": "c2bcd28d296d51789ab4bee27341cb8cd6d053f125d904e293e383b497484395",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 60,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0019-sequential_three_task_screen-seed-61.json.gz",
+          "sha256": "74a73edbaadc7f9ac69d6a6a9351344770df58d09eb04052114405d646131262",
+          "size_bytes": 364,
+          "uncompressed_bytes": 465
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-LIFE-0001-R1",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 61,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      }
+    ]
+  },
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "sequential_three_task_screen": {
+        "metrics": {},
+        "run_count": 20,
+        "seeds": [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 20,
+    "schema_version": "2.0"
+  }
+}
