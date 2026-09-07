@@ -27,13 +27,21 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Apply checksum-bound changes preserving newer work
+      - name: Apply reviewed refinement without overwriting newer work
         run: |
           git config user.name 'Brain-5D maintenance (AI-assisted)'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python .maintenance/apply_repair.py
+          cat .maintenance/refinement-*.patch > "$RUNNER_TEMP/refinement.patch"
+          if git apply --reverse --check "$RUNNER_TEMP/refinement.patch" 2>/dev/null; then
+            echo 'Refinement already applied'
+          else
+            git apply --check "$RUNNER_TEMP/refinement.patch"
+            git apply "$RUNNER_TEMP/refinement.patch"
+          fi
+          git add .gitattributes .github/workflows/ci.yml .github/workflows/sync-huggingface.yml .huggingface/lfs.gitattributes .pre-commit-config.yaml scripts/generate_baseline.py src tests/test_catalog_status.py tests/test_file_rendering.py
           git diff --cached --check
-          git diff --cached --quiet || git commit -m 'fix: unify file rendering and repair full-stack verification boundaries'
+          git diff --cached --quiet || git commit -m 'fix: authorize file changes, complete chat rendering and catalog facets, preserve clean checkouts'
+          git reset --hard HEAD
       - name: Install verification tools
         run: python -m pip install -e '.[dev,docs,browser]'
       - name: Verify code style and types
@@ -42,6 +50,7 @@ jobs:
           python -m ruff check src tests scripts
           python -m mypy src
           python -m pyright
+          python -c "from pathlib import Path; import yaml; [yaml.safe_load(p.read_text()) for p in Path('.github/workflows').glob('*.yml')]"
       - name: Produce genuine test and determinism artifacts
         run: |
           python scripts/generate_baseline.py
@@ -55,7 +64,7 @@ jobs:
         run: |
           git add tests/test_baseline.json research/generated
           git diff --cached --check
-          git diff --cached --quiet || git commit -m 'test: publish source-bound baseline and current research reports'
+          git diff --cached --quiet || git commit -m 'test: refresh source-bound baseline and current catalog review status'
           git push origin HEAD:main
           gh workflow run ci.yml --ref main
       - name: Export verification source and diagnostics
@@ -65,7 +74,7 @@ jobs:
           git bundle create "$RUNNER_TEMP/verification-source/repository.bundle" --all
           git diff > "$RUNNER_TEMP/verification-source/uncommitted.patch"
           git status --short > "$RUNNER_TEMP/verification-source/tree-status.txt"
-          git log -5 --oneline > "$RUNNER_TEMP/verification-source/commits.txt"
+          git log -5 --format='%H %s' > "$RUNNER_TEMP/verification-source/commits.txt"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
