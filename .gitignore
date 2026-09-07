@@ -54,3 +54,12 @@ Thumbs.db
 
 # Pre-commit
 .pre-commit-config.yaml.bak
+
+# Reproducible tool installations and local reports
+node_modules/
+test-results/
+playwright-report/
+.blob-report/
+.mypy_cache/
+.pyright/
+.ruff_cache/

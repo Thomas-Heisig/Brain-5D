@@ -269,11 +269,12 @@ export function renderWorkspaceSummaries(state) {
   setText("runtime-last-ms", Number(state.runtime?.batch_duration_ms ?? system.core_step_ms ?? 0).toFixed(2));
 
   const activeSession = experiment.active_session || null;
-  if (["true", "completed"].includes(document.body.dataset.experimentWorkflowActive)) return;
+  if (!["true", "completed"].includes(document.body.dataset.experimentWorkflowActive)) {
   const footerExperiment = byId("footer-experiment");
   if (footerExperiment) footerExperiment.dataset.active = String(activeSession !== null);
   setText("footer-experiment-state", activeSession ? "running" : "inactive");
   setText("footer-experiment-id", activeSession?.session_id || "no session");
+  }
 
   setText("research-workspace-registry", formatNumber(research.registry));
   setText("research-workspace-experiments", formatNumber(research.experiments));

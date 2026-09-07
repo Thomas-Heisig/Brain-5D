@@ -10203,3 +10203,21 @@ body.box-state-lock {
     max-height: calc(100dvh - 16px);
   }
 }
+
+/* Canonical file output: scoped to modal and chat, with no fixed global IDs. */
+.file-renderer { min-width: 0; overflow: auto; max-width: 100%; }
+.file-renderer-header { position: sticky; top: 0; flex-wrap: wrap; gap: .6rem; z-index: 2; }
+.file-renderer-actions { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+.file-renderer-actions a, .file-renderer-actions button { font: inherit; padding: .35rem .6rem; }
+.file-renderer-body { padding: 1rem; overflow: auto; overflow-wrap: anywhere; }
+.file-renderer-source, .file-renderer-body pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.file-renderer-table { border-collapse: collapse; width: 100%; }
+.file-renderer-table td, .file-renderer-table th { border: 1px solid var(--border-color, #394452); padding: .4rem; text-align: left; }
+.file-renderer-notice, .file-renderer-error { padding: .5rem 1rem; }
+.file-renderer-media { display: block; max-width: 100%; margin: auto; }
+iframe.file-renderer-media { width: 100%; height: 65vh; border: 0; }
+.file-renderer-editor { display: block; box-sizing: border-box; width: 100%; min-height: 45vh; font: 14px monospace; }
+.chat-file-card { border: 1px solid var(--border-color, #394452); border-radius: .5rem; margin: .6rem 0; max-width: 100%; }
+.chat-file-card summary { cursor: pointer; padding: .5rem; overflow-wrap: anywhere; }
+.chat-file-card .file-renderer-body { max-height: 45vh; }
+.chat-output { min-width: 0; overflow-wrap: anywhere; }

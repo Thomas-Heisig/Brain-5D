@@ -1,21 +1,11 @@
 "use strict";
 
+import { renderMessage } from "./file-renderer.js";
+
 function escapeChat(value) {
   const node = document.createElement('div');
   node.textContent = value;
-  return node.innerHTML;
-}
-
-function renderMarkdown(value) {
-  let html = escapeChat(value.trim());
-  html = html.replace(/^### (.+)$/gm, '<h5>$1</h5>');
-  html = html.replace(/^## (.+)$/gm, '<h4>$1</h4>');
-  html = html.replace(/^# (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>\n?)+/g, (items) => `<ul>${items}</ul>`);
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  return html.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
+  return node.innerHTML.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
 const STORAGE_KEY = 'brain5d.research-chat.rooms.v1';
@@ -95,8 +85,13 @@ function renderInteractionTrace(metadata) {
   return parts.length ? `<small class="chat-trace">AI trace · ${parts.join(' · ')}</small>` : '';
 }
     room.messages.forEach((message) => {
-      const content = message.role === 'assistant' ? `<div class="chat-markdown"><p>${renderMarkdown(message.content)}</p></div>${renderInteractionTrace(message.metadata)}` : `<p>${escapeChat(message.content)}</p>`;
-      log.insertAdjacentHTML('beforeend', `<div class="chat-message ${message.role}"><strong>${message.role === 'assistant' ? 'Research AI · grounded in Research + Docs' : 'You'}</strong>${content}</div>`);
+      const entry = document.createElement('div');
+      entry.className = `chat-message ${message.role === 'assistant' ? 'assistant' : 'user'}`;
+      const label = document.createElement('strong'); label.textContent = message.role === 'assistant' ? 'Research AI - Research + Docs' : 'You';
+      const output = document.createElement('div'); output.className = 'chat-output';
+      entry.append(label, output); log.append(entry);
+      renderMessage(output, message.content, message.files || []);
+      if (message.role === 'assistant') entry.insertAdjacentHTML('beforeend', renderInteractionTrace(message.metadata));
     });
   }
 
@@ -127,7 +122,13 @@ function renderInteractionTrace(metadata) {
 
   function closeChat() {
     modal.hidden = true;
-    toggle.setAttribute('aria-expanded', 'false');
+    document.addEventListener('brain5d:chat-file', (event) => {
+    const reference = event.detail;
+    if (!reference || !['docs', 'research'].includes(reference.source) || typeof reference.path !== 'string') return;
+    activeRoom().messages.push({ role: 'user', content: `Datei: ${reference.source}/${reference.path}`, files: [reference] });
+    saveState(state); render(); open();
+  });
+  toggle.setAttribute('aria-expanded', 'false');
   }
 
   toggle.setAttribute('aria-expanded', 'false');
@@ -264,7 +265,7 @@ function renderInteractionTrace(metadata) {
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
       document.getElementById('chat-waiting')?.remove();
-      room.messages.push({ role: 'assistant', content: payload.answer || '', metadata: payload.metadata || {} });
+      room.messages.push({ role: 'assistant', content: payload.answer || '', metadata: payload.metadata || {}, files: payload.files || [] });
       imageInput.value = '';
       dropZone.classList.remove('has-files');
       saveState(state);

@@ -6,12 +6,13 @@ import json
 from pathlib import Path
 from statistics import fmean
 
-import yaml
 from docx import Document
 
-
 ROOT = Path(__file__).resolve().parents[1]
-DOCX = ROOT / "docs/06-research/KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx"
+DOCX = (
+    ROOT
+    / "docs/06-research/KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx"
+)
 RESEARCH = ROOT / "research"
 MARKER = "Empirischer Brain-5D-Nachtrag"
 
@@ -30,9 +31,6 @@ def main() -> None:
         print(f"{DOCX} already contains {MARKER}")
         return
 
-    questions = yaml.safe_load(
-        (RESEARCH / "registry/questions.yaml").read_text(encoding="utf-8")
-    )
     document.add_page_break()
     document.add_heading(MARKER, level=1)
     document.add_paragraph(
@@ -46,7 +44,14 @@ def main() -> None:
     document.add_heading("Ergebnisübersicht", level=2)
     table = document.add_table(rows=1, cols=6)
     table.style = "Table Grid"
-    headers = ["Forschungsfrage", "Experiment", "Modus", "Umfang", "Technisches Ergebnis", "Evidenzstatus"]
+    headers = [
+        "Forschungsfrage",
+        "Experiment",
+        "Modus",
+        "Umfang",
+        "Technisches Ergebnis",
+        "Evidenzstatus",
+    ]
     for cell, text in zip(table.rows[0].cells, headers):
         cell.text = text
 
@@ -142,7 +147,9 @@ def main() -> None:
     )
 
     document.add_heading("RQ-SUITE-001: Science-Suite-Diagnostik", level=2)
-    suite_manifest = read_json(RESEARCH / "experiments" / "EXP-GEN-0033-R1" / "manifest.json")
+    suite_manifest = read_json(
+        RESEARCH / "experiments" / "EXP-GEN-0033-R1" / "manifest.json"
+    )
     document.add_paragraph(
         f"Die vollständige Suite erzeugte {suite_manifest['results']['run_count']} Teilruns "
         "unter gemeinsamer Provenienz. Der Tickvertrag bis 100.000 Ticks wurde erfüllt; "

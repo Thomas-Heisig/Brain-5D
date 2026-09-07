@@ -80,7 +80,7 @@ def run_tests() -> dict[str, bool]:
         test_path = REPO_ROOT / test_file
         if not test_path.exists():
             print(f"  SKIP  {test_file} (not found)")
-            results[test_file] = True  # Skip missing files gracefully
+            results[test_file] = False  # Missing proofs fail closed.
             continue
 
         print(f"  RUN   {test_file} ...", end=" ")
@@ -134,7 +134,7 @@ def main() -> int:
     print()
 
     # Build proof map
-    all_passed = all(test_results.values())
+    all_passed = all(test_results.values()) and compute_tree_digest() == digest
     proofs = {
         "rng_state_persistence": test_results.get(
             "tests/test_rng_persistence.py", False
@@ -184,7 +184,7 @@ def main() -> int:
     # Write artifact
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     ARTIFACT_PATH.write_text(
-        json.dumps(artifact, indent=2, ensure_ascii=False),
+        json.dumps(artifact, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     print(f"Artifact written to: {ARTIFACT_PATH}")

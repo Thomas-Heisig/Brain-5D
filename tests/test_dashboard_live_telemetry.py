@@ -1,37 +1,22 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from http.client import HTTPConnection
 from threading import Thread
 from typing import Any
 
 from src.controller.runtime import RuntimeController
+from src.core.network import Brain5DConfig, NeuralNetwork
 from src.dashboard.live_projection import TelemetryFrameStore
 from src.dashboard.operator_bridge import OperatorBridge
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
 
 
-@dataclass
-class _Neuron:
-    v: float = -65.0
-    energy: float = 1.0
-    u: float = -13.0
-    spike_counter: int = 0
-    last_spike_tick: int = -1
-
-
-class _Network:
-    dimensions = (2, 2, 1, 1, 1)
-    neurons = {0: _Neuron()}
-    synapses: dict[int, list[Any]] = {}
-    neuron_count = 1
-    synapse_count = 0
-    queued_event_count = 0
-
-    def __init__(self) -> None:
-        self.current_tick = 0
+def make_network() -> NeuralNetwork:
+    network = NeuralNetwork(Brain5DConfig(dimensions=(2, 2, 1, 1, 1)))
+    network.add_neuron((0, 0, 0, 0, 0))
+    return network
 
 
 def _request(server: DashboardServer) -> tuple[int, dict[str, Any]]:
@@ -45,7 +30,9 @@ def _request(server: DashboardServer) -> tuple[int, dict[str, Any]]:
         connection.close()
 
 
-def _start_server(network: _Network, store: TelemetryFrameStore) -> DashboardServer:
+def _start_server(
+    network: NeuralNetwork, store: TelemetryFrameStore
+) -> DashboardServer:
     bridge = OperatorBridge(
         RuntimeController(network),
         telemetry_store=store,
@@ -61,7 +48,7 @@ def _start_server(network: _Network, store: TelemetryFrameStore) -> DashboardSer
 
 
 def test_live_projection_route_propagates_unavailable_telemetry() -> None:
-    network = _Network()
+    network = make_network()
     server = _start_server(network, TelemetryFrameStore(capture_interval_ticks=2))
     try:
         status, payload = _request(server)
@@ -74,7 +61,7 @@ def test_live_projection_route_propagates_unavailable_telemetry() -> None:
 
 
 def test_live_projection_route_propagates_stale_store_status() -> None:
-    network = _Network()
+    network = make_network()
     store = TelemetryFrameStore(capture_interval_ticks=2)
     store.prime(network)
     network.current_tick = 10

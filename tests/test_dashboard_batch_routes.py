@@ -7,9 +7,9 @@ from threading import Thread
 from typing import Any
 
 import src.dashboard.server as server_module
+from src.dashboard.research_source import ResearchSource
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
-from src.dashboard.research_source import ResearchSource
 
 
 class _FakeBatchService:
@@ -35,7 +35,12 @@ class _RejectingBatchService(_FakeBatchService):
         raise ValueError("Unknown experiment protocol: missing_protocol")
 
 
-def _request(server: DashboardServer, method: str, path: str, body: dict[str, object] | None = None) -> tuple[int, str]:
+def _request(
+    server: DashboardServer,
+    method: str,
+    path: str,
+    body: dict[str, object] | None = None,
+) -> tuple[int, str]:
     host, port = server.server_address[:2]
     connection = HTTPConnection(str(host), int(port), timeout=5)
     try:
@@ -65,11 +70,15 @@ def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> No
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        catalog_status, catalog_body = _request(server, "GET", "/api/experiment/workflow/catalog")
+        catalog_status, catalog_body = _request(
+            server, "GET", "/api/experiment/workflow/catalog"
+        )
         assert catalog_status == 200
         assert '"questions"' in catalog_body
 
-        timeline_status, timeline_body = _request(server, "GET", "/api/releases/timeline")
+        timeline_status, timeline_body = _request(
+            server, "GET", "/api/releases/timeline"
+        )
         assert timeline_status == 200
         timeline = json.loads(timeline_body)
         assert {source["name"] for source in timeline["sources"]} == {
@@ -104,7 +113,9 @@ def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> No
 def test_batch_route_returns_structured_bad_request_for_invalid_protocol(
     monkeypatch: Any,
 ) -> None:
-    monkeypatch.setattr(server_module, "ExperimentWorkflowService", _RejectingBatchService)
+    monkeypatch.setattr(
+        server_module, "ExperimentWorkflowService", _RejectingBatchService
+    )
     server = DashboardServer(
         ("127.0.0.1", 0),
         DashboardStateStore(),
@@ -122,7 +133,9 @@ def test_batch_route_returns_structured_bad_request_for_invalid_protocol(
         )
 
         assert status == 400
-        assert response_body == '{"error":"Unknown experiment protocol: missing_protocol"}'
+        assert (
+            response_body == '{"error":"Unknown experiment protocol: missing_protocol"}'
+        )
     finally:
         server.shutdown()
         server.server_close()

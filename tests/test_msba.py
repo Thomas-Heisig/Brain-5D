@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 
 import pytest
@@ -20,6 +21,22 @@ from src.embodiment import (
     resource_pressure,
     visual_growth_probability,
 )
+from src.embodiment.models import JSONValue
+
+
+def mapping(value: JSONValue) -> dict[str, JSONValue]:
+    assert isinstance(value, dict)
+    return value
+
+
+def sequence(value: JSONValue) -> list[JSONValue]:
+    assert isinstance(value, list)
+    return value
+
+
+def text(value: JSONValue) -> str:
+    assert isinstance(value, str)
+    return value
 
 
 def test_msba_contract_is_fail_closed_and_core_safe() -> None:
@@ -67,18 +84,19 @@ def test_energy_accounting_keeps_measured_and_estimated_joules_separate() -> Non
     )
     assert estimate.normalized_energy_units > 0.0
     assert estimate.estimated_joules is not None
-    assert estimate.measured_joules == pytest.approx(0.25)
+    assert estimate.measured_joules is not None
+    assert math.isclose(estimate.measured_joules, 0.25, rel_tol=1e-6, abs_tol=1e-12)
     assert estimate.estimated_joules != estimate.measured_joules
     serialized = estimate.to_json()
-    assert serialized["provenance"] == {
+    assert mapping(serialized["provenance"]) == {
         "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
         "estimated_joules": "CALIBRATED_CONVERSION",
         "measured_joules": "DIRECT_TELEMETRY",
     }
     assert serialized["estimated_is_not_measured"] is True
-    assert serialized["component_units"]["spikes"] == 2.0
-    assert serialized["component_units"]["synaptic_events"] == 3.0
-    assert set(serialized["component_units"]) == {
+    assert mapping(serialized["component_units"])["spikes"] == 2.0
+    assert mapping(serialized["component_units"])["synaptic_events"] == 3.0
+    assert set(mapping(serialized["component_units"])) == {
         "sensor",
         "encoder",
         "spikes",
@@ -100,14 +118,16 @@ def test_energy_accounting_separates_sensor_and_encoder_contributions() -> None:
     assert estimate.component_units["sensor"] == 2.5
     assert estimate.component_units["encoder"] == 1.5
     assert estimate.component_units["adapter"] == 1.5
-    assert estimate.normalized_energy_units == pytest.approx(5.5)
+    assert math.isclose(
+        estimate.normalized_energy_units, 5.5, rel_tol=1e-6, abs_tol=1e-12
+    )
 
 
 def test_energy_accounting_marks_missing_measurements_as_unavailable() -> None:
     serialized = energy_units(EnergyObservation(spikes=1)).to_json()
 
-    assert serialized["provenance"]["estimated_joules"] == "NOT_AVAILABLE"
-    assert serialized["provenance"]["measured_joules"] == "NOT_AVAILABLE"
+    assert mapping(serialized["provenance"])["estimated_joules"] == "NOT_AVAILABLE"
+    assert mapping(serialized["provenance"])["measured_joules"] == "NOT_AVAILABLE"
 
 
 def test_energy_accounting_rejects_negative_counters() -> None:
@@ -121,9 +141,9 @@ def test_resource_pressure_and_fan_failure_are_bounded_and_fail_safe() -> None:
         ResourcePressure(energy=1.0, thermal=1.0, compute=1.0, memory=1.0)
     )
     failed = resource_pressure(ResourcePressure(fan_failure=True))
-    assert nominal == pytest.approx(0.0)
+    assert math.isclose(nominal, 0.0, rel_tol=1e-6, abs_tol=1e-12)
     assert 0.0 < loaded <= 1.0
-    assert failed == pytest.approx(1.0)
+    assert math.isclose(failed, 1.0, rel_tol=1e-6, abs_tol=1e-12)
     assert energy_state(ResourcePressure(fan_failure=True)) is EnergyState.SURVIVAL
 
 
@@ -139,13 +159,16 @@ def test_hard_safety_trips_override_high_utility_allocation() -> None:
 
 
 def test_protection_policy_reduces_then_freezes_and_preserves_safety_paths() -> None:
-    assert recommended_protection_policy(EnergyState.CONSERVE)["plasticity"] == "reduce_first"
+    assert (
+        recommended_protection_policy(EnergyState.CONSERVE)["plasticity"]
+        == "reduce_first"
+    )
     assert recommended_protection_policy(EnergyState.CRITICAL)["plasticity"] == "freeze"
     survival = recommended_protection_policy(EnergyState.SURVIVAL)
     assert survival["plasticity"] == "freeze"
-    assert "thermal_sensing" in survival["preserve"]
-    assert "core_persistence" in survival["preserve"]
-    assert "storage_integrity" in survival["preserve"]
+    assert "thermal_sensing" in sequence(survival["preserve"])
+    assert "core_persistence" in sequence(survival["preserve"])
+    assert "storage_integrity" in sequence(survival["preserve"])
 
 
 def test_allocation_gate_prefers_higher_utility_and_lower_cost() -> None:
@@ -157,8 +180,10 @@ def test_allocation_gate_prefers_higher_utility_and_lower_cost() -> None:
 
 
 def test_phase_weighting_never_inverts_stdp_sign() -> None:
-    assert phase_coherence(0.0) == pytest.approx(1.0)
-    assert phase_coherence(3.141592653589793) == pytest.approx(0.0)
+    assert math.isclose(phase_coherence(0.0), 1.0, rel_tol=1e-6, abs_tol=1e-12)
+    assert math.isclose(
+        phase_coherence(3.141592653589793), 0.0, rel_tol=1e-6, abs_tol=1e-12
+    )
     assert phase_weighted_stdp(0.2, 0.5) >= 0.0
     assert phase_weighted_stdp(-0.2, 0.5) <= 0.0
 
@@ -205,15 +230,18 @@ def test_treatment_provenance_binds_adapter_projection_gateway_and_energy() -> N
         "id": "vision.adapter.test",
         "architecture": "onnx-runtime",
     }
-    assert record["projection"]["mode"] == "shuffled"
-    assert record["projection"]["dimensions"] == 8
-    assert record["gateway"]["requires_preregistration"] is True
-    assert record["energy"]["units_are_not_physical_joules"] is True
-    assert record["scientific_boundary"]["does_not_promote_to_evid"] is True
-    assert len(record["record_sha256"]) == 64
-    assert record == EmbodimentTreatmentProvenance(
-        adapter_id="vision.adapter.test",
-        adapter_architecture="onnx-runtime",
-        projection_mode="shuffled",
-        projection_dimensions=8,
-    ).to_json()
+    assert mapping(record["projection"])["mode"] == "shuffled"
+    assert mapping(record["projection"])["dimensions"] == 8
+    assert mapping(record["gateway"])["requires_preregistration"] is True
+    assert mapping(record["energy"])["units_are_not_physical_joules"] is True
+    assert mapping(record["scientific_boundary"])["does_not_promote_to_evid"] is True
+    assert len(text(record["record_sha256"])) == 64
+    assert (
+        record
+        == EmbodimentTreatmentProvenance(
+            adapter_id="vision.adapter.test",
+            adapter_architecture="onnx-runtime",
+            projection_mode="shuffled",
+            projection_dimensions=8,
+        ).to_json()
+    )

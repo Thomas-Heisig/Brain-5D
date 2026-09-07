@@ -1,5 +1,6 @@
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, cast
 
@@ -8,8 +9,8 @@ import pytest
 from src.embodiment import (
     AreaDescriptor,
     AreaKind,
-    NeuralSymbiosisCatalog,
     NetworkAreaAdapter,
+    NeuralSymbiosisCatalog,
     PipelineDirection,
     PipelineTemplate,
     PlasticGatewayConfig,
@@ -203,14 +204,21 @@ def test_homeostatic_scale_moves_weight_toward_target_activity() -> None:
 def test_gate_and_third_factor_math_is_bounded_and_explicit() -> None:
     config = PlasticGatewayConfig(gate_learning_eta=0.2)
     assert 0.0 < gate_signal(0.0, 0.0) < 1.0
-    assert gate_signal(1000.0, 0.0) == pytest.approx(1.0)
-    assert gate_signal(-1000.0, 0.0) == pytest.approx(0.0)
-    assert reward_modulated_delta(0.25, 2.0, config) == pytest.approx(0.1)
+    assert math.isclose(gate_signal(1000.0, 0.0), 1.0, rel_tol=1e-6, abs_tol=1e-12)
+    assert math.isclose(gate_signal(-1000.0, 0.0), 0.0, rel_tol=1e-6, abs_tol=1e-12)
+    assert math.isclose(
+        reward_modulated_delta(0.25, 2.0, config), 0.1, rel_tol=1e-6, abs_tol=1e-12
+    )
 
 
 def test_structural_probabilities_are_clipped_and_rng_free() -> None:
     config = PlasticGatewayConfig(structural_eta=0.5, pruning_eta=0.5)
-    assert formation_probability(5.0, 5.0, 10.0, config) == pytest.approx(0.125)
+    assert math.isclose(
+        formation_probability(5.0, 5.0, 10.0, config),
+        0.125,
+        rel_tol=1e-6,
+        abs_tol=1e-12,
+    )
     assert 0.0 <= pruning_probability(0.25, config) <= 1.0
     assert pruning_probability(0.1, config) > pruning_probability(0.9, config)
 

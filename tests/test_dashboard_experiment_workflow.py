@@ -137,10 +137,9 @@ def test_batch_runs_operational_protocols_in_order_with_per_protocol_options(
     import src.dashboard.experiment_workflow as workflow_module
 
     _write_registry(tmp_path)
-    monkeypatch.setattr(
-        workflow_module,
-        "protocol_catalog",
-        lambda _root: [
+
+    def fake_catalog(_root: Path) -> list[dict[str, object]]:
+        return [
             {
                 "id": "protocol_a",
                 "research_question": "RQ-SNN-001",
@@ -153,13 +152,16 @@ def test_batch_runs_operational_protocols_in_order_with_per_protocol_options(
                 "hypothesis": "H-SNN-002-A",
                 "preregistration": "prereg-b.json",
             },
-        ],
-    )
+        ]
+
+    monkeypatch.setattr(workflow_module, "protocol_catalog", fake_catalog)
     service = ExperimentWorkflowService(tmp_path)
     calls: list[tuple[str, int, str]] = []
 
     def fake_run_science(body: dict[str, object]) -> dict[str, object]:
-        calls.append((str(body["protocol"]), int(body["ticks"]), str(body["seeds"])))
+        tick_value = body["ticks"]
+        assert isinstance(tick_value, int)
+        calls.append((str(body["protocol"]), tick_value, str(body["seeds"])))
         if body["protocol"] == "protocol_b":
             raise RuntimeError("child failure")
         return {"experiment_id": body["experiment_id"], "report": "report.md"}
@@ -179,7 +181,11 @@ def test_batch_runs_operational_protocols_in_order_with_per_protocol_options(
     assert calls == [("protocol_a", 12, "1-2"), ("protocol_b", 34, "7-16")]
     assert result["completed"] == 1
     assert result["failed"] == 1
-    assert result["results"][1]["error"].startswith("RuntimeError: child failure")
+    results = result["results"]
+    assert isinstance(results, list)
+    failure = cast(list[dict[str, object]], results)[1]["error"]
+    assert isinstance(failure, str)
+    assert failure.startswith("RuntimeError: child failure")
     assert (tmp_path / "workflows" / "EXP-BATCH-CONTRACT.json").is_file()
     assert (tmp_path / "workflows" / "EXP-BATCH-CONTRACT.md").is_file()
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
 from dataclasses import asdict, dataclass, replace
+from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
 from types import CodeType, ModuleType
@@ -158,10 +158,19 @@ class ExperimentWorkflowService:
         """Run selected registered protocols and publish one aggregate report."""
         protocol_ids_value = body.get("protocols")
         if not isinstance(protocol_ids_value, list) or not protocol_ids_value:
-            raise WorkflowValidationError("protocols must contain at least one protocol id")
-        protocol_ids = [item for item in protocol_ids_value if isinstance(item, str) and item]
+            raise WorkflowValidationError(
+                "protocols must contain at least one protocol id"
+            )
+        selections = cast(list[object], protocol_ids_value)
+        if not all(isinstance(item, str) and item for item in selections):
+            raise WorkflowValidationError(
+                "protocols must contain only non-empty strings"
+            )
+        protocol_ids = cast(list[str], selections)
         if not protocol_ids:
-            raise WorkflowValidationError("protocols must contain valid protocol selections")
+            raise WorkflowValidationError(
+                "protocols must contain valid protocol selections"
+            )
         catalog = {
             str(item["id"]): item
             for item in protocol_catalog(self._research_root)
@@ -173,15 +182,23 @@ class ExperimentWorkflowService:
             if protocol_id.startswith("exploratory:"):
                 parts = protocol_id.split(":", 2)
                 if len(parts) != 3 or not parts[1] or not parts[2]:
-                    raise WorkflowValidationError(f"Invalid exploratory selection: {protocol_id}")
+                    raise WorkflowValidationError(
+                        f"Invalid exploratory selection: {protocol_id}"
+                    )
                 exploratory[protocol_id] = (parts[1], parts[2])
             else:
                 known_protocols.append(protocol_id)
-        unknown = [protocol_id for protocol_id in known_protocols if protocol_id not in catalog]
+        unknown = [
+            protocol_id for protocol_id in known_protocols if protocol_id not in catalog
+        ]
         if unknown:
-            raise WorkflowValidationError(f"Unknown operational protocols: {', '.join(unknown)}")
+            raise WorkflowValidationError(
+                f"Unknown operational protocols: {', '.join(unknown)}"
+            )
         batch_id_value = body.get("batch_id")
-        batch_id = str(batch_id_value).strip() if isinstance(batch_id_value, str) else ""
+        batch_id = (
+            str(batch_id_value).strip() if isinstance(batch_id_value, str) else ""
+        )
         if not batch_id:
             stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             batch_id = f"EXP-BATCH-{stamp}"
@@ -192,17 +209,31 @@ class ExperimentWorkflowService:
             raise WorkflowValidationError("ticks must be a positive integer")
         seeds = body.get("seeds", "42-44")
         options_value = body.get("protocol_options", {})
-        protocol_options = options_value if isinstance(options_value, dict) else {}
+        protocol_options = (
+            cast(dict[str, object], options_value)
+            if isinstance(options_value, dict)
+            else {}
+        )
         title_prefix = str(body.get("title_prefix") or "Experiment workflow").strip()
-        conditions = str(body.get("conditions") or "Registered protocol conditions").strip()
+        conditions = str(
+            body.get("conditions") or "Registered protocol conditions"
+        ).strip()
         notes = str(body.get("notes") or "").strip()
         results: list[dict[str, object]] = []
         for index, protocol_id in enumerate(protocol_ids, start=1):
             option_value = protocol_options.get(protocol_id)
-            option = option_value if isinstance(option_value, dict) else {}
+            option = (
+                cast(dict[str, object], option_value)
+                if isinstance(option_value, dict)
+                else {}
+            )
             child_ticks = option.get("ticks", ticks)
             child_seeds = option.get("seeds", seeds)
-            if not isinstance(child_ticks, int) or isinstance(child_ticks, bool) or child_ticks < 1:
+            if (
+                not isinstance(child_ticks, int)
+                or isinstance(child_ticks, bool)
+                or child_ticks < 1
+            ):
                 raise WorkflowValidationError(f"Invalid ticks for {protocol_id}")
             if protocol_id in exploratory:
                 question_id, hypothesis_id = exploratory[protocol_id]
@@ -215,7 +246,7 @@ class ExperimentWorkflowService:
                 protocol = protocol_id
                 title = f"{title_prefix}: {protocol_id}"
             experiment_id = f"{batch_id}-{index:02d}"
-            child = {
+            child: dict[str, object] = {
                 "experiment_id": experiment_id,
                 "question_id": question_id,
                 "hypothesis_id": hypothesis_id,
@@ -237,23 +268,37 @@ class ExperimentWorkflowService:
                     summary = write_experiment_summary(
                         self._research_root,
                         experiment_id,
-                        {"status": "unavailable", "reason": "Exploratory runtime run; AI post-hoc analysis not required.", "scientific_evidence": False},
+                        {
+                            "status": "unavailable",
+                            "reason": "Exploratory runtime run; AI post-hoc analysis not required.",
+                            "scientific_evidence": False,
+                        },
                     )
                     result["summary"] = summary
                     result["research_run_mode"] = "EXPLORATORY"
                     result["test_run"] = True
                 else:
                     result = self.run_science(child)
-                results.append({"protocol": protocol_id, "ticks": child_ticks, "seeds": child_seeds, "status": "completed", **result})
+                results.append(
+                    {
+                        "protocol": protocol_id,
+                        "ticks": child_ticks,
+                        "seeds": child_seeds,
+                        "status": "completed",
+                        **result,
+                    }
+                )
             except Exception as exc:
-                results.append({
-                    "protocol": protocol_id,
-                    "ticks": child_ticks,
-                    "seeds": child_seeds,
-                    "experiment_id": experiment_id,
-                    "status": "failed",
-                    "error": f"{type(exc).__name__}: {exc}",
-                })
+                results.append(
+                    {
+                        "protocol": protocol_id,
+                        "ticks": child_ticks,
+                        "seeds": child_seeds,
+                        "experiment_id": experiment_id,
+                        "status": "failed",
+                        "error": f"{type(exc).__name__}: {exc}",
+                    }
+                )
         workflow_root = self._research_root / "workflows"
         workflow_root.mkdir(parents=True, exist_ok=True)
         report_path = workflow_root / f"{batch_id}.json"
@@ -269,22 +314,32 @@ class ExperimentWorkflowService:
             "failed": failed,
             "results": results,
         }
-        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=True, default=str) + "\n", encoding="utf-8")
+        report_path.write_text(
+            json.dumps(report, indent=2, ensure_ascii=True, default=str) + "\n",
+            encoding="utf-8",
+        )
         markdown_path = report_path.with_suffix(".md")
         markdown_path.write_text(
-            "\n".join([
-                f"# {batch_id}: Experiment workflow",
-                "",
-                f"- Requested ticks: `{ticks}`",
-                f"- Seeds: `{seeds}`",
-                f"- Completed: `{completed}`",
-                f"- Failed: `{failed}`",
-                "",
-                "## Protocol results",
-                *[f"- `{item['protocol']}`: **{item['status']}**" + (f" — {item['error']}" if item.get("error") else "") for item in results],
-                "",
-                "The workflow report is an aggregate index; each completed protocol keeps its own manifest, raw data, statistics and report.",
-            ]) + "\n",
+            "\n".join(
+                [
+                    f"# {batch_id}: Experiment workflow",
+                    "",
+                    f"- Requested ticks: `{ticks}`",
+                    f"- Seeds: `{seeds}`",
+                    f"- Completed: `{completed}`",
+                    f"- Failed: `{failed}`",
+                    "",
+                    "## Protocol results",
+                    *[
+                        f"- `{item['protocol']}`: **{item['status']}**"
+                        + (f" — {item['error']}" if item.get("error") else "")
+                        for item in results
+                    ],
+                    "",
+                    "The workflow report is an aggregate index; each completed protocol keeps its own manifest, raw data, statistics and report.",
+                ]
+            )
+            + "\n",
             encoding="utf-8",
         )
         return {
@@ -645,9 +700,10 @@ class ExperimentWorkflowService:
 
         if runner_name == "run_sustained_stability":
             observed_ints = [
-                run.metrics.get("ticks_executed")
+                value
                 for run in runs
-                if isinstance(run.metrics.get("ticks_executed"), int)
+                if isinstance((value := run.metrics.get("ticks_executed")), int)
+                and not isinstance(value, bool)
             ]
             if len(observed_ints) != len(runs) or not observed_ints:
                 raise WorkflowValidationError(
@@ -840,24 +896,28 @@ class ExperimentWorkflowService:
             observed_ticks=observed_ticks,
             ticks_requested=workflow.ticks,
             tick_contract="SATISFIED",
-        ).record_artifact("data", "DATA/runs.json").record_runtime(duration).mark_completed().save()
+        ).record_artifact("data", "DATA/runs.json").record_runtime(
+            duration
+        ).mark_completed().save()
 
         data_path.write_text(
             json.dumps(
-                [{
-                    "experiment_id": workflow.experiment_id,
-                    "condition": "exploratory_runtime_ticks",
-                    "seed": workflow.seeds[0],
-                    "metrics": {
-                        "ticks_requested": workflow.ticks,
-                        "ticks_executed": observed_ticks,
-                        "start_tick": before["tick"],
-                        "end_tick": runtime["tick"],
-                        "neurons": runtime["neurons"],
-                        "synapses": runtime["synapses"],
-                    },
-                    "runtime_error": None,
-                }],
+                [
+                    {
+                        "experiment_id": workflow.experiment_id,
+                        "condition": "exploratory_runtime_ticks",
+                        "seed": workflow.seeds[0],
+                        "metrics": {
+                            "ticks_requested": workflow.ticks,
+                            "ticks_executed": observed_ticks,
+                            "start_tick": before["tick"],
+                            "end_tick": runtime["tick"],
+                            "neurons": runtime["neurons"],
+                            "synapses": runtime["synapses"],
+                        },
+                        "runtime_error": None,
+                    }
+                ],
                 indent=2,
                 ensure_ascii=True,
             )
@@ -918,7 +978,9 @@ class ExperimentWorkflowService:
         hypothesis = registry.hypotheses.get(hypothesis_id)
         if question is None:
             raise WorkflowValidationError(f"Unknown research question '{question_id}'.")
-        exploratory_runtime = protocol == "runtime_ticks_v1" and body.get("exploratory") is True
+        exploratory_runtime = (
+            protocol == "runtime_ticks_v1" and body.get("exploratory") is True
+        )
         if exploratory_runtime and hypothesis_id == "EXPLORATORY-UNSPECIFIED":
             hypothesis = None
         elif hypothesis is None or hypothesis.research_question != question.id:

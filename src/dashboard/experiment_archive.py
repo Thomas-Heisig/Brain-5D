@@ -6,7 +6,7 @@ import json
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 
 class ExperimentArchiveError(ValueError):
@@ -24,7 +24,11 @@ class ExperimentArchiveService:
     def _validate_id(self, experiment_id: str) -> str:
         if not experiment_id or experiment_id in {".", ".."}:
             raise ExperimentArchiveError("experiment_id is required")
-        if Path(experiment_id).name != experiment_id or "/" in experiment_id or "\\" in experiment_id:
+        if (
+            Path(experiment_id).name != experiment_id
+            or "/" in experiment_id
+            or "\\" in experiment_id
+        ):
             raise ExperimentArchiveError("invalid experiment_id")
         return experiment_id
 
@@ -41,20 +45,26 @@ class ExperimentArchiveService:
                 try:
                     loaded = json.loads(metadata_path.read_text(encoding="utf-8"))
                     if isinstance(loaded, dict):
-                        metadata = loaded
+                        metadata = cast(dict[str, Any], loaded)
                 except (OSError, json.JSONDecodeError):
                     metadata = {}
-            items.append({"experiment_id": directory.name, "archived": True, **metadata})
+            items.append(
+                {"experiment_id": directory.name, "archived": True, **metadata}
+            )
         return items
 
-    def archive_experiment(self, experiment_id: str, reason: str = "") -> dict[str, Any]:
+    def archive_experiment(
+        self, experiment_id: str, reason: str = ""
+    ) -> dict[str, Any]:
         experiment_id = self._validate_id(experiment_id)
         source = self.experiments / experiment_id
         target = self.archive / experiment_id
         if not (source / "manifest.json").is_file():
             raise ExperimentArchiveError(f"experiment not found: {experiment_id}")
         if target.exists():
-            raise ExperimentArchiveError(f"experiment already archived: {experiment_id}")
+            raise ExperimentArchiveError(
+                f"experiment already archived: {experiment_id}"
+            )
         self.archive.mkdir(parents=True, exist_ok=True)
         archived_at = datetime.now(timezone.utc).isoformat()
         shutil.move(str(source), str(target))
@@ -74,9 +84,13 @@ class ExperimentArchiveService:
         source = self.archive / experiment_id
         target = self.experiments / experiment_id
         if not (source / "manifest.json").is_file():
-            raise ExperimentArchiveError(f"archived experiment not found: {experiment_id}")
+            raise ExperimentArchiveError(
+                f"archived experiment not found: {experiment_id}"
+            )
         if target.exists():
-            raise ExperimentArchiveError(f"active experiment already exists: {experiment_id}")
+            raise ExperimentArchiveError(
+                f"active experiment already exists: {experiment_id}"
+            )
         metadata_path = source / "archive.json"
         if metadata_path.exists():
             metadata_path.unlink()

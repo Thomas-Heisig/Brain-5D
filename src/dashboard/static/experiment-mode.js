@@ -243,6 +243,7 @@ export class ExperimentMode {
     }
 
     const hasActive = this.activeSession !== null;
+    if (!["true", "completed"].includes(document.body.dataset.experimentWorkflowActive)) {
     const footer = byId("footer-experiment");
     if (footer) footer.dataset.active = String(hasActive);
     if (byId("footer-experiment-state")) {
@@ -253,6 +254,7 @@ export class ExperimentMode {
     }
     if (byId("footer-experiment-progress")) {
       byId("footer-experiment-progress").textContent = hasActive ? "Session aktiv" : "kein Lauf";
+    }
     }
     if (this._elements.startBtn) {
       this._elements.startBtn.disabled = hasActive;

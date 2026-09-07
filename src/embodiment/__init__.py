@@ -34,11 +34,11 @@ from .models import (
     SensorFrame,
 )
 from .msba import (
+    EmbodimentTreatmentProvenance,
     EnergyCoefficients,
     EnergyEstimate,
     EnergyObservation,
     EnergyState,
-    EmbodimentTreatmentProvenance,
     Modality,
     ModalityProfile,
     MSBAGatewayConfig,

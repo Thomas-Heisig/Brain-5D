@@ -295,14 +295,14 @@ function renderExperimentRunFooter() {
   setText('footer-spikes-value', 'Testlauf');
   const activityBar = $('footer-activity-bar');
   const spikesBar = $('footer-spikes-bar');
-  if (activityBar) activityBar.style.width = '58%';
-  if (spikesBar) spikesBar.style.width = '42%';
+  if (activityBar) activityBar.style.width = '0%';
+  if (spikesBar) spikesBar.style.width = '0%';
 }
 
 document.addEventListener('brain5d:experiment-progress', (event) => {
   const detail = event.detail || {};
   experimentRunActive = Boolean(detail.active);
-  document.body.dataset.experimentWorkflowActive = String(experimentRunActive);
+  document.body.dataset.experimentWorkflowActive = experimentRunActive ? "true" : (detail.experimentId ? "completed" : "false");
   const footer = $('footer-experiment');
   const state = $('footer-experiment-state');
   const id = $('footer-experiment-id');

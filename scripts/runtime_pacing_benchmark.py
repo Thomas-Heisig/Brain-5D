@@ -16,8 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.controller.runtime import RuntimeController
-
 
 @dataclass(slots=True)
 class _StepResult:
@@ -47,6 +45,8 @@ def run_deterministic_batch(
     """Run identical synchronous simulation work under one pacing setting."""
     if ticks <= 0:
         raise ValueError("ticks must be positive")
+    from src.controller.runtime import RuntimeController
+
     network = _BenchmarkNetwork()
     telemetry = RuntimeController(network, target_hz=target_hz).run_ticks(ticks)
     state = json.dumps(
@@ -75,6 +75,8 @@ def run_pacing_case(
         raise ValueError("duration_seconds must be positive")
     if target_hz is not None and target_hz <= 0.0:
         raise ValueError("target_hz must be positive or None")
+    from src.controller.runtime import RuntimeController
+
     network = _BenchmarkNetwork()
     controller = RuntimeController(
         network,
@@ -91,9 +93,7 @@ def run_pacing_case(
     warmup_ticks = controller.telemetry.completed_ticks
     measurement_duration = duration_seconds
     if target_hz is not None:
-        measurement_duration = max(
-            measurement_duration, (3.0 * batch_size) / target_hz
-        )
+        measurement_duration = max(measurement_duration, (3.0 * batch_size) / target_hz)
     started = time.perf_counter()
     time.sleep(measurement_duration)
     controller.stop()
@@ -104,9 +104,7 @@ def run_pacing_case(
     return {
         "target_hz": target_hz,
         "achieved_hz": achieved_hz,
-        "realtime_ratio": (
-            None if target_hz is None else achieved_hz / target_hz
-        ),
+        "realtime_ratio": (None if target_hz is None else achieved_hz / target_hz),
         "duration_seconds": elapsed,
         "measurement_duration_seconds": measurement_duration,
         "warmup_ticks": warmup_ticks,

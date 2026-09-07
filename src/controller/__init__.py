@@ -6,12 +6,12 @@ and exposes safe operator commands for interactive control.
 """
 
 from .runtime import (
+    PROFILE_PHASES,
     ControllerCommand,
     ControllerState,
     ErrorCallback,
     HomeostasisLike,
     PostTickHook,
-    PROFILE_PHASES,
     PreTickHook,
     RuntimeController,
     RuntimeNetworkLike,

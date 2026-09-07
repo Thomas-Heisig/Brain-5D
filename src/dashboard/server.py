@@ -92,8 +92,8 @@ from .models import (
 )
 from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
-from .research_source import ResearchSource, create_research_source
 from .release_timeline import build_release_timeline
+from .research_source import ResearchSource, create_research_source
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -1340,7 +1340,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _serve_release_timeline(self) -> None:
         """Serve the merged release timeline from the canonical Markdown docs."""
         repo_root = Path(__file__).resolve().parents[2]
-        self._send_json(build_release_timeline(repo_root))
+        self._send_json(
+            cast(dict[str, JSONValue], dict(build_release_timeline(repo_root)))
+        )
 
     # ========================================================================
     # Structural / runtime POST dispatch
@@ -2763,7 +2765,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self._require_research_source()
         selected = body.get("protocols", [])
         exploratory_selected = isinstance(selected, list) and any(
-            isinstance(item, str) and item.startswith("exploratory:") for item in selected
+            isinstance(item, str) and item.startswith("exploratory:")
+            for item in cast(list[object], selected)
         )
         run_ticks = None
         before = None
@@ -2772,14 +2775,20 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             bridge = self._require_bridge()
             step = getattr(bridge.controller, "step", None)
             if not callable(step):
-                raise BridgeNotConfiguredError("Runtime controller does not support step().")
+                raise BridgeNotConfiguredError(
+                    "Runtime controller does not support step()."
+                )
             state = self.dashboard_server.dashboard_state
 
             def metrics() -> dict[str, int]:
                 snapshot = state.snapshot().system
                 network = getattr(bridge.controller, "network", None)
                 tick = getattr(network, "current_tick", snapshot.tick)
-                return {"tick": int(tick), "neurons": snapshot.neurons, "synapses": snapshot.synapses}
+                return {
+                    "tick": int(tick),
+                    "neurons": snapshot.neurons,
+                    "synapses": snapshot.synapses,
+                }
 
             run_ticks, before, after = step, metrics, metrics
         result = ExperimentWorkflowService(
@@ -2803,7 +2812,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             result = (
                 service.restore_experiment(experiment_id)
                 if action == "restore"
-                else service.archive_experiment(experiment_id, str(body.get("reason") or ""))
+                else service.archive_experiment(
+                    experiment_id, str(body.get("reason") or "")
+                )
             )
         except ExperimentArchiveError as exc:
             raise InvalidRequestError(str(exc)) from exc

@@ -7,7 +7,6 @@ import yaml
 from src.research.experiment_suite import run_sustained_stability
 from src.research.protocol_registry import validate_operational_protocol
 
-
 ROOT = Path(__file__).parents[1]
 
 
@@ -37,7 +36,5 @@ def test_sustained_stability_runner_records_control_and_drive_traces() -> None:
         assert run.metrics["finite_state"] is True
         assert run.metrics["topology_unchanged"] is True
     assert all(
-        run.metrics["stability_pass"]
-        for run in runs
-        if run.condition == "tonic_drive"
+        run.metrics["stability_pass"] for run in runs if run.condition == "tonic_drive"
     )

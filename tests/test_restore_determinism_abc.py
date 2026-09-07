@@ -46,6 +46,7 @@ Proofs (all machine-measured, never hardcoded):
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -397,7 +398,12 @@ def test_write_restore_determinism_artifact(tmp_path: Path) -> None:
     }
 
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
-    ARTIFACT_PATH.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+    output_path = (
+        ARTIFACT_PATH
+        if os.environ.get("BRAIN5D_WRITE_VERIFICATION_ARTIFACTS") == "1"
+        else tmp_path / "restore_determinism.json"
+    )
+    output_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
     print(f"Restore determinism artifact written to: {ARTIFACT_PATH}")
     print(f"  status = {artifact['status']}")
     print(f"  digest_A = {dA}")

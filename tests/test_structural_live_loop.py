@@ -60,6 +60,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import random
 from pathlib import Path
 from typing import Any
@@ -543,6 +544,8 @@ def test_write_live_loop_verification_artifact(tmp_path: Path) -> None:
     }
 
     verification_dir = repo_root / "research" / "generated" / "verification"
+    if os.environ.get("BRAIN5D_WRITE_VERIFICATION_ARTIFACTS") != "1":
+        verification_dir = tmp_path / "verification"
     verification_dir.mkdir(parents=True, exist_ok=True)
     artifact_path = verification_dir / "structural_live_loop.json"
     artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")

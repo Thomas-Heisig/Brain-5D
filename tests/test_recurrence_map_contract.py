@@ -6,7 +6,6 @@ import yaml
 
 from src.research.followup_experiments import run_recurrence_map
 
-
 ROOT = Path(__file__).parents[1]
 
 
@@ -18,7 +17,13 @@ def test_recurrence_map_covers_registered_weight_delay_grid() -> None:
 
     assert len(runs) == 2 * 5 * 3
     assert {run.seed for run in runs} == {42, 43}
-    assert {run.metrics["recurrent_weight"] for run in runs} == {0.0, 50.0, 75.0, 100.0, 125.0}
+    assert {run.metrics["recurrent_weight"] for run in runs} == {
+        0.0,
+        50.0,
+        75.0,
+        100.0,
+        125.0,
+    }
     assert {run.metrics["recurrent_delay"] for run in runs} == {1, 2, 4}
     assert {run.metrics["persistence_class"] for run in runs} == {
         "immediate_decay",
