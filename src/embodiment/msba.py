@@ -154,6 +154,20 @@ class EnergyEstimate:
             "normalized_energy_units": self.normalized_energy_units,
             "estimated_joules": self.estimated_joules,
             "measured_joules": self.measured_joules,
+            "provenance": {
+                "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
+                "estimated_joules": (
+                    "CALIBRATED_CONVERSION"
+                    if self.estimated_joules is not None
+                    else "NOT_AVAILABLE"
+                ),
+                "measured_joules": (
+                    "DIRECT_TELEMETRY"
+                    if self.measured_joules is not None
+                    else "NOT_AVAILABLE"
+                ),
+            },
+            "estimated_is_not_measured": True,
         }
 
 
@@ -481,6 +495,12 @@ def msba_contract() -> dict[str, JSONValue]:
                 "estimated_joules",
                 "measured_joules",
             ],
+            "provenance_classes": {
+                "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
+                "estimated_joules": "CALIBRATED_CONVERSION",
+                "measured_joules": "DIRECT_TELEMETRY",
+                "missing": "NOT_AVAILABLE",
+            },
             "estimated_is_not_measured": True,
         },
         "topology": {

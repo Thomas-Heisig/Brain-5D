@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Energy provenance classes
+
+- Added machine-readable provenance classes for normalized energy, estimated joules and measured joules.
+- Missing energy measurements remain `NOT_AVAILABLE` rather than being treated as zero.
+
 ## 2026-09-07 — Preregistered increased-dimensional projection controls
 
 - Added the MSBA projection ablation protocol for 5D, 8D and 16D external projection spaces.

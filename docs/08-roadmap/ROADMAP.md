@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Energy provenance classes
+
+- Added explicit provenance classes for normalized model units, calibrated joule conversions, direct telemetry measurements and unavailable values.
+- Preserved measured and estimated joules as separate fields with an explicit non-equivalence flag.
+
 ## 2026-09-07 Preregistered increased-dimensional projection controls
 
 - Added `PROTO-MSBA-PROJECTION-001` with structured 5D baseline and external 8D/16D projection controls.

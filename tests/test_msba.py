@@ -69,6 +69,20 @@ def test_energy_accounting_keeps_measured_and_estimated_joules_separate() -> Non
     assert estimate.estimated_joules is not None
     assert estimate.measured_joules == pytest.approx(0.25)
     assert estimate.estimated_joules != estimate.measured_joules
+    serialized = estimate.to_json()
+    assert serialized["provenance"] == {
+        "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
+        "estimated_joules": "CALIBRATED_CONVERSION",
+        "measured_joules": "DIRECT_TELEMETRY",
+    }
+    assert serialized["estimated_is_not_measured"] is True
+
+
+def test_energy_accounting_marks_missing_measurements_as_unavailable() -> None:
+    serialized = energy_units(EnergyObservation(spikes=1)).to_json()
+
+    assert serialized["provenance"]["estimated_joules"] == "NOT_AVAILABLE"
+    assert serialized["provenance"]["measured_joules"] == "NOT_AVAILABLE"
 
 
 def test_energy_accounting_rejects_negative_counters() -> None:
