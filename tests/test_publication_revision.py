@@ -91,7 +91,10 @@ def test_incomplete_toc_is_rejected(edition_root: Path) -> None:
 
 @pytest.mark.parametrize(
     "field",
-    ["automatic_evidence_promotion", "empirical_brain5d_experiments_executed_in_revision"],
+    [
+        "automatic_evidence_promotion",
+        "empirical_brain5d_experiments_executed_in_revision",
+    ],
 )
 def test_scientific_status_cannot_be_promoted(edition_root: Path, field: str) -> None:
     path = edition_root / PUBLICATIONS / EDITION / "manifest.json"

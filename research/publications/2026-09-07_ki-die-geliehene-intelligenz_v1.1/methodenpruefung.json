@@ -5,7 +5,7 @@
   "scientific_evidence_promotion": false,
   "preregistered": false,
   "limitations": "Constructed finite witnesses, not learned capabilities or a topology benchmark.",
-  "script_sha256": "b3e51c9a1efeed0f536d46b0c7749f3bfe21b19a7e69cbdff410eba3924cd065",
+  "script_sha256": "c17e8207ff001c2f3d072946844d6517a13cfe569edf4141cfa7dd14ab6916c5",
   "fixture": {
     "nodes": 12,
     "updates": 64,

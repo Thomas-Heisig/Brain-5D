@@ -82,7 +82,8 @@ def run_checks() -> dict[str, Any]:
     check("nonzero_activity", sum(map(sum, reference)) > 0)
     check("nonconstant_trajectory", len({tuple(row) for row in reference}) > 1)
     check(
-        "negative_control_changes_trajectory", trajectory(5, break_edge=True) != reference
+        "negative_control_changes_trajectory",
+        trajectory(5, break_edge=True) != reference,
     )
     records = []
     for bit in (0, 1):
