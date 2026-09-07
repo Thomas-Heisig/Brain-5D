@@ -182,6 +182,8 @@ class ResourcePressure:
     compute: float = 0.0
     memory: float = 0.0
     fan_failure: bool = False
+    thermal_safety_trip: bool = False
+    persistence_failure: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -376,7 +378,11 @@ def resource_pressure(
 ) -> float:
     """Return clipped soft resource pressure; fan failure is a hard safety override."""
 
-    if pressure.fan_failure:
+    if (
+        pressure.fan_failure
+        or pressure.thermal_safety_trip
+        or pressure.persistence_failure
+    ):
         return 1.0
     terms = (
         config.pressure_energy_weight * _unit(pressure.energy)
@@ -390,7 +396,11 @@ def resource_pressure(
 def energy_state(pressure: ResourcePressure) -> EnergyState:
     """Map resource pressure to a deterministic protection state."""
 
-    if pressure.fan_failure:
+    if (
+        pressure.fan_failure
+        or pressure.thermal_safety_trip
+        or pressure.persistence_failure
+    ):
         return EnergyState.SURVIVAL
     level = resource_pressure(pressure)
     if level >= 0.85:
@@ -421,6 +431,12 @@ def allocation_gate(
 
     if cost < 0.0:
         raise ValueError("cost must be non-negative")
+    if (
+        pressure.fan_failure
+        or pressure.thermal_safety_trip
+        or pressure.persistence_failure
+    ):
+        return 0.0
     drive = utility - energy_price(pressure, config) * cost - threshold
     return _sigmoid(config.allocation_beta * drive)
 

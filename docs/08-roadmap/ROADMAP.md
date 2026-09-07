@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Hard protection and ordering gates
+
+- Added fail-closed thermal-safety, fan-failure and persistence-failure trips that force `SURVIVAL` and block learned gateway allocation regardless of utility.
+- Locked the protection order to reduce plasticity first, freeze it at criticality, and preserve thermal sensing, persistence and storage integrity.
+
 ## 2026-09-07 Separate energy contribution accounting
 
 - Added component-level normalized energy accounting for sensor, encoder, spikes, synaptic events, plasticity, structural events, memory, I/O and adapter contributions.

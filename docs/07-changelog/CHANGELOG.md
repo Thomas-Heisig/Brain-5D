@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Hard protection and ordering gates
+
+- Added hard safety trips for thermal, fan and persistence failures.
+- Verified learned allocation cannot override these trips and protection freezes plasticity before sacrificing safety-critical paths.
+
 ## 2026-09-07 — Separate energy contribution accounting
 
 - Added serialized component-level energy contributions for the full MSBA accounting path.

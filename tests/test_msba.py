@@ -127,6 +127,27 @@ def test_resource_pressure_and_fan_failure_are_bounded_and_fail_safe() -> None:
     assert energy_state(ResourcePressure(fan_failure=True)) is EnergyState.SURVIVAL
 
 
+def test_hard_safety_trips_override_high_utility_allocation() -> None:
+    for pressure in (
+        ResourcePressure(fan_failure=True),
+        ResourcePressure(thermal_safety_trip=True),
+        ResourcePressure(persistence_failure=True),
+    ):
+        assert resource_pressure(pressure) == 1.0
+        assert energy_state(pressure) is EnergyState.SURVIVAL
+        assert allocation_gate(utility=1_000_000.0, cost=0.0, pressure=pressure) == 0.0
+
+
+def test_protection_policy_reduces_then_freezes_and_preserves_safety_paths() -> None:
+    assert recommended_protection_policy(EnergyState.CONSERVE)["plasticity"] == "reduce_first"
+    assert recommended_protection_policy(EnergyState.CRITICAL)["plasticity"] == "freeze"
+    survival = recommended_protection_policy(EnergyState.SURVIVAL)
+    assert survival["plasticity"] == "freeze"
+    assert "thermal_sensing" in survival["preserve"]
+    assert "core_persistence" in survival["preserve"]
+    assert "storage_integrity" in survival["preserve"]
+
+
 def test_allocation_gate_prefers_higher_utility_and_lower_cost() -> None:
     pressure = ResourcePressure(energy=0.4, compute=0.2)
     config = MSBAGatewayConfig(allocation_beta=4.0)
