@@ -1,4 +1,7 @@
 # Hooks use the same pinned development tools as CI; no formatter version drift.
+# Frozen publication bytes are verified by Publication Integrity CI.
+exclude: ^research/publications/2026-09-07_ki-die-geliehene-intelligenz/
+
 repos:
   - repo: local
     hooks:

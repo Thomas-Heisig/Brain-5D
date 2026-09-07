@@ -1,0 +1,424 @@
+{
+  "schema_version": "1.0",
+  "source": "../2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.md",
+  "source_sha256": "98a40536bbbd6a9fa9bab740bccb28baba6a09893b6993fab2650ef3f0d2ae7b",
+  "source_bytes": 544615,
+  "authority": "interpretation_only",
+  "section_count": 46,
+  "sections": [
+    {
+      "path": "section-000.md",
+      "title": "KI - Die geliehene Intelligenz",
+      "first_line": 1,
+      "last_line": 22,
+      "source_sha256": "bdf87c862b92f52b7343ec49578a81b7494e69a57cc7643e2bcfbe68059fecbd",
+      "rendered_sha256": "3c4e293a6fc2867b581a9808336b11d75ecd53e210474421aae2d906b5d0a2da",
+      "rendered_bytes": 1464
+    },
+    {
+      "path": "section-001.md",
+      "title": "Zusammenfassung",
+      "first_line": 23,
+      "last_line": 38,
+      "source_sha256": "9e27e272e462f5cb1ab01a7309838159ad61a634d352c28d2b83bd431a13b0ed",
+      "rendered_sha256": "742ff64dfd46543401366ceae744f25e2f5b517b7f47e23dbc43e8d2e7403f14",
+      "rendered_bytes": 4224
+    },
+    {
+      "path": "section-002.md",
+      "title": "Abstract",
+      "first_line": 39,
+      "last_line": 48,
+      "source_sha256": "beaa353c6fd1bd28fa0ffc8cd7cc6fabcd16ece19e7f89e29da3acdb162df34c",
+      "rendered_sha256": "32cc87ebdeebcd4628f42b114027c73399abb5434335bca66b24aad635dc8142",
+      "rendered_bytes": 1950
+    },
+    {
+      "path": "section-003.md",
+      "title": "Leseweg und Orientierung",
+      "first_line": 49,
+      "last_line": 58,
+      "source_sha256": "1040c0a10e6fd3a29e726bb9e3ec0c61b4dc2ad11272422246a6b246b7fa8d5f",
+      "rendered_sha256": "52d7d641f03ae1f0f913d2c6b75c5ac7d74217b21d64a1ae973a85ab88a9d595",
+      "rendered_bytes": 1600
+    },
+    {
+      "path": "section-004.md",
+      "title": "Inhaltsverzeichnis",
+      "first_line": 59,
+      "last_line": 104,
+      "source_sha256": "cae81208a58ded7d41b501bca1429853aa76beaa961c555f272dac64c9c80792",
+      "rendered_sha256": "5ef94a60e8417ee052ffbc054c6fe02e3285e5dd06e426576ca65a8db38dfa82",
+      "rendered_bytes": 5416
+    },
+    {
+      "path": "section-005.md",
+      "title": "1. Erkenntnisinteresse, Gegenstand und Grenzen",
+      "first_line": 105,
+      "last_line": 294,
+      "source_sha256": "93dc303f226cb2332c47151ab3cb01daa4b80faf47a40786b8fdc6a693cb0652",
+      "rendered_sha256": "e3f30350c2a8bdea36c066641a76fe22e13c01ad3bb1b814f7d47228f5705b16",
+      "rendered_bytes": 19445
+    },
+    {
+      "path": "section-006.md",
+      "title": "2. Methodologie und Evidenzordnung",
+      "first_line": 295,
+      "last_line": 523,
+      "source_sha256": "7e30e299c1fe37d144d6d6057efa201d95f38ee84876c810fa8ea5c6ccdfea67",
+      "rendered_sha256": "a78ad4eb997cbaff89fcd8a2bac7ce26220e65a28c80d81bb8444777cd0e2106",
+      "rendered_bytes": 20362
+    },
+    {
+      "path": "section-007.md",
+      "title": "3. Forschungsfragen, Hypothesen und Gegenhypothesen",
+      "first_line": 524,
+      "last_line": 597,
+      "source_sha256": "c10ae5d0629fea08f6d40343a50c37647949a3c286d269d9d8e1f6e40069c250",
+      "rendered_sha256": "4177df8c133746ffd72da60bfba986f8e2fe6c64da14c3ef074e0175b9209c70",
+      "rendered_bytes": 10572
+    },
+    {
+      "path": "section-008.md",
+      "title": "4. Genealogie künstlicher Agency",
+      "first_line": 598,
+      "last_line": 767,
+      "source_sha256": "f914ecc7653f46c20217972da842143e56ee5a23da082d41f66f26a57f3c2ade",
+      "rendered_sha256": "c92209492a2c7de0e0e6ffbd60f7856ff2b258b1e3d05d51fe4792bc839d8b80",
+      "rendered_bytes": 21453
+    },
+    {
+      "path": "section-009.md",
+      "title": "5. Gegenwart: Forschung und Entwurf durch KI",
+      "first_line": 768,
+      "last_line": 841,
+      "source_sha256": "721adbb5efd9c84eabc9cd5a6874f8e3771ca73fa244b35585f66046333444b0",
+      "rendered_sha256": "3039f05f79d54898c2ac7865c743ed0e15657938f116fef05220573481e8d4d0",
+      "rendered_bytes": 10777
+    },
+    {
+      "path": "section-010.md",
+      "title": "6. Geliehene Intelligenz und rekursive Technogenese",
+      "first_line": 842,
+      "last_line": 935,
+      "source_sha256": "f451e139335e6a67cbc88a603861852732476f75fbac5c7492a3ada62fb5b126",
+      "rendered_sha256": "391153b181dd84aea6a7a5f27b44f386089f42f5386a2bb7b2fc62c4c12ac8e7",
+      "rendered_bytes": 8132
+    },
+    {
+      "path": "section-011.md",
+      "title": "7. Menschliche Rollen und verteilte Autorenschaft",
+      "first_line": 936,
+      "last_line": 1005,
+      "source_sha256": "1b64145d3a445b0a0b05aacf8a8e34209b7d39cb3356042d846df30727fd69e0",
+      "rendered_sha256": "1d7cd3808c0ad06af9062472167bbac4de20189bf33e4600041a54371127d2b5",
+      "rendered_bytes": 7128
+    },
+    {
+      "path": "section-012.md",
+      "title": "8. Hoheit, Kontrolle und Autonomierisiken",
+      "first_line": 1006,
+      "last_line": 1100,
+      "source_sha256": "8e59651b8b8a8df03be6f962e1fd56e9f535bd976fad356cb732156eab8257a9",
+      "rendered_sha256": "bb60231bb45e961c26aa45a1d25ad43eaaae55a9d6243f1bf22c1b80572b2ee2",
+      "rendered_bytes": 9434
+    },
+    {
+      "path": "section-013.md",
+      "title": "9. Embodiment und die Frage nach dem Körper",
+      "first_line": 1101,
+      "last_line": 1251,
+      "source_sha256": "34a218d44538506fa1a4b5f9f2b74cee2e0102842afe99120a9bd1871003dfd7",
+      "rendered_sha256": "74567fad898f8ab1d709e5c4003c61856134ce5c64f4ff8a8b9fc8e7d5008a88",
+      "rendered_bytes": 15145
+    },
+    {
+      "path": "section-014.md",
+      "title": "10. Ethik, philosophische Bezugslinien und moralischer Status",
+      "first_line": 1252,
+      "last_line": 1403,
+      "source_sha256": "2b31c48fdb97dd9ad8433d25e553e59cf7c888f25fd3fbdbabccfe24339a0857",
+      "rendered_sha256": "e0a593e260e6bd0d5e4480a251605df8478d01cfe8188cef520d147b9e846658",
+      "rendered_bytes": 16922
+    },
+    {
+      "path": "section-015.md",
+      "title": "11. Recht, Governance und zeitliche Anwendbarkeit",
+      "first_line": 1404,
+      "last_line": 1491,
+      "source_sha256": "56eb8cc58e4f09f48aba329c91b8ea327c68169fb2f6f7ecefffe47a242a420e",
+      "rendered_sha256": "4100ccc2d6fba55c2d1c52dfd19d2834ee71705706994aea74e8a280ad2fde93",
+      "rendered_bytes": 11150
+    },
+    {
+      "path": "section-016.md",
+      "title": "12. Wissenschaftliche Reflexivität und eigene Kontrolle",
+      "first_line": 1492,
+      "last_line": 1562,
+      "source_sha256": "0ee5ad3607a6b48ca12d7bab3ccc895a3034210c254b7ec2f2f42e8a02d10e9d",
+      "rendered_sha256": "2f7c895fe1feae236c68c914a9c943aed1b89276d3b8db5e778654a5169a44e8",
+      "rendered_bytes": 7127
+    },
+    {
+      "path": "section-017.md",
+      "title": "13. Brain-5D: Ontologie, Architektur und Sicherheitsgrenzen",
+      "first_line": 1563,
+      "last_line": 1797,
+      "source_sha256": "bd06d8e858df4c43343714c3a988b7d8c3b1caa094eff71988996b7af4225f3e",
+      "rendered_sha256": "1fb1dbfd39ab6c41f799f2ed4d7e12e92d67a2841ad770292a51adc7220ce952",
+      "rendered_bytes": 22072
+    },
+    {
+      "path": "section-018.md",
+      "title": "14. Mathematische Annahmen und hybrides Zustandsmodell",
+      "first_line": 1798,
+      "last_line": 1942,
+      "source_sha256": "ea65756195d339a321dcc8d769e554b5749075773f19aabaf4e0cbb9662c837a",
+      "rendered_sha256": "042fdc0ccaea114b5352247c9176c15628bcafe5486bb387ec8db05dafafe09a",
+      "rendered_bytes": 10196
+    },
+    {
+      "path": "section-019.md",
+      "title": "15. Fünfdimensionaler Adressraum und dynamischer Graph",
+      "first_line": 1943,
+      "last_line": 2144,
+      "source_sha256": "6725428d12fea46c4ef0ab87676e4faaf705e895bce8fc6e64fe9e2bb5f94b4e",
+      "rendered_sha256": "0b1cb796a41c2785cbd5a7f2ea4ee177d7fc1c449e08a7f036091d33c9a4fbf5",
+      "rendered_bytes": 11013
+    },
+    {
+      "path": "section-020.md",
+      "title": "16. Neuronale Dynamik und synaptische Übertragung",
+      "first_line": 2145,
+      "last_line": 2202,
+      "source_sha256": "0f7c61d9dc3c6944b61a2ec3b2ca33a9894a18a59e62b65bacbae6d4f196181a",
+      "rendered_sha256": "8271a7ecbd4658fccfe05e2fb37190cc5b01bdee7696079314dc9eaf66ee9edb",
+      "rendered_bytes": 3672
+    },
+    {
+      "path": "section-021.md",
+      "title": "17. Plastizität, Homeostase und struktureller Wandel",
+      "first_line": 2203,
+      "last_line": 2330,
+      "source_sha256": "0b3dfe8eedaf510baab521bd65ba6a67ec93d17de146b6bca9d5dd4351e4ea0f",
+      "rendered_sha256": "81e1c5da2b723932ce4060d50b8e4fc261312d108b70f5bdb3fccd2235d6216e",
+      "rendered_bytes": 9673
+    },
+    {
+      "path": "section-022.md",
+      "title": "18. Stabilität, Attraktoren, Emergenz und Kausalität",
+      "first_line": 2331,
+      "last_line": 2468,
+      "source_sha256": "7fc989c2421d4fbe00c5a5e259cd50e90036c58881eea8a5e3c8ff0f844e1d75",
+      "rendered_sha256": "d003bda83ea62604c6269693fdff8b7f9845859873d827b03383173998e53df3",
+      "rendered_bytes": 9534
+    },
+    {
+      "path": "section-023.md",
+      "title": "19. Repräsentation, Gedächtnis und interne Prädiktion",
+      "first_line": 2469,
+      "last_line": 2696,
+      "source_sha256": "09b0df820b6743a0ad5fec101a3092385c2c650371a97909558960e257b4bf76",
+      "rendered_sha256": "1f9d21aab1d53579633374cb9fafb7b6c0076cb17188aded27ae8090423e41df",
+      "rendered_bytes": 13031
+    },
+    {
+      "path": "section-024.md",
+      "title": "20. Signalinterpretation, Sprache und Wissensaufnahme",
+      "first_line": 2697,
+      "last_line": 2966,
+      "source_sha256": "3eb58507583dddf469dc72eb8b6f5a02142588bb33b3a30ce719dfe9a537f4a5",
+      "rendered_sha256": "b15e1b611145a8d3897bdc5c28357db9b57e9740270647234dfe756f0eda9c05",
+      "rendered_bytes": 12572
+    },
+    {
+      "path": "section-025.md",
+      "title": "21. Persistenz, Digital State Twin und Reproduzierbarkeit",
+      "first_line": 2967,
+      "last_line": 3228,
+      "source_sha256": "369feea0eb9567fe5f915e55be49ff98475d0603622edda4107acf834ca7391e",
+      "rendered_sha256": "a7baebd5f61d731de8ba888a1112ca116dfd05b5279091540b1683716e10cf5a",
+      "rendered_bytes": 10913
+    },
+    {
+      "path": "section-026.md",
+      "title": "22. Vorhandene technische Evidenz: Restore und Speicherung",
+      "first_line": 3229,
+      "last_line": 3265,
+      "source_sha256": "d609874631111a161e9d118b0a2adff26dbe031f88910039ff3906227c37402c",
+      "rendered_sha256": "266d36eedbf4975c0b1b9bd9bc67cd7fce4036e98c292b32b2ea66f3fa411ce7",
+      "rendered_bytes": 4911
+    },
+    {
+      "path": "section-027.md",
+      "title": "23. Historische Versuche und explorative Ausgangsbefunde",
+      "first_line": 3266,
+      "last_line": 3305,
+      "source_sha256": "68e24a285e59057809baa559c3d4b9e7c41747ba5bf586f90f2f298254355e46",
+      "rendered_sha256": "6f8400d1a9b7cccc4d0e71da42793de32f0eeef7feb7751c7e526868e21c0fb0",
+      "rendered_bytes": 5291
+    },
+    {
+      "path": "section-028.md",
+      "title": "24. Vier aktuelle Ergebnislinien und ihre Grenzen",
+      "first_line": 3306,
+      "last_line": 3370,
+      "source_sha256": "8928cc591698665592e17c0e23f8f47fbdc44bb748c16dfa37094842cef671a7",
+      "rendered_sha256": "efd4345e28bd19779dc594fe2e4d88b942b9d6bb15df07156006dcc73c8ba38b",
+      "rendered_bytes": 9474
+    },
+    {
+      "path": "section-029.md",
+      "title": "25. Ergebnisattribution und Verbindung der Hypothesen",
+      "first_line": 3371,
+      "last_line": 3398,
+      "source_sha256": "a2ecd18a29c2f4449d2f2ec6645f32c0d1d5229333c7aeec6b9e87b4e53bd134",
+      "rendered_sha256": "7f6f12904e19d22211cadf029b27216c12e408f4725cd43abf5ed9718e1fc0d4",
+      "rendered_bytes": 4024
+    },
+    {
+      "path": "section-030.md",
+      "title": "26. Nichtmenschliches Embodiment und ein erweiterbarer Körper",
+      "first_line": 3399,
+      "last_line": 3455,
+      "source_sha256": "c36675d91e8bd834fe756b40b5f317a338e8fc231c813bcfbfdd4c36818d8576",
+      "rendered_sha256": "1a6010aa28884fc12db57384b1c8c47c0df9c58c28221405cd08f029ca8cc542",
+      "rendered_bytes": 7822
+    },
+    {
+      "path": "section-031.md",
+      "title": "27. MSBA: Modalitäten, Gateways und Ressourcenverteilung",
+      "first_line": 3456,
+      "last_line": 3497,
+      "source_sha256": "d67ed038a85ef6a44faf50394fa4016f6647e10c98c074918bdd7449b9674b9e",
+      "rendered_sha256": "a25827932cc8c51a25b3c60bbafbc22a6ef0b6da1bd3b1d7044836db96ad3072",
+      "rendered_bytes": 6376
+    },
+    {
+      "path": "section-032.md",
+      "title": "28. Kompakte Daten, Berichtstreue und epistemische Kontrolle",
+      "first_line": 3498,
+      "last_line": 3533,
+      "source_sha256": "ba30bb28fba41bd2c1216783c681275b71684cdec81c4a1e56d1e1a7dd9269e1",
+      "rendered_sha256": "08f723e057b79742204d87b17b47e009ed17b115d36272f9329dec3bae9466e9",
+      "rendered_bytes": 4807
+    },
+    {
+      "path": "section-033.md",
+      "title": "29. Versuchsplanung, Artefaktvergleich und Statistik",
+      "first_line": 3534,
+      "last_line": 3977,
+      "source_sha256": "5e6baefeb8da76445ede426ce87fe5e5f80f913802988c739757189d24bbfd2b",
+      "rendered_sha256": "402dc6e31780d26f98bbb925fa6aace075624a076add1c03d01187aaaac58d79",
+      "rendered_bytes": 24409
+    },
+    {
+      "path": "section-034.md",
+      "title": "30. Experimentfamilien A bis J, Baselines und Falsifikation",
+      "first_line": 3978,
+      "last_line": 4402,
+      "source_sha256": "0a663a8f83dbaf45a1c318745ac892502606f356b4733526c0d7fbd3c6b66632",
+      "rendered_sha256": "79382cf2fab6a74caf3b3f9dabdc8394c3817f0e3628a498233850d2e89e824e",
+      "rendered_bytes": 17321
+    },
+    {
+      "path": "section-035.md",
+      "title": "31. Acht neue Synthesehypothesen und Prüfprotokolle",
+      "first_line": 4403,
+      "last_line": 4492,
+      "source_sha256": "656d3eb8234deae584fd0b0607ee6ad728e1e13709c79c18a00d839a31765c03",
+      "rendered_sha256": "3d7e95a1e86c1e4ff1cdf533a19d0266cdd3655ee83cf92533642f31e62277e9",
+      "rendered_bytes": 9877
+    },
+    {
+      "path": "section-036.md",
+      "title": "32. Roadmap, Evidenzgates und offene Entwicklung",
+      "first_line": 4493,
+      "last_line": 5108,
+      "source_sha256": "6469948f28a3d28c67fcefa5b7aa58a664bd0b2997b3a07674283f9da24e53ca",
+      "rendered_sha256": "844fc1eeddbdaf300d4578b3e4a4b5b2d2050b36de2c02841f5496dc90eda3f6",
+      "rendered_bytes": 29042
+    },
+    {
+      "path": "section-037.md",
+      "title": "33. Arbeit, Macht, Umwelt und soziale Einbettung",
+      "first_line": 5109,
+      "last_line": 5152,
+      "source_sha256": "3b5cb26ed0e064c76da7552a1b493cd041174d1e6019fc54769d6e467157acd2",
+      "rendered_sha256": "3159344c5b30d67bc5f33cd4a04c2dc65aca2213ed773067c6dbff2ec32e5513",
+      "rendered_bytes": 5996
+    },
+    {
+      "path": "section-038.md",
+      "title": "34. Zukunftsszenarien als begriffliche Belastungstests",
+      "first_line": 5153,
+      "last_line": 5259,
+      "source_sha256": "3dbdc67d2cf152da9f92d8d68a616ba5f2ae9070d9172641c7c23a3b1f3a41e0",
+      "rendered_sha256": "1025bdd11377c63a1ec399c1f550c0d6b44e78fb9a32cbe63d10792df6a2328d",
+      "rendered_bytes": 11685
+    },
+    {
+      "path": "section-039.md",
+      "title": "35. Gegenpositionen, Falsifizierbarkeit und Limitationen",
+      "first_line": 5260,
+      "last_line": 5387,
+      "source_sha256": "b89bd4738534f5fe49824be40c75399dc9379fbc7049d5db469eeb3b2fb44da9",
+      "rendered_sha256": "5630d2df96b0e0687adfaca7704c441d5f5443f070fa6774ad3a926b9a921045",
+      "rendered_bytes": 10202
+    },
+    {
+      "path": "section-040.md",
+      "title": "36. Gesamtsynthese und wissenschaftliche Schlussposition",
+      "first_line": 5388,
+      "last_line": 5465,
+      "source_sha256": "14f4004073a9b87e7a018efe1266352f83d64041278507ca773293feb50964d8",
+      "rendered_sha256": "137f80f950bd46d9483e76adbfe878a8c26a0d72733898bbc3cf81f45255a3b9",
+      "rendered_bytes": 11655
+    },
+    {
+      "path": "section-041.md",
+      "title": "Anhang A - Datenverträge, Skalen und Statuskonventionen",
+      "first_line": 5466,
+      "last_line": 5738,
+      "source_sha256": "050fa64aa44a35d6ffb8179dbb48989e916a519e25161769e0558732706516a5",
+      "rendered_sha256": "eacc3ae3839d03a5f1e6cff361ffa0c5949a5e320ea9cbe8aef901fd9b36d986",
+      "rendered_bytes": 11389
+    },
+    {
+      "path": "section-042.md",
+      "title": "Anhang B - Forschungsfragen und Hypothesen im Projektregister",
+      "first_line": 5739,
+      "last_line": 6132,
+      "source_sha256": "ad81ff106be0b1dc8449afb6ad8876f3f38cd18a6ef536fe968cf91dc8eb7a2a",
+      "rendered_sha256": "b0518d62dae11adc2e10d351965a8d40ab71583c29ef6a5d246929cd4a2de8c0",
+      "rendered_bytes": 22696
+    },
+    {
+      "path": "section-043.md",
+      "title": "Anhang C - Antworten auf die übergeordneten Forschungsfragen",
+      "first_line": 6133,
+      "last_line": 6334,
+      "source_sha256": "84b2f71eff48068ac2877adabcd602868a102c49dd2efb5781e038a2a8c2f594",
+      "rendered_sha256": "81b6978bbc7f3a83337330cbdc433eef693145ea49f14989e837cac6fb23a208",
+      "rendered_bytes": 9182
+    },
+    {
+      "path": "section-044.md",
+      "title": "Anhang D - Quellenkontrolle, Redaktion und KI-Unterstützung",
+      "first_line": 6335,
+      "last_line": 6412,
+      "source_sha256": "d6ec878a7fd5d01a0a63a0a8fec04f2ee534996f0a59733c141d63a038a27e7a",
+      "rendered_sha256": "79bbb1df5fab49e700a2b75337f0cbba86892f31980364d0911af0a032f657cd",
+      "rendered_bytes": 9421
+    },
+    {
+      "path": "section-045.md",
+      "title": "Anhang E - Literaturverzeichnis",
+      "first_line": 6413,
+      "last_line": 7043,
+      "source_sha256": "c07db88a31b5a09fbac05107224b1f3b8f2cc28e7bc1329438fe06b6559c7136",
+      "rendered_sha256": "94933abb063570d3597b0dfbc765ab9a96a26fc9c8a32500a8da672e44a9c5f1",
+      "rendered_bytes": 65139
+    }
+  ]
+}
