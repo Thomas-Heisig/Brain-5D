@@ -668,3 +668,5 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 ---
 
 *Insgesamt 48 offene Fragen.*
+
+> Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.
