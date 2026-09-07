@@ -16,11 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          fetch-tags: true
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
       - name: Install repository test toolchain
         run: python -m pip install -e '.[dev,docs]'
+      - name: Apply scoped corrections from actual checks
+        run: python .maintenance/refine_cognition.py
       - name: Import once, validate, and record actual scoped verification
         run: python .maintenance/cognition_ci.py
