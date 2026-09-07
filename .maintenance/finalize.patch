@@ -1,0 +1,427 @@
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index 889067f..b95d01c 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -31,14 +31,16 @@ repos:
+     rev: v5.0.0
+     hooks:
+       - id: trailing-whitespace
+-        exclude: ^(research/(experiments/|registry/evidence/|generated/data/)|docs/99-archive/)
++        exclude: ^(research/(experiments/|preregistrations/|publications/|registry/evidence/|generated/data/)|docs/99-archive/)
+         args: [--markdown-linebreak-ext=md]
+       - id: end-of-file-fixer
+         # Frozen experiment manifests are evidence artifacts and must not be
+         # byte-rewritten by an automatic formatting hook.
+-        exclude: ^research/(experiments/|registry/evidence/|generated/data/|generated/verification/)
++        exclude: ^research/(experiments/|preregistrations/|publications/|registry/evidence/|generated/data/|generated/verification/)
+       - id: check-merge-conflict
+       - id: check-yaml
+       - id: check-toml
+       - id: check-added-large-files
++        # Delivered publication sizes are enforced by the SHA-256 manifest test.
++        exclude: ^research/publications/
+         args: [--maxkb=500]
+diff --git a/README.md b/README.md
+index f2ba072..ca9d7a1 100644
+--- a/README.md
++++ b/README.md
+@@ -292,3 +292,10 @@ The dashboard binds to loopback by default. It exposes operator and file-managem
+ ## License
+ 
+ MIT License. See [LICENSE](LICENSE).
++
++## Consolidated scientific publication
++
++The complete [scientific treatment and companion files](research/publications/2026-09-07_ki-die-geliehene-intelligenz/README.md)
++are integrated under `research/publications/`. Their SHA-256 manifest is verified
++by the test suite; publication content is interpretation, not automatic EVID
++promotion. See the [main consolidation record](docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md).
+diff --git a/docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md b/docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md
+new file mode 100644
+index 0000000..2d353ab
+--- /dev/null
++++ b/docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md
+@@ -0,0 +1,37 @@
++# Main consolidation - 2026-09-07
++
++AI-assisted engineering record; not a human scientific review.
++
++The concurrent file-viewer work through `ff173aded229f5fe978048adf9eae75bda188ab0`
++is preserved, including archive/JSON rendering, Windows paths, navigation,
++BibTeX links and flowing Markdown prose.
++
++- `fix/footer-runtime-recovery-green-base` (`b242a96`) was already in main.
++- `fix/footer-runtime-responsiveness-ci` (`8b4f434`) was merged at `65b8026`.
++  Its behavior already exists in the newer canonical footer. Conflict resolution
++  retains single dispatch, MAX yield, mode feedback, current styles and the
++  duplicate-footer guard instead of restoring an obsolete second footer.
++- `integration/scientific-publication-20260907` (`c6b7b6d`) was merged via PR #24
++  at `b5c7740`. The complete publication contains 41 verified files plus its
++  original archive and repository integrity manifest.
++
++The central file renderer remains shared by the File Viewer and chat. Research
++publications are now discoverable and immutable through the file API. Their
++bytes are checked against the delivered SHA-256 manifest. Formatting hooks do
++not rewrite publications or frozen preregistrations.
++
++The prepared verification repair addresses XML DTD/entity attacks including
++UTF-16 input, install-metadata-induced false baseline changes, missing final
++newlines and incorrect wheel namespace/static-asset packaging. Verification
++must use the final source tree; a pending CI run is not a passed CI run.
++
++The maintenance workflow refreshes the real full-suite baseline and determinism
++artifacts, checks style/types/security/build, and dispatches complete CI including
++Playwright. Branch cleanup verifies ancestry and exact reviewed remote tips.
++Concurrent new work aborts deletion; main is never force-overwritten.
++
++Completed transport payloads and import automation are retired. Publication
++import instructions are preserved in `docs/99-archive/publication-import/`.
++Frozen DATA, preregistrations and evidence are unchanged. Human review,
++EVID promotion and remaining research TODOs remain explicitly open. A clean
++runner checkout does not assert that a user's local Windows tree is clean.
+diff --git a/docs/08-roadmap/TODO.md b/docs/08-roadmap/TODO.md
+index 7944caa..d1f992a 100644
+--- a/docs/08-roadmap/TODO.md
++++ b/docs/08-roadmap/TODO.md
+@@ -476,3 +476,14 @@ A milestone is not complete because a UI card is green. It is complete only when
+ - [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
+ - [ ] documentation records what was actually shown, not what was expected;
+ - [ ] dashboard visualization, catalog reachability or pipeline reachability is not substituted for experimental evidence.
++
++## 2026-09-07 Main consolidation
++
++- [x] Merge reviewed branches while preserving concurrent File Viewer development.
++- [x] Integrate the complete scientific publication and verify all 41 files plus archive.
++- [x] Expose publications through the shared research/file renderer without write access.
++- [x] Prepare source-bound verification, safe exact-tip branch cleanup and corrected packaging.
++
++See [the consolidation record](MAIN_CONSOLIDATION_2026-09-07.md). Technical CI
++and independent scientific review remain separate; existing open research
++items above are not closed by this maintenance operation.
+diff --git a/package.json b/package.json
+index 1ae0e48..cabea32 100644
+--- a/package.json
++++ b/package.json
+@@ -7,4 +7,4 @@
+   "devDependencies": {
+     "@playwright/test": "1.63.0"
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/pyproject.toml b/pyproject.toml
+index 66142bc..3dd35c8 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -32,6 +32,7 @@ classifiers = [
+   "Topic :: Scientific/Engineering :: Bio-Inspired Computing",
+ ]
+ dependencies = [
++  "defusedxml>=0.7.1",
+   "PyYAML>=6.0",
+   "matplotlib>=3.8",
+   "numpy>=1.26",
+@@ -62,6 +63,7 @@ dev = [
+   "pytest>=8.0",
+   "pytest-cov>=5.0",
+   "ruff==0.16.6",
++  "types-defusedxml>=0.7.0",
+   "types-PyYAML>=6.0",
+   "types-psutil>=7.0",
+ ]
+@@ -154,3 +156,12 @@ skips = ["B101", "B301", "B403", "B404", "B603", "B607"]
+ [tool.ruff.lint.per-file-ignores]
+ "tests/*" = ["S101", "S311", "ARG001", "ARG002"]
+ "scripts/*" = ["S101", "S311", "ARG001"]
++
++# src is the import namespace, not an implicit src-layout directory.
++[tool.setuptools.packages.find]
++where = ["."]
++include = ["src", "src.*"]
++namespaces = false
++
++[tool.setuptools.package-data]
++"src.dashboard" = ["static/*", "static/**/*"]
+diff --git a/requirements.txt b/requirements.txt
+index 5411a45..c93b2d9 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -11,6 +11,7 @@
+ # ============================================================================
+ 
+ # Core dependencies (from pyproject.toml [project])
++defusedxml>=0.7.1
+ PyYAML>=6.0
+ matplotlib>=3.8
+ numpy>=1.26
+diff --git a/research/generated/LITERATURE_MATRIX.md b/research/generated/LITERATURE_MATRIX.md
+index 158db35..5dd5d3c 100644
+--- a/research/generated/LITERATURE_MATRIX.md
++++ b/research/generated/LITERATURE_MATRIX.md
+@@ -14,4 +14,4 @@
+ | Barabási (1999) | Preferential attachment produces scale-free network degree distributions. | RQ-SNN-003 | open |
+ 
+ ---
+-*Automatisch generiert am 2026-09-07*
+\ No newline at end of file
++*Automatisch generiert am 2026-09-07*
+diff --git a/research/registry/catalog_audit_allow_list.yaml b/research/registry/catalog_audit_allow_list.yaml
+index b21a156..80d237a 100644
+--- a/research/registry/catalog_audit_allow_list.yaml
++++ b/research/registry/catalog_audit_allow_list.yaml
+@@ -41,4 +41,4 @@ test_fixtures:
+   H-BROWSER-001-A: "Browser test fixture."
+   H-EXTRA-E01-A: "Registry-fragment test fixture."
+   H-MISSING-001: "Catalog-audit negative test fixture."
+-  H-TEST-001-A: "Catalog-audit test fixture."
+\ No newline at end of file
++  H-TEST-001-A: "Catalog-audit test fixture."
+diff --git a/scripts/generate_baseline.py b/scripts/generate_baseline.py
+index f35418a..9f400a4 100644
+--- a/scripts/generate_baseline.py
++++ b/scripts/generate_baseline.py
+@@ -124,6 +124,7 @@ def main() -> int:
+         for path in sorted((REPO_ROOT / prefix).rglob("*"))
+         if path.is_file()
+         and "__pycache__" not in path.parts
++        and not any(part.endswith(".egg-info") for part in path.parts)
+         and path != BASELINE_PATH
+         and path.suffix not in {".pyc", ".pyo"}
+     }
+diff --git a/src/dashboard/file_rendering.py b/src/dashboard/file_rendering.py
+index fdb4190..b5482be 100644
+--- a/src/dashboard/file_rendering.py
++++ b/src/dashboard/file_rendering.py
+@@ -25,7 +25,9 @@ from http import HTTPStatus
+ from pathlib import Path, PurePosixPath
+ from typing import Any, cast
+ from urllib.parse import quote, unquote, urlparse
+-from xml.etree import ElementTree
++
++from defusedxml import ElementTree
++from defusedxml.common import DefusedXmlException
+ 
+ PREVIEW_BYTES = 256 * 1024
+ EDIT_BYTES = 1024 * 1024
+@@ -53,6 +55,7 @@ _PROTECTED_RESEARCH = frozenset(
+         "archive",
+         "registry",
+         "preregistrations",
++        "publications",
+         "protocols",
+         "schemas",
+         "workflows",
+@@ -198,7 +201,12 @@ class FilePreviewService:
+                     or b"<!ENTITY" in raw.upper()
+                 ):
+                     raise FileContractError("Unsafe or oversized document XML")
+-                tree = ElementTree.fromstring(raw)
++                try:
++                    tree = ElementTree.fromstring(
++                        raw, forbid_dtd=True, forbid_entities=True, forbid_external=True
++                    )
++                except DefusedXmlException as exc:
++                    raise FileContractError("Unsafe document XML") from exc
+                 lines.append(info.filename)
+                 for node in tree.iter():
+                     if node.tag.rsplit("}", 1)[-1] in {"t", "v", "f"} and node.text:
+@@ -341,11 +349,11 @@ class FilePreviewService:
+                     result["kind"] = (
+                         "markdown"
+                         if ext in {".md", ".markdown"}
+-                        else "formula"
+-                        if ext in FORMULA_EXTENSIONS
+-                        else "diagram"
+-                        if ext in DIAGRAM_FORMATS
+-                        else "text"
++                        else (
++                            "formula"
++                            if ext in FORMULA_EXTENSIONS
++                            else "diagram" if ext in DIAGRAM_FORMATS else "text"
++                        )
+                     )
+                     if ext in FORMULA_EXTENSIONS:
+                         result["formula_format"] = "latex"
+diff --git a/src/dashboard/research_source.py b/src/dashboard/research_source.py
+index b179ec3..cb75858 100644
+--- a/src/dashboard/research_source.py
++++ b/src/dashboard/research_source.py
+@@ -108,6 +108,7 @@ class ResearchSource:
+     _CATEGORIES: tuple[str, ...] = (
+         "registry",
+         "generated",
++        "publications",
+         "experiments",
+         "reports",
+         "analysis",
+diff --git a/src/dashboard/static/api-client.js b/src/dashboard/static/api-client.js
+index 6acc124..8e9e807 100644
+--- a/src/dashboard/static/api-client.js
++++ b/src/dashboard/static/api-client.js
+@@ -25,4 +25,4 @@ export async function readJson(response) {
+       `API returned non-JSON data (HTTP ${response.status}, ${contentType})`,
+     );
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/src/dashboard/static/dashboard-experience.css b/src/dashboard/static/dashboard-experience.css
+index 0734625..c86fffb 100644
+--- a/src/dashboard/static/dashboard-experience.css
++++ b/src/dashboard/static/dashboard-experience.css
+@@ -1116,4 +1116,4 @@ kbd {
+   .experience-ready .site-footer .footer-vitals.is-test-running .footer-vital:nth-child(2) b {
+     animation: none;
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/src/dashboard/verification.py b/src/dashboard/verification.py
+index 0d5b182..0fa6df5 100644
+--- a/src/dashboard/verification.py
++++ b/src/dashboard/verification.py
+@@ -149,7 +149,7 @@ def compute_source_tree_digest(
+                     if rel_path.endswith(_DIGEST_EXCLUDE_SUFFIXES):
+                         continue
+                     if any(
+-                        part in _DIGEST_EXCLUDE_DIRS
++                        part in _DIGEST_EXCLUDE_DIRS or part.endswith(".egg-info")
+                         for part in path.relative_to(repo_root).parts
+                     ):
+                         continue
+diff --git a/src/research/literature_registry.py b/src/research/literature_registry.py
+index 4971e2f..49d7208 100644
+--- a/src/research/literature_registry.py
++++ b/src/research/literature_registry.py
+@@ -70,5 +70,7 @@ class LiteratureRegistry:
+     def write_literature_matrix(self, path: Path | None = None) -> Path:
+         """Write the literature matrix to a markdown file."""
+         output = path or (REPO_ROOT / "research" / "generated" / "LITERATURE_MATRIX.md")
+-        output.write_text(self.generate_literature_matrix(), encoding="utf-8")
++        output.write_text(
++            self.generate_literature_matrix().rstrip() + "\n", encoding="utf-8"
++        )
+         return output
+diff --git a/tests/browser/dashboard.spec.js b/tests/browser/dashboard.spec.js
+index ea365f5..5e418c8 100644
+--- a/tests/browser/dashboard.spec.js
++++ b/tests/browser/dashboard.spec.js
+@@ -197,4 +197,4 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768
+     expect(metrics.footerWidth).toBeLessThanOrEqual(metrics.viewportWidth);
+     expect(metrics.footerVisible).toBe(true);
+   });
+-}
+\ No newline at end of file
++}
+diff --git a/tests/test_file_rendering.py b/tests/test_file_rendering.py
+index 7b3ceee..96ef66f 100644
+--- a/tests/test_file_rendering.py
++++ b/tests/test_file_rendering.py
+@@ -444,3 +444,28 @@ def test_remote_file_writes_require_explicit_authorization(
+         validate_file_write_access(request)
+     request.headers["Authorization"] = "Bearer explicit-test-credential"
+     validate_file_write_access(request)
++
++
++@pytest.mark.parametrize("encoding", ["utf-8", "utf-16", "utf-16-le", "utf-16-be"])
++@pytest.mark.parametrize(
++    ("extension", "member"),
++    [
++        ("docx", "word/document.xml"),
++        ("xlsx", "xl/worksheets/sheet1.xml"),
++        ("pptx", "ppt/slides/slide1.xml"),
++    ],
++)
++def test_encoded_office_dtd_is_rejected(
++    service: FilePreviewService, encoding: str, extension: str, member: str
++) -> None:
++    """UTF-16 must not bypass XML entity protection."""
++    path = service.roots["docs"] / f"encoded.{extension}"
++    xml = '<?xml version="1.0"?><!DOCTYPE x [<!ENTITY e "not-safe">]><x><t>&e;</t></x>'
++    with zipfile.ZipFile(path, "w") as archive:
++        archive.writestr(member, xml.encode(encoding))
++    original = path.read_bytes()
++    preview = service.preview("docs", path.name)
++    assert preview["kind"] == "binary"
++    assert preview["content"] == ""
++    assert "Unsafe" in preview["notice"]
++    assert path.read_bytes() == original
+diff --git a/tests/test_repository_hygiene.py b/tests/test_repository_hygiene.py
+new file mode 100644
+index 0000000..fd6687d
+--- /dev/null
++++ b/tests/test_repository_hygiene.py
+@@ -0,0 +1,73 @@
++"""Regression coverage for immutable publications and reproducible installs."""
++
++import hashlib
++import json
++import re
++import tomllib
++from pathlib import Path
++from typing import Any, cast
++
++import yaml
++
++from src.dashboard.file_rendering import file_is_read_only
++from src.dashboard.research_source import ResearchSource
++from src.dashboard.verification import compute_source_tree_digest
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def test_install_metadata_does_not_change_source_identity(tmp_path: Path) -> None:
++    source = tmp_path / "src"
++    source.mkdir()
++    module = source / "example.py"
++    module.write_text("value = 1\n")
++    before = compute_source_tree_digest(tmp_path)
++    assert before is not None
++    metadata = source / "brain5d_core.egg-info"
++    metadata.mkdir()
++    (metadata / "PKG-INFO").write_text("generated install metadata")
++    assert compute_source_tree_digest(tmp_path) == before
++    module.write_text("value = 2\n")
++    assert compute_source_tree_digest(tmp_path) != before
++
++
++def test_frozen_records_are_not_reformatted() -> None:
++    config = cast(
++        dict[str, Any], yaml.safe_load((ROOT / ".pre-commit-config.yaml").read_text())
++    )
++    hooks = {hook["id"]: hook for repo in config["repos"] for hook in repo["hooks"]}
++    for name in ("trailing-whitespace", "end-of-file-fixer"):
++        pattern = hooks[name]["exclude"]
++        assert re.search(pattern, "research/preregistrations/PREREG-SNN-001.json")
++        assert re.search(pattern, "research/publications/integrity.json")
++        assert not re.search(pattern, "src/dashboard/file_rendering.py")
++
++
++def test_wheel_preserves_import_namespace_and_assets() -> None:
++    config = tomllib.loads((ROOT / "pyproject.toml").read_text())
++    discovery = config["tool"]["setuptools"]["packages"]["find"]
++    assert discovery["where"] == ["."]
++    assert discovery["include"] == ["src", "src.*"]
++    assets = config["tool"]["setuptools"]["package-data"]["src.dashboard"]
++    assert "static/*" in assets and "static/**/*" in assets
++
++
++def test_complete_publication_is_byte_exact_and_discoverable() -> None:
++    root = ROOT / "research/publications"
++    manifest = json.loads((root / "integrity.json").read_text())
++    package = root / manifest["package"]
++    assert len(manifest["files"]) == manifest["file_count"] == 41
++    for item in manifest["files"]:
++        data = (package / item["path"]).read_bytes()
++        assert len(data) == item["size"], item["path"]
++        assert hashlib.sha256(data).hexdigest() == item["sha256"], item["path"]
++    item = manifest["archive"]
++    data = (root / item["path"]).read_bytes()
++    assert len(data) == item["size"]
++    assert hashlib.sha256(data).hexdigest() == item["sha256"]
++    docs = ResearchSource(ROOT / "research").list_documents()
++    assert any(d.path.endswith("wissenschaftliche_abhandlung.md") for d in docs)
++    assert file_is_read_only(
++        "research", "publications/" + manifest["package"] + "/literatur.bib"
++    )
++    assert manifest["automatic_evidence_promotion"] is False
