@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.embodiment import ConnectionManager
+import src.embodiment.system_sensor as system_sensor
 from src.embodiment.system_sensor import host_system_readings
 
 STATIC = Path("src/dashboard/static")
@@ -41,6 +44,30 @@ def test_host_snapshot_exposes_real_pc_resources_without_fallback_values() -> No
         readings["temperature_c"], float
     )
     assert readings["fan_rpm"] is None or isinstance(readings["fan_rpm"], float)
+
+
+def test_host_snapshot_handles_platform_missing_optional_sensors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        system_sensor.psutil, "sensors_temperatures", None, raising=False
+    )
+    monkeypatch.setattr(system_sensor.psutil, "sensors_fans", None, raising=False)
+
+    def unavailable_load_average() -> tuple[float, float, float]:
+        raise OSError("load average unavailable")
+
+    monkeypatch.setattr(
+        system_sensor.os, "getloadavg", unavailable_load_average, raising=False
+    )
+
+    readings = host_system_readings(8)
+
+    assert readings["temperatures"] == {}
+    assert readings["fans"] == {}
+    assert readings["temperature_c"] is None
+    assert readings["fan_rpm"] is None
+    assert readings["load_average"] is None
 
 
 def test_dynamic_self_model_is_real_data_driven_and_theme_safe() -> None:

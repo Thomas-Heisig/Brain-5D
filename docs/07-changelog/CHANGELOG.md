@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Real-body platform failure-path coverage
+
+- Added coverage for hosts without optional temperature, fan and load-average APIs.
+- Verified missing measurements remain `None` or empty instead of receiving fallback values.
+
 ## 2026-09-07 — Live telemetry propagation coverage
 
 - Added HTTP coverage for unavailable and stale live telemetry states.

@@ -337,7 +337,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Increase dashboard server routing/error-path coverage with invalid batch protocol response testing.
 - [x] Increase evidence-engine rejection/edge-path coverage with dirty-tree and source-freeze mismatch tests.
 - [x] Increase operator bridge and control-boundary coverage for unknown proposals and commands.
-- [ ] Increase real-body platform-specific failure-path coverage.
+- [x] Increase real-body platform-specific failure-path coverage for missing optional host APIs.
 - [x] Add integration tests for unknown/stale telemetry propagation across API → store → UI.
 - [ ] Add browser-level tests for dynamic sensor/actuator appearance/disappearance.
 - [ ] Add negative tests proving peripheral adapters cannot silently mutate canonical core/research state.

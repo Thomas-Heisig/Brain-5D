@@ -4,6 +4,10 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Real-body platform failure-path coverage
+
+- Added Windows-compatible regression coverage for absent optional `psutil` sensors and unavailable `os.getloadavg`, preserving explicit unknown values without fabricated readings.
+
 ## 2026-09-07 Live telemetry propagation coverage
 
 - Added HTTP integration coverage for unavailable telemetry (`503`) and stale frame metadata flowing from `TelemetryFrameStore` through `OperatorBridge` and the live projection API.
