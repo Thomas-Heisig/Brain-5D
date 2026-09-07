@@ -4,7 +4,7 @@
 
 - Refreshed the project and Hugging Face baseline documentation to the current `main` status.
 - Kept GitHub `main` canonical while publishing `HF_README.md` as the Hugging Face repository README.
-- Updated the optional mirror workflow to include Git LFS objects during synchronization.
+- Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
 
 ## 2026-09-07 — Repository catalog audit CI report
 

@@ -42,11 +42,15 @@ jobs:
           git remote add huggingface \
             "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
 
+          # Hugging Face rejects binary blobs in older Git history. Publish a
+          # fresh source snapshot so every current binary passes the LFS filter.
+          git switch --orphan hf-mirror
+          git read-tree --empty
           if [ -f HF_README.md ]; then
             cp HF_README.md README.md
-            git add README.md
-            git commit --allow-empty -m "Sync: Update HF README"
           fi
+          git add --all
+          git commit -m "Sync: mirror GitHub main"
 
-          git push huggingface main --force
-          git lfs push --all huggingface main
+          git push huggingface HEAD:main --force
+          git lfs push --all huggingface HEAD

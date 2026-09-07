@@ -8,7 +8,7 @@
 
 - [x] Refresh the current baseline in `README.md`, `docs/README.md` and `HF_README.md`.
 - [x] Document GitHub `main` as canonical and Hugging Face as the derived mirror.
-- [x] Configure the optional mirror workflow to publish Git LFS objects with the source tree.
+- [x] Configure the optional mirror workflow to publish a fresh LFS-normalized source snapshot.
 
 ## 2026-09-07 Chromium browser checks
 

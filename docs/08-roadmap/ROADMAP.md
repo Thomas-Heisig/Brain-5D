@@ -8,7 +8,7 @@
 
 - Refreshed the current baseline in the project, documentation and Hugging Face READMEs.
 - Kept GitHub `main` as the canonical source and documented the Hugging Face mirror as a derived publication target.
-- Updated the optional mirror workflow to include Git LFS objects when publishing the current source tree.
+- Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
 
 ## 2026-09-07 Full-stack dashboard E2E verification
 
