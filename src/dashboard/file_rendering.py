@@ -50,6 +50,7 @@ FORMULA_EXTENSIONS = frozenset({".tex", ".latex"})
 _PROTECTED_RESEARCH = frozenset(
     {
         "experiments",
+        "publications",
         "archive",
         "registry",
         "preregistrations",

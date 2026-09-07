@@ -98,7 +98,9 @@ def test_reader_detects_stale_or_missing_parts(tmp_path: Path) -> None:
     (snapshot / MASTER).write_text("# One\nBody.\n# Two\nEnd.\n", encoding="utf-8")
     assert build_reader(tmp_path) == 2
     assert build_reader(tmp_path, check=True) == 2
-    (tmp_path / PUBLICATIONS / "reader" / "section-001.md").write_text("changed", encoding="utf-8")
+    (tmp_path / PUBLICATIONS / "reader" / "section-001.md").write_text(
+        "changed", encoding="utf-8"
+    )
     with pytest.raises(ValueError, match="Stale"):
         build_reader(tmp_path, check=True)
 

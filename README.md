@@ -292,3 +292,9 @@ The dashboard binds to loopback by default. It exposes operator and file-managem
 ## License
 
 MIT License. See [LICENSE](LICENSE).
+
+## Wissenschaftliche Abhandlung und Publikationsarchiv
+
+[KI - Die geliehene Intelligenz: vollstaendige wissenschaftliche Abhandlung](research/publications/README.md)
+
+Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forschungsfragen, Hypothesen, Ergebnisdarstellungen, Originalmanuskripte und alle Begleitdateien. Die kapitelweise Lesefassung ist im zentralen File Viewer vollstaendig zugaenglich. Datierte Originale bleiben unveraendert und schreibgeschuetzt; kanonische Register und Evidenzfreigaben werden nicht ersetzt.

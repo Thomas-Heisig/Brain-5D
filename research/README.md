@@ -207,3 +207,9 @@ python scripts/verify_network_activity.py
 ```
 
 Technische Reports dürfen `implemented`, `integrated` oder `verified` tragen. `evidenced` ist ausschließlich für reproduzierbare, protokollierte und reviewte Forschungsergebnisse vorgesehen.
+
+## Wissenschaftliche Abhandlung und Publikationsarchiv
+
+[KI - Die geliehene Intelligenz: vollstaendige wissenschaftliche Abhandlung](publications/README.md)
+
+Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forschungsfragen, Hypothesen, Ergebnisdarstellungen, Originalmanuskripte und alle Begleitdateien. Die kapitelweise Lesefassung ist im zentralen File Viewer vollstaendig zugaenglich. Datierte Originale bleiben unveraendert und schreibgeschuetzt; kanonische Register und Evidenzfreigaben werden nicht ersetzt.
