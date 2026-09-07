@@ -8,6 +8,7 @@ import yaml
 
 from src.research.experiment_suite import (
     run_learning_repeat,
+    run_5d,
     run_ping,
     run_ping_v2,
     run_regulation,
@@ -49,6 +50,19 @@ def test_temporal_runner_keeps_explicit_unknown_metrics() -> None:
     assert runs[0].metrics["novelty"] == "not_registered"
     assert runs[0].metrics["prediction_error"] == "not_available"
     assert runs[0].metrics["comparisons"]
+
+
+def test_5d_runner_includes_deterministic_dimension_shuffled_control() -> None:
+    first = run_5d(_config(), seeds=(42,), ticks=2)
+    second = run_5d(_config(), seeds=(42,), ticks=2)
+
+    shuffled = next(run for run in first if run.condition == "5d_shuffled")
+    baseline = next(run for run in first if run.condition == "5d")
+    assert shuffled == next(run for run in second if run.condition == "5d_shuffled")
+    assert shuffled.metrics["dimensions"] == [2, 2, 2, 2, 2]
+    assert shuffled.metrics["control"] == "dimension_shuffled"
+    assert baseline.metrics["control"] == "matched_embedding"
+    assert shuffled.state_digest_before != baseline.state_digest_before
 
 
 def test_regulation_runner_is_reproducible_and_fail_closed() -> None:

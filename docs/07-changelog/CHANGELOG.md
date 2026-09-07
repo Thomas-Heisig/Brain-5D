@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Dimension-shuffled 5D control
+
+- Added the reproducible topology-matched `5d_shuffled` ablation arm.
+- Recorded explicit control metadata for the unchanged dimensions and permuted coordinate embedding.
+
 ## 2026-09-07 — Epistemic layer separation in workflows
 
 - Added explicit UI state, DATA, EVID and interpretation fields to experiment workflow artifacts and reports.

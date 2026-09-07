@@ -68,6 +68,7 @@ def _network(
     recurrence: bool = False,
     dimensions: Coord5D = (3, 1, 1, 1, 1),
     random_graph: bool = False,
+    coordinate_shuffle: bool = False,
 ) -> NeuralNetwork:
     impulse_weight = 100.0
     impulse_synapse_config = SynapseConfig(w_max=impulse_weight)
@@ -85,11 +86,13 @@ def _network(
         relay = (0, 1, 0, 0, 0)
     else:
         relay = (0, 0, 1, 0, 0)
-    coordinates: tuple[Coord5D, Coord5D, Coord5D] = (
+    coordinates: list[Coord5D] = [
         (0, 0, 0, 0, 0),
         relay,
         cast(Coord5D, tuple(size - 1 for size in dimensions)),
-    )
+    ]
+    if coordinate_shuffle:
+        random.Random(seed ^ 0x5D5D5D).shuffle(coordinates)
     neurons: list[int] = []
     for coord in coordinates:
         existing = network.get_neuron_at_coord(coord)
@@ -407,13 +410,18 @@ def run_5d(
         "2d": (2, 2, 1, 1, 1),
         "3d": (2, 2, 2, 1, 1),
         "5d": (2, 2, 2, 2, 2),
+        "5d_shuffled": (2, 2, 2, 2, 2),
         "random_graph": (2, 2, 2, 2, 2),
     }
     runs: list[ScientificRun] = []
     for seed in seeds:
         for condition, shape in dimensions.items():
             network = _network(
-                config, seed, dimensions=shape, random_graph=condition == "random_graph"
+                config,
+                seed,
+                dimensions=shape,
+                random_graph=condition == "random_graph",
+                coordinate_shuffle=condition == "5d_shuffled",
             )
             before = _digest(network)
             signature = NetworkImpulseProbe(
@@ -430,6 +438,11 @@ def run_5d(
                     seed,
                     {
                         "dimensions": list(shape),
+                        "control": (
+                            "dimension_shuffled"
+                            if condition == "5d_shuffled"
+                            else "matched_embedding"
+                        ),
                         "ticks_requested": ticks,
                         **signature.to_dict(),
                     },

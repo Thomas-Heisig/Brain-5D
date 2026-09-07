@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dimension-shuffled 5D control
+
+- Added a deterministic `5d_shuffled` control arm that preserves dimensions, graph topology, seed and tick contract while permuting the three-node coordinate embedding.
+- Exposed control classification in run metrics without treating the shuffled embedding as productive N-D core support.
+
 ## 2026-09-07 Epistemic layer separation in workflows
 
 - Added a shared machine-readable `epistemic_layers` contract to workflow JSON, manifests and API results.
