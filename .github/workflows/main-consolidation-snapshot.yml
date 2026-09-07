@@ -1,0 +1,39 @@
+name: Snapshot consolidated main
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/main-consolidation-snapshot.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - name: Remove already merged exact publication tip
+        run: |
+          ref=refs/heads/fix/publication-research-integration-20260907
+          expected=cbc7f78850ad22d6ea2b0eb1405c09b851f98f3d
+          current="$(git ls-remote --heads origin "$ref" | cut -f1)"
+          if test -n "$current"; then
+            test "$current" = "$expected"
+            git merge-base --is-ancestor "$expected" HEAD
+            git push "--force-with-lease=$ref:$expected" origin ":$ref"
+          fi
+      - name: Export current source and history without credentials
+        run: |
+          mkdir -p "$RUNNER_TEMP/current-main"
+          git bundle create "$RUNNER_TEMP/current-main/repository.bundle" --all
+          git rev-parse HEAD > "$RUNNER_TEMP/current-main/HEAD.txt"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: current-main
+          path: ${{ runner.temp }}/current-main/
+          retention-days: 3
