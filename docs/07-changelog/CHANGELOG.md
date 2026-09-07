@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Operator bridge control-boundary coverage
+
+- Added direct tests for unknown structural proposals and unknown runtime commands.
+- Verified rejected inputs do not mutate structural decision or history state.
+
 ## 2026-09-07 — Dashboard batch error-path coverage
 
 - Added HTTP coverage for invalid batch protocols and their structured `400` JSON response.

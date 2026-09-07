@@ -87,3 +87,29 @@ def test_bridge_applies_approved_proposal_and_exposes_history(tmp_path: Path) ->
     assert result.ok
     assert bridge.structural_history(10)[0]["proposal_id"] == "p1"
     assert coordinator.decisions()[-1].accepted
+
+
+def test_bridge_rejects_unknown_proposal_without_recording_decision(
+    tmp_path: Path,
+) -> None:
+    coordinator = SelfOrganizationCoordinator()
+    plasticity = StructuralPlasticityEngine(
+        Manipulator(),
+        journal=StructuralJournal(tmp_path / "structural.journal"),
+    )
+    bridge = OperatorBridge(RuntimeController(Network()), coordinator, plasticity)
+
+    result = bridge.approve_structural("missing")
+
+    assert not result.ok
+    assert result.message == "proposal not found: missing"
+    assert coordinator.decisions() == ()
+    assert bridge.structural_history(10) == []
+
+
+def test_bridge_returns_error_for_unknown_controller_command() -> None:
+    bridge = OperatorBridge(RuntimeController(Network()))
+
+    result = bridge.command("missing")
+
+    assert result == {"ok": False, "error": "unknown command: missing"}

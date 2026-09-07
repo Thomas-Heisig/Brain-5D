@@ -4,6 +4,10 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Operator bridge control-boundary coverage
+
+- Added regression coverage proving unknown structural proposals do not create decisions or history records and unknown runtime commands return explicit errors.
+
 ## 2026-09-07 Dashboard batch error-path coverage
 
 - Added an HTTP regression test proving invalid batch protocols return a structured `400` JSON response.
