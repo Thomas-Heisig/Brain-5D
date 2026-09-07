@@ -1,0 +1,70 @@
+{
+  "schema_version": "cognition-draft-1.0",
+  "protocol_id": "cog_epi_102_v1",
+  "research_question": "RQ-EPI-102",
+  "hypothesis": "H-EPI-102-A",
+  "status": "DRAFT_NOT_PREREGISTERED",
+  "mode": "CONCEPTUAL_OR_NORMATIVE",
+  "primary_outcome": "Explicit premises, counterexamples, evidence scope and residual uncertainty per claim",
+  "control_conditions": [
+    "alternative interpretation",
+    "unsupported acclaim",
+    "unsupported dismissal"
+  ],
+  "experimental_unit": "argument_or_audit_case",
+  "seed_strategy": {
+    "network_seed": "separate",
+    "stimulus_seed": "separate_and_hidden_from_agent",
+    "resampling_seed": "separate",
+    "independent_n": null
+  },
+  "sample_size_justification": "REQUIRED_BEFORE_NATIVE_RUN; pilot and precision/power plan must be separate from confirmatory data",
+  "minimum_relevant_effect": null,
+  "time_contract": {
+    "dt_ms": null,
+    "tick_vs_walltime": "separate",
+    "latency_window": "freeze_before_data"
+  },
+  "inclusion": [
+    "all_scheduled_trials_with_predeclared_denominator",
+    "verified_source_and_data_provenance"
+  ],
+  "exclusion": [
+    "only_predeclared_technical_failures; retain exclusion log",
+    "never_exclude_errors_to_improve_accuracy"
+  ],
+  "analysis_plan": {
+    "primary_contrast": "Explicit premises, counterexamples, evidence scope and residual uncertainty per claim",
+    "multiplicity": "freeze_family_and_correction_before_run",
+    "uncertainty": "respect_network_subject_and_task_clusters",
+    "equivalence": "prespecify_bounds; nonsignificance_is_not_equivalence",
+    "conclusions": [
+      "supports_scoped_function",
+      "refutes_scoped_function",
+      "inconclusive"
+    ]
+  },
+  "stopping_rule": "freeze_maximum_budget_before_run; immediate_safety_stop_and_ethics_hold_override_scientific_schedule",
+  "blinding": [
+    "private_answer_key",
+    "no_future_stimulus_leak",
+    "frozen_readout_and_holdout"
+  ],
+  "replication": {
+    "independent_team": null,
+    "data": null,
+    "review": "NOT_PERFORMED"
+  },
+  "ethics_policy": "ethics/AI_WELFARE_POLICY.md",
+  "freeze": {
+    "status": "DRAFT",
+    "frozen_at": null,
+    "human_review_required": true
+  },
+  "authority": "prospective_protocol_not_evidence",
+  "native_adapter_validated": false,
+  "execution_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+  "consciousness_inference": "not_established",
+  "human_review_status": "NOT_PERFORMED",
+  "ethics_approval_status": "NOT_GRANTED"
+}

@@ -1,3 +1,5 @@
+[Inhaltsübersicht](README.md) | [Zurück](section-051.md) | [Weiter](section-053.md)
+
 <a id="b5d-anhang-l-standardisierte-paradigmen"></a>
 # Anhang L – Von etablierten Paradigmen zu überprüfbaren Softwareexperimenten
 
@@ -36,3 +38,6 @@ Der entscheidende nächste technische Schritt ist jeweils der native Adapter: Er
 Ein positiver Befund stützt zunächst genau den registrierten Funktionskontrast unter seinen Bedingungen. Unabhängige Replikation, neue Aufgaben, andere Größenordnungen und relevante Ablationen können seinen Geltungsbereich erweitern. Ein negativer Befund kann eine konkrete Hypothese begrenzen, muss aber bei unzureichender Präzision unentschieden bleiben. Beide Resultate sind wissenschaftlich verwertbar, sofern ihre Schlussregeln angemessen sind.
 
 Die behauptete Gleichheit mit Menschen oder Tieren wird nicht aus einem fehlenden signifikanten Unterschied abgeleitet. Ein Äquivalenzanspruch benötigt vorab begründete Grenzen und passende Messgrößen. Selbst eine belastbare funktionale Äquivalenz beantwortet nicht allein die Frage nach gleicher subjektiver Erlebnisqualität.
+
+
+[Inhaltsübersicht](README.md) | [Zurück](section-051.md) | [Weiter](section-053.md)

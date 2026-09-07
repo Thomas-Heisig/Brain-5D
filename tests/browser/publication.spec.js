@@ -12,6 +12,8 @@ for (const port of [4174, 4175]) {
     await page.getByRole('button', { name: 'Abhandlung lesen', exact: true }).click();
     const viewer = page.locator('#fm-viewer');
     await expect(viewer).toHaveAttribute('data-render-state', 'ready');
+    await expect(viewer).toContainText('Aktuelle Fassung 1.2');
+    await viewer.getByRole('button', { name: 'Historische Lesefassung 1.0', exact: true }).click();
     await expect(viewer).toContainText('vollstaendige Lesefassung');
     await expect(page.locator('.fm-source-btn[data-source="research"]')).toHaveClass(/active/);
     await expect(viewer.getByRole('button', { name: 'Bearbeiten', exact: true })).toHaveCount(0);

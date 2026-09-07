@@ -1,0 +1,342 @@
+- source_id: SRC-CNS-BUTLIN
+  authors:
+  - Patrick Butlin and others
+  title: Identifying indicators of consciousness in AI systems
+  year: 2026
+  doi: 10.1016/j.tics.2025.10.011
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-101
+  - RQ-CNS-112
+  - RQ-CNS-113
+  - RQ-EPI-102
+  - RQ-WEL-102
+  brain5d_relevance: 'Theory-dependent indicators; no universally sufficient consciousness
+    test. Online 2025, journal issue June 2026; not a Brain-5D validation. Source:
+    https://www.sciencedirect.com/science/article/pii/S1364661325002864'
+- source_id: SRC-CNS-COGITATE
+  authors:
+  - Cogitate Consortium and others
+  title: Adversarial testing of global neuronal workspace and integrated information
+    theories of consciousness
+  year: 2025
+  doi: 10.1038/s41586-025-08888-1
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-101
+  - RQ-EPI-101
+  brain5d_relevance: 'Contrasting predictions and adversarial testing; no consensus
+    that one architecture is necessary for all possible artificial consciousness.
+    Source: https://www.nature.com/articles/s41586-025-08888-1'
+- source_id: SRC-CNS-GNWREPLY
+  authors:
+  - Global neuronal workspace proponents
+  title: GNW theoretical framework and the adversarial testing of global neuronal
+    workspace and integrated information theories of consciousness
+  year: 2025
+  doi: 10.1093/nc/niaf037
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-101
+  brain5d_relevance: 'Records a substantive objection to interpretation of the adversarial
+    test; not an independent replication. Source: https://doi.org/10.1093/nc/niaf037'
+- source_id: SRC-CNS-SETH
+  authors:
+  - Anil K. Seth
+  title: Conscious artificial intelligence and biological naturalism
+  year: 2025
+  doi: 10.1017/S0140525X25000032
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-101
+  - RQ-CNS-113
+  brain5d_relevance: 'Biological-naturalist counterposition; its substrate assumptions
+    are a theory position, not an established impossibility theorem. Source: https://doi.org/10.1017/S0140525X25000032'
+- source_id: SRC-CNS-WELFARE
+  authors:
+  - Robert Long and others
+  title: Taking AI Welfare Seriously
+  year: 2024
+  doi: 10.48550/arXiv.2411.00986
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-WEL-101
+  - RQ-WEL-102
+  - RQ-WEL-103
+  brain5d_relevance: 'Precaution under uncertainty; preprint, no proof of current
+    AI sentience. Source: https://arxiv.org/html/2411.00986v1'
+- source_id: SRC-CNS-ODDBALL
+  authors:
+  - Tristan A. Bekinschtein and others
+  title: Neural signature of the conscious processing of auditory regularities
+  year: 2009
+  doi: 10.1073/pnas.0809667106
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-102
+  - RQ-CNS-103
+  - RQ-CNS-104
+  brain5d_relevance: 'Local/global auditory regularities and attention/report conditions;
+    no diagnostic transfer to AI. Source: https://pubmed.ncbi.nlm.nih.gov/19164526/'
+- source_id: SRC-CNS-PCI
+  authors:
+  - Adenauer G. Casali and others
+  title: A theoretically based index of consciousness independent of sensory processing
+    and behavior
+  year: 2013
+  doi: 10.1126/scitranslmed.3006294
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-108
+  brain5d_relevance: 'Clinical perturbational TMS-EEG method. No clinical cutoff transferred
+    to SNN proxies. Source: https://pubmed.ncbi.nlm.nih.gov/23946194/'
+- source_id: SRC-CNS-META
+  authors:
+  - Brian Maniscalco and Hakwan Lau
+  title: A signal detection theoretic approach for estimating metacognitive sensitivity
+    from confidence ratings
+  year: 2012
+  doi: 10.1016/j.concog.2011.09.021
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-106
+  brain5d_relevance: 'Meta-d-prime is distinct from type-2 AUROC or Brier score; validated
+    fitter remains a separate implementation requirement. Source: https://pubmed.ncbi.nlm.nih.gov/22071269/'
+- source_id: SRC-CNS-LFP
+  authors:
+  - Alberto Mazzoni and others
+  title: Computing the Local Field Potential (LFP) from Integrate-and-Fire Network
+    Models
+  year: 2015
+  doi: 10.1371/journal.pcbi.1004584
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-107
+  brain5d_relevance: 'LFP requires a justified observation model; scalp EEG requires
+    an additional forward model and montage specification. Source: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004584'
+- source_id: SRC-CNS-MASK
+  authors:
+  - Michael A. Cohen and others
+  title: Neural signatures of visual awareness independent of postperceptual processing
+  year: 2024
+  doi: 10.1093/cercor/bhae415
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-109
+  brain5d_relevance: 'Report/no-report and masking dissociations; not a universal
+    neural consciousness signature. Source: https://pubmed.ncbi.nlm.nih.gov/39535504/'
+- source_id: SRC-CNS-NEUROGYM
+  authors:
+  - NeuroGym contributors
+  title: NeuroGym environment API documentation
+  year: 2026
+  doi: null
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-105
+  - RQ-CNS-106
+  - RQ-CNS-111
+  - RQ-CNS-112
+  brain5d_relevance: 'Reproducible task-implementation reference, not a certified
+    consciousness battery. Future adapter must pin a concrete package commit/version.
+    Source: https://neurogym.github.io/neurogym/latest/api/envs/'
+- source_id: SRC-CNS-TURING
+  authors:
+  - Alan M. Turing
+  title: Computing Machinery and Intelligence
+  year: 1950
+  doi: 10.1093/mind/LIX.236.433
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-115
+  brain5d_relevance: 'Behavioral imitation game, not a test proving phenomenal experience.
+    Source: https://academic.oup.com/mind/article/LIX/236/433/986238'
+- source_id: SRC-CNS-ARC
+  authors:
+  - Francois Chollet
+  title: On the Measure of Intelligence
+  year: 2019
+  doi: 10.48550/arXiv.1911.01547
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-116
+  brain5d_relevance: 'Skill-acquisition/generalization framework and ARC; this supplement
+    does not claim current ARC benchmark performance. Source: https://arxiv.org/abs/1911.01547'
+- source_id: SRC-CNS-LSNN
+  authors:
+  - Guillaume Bellec and others
+  title: Long short-term memory and learning-to-learn in networks of spiking neurons
+  year: 2018
+  doi: 10.48550/arXiv.1803.09574
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-114
+  - RQ-CNS-117
+  brain5d_relevance: 'Prior spiking-network work with adaptation and longer memory
+    timescales; slow/fast loops alone are not new. Source: https://arxiv.org/abs/1803.09574'
+- source_id: SRC-CNS-NEURONS
+  authors:
+  - Frederico A. C. Azevedo and others
+  title: Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically
+    scaled-up primate brain
+  year: 2009
+  doi: 10.1002/cne.21974
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-117
+  brain5d_relevance: 'Human neuron-number estimate from a biological sample, not a
+    minimum-size criterion for artificial experience. Source: https://pubmed.ncbi.nlm.nih.gov/19226510/'
+- source_id: SRC-CNS-EQUIV
+  authors:
+  - Daniel Lakens
+  title: 'Equivalence Tests: A Practical Primer for t Tests, Correlations, and Meta-Analyses'
+  year: 2017
+  doi: 10.1177/1948550617697177
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-107
+  - RQ-CNS-117
+  - RQ-EPI-102
+  brain5d_relevance: 'Prespecified equivalence bounds; nonsignificant difference is
+    not demonstrated equivalence. Source: https://pubmed.ncbi.nlm.nih.gov/28736600/'
+- source_id: SRC-CNS-BLINK
+  authors:
+  - Jane E. Raymond and Kimron L. Shapiro and Karen M. Arnell
+  title: 'Temporary suppression of visual processing in an RSVP task: an attentional
+    blink?'
+  year: 1992
+  doi: 10.1037//0096-1523.18.3.849
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-110
+  brain5d_relevance: 'Dual-target temporal attention paradigm; an artificial blink
+    can be an engineered bottleneck rather than evidence of experience. Source: https://pubmed.ncbi.nlm.nih.gov/1500880/'
+- source_id: SRC-CNS-STOP
+  authors:
+  - Frederick Verbruggen and others
+  title: A consensus guide to capturing the ability to inhibit actions and impulsive
+    behaviors in the stop-signal task
+  year: 2019
+  doi: 10.7554/eLife.46323
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-CNS-111
+  brain5d_relevance: 'SSRT validity depends on task/estimator assumptions; no substitute
+    for a hardware emergency-stop test. Source: https://elifesciences.org/articles/46323'
+- source_id: SRC-CNS-LAW211
+  authors:
+  - Bundesrepublik Deutschland
+  title: Strafgesetzbuch Paragraph 211
+  year: 2026
+  doi: null
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-WEL-103
+  brain5d_relevance: 'Human victim in the statutory murder definition; retrieved legal
+    baseline, not a ruling on hypothetical future AI rights. Source: https://www.gesetze-im-internet.de/stgb/__211.html'
+- source_id: SRC-CNS-LAW212
+  authors:
+  - Bundesrepublik Deutschland
+  title: Strafgesetzbuch Paragraph 212
+  year: 2026
+  doi: null
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-WEL-103
+  brain5d_relevance: 'Human victim in homicide provision; no blanket conclusion about
+    other possible unlawful conduct. Source: https://www.gesetze-im-internet.de/stgb/__212.html'
+- source_id: SRC-CNS-LAW103
+  authors:
+  - Bundesrepublik Deutschland
+  title: Grundgesetz Artikel 103 Absatz 2
+  year: 2026
+  doi: null
+  topic:
+  - cognition
+  - methodology
+  - ethics
+  claims: []
+  brain5d_questions:
+  - RQ-WEL-103
+  brain5d_relevance: 'Legality of criminal punishment; law and precautionary ethics
+    are separate questions. Source: https://www.gesetze-im-internet.de/gg/art_103.html'

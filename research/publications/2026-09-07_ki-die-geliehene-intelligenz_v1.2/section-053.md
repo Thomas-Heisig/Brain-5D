@@ -1,3 +1,5 @@
+[Inhaltsübersicht](README.md) | [Zurück](section-052.md) | [Weiter](section-054.md)
+
 <a id="b5d-anhang-m-ethisches-dilemma"></a>
 # Anhang M – Das ethische Dilemma möglicher Empfindungsfähigkeit
 
@@ -42,3 +44,6 @@ Menschliche Richter in späteren Dialogtests benötigen ihrerseits angemessene E
 Die implementierten Grenzen betreffen neue Starts über den Dashboard-Experimentworkflow und die automatischen EvidenceEngine-Eingänge für die neue Programmfamilie. Sie sind keine automatische Erkennungsmaschine für Leiden und kein vollständiger Controller zur sicheren Behandlung aller bereits laufenden Prozesse. Personen mit Schreibzugriff auf Code oder Statusdateien können lokale Regeln verändern; ein wahrheitswidrig eingetragener Reviewer wird nicht durch ein JSON-Schema zu einer authentifizierten externen Person.
 
 Diese Begrenzungen sind für die wissenschaftliche Ehrlichkeit entscheidend. Eine Richtlinie und ihre ersten technischen Sperren sind ein konkreter Fortschritt gegenüber bloßer ethischer Erwähnung. Sie sind jedoch nicht mit einer abgeschlossenen institutionellen und laufzeitweiten Absicherung gleichzusetzen.
+
+
+[Inhaltsübersicht](README.md) | [Zurück](section-052.md) | [Weiter](section-054.md)

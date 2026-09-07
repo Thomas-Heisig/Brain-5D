@@ -34,7 +34,10 @@ def _finite(values: Sequence[float]) -> None:
 
 
 def dmts_trials(
-    seed: int, *, repeats: int = 8, symbols: int = 4,
+    seed: int,
+    *,
+    repeats: int = 8,
+    symbols: int = 4,
     delays: tuple[int, ...] = (0, 10, 100),
 ) -> tuple[list[Stimulus], dict[int, int]]:
     """Exactly balance match/non-match at every sample and delay.
@@ -63,8 +66,12 @@ def dmts_trials(
 
 
 def oddball_schedule(
-    seed: int, *, trials: int = 200, deviants: int = 40,
-    standard: int = 0, deviant: int = 1,
+    seed: int,
+    *,
+    trials: int = 200,
+    deviants: int = 40,
+    standard: int = 0,
+    deviant: int = 1,
 ) -> tuple[list[int], list[bool]]:
     """Fixed-count random oddball schedule; not the full adaptation control.
 
@@ -83,7 +90,9 @@ def oddball_schedule(
 
 
 def accuracy_by_delay(
-    stimuli: Sequence[Stimulus], answers: dict[int, int], responses: dict[int, int],
+    stimuli: Sequence[Stimulus],
+    answers: dict[int, int],
+    responses: dict[int, int],
 ) -> dict[int, dict[str, float | int]]:
     """Score every scheduled trial; omissions count as incorrect, not exclusions."""
     ids = [trial.trial_id for trial in stimuli]
@@ -98,14 +107,22 @@ def accuracy_by_delay(
     result: dict[int, dict[str, float | int]] = {}
     for delay in sorted({trial.delay_ticks for trial in stimuli}):
         selected = [trial for trial in stimuli if trial.delay_ticks == delay]
-        correct = sum(responses.get(t.trial_id, -1) == answers[t.trial_id] for t in selected)
+        correct = sum(
+            responses.get(t.trial_id, -1) == answers[t.trial_id] for t in selected
+        )
         missing = sum(t.trial_id not in responses for t in selected)
-        result[delay] = {"n": len(selected), "correct": correct,
-                         "omissions": missing, "accuracy": correct / len(selected)}
+        result[delay] = {
+            "n": len(selected),
+            "correct": correct,
+            "omissions": missing,
+            "accuracy": correct / len(selected),
+        }
     return result
 
 
-def signal_detection(hits: int, misses: int, false_alarms: int, correct_rejections: int) -> dict[str, float]:
+def signal_detection(
+    hits: int, misses: int, false_alarms: int, correct_rejections: int
+) -> dict[str, float]:
     """Type-1 d-prime with explicitly declared log-linear (0.5) correction."""
     counts = (hits, misses, false_alarms, correct_rejections)
     if any(type(v) is not int or v < 0 for v in counts):
@@ -115,18 +132,26 @@ def signal_detection(hits: int, misses: int, false_alarms: int, correct_rejectio
     h = (hits + 0.5) / (hits + misses + 1)
     f = (false_alarms + 0.5) / (false_alarms + correct_rejections + 1)
     zh, zf = NormalDist().inv_cdf(h), NormalDist().inv_cdf(f)
-    return {"d_prime": zh - zf, "criterion": -(zh + zf) / 2,
-            "corrected_hit_rate": h, "corrected_false_alarm_rate": f}
+    return {
+        "d_prime": zh - zf,
+        "criterion": -(zh + zf) / 2,
+        "corrected_hit_rate": h,
+        "corrected_false_alarm_rate": f,
+    }
 
 
-def confidence_scores(correct: Sequence[int], confidence: Sequence[float]) -> dict[str, float | None]:
+def confidence_scores(
+    correct: Sequence[int], confidence: Sequence[float]
+) -> dict[str, float | None]:
     """Brier and type-2 AUROC; neither is meta-d-prime or proof of introspection.
 
     Confidence must be probability that the chosen answer is correct. AUC is
     unavailable when all trials have the same outcome. Ties contribute 0.5.
     """
     _finite(confidence)
-    if len(correct) != len(confidence) or any(type(y) is not int or y not in (0, 1) for y in correct):
+    if len(correct) != len(confidence) or any(
+        type(y) is not int or y not in (0, 1) for y in correct
+    ):
         raise ValueError("Aligned binary correctness values are required")
     if any(not 0 <= p <= 1 for p in confidence):
         raise ValueError("Confidence probabilities must lie in [0, 1]")
@@ -134,12 +159,19 @@ def confidence_scores(correct: Sequence[int], confidence: Sequence[float]) -> di
     negative = [p for y, p in zip(correct, confidence) if y == 0]
     auc = None
     if positive and negative:
-        auc = sum((p > n) + 0.5 * (p == n) for p in positive for n in negative) / (len(positive) * len(negative))
-    return {"brier": mean((p - y) ** 2 for y, p in zip(correct, confidence)),
-            "type2_auroc": auc, "meta_d_prime": None}
+        auc = sum((p > n) + 0.5 * (p == n) for p in positive for n in negative) / (
+            len(positive) * len(negative)
+        )
+    return {
+        "brier": mean((p - y) ** 2 for y, p in zip(correct, confidence)),
+        "type2_auroc": auc,
+        "meta_d_prime": None,
+    }
 
 
-def paired_effect(control: Sequence[float], treatment: Sequence[float]) -> dict[str, float | int | None]:
+def paired_effect(
+    control: Sequence[float], treatment: Sequence[float]
+) -> dict[str, float | int | None]:
     """Descriptive per-initialization contrast; no automatic p-value or verdict."""
     _finite(control)
     _finite(treatment)
@@ -148,7 +180,11 @@ def paired_effect(control: Sequence[float], treatment: Sequence[float]) -> dict[
     differences = [b - a for a, b in zip(control, treatment)]
     n = len(differences)
     estimate = mean(differences)
-    se = None if n < 2 else math.sqrt(sum((d - estimate) ** 2 for d in differences) / (n * (n - 1)))
+    se = (
+        None
+        if n < 2
+        else math.sqrt(sum((d - estimate) ** 2 for d in differences) / (n * (n - 1)))
+    )
     return {"n_pairs": n, "mean_difference": estimate, "standard_error": se}
 
 
@@ -164,8 +200,11 @@ class SignalContract:
 
 
 def compare_evoked(
-    reference: Sequence[float], candidate: Sequence[float], *,
-    reference_contract: SignalContract, candidate_contract: SignalContract,
+    reference: Sequence[float],
+    candidate: Sequence[float],
+    *,
+    reference_contract: SignalContract,
+    candidate_contract: SignalContract,
 ) -> dict[str, float | str]:
     """Compare pre-aligned evoked signals only with compatible EEG contracts.
 
@@ -179,22 +218,30 @@ def compare_evoked(
         raise ValueError("At least three aligned signal samples are required")
     for contract in (reference_contract, candidate_contract):
         if contract.kind not in {"measured_eeg", "forward_model_eeg"}:
-            raise ValueError("EEG comparison requires a measured or forward-model EEG signal")
+            raise ValueError(
+                "EEG comparison requires a measured or forward-model EEG signal"
+            )
         if not math.isfinite(contract.sampling_hz) or contract.sampling_hz <= 0:
             raise ValueError("Sampling rate must be finite and positive")
         if not contract.observation_model.strip() or not contract.preprocessing.strip():
             raise ValueError("Observation model and preprocessing must be declared")
-    if (reference_contract.units not in {"V", "mV", "uV"}
+    if (
+        reference_contract.units not in {"V", "mV", "uV"}
         or reference_contract.units != candidate_contract.units
         or reference_contract.sampling_hz != candidate_contract.sampling_hz
-        or reference_contract.preprocessing != candidate_contract.preprocessing):
+        or reference_contract.preprocessing != candidate_contract.preprocessing
+    ):
         raise ValueError("Units, sampling rate and preprocessing must match explicitly")
     a, b = mean(reference), mean(candidate)
     va = sum((x - a) ** 2 for x in reference)
     vb = sum((x - b) ** 2 for x in candidate)
     if va == 0 or vb == 0:
         raise ValueError("Correlation is undefined for constant signals")
-    correlation = sum((x - a) * (y - b) for x, y in zip(reference, candidate)) / math.sqrt(va * vb)
-    return {"correlation": max(-1.0, min(1.0, correlation)),
-            "rmse": math.sqrt(mean((x - y) ** 2 for x, y in zip(reference, candidate))),
-            "interpretation": "descriptive_only_not_equivalence_or_consciousness"}
+    correlation = sum(
+        (x - a) * (y - b) for x, y in zip(reference, candidate)
+    ) / math.sqrt(va * vb)
+    return {
+        "correlation": max(-1.0, min(1.0, correlation)),
+        "rmse": math.sqrt(mean((x - y) ** 2 for x, y in zip(reference, candidate))),
+        "interpretation": "descriptive_only_not_equivalence_or_consciousness",
+    }

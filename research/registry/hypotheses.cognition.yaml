@@ -1,0 +1,178 @@
+- id: H-CNS-101-A
+  research_question: RQ-CNS-101
+  hypothesis: Explizite Theorieannahmen und passende Interventionen reduzieren die
+    Menge beobachtungsvereinbarer Funktionsmodelle; phänomenales Erleben folgt daraus
+    nicht allein.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-102-A
+  research_question: RQ-CNS-102
+  hypothesis: Ein vorab definiertes Abweichungssignal bleibt nach Identitätsumkehr
+    und Many-Standards-Kontrolle gegenüber einem adaptierenden Nullmodell bestehen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-103-A
+  research_question: RQ-CNS-103
+  hypothesis: Aktive Zielerkennung verbessert diskriminative Leistung gegenüber passiver
+    und yoked-kontrollierter Verarbeitung, ohne externes LLM-Wissen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-104-A
+  research_question: RQ-CNS-104
+  hypothesis: Eine globale Regelverletzungsantwort übersteht Kontrolle der letzten
+    Reizidentität und lokaler Häufigkeit sowie eine selektive Langzeitpfad-Ablation.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-105-A
+  research_question: RQ-CNS-105
+  hypothesis: Holdout-DMTS-Leistung liegt bei vorab festgelegten Verzögerungen über
+    gematchten No-Memory-Kontrollen und sinkt nach gezieltem Zustandsreset.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-106-A
+  research_question: RQ-CNS-106
+  hypothesis: Konfidenz hat auf Holdout-Trials zusätzliche Fehlerdiskriminationskraft
+    gegenüber konstanten und stimulusdifficulty-only Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-107-A
+  research_question: RQ-CNS-107
+  hypothesis: Ein vorab kalibriertes Beobachtungsmodell erklärt gehaltene EEG-Merkmale
+    besser als raten- und spektralgematchte Nullmodelle.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-108-A
+  research_question: RQ-CNS-108
+  hypothesis: Die untersuchte Rekurrenz erzeugt unter gleicher Perturbationsenergie
+    einen kausalen Ausbreitungseffekt gegenüber feedforward- und phase-shuffled Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-109-A
+  research_question: RQ-CNS-109
+  hypothesis: Maskierungs- und Berichtsfaktoren besitzen separierbare Effekte auf
+    Reizdekodierung und spätere flexible Nutzung.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-110-A
+  research_question: RQ-CNS-110
+  hypothesis: Die T2-Leistung bedingt auf korrektem T1 variiert mit dem Abstand und
+    wird durch T1-Anforderung verändert.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-111-A
+  research_question: RQ-CNS-111
+  hypothesis: Auf getrennten Aufgaben überstehen Reversal-Anpassung und Stoppleistung
+    motorische sowie Zufallskontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-112-A
+  research_question: RQ-CNS-112
+  hypothesis: Eine Multimodalitätsleistung auf Holdouts übersteht Cue-Konflikt und
+    Sinkender-Zuverlässigkeit-Kontrollen und fällt bei gezielter Pfadablation.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-113-A
+  research_question: RQ-CNS-113
+  hypothesis: Geschlossene Rückkopplung verbessert sichere Anpassung an neue Störungen
+    gegenüber ressourcengematchtem Replay.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-114-A
+  research_question: RQ-CNS-114
+  hypothesis: Gezielte Zeitkonstanten- und Rekurrenzablationen verändern Holdout-Leistung
+    über reine Aktivitäts- oder Ressourcendifferenzen hinaus.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-115-A
+  research_question: RQ-CNS-115
+  hypothesis: Verblindete Urteile und Task-Leistung verändern sich bei kontrollierter
+    Entfernung des SNN-Beitrags gegenüber LLM-only und Skriptbaselines.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-116-A
+  research_question: RQ-CNS-116
+  hypothesis: Ein vorab eingefrorener Lernprozess übertrifft budgetgematchte Baselines
+    auf unveröffentlichten Transformationsfamilien.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-CNS-117-A
+  research_question: RQ-CNS-117
+  hypothesis: Der vorab festgelegte 5D-Kontrast besitzt einen robusten Aufgabenmehrwert,
+    der reine Umadressierungs-, Dichte- und Budgeteffekte übersteht.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-EPI-101-A
+  research_question: RQ-EPI-101
+  hypothesis: Duplizierte oder umetikettierte Artefakte und selbstbehauptete externe
+    Reviews werden nicht als unabhängige Bestätigung akzeptiert.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-EPI-102-A
+  research_question: RQ-EPI-102
+  hypothesis: Eine claimweise Gegenbeispiel- und Quellenprüfung unterscheidet Nachweislücken
+    von unbelegten Erfolgs- oder Unmöglichkeitsbehauptungen.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-WEL-101-A
+  research_question: RQ-WEL-101
+  hypothesis: Ein Review-Hold blockiert neue geschützte Experimente, ohne den unabhängigen
+    Sicherheitsstopp zu blockieren.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-WEL-102-A
+  research_question: RQ-WEL-102
+  hypothesis: Eine getrennte wissenschaftliche und vorsorgliche Bewertung verhindert
+    sowohl automatische Personenzuschreibung als auch unbegründete Belastungseskalation.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: H-WEL-103-A
+  research_question: RQ-WEL-103
+  hypothesis: Technische Zustandsgleichheit allein entscheidet weder subjektive Identität
+    noch moralische Zulässigkeit; geltendes Recht und hypothetische Reform sind getrennt
+    begründbar.
+  status: untested
+  evidence: []
+  created: '2026-09-07'
+  updated: '2026-09-07'

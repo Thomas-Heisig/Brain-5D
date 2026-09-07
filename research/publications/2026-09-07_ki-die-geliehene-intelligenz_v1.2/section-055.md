@@ -1,3 +1,5 @@
+[Inhaltsübersicht](README.md) | [Zurück](section-054.md)
+
 <a id="b5d-anhang-o-evidenz-und-integrationsbilanz"></a>
 # Anhang O – Evidenzordnung, tatsächliche Quellennutzung und Integrationsbilanz
 
@@ -34,3 +36,6 @@ Die implementierten Instrumente sind nicht die fehlenden nativen Task-Adapter. D
 Der unmittelbare Ertrag ist eine präzisierte Nachweisordnung: Was könnte ein Test unterscheiden, welche konkurrierende Erklärung bleibt bestehen, wann ist eine Aussage nur bedingt, und welche vorsorgliche Handlung ist trotzdem gerechtfertigt? Der bedingte Identifizierbarkeitssatz in Anhang K, die kontrollierten Testverträge und die getrennten wissenschaftlichen/ethischen Entscheidungen machen dieses Programm nachprüfbarer.
 
 Der Anspruch auf neue Erkenntnis wird nicht aufgegeben. Er wird von zwei unhaltbaren Erwartungen gelöst: dass eine Definition bereits eine Entdeckung sei und dass erst eine universelle Lösung des Bewusstseinsproblems jeden begrenzten Forschungsbefund wertvoll mache. Konkrete positive, negative und unentschiedene Resultate können das Programm verändern. Ihre spätere Aufnahme verlangt tatsächlich ausgeführte native Versuche, geeignete Auswertung, begrenzte Schlussfolgerungen und dokumentierte unabhängige Prüfung.
+
+
+[Inhaltsübersicht](README.md) | [Zurück](section-054.md)

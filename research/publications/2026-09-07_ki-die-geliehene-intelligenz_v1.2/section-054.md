@@ -1,3 +1,5 @@
+[Inhaltsübersicht](README.md) | [Zurück](section-053.md) | [Weiter](section-055.md)
+
 <a id="b5d-anhang-n-bewertungsszenarien"></a>
 # Anhang N – Gegenwartsbewertung, hypothetischer Vollausbau und wissenschaftliche Anerkennung
 
@@ -42,3 +44,6 @@ Auch Energie, Skalierung, Laufzeit und langfristige Stabilität bleiben eigene N
 Die Formulierungen „Goldstandard“, „Werk des Jahrzehnts“, „instant klassisch“, „neue Ära“ und „Nobelpreis-Kandidat“ sind hypothetische Anerkennungsversprechen des übermittelten Textes. Sie werden dokumentiert, aber nicht als Prognose oder Zielkennzahl des Projekts übernommen. Dasselbe gilt für die abwertende Chiffre „Spinnerei“. Keine dieser Bezeichnungen darf die Nachweisführung ersetzen.
 
 Die angemessene Fortschrittsfrage lautet: Welche konkrete Unsicherheit wurde durch welches Design unter welchen Grenzen verringert? Darauf muss jede neue Publikationsfassung antworten. Die Qualität dieser Antwort, nicht der rhetorische Ausschlag einer Bewertung, bestimmt den wissenschaftlichen Mehrwert.
+
+
+[Inhaltsübersicht](README.md) | [Zurück](section-053.md) | [Weiter](section-055.md)

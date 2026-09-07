@@ -7,6 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, cast
 
+from .cognition_governance import PREFIXES
 from .protocol_registry import protocol_catalog
 from .registry import ResearchRegistry
 
@@ -78,6 +79,12 @@ def question_facets(root: Path, registry: ResearchRegistry) -> list[dict[str, An
                 "domain": question.domain,
                 "status": question.status,
                 "operational": question.id in operational,
+                "execution_status": (
+                    "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED"
+                    if question.id.startswith(PREFIXES)
+                    else "existing_workflow_contract"
+                ),
+                "consciousness_inference": "not_established",
                 "evidence_status": (
                     "review_required" if evidence[question.id] else "none"
                 ),

@@ -310,3 +310,7 @@ Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forsch
 
 Main integration decisions and verification scope are recorded in
 [the consolidation record](docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md).
+
+## Consciousness critique and research safeguards
+
+The [current treatise](research/publications/README.md) integrates a [38-topic critique audit](research/critique/CONSCIOUSNESS_CRITIQUE.md), [22 registered research questions and protocol contracts](research/protocols/COGNITION_CONSCIOUSNESS.md), and a [precautionary ethics policy](research/ethics/AI_WELFARE_POLICY.md). Cognitive-task success is not a consciousness verdict. The new battery has tested stimulus/scoring instruments; unvalidated native adapters cannot silently fall back to generic experiments. No empirical consciousness findings or external ethics approval are claimed.

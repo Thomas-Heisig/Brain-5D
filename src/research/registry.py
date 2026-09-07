@@ -235,7 +235,7 @@ class ResearchRegistry:
             "hypotheses.yaml", "hypotheses.*.yaml", Hypothesis
         )
         self.claims = self._load_yaml("claims.yaml", Claim)
-        self.sources = self._load_yaml("sources.yaml", Source)
+        self.sources = self._load_yaml_family("sources.yaml", "sources.*.yaml", Source)
         return self
 
     def _family_paths(self, base_filename: str, fragment_pattern: str) -> list[Path]:

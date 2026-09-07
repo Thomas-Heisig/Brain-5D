@@ -16,6 +16,11 @@ from src.research.catalog_status import (
     question_facet_options,
     question_facets,
 )
+from src.research.cognition_governance import (
+    CognitionGovernanceError,
+    cognition_catalog,
+    guard_cognition_launch,
+)
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -145,6 +150,9 @@ class ExperimentWorkflowService:
                     },
                     *protocol_catalog(self._research_root),
                 ],
+            ),
+            "cognition_protocols": cast(
+                JSONValue, cognition_catalog(self._research_root)
             ),
             "next_experiment_id": self._next_experiment_id(),
         }
@@ -975,6 +983,10 @@ class ExperimentWorkflowService:
         seeds = self._parse_seeds(body.get("seeds"))
         question_id = required("question_id")
         hypothesis_id = required("hypothesis_id")
+        try:
+            guard_cognition_launch(self._research_root, question_id, protocol)
+        except CognitionGovernanceError as exc:
+            raise WorkflowValidationError(str(exc)) from exc
         registry = ResearchRegistry(self._research_root / "registry").load_all()
         question = registry.questions.get(question_id)
         hypothesis = registry.hypotheses.get(hypothesis_id)

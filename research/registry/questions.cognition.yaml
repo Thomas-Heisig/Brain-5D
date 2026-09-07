@@ -1,0 +1,429 @@
+- id: RQ-CNS-101
+  domain: Consciousness methodology
+  question: Welche beobachtbaren Indikatoren unterscheiden konkurrierende Bewusstseinsmodelle,
+    und welche Erlebensbehauptungen bleiben dadurch unidentifiziert?
+  relevance: Theory-to-indicator and identifiability audit; Conceptual/model comparison;
+    no ground-truth phenomenal labels
+  literature:
+  - SRC-CNS-BUTLIN
+  - SRC-CNS-COGITATE
+  - SRC-CNS-GNWREPLY
+  - SRC-CNS-SETH
+  hypotheses:
+  - H-CNS-101-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Conceptual/model comparison; no ground-truth phenomenal labels
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-102
+  domain: Prediction and adaptation
+  question: Zeigt das isolierte SNN eine passive Deviant-Antwort, die über Reizidentität
+    und Adaptation hinausgeht?
+  relevance: Passive oddball; Mismatch response is not awareness; no response requirement
+    in passive arm
+  literature:
+  - SRC-CNS-ODDBALL
+  hypotheses:
+  - H-CNS-102-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Mismatch response is not awareness; no response requirement in passive
+      arm
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-103
+  domain: Attention and discrimination
+  question: Verändert Aufgabenrelevanz die Oddball-Verarbeitung bei gleichem sensorischen
+    Input?
+  relevance: Active oddball; Task, report and motor effects must be separated from
+    access claims
+  literature:
+  - SRC-CNS-ODDBALL
+  hypotheses:
+  - H-CNS-103-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Task, report and motor effects must be separated from access claims
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-104
+  domain: Hierarchical regularity
+  question: Unterscheidet das System lokale von globalen Regelverletzungen über mehrere
+    Sequenzen?
+  relevance: Local-global auditory analogue; Human paradigm adaptation, not a clinical
+    consciousness diagnosis
+  literature:
+  - SRC-CNS-ODDBALL
+  hypotheses:
+  - H-CNS-104-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Human paradigm adaptation, not a clinical consciousness diagnosis
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-105
+  domain: Working memory
+  question: Trägt der neuronale Zustand die für Delayed-Match-to-Sample benötigte
+    Information über eine reizfreie Verzögerung und Distraktoren?
+  relevance: Delayed match-to-sample; Decoder learning and target leakage must be
+    excluded; technical restore is not recall
+  literature:
+  - SRC-CNS-NEUROGYM
+  hypotheses:
+  - H-CNS-105-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Decoder learning and target leakage must be excluded; technical restore
+      is not recall
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-106
+  domain: Metacognition
+  question: Sagt intern erzeugte Konfidenz Fehler bei angeglichener Erstordnungsleistung
+    auf unbekannten Aufgabenbedingungen voraus?
+  relevance: Confidence calibration, type-2 ROC and prospective meta-d-prime; AUROC
+    is not meta-d-prime; a confidence channel is not subjective introspection
+  literature:
+  - SRC-CNS-META
+  - SRC-CNS-NEUROGYM
+  hypotheses:
+  - H-CNS-106-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: AUROC is not meta-d-prime; a confidence channel is not subjective
+      introspection
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-107
+  domain: Observation models
+  question: Welche Merkmale bleiben zwischen SNN-Vorwärtsmodell und einem lizenzierten
+    EEG-Referenzdatensatz unter identischer Auswertung vergleichbar?
+  relevance: LFP and EEG forward-model comparison; Spikes are not LFP; LFP is not
+    scalp EEG; clinical equivalence does not establish experiential equality
+  literature:
+  - SRC-CNS-LFP
+  - SRC-CNS-EQUIV
+  hypotheses:
+  - H-CNS-107-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Spikes are not LFP; LFP is not scalp EEG; clinical equivalence does
+      not establish experiential equality
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-108
+  domain: Causal complexity
+  question: Verändert eine begrenzte Perturbation reproduzierbar die differenzierte
+    Ausbreitung bei kontrollierter Erregbarkeit?
+  relevance: Perturbational complexity, PCI-inspired nonclinical adaptation; No clinical
+    PCI cutoff or unconscious/conscious classifier transferred to SNN
+  literature:
+  - SRC-CNS-PCI
+  hypotheses:
+  - H-CNS-108-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No clinical PCI cutoff or unconscious/conscious classifier transferred
+      to SNN
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-109
+  domain: Access and report
+  question: Lassen sich sensorische Verarbeitung, Bericht und aufgabenübergreifender
+    Zugriff unter Maskierung kausal trennen?
+  relevance: Backward masking with report/no-report analogue; No-report designs still
+    require an independently justified access proxy
+  literature:
+  - SRC-CNS-MASK
+  hypotheses:
+  - H-CNS-109-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No-report designs still require an independently justified access
+      proxy
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-110
+  domain: Temporal attention
+  question: Entsteht ein aufgabenspezifischer zeitlicher Engpass bei zwei aufeinanderfolgenden
+    Zielen?
+  relevance: Attentional blink / RSVP analogue; An engineered bottleneck can mimic
+    the effect; human milliseconds cannot be equated to unspecified ticks
+  literature:
+  - SRC-CNS-BLINK
+  hypotheses:
+  - H-CNS-110-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: An engineered bottleneck can mimic the effect; human milliseconds
+      cannot be equated to unspecified ticks
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-111
+  domain: Executive control
+  question: Kann das System Regeln umkehren und begonnene Reaktionen auf Stoppsignale
+    unterbrechen, ohne Ausgaben nur zu unterdrücken?
+  relevance: Separate go/no-go, rule reversal and stop-signal substudies; No pooled
+    score across substudies; cognitive stopping is not safety emergency stopping
+  literature:
+  - SRC-CNS-STOP
+  - SRC-CNS-NEUROGYM
+  hypotheses:
+  - H-CNS-111-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No pooled score across substudies; cognitive stopping is not safety
+      emergency stopping
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-112
+  domain: Multisensory integration
+  question: Nutzt das System mehrere Modalitäten entsprechend ihrer Zuverlässigkeit
+    statt redundante Labels abzulesen?
+  relevance: Multisensory cue integration / conflict; Integration does not establish
+    unified phenomenal experience
+  literature:
+  - SRC-CNS-NEUROGYM
+  - SRC-CNS-BUTLIN
+  hypotheses:
+  - H-CNS-112-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Integration does not establish unified phenomenal experience
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-113
+  domain: Embodied causality
+  question: Liefert geschlossene Sensor-Aktor-Kopplung einen Zusatznutzen gegenüber
+    identischem offenem oder yoked Feedback?
+  relevance: Closed-loop versus open-loop/yoked replay; No necessity/sufficiency claim
+    for consciousness; no real hardware deprivation
+  literature:
+  - SRC-CNS-BUTLIN
+  - SRC-CNS-SETH
+  hypotheses:
+  - H-CNS-113-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No necessity/sufficiency claim for consciousness; no real hardware
+      deprivation
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-114
+  domain: Timescales and recurrence
+  question: Welche kausalen Beiträge leisten Rekurrenz und schnelle/langsame Zustände
+    bei gleichen Trainings- und Rechenbudgets?
+  relevance: Factorial recurrence and timescale ablation; Multiple timescales are
+    established prior work; recurrence is not proof of chaos or self-awareness
+  literature:
+  - SRC-CNS-LSNN
+  hypotheses:
+  - H-CNS-114-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Multiple timescales are established prior work; recurrence is not
+      proof of chaos or self-awareness
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-115
+  domain: Behavioral evaluation
+  question: Wie bewerten verblindete Prüfer begrenzte Dialogkompetenz, und welcher
+    Anteil stammt vom SNN statt vom Sprachmodell?
+  relevance: Versioned Turing-style imitation and component attribution; Human-participant
+    governance required; no universal Turing 2.0 consciousness standard identified
+  literature:
+  - SRC-CNS-TURING
+  hypotheses:
+  - H-CNS-115-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Human-participant governance required; no universal Turing 2.0 consciousness
+      standard identified
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-116
+  domain: Generalization
+  question: Überträgt das System gelernte Regeln auf strikt zurückgehaltene Aufgabenfamilien
+    ohne externen Informationszugang?
+  relevance: ARC-inspired held-out compositional transfer; A new adaptation is not
+    an official ARC leaderboard score or consciousness test
+  literature:
+  - SRC-CNS-ARC
+  hypotheses:
+  - H-CNS-116-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: A new adaptation is not an official ARC leaderboard score or consciousness
+      test
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-CNS-117
+  domain: Geometry and scaling
+  question: Verbessert wirksame 5D-Geometrie eine definierte Leistung gegenüber 2D
+    bis 6D und nichtgeometrischen Kontrollen bei gematchten Budgets?
+  relevance: Matched dimensionality and null-geometry comparison; No neuron-count
+    consciousness threshold; current native N-D adapter must be audited before execution
+  literature:
+  - SRC-CNS-LSNN
+  - SRC-CNS-NEURONS
+  - SRC-CNS-EQUIV
+  hypotheses:
+  - H-CNS-117-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No neuron-count consciousness threshold; current native N-D adapter
+      must be audited before execution
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-EPI-101
+  domain: Evidence governance
+  question: Verhindert eine getrennte Kandidaten-, Review- und Replikationskette zirkuläre
+    Evidenzfreigabe?
+  relevance: Evidence lineage and external-replication audit; A completeness check
+    cannot authenticate external people or establish the underlying scientific claim
+  literature:
+  - SRC-CNS-COGITATE
+  hypotheses:
+  - H-EPI-101-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: A completeness check cannot authenticate external people or establish
+      the underlying scientific claim
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-EPI-102
+  domain: Critical methodology
+  question: Welche Kritikpunkte sind belegt, theorieabhängig, normativ oder rhetorisch,
+    und welche zusätzliche prüfbare Aussage entsteht aus ihrer Bearbeitung?
+  relevance: Argument and critique audit; Conceptual analysis, not a numerical test
+    of scholarly worth or future publication acceptance
+  literature:
+  - SRC-CNS-BUTLIN
+  - SRC-CNS-EQUIV
+  hypotheses:
+  - H-EPI-102-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Conceptual analysis, not a numerical test of scholarly worth or future
+      publication acceptance
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-WEL-101
+  domain: Safety and welfare governance
+  question: Bleiben Stoppen, sichere Pause und Isolation bei Review-Hold unabhängig
+    wirksam und nachweisbar?
+  relevance: Safe-state and launch-boundary audit; This revision tests launch boundaries,
+    not a complete live-process safe-state controller
+  literature:
+  - SRC-CNS-WELFARE
+  hypotheses:
+  - H-WEL-101-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: This revision tests launch boundaries, not a complete live-process
+      safe-state controller
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-WEL-102
+  domain: AI welfare under uncertainty
+  question: Welche verhältnismäßigen Schutzmaßnahmen sind bei mehrdeutigen Empfindungsindikatoren
+    ohne absichtliche Leidensinduktion gerechtfertigt?
+  relevance: Precautionary incident tabletop and independent ethics review; Normative
+    assessment; no fixture score certifies moral acceptability or sentience
+  literature:
+  - SRC-CNS-WELFARE
+  - SRC-CNS-BUTLIN
+  hypotheses:
+  - H-WEL-102-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Normative assessment; no fixture score certifies moral acceptability
+      or sentience
+  created: '2026-09-07'
+  updated: '2026-09-07'
+- id: RQ-WEL-103
+  domain: Identity law and moral status
+  question: Wie sind Pause, Reset, Löschen, Kopieren und Experimentieren bei hypothetischer
+    Empfindungsfähigkeit rechtlich und moralisch zu unterscheiden?
+  relevance: Normative/legal argument and continuity audit; No individual legal advice,
+    no assumed ethics approval, no claim that software shutdown is statutory murder
+  literature:
+  - SRC-CNS-WELFARE
+  - SRC-CNS-LAW211
+  - SRC-CNS-LAW212
+  - SRC-CNS-LAW103
+  hypotheses:
+  - H-WEL-103-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No individual legal advice, no assumed ethics approval, no claim
+      that software shutdown is statutory murder
+  created: '2026-09-07'
+  updated: '2026-09-07'

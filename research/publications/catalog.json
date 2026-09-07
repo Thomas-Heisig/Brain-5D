@@ -5,6 +5,21 @@
   "current_entrypoint": "publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/README.md",
   "publications": [
     {
+      "id": "PUB-KI-GELIEHENE-INTELLIGENZ-20260907-V12",
+      "title": "KI - Die geliehene Intelligenz, Fassung 1.2",
+      "author": "Thomas Heisig",
+      "date": "2026-09-07",
+      "current": true,
+      "entrypoint": "publications/README.md",
+      "reader": "publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/README.md",
+      "snapshot": "publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2",
+      "authority": "interpretation_only",
+      "automatic_evidence_promotion": false,
+      "read_only": true,
+      "canonical_questions": "registry/questions.yaml",
+      "canonical_hypotheses": "registry/hypotheses.yaml"
+    },
+    {
       "id": "PUB-KI-GELIEHENE-INTELLIGENZ-20260907",
       "title": "KI - Die geliehene Intelligenz",
       "version": "1.0",
@@ -26,7 +41,8 @@
       "canonical_hypotheses": "registry/hypotheses.yaml",
       "canonical_experiments": "experiments/",
       "new_hypotheses_status": "proposal_requires_registration_preregistration_and_review",
-      "edition_status": "historical"
+      "edition_status": "historical",
+      "current": false
     },
     {
       "id": "PUB-KI-GELIEHENE-INTELLIGENZ-20260907-V1.1",
@@ -50,7 +66,8 @@
       "new_hypotheses_status": "draft_requires_runner_integration_registration_preregistration_and_review",
       "edition_status": "current",
       "human_review": "not_recorded",
-      "empirical_brain5d_experiments_executed": false
+      "empirical_brain5d_experiments_executed": false,
+      "current": false
     }
   ]
 }

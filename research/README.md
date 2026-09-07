@@ -219,3 +219,7 @@ Technische Reports dürfen `implemented`, `integrated` oder `verified` tragen. `
 [KI - Die geliehene Intelligenz: vollstaendige wissenschaftliche Abhandlung](publications/README.md)
 
 Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forschungsfragen, Hypothesen, Ergebnisdarstellungen, Originalmanuskripte und alle Begleitdateien. Die kapitelweise Lesefassung ist im zentralen File Viewer vollstaendig zugaenglich. Datierte Originale bleiben unveraendert und schreibgeschuetzt; kanonische Register und Evidenzfreigaben werden nicht ersetzt.
+
+## Kognition, Bewusstseinskritik und vorsorgliche Ethik
+
+[Programm und Messgrenzen](protocols/COGNITION_CONSCIOUSNESS.md), [22 kanonische Fragen](registry/questions.cognition.yaml), [Hypothesen](registry/hypotheses.cognition.yaml), [38 Kritikthemen](critique/CONSCIOUSNESS_CRITIQUE.md), [Ethikrichtlinie](ethics/AI_WELFARE_POLICY.md), [Quellennutzung](literature/COGNITION_SOURCES.md), [aktuelle Abhandlung](publications/README.md). Die neue Batterie hat prospektive Entwürfe und getestete Instrumente, aber keine validierten nativen Adapter. Geschützte Starts und automatische EVID-Promotion sind blockiert; alte DATA/EVID bleiben unverändert.

@@ -499,3 +499,15 @@ items above are not closed by this maintenance operation.
 - [ ] Operationalize the eight synthesis hypotheses from the publication in
   canonical questions, hypotheses and protocols before treating them as
   executable experiments; their current status is PROPOSED_NOT_REGISTERED.
+
+## Bewusstseinskritik und Kognitionsprogramm (2026-09-07)
+
+- [x] Kritik, Definitionen, Testverträge und Ethik in Publikationsfassung 1.2 integrieren.
+- [x] 22 neue kanonische Fragen/Hypothesen mit Quellen und 22 prospektiven Entwürfen registrieren.
+- [x] Stimulus-/Auswertungsinstrumente und Start-/Promotionsgrenzen mit Regressionstests ergänzen.
+- [ ] Native Adapter einzeln implementieren und unabhängig gegen Referenzaufgaben prüfen; vorher keine Entwürfe als ausführbare Evidenz ausgeben.
+- [ ] Unabhängige Methoden-/Ethikexpertise gewinnen; kein bereits bestehendes Gremium behaupten.
+- [ ] Geeigneten lizenzierten EEG-Datensatz und ein physikalisch geprüftes Beobachtungsmodell festlegen.
+- [ ] Meta-d-prime-Fitter, live-process safe-state controller und authentifizierte externe Reviewkette separat validieren.
+- [ ] Echte präregistrierte Versuche mit begründeter Stichprobe, Holdout, Alternativmodellen und unabhängiger Replikation durchführen.
+- [ ] DOCX-Export der aktuellen kapitelweisen Edition und Hugging-Face-Deployment gesondert prüfen.

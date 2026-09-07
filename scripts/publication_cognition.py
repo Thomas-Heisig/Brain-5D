@@ -21,7 +21,11 @@ def verify(root: Path) -> dict[str, int]:
     expected = [f"section-{i:03d}.md" for i in range(56)]
     if manifest["section_order"] != expected or manifest["section_count"] != 56:
         raise ValueError("Incomplete cognition edition")
-    if manifest["authority"] != "interpretation_only" or manifest["automatic_evidence_promotion"] is not False or manifest["new_empirical_consciousness_findings"] is not False:
+    if (
+        manifest["authority"] != "interpretation_only"
+        or manifest["automatic_evidence_promotion"] is not False
+        or manifest["new_empirical_consciousness_findings"] is not False
+    ):
         raise ValueError("Publication cannot award consciousness evidence")
     names = {p.name for p in folder.iterdir() if p.is_file()} - {"manifest.json"}
     if names != set(manifest["files"]):
@@ -35,7 +39,10 @@ def verify(root: Path) -> dict[str, int]:
         if path.parent != folder.resolve() or not path.is_file():
             raise ValueError("Unsafe inventory path")
         data = path.read_bytes()
-        if len(data) != record["size"] or hashlib.sha256(data).hexdigest() != record["sha256"]:
+        if (
+            len(data) != record["size"]
+            or hashlib.sha256(data).hexdigest() != record["sha256"]
+        ):
             raise ValueError(f"Edition checksum mismatch: {name}")
         if name in expected:
             if not data or len(data) >= 240 * 1024:
@@ -45,7 +52,11 @@ def verify(root: Path) -> dict[str, int]:
     pages = list(folder.glob("*.md")) + [root / "research/publications/README.md"]
     pages += list((root / "research/critique").glob("*.md"))
     pages += list((root / "research/ethics").glob("*.md"))
-    pages += [root / "research/protocols/COGNITION_CONSCIOUSNESS.md", root / "research/literature/COGNITION_SOURCES.md", root / "docs/06-research/CONSCIOUSNESS_AND_WELFARE.md"]
+    pages += [
+        root / "research/protocols/COGNITION_CONSCIOUSNESS.md",
+        root / "research/literature/COGNITION_SOURCES.md",
+        root / "docs/06-research/CONSCIOUSNESS_AND_WELFARE.md",
+    ]
     checked = 0
     for page in pages:
         for match in LINK.finditer(page.read_text(encoding="utf-8")):
@@ -53,8 +64,13 @@ def verify(root: Path) -> dict[str, int]:
             if EXTERNAL.match(target):
                 continue
             relative, _, anchor = target.partition("#")
-            destination = (page.parent / unquote(relative)).resolve() if relative else page
-            if not destination.is_relative_to(root.resolve()) or not destination.exists():
+            destination = (
+                (page.parent / unquote(relative)).resolve() if relative else page
+            )
+            if (
+                not destination.is_relative_to(root.resolve())
+                or not destination.exists()
+            ):
                 raise ValueError(f"Broken or unsafe link {page.name}: {target}")
             if anchor and destination.suffix == ".md":
                 content = destination.read_text(encoding="utf-8")
@@ -65,17 +81,36 @@ def verify(root: Path) -> dict[str, int]:
         text = (folder / name).read_text(encoding="utf-8")
         if any(f"]({section})" not in text for section in expected):
             raise ValueError("Incomplete edition navigation")
-    program = json.loads((root / "research/protocols/COGNITION_CONSCIOUSNESS_V1.json").read_text(encoding="utf-8"))
+    program = json.loads(
+        (root / "research/protocols/COGNITION_CONSCIOUSNESS_V1.json").read_text(
+            encoding="utf-8"
+        )
+    )
     protocols = program["protocols"]
     if len(protocols) != 22 or len({p["id"] for p in protocols}) != 22:
         raise ValueError("Incomplete protocol family")
     for protocol in protocols:
-        draft = json.loads((root / "research" / protocol["preregistration_draft"]).read_text(encoding="utf-8"))
-        if draft["status"] != "DRAFT_NOT_PREREGISTERED" or draft["protocol_id"] != protocol["id"]:
+        draft = json.loads(
+            (root / "research" / protocol["preregistration_draft"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        if (
+            draft["status"] != "DRAFT_NOT_PREREGISTERED"
+            or draft["protocol_id"] != protocol["id"]
+        ):
             raise ValueError("Preregistration falsely promoted or mismatched")
-        if protocol["consciousness_inference"] != "not_established" or protocol["native_adapter_validated"] is not False:
+        if (
+            protocol["consciousness_inference"] != "not_established"
+            or protocol["native_adapter_validated"] is not False
+        ):
             raise ValueError("Unvalidated adapter promoted")
-    return {"sections": len(expected), "links": checked, "protocols": len(protocols), "critique_topics": 38}
+    return {
+        "sections": len(expected),
+        "links": checked,
+        "protocols": len(protocols),
+        "critique_topics": 38,
+    }
 
 
 if __name__ == "__main__":

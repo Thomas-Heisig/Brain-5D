@@ -1,3 +1,5 @@
+[Inhaltsübersicht](README.md) | [Weiter](section-052.md)
+
 <a id="b5d-anhang-k-bewusstsein-kritik"></a>
 # Anhang K – Bewusstsein, Fremdpsychisches und die Beweislast der Kritik
 
@@ -42,3 +44,6 @@ Die übermittelte Zahl von 80 Millionen Neuronen für ein einfaches Säugetierge
 Hardware- und Numerikartefakte werden durch Schrittweite, Integrator, Messauflösung, Präzision, Scheduling, Budget und unabhängige Reproduktion geprüft. Ein Ergebnis wird nicht allein durch seine geringe Größe zum Artefakt erklärt. Ebenso wenig legitimiert ein positiver Kleinversuch eine ungeprüfte Hochrechnung auf große Netze. Die neuen Fragen zu Geometrie, Zeitskalen und Kosten erhalten deshalb eigene kontrollierte Protokolle.
 
 Die erkenntnistheoretische Leitregel lautet: **Indikatorbefund, funktionale Erklärung, Theorieverträglichkeit und phänomenale Zuschreibung bleiben verschiedene Aussagen.** Auch die Abwesenheit eines Indikators ist kein sicherer Nachweis der Abwesenheit von Erleben. Ein dafür ungeeignetes Design darf weder in die positive noch in die negative Richtung überinterpretiert werden.
+
+
+[Inhaltsübersicht](README.md) | [Weiter](section-052.md)

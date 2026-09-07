@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-09-07T21:36:50.086714+00:00",
+  "base_head": "aadf6e1eba804e18340b00edae68a5887fa012b1",
+  "workflow_run_id": "34163631110",
+  "tested_sources_sha256": {
+    "src/research/cognition_metrics.py": "d8a7cca3b79d51a0b8db0c69e3905110cb142597e9feffe20f2243a3611b0014",
+    "src/research/cognition_governance.py": "3033387cad58969f18c5a0cd3081adbb61663d27df930a7d8e9af9d142949dac",
+    "src/research/registry.py": "7f0720d560632ddd3ed86067ba1ea2c46e291de81589cc2468ab3bf990fa671c",
+    "src/research/evidence_engine.py": "3d5da0b1dc8f783baef86b2eadd551bcaf6d0930b290b674e7109e714fbe12ee",
+    "src/research/catalog_status.py": "8ad19d6c11bacae0767a8f81b4fe39e3b0712c26d647a6ccd64f6606c71adeb4",
+    "src/dashboard/experiment_workflow.py": "8d78cb1a89c7d250b0c96c1791aa7a505152ad5d29c34b62c3d57c57968b3d4f",
+    "tests/test_cognition_program.py": "05002ab229d3d9a16065528209ea062fd26e41b822e3c36a9e1d7f5f4c3ef7f4",
+    "scripts/publication_cognition.py": "4187ee415f8b24c7b341c8fbdfed95b42b08918d83c4eb642b5d452b76c7d992"
+  },
+  "checks": [
+    {
+      "check": "one_time_import",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        ".maintenance/integrate_cognition.py",
+        "--apply"
+      ],
+      "exit_code": 0,
+      "output": "Imported 22 questions/protocols and edition 1.2; tests and review remain separate.\n"
+    },
+    {
+      "check": "format",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "black",
+        "src/research/cognition_metrics.py",
+        "src/research/cognition_governance.py",
+        "src/research/registry.py",
+        "src/research/evidence_engine.py",
+        "src/research/catalog_status.py",
+        "src/dashboard/experiment_workflow.py",
+        "tests/test_cognition_program.py",
+        "scripts/publication_cognition.py"
+      ],
+      "exit_code": 0,
+      "output": "reformatted src/research/cognition_governance.py\nreformatted scripts/publication_cognition.py\nreformatted src/research/cognition_metrics.py\nreformatted tests/test_cognition_program.py\nreformatted src/dashboard/experiment_workflow.py\n\nAll done! ✨ 🍰 ✨\n5 files reformatted, 3 files left unchanged.\n"
+    },
+    {
+      "check": "lint_fix",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--fix",
+        "src/research/cognition_metrics.py",
+        "src/research/cognition_governance.py",
+        "src/research/registry.py",
+        "src/research/evidence_engine.py",
+        "src/research/catalog_status.py",
+        "src/dashboard/experiment_workflow.py",
+        "tests/test_cognition_program.py",
+        "scripts/publication_cognition.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "check": "format_check",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "black",
+        "--check",
+        "src/research/cognition_metrics.py",
+        "src/research/cognition_governance.py",
+        "src/research/registry.py",
+        "src/research/evidence_engine.py",
+        "src/research/catalog_status.py",
+        "src/dashboard/experiment_workflow.py",
+        "tests/test_cognition_program.py",
+        "scripts/publication_cognition.py"
+      ],
+      "exit_code": 0,
+      "output": "All done! ✨ 🍰 ✨\n8 files would be left unchanged.\n"
+    },
+    {
+      "check": "lint",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "src/research/cognition_metrics.py",
+        "src/research/cognition_governance.py",
+        "src/research/registry.py",
+        "src/research/evidence_engine.py",
+        "src/research/catalog_status.py",
+        "src/dashboard/experiment_workflow.py",
+        "tests/test_cognition_program.py",
+        "scripts/publication_cognition.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "check": "original_publication_integrity",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/publication_bundle.py"
+      ],
+      "exit_code": 0,
+      "output": "VERIFIED: 41 frozen files, original ZIP, 46 complete reader sections\n"
+    },
+    {
+      "check": "previous_revision_integrity",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/publication_revision.py"
+      ],
+      "exit_code": 0,
+      "output": "PASS: 28 methodological checks; Brain-5D runtime NOT executed\nVERIFIED publication revision: {\"inherited\": 38, \"links\": 594, \"sections\": 51, \"witnesses\": 28}\n"
+    },
+    {
+      "check": "cognition_edition_integrity",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/publication_cognition.py"
+      ],
+      "exit_code": 0,
+      "output": "VERIFIED cognition supplement: {\"critique_topics\": 38, \"links\": 659, \"protocols\": 22, \"sections\": 56}\n"
+    },
+    {
+      "check": "cognition_and_publication_tests",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_cognition_program.py",
+        "tests/test_publication_revision.py",
+        "tests/test_publication_integration.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "...............................................................          [100%]\n63 passed in 1.84s\n"
+    },
+    {
+      "check": "pyright",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "pyright"
+      ],
+      "exit_code": 1,
+      "output": "/home/runner/work/Brain-5D/Brain-5D/src/research/cognition_governance.py\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_governance.py:31:5 - error: Type of \"values\" is partially unknown\n    Type of \"values\" is \"Unknown | None\" (reportUnknownVariableType)\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_governance.py:31:22 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_governance.py:70:43 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_governance.py:78:12 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n/home/runner/work/Brain-5D/Brain-5D/src/research/cognition_metrics.py\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_metrics.py:27:39 - error: Unnecessary isinstance call; \"int\" is always an instance of \"int\" (reportUnnecessaryIsInstance)\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_metrics.py:53:39 - error: Unnecessary isinstance call; \"int\" is always an instance of \"int\" (reportUnnecessaryIsInstance)\n  /home/runner/work/Brain-5D/Brain-5D/src/research/cognition_metrics.py:83:42 - error: Unnecessary isinstance call; \"int\" is always an instance of \"int\" (reportUnnecessaryIsInstance)\n/home/runner/work/Brain-5D/Brain-5D/tests/test_cognition_program.py\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_cognition_program.py:242:17 - error: \"_validate\" is protected and used outside of the class in which it is declared (reportPrivateUsage)\n8 errors, 0 warnings, 0 informations\n"
+    },
+    {
+      "check": "fast_regressions",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "pytest",
+        "-m",
+        "not slow",
+        "-q"
+      ],
+      "exit_code": 1,
+      "output": "........................................................................ [  7%]\n..................................................................F..... [ 15%]\n........................................................................ [ 23%]\n........................................................................ [ 31%]\n........................................................................ [ 39%]\n........................................................................ [ 46%]\n........................................................................ [ 54%]\n........................................................................ [ 62%]\n........................................................................ [ 70%]\n.........................................................F.............. [ 78%]\n........................................................................ [ 85%]\n........................................................................ [ 93%]\n..........................................................               [100%]\n=================================== FAILURES ===================================\n_____________ test_workflow_catalog_and_batch_routes_are_reachable _____________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdf9e94bce0>\n\n    def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> None:\n        original = server_module.ExperimentWorkflowService\n        monkeypatch.setattr(server_module, \"ExperimentWorkflowService\", _FakeBatchService)\n        server = DashboardServer(\n            (\"127.0.0.1\", 0),\n            DashboardStateStore(),\n            None,\n            research_source=ResearchSource(Path(\"research\")),\n        )\n        thread = Thread(target=server.serve_forever, daemon=True)\n        thread.start()\n        try:\n            catalog_status, catalog_body = _request(\n                server, \"GET\", \"/api/experiment/workflow/catalog\"\n            )\n            assert catalog_status == 200\n            assert '\"questions\"' in catalog_body\n    \n            timeline_status, timeline_body = _request(\n                server, \"GET\", \"/api/releases/timeline\"\n            )\n            assert timeline_status == 200\n            timeline = json.loads(timeline_body)\n            assert {source[\"name\"] for source in timeline[\"sources\"]} == {\n                \"TODO\",\n                \"ROADMAP\",\n                \"CHANGELOG\",\n                \"RELEASE\",\n            }\n            assert timeline[\"entries\"]\n    \n            releases_status, releases_body = _request(server, \"GET\", \"/api/releases\")\n            assert releases_status == 200\n            releases = json.loads(releases_body)\n            release_versions = {record[\"version\"] for record in releases[\"releases\"]}\n>           assert {\"0.1.0\", \"0.3.0\", \"0.3.0.1\"}.issubset(release_versions)\nE           AssertionError: assert False\nE            +  where False = <built-in method issubset of set object at 0x7fdf9ea792a0>({'0.5.0-alpha.5', '0.5.0-alpha.6'})\nE            +    where <built-in method issubset of set object at 0x7fdf9ea792a0> = {'0.1.0', '0.3.0', '0.3.0.1'}.issubset\n\ntests/test_dashboard_batch_routes.py:96: AssertionError\n______________ test_release_timeline_reads_all_canonical_sources _______________\n\n    def test_release_timeline_reads_all_canonical_sources() -> None:\n        payload = build_release_timeline(ROOT)\n    \n        assert [source[\"name\"] for source in payload[\"sources\"]] == [\n            \"TODO\",\n            \"ROADMAP\",\n            \"CHANGELOG\",\n            \"RELEASE\",\n        ]\n        assert all(source[\"available\"] for source in payload[\"sources\"])\n        assert payload[\"entries\"]\n        assert {entry.get(\"phase\") for entry in payload[\"entries\"]} == {\n            \"past\",\n            \"current\",\n            \"future\",\n        }\n>       assert any(\n            entry[\"title\"] == \"0.1.0 · Historical tagged release\"\n            for entry in payload[\"entries\"]\n        )\nE       assert False\nE        +  where False = any(<generator object test_release_timeline_reads_all_canonical_sources.<locals>.<genexpr> at 0x7fdf9e73fe00>)\n\ntests/test_release_timeline.py:26: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_dashboard_batch_routes.py::test_workflow_catalog_and_batch_routes_are_reachable - AssertionError: assert False\n +  where False = <built-in method issubset of set object at 0x7fdf9ea792a0>({'0.5.0-alpha.5', '0.5.0-alpha.6'})\n +    where <built-in method issubset of set object at 0x7fdf9ea792a0> = {'0.1.0', '0.3.0', '0.3.0.1'}.issubset\nFAILED tests/test_release_timeline.py::test_release_timeline_reads_all_canonical_sources - assert False\n +  where False = any(<generator object test_release_timeline_reads_all_canonical_sources.<locals>.<genexpr> at 0x7fdf9e73fe00>)\n2 failed, 920 passed, 32 deselected in 97.49s (0:01:37)\n"
+    }
+  ],
+  "all_passed": false,
+  "authority": "software_verification_only",
+  "empirical_brain5d_consciousness_experiments": false,
+  "external_ethics_approval": false
+}

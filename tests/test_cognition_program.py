@@ -35,7 +35,9 @@ def test_dmts_balances_each_sample_and_delay() -> None:
     assert len(trials) == 192
     for delay in (0, 10, 100):
         for sample in range(4):
-            selected = [t for t in trials if t.sample == sample and t.delay_ticks == delay]
+            selected = [
+                t for t in trials if t.sample == sample and t.delay_ticks == delay
+            ]
             assert sum(key[t.trial_id] for t in selected) == 8
             assert len(selected) == 16
 
@@ -52,7 +54,9 @@ def test_dmts_omissions_and_constant_baseline() -> None:
     assert all(v["accuracy"] == 1 for v in accuracy_by_delay(trials, key, key).values())
     assert all(v["accuracy"] == 0 for v in accuracy_by_delay(trials, key, {}).values())
     constant = {t.trial_id: 1 for t in trials}
-    assert all(v["accuracy"] == 0.5 for v in accuracy_by_delay(trials, key, constant).values())
+    assert all(
+        v["accuracy"] == 0.5 for v in accuracy_by_delay(trials, key, constant).values()
+    )
 
 
 @pytest.mark.parametrize("delays", [(), (0, 0), (-1,), (True,)])
@@ -112,22 +116,39 @@ def test_paired_effect_not_inference() -> None:
 
 def test_eeg_contract_and_descriptive_values() -> None:
     measured = SignalContract("measured_eeg", "uV", 1000, "dataset/montage", "frozen")
-    predicted = replace(measured, kind="forward_model_eeg", observation_model="forward-v1")
-    result = compare_evoked([1, 3, 2], [1, 3, 2], reference_contract=measured, candidate_contract=predicted)
+    predicted = replace(
+        measured, kind="forward_model_eeg", observation_model="forward-v1"
+    )
+    result = compare_evoked(
+        [1, 3, 2], [1, 3, 2], reference_contract=measured, candidate_contract=predicted
+    )
     assert result["rmse"] == 0 and result["correlation"] == 1
     assert "not_equivalence" in str(result["interpretation"])
-    for invalid in (replace(predicted, kind="spike_sum"), replace(predicted, kind="lfp_proxy"), replace(predicted, units="V"), replace(predicted, sampling_hz=500)):
+    for invalid in (
+        replace(predicted, kind="spike_sum"),
+        replace(predicted, kind="lfp_proxy"),
+        replace(predicted, units="V"),
+        replace(predicted, sampling_hz=500),
+    ):
         with pytest.raises(ValueError):
-            compare_evoked([1, 3, 2], [1, 3, 2], reference_contract=measured, candidate_contract=invalid)
+            compare_evoked(
+                [1, 3, 2],
+                [1, 3, 2],
+                reference_contract=measured,
+                candidate_contract=invalid,
+            )
 
 
-@pytest.mark.parametrize("question,protocol", [
-    ("RQ-CNS-105", "runtime_ticks_v1"),
-    ("RQ-CNS-102", "science_all_v1"),
-    ("RQ-WEL-101", "science_suite_v1"),
-    ("RQ-EPI-101", "runtime_ticks_v1"),
-    ("RQ-SNN-001", "cog_cns_105_v1"),
-])
+@pytest.mark.parametrize(
+    "question,protocol",
+    [
+        ("RQ-CNS-105", "runtime_ticks_v1"),
+        ("RQ-CNS-102", "science_all_v1"),
+        ("RQ-WEL-101", "science_suite_v1"),
+        ("RQ-EPI-101", "runtime_ticks_v1"),
+        ("RQ-SNN-001", "cog_cns_105_v1"),
+    ],
+)
 def test_no_generic_fallback(tmp_path: Path, question: str, protocol: str) -> None:
     with pytest.raises(CognitionGovernanceError, match="ADAPTER_NOT_VALIDATED"):
         guard_cognition_launch(tmp_path, question, protocol)
@@ -137,7 +158,9 @@ def test_no_generic_fallback(tmp_path: Path, question: str, protocol: str) -> No
 def test_hold_blocks_legacy_new_launch(tmp_path: Path, state: str) -> None:
     folder = tmp_path / "ethics"
     folder.mkdir()
-    (folder / "operational_state.json").write_text(json.dumps({"state": state}), encoding="utf-8")
+    (folder / "operational_state.json").write_text(
+        json.dumps({"state": state}), encoding="utf-8"
+    )
     with pytest.raises(CognitionGovernanceError):
         guard_cognition_launch(tmp_path, "RQ-SNN-001", "runtime_ticks_v1")
 
@@ -154,7 +177,22 @@ def test_promotion_guard() -> None:
 
 def test_candidate_never_accepts_or_authenticates() -> None:
     assert assess_candidate({})["status"] == "INCOMPLETE"
-    fields = ["candidate_id", "protocol_id", "question_id", "hypothesis_id", "source_commit", "raw_artifacts", "analysis_hash", "limitations", "alternatives", "replication", "ethics_review", "theory_assumptions", "measurement_validity", "human_review"]
+    fields = [
+        "candidate_id",
+        "protocol_id",
+        "question_id",
+        "hypothesis_id",
+        "source_commit",
+        "raw_artifacts",
+        "analysis_hash",
+        "limitations",
+        "alternatives",
+        "replication",
+        "ethics_review",
+        "theory_assumptions",
+        "measurement_validity",
+        "human_review",
+    ]
     candidate: dict[str, object] = {key: "declared-not-authenticated" for key in fields}
     candidate["claim_scope"] = "functional_or_theory_conditional"
     result = assess_candidate(candidate)
@@ -181,21 +219,38 @@ def test_registry_program_links_and_sources() -> None:
 
 
 def test_dashboard_boundary_and_visible_catalog() -> None:
-    from src.dashboard.experiment_workflow import ExperimentWorkflowService, WorkflowValidationError
+    from src.dashboard.experiment_workflow import (
+        ExperimentWorkflowService,
+        WorkflowValidationError,
+    )
 
     service = ExperimentWorkflowService(ROOT / "research")
     catalogue = service.catalog()
     assert "cognition_protocols" in catalogue
-    body: dict[str, object] = {"experiment_id": "EXP-CNS-TEST", "question_id": "RQ-CNS-105", "hypothesis_id": "H-CNS-105-A", "protocol": "runtime_ticks_v1", "ticks": 1, "title": "test", "conditions": "test", "exploratory": True, "ethics_approved": True}
+    body: dict[str, object] = {
+        "experiment_id": "EXP-CNS-TEST",
+        "question_id": "RQ-CNS-105",
+        "hypothesis_id": "H-CNS-105-A",
+        "protocol": "runtime_ticks_v1",
+        "ticks": 1,
+        "title": "test",
+        "conditions": "test",
+        "exploratory": True,
+        "ethics_approved": True,
+    }
     with pytest.raises(WorkflowValidationError, match="ADAPTER_NOT_VALIDATED"):
         service._validate(body)
 
 
-@pytest.mark.parametrize("entrypoint", ["evaluate_experiment", "promote_validated_experiment"])
+@pytest.mark.parametrize(
+    "entrypoint", ["evaluate_experiment", "promote_validated_experiment"]
+)
 def test_evidence_entrypoints_block_before_any_write(entrypoint: str) -> None:
     from src.research.evidence_engine import EvidenceEngine
 
     engine = EvidenceEngine(ResearchRegistry(ROOT / "research" / "registry").load_all())
     method = getattr(engine, entrypoint)
     with pytest.raises(CognitionGovernanceError, match="REVIEW_REQUIRED"):
-        method("EXP-NOT-CREATED", "CLAIM-CNS-105", "H-CNS-105-A", "fixture is not evidence")
+        method(
+            "EXP-NOT-CREATED", "CLAIM-CNS-105", "H-CNS-105-A", "fixture is not evidence"
+        )

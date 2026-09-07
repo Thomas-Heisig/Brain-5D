@@ -1,0 +1,335 @@
+{
+  "schema_version": "1.0",
+  "edition": "1.2",
+  "date": "2026-09-07",
+  "base_commit": "aadf6e1eba804e18340b00edae68a5887fa012b1",
+  "inherited_edition": "../2026-09-07_ki-die-geliehene-intelligenz_v1.1",
+  "section_order": [
+    "section-000.md",
+    "section-001.md",
+    "section-002.md",
+    "section-003.md",
+    "section-004.md",
+    "section-005.md",
+    "section-006.md",
+    "section-007.md",
+    "section-008.md",
+    "section-009.md",
+    "section-010.md",
+    "section-011.md",
+    "section-012.md",
+    "section-013.md",
+    "section-014.md",
+    "section-015.md",
+    "section-016.md",
+    "section-017.md",
+    "section-018.md",
+    "section-019.md",
+    "section-020.md",
+    "section-021.md",
+    "section-022.md",
+    "section-023.md",
+    "section-024.md",
+    "section-025.md",
+    "section-026.md",
+    "section-027.md",
+    "section-028.md",
+    "section-029.md",
+    "section-030.md",
+    "section-031.md",
+    "section-032.md",
+    "section-033.md",
+    "section-034.md",
+    "section-035.md",
+    "section-036.md",
+    "section-037.md",
+    "section-038.md",
+    "section-039.md",
+    "section-040.md",
+    "section-041.md",
+    "section-042.md",
+    "section-043.md",
+    "section-044.md",
+    "section-045.md",
+    "section-046.md",
+    "section-047.md",
+    "section-048.md",
+    "section-049.md",
+    "section-050.md",
+    "section-051.md",
+    "section-052.md",
+    "section-053.md",
+    "section-054.md",
+    "section-055.md"
+  ],
+  "section_count": 56,
+  "revised_sections": [
+    "section-000.md",
+    "section-001.md",
+    "section-002.md",
+    "section-003.md",
+    "section-004.md",
+    "section-006.md",
+    "section-014.md",
+    "section-015.md",
+    "section-017.md",
+    "section-019.md",
+    "section-026.md",
+    "section-033.md",
+    "section-039.md",
+    "section-040.md"
+  ],
+  "added_sections": [
+    "section-051.md",
+    "section-052.md",
+    "section-053.md",
+    "section-054.md",
+    "section-055.md"
+  ],
+  "files": {
+    "README.md": {
+      "sha256": "781a4e877c8e54d882cd820114d17f9163f6a6707ec5cc63f55babee03a84a75",
+      "size": 5282
+    },
+    "literatur_revision.bib": {
+      "sha256": "f8d4660f11500d3130ad77e3091360c0a86b10ca88eb644433b6f39152a49716",
+      "size": 2302
+    },
+    "methodenpruefung.json": {
+      "sha256": "b4aec2c2088d09b48f1d25f5c6d41f84389f44508bc5edd6938a516818b70769",
+      "size": 3806
+    },
+    "methodenpruefung.py": {
+      "sha256": "c17e8207ff001c2f3d072946844d6517a13cfe569edf4141cfa7dd14ab6916c5",
+      "size": 5838
+    },
+    "section-000.md": {
+      "sha256": "d7d9fc762f48efd2bc1316d0a459bbc8e25056e0a4679f808625f3e052c99553",
+      "size": 1360
+    },
+    "section-001.md": {
+      "sha256": "6c12fd62e655ea93a6a6147b1232de92615d7047e9b88dec951044bdae92e2ce",
+      "size": 1972
+    },
+    "section-002.md": {
+      "sha256": "02ba1c0447414c244b31823dd8174d82b1aa285d45053196ce261fcf749c38da",
+      "size": 1364
+    },
+    "section-003.md": {
+      "sha256": "5c34ee2f1bab9a2fbcd2bfc399dcd4250506258fa015a61457ef0069e8cbebd1",
+      "size": 930
+    },
+    "section-004.md": {
+      "sha256": "8f8e93dfa1463348f4c04e892e05dcc87636e6ed592817c154f8f0c288e279af",
+      "size": 4184
+    },
+    "section-005.md": {
+      "sha256": "e3f30350c2a8bdea36c066641a76fe22e13c01ad3bb1b814f7d47228f5705b16",
+      "size": 19445
+    },
+    "section-006.md": {
+      "sha256": "65f6f1f87d72c89d5d58d2bd355676f707984d59cfeead5b84183f7fcbf8b9c1",
+      "size": 17552
+    },
+    "section-007.md": {
+      "sha256": "4177df8c133746ffd72da60bfba986f8e2fe6c64da14c3ef074e0175b9209c70",
+      "size": 10572
+    },
+    "section-008.md": {
+      "sha256": "c92209492a2c7de0e0e6ffbd60f7856ff2b258b1e3d05d51fe4792bc839d8b80",
+      "size": 21453
+    },
+    "section-009.md": {
+      "sha256": "3039f05f79d54898c2ac7865c743ed0e15657938f116fef05220573481e8d4d0",
+      "size": 10777
+    },
+    "section-010.md": {
+      "sha256": "391153b181dd84aea6a7a5f27b44f386089f42f5386a2bb7b2fc62c4c12ac8e7",
+      "size": 8132
+    },
+    "section-011.md": {
+      "sha256": "1d7cd3808c0ad06af9062472167bbac4de20189bf33e4600041a54371127d2b5",
+      "size": 7128
+    },
+    "section-012.md": {
+      "sha256": "bb60231bb45e961c26aa45a1d25ad43eaaae55a9d6243f1bf22c1b80572b2ee2",
+      "size": 9434
+    },
+    "section-013.md": {
+      "sha256": "74567fad898f8ab1d709e5c4003c61856134ce5c64f4ff8a8b9fc8e7d5008a88",
+      "size": 15145
+    },
+    "section-014.md": {
+      "sha256": "80a8a006653102df78316f7b81247a967248500f7da62f1267de5e479ab52f03",
+      "size": 17502
+    },
+    "section-015.md": {
+      "sha256": "a26aaae1af794968f1f8f1d21ee374bbf40709b857286e397d06d4b58186cd62",
+      "size": 11742
+    },
+    "section-016.md": {
+      "sha256": "2f7c895fe1feae236c68c914a9c943aed1b89276d3b8db5e778654a5169a44e8",
+      "size": 7127
+    },
+    "section-017.md": {
+      "sha256": "2ed2a8bf791e42bfa2a10bbb40afa2d21caad168201da0c9799d8b11f239b9a3",
+      "size": 22642
+    },
+    "section-018.md": {
+      "sha256": "042fdc0ccaea114b5352247c9176c15628bcafe5486bb387ec8db05dafafe09a",
+      "size": 10196
+    },
+    "section-019.md": {
+      "sha256": "a1cd7bc77c154d1f8c7dd3ec24c14246a89f716f373b92027d4d50db0881363d",
+      "size": 13162
+    },
+    "section-020.md": {
+      "sha256": "8271a7ecbd4658fccfe05e2fb37190cc5b01bdee7696079314dc9eaf66ee9edb",
+      "size": 3672
+    },
+    "section-021.md": {
+      "sha256": "81e1c5da2b723932ce4060d50b8e4fc261312d108b70f5bdb3fccd2235d6216e",
+      "size": 9673
+    },
+    "section-022.md": {
+      "sha256": "d003bda83ea62604c6269693fdff8b7f9845859873d827b03383173998e53df3",
+      "size": 9534
+    },
+    "section-023.md": {
+      "sha256": "1f9d21aab1d53579633374cb9fafb7b6c0076cb17188aded27ae8090423e41df",
+      "size": 13031
+    },
+    "section-024.md": {
+      "sha256": "b15e1b611145a8d3897bdc5c28357db9b57e9740270647234dfe756f0eda9c05",
+      "size": 12572
+    },
+    "section-025.md": {
+      "sha256": "a7baebd5f61d731de8ba888a1112ca116dfd05b5279091540b1683716e10cf5a",
+      "size": 10913
+    },
+    "section-026.md": {
+      "sha256": "c728c93eb7ed9c1650de17dbf1f77e0eed9662b89bdf157fac144ad22e75c44f",
+      "size": 5463
+    },
+    "section-027.md": {
+      "sha256": "6f8400d1a9b7cccc4d0e71da42793de32f0eeef7feb7751c7e526868e21c0fb0",
+      "size": 5291
+    },
+    "section-028.md": {
+      "sha256": "efd4345e28bd19779dc594fe2e4d88b942b9d6bb15df07156006dcc73c8ba38b",
+      "size": 9474
+    },
+    "section-029.md": {
+      "sha256": "7f6f12904e19d22211cadf029b27216c12e408f4725cd43abf5ed9718e1fc0d4",
+      "size": 4024
+    },
+    "section-030.md": {
+      "sha256": "1a6010aa28884fc12db57384b1c8c47c0df9c58c28221405cd08f029ca8cc542",
+      "size": 7822
+    },
+    "section-031.md": {
+      "sha256": "a25827932cc8c51a25b3c60bbafbc22a6ef0b6da1bd3b1d7044836db96ad3072",
+      "size": 6376
+    },
+    "section-032.md": {
+      "sha256": "08f723e057b79742204d87b17b47e009ed17b115d36272f9329dec3bae9466e9",
+      "size": 4807
+    },
+    "section-033.md": {
+      "sha256": "93d294f5799649bafbff50d571659f03b05bef34584ad476acbf2b4a42283fa8",
+      "size": 24995
+    },
+    "section-034.md": {
+      "sha256": "79382cf2fab6a74caf3b3f9dabdc8394c3817f0e3628a498233850d2e89e824e",
+      "size": 17321
+    },
+    "section-035.md": {
+      "sha256": "3d7e95a1e86c1e4ff1cdf533a19d0266cdd3655ee83cf92533642f31e62277e9",
+      "size": 9877
+    },
+    "section-036.md": {
+      "sha256": "844fc1eeddbdaf300d4578b3e4a4b5b2d2050b36de2c02841f5496dc90eda3f6",
+      "size": 29042
+    },
+    "section-037.md": {
+      "sha256": "3159344c5b30d67bc5f33cd4a04c2dc65aca2213ed773067c6dbff2ec32e5513",
+      "size": 5996
+    },
+    "section-038.md": {
+      "sha256": "1025bdd11377c63a1ec399c1f550c0d6b44e78fb9a32cbe63d10792df6a2328d",
+      "size": 11685
+    },
+    "section-039.md": {
+      "sha256": "902514a81d668138dc0f7eedc1b965ea83d8dfd88135d1ee36633c4f99d7fae5",
+      "size": 10788
+    },
+    "section-040.md": {
+      "sha256": "09112ac1c244c2ec70127fb65767f56aac1094f46da45ea43f4c617cb9653d4a",
+      "size": 10499
+    },
+    "section-041.md": {
+      "sha256": "eacc3ae3839d03a5f1e6cff361ffa0c5949a5e320ea9cbe8aef901fd9b36d986",
+      "size": 11389
+    },
+    "section-042.md": {
+      "sha256": "b0518d62dae11adc2e10d351965a8d40ab71583c29ef6a5d246929cd4a2de8c0",
+      "size": 22696
+    },
+    "section-043.md": {
+      "sha256": "81b6978bbc7f3a83337330cbdc433eef693145ea49f14989e837cac6fb23a208",
+      "size": 9182
+    },
+    "section-044.md": {
+      "sha256": "79bbb1df5fab49e700a2b75337f0cbba86892f31980364d0911af0a032f657cd",
+      "size": 9421
+    },
+    "section-045.md": {
+      "sha256": "94933abb063570d3597b0dfbc765ab9a96a26fc9c8a32500a8da672e44a9c5f1",
+      "size": 65139
+    },
+    "section-046.md": {
+      "sha256": "c9b13c47c4308e23498bf4e13931a1022c867b0644d7f9a7318c6e13ee9d6d3b",
+      "size": 25573
+    },
+    "section-047.md": {
+      "sha256": "30fc0832a0c32444d27f6572076319a947b6ee1f2af4f621b4429ef214f78388",
+      "size": 11690
+    },
+    "section-048.md": {
+      "sha256": "7d23c49b87ddb9cf1fe396c1356a976d92219c7a86a88333154ab03ebd934929",
+      "size": 13368
+    },
+    "section-049.md": {
+      "sha256": "4a06e55910b6f2e8faed7368909b91c68a5179a87e51774b00481308a16ecb3f",
+      "size": 10135
+    },
+    "section-050.md": {
+      "sha256": "6c0affa6c4e6e09ff0f1e64847a390194d793590aa82fceae76f2d5e05966bd5",
+      "size": 7476
+    },
+    "section-051.md": {
+      "sha256": "22f6dbf2765f820c3d5a0e4de70bc45293bdafb0d34edf81759f11d1f3ea2d64",
+      "size": 7479
+    },
+    "section-052.md": {
+      "sha256": "ae0f2dc4f4c6404b70fe6990fc9ce60e3e7f8168a364a2f48ef0d3c7bf9a9a77",
+      "size": 6339
+    },
+    "section-053.md": {
+      "sha256": "b96ffb57fab11913d6e7181f3b32310fdbcb5a587a88364a4af69e23ce7c1862",
+      "size": 7596
+    },
+    "section-054.md": {
+      "sha256": "7592b34d34f61beb3ab8e65b6b1c07a1a7ae648a60ca3a59e2a3c9f289e77ac7",
+      "size": 7529
+    },
+    "section-055.md": {
+      "sha256": "6e9ab4e034fa914ba85891da2de19236423f07ea124dc34cb0ebdabb84b04edd",
+      "size": 5914
+    }
+  },
+  "authority": "interpretation_only",
+  "automatic_evidence_promotion": false,
+  "new_empirical_consciousness_findings": false,
+  "external_ethics_approval": "not_granted"
+}

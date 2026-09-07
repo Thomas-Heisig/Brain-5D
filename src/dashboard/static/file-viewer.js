@@ -160,7 +160,7 @@ function initFileManager() {
           updateFMExperimentSortControl();
           updateFMBreadcrumb();
           await refreshFileManager();
-          await openFMFile('publications/reader/README.md');
+          await openFMFile('publications/README.md');
         } catch (error) {
           window.alert(`Abhandlung konnte nicht geoeffnet werden: ${error.message}`);
         } finally {
