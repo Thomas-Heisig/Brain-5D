@@ -113,6 +113,7 @@ class ResearchSource:
         "analysis",
         "benchmarks",
         "literature",
+        "publications",
         "schemas",
     )
 

@@ -1,0 +1,114 @@
+name: Verify publication research UI integration
+
+on:
+  push:
+    branches: [fix/publication-research-integration-20260907]
+    paths: ['.github/workflows/publication-ui-finalize-20260907.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Materialize complete publication
+        run: git lfs pull --include='research/publications/**' --exclude=''
+      - name: Patch navigation and fixture safely
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          def patch(name, old, new):
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              if new in text:
+                  return
+              if old not in text:
+                  raise ValueError('Expected anchor missing: ' + name)
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          patch('tests/test_publication_integration.py', '    assert source.registry_summary()["categories"]["publications"] == 1', '    categories = source.registry_summary()["categories"]\n    assert isinstance(categories, dict)\n    assert categories["publications"] == 1')
+          path = Path('scripts/browser_server.py')
+          text = path.read_text(encoding='utf-8')
+          if 'import shutil' not in text:
+              text = text.replace('import json\n', 'import json\nimport shutil\n', 1)
+          if 'ROOT / "research" / "publications"' not in text:
+              old = '    docs.mkdir(); registry.mkdir(parents=True)'
+              new = old + '\n    shutil.copytree(ROOT / "research" / "publications", research / "publications")'
+              if old not in text:
+                  old = '    registry.mkdir(parents=True)'
+                  new = old + '\n    shutil.copytree(ROOT / "research" / "publications", research / "publications")'
+              if old not in text:
+                  raise ValueError('Browser fixture anchor missing')
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          navigation = '''    if (toolbar && !document.getElementById('fm-open-publication')) {
+                const publication = document.createElement('button');
+                publication.id = 'fm-open-publication';
+                publication.type = 'button';
+                publication.textContent = 'Abhandlung lesen';
+                publication.addEventListener('click', async () => {
+                  publication.disabled = true;
+                  try {
+                    fmCurrentSource = 'research';
+                    document.querySelectorAll('.fm-source-btn').forEach(button => {
+                      button.classList.toggle('active', button.dataset.source === 'research');
+                    });
+                    updateFMExperimentSortControl();
+                    updateFMBreadcrumb();
+                    await refreshFileManager();
+                    await openFMFile('publications/reader/README.md');
+                  } finally {
+                    publication.disabled = false;
+                  }
+                });
+                toolbar.append(publication);
+              }
+          '''
+          navigation = '\n'.join(line[10:] if line.startswith('          ') else line for line in navigation.splitlines()) + '\n'
+          patch('src/dashboard/static/file-viewer.js', '    loadFMRecent();\n    setupFMSourceButtons();', navigation + '    loadFMRecent();\n    setupFMSourceButtons();')
+          PY
+      - name: Validate and persist results
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          results = []
+          def run(name, command):
+              result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              print(name, result.returncode, result.stdout[-5000:], flush=True)
+              results.append({'check': name, 'exit_code': result.returncode, 'tail': result.stdout[-4500:]})
+              return result.returncode == 0
+          run('dependencies', ['python', '-m', 'pip', 'install', '-e', '.[dev,docs]'])
+          run('format', ['python', '-m', 'black', 'scripts/publication_bundle.py', 'scripts/browser_server.py', 'tests/test_publication_integration.py'])
+          run('lint', ['python', '-m', 'ruff', 'check', '--fix', 'scripts/publication_bundle.py', 'scripts/browser_server.py', 'tests/test_publication_integration.py'])
+          run('type_check', ['python', '-m', 'pyright'])
+          run('integrity', ['python', 'scripts/publication_bundle.py'])
+          run('python_tests', ['python', '-m', 'pytest', 'tests/test_publication_integration.py', 'tests/test_dashboard_file_manager.py', '-q'])
+          run('npm_install', ['npm', 'ci'])
+          run('browser_install', ['npx', 'playwright', 'install', '--with-deps', 'chromium'])
+          run('publication_browser_tests', ['npx', 'playwright', 'test', 'tests/browser/publication.spec.js', '--reporter=line'])
+          run('identity_name', ['git', 'config', 'user.name', 'github-actions[bot]'])
+          run('identity_email', ['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'])
+          run('stage', ['git', 'add', 'src/dashboard/static/file-viewer.js', 'scripts/browser_server.py', 'scripts/publication_bundle.py', 'tests/test_publication_integration.py'])
+          clean = run('diff_check', ['git', 'diff', '--cached', '--check'])
+          if clean and subprocess.run(['git', 'diff', '--cached', '--quiet']).returncode:
+              run('commit', ['git', 'commit', '-m', 'feat(research): add complete publication reader shortcut and browser fixtures'])
+              run('push', ['git', 'push', 'origin', 'HEAD:refs/heads/fix/publication-research-integration-20260907'])
+          report = {'status': 'success' if all(r['exit_code'] == 0 for r in results) else 'failure', 'checks': results}
+          Path('.publication-ui-result.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          subprocess.run(['git', 'reset'], check=True)
+          subprocess.run(['git', 'add', '.publication-ui-result.json'], check=True)
+          subprocess.run(['git', 'commit', '-m', 'chore(research): record full-stack publication verification'], check=True)
+          subprocess.run(['git', 'push', 'origin', 'HEAD:refs/heads/fix/publication-research-integration-20260907'], check=True)
+          if report['status'] != 'success':
+              raise SystemExit(1)
+          PY

@@ -1,0 +1,70 @@
+{
+  "status": "failure",
+  "checks": [
+    {
+      "check": "identity_name",
+      "exit_code": 0,
+      "tail": ""
+    },
+    {
+      "check": "identity_email",
+      "exit_code": 0,
+      "tail": ""
+    },
+    {
+      "check": "reader_build",
+      "exit_code": 0,
+      "tail": "Reader generated: 46 complete sections\n"
+    },
+    {
+      "check": "complete_integrity",
+      "exit_code": 0,
+      "tail": "VERIFIED: 41 frozen files, original ZIP, 46 complete reader sections\n"
+    },
+    {
+      "check": "dependencies",
+      "exit_code": 0,
+      "tail": "━━━ 1.5/1.5 MB 212.9 MB/s  0:00:00\nDownloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)\nDownloading nodeenv-1.10.0-py2.py3-none-any.whl (23 kB)\nDownloading numpy-2.5.3-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 321.6 MB/s  0:00:00\nDownloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)\nDownloading packaging-26.3-py3-none-any.whl (129 kB)\nDownloading pathspec-1.1.1-py3-none-any.whl (57 kB)\nDownloading pillow-12.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 285.5 MB/s  0:00:00\nDownloading platformdirs-4.11.7-py3-none-any.whl (23 kB)\nDownloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)\nDownloading pyparsing-3.3.2-py3-none-any.whl (122 kB)\nDownloading pypdf-6.18.0-py3-none-any.whl (393 kB)\nDownloading pytest-9.1.1-py3-none-any.whl (386 kB)\nDownloading pluggy-1.6.0-py3-none-any.whl (20 kB)\nDownloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)\nDownloading pygments-2.21.0-py3-none-any.whl (1.3 MB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 218.1 MB/s  0:00:00\nDownloading pytest_cov-7.1.0-py3-none-any.whl (22 kB)\nDownloading coverage-7.16.0-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (257 kB)\nDownloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)\nDownloading python_docx-1.2.0-py3-none-any.whl (252 kB)\nDownloading lxml-6.1.3-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 295.1 MB/s  0:00:00\nDownloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 801.6/801.6 kB 160.7 MB/s  0:00:00\nDownloading six-1.17.0-py2.py3-none-any.whl (11 kB)\nDownloading tomlkit-0.15.1-py3-none-any.whl (49 kB)\nDownloading types_psutil-7.2.2.20260906-py3-none-any.whl (33 kB)\nDownloading types_pyyaml-6.0.12.20260906-py3-none-any.whl (21 kB)\nDownloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)\nDownloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)\nBuilding wheels for collected packages: brain5d-core\n  Building editable for brain5d-core (pyproject.toml): started\n  Building editable for brain5d-core (pyproject.toml): finished with status 'done'\n  Created wheel for brain5d-core: filename=brain5d_core-0.5.0a7-0.editable-py3-none-any.whl size=9334 sha256=75eaaacd93f6a20818821b330ca1039b621557878c16fdf5d62b65a8c6248cbd\n  Stored in directory: /tmp/pip-ephem-wheel-cache-p4xx6fuc/wheels/76/41/82/73623b29a2ccdf30e2f48551d8299a5b057f05cdb380aa288f\nSuccessfully built brain5d-core\nInstalling collected packages: typing_extensions, types-PyYAML, types-psutil, tomlkit, six, ruff, PyYAML, pytokens, pypdf, pyparsing, pygments, psutil, pluggy, platformdirs, pillow, pathspec, packaging, numpy, nodeenv, mypy-extensions, mccabe, lxml, librt, kiwisolver, iniconfig, fonttools, et-xmlfile, dill, cycler, coverage, click, astroid, ast-serialize, python-docx, python-dateutil, pytest, pyright, openpyxl, mypy, isort, contourpy, black, pytest-cov, pylint, matplotlib, brain5d-core\n\nSuccessfully installed PyYAML-6.0.3 ast-serialize-0.10.0 astroid-4.0.4 black-26.5.1 brain5d-core-0.5.0a7 click-8.5.0 contourpy-1.3.3 coverage-7.16.0 cycler-0.12.1 dill-0.4.1 et-xmlfile-2.0.0 fonttools-4.64.0 iniconfig-2.3.0 isort-9.0.1 kiwisolver-1.5.1 librt-0.15.0 lxml-6.1.3 matplotlib-3.11.1 mccabe-0.7.0 mypy-2.3.1 mypy-extensions-1.1.0 nodeenv-1.10.0 numpy-2.5.3 openpyxl-3.1.5 packaging-26.3 pathspec-1.1.1 pillow-12.3.0 platformdirs-4.11.7 pluggy-1.6.0 psutil-7.2.2 pygments-2.21.0 pylint-4.0.8 pyparsing-3.3.2 pypdf-6.18.0 pyright-1.1.411 pytest-9.1.1 pytest-cov-7.1.0 python-dateutil-2.9.0.post0 python-docx-1.2.0 pytokens-0.4.1 ruff-0.16.6 six-1.17.0 tomlkit-0.15.1 types-PyYAML-6.0.12.20260906 types-psutil-7.2.2.20260906 typing_extensions-4.16.0\n"
+    },
+    {
+      "check": "format",
+      "exit_code": 0,
+      "tail": "reformatted tests/test_publication_integration.py\nreformatted scripts/publication_bundle.py\n\nAll done! ✨ 🍰 ✨\n2 files reformatted.\n"
+    },
+    {
+      "check": "lint",
+      "exit_code": 0,
+      "tail": "All checks passed!\n"
+    },
+    {
+      "check": "integration_tests",
+      "exit_code": 0,
+      "tail": "..........................                                               [100%]\n26 passed in 6.28s\n"
+    },
+    {
+      "check": "type_check",
+      "exit_code": 1,
+      "tail": "/home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: Argument of type \"Literal['publications']\" cannot be assigned to parameter \"key\" of type \"SupportsIndex | slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None]\" in function \"__getitem__\"\n    Type \"Literal['publications']\" is not assignable to type \"SupportsIndex | slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None]\"\n      \"Literal['publications']\" is incompatible with protocol \"SupportsIndex\"\n        \"__index__\" is not present\n      \"Literal['publications']\" is not assignable to \"slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None]\" (reportArgumentType)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: \"__getitem__\" method not defined on type \"int\" (reportIndexIssue)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: \"__getitem__\" method not defined on type \"float\" (reportIndexIssue)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: \"__getitem__\" method not defined on type \"bool\" (reportIndexIssue)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: Object of type \"None\" is not subscriptable (reportOptionalSubscript)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: No overloads for \"__getitem__\" match the provided arguments (reportCallIssue)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_publication_integration.py:37:12 - error: Argument of type \"Literal['publications']\" cannot be assigned to parameter \"s\" of type \"slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None]\" in function \"__getitem__\"\n    \"Literal['publications']\" is not assignable to \"slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None]\" (reportArgumentType)\n7 errors, 0 warnings, 0 informations\n"
+    },
+    {
+      "check": "stage",
+      "exit_code": 0,
+      "tail": ""
+    },
+    {
+      "check": "diff_check",
+      "exit_code": 0,
+      "tail": ""
+    },
+    {
+      "check": "commit",
+      "exit_code": 0,
+      "tail": "[fix/publication-research-integration-20260907 3e5fa0c] feat(research): integrate immutable publication and complete verified chapter reader\n 55 files changed, 7778 insertions(+), 28 deletions(-)\n create mode 100644 research/publications/reader/README.md\n create mode 100644 research/publications/reader/manifest.json\n create mode 100644 research/publications/reader/section-000.md\n create mode 100644 research/publications/reader/section-001.md\n create mode 100644 research/publications/reader/section-002.md\n create mode 100644 research/publications/reader/section-003.md\n create mode 100644 research/publications/reader/section-004.md\n create mode 100644 research/publications/reader/section-005.md\n create mode 100644 research/publications/reader/section-006.md\n create mode 100644 research/publications/reader/section-007.md\n create mode 100644 research/publications/reader/section-008.md\n create mode 100644 research/publications/reader/section-009.md\n create mode 100644 research/publications/reader/section-010.md\n create mode 100644 research/publications/reader/section-011.md\n create mode 100644 research/publications/reader/section-012.md\n create mode 100644 research/publications/reader/section-013.md\n create mode 100644 research/publications/reader/section-014.md\n create mode 100644 research/publications/reader/section-015.md\n create mode 100644 research/publications/reader/section-016.md\n create mode 100644 research/publications/reader/section-017.md\n create mode 100644 research/publications/reader/section-018.md\n create mode 100644 research/publications/reader/section-019.md\n create mode 100644 research/publications/reader/section-020.md\n create mode 100644 research/publications/reader/section-021.md\n create mode 100644 research/publications/reader/section-022.md\n create mode 100644 research/publications/reader/section-023.md\n create mode 100644 research/publications/reader/section-024.md\n create mode 100644 research/publications/reader/section-025.md\n create mode 100644 research/publications/reader/section-026.md\n create mode 100644 research/publications/reader/section-027.md\n create mode 100644 research/publications/reader/section-028.md\n create mode 100644 research/publications/reader/section-029.md\n create mode 100644 research/publications/reader/section-030.md\n create mode 100644 research/publications/reader/section-031.md\n create mode 100644 research/publications/reader/section-032.md\n create mode 100644 research/publications/reader/section-033.md\n create mode 100644 research/publications/reader/section-034.md\n create mode 100644 research/publications/reader/section-035.md\n create mode 100644 research/publications/reader/section-036.md\n create mode 100644 research/publications/reader/section-037.md\n create mode 100644 research/publications/reader/section-038.md\n create mode 100644 research/publications/reader/section-039.md\n create mode 100644 research/publications/reader/section-040.md\n create mode 100644 research/publications/reader/section-041.md\n create mode 100644 research/publications/reader/section-042.md\n create mode 100644 research/publications/reader/section-043.md\n create mode 100644 research/publications/reader/section-044.md\n create mode 100644 research/publications/reader/section-045.md\n"
+    },
+    {
+      "check": "push",
+      "exit_code": 0,
+      "tail": "To https://github.com/Thomas-Heisig/Brain-5D\n   0d55eba..3e5fa0c  HEAD -> fix/publication-research-integration-20260907\n"
+    }
+  ]
+}
