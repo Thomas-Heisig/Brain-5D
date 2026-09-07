@@ -98,6 +98,7 @@ export class ExperimentWorkflowPanel {
   constructor({ onCompleted = null } = {}) {
     this.onCompleted = onCompleted;
     this.questions = [];
+    this.facets = {};
     this.hypotheses = [];
     this.protocols = [];
     this.nextExperimentId = "";
@@ -368,6 +369,7 @@ export class ExperimentWorkflowPanel {
     try {
       const catalog = await fetchJson("/api/experiment/workflow/catalog");
       this.questions = catalog.questions || [];
+      this.facets = catalog.facets || {};
       this.hypotheses = catalog.hypotheses || [];
       this.protocols = catalog.protocols || [];
       this.nextExperimentId = catalog.next_experiment_id || "";

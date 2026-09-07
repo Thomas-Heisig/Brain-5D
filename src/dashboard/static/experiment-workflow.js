@@ -131,7 +131,11 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     const facets = [...document.querySelectorAll("[data-catalog-facet]")];
     for (const select of facets) {
       const value = select.value;
-      const options = [...new Set(this.questions.map((item) => item[select.dataset.catalogFacet]).filter(Boolean))].sort();
+      const field = select.dataset.catalogFacet;
+      const configured = this.facets?.[field];
+      const options = Array.isArray(configured)
+        ? configured
+        : [...new Set(this.questions.map((item) => item[field]).filter(Boolean))].sort();
       select.replaceChildren(new Option("Alle", ""), ...options.map((item) => new Option(item, item)));
       select.value = options.includes(value) ? value : "";
     }

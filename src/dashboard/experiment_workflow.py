@@ -11,7 +11,11 @@ from time import perf_counter
 from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
-from src.research.catalog_status import question_facets
+from src.research.catalog_status import (
+    CATALOG_FACET_FIELDS,
+    question_facet_options,
+    question_facets,
+)
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -95,11 +99,11 @@ class ExperimentWorkflowService:
     def catalog(self) -> dict[str, JSONValue]:
         """Return registry entries suitable for workflow selection."""
         registry = ResearchRegistry(self._research_root / "registry").load_all()
+        questions = question_facets(self._research_root, registry)
         return {
-            "questions": cast(
-                JSONValue,
-                question_facets(self._research_root, registry),
-            ),
+            "questions": cast(JSONValue, questions),
+            "facets": cast(JSONValue, question_facet_options(questions)),
+            "facet_fields": cast(JSONValue, list(CATALOG_FACET_FIELDS)),
             "hypotheses": cast(
                 JSONValue,
                 [

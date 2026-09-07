@@ -12,6 +12,12 @@ from .registry import ResearchRegistry
 
 MAX_MANIFESTS = 4096
 MAX_RECORD_BYTES = 262144
+CATALOG_FACET_FIELDS = (
+    "domain",
+    "status",
+    "evidence_status",
+    "experiment_progress",
+)
 
 
 def _record(path: Path) -> dict[str, Any]:
@@ -83,3 +89,17 @@ def question_facets(root: Path, registry: ResearchRegistry) -> list[dict[str, An
             }
         )
     return result
+
+
+def question_facet_options(rows: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """Return stable option values for the catalog's backend-owned facets."""
+    return {
+        field: sorted(
+            {
+                str(row[field])
+                for row in rows
+                if row.get(field) is not None and str(row[field])
+            }
+        )
+        for field in CATALOG_FACET_FIELDS
+    }
