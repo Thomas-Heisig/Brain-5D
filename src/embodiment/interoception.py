@@ -35,6 +35,10 @@ class VitalSignal:
         """Classify missing or numeric values without treating missing as safe."""
         if self.value is None:
             return "unknown"
+        if not isinstance(self.value, (int, float, bool)):
+            return "unknown"
+        if self.critical_range is not None and isinstance(self.value, bool):
+            return "unknown"
         if self.critical_range is not None and self._outside(self.critical_range):
             return "critical"
         if self.warning_range is not None and self._outside(self.warning_range):
@@ -226,7 +230,7 @@ def derive_drives(frame: InteroceptionFrame) -> DriveState:
         "thermal_threat": _uncertainty(temperature),
         "resource_pressure": 1.0 if not known_pressures else 0.0,
         "sensory_integrity": 1.0 - sensory_integrity,
-        "continuity_risk": _uncertainty(network),
+        "continuity_risk": _uncertainty(continuity_risk),
         "task_progress": _uncertainty(task_progress),
         "novelty": _uncertainty(novelty),
         "actuator_confidence": _uncertainty(actuator_confidence),

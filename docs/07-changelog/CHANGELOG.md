@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Missing and uncertain sensor conditions
+
+- Added regression coverage for malformed sensor values.
+- Corrected continuity uncertainty so invalid raw values remain explicitly uncertain.
+
 ## 2026-09-07 — Peripheral adapter mutation boundary coverage
 
 - Added a negative test for non-executing peripheral adapter registration and catalog publication.

@@ -24,6 +24,23 @@ def test_missing_signal_is_unknown_and_not_nominal() -> None:
     assert temperature.status == "unknown"
 
 
+def test_malformed_sensor_values_are_unknown_and_uncertain() -> None:
+    signals = normalize_vital_signals(
+        {"temperature_c": "sensor-error", "network_up": "unknown"}
+    )
+    temperature = next(signal for signal in signals if signal.name == "temperature_c")
+    network = next(signal for signal in signals if signal.name == "network_up")
+
+    assert temperature.status == "unknown"
+    assert network.status == "unknown"
+
+    drives = derive_drives(InteroceptionFrame(5, signals))
+    assert drives.drives["thermal_threat"] is None
+    assert drives.drives["continuity_risk"] is None
+    assert drives.uncertainty["thermal_threat"] == 1.0
+    assert drives.uncertainty["continuity_risk"] == 1.0
+
+
 def test_signal_quality_and_critical_range_are_explicit() -> None:
     signal = VitalSignal(
         name="thermal_margin",

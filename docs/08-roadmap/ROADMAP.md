@@ -4,6 +4,10 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Missing and uncertain sensor conditions
+
+- Classified malformed numeric/boolean sensor values as `unknown` and propagated uncertainty through thermal and continuity drives without treating raw presence as valid telemetry.
+
 ## 2026-09-07 Peripheral adapter mutation boundary coverage
 
 - Added a negative catalog test proving a peripheral adapter is not executed during registration or publication and cannot silently change canonical core or research state through that boundary.
