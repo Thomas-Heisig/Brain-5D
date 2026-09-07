@@ -121,7 +121,7 @@ def _nonempty_text(value: object) -> bool:
 def _texts(value: object) -> bool:
     return (
         isinstance(value, list)
-        and bool(value)
+        and bool(cast(list[object], value))
         and all(_nonempty_text(item) for item in cast(list[object], value))
     )
 
