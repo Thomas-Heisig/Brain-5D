@@ -16,6 +16,8 @@
 - [x] Merge duplicate dated milestones while preserving their source labels and checklist state.
 - [x] Add regression coverage for the timeline data contract and frontend wiring.
 - [x] Show one complete past/present/future timeline, including the current release registry and open P0 backlog.
+- [x] Organize Release into Gate, Releases, current preview, chronological Timeline, and TODO/CHANGELOG/ROADMAP tabs.
+- [x] Include historical tagged releases from 0.1.0 through the current development release.
 
 ## 2026-09-07 Dashboard batch HTTP contract coverage
 

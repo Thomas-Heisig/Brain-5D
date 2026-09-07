@@ -17,6 +17,8 @@
 - The dashboard merges dated milestones from TODO, ROADMAP and CHANGELOG and keeps source provenance visible.
 - Checklist completion remains derived from the source Markdown rather than copied into frontend code.
 - The Release workspace now separates completed history, current Alpha.7 work and planned backlog into three timeline lanes.
+- Release navigation now separates Gate, version history, current preview, chronological Timeline, and the three canonical project documents.
+- Historical Git tags extend the visible release range from 0.1.0 through the current development node.
 
 ## 2026-09-07 Full-stack runtime phase profiling
 

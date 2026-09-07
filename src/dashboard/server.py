@@ -34,6 +34,7 @@ import json
 import os
 import secrets
 import signal
+import subprocess
 import threading
 from collections.abc import Mapping
 from http import HTTPStatus
@@ -1249,6 +1250,47 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                     records.append(cast("dict[str, object]", data))
                 except Exception:
                     pass
+
+        # Preserve older tagged versions even when they predate the JSON
+        # release registry. Tag metadata is descriptive only; gate truth
+        # remains available only for immutable JSON release records.
+        known_versions = {str(record.get("version")) for record in records}
+        try:
+            tags = subprocess.run(
+                [
+                    "git",
+                    "for-each-ref",
+                    "refs/tags",
+                    "--format=%(refname:short)|%(objectname:short)|%(creatordate:short)",
+                ],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except OSError:
+            tags = None
+        if tags is not None:
+            for line in tags.stdout.splitlines():
+                tag, commit, date = (line.split("|", 2) + ["", "", ""])[:3]
+                version = tag.removeprefix("brain5d-core-").removeprefix("v")
+                if version in known_versions or not version.startswith("0."):
+                    continue
+                records.append(
+                    {
+                        "schema_version": 1,
+                        "version": version,
+                        "pep440": version,
+                        "status": "released",
+                        "title": "Historical tagged release",
+                        "tag": tag,
+                        "commit": commit,
+                        "date": date,
+                        "gate": "unknown",
+                        "historical_tag_only": True,
+                    }
+                )
+                known_versions.add(version)
 
         current_path = releases_dir / "current.json"
         if current_path.exists():

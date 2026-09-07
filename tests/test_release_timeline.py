@@ -24,6 +24,7 @@ def test_release_timeline_reads_all_canonical_sources() -> None:
         "current",
         "future",
     }
+    assert any(entry["title"] == "0.1.0 · Historical tagged release" for entry in payload["entries"])
 
 
 def test_release_timeline_merges_same_milestone_and_keeps_checklist_state() -> None:

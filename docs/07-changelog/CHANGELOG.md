@@ -19,6 +19,8 @@
 - Merged repeated milestones and exposed source labels plus checklist completion in the frontend.
 - Added backend and frontend regression coverage for the documentation timeline contract.
 - Added a complete `Was war` / `Was ist` / `Was wird` view including release-registry history and open P0 work.
+- Reorganized the Release workspace into Gate, Releases, current preview, chronological Timeline, and TODO/CHANGELOG/ROADMAP tabs.
+- Added historical tagged release nodes from `0.1.0` through the current development release.
 
 ## 2026-09-07 — Full-stack runtime phase profiling
 

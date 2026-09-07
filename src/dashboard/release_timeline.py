@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$")
@@ -66,6 +67,7 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
         return []
 
     entries: list[dict[str, object]] = []
+    known_versions: set[str] = set()
     for path in sorted(releases_dir.glob("*.json")):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -75,6 +77,7 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
             continue
 
         version = str(data.get("version") or path.stem)
+        known_versions.add(version)
         title = str(data.get("title") or "Release")
         status = str(data.get("status") or "unknown")
         items: list[dict[str, object]] = []
@@ -95,6 +98,38 @@ def _release_entries(repo_root: Path) -> list[dict[str, object]]:
                 "phase": "current" if status == "development" else "past",
             }
         )
+
+    try:
+        tags = subprocess.run(
+            [
+                "git",
+                "for-each-ref",
+                "refs/tags",
+                "--format=%(refname:short)|%(objectname:short)|%(creatordate:short)",
+            ],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        tags = None
+    if tags is not None:
+        for line in tags.stdout.splitlines():
+            tag, commit, date = (line.split("|", 2) + ["", "", ""])[:3]
+            version = tag.removeprefix("brain5d-core-").removeprefix("v")
+            if version in known_versions or not version.startswith("0."):
+                continue
+            entries.append(
+                {
+                    "date": date or None,
+                    "title": f"{version} · Historical tagged release",
+                    "sources": ["RELEASE"],
+                    "items": [{"text": f"Tag {tag} · commit {commit}", "done": True}],
+                    "phase": "past",
+                }
+            )
+            known_versions.add(version)
     return entries
 
 

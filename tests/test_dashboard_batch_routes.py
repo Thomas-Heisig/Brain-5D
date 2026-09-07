@@ -80,6 +80,12 @@ def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> No
         }
         assert timeline["entries"]
 
+        releases_status, releases_body = _request(server, "GET", "/api/releases")
+        assert releases_status == 200
+        releases = json.loads(releases_body)
+        release_versions = {record["version"] for record in releases["releases"]}
+        assert {"0.1.0", "0.3.0", "0.3.0.1"}.issubset(release_versions)
+
         batch_status, batch_body = _request(
             server,
             "POST",
