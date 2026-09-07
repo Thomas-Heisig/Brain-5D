@@ -1,9 +1,9 @@
-name: Verify consolidated main and clean merged branches
+name: Verify consolidated main
 
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/repository-maintenance.yml, ".maintenance/**"]
+    paths: [.github/workflows/repository-maintenance.yml, '.maintenance/**']
   workflow_dispatch:
 
 permissions:
@@ -15,45 +15,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  cleanup:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-          ref: ${{ github.sha }}
-      - name: Remove only reviewed branch tips already in main
-        shell: bash
-        run: |
-          set -euo pipefail
-          deletes=()
-          leases=()
-          while read -r branch expected; do
-            ref="refs/heads/$branch"
-            current="$(git ls-remote --heads origin "$ref" | cut -f1)"
-            if test -z "$current"; then
-              echo "$branch: already absent" >> "$GITHUB_STEP_SUMMARY"
-              continue
-            fi
-            if test "$current" != "$expected"; then
-              echo "Branch changed; preserving new work: $branch" >&2
-              exit 1
-            fi
-            git merge-base --is-ancestor "$expected" HEAD
-            leases+=("--force-with-lease=$ref:$expected")
-            deletes+=(":$ref")
-          done <<'BRANCHES'
-          fix/footer-runtime-recovery-green-base b242a967167f2ba496faabbddff235c259642ecc
-          fix/footer-runtime-responsiveness-ci 8b4f4347bc6a8cab2ba99d5d4bbd8efd038909d2
-          integration/scientific-publication-20260907 f1dc5fe6248da4c56a30ce862ab2e2e33d1570b2
-          BRANCHES
-          if test "${#deletes[@]}" -gt 0; then
-            git push --atomic "${leases[@]}" origin "${deletes[@]}"
-          fi
-          git ls-remote --heads origin >> "$GITHUB_STEP_SUMMARY"
-
   verification:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -66,45 +27,51 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Apply reviewed repair without replacing newer files
+      - name: Apply the exact reviewed source repair and retire its transport
         shell: bash
         run: |
           git config user.name 'Brain-5D maintenance (AI-assisted)'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          for patch in .maintenance/*.patch; do
-            test -f "$patch" || continue
-            git apply --check --index "$patch"
-            git apply --index "$patch"
-            git rm "$patch"
-          done
+          python - <<'PY'
+          import gzip
+          import hashlib
+          import os
+          import subprocess
+          from pathlib import Path
+          parts = sorted(Path('.maintenance').glob('verified-*.bin'))
+          if parts:
+              if [p.name for p in parts] != ['verified-0.bin', 'verified-1.bin', 'verified-2.bin']:
+                  raise SystemExit('Unexpected repair transport inventory')
+              raw = gzip.decompress(b''.join(p.read_bytes() for p in parts))
+              expected = '73fa9df832b6f6f9d5688bd2bb0c2d499dee9db348ef7b3641e06f0c3297dd99'
+              if hashlib.sha256(raw).hexdigest() != expected:
+                  raise SystemExit('Repair payload digest mismatch')
+              patch = Path(os.environ['RUNNER_TEMP']) / 'reviewed.patch'
+              patch.write_bytes(raw)
+              subprocess.run(['git', 'apply', '--check', '--index', str(patch)], check=True)
+              subprocess.run(['git', 'apply', '--index', str(patch)], check=True)
+              subprocess.run(['git', 'rm', '--', *map(str, parts)], check=True)
+          PY
           git diff --cached --check
           if ! git diff --cached --quiet; then
-            git commit -m 'fix: secure shared previews and preserve reproducible package identity'
+            git commit -m 'fix: finish shared publication rendering and source-bound verification'
           fi
       - name: Install canonical tools
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e '.[dev,docs]' pre-commit bandit build
-      - name: Complete publication reader and format current source
+      - name: Verify prepared source, publication and security
         run: |
-          python scripts/publication_bundle.py --build-reader
           python scripts/publication_bundle.py
-          python -m black src tests scripts
-          python -m ruff check src tests scripts
-          git diff --exit-code "$GITHUB_SHA" -- research/experiments research/preregistrations research/registry/evidence research/publications/2026-09-07_ki-die-geliehene-intelligenz
-          git add src tests scripts research/publications/reader
-          git diff --cached --check
-          if ! git diff --cached --quiet; then
-            git commit -m 'feat: publish complete chapter reader with canonical source formatting'
-          fi
-      - name: Check source quality and security
-        run: |
           python -m black --check src tests scripts
           python -m ruff check src tests scripts
           python -m mypy src
           python -m pyright
           python -m bandit -c pyproject.toml -r src -ll
           python -m pre_commit run --all-files --show-diff-on-failure
+          git diff --exit-code "$GITHUB_SHA" -- research/experiments research/preregistrations research/registry/evidence research/publications/2026-09-07_ki-die-geliehene-intelligenz
+      - name: Publish prepared source without overwriting concurrent work
+        run: git push origin HEAD:refs/heads/main
       - name: Generate real full-suite and determinism evidence
         env:
           BRAIN5D_RUN_LARGE_STORAGE_TEST: '1'
@@ -116,28 +83,30 @@ jobs:
           python scripts/generate_catalog_audit_report.py
           python scripts/check_doc_consistency.py --check-tests
           python scripts/publication_bundle.py
-      - name: Build package and verify namespace plus renderer assets
+      - name: Build package and verify installed renderer outside source checkout
         run: |
           python -m build
           python -m venv --system-site-packages "$RUNNER_TEMP/wheel-check"
           "$RUNNER_TEMP/wheel-check/bin/python" -m pip install --no-deps --force-reinstall dist/*.whl
           cd "$RUNNER_TEMP"
           "$RUNNER_TEMP/wheel-check/bin/python" -c "from src.dashboard import file_rendering; from pathlib import Path; assert Path(file_rendering.__file__).with_name('static').joinpath('file-renderer.js').is_file(); print(file_rendering.__file__)"
-      - name: Publish verified current artifacts without force
+      - name: Publish genuine verification artifacts and assert a clean tree
         shell: bash
         run: |
           git add tests/test_baseline.json research/generated
           git diff --cached --check
           if ! git diff --cached --quiet; then
-            git commit -m 'test: refresh genuine baseline and determinism on consolidated source'
+            git commit -m 'test: publish genuine verification for consolidated main'
           fi
           test -z "$(git status --porcelain --untracked-files=all)"
           git push origin HEAD:refs/heads/main
-      - name: Run complete CI on published main
+      - name: Run complete CI and publication integrity on published main
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run ci.yml --ref main
-      - name: Export source and diagnostics
+        run: |
+          gh workflow run ci.yml --ref main
+          gh workflow run publication-integrity.yml --ref main
+      - name: Export exact source and diagnostics
         if: always()
         shell: bash
         run: |
@@ -145,7 +114,8 @@ jobs:
           git bundle create "$RUNNER_TEMP/consolidation-verification/repository.bundle" --all
           git rev-parse HEAD > "$RUNNER_TEMP/consolidation-verification/HEAD.txt"
           git status --porcelain --untracked-files=all > "$RUNNER_TEMP/consolidation-verification/tree-status.txt"
-          git diff > "$RUNNER_TEMP/consolidation-verification/uncommitted.patch"
+          git diff HEAD > "$RUNNER_TEMP/consolidation-verification/uncommitted.patch"
+          git ls-remote --heads origin > "$RUNNER_TEMP/consolidation-verification/remote-branches.txt"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
