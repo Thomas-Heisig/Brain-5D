@@ -4,6 +4,21 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Structured archive and JSON previews
+
+- ZIP-compatible containers (`.zip`, `.epub`, `.whl`, `.jar`, `.cbz`) now expose a bounded member manifest without extracting or executing entries.
+- Archive previews mark suspicious `..` or absolute member paths and reject archives above the member-count or uncompressed-size budget.
+- JSON previews now provide an expandable, bounded tree while retaining the original content for copy/edit operations.
+- Remaining viewer gaps are media metadata, PDF text extraction, older binary Office formats, and local Graphviz/PlantUML conversion.
+
+## 2026-09-07 File Viewer format and rendering pass
+
+- Unified Markdown rendering now preserves fenced-language classes, renders Mermaid diagrams lazily in strict mode, and routes relative document links through the canonical viewer.
+- Markdown and notebook cells expose a formula-aware surface for MathJax, including bounded notebook PNG/JPEG outputs.
+- `.tex`/`.latex` files are classified as formula sources; `.mmd`/`.mermaid` as Mermaid diagrams; `.dot`/`.gv` and `.puml`/`.plantuml` as safe source previews.
+- BibTeX previews now show the structured table without appending a duplicate raw source block.
+- Graphviz and PlantUML source-to-SVG conversion remains intentionally open because the viewer has no local converter and remote rendering would disclose research content.
+
 ## 2026-09-07 GitHub/Hugging Face mirror synchronization
 
 - Refreshed the current baseline in the project, documentation and Hugging Face READMEs.

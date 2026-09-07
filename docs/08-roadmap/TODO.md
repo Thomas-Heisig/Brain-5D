@@ -4,6 +4,22 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Structured archive and JSON previews
+
+- [x] Add bounded ZIP-compatible archive manifests without extraction.
+- [x] Mark unsafe archive member paths in the preview.
+- [x] Add a bounded expandable JSON tree to the shared renderer.
+- [ ] Add browser media metadata (dimensions, duration and codec) without decoding full files.
+- [ ] Add bounded PDF text/page metadata and optional local Graphviz/PlantUML conversion.
+
+## 2026-09-07 File Viewer format and rendering pass
+
+- [x] Give Mermaid, Graphviz, PlantUML and LaTeX source files explicit preview kinds.
+- [x] Render Markdown fenced Mermaid blocks through the shared safe viewer path.
+- [x] Improve formula-aware Markdown and notebook cell rendering, including bounded image outputs.
+- [x] Keep BibTeX structured previews free of duplicate raw source output.
+- [ ] Add an optional local Graphviz/PlantUML to SVG converter without sending research sources to a remote service.
+
 ## 2026-09-07 GitHub/Hugging Face mirror synchronization
 
 - [x] Refresh the current baseline in `README.md`, `docs/README.md` and `HF_README.md`.

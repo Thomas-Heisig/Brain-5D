@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-07 — Structured archive and JSON previews
+
+- Added safe, metadata-only previews for ZIP-compatible containers: `.zip`, `.epub`, `.whl`, `.jar` and `.cbz`.
+- Added member-count and uncompressed-size limits, plus unsafe archive-path indicators, without extracting archive entries.
+- Replaced JSON-only pretty text previews with bounded expandable JSON trees while preserving the exact source for editing and copying.
+- Documented remaining media metadata, PDF extraction, legacy Office and local diagram-conversion work.
+
+## 2026-09-07 — File Viewer formats and scientific rendering
+
+- Added explicit preview contracts for Mermaid, Graphviz, PlantUML and LaTeX sources.
+- Improved Markdown and notebook rendering for fenced code, MathJax formulas and bounded PNG/JPEG outputs.
+- Centralized Mermaid rendering in the shared file renderer with strict security mode and source disclosure fallback.
+- Routed relative research-document links through the canonical viewer and removed duplicate BibTeX raw output.
+- Documented Graphviz/PlantUML SVG conversion as a remaining local capability rather than using a remote renderer for research content.
+
 ## 2026-09-07 — GitHub/Hugging Face mirror synchronization
 
 - Refreshed the project and Hugging Face baseline documentation to the current `main` status.

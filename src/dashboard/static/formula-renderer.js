@@ -159,6 +159,8 @@ function initFormulaRenderer() {
   injectFormulaStyles();
   observer = new MutationObserver((mutations) => {
     if (mutations.some((mutation) =>
+      mutation.target?.matches?.(".fm-markdown") ||
+      mutation.target?.closest?.(".fm-markdown") ||
       [...mutation.addedNodes].some((node) =>
         node.nodeType === Node.ELEMENT_NODE &&
         (node.matches?.(".fm-markdown") || node.querySelector?.(".fm-markdown")),

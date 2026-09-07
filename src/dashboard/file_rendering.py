@@ -31,12 +31,22 @@ PREVIEW_BYTES = 256 * 1024
 EDIT_BYTES = 1024 * 1024
 DIGEST_BYTES = 64 * 1024 * 1024
 ARCHIVE_BYTES = 32 * 1024 * 1024
+ARCHIVE_EXTENSIONS = frozenset({".zip", ".epub", ".whl", ".jar", ".cbz"})
 TEXT_EXTENSIONS = frozenset(
     ".md .markdown .txt .text .json .jsonl .ndjson .yaml .yml .toml .csv .tsv "
     ".py .js .mjs .ts .tsx .jsx .css .html .xml .svg .bib .tex .rst .log .ini "
     ".cfg .conf .sh .bat .cmd .ps1 .sql .ipynb .dot .puml .plantuml .diff .patch "
-    ".c .h .cpp .hpp .rs .go .java .kt .r .properties".split()
+    ".mmd .mermaid .gv .latex .c .h .cpp .hpp .rs .go .java .kt .r .properties".split()
 )
+DIAGRAM_FORMATS = {
+    ".mmd": "mermaid",
+    ".mermaid": "mermaid",
+    ".dot": "graphviz",
+    ".gv": "graphviz",
+    ".puml": "plantuml",
+    ".plantuml": "plantuml",
+}
+FORMULA_EXTENSIONS = frozenset({".tex", ".latex"})
 _PROTECTED_RESEARCH = frozenset(
     {
         "experiments",
@@ -156,28 +166,32 @@ class FilePreviewService:
                 or sum(item.file_size for item in members) > ARCHIVE_BYTES
             ):
                 raise FileContractError("Archive exceeds preview expansion limit")
-            names = archive.namelist()
             if path.suffix.lower() in {".xlsx", ".xlsm"}:
                 selected = [
-                    name
-                    for name in names
-                    if name == "xl/sharedStrings.xml"
-                    or re.fullmatch(r"xl/worksheets/sheet\d+\.xml", name)
+                    info
+                    for info in members
+                    if info.filename == "xl/sharedStrings.xml"
+                    or re.fullmatch(r"xl/worksheets/sheet\d+\.xml", info.filename)
                 ]
             elif path.suffix.lower() == ".pptx":
                 selected = sorted(
-                    name
-                    for name in names
-                    if re.fullmatch(r"ppt/slides/slide\d+\.xml", name)
+                    (
+                        info
+                        for info in members
+                        if re.fullmatch(r"ppt/slides/slide\d+\.xml", info.filename)
+                    ),
+                    key=lambda info: info.filename,
                 )
             else:
-                selected = ["word/document.xml"]
+                selected = [
+                    info for info in members if info.filename == "word/document.xml"
+                ]
             lines: list[str] = []
             total = 0
-            for name in selected[:32]:
-                if name not in names:
-                    continue
-                raw = archive.read(name)
+            for info in selected[:32]:
+                if info.file_size > 8 * PREVIEW_BYTES:
+                    raise FileContractError("Document XML member exceeds preview limit")
+                raw = archive.read(info)
                 if (
                     len(raw) > 8 * PREVIEW_BYTES
                     or b"<!DOCTYPE" in raw.upper()
@@ -185,7 +199,7 @@ class FilePreviewService:
                 ):
                     raise FileContractError("Unsafe or oversized document XML")
                 tree = ElementTree.fromstring(raw)
-                lines.append(name)
+                lines.append(info.filename)
                 for node in tree.iter():
                     if node.tag.rsplit("}", 1)[-1] in {"t", "v", "f"} and node.text:
                         value = node.text[:2000]
@@ -194,6 +208,29 @@ class FilePreviewService:
                         if total >= PREVIEW_BYTES:
                             return "\n".join(lines)[:PREVIEW_BYTES]
             return "\n".join(lines)[:PREVIEW_BYTES]
+
+    @staticmethod
+    def _archive_manifest(path: Path) -> tuple[list[dict[str, Any]], int]:
+        """List archive metadata without extracting or executing any member."""
+        with zipfile.ZipFile(path) as archive:
+            members = archive.infolist()
+            expanded_bytes = sum(info.file_size for info in members)
+            if len(members) > 2048 or expanded_bytes > ARCHIVE_BYTES:
+                raise FileContractError("Archive exceeds preview expansion limit")
+            manifest: list[dict[str, Any]] = []
+            for info in members:
+                name = info.filename.replace("\\", "/")
+                parts = PurePosixPath(name).parts
+                manifest.append(
+                    {
+                        "name": name,
+                        "size_bytes": info.file_size,
+                        "compressed_bytes": info.compress_size,
+                        "directory": info.is_dir(),
+                        "unsafe_path": name.startswith("/") or ".." in parts,
+                    }
+                )
+            return manifest, expanded_bytes
 
     def preview(self, source: str, path: str) -> dict[str, Any]:
         """Produce a bounded rendering descriptor; never load a whole large file."""
@@ -251,6 +288,25 @@ class FilePreviewService:
                 result["notice"] = (
                     f"Document preview unavailable: {exc}. Original download remains available."
                 )
+        elif ext in ARCHIVE_EXTENSIONS or mime == "application/zip":
+            try:
+                members, expanded_bytes = self._archive_manifest(candidate)
+                result["kind"] = "archive"
+                result["archive_format"] = ext.lstrip(".") or "zip"
+                result["members"] = members
+                result["member_count"] = len(members)
+                result["expanded_bytes"] = expanded_bytes
+                result["notice"] = (
+                    "Nur Archivmetadaten; Eintraege werden nicht entpackt oder ausgefuehrt."
+                )
+            except (
+                FileContractError,
+                OSError,
+                zipfile.BadZipFile,
+            ) as exc:
+                result["notice"] = (
+                    f"Archivvorschau nicht verfuegbar: {exc}. Das Original bleibt verfuegbar."
+                )
         else:
             with candidate.open("rb") as stream:
                 raw = stream.read(PREVIEW_BYTES + 1)
@@ -283,8 +339,18 @@ class FilePreviewService:
                         and (ext in TEXT_EXTENSIONS or not ext)
                     )
                     result["kind"] = (
-                        "markdown" if ext in {".md", ".markdown"} else "text"
+                        "markdown"
+                        if ext in {".md", ".markdown"}
+                        else "formula"
+                        if ext in FORMULA_EXTENSIONS
+                        else "diagram"
+                        if ext in DIAGRAM_FORMATS
+                        else "text"
                     )
+                    if ext in FORMULA_EXTENSIONS:
+                        result["formula_format"] = "latex"
+                    if ext in DIAGRAM_FORMATS:
+                        result["diagram_format"] = DIAGRAM_FORMATS[ext]
                     if ext == ".json" and not result["truncated"]:
                         try:
                             result["content"] = json.dumps(

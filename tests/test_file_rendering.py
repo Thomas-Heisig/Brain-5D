@@ -217,6 +217,65 @@ def test_csv_quoted_cells_and_binary_fallback(service: FilePreviewService) -> No
     assert binary["download_url"]
 
 
+def test_zip_preview_lists_members_without_extracting(
+    service: FilePreviewService,
+) -> None:
+    target = service.roots["docs"] / "bundle.zip"
+    with zipfile.ZipFile(target, "w") as archive:
+        archive.writestr("data/result.json", "{}")
+        archive.writestr("../outside.txt", "never extracted")
+
+    preview = service.preview("docs", target.name)
+
+    assert preview["kind"] == "archive"
+    assert preview["member_count"] == 2
+    assert preview["members"][0]["name"] == "data/result.json"
+    assert preview["members"][1]["unsafe_path"] is True
+    assert not (service.roots["docs"] / "outside.txt").exists()
+
+
+def test_archive_preview_rejects_excessive_expansion(
+    service: FilePreviewService, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from src.dashboard import file_rendering
+
+    target = service.roots["docs"] / "large.zip"
+    with zipfile.ZipFile(target, "w") as archive:
+        archive.writestr("large.txt", "12345")
+    monkeypatch.setattr(file_rendering, "ARCHIVE_BYTES", 4)
+
+    preview = service.preview("docs", target.name)
+
+    assert preview["kind"] == "binary"
+    assert "expansion limit" in preview["notice"]
+
+
+@pytest.mark.parametrize(
+    ("filename", "expected_kind", "descriptor_key", "descriptor_value"),
+    [
+        ("flow.mmd", "diagram", "diagram_format", "mermaid"),
+        ("flow.gv", "diagram", "diagram_format", "graphviz"),
+        ("flow.plantuml", "diagram", "diagram_format", "plantuml"),
+        ("equation.tex", "formula", "formula_format", "latex"),
+    ],
+)
+def test_scientific_source_formats_have_explicit_preview_kinds(
+    service: FilePreviewService,
+    filename: str,
+    expected_kind: str,
+    descriptor_key: str,
+    descriptor_value: str,
+) -> None:
+    target = service.roots["docs"] / filename
+    target.write_text("graph TD\n  A --> B\n" if filename.endswith(".mmd") else "x")
+
+    preview = service.preview("docs", filename)
+
+    assert preview["kind"] == expected_kind
+    assert preview[descriptor_key] == descriptor_value
+    assert preview["editable"] is True
+
+
 def test_unsafe_document_xml_never_expands_entities(
     service: FilePreviewService,
 ) -> None:
