@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 RQ-SNN-001 clean-freeze rerun and AIRR retry
+
+- Executed the exact frozen `sustained_activity_stability_v1` protocol as `EXP-SNN-001-R5` from a clean worktree: 20 runs, 10 seeds, 100,000 ticks per run, zero runtime errors and `dirty=false` provenance.
+- Corrected semantic classification so the dedicated RQ-SNN-001 protocol is `DIRECT_MATCH`; Human Review and EVID promotion remain open.
+- Attempted append-only AIRR retries for `EXP-GEN-0033`; local Ollama runs produced fallback/timeout or schema-invalid role outputs, so AIRR-2026-0003 remains review-pending and non-evidence.
+
 ## 2026-09-07 Pacing-only determinism proof
 
 - Added a deterministic controller batch comparison proving target-Hz configuration does not alter ticks, spikes or state digest when simulated inputs and `dt` are identical.

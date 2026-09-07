@@ -25,7 +25,7 @@
   },
   "causal_taint": "PURE",
   "config": {
-    "path": "C:\\Users\\T_hei\\AppData\\Local\\Temp\\brain5d-clean-snn-r5\\configs\\learning_experiment.yaml",
+    "path": "configs/learning_experiment.yaml",
     "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
   },
   "created_at": "2026-09-07T14:12:05.577478+00:00",

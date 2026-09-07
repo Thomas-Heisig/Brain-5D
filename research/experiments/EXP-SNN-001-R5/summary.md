@@ -20,9 +20,9 @@ Diese Zusammenfassung wird deterministisch aus Manifest, Workflow, DATA und — 
 
 ## 2. Semantische Konsistenz
 
-- RQ/Condition-Pruefung: `MISMATCH`
-- Evidence Readiness: `BLOCKED_SEMANTIC_MISMATCH`
-- Begründung: RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. science_suite_v1/science_all_v1 bleiben dafuer diagnostisch; eine Primaerpruefung erfordert weiterhin ein dediziertes Sustained-Activity-Protokoll.
+- RQ/Condition-Pruefung: `DIRECT_MATCH`
+- Evidence Readiness: `BLOCKED_HUMAN_REVIEW`
+- Begründung: RQ-SNN-001 verwendet das dedizierte Sustained-Activity-Protokoll mit Kontroll- und Tonic-Drive-Bedingung. Clean-Freeze, semantische Zuordnung und Tickvertrag sind erfüllt; Human Review und EVID-Gate bleiben offen.
 - Beobachtete Conditions: `no_input_control, tonic_drive`
 
 `DIRECT_MATCH` bezeichnet einen gezielten RQ-spezifischen Lauf. `CONTAINS_MATCH` bedeutet, dass die passende Teilstudie innerhalb einer Gesamtsuite enthalten ist; nur diese Teilstudie ist primaer fuer die registrierte RQ auszuwerten. `MISMATCH` blockiert die Nutzung als Evidenz fuer die registrierte Forschungsfrage, auch wenn die technische Ausfuehrung fehlerfrei war.
@@ -32,7 +32,7 @@ Diese Zusammenfassung wird deterministisch aus Manifest, Workflow, DATA und — 
 - Titel: RQ-SNN-001 frozen clean-tree replication
 - Bedingungen: Frozen sustained_activity_stability_v1; no-input control versus tonic drive; 10 independent seeds; 100000 ticks
 - Notizen: Exact frozen protocol rerun from a clean Git worktree.
-- Konfiguration: `C:\Users\T_hei\AppData\Local\Temp\brain5d-clean-snn-r5\configs\learning_experiment.yaml`
+- Konfiguration: `configs/learning_experiment.yaml`
 - Config SHA-256: `6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c`
 - Git Commit: `4300e43de48ae08d59381830faf0a633e1ccfebf`
 - Git dirty: `False`
@@ -134,4 +134,4 @@ Deterministische Statistikdatei: [`analysis/statistics.json`](analysis/statistic
 
 Die technischen Laufdaten duerfen deskriptiv ausgewertet werden. Eine Hypothese gilt dadurch nicht automatisch als bestaetigt oder widerlegt. Kausale Aussagen sind nur fuer explizit kontrollierte Interventionen und nur innerhalb des simulierten Systems zulaessig; biologische Generalisierung erfordert zusaetzliche Evidenz. Die KI-Auswertung ist post-hoc und besitzt keine Evidenzfreigabe.
 
-**Gesamtstatus:** technische Ausfuehrung `completed`, Tick-Vertrag `SATISFIED`, semantische Zuordnung `MISMATCH`, wissenschaftliche Evidenz `false` bis zur menschlichen Review/Freigabe.
+**Gesamtstatus:** technische Ausfuehrung `completed`, Tick-Vertrag `SATISFIED`, semantische Zuordnung `DIRECT_MATCH`, Clean Freeze `dirty=false`, wissenschaftliche Evidenz `false` bis zur menschlichen Review/Freigabe.

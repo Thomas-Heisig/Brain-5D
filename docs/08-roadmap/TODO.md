@@ -9,21 +9,21 @@
 - [x] Test workflow catalog GET route.
 - [x] Test batch POST route and structured workflow response.
 - [x] Keep browser-independent route coverage for the batch workflow.
-- [ ] Add browser E2E coverage for the interactive batch dialog.
+- [ ] Add browser E2E coverage for the interactive batch dialog. Blocked: Chromium runtime unavailable; browser-independent HTTP/static coverage is complete.
 
 ## 2026-09-07 Batch service contract coverage
 
 - [x] Test sequential protocol execution order.
 - [x] Test per-protocol Seeds/Ticks propagation.
 - [x] Test partial failure isolation and aggregate workflow reports.
-- [ ] Add browser E2E coverage for the interactive batch dialog.
+- [ ] Add browser E2E coverage for the interactive batch dialog. Blocked: Chromium runtime unavailable; browser-independent HTTP/static coverage is complete.
 
 ## 2026-09-07 Dissertation results synchronization
 
 - [x] Insert verified Brain-5D experiment results into the dissertation-basis DOCX.
 - [x] Preserve dirty-source and human-review limitations in the document.
 - [x] Keep the DOCX update repeatable through `scripts/update_dissertation_results.py`.
-- [ ] Synchronize future reviewed EVID records into the DOCX after human approval.
+- [ ] Synchronize future reviewed EVID records into the DOCX after human approval. No reviewed EVID record exists yet.
 
 ## 2026-09-07 Failed experiment retries repaired
 
@@ -94,14 +94,14 @@
 - [x] Generate missing reviewer/writer analysis records for `EXP-GEN-0033`.
 - [x] Generate its missing AIRR JSON/Markdown report files.
 - [x] Keep deterministic data authoritative and scientific evidence disabled when AI analysis is unavailable.
-- [ ] Re-run AI roles with a schema-conforming backend and complete human review.
+- [ ] Re-run AI roles with a schema-conforming backend and complete human review. Local Ollama retries remain fallback/timeout or schema-invalid; AIRR-2026-0003 is review-pending and non-evidence.
 
 ## 2026-09-06 RQ-SNN-001 operationalization
 
 - [x] Define a frozen sustained-activity protocol with explicit controls, metrics, thresholds and stopping rules.
 - [x] Execute 100,000 ticks over ten independent seeds and retain full raw traces.
 - [x] Produce deterministic run/statistics/manifests for `EXP-SNN-001-R2`.
-- [ ] Run the exact frozen protocol from a clean source tree.
+- [x] Run the exact frozen protocol from a clean source tree (`EXP-SNN-001-R5`, dirty=false, 20 runs, 10 seeds, 100000 ticks).
 - [ ] Complete mandatory human review and decide whether `H-SNN-001-A` merits EVID promotion.
 - [ ] Update RQ/H evidence links only after clean-freeze and human-review gates pass.
 

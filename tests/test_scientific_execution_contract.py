@@ -225,6 +225,19 @@ def test_long_term_stability_is_not_claimed_from_ping_omnibus() -> None:
     assert "langfristig" in note
 
 
+def test_long_term_stability_dedicated_protocol_is_direct_match() -> None:
+    from src.research.experiment_summary import _semantic_status
+
+    status, note = _semantic_status(
+        "RQ-SNN-001",
+        "sustained_activity_stability_v1",
+        {"no_input_control", "tonic_drive"},
+    )
+
+    assert status == "DIRECT_MATCH"
+    assert "dedizierte" in note
+
+
 def test_long_term_stability_question_uses_diagnostic_suite() -> None:
     assert (
         ExperimentWorkflowService._science_runner(

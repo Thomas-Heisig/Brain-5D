@@ -9,8 +9,8 @@
   "artifacts": {
     "ai_packet": "analysis/ai_packet.json",
     "ai_packet_digest": "analysis/ai_packet_digest.json",
-    "ai_report_json": "reports/AIRR-2026-0001.json",
-    "ai_report_markdown": "reports/AIRR-2026-0001.md",
+    "ai_report_json": "reports/AIRR-2026-0003.json",
+    "ai_report_markdown": "reports/AIRR-2026-0003.md",
     "current_run": "DATA/current_run.json",
     "data": "DATA/runs.json",
     "data_index": "DATA/runs_index.json",

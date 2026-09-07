@@ -354,6 +354,11 @@ def _semantic_status(
             "RQ-SNN-002 erwartet einen kontrollierten Impulsantwort-Vergleich mit recurrence_off und recurrence_on.",
         )
     if question_id == "RQ-SNN-001":
+        if protocol == "sustained_activity_stability_v1":
+            return (
+                "DIRECT_MATCH",
+                "RQ-SNN-001 verwendet das dedizierte Sustained-Activity-Protokoll mit Kontroll- und Tonic-Drive-Bedingung.",
+            )
         return (
             "MISMATCH",
             "RQ-SNN-001 fordert langfristig stabile Spike-Dynamik unter fortlaufender Aktivitaet. science_suite_v1/science_all_v1 bleiben dafuer diagnostisch; eine Primaerpruefung erfordert weiterhin ein dediziertes Sustained-Activity-Protokoll.",

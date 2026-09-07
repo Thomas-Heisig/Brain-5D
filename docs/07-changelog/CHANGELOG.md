@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — RQ-SNN-001 clean-freeze rerun and AIRR retry
+
+- Ran `EXP-SNN-001-R5` from a clean worktree with `dirty=false`, 20 runs, 10 seeds and 100,000 ticks per run.
+- Classified the dedicated sustained-activity protocol as `DIRECT_MATCH` while retaining Human Review/EVID gates.
+- Added append-only AIRR retry artifacts; local Ollama role failures remain explicitly non-evidence and review-pending.
+
 ## 2026-09-07 — Pacing-only determinism proof
 
 - Added regression coverage showing target-Hz versus unlimited configuration produces identical deterministic batch results for equal inputs and `dt`.
