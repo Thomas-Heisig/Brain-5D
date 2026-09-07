@@ -39,18 +39,22 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-          git remote add huggingface \
-            "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
-
           # Hugging Face rejects binary blobs in older Git history. Publish a
           # fresh source snapshot so every current binary passes the LFS filter.
-          git switch --orphan hf-mirror
-          git read-tree --empty
-          if [ -f HF_README.md ]; then
-            cp HF_README.md README.md
+          mirror_dir="$(mktemp -d)"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec cp -a {} "$mirror_dir"/ \;
+          if [ -f "$mirror_dir/HF_README.md" ]; then
+            cp "$mirror_dir/HF_README.md" "$mirror_dir/README.md"
           fi
-          git add --all
-          git commit -m "Sync: mirror GitHub main"
 
-          git push huggingface HEAD:main --force
-          git lfs push --all huggingface HEAD
+          git -C "$mirror_dir" init --initial-branch=main
+          git -C "$mirror_dir" lfs install --local
+          git -C "$mirror_dir" config user.email "github-actions[bot]@users.noreply.github.com"
+          git -C "$mirror_dir" config user.name "github-actions[bot]"
+          git -C "$mirror_dir" remote add huggingface \
+            "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/${HF_USERNAME}/${HF_REPO}"
+          git -C "$mirror_dir" add --all --force
+          git -C "$mirror_dir" commit -m "Sync: mirror GitHub main"
+
+          git -C "$mirror_dir" push huggingface HEAD:main --force
+          git -C "$mirror_dir" lfs push --all huggingface HEAD
