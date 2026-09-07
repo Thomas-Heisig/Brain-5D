@@ -1,0 +1,26 @@
+name: Cognition Integration Verification
+
+on:
+  push:
+    branches: ['integration/cognition-ethics-20260907']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  integration:
+    if: github.ref == 'refs/heads/integration/cognition-ethics-20260907'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install repository test toolchain
+        run: python -m pip install -e '.[dev,docs]'
+      - name: Import once, validate, and record actual scoped verification
+        run: python .maintenance/cognition_ci.py

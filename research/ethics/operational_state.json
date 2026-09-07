@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "state": "NORMAL",
+  "meaning": "No operator hold is asserted; not a consciousness verdict or ethics approval.",
+  "external_review_authority": "not_appointed",
+  "native_cognition_experiments_authorized": false,
+  "automatic_consciousness_detection": false,
+  "automatic_running_process_interruption": false,
+  "operator_instruction": "Set REVIEW_REQUIRED or HOLD to block new dashboard research launches; use independent stop/isolate for running work.",
+  "policy": "AI_WELFARE_POLICY.md",
+  "updated": "2026-09-07"
+}

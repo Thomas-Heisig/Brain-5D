@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:brain5d:cognition-evidence-candidate:1.0",
+  "title": "Cognition evidence candidate - never automatic acceptance",
+  "type": "object",
+  "required": ["schema_version", "candidate_id", "protocol_id", "question_id", "hypothesis_id", "source_commit", "raw_artifacts", "analysis_hash", "claim_scope", "consciousness_verdict", "limitations", "alternatives", "theory_assumptions", "measurement_validity", "replication", "human_review", "ethics_review"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "candidate_id": {"type": "string", "pattern": "^CAND-CNS-[A-Za-z0-9_-]+$"},
+    "protocol_id": {"type": "string", "pattern": "^cog_[a-z0-9_]+_v[0-9]+$"},
+    "question_id": {"type": "string", "pattern": "^RQ-(CNS|WEL|EPI)-[0-9]+$"},
+    "hypothesis_id": {"type": "string", "pattern": "^H-(CNS|WEL|EPI)-[0-9]+-[A-Z]+$"},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "analysis_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "raw_artifacts": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["path", "sha256", "role"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "role": {"enum": ["primary_observation", "stimulus_schedule", "state", "configuration"]}}}},
+    "claim_scope": {"const": "functional_or_theory_conditional"},
+    "consciousness_verdict": {"const": "not_established"},
+    "limitations": {"$ref": "#/$defs/nonemptyStrings"},
+    "alternatives": {"$ref": "#/$defs/nonemptyStrings"},
+    "theory_assumptions": {"$ref": "#/$defs/nonemptyStrings"},
+    "measurement_validity": {"type": "object", "required": ["observation_model", "units", "controls", "holdout", "independent_unit", "uncertainty"], "properties": {"observation_model": {"type": "string", "minLength": 1}, "units": {"type": "string", "minLength": 1}, "controls": {"$ref": "#/$defs/nonemptyStrings"}, "holdout": {"type": "string", "minLength": 1}, "independent_unit": {"type": "string", "minLength": 1}, "uncertainty": {"type": "string", "minLength": 1}}},
+    "replication": {"$ref": "#/$defs/review"},
+    "human_review": {"$ref": "#/$defs/review"},
+    "ethics_review": {"$ref": "#/$defs/review"},
+    "authority": {"const": "candidate_only"},
+    "accepted_evidence": {"const": false}
+  },
+  "$defs": {
+    "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "review": {"type": "object", "required": ["status", "reviewer", "artifact", "independence", "authentication"], "properties": {"status": {"enum": ["PENDING", "RECEIVED_UNVERIFIED", "VERIFIED_EXTERNALLY", "REJECTED"]}, "reviewer": {"type": ["string", "null"]}, "artifact": {"type": ["string", "null"]}, "independence": {"type": "string", "minLength": 1}, "authentication": {"type": "string", "minLength": 1}}, "description": "A schema validates structure, not reviewer identity, independence or the truth of VERIFIED_EXTERNALLY."}
+  },
+  "description": "Passing schema validation is not scientific acceptance, identity authentication, ethics approval or proof of consciousness. Freeze and verify actual artifacts and obtain independent review separately."
+}
