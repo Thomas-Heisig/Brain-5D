@@ -1,0 +1,32 @@
+name: Repository source snapshot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repository-snapshot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export versioned sources and history without credentials
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/source-snapshot"
+          git bundle create "$RUNNER_TEMP/source-snapshot/repository.bundle" --all
+          git rev-parse HEAD > "$RUNNER_TEMP/source-snapshot/HEAD.txt"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: repository-source-${{ github.sha }}
+          path: ${{ runner.temp }}/source-snapshot/
+          retention-days: 3
