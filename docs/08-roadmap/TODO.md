@@ -10,6 +10,12 @@
 - [x] Document GitHub `main` as canonical and Hugging Face as the derived mirror.
 - [x] Configure the optional mirror workflow to publish a fresh LFS-normalized source snapshot.
 
+## 2026-09-07 Hugging Face Space
+
+- [x] Configure the Docker image to start the integrated dashboard on the Space port.
+- [x] Publish the dashboard as `superdigger/Brain-5D-Space`.
+- [ ] Add a Space-specific smoke check against the public dashboard URL.
+
 ## 2026-09-07 Chromium browser checks
 
 - [x] Provide a reproducible Playwright + Chromium installation path.

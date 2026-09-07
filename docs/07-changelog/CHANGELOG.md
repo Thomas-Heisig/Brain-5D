@@ -6,6 +6,11 @@
 - Kept GitHub `main` canonical while publishing `HF_README.md` as the Hugging Face repository README.
 - Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
 
+## 2026-09-07 — Hugging Face Space
+
+- Configured the Docker image to start the integrated dashboard on `0.0.0.0:8765`.
+- Published the live dashboard as `superdigger/Brain-5D-Space`.
+
 ## 2026-09-07 — Repository catalog audit CI report
 
 - Added a reproducible repository-wide RQ/H audit report in Markdown and JSON.

@@ -4,10 +4,8 @@
 # Diese Konfiguration definiert einen optionalen Hugging Face Space,
 # der den Brain-5D Operator Dashboard als Web-App bereitstellt.
 #
-# Aktivierung (nach Repository-Erstellung):
-#   1. Auf https://huggingface.co/new-space ein neues Space erstellen
-#   2. Docker/Python SDK als SDK wählen
-#   3. Mit diesem Repository verknüpfen
+# Space: https://huggingface.co/spaces/superdigger/Brain-5D-Space
+# Dieses Space wird als separates Repository vom kanonischen GitHub-Branch gespeist.
 # ============================================================================
 
 # SDK-Typ (docker, streamlit, gradio, static)

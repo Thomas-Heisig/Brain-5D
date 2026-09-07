@@ -10,6 +10,11 @@
 - Kept GitHub `main` as the canonical source and documented the Hugging Face mirror as a derived publication target.
 - Updated the optional mirror workflow to publish a fresh one-commit source snapshot with Git LFS objects, avoiding rejected binary blobs from inherited history.
 
+## 2026-09-07 Hugging Face Space
+
+- Prepared the Docker entrypoint for the integrated dashboard on `0.0.0.0:8765`.
+- Added Docker Space metadata and published the live dashboard as `superdigger/Brain-5D-Space`.
+
 ## 2026-09-07 Full-stack dashboard E2E verification
 
 - Added an executable Chromium Playwright suite for batch selection, per-protocol Seeds/Ticks editing, aggregate workflow output and Footer progress.
