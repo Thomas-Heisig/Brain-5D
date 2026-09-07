@@ -377,7 +377,7 @@ class ExperimentWorkflowService:
             effective_seeds,
             cast(Sequence[_ScientificRunLike], runs),
         )
-        output_dir.mkdir(parents=True, exist_ok=False)
+        recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
         serialized_runs = [asdict(run) for run in runs]
@@ -395,7 +395,6 @@ class ExperimentWorkflowService:
             encoding="utf-8",
         )
 
-        recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         recorder.record_research_links([workflow.question_id], [workflow.hypothesis_id])
         operational_protocol = protocol_by_id(self._research_root, workflow.protocol)
         if operational_protocol is not None:
