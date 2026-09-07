@@ -133,6 +133,8 @@ class EnergyCoefficients:
 
 @dataclass(frozen=True, slots=True)
 class EnergyObservation:
+    sensor_units: float = 0.0
+    encoder_units: float = 0.0
     spikes: int = 0
     synaptic_events: int = 0
     plasticity_updates: int = 0
@@ -148,12 +150,14 @@ class EnergyEstimate:
     normalized_energy_units: float
     estimated_joules: float | None
     measured_joules: float | None
+    component_units: dict[str, float] | None = None
 
     def to_json(self) -> dict[str, JSONValue]:
         return {
             "normalized_energy_units": self.normalized_energy_units,
             "estimated_joules": self.estimated_joules,
             "measured_joules": self.measured_joules,
+            "component_units": self.component_units or {},
             "provenance": {
                 "normalized_energy_units": "NORMALIZED_MODEL_ESTIMATE",
                 "estimated_joules": (
@@ -321,6 +325,8 @@ def energy_units(
     """Estimate resource cost while keeping measured and estimated joules distinct."""
 
     values = (
+        observation.sensor_units,
+        observation.encoder_units,
         observation.spikes,
         observation.synaptic_events,
         observation.plasticity_updates,
@@ -331,7 +337,9 @@ def energy_units(
     if any(value < 0 for value in values):
         raise ValueError("energy counters must be non-negative")
     units = (
-        coefficients.adapter_base
+        observation.sensor_units
+        + observation.encoder_units
+        + coefficients.adapter_base
         + observation.adapter_units
         + coefficients.spike * observation.spikes
         + coefficients.synaptic_event * observation.synaptic_events
@@ -340,8 +348,27 @@ def energy_units(
         + coefficients.memory_byte * observation.memory_bytes
         + coefficients.io_byte * observation.io_bytes
     )
+    components = {
+        "sensor": float(observation.sensor_units),
+        "encoder": float(observation.encoder_units),
+        "spikes": float(coefficients.spike * observation.spikes),
+        "synaptic_events": float(
+            coefficients.synaptic_event * observation.synaptic_events
+        ),
+        "plasticity": float(
+            coefficients.plasticity_update * observation.plasticity_updates
+        ),
+        "structural": float(
+            coefficients.structural_event * observation.structural_events
+        ),
+        "memory": float(coefficients.memory_byte * observation.memory_bytes),
+        "io": float(coefficients.io_byte * observation.io_bytes),
+        "adapter": float(coefficients.adapter_base + observation.adapter_units),
+    }
     estimated = None if joules_per_unit is None else units * joules_per_unit
-    return EnergyEstimate(float(units), estimated, observation.measured_joules)
+    return EnergyEstimate(
+        float(units), estimated, observation.measured_joules, components
+    )
 
 
 def resource_pressure(

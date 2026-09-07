@@ -301,7 +301,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 - [ ] Calibrate normalized MSBA energy units against measured CPU/GPU/system power where reliable telemetry exists.
 - [x] Preserve `measured_joules`, `estimated_joules` and normalized units as separate fields and provenance classes.
-- [ ] Measure sensor, encoder, spike, synaptic-event, plasticity, structural, memory, I/O and adapter contributions separately where possible.
+- [x] Measure sensor, encoder, spike, synaptic-event, plasticity, structural, memory, I/O and adapter contributions separately where possible.
 - [ ] Verify that hard thermal/fan/persistence protection cannot be overridden by learned allocation.
 - [ ] Verify protection ordering: reduce/freeze plasticity before deleting learned structure or disabling safety-critical sensing.
 

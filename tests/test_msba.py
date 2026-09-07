@@ -76,6 +76,31 @@ def test_energy_accounting_keeps_measured_and_estimated_joules_separate() -> Non
         "measured_joules": "DIRECT_TELEMETRY",
     }
     assert serialized["estimated_is_not_measured"] is True
+    assert serialized["component_units"]["spikes"] == 2.0
+    assert serialized["component_units"]["synaptic_events"] == 3.0
+    assert set(serialized["component_units"]) == {
+        "sensor",
+        "encoder",
+        "spikes",
+        "synaptic_events",
+        "plasticity",
+        "structural",
+        "memory",
+        "io",
+        "adapter",
+    }
+
+
+def test_energy_accounting_separates_sensor_and_encoder_contributions() -> None:
+    estimate = energy_units(
+        EnergyObservation(sensor_units=2.5, encoder_units=1.5, adapter_units=0.5)
+    )
+
+    assert estimate.component_units is not None
+    assert estimate.component_units["sensor"] == 2.5
+    assert estimate.component_units["encoder"] == 1.5
+    assert estimate.component_units["adapter"] == 1.5
+    assert estimate.normalized_energy_units == pytest.approx(5.5)
 
 
 def test_energy_accounting_marks_missing_measurements_as_unavailable() -> None:

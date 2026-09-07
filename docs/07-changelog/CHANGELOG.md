@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Separate energy contribution accounting
+
+- Added serialized component-level energy contributions for the full MSBA accounting path.
+- Kept aggregate normalized units and measured/estimated joules unchanged and separately classified.
+
 ## 2026-09-07 — Energy provenance classes
 
 - Added machine-readable provenance classes for normalized energy, estimated joules and measured joules.

@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Separate energy contribution accounting
+
+- Added component-level normalized energy accounting for sensor, encoder, spikes, synaptic events, plasticity, structural events, memory, I/O and adapter contributions.
+- Preserved the aggregate estimate while exposing the component breakdown as DATA.
+
 ## 2026-09-07 Energy provenance classes
 
 - Added explicit provenance classes for normalized model units, calibrated joule conversions, direct telemetry measurements and unavailable values.
