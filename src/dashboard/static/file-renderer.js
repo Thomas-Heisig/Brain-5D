@@ -24,6 +24,10 @@ function button(label, action) {
   return control;
 }
 
+function canonicalFilePath(value) {
+  return typeof value === 'string' ? value.replaceAll('\\', '/') : value;
+}
+
 function ensureMermaid() {
   if (window.mermaid?.render) return Promise.resolve(window.mermaid);
   if (mermaidPromise) return mermaidPromise;
@@ -49,9 +53,9 @@ function ensureMermaid() {
 
 /** Resolve a link without allowing references outside the configured sources. */
 export function fileReference(value, context = { source: 'research', path: '' }) {
-  if (typeof value !== 'string' || !value || /[\\\u0000]/.test(value)) return null;
+  if (typeof value !== 'string' || !value || /[\u0000]/.test(value)) return null;
   let path;
-  try { path = decodeURIComponent(value.split('#')[0]); } catch { return null; }
+  try { path = canonicalFilePath(decodeURIComponent(value.split('#')[0])); } catch { return null; }
   if (/^[a-z][a-z\d+.-]*:/i.test(path) || path.startsWith('//')) return null;
   if (path.startsWith('/api/files/')) {
     const url = new URL(path, window.location.origin);
@@ -329,7 +333,8 @@ for (const kind of ['image', 'audio', 'video', 'pdf']) {
 registerFileRenderer('binary', (container) => container.append(node('p', 'Fuer dieses Format ist keine sichere Vorschau verfuegbar. Das unveraenderte Original kann heruntergeladen werden.')));
 
 async function mutate(reference, action) {
-  const response = await fetch(`/api/files/document/${encodeURIComponent(reference.path)}?source=${encodeURIComponent(reference.source)}`, {
+  const path = canonicalFilePath(reference.path);
+  const response = await fetch(`/api/files/document/${encodeURIComponent(path)}?source=${encodeURIComponent(reference.source)}`, {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action),
   });
   const data = await response.json();
@@ -349,7 +354,7 @@ export async function renderFile(container, reference, options = {}) {
   container.replaceChildren(node('p', 'Datei wird geladen ...', 'file-renderer-loading'));
   container.classList.add('file-renderer'); container.dataset.renderState = 'loading';
   const source = reference?.source;
-  const path = reference?.path;
+  const path = canonicalFilePath(reference?.path);
   try {
     if (!['docs', 'research'].includes(source) || typeof path !== 'string') throw new Error('Ungueltige Dateireferenz');
     const response = await fetch(`/api/files/preview/${encodeURIComponent(path)}?source=${encodeURIComponent(source)}`, { signal: controller.signal });

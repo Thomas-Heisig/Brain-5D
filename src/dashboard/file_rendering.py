@@ -468,7 +468,7 @@ def handle_file_rendering(
         return False
     kind, encoded = match.groups()
     source = query.get("source", ["research"])[0]
-    file_path = unquote(encoded)
+    file_path = unquote(encoded).replace("\\", "/")
     service = FilePreviewService(roots)
     try:
         if kind == "document" and handler.command == "PUT":

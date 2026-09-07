@@ -372,6 +372,25 @@ def test_actual_http_preview_range_and_origin_contract(
     assert status == 416
 
 
+def test_http_preview_normalizes_windows_path_separators(
+    server: DashboardServer, service: FilePreviewService
+) -> None:
+    target = service.roots["research"] / "experiments" / "EXP-SNN-001-R5" / "summary.md"
+    target.parent.mkdir(parents=True)
+    target.write_text("# Summary\n")
+
+    status, data, _ = request(
+        server,
+        "GET",
+        "/api/files/preview/experiments%5CEXP-SNN-001-R5%5Csummary.md?source=research",
+    )
+
+    assert status == 200
+    preview: dict[str, Any] = json.loads(data)
+    assert preview["path"] == "experiments/EXP-SNN-001-R5/summary.md"
+    assert preview["kind"] == "markdown"
+
+
 def test_active_content_download_is_sandboxed(
     server: DashboardServer, service: FilePreviewService
 ) -> None:

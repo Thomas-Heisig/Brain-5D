@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Viewer path compatibility
+
+- [x] Normalize Windows-style separators for preview, raw and document requests.
+- [x] Cover encoded workflow artifact paths with an HTTP regression test.
+
 ## 2026-09-07 Structured archive and JSON previews
 
 - [x] Add bounded ZIP-compatible archive manifests without extraction.

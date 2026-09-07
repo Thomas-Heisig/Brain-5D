@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — Viewer path compatibility
+
+- Fixed preview failures for workflow artifact paths containing Windows backslashes.
+- Canonicalized separators in both the shared browser renderer and file-preview API handler.
+- Added HTTP regression coverage for encoded Windows-style paths.
+
 ## 2026-09-07 — Structured archive and JSON previews
 
 - Added safe, metadata-only previews for ZIP-compatible containers: `.zip`, `.epub`, `.whl`, `.jar` and `.cbz`.

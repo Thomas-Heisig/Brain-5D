@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 Viewer path compatibility
+
+- Normalized Windows backslashes at the browser and API preview boundaries so workflow artifacts such as `experiments\\EXP-SNN-001-R5\\summary.md` resolve to the canonical repository path.
+- Added an HTTP regression test covering the encoded Windows-style path.
+
 ## 2026-09-07 Structured archive and JSON previews
 
 - ZIP-compatible containers (`.zip`, `.epub`, `.whl`, `.jar`, `.cbz`) now expose a bounded member manifest without extracting or executing entries.
