@@ -100,11 +100,16 @@ class AIRRPipeline:
         backend: AnalysisBackend,
         *,
         supersedes: str | None = None,
+        force: bool = False,
     ) -> AIResearchReport:
         packet = self._assistant.build_packet(experiment_id)
-        analyst = self._run_role("scientific_analyst", packet, backend)
-        reviewer = self._run_role("critical_reviewer", packet, backend, analyst)
-        writer = self._run_role("scientific_writer", packet, backend, analyst, reviewer)
+        analyst = self._run_role("scientific_analyst", packet, backend, force=force)
+        reviewer = self._run_role(
+            "critical_reviewer", packet, backend, analyst, force=force
+        )
+        writer = self._run_role(
+            "scientific_writer", packet, backend, analyst, reviewer, force=force
+        )
         experiment_directory = self._root / "experiments" / experiment_id
         report = _build_report(
             packet,
@@ -135,8 +140,9 @@ class AIRRPipeline:
         packet: ResearchPacket,
         backend: AnalysisBackend,
         *analyses: AIAnalysisRecord,
+        force: bool = False,
     ) -> AIAnalysisRecord:
-        existing = self._existing_role(packet.experiment_id, role)
+        existing = None if force else self._existing_role(packet.experiment_id, role)
         if existing is not None:
             return existing
         prompt = _role_prompt(role, packet, analyses)

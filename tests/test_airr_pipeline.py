@@ -112,6 +112,24 @@ def test_pipeline_writes_three_aiars_and_canonical_airr(tmp_path: Path) -> None:
     assert (report_dir / f"{report.report_id}.json").read_text() == original
 
 
+def test_pipeline_force_rerun_appends_schema_conforming_roles(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    first = AIRRPipeline(tmp_path).analyze("EXP-AIR-0001", _backend)
+    second = AIRRPipeline(tmp_path).analyze(
+        "EXP-AIR-0001", _backend, supersedes=first.report_id, force=True
+    )
+
+    assert second.report_id == "AIRR-2026-0002"
+    assert second.supersedes == first.report_id
+    assert second.scientific_evidence is False
+    analysis_ids = set(second.analysis_ids)
+    assert len(analysis_ids) == 3
+    analysis_files = list(
+        (tmp_path / "experiments" / "EXP-AIR-0001" / "analysis").glob("AIAR-*.json")
+    )
+    assert len(analysis_files) == 6
+
+
 def test_human_review_requires_bound_report_identity_and_comments(
     tmp_path: Path,
 ) -> None:
