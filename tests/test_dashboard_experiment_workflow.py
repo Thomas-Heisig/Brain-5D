@@ -125,6 +125,59 @@ def test_exploratory_batch_runs_through_runtime_ticks(tmp_path: Path) -> None:
     assert (child / "summary.md").is_file()
 
 
+def test_batch_runs_operational_protocols_in_order_with_per_protocol_options(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import src.dashboard.experiment_workflow as workflow_module
+
+    _write_registry(tmp_path)
+    monkeypatch.setattr(
+        workflow_module,
+        "protocol_catalog",
+        lambda _root: [
+            {
+                "id": "protocol_a",
+                "research_question": "RQ-SNN-001",
+                "hypothesis": "H-SNN-001-A",
+                "preregistration": "prereg-a.json",
+            },
+            {
+                "id": "protocol_b",
+                "research_question": "RQ-SNN-002",
+                "hypothesis": "H-SNN-002-A",
+                "preregistration": "prereg-b.json",
+            },
+        ],
+    )
+    service = ExperimentWorkflowService(tmp_path)
+    calls: list[tuple[str, int, str]] = []
+
+    def fake_run_science(body: dict[str, object]) -> dict[str, object]:
+        calls.append((str(body["protocol"]), int(body["ticks"]), str(body["seeds"])))
+        if body["protocol"] == "protocol_b":
+            raise RuntimeError("child failure")
+        return {"experiment_id": body["experiment_id"], "report": "report.md"}
+
+    service.run_science = fake_run_science  # type: ignore[method-assign]
+    result = service.run_batch(
+        {
+            "batch_id": "EXP-BATCH-CONTRACT",
+            "protocols": ["protocol_a", "protocol_b"],
+            "protocol_options": {
+                "protocol_a": {"ticks": 12, "seeds": "1-2"},
+                "protocol_b": {"ticks": 34, "seeds": "7-16"},
+            },
+        }
+    )
+
+    assert calls == [("protocol_a", 12, "1-2"), ("protocol_b", 34, "7-16")]
+    assert result["completed"] == 1
+    assert result["failed"] == 1
+    assert result["results"][1]["error"].startswith("RuntimeError: child failure")
+    assert (tmp_path / "workflows" / "EXP-BATCH-CONTRACT.json").is_file()
+    assert (tmp_path / "workflows" / "EXP-BATCH-CONTRACT.md").is_file()
+
+
 def test_run_can_append_ai_report_only_after_completed_run(tmp_path: Path) -> None:
     _write_registry(tmp_path)
     service = ExperimentWorkflowService(tmp_path)

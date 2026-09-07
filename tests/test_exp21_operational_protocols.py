@@ -15,6 +15,7 @@ from src.research.protocol_registry import (
 ROOT = Path(__file__).resolve().parents[1] / "research"
 
 EXPECTED = {
+    "RQ-SNN-001": ("H-SNN-001-A", "sustained_activity_stability_v1", 10),
     "RQ-REC-001": ("H-REC-001-A", "recurrence_map_v1", 20),
     "RQ-GEN-001": ("H-GEN-001-A", "learning_generalization_v1", 20),
     "RQ-REPL-001": ("H-REPL-001-A", "independent_replication_v1", 20),

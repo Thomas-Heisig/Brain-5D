@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Batch service contract coverage
+
+- [x] Test sequential protocol execution order.
+- [x] Test per-protocol Seeds/Ticks propagation.
+- [x] Test partial failure isolation and aggregate workflow reports.
+- [ ] Add browser E2E coverage for the interactive batch dialog.
+
 ## 2026-09-07 Dissertation results synchronization
 
 - [x] Insert verified Brain-5D experiment results into the dissertation-basis DOCX.
@@ -195,10 +202,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 791 tests collected on the 2026-09-06 merged research-catalog baseline.
+- [x] 793 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
-- [ ] Confirm the final current-head `main` CI after the documentation refresh before calling the refreshed head fully green.
+- [x] Confirm the final current-head `main` CI after the documentation refresh: 793 passed, 5 skipped, 0 failed.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.

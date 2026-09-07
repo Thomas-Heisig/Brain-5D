@@ -4,6 +4,18 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Batch service contract coverage
+
+- Added automated coverage for sequential protocol order, per-protocol Seeds/Ticks and child failure isolation.
+- Aggregate JSON/Markdown workflow reports are covered independently of browser availability.
+- Browser-level interaction coverage remains a separate environment-dependent gate.
+
+## 2026-09-07 Current-head verification and protocol contracts
+
+- Fixed the stale frontend ExperimentMode lifecycle contract.
+- Updated the operational protocol contract test for the new frozen `RQ-SNN-001` stability protocol.
+- Current head verification: 793 passed, 5 skipped, 0 failed.
+
 ## 2026-09-07 Dissertation results synchronization
 
 - Added the verified Brain-5D experiment results to `KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx`.

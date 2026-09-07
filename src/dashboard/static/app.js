@@ -190,8 +190,12 @@ function setupTabs() {
     if (tabName === 'control' && !initialized.control) {
       instances.control = initControlPanel();
       instances.console = initOperatorConsole();
-      instances.experimentMode = sharedExperimentMode || new ExperimentMode();
-      if (!sharedExperimentMode) instances.experimentMode.refresh();
+      if (sharedExperimentMode) {
+        instances.experimentMode = sharedExperimentMode;
+      } else {
+        instances.experimentMode = new ExperimentMode();
+        instances.experimentMode.refresh();
+      }
       initialized.control = true;
     }
     if (tabName === 'research' && !initialized.research) {

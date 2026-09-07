@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-07 — Batch service contract coverage
+
+- Added tests for sequential batch execution, individual protocol parameters and partial child failures.
+- Kept browser E2E as a separate remaining verification gate.
+
+## 2026-09-07 — Current-head verification and protocol contracts
+
+- Restored the explicit ExperimentMode lifecycle branch required by the frontend contract.
+- Added the frozen RQ-SNN-001 stability protocol to the operational protocol test expectations.
+- Full current-head test suite is green: 793 passed, 5 skipped, 0 failed.
+
 ## 2026-09-07 — Dissertation results synchronization
 
 - Added a data-first Brain-5D empirical-results appendix to the comprehensive dissertation basis DOCX.
