@@ -1,0 +1,138 @@
+[
+  {
+    "id": "R1",
+    "path": "research/README.md",
+    "title": "Projektarchitektur, Instrumentierung, Kompaktierung und MSBA",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/README.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R2",
+    "path": "research/registry/questions.yaml",
+    "title": "Kanonische Forschungsfragen; Stand im gelesenen Snapshot",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/questions.yaml",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R3",
+    "path": "research/experiments/EXP-SNN-001-R2/summary.md",
+    "title": "Stabilitätslauf; technischer Status und semantischer Konflikt",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-SNN-001-R2/summary.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R4",
+    "path": "research/experiments/EXP-REPL-0001-R1/summary.md",
+    "title": "Rekurrenz-Replikationsbericht; aggregierte Kennzahlen",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-REPL-0001-R1/summary.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R5",
+    "path": "research/experiments/EXP-GEN-0033-R1/summary.md",
+    "title": "Science-Suite-Diagnostik; 57 Teilruns",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-GEN-0033-R1/summary.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R6",
+    "path": "research/registry/hypotheses.yaml",
+    "title": "Hypothesen und vorhandene supported-Einträge",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/hypotheses.yaml",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R7",
+    "path": "research/registry/evidence/EVID-2026-15.json",
+    "title": "Registry-Evidenzrecord Restore-Determinismus",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/evidence/EVID-2026-15.json",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R8",
+    "path": "research/generated/data/DATA-2026-15.json",
+    "title": "Archivierter pytest-Output: 7 bestandene Restore-Tests",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/generated/data/DATA-2026-15.json",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R9",
+    "path": "research/registry/evidence/EVID-2026-16.json",
+    "title": "Registry-Evidenzrecord Speicher-Roundtrip",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/evidence/EVID-2026-16.json",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R10",
+    "path": "research/generated/data/DATA-2026-16.json",
+    "title": "Archivierter pytest-Output: 15 bestanden, 1 übersprungen",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/generated/data/DATA-2026-16.json",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R11",
+    "path": "research/experiments/EXP-GEN-0021/AI_ANALYSIS_GPT-5.6-SOL.md",
+    "title": "KI-gekennzeichnete Nachanalyse; interpretation_only",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-GEN-0021/AI_ANALYSIS_GPT-5.6-SOL.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R12",
+    "path": "research/experiments/EXP-LIFE-0001-R1/summary.md",
+    "title": "Explorativer Interferenz-Vorläuferscreen",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-LIFE-0001-R1/summary.md",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R13",
+    "path": "research/registry/questions.msba.yaml",
+    "title": "Fünf offene modalitätsspezifische Forschungsfragen",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/questions.msba.yaml",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R14",
+    "path": "research/experiments/EXP-SNN-001-R2/DATA/current_run.json",
+    "title": "Raw-Pointer mit Kompressions- und Hashmetadaten",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/experiments/EXP-SNN-001-R2/DATA/current_run.json",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "accessed": "2026-09-07",
+    "capture": "connector_read; selected complete files or relevant line ranges; no local original-byte archive"
+  },
+  {
+    "id": "R15",
+    "path": "research/registry/hypotheses.msba.yaml",
+    "title": "Fünf MSBA-Hypothesen: Originalwortlaut, Status untested und leere Evidenzlisten",
+    "snapshot_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/blob/661681981458bc69fea5fce096e27f2b85b6c9d2/research/registry/hypotheses.msba.yaml",
+    "accessed": "2026-09-07",
+    "capture": "complete connector text read; no local original-byte archive",
+    "git_blob_sha": "b84aee40540ecb80dcdbeb630462bf9526a67de7"
+  }
+]

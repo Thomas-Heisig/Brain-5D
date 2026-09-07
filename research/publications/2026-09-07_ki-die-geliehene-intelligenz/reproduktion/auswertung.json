@@ -1,0 +1,70 @@
+{
+  "input_sha256": "b16e64d1e9c33b431b151b2e6756fdd3843988ece331fcf15e72212b4472ed0e",
+  "calculation_status": "descriptive_secondary_calculation",
+  "new_experiment": false,
+  "raw_event_reanalysis": false,
+  "independent_replication": false,
+  "evidence_promotion": false,
+  "recurrence_report_comparisons": {
+    "total_spikes": {
+      "reference": 3.0,
+      "comparison": 33.0,
+      "absolute_difference": 30.0,
+      "ratio": 11.0,
+      "relative_change_percent": 1000.0,
+      "ratio_note": "descriptive only"
+    },
+    "delivered_synaptic_events": {
+      "reference": 2.0,
+      "comparison": 33.0,
+      "absolute_difference": 31.0,
+      "ratio": 16.5,
+      "relative_change_percent": 1550.0,
+      "ratio_note": "descriptive only"
+    },
+    "activated_neurons": {
+      "reference": 3.0,
+      "comparison": 3.0,
+      "absolute_difference": 0.0,
+      "ratio": 1.0,
+      "relative_change_percent": 0.0,
+      "ratio_note": "descriptive only"
+    },
+    "recurrent_events": {
+      "reference": 0.0,
+      "comparison": 10.0,
+      "absolute_difference": 10.0,
+      "ratio": null,
+      "relative_change_percent": null,
+      "ratio_note": "undefined for zero reference"
+    },
+    "propagation_depth": {
+      "reference": 1.0,
+      "comparison": 61.0,
+      "absolute_difference": 60.0,
+      "ratio": 61.0,
+      "relative_change_percent": 6000.0,
+      "ratio_note": "descriptive only"
+    }
+  },
+  "learning_weight_report_comparison": {
+    "reference": 0.05,
+    "comparison": 0.5172804698,
+    "absolute_difference": 0.4672804698,
+    "ratio": 10.345609396,
+    "relative_change_percent": 934.5609396,
+    "ratio_note": "descriptive only"
+  },
+  "compression_pointer_comparison": {
+    "uncompressed_to_compressed_ratio": 84.85868205480004,
+    "size_reduction_percent": 98.82157019672516,
+    "scope": "one reported raw-artifact pointer; no general compression claim",
+    "raw_digest_verified": false
+  },
+  "excluded_inferences": [
+    "No significance tests without raw data and a valid sampling design",
+    "Seed labels alone do not establish independent initialization",
+    "Propagation depth is not the number of distinct anatomical layers",
+    "Persistence and technical restore are not functional memory evidence"
+  ]
+}

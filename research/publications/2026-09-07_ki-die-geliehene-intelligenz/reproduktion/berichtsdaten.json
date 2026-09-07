@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "input_kind": "transcribed_report_aggregates_not_raw_observations",
+  "sources": [
+    "R4",
+    "R11",
+    "R14"
+  ],
+  "recurrence": {
+    "runs": 40,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61
+    ],
+    "ticks_per_run": 256,
+    "per_condition_n": 20,
+    "recurrence_off": {
+      "total_spikes": 3,
+      "delivered_synaptic_events": 2,
+      "activated_neurons": 3,
+      "recurrent_events": 0,
+      "propagation_depth": 1
+    },
+    "recurrence_on": {
+      "total_spikes": 33,
+      "delivered_synaptic_events": 33,
+      "activated_neurons": 3,
+      "recurrent_events": 10,
+      "propagation_depth": 61
+    },
+    "isi_ticks": {
+      "off": {
+        "n_intervals": 40,
+        "mean": 1
+      },
+      "on": {
+        "n_intervals": 640,
+        "mean": 1.9375,
+        "median": 2,
+        "min": 1,
+        "max": 4
+      }
+    },
+    "runtime_seconds": 0.08962029998656362
+  },
+  "learning": {
+    "initial_weight": "0.05",
+    "final_weight": "0.5172804698",
+    "source": "R11; secondary AI analysis only"
+  },
+  "compression_pointer": {
+    "raw_path": "DATA/raw/run-0019-tonic_drive-seed-51.json.gz",
+    "sha256_reported": "5d8f358b0dd07b4a4710d9cb4fad3740611d28864cf9f826b57213b2f34bfaa5",
+    "compressed_bytes": 24781,
+    "uncompressed_bytes": 2102883,
+    "digest_locally_verified": false
+  }
+}

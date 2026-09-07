@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Bitte dieses Paket als KI-gestuetzte wissenschaftliche Abhandlung zitieren; siehe README zu Quellen- und Evidenzstatus."
+type: dataset
+title: "KI - Die geliehene Intelligenz: Wissenschaftliche Abhandlung und Begleitmaterialien"
+version: "1.0"
+date-released: "2026-09-07"
+authors:
+  - family-names: "Heisig"
+    given-names: "Thomas"
+keywords:
+  - Brain-5D
+  - Spiking Neural Networks
+  - Embodiment
+  - epistemische Genealogie
+  - wissenschaftliche Evidenz
+abstract: "Integrierte theoretische Synthese mit artefaktbasierter Sekundaerauswertung. Keine neue Simulation, keine unabhaengige Rohdatenreplikation und keine automatische Evidenzfreigabe."
