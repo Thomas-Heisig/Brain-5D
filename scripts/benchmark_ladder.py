@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import platform
 import random
 import sys
@@ -30,16 +31,18 @@ DEFAULT_TIERS = (5_000, 25_000, 100_000, 1_000_000)
 LARGE_TIER_LIMIT = 100_000
 
 
-def build_network(neuron_count: int, seed: int) -> Any:
+def build_network(
+    neuron_count: int, seed: int, connections_per_neuron: int = 0
+) -> Any:
     from src.core.network import Brain5DConfig, NeuralNetwork
     from src.core.spatial_index import linear_to_5d
 
-    side = max(1, neuron_count)
+    side = max(1, math.ceil(neuron_count ** (1.0 / 5.0)))
     config = Brain5DConfig.from_dict(
         {
-            "dimensions": [side, 1, 1, 1, 1],
+            "dimensions": [side, side, side, side, side],
             "network": {
-                "initial_connections_per_neuron": 0,
+                "initial_connections_per_neuron": connections_per_neuron,
                 "neighbour_radius": 1.0,
             },
         }
@@ -47,12 +50,22 @@ def build_network(neuron_count: int, seed: int) -> Any:
     network = NeuralNetwork(config, random.Random(seed))
     for index in range(neuron_count):
         network.add_neuron(linear_to_5d(index, config.dimensions))
+    if connections_per_neuron:
+        network.initialize_random_connections(
+            connections_per_neuron=connections_per_neuron,
+            radius=1.0,
+        )
     return network
 
 
-def run_tier(neuron_count: int, ticks: int, seed: int) -> dict[str, Any]:
+def run_tier(
+    neuron_count: int,
+    ticks: int,
+    seed: int,
+    connections_per_neuron: int = 0,
+) -> dict[str, Any]:
     started = time.perf_counter()
-    network = build_network(neuron_count, seed)
+    network = build_network(neuron_count, seed, connections_per_neuron)
     construction_seconds = time.perf_counter() - started
 
     step_started = time.perf_counter()
@@ -64,11 +77,17 @@ def run_tier(neuron_count: int, ticks: int, seed: int) -> dict[str, Any]:
         "neurons": neuron_count,
         "synapses": network.get_state_summary().get("synapses", 0),
         "ticks": ticks,
+        "connections_per_neuron_requested": connections_per_neuron,
         "construction_seconds": round(construction_seconds, 6),
         "step_seconds": round(step_seconds, 6),
         "ticks_per_second": round(ticks / step_seconds, 3) if step_seconds else None,
         "neurons_per_second": (
             round(neuron_count * ticks / step_seconds, 3) if step_seconds else None
+        ),
+        "synapses_per_second": (
+            round(network.synapse_count * ticks / step_seconds, 3)
+            if step_seconds
+            else None
         ),
     }
 
@@ -82,6 +101,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--ticks", type=int, default=20)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--connections-per-neuron", type=int, default=0)
     parser.add_argument("--output", type=Path)
     parser.add_argument(
         "--allow-large",
@@ -95,6 +115,8 @@ def main() -> int:
     args = parse_args()
     if args.ticks <= 0:
         raise SystemExit("--ticks must be positive")
+    if args.connections_per_neuron < 0:
+        raise SystemExit("--connections-per-neuron must be non-negative")
     tiers = tuple(sorted({int(value) for value in args.tiers.split(",") if value}))
     if not tiers or any(value <= 0 for value in tiers):
         raise SystemExit("--tiers must contain positive integers")
@@ -110,7 +132,16 @@ def main() -> int:
         "platform": platform.platform(),
         "seed": args.seed,
         "requested_ticks": args.ticks,
-        "tiers": [run_tier(value, args.ticks, args.seed) for value in tiers],
+        "connections_per_neuron": args.connections_per_neuron,
+        "tiers": [
+            run_tier(
+                value,
+                args.ticks,
+                args.seed,
+                args.connections_per_neuron,
+            )
+            for value in tiers
+        ],
         "scientific_claim": False,
     }
     payload = json.dumps(report, indent=2)

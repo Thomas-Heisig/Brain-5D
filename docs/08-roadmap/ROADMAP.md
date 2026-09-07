@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Neuron/synapse scaling profile
+
+- Extended `scripts/benchmark_ladder.py` with explicit connections-per-neuron, actual synapse counts and synapse throughput.
+- Generated a bounded 100/500/1000-neuron profile with two connections per neuron; the artifact remains a performance measurement, not scientific evidence.
+
 ## 2026-09-07 RQ-SNN-001 clean-freeze rerun and AIRR retry
 
 - Executed the exact frozen `sustained_activity_stability_v1` protocol as `EXP-SNN-001-R5` from a clean worktree: 20 runs, 10 seeds, 100,000 ticks per run, zero runtime errors and `dirty=false` provenance.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Neuron/synapse scaling profile
+
+- Extended the scaling benchmark to profile actual synapse counts and throughput alongside neuron counts.
+- Added a bounded 100/500/1000-neuron, two-connections-per-neuron artifact.
+
 ## 2026-09-07 — RQ-SNN-001 clean-freeze rerun and AIRR retry
 
 - Ran `EXP-SNN-001-R5` from a clean worktree with `dirty=false`, 20 runs, 10 seeds and 100,000 ticks per run.

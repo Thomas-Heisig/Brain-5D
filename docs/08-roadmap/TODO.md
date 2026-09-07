@@ -311,7 +311,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [x] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
 - [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage as distinct measured phases.
-- [ ] Profile increasing neuron/synapse counts before optimizing kernels.
+- [x] Profile increasing neuron/synapse counts before optimizing kernels.
 
 ## P1 — 5D causal/ablation program
 
