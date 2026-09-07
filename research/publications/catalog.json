@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "category": "publications",
+  "publications": [
+    {
+      "id": "PUB-KI-GELIEHENE-INTELLIGENZ-20260907",
+      "title": "KI - Die geliehene Intelligenz",
+      "type": "wissenschaftliche_abhandlung",
+      "author": "Thomas Heisig",
+      "date": "2026-09-07",
+      "source_commit": "661681981458bc69fea5fce096e27f2b85b6c9d2",
+      "entrypoint": "publications/README.md",
+      "reader": "publications/reader/README.md",
+      "snapshot": "publications/2026-09-07_ki-die-geliehene-intelligenz",
+      "archive": "publications/archives/Brain5D_Wissenschaftliche_Abhandlung_2026-09-07.zip",
+      "integrity": "publications/integrity.json",
+      "frozen_file_count": 41,
+      "read_only": true,
+      "authority": "interpretation_only",
+      "automatic_evidence_promotion": false,
+      "registry_role": "historical_snapshot_not_canonical_registry",
+      "canonical_questions": "registry/questions.yaml",
+      "canonical_hypotheses": "registry/hypotheses.yaml",
+      "canonical_experiments": "experiments/",
+      "new_hypotheses_status": "proposal_requires_registration_preregistration_and_review"
+    }
+  ]
+}
