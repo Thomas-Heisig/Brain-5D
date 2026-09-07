@@ -792,6 +792,56 @@ class TestEvidenceRejection:
             ee_module.EXPERIMENTS_DIR = original_dir
             ee_module.EVIDENCE_DIR = original_evidence
 
+    def test_validated_promotion_rejects_mismatched_source_freeze(
+        self, registry: ResearchRegistry, tmp_path: Path
+    ) -> None:
+        """A review cannot bypass a provenance digest mismatch."""
+        engine = EvidenceEngine(registry)
+        exp_dir = tmp_path / "research" / "experiments" / "EXP-TEST-0001"
+        exp_dir.mkdir(parents=True, exist_ok=True)
+        self._create_manifest(exp_dir, "completed", valid=True)
+        provenance = {
+            "code": "a" * 64,
+            "config": "b" * 64,
+            "prompt": "c" * 64,
+            "data": "d" * 64,
+        }
+        manifest_path = exp_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["provenance_digests"] = provenance
+        manifest["source_freeze_sha"] = "0" * 64
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        (exp_dir / "human_review.json").write_text(
+            json.dumps(
+                {
+                    "experiment_id": "EXP-TEST-0001",
+                    "reviewer": "human",
+                    "decision": "supports",
+                    "comments": "Review completed.",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        import src.research.evidence_engine as ee_module
+
+        original_dir = ee_module.EXPERIMENTS_DIR
+        original_evidence = ee_module.EVIDENCE_DIR
+        try:
+            ee_module.EXPERIMENTS_DIR = tmp_path / "research" / "experiments"
+            ee_module.EVIDENCE_DIR = tmp_path / "research" / "registry" / "evidence"
+            ee_module.EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+            with pytest.raises(ValueError, match="Source-freeze digest"):
+                engine.promote_validated_experiment(
+                    "EXP-TEST-0001",
+                    "CLAIM-TEST-001",
+                    "H-TEST-001-A",
+                    "Reviewed result",
+                )
+        finally:
+            ee_module.EXPERIMENTS_DIR = original_dir
+            ee_module.EVIDENCE_DIR = original_evidence
+
 
 # ============================================================================
 # Phase 2: Fail-fast mode

@@ -1,0 +1,43 @@
+{
+  "experiment_id": "EXP-REG-0002-R1",
+  "research_question": "RQ-REG-002",
+  "hypothesis": "H-REG-002-A",
+  "title": "Closed-loop regulation recovery v1",
+  "conditions": "Regulation off control vs regulation on treatment; nominal-pressure-recovery schedule; seeds 42-61.",
+  "ticks": 128,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+  ],
+  "protocol": "closed_loop_regulation_v1",
+  "resolved_runner": "run_regulation_recovery",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 128,
+    "observed_min": 128,
+    "observed_max": 128
+  },
+  "notes": "Full PREREG-REG-002 seed set.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only."
+}

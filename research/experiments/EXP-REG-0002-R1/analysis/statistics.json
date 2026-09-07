@@ -1,0 +1,114 @@
+{
+  "conditions": {
+    "regulation_off": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 128.0,
+          "mean": 128.0,
+          "median": 128.0,
+          "min": 128.0,
+          "n": 20,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 73.0,
+          "mean": 73.0,
+          "median": 73.0,
+          "min": 73.0,
+          "n": 20,
+          "std": 0.0
+        }
+      },
+      "run_count": 20,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ]
+    },
+    "regulation_on": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 128.0,
+          "mean": 128.0,
+          "median": 128.0,
+          "min": 128.0,
+          "n": 20,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 67.0,
+          "mean": 67.0,
+          "median": 67.0,
+          "min": 67.0,
+          "n": 20,
+          "std": 0.0
+        }
+      },
+      "run_count": 20,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 40,
+  "schema_version": "2.0",
+  "two_condition_effects": {
+    "ticks_executed": {
+      "absolute_difference": 0.0,
+      "comparison_condition": "regulation_on",
+      "ratio": 1.0,
+      "reference_condition": "regulation_off"
+    },
+    "total_spikes": {
+      "absolute_difference": -6.0,
+      "comparison_condition": "regulation_on",
+      "ratio": 0.9178082191780822,
+      "reference_condition": "regulation_off"
+    }
+  }
+}

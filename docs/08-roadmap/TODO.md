@@ -348,7 +348,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [ ] Integrate measured host telemetry into experiment-only resource observations with explicit missing/unknown values.
 - [ ] Test missing and uncertain sensor conditions.
 - [x] Register deterministic recovery comparison with regulation enabled/disabled.
-- [ ] Execute and review the recovery experiment across the required seed set.
+- [x] Execute the recovery experiment across the required seed set: `EXP-REG-0002-R1`, 40 runs, 20 seeds, 0 runtime errors.
+- [ ] Independently review `EXP-REG-0002-R1` before any EVID promotion.
 - [ ] Test whether body-boundary changes predictably alter behavior under matched conditions.
 
 ## P2 — memory/world model

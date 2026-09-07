@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — Regulation recovery experiment executed
+
+- Ran `closed_loop_regulation_v1` with 20 seeds and both regulation arms.
+- Completed 40 runs at 128 ticks with no runtime errors.
+- Descriptive result: regulation-on reduced pressure spikes and improved the recovery ratio; no evidence promotion was performed.
+
 ## 2026-09-07 — Recurrence/propagation validation executed
 
 - Ran the registered multi-seed recurrence map: 300 runs, 20 seeds, full weight×delay grid, 256 ticks per run, zero runtime errors.

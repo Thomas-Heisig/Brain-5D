@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Regulation recovery experiment executed
+
+- Executed frozen `closed_loop_regulation_v1` / `PREREG-REG-002` as `EXP-REG-0002-R1`.
+- Completed 40 runs across 20 seeds and regulation-off/on arms at 128 ticks with zero runtime errors.
+- Regulation-on reduced pressure-phase spikes from 15 to 5 and increased recovery-phase spikes from 21 to 25; recovery-ratio means were 5.0 versus 1.4.
+- Results remain review-pending because source provenance is dirty and human review is required.
+
 ## 2026-09-07 Recurrence/propagation validation executed
 
 - Executed frozen `recurrence_map_v1` / `PREREG-REC-001` as `EXP-REC-0001-R1`.
