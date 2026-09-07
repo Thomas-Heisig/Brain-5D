@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0",
+  "kind": "methodological_witness_checks",
+  "brain5d_runtime_executed": false,
+  "scientific_evidence_promotion": false,
+  "preregistered": false,
+  "limitations": "Constructed finite witnesses, not learned capabilities or a topology benchmark.",
+  "script_sha256": "b3e51c9a1efeed0f536d46b0c7749f3bfe21b19a7e69cbdff410eba3924cd065",
+  "fixture": {
+    "nodes": 12,
+    "updates": 64,
+    "recorded_states": 65,
+    "dimensions": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "memory_records": [
+    {
+      "input_bit": 0,
+      "informative_trace": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "uninformative_trace": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "aggregate_total_spikes": 4,
+      "aggregate_activated_channels": 1
+    },
+    {
+      "input_bit": 1,
+      "informative_trace": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "uninformative_trace": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "aggregate_total_spikes": 4,
+      "aggregate_activated_channels": 1
+    }
+  ],
+  "decoding_accuracy": {
+    "informative": 1.0,
+    "uninformative": 0.5
+  },
+  "checks_passed": 28,
+  "checks": [
+    {
+      "name": "addresses_2d_injective",
+      "passed": true
+    },
+    {
+      "name": "addresses_2d_shape",
+      "passed": true
+    },
+    {
+      "name": "trajectory_2d_equal",
+      "passed": true
+    },
+    {
+      "name": "permutation_2d_equal",
+      "passed": true
+    },
+    {
+      "name": "addresses_3d_injective",
+      "passed": true
+    },
+    {
+      "name": "addresses_3d_shape",
+      "passed": true
+    },
+    {
+      "name": "trajectory_3d_equal",
+      "passed": true
+    },
+    {
+      "name": "permutation_3d_equal",
+      "passed": true
+    },
+    {
+      "name": "addresses_4d_injective",
+      "passed": true
+    },
+    {
+      "name": "addresses_4d_shape",
+      "passed": true
+    },
+    {
+      "name": "trajectory_4d_equal",
+      "passed": true
+    },
+    {
+      "name": "permutation_4d_equal",
+      "passed": true
+    },
+    {
+      "name": "addresses_5d_injective",
+      "passed": true
+    },
+    {
+      "name": "addresses_5d_shape",
+      "passed": true
+    },
+    {
+      "name": "trajectory_5d_equal",
+      "passed": true
+    },
+    {
+      "name": "permutation_5d_equal",
+      "passed": true
+    },
+    {
+      "name": "addresses_6d_injective",
+      "passed": true
+    },
+    {
+      "name": "addresses_6d_shape",
+      "passed": true
+    },
+    {
+      "name": "trajectory_6d_equal",
+      "passed": true
+    },
+    {
+      "name": "permutation_6d_equal",
+      "passed": true
+    },
+    {
+      "name": "nonzero_activity",
+      "passed": true
+    },
+    {
+      "name": "nonconstant_trajectory",
+      "passed": true
+    },
+    {
+      "name": "negative_control_changes_trajectory",
+      "passed": true
+    },
+    {
+      "name": "same_counts_bit_0",
+      "passed": true
+    },
+    {
+      "name": "same_counts_bit_1",
+      "passed": true
+    },
+    {
+      "name": "different_decodability",
+      "passed": true
+    },
+    {
+      "name": "observational_equivalence",
+      "passed": true
+    },
+    {
+      "name": "intervention_separates_models",
+      "passed": true
+    }
+  ]
+}

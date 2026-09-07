@@ -38,3 +38,4 @@ docs/06-research/KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissert
 
 # Two trailing spaces encode intentional Markdown hard line breaks.
 research/publications/reader/*.md whitespace=-blank-at-eol
+research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/*.md whitespace=-blank-at-eol
