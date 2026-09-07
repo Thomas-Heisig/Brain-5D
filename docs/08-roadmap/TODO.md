@@ -484,3 +484,18 @@ A milestone is not complete because a UI card is green. It is complete only when
 - [ ] human interpretation distinguishes positive, negative and inconclusive outcomes;
 - [ ] documentation records what was actually shown, not what was expected;
 - [ ] dashboard visualization, catalog reachability or pipeline reachability is not substituted for experimental evidence.
+
+## 2026-09-07 Main consolidation
+
+- [x] Merge reviewed branches while preserving concurrent File Viewer development.
+- [x] Integrate the complete scientific publication and verify all 41 files plus archive.
+- [x] Expose publications through the shared research/file renderer without write access.
+- [x] Prepare source-bound verification, safe exact-tip branch cleanup and corrected packaging.
+
+See [the consolidation record](MAIN_CONSOLIDATION_2026-09-07.md). Technical CI
+and independent scientific review remain separate; existing open research
+items above are not closed by this maintenance operation.
+
+- [ ] Operationalize the eight synthesis hypotheses from the publication in
+  canonical questions, hypotheses and protocols before treating them as
+  executable experiments; their current status is PROPOSED_NOT_REGISTERED.

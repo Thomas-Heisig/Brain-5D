@@ -28,7 +28,7 @@ def load_allow_list(path: Path) -> dict[str, dict[str, str]]:
     if not isinstance(raw, dict):
         raise ValueError("Catalog audit allow-list must be a mapping")
     result: dict[str, dict[str, str]] = {}
-    for category in ("historical_only", "test_fixtures"):
+    for category in ("historical_only", "test_fixtures", "publication_proposals"):
         entries = raw.get(category, {})
         if not isinstance(entries, dict):
             raise ValueError(f"Allow-list category must be a mapping: {category}")
@@ -53,8 +53,18 @@ def report_data(
     missing = set(audit.missing_questions) | set(audit.missing_hypotheses)
     historical = set(allow_list["historical_only"])
     fixtures = set(allow_list["test_fixtures"])
-    stale_allow_list = sorted((historical | fixtures) - missing)
-    disallowed = sorted(missing - historical - fixtures)
+    proposals = set(allow_list.get("publication_proposals", {}))
+    scoped_proposals = {
+        identifier
+        for identifier in proposals
+        if all(
+            path.startswith("research/publications/")
+            or path == "research/registry/catalog_audit_allow_list.yaml"
+            for path in _references_for(audit, identifier)
+        )
+    }
+    stale_allow_list = sorted((historical | fixtures | proposals) - missing)
+    disallowed = sorted(missing - historical - fixtures - scoped_proposals)
     return {
         "status": "clean" if not disallowed and not audit.link_issues else "failed",
         "audit": {
@@ -78,6 +88,14 @@ def report_data(
                 "references": _references_for(audit, identifier),
             }
             for identifier in sorted(missing & fixtures)
+        },
+        "publication_proposals": {
+            identifier: {
+                "reason": allow_list["publication_proposals"][identifier],
+                "status": "PROPOSED_NOT_REGISTERED",
+                "references": _references_for(audit, identifier),
+            }
+            for identifier in sorted(missing & scoped_proposals)
         },
         "disallowed_missing": {
             identifier: _references_for(audit, identifier) for identifier in disallowed
@@ -107,6 +125,7 @@ def _markdown_report(data: dict[str, Any]) -> str:
     for title, key in (
         ("Historical/design references", "historical_only"),
         ("Test fixtures", "test_fixtures"),
+        ("Publication proposals - not registered or executed", "publication_proposals"),
     ):
         lines.extend([f"## {title}", ""])
         entries = data[key]

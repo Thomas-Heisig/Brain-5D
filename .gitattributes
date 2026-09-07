@@ -35,3 +35,6 @@ artifacts/benchmark_ladder_neuron_synapse.json filter=lfs diff=lfs merge=lfs -te
 docs/06-research/Brain-5D_Scientific_Framework_v0.2.docx filter=lfs diff=lfs merge=lfs -text
 docs/06-research/KI_Die_geliehene_Intelligenz_Dissertation.docx filter=lfs diff=lfs merge=lfs -text
 docs/06-research/KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx filter=lfs diff=lfs merge=lfs -text
+
+# Two trailing spaces encode intentional Markdown hard line breaks.
+research/publications/reader/*.md whitespace=-blank-at-eol

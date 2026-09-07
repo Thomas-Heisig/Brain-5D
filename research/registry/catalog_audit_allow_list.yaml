@@ -42,3 +42,14 @@ test_fixtures:
   H-EXTRA-E01-A: "Registry-fragment test fixture."
   H-MISSING-001: "Catalog-audit negative test fixture."
   H-TEST-001-A: "Catalog-audit test fixture."
+
+# Frozen manuscript proposals; accepted only inside publication files.
+publication_proposals:
+  H-SYN-01: "Review-packet compaction proposal; not preregistered and no evidence."
+  H-SYN-02: "Resource-feedback recovery proposal; not preregistered and no evidence."
+  H-SYN-03: "Self-state calibration proposal; not preregistered and no evidence."
+  H-SYN-04: "Geometry-mechanism proposal; not preregistered and no evidence."
+  H-SYN-05: "Local regulation-error proposal; not preregistered and no evidence."
+  H-SYN-06: "Source and approval-status consistency proposal; not preregistered and no evidence."
+  H-SYN-07: "Persistence versus episodic-recall proposal; not preregistered and no evidence."
+  H-SYN-08: "Intervention-window proposal; not preregistered and no evidence."

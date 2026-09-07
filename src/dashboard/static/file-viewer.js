@@ -144,6 +144,31 @@ function initFileManager() {
       });
       toolbar.append(create);
     }
+    if (toolbar && !document.getElementById('fm-open-publication')) {
+      const publication = document.createElement('button');
+      publication.id = 'fm-open-publication';
+      publication.type = 'button';
+      publication.textContent = 'Abhandlung lesen';
+      publication.addEventListener('click', async () => {
+        publication.disabled = true;
+        try {
+          fmCurrentSource = 'research';
+          fmCurrentPath = '';
+          document.querySelectorAll('.fm-source-btn').forEach(control => {
+            control.classList.toggle('active', control.dataset.source === 'research');
+          });
+          updateFMExperimentSortControl();
+          updateFMBreadcrumb();
+          await refreshFileManager();
+          await openFMFile('publications/reader/README.md');
+        } catch (error) {
+          window.alert(`Abhandlung konnte nicht geoeffnet werden: ${error.message}`);
+        } finally {
+          publication.disabled = false;
+        }
+      });
+      toolbar.append(publication);
+    }
     loadFMRecent();
     setupFMSourceButtons();
     setupFMExperimentSort();

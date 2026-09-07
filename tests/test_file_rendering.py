@@ -444,3 +444,28 @@ def test_remote_file_writes_require_explicit_authorization(
         validate_file_write_access(request)
     request.headers["Authorization"] = "Bearer explicit-test-credential"
     validate_file_write_access(request)
+
+
+@pytest.mark.parametrize("encoding", ["utf-8", "utf-16", "utf-16-le", "utf-16-be"])
+@pytest.mark.parametrize(
+    ("extension", "member"),
+    [
+        ("docx", "word/document.xml"),
+        ("xlsx", "xl/worksheets/sheet1.xml"),
+        ("pptx", "ppt/slides/slide1.xml"),
+    ],
+)
+def test_encoded_office_dtd_is_rejected(
+    service: FilePreviewService, encoding: str, extension: str, member: str
+) -> None:
+    """UTF-16 must not bypass XML entity protection."""
+    path = service.roots["docs"] / f"encoded.{extension}"
+    xml = '<?xml version="1.0"?><!DOCTYPE x [<!ENTITY e "not-safe">]><x><t>&e;</t></x>'
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr(member, xml.encode(encoding))
+    original = path.read_bytes()
+    preview = service.preview("docs", path.name)
+    assert preview["kind"] == "binary"
+    assert preview["content"] == ""
+    assert "Unsafe" in preview["notice"]
+    assert path.read_bytes() == original

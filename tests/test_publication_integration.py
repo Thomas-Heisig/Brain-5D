@@ -34,7 +34,9 @@ def test_publication_discovery_and_tree(tmp_path: Path) -> None:
     assert len(documents) == 1
     assert documents[0].category == "publications"
     assert documents[0].path == f"publications/{PACKAGE}/{MASTER}"
-    assert source.registry_summary()["categories"]["publications"] == 1
+    categories = source.registry_summary()["categories"]
+    assert isinstance(categories, dict)
+    assert categories["publications"] == 1
     tree = FileManager(source, None, tmp_path / "docs").get_tree("research")
     assert any(child["name"] == "publications" for child in tree["children"])
 

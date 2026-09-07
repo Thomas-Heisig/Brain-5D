@@ -32,6 +32,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Inspired Computing",
 ]
 dependencies = [
+  "defusedxml>=0.7.1",
   "PyYAML>=6.0",
   "matplotlib>=3.8",
   "numpy>=1.26",
@@ -62,6 +63,7 @@ dev = [
   "pytest>=8.0",
   "pytest-cov>=5.0",
   "ruff==0.16.6",
+  "types-defusedxml>=0.7.0",
   "types-PyYAML>=6.0",
   "types-psutil>=7.0",
 ]
@@ -154,3 +156,12 @@ skips = ["B101", "B301", "B403", "B404", "B603", "B607"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "S311", "ARG001", "ARG002"]
 "scripts/*" = ["S101", "S311", "ARG001"]
+
+# src is the import namespace, not an implicit src-layout directory.
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"src.dashboard" = ["static/*", "static/**/*"]

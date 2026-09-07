@@ -307,3 +307,6 @@ MIT License. See [LICENSE](LICENSE).
 [KI - Die geliehene Intelligenz: vollstaendige wissenschaftliche Abhandlung](research/publications/README.md)
 
 Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forschungsfragen, Hypothesen, Ergebnisdarstellungen, Originalmanuskripte und alle Begleitdateien. Die kapitelweise Lesefassung ist im zentralen File Viewer vollstaendig zugaenglich. Datierte Originale bleiben unveraendert und schreibgeschuetzt; kanonische Register und Evidenzfreigaben werden nicht ersetzt.
+
+Main integration decisions and verification scope are recorded in
+[the consolidation record](docs/08-roadmap/MAIN_CONSOLIDATION_2026-09-07.md).

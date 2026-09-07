@@ -34,14 +34,16 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^(research/(experiments/|registry/evidence/|generated/data/)|docs/99-archive/)
+        exclude: ^(research/(experiments/|preregistrations/|publications/|registry/evidence/|generated/data/)|docs/99-archive/)
         args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
         # Frozen experiment manifests are evidence artifacts and must not be
         # byte-rewritten by an automatic formatting hook.
-        exclude: ^research/(experiments/|registry/evidence/|generated/data/|generated/verification/)
+        exclude: ^research/(experiments/|preregistrations/|publications/|registry/evidence/|generated/data/|generated/verification/)
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
+        # Delivered publication sizes are enforced by the SHA-256 manifest test.
+        exclude: ^research/publications/
         args: [--maxkb=500]

@@ -25,7 +25,9 @@ from http import HTTPStatus
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
 from urllib.parse import quote, unquote, urlparse
-from xml.etree import ElementTree
+
+from defusedxml import ElementTree
+from defusedxml.common import DefusedXmlException
 
 PREVIEW_BYTES = 256 * 1024
 EDIT_BYTES = 1024 * 1024
@@ -199,7 +201,12 @@ class FilePreviewService:
                     or b"<!ENTITY" in raw.upper()
                 ):
                     raise FileContractError("Unsafe or oversized document XML")
-                tree = ElementTree.fromstring(raw)
+                try:
+                    tree = ElementTree.fromstring(
+                        raw, forbid_dtd=True, forbid_entities=True, forbid_external=True
+                    )
+                except DefusedXmlException as exc:
+                    raise FileContractError("Unsafe document XML") from exc
                 lines.append(info.filename)
                 for node in tree.iter():
                     if node.tag.rsplit("}", 1)[-1] in {"t", "v", "f"} and node.text:
@@ -342,11 +349,11 @@ class FilePreviewService:
                     result["kind"] = (
                         "markdown"
                         if ext in {".md", ".markdown"}
-                        else "formula"
-                        if ext in FORMULA_EXTENSIONS
-                        else "diagram"
-                        if ext in DIAGRAM_FORMATS
-                        else "text"
+                        else (
+                            "formula"
+                            if ext in FORMULA_EXTENSIONS
+                            else "diagram" if ext in DIAGRAM_FORMATS else "text"
+                        )
                     )
                     if ext in FORMULA_EXTENSIONS:
                         result["formula_format"] = "latex"

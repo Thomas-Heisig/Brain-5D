@@ -124,6 +124,7 @@ def main() -> int:
         for path in sorted((REPO_ROOT / prefix).rglob("*"))
         if path.is_file()
         and "__pycache__" not in path.parts
+        and not any(part.endswith(".egg-info") for part in path.parts)
         and path != BASELINE_PATH
         and path.suffix not in {".pyc", ".pyo"}
     }

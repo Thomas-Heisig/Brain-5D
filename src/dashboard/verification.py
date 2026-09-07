@@ -149,7 +149,7 @@ def compute_source_tree_digest(
                     if rel_path.endswith(_DIGEST_EXCLUDE_SUFFIXES):
                         continue
                     if any(
-                        part in _DIGEST_EXCLUDE_DIRS
+                        part in _DIGEST_EXCLUDE_DIRS or part.endswith(".egg-info")
                         for part in path.relative_to(repo_root).parts
                     ):
                         continue

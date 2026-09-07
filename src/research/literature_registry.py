@@ -70,5 +70,7 @@ class LiteratureRegistry:
     def write_literature_matrix(self, path: Path | None = None) -> Path:
         """Write the literature matrix to a markdown file."""
         output = path or (REPO_ROOT / "research" / "generated" / "LITERATURE_MATRIX.md")
-        output.write_text(self.generate_literature_matrix(), encoding="utf-8")
+        output.write_text(
+            self.generate_literature_matrix().rstrip() + "\n", encoding="utf-8"
+        )
         return output

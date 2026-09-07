@@ -47,7 +47,13 @@ def main() -> None:
         research = root / "research"
         docs = root / "docs"
         docs.mkdir()
-        for name in ("registry", "protocols", "preregistrations", "schemas"):
+        for name in (
+            "registry",
+            "protocols",
+            "preregistrations",
+            "schemas",
+            "publications",
+        ):
             shutil.copytree(ROOT / "research" / name, research / name)
         shutil.copytree(ROOT / "configs", root / "configs")
         (docs / "preview.md").write_text(
