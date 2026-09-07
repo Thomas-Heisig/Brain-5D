@@ -447,9 +447,9 @@ Still required:
 
 1. assign every still-unmapped canonical RQ/H a dedicated runner or an explicit `design_pending` state;
 2. freeze controls, stopping rules, primary outcomes and preregistrations before confirmatory execution;
-3. expose domain/status/evidence/progress facets through the workflow catalog API;
+3. expose domain/status/evidence/progress facets through the workflow catalog API; ✅
 4. publish the registry audit as a CI Markdown/JSON artifact and maintain an explicit, reasoned historical/test-fixture allow-list where appropriate;
-5. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports.
+5. regenerate only current generated catalog/matrix documents after registry changes, never experiment-owned historical reports. ✅
 
 **Priority:** immediate.
 

@@ -15,6 +15,7 @@
 - [x] Link DOI and publication URL fields in BibTeX previews.
 - [x] Reuse base table/link styling for BibTeX output.
 - [x] Preserve flowing prose when Markdown source lines are wrapped.
+- [x] Reserve stable width for four-digit BibTeX years in both table previews.
 - [ ] Add RIS export and richer citation style previews.
 
 ## 2026-09-07 Functional viewer restoration
@@ -319,8 +320,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Publish a CI Markdown/JSON report from the repository-wide catalog audit and maintain a reasoned historical/test-fixture allow-list; unknown missing IDs fail the job.
 - [ ] Operationalize every still-unmapped canonical RQ/H with a dedicated protocol, controls, stopping rule, preregistration and runner before claiming that hypothesis can be confirmatorily tested.
 - [x] Decide which non-canonical references remain explicit historical/design references or test fixtures; canonical registry entries remain authoritative.
-- [ ] Add domain/status/evidence/experiment-progress facets to the Research Catalog once those fields are exposed by the workflow catalog API.
-- [ ] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
+- [x] Add domain/status/evidence/experiment-progress facets to the Research Catalog through the workflow catalog API.
+- [x] Regenerate current research catalog/evidence/open-question reports after every accepted canonical registry change; never rewrite historical experiment-owned reports.
 
 ## P0 — variable dimensionality
 

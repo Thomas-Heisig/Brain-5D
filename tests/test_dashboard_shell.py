@@ -62,4 +62,12 @@ def test_dashboard_tabs_are_hidden_before_external_styles_load() -> None:
 def test_print_styles_do_not_capture_screen_rules() -> None:
     css = (STATIC / "styles.css").read_text(encoding="utf-8")
     assert "color: black !important;\n  }\n}\n\n/* ============================================================================\n   BIBTEX VIEWER" in css
+
+
+def test_bibtex_year_columns_reserve_four_digit_width() -> None:
+    css = (STATIC / "styles.css").read_text(encoding="utf-8")
+    assert ".bibtex-cell-year" in css
+    assert "min-width: 5.5rem" in css
+    assert "font-variant-numeric: tabular-nums" in css
+    assert ".file-renderer-bibtex td:nth-child(4)" in css
 # fmt: on

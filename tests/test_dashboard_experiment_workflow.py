@@ -357,6 +357,18 @@ def test_catalog_publishes_the_next_generated_experiment_id(tmp_path: Path) -> N
     catalog = ExperimentWorkflowService(tmp_path).catalog()
 
     assert catalog["next_experiment_id"] == "EXP-GEN-0001"
+    assert catalog["facet_fields"] == [
+        "domain",
+        "status",
+        "evidence_status",
+        "experiment_progress",
+    ]
+    assert catalog["facets"] == {
+        "domain": ["research-infrastructure", "snn", "timing"],
+        "status": ["open"],
+        "evidence_status": ["none"],
+        "experiment_progress": ["not_run"],
+    }
 
 
 def test_science_suite_publishes_all_artifacts_without_unconfigured_ai(

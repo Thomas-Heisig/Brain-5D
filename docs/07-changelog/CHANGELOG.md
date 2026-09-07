@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-07 — BibTeX year column layout
+
+- Reserved a stable, tabular-numeric year column in both BibTeX table previews so four-digit years remain readable.
+
+## 2026-09-07 — Research Catalog facets and current report lifecycle
+
+- Exposed backend-owned domain, status, evidence-status and experiment-progress facet options through the workflow catalog API.
+- Added automatic main-branch regeneration of current research reports after canonical registry changes.
+- Kept regeneration scoped to `research/generated`; historical experiment-owned reports are never rewritten.
+
 ## 2026-09-07 — DOCX viewer surface alignment
 
 - Removed the white nested DOCX popup/card from the file viewer.

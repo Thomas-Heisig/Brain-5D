@@ -7898,6 +7898,9 @@ body.accessibility-mode .health-bar {
   font-family: var(--font-mono);
   color: #b5cea8;
   white-space: nowrap;
+  width: 5.5rem;
+  min-width: 5.5rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .bibtex-cell-status {
@@ -10264,6 +10267,14 @@ body.box-state-lock {
 .file-renderer-bibtex { font-size: .88rem; }
 .file-renderer-bibtex th { color: var(--accent, #7aabff); background: rgba(74, 124, 247, .12); font-weight: 600; }
 .file-renderer-bibtex td { vertical-align: top; }
+.file-renderer-bibtex th:nth-child(4),
+.file-renderer-bibtex td:nth-child(4) {
+  width: 5.5rem;
+  min-width: 5.5rem;
+  white-space: nowrap;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
 .file-renderer-bib-links { white-space: nowrap; }
 .file-renderer-bib-link { color: var(--accent, #7aabff); margin-right: .6rem; text-decoration: none; border-bottom: 1px solid rgba(122, 171, 255, .35); }
 .file-renderer-bib-link:hover { color: var(--text, #fff); border-bottom-color: currentColor; }
