@@ -334,8 +334,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P1 — high-risk test coverage
 
-- [ ] Increase dashboard server routing/error-path coverage.
-- [ ] Increase evidence-engine rejection/edge-path coverage.
+- [x] Increase dashboard server routing/error-path coverage with invalid batch protocol response testing.
+- [x] Increase evidence-engine rejection/edge-path coverage with dirty-tree and source-freeze mismatch tests.
 - [ ] Increase operator bridge and control-boundary coverage.
 - [ ] Increase real-body platform-specific failure-path coverage.
 - [ ] Add integration tests for unknown/stale telemetry propagation across API → store → UI.

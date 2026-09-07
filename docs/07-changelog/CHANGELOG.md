@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-07 — Dashboard batch error-path coverage
+
+- Added HTTP coverage for invalid batch protocols and their structured `400` JSON response.
+
+## 2026-09-07 — Evidence-engine edge coverage
+
+- Added tests for dirty-tree rejection and source-freeze digest mismatch during validated evidence promotion.
+
 ## 2026-09-07 — Regulation recovery experiment executed
 
 - Ran `closed_loop_regulation_v1` with 20 seeds and both regulation arms.

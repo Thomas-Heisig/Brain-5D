@@ -4,6 +4,14 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Dashboard batch error-path coverage
+
+- Added an HTTP regression test proving invalid batch protocols return a structured `400` JSON response.
+
+## 2026-09-07 Evidence-engine edge coverage
+
+- Added regression coverage proving dirty source trees and mismatched source-freeze digests cannot produce validated EVID promotion, even with a human review artifact.
+
 ## 2026-09-07 Regulation recovery experiment executed
 
 - Executed frozen `closed_loop_regulation_v1` / `PREREG-REG-002` as `EXP-REG-0002-R1`.

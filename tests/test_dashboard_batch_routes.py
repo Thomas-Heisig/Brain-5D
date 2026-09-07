@@ -29,6 +29,11 @@ class _FakeBatchService:
         return {"questions": [{"id": "RQ-TEST-001"}], "protocols": []}
 
 
+class _RejectingBatchService(_FakeBatchService):
+    def run_batch(self, body: dict[str, object], **_kwargs: Any) -> dict[str, object]:
+        raise ValueError("Unknown experiment protocol: missing_protocol")
+
+
 def _request(server: DashboardServer, method: str, path: str, body: dict[str, object] | None = None) -> tuple[int, str]:
     host, port = server.server_address[:2]
     connection = HTTPConnection(str(host), int(port), timeout=5)
@@ -76,3 +81,30 @@ def test_workflow_catalog_and_batch_routes_are_reachable(monkeypatch: Any) -> No
         server.server_close()
         assert server_module.ExperimentWorkflowService is _FakeBatchService
         monkeypatch.setattr(server_module, "ExperimentWorkflowService", original)
+
+
+def test_batch_route_returns_structured_bad_request_for_invalid_protocol(
+    monkeypatch: Any,
+) -> None:
+    monkeypatch.setattr(server_module, "ExperimentWorkflowService", _RejectingBatchService)
+    server = DashboardServer(
+        ("127.0.0.1", 0),
+        DashboardStateStore(),
+        None,
+        research_source=ResearchSource(Path("research")),
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, response_body = _request(
+            server,
+            "POST",
+            "/api/experiment/workflow/batch",
+            {"batch_id": "EXP-ROUTE-INVALID", "protocols": ["missing_protocol"]},
+        )
+
+        assert status == 400
+        assert response_body == '{"error":"Unknown experiment protocol: missing_protocol"}'
+    finally:
+        server.shutdown()
+        server.server_close()
