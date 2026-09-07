@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — DOCX viewer surface alignment
+
+- Removed the white nested DOCX popup/card from the file viewer.
+- Aligned DOCX headings, links, tables, lists and images with the dashboard base CSS and responsive viewer width.
+
 ## 2026-09-07 — BibTeX links and prose rendering
 
 - Added safe clickable DOI and publication URL links to both BibTeX viewer paths.

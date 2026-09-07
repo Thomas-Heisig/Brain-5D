@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 DOCX viewer surface alignment
+
+- Flattened the DOCX preview into the existing file viewer surface instead of rendering a bright paper card inside the modal.
+- Reused dashboard text, line and accent variables for DOCX headings, links and tables; images and lists now follow the same responsive width rules.
+
 ## 2026-09-07 BibTeX links and prose rendering
 
 - Added safe DOI and publication URL links to both the shared BibTeX preview and the legacy structured BibTeX table.

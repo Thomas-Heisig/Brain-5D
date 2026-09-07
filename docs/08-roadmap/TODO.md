@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 DOCX viewer surface alignment
+
+- [x] Remove the nested white DOCX card from the viewer modal.
+- [x] Align DOCX headings, links, tables, lists and images with the base dashboard CSS.
+- [ ] Add optional page-break and section markers when Mammoth exposes them without recreating a nested paper surface.
+
 ## 2026-09-07 BibTeX links and prose rendering
 
 - [x] Link DOI and publication URL fields in BibTeX previews.
