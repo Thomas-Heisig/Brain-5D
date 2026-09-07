@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Runtime pacing benchmark
+
+- Added a bounded RuntimeController pacing benchmark for targeted and unlimited modes.
+- Persisted target/achieved Hz, realtime ratio, `dt`, tick cost and phase profile in the benchmark output.
+
 ## 2026-09-07 — Hard protection and ordering gates
 
 - Added hard safety trips for thermal, fan and persistence failures.

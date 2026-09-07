@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Runtime pacing benchmark
+
+- Added `scripts/runtime_pacing_benchmark.py` for bounded low-rate, targeted and unlimited RuntimeController measurements.
+- Benchmark artifacts record target/achieved Hz, realtime ratio, `dt`, tick cost, phase profile and simulation tick without making a scientific performance claim.
+
 ## 2026-09-07 Hard protection and ordering gates
 
 - Added fail-closed thermal-safety, fan-failure and persistence-failure trips that force `SURVIVAL` and block learned gateway allocation regardless of utility.

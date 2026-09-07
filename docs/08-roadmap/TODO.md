@@ -307,8 +307,8 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P1 — runtime/time semantics and performance
 
-- [ ] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
-- [ ] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
+- [x] Benchmark target-Hz pacing from low real-time rates to unlimited mode.
+- [x] Record target Hz, achieved Hz, realtime ratio, `dt` and tick cost in benchmark artifacts.
 - [ ] Prove pacing-only changes do not alter deterministic simulation results when simulated inputs/`dt` remain identical.
 - [ ] Extend profiling to learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage as distinct measured phases.
 - [ ] Profile increasing neuron/synapse counts before optimizing kernels.
