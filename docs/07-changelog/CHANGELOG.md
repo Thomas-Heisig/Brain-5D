@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Digital payload checksum persistence
+
+- Persisted exact SHA-256 checksums and metadata for digital `SymbolFrame` payloads.
+- Added MSBA contract coverage for digital provenance persistence.
+
 ## 2026-09-07 — Dynamic embodiment connection coverage
 
 - Added backend coverage for runtime sensor appearance/disappearance.

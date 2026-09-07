@@ -172,6 +172,18 @@ class SymbolFrame:
         digest = hashlib.sha256(self.payload).digest()
         return tuple(digest[index] % 2 for index in range(population_size))
 
+    def to_json(self) -> dict[str, JSONValue]:
+        """Persist digital provenance without replacing the exact payload."""
+
+        return {
+            "codec": self.codec,
+            "sequence": self.sequence,
+            "provenance": self.provenance,
+            "payload_size_bytes": len(self.payload),
+            "checksum_algorithm": "sha256",
+            "checksum": self.checksum,
+        }
+
 
 @dataclass(frozen=True, slots=True)
 class ModalityProfile:
@@ -431,6 +443,7 @@ def msba_contract() -> dict[str, JSONValue]:
             "learning_disabled_by_default": True,
             "structural_growth_disabled_by_default": True,
             "digital_payload_outside_snn": True,
+            "digital_checksum_persisted": True,
             "reachability_is_not_learned_use": True,
             "historical_data_unchanged": True,
             "activation_requires_preregistered_experiment": True,

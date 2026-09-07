@@ -4,6 +4,11 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Digital payload checksum persistence
+
+- Added JSON provenance persistence for digital `SymbolFrame` payloads with SHA-256 checksum, payload size, codec, sequence and source provenance.
+- Declared checksum persistence in the MSBA scientific boundary without copying the raw payload into the provenance record.
+
 ## 2026-09-07 Dynamic embodiment connection coverage
 
 - Added API transition coverage for a sensor changing from available/active to unavailable/inactive.

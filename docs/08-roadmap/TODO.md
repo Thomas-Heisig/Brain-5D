@@ -329,7 +329,7 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 - [x] Evidence-engine negative tests for incomplete/mismatched provenance.
 - [x] Compact AI-packet provenance and SHA-verified raw-run indexing.
 - [ ] Persist Neural Symbiosis/MSBA adapter, projection, gateway and energy provenance whenever these components become experimental treatments.
-- [ ] Persist exact digital checksums for every digital-path experiment.
+- [x] Persist exact digital checksums for every digital-path experiment.
 - [ ] Continue distinguishing UI state, DATA, EVID and interpretation in every workflow.
 
 ## P1 — high-risk test coverage

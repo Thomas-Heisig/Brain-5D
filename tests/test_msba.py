@@ -52,6 +52,11 @@ def test_digital_symbol_frame_is_exact_and_deterministic() -> None:
     assert frame.deterministic_population(8) == frame.deterministic_population(8)
     assert len(frame.deterministic_population(8)) == 8
     assert set(frame.deterministic_population(8)) <= {0, 1}
+    persisted = frame.to_json()
+    assert persisted["checksum_algorithm"] == "sha256"
+    assert persisted["checksum"] == frame.checksum
+    assert persisted["payload_size_bytes"] == 4
+    assert persisted["provenance"] == "unit-test"
 
 
 def test_energy_accounting_keeps_measured_and_estimated_joules_separate() -> None:
@@ -116,3 +121,10 @@ def test_survival_policy_preserves_safety_and_module_has_no_core_import() -> Non
     source = Path("src/embodiment/msba.py").read_text(encoding="utf-8")
     assert "from src.core" not in source
     assert "import src.core" not in source
+
+
+def test_msba_contract_requires_digital_checksum_persistence() -> None:
+    boundary = msba_contract()["scientific_boundary"]
+    assert isinstance(boundary, dict)
+    assert boundary["digital_payload_outside_snn"] is True
+    assert boundary["digital_checksum_persisted"] is True
