@@ -1,11 +1,11 @@
 # Brain-5D Research Catalog
 
-*Generiert am 2026-09-02*
+*Generiert am 2026-09-07*
 
 ## Übersicht
 
-- **Forschungsfragen:** 29
-- **Hypothesen:** 28
+- **Forschungsfragen:** 48
+- **Hypothesen:** 47
 - **Claims:** 8
 - **Literaturquellen:** 10
 
@@ -70,6 +70,18 @@
 
 ---
 
+### RQ-5D-005
+
+**Frage:** Verändert 5D-Geometrie Propagation, Robustheit oder Dynamik, wenn Neuronenzahl, Synapsenzahl, Grad- und Gewichtsmuster sowie Stimulusplan kontrolliert gleich bleiben?
+
+**Status:** open
+**Relevanz:** Der kleine 5D-Test in EXP-GEN-0021 isolierte keinen dimensionsspezifischen Effekt.
+
+**Hypothesen:**
+- `H-5D-005-A`: Mindestens eine registrierte Propagationsmetrik unterscheidet sich in 5D von topology-matched niedrigdimensionalen Einbettungen. *(untested)*
+
+---
+
 ## AI-Assisted Research
 
 ### RQ-AIR-001
@@ -84,6 +96,34 @@
 
 **Claims:**
 - `CLAIM-AIR-001`: Ein standardisiertes ResearchPacket verbessert die Identifikation vorab definierter methodischer Fehler gegenüber einem unstrukturierten Experimentbericht. *(untested, none)*
+
+---
+
+## Adaptive Resource Allocation
+
+### RQ-MSBA-E02
+
+**Frage:** Erhaelt kostenadaptive Gateway-Allokation unter identischem Gesamtbudget mehr Aufgabenleistung als fixe oder zufaellige Allokation?
+
+**Status:** open
+**Relevanz:** Operationalisiert die Frage, ob Ressourcenhomoeostase funktionalen Nutzen statt nur Verbrauchsreduktion erzeugt.
+
+**Hypothesen:**
+- `H-MSBA-E02-A`: Adaptive Utility-minus-Cost-Allokation erzielt bei gleichem Ressourcenbudget hoehere Aufgabenleistung oder laengere funktionsfaehige Laufzeit als fixe und zufaellige Kontrollen. *(untested)*
+
+---
+
+## Closed-loop Regulation
+
+### RQ-REG-002
+
+**Frage:** Verbessert aktive Regulation Stabilität und Recovery eines laufenden SNN unter identischen Ressourcen- oder Sensorperturbationen gegenüber deaktivierter Regulation?
+
+**Status:** open
+**Relevanz:** EXP-GEN-0021 validierte Regulationszustände, aber noch keinen funktionalen Closed-loop-Nutzen.
+
+**Hypothesen:**
+- `H-REG-002-A`: Der registrierte Regulationsfeedbackpfad verbessert die Recovery-Metrik nach einer identischen Druckphase gegenüber Regulation-off. *(untested)*
 
 ---
 
@@ -106,6 +146,20 @@
 - `SRC-IZHIKEVICH-2003`: Eugene M. Izhikevich et al. (2003)
 
 **Evidenzen:** EVID-2026-01, EVID-2026-03, EVID-2026-05, EVID-2026-07, EVID-2026-09, EVID-2026-11, EVID-2026-13, EVID-2026-15
+
+---
+
+## Digital Gateway Integrity
+
+### RQ-MSBA-E04
+
+**Frage:** Bleibt digitale Payload-Integritaet unter Ressourcen-Drosselung exakt erhalten, waehrend lediglich Durchsatz und Admission sinken?
+
+**Status:** open
+**Relevanz:** Sichert die wissenschaftliche und technische Trennung zwischen lernbarer Weiterleitung und unveraenderlicher digitaler Nutzlast.
+
+**Hypothesen:**
+- `H-MSBA-E04-A`: Ressourcen-Drosselung reduziert die zugelassene Symbolrate, erzeugt aber keine Mutation der digitalen Payload oder ihrer Checksumme. *(untested)*
 
 ---
 
@@ -209,6 +263,48 @@
 
 ---
 
+## Learning Generalization
+
+### RQ-GEN-001
+
+**Frage:** Verbessert reward-moduliertes lokales Lernen die Leistung auf Holdout- und Perturbationsbedingungen, die nicht zur Anpassung verwendet wurden?
+
+**Status:** open
+**Relevanz:** EXP-GEN-0021 zeigte funktionelle Änderung unter Learning-on, aber keine Generalisierung.
+
+**Hypothesen:**
+- `H-GEN-001-A`: Learning-on verbessert die Erfolgsrate auf vorab registrierten Perturbationsproben gegenüber Learning-off und Sham-Replay. *(untested)*
+
+---
+
+## Learning Timescale
+
+### RQ-TIME-001
+
+**Frage:** Wie verändert sich die messbare Laufzeit und Lernaktivität über die registrierte Tick-Leiter?
+
+**Status:** open
+**Relevanz:** Kalibrierung der zeitlichen Ausführung vor Langzeitexperimenten.
+
+**Hypothesen:**
+- `H-TIME-001-A`: Die Tick-Leiter liefert reproduzierbare Durchsatz- und Zustandsmessungen bis 1.000.000 Ticks. *(untested)*
+
+---
+
+## Lifelong Learning
+
+### RQ-LIFE-001
+
+**Frage:** Bleibt zuvor erworbene Lernleistung bei sequenziellen Aufgaben erhalten oder entstehen messbare Interferenzeffekte?
+
+**Status:** open
+**Relevanz:** Das positive Single-Task-Learningsignal aus EXP-GEN-0021 motiviert Retentionstests.
+
+**Hypothesen:**
+- `H-LIFE-001-A`: Sequenzielle Lernaufgaben zeigen eine messbare Veränderung der Retentions- oder Gewichtssignatur gegenüber einer Single-Task-Baseline. *(untested)*
+
+---
+
 ## Memory
 
 ### RQ-MEM-001
@@ -220,6 +316,130 @@
 
 **Hypothesen:**
 - `H-MEM-001-A`: Brain-5D kann Informationen über synaptische Gewichte speichern und auf Input-Muster abrufen. *(untested)*
+
+---
+
+## Multimodal Compensation
+
+### RQ-MSBA-E05
+
+**Frage:** Erhoeht das System nach Ausfall oder Degradation einer Modalitaet gezielt die Allokation einer anderen Modalitaet, wenn deren erwarteter Nutzen die Mehrkosten rechtfertigt?
+
+**Status:** open
+**Relevanz:** Prueft adaptive Kompensation unter kontrolliertem Modalitaetsausfall und gleichen Ressourcenbudgets.
+
+**Hypothesen:**
+- `H-MSBA-E05-A`: Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur bei guenstigem Utility-Kosten-Verhaeltnis und verbessert die Aufgaben-Recovery gegenueber fixen und No-Compensation-Kontrollen. *(untested)*
+
+---
+
+## Multimodal Energy Efficiency
+
+### RQ-MSBA-E01
+
+**Frage:** Unterscheiden sich Audio-, Vision- und Digital-Gateways systematisch im Ressourcenverbrauch pro verwertbarer Information oder korrekter Entscheidung?
+
+**Status:** open
+**Relevanz:** Prueft die Ressourcenökonomie modalitaetsspezifischer Neural-Symbiosis-Gateways unter vergleichbaren Aufgabenbedingungen.
+
+**Hypothesen:**
+- `H-MSBA-E01-A`: Unter kontrollierter Aufgabeninformation unterscheiden sich Audio-, Vision- und Digital-Gateways reproduzierbar in Energie- und Synapsenkosten pro korrekter Entscheidung. *(untested)*
+
+---
+
+## Network Dynamics
+
+### RQ-PING-001
+
+**Frage:** Ist die beobachtete Network-Impulse-Response bei identischem Zustand und Seed reproduzierbar?
+
+**Status:** open
+**Relevanz:** Reproduzierbarkeit der kontrollierten Impulsantwort.
+
+**Hypothesen:**
+- `H-PING-001-A`: Identische Impulse erzeugen bei identischem Anfangszustand dieselbe beobachtete Response-Signatur. *(untested)*
+
+---
+
+## Recurrent Dynamics
+
+### RQ-REC-001
+
+**Frage:** Unter welchen Rekurrenzgewichten und Delays wechselt Brain-5D zwischen sofortigem Erlöschen, transienter rekurrenter Aktivität und bis zum Beobachtungsende persistierender Aktivität?
+
+**Status:** open
+**Relevanz:** EXP-GEN-0021 zeigte einen klaren rekurrenzabhängigen Dynamikunterschied, aber noch keine Parametergrenze.
+
+**Hypothesen:**
+- `H-REC-001-A`: Rekurrenzgewicht und Delay erzeugen reproduzierbare Übergänge zwischen sofortigem Erlöschen, transienter Aktivität und Aktivität bis zum Ende des registrierten Beobachtungsfensters. *(untested)*
+
+---
+
+### RQ-REC-002
+
+**Frage:** Wie verändern Loop-Delay und skalierte Rekurrenzstruktur Persistenzdauer, Inter-Spike-Dynamik und Extinktionsverhalten?
+
+**Status:** open
+**Relevanz:** Der Drei-Neuronen-Loop aus EXP-GEN-0021 reicht nicht für Skalierungsaussagen.
+
+**Hypothesen:**
+- `H-REC-002-A`: Größere rekurrente Delays verändern Persistenzdauer oder Propagation Depth gegenüber dem Delay-1-Kontrollarm. *(untested)*
+
+---
+
+## Regulation
+
+### RQ-REG-001
+
+**Frage:** Wie reagieren Drives und funktionale Zustandsgrößen auf nominale, chronische und unbekannte Telemetrie?
+
+**Status:** open
+**Relevanz:** Deterministische Prüfung der Selbstregulation unter Ressourcen- und Sensorbedingungen.
+
+**Hypothesen:**
+- `H-REG-001-A`: Chronischer Druck erhöht deterministisch Resource Pressure und Thermal Threat, während unbekannte Telemetrie Unsicherheit erhält. *(untested)*
+
+---
+
+## Replication
+
+### RQ-REPL-001
+
+**Frage:** Bleiben die in EXP-GEN-0021 beobachteten Rekurrenz- und Learning-Effekte unter unabhängigen Initialisierungen und sauberem Prozess erhalten?
+
+**Status:** open
+**Relevanz:** Identische Seedsignaturen zeigen Determinismus, aber keine statistisch unabhängige Replikation.
+
+**Hypothesen:**
+- `H-REPL-001-A`: Der Rekurrenzbehandlungseffekt bleibt über mindestens 20 vorab registrierte Initialisierungsseeds in Richtung und Größenordnung konsistent. *(untested)*
+
+---
+
+## Research Infrastructure
+
+### RQ-SUITE-001
+
+**Frage:** Erzeugt der vollstaendige Science-Suite-Lauf unter gemeinsamer Provenienz vollstaendige und intern konsistente Diagnoseartefakte fuer alle registrierten Teilprotokolle?
+
+**Status:** open
+**Relevanz:** Trennt technische Omnibus-Validierung von hypothesenspezifischer wissenschaftlicher Evidenz.
+
+**Hypothesen:**
+- `H-SUITE-001-A`: Alle Science-Suite-Teilprotokolle erfuellen in einem gemeinsamen Lauf ihre registrierten Ausfuehrungsvertraege und erzeugen auswertbare DATA-, Statistik- und Provenienzartefakte. *(untested)*
+
+---
+
+## Runtime Performance
+
+### RQ-PERF-001
+
+**Frage:** Welche Subsysteme dominieren die Wall-Time wissenschaftlicher Läufe und welche Optimierungen erhöhen den Durchsatz bei erhaltener deterministischer Äquivalenz?
+
+**Status:** open
+**Relevanz:** EXP-GEN-0021 zeigte eine große Differenz zwischen isoliertem Tick-Durchsatz und Suite-Laufzeit.
+
+**Hypothesen:**
+- `H-PERF-001-A`: Der Core-Tick-Loop ist nicht der einzige dominante Kostenblock vollständiger Science-Läufe; mindestens ein zusätzlicher gemessener Subsystemanteil ist relevant. *(untested)*
 
 ---
 
@@ -453,5 +673,47 @@
 
 **Hypothesen:**
 - `H-STRUCT-001-A`: Strukturelle Plastizität (Pruning/Sprouting) führt zu messbar verbesserter Netzwerkeffizienz. *(untested)*
+
+---
+
+## Temporal Learning
+
+### RQ-TEMP-002
+
+**Frage:** Reagiert Brain-5D auf spike-tragende zeitliche Reihenfolge anders als auf umgekehrte oder simultane Kontrollfolgen?
+
+**Status:** open
+**Relevanz:** EXP-GEN-0021 zeigte Temporal-State-Diskrepanzen ohne Spike-Aktivität.
+
+**Hypothesen:**
+- `H-TEMP-002-A`: Forward-, Reverse- und Simultanfolgen erzeugen bei gleicher Ereignisanzahl unterscheidbare spike-basierte Antwortsignaturen. *(untested)*
+
+---
+
+## Temporal State
+
+### RQ-TEMP-001
+
+**Frage:** Wie unterscheiden sich FAST-, MEDIUM- und SLOW-Referenzzustände unter identischer Ausführung?
+
+**Status:** open
+**Relevanz:** Messung von Persistenz und Zustandsdrift ohne Runtime-Zurückspulen.
+
+**Hypothesen:**
+- `H-TEMP-001-A`: Die Temporal-State-Vergleiche unterscheiden sich deterministisch nach FAST-, MEDIUM- und SLOW-Horizont. *(untested)*
+
+---
+
+## Visual Resource Allocation
+
+### RQ-MSBA-E03
+
+**Frage:** Kann sich eine nutzungsabhaengige visuelle ROI/Foveation ohne hart kodierte Zielregion entwickeln?
+
+**Status:** open
+**Relevanz:** Trennt adaptive visuelle Ressourcenlenkung von fest programmierten Zentrum- oder Vollbildstrategien.
+
+**Hypothesen:**
+- `H-MSBA-E03-A`: Adaptive visuelle ROI-Allokation konzentriert Ressourcen auf aufgabenrelevante Regionen und verbessert Leistung pro Ressourceneinheit gegenueber einer zufaelligen ROI-Kontrolle. *(untested)*
 
 ---

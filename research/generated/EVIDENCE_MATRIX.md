@@ -1,6 +1,6 @@
 # Brain-5D Evidence Matrix
 
-*Generiert am 2026-09-02*
+*Generiert am 2026-09-07*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
@@ -10,6 +10,10 @@
 | `RQ-SNN-003` | — | 2 | — | — | offen |
 | `RQ-SNN-004` | `H-SNN-004-A` | 2 | `CLAIM-SNN-001` | — | offen |
 | `RQ-SNN-005` | `H-SNN-005-A` | 2 | — | — | offen |
+| `RQ-PING-001` | `H-PING-001-A` | 0 | — | — | offen |
+| `RQ-TEMP-001` | `H-TEMP-001-A` | 0 | — | — | offen |
+| `RQ-TIME-001` | `H-TIME-001-A` | 0 | — | — | offen |
+| `RQ-REG-001` | `H-REG-001-A` | 0 | — | — | offen |
 | `RQ-STDP-001` | `H-STDP-001-A` | 2 | `CLAIM-STDP-001` | — | offen |
 | `RQ-STDP-002` | `H-STDP-002-A` | 1 | — | — | offen |
 | `RQ-HOM-001` | `H-HOM-001-A` | 1 | — | — | offen |
@@ -33,6 +37,21 @@
 | `RQ-ETH-002` | `H-ETH-002-A` | 0 | — | — | offen |
 | `RQ-EPIST-001` | `H-EPIST-001-A` | 0 | — | — | offen |
 | `RQ-AIR-001` | `H-AIR-001-A` | 0 | `CLAIM-AIR-001` | — | offen |
+| `RQ-SUITE-001` | `H-SUITE-001-A` | 0 | — | — | offen |
+| `RQ-REC-001` | `H-REC-001-A` | 0 | — | — | offen |
+| `RQ-GEN-001` | `H-GEN-001-A` | 0 | — | — | offen |
+| `RQ-REPL-001` | `H-REPL-001-A` | 0 | — | — | offen |
+| `RQ-5D-005` | `H-5D-005-A` | 0 | — | — | offen |
+| `RQ-REG-002` | `H-REG-002-A` | 0 | — | — | offen |
+| `RQ-TEMP-002` | `H-TEMP-002-A` | 0 | — | — | offen |
+| `RQ-PERF-001` | `H-PERF-001-A` | 0 | — | — | offen |
+| `RQ-REC-002` | `H-REC-002-A` | 0 | — | — | offen |
+| `RQ-LIFE-001` | `H-LIFE-001-A` | 0 | — | — | offen |
+| `RQ-MSBA-E01` | `H-MSBA-E01-A` | 0 | — | — | offen |
+| `RQ-MSBA-E02` | `H-MSBA-E02-A` | 0 | — | — | offen |
+| `RQ-MSBA-E03` | `H-MSBA-E03-A` | 0 | — | — | offen |
+| `RQ-MSBA-E04` | `H-MSBA-E04-A` | 0 | — | — | offen |
+| `RQ-MSBA-E05` | `H-MSBA-E05-A` | 0 | — | — | offen |
 
 ## Zusammenfassung
 
