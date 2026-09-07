@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-07 — Live telemetry propagation coverage
+
+- Added HTTP coverage for unavailable and stale live telemetry states.
+- Verified stale frame age and status remain visible in the projection JSON consumed by the dashboard.
+
 ## 2026-09-07 — Operator bridge control-boundary coverage
 
 - Added direct tests for unknown structural proposals and unknown runtime commands.

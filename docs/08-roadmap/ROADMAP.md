@@ -4,6 +4,10 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Live telemetry propagation coverage
+
+- Added HTTP integration coverage for unavailable telemetry (`503`) and stale frame metadata flowing from `TelemetryFrameStore` through `OperatorBridge` and the live projection API.
+
 ## 2026-09-07 Operator bridge control-boundary coverage
 
 - Added regression coverage proving unknown structural proposals do not create decisions or history records and unknown runtime commands return explicit errors.
