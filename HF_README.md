@@ -34,8 +34,10 @@ Brain-5D is an experimental framework for studying learning, self-organization a
 
 - version: `0.5.0a7`
 - Python: 3.11–3.13
-- latest verified Python suite: **825 passed, 5 skipped**
-- latest verified browser suite: **5 passed** with Chromium
+- latest local fast-suite snapshot: **849 passed, 5 skipped, 3 failed**; 32 slow tests deselected
+- the three known failures are Windows line-ending and publication-path contract expectations; this local snapshot is not fully green
+- last recorded browser suite: **5 passed** with Chromium
+- current `main` HEAD: `a5cdfa7b4fcce97eea8b68c9b81fe2fea1757c56`
 - Research Catalog / variable-projection-dimension integration is merged to `main`
 - merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: run #598, success
@@ -62,12 +64,16 @@ https://huggingface.co/spaces/superdigger/Brain-5D-Space
 - fragmentable canonical research-question/hypothesis registries with duplicate-ID rejection;
 - searchable Research Catalog with operational/exploratory distinction;
 - repository-wide read-only RQ/H reference audit;
+- backend-owned Research Catalog facets for domain, status, evidence status and experiment progress;
 - research registries, manifests, DATA/EVID separation and AI provenance;
-- responsive dashboard centered on Overview, Control, Research, Settings, Wesen and Embodiment.
+- responsive dashboard centered on Overview, Control, Research, Settings, Wesen and Embodiment;
+- natural German read-aloud controls for File Viewer previews, chat file cards and Research Chat answers.
 
 ## Research Catalog and dimensions
 
 Canonical `questions.yaml` / `hypotheses.yaml` can be extended through deterministic `questions.*.yaml` / `hypotheses.*.yaml` fragments. MSBA research questions and hypotheses are normal experiment-workflow entries. A question is marked operational only when an appropriate frozen/preregistered protocol exists; otherwise it remains exploratory and cannot be silently promoted to evidence.
+
+Accepted canonical registry changes regenerate current catalog, evidence and open-question reports. Historical experiment-owned reports are preserved unchanged.
 
 MSBA/external projection spaces may use 1–32 dimensions. The persisted productive SNN core remains 5D for backward compatibility until a separately versioned N-D neuron-ID, spatial-index and `.b5d` migration has been implemented and verified.
 

@@ -10,6 +10,7 @@ Dieses Verzeichnis enthält Konfigurationsdateien für das Hugging Face Reposito
 
 - **Haupt-README**: Die Datei `HF_README.md` im Projektstamm ist die Hugging Face-spezifische README.
 - **Kanonische Quelle**: GitHub `main` ist die Quelle der Wahrheit; Hugging Face wird daraus gespiegelt.
+- **Aktueller Stand**: Die Dashboard-README beschreibt auch die gemeinsamen deutschen Vorlesesteuerungen fuer File Viewer und Research Chat.
 - **LICENSE**: MIT-Lizenz — bereits im Projektstamm vorhanden.
 - **Git LFS**: `.gitattributes` im Projektstamm konfiguriert Git LFS für große Dateien.
 

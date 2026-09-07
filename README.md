@@ -12,11 +12,13 @@ Brain-5D is a research framework for studying learning, self-organization and em
 
 ## Current `main` baseline
 
-Updated on **2026-09-07** after the dashboard release workflow, runtime profiling and repository verification updates:
+Updated on **2026-09-07** after the dashboard release workflow, shared natural-language reader and repository verification updates:
 
 - package version: `0.5.0a7`
-- latest verified Python suite: **825 passed, 5 skipped**
-- latest verified browser suite: **5 passed** with Chromium
+- latest local fast-suite snapshot: **849 passed, 5 skipped, 3 failed**; 32 slow tests deselected
+- the three known failures are Windows line-ending and publication-path contract expectations; this local snapshot is not fully green
+- last recorded browser suite: **5 passed** with Chromium
+- current `main` HEAD: `a5cdfa7b4fcce97eea8b68c9b81fe2fea1757c56`
 - Research Catalog / variable-dimension merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - the merge-triggered `main` CI is the authoritative verification for the new baseline; do not infer success until that run completes
@@ -44,6 +46,7 @@ The dashboard uses explicit unknown-state rendering. Missing telemetry is never 
 | Research | Fragmentable RQ/H registries, searchable Research Catalog, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
 | Experiment observability | Tick, spike, neuron, synapse, latency, recurrence and digest measurements persisted per run |
 | Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |
+| Accessibility | Shared German read-aloud controls for the File Viewer, chat file cards and Research Chat answers |
 | AI boundary | Research AI / Language Organ / Cognitive Advisor contracts remain read-only or proposal-only unless explicitly registered as a treatment |
 
 ## Research Catalog and variable dimensions
@@ -51,6 +54,8 @@ The dashboard uses explicit unknown-state rendering. Missing telemetry is never 
 The research workflow now loads canonical base registries plus deterministic fragments such as `questions.*.yaml` and `hypotheses.*.yaml`. Duplicate IDs fail closed. `RQ-MSBA-E01` through `RQ-MSBA-E05` and their matching hypotheses are first-class registry entries and visible through the normal Experiment Workflow.
 
 The frontend uses a searchable Research Catalog rather than relying on a single long pulldown. Questions are marked `OPERATIONAL` when a matching frozen/preregistered protocol exists and `EXPLORATORY` otherwise. Exploratory questions may run through the bounded runtime path but must not be promoted as confirmatory EVID.
+
+The workflow catalog API publishes backend-owned `domain`, `status`, `evidence_status` and `experiment_progress` facets. Current generated catalog, evidence and open-question reports are regenerated after accepted canonical registry changes; historical experiment-owned reports remain untouched.
 
 MSBA/external projection spaces can declare **1–32 dimensions**. This does **not** yet change the persisted productive SNN core: neuron IDs, `.b5d` persistence and the canonical spatial core remain 5D until a separately versioned N-D storage/ID migration is designed, tested and preregistered. The remaining work is explicitly tracked in both [`TODO`](docs/08-roadmap/TODO.md) and [`ROADMAP`](docs/08-roadmap/ROADMAP.md).
 
@@ -76,6 +81,10 @@ Virtual cognitive systems such as logic engines, databases, knowledge graphs, re
 **Scientific boundary:** all gateway learning is disabled by default. Endpoint reachability, area registration or a visible pipeline is not evidence that the SNN learned to use that area. Synaptic/structural/efferent gateway plasticity must first be enabled only inside an explicit preregistered experiment with its own RNG, model/version hashes, controls, DATA and EVID path.
 
 See [`docs/02-architecture/NEURAL_SYMBIOSIS.md`](docs/02-architecture/NEURAL_SYMBIOSIS.md).
+
+## Read-aloud support
+
+The shared File Viewer and Research Chat provide natural-language German read-aloud controls through the browser Speech Synthesis API. Markdown links, formatting markers and URLs are simplified before speech. The controls support start, pause, resume and stop for file previews, expanded chat file cards and the latest assistant answer. Browsers without speech synthesis keep the text usable and disable the unsupported control gracefully.
 
 ## Runtime and experiment observability
 

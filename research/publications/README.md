@@ -24,6 +24,8 @@ Die vollstaendige Publikation verbindet die drei Originalmanuskripte, technische
 
 Der Research-Dokumentbaum und die Research-Dokumentliste enthalten die Kategorie `publications`. Alle Darstellungen laufen durch den bestehenden zentralen File Viewer, einschliesslich Markdown, DOCX, BibTeX, JSON, Formeln, Abbildungen und ZIP-Inhaltsverzeichnis. Die Publikation und ihre Lesefassung sind ueber die Dateiverwaltungs-API schreibgeschuetzt.
 
+Im zentralen File Viewer und in aufgeklappten Chat-Dateikarten steht ausserdem der gemeinsame natuerliche Vorlesemodus mit deutscher Stimme, Pause, Fortsetzen und Stopp zur Verfuegung. Die datierte Publikation selbst bleibt ein unveraenderter, schreibgeschuetzter Publikationsstand.
+
 Das Publikationsregister ist eine zitierbare Momentaufnahme, **kein zweites kanonisches Forschungsregister**. Massgeblich bleiben [questions.yaml](../registry/questions.yaml) und seine Fragmente, [hypotheses.yaml](../registry/hypotheses.yaml) und seine Fragmente sowie die registrierten Experiment- und Evidenzartefakte. Die Einbindung veraendert keine Messdaten, Hypothesenstatus oder Review-Entscheidungen. Neue Synthesehypothesen werden hier nicht automatisch zu bestaetigten oder ausfuehrbaren Forschungsfragen erklaert.
 
 ## Pruefung und Aktualisierung

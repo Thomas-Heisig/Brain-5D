@@ -19,8 +19,10 @@ Passing tests prove engineering behavior covered by those tests; they do not aut
 
 - canonical branch: `main`
 - package version: `0.5.0a7`
-- latest verified Python suite: **825 passed, 5 skipped**
-- latest verified browser suite: **5 passed** with Chromium
+- latest local fast-suite snapshot: **849 passed, 5 skipped, 3 failed**; 32 slow tests deselected
+- the three known failures are Windows line-ending and publication-path contract expectations; this local snapshot is not fully green
+- last recorded browser suite: **5 passed** with Chromium
+- current `main` HEAD: `a5cdfa7b4fcce97eea8b68c9b81fe2fea1757c56`
 - Research Catalog / variable-projection-dimension merge: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
 - latest fully completed pre-merge `main` CI baseline: **success** (run #598)
 - Python matrix: **3.11 / 3.12 / 3.13**
@@ -66,7 +68,7 @@ The normal research workflow loads canonical base registries plus deterministic 
 
 Duplicate identifiers fail closed. MSBA questions/hypotheses are first-class entries rather than side documentation. The Experiment Workflow exposes them through a searchable Research Catalog and distinguishes questions with frozen/preregistered operational protocols from exploratory-only questions. Exploratory execution must not be confused with confirmatory evidence.
 
-The repository-wide RQ/H audit reports references that are not represented in the canonical registry without rewriting historical sources.
+The repository-wide RQ/H audit reports references that are not represented in the canonical registry without rewriting historical sources. The workflow catalog API also publishes backend-owned `domain`, `status`, `evidence_status` and `experiment_progress` facets. Accepted canonical registry changes regenerate current catalog/evidence/open-question reports through the report workflow; experiment-owned historical reports are never rewritten.
 
 ## Current dashboard terminology
 
@@ -80,6 +82,8 @@ The repository-wide RQ/H audit reports references that are not represented in th
 - **MSBA** — modality-specific audio/vision/digital gateway contract plus resource/energy model inside Neural Symbiosis;
 - **Release/Gate** — footer-accessed release-readiness surface;
 - **Network** — no longer a primary user-facing workspace.
+
+The shared browser read-aloud service supports natural German speech with start, pause, resume and stop controls in the File Viewer, expanded chat file cards and the latest Research Chat answer. Unsupported browsers leave the underlying text available and disable speech controls.
 
 `Wesen`, Neural Symbiosis and MSBA must never be described as proof of consciousness, self-awareness, causal tool use or learned sensor control. Reachability, recurrence, loopback, morphology, pipeline availability, energy allocation candidates and gateway candidates are engineering/observation state until a preregistered experiment produces reviewable DATA/EVID.
 

@@ -2,13 +2,15 @@
 
 Ein wissenschaftliches Evidenzsystem für Brain-5D, das technische Implementierung, Experimentdaten, akzeptierte Evidenz und Interpretation strikt trennt.
 
-## Aktueller technischer Stand — 2026-09-06
+## Aktueller technischer Stand — 2026-09-07
 
 Die Forschungsinfrastruktur auf `main` umfasst Scientific Integrity Gate, AI-Provenienz und Causal-Taint, Shadow-/Replay-Kontrollen, deterministische Statistics Engine, epistemischen Provenienzgraph, getrennte Operator-/Experiment-/Dev-Storage-Scopes sowie protocol-driven Science Runner.
 
 Aktueller Engineering-Snapshot:
 
-- **791 Tests** werden gesammelt;
+- der aktuelle lokale Fast-Suite-Snapshot umfasst **849 bestanden, 5 uebersprungen und 3 fehlgeschlagen**; 32 Slow-Tests wurden abgewaehlt;
+- die drei bekannten Fehler betreffen Windows-Zeilenenden sowie eine erwartete Fehlermeldung bei unsicheren Publikationspfaden; der lokale Snapshot ist daher nicht vollstaendig gruen;
+- der letzte aufgezeichnete Browser-Snapshot umfasst **5 bestandene Chromium-Tests**;
 - Research Catalog / variable-projection-dimension integration ist nach `main` gemergt;
 - Merge-Commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`;
 - der letzte vollständig abgeschlossene `main`-CI-Baseline-Lauf vor diesem Merge war #598 und erfolgreich;
@@ -16,6 +18,8 @@ Aktueller Engineering-Snapshot:
 - Python 3.11, 3.12 und 3.13, Typprüfung, Format/Lint, Security, Scientific Integrity, Wheel und Docker bleiben verpflichtende Gates.
 
 Diese technischen Ergebnisse sind **kein wissenschaftlicher Wirksamkeitsnachweis**.
+
+Die aktuelle Dashboard-Oberflaeche bietet ausserdem einen gemeinsamen natuerlichen Vorlesemodus: Der File Viewer, aufgeklappte Chat-Dateikarten und die letzte Research-Chat-Antwort koennen ueber die deutsche Browser-Sprachsynthese vorgelesen, pausiert, fortgesetzt und angehalten werden. Markdown-Formatierung, Links und URLs werden fuer die Spracheingabe geglaettet; ohne Browser-Unterstuetzung bleibt der Text normal lesbar.
 
 ## Forschungsfragen- und Hypothesen-Registry
 
@@ -25,6 +29,8 @@ Der normale Forschungsworkflow lädt die Basiseinträge plus deterministische Re
 - `research/registry/hypotheses.yaml` und `hypotheses.*.yaml`.
 
 Doppelte IDs werden fail-closed abgelehnt. MSBA-Fragen und -Hypothesen sind dadurch normale, im Experiment Workflow erreichbare Forschungsobjekte. Die UI bietet einen durchsuchbaren Research Catalog statt einer einzigen langen Pulldown-Liste und unterscheidet `OPERATIONAL` von `EXPLORATORY`.
+
+Der Workflow-Katalog liefert die Facetten `domain`, `status`, `evidence_status` und `experiment_progress` aus dem Backend. Nach akzeptierten kanonischen Registry-Aenderungen werden die aktuellen Katalog-, Evidence- und Open-Question-Reports automatisch neu erzeugt; historische experiment-eigene Reports bleiben unveraendert.
 
 `OPERATIONAL` bedeutet, dass ein passender eingefrorener/preregistrierter Experimentvertrag existiert. `EXPLORATORY` darf einen protokollierten Lauf erzeugen, aber **keine bestätigende Evidenz vortäuschen oder automatisch nach EVID promoten**. Noch nicht operationalisierte RQ/H bleiben in TODO und Roadmap, bis Hypothese, Kontrollen, Stopping Rule, Preregistration und Runner vollständig vorhanden sind.
 
