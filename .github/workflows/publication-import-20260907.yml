@@ -1,4 +1,4 @@
-name: Publication import 2026-09-07
+name: Publication system integration
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
     paths:
       - '.publication-import/**'
       - '.github/workflows/publication-import-20260907.yml'
+      - 'scripts/publication_bundle.py'
+      - 'tests/test_publication_integration.py'
 
 permissions:
   contents: write
@@ -18,22 +20,34 @@ jobs:
   integrate:
     if: github.repository == 'Thomas-Heisig/Brain-5D'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
-      - name: Materialize original source documents
-        run: git lfs pull --include='docs/06-research/*.docx' --exclude=''
-      - name: Restore all publication files with byte-exact checks
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python .publication-import/assemble.py
-      - name: Commit verified publication using Git LFS
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Materialize complete publication
+        run: git lfs pull --include='research/publications/**' --exclude=''
+      - name: Integrate publication into research system
+        run: |
+          python .publication-import/integrate.py
+          python scripts/publication_bundle.py --build-reader
+          python scripts/publication_bundle.py
+      - name: Install and validate code
+        run: |
+          python -m pip install -e '.[dev,docs]'
+          python -m black scripts/publication_bundle.py tests/test_publication_integration.py
+          python -m ruff check scripts/publication_bundle.py tests/test_publication_integration.py
+          python -m pytest tests/test_publication_integration.py tests/test_dashboard_file_manager.py -q
+      - name: Commit derived reader and additive system integration
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/publications
-          git commit -m 'docs(research): restore 41 verified publication files and complete original archive'
-          git push origin HEAD:refs/heads/integration/scientific-publication-20260907
-          echo "Publication commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          git add research/publications/reader research/README.md README.md .pre-commit-config.yaml src/dashboard/research_source.py src/dashboard/file_rendering.py scripts/publication_bundle.py tests/test_publication_integration.py
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat(research): expose frozen publication and complete chapter reader in research system'
+            git push origin HEAD:refs/heads/integration/scientific-publication-20260907
+          fi
