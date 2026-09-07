@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-06
 
+## 2026-09-07 Full-stack dashboard E2E verification
+
+- Added an executable Chromium Playwright suite for batch selection, per-protocol Seeds/Ticks editing, aggregate workflow output and Footer progress.
+- Covered workspace routing, responsive shell overflow and box-state minimize/maximize behavior at 1440, 1024 and 390 pixel viewports.
+- Made the registered per-protocol batch Seeds/Ticks inputs editable so the tested workflow contract is available to operators.
+- Verified `npm run test:e2e`: 5 passed and `python -m pytest tests -q`: 825 passed, 5 skipped.
+
 ## 2026-09-07 Full-stack runtime phase profiling
 
 - Added canonical RuntimeTelemetry phase slots for learning, homeostasis, structural, embodiment, Neural Symbiosis/MSBA, dashboard telemetry and storage.

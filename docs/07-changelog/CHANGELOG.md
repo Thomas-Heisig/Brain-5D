@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-07 — Full-stack dashboard E2E verification
+
+- Added a reproducible Chromium Playwright suite for batch selection, per-protocol Seeds/Ticks editing, workflow completion output and Footer progress.
+- Added browser coverage for workspace routing, box-state controls and responsive desktop/tablet/mobile shell behavior.
+- Enabled operator editing of the individual Seeds/Ticks fields rendered for selected batch protocols.
+- Verified 5 browser tests and 825 Python tests; 5 Python tests remain intentionally skipped for platform/large-run conditions.
+
 ## 2026-09-07 — Full-stack runtime phase profiling
 
 - Added canonical runtime phase slots and external hook recording for subsystem profiling.
@@ -54,6 +61,12 @@
 
 - Added explicit UI state, DATA, EVID and interpretation fields to experiment workflow artifacts and reports.
 - Kept interpretation outside execution authority and EVID promotion outside ordinary workflow completion.
+
+## 2026-09-07 — Chromium browser checks restored
+
+- Added `scripts/browser_check.py` with automatic local dashboard startup and free-port selection.
+- Added a Playwright browser extra and explicit Chromium installation command.
+- Added a CI browser job covering dashboard rendering and experiment-dialog interaction.
 
 ## 2026-09-07 — Embodiment treatment provenance
 

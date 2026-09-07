@@ -17,6 +17,25 @@ Neue Funktionalität wird erst in den Core übernommen, wenn sie isoliert testba
 9. Benchmark gegen Referenzstand vergleichen.
 10. Commit mit eindeutiger Nachricht erzeugen.
 
+## Browser-Checks
+
+Die Dashboard-UI wird mit Playwright und Chromium geprüft. Ein vollständiger
+lokaler Check installiert die optionale Browser-Abhängigkeit und startet den
+Dashboard-Server automatisch auf einem freien Port:
+
+```powershell
+python -m pip install -e ".[browser]"
+python -m playwright install chromium
+python scripts/browser_check.py
+```
+
+Für einen bereits laufenden Dashboard-Server kann die URL direkt übergeben
+werden: `python scripts/browser_check.py --url http://127.0.0.1:8765/`.
+
+Die vollständige Browser-Suite läuft unabhängig mit `npm ci` und
+`npm run test:e2e`; sie prüft Batch-Optionen, Footer-Status, Routing,
+Box-Zustände sowie responsive Viewports.
+
 ## Definition of Done
 
 Eine Änderung ist fertig, wenn:

@@ -2,21 +2,27 @@
 
 **Canonical TODO for `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-06
+**Updated:** 2026-09-07
+
+## 2026-09-07 Chromium browser checks
+
+- [x] Provide a reproducible Playwright + Chromium installation path.
+- [x] Add a self-starting dashboard browser smoke check.
+- [x] Run the Chromium smoke check in CI.
 
 ## 2026-09-07 Dashboard batch HTTP contract coverage
 
 - [x] Test workflow catalog GET route.
 - [x] Test batch POST route and structured workflow response.
 - [x] Keep browser-independent route coverage for the batch workflow.
-- [ ] Add browser E2E coverage for the interactive batch dialog. Blocked: Chromium runtime unavailable; browser-independent HTTP/static coverage is complete.
+- [x] Add browser E2E coverage for the interactive batch dialog.
 
 ## 2026-09-07 Batch service contract coverage
 
 - [x] Test sequential protocol execution order.
 - [x] Test per-protocol Seeds/Ticks propagation.
 - [x] Test partial failure isolation and aggregate workflow reports.
-- [ ] Add browser E2E coverage for the interactive batch dialog. Blocked: Chromium runtime unavailable; browser-independent HTTP/static coverage is complete.
+- [x] Add browser E2E coverage for the interactive batch dialog.
 
 ## 2026-09-07 Dissertation results synchronization
 
@@ -38,7 +44,7 @@
 - [x] Execute selected experiments sequentially.
 - [x] Derive Seeds/Ticks from each registered protocol.
 - [x] Preselect the complete experiment plan while allowing deselection.
-- [ ] Add browser E2E coverage for the full sequential workflow.
+- [x] Add browser E2E coverage for the full sequential workflow.
 
 ## 2026-09-06 Batch result visibility
 
@@ -46,41 +52,41 @@
 - [x] Show aggregate workflow ID and report paths in the main workflow output.
 - [x] Close the dialog robustly after successful report rendering.
 - [x] Show batch running/completed/failed state in the Footer.
-- [ ] Add browser E2E coverage for batch completion UI.
+- [x] Add browser E2E coverage for batch completion UI.
 
 ## 2026-09-06 Exploratory experiment artifacts
 
 - [x] Write DATA and summary artifacts for exploratory Runtime-Ticks runs.
 - [x] Mark exploratory child results as `EXPLORATORY` and `test_run`.
-- [ ] Add browser E2E coverage for the visible experiment list refresh after a batch run.
+- [x] Add browser E2E coverage for the visible experiment list refresh after a batch run.
 
 ## 2026-09-06 Batch execution options and exploratory start
 
 - [x] Allow operational batches to start without an attached Runtime Bridge.
 - [x] Provide independent seed and tick settings per selected protocol.
 - [x] Keep all exploratory questions selectable and route them through Runtime-Ticks.
-- [ ] Add browser E2E coverage for batch start and per-protocol option editing.
+- [x] Add browser E2E coverage for batch start and per-protocol option editing.
 
 ## 2026-09-06 Exploratory workflow execution
 
 - [x] Allow exploratory questions to start from the batch dialog.
 - [x] Route exploratory selections through bounded `runtime_ticks_v1` execution.
 - [x] Preserve explicit exploratory status and prevent evidence promotion.
-- [ ] Add browser E2E coverage for starting an exploratory selection and reading its report.
+- [x] Add browser E2E coverage for starting an exploratory selection and reading its report.
 
 ## 2026-09-06 Experiment workflow selection repair
 
 - [x] Show all Research Catalog questions in the batch dialog.
 - [x] Mark non-operational questions explicitly as exploratory.
 - [x] Show batch progress/errors/results in the dialog and workflow output.
-- [ ] Add browser E2E coverage for the batch dialog interaction.
+- [x] Add browser E2E coverage for the batch dialog interaction.
 
 ## 2026-09-06 Experiment workflow UI activation
 
 - [x] Activate the Experiment-Workflow button.
 - [x] Open the options popup from the `batch_workflow_v1` protocol selection.
 - [x] Submit selected protocols and display the aggregate workflow report.
-- [ ] Add browser interaction coverage for popup start/cancel and report rendering.
+- [x] Add browser interaction coverage for popup start/cancel and report rendering.
 
 ## 2026-09-06 EXP-GEN-0033 replication
 
@@ -110,47 +116,47 @@
 - [x] Show the active workflow experiment ID in the Footer.
 - [x] Show running status, label and progress percentage.
 - [x] Prevent dashboard refreshes from resetting the active workflow display.
-- [ ] Add browser interaction coverage for the live Footer experiment state.
+- [x] Add browser interaction coverage for the live Footer experiment state.
 
 ## 2026-09-06 Runtime & Wesen grid readability
 
 - [x] Place body map, state sidebar, inspector sidebar and technical interface in explicit grid areas.
 - [x] Keep Neural Symbiosis full-width instead of squeezing it into a single column.
 - [x] Reflow technical cards for desktop, tablet and mobile.
-- [ ] Add browser screenshots for Runtime & Wesen at desktop, tablet and mobile widths.
+- [x] Add browser screenshots for Runtime & Wesen at desktop, tablet and mobile widths.
 
 ## 2026-09-06 Full-page tabs and responsive box states
 
 - [x] Treat active workspaces as full-page tab surfaces.
 - [x] Add minimize, standard and maximize controls to dashboard boxes.
 - [x] Support dynamically created boxes and native-header-less containers.
-- [ ] Add browser viewport coverage for box-state controls and maximized overlays.
+- [x] Add browser viewport coverage for box-state controls and maximized overlays.
 
 ## 2026-09-06 Wissenschaft Network route restored
 
 - [x] Make `Wissenschaft → Neuronales Netzwerk` callable again.
 - [x] Restore Network subview tabs without showing hidden panels simultaneously.
-- [ ] Add browser interaction coverage for the Wissenschaft route.
+- [x] Add browser interaction coverage for the Wissenschaft route.
 
 ## 2026-09-06 Fixed application header and primary areas
 
 - [x] Fix Header and `Dashboard` / `Wissenschaft` / `Runtime & Wesen` navigation to the top edge.
 - [x] Reserve measured header/navigation height in the workspace.
-- [ ] Add browser viewport checks for wrapped primary navigation and content offset.
+- [x] Add browser viewport checks for wrapped primary navigation and content offset.
 
 ## 2026-09-06 Fixed bottom Footer
 
 - [x] Fix the Footer to the bottom edge of the viewport.
 - [x] Reserve responsive Footer space so workspace content is not obscured.
 - [x] Support mobile safe-area insets.
-- [ ] Add browser viewport checks for fixed Footer overlap and mobile wrapping.
+- [x] Add browser viewport checks for fixed Footer overlap and mobile wrapping.
 
 ## 2026-09-06 Footer status-bar consolidation
 
 - [x] Use one responsive Footer grid for Runtime, I/O, Experiment, Mode, Health and vitals.
 - [x] Expose Runtime tick and command feedback in the Footer DOM.
 - [x] Remove the duplicate Settings/Release Footer row.
-- [ ] Add automated browser viewport checks for Footer wrapping and action reachability.
+- [x] Add automated browser viewport checks for Footer wrapping and action reachability.
 
 ## 2026-09-06 Dashboard CSS consolidation pass II
 
@@ -166,7 +172,7 @@
 - [x] Provide full-size popup/dialog behavior, tab-driven visibility and limited local scrolling for dense content.
 - [x] Add Reader view, contrast mode, larger controls, focus visibility and reduced-motion support.
 - [x] Initialize the Wesen timeline before the first telemetry frame.
-- [ ] Add browser/E2E viewport checks once a Chromium runtime is available in the development environment.
+- [x] Add browser/E2E viewport checks with the local Chromium runtime.
 
 ## 2026-09-06 Footer 6/3 grid alignment
 
@@ -209,10 +215,10 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 ## Current engineering baseline
 
 - [x] `main` is the canonical development line.
-- [x] 796 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
+- [x] 825 tests passed on the current head; 5 platform/large-run tests skipped, 0 failed.
 - [x] Research Catalog / variable-projection-dimension PR #21 merged to `main` at `85e7209509b348bf7912dde01d3d9ebb078a2e61`.
 - [x] Latest fully completed pre-merge `main` CI baseline: #598, success.
-- [x] Confirm the final current-head `main` CI after the documentation refresh: 796 passed, 5 skipped, 0 failed.
+- [x] Confirm the final current-head `main` CI after the documentation refresh: 825 passed, 5 skipped, 0 failed.
 - [x] Unified responsive dashboard design applied across the system.
 - [x] Primary frontend reduced to Dashboard, Wissenschaft and Runtime & Wesen while legacy workspaces remain internal routed surfaces.
 - [x] `Network` removed from primary frontend navigation and integrated into Wissenschaft.
