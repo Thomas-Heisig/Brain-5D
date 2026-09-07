@@ -152,6 +152,19 @@ export function renderText(container, value, context = {}, onOpen = null) {
       if (!list) { list = node('ul'); container.append(list); }
       const item = node('li'); inline(item, bullet[1], context, onOpen); list.append(item); continue;
     }
+    if (!heading && !line.startsWith('> ')) {
+      const paragraphLines = [line];
+      while (index + 1 < lines.length) {
+        const next = lines[index + 1];
+        const startsBlock = !next.trim() || /^```/.test(next) || /^(#{1,6})\s+/.test(next) || /^\s*(?:[-*]|\d+\.)\s+/.test(next) || next.startsWith('> ');
+        const startsTable = next.includes('|') && index + 2 < lines.length && /^\s*\|?\s*:?-{3,}/.test(lines[index + 2]);
+        if (startsBlock || startsTable) break;
+        paragraphLines.push(lines[++index]);
+      }
+      const paragraph = node('p');
+      inline(paragraph, paragraphLines.join(' '), context, onOpen);
+      container.append(paragraph); list = null; continue;
+    }
     list = null;
     const element = heading ? node(`h${Math.min(heading[1].length + 1, 6)}`) : node(line.startsWith('> ') ? 'blockquote' : 'p');
     inline(element, heading ? heading[2] : line.replace(/^> /, ''), context, onOpen);
@@ -171,6 +184,36 @@ function renderTable(container, data) {
     const row = node('tr');
     for (const value of values.slice(0, 64)) row.append(node(index ? 'td' : 'th', value));
     table.append(row);
+  }
+  container.append(table);
+}
+
+function bibLink(value) {
+  const clean = String(value || '').trim().replace(/[{}]/g, '');
+  if (/^doi:\s*/i.test(clean)) return `https://doi.org/${clean.replace(/^doi:\s*/i, '')}`;
+  if (/^10\.\d{4,9}\/\S+/i.test(clean)) return `https://doi.org/${clean}`;
+  return /^https?:\/\//i.test(clean) ? clean : null;
+}
+
+function renderBibTeXTable(container, entries) {
+  const table = node('table', '', 'file-renderer-table file-renderer-bibtex');
+  const head = node('tr');
+  for (const label of ['Key', 'Autor', 'Titel', 'Jahr', 'DOI / URL']) {
+    const cell = node('th', label); cell.scope = 'col'; head.append(cell);
+  }
+  table.append(head);
+  for (const entry of entries.slice(0, 500)) {
+    const row = node('tr');
+    row.append(node('td', entry.key), node('td', entry.fields.author || ''), node('td', entry.fields.title || ''), node('td', entry.fields.year || ''));
+    const links = node('td', '', 'file-renderer-bib-links');
+    for (const [label, value] of [['DOI', entry.fields.doi], ['Web', entry.fields.url]]) {
+      const href = bibLink(value);
+      if (!href) continue;
+      const anchor = node('a', label, 'file-renderer-bib-link');
+      anchor.href = href; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer';
+      links.append(anchor);
+    }
+    row.append(links); table.append(row);
   }
   container.append(table);
 }
@@ -293,7 +336,7 @@ async function renderSource(container, data, options = {}) {
   if (data.ext === '.bib') {
     const entries = parseBibTeX(data.content || '');
     if (entries.length) {
-      renderTable(container, { rows: [['Key', 'Autor', 'Jahr', 'Titel'], ...entries.map(entry => [entry.key, entry.fields.author || '', entry.fields.year || '', entry.fields.title || ''])] });
+      renderBibTeXTable(container, entries);
       return;
     }
   }

@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 BibTeX links and prose rendering
+
+- Added safe DOI and publication URL links to both the shared BibTeX preview and the legacy structured BibTeX table.
+- Aligned BibTeX link and table styling with the dashboard base CSS variables.
+- Markdown and documentation line wrapping now forms flowing paragraphs instead of one paragraph per source line, while preserving structural blocks.
+
 ## 2026-09-07 Functional viewer restoration
 
 - Restored viewer back navigation and exposed `window.openBrain5DFile(source, path)` plus the `brain5d:open-file` event for cross-module file opening.

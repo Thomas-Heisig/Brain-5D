@@ -4,6 +4,13 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-07 BibTeX links and prose rendering
+
+- [x] Link DOI and publication URL fields in BibTeX previews.
+- [x] Reuse base table/link styling for BibTeX output.
+- [x] Preserve flowing prose when Markdown source lines are wrapped.
+- [ ] Add RIS export and richer citation style previews.
+
 ## 2026-09-07 Functional viewer restoration
 
 - [x] Add a viewer back button and cross-module `openBrain5DFile` API.

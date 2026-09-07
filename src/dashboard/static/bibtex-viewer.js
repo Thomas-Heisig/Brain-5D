@@ -232,11 +232,16 @@ function renderBibTeXRow(entry, idx) {
   const title = entry.fields.title || '';
   const year = entry.fields.year || '';
   const doi = entry.fields.doi || '';
+  const titleLink = resolveBibLink(doi) || resolveBibLink(entry.fields.url);
+  const webLink = resolveBibLink(entry.fields.url);
+  const titleMarkup = titleLink
+    ? `<a class="bibtex-record-link" href="${escapeHtml(titleLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(truncateText(title, 60))}</a>`
+    : escapeHtml(truncateText(title, 60));
 
   return `<tr class="bibtex-row ${errors.length > 0 ? 'bibtex-row-warn' : ''}" data-idx="${idx}">
     <td class="bibtex-cell-key"><code>${escapeHtml(entry.key)}</code></td>
     <td class="bibtex-cell-author">${escapeHtml(truncateText(author, 50))}</td>
-    <td class="bibtex-cell-title">${escapeHtml(truncateText(title, 60))}</td>
+    <td class="bibtex-cell-title">${titleMarkup}</td>
     <td class="bibtex-cell-year">${escapeHtml(year)}</td>
     <td class="bibtex-cell-type"><span class="bibtex-type-badge">${typeLabels[entry.type] || entry.type}</span></td>
     <td class="bibtex-cell-status"><span class="${statusClass}" title="${escapeHtml(statusTitle)}">${statusIcon}</span></td>
@@ -244,6 +249,7 @@ function renderBibTeXRow(entry, idx) {
       <button class="bibtex-action-btn" data-action="cite" data-idx="${idx}" title="Copy citation">📋 Cite</button>
       <button class="bibtex-action-btn" data-action="copy" data-idx="${idx}" title="Copy BibTeX entry">📄 Bib</button>
       ${doi ? `<button class="bibtex-action-btn" data-action="doi" data-doi="${escapeHtml(doi)}" title="Open DOI">🔗 DOI</button>` : ''}
+      ${webLink ? `<a class="bibtex-action-btn" href="${escapeHtml(webLink)}" target="_blank" rel="noopener noreferrer" title="Open publication URL">↗ Web</a>` : ''}
     </td>
   </tr>`;
 }
@@ -262,6 +268,13 @@ function escapeHtml(str) {
 function truncateText(str, maxLen) {
   if (!str || str.length <= maxLen) return str || '';
   return str.substring(0, maxLen) + '…';
+}
+
+function resolveBibLink(value) {
+  const clean = String(value || '').trim().replace(/[{}]/g, '');
+  if (/^doi:\s*/i.test(clean)) return `https://doi.org/${clean.replace(/^doi:\s*/i, '')}`;
+  if (/^10\.\d{4,9}\/\S+/i.test(clean)) return `https://doi.org/${clean}`;
+  return /^https?:\/\//i.test(clean) ? clean : null;
 }
 
 // ================================================================

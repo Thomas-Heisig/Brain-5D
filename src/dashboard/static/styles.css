@@ -7847,6 +7847,17 @@ body.accessibility-mode .health-bar {
   line-clamp: 2;
 }
 
+.bibtex-record-link {
+  color: var(--accent, #7aabff);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(122, 171, 255, .35);
+}
+
+.bibtex-record-link:hover {
+  color: var(--text, #fff);
+  border-bottom-color: currentColor;
+}
+
 .bibtex-cell-year {
   text-align: center;
   font-family: var(--font-mono);
@@ -7886,6 +7897,8 @@ body.accessibility-mode .health-bar {
 }
 
 .bibtex-action-btn {
+  display: inline-block;
+  text-decoration: none;
   padding: 2px 7px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 4px;
@@ -10213,6 +10226,12 @@ body.box-state-lock {
 .file-renderer-source, .file-renderer-body pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .file-renderer-table { border-collapse: collapse; width: 100%; }
 .file-renderer-table td, .file-renderer-table th { border: 1px solid var(--border-color, #394452); padding: .4rem; text-align: left; }
+.file-renderer-bibtex { font-size: .88rem; }
+.file-renderer-bibtex th { color: var(--accent, #7aabff); background: rgba(74, 124, 247, .12); font-weight: 600; }
+.file-renderer-bibtex td { vertical-align: top; }
+.file-renderer-bib-links { white-space: nowrap; }
+.file-renderer-bib-link { color: var(--accent, #7aabff); margin-right: .6rem; text-decoration: none; border-bottom: 1px solid rgba(122, 171, 255, .35); }
+.file-renderer-bib-link:hover { color: var(--text, #fff); border-bottom-color: currentColor; }
 .file-renderer-json-node { margin: .25rem 0; }
 .file-renderer-json-node > summary { cursor: pointer; padding: .3rem .45rem; border-radius: .3rem; background: rgba(255, 255, 255, .04); }
 .file-renderer-json-children { margin-left: 1rem; padding-left: .7rem; border-left: 1px solid var(--border-color, #394452); }

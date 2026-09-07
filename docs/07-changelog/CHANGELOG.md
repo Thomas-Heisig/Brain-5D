@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-07 — BibTeX links and prose rendering
+
+- Added safe clickable DOI and publication URL links to both BibTeX viewer paths.
+- Matched BibTeX links and tables to the dashboard base CSS.
+- Fixed Markdown/documentation prose so wrapped source lines render as continuous paragraphs.
+
 ## 2026-09-07 — Functional viewer restoration
 
 - Added viewer back navigation and the public `window.openBrain5DFile(source, path)` / `brain5d:open-file` integration points.
