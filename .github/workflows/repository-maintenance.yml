@@ -3,7 +3,7 @@ name: Verify consolidated main and clean merged branches
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/repository-maintenance.yml, .maintenance/finalize.patch]
+    paths: [.github/workflows/repository-maintenance.yml, ".maintenance/**"]
   workflow_dispatch:
 
 permissions:
@@ -71,11 +71,14 @@ jobs:
         run: |
           git config user.name 'Brain-5D maintenance (AI-assisted)'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if test -f .maintenance/finalize.patch; then
-            git apply --check --index .maintenance/finalize.patch
-            git apply --index .maintenance/finalize.patch
-            git rm .maintenance/finalize.patch
-            git diff --cached --check
+          for patch in .maintenance/*.patch; do
+            test -f "$patch" || continue
+            git apply --check --index "$patch"
+            git apply --index "$patch"
+            git rm "$patch"
+          done
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
             git commit -m 'fix: secure shared previews and preserve reproducible package identity'
           fi
       - name: Install canonical tools
