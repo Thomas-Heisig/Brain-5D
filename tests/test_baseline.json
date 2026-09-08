@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "4f9e927c056f99874b3d68bbc0cc85d232226f6d",
-  "tested_tree_digest": "4c778b8826c75d9fc32c018a974c2adc404370fc7fa41d3d9c4854a6e506c78d",
+  "tested_commit": "cf156d5275146a2ee966537538069a2f43108267",
+  "tested_tree_digest": "b1ebb449059b5ed3f4d716278ea7f4314cbd51b10b34b8f0df8e475ec3b18886",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T14:12:12.996626+00:00",
+  "timestamp": "2026-09-08T19:34:09.490518+00:00",
   "python": "3.13.14",
   "platform": "Windows-11-10.0.26200-SP0",
   "source_unchanged_during_run": true,
@@ -268,7 +268,7 @@
     "src/telemetry/spike_history.py": "c18ec35de22484cfbd79035c3ca7d5d4fccc3203710e85cf9e54389c395f8bcc",
     "src/utils/__init__.py": "7d98999f8b37bf4e78977bf69c76f710612c9e3d81316ba864ddeed3c1f6dbe0",
     "src/utils/run_artifacts.py": "4c47b7f4a4614d75cc792a82f58541d2840ec21998adf1e3a8e2aac64523edcc",
-    "src/version.py": "4e6927cf572b60f9e65f6bc7757a43415fe35f40388f0a944c5a254148b7a79e",
+    "src/version.py": "9993a75018d1ea58f1c993da68d67a0db5633f457a12b91fdcc16e6813718e08",
     "src/visualization/__init__.py": "7d98999f8b37bf4e78977bf69c76f710612c9e3d81316ba864ddeed3c1f6dbe0",
     "src/visualization/heatmap.py": "b8f943e8b3ba079a2dd421847e40385cad418d539d227e3ad368e04efbb09bde",
     "src/visualization/observatory.py": "99a28e3b82fd36edad445ae1655bb970b3a9aba16d5f7e944dd210d99ad4796c",
@@ -293,7 +293,7 @@
     "research/schemas/experiment.schema.json": "ad98a002c25a2004aa09f80df3e88b98a00c623287a6bf64af8bd288e3e282d7",
     "research/schemas/preregistration.schema.json": "f4ab03fa5a8718177a843741d8fc6637ba8b80edf6833dfa48c8c31f25cba880",
     "research/schemas/question.schema.json": "ba90d930c356248ba8eb3f847a7c060cbaf3cf266b4fa8c0b6a43f2f2febdb2f",
-    "pyproject.toml": "7a22357af24b48ae6baf6b6488fe47652786173109b359813ed832c9aa49afb7",
+    "pyproject.toml": "83deabb3befd198a0093e2403e20a87f69135e26c0a201ace288dfe56d706072",
     "tests/__init__.py": "175843bab438dd8fca59002363d761642b9830ee948f7f82d2efce275ce1ea3e",
     "tests/_restore_helpers.py": "4c01c1ae86a458cb81eac7d243e09952e941e7dbfcac95fd4aeab63ec07959ce",
     "tests/_restore_worker.py": "d7692ea535f338ccb335b811033c481f2b8dcf4ed3420e1f4a2b84ca97276c42",
@@ -367,7 +367,7 @@
     "tests/test_experiment_validity.py": "2b56f4760c674568b66ea0c6710999897b12a78ffdf39442afc204f32f4ad1d9",
     "tests/test_file_rendering.py": "0fc54b9fe1dbfce047b771b0a7e8fe99682ce8207fc00986b6c90dcd6664b445",
     "tests/test_followup_experiment_failures.py": "dfc56d72db50c2edf7d45b85b057de0171d02b85e8806d028d3621cfc7411f67",
-    "tests/test_gate_frontend_layout.py": "1e6efc2990fb0b957980529dd4a9890cd3617b09ade8f3ce2455ae44008bfa52",
+    "tests/test_gate_frontend_layout.py": "f4fd148a1057fe3538d0e870d9138811884025e1d3de127238ebbd20eea39e44",
     "tests/test_gate_status.py": "6ea5d162a667ecc4897748a3731dcf6c2ac8cc51271af5821542fa238551f8e4",
     "tests/test_golden_chain.py": "e6beaefb0fb66b6dc6e670b8309a43f7ab91b33641cc3e7baec2f5a61b19acf0",
     "tests/test_heatmap.py": "d6ed96dafc9cde4f7e8612ff57c58786681cfb613dff121117ad3c365a87ce2c",
@@ -402,7 +402,7 @@
     "tests/test_publication_revision.py": "bf17fdfc7068c60db850f4b5ad00fb2cc6d1d6db2275a4abe0db59d3f3efb2fd",
     "tests/test_recovery.py": "ca39582eda259f5220eff7f6a1831c79bf2457ca334c79212b3fc88e63ac1378",
     "tests/test_recurrence_map_contract.py": "36c779d46ba4167636a24f17fb9be6ba252d186a51d41eef3be1539648fb076a",
-    "tests/test_release_registry.py": "e4cf815de9c43004a1ca2f6328d13a30f6d9b1bf7da679e126731a22642282f2",
+    "tests/test_release_registry.py": "e95c08514ea91705d32e017cb43de0f0ed4cfe13db20cf8cd3cd0a6d29cd1247",
     "tests/test_release_timeline.py": "8fee0b89d406841332897c1a8ecd8d233608af26817bec3a4da029649711006c",
     "tests/test_repository_hygiene.py": "96e99dc31b7ebe6619cdce755fbdb45b43b218123cf66d2d27c5cd1b231733c6",
     "tests/test_research_assistant.py": "a71e8a9c26b37797296f50ef47aadc43c4e0c63f362a1a560c3daadfb6004dcb",
@@ -450,6 +450,6 @@
     "tests/test_structural_recovery.py": "1d0805254ca21d72d153d8d3a8fcd8ba9232d2f64341edca5d2de6afd38a1a60",
     "tests/test_structural_undo.py": "736077433fe3e73ce111c9c421d9f4c2b9b158ae2c2d5efe3a8a973fc74d0bf6",
     "tests/test_sustained_stability_protocol.py": "4bc8876a9b0f7f5583e1b0303df089d19c973dd914f1137b1e9b18b0958d6c38",
-    "tests/test_version_consistency.py": "654412dff16af8002a7ba75f70c6c90cae855d23d2a1699568be45c804caa577"
+    "tests/test_version_consistency.py": "fe008501a983aeb45fbfee4aa84a5119dfc8be4889df287b9a42da72927606d8"
   }
 }
