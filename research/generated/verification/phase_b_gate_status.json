@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "status": "verified",
-  "generated": "2026-09-08T12:05:11.439585+00:00",
+  "generated": "2026-09-08T12:12:06+00:00",
   "source_freeze": {
-    "commit": "366e134f6633e98ef03740b68f85e8d17916a6ba",
+    "commit": "59138eabba403e6e88be39362e05f984f960d9de",
     "tested_tree_digest": "42ebb11cd394d156118a78589e83ba8f76d68e5488ff8f2250ad9e60e636b04f"
   },
   "baseline": {
@@ -15,9 +15,9 @@
     "artifact": "tests/test_baseline.json"
   },
   "continuous_integration": {
-    "workflow": "Gate Freeze Refresh / canonical full-suite verification",
-    "run_id": 34223919644,
-    "head_sha": "366e134f6633e98ef03740b68f85e8d17916a6ba",
+    "workflow": "Continuous Integration",
+    "run_id": 34224253173,
+    "head_sha": "59138eabba403e6e88be39362e05f984f960d9de",
     "conclusion": "success"
   },
   "scientific_gate": {
