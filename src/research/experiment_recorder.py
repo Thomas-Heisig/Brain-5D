@@ -87,9 +87,9 @@ def get_software_info() -> dict[str, Any]:
         "os": f"{platform.system()} {platform.release()}",
     }
     try:
-        import brain5d  # type: ignore[import-not-found]
+        from src.version import BRAIN5D_VERSION
 
-        info["brain5d_version"] = getattr(brain5d, "__version__", "unknown")
+        info["brain5d_version"] = BRAIN5D_VERSION
     except ImportError:
         info["brain5d_version"] = "unknown"
     return info
