@@ -250,9 +250,7 @@ def inspect_source_tree(
         if git_available
         else set()
     )
-    index_blobs = (
-        _git_index_blobs(repo_root, tracked_set) if git_available else {}
-    )
+    index_blobs = _git_index_blobs(repo_root, tracked_set) if git_available else {}
     hasher = hashlib.sha256()
     found_any = False
     ordered_paths = list(filesystem_paths)
