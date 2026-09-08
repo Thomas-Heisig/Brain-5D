@@ -42,13 +42,19 @@ def _first_difference(left: bytes, right: bytes) -> str:
 
 def _difference_kind(root: Path, relative: str, data: bytes, expected: str) -> str:
     canonical = canonical_source_file_bytes(root, relative)
+    reference = _git_blob(root, relative)
+    if reference is not None:
+        if data.startswith(b"\xef\xbb\xbf") != reference.startswith(b"\xef\xbb\xbf"):
+            return "encoding_or_bom_difference"
+        try:
+            data.decode("utf-8")
+            reference.decode("utf-8")
+        except UnicodeDecodeError:
+            return "encoding_or_bom_difference"
     if _sha256(canonical) == expected and canonical != data:
         return "line_endings_only"
-    if data.startswith(b"\xef\xbb\xbf") != canonical.startswith(b"\xef\xbb\xbf"):
-        return "encoding_or_bom_difference"
     if b"\r\n" in data:
         return "line_endings_and_content_difference"
-    reference = _git_blob(root, relative)
     if reference is not None:
         return f"content_or_encoding_difference ({_first_difference(data, reference)})"
     return "content_or_encoding_difference"
