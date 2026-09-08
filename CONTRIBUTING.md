@@ -14,7 +14,7 @@ By participating, you agree to follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 Use the GitHub issue tracker:
 
-https://github.com/Thomas-Heisig/Brain-5D/issues
+https://github.com/Thomas-Heisig/MHRN/issues
 
 For bugs, include:
 
