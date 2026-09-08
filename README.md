@@ -14,7 +14,7 @@ MHRN is the current project name. Historical publications, scientific coordinate
 **Experimental sparse 5D spiking-neural research framework with deterministic persistence, controlled plasticity, embodiment, multi-network peripheral integration and scientific provenance.**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/version-0.5.0a7-orange.svg)](pyproject.toml)
+[![Version](https://img.shields.io/badge/version-0.6.0a1-orange.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 MHRN is a research framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network (SNN). The SNN remains the primary adaptive system. Language models, research assistants and peripheral neural networks are bounded components and do not acquire implicit authority over canonical neural state, reward, memory, experiment DATA or accepted EVID.
@@ -23,16 +23,15 @@ MHRN is a research framework for studying learning, self-organization and embodi
 
 ## Current `main` baseline
 
-Updated on **2026-09-07** after the dashboard release workflow, shared natural-language reader and repository verification updates:
+Updated on **2026-09-08** after the v0.6 development line opened:
 
-- package version: `0.5.0a7`
-- latest local fast-suite snapshot: **849 passed, 5 skipped, 3 failed**; 32 slow tests deselected
-- the three known failures are Windows line-ending and publication-path contract expectations; this local snapshot is not fully green
-- last recorded browser suite: **5 passed** with Chromium
-- current `main` HEAD: `a5cdfa7b4fcce97eea8b68c9b81fe2fea1757c56`
-- Research Catalog / variable-dimension merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
-- latest fully completed pre-merge `main` CI baseline: **success** (run #598)
-- the merge-triggered `main` CI is the authoritative verification for the new baseline; do not infer success until that run completes
+- package version: `0.6.0a1`
+- v0.5.0-alpha.7 gate: closed and historically recorded; v0.6 remains an open development milestone
+- latest local full-suite snapshot: **1000 passed, 7 skipped, 0 failed**
+- current development branch: `fix/cross-platform-source-freeze-digest`
+- current source-freeze digest: `4c778b8826c75d9fc32c018a974c2adc404370fc7fa41d3d9c4854a6e506c78d`
+- v0.6 scope: scaling benchmarks, bounded telemetry/storage, deterministic resume and migration compatibility
+- release readiness for v0.6 remains open until its specific milestone criteria are completed
 - GitHub `main` is the canonical source; the configured Hugging Face mirror is updated from this branch after repository changes
 - Live dashboard Space: https://huggingface.co/spaces/superdigger/Brain-5D-Space
 - Python verification matrix: **3.11, 3.12 and 3.13**

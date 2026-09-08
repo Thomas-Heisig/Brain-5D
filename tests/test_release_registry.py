@@ -17,16 +17,16 @@ def _release(name: str) -> dict[str, Any]:
     )
 
 
-def test_current_release_matches_canonical_alpha7_version() -> None:
+def test_current_release_matches_canonical_development_version() -> None:
     with (ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
     current = _release("current.json")
 
-    assert project["version"] == "0.5.0a7"
-    assert current["version"] == "0.5.0-alpha.7"
+    assert project["version"] == "0.6.0a1"
+    assert current["version"] == "0.6.0-alpha.1"
     assert current["pep440"] == project["version"]
     assert current["status"] == "development"
-    assert current["parent"] == "v0.5.0-alpha.6"
+    assert current["parent"] == "v0.5.0-alpha.7"
 
 
 def test_alpha6_release_preserves_verified_historical_boundary() -> None:

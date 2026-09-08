@@ -2,7 +2,7 @@
 
 **Canonical research roadmap**
 **Updated:** 2026-09-04
-**Engineering baseline:** `brain5d-core 0.5.0a7`
+**Engineering baseline:** `mhrn-core 0.6.0a1`
 
 ## Research objective
 

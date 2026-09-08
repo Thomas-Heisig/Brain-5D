@@ -37,7 +37,7 @@ class TestVersionConsistency:
 
     def test_display_format(self) -> None:
         """BRAIN5D_VERSION_DISPLAY is a valid alpha display string."""
-        assert BRAIN5D_VERSION_DISPLAY.startswith("0.5.0-alpha.")
+        assert BRAIN5D_VERSION_DISPLAY.startswith("0.6.0-alpha.")
         # Should match pattern like 0.5.0-alpha.5
         assert re.match(r"^\d+\.\d+\.\d+-alpha\.\d+$", BRAIN5D_VERSION_DISPLAY)
 

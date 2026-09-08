@@ -17,7 +17,9 @@ ROADMAP_DOCS = (
     DOCS_ROOT / "08-roadmap" / "ROADMAP.md",
 )
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
-BASELINE_PATTERN = re.compile(r"\*\*Baseline:\*\*\s+`?brain5d-core\s+([^`\s]+)`?")
+BASELINE_PATTERN = re.compile(
+    r"\*\*Baseline:\*\*\s+`?(?:brain5d-core|mhrn-core)\s+([^`\s]+)`?"
+)
 COLLECTED_PATTERN = re.compile(r"(\d+)\s+tests collected")
 
 
