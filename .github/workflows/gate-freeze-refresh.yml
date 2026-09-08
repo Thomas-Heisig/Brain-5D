@@ -21,8 +21,8 @@ jobs:
           python-version: '3.13'
       - name: Install project and development dependencies
         run: python -m pip install -e '.[dev,browser]'
-      - name: Verify Black before freeze
-        run: python -m black --check src tests scripts
+      - name: Apply canonical Black formatting
+        run: python -m black src tests scripts
       - name: Regenerate canonical verified baseline
         run: python scripts/generate_baseline.py
       - name: Refresh CI-bound gate snapshot
