@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "tested_commit": "0e0c6d4ad9bf44deed161ee759ee4fe39795dc30",
+  "tested_commit": "4f9e927c056f99874b3d68bbc0cc85d232226f6d",
   "tested_tree_digest": "4c778b8826c75d9fc32c018a974c2adc404370fc7fa41d3d9c4854a6e506c78d",
   "tree_digest_paths": [
     "src/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T14:06:14.932435+00:00",
+  "timestamp": "2026-09-08T14:12:12.996626+00:00",
   "python": "3.13.14",
   "platform": "Windows-11-10.0.26200-SP0",
   "source_unchanged_during_run": true,
