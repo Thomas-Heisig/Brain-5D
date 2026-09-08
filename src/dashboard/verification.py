@@ -135,7 +135,9 @@ def _git_changed_paths(repo_root: Path, paths: list[str]) -> set[str]:
     }
 
 
-def _git_index_blobs(repo_root: Path) -> dict[str, bytes]:
+def _git_index_blobs(
+    repo_root: Path, requested_paths: set[str] | None = None
+) -> dict[str, bytes]:
     """Read stage-zero index blobs in one Git batch operation."""
     listing = _git_output(repo_root, ["ls-files", "-s", "-z"])
     if listing is None:
@@ -148,9 +150,12 @@ def _git_index_blobs(repo_root: Path) -> dict[str, bytes]:
         fields = header.split()
         if not separator or len(fields) != 3 or fields[2] != b"0":
             continue
+        relative = raw_path.decode("utf-8", "surrogateescape")
+        if requested_paths is not None and relative not in requested_paths:
+            continue
         entries.append(
             (
-                raw_path.decode("utf-8", "surrogateescape"),
+                relative,
                 fields[1].decode("ascii"),
             )
         )
@@ -245,7 +250,9 @@ def inspect_source_tree(
         if git_available
         else set()
     )
-    index_blobs = _git_index_blobs(repo_root) if git_available else {}
+    index_blobs = (
+        _git_index_blobs(repo_root, tracked_set) if git_available else {}
+    )
     hasher = hashlib.sha256()
     found_any = False
     ordered_paths = list(filesystem_paths)
