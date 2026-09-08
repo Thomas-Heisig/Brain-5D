@@ -5,7 +5,7 @@
   "hypothesis": "H-MSBA-E04-A",
   "protocol_id": "msba_digital_integrity_v1",
   "mode": "CONFIRMATORY",
-  "primary_outcomes": ["checksum_mismatches", "admitted_symbol_rate", "task_accuracy"],
+  "primary_outcomes": ["checksum_mismatches", "admitted_symbol_rate", "exact_integrity_pass"],
   "secondary_outcomes": ["exact_payload_mismatches", "deterministic_replay_equal"],
   "conditions": ["throttled", "no_throttling", "deterministic_replay"],
   "seed_strategy": {"minimum_independent_seeds": 3, "rule": "independent deterministic payload streams with exact replay"},

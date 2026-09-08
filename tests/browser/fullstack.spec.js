@@ -12,9 +12,9 @@ for (const port of [4174, 4175]) {
     await page.locator('#workflow-research-search').fill('RQ-MSBA-E01');
     await expect(page.locator('.research-rq-card')).toHaveCount(1);
     await page.locator('.research-rq-card').click();
-    await expect(page.locator('#workflow-research-results')).toContainText('EXPLORATORY');
+    await expect(page.locator('#workflow-research-results')).toContainText('OPERATIONAL');
     await page.locator('#workflow-research-operational').check();
-    await expect(page.locator('.research-rq-card')).toHaveCount(0);
+    await expect(page.locator('.research-rq-card')).toHaveCount(1);
     await page.locator('#workflow-research-operational').uncheck();
     await page.locator('[data-primary-area="wesen"]').click();
     await expect(page.locator('#wesen-neural-symbiosis')).toBeVisible();

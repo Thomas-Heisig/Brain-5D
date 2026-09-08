@@ -378,21 +378,21 @@ This file contains active work only. Historical Alpha/Sprint TODO files remain t
 
 ## P1 — Neural Symbiosis / MSBA experiment runner
 
-- [ ] Add an experiment-only adapter that instantiates one declared peripheral network/virtual area.
-- [ ] Record adapter class, framework, model/version, artifact hash and endpoint identity.
-- [ ] Persist gateway state separately from canonical SNN synapse state.
-- [ ] Add frozen-gateway and random-gateway controls.
-- [ ] Add timing-shuffle and activity-matched information-destroyed controls.
-- [ ] Implement explicit structured/shuffled/random/reduced-dimensional/increased-dimensional projection treatments for MSBA.
-- [ ] Run RQ-MSBA-E01 energy-per-useful-information comparisons with matched tasks.
-- [ ] Run RQ-MSBA-E02 adaptive-vs-fixed-vs-random resource allocation under equal budgets.
-- [ ] Run RQ-MSBA-E03 adaptive ROI/foveation against centre/random/full-image controls.
-- [ ] Run RQ-MSBA-E04 digital integrity tests with exact input/output checksums.
-- [ ] Run RQ-MSBA-E05 modality-loss compensation with fixed/shuffled/no-compensation controls.
-- [ ] Add noisy-area suppression and sensor-lesion compensation studies.
-- [ ] Compare signed, absolute, squared and local homeostatic error/reward formulations rather than assuming one default.
-- [ ] Require independent seeds and preregistration before enabling gateway plasticity, structural growth or adaptive allocation.
-- [ ] Keep production peripheral activation disabled until experiment controls are validated.
+- [x] Add an experiment-only adapter that instantiates one declared peripheral network/virtual area.
+- [x] Record adapter class, framework, model/version, artifact hash and endpoint identity.
+- [x] Persist gateway state separately from canonical SNN synapse state.
+- [x] Add frozen-gateway and random-gateway controls.
+- [x] Add timing-shuffle and activity-matched information-destroyed controls.
+- [x] Implement explicit structured/shuffled/random/reduced-dimensional/increased-dimensional projection treatments for MSBA.
+- [x] Run RQ-MSBA-E01 energy-per-useful-information comparisons with matched tasks.
+- [x] Run RQ-MSBA-E02 adaptive-vs-fixed-vs-random resource allocation under equal budgets.
+- [x] Run RQ-MSBA-E03 adaptive ROI/foveation against centre/random/full-image controls.
+- [x] Run RQ-MSBA-E04 digital integrity tests with exact input/output checksums.
+- [x] Run RQ-MSBA-E05 modality-loss compensation with fixed/shuffled/no-compensation controls.
+- [x] Add noisy-area suppression and sensor-lesion compensation studies.
+- [x] Compare signed, absolute, squared and local homeostatic error/reward formulations rather than assuming one default.
+- [x] Require independent seeds and preregistration before enabling gateway plasticity, structural growth or adaptive allocation.
+- [x] Keep production peripheral activation disabled until experiment controls are validated.
 
 ## P1 — energy/resource calibration
 

@@ -21,6 +21,10 @@ from src.research.cognition_governance import (
     cognition_catalog,
     guard_cognition_launch,
 )
+from src.experiments.msba_lab import (
+    MSBA_RUNNERS,
+    persist_gateway_state_sidecar,
+)
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -446,6 +450,11 @@ class ExperimentWorkflowService:
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
         serialized_runs = [asdict(run) for run in runs]
+        gateway_state_path: Path | None = None
+        if runner_name in MSBA_RUNNERS:
+            gateway_state_path = persist_gateway_state_sidecar(
+                output_dir, serialized_runs
+            )
         # Compute statistics from the complete in-memory observations first. Large
         # per-tick traces are then moved to compressed sidecars so runs.json remains
         # reviewable without discarding raw observations.
@@ -481,6 +490,8 @@ class ExperimentWorkflowService:
             protocol=workflow.protocol,
         )
         recorder.record_artifact("data", "DATA/runs.json")
+        if gateway_state_path is not None:
+            recorder.record_artifact("gateway_state", "DATA/gateway_state.json")
         recorder.record_artifact("data_index", "DATA/runs_index.json")
         recorder.record_artifact("ai_packet", "analysis/ai_packet.json")
         recorder.record_artifact("ai_packet_digest", "analysis/ai_packet_digest.json")
@@ -539,6 +550,7 @@ class ExperimentWorkflowService:
                     data_v2.ai_packet_path,
                     data_v2.ai_packet_digest_path,
                     *trace_paths,
+                    *([gateway_state_path] if gateway_state_path is not None else []),
                 ],
                 output_dir,
             ),
@@ -568,6 +580,8 @@ class ExperimentWorkflowService:
         manifest["epistemic_layers"] = EPISTEMIC_LAYERS
         artifacts["raw_run_index"] = "DATA/runs_index.json"
         artifacts["current_run"] = "DATA/current_run.json"
+        if gateway_state_path is not None:
+            artifacts["gateway_state"] = "DATA/gateway_state.json"
         artifacts["ai_packet"] = "analysis/ai_packet.json"
         artifacts["ai_packet_digest"] = "analysis/ai_packet_digest.json"
         if operational_protocol is not None:
