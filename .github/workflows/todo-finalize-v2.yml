@@ -25,6 +25,8 @@ jobs:
       - name: Validate focused contracts
         run: |
           python -m black src/dashboard/file_rendering.py tests/test_file_rendering.py
+          python -m ruff check --fix src/dashboard/file_rendering.py tests/test_file_rendering.py
+          python -m black src/dashboard/file_rendering.py tests/test_file_rendering.py
           python -m ruff check src/dashboard/file_rendering.py tests/test_file_rendering.py
           python -m pytest tests/test_file_rendering.py -q
           node --check src/dashboard/static/file-renderer.js
@@ -32,7 +34,7 @@ jobs:
           git diff --check
       - name: Commit final tree
         run: |
-          rm -f .github/workflows/todo-fullstack-finalize.yml .github/workflows/todo-finalize-v2.yml .maintenance/complete_open_todos.py
+          rm -f .github/workflows/todo-fullstack-finalize.yml .github/workflows/todo-finalize-v2.yml .maintenance/complete_open_todos.py .maintenance/todo-trigger.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
