@@ -10,97 +10,60 @@ permissions:
 
 jobs:
   finalize:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: codex/msba-experiment-runner
           fetch-depth: 0
-      - name: Merge current main
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Finalize on current main and refresh baseline
         run: |
           git fetch origin main
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git merge origin/main --no-edit
-      - name: Apply final MSBA workflow and contract updates
-        run: |
           python - <<'PY'
-          import json
           from pathlib import Path
 
           workflow = Path("src/dashboard/experiment_workflow.py")
           text = workflow.read_text(encoding="utf-8")
+          addition = "from src.experiments.msba_lab import (\n    MSBA_RUNNERS,\n    persist_gateway_state_sidecar,\n)\n"
           anchor = "from src.research.data_v2 import prepare_research_data_v2\n"
-          addition = (
-              "from src.experiments.msba_lab import (\n"
-              "    MSBA_RUNNERS,\n"
-              "    persist_gateway_state_sidecar,\n"
-              ")\n"
-          )
           if addition not in text:
-              text = text.replace(anchor, addition + anchor)
+              if anchor not in text:
+                  raise SystemExit("data_v2 import anchor not found")
+              text = text.replace(anchor, addition + anchor, 1)
           old = "        serialized_runs = [asdict(run) for run in runs]\n        # Compute statistics"
-          new = (
-              "        serialized_runs = [asdict(run) for run in runs]\n"
-              "        gateway_state_path: Path | None = None\n"
-              "        if runner_name in MSBA_RUNNERS:\n"
-              "            gateway_state_path = persist_gateway_state_sidecar(\n"
-              "                output_dir, serialized_runs\n"
-              "            )\n"
-              "        # Compute statistics"
-          )
-          if old not in text:
-              raise SystemExit("serialized_runs anchor not found")
-          text = text.replace(old, new)
+          if "gateway_state_path: Path | None = None" not in text:
+              if old not in text:
+                  raise SystemExit("serialized_runs anchor not found")
+              text = text.replace(old, "        serialized_runs = [asdict(run) for run in runs]\n        gateway_state_path: Path | None = None\n        if runner_name in MSBA_RUNNERS:\n            gateway_state_path = persist_gateway_state_sidecar(\n                output_dir, serialized_runs\n            )\n        # Compute statistics", 1)
           old = '        recorder.record_artifact("data", "DATA/runs.json")\n'
-          new = (
-              '        recorder.record_artifact("data", "DATA/runs.json")\n'
-              '        if gateway_state_path is not None:\n'
-              '            recorder.record_artifact("gateway_state", "DATA/gateway_state.json")\n'
-          )
-          text = text.replace(old, new, 1)
+          if 'record_artifact("gateway_state"' not in text:
+              text = text.replace(old, old + '        if gateway_state_path is not None:\n            recorder.record_artifact("gateway_state", "DATA/gateway_state.json")\n', 1)
           old = "                    *trace_paths,\n                ],"
-          new = (
-              "                    *trace_paths,\n"
-              "                    *([gateway_state_path] if gateway_state_path is not None else []),\n"
-              "                ],"
-          )
-          if old not in text:
-              raise SystemExit("digest anchor not found")
-          text = text.replace(old, new, 1)
+          if "*([gateway_state_path]" not in text:
+              if old not in text:
+                  raise SystemExit("digest anchor not found")
+              text = text.replace(old, "                    *trace_paths,\n                    *([gateway_state_path] if gateway_state_path is not None else []),\n                ],", 1)
           old = '        artifacts["current_run"] = "DATA/current_run.json"\n'
-          new = (
-              '        artifacts["current_run"] = "DATA/current_run.json"\n'
-              '        if gateway_state_path is not None:\n'
-              '            artifacts["gateway_state"] = "DATA/gateway_state.json"\n'
-          )
-          text = text.replace(old, new, 1)
+          if 'artifacts["gateway_state"]' not in text:
+              text = text.replace(old, old + '        if gateway_state_path is not None:\n            artifacts["gateway_state"] = "DATA/gateway_state.json"\n', 1)
           workflow.write_text(text, encoding="utf-8")
 
           browser = Path("tests/browser/fullstack.spec.js")
           b = browser.read_text(encoding="utf-8")
-          b = b.replace(
-              "await expect(page.locator('#workflow-research-results')).toContainText('EXPLORATORY');",
-              "await expect(page.locator('#workflow-research-results')).toContainText('OPERATIONAL');",
-          )
-          b = b.replace(
-              "await expect(page.locator('.research-rq-card')).toHaveCount(0);",
-              "await expect(page.locator('.research-rq-card')).toHaveCount(1);",
-              1,
-          )
+          b = b.replace("await expect(page.locator('#workflow-research-results')).toContainText('EXPLORATORY');", "await expect(page.locator('#workflow-research-results')).toContainText('OPERATIONAL');", 1)
+          b = b.replace("await expect(page.locator('.research-rq-card')).toHaveCount(0);", "await expect(page.locator('.research-rq-card')).toHaveCount(1);", 1)
           browser.write_text(b, encoding="utf-8")
 
-          for filename in (
-              "research/preregistrations/PREREG-MSBA-E04.json",
-              "research/protocols/EXP_GEN_0021_OPERATIONAL_PROTOCOLS.json",
-          ):
+          for filename in ("research/preregistrations/PREREG-MSBA-E04.json", "research/protocols/EXP_GEN_0021_OPERATIONAL_PROTOCOLS.json"):
               path = Path(filename)
               raw = path.read_text(encoding="utf-8")
-              raw = raw.replace(
-                  '"checksum_mismatches", "admitted_symbol_rate", "task_accuracy"',
-                  '"checksum_mismatches", "admitted_symbol_rate", "exact_integrity_pass"',
-              )
+              raw = raw.replace('"checksum_mismatches", "admitted_symbol_rate", "task_accuracy"', '"checksum_mismatches", "admitted_symbol_rate", "exact_integrity_pass"')
               path.write_text(raw, encoding="utf-8")
 
           todo = Path("docs/08-roadmap/TODO.md")
@@ -109,15 +72,16 @@ jobs:
           start = t.find(heading)
           if start < 0:
               raise SystemExit("MSBA TODO heading not found")
-          next_heading = t.find("\n## ", start + len(heading))
-          if next_heading < 0:
-              next_heading = len(t)
-          block = t[start:next_heading]
-          block = block.replace("- [ ] ", "- [x] ")
-          t = t[:start] + block + t[next_heading:]
-          todo.write_text(t, encoding="utf-8")
+          end = t.find("\n## ", start + len(heading))
+          if end < 0:
+              end = len(t)
+          block = t[start:end].replace("- [ ] ", "- [x] ")
+          todo.write_text(t[:start] + block + t[end:], encoding="utf-8")
           PY
-          python -m black src/dashboard/experiment_workflow.py
-          git add src/dashboard/experiment_workflow.py tests/browser/fullstack.spec.js research/preregistrations/PREREG-MSBA-E04.json research/protocols/EXP_GEN_0021_OPERATIONAL_PROTOCOLS.json docs/08-roadmap/TODO.md
-          git commit -m "feat(msba): complete end-to-end experiment workflow" || true
+          python -m pip install -e ".[dev]"
+          python -m black src/dashboard/experiment_workflow.py src/experiments/msba_lab.py src/embodiment/peripheral_adapters.py src/research/followup_experiments.py tests/test_msba_experiment_runner.py
+          python scripts/generate_baseline.py
+          git rm .github/workflows/msba-finalize-branch.yml
+          git add src/dashboard/experiment_workflow.py tests/browser/fullstack.spec.js research/preregistrations/PREREG-MSBA-E04.json research/protocols/EXP_GEN_0021_OPERATIONAL_PROTOCOLS.json docs/08-roadmap/TODO.md tests/test_baseline.json
+          git commit -m "feat(msba): complete full-stack experiment runner and baseline"
           git push origin HEAD:codex/msba-experiment-runner
