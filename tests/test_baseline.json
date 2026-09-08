@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "1c2d1803211a6c4a24fc9dd623e07b1a0b6b52a0",
-  "tested_tree_digest": "4b884c10fa8e8566cfba741728a801a883b2f1553343deb1857acebe6c10d5b9",
+  "tested_commit": "e88832ae5abc45a0084a8012d7a49eed46d8f78c",
+  "tested_tree_digest": "94ef0b6dfa0713fec3211da6d82355e9ad088edbb0f2f6170b5784e2295b14c2",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T13:26:43.501108+00:00",
+  "timestamp": "2026-09-08T13:34:57.804527+00:00",
   "python": "3.13.14",
   "platform": "Windows-11-10.0.26200-SP0",
   "source_unchanged_during_run": true,
@@ -132,7 +132,7 @@
     "src/dashboard/static/wesen.js": "a90a705b3da22aa1fb2453be59620462def477d9d8ff68bfb97858824b57da27",
     "src/dashboard/static/workspace-panels.js": "1ee152bed3a3cb89366caeb2a4b510e25e511a0923b4206a927ac876d4a4f248",
     "src/dashboard/structural_api.py": "2c77a69bac1b8cc531adafb7f9a148280d3b0ead8431eefcc8fe8ac43eb0044a",
-    "src/dashboard/verification.py": "1813a5729d72c0a20cb55f06556cecf58c8bb31082e27b08fc263da2ac9dd39a",
+    "src/dashboard/verification.py": "843c0d3a8bbc873547d0f9344714f22a06708c4487222bc4b57763062a222c82",
     "src/diagnostics/__init__.py": "7d98999f8b37bf4e78977bf69c76f710612c9e3d81316ba864ddeed3c1f6dbe0",
     "src/diagnostics/propagation.py": "55819224277c616e8b3430b76e1fdeb601d628a41991f0d7ec16144ffde80603",
     "src/diagnostics/stimulus.py": "042f1a597b7e1e65e35e79d7450f55d39dfc626cf499c205a4b78b3701a3cede",
