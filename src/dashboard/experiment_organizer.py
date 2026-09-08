@@ -29,14 +29,31 @@ class ExperimentOrganizerService:
             data = cast(dict[str, Any], raw)
             results_value = data.get("results", [])
             results = (
-                [cast(dict[str, Any], item) for item in results_value if isinstance(item, dict)]
+                [
+                    cast(dict[str, Any], item)
+                    for item in results_value
+                    if isinstance(item, dict)
+                ]
                 if isinstance(results_value, list)
                 else []
             )
-            completed = int(data.get("completed", sum(item.get("status") == "completed" for item in results)))
+            completed = int(
+                data.get(
+                    "completed",
+                    sum(item.get("status") == "completed" for item in results),
+                )
+            )
             failed = int(data.get("failed", len(results) - completed))
-            status = "completed" if completed > 0 and failed == 0 else "partial" if completed else "failed"
-            assessment = "HUMAN_REVIEW_REQUIRED" if status == "completed" else "EXECUTION_REVIEW_REQUIRED"
+            status = (
+                "completed"
+                if completed > 0 and failed == 0
+                else "partial" if completed else "failed"
+            )
+            assessment = (
+                "HUMAN_REVIEW_REQUIRED"
+                if status == "completed"
+                else "EXECUTION_REVIEW_REQUIRED"
+            )
             series.append(
                 {
                     "series_id": str(data.get("workflow_id") or path.stem),

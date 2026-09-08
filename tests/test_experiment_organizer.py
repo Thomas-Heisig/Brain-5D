@@ -22,8 +22,16 @@ def test_series_summary_keeps_child_results_and_review_boundary(tmp_path: Path) 
                 "completed": 2,
                 "failed": 0,
                 "results": [
-                    {"protocol": "protocol_a", "experiment_id": "EXP-SERIES-0001-01", "status": "completed"},
-                    {"protocol": "protocol_b", "experiment_id": "EXP-SERIES-0001-02", "status": "completed"},
+                    {
+                        "protocol": "protocol_a",
+                        "experiment_id": "EXP-SERIES-0001-01",
+                        "status": "completed",
+                    },
+                    {
+                        "protocol": "protocol_b",
+                        "experiment_id": "EXP-SERIES-0001-02",
+                        "status": "completed",
+                    },
                 ],
             }
         ),
