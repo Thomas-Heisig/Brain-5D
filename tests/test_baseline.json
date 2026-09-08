@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "tested_commit": "d9420d4bc5032d81c35a9e0cb169f00e97e2a28c",
+  "tested_commit": "2db6be37c4e5aa30e526b34da80777f4d878abec",
   "tested_tree_digest": "6d8a0b833ebd69d45d367baef7fcff3ee1978d45fd68394cba02046078756555",
   "tree_digest_paths": [
     "src/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T06:07:31.881084+00:00",
+  "timestamp": "2026-09-08T06:12:22.885265+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -25,16 +25,13 @@
     "command": "python -m pytest tests/ -q -ra --junitxml=<temporary-report>",
     "status": "passed",
     "exit_code": 0,
-    "passed": 982,
+    "passed": 984,
     "failed": 0,
     "errors": 0,
-    "skipped": 2,
+    "skipped": 0,
     "xfailed": 0,
     "xpassed": 0,
-    "skipped_reasons": [
-      "/home/runner/work/Brain-5D/Brain-5D/tests/test_b5d_storage.py:380: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test",
-      "/home/runner/work/Brain-5D/Brain-5D/tests/test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable"
-    ]
+    "skipped_reasons": []
   },
   "source_files": {
     "src/__init__.py": "d4338ff560ef4f0b3c7ef71a523cb7ed096448286b8643966ec94af43b8ffb6e",
