@@ -50,9 +50,17 @@ def _yaml_ids(path: Path) -> set[str]:
     return ids
 
 
+def _registry_ids(prefix: str) -> set[str]:
+    registry = ROOT / "registry"
+    ids: set[str] = set()
+    for path in sorted(registry.glob(f"{prefix}*.yaml")):
+        ids.update(_yaml_ids(path))
+    return ids
+
+
 def test_followup_questions_and_hypotheses_are_canonical() -> None:
-    questions = _yaml_ids(ROOT / "registry" / "questions.yaml")
-    hypotheses = _yaml_ids(ROOT / "registry" / "hypotheses.yaml")
+    questions = _registry_ids("questions")
+    hypotheses = _registry_ids("hypotheses")
     assert set(EXPECTED).issubset(questions)
     assert {value[0] for value in EXPECTED.values()}.issubset(hypotheses)
 
