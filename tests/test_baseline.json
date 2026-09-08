@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "e88832ae5abc45a0084a8012d7a49eed46d8f78c",
-  "tested_tree_digest": "94ef0b6dfa0713fec3211da6d82355e9ad088edbb0f2f6170b5784e2295b14c2",
+  "tested_commit": "00397034358b10f39eef40551bacd0e4b518b314",
+  "tested_tree_digest": "35ff80655b1d65ba67a579a6d45267a17793a69bc15a60d5a46b43bb583d25a6",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T13:34:57.804527+00:00",
+  "timestamp": "2026-09-08T13:45:01.054735+00:00",
   "python": "3.13.14",
   "platform": "Windows-11-10.0.26200-SP0",
   "source_unchanged_during_run": true,
@@ -132,7 +132,7 @@
     "src/dashboard/static/wesen.js": "a90a705b3da22aa1fb2453be59620462def477d9d8ff68bfb97858824b57da27",
     "src/dashboard/static/workspace-panels.js": "1ee152bed3a3cb89366caeb2a4b510e25e511a0923b4206a927ac876d4a4f248",
     "src/dashboard/structural_api.py": "2c77a69bac1b8cc531adafb7f9a148280d3b0ead8431eefcc8fe8ac43eb0044a",
-    "src/dashboard/verification.py": "843c0d3a8bbc873547d0f9344714f22a06708c4487222bc4b57763062a222c82",
+    "src/dashboard/verification.py": "067bdbad17768828ba97e5cea638716a8b37f3ddb3a185afa13a69d0d39d54e6",
     "src/diagnostics/__init__.py": "7d98999f8b37bf4e78977bf69c76f710612c9e3d81316ba864ddeed3c1f6dbe0",
     "src/diagnostics/propagation.py": "55819224277c616e8b3430b76e1fdeb601d628a41991f0d7ec16144ffde80603",
     "src/diagnostics/stimulus.py": "042f1a597b7e1e65e35e79d7450f55d39dfc626cf499c205a4b78b3701a3cede",
@@ -432,7 +432,7 @@
     "tests/test_signal_processing_contracts.py": "0f621943d463b9bb1602b6b9ea513f6389b8246f7e411f036961cad838c49800",
     "tests/test_single_listener.py": "09082b585f5f89bc9e6db649bf009bd4dffc1531cd0b3a6c5c18076c08260368",
     "tests/test_single_listener_linux_parser.py": "f00df765594b2f002dd8a28000e05fc550cd2c57a923e85b9f84d334d704244d",
-    "tests/test_source_digest.py": "e10b551c4200b09e0ac0944c4fe9b7780f31d1a1e2543e3b0308d8e9b615397b",
+    "tests/test_source_digest.py": "23645e38b424b706c234f5fb962e452ac2c133e3f24cb1fc7ee785445b6f96ff",
     "tests/test_spatial_index.py": "a7b4d03b7dbfb7fe51a869291859d50d4ecb72c528e8a06be90e36e2f1f2f5f5",
     "tests/test_stdp_integration.py": "6969a4da6312f1621e63dd9b305bb40d42887a805b0ec56e960b928d9b466f3e",
     "tests/test_stdp_isolated.py": "726e30bfd9bc568b67b65676b16ff8c391547b3ada19cc62604b4c9511d44429",
