@@ -28,7 +28,11 @@ def test_exact_namespace_is_scoped_to_its_defining_module(
         other.parent.mkdir(parents=True, exist_ok=True)
         other.write_text(prefix, encoding="utf-8")
     registry = ResearchRegistry(registry_dir).load_all()
-    allow = {"historical_only": {}, "test_fixtures": {}, "publication_proposals": {}}
+    allow: dict[str, dict[str, str]] = {
+        "historical_only": {},
+        "test_fixtures": {},
+        "publication_proposals": {},
+    }
     result = report_data(audit_research_catalog(tmp_path, registry), allow)
     assert result["status"] == ("clean" if extra_path is None else "failed")
     assert (prefix in result["namespace_prefixes"]) == (extra_path is None)
@@ -37,9 +41,7 @@ def test_exact_namespace_is_scoped_to_its_defining_module(
     assert registry.hypotheses == {}
 
 
-def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(
-    tmp_path: Path,
-) -> None:
+def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(tmp_path: Path) -> None:
     identifier = "RQ-" + "EPI-19999"
     registry_dir = tmp_path / "research/registry"
     registry_dir.mkdir(parents=True)
@@ -47,7 +49,11 @@ def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(
     source.parent.mkdir(parents=True)
     source.write_text(identifier, encoding="utf-8")
     registry = ResearchRegistry(registry_dir).load_all()
-    allow = {"historical_only": {}, "test_fixtures": {}, "publication_proposals": {}}
+    allow: dict[str, dict[str, str]] = {
+        "historical_only": {},
+        "test_fixtures": {},
+        "publication_proposals": {},
+    }
     result = report_data(audit_research_catalog(tmp_path, registry), allow)
     assert result["status"] == "failed"
     assert identifier in result["disallowed_missing"]

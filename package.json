@@ -1,5 +1,5 @@
 {
-  "name": "brain5d-dashboard-e2e",
+  "name": "mhrn-dashboard-e2e",
   "private": true,
   "scripts": {
     "test:e2e": "playwright test"
