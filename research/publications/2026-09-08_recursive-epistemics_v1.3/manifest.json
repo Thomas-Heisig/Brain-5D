@@ -70,9 +70,13 @@
   "new_empirical_findings": false,
   "revision_scope": "naming_translation_and_scope_clarification",
   "files": {
+    "CITATION.bib": {
+      "sha256": "461736590738f1b5d2e83dc1d3b554925bec21f4c35e87ce0c6eca2719382076",
+      "size": 583
+    },
     "CITATION.cff": {
-      "sha256": "76e051fff2a3ea48b746adf33d6d7bd779a1aec2f2667c124c7ac0ed9f32e097",
-      "size": 571
+      "sha256": "df849cd21304d25c50b51b2b1bad0f346b0963eb4600a6df5722ba95f02973af",
+      "size": 1112
     },
     "README.md": {
       "sha256": "6e50cce46250b66547e97e33445db60de10281eeedc9b6671376044c38dfb368",

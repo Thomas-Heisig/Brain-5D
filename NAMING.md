@@ -42,3 +42,5 @@ The directory on Windows may be renamed to `MHRN` after processes and editors us
 GitHub, “Renaming a repository”: https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository . Hugging Face, “Create and manage a repository”, `move_repo`: https://huggingface.co/docs/huggingface_hub/guides/repository . Consulted 2026-09-08; the actual operation is documented separately from the intended configuration.
 
 The migration inventory is a dated byte-preservation record, not a ban on future canonical research updates. Persistent checks protect the historical publication editions; legitimate future registry and run changes remain possible.
+
+Preferred configuration import: `from src.core.network import MHRNConfig`. The historical `Brain5DConfig` name refers to the identical class. The current publication package includes a CFF record with a report-type preferred citation and a matching BibTeX citation. Audit inventories are split into bounded files; they preserve the full migration record.

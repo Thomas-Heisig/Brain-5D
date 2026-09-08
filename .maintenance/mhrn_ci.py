@@ -59,6 +59,8 @@ def main() -> None:
     browser.write_text(text, encoding="utf-8")
     # Workflow files are committed through the authorized connector, not the runner token.
     subprocess.run(["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", ".github/workflows"], check=True)
+    # Workflow files are committed through the authorized connector, not the runner token.
+    subprocess.run(["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", ".github/workflows"], check=True)
     run("format", [sys.executable, "-m", "black", "src", "tests", "scripts"])
     run("lint_fix", [sys.executable, "-m", "ruff", "check", "--fix", "src", "tests", "scripts"])
     run("format_check", [sys.executable, "-m", "black", "--check", "src", "tests", "scripts"])

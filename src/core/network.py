@@ -1197,3 +1197,6 @@ __all__ = [
     "PostStepHook",
     "ConfigDict",
 ]
+
+# Preferred public name; preserve class identity for old configurations.
+MHRNConfig = Brain5DConfig

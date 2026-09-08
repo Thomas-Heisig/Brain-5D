@@ -113,3 +113,25 @@ def test_no_scientific_promotion_by_renaming() -> None:
     )
     assert manifest["new_empirical_findings"] is False
     assert manifest["automatic_evidence_promotion"] is False
+
+
+def test_configuration_alias_preserves_existing_class_identity() -> None:
+    from src.core.network import Brain5DConfig, MHRNConfig
+
+    assert MHRNConfig is Brain5DConfig
+    assert MHRNConfig(dimensions=(2, 2, 2, 2, 2)).dimensions == (2, 2, 2, 2, 2)
+
+
+def test_publication_citation_distinguishes_package_from_treatise() -> None:
+    folder = ROOT / "research/publications/2026-09-08_recursive-epistemics_v1.3"
+    citation = json.loads((folder / "CITATION.cff").read_text(encoding="utf-8"))
+    identity = json.loads((ROOT / "project_identity.json").read_text(encoding="utf-8"))
+    assert citation["type"] == "software"
+    assert citation["preferred-citation"]["type"] == "report"
+    assert (
+        citation["preferred-citation"]["title"] == identity["publication"]["title_en"]
+    )
+    assert (
+        citation["preferred-citation"]["abstract"]
+        == identity["publication"]["subtitle_de"]
+    )

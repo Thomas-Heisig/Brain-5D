@@ -10341,3 +10341,12 @@ iframe.file-renderer-media { width: 100%; height: 65vh; border: 0; }
 .brain5d-primary-nav { top: var(--dashboard-topbar-height, 0px) !important; }
 html { scroll-padding-top: var(--mhrn-sticky-offset, 180px); }
 [data-workspace-view], .tab-content button, .tab-content a { scroll-margin-top: var(--mhrn-sticky-offset, 180px); }
+
+/* MHRN contextual navigation clearance: keep controls below the taller title
+ * and primary navigation, including when the page was opened from the footer. */
+#tab-gate > .workspace-view-tabs {
+  position: sticky;
+  top: var(--mhrn-sticky-offset, 200px);
+  z-index: 12;
+  background: var(--shell-surface-strong, var(--panel)) !important;
+}

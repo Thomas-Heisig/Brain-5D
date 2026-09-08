@@ -53,6 +53,7 @@ def main() -> None:
             "preregistrations",
             "schemas",
             "publications",
+            "ethics",
         ):
             shutil.copytree(ROOT / "research" / name, research / name)
         shutil.copytree(ROOT / "configs", root / "configs")

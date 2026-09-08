@@ -18,7 +18,7 @@ def main() -> None:
     path = ROOT / ".maintenance/mhrn_ci.py"
     text = path.read_text(encoding="utf-8")
     needle = '    run("format", [sys.executable, "-m", "black", "src", "tests", "scripts"])'
-    if "workflow files are committed through" not in text:
+    if "Workflow files are committed through" not in text:
         text = text.replace(needle, '    # Workflow files are committed through the authorized connector, not the runner token.\n    subprocess.run(["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", ".github/workflows"], check=True)\n' + needle)
     path.write_text(text, encoding="utf-8")
     # Prevent the expanded bilingual header from covering sticky navigation.
