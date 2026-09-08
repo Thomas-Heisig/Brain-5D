@@ -39,7 +39,7 @@ The package version describes software, not validated cognition. GitHub main is 
 
 ## Live dashboard Space
 
-The interactive operator and research dashboard is published separately as a Docker Space:
+The interactive operator and research dashboard is published separately as a Docker Space. The current Hugging Face Space still uses its legacy repository slug for continuity:
 
 https://huggingface.co/spaces/superdigger/Brain-5D-Space
 
@@ -89,7 +89,7 @@ Gateway plasticity is **disabled by default**. Pipeline reachability or area reg
 ## Quick start
 
 ```bash
-git clone https://github.com/Thomas-Heisig/Brain-5D.git MHRN
+git clone https://github.com/Thomas-Heisig/MHRN.git
 cd MHRN
 python -m venv .venv
 source .venv/bin/activate
@@ -154,9 +154,9 @@ MIT License — see `LICENSE`.
   title   = {Multi-Scale Homeostatic Recurrence Network (MHRN)},
   year    = {2026},
   version = {0.5.0a7},
-  url     = {https://github.com/Thomas-Heisig/Brain-5D},
+  url     = {https://github.com/Thomas-Heisig/MHRN},
   license = {MIT}
 }
 ```
 
-GitHub: https://github.com/Thomas-Heisig/Brain-5D
+GitHub: https://github.com/Thomas-Heisig/MHRN
