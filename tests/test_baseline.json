@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "93c0b601325979e7d25938f7613353a548872f36",
-  "tested_tree_digest": "db0bcdb1b729923b9b6038102427d5a36d8ad411f5e63e3dc6f385a66e717a40",
+  "tested_commit": "dec64f64e19a5da029aa6806964f081d13e9db1f",
+  "tested_tree_digest": "74fce857393239fa4dbe9b55c9dee0411fb7c8efa788f730bd301a1ae825e16f",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,20 +12,20 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T08:48:12.340224+00:00",
+  "timestamp": "2026-09-08T11:56:00.402014+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
   "full_collection": {
     "status": "passed",
-    "collected": 997,
+    "collected": 999,
     "collection_errors": 0
   },
   "full_suite": {
     "command": "python -m pytest tests/ -q -ra --junitxml=<temporary-report>",
     "status": "passed",
     "exit_code": 0,
-    "passed": 995,
+    "passed": 997,
     "failed": 0,
     "errors": 0,
     "skipped": 2,
@@ -109,7 +109,7 @@
     "src/dashboard/static/speech-reader.js": "c96605baa5a0b0184d621d13d20bee1f58a3bbcdba8910129b70168da9ee2f58",
     "src/dashboard/static/state-store.js": "bb559a0439bf93f1bf27f06ce6b2dee2ae6b5d249f5b240b743535daf1818363",
     "src/dashboard/static/structural-proposal-panel.js": "a4f091a537c1f9bfea1631805914f890bb316fc2f4212759e44c05d509446731",
-    "src/dashboard/static/styles.css": "06b02522bb0c6163bbf0faa6e49b274783abd836fbaddf7e252655ca325e00a6",
+    "src/dashboard/static/styles.css": "5038a2e2e217d4426d8e3c7a6c1eef9262e8c8e8b0de0dd470d5d1ccee14b677",
     "src/dashboard/static/visualizations/dynamics.js": "375dad878312b10552b89d0b1683180b8c39bdf3b2889e0ca2a3576ca55250be",
     "src/dashboard/static/visualizations/heatmap.js": "fc2d723b514aa3809253c4e389ea0516805439fbf79c95dd7b6f2b2332c7da54",
     "src/dashboard/static/visualizations/inspector.js": "fe72907a3f4565704e8f41d6afb7e159f8cd5f48bfcf7a59db32437a7fba7b94",
@@ -361,6 +361,7 @@
     "tests/test_experiment_validity.py": "2b56f4760c674568b66ea0c6710999897b12a78ffdf39442afc204f32f4ad1d9",
     "tests/test_file_rendering.py": "0fc54b9fe1dbfce047b771b0a7e8fe99682ce8207fc00986b6c90dcd6664b445",
     "tests/test_followup_experiment_failures.py": "dfc56d72db50c2edf7d45b85b057de0171d02b85e8806d028d3621cfc7411f67",
+    "tests/test_gate_frontend_layout.py": "f25fe50e40d3b2591a7ebd0a391b884c55eb49bf759337e7e439fb6cfe7877be",
     "tests/test_gate_status.py": "6ea5d162a667ecc4897748a3731dcf6c2ac8cc51271af5821542fa238551f8e4",
     "tests/test_golden_chain.py": "e6beaefb0fb66b6dc6e670b8309a43f7ab91b33641cc3e7baec2f5a61b19acf0",
     "tests/test_heatmap.py": "d6ed96dafc9cde4f7e8612ff57c58786681cfb613dff121117ad3c365a87ce2c",
