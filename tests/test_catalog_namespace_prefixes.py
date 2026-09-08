@@ -10,7 +10,9 @@ from src.research.registry import ResearchRegistry
 
 
 @pytest.mark.parametrize("prefix", ["RQ-" + "EPI-1", "H-" + "EPI-1"])
-@pytest.mark.parametrize("extra_path", [None, "docs/claim.md", "research/protocols/run.json"])
+@pytest.mark.parametrize(
+    "extra_path", [None, "docs/claim.md", "research/protocols/run.json"]
+)
 def test_exact_namespace_is_scoped_to_its_defining_module(
     tmp_path: Path, prefix: str, extra_path: str | None
 ) -> None:
@@ -35,7 +37,9 @@ def test_exact_namespace_is_scoped_to_its_defining_module(
     assert registry.hypotheses == {}
 
 
-def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(tmp_path: Path) -> None:
+def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(
+    tmp_path: Path,
+) -> None:
     identifier = "RQ-" + "EPI-19999"
     registry_dir = tmp_path / "research/registry"
     registry_dir.mkdir(parents=True)

@@ -51,6 +51,17 @@ def report_data(
     audit: ResearchCatalogAudit, allow_list: dict[str, dict[str, str]]
 ) -> dict[str, Any]:
     missing = set(audit.missing_questions) | set(audit.missing_hypotheses)
+    # Namespace selectors are not entity IDs. Keep this exception exact and
+    # confined to the defining module; a matching reference elsewhere fails.
+    from src.research.cognition_governance import HYPOTHESIS_PREFIXES, PREFIXES
+
+    declared_prefixes = set(PREFIXES) | set(HYPOTHESIS_PREFIXES)
+    namespace_prefixes = {
+        identifier
+        for identifier in missing & declared_prefixes
+        if _references_for(audit, identifier)
+        == ["src/research/cognition_governance.py"]
+    }
     historical = set(allow_list["historical_only"])
     fixtures = set(allow_list["test_fixtures"])
     proposals = set(allow_list.get("publication_proposals", {}))
@@ -64,7 +75,9 @@ def report_data(
         )
     }
     stale_allow_list = sorted((historical | fixtures | proposals) - missing)
-    disallowed = sorted(missing - historical - fixtures - scoped_proposals)
+    disallowed = sorted(
+        missing - historical - fixtures - scoped_proposals - namespace_prefixes
+    )
     return {
         "status": "clean" if not disallowed and not audit.link_issues else "failed",
         "audit": {
@@ -97,6 +110,13 @@ def report_data(
             }
             for identifier in sorted(missing & scoped_proposals)
         },
+        "namespace_prefixes": {
+            identifier: {
+                "reason": "Exact declared governance family selector, not a research entity; allowed only in its defining module.",
+                "references": _references_for(audit, identifier),
+            }
+            for identifier in sorted(namespace_prefixes)
+        },
         "disallowed_missing": {
             identifier: _references_for(audit, identifier) for identifier in disallowed
         },
@@ -125,6 +145,7 @@ def _markdown_report(data: dict[str, Any]) -> str:
     for title, key in (
         ("Historical/design references", "historical_only"),
         ("Test fixtures", "test_fixtures"),
+        ("Code namespace selectors - not research entities", "namespace_prefixes"),
         ("Publication proposals - not registered or executed", "publication_proposals"),
     ):
         lines.extend([f"## {title}", ""])
