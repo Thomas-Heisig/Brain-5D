@@ -145,6 +145,15 @@ test("batch dialog edits per-protocol options, reports completion, and updates f
   expect(batchResponse.body.protocol_options.browser_protocol).toEqual({ seeds: "21-23", ticks: 48 });
 });
 
+test("research help explains operational and exploratory status", async ({ page }) => {
+  await openDashboard(page);
+  await page.locator("#help-toggle").click();
+  await expect(page.locator("#context-help-title")).toHaveText("Research Workspace");
+  await expect(page.locator("#context-help-text")).toContainText("Operational bedeutet");
+  await expect(page.locator("#context-help-text")).toContainText("Exploratory bedeutet");
+  await expect(page.locator("#context-help-text")).toContainText("niemals automatisch");
+});
+
 test("navigation and box-state controls remain usable", async ({ page }) => {
   await openDashboard(page);
   await page.locator('[data-tab="network"]').evaluate((button) => button.click());

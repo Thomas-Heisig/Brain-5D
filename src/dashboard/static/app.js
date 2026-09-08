@@ -2373,7 +2373,7 @@ function setupGlobalChrome() {
     overview: ['System Overview', 'Verdichtet Runtime, Health, wissenschaftlichen Status und die wichtigsten Messwerte.'],
     network: ['Network Workbench', 'Untersucht reale Live-Dynamik, Projektionen, Populationen, Neuronen und Synapsen. Auflösungsregler steuern die Backend-Aggregation.'],
     control: ['Control Workbench', 'Steuert Ticks, Loop, Snapshot, Experiment-Sessions und freigabepflichtige Strukturänderungen.'],
-    research: ['Research Workspace', 'Durchsucht Registry, Experimente, Evidenz, Reports und Dokumentation aus dem Repository.'],
+    research: ['Research Workspace', 'Durchsucht Registry, Experimente, Evidenz, Reports und Dokumentation aus dem Repository. Operational bedeutet: Forschungsfrage, Hypothese, Bedingungen, Seeds, Ticks und Auswertung sind in einem eingefrorenen, präregistrierten Research Contract festgelegt. Exploratory bedeutet: Der Lauf ist technisch protokolliert und darf Fragen oder Folgeexperimente vorbereiten, erfüllt aber keinen eingefrorenen Confirmatory Contract. Exploratory-Ergebnisse werden niemals automatisch als wissenschaftliche Evidenz promotet; beide Statuswerte sagen nichts allein über die Wahrheit einer Hypothese aus.'],
     gate: ['Release Workspace', 'Trennt Scientific Gate, Source-CI und Release Readiness. Stale bedeutet: Source wurde seit der Evidenz verändert.'],
     settings: ['Scientific Settings', 'Änderungen werden zunächst als Pending Change vorgemerkt. S markiert wissenschaftlich sensitive Werte, R einen notwendigen Neustart.'],
     embodiment: ['Embodiment Workspace', 'Zeigt ausschließlich publizierte Sensor-, Aktuator-, Episoden- und Reward-Metriken. Unconfigured ist kein simulierter Zustand.'],
