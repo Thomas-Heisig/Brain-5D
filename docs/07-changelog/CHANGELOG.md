@@ -1883,3 +1883,10 @@
 
 - Added bounded media/PDF metadata and local-only optional Graphviz/PlantUML SVG previews.
 - Added DOCX structural markers, RIS export, short/APA/IEEE citation formatting and split editing with conflict comparison.
+
+### 2026-09-08 — Research Review Inbox and v1.2 roadmap
+
+- Added `GET /api/research/reviews` to aggregate outstanding Human Reviews.
+- Added Research UI controls to record reviewer identity, mandatory comments and accept/reject decisions through append-only review files.
+- Review completion never grants scientific evidence automatically.
+- Extended the version roadmap through v1.2 with explicit reproducibility, replication, embodiment, memory and governed-adaptation milestones.

@@ -602,3 +602,41 @@ Files such as `ROADMAP_ALPHA4.md`, `ROADMAP_ALPHA5*.md`, `ROADMAP_V*.md` and spr
 - Added bounded media/PDF metadata and optional local-only Graphviz/PlantUML rendering.
 - Added DOCX structural markers, RIS/APA/IEEE citation output and a responsive split editor with live preview/conflict diff.
 - Human-review/EVID promotions remain deliberately gated and are never auto-approved by CI or AI tooling.
+
+## Version roadmap — v0.6 to v1.2
+
+### v0.6 — Scaling & deterministic performance
+- Larger sparse networks and bounded storage/telemetry.
+- Reproducible performance benchmarks across supported Python versions.
+- Runtime frequency controls, compact run summaries and deterministic resume.
+
+### v0.7 — Knowledge & learning experiments
+- Operational learning protocols with registered controls and independent seeds.
+- Interference, retention, transfer and retrieval experiments.
+- Evidence-ready statistics artifacts without model-generated quantitative claims.
+
+### v0.8 — Embodiment & Neural Symbiosis
+- MSBA peripheral adapters remain experiment-only until controls validate them.
+- Sensor/actuator contracts, lesion/noise studies and resource-allocation experiments.
+- No production peripheral activation without explicit governance gates.
+
+### v0.9 — Memory, world model & self-model
+- Bounded episodic/semantic memory experiments.
+- World-model prediction, calibration and counterfactual evaluation.
+- Self-model observables treated as operational variables, not consciousness claims.
+
+### v1.0 — Reproducible research platform
+- Stable public APIs and artifact schemas.
+- Research Review Inbox, evidence workflow and publication-integrity checks integrated end to end.
+- Reproducible release bundles, migration notes and compatibility guarantees.
+
+### v1.1 — Replication & multi-system validation
+- Independent replication packages and cross-hardware reproducibility studies.
+- Comparative baselines against reduced-dimensional, shuffled and non-neural controls.
+- External adapter/provider compatibility matrix with provenance hashes.
+
+### v1.2 — Governed adaptive system
+- Preregistered adaptive allocation, structural growth and peripheral plasticity behind explicit review gates.
+- Human-auditable policy/decision ledger for adaptive system changes.
+- Long-horizon stability, rollback, safety isolation and failure-recovery experiments.
+- Production enablement remains opt-in and requires validated controls plus human approval.

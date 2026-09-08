@@ -329,3 +329,7 @@ The [current treatise](research/publications/README.md) integrates a [38-topic c
 ## Full-stack File Viewer completion — 2026-09-08
 
 The repository File Viewer is the canonical renderer for Dashboard, Research and Chat file cards. It now includes bounded media metadata, bounded PDF metadata/text when local tools are available, optional local Graphviz/PlantUML-to-SVG conversion, DOCX page/section markers, RIS export with selectable citation styles, and a responsive split editor with live preview and optimistic-lock conflict diff. Scientific artifacts remain read-only and local converters never upload source material.
+
+### Research Review Inbox
+
+Research now includes a review inbox for open Human Reviews. The dashboard lists pending review targets and lets a human reviewer record reviewer identity, an accept/reject decision and mandatory comments. Review records are append-only and do not automatically promote artifacts to scientific evidence.

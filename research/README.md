@@ -227,3 +227,9 @@ Die Research-Kategorie `publications` enthaelt Word, Markdown, Literatur, Forsch
 ## Kognition, Bewusstseinskritik und vorsorgliche Ethik
 
 [Programm und Messgrenzen](protocols/COGNITION_CONSCIOUSNESS.md), [22 kanonische Fragen](registry/questions.cognition.yaml), [Hypothesen](registry/hypotheses.cognition.yaml), [38 Kritikthemen](critique/CONSCIOUSNESS_CRITIQUE.md), [Ethikrichtlinie](ethics/AI_WELFARE_POLICY.md), [Quellennutzung](literature/COGNITION_SOURCES.md), [aktuelle Abhandlung](publications/README.md). Die neue Batterie hat prospektive Entwürfe und getestete Instrumente, aber keine validierten nativen Adapter. Geschützte Starts und automatische EVID-Promotion sind blockiert; alte DATA/EVID bleiben unverändert.
+
+## Human Review Inbox
+
+The Research dashboard exposes an explicit Human Review Inbox through `GET /api/research/reviews`. It aggregates open AIRR and explicitly review-blocked artifacts. A reviewer must provide identity, decision and comments. Decisions are persisted only through the existing append-only review writers and therefore never rewrite the reviewed artifact or automatically create scientific evidence.
+
+The UI is intended to make review completion operationally simple without weakening epistemic controls: `accepted_as_interpretation` means the human accepts an interpretation record, not that a hypothesis or research question is confirmed. Evidence promotion remains a separate, explicit workflow.
