@@ -28,7 +28,7 @@ Preferred reporting path:
 
 Repository security page:
 
-https://github.com/Thomas-Heisig/Brain-5D/security
+https://github.com/Thomas-Heisig/MHRN/security
 
 Please include:
 
