@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import importlib
 import importlib.metadata
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -111,48 +112,56 @@ def run_embedding_job(
                 "perplexity must be greater than 0 and below the point count"
             )
         try:
-            from sklearn.manifold import TSNE
+            tsne_class = importlib.import_module("sklearn.manifold").TSNE
         except ImportError as exc:
             raise EmbeddingJobError(
                 "t-SNE requires the optional analysis dependencies"
             ) from exc
-        transformed = TSNE(
-            n_components=2,
-            perplexity=perplexity,
-            init="pca",
-            learning_rate="auto",
-            random_state=random_state,
-            max_iter=750,
-        ).fit_transform(features)
+        transformed = np.asarray(
+            tsne_class(
+                n_components=2,
+                perplexity=perplexity,
+                init="pca",
+                learning_rate="auto",
+                random_state=random_state,
+                max_iter=750,
+            ).fit_transform(features),
+            dtype=np.float64,
+        )
         clusters = [None] * len(neuron_ids)
         algorithm_version = _package_version("scikit-learn")
     elif method == "umap":
         if n_neighbors < 2 or n_neighbors >= len(neuron_ids):
             raise EmbeddingJobError("n_neighbors must be between 2 and the point count")
         try:
-            from umap import UMAP
+            umap_class = importlib.import_module("umap").UMAP
         except ImportError as exc:
             raise EmbeddingJobError(
                 "UMAP requires the optional analysis dependencies"
             ) from exc
-        transformed = UMAP(
-            n_components=2,
-            n_neighbors=n_neighbors,
-            random_state=random_state,
-            transform_seed=random_state,
-        ).fit_transform(features)
+        transformed = np.asarray(
+            umap_class(
+                n_components=2,
+                n_neighbors=n_neighbors,
+                random_state=random_state,
+                transform_seed=random_state,
+            ).fit_transform(features),
+            dtype=np.float64,
+        )
         clusters = [None] * len(neuron_ids)
         algorithm_version = _package_version("umap-learn")
     else:
         if n_clusters < 2 or n_clusters > len(neuron_ids):
             raise EmbeddingJobError("n_clusters must be between 2 and the point count")
         try:
-            from sklearn.cluster import KMeans
+            kmeans_class = importlib.import_module("sklearn.cluster").KMeans
         except ImportError as exc:
             raise EmbeddingJobError(
                 "Cluster export requires the optional analysis dependencies"
             ) from exc
-        model = KMeans(n_clusters=n_clusters, n_init=10, random_state=random_state)
+        model = kmeans_class(
+            n_clusters=n_clusters, n_init=10, random_state=random_state
+        )
         clusters = [int(value) for value in model.fit_predict(features)]
         transformed = features[:, :2]
         algorithm_version = _package_version("scikit-learn")
@@ -219,5 +228,8 @@ def list_embedding_jobs(repo_root: Path) -> list[dict[str, Any]]:
         except (OSError, json.JSONDecodeError):
             continue
         if isinstance(data, dict):
-            jobs.append({key: value for key, value in data.items() if key != "rows"})
+            typed_data = cast(dict[str, Any], data)
+            jobs.append(
+                {key: value for key, value in typed_data.items() if key != "rows"}
+            )
     return jobs
