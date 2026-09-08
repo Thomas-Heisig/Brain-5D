@@ -1,8 +1,14 @@
 # MHRN Development Roadmap
 
 **Canonical roadmap for current `main`**  
-**Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-07
+**Baseline:** `mhrn-core 0.6.0a1`
+**Updated:** 2026-09-08
+
+## 2026-09-08 v0.6.0a1 development line opened
+
+- Opened the v0.6 Scaling & Deterministic Performance line after the reviewed v0.5.0-alpha.7 gate closure.
+- Kept the v0.6 milestone explicitly open: version movement is release engineering, not evidence of completed scaling or scientific validation.
+- The active v0.6 criteria remain the source of truth for future compatibility, benchmark, storage, resume and migration work.
 
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 

@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "version": "0.5.0-alpha.7",
-  "pep440": "0.5.0a7",
+  "version": "0.6.0-alpha.1",
+  "pep440": "0.6.0a1",
   "status": "development",
-  "title": "Embodiment Foundation & Safe Environment I/O",
-  "parent": "v0.5.0-alpha.6",
+  "title": "Scaling & Deterministic Performance",
+  "parent": "v0.5.0-alpha.7",
   "gate": "open",
   "scope": [
-    "typed environment, sensor and actuator boundaries",
-    "fail-closed connection discovery and explicit authorization",
-    "capability and rate limits",
-    "auditable actions",
-    "enforced emergency stop and human override"
+    "compatibility contract for runtime state, snapshots and resumable runs",
+    "reproducible scaling benchmarks with explicit memory and tick-cost budgets",
+    "bounded telemetry and storage compaction",
+    "deterministic pause/resume/restart identity",
+    "migration and rollback tests for persisted-state schema changes"
   ],
-  "note": "Read-only discovery is foundation work, not completion. Alpha.7 remains open until one deterministic EnvironmentAdapter and the complete bounded action path are verified."
+  "note": "v0.6.0a1 is a development baseline. Its release gate remains open until the milestone compatibility, benchmark, storage, determinism and migration criteria are verified."
 }

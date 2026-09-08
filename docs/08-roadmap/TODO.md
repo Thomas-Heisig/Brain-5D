@@ -5,7 +5,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 # MHRN Current TODO
 
 **Canonical TODO for `main`**  
-**Baseline:** `brain5d-core 0.5.0a7`  
+**Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-08  
 **Current release-blocking backlog:** **0**
 
@@ -49,9 +49,9 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 - [x] Review records are append-only and preserve reviewer identity, decision semantics, comments and provenance digests.
 - [x] Historical experiment artifacts remain immutable; dirty, exploratory or AI-generated records are not rewritten to appear scientifically validated.
 
-## Next development milestone — v0.6 Scaling & Deterministic Performance
+## Current development milestone — v0.6 Scaling & Deterministic Performance
 
-The reviewed v0.5.0a7 release gate is closed. The following checklist opens the **next version milestone**; these items are development targets, not retroactive blockers for the closed v0.5 gate.
+The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the development line; the following checklist remains open and does not claim that v0.6 research or engineering is complete.
 
 - [ ] Freeze the v0.6 compatibility contract for runtime state, snapshots and resumable runs.
 - [ ] Add reproducible scaling benchmarks across increasing neuron/synapse counts with explicit memory and tick-cost budgets.

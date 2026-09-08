@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-08 - v0.6.0a1 development line
+
+- Opened the v0.6 Scaling & Deterministic Performance development line after the reviewed v0.5.0-alpha.7 gate closure.
+- Updated canonical package and dashboard version metadata to `0.6.0a1` / `0.6.0-alpha.1`.
+- Kept v0.6 release readiness open; no scientific evidence, historical artifact or AIRR interpretation was promoted by the version change.
+
 ## 2026-09-08 - Cross-platform source-freeze digest mismatch on Windows
 
 - Canonicalized tracked text content through the Git representation so LF and CRLF checkouts produce the same scientific source digest.
