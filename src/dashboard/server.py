@@ -2826,7 +2826,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _serve_analysis_jobs(self) -> None:
         source = self._require_research_source()
         self._send_json(
-            {"jobs": cast(list[JSONValue], list_embedding_jobs(source.root()))}
+            {"jobs": cast(list[JSONValue], list_embedding_jobs(source.root().parent))}
         )
 
     def _run_analysis_job(self, body: dict[str, object]) -> None:
@@ -2840,9 +2840,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(method, str):
             raise InvalidRequestError("method is required")
         source = self._require_research_source()
+        repo_root = source.root().parent
         try:
             job = run_embedding_job(
-                source.root(),
+                repo_root,
                 network,
                 method=method,
                 random_state=int(body.get("random_state", 42)),
