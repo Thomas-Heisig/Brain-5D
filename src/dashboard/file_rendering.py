@@ -119,36 +119,48 @@ def _ffprobe_metadata(path: Path) -> dict[str, Any]:
             text=True,
             timeout=4,
         )
-        payload = json.loads(completed.stdout[:PDF_TEXT_BYTES])
+        payload_object: object = json.loads(completed.stdout[:PDF_TEXT_BYTES])
     except (OSError, subprocess.SubprocessError, ValueError, TypeError):
         return {}
+    if not isinstance(payload_object, dict):
+        return {}
+    payload = cast(dict[str, object], payload_object)
     result: dict[str, Any] = {}
-    format_info = payload.get("format") if isinstance(payload, dict) else None
-    if isinstance(format_info, dict):
-        if format_info.get("duration") is not None:
+    format_object = payload.get("format")
+    if isinstance(format_object, dict):
+        format_info = cast(dict[str, object], format_object)
+        duration = format_info.get("duration")
+        if duration is not None:
             try:
-                result["duration_seconds"] = round(float(format_info["duration"]), 3)
+                result["duration_seconds"] = round(float(str(duration)), 3)
             except (TypeError, ValueError):
                 pass
-        if format_info.get("format_name"):
-            result["container"] = str(format_info["format_name"])
-    streams = payload.get("streams") if isinstance(payload, dict) else None
-    if isinstance(streams, list):
-        codecs = sorted(
-            {
-                str(item.get("codec_name"))
-                for item in streams
-                if isinstance(item, dict) and item.get("codec_name")
-            }
-        )
-        if codecs:
-            result["codecs"] = codecs
-        for item in streams:
-            if isinstance(item, dict) and item.get("codec_type") == "video":
-                if item.get("width") is not None:
-                    result["width"] = int(item["width"])
-                if item.get("height") is not None:
-                    result["height"] = int(item["height"])
+        format_name = format_info.get("format_name")
+        if format_name:
+            result["container"] = str(format_name)
+    streams_object = payload.get("streams")
+    if isinstance(streams_object, list):
+        stream_objects = cast(list[object], streams_object)
+        stream_items: list[dict[str, object]] = []
+        codec_names: set[str] = set()
+        for stream_object in stream_objects:
+            if not isinstance(stream_object, dict):
+                continue
+            item = cast(dict[str, object], stream_object)
+            stream_items.append(item)
+            codec_name = item.get("codec_name")
+            if codec_name:
+                codec_names.add(str(codec_name))
+        if codec_names:
+            result["codecs"] = sorted(codec_names)
+        for item in stream_items:
+            if item.get("codec_type") == "video":
+                width = item.get("width")
+                height = item.get("height")
+                if width is not None:
+                    result["width"] = int(str(width))
+                if height is not None:
+                    result["height"] = int(str(height))
                 break
     return result
 

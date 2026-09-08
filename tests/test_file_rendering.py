@@ -495,18 +495,18 @@ def test_media_pdf_and_local_diagram_todo_contracts(
 
     graph = service.roots["docs"] / "flow.dot"
     graph.write_text("digraph G { a -> b; }")
-    monkeypatch.setattr(
-        file_rendering.shutil,
-        "which",
-        lambda name: "/usr/bin/dot" if name == "dot" else None,
-    )
-    monkeypatch.setattr(
-        file_rendering.subprocess,
-        "run",
-        lambda *args, **kwargs: SimpleNamespace(
+
+    def fake_which(name: str) -> str | None:
+        return "/usr/bin/dot" if name == "dot" else None
+
+    def fake_run(*args: object, **kwargs: object) -> SimpleNamespace:
+        del args, kwargs
+        return SimpleNamespace(
             stdout='<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>'
-        ),
-    )
+        )
+
+    monkeypatch.setattr(file_rendering.shutil, "which", fake_which)
+    monkeypatch.setattr(file_rendering.subprocess, "run", fake_run)
     diagram = service.preview("docs", graph.name)
     assert diagram["diagram_renderer"] == "local"
     assert diagram["diagram_svg"].startswith("<svg")

@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
+from pathlib import Path
 
 import pytest
 
 from src.embodiment.peripheral_adapters import (
+    PRODUCTION_PERIPHERAL_ACTIVATION_ENABLED,
     AdapterDeclaration,
     ExperimentAdapterFactory,
-    PRODUCTION_PERIPHERAL_ACTIVATION_ENABLED,
     declaration_artifact_hash,
 )
 from src.experiments import msba_lab
@@ -155,7 +156,7 @@ def test_e05_lesion_compensation_and_gateway_controls_execute() -> None:
     assert matrix["frozen_gateway_control"]["allocation_mode"] == "frozen"
 
 
-def test_gateway_state_persists_to_separate_sidecar(tmp_path) -> None:
+def test_gateway_state_persists_to_separate_sidecar(tmp_path: Path) -> None:
     prereg = json.loads(
         msba_lab.Path("research/preregistrations/PREREG-MSBA-E01.json").read_text(
             encoding="utf-8"
