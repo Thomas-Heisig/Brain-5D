@@ -148,3 +148,14 @@ test('canonical file viewer: split editor live preview and stale-write conflict 
   await expect(host.locator('.file-renderer-body')).toContainText('Remote Version');
   await expect(host.locator('.file-renderer-body')).toContainText('Live Preview');
 });
+
+test('research review inbox completes an append-only human review', async ({ page }) => {
+  await page.goto('http://127.0.0.1:4174/');
+  await page.locator('[data-primary-area="science"]').click();
+  await expect(page.locator('#workflow-review-inbox')).toBeVisible();
+  const inboxResponse = await page.request.get('/api/research/reviews');
+  expect(inboxResponse.ok()).toBeTruthy();
+  const inbox = await inboxResponse.json();
+  expect(Array.isArray(inbox.items)).toBeTruthy();
+  await expect(page.locator('#workflow-review-count')).toContainText('offen');
+});

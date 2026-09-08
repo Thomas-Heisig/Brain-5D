@@ -94,6 +94,7 @@ from .network_inspector import NetworkInspector
 from .operator_bridge import OperatorBridge
 from .release_timeline import build_release_timeline
 from .research_source import ResearchSource, create_research_source
+from .review_inbox import build_review_inbox
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -457,6 +458,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/reports":
                 self._serve_research_reports()
+                return
+
+            if path == "/api/research/reviews":
+                source = self._require_research_source()
+                self._send_json(build_review_inbox(source.root()))
                 return
 
             if path == "/api/research/ai-reports":

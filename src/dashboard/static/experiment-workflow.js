@@ -46,6 +46,15 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
         <label class="research-catalog-check"><input id="workflow-research-operational" type="checkbox"> nur operational</label>
       </div>
       <div id="workflow-research-results" class="research-catalog-results" role="listbox" aria-label="Forschungsfragen"></div>
+      <section id="workflow-review-inbox" class="research-review-inbox" aria-label="Offene Human Reviews">
+        <div class="research-review-head"><strong>Review Inbox</strong><span id="workflow-review-count" class="gate-badge pending">lädt …</span></div>
+        <p>Offene Human Reviews können hier nachvollziehbar abgeschlossen werden. Reviewer, Entscheidung und Kommentar sind Pflicht; ein Review erzeugt niemals automatisch wissenschaftliche Evidenz.</p>
+        <div class="research-review-controls">
+          <input id="workflow-review-reviewer" type="text" placeholder="Reviewer / Verantwortlicher" autocomplete="name">
+          <button id="workflow-review-refresh" type="button">Reviews aktualisieren</button>
+        </div>
+        <div id="workflow-review-list" class="research-review-list"></div>
+      </section>
       <div class="research-dimension-control">
         <label>MSBA Projektions-Dimensionen
           <input id="workflow-projection-dimensions" type="number" min="1" max="32" value="5">
@@ -81,16 +90,94 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
       .research-rq-badge.operational{color:#3fb950}.research-rq-badge.exploratory{color:#d29922}
       .research-dimension-control{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--border-color,#30363d)}
       .research-dimension-control label{max-width:220px}.research-dimension-control small{max-width:680px;opacity:.8}
+      .research-review-inbox{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-color,#30363d)}
+      .research-review-head,.research-review-controls,.research-review-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+      .research-review-head{justify-content:space-between}.research-review-controls{margin:8px 0}
+      .research-review-controls input{min-width:240px;flex:1}.research-review-list{display:grid;gap:8px}
+      .research-review-card{border:1px solid var(--border-color,#30363d);border-radius:9px;padding:10px}
+      .research-review-card textarea{width:100%;min-height:72px;margin:8px 0;resize:vertical}
+      .research-review-meta{font-size:.78rem;opacity:.75}.research-review-empty{opacity:.75;font-style:italic}
     `;
     document.head.appendChild(style);
 
     byId("workflow-research-search")?.addEventListener("input", () => this._renderResearchCatalog());
     byId("workflow-research-operational")?.addEventListener("change", () => this._renderResearchCatalog());
+    byId("workflow-review-refresh")?.addEventListener("click", () => this._loadReviewInbox());
+    byId("workflow-review-list")?.addEventListener("click", (event) => this._handleReviewAction(event));
+    this._loadReviewInbox();
     byId("workflow-projection-dimensions")?.addEventListener("change", (event) => {
       const value = Math.max(1, Math.min(32, Number(event.target.value) || 5));
       event.target.value = String(value);
       this._syncProjectionDimensions(value);
     });
+  }
+
+  async _loadReviewInbox() {
+    const list = byId("workflow-review-list");
+    const count = byId("workflow-review-count");
+    if (!list) return;
+    try {
+      const response = await fetch("/api/research/reviews", { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error(`Review inbox HTTP ${response.status}`);
+      const payload = await response.json();
+      this.reviewInbox = Array.isArray(payload.items) ? payload.items : [];
+      if (count) {
+        count.textContent = `${Number(payload.open || 0)} offen`;
+        count.className = `gate-badge ${Number(payload.open || 0) ? "pending" : "success"}`;
+      }
+      if (!this.reviewInbox.length) {
+        list.innerHTML = '<p class="research-review-empty">Keine offenen Human Reviews.</p>';
+        return;
+      }
+      list.innerHTML = this.reviewInbox.map((item, index) => `
+        <article class="research-review-card" data-review-index="${index}">
+          <strong>${escapeHtml(item.title || item.artifact_path)}</strong>
+          <div class="research-review-meta">${escapeHtml(item.research_question_id || item.kind || "review")} · ${escapeHtml(item.artifact_path || "")}</div>
+          <p>${escapeHtml(item.summary || "Human Review erforderlich.")}</p>
+          <textarea aria-label="Review-Kommentar" placeholder="Begründung / Review-Kommentar"></textarea>
+          <div class="research-review-actions">
+            <button type="button" data-review-decision="accepted_as_interpretation">Als Interpretation akzeptieren</button>
+            <button type="button" data-review-decision="rejected">Ablehnen</button>
+          </div>
+        </article>`).join("");
+    } catch (error) {
+      list.innerHTML = `<p class="research-review-empty">Review Inbox nicht verfügbar: ${escapeHtml(error.message || error)}</p>`;
+      if (count) count.textContent = "Fehler";
+    }
+  }
+
+  async _handleReviewAction(event) {
+    const button = event.target.closest?.("[data-review-decision]");
+    if (!button) return;
+    const card = button.closest("[data-review-index]");
+    const item = this.reviewInbox?.[Number(card?.dataset.reviewIndex)];
+    if (!item) return;
+    const reviewer = (byId("workflow-review-reviewer")?.value || "").trim();
+    const comments = (card.querySelector("textarea")?.value || "").trim();
+    if (!reviewer || !comments) {
+      window.alert("Reviewer und Review-Kommentar sind Pflicht.");
+      return;
+    }
+    const review_status = button.dataset.reviewDecision;
+    const body = item.kind === "artifact"
+      ? { artifact_path: item.artifact_path, reviewer, comments, review_status }
+      : { reviewer, comments, review_status };
+    button.disabled = true;
+    try {
+      const response = await fetch(item.review_endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(body),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || payload.message || `HTTP ${response.status}`);
+      await this._loadReviewInbox();
+      document.dispatchEvent(new CustomEvent("mhrn:research-review-completed", { detail: payload }));
+    } catch (error) {
+      window.alert(`Review konnte nicht gespeichert werden: ${error.message || error}`);
+    } finally {
+      button.disabled = false;
+    }
   }
 
   _configureConditionProfiles(preset = this.activePreset) {
