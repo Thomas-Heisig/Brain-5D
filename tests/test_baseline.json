@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "19825159d63e54d92b53a08aa16fc5739fea64de",
-  "tested_tree_digest": "76e64f42e5c966df6c2b97cdb92b3d6efcf2ef20df67cfc9f0cdf90c35bff901",
+  "tested_commit": "d9420d4bc5032d81c35a9e0cb169f00e97e2a28c",
+  "tested_tree_digest": "6d8a0b833ebd69d45d367baef7fcff3ee1978d45fd68394cba02046078756555",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-08T06:03:13.641440+00:00",
+  "timestamp": "2026-09-08T06:07:31.881084+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -310,7 +310,7 @@
     "tests/test_brain5d_launcher.py": "92b5b8e135793ee3146e2ceee25ba8d8ff4644c519a80ed67281a8c910dad1dd",
     "tests/test_canonical_state.py": "c79a8106a6f0677e6778b8e8a13a3a2c4148ca9675172e5d59645b966a5b52b9",
     "tests/test_catalog_audit_report.py": "a9fbf2753f3de568bf663af02b45ebf81900ecc17f788f24443451acaf234d08",
-    "tests/test_catalog_namespace_prefixes.py": "f6332d891eab307e1036d4970e2ad164c7e711912d60147efe07d5d960900992",
+    "tests/test_catalog_namespace_prefixes.py": "e685d0156271a5ce13fc047f8139f039588ba42bead1c37b85644fda6f665bc1",
     "tests/test_catalog_status.py": "f49424d0087e1f4a26a678f5dbe65a3889e954211039e22df9fa4e4c8957591b",
     "tests/test_checkpoint.py": "6b5acac3c0872ccdf67d9ccddd7832b1b83070126772f26c43a650f68af2b163",
     "tests/test_checkpoint_v4.py": "db1c9c3fd4366326590691f41ab96580672612f59fa21e51e7d264eeb2acf323",

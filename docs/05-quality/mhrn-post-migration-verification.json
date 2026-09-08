@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-08T06:03:32.502571+00:00",
-  "tested_commit": "19825159d63e54d92b53a08aa16fc5739fea64de",
-  "run_id": "34192882994",
+  "generated_at": "2026-09-08T06:07:50.802378+00:00",
+  "tested_commit": "d9420d4bc5032d81c35a9e0cb169f00e97e2a28c",
+  "run_id": "34193168248",
   "checks": [
     {
       "check": "format_catalog_tests",
@@ -57,7 +57,7 @@
         "scripts/generate_baseline.py"
       ],
       "exit_code": 0,
-      "output": "\n.....................................................s.................. [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 29%]\n.......................................................................s [ 36%]\n........................................................................ [ 43%]\n........................................................................ [ 51%]\n........................................................................ [ 58%]\n........................................................................ [ 65%]\n........................................................................ [ 73%]\n........................................................................ [ 80%]\n........................................................................ [ 87%]\n........................................................................ [ 95%]\n................................................                         [100%]\n=========================== short test summary info ============================\nSKIPPED [1] tests/test_b5d_storage.py:380: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test\nSKIPPED [1] tests/test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable\n982 passed, 2 skipped in 97.92s (0:01:37)\n\nBaseline: 982 passed, 0 failed, 0 errors, 2 skipped; unchanged=True\n"
+      "output": "\n.....................................................s.................. [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 29%]\n.......................................................................s [ 36%]\n........................................................................ [ 43%]\n........................................................................ [ 51%]\n........................................................................ [ 58%]\n........................................................................ [ 65%]\n........................................................................ [ 73%]\n........................................................................ [ 80%]\n........................................................................ [ 87%]\n........................................................................ [ 95%]\n................................................                         [100%]\n=========================== short test summary info ============================\nSKIPPED [1] tests/test_b5d_storage.py:380: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test\nSKIPPED [1] tests/test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable\n982 passed, 2 skipped in 98.78s (0:01:38)\n\nBaseline: 982 passed, 0 failed, 0 errors, 2 skipped; unchanged=True\n"
     },
     {
       "check": "documentation_consistency",
@@ -85,8 +85,8 @@
         "-m",
         "pyright"
       ],
-      "exit_code": 1,
-      "output": "/home/runner/work/Brain-5D/Brain-5D/tests/test_catalog_namespace_prefixes.py\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_catalog_namespace_prefixes.py:31:5 - error: Type of \"allow\" is partially unknown\n    Type of \"allow\" is \"dict[str, dict[Unknown, Unknown]]\" (reportUnknownVariableType)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_catalog_namespace_prefixes.py:32:70 - error: Argument type is partially unknown\n    Argument corresponds to parameter \"allow_list\" in function \"report_data\"\n    Argument type is \"dict[str, dict[Unknown, Unknown]]\" (reportUnknownArgumentType)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_catalog_namespace_prefixes.py:50:5 - error: Type of \"allow\" is partially unknown\n    Type of \"allow\" is \"dict[str, dict[Unknown, Unknown]]\" (reportUnknownVariableType)\n  /home/runner/work/Brain-5D/Brain-5D/tests/test_catalog_namespace_prefixes.py:51:70 - error: Argument type is partially unknown\n    Argument corresponds to parameter \"allow_list\" in function \"report_data\"\n    Argument type is \"dict[str, dict[Unknown, Unknown]]\" (reportUnknownArgumentType)\n4 errors, 0 warnings, 0 informations\n"
+      "exit_code": 0,
+      "output": "0 errors, 0 warnings, 0 informations\n"
     },
     {
       "check": "format",
@@ -122,6 +122,6 @@
       "paths_changed": []
     }
   ],
-  "all_checks_passed": false,
+  "all_checks_passed": true,
   "authority": "software_verification_only"
 }
