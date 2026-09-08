@@ -13,7 +13,7 @@ def test_next_version_todo_is_opened_without_reopening_closed_gate() -> None:
     todo = (ROOT / "docs/08-roadmap/TODO.md").read_text(encoding="utf-8")
     assert "Current release-blocking backlog:** **0**" in todo
     assert (
-        "## Next development milestone — v0.6 Scaling & Deterministic Performance"
+        "## Current development milestone — v0.6 Scaling & Deterministic Performance"
         in todo
     )
     assert "- [ ] Freeze the v0.6 compatibility contract" in todo
