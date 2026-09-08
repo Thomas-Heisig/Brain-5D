@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-08 — Gate board truth-source and full-width preparation
+
+- Expanded the Release/Gate board from the legacy 900 px cap to the full available workspace width while retaining responsive criterion columns.
+- Opened the actionable v0.6 Scaling & Deterministic Performance TODO milestone after closing the reviewed v0.5 gate.
+- Prepared regeneration of the canonical test/source freeze and CI-bound gate snapshot so the dashboard reports current verification rather than stale historical artifacts.
+
 ## 2026-09-08 — Cross-platform gate and browser contract repair
 
 - Pinned manifest-backed publication citation, TeX and checksum artifacts to LF so Windows `core.autocrlf` checkouts preserve their recorded bytes.

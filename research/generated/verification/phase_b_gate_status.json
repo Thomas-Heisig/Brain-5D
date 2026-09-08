@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
   "status": "verified",
-  "generated": "2026-09-01T15:31:10+02:00",
+  "generated": "2026-09-08T12:12:06+00:00",
   "source_freeze": {
-    "commit": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
-    "tested_tree_digest": "90439f88503e8c22e2babe74f989228f0f99795942f59cdebd5fbeb6920f64a9"
+    "commit": "59138eabba403e6e88be39362e05f984f960d9de",
+    "tested_tree_digest": "42ebb11cd394d156118a78589e83ba8f76d68e5488ff8f2250ad9e60e636b04f"
   },
   "baseline": {
-    "python": "3.13.14",
-    "passed": 489,
+    "python": "3.13.15",
+    "passed": 997,
     "failed": 0,
-    "skipped": 5,
+    "skipped": 2,
     "collection_errors": 0,
     "artifact": "tests/test_baseline.json"
   },
   "continuous_integration": {
-    "workflow": "Continuous Integration #145",
-    "run_id": 33514118085,
-    "head_sha": "3025e681a5f46bfd8dc2e5dbb8e1474fa5132cd1",
+    "workflow": "Continuous Integration",
+    "run_id": 34224253173,
+    "head_sha": "59138eabba403e6e88be39362e05f984f960d9de",
     "conclusion": "success"
   },
   "scientific_gate": {
@@ -37,10 +37,10 @@
   },
   "release_readiness": "ready",
   "final_validation": {
-    "command": "python -m pytest tests/ -q --tb=short",
-    "passed": 489,
+    "command": "python scripts/generate_baseline.py",
+    "passed": 997,
     "failed": 0,
-    "skipped": 5
+    "skipped": 2
   },
   "verification_artifacts": [
     "research/generated/verification/restore_determinism.json",
@@ -49,14 +49,8 @@
     "research/generated/verification/single_listener.json",
     "research/generated/verification/determinism_infrastructure.json"
   ],
-  "experiment_evidence": [
-    "research/generated/data/DATA-2026-15.json",
-    "research/generated/data/DATA-2026-16.json",
-    "research/registry/evidence/EVID-2026-15.json",
-    "research/registry/evidence/EVID-2026-16.json"
-  ],
   "limitations": [
-    "Sync to Hugging Face is outside the Continuous Integration gate and remains failed.",
-    "Restore path C proves a fresh C2 process; the stricter C1-exit-C2 orchestration remains a separate hardening task."
+    "Scientific evidence status remains independent from release engineering readiness.",
+    "External Hugging Face proxy smoke remains non-blocking operational follow-up."
   ]
 }
