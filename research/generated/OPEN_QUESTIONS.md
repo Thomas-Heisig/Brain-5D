@@ -1,6 +1,6 @@
-# Brain-5D Open Questions
+# MHRN Open Questions
 
-*Generiert am 2026-09-07*
+*Generiert am 2026-09-08*
 
 Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evidenz.
 

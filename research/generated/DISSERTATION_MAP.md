@@ -1,8 +1,8 @@
-# Brain-5D Dissertation Map
+# MHRN Dissertation Map
 
-*Generiert am 2026-09-07*
+*Generiert am 2026-09-08*
 
-Diese Karte zeigt, wie die Forschungsergebnisse von Brain-5D in eine
+Diese Karte zeigt, wie die Forschungsergebnisse von MHRN in eine
 Dissertationsstruktur eingeordnet werden können.
 
 ## Kapitel 1 – Theorie und Grundlagen

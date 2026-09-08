@@ -1,6 +1,6 @@
-# Brain-5D Research Catalog
+# MHRN Research Catalog
 
-*Generiert am 2026-09-07*
+*Generiert am 2026-09-08*
 
 ## Übersicht
 

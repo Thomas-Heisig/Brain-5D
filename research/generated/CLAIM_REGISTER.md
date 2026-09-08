@@ -1,6 +1,6 @@
-# Brain-5D Claim Register
+# MHRN Claim Register
 
-*Generiert am 2026-09-07*
+*Generiert am 2026-09-08*
 
 | Claim | Status | Konfidenz | Evidenzen | Experimente |
 |-------|--------|-----------|-----------|-------------|

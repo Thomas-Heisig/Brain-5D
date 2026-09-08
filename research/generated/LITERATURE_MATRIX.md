@@ -1,6 +1,6 @@
-# Literatur → Brain-5D Relevanzmatrix
+# Literatur → MHRN Relevanzmatrix
 
-| Quelle | Aussage | Brain-5D-Frage(n) | Status |
+| Quelle | Aussage | MHRN-Frage(n) | Status |
 |--------|---------|-------------------|--------|
 | Izhikevich (2003) | Simple spiking models can reproduce multiple cortical firing patterns. | RQ-SNN-001, RQ-SNN-002, RQ-DET-001 | open |
 | Gerstner (2014) | Spiking neural networks can model cognitive processes. | RQ-SNN-001, RQ-SNN-002 | open |
@@ -35,4 +35,4 @@
 | Deutschland (2026) |  | RQ-WEL-103 | open |
 
 ---
-*Automatisch generiert am 2026-09-07*
+*Automatisch generiert am 2026-09-08*

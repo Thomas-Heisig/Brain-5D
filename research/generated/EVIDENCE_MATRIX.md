@@ -1,6 +1,6 @@
-# Brain-5D Evidence Matrix
+# MHRN Evidence Matrix
 
-*Generiert am 2026-09-07*
+*Generiert am 2026-09-08*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
