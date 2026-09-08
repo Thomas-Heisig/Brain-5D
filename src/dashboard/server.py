@@ -2841,16 +2841,29 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             raise InvalidRequestError("method is required")
         source = self._require_research_source()
         repo_root = source.root().parent
+
+        def integer_option(name: str, default: int) -> int:
+            value = body.get(name, default)
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise InvalidRequestError(f"{name} must be an integer")
+            return value
+
+        def float_option(name: str, default: float) -> float:
+            value = body.get(name, default)
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise InvalidRequestError(f"{name} must be numeric")
+            return float(value)
+
         try:
             job = run_embedding_job(
                 repo_root,
                 network,
                 method=method,
-                random_state=int(body.get("random_state", 42)),
-                max_points=int(body.get("max_points", 500)),
-                perplexity=float(body.get("perplexity", 30.0)),
-                n_neighbors=int(body.get("n_neighbors", 15)),
-                n_clusters=int(body.get("n_clusters", 5)),
+                random_state=integer_option("random_state", 42),
+                max_points=integer_option("max_points", 500),
+                perplexity=float_option("perplexity", 30.0),
+                n_neighbors=integer_option("n_neighbors", 15),
+                n_clusters=integer_option("n_clusters", 5),
             )
         except (EmbeddingJobError, ValueError, TypeError) as exc:
             raise InvalidRequestError(str(exc)) from exc
