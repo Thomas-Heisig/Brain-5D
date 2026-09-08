@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, cast
@@ -378,7 +378,7 @@ def _with_digests(report: AIResearchReport, markdown: str) -> AIResearchReport:
     ).hexdigest()
     payload["markdown_digest"] = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
     return AIResearchReport(
-        **{key: payload[key] for key in AIResearchReport.__dataclass_fields__}
+        **{field.name: payload[field.name] for field in fields(AIResearchReport)}
     )
 
 

@@ -56,6 +56,7 @@ class ReleaseTimeline(TypedDict):
 def _parse_document(path: Path, source: str) -> list[TimelineEntry]:
     entries: list[TimelineEntry] = []
     current: TimelineEntry | None = None
+    current_items: list[TimelineItem] = []
     for line in path.read_text(encoding="utf-8").splitlines():
         heading = _HEADING_RE.match(line)
         if heading:
@@ -63,15 +64,16 @@ def _parse_document(path: Path, source: str) -> list[TimelineEntry]:
                 entries.append(current)
             heading_text = heading.group(1).strip()
             dated = _DATED_TITLE_RE.match(heading_text)
+            current_items = []
             current = {
                 "date": dated.group("date") if dated else None,
                 "title": dated.group("title").strip() if dated else heading_text,
                 "sources": [source],
-                "items": [],
+                "items": current_items,
             }
         elif current is not None and (bullet := _BULLET_RE.match(line.strip())):
             checked = bullet.group("checked")
-            current["items"].append(
+            current_items.append(
                 {
                     "text": bullet.group("text").strip(),
                     "done": None if checked is None else checked.lower() == "x",

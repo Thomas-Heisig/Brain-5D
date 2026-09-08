@@ -82,14 +82,16 @@ class ResearchChat:
         context = self._context()
         web_enabled = bool(self.web_context.strip())
         mode = NetworkMode.LIVE_NETWORK if web_enabled else NetworkMode.FROZEN_CORPUS
+        research_documents = list(self.research.list_documents())
+        doc_documents = list(self.docs.list_documents(recursive=True))
         source_count = sum(
             1
-            for document in self.research.list_documents()
+            for document in research_documents
             if document.kind in {"md", "json", "yaml", "yml", "txt"}
         )
         source_count += sum(
             1
-            for document in self.docs.list_documents(recursive=True)
+            for document in doc_documents
             if getattr(document, "file_type", None) is not None
             and getattr(document, "file_type").value
             in {"markdown", "text", "json", "yaml"}
@@ -152,15 +154,17 @@ class ResearchChat:
     def _context(self) -> str:
         research_chunks: list[str] = []
         docs_chunks: list[str] = []
-        for document in self.research.list_documents():
+        research_documents = list(self.research.list_documents())
+        doc_documents = list(self.docs.list_documents(recursive=True))
+        for document in research_documents:
             if document.kind not in {"md", "json", "yaml", "yml", "txt"}:
                 continue
             try:
-                content = self.research.read_content(document.path)
+                content = str(self.research.read_content(document.path))
             except (OSError, UnicodeError):
                 continue
             research_chunks.append(f"[RESEARCH: {document.path}]\n{content[:4000]}")
-        for doc_document in self.docs.list_documents(recursive=True):
+        for doc_document in doc_documents:
             file_type = getattr(doc_document, "file_type", None)
             if file_type is None or file_type.value not in {
                 "markdown",
@@ -170,7 +174,7 @@ class ResearchChat:
             }:
                 continue
             try:
-                content = self.docs.read_content(doc_document.path)
+                content = str(self.docs.read_content(doc_document.path))
             except (OSError, UnicodeError, ValueError):
                 continue
             docs_chunks.append(f"[DOCS: docs/{doc_document.path}]\n{content[:4000]}")

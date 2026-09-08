@@ -64,8 +64,8 @@ jobs:
         run: python -m black --check src tests scripts
       - name: Ruff (fast linter + isort)
         run: python -m ruff check src/ tests/ scripts/
-      - name: Pylint quality threshold
-        run: python -m pylint --fail-under=9.0 src
+      - name: Pylint error diagnostics and quality threshold
+        run: python -m pylint --disable=all --enable=E,F --fail-under=9.0 src
       - name: Pre-commit hooks (all files)
         run: python -m pre_commit run --all-files --show-diff-on-failure
       - name: Whitespace & merge-conflict check

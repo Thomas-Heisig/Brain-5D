@@ -115,7 +115,7 @@ function inline(parent, text, context, onOpen, depth = 0) {
 /** Safe Markdown subset. Source code, equations and unsupported syntax survive. */
 export function renderText(container, value, context = {}, onOpen = null) {
   container.replaceChildren();
-  const text = String(value ?? '').slice(0, TEXT_LIMIT);
+  const text = String(value ?? '').replace(/\r\n?/g, '\n').slice(0, TEXT_LIMIT);
   const lines = text.split('\n');
   let code = null;
   let list = null;

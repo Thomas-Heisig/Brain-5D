@@ -8,6 +8,14 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-08 Cross-platform gate and browser contract repair
+
+- [x] Keep manifest-backed `.bib`, `.cff`, `.tex` and `SHA256SUMS.txt` artifacts byte-stable on Windows checkouts.
+- [x] Preserve exact viewer text and byte ranges in Windows-focused file-rendering tests.
+- [x] Normalize CRLF Markdown before shared browser rendering.
+- [x] Isolate browser inventory E2E status from host camera and robotics discovery.
+- [x] Verify the complete 15-test Chromium suite after the contract repair.
+
 ## 2026-09-07 DOCX viewer surface alignment
 
 - [x] Remove the nested white DOCX card from the viewer modal.

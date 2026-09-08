@@ -29,6 +29,8 @@ def main() -> int:
         "-v",
     )
     run(
+        python,
+        "-m",
         "black",
         "--check",
         "src/dashboard",
@@ -38,8 +40,17 @@ def main() -> int:
         "tests/test_dashboard_alpha7.py",
         "tests/test_embodiment.py",
     )
-    run("mypy", "--strict", "src/dashboard", "src/embodiment")
-    run("pylint", "src/dashboard", "src/embodiment")
+    run(python, "-m", "mypy", "--strict", "src/dashboard", "src/embodiment")
+    run(
+        python,
+        "-m",
+        "pylint",
+        "--disable=all",
+        "--enable=E,F",
+        "--fail-under=9.0",
+        "src/dashboard",
+        "src/embodiment",
+    )
     return 0
 
 

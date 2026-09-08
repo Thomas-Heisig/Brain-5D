@@ -8,7 +8,7 @@ adaptation.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import Any
 
 from src.core.spatial_index import (
@@ -42,7 +42,7 @@ class SelfOrganizationParameters:
     def from_config(cls, config: dict[str, Any]) -> SelfOrganizationParameters:
         c = config.get("self_organization", {})
         params = cls(
-            **{k: c[k] for k in cls.__dataclass_fields__ if k in c}
+            **{field.name: c[field.name] for field in fields(cls) if field.name in c}
         )  # pylint: disable=no-member
         # Also support top-level max_neurons for backward compatibility
         if params.max_neurons == 0 and "max_neurons" in config:

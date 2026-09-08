@@ -179,7 +179,7 @@ def host_system_readings(tick: int) -> Mapping[str, JSONValue]:
     try:
         load_average: JSONValue = (
             [float(value) for value in load_average_reader()]
-            if callable(load_average_reader)
+            if load_average_reader is not None
             else None
         )
     except OSError:

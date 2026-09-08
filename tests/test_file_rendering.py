@@ -199,7 +199,7 @@ def test_json_pretty_preview_keeps_exact_editor_source(
 ) -> None:
     target = service.roots["docs"] / "data.json"
     original = '{"value":1, "ordered":[1,2]}\n'
-    target.write_text(original)
+    target.write_bytes(original.encode("utf-8"))
     preview = service.preview("docs", target.name)
     assert preview["raw_content"] == original
     assert json.loads(preview["content"])["value"] == 1
@@ -337,7 +337,7 @@ def request(
 def test_actual_http_preview_range_and_origin_contract(
     server: DashboardServer, service: FilePreviewService
 ) -> None:
-    (service.roots["docs"] / "notes.md").write_text("# Original\n")
+    (service.roots["docs"] / "notes.md").write_bytes(b"# Original\n")
     status, data, _ = request(server, "GET", "/api/files/preview/notes.md?source=docs")
     assert status == 200
     preview: dict[str, Any] = json.loads(data)

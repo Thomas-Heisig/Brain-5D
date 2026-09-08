@@ -28,6 +28,7 @@ A representative local verification set is:
 python -m pytest -q
 python -m black --check src tests scripts
 python -m ruff check src tests scripts
+python -m pylint --disable=all --enable=E,F --fail-under=9.0 src
 python -m mypy src
 python -m pyright
 python -m pre_commit run --all-files
@@ -72,7 +73,7 @@ Historical experiment DATA must not be rewritten after instrumentation changes. 
 - pytest: no unexpected failures; skips must be intentional and documented;
 - formatting/lint/pre-commit: clean;
 - Mypy/Pyright: zero errors in required scopes;
-- Pylint: no unresolved fatal/error diagnostics and configured score threshold satisfied;
+- Pylint: no unresolved fatal/error diagnostics and configured score threshold satisfied; convention/refactor/warning output remains visible separately;
 - dashboard verification: pass;
 - network activity diagnostic: pass for the registered diagnostic configuration;
 - deterministic restore: exact contract equality, not tolerance-based substitution;

@@ -4,6 +4,14 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-08 Cross-platform gate and browser contract repair
+
+- Publication manifests now remain byte-exact when a Windows checkout uses `core.autocrlf=true`; citation, TeX and checksum text is pinned to LF.
+- File-rendering contracts use byte-exact fixtures, and unsafe POSIX absolute manifest paths are rejected consistently.
+- The shared Markdown renderer normalizes CRLF input before building safe heading, prose and link nodes.
+- Browser inventory fixtures override canonical sensor/actuator IDs, so the Wesen pipeline reports host-independent endpoint transitions.
+- The focused browser regressions pass; the full 15-test Chromium suite is the release check for this surface.
+
 ## 2026-09-07 DOCX viewer surface alignment
 
 - Flattened the DOCX preview into the existing file viewer surface instead of rendering a bright paper card inside the modal.
