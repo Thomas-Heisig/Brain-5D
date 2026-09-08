@@ -137,7 +137,9 @@ def _require_preregistration(
     if freeze.get("status") not in {"REGISTERED", "FROZEN", "AMENDED"}:
         raise MSBAPreregistrationError("preregistration is not frozen/registered")
     if freeze.get("immutable_after_first_run") is not True:
-        raise MSBAPreregistrationError("preregistration must be immutable after first run")
+        raise MSBAPreregistrationError(
+            "preregistration must be immutable after first run"
+        )
     if freeze.get("human_review_required") is not True:
         raise MSBAPreregistrationError("preregistration must require human review")
 
@@ -195,7 +197,9 @@ def _projection(
         projected: list[float] = []
         for _ in source:
             weights = [rng.choice((-1.0, 1.0)) / math.sqrt(len(source)) for _ in source]
-            projected.append(sum(value * weight for value, weight in zip(source, weights)))
+            projected.append(
+                sum(value * weight for value, weight in zip(source, weights))
+            )
         return tuple(projected)
     if treatment is ProjectionTreatment.REDUCED_DIMENSIONAL:
         target = max(1, len(source) // 2)
@@ -275,7 +279,9 @@ def _gateway_state(
         projection=projection.value,
         projection_dimensions=dimensions,
         weights=tuple(float(value) for value in weights),
-        allocation=tuple(sorted((key, float(value)) for key, value in allocations.items())),
+        allocation=tuple(
+            sorted((key, float(value)) for key, value in allocations.items())
+        ),
         plasticity_updates=plasticity_updates,
         structural_events=structural_events,
     )
@@ -631,7 +637,9 @@ def run_msba_e02(
     preregistration: Mapping[str, Any] | None = None,
 ) -> list[ScientificRun]:
     del config
-    _require_preregistration(preregistration, seeds, adaptive=True, gateway_plasticity=True)
+    _require_preregistration(
+        preregistration, seeds, adaptive=True, gateway_plasticity=True
+    )
     runs: list[ScientificRun] = []
     for seed in seeds:
         results = tuple(
@@ -641,7 +649,9 @@ def run_msba_e02(
         shared = {
             "noisy_area_suppression": _noise_suppression(seed),
             "reward_formulations": _reward_comparison(seed),
-            "frozen_gateway_control": _allocation_condition(seed, GatewayMode.FROZEN).metrics,
+            "frozen_gateway_control": _allocation_condition(
+                seed, GatewayMode.FROZEN
+            ).metrics,
         }
         runs.extend(_scientific_runs(seed, results, shared=shared))
     return runs
@@ -654,7 +664,9 @@ def run_msba_e03(
     preregistration: Mapping[str, Any] | None = None,
 ) -> list[ScientificRun]:
     del config
-    _require_preregistration(preregistration, seeds, adaptive=True, structural_growth=True)
+    _require_preregistration(
+        preregistration, seeds, adaptive=True, structural_growth=True
+    )
     runs: list[ScientificRun] = []
     for seed in seeds:
         results = tuple(
@@ -685,7 +697,8 @@ def run_msba_e04(
         replay = _digital_condition(seed, "deterministic_replay")
         unthrottled = _digital_condition(seed, "no_throttling")
         shared = {
-            "deterministic_replay_equal": first.metrics["checksums"] == replay.metrics["checksums"],
+            "deterministic_replay_equal": first.metrics["checksums"]
+            == replay.metrics["checksums"],
             "exact_checksums_required": True,
         }
         runs.extend(_scientific_runs(seed, (first, replay, unthrottled), shared=shared))
@@ -699,7 +712,9 @@ def run_msba_e05(
     preregistration: Mapping[str, Any] | None = None,
 ) -> list[ScientificRun]:
     del config
-    _require_preregistration(preregistration, seeds, adaptive=True, gateway_plasticity=True)
+    _require_preregistration(
+        preregistration, seeds, adaptive=True, gateway_plasticity=True
+    )
     runs: list[ScientificRun] = []
     for seed in seeds:
         results = tuple(
@@ -716,8 +731,12 @@ def run_msba_e05(
             "noisy_area_suppression": _noise_suppression(seed),
             "timing_and_information_controls": _information_controls(seed),
             "reward_formulations": _reward_comparison(seed),
-            "random_gateway_control": _allocation_condition(seed, GatewayMode.RANDOM).metrics,
-            "frozen_gateway_control": _allocation_condition(seed, GatewayMode.FROZEN).metrics,
+            "random_gateway_control": _allocation_condition(
+                seed, GatewayMode.RANDOM
+            ).metrics,
+            "frozen_gateway_control": _allocation_condition(
+                seed, GatewayMode.FROZEN
+            ).metrics,
         }
         runs.extend(_scientific_runs(seed, results, shared=shared))
     return runs
@@ -751,7 +770,9 @@ def persist_gateway_state_sidecar(
         "canonical_snn_synapse_state": "not_accessed",
         "records": records,
     }
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return path
 
 

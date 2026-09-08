@@ -28,7 +28,9 @@ def _required_text(value: str, field: str) -> str:
 
 def _sha256_hex(value: str, field: str) -> str:
     candidate = value.strip().lower()
-    if len(candidate) != 64 or any(char not in "0123456789abcdef" for char in candidate):
+    if len(candidate) != 64 or any(
+        char not in "0123456789abcdef" for char in candidate
+    ):
         raise ValueError(f"{field} must be a 64-character SHA-256 hex digest")
     return candidate
 
@@ -58,7 +60,9 @@ class AdapterDeclaration:
             "modality",
             "transform",
         ):
-            object.__setattr__(self, field, _required_text(str(getattr(self, field)), field))
+            object.__setattr__(
+                self, field, _required_text(str(getattr(self, field)), field)
+            )
         object.__setattr__(
             self,
             "artifact_sha256",
@@ -69,7 +73,9 @@ class AdapterDeclaration:
                 f"adapter_class is not an approved experiment-only adapter: {self.adapter_class}"
             )
         if self.transform not in {"identity", "threshold_features", "virtual_logic"}:
-            raise ValueError(f"unsupported experiment adapter transform: {self.transform}")
+            raise ValueError(
+                f"unsupported experiment adapter transform: {self.transform}"
+            )
 
     def provenance(self) -> dict[str, JSONValue]:
         record: dict[str, JSONValue] = {
@@ -154,7 +160,7 @@ class ExperimentAdapterFactory:
         return adapter_type(declaration)
 
 
-def declaration_artifact_hash(value: JSONValue) -> str:
+def declaration_artifact_hash(value: object) -> str:
     """Hash a declarative model artifact without executing or importing it."""
 
     encoded = json.dumps(

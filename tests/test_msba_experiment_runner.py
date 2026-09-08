@@ -15,7 +15,6 @@ from src.experiments import msba_lab
 from src.research import followup_experiments
 from src.research.protocol_registry import OPERATIONAL_RUNNERS, protocol_catalog
 
-
 SEEDS = (101, 102, 103)
 
 
@@ -87,9 +86,12 @@ def test_e01_energy_and_projection_information_controls_execute() -> None:
             "reduced_dimensional",
             "increased_dimensional",
         }
-        assert matrix["information_controls"][
-            "activity_matched_information_destroyed"
-        ]["activity_matched"] is True
+        assert (
+            matrix["information_controls"]["activity_matched_information_destroyed"][
+                "activity_matched"
+            ]
+            is True
+        )
 
 
 def test_e02_equal_budget_frozen_random_noise_and_rewards_execute() -> None:

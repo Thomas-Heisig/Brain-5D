@@ -168,7 +168,9 @@ def run_generalization(
         initial_weight = float(exp.get("initial_weight", 0.05))
         initial_weights = tuple(initial_weight for _ in range(pre_count))
         for condition in ("learning_on", "learning_off", "sham_replay"):
-            trained_weights, learning, partitions = train_learning_weights(values, condition)
+            trained_weights, learning, partitions = train_learning_weights(
+                values, condition
+            )
             initial_mean = statistics.mean(initial_weights)
             final_mean = statistics.mean(trained_weights)
             for drive_scale in (0.85, 1.0, 1.15):
@@ -176,8 +178,8 @@ def run_generalization(
                 probe_exp = dict(exp)
                 probe_exp["drive_current"] = base_drive * drive_scale
                 probe_config["learning_experiment"] = probe_exp
-                baseline_spiked, baseline_peak_v, baseline_tick = probe_learning_response(
-                    probe_config, initial_weights
+                baseline_spiked, baseline_peak_v, baseline_tick = (
+                    probe_learning_response(probe_config, initial_weights)
                 )
                 trained_spiked, trained_peak_v, trained_tick = probe_learning_response(
                     probe_config, trained_weights
@@ -296,8 +298,18 @@ def run_regulation_recovery(
 ) -> list[ScientificRun]:
     """Measure a defined regulatory feedback intervention against a disabled control."""
     readings: dict[str, dict[str, Any]] = {
-        "nominal": {"cpu_percent": 20.0, "memory_percent": 30.0, "temperature_c": 40.0, "network_up": True},
-        "pressure": {"cpu_percent": 95.0, "memory_percent": 92.0, "temperature_c": 90.0, "network_up": False},
+        "nominal": {
+            "cpu_percent": 20.0,
+            "memory_percent": 30.0,
+            "temperature_c": 40.0,
+            "network_up": True,
+        },
+        "pressure": {
+            "cpu_percent": 95.0,
+            "memory_percent": 92.0,
+            "temperature_c": 90.0,
+            "network_up": False,
+        },
     }
     runs: list[ScientificRun] = []
     for seed in seeds:
@@ -310,7 +322,9 @@ def run_regulation_recovery(
             recovery_spikes = 0
             for tick in range(ticks):
                 phase = "pressure" if ticks // 3 <= tick < 2 * ticks // 3 else "nominal"
-                frame = InteroceptionFrame(tick, normalize_vital_signals(readings[phase]))
+                frame = InteroceptionFrame(
+                    tick, normalize_vital_signals(readings[phase])
+                )
                 regulatory = derive_regulatory_state(frame)
                 functional = derive_functional_state(frame)
                 current = 100.0
@@ -336,7 +350,11 @@ def run_regulation_recovery(
                         "total_spikes": total_spikes,
                         "pressure_phase_spikes": pressure_spikes,
                         "recovery_phase_spikes": recovery_spikes,
-                        "recovery_ratio": recovery_spikes / pressure_spikes if pressure_spikes else None,
+                        "recovery_ratio": (
+                            recovery_spikes / pressure_spikes
+                            if pressure_spikes
+                            else None
+                        ),
                         "feedback_definition": "pressure scales source current only in regulation_on",
                     },
                     before,
@@ -354,7 +372,11 @@ def run_temporal_order(
     """Test spike-carrying A->B versus B->A and shuffled timing sequences."""
     runs: list[ScientificRun] = []
     for seed in seeds:
-        for condition, schedule in {"forward": (0, 4), "reverse": (4, 0), "simultaneous": (0, 0)}.items():
+        for condition, schedule in {
+            "forward": (0, 4),
+            "reverse": (4, 0),
+            "simultaneous": (0, 0),
+        }.items():
             network = _three_node_network(config, seed)
             before = canonical_state_digest(network)
             input_id = min(network.input_cells)
@@ -372,7 +394,9 @@ def run_temporal_order(
                         "ticks_executed": ticks,
                         "schedule": list(schedule),
                         "total_spikes": len(spikes),
-                        "output_spike_count": sum(1 for spike in spikes if spike in network.output_cells),
+                        "output_spike_count": sum(
+                            1 for spike in spikes if spike in network.output_cells
+                        ),
                         "sequence_digest": canonical_state_digest(network),
                     },
                     before,
@@ -435,7 +459,9 @@ def run_recurrence_scale(
     runs: list[ScientificRun] = []
     for seed in seeds:
         for delay in (1, 2, 4, 8):
-            network = _three_node_network(config, seed, recurrent_weight=100.0, recurrent_delay=delay)
+            network = _three_node_network(
+                config, seed, recurrent_weight=100.0, recurrent_delay=delay
+            )
             result = _probe(network, ticks)
             metrics = dict(result["metrics"])
             metrics["loop_delay_ticks"] = delay
@@ -524,21 +550,66 @@ def _run_msba_registered(
     ]
 
 
-def run_msba_e01(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
-    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E01", hypothesis_id="H-MSBA-E01-A", protocol_id="msba_energy_efficiency_v1", runner_name="run_msba_e01")
+def run_msba_e01(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E01",
+        hypothesis_id="H-MSBA-E01-A",
+        protocol_id="msba_energy_efficiency_v1",
+        runner_name="run_msba_e01",
+    )
 
 
-def run_msba_e02(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
-    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E02", hypothesis_id="H-MSBA-E02-A", protocol_id="msba_resource_allocation_v1", runner_name="run_msba_e02")
+def run_msba_e02(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E02",
+        hypothesis_id="H-MSBA-E02-A",
+        protocol_id="msba_resource_allocation_v1",
+        runner_name="run_msba_e02",
+    )
 
 
-def run_msba_e03(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
-    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E03", hypothesis_id="H-MSBA-E03-A", protocol_id="msba_visual_roi_v1", runner_name="run_msba_e03")
+def run_msba_e03(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E03",
+        hypothesis_id="H-MSBA-E03-A",
+        protocol_id="msba_visual_roi_v1",
+        runner_name="run_msba_e03",
+    )
 
 
-def run_msba_e04(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
-    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E04", hypothesis_id="H-MSBA-E04-A", protocol_id="msba_digital_integrity_v1", runner_name="run_msba_e04")
+def run_msba_e04(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E04",
+        hypothesis_id="H-MSBA-E04-A",
+        protocol_id="msba_digital_integrity_v1",
+        runner_name="run_msba_e04",
+    )
 
 
-def run_msba_e05(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
-    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E05", hypothesis_id="H-MSBA-E05-A", protocol_id="msba_modality_compensation_v1", runner_name="run_msba_e05")
+def run_msba_e05(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E05",
+        hypothesis_id="H-MSBA-E05-A",
+        protocol_id="msba_modality_compensation_v1",
+        runner_name="run_msba_e05",
+    )
