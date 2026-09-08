@@ -5061,8 +5061,29 @@ body.accessibility-mode .health-bar {
 
 
 .gate-board {
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.release-gate-panel {
+  width: 100%;
+  max-width: none;
+}
+
+.release-gate-panel .gate-section,
+.release-gate-panel .gate-live-runtime {
+  width: 100%;
+}
+
+.release-gate-panel .gate-row {
+  grid-template-columns: minmax(360px, 3fr) minmax(90px, 0.55fr) minmax(130px, 0.75fr) minmax(140px, 0.8fr);
+}
+
+@media (max-width: 900px) {
+  .release-gate-panel .gate-row {
+    grid-template-columns: minmax(220px, 2.4fr) minmax(70px, 0.55fr) minmax(110px, 0.8fr) minmax(115px, 0.85fr);
+  }
 }
 
 .gate-header {

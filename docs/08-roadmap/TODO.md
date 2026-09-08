@@ -48,6 +48,21 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 - [x] Review records are append-only and preserve reviewer identity, decision semantics, comments and provenance digests.
 - [x] Historical experiment artifacts remain immutable; dirty, exploratory or AI-generated records are not rewritten to appear scientifically validated.
 
+## Next development milestone — v0.6 Scaling & Deterministic Performance
+
+The reviewed v0.5.0a7 release gate is closed. The following checklist opens the **next version milestone**; these items are development targets, not retroactive blockers for the closed v0.5 gate.
+
+- [ ] Freeze the v0.6 compatibility contract for runtime state, snapshots and resumable runs.
+- [ ] Add reproducible scaling benchmarks across increasing neuron/synapse counts with explicit memory and tick-cost budgets.
+- [ ] Introduce bounded telemetry/storage compaction so long experiment histories never require an AI consumer to ingest unbounded `runs.json` files.
+- [ ] Persist one compact current-run packet plus immutable raw-run indexes with SHA-verified provenance.
+- [ ] Verify deterministic pause/resume/restart identity for the v0.6 runtime contract across supported Python versions.
+- [ ] Add performance regression thresholds for RuntimeController, structural phases, learning, storage and dashboard telemetry.
+- [ ] Make target-Hz pacing and unlimited mode observable with achieved-Hz/realtime-ratio acceptance criteria.
+- [ ] Add clean migration/rollback tests for all v0.6 persisted-state schema changes.
+- [ ] Require full Python 3.11/3.12/3.13, browser, type, lint, security, build and Docker gates before v0.6 release.
+- [ ] Generate the v0.6 release record only after the exact source-freeze CI and release-readiness snapshot are both green.
+
 ## Future work is roadmap work, not an open release blocker
 
 The following programmes remain intentionally **future research/engineering**, and are therefore maintained in [ROADMAP.md](ROADMAP.md) rather than as release-blocking TODO checkboxes:
