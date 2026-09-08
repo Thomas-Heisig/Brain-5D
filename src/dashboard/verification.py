@@ -20,7 +20,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import platform
 import subprocess
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 
@@ -43,6 +45,252 @@ TEST_PATHS: list[str] = ["tests/"]
 _DIGEST_EXCLUDE_FILES: set[str] = {"tests/test_baseline.json"}
 _DIGEST_EXCLUDE_SUFFIXES: tuple[str, ...] = (".pyc", ".pyo")
 _DIGEST_EXCLUDE_DIRS: tuple[str, ...] = ("__pycache__",)
+
+
+@dataclass(frozen=True, slots=True)
+class SourceTreeInspection:
+    """Deterministic source-freeze details used by gates and diagnostics."""
+
+    digest: str | None
+    dirty_relevant_paths: tuple[str, ...]
+    untracked_relevant_paths: tuple[str, ...]
+    missing_relevant_paths: tuple[str, ...]
+    mismatching_files: tuple[str, ...]
+    platform: str
+    line_ending_normalization_mode: str
+    git_available: bool
+
+
+def _is_digest_file(path: Path, repo_root: Path) -> bool:
+    """Return whether a filesystem path belongs to the digest scope."""
+    if not path.is_file():
+        return False
+    relative = path.relative_to(repo_root).as_posix()
+    if relative in _DIGEST_EXCLUDE_FILES or relative.endswith(_DIGEST_EXCLUDE_SUFFIXES):
+        return False
+    return not any(
+        part in _DIGEST_EXCLUDE_DIRS or part.endswith(".egg-info")
+        for part in path.relative_to(repo_root).parts
+    )
+
+
+def _filesystem_digest_paths(repo_root: Path, paths: list[str]) -> list[str]:
+    """Return digest paths in the historical, reproducible traversal order."""
+    result: list[str] = []
+    for relative in paths:
+        target = repo_root / relative
+        if target.is_file():
+            if _is_digest_file(target, repo_root):
+                result.append(relative.rstrip("/"))
+        elif target.is_dir():
+            result.extend(
+                path.relative_to(repo_root).as_posix()
+                for path in sorted(target.rglob("*"))
+                if _is_digest_file(path, repo_root)
+            )
+    return result
+
+
+def _git_output(
+    repo_root: Path, arguments: list[str], input_data: bytes = b""
+) -> bytes | None:
+    """Run a bounded, read-only Git command."""
+    try:
+        result = subprocess.run(
+            ["git", *arguments],
+            cwd=str(repo_root),
+            input=input_data,
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if result.returncode != 0:
+        return None
+    return result.stdout
+
+
+def _git_scope_paths(
+    repo_root: Path, paths: list[str], *, untracked: bool
+) -> list[str]:
+    arguments = ["ls-files", "-z"]
+    if untracked:
+        arguments.extend(["--others", "--exclude-standard"])
+    arguments.extend(["--", *paths])
+    output = _git_output(repo_root, arguments)
+    if output is None:
+        return []
+    return [
+        item.decode("utf-8", "surrogateescape")
+        for item in output.split(b"\0")
+        if item
+    ]
+
+
+def _git_changed_paths(repo_root: Path, paths: list[str]) -> set[str]:
+    output = _git_output(
+        repo_root, ["diff", "HEAD", "--name-only", "-z", "--", *paths]
+    )
+    if output is None:
+        return set()
+    return {
+        item.decode("utf-8", "surrogateescape")
+        for item in output.split(b"\0")
+        if item
+    }
+
+
+def _git_index_blobs(repo_root: Path) -> dict[str, bytes]:
+    """Read stage-zero index blobs in one Git batch operation."""
+    listing = _git_output(repo_root, ["ls-files", "-s", "-z"])
+    if listing is None:
+        return {}
+    entries: list[tuple[str, str]] = []
+    for raw_entry in listing.split(b"\0"):
+        if not raw_entry:
+            continue
+        header, separator, raw_path = raw_entry.partition(b"\t")
+        fields = header.split()
+        if not separator or len(fields) != 3 or fields[2] != b"0":
+            continue
+        entries.append(
+            (
+                raw_path.decode("utf-8", "surrogateescape"),
+                fields[1].decode("ascii"),
+            )
+        )
+    if not entries:
+        return {}
+
+    request = b"".join(f"{object_id}\n".encode("ascii") for _, object_id in entries)
+    output = _git_output(repo_root, ["cat-file", "--batch"], request)
+    if output is None:
+        return {}
+    blobs: dict[str, bytes] = {}
+    offset = 0
+    for relative, object_id in entries:
+        header_end = output.find(b"\n", offset)
+        if header_end < 0:
+            break
+        header = output[offset:header_end].split()
+        offset = header_end + 1
+        if len(header) != 3 or header[0].decode("ascii", "ignore") != object_id:
+            break
+        size = int(header[2])
+        blobs[relative] = output[offset : offset + size]
+        offset += size + 1
+    return blobs
+
+
+def _git_text_paths(repo_root: Path, paths: list[str]) -> set[str]:
+    """Resolve Git's text attribute for paths using one batch query."""
+    if not paths:
+        return set()
+    input_data = ("\n".join(paths) + "\n").encode("utf-8", "surrogateescape")
+    output = _git_output(repo_root, ["check-attr", "--stdin", "text"], input_data)
+    if output is None:
+        return set()
+    text_paths: set[str] = set()
+    for raw_line in output.splitlines():
+        try:
+            relative, _attribute, value = raw_line.decode(
+                "utf-8", "surrogateescape"
+            ).rsplit(": ", 2)
+        except ValueError:
+            continue
+        if value in {"set", "auto"}:
+            text_paths.add(relative)
+    return text_paths
+
+
+def _canonical_text_bytes(data: bytes) -> bytes:
+    """Apply Git's portable text line-ending representation without decoding."""
+    return data.replace(b"\r\n", b"\n")
+
+
+def _digest_bytes(path: Path, relative: str, text_paths: set[str]) -> bytes:
+    data = path.read_bytes()
+    if relative in text_paths or (relative not in text_paths and b"\0" not in data):
+        return _canonical_text_bytes(data)
+    return data
+
+
+def inspect_source_tree(
+    repo_root: Path,
+    paths: list[str] | None = None,
+) -> SourceTreeInspection:
+    """Inspect and hash the source freeze with Git-aware text canonicalization."""
+    all_paths = paths if paths is not None else SCIENTIFIC_PATHS + TEST_PATHS
+    filesystem_paths = _filesystem_digest_paths(repo_root, all_paths)
+    tracked_paths = _git_scope_paths(repo_root, all_paths, untracked=False)
+    untracked_paths = _git_scope_paths(repo_root, all_paths, untracked=True)
+    git_available = bool(
+        tracked_paths or _git_output(repo_root, ["rev-parse", "--git-dir"])
+    )
+    changed_paths = _git_changed_paths(repo_root, all_paths) if git_available else set()
+    relevant_untracked = sorted(
+        path for path in untracked_paths if _is_digest_file(repo_root / path, repo_root)
+    )
+    tracked_set = {
+        path for path in tracked_paths if _is_digest_file(repo_root / path, repo_root)
+    }
+    filesystem_set = set(filesystem_paths)
+    missing_paths = sorted(tracked_set - filesystem_set)
+    dirty_paths = sorted(path for path in changed_paths if path in tracked_set)
+    mismatching = tuple(
+        sorted(set(dirty_paths) | set(relevant_untracked) | set(missing_paths))
+    )
+
+    text_paths = (
+        _git_text_paths(
+            repo_root, sorted(set(filesystem_paths) | set(relevant_untracked))
+        )
+        if git_available
+        else set()
+    )
+    index_blobs = _git_index_blobs(repo_root) if git_available else {}
+    hasher = hashlib.sha256()
+    found_any = False
+    ordered_paths = list(filesystem_paths)
+    ordered_paths.extend(path for path in missing_paths if path not in filesystem_set)
+    for relative in ordered_paths:
+        path = repo_root / relative
+        if (
+            relative in index_blobs
+            and relative not in dirty_paths
+            and relative not in missing_paths
+        ):
+            data = index_blobs[relative]
+        elif path.is_file():
+            data = _digest_bytes(path, relative, text_paths)
+        else:
+            data = b"<missing>"
+        hasher.update(relative.encode("utf-8", "surrogateescape"))
+        hasher.update(b"\0")
+        hasher.update(data)
+        hasher.update(b"\0")
+        found_any = True
+
+    return SourceTreeInspection(
+        digest=hasher.hexdigest() if found_any else None,
+        dirty_relevant_paths=tuple(dirty_paths),
+        untracked_relevant_paths=tuple(relevant_untracked),
+        missing_relevant_paths=tuple(missing_paths),
+        mismatching_files=mismatching,
+        platform=platform.platform(),
+        line_ending_normalization_mode="git-text-crlf-to-lf;binary-byte-exact",
+        git_available=git_available,
+    )
+
+
+def canonical_source_file_bytes(repo_root: Path, relative: str) -> bytes:
+    """Return one working-tree file in the source-freeze representation."""
+    path = repo_root / relative
+    if not path.is_file():
+        raise FileNotFoundError(relative)
+    text_paths = _git_text_paths(repo_root, [relative])
+    return _digest_bytes(path, relative, text_paths)
 
 # Stable evidence boundaries.  Paths are repository-relative and deliberately
 # explicit so a dashboard-only change does not stale storage evidence.
@@ -120,48 +368,34 @@ def compute_source_tree_digest(
     ``pyproject.toml`` and ``tests/`` (excluding ``test_baseline.json``
     so the baseline file cannot invalidate itself).
 
-    The digest is computed from file contents (not git blobs) so it works
-    in a dirty working tree and does not require a clean git state.
-    Returns ``None`` if no files were found.
+    Tracked clean files use their canonical Git index blobs. Working-tree
+    changes and relevant untracked files are included after Git-compatible
+    text line-ending normalization; binary bytes remain exact. Returns
+    ``None`` if no files were found.
     """
+    try:
+        return inspect_source_tree(repo_root, paths).digest
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def compute_legacy_raw_source_tree_digest(
+    repo_root: Path,
+    paths: list[str] | None = None,
+) -> str | None:
+    """Compute the pre-fix raw-byte digest for migration diagnostics only."""
     all_paths = paths if paths is not None else SCIENTIFIC_PATHS + TEST_PATHS
     try:
         hasher = hashlib.sha256()
         found_any = False
-        for rel in all_paths:
-            target = repo_root / rel
-            if target.is_file():
-                rel_posix = rel.rstrip("/")
-                if rel_posix in _DIGEST_EXCLUDE_FILES:
-                    continue
-                hasher.update(rel_posix.encode("utf-8"))
-                hasher.update(b"\0")
-                hasher.update(target.read_bytes())
-                hasher.update(b"\0")
-                found_any = True
-            elif target.is_dir():
-                for path in sorted(target.rglob("*")):
-                    if not path.is_file():
-                        continue
-                    rel_path = path.relative_to(repo_root).as_posix()
-                    if rel_path in _DIGEST_EXCLUDE_FILES:
-                        continue
-                    if rel_path.endswith(_DIGEST_EXCLUDE_SUFFIXES):
-                        continue
-                    if any(
-                        part in _DIGEST_EXCLUDE_DIRS or part.endswith(".egg-info")
-                        for part in path.relative_to(repo_root).parts
-                    ):
-                        continue
-                    hasher.update(rel_path.encode("utf-8"))
-                    hasher.update(b"\0")
-                    hasher.update(path.read_bytes())
-                    hasher.update(b"\0")
-                    found_any = True
-        if not found_any:
-            return None
-        return hasher.hexdigest()
-    except Exception:
+        for relative in _filesystem_digest_paths(repo_root, all_paths):
+            hasher.update(relative.encode("utf-8", "surrogateescape"))
+            hasher.update(b"\0")
+            hasher.update((repo_root / relative).read_bytes())
+            hasher.update(b"\0")
+            found_any = True
+        return hasher.hexdigest() if found_any else None
+    except OSError:
         return None
 
 
@@ -221,6 +455,12 @@ class BaselineEvaluation:
         current_commit: str | None,
         tested_tree_digest: str | None,
         current_tree_digest: str | None,
+        dirty_relevant_paths: tuple[str, ...] = (),
+        untracked_relevant_paths: tuple[str, ...] = (),
+        mismatching_files: tuple[str, ...] = (),
+        stale_reason: str | None = None,
+        platform_name: str | None = None,
+        line_ending_normalization_mode: str = "git-text-crlf-to-lf;binary-byte-exact",
     ) -> None:
         self.stale = stale
         self.available = available
@@ -232,6 +472,12 @@ class BaselineEvaluation:
         self.current_commit = current_commit
         self.tested_tree_digest = tested_tree_digest
         self.current_tree_digest = current_tree_digest
+        self.dirty_relevant_paths = dirty_relevant_paths
+        self.untracked_relevant_paths = untracked_relevant_paths
+        self.mismatching_files = mismatching_files
+        self.stale_reason = stale_reason
+        self.platform = platform_name or platform.platform()
+        self.line_ending_normalization_mode = line_ending_normalization_mode
 
 
 def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
@@ -246,7 +492,8 @@ def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
     """
     baseline = read_test_baseline(repo_root)
     current_commit = current_git_head(repo_root)
-    current_tree_digest = compute_source_tree_digest(repo_root)
+    inspection = inspect_source_tree(repo_root)
+    current_tree_digest = inspection.digest
 
     if baseline is None:
         return BaselineEvaluation(
@@ -260,6 +507,11 @@ def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
             current_commit=current_commit,
             tested_tree_digest=None,
             current_tree_digest=current_tree_digest,
+            dirty_relevant_paths=inspection.dirty_relevant_paths,
+            untracked_relevant_paths=inspection.untracked_relevant_paths,
+            mismatching_files=inspection.mismatching_files,
+            platform_name=inspection.platform,
+            line_ending_normalization_mode=inspection.line_ending_normalization_mode,
         )
 
     # --- Counts: support both new (full_suite) and legacy (verified_subset) ---
@@ -289,8 +541,22 @@ def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
     tested_tree_digest = baseline.get("tested_tree_digest")
 
     stale = True
+    stale_reason: str | None = "missing_tree_digest"
     if tested_tree_digest is not None and current_tree_digest is not None:
-        stale = tested_tree_digest != current_tree_digest
+        local_tree_changed = bool(inspection.mismatching_files)
+        stale = tested_tree_digest != current_tree_digest or local_tree_changed
+        if not stale:
+            stale_reason = None
+        elif inspection.dirty_relevant_paths or inspection.missing_relevant_paths:
+            stale_reason = "working_tree_content_diff"
+        elif inspection.untracked_relevant_paths:
+            stale_reason = "untracked_relevant_path"
+        elif (
+            tested_tree_digest == compute_legacy_raw_source_tree_digest(repo_root)
+        ):
+            stale_reason = "legacy_platform_digest_mismatch"
+        else:
+            stale_reason = "verification_artifact_scope_mismatch"
 
     return BaselineEvaluation(
         stale=stale,
@@ -303,4 +569,10 @@ def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
         current_commit=current_commit,
         tested_tree_digest=tested_tree_digest,
         current_tree_digest=current_tree_digest,
+        dirty_relevant_paths=inspection.dirty_relevant_paths,
+        untracked_relevant_paths=inspection.untracked_relevant_paths,
+        mismatching_files=inspection.mismatching_files,
+        stale_reason=stale_reason,
+        platform_name=inspection.platform,
+        line_ending_normalization_mode=inspection.line_ending_normalization_mode,
     )

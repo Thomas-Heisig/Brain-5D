@@ -4,6 +4,12 @@
 **Baseline:** `brain5d-core 0.5.0a7`  
 **Updated:** 2026-09-07
 
+## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
+
+- Scientific source-freeze digests now use canonical Git text content across LF/CRLF checkouts while preserving byte-exact binary files.
+- Gate diagnostics expose real dirty and untracked relevant paths, source commits, digest values and the reproducible stale reason.
+- Baseline and verification artifact generation use the same canonical per-file representation.
+
 ## 2026-09-08 Cross-platform gate and browser contract repair
 
 - Publication manifests now remain byte-exact when a Windows checkout uses `core.autocrlf=true`; citation, TeX and checksum text is pinned to LF.
