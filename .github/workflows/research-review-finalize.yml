@@ -38,7 +38,7 @@ jobs:
       - name: Regenerate deterministic test baseline
         run: python scripts/generate_baseline.py
       - name: Validate documentation consistency
-        run: python scripts/check_docs_consistency.py
+        run: python scripts/check_doc_consistency.py --check-tests
       - name: Remove temporary finalizer and implementation scripts
         run: |
           rm .github/workflows/research-review-finalize.yml
