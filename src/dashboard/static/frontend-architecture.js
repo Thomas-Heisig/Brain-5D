@@ -42,6 +42,14 @@ function injectStyles() {
     .architecture-capability header { display:flex; align-items:flex-start; justify-content:space-between; gap:.6rem; }
     .architecture-capability h3 { margin:0; font-size:.9rem; }
     .architecture-capability p { margin:.45rem 0 0; opacity:.68; font-size:.78rem; line-height:1.45; }
+    .embedding-analysis-capability { grid-column:1/-1; }
+    .embedding-analysis-form { display:flex; flex-wrap:wrap; gap:.5rem; align-items:end; margin-top:.7rem; }
+    .embedding-analysis-form label { display:grid; gap:.22rem; color:var(--muted,#9ca3af); font-size:.68rem; }
+    .embedding-analysis-form input,.embedding-analysis-form select { min-width:7rem; padding:.42rem .5rem; border:1px solid var(--line,rgba(127,127,127,.25)); border-radius:6px; background:rgba(0,0,0,.16); color:inherit; font:inherit; }
+    .embedding-analysis-form button { padding:.48rem .7rem; border:1px solid var(--line,rgba(127,127,127,.25)); border-radius:7px; background:rgba(127,127,127,.1); color:inherit; cursor:pointer; font:600 .72rem/1.2 inherit; }
+    .embedding-analysis-status { margin:.6rem 0 0; font-size:.72rem; color:var(--muted,#9ca3af); white-space:pre-wrap; }
+    .embedding-analysis-status[data-state="completed"] { color:#51d6ad; }
+    .embedding-analysis-status[data-state="error"] { color:#ef8b8b; }
     .maturity-state { flex:0 0 auto; display:inline-flex; padding:.22rem .45rem; border:1px solid currentColor; border-radius:999px; font-size:.62rem; letter-spacing:.05em; text-transform:uppercase; }
     .maturity-state.implemented { color:#51d6ad; }
     .maturity-state.pending { color:#efb45e; }
@@ -148,9 +156,46 @@ function ensureScienceMaturityPanel() {
   panel.innerHTML = `
     <article class="architecture-capability"><header><h3>Netzwerk-Workbench</h3><span class="maturity-state implemented">implemented</span></header><p>Live-Dynamik, Topologie, Raster/Histogramm und der neue PCA-basierte Neuron Model Viewer verwenden reale Runtime-Daten.</p></article>
     <article class="architecture-capability"><header><h3>Experiment-Workflow</h3><span class="maturity-state implemented">implemented</span></header><p>Registrierte Forschungsfragen, kontrollierte Runner, DATA/EVID-Trennung und reproduzierbare Nachweise bleiben erhalten.</p></article>
-    <article class="architecture-capability"><header><h3>t-SNE / UMAP / Clusterexport</h3><span class="maturity-state pending">Not implemented yet</span></header><p>Benötigt einen dedizierten Backend-Job mit Versions-, Parameter- und Provenienzbindung. Kein UI-Platzhalter wird als wissenschaftliche Funktion ausgegeben.</p></article>`;
+    <article class="architecture-capability embedding-analysis-capability"><header><h3>t-SNE / UMAP / Clusterexport</h3><span class="maturity-state implemented">backend job</span></header><p>Reproduzierbare Live-Netzwerkanalyse mit gebundenen Parametern, Bibliotheksversionen, Input-Digest und Source-Provenienz. Ergebnisdaten sind technische Analyse, keine automatische Evidenz.</p><form class="embedding-analysis-form" id="embedding-analysis-form"><label>Methode<select id="embedding-analysis-method"><option value="tsne">t-SNE</option><option value="umap">UMAP</option><option value="cluster_export">Clusterexport</option></select></label><label>Seed<input id="embedding-analysis-seed" type="number" min="0" value="42"></label><label>Punkte<input id="embedding-analysis-points" type="number" min="2" max="2000" value="500"></label><label>Cluster<input id="embedding-analysis-clusters" type="number" min="2" max="64" value="5"></label><button type="submit">Analyse starten</button></form><div id="embedding-analysis-status" class="embedding-analysis-status" data-state="idle">Bereit für einen Live-Netzwerkjob.</div><div id="embedding-analysis-history" class="embedding-analysis-history"></div></article>`;
   const anchor = research.querySelector(":scope > .research-lanes") || research.querySelector(":scope > .workspace-header");
   anchor?.insertAdjacentElement("afterend", panel);
+  const form = panel.querySelector("#embedding-analysis-form");
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = panel.querySelector("#embedding-analysis-status");
+    const method = panel.querySelector("#embedding-analysis-method")?.value || "tsne";
+    const body = {
+      method,
+      random_state: Number(panel.querySelector("#embedding-analysis-seed")?.value || 42),
+      max_points: Number(panel.querySelector("#embedding-analysis-points")?.value || 500),
+      n_clusters: Number(panel.querySelector("#embedding-analysis-clusters")?.value || 5),
+    };
+    if (status) { status.dataset.state = "running"; status.textContent = "Analyse läuft …"; }
+    try {
+      const response = await fetch("/api/research/analysis-jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+      const job = payload.job || {};
+      if (status) { status.dataset.state = "completed"; status.textContent = `${job.method} abgeschlossen: ${job.input?.neuron_count || 0} Punkte. JSON: ${job.artifacts?.json || "—"} · CSV: ${job.artifacts?.csv || "—"}\nSource-Digest: ${job.provenance?.source_tree_digest || "—"}`; }
+      await loadEmbeddingHistory(panel);
+    } catch (error) {
+      if (status) { status.dataset.state = "error"; status.textContent = `Analyse fehlgeschlagen: ${error.message || error}`; }
+    }
+  });
+  loadEmbeddingHistory(panel);
+}
+
+async function loadEmbeddingHistory(panel) {
+  const history = panel.querySelector("#embedding-analysis-history");
+  if (!history) return;
+  try {
+    const response = await fetch("/api/research/analysis-jobs", { headers: { "Cache-Control": "no-store" } });
+    const payload = await response.json();
+    const jobs = Array.isArray(payload.jobs) ? payload.jobs.slice(0, 5) : [];
+    history.innerHTML = jobs.length ? `<small>Letzte Jobs: ${jobs.map((job) => `${job.method} · ${job.created_at || ""} · ${job.status}`).join(" | ")}</small>` : "";
+  } catch (_) {
+    history.textContent = "Jobhistorie nicht verfügbar.";
+  }
 }
 
 function ensureRuntimeCapabilityBoard() {

@@ -66,6 +66,7 @@ from src.research_assistant.ollama_backend import OllamaBackend
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
+from .embedding_jobs import EmbeddingJobError, list_embedding_jobs, run_embedding_job
 from .experiment_archive import ExperimentArchiveError, ExperimentArchiveService
 from .experiment_organizer import ExperimentOrganizerService
 from .experiment_workflow import (
@@ -500,6 +501,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/research/experiment-series":
                 self._serve_experiment_series()
                 return
+            if path == "/api/research/analysis-jobs":
+                self._serve_analysis_jobs()
+                return
 
             if path.startswith("/api/research-files/"):
                 self._serve_research_file(path)
@@ -719,6 +723,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/experiments/archive":
                 self._archive_experiment(body)
+                return
+            if path == "/api/research/analysis-jobs":
+                self._run_analysis_job(body)
                 return
 
             if path == "/api/research/ai-reports/generate":
@@ -2815,6 +2822,38 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self._require_research_source()
         service = ExperimentOrganizerService(source.root())
         self._send_json({"series": cast(list[JSONValue], service.list_series())})
+
+    def _serve_analysis_jobs(self) -> None:
+        source = self._require_research_source()
+        self._send_json(
+            {"jobs": cast(list[JSONValue], list_embedding_jobs(source.root()))}
+        )
+
+    def _run_analysis_job(self, body: dict[str, object]) -> None:
+        bridge = self._require_bridge()
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            raise BridgeNotConfiguredError(
+                "Live network is not available for analysis."
+            )
+        method = body.get("method")
+        if not isinstance(method, str):
+            raise InvalidRequestError("method is required")
+        source = self._require_research_source()
+        try:
+            job = run_embedding_job(
+                source.root(),
+                network,
+                method=method,
+                random_state=int(body.get("random_state", 42)),
+                max_points=int(body.get("max_points", 500)),
+                perplexity=float(body.get("perplexity", 30.0)),
+                n_neighbors=int(body.get("n_neighbors", 15)),
+                n_clusters=int(body.get("n_clusters", 5)),
+            )
+        except (EmbeddingJobError, ValueError, TypeError) as exc:
+            raise InvalidRequestError(str(exc)) from exc
+        self._send_json(cast(dict[str, JSONValue], {"ok": True, "job": job}))
 
     def _archive_experiment(self, body: dict[str, object]) -> None:
         source = self._require_research_source()

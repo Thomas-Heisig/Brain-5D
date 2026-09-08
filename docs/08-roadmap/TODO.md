@@ -42,6 +42,7 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 
 ## Completed platform consolidation
 
+- [x] Replace the t-SNE / UMAP / Clusterexport placeholder with a provenance-bound technical analysis job and Research UI controls.
 - [x] Add Research experiment-series launch plus immutable archive/restore organization to the dashboard workflow.
 - [x] `main` is the canonical development line and GitHub is the source of truth; Hugging Face is a derived mirror.
 - [x] File Viewer is the canonical file renderer shared by Dashboard, Research and Chat surfaces.

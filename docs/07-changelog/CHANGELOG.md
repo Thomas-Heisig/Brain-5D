@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-08 - Versioned embedding and cluster analysis jobs
+
+- Replaced the t-SNE / UMAP / Clusterexport placeholder with a bounded backend analysis job.
+- Persisted JSON/CSV outputs with algorithm versions, parameters, input digest, source-tree digest and human-review boundary.
+- Added Research Workspace controls for live-network analysis; technical projections never promote scientific evidence automatically.
+
 ## 2026-09-08 - Research experiment organizer
 
 - Added a visible Research Organizer for starting experiment series through the existing controlled batch workflow.

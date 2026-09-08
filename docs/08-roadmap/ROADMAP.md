@@ -4,6 +4,12 @@
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-08
 
+## 2026-09-08 Versioned embedding and cluster analysis
+
+- t-SNE, UMAP and K-Means cluster export now run through a bounded, provenance-bound backend job.
+- The Research Workspace exposes method, seed, point and cluster controls plus persisted job history.
+- Outputs remain technical analyses and require human review; they are not automatic scientific evidence.
+
 ## 2026-09-08 Research experiment organizer
 
 - Research now exposes experiment-series launch, active experiment inventory, immutable archive and restore controls in the existing dashboard workflow.
