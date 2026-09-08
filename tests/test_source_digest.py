@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from typing import Any, cast
 
 from src.dashboard.gate_status import GateStatusBuilder
 from src.dashboard.verification import (
@@ -17,7 +18,9 @@ from src.dashboard.verification import (
 
 def _git_repo(root: Path) -> None:
     subprocess.run(["git", "init", "-q"], cwd=root, check=True)
-    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=root, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.invalid"], cwd=root, check=True
+    )
     subprocess.run(["git", "config", "user.name", "Digest Test"], cwd=root, check=True)
     subprocess.run(["git", "add", "."], cwd=root, check=True)
     subprocess.run(["git", "commit", "-qm", "initial"], cwd=root, check=True)
@@ -129,5 +132,7 @@ def test_ci_provenance_loads_when_source_digest_matches(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
-    status = GateStatusBuilder(repo_root=tmp_path).build()["ci_status"]
-    assert status["status"] == "passed"  # type: ignore[index]
+    status = cast(
+        dict[str, Any], GateStatusBuilder(repo_root=tmp_path).build()["ci_status"]
+    )
+    assert status["status"] == "passed"

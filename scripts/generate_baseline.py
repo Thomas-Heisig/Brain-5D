@@ -33,7 +33,7 @@ def main() -> int:
         compute_source_tree_digest,
         current_git_head,
         inspect_source_tree,
-        _filesystem_digest_paths,
+        source_digest_paths,
     )
 
     initial_inspection = inspect_source_tree(REPO_ROOT)
@@ -90,8 +90,7 @@ def main() -> int:
         passed = tests - failed - errors - skipped - unexpected_passes
         final_inspection = inspect_source_tree(REPO_ROOT)
         unchanged = (
-            final_inspection.digest == digest
-            and not final_inspection.mismatching_files
+            final_inspection.digest == digest and not final_inspection.mismatching_files
         )
         success = (
             result.returncode == 0
@@ -141,9 +140,7 @@ def main() -> int:
         relative: hashlib.sha256(
             canonical_source_file_bytes(REPO_ROOT, relative)
         ).hexdigest()
-        for relative in _filesystem_digest_paths(
-            REPO_ROOT, SCIENTIFIC_PATHS + TEST_PATHS
-        )
+        for relative in source_digest_paths(REPO_ROOT, SCIENTIFIC_PATHS + TEST_PATHS)
     }
     BASELINE_PATH.write_text(
         json.dumps(baseline, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

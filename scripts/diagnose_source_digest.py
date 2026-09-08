@@ -5,20 +5,20 @@ from __future__ import annotations
 import hashlib
 import sys
 from pathlib import Path
+from typing import cast
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.dashboard.verification import (
+from src.dashboard.verification import (  # noqa: E402
     SCIENTIFIC_PATHS,
     TEST_PATHS,
-    _canonical_text_bytes,
-    _filesystem_digest_paths,
-    _git_output,
-    _git_text_paths,
+    canonical_source_file_bytes,
     compute_legacy_raw_source_tree_digest,
+    git_source_blob,
     inspect_source_tree,
     read_test_baseline,
+    source_digest_paths,
 )
 
 
@@ -27,8 +27,7 @@ def _sha256(data: bytes) -> str:
 
 
 def _git_blob(root: Path, relative: str) -> bytes | None:
-    output = _git_output(root, ["show", f"HEAD:{relative}"])
-    return output
+    return git_source_blob(root, relative)
 
 
 def _first_difference(left: bytes, right: bytes) -> str:
@@ -42,7 +41,7 @@ def _first_difference(left: bytes, right: bytes) -> str:
 
 
 def _difference_kind(root: Path, relative: str, data: bytes, expected: str) -> str:
-    canonical = _canonical_text_bytes(data) if b"\0" not in data else data
+    canonical = canonical_source_file_bytes(root, relative)
     if _sha256(canonical) == expected and canonical != data:
         return "line_endings_only"
     if data.startswith(b"\xef\xbb\xbf") != canonical.startswith(b"\xef\xbb\xbf"):
@@ -57,14 +56,16 @@ def _difference_kind(root: Path, relative: str, data: bytes, expected: str) -> s
 
 def main() -> int:
     baseline = read_test_baseline(ROOT) or {}
-    expected_files = baseline.get("source_files", {})
-    if not isinstance(expected_files, dict):
-        expected_files = {}
-    expected_files = {str(path): str(digest) for path, digest in expected_files.items()}
+    raw_expected_files = baseline.get("source_files", {})
+    expected_files: dict[str, str] = {}
+    if isinstance(raw_expected_files, dict):
+        expected_files = {
+            str(path): str(digest)
+            for path, digest in cast(dict[str, object], raw_expected_files).items()
+        }
 
     scope_paths = SCIENTIFIC_PATHS + TEST_PATHS
-    local_files = set(_filesystem_digest_paths(ROOT, scope_paths))
-    text_paths = _git_text_paths(ROOT, sorted(local_files))
+    local_files = set(source_digest_paths(ROOT, scope_paths))
     inspection = inspect_source_tree(ROOT)
 
     print(f"platform: {inspection.platform}")
@@ -81,7 +82,7 @@ def main() -> int:
             continue
         data = path.read_bytes()
         local_digest = _sha256(data)
-        canonical = _canonical_text_bytes(data) if relative in text_paths or b"\0" not in data else data
+        canonical = canonical_source_file_bytes(ROOT, relative)
         canonical_digest = _sha256(canonical)
         if expected is None:
             print(

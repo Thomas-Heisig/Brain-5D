@@ -122,22 +122,16 @@ def _git_scope_paths(
     if output is None:
         return []
     return [
-        item.decode("utf-8", "surrogateescape")
-        for item in output.split(b"\0")
-        if item
+        item.decode("utf-8", "surrogateescape") for item in output.split(b"\0") if item
     ]
 
 
 def _git_changed_paths(repo_root: Path, paths: list[str]) -> set[str]:
-    output = _git_output(
-        repo_root, ["diff", "HEAD", "--name-only", "-z", "--", *paths]
-    )
+    output = _git_output(repo_root, ["diff", "HEAD", "--name-only", "-z", "--", *paths])
     if output is None:
         return set()
     return {
-        item.decode("utf-8", "surrogateescape")
-        for item in output.split(b"\0")
-        if item
+        item.decode("utf-8", "surrogateescape") for item in output.split(b"\0") if item
     }
 
 
@@ -173,11 +167,11 @@ def _git_index_blobs(repo_root: Path) -> dict[str, bytes]:
         header_end = output.find(b"\n", offset)
         if header_end < 0:
             break
-        header = output[offset:header_end].split()
+        fields = output[offset:header_end].split()
         offset = header_end + 1
-        if len(header) != 3 or header[0].decode("ascii", "ignore") != object_id:
+        if len(fields) != 3 or fields[0].decode("ascii", "ignore") != object_id:
             break
-        size = int(header[2])
+        size = int(fields[2])
         blobs[relative] = output[offset : offset + size]
         offset += size + 1
     return blobs
@@ -228,7 +222,9 @@ def inspect_source_tree(
     git_available = bool(
         tracked_paths or _git_output(repo_root, ["rev-parse", "--git-dir"])
     )
-    changed_paths = _git_changed_paths(repo_root, all_paths) if git_available else set()
+    changed_paths: set[str] = (
+        _git_changed_paths(repo_root, all_paths) if git_available else set()
+    )
     relevant_untracked = sorted(
         path for path in untracked_paths if _is_digest_file(repo_root / path, repo_root)
     )
@@ -242,7 +238,7 @@ def inspect_source_tree(
         sorted(set(dirty_paths) | set(relevant_untracked) | set(missing_paths))
     )
 
-    text_paths = (
+    text_paths: set[str] = (
         _git_text_paths(
             repo_root, sorted(set(filesystem_paths) | set(relevant_untracked))
         )
@@ -291,6 +287,19 @@ def canonical_source_file_bytes(repo_root: Path, relative: str) -> bytes:
         raise FileNotFoundError(relative)
     text_paths = _git_text_paths(repo_root, [relative])
     return _digest_bytes(path, relative, text_paths)
+
+
+def source_digest_paths(repo_root: Path, paths: list[str] | None = None) -> list[str]:
+    """Return the included repository-relative paths in digest order."""
+    return _filesystem_digest_paths(
+        repo_root, paths if paths is not None else SCIENTIFIC_PATHS + TEST_PATHS
+    )
+
+
+def git_source_blob(repo_root: Path, relative: str) -> bytes | None:
+    """Read one HEAD blob for human-readable source-digest diagnostics."""
+    return _git_output(repo_root, ["show", f"HEAD:{relative}"])
+
 
 # Stable evidence boundaries.  Paths are repository-relative and deliberately
 # explicit so a dashboard-only change does not stale storage evidence.
@@ -551,9 +560,7 @@ def evaluate_test_baseline(repo_root: Path) -> BaselineEvaluation:
             stale_reason = "working_tree_content_diff"
         elif inspection.untracked_relevant_paths:
             stale_reason = "untracked_relevant_path"
-        elif (
-            tested_tree_digest == compute_legacy_raw_source_tree_digest(repo_root)
-        ):
+        elif tested_tree_digest == compute_legacy_raw_source_tree_digest(repo_root):
             stale_reason = "legacy_platform_digest_mismatch"
         else:
             stale_reason = "verification_artifact_scope_mismatch"
