@@ -9,6 +9,7 @@ from __future__ import annotations
 import random
 import statistics
 import time
+from pathlib import Path
 from typing import Any, Mapping
 
 from src.core import NeuralNetwork
@@ -19,6 +20,7 @@ from src.embodiment import (
     derive_regulatory_state,
     normalize_vital_signals,
 )
+from src.experiments import msba_lab as _msba_lab
 from src.experiments.learning_lab import (
     probe_learning_response,
     run_learning_experiment,
@@ -27,6 +29,7 @@ from src.experiments.learning_lab import (
 from src.research.canonical_state import canonical_state_digest
 from src.research.experiment_suite import ScientificRun
 from src.research.network_probe import NetworkImpulseProbe
+from src.research.protocol_registry import validate_operational_protocol
 
 Config = Mapping[str, Any]
 Coord5D = tuple[int, int, int, int, int]
@@ -154,12 +157,7 @@ def run_generalization(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
 ) -> list[ScientificRun]:
-    """Train once, then evaluate frozen weights on registered perturbation probes.
-
-    Perturbation strength is changed only after adaptation. This prevents the
-    treatment from leaking into training and makes the off/sham/on comparison a
-    genuine held-out probe of the learned weight state.
-    """
+    """Train once, then evaluate frozen weights on registered perturbation probes."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         values = dict(config)
@@ -169,21 +167,17 @@ def run_generalization(
         pre_count = int(exp.get("presynaptic_neurons", 48))
         initial_weight = float(exp.get("initial_weight", 0.05))
         initial_weights = tuple(initial_weight for _ in range(pre_count))
-
         for condition in ("learning_on", "learning_off", "sham_replay"):
-            trained_weights, learning, partitions = train_learning_weights(
-                values, condition
-            )
+            trained_weights, learning, partitions = train_learning_weights(values, condition)
             initial_mean = statistics.mean(initial_weights)
             final_mean = statistics.mean(trained_weights)
-
             for drive_scale in (0.85, 1.0, 1.15):
                 probe_config = dict(values)
                 probe_exp = dict(exp)
                 probe_exp["drive_current"] = base_drive * drive_scale
                 probe_config["learning_experiment"] = probe_exp
-                baseline_spiked, baseline_peak_v, baseline_tick = (
-                    probe_learning_response(probe_config, initial_weights)
+                baseline_spiked, baseline_peak_v, baseline_tick = probe_learning_response(
+                    probe_config, initial_weights
                 )
                 trained_spiked, trained_peak_v, trained_tick = probe_learning_response(
                     probe_config, trained_weights
@@ -302,18 +296,8 @@ def run_regulation_recovery(
 ) -> list[ScientificRun]:
     """Measure a defined regulatory feedback intervention against a disabled control."""
     readings: dict[str, dict[str, Any]] = {
-        "nominal": {
-            "cpu_percent": 20.0,
-            "memory_percent": 30.0,
-            "temperature_c": 40.0,
-            "network_up": True,
-        },
-        "pressure": {
-            "cpu_percent": 95.0,
-            "memory_percent": 92.0,
-            "temperature_c": 90.0,
-            "network_up": False,
-        },
+        "nominal": {"cpu_percent": 20.0, "memory_percent": 30.0, "temperature_c": 40.0, "network_up": True},
+        "pressure": {"cpu_percent": 95.0, "memory_percent": 92.0, "temperature_c": 90.0, "network_up": False},
     }
     runs: list[ScientificRun] = []
     for seed in seeds:
@@ -326,21 +310,17 @@ def run_regulation_recovery(
             recovery_spikes = 0
             for tick in range(ticks):
                 phase = "pressure" if ticks // 3 <= tick < 2 * ticks // 3 else "nominal"
-                frame = InteroceptionFrame(
-                    tick, normalize_vital_signals(readings[phase])
-                )
+                frame = InteroceptionFrame(tick, normalize_vital_signals(readings[phase]))
                 regulatory = derive_regulatory_state(frame)
                 functional = derive_functional_state(frame)
                 current = 100.0
                 if enabled and phase == "pressure":
-                    uncertainty = functional.uncertainty
                     pressure = regulatory.values.get("resource_pressure")
                     if isinstance(pressure, (int, float)):
                         current *= max(0.25, 1.0 - 0.5 * float(pressure))
-                    current *= max(0.5, 1.0 - 0.25 * float(uncertainty))
+                    current *= max(0.5, 1.0 - 0.25 * float(functional.uncertainty))
                 network.inject_current(source, current)
-                step = network.step()
-                count = len(step.spike_ids)
+                count = len(network.step().spike_ids)
                 total_spikes += count
                 if phase == "pressure":
                     pressure_spikes += count
@@ -356,11 +336,7 @@ def run_regulation_recovery(
                         "total_spikes": total_spikes,
                         "pressure_phase_spikes": pressure_spikes,
                         "recovery_phase_spikes": recovery_spikes,
-                        "recovery_ratio": (
-                            recovery_spikes / pressure_spikes
-                            if pressure_spikes
-                            else None
-                        ),
+                        "recovery_ratio": recovery_spikes / pressure_spikes if pressure_spikes else None,
                         "feedback_definition": "pressure scales source current only in regulation_on",
                     },
                     before,
@@ -378,11 +354,7 @@ def run_temporal_order(
     """Test spike-carrying A->B versus B->A and shuffled timing sequences."""
     runs: list[ScientificRun] = []
     for seed in seeds:
-        for condition, schedule in {
-            "forward": (0, 4),
-            "reverse": (4, 0),
-            "simultaneous": (0, 0),
-        }.items():
+        for condition, schedule in {"forward": (0, 4), "reverse": (4, 0), "simultaneous": (0, 0)}.items():
             network = _three_node_network(config, seed)
             before = canonical_state_digest(network)
             input_id = min(network.input_cells)
@@ -390,8 +362,7 @@ def run_temporal_order(
             for tick in range(ticks):
                 if tick in schedule:
                     network.inject_current(input_id, 100.0)
-                step = network.step()
-                spikes.extend(step.spike_ids)
+                spikes.extend(network.step().spike_ids)
             runs.append(
                 ScientificRun(
                     "EXP-TEMP-0002",
@@ -401,9 +372,7 @@ def run_temporal_order(
                         "ticks_executed": ticks,
                         "schedule": list(schedule),
                         "total_spikes": len(spikes),
-                        "output_spike_count": sum(
-                            1 for spike in spikes if spike in network.output_cells
-                        ),
+                        "output_spike_count": sum(1 for spike in spikes if spike in network.output_cells),
                         "sequence_digest": canonical_state_digest(network),
                     },
                     before,
@@ -466,9 +435,7 @@ def run_recurrence_scale(
     runs: list[ScientificRun] = []
     for seed in seeds:
         for delay in (1, 2, 4, 8):
-            network = _three_node_network(
-                config, seed, recurrent_weight=100.0, recurrent_delay=delay
-            )
+            network = _three_node_network(config, seed, recurrent_weight=100.0, recurrent_delay=delay)
             result = _probe(network, ticks)
             metrics = dict(result["metrics"])
             metrics["loop_delay_ticks"] = delay
@@ -521,3 +488,57 @@ def run_learning_interference(
             )
         )
     return runs
+
+
+def _run_msba_registered(
+    config: Config,
+    seeds: tuple[int, ...],
+    *,
+    question_id: str,
+    hypothesis_id: str,
+    protocol_id: str,
+    runner_name: str,
+) -> list[ScientificRun]:
+    """Validate the frozen preregistration before any adaptive MSBA mechanism runs."""
+    research_root = Path(__file__).resolve().parents[2] / "research"
+    preregistration = validate_operational_protocol(
+        research_root,
+        question_id=question_id,
+        hypothesis_id=hypothesis_id,
+        protocol_id=protocol_id,
+        seed_count=len(set(seeds)),
+    )
+    runner = getattr(_msba_lab, runner_name)
+    runs = runner(config, seeds=seeds, preregistration=preregistration)
+    return [
+        ScientificRun(
+            run.experiment_id,
+            run.condition,
+            run.seed,
+            run.metrics,
+            run.state_digest_before,
+            run.state_digest_after,
+            run.runtime_error,
+        )
+        for run in runs
+    ]
+
+
+def run_msba_e01(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
+    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E01", hypothesis_id="H-MSBA-E01-A", protocol_id="msba_energy_efficiency_v1", runner_name="run_msba_e01")
+
+
+def run_msba_e02(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
+    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E02", hypothesis_id="H-MSBA-E02-A", protocol_id="msba_resource_allocation_v1", runner_name="run_msba_e02")
+
+
+def run_msba_e03(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
+    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E03", hypothesis_id="H-MSBA-E03-A", protocol_id="msba_visual_roi_v1", runner_name="run_msba_e03")
+
+
+def run_msba_e04(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
+    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E04", hypothesis_id="H-MSBA-E04-A", protocol_id="msba_digital_integrity_v1", runner_name="run_msba_e04")
+
+
+def run_msba_e05(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[ScientificRun]:
+    return _run_msba_registered(config, seeds, question_id="RQ-MSBA-E05", hypothesis_id="H-MSBA-E05-A", protocol_id="msba_modality_compensation_v1", runner_name="run_msba_e05")
