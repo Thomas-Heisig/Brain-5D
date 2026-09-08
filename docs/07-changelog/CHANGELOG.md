@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-08 - Cross-platform source-freeze digest mismatch on Windows
+
+- Canonicalized tracked text content through the Git representation so LF and CRLF checkouts produce the same scientific source digest.
+- Preserved stale detection for real working-tree changes and relevant untracked files, while keeping binary content byte-exact and cache metadata excluded.
+- Added per-file source-digest diagnostics and structured gate provenance for expected/current digest, commits, paths and stale reason.
+
 ## 2026-09-08 — Gate board truth-source and full-width preparation
 
 - Expanded the Release/Gate board from the legacy 900 px cap to the full available workspace width while retaining responsive criterion columns.

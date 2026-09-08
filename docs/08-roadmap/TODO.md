@@ -25,6 +25,7 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 
 ## 2026-09-08 Quality-gate state
 
+- [x] Resolve **Cross-platform source-freeze digest mismatch on Windows** with Git-canonical text content, explicit dirty/untracked diagnostics and byte-exact binary handling.
 - [x] Scientific Integrity Gate passes on the reviewed `main` state.
 - [x] Lint/format checks pass: Black, Ruff, Pylint, pre-commit and whitespace/merge-conflict checks.
 - [x] Type checks pass: Mypy and both Pyright scopes.

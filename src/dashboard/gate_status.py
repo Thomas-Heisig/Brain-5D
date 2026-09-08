@@ -318,12 +318,14 @@ class GateStatusBuilder:
                 self._release_blockers(overall, ci_overall),
             ),
         }
+        source_freeze = self._source_freeze_diagnostics()
 
         return {
             # New canonical sections
             "scientific_gate": scientific_gate,
             "ci_status": ci,
             "release_readiness": release_readiness,
+            "source_freeze": cast(JSONValue, source_freeze),
             # Legacy flat keys kept for backward compatibility
             "overall": overall,
             "gate_a": {"items": cast(JSONValue, gate_a)},
@@ -331,6 +333,22 @@ class GateStatusBuilder:
             "gate_c": {"items": cast(JSONValue, gate_c)},
             "live_runtime": cast(JSONValue, live_runtime),
             "source": "live_backend",
+        }
+
+    def _source_freeze_diagnostics(self) -> dict[str, JSONValue]:
+        """Return the reproducible source-freeze explanation for the gate."""
+        evaluation = evaluate_test_baseline(self.repo_root)
+        return {
+            "expected_tree_digest": evaluation.tested_tree_digest,
+            "current_tree_digest": evaluation.current_tree_digest,
+            "tested_commit": evaluation.tested_commit,
+            "current_commit": evaluation.current_commit,
+            "dirty_relevant_paths": list(evaluation.dirty_relevant_paths),
+            "untracked_relevant_paths": list(evaluation.untracked_relevant_paths),
+            "mismatching_files": list(evaluation.mismatching_files),
+            "stale_reason": evaluation.stale_reason,
+            "platform": evaluation.platform,
+            "line_ending_normalization_mode": evaluation.line_ending_normalization_mode,
         }
 
     def _load_ci_status(self) -> dict[str, JSONValue] | None:

@@ -26,8 +26,23 @@ sys.path.insert(0, str(REPO_ROOT))
 
 
 def main() -> int:
-    from src.dashboard.verification import compute_source_tree_digest, current_git_head
+    from src.dashboard.verification import (
+        SCIENTIFIC_PATHS,
+        TEST_PATHS,
+        canonical_source_file_bytes,
+        compute_source_tree_digest,
+        current_git_head,
+        inspect_source_tree,
+        source_digest_paths,
+    )
 
+    initial_inspection = inspect_source_tree(REPO_ROOT)
+    if initial_inspection.mismatching_files:
+        print(
+            "ERROR: Source freeze must be generated from a clean relevant tree: "
+            + ", ".join(initial_inspection.mismatching_files)
+        )
+        return 1
     digest = compute_source_tree_digest(REPO_ROOT)
     if digest is None:
         print("ERROR: Cannot compute source digest")
@@ -73,7 +88,10 @@ def main() -> int:
             int(unexpected_pass_counts[-1]) if unexpected_pass_counts else 0
         )
         passed = tests - failed - errors - skipped - unexpected_passes
-        unchanged = compute_source_tree_digest(REPO_ROOT) == digest
+        final_inspection = inspect_source_tree(REPO_ROOT)
+        unchanged = (
+            final_inspection.digest == digest and not final_inspection.mismatching_files
+        )
         success = (
             result.returncode == 0
             and passed > 0
@@ -119,14 +137,10 @@ def main() -> int:
             },
         }
     baseline["source_files"] = {
-        str(path.relative_to(REPO_ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for prefix in ("src", "configs", "research/schemas", "tests")
-        for path in sorted((REPO_ROOT / prefix).rglob("*"))
-        if path.is_file()
-        and "__pycache__" not in path.parts
-        and not any(part.endswith(".egg-info") for part in path.parts)
-        and path != BASELINE_PATH
-        and path.suffix not in {".pyc", ".pyo"}
+        relative: hashlib.sha256(
+            canonical_source_file_bytes(REPO_ROOT, relative)
+        ).hexdigest()
+        for relative in source_digest_paths(REPO_ROOT, SCIENTIFIC_PATHS + TEST_PATHS)
     }
     BASELINE_PATH.write_text(
         json.dumps(baseline, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
