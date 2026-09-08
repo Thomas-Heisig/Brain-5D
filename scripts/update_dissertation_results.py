@@ -1,4 +1,4 @@
-"""Append verified MHRN experiment results to the dissertation basis DOCX."""
+"""Append verified Brain-5D experiment results to the dissertation basis DOCX."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ DOCX = (
     / "docs/06-research/KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx"
 )
 RESEARCH = ROOT / "research"
-MARKER = "Empirischer MHRN-Nachtrag"
+MARKER = "Empirischer Brain-5D-Nachtrag"
 
 
 def read_json(path: Path) -> dict:
@@ -34,7 +34,7 @@ def main() -> None:
     document.add_page_break()
     document.add_heading(MARKER, level=1)
     document.add_paragraph(
-        "Stand: 7. September 2026. Dieser Nachtrag dokumentiert technische MHRN-Läufe "
+        "Stand: 7. September 2026. Dieser Nachtrag dokumentiert technische Brain-5D-Läufe "
         "aus dem Forschungsregister. Die Angaben wurden aus Manifesten, deterministischen "
         "Statistiken und DATA-Artefakten übernommen. Ein abgeschlossener Lauf ist keine "
         "automatische wissenschaftliche Evidenz; Dirty-Tree- und Human-Review-Gates bleiben "
@@ -110,7 +110,7 @@ def main() -> None:
     document.add_paragraph(
         "Interpretationsgrenze: Der Runner verwendet ein kontrolliertes Kleinnetzwerk. "
         "Das Ergebnis stützt die technische Stabilität dieses Versuchsaufbaus, nicht "
-        "automatisch die Stabilität des vollständigen produktiven MHRN-Netzes."
+        "automatisch die Stabilität des vollständigen produktiven Brain-5D-Netzes."
     )
 
     document.add_heading("RQ-REPL-001: Unabhängige Replikation", level=2)

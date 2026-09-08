@@ -1,4 +1,4 @@
-# MHRN: Eine hybride neural-symbolische Architektur für verkörperte kognitive Systeme
+# Brain-5D: Eine hybride neural-symbolische Architektur für verkörperte kognitive Systeme
 
 ## Status und Zukunftsperspektive
 
@@ -6,7 +6,7 @@
 
 ## Zusammenfassung
 
-MHRN ist ein experimentelles Forschungsframework, das ein **5D-Spiking-Neural-Network (SNN)** mit einer neuartigen, kontrollierten Kopplung an ein **Large Language Model (LLM)** als sprachliches Organ verbindet. Das System verfolgt das übergeordnete Ziel, eine **verkörperte, selbstorganisierende Intelligenz** zu schaffen, bei der das SNN als eigenständiger Lernender agiert, während das LLM als Übersetzer, Monitor und semantische Brücke zwischen der subsymbolischen Spike-Welt und der symbolischen Außenwelt fungiert. Dieser Beitrag beschreibt den aktuellen Entwicklungsstand (v0.5.0-alpha.5), die zugrundeliegenden biologisch inspirierten Lernmechanismen und die geplante Architektur für eine hybride neural-symbolische Kognition.
+Brain-5D ist ein experimentelles Forschungsframework, das ein **5D-Spiking-Neural-Network (SNN)** mit einer neuartigen, kontrollierten Kopplung an ein **Large Language Model (LLM)** als sprachliches Organ verbindet. Das System verfolgt das übergeordnete Ziel, eine **verkörperte, selbstorganisierende Intelligenz** zu schaffen, bei der das SNN als eigenständiger Lernender agiert, während das LLM als Übersetzer, Monitor und semantische Brücke zwischen der subsymbolischen Spike-Welt und der symbolischen Außenwelt fungiert. Dieser Beitrag beschreibt den aktuellen Entwicklungsstand (v0.5.0-alpha.5), die zugrundeliegenden biologisch inspirierten Lernmechanismen und die geplante Architektur für eine hybride neural-symbolische Kognition.
 
 ---
 
@@ -16,13 +16,13 @@ MHRN ist ein experimentelles Forschungsframework, das ein **5D-Spiking-Neural-Ne
 
 Die Künstliche Intelligenz steht vor einer fundamentalen Herausforderung: Während Large Language Models (LLMs) beeindruckende symbolische Verarbeitungs- und Sprachfähigkeiten zeigen, bleiben sie im Kern statistische Mustererkennungssysteme ohne genuine Verkörperung, ohne intrinsische Lernfähigkeit und ohne ein Verständnis von Zeit, Kausalität und physikalischer Realität. Spiking Neural Networks (SNNs) hingegen bieten biologisch plausible Dynamiken, temporale Kodierung und plastizitätsgetriebenes Lernen, stoßen jedoch bei symbolischen Abstraktionen und sprachlicher Interaktion an ihre Grenzen.
 
-MHRN adressiert diese komplementären Stärken und Schwächen durch eine **hybride neural-symbolische Architektur**, die das SNN als primäre, sich selbstorganisierende Intelligenz etabliert und das LLM als kontrolliertes, austauschbares Organ für Übersetzung, Monitoring und semantische Ein- und Ausgabe integriert.
+Brain-5D adressiert diese komplementären Stärken und Schwächen durch eine **hybride neural-symbolische Architektur**, die das SNN als primäre, sich selbstorganisierende Intelligenz etabliert und das LLM als kontrolliertes, austauschbares Organ für Übersetzung, Monitoring und semantische Ein- und Ausgabe integriert.
 
 ### 1.2 Stand der Forschung
 
 Die Forschung zu hybriden SNN-LLM-Architekturen gewinnt zunehmend an Bedeutung. Aktuelle Arbeiten wie **EMBER (Experience-Modulated Biologically-inspired Emergent Reasoning)** zeigen, dass die Integration eines LLM mit einem persistenten, biologisch fundierten assoziativen Substrat (einem SNN mit STDP) emergentes Reasoning und autonome Interaktion ohne externes Prompting ermöglichen kann. Diese Architekturen platzieren das LLM nicht als zentrale Steuerung, sondern als austauschbares Reasoning-Engine innerhalb eines biologisch inspirierten Grundgerüsts.
 
-MHRN geht über diese Ansätze hinaus, indem es eine **strikte kausale Geschlossenheit** des SNN gegenüber dem LLM durchsetzt – das LLM hat keinen direkten Zugriff auf synaptische Gewichte, strukturelle Plastizität oder den Runtime-Loop.
+Brain-5D geht über diese Ansätze hinaus, indem es eine **strikte kausale Geschlossenheit** des SNN gegenüber dem LLM durchsetzt – das LLM hat keinen direkten Zugriff auf synaptische Gewichte, strukturelle Plastizität oder den Runtime-Loop.
 
 ---
 
@@ -30,7 +30,7 @@ MHRN geht über diese Ansätze hinaus, indem es eine **strikte kausale Geschloss
 
 ### 2.1 Überblick
 
-Die Architektur von MHRN folgt einer strikten Schichtenlogik mit klar definierten Verantwortlichkeiten und Schnittstellen:
+Die Architektur von Brain-5D folgt einer strikten Schichtenlogik mit klar definierten Verantwortlichkeiten und Schnittstellen:
 
 ```
                          EXTERNE WELT
@@ -65,7 +65,7 @@ Die Architektur von MHRN folgt einer strikten Schichtenlogik mit klar definierte
                               │
                               ▼
                     ┌──────────────────┐
-                    │    MHRN SNN  │
+                    │    Brain-5D SNN  │
                     │                  │
                     │ learning         │
                     │ homeostasis      │
@@ -79,7 +79,7 @@ Die Architektur von MHRN folgt einer strikten Schichtenlogik mit klar definierte
 
 ### 2.2 Das Spiking Neural Network (SNN)
 
-Das Kernsystem von MHRN basiert auf dem **Izhikevich-Neuronenmodell**, das eine Balance zwischen biologischer Plausibilität und rechnerischer Effizienz bietet. Die Membrandynamik eines einzelnen Neurons wird durch zwei gekoppelte Differentialgleichungen beschrieben:
+Das Kernsystem von Brain-5D basiert auf dem **Izhikevich-Neuronenmodell**, das eine Balance zwischen biologischer Plausibilität und rechnerischer Effizienz bietet. Die Membrandynamik eines einzelnen Neurons wird durch zwei gekoppelte Differentialgleichungen beschrieben:
 
 \[
 \frac{dV}{dt} = 0.04V^2 + 5V + 140 - u + I
@@ -124,7 +124,7 @@ Dieser Frame wird vom LLM interpretiert – nicht die interne neuronale Datenstr
 
 ## 3. Lernmechanismen
 
-MHRN implementiert drei zentrale, biologisch inspirierte Plastizitätsmechanismen, die das Netzwerk zur Selbstorganisation befähigen.
+Brain-5D implementiert drei zentrale, biologisch inspirierte Plastizitätsmechanismen, die das Netzwerk zur Selbstorganisation befähigen.
 
 ### 3.1 Spike-Timing-Dependent Plasticity (STDP)
 
@@ -144,7 +144,7 @@ Diese Hebb'sche Lernregel verstärkt Verbindungen, bei denen präsynaptische Akt
 
 Die homöostatische Plastizität reguliert die **Gesamtfeuerrate** und die **Erregbarkeit** von Neuronen, um Instabilität und Ausreißer zu verhindern. Sie wirkt als globaler Regelkreis, der die Aktivität des Netzwerks in einem physiologisch plausiblen Bereich hält.
 
-In MHRN umfasst dies:
+In Brain-5D umfasst dies:
 - **Skalierung der Eingangsgewichte** basierend auf der durchschnittlichen Feuerrate
 - **Anpassung der intrinsischen Erregbarkeit** (Parameter \( a, b \))
 - **Regulation der Spikeschwellen** zur Vermeidung von Explodier- oder Erstarreffekten
@@ -153,7 +153,7 @@ In MHRN umfasst dies:
 
 Die strukturelle Plastizität simuliert das **Wachstum und die Beschneidung (Pruning) von Synapsen** – einen Mechanismus, der in biologischen Netzwerken kontinuierlich wirkt.
 
-MHRN implementiert:
+Brain-5D implementiert:
 - **Neurogenese**: Bildung neuer synaptischer Verbindungen basierend auf Aktivitätsmustern
 - **Pruning**: Entfernung schwacher oder inaktiver Verbindungen zur Ressourcenoptimierung
 - **Altersverfolgung** von Neuronen und Synapsen für entwicklungsbezogene Entscheidungen
@@ -167,7 +167,7 @@ Die strukturelle Plastizität ermöglicht dem Netzwerk, sich **topologisch** an 
 
 ### 4.1 Design-Prinzipien
 
-Die Integration eines LLM in MHRN folgt sieben grundlegenden **Verboten bzw. Grenzen**【aus der bereitgestellten Datei】:
+Die Integration eines LLM in Brain-5D folgt sieben grundlegenden **Verboten bzw. Grenzen**【aus der bereitgestellten Datei】:
 
 1. Kein direkter Zugriff des LLM auf `synapse.weight`
 2. Kein direkter Zugriff auf `StructuralPlasticityEngine.apply_*`
@@ -177,7 +177,7 @@ Die Integration eines LLM in MHRN folgt sieben grundlegenden **Verboten bzw. Gre
 6. Keine LLM-Antwort als „Fakt“ ohne Provenance
 7. Ausfall oder Timeout des LLM darf das SNN nicht stoppen
 
-Diese Prinzipien stellen sicher, dass **das Language Organ niemals Eigentümer des MHRN Runtime Loops wird**. Der `RuntimeController` behält die vollständige Kontrolle über den Simulationsablauf. Das LLM arbeitet asynchron und seine Ausgaben werden als **Input-Daten** behandelt.
+Diese Prinzipien stellen sicher, dass **das Language Organ niemals Eigentümer des Brain-5D Runtime Loops wird**. Der `RuntimeController` behält die vollständige Kontrolle über den Simulationsablauf. Das LLM arbeitet asynchron und seine Ausgaben werden als **Input-Daten** behandelt.
 
 ### 4.2 Funktionen des Language Organs
 
@@ -253,7 +253,7 @@ Internet / Wikipedia / lokale Dokumente
         LearningStimulus
                 │
                 ▼
-             MHRN
+             Brain-5D
 ```
 
 ### 5.3 Provenance und Nachvollziehbarkeit
@@ -302,7 +302,7 @@ Wikipedia:
      "Paris" / richtige Antwort?
 ```
 
-**Erst wenn dieser letzte Schritt ohne erneuten Abruf der Quelle funktioniert, darf das System als „lernend“ bezeichnet werden.** Dieses experimentelle Design ist die methodologische Grundlage für die Evaluierung von MHRN.
+**Erst wenn dieser letzte Schritt ohne erneuten Abruf der Quelle funktioniert, darf das System als „lernend“ bezeichnet werden.** Dieses experimentelle Design ist die methodologische Grundlage für die Evaluierung von Brain-5D.
 
 ---
 
@@ -310,13 +310,13 @@ Wikipedia:
 
 ### 6.1 EMBER (Experience-Modulated Biologically-inspired Emergent Reasoning)
 
-EMBER integriert ein 220.000-Neuronen-SNN mit STDP in eine hybride LLM-Architektur. Im Gegensatz zu MHRN wird das LLM bei EMBER als "austauschbare Reasoning-Engine" innerhalb eines persistenten, biologisch fundierten assoziativen Substrats positioniert.
+EMBER integriert ein 220.000-Neuronen-SNN mit STDP in eine hybride LLM-Architektur. Im Gegensatz zu Brain-5D wird das LLM bei EMBER als "austauschbare Reasoning-Engine" innerhalb eines persistenten, biologisch fundierten assoziativen Substrats positioniert.
 
-MHRN geht einen Schritt weiter: Es etabliert das SNN als **kausal geschlossenes System** und das LLM als **reines Organ ohne Schreibrechte**. Während EMBER das LLM als Reasoning-Engine nutzt, bleibt in MHRN die gesamte Entscheidungsfindung und Plastizität dem SNN vorbehalten.
+Brain-5D geht einen Schritt weiter: Es etabliert das SNN als **kausal geschlossenes System** und das LLM als **reines Organ ohne Schreibrechte**. Während EMBER das LLM als Reasoning-Engine nutzt, bleibt in Brain-5D die gesamte Entscheidungsfindung und Plastizität dem SNN vorbehalten.
 
 ### 6.2 Neuro-Symbolische Systeme
 
-Neuro-symbolische Architekturen kombinieren neuronale Netze mit symbolischen Repräsentationen. MHRN unterscheidet sich durch:
+Neuro-symbolische Architekturen kombinieren neuronale Netze mit symbolischen Repräsentationen. Brain-5D unterscheidet sich durch:
 - **Temporale Kodierung** (Spikes) statt Ratenkodierung
 - **Plastizitätsgetriebenes Lernen** statt Backpropagation
 - **Strikte Trennung** zwischen subsymbolischer (SNN) und symbolischer (LLM) Ebene
@@ -324,7 +324,7 @@ Neuro-symbolische Architekturen kombinieren neuronale Netze mit symbolischen Rep
 
 ### 6.3 Embodied AI
 
-Die Embodied-AI-Forschung betont die enge **Wahrnehmungs–Kognitions–Handlungs-Kopplung**【aus der bereitgestellten Datei】. MHRN realisiert dies durch:
+Die Embodied-AI-Forschung betont die enge **Wahrnehmungs–Kognitions–Handlungs-Kopplung**【aus der bereitgestellten Datei】. Brain-5D realisiert dies durch:
 - **Sensorische Input-Kanäle** (Text, später Bild, Audio, taktil)
 - **Motorische Output-Kanäle** (Text, Sprache, Aktuatoren)
 - **Geschlossene Wahrnehmungs-Handlungs-Schleife**
@@ -336,7 +336,7 @@ Die Embodied-AI-Forschung betont die enge **Wahrnehmungs–Kognitions–Handlung
 
 ### 7.1 Entwicklungsstufen
 
-Die geplante Evolution von MHRN folgt einer gestaffelten Roadmap【aus der bereitgestellten Datei】:
+Die geplante Evolution von Brain-5D folgt einer gestaffelten Roadmap【aus der bereitgestellten Datei】:
 
 ```
 alpha.5
@@ -437,13 +437,13 @@ Die finale Embodiment-Stufe vereinheitlicht alle Modalitäten:
 
 ### 8.1 Wissenschaftliche Einordnung
 
-MHRN repräsentiert einen **Paradigmenwechsel** in der hybriden KI-Forschung: Statt das LLM als zentrale Intelligenz zu positionieren und das SNN als peripheres Modul zu behandeln, kehrt die Architektur die Hierarchie um. Das SNN ist das **primäre, lernende Subjekt**; das LLM ist ein **kontrolliertes Organ** für spezifische Übersetzungs- und Interpretationsaufgaben.
+Brain-5D repräsentiert einen **Paradigmenwechsel** in der hybriden KI-Forschung: Statt das LLM als zentrale Intelligenz zu positionieren und das SNN als peripheres Modul zu behandeln, kehrt die Architektur die Hierarchie um. Das SNN ist das **primäre, lernende Subjekt**; das LLM ist ein **kontrolliertes Organ** für spezifische Übersetzungs- und Interpretationsaufgaben.
 
 Diese Entscheidung ist wissenschaftlich fundiert: Sie ermöglicht die **Isolation** der Lernmechanismen des SNN von den statistischen Mustern des LLM und schafft damit die Voraussetzung für **valide Experimente** zum Thema "echtes Lernen".
 
 ### 8.2 Herausforderungen
 
-Die zentrale Herausforderung bleibt die **Latenz-Diskrepanz**: Das SNN operiert im Millisekunden-Bereich, das LLM in Sekunden. MHRN adressiert dies durch:
+Die zentrale Herausforderung bleibt die **Latenz-Diskrepanz**: Das SNN operiert im Millisekunden-Bereich, das LLM in Sekunden. Brain-5D adressiert dies durch:
 - **Asynchrone** Verarbeitung des LLM in separaten Threads
 - **Nutzung des LLM nur für höhere Kognition** (nicht für Reflexe)
 - **Cognitive Ticks** (z.B. alle 500-1000 Simulationsschritte)
@@ -457,7 +457,7 @@ Die langfristige Vision ist ein System, bei dem das SNN zunehmend **eigene Inter
 
 ## 9. Fazit
 
-MHRN ist ein **experimentelles Framework für verkörperte, selbstorganisierende Intelligenz**, das die komplementären Stärken von Spiking Neural Networks und Large Language Models in einer kontrollierten, wissenschaftlich validierbaren Architektur vereint.
+Brain-5D ist ein **experimentelles Framework für verkörperte, selbstorganisierende Intelligenz**, das die komplementären Stärken von Spiking Neural Networks und Large Language Models in einer kontrollierten, wissenschaftlich validierbaren Architektur vereint.
 
 Die zentralen Innovationen sind:
 
@@ -467,7 +467,7 @@ Die zentralen Innovationen sind:
 4. **Austauschbares Language Organ** mit Null-Backend für Kontrollexperimente
 5. **Gestaffelte Roadmap** für schrittweise, wissenschaftlich fundierte Entwicklung
 
-Das System ist derzeit auf dem Stand v0.5.0-alpha.5 und befindet sich in der aktiven Entwicklung. Die geplanten Erweiterungen (Alpha.6–V0.8) werden MHRN zu einer **vollständigen, experimentierbaren Plattform für hybride neural-symbolische Kognition** machen – mit dem Potenzial, grundlegende Fragen zum Verhältnis von Verkörperung, Lernen und Sprache in intelligenten Systemen zu adressieren.
+Das System ist derzeit auf dem Stand v0.5.0-alpha.5 und befindet sich in der aktiven Entwicklung. Die geplanten Erweiterungen (Alpha.6–V0.8) werden Brain-5D zu einer **vollständigen, experimentierbaren Plattform für hybride neural-symbolische Kognition** machen – mit dem Potenzial, grundlegende Fragen zum Verhältnis von Verkörperung, Lernen und Sprache in intelligenten Systemen zu adressieren.
 
 ---
 

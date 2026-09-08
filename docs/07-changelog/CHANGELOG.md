@@ -69,7 +69,7 @@
 ## 2026-09-07 — Hugging Face Space
 
 - Configured the Docker image to start the integrated dashboard on `0.0.0.0:8765`.
-- Published the live dashboard as `superdigger/MHRN-Space`.
+- Published the live dashboard as `superdigger/Brain-5D-Space`.
 - Added automatic synchronization to the Space repository alongside the model mirror.
 
 ## 2026-09-07 — Space API rate-limit handling
@@ -246,7 +246,7 @@
 
 ## 2026-09-07 — Dissertation results synchronization
 
-- Added a data-first MHRN empirical-results appendix to the comprehensive dissertation basis DOCX.
+- Added a data-first Brain-5D empirical-results appendix to the comprehensive dissertation basis DOCX.
 - Included RQ-SNN-001, RQ-REPL-001, RQ-LIFE-001 and RQ-SUITE-001 with correct limitations and evidence status.
 
 ## 2026-09-07 — Failed experiment retries repaired
@@ -1200,7 +1200,7 @@
 - Parameter Inspector exposes a focusable Help marker for every parameter using its real schema description.
 - Added an Embodiment workspace backed by the existing `EmbodimentMetrics` dashboard contract. It reports environment, sensors, actuators, episode and rewards, and honestly stays `unconfigured` until an adapter publishes metrics.
 - Added read-only `/api/embodiment/state`, `/metrics` and `/history` endpoints plus a six-stage Environment→Sensor→Encoder→SNN→Decoder→Actuator visualization. Missing adapter details remain null/not-reported; no demo state or manual action path is introduced.
-- Rebuilt Embodiment as an animated MHRN living-system map with a dedicated creature asset. Network, spikes, homeostasis, learning, signal bridge, language organ, knowledge intake, structural growth, storage and embodiment I/O are displayed as body systems from the central state store; activity, energy and synchrony drive only visual intensity, and reduced-motion disables animation.
+- Rebuilt Embodiment as an animated Brain-5D living-system map with a dedicated creature asset. Network, spikes, homeostasis, learning, signal bridge, language organ, knowledge intake, structural growth, storage and embodiment I/O are displayed as body systems from the central state store; activity, energy and synchrony drive only visual intensity, and reduced-motion disables animation.
 - Added configurable integrated-dashboard host/port forwarding through `src.main`, the Python launcher and `start.ps1`. Loopback remains the default, trusted-LAN binding is explicit, and the supplied Caddy template provides TLS plus authentication for internet access without exposing operator APIs directly.
 - Added the fail-closed Embodiment Connection Manager and `/api/embodiment/connections`. It discovers real compute, storage, LAN/internet routes and platform camera, microphone, audio-output and printer presence while keeping every detected device unauthorized and inactive; extensible descriptors cover future Web/API, database, messaging, display, environment, location and robotics adapters.
 - Added the animated dynamic-body connection graph to Embodiment, with separate availability, authorization, activity, relationship, capabilities and provenance indicators sourced through the central dashboard store.

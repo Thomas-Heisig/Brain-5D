@@ -1,4 +1,4 @@
-"""Fail-fast quality gate for MHRN v0.4.0-alpha.7."""
+"""Fail-fast quality gate for Brain-5D v0.4.0-alpha.7."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ def main() -> int:
     run("mypy", "src")
     run("pylint", "src")
     run(python, "-m", "compileall", "-q", "src", "tests")
-    print("MHRN alpha.7 quality gate passed.")
+    print("Brain-5D alpha.7 quality gate passed.")
     return 0
 
 

@@ -1,6 +1,6 @@
 # Research and Strategy Alignment
 
-This document connects the repository strategy documents to measurable MHRN
+This document connects the repository strategy documents to measurable Brain-5D
 milestones. The source documents are:
 
 - `docs/Analyse_Deepseek.md`
@@ -9,7 +9,7 @@ milestones. The source documents are:
 
 ## Accepted strategic conclusions
 
-### MHRN is currently an SNN research platform, not a general intelligence
+### Brain-5D is currently an SNN research platform, not a general intelligence
 
 The current system has meaningful differentiators: deterministic sparse 5D
 state, persistence, local plasticity, observability and controlled structural
@@ -18,14 +18,14 @@ themselves demonstrate understanding, reasoning or general intelligence.
 
 ### Scaling must be measured, not assumed
 
-The research notes point to rapid progress in large SNN systems, but MHRN
+The research notes point to rapid progress in large SNN systems, but Brain-5D
 must establish its own scaling curve. v0.6 therefore keeps explicit 50k, 500k
 and 1M-neuron gates before any larger claim is accepted.
 
 ### Local and three-factor learning remain a valid experimental direction
 
 The research survey does not identify a single dominant SNN learning algorithm.
-MHRN therefore keeps STDP and three-factor rules as experimentally testable
+Brain-5D therefore keeps STDP and three-factor rules as experimentally testable
 components rather than treating them as a solved route to intelligence.
 
 ### Embodiment becomes a first-class roadmap item
@@ -104,7 +104,7 @@ support later cognitive extensions.
 - benchmark suite freeze
 - reproducible installation
 
-### v1.0 - usable MHRN AI
+### v1.0 - usable Brain-5D AI
 
 v1.0 means a persistent, stable, trainable and observable system that improves
 on held-out tasks, retains prior skills, uses at least two input modalities and
