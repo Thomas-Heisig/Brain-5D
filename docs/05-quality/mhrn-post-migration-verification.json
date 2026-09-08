@@ -1,0 +1,127 @@
+{
+  "generated_at": "2026-09-08T06:07:50.802378+00:00",
+  "tested_commit": "d9420d4bc5032d81c35a9e0cb169f00e97e2a28c",
+  "run_id": "34193168248",
+  "checks": [
+    {
+      "check": "format_catalog_tests",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "black",
+        "scripts/generate_catalog_audit_report.py",
+        "tests/test_catalog_namespace_prefixes.py"
+      ],
+      "exit_code": 0,
+      "output": "reformatted tests/test_catalog_namespace_prefixes.py\n\nAll done! ✨ 🍰 ✨\n1 file reformatted, 1 file left unchanged.\n"
+    },
+    {
+      "check": "lint_catalog_tests",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "scripts/generate_catalog_audit_report.py",
+        "tests/test_catalog_namespace_prefixes.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "check": "catalog_negative_and_positive_tests",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_catalog_audit_report.py",
+        "tests/test_catalog_namespace_prefixes.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "..........                                                               [100%]\n10 passed in 0.12s\n"
+    },
+    {
+      "check": "catalog_audit",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/generate_catalog_audit_report.py"
+      ],
+      "exit_code": 0,
+      "output": "Catalog audit: clean\n"
+    },
+    {
+      "check": "complete_baseline_real_execution",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/generate_baseline.py"
+      ],
+      "exit_code": 0,
+      "output": "\n.....................................................s.................. [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 29%]\n.......................................................................s [ 36%]\n........................................................................ [ 43%]\n........................................................................ [ 51%]\n........................................................................ [ 58%]\n........................................................................ [ 65%]\n........................................................................ [ 73%]\n........................................................................ [ 80%]\n........................................................................ [ 87%]\n........................................................................ [ 95%]\n................................................                         [100%]\n=========================== short test summary info ============================\nSKIPPED [1] tests/test_b5d_storage.py:380: set BRAIN5D_RUN_LARGE_STORAGE_TEST=1 for the 50k storage smoke test\nSKIPPED [1] tests/test_delta_journal.py:120: set BRAIN5D_RUN_LARGE_STORAGE_TESTS=1 to enable\n982 passed, 2 skipped in 98.78s (0:01:38)\n\nBaseline: 982 passed, 0 failed, 0 errors, 2 skipped; unchanged=True\n"
+    },
+    {
+      "check": "documentation_consistency",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/check_doc_consistency.py",
+        "--check-tests"
+      ],
+      "exit_code": 0,
+      "output": "Documentation consistency checks passed.\n"
+    },
+    {
+      "check": "publication_naming",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "scripts/publication_naming.py"
+      ],
+      "exit_code": 0,
+      "output": "VERIFIED MHRN naming: {\"historical_files\": 207, \"links\": 648, \"sections\": 57}\n"
+    },
+    {
+      "check": "pyright",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "pyright"
+      ],
+      "exit_code": 0,
+      "output": "0 errors, 0 warnings, 0 informations\n"
+    },
+    {
+      "check": "format",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "black",
+        "--check",
+        "src",
+        "tests",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "output": "All done! ✨ 🍰 ✨\n356 files would be left unchanged.\n"
+    },
+    {
+      "check": "lint",
+      "command": [
+        "/opt/hostedtoolcache/Python/3.13.15/x64/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "output": "warning: Invalid `# noqa` directive on tests/test_dashboard_disconnect_hardening.py:136: expected a comma-separated list of codes (e.g., `# noqa: F401, F841`).\nAll checks passed!\n"
+    },
+    {
+      "check": "historical_scientific_bytes_unchanged",
+      "exit_code": 0,
+      "paths_changed": []
+    }
+  ],
+  "all_checks_passed": true,
+  "authority": "software_verification_only"
+}
