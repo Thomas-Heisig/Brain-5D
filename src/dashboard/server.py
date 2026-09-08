@@ -67,6 +67,7 @@ from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
 from .docs_source import DocumentationSource, create_docs_source
 from .experiment_archive import ExperimentArchiveError, ExperimentArchiveService
+from .experiment_organizer import ExperimentOrganizerService
 from .experiment_workflow import (
     ExperimentWorkflowService,
     write_experiment_summary,
@@ -495,6 +496,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/experiments/archive":
                 self._serve_archived_experiments()
+                return
+            if path == "/api/research/experiment-series":
+                self._serve_experiment_series()
                 return
 
             if path.startswith("/api/research-files/"):
@@ -2806,6 +2810,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         source = self._require_research_source()
         service = ExperimentArchiveService(source.root())
         self._send_json({"experiments": cast(list[JSONValue], service.list_archived())})
+
+    def _serve_experiment_series(self) -> None:
+        source = self._require_research_source()
+        service = ExperimentOrganizerService(source.root())
+        self._send_json({"series": cast(list[JSONValue], service.list_series())})
 
     def _archive_experiment(self, body: dict[str, object]) -> None:
         source = self._require_research_source()

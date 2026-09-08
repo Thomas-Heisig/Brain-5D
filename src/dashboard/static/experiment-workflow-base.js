@@ -166,6 +166,27 @@ export class ExperimentWorkflowPanel {
       form.insertAdjacentElement("afterend", contract);
     }
 
+    if (!byId("workflow-experiment-library")) {
+      const library = document.createElement("section");
+      library.id = "workflow-experiment-library";
+      library.className = "experiment-library-card";
+      library.innerHTML = `
+        <div class="panel-title">
+          <div><span class="workspace-kicker">RESEARCH ORGANIZER</span><h3>Experimentreihen &amp; Archiv</h3><p>Reihen laufen über den kontrollierten Batch-Workflow. Abgeschlossene Experimente bleiben unverändert und können aus der aktiven Ansicht ins Archiv verschoben werden.</p></div>
+          <div class="experiment-library-actions"><button type="button" id="workflow-series-open" class="btn-primary">Neue Reihe</button><button type="button" id="workflow-library-refresh" class="btn-secondary" title="Experimentliste aktualisieren" aria-label="Experimentliste aktualisieren">↻</button></div>
+        </div>
+        <div class="experiment-library-summary"><span id="workflow-active-count">0 aktiv</span><span id="workflow-archived-count">0 archiviert</span></div>
+        <div class="experiment-library-grid">
+          <section><h4>Aktive Experimente</h4><div id="workflow-active-experiments" class="experiment-library-list"><p class="experiment-library-empty">Lade Experimente …</p></div></section>
+          <section><h4>Archiv</h4><div id="workflow-archived-experiments" class="experiment-library-list"><p class="experiment-library-empty">Lade Archiv …</p></div></section>
+        </div>`;
+      form.insertAdjacentElement("afterend", library);
+      byId("workflow-series-open")?.addEventListener("click", () => this._openBatchWorkflow());
+      byId("workflow-library-refresh")?.addEventListener("click", () => this._loadExperimentCollections());
+      library.addEventListener("click", (event) => this._handleExperimentLibraryAction(event));
+      this._loadExperimentCollections();
+    }
+
     if (!byId("workflow-result-actions")) {
       const actions = document.createElement("section");
       actions.id = "workflow-result-actions";
@@ -342,6 +363,7 @@ export class ExperimentWorkflowPanel {
       if (this.elements.batchResult) this.elements.batchResult.textContent = resultText;
       if (this.elements.result) this.elements.result.textContent = resultText;
       this._setStatus("Workflow-Bericht erstellt", "completed");
+      await this._loadExperimentCollections();
       document.dispatchEvent(new CustomEvent("brain5d:experiment-progress", {
         detail: { active: false, preserveFooter: true, progress: 100, label: "Experiment-Workflow abgeschlossen", experimentId: result.workflow_id },
       }));
@@ -383,6 +405,62 @@ export class ExperimentWorkflowPanel {
       this._setProgress(0, "Bereit", false);
     } catch (error) {
       this._setStatus(`Nicht verfuegbar: ${error.message}`, "error");
+    }
+  }
+
+  async _loadExperimentCollections() {
+    const active = byId("workflow-active-experiments");
+    const archived = byId("workflow-archived-experiments");
+    if (!active || !archived) return;
+    try {
+      const [activePayload, archivedPayload] = await Promise.all([
+        fetchJson("/api/research/experiments"),
+        fetchJson("/api/research/experiments/archive"),
+      ]);
+      const activeItems = Array.isArray(activePayload.experiments) ? activePayload.experiments : [];
+      const archivedItems = Array.isArray(archivedPayload.experiments) ? archivedPayload.experiments : [];
+      const activeCount = byId("workflow-active-count");
+      const archivedCount = byId("workflow-archived-count");
+      if (activeCount) activeCount.textContent = `${activeItems.length} aktiv`;
+      if (archivedCount) archivedCount.textContent = `${archivedItems.length} archiviert`;
+      active.innerHTML = activeItems.length ? activeItems.map((item) => this._experimentLibraryItem(item, false)).join("") : '<p class="experiment-library-empty">Keine aktiven Experimente.</p>';
+      archived.innerHTML = archivedItems.length ? archivedItems.map((item) => this._experimentLibraryItem(item, true)).join("") : '<p class="experiment-library-empty">Archiv ist leer.</p>';
+    } catch (error) {
+      active.innerHTML = `<p class="experiment-library-empty">Experimentliste nicht verfügbar: ${escapeHtml(error.message || error)}</p>`;
+      archived.innerHTML = `<p class="experiment-library-empty">Archiv nicht verfügbar: ${escapeHtml(error.message || error)}</p>`;
+    }
+  }
+
+  _experimentLibraryItem(item, archived) {
+    const manifest = item.manifest && typeof item.manifest === "object" ? item.manifest : {};
+    const status = String(manifest.experiment_status || item.status || (archived ? "archived" : "unknown"));
+    const question = Array.isArray(manifest.research_questions) ? manifest.research_questions.join(", ") : "Research experiment";
+    const created = item.created_at || manifest.created_at || manifest.timestamp || "";
+    const meta = [question, status, created].filter(Boolean).join(" · ");
+    const action = archived
+      ? `<button type="button" class="btn-small" data-experiment-action="restore" data-experiment-id="${escapeHtml(item.experiment_id)}">↶ Wiederherstellen</button>`
+      : `<button type="button" class="btn-small" data-experiment-action="archive" data-experiment-id="${escapeHtml(item.id)}">▣ Archivieren</button>`;
+    return `<article class="experiment-library-item ${archived ? "is-archived" : ""}"><div><strong>${escapeHtml(item.experiment_id || item.id)}</strong><small>${escapeHtml(meta)}</small></div><div class="experiment-library-item-actions">${action}</div></article>`;
+  }
+
+  async _handleExperimentLibraryAction(event) {
+    const button = event.target.closest?.("[data-experiment-action]");
+    if (!button) return;
+    const experimentId = button.dataset.experimentId;
+    const action = button.dataset.experimentAction;
+    if (!experimentId || !action) return;
+    const reason = action === "archive" ? (window.prompt("Warum wird dieses Experiment archiviert?", "manuelle Archivierung") || "manuelle Archivierung") : "";
+    if (action === "archive" && !window.confirm(`${experimentId} archivieren? Die Artefakte bleiben unverändert.`)) return;
+    button.disabled = true;
+    try {
+      await fetchJson("/api/research/experiments/archive", {
+        method: "POST",
+        body: JSON.stringify({ experiment_id: experimentId, action, reason }),
+      });
+      await this._loadExperimentCollections();
+    } catch (error) {
+      window.alert(`Aktion fehlgeschlagen: ${error.message || error}`);
+      button.disabled = false;
     }
   }
 

@@ -123,6 +123,10 @@ async function openDashboard(page, batchResponse = null) {
 test("batch dialog edits per-protocol options, reports completion, and updates footer", async ({ page }) => {
   const batchResponse = { body: null };
   await openDashboard(page, batchResponse);
+  await expect(page.locator("#workflow-experiment-library")).toBeVisible();
+  await expect(page.locator("#workflow-series-open")).toHaveText("Neue Reihe");
+  await expect(page.locator("#workflow-active-experiments")).toContainText("Keine aktiven Experimente.");
+  await expect(page.locator("#workflow-archived-experiments")).toContainText("Archiv ist leer.");
 
   await page.locator("#workflow-batch-open").click();
   await expect(page.locator("#workflow-batch-dialog")).toBeVisible();

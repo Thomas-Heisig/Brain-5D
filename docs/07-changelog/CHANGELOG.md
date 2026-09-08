@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-08 - Research experiment organizer
+
+- Added a visible Research Organizer for starting experiment series through the existing controlled batch workflow.
+- Added active experiment and archive lists with explicit archive reasons and restore actions.
+- Kept archived experiment directories immutable; no DATA, EVID or interpretation status is changed by archiving.
+
 ## 2026-09-08 - v0.6.0a1 development line
 
 - Opened the v0.6 Scaling & Deterministic Performance development line after the reviewed v0.5.0-alpha.7 gate closure.

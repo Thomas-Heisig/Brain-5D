@@ -2488,6 +2488,29 @@ body.contrast-mode .overview-surface {
 .workflow-progress-track.is-running b { width: 38% !important; background: var(--color-success); animation: workflow-progress-sweep 1.2s ease-in-out infinite; }
 @keyframes workflow-progress-sweep { 0%, 100% { transform: translateX(-105%); } 50% { transform: translateX(205%); } }
 
+.experiment-library-card { display: grid; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 4px; background: rgba(7, 20, 30, .58); }
+.experiment-library-card .panel-title { align-items: flex-start; }
+.experiment-library-card h3, .experiment-library-card h4 { margin: 2px 0; }
+.experiment-library-card p { margin: 4px 0 0; color: var(--muted); font-size: .74rem; line-height: 1.4; }
+.experiment-library-actions, .experiment-library-summary, .experiment-library-item-actions { display: flex; align-items: center; gap: 6px; }
+.experiment-library-summary { gap: 12px; color: var(--muted); font-size: .72rem; }
+.experiment-library-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.experiment-library-grid > section { min-width: 0; }
+.experiment-library-list { display: grid; gap: 6px; margin-top: 6px; }
+.experiment-library-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; padding: 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: var(--surface-2, rgba(255,255,255,.04)); }
+.experiment-library-item.is-archived { opacity: .82; }
+.experiment-library-item > div:first-child { display: grid; min-width: 0; gap: 2px; }
+.experiment-library-item strong, .experiment-library-item small { overflow-wrap: anywhere; }
+.experiment-library-item small, .experiment-library-empty { color: var(--muted); font-size: .7rem; }
+.experiment-library-item-actions { flex: 0 0 auto; }
+
+@media (max-width: 680px) {
+  .experiment-library-grid { grid-template-columns: 1fr; }
+  .experiment-library-card .panel-title { align-items: stretch; flex-direction: column; }
+  .experiment-library-actions { justify-content: flex-end; }
+  .experiment-library-item { align-items: flex-start; flex-direction: column; }
+}
+
 .workflow-batch-dialog {
   width: min(820px, calc(100vw - 24px));
   max-width: 100%;

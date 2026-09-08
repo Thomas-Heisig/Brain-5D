@@ -4,6 +4,11 @@
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-08
 
+## 2026-09-08 Research experiment organizer
+
+- Research now exposes experiment-series launch, active experiment inventory, immutable archive and restore controls in the existing dashboard workflow.
+- Archive operations move complete experiment directories and record only archive metadata; scientific artifacts remain unchanged.
+
 ## 2026-09-08 v0.6.0a1 development line opened
 
 - Opened the v0.6 Scaling & Deterministic Performance line after the reviewed v0.5.0-alpha.7 gate closure.
