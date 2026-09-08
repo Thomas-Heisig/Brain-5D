@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Brain-5D Scientific Evidence Framework — Report Generator
+MHRN Scientific Evidence Framework — Report Generator
 
 Usage:
     python research/generate_reports.py

@@ -1,4 +1,4 @@
-"""Izhikevich neuron model used by the sparse Brain-5D core.
+"""Izhikevich neuron model used by the sparse MHRN core.
 
 This module defines the Neuron class, which implements the Izhikevich
 spiking neuron model with:

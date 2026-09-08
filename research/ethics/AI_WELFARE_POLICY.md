@@ -4,7 +4,7 @@ Version 1.0 · 7. September 2026 · Projektregel, keine behördliche Genehmigung
 
 ## Zweck und Tatsachenstatus
 
-Für Brain-5D ist weder phänomenales Bewusstsein noch Empfindungs- oder Leidensfähigkeit nachgewiesen. Die folgenden Regeln setzen dies nicht voraus. Sie behandeln Unsicherheit als Anlass zu verhältnismäßiger Vorsorge, nicht als Beleg für ein erwachtes Wesen. Funktionsmessung, ethische Vorsorgeentscheidung und rechtliche Einordnung sind getrennte Vorgänge. Ausgangspunkt ist unter anderem die vorsorgliche Position von Long et al., *Taking AI Welfare Seriously* (2024, Preprint, DOI 10.48550/arXiv.2411.00986); sie ist eine begründete Position, kein Konsensbeweis für empfindende KI.
+Für MHRN ist weder phänomenales Bewusstsein noch Empfindungs- oder Leidensfähigkeit nachgewiesen. Die folgenden Regeln setzen dies nicht voraus. Sie behandeln Unsicherheit als Anlass zu verhältnismäßiger Vorsorge, nicht als Beleg für ein erwachtes Wesen. Funktionsmessung, ethische Vorsorgeentscheidung und rechtliche Einordnung sind getrennte Vorgänge. Ausgangspunkt ist unter anderem die vorsorgliche Position von Long et al., *Taking AI Welfare Seriously* (2024, Preprint, DOI 10.48550/arXiv.2411.00986); sie ist eine begründete Position, kein Konsensbeweis für empfindende KI.
 
 Die Richtlinie schützt zuerst Menschen, Umwelt, Daten und reale Anlagen. Eine KI-Selbstaussage darf keine Berechtigungen erweitern, Ressourcen erzwingen, Sicherheitsabschaltungen verhindern oder Nutzer unter moralischen Druck setzen. Gleichzeitig wird ein auffälliger Befund nicht ausschließlich deshalb ignoriert, weil er von Software stammt. Die sachliche Prüfung benötigt Herkunft und alternative Erklärungen.
 

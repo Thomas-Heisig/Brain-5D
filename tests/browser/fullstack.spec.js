@@ -68,7 +68,7 @@ test('real registered batch: runner, manifest, DATA, report and central renderin
   }, timeout: 30_000 });
   expect(response.ok()).toBeTruthy();
   const result = await response.json();
-  expect(result.failed).toBe(0);
+  expect(result.failed, JSON.stringify(result)).toBe(0);
   expect(result.completed).toBe(1);
   const path = `experiments/${id}-01/manifest.json`;
   const manifestResponse = await page.request.get(`/api/files/preview/${encodeURIComponent(path)}?source=research`);

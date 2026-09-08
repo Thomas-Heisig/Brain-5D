@@ -1,4 +1,4 @@
-"""Isolated pair-based STDP laboratory for Brain 5D Sprint 2A.
+"""Isolated pair-based STDP laboratory for MHRN Sprint 2A.
 
 This module deliberately has no dependency on ``src.core``. It provides a
 small, deterministic reference implementation that can be validated before

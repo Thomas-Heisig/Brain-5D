@@ -1,4 +1,4 @@
-# Brain-5D Release Quality Gate
+# MHRN Release Quality Gate
 
 A release may be tagged only after all required engineering and scientific-integrity gates are green for the release candidate tree.
 

@@ -5,6 +5,22 @@
   "current_entrypoint": "publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/README.md",
   "publications": [
     {
+      "id": "PUB-RECURSIVE-EPISTEMICS-20260908",
+      "title": "Recursive Epistemics in Embodied Spiking Neural Architectures: A Framework for Delegated Agency and Multi-Scale Recurrence",
+      "subtitle": "Rekursive Epistemik in verkörperten spikenden neuronalen Architekturen: Ein Framework für delegierte Handlungsmacht und mehrskalige Rekurrenz",
+      "type": "wissenschaftliche_abhandlung",
+      "author": "Thomas Heisig",
+      "date": "2026-09-08",
+      "version": "1.3",
+      "entrypoint": "publications/README.md",
+      "reader": "publications/2026-09-08_recursive-epistemics_v1.3/README.md",
+      "snapshot": "publications/2026-09-08_recursive-epistemics_v1.3",
+      "read_only": true,
+      "authority": "interpretation_only",
+      "automatic_evidence_promotion": false,
+      "registry_role": "historical_snapshot_not_canonical_registry"
+    },
+    {
       "id": "PUB-KI-GELIEHENE-INTELLIGENZ-20260907-V12",
       "title": "KI - Die geliehene Intelligenz, Fassung 1.2",
       "author": "Thomas Heisig",
@@ -69,5 +85,6 @@
       "empirical_brain5d_experiments_executed": false,
       "current": false
     }
-  ]
+  ],
+  "current_publication": "PUB-RECURSIVE-EPISTEMICS-20260908"
 }

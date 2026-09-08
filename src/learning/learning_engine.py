@@ -1,4 +1,4 @@
-"""Optional plasticity layer for Brain 5D.
+"""Optional plasticity layer for MHRN.
 
 Sprint 2C extends the Sprint 2B nearest-neighbour STDP/eligibility layer with
 reward-modulated three-factor learning. The engine remains outside ``src.core``

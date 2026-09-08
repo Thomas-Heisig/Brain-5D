@@ -1,6 +1,6 @@
 """Read-only research registry and report source for the dashboard.
 
-Exposes the Brain-5D Scientific Evidence Framework (B5D-SEF) artifacts
+Exposes the MHRN Scientific Evidence Framework (B5D-SEF) artifacts
 located under ``research/`` to the operator dashboard. The source is
 strictly read-only and resolves paths defensively so a missing or
 partially populated research tree never crashes the dashboard.

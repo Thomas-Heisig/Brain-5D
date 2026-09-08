@@ -1,4 +1,4 @@
-"""Validation tests for the Brain-5D research registry.
+"""Validation tests for the MHRN research registry.
 
 These tests enforce structural integrity of the research registry YAML files:
 - No duplicate IDs across all registry files
@@ -274,7 +274,7 @@ class TestRegistryReferences:
     def test_source_question_references_resolve(
         self, registry_data: dict[str, list[RegistryEntry]]
     ) -> None:
-        """Every Brain-5D question reference on a source must exist."""
+        """Every MHRN question reference on a source must exist."""
         question_ids: set[str] = {
             str(entry["id"])
             for entry in registry_data.get("questions", [])

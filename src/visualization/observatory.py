@@ -1,4 +1,4 @@
-"""Interactive Brain 5D observatory with optional X-Y heatmap."""
+"""Interactive MHRN observatory with optional X-Y heatmap."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def build_raster_points(frames: Any, sample_ids: list[int]) -> list[tuple[int, i
 
 
 class Observatory:
-    """Interactive visual observer for sparse Brain 5D simulations."""
+    """Interactive visual observer for sparse MHRN simulations."""
 
     def __init__(
         self,

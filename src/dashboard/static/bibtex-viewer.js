@@ -1,5 +1,5 @@
 /**
- * Brain-5D Operator Dashboard – BibTeX Viewer Module
+ * MHRN Operator Dashboard – BibTeX Viewer Module
  *
  * Self-contained ES module for parsing, displaying, and exporting
  * BibTeX bibliographic entries. Provides:

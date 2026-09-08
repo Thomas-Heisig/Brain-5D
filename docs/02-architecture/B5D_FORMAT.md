@@ -1,4 +1,4 @@
-# Brain-5D `.b5d` Snapshot Format V1
+# MHRN `.b5d` Snapshot Format V1
 
 ## Status
 
@@ -11,7 +11,7 @@ integration are complete.
 
 ## Design goals
 
-`.b5d` V1 provides a deterministic, memory-mappable snapshot of a Brain-5D
+`.b5d` V1 provides a deterministic, memory-mappable snapshot of a MHRN
 network with fixed-size neuron and synapse records. It is intended for:
 
 - large snapshots that must not be loaded completely into RAM,
@@ -133,7 +133,7 @@ The exact struct is:
 | last_pre_spike | int64 | 8 |
 | reserved | zero/padding | 4 |
 
-Brain-5D currently uses 40 significant bits for packed neuron IDs, but V1
+MHRN currently uses 40 significant bits for packed neuron IDs, but V1
 stores IDs as uint64. This keeps records aligned and simple. A packed 40-bit
 variant requires a future format version and benchmark evidence.
 

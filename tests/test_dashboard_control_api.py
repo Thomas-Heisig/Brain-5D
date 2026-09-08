@@ -1,4 +1,4 @@
-"""API contract tests for the Brain-5D dashboard control endpoints.
+"""API contract tests for the MHRN dashboard control endpoints.
 
 Tests every runtime command through the full HTTP dispatch path:
 - Canonical contract: POST /api/control { "command": "...", ... }

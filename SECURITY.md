@@ -2,7 +2,7 @@
 
 ## Project status
 
-Brain-5D is an experimental research and engineering project. The current
+MHRN is an experimental research and engineering project. The current
 development line is `0.5.x`; it is not presented as a hardened internet-facing
 service.
 

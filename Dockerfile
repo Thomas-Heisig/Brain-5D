@@ -1,11 +1,11 @@
 # ============================================================================
-# Brain-5D — Dockerfile
+# MHRN — Dockerfile
 # ============================================================================
 # Multi-stage build for minimal production image.
 #
-# Build:    docker build -t brain5d .
-# Run:      docker run --rm -p 8765:8765 brain5d
-# Run with: docker run --rm -v ./configs:/app/configs brain5d \
+# Build:    docker build -t mhrn .
+# Run:      docker run --rm -p 8765:8765 mhrn
+# Run with: docker run --rm -v ./configs:/app/configs mhrn \
 #             python -m src.main --config configs/poc_config.yaml
 # ============================================================================
 
@@ -42,6 +42,9 @@ RUN pip install --no-cache-dir /tmp/*.whl && rm /tmp/*.whl
 COPY src/ src/
 COPY configs/ configs/
 COPY scripts/ scripts/
+COPY research/ research/
+COPY docs/ docs/
+COPY project_identity.json NAMING.md README.md ./
 
 # Expose dashboard port
 EXPOSE 8765

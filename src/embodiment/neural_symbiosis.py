@@ -1,6 +1,6 @@
 """Embodiment-only contracts for peripheral neural-network symbiosis.
 
-This module deliberately does not import or mutate the Brain-5D neural core.
+This module deliberately does not import or mutate the MHRN neural core.
 It describes peripheral neural/virtual processing areas, read-only topology
 publication and pure gateway mathematics that experiments may opt into later.
 
@@ -27,7 +27,7 @@ class AreaKind(StrEnum):
 
 
 class PipelineDirection(StrEnum):
-    """Direction of information flow relative to the Brain-5D core."""
+    """Direction of information flow relative to the MHRN core."""
 
     AFFERENT = "afferent"
     EFFERENT = "efferent"
@@ -49,7 +49,7 @@ class NetworkAreaAdapter(Protocol):
         ...
 
     def process(self, payload: JSONValue, tick: int) -> JSONValue:
-        """Process one payload without direct access to Brain-5D core state."""
+        """Process one payload without direct access to MHRN core state."""
         ...
 
 

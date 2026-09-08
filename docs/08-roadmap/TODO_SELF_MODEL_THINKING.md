@@ -1,4 +1,4 @@
-# Brain-5D — TODO: Self-Model, Functional Thinking & Philosophical Research
+# MHRN — TODO: Self-Model, Functional Thinking & Philosophical Research
 
 > Stand: 2026-09-03
 > Ergänzt `docs/08-roadmap/TODO.md` um den weiterführenden Forschungsstrang.
@@ -123,7 +123,7 @@
 
 ## SCIENCE — Kriterien für den Begriff „funktionales Denken“
 
-Vor einem positiven Brain-5D-Claim müssen gemeinsam nachgewiesen sein:
+Vor einem positiven MHRN-Claim müssen gemeinsam nachgewiesen sein:
 
 - [ ] T1 interne Persistenz
 - [ ] T2 Gegenwartsentkopplung

@@ -1,4 +1,4 @@
-# Brain-5D Real-Body Embodiment
+# MHRN Real-Body Embodiment
 
 ## Ziel
 
@@ -16,7 +16,7 @@ Das Embodiment soll kein vorgezeichnetes menschliches Körperschema simulieren. 
 
 ## Dynamische Körpergrenze
 
-Das Dashboard erzeugt den Körper aus `/api/embodiment/connections`. Verfügbare Verbindungen werden radial um den Brain-5D-Kern angeordnet. Dadurch verändert sich die Form automatisch, wenn reale Verbindungen hinzukommen oder verschwinden.
+Das Dashboard erzeugt den Körper aus `/api/embodiment/connections`. Verfügbare Verbindungen werden radial um den MHRN-Kern angeordnet. Dadurch verändert sich die Form automatisch, wenn reale Verbindungen hinzukommen oder verschwinden.
 
 Beispiele sind:
 
@@ -50,7 +50,7 @@ Fehlende Temperatur-, Lüfter- oder Akkudaten werden ausdrücklich nicht geschä
 
 `embodiment-self-model.js` ergänzt das bestehende Embodiment-Dashboard um ein zentrales Selbstbild:
 
-1. Brain-5D bleibt der visuelle Mittelpunkt.
+1. MHRN bleibt der visuelle Mittelpunkt.
 2. Reale verfügbare Verbindungen bilden dynamisch die äußeren Organe.
 3. Host-Telemetrie bildet die inneren Zustandsanzeigen.
 4. Verbindungsstatus, Beziehung, Fähigkeiten, Berechtigungen, Autorisierung und Aktivität sind interaktiv einsehbar.

@@ -1,5 +1,5 @@
 /**
- * Brain-5D Operator Dashboard – Main Application (Sole Lifecycle Owner)
+ * MHRN Operator Dashboard – Main Application (Sole Lifecycle Owner)
  *
  * This module is the ONLY component that initializes dashboard sub-modules.
  * ControlPanel and OperatorConsole are pure ES modules that do NOT
@@ -2111,7 +2111,7 @@ function openGateDetail(item) {
 /**
  * Build version-specific integration checks.
  * Each version has its own set of checks that reflect what was
- * integrated at that stage of Brain-5D development.
+ * integrated at that stage of MHRN development.
  */
 function getVersionChecks() {
   return {
@@ -2437,7 +2437,7 @@ function setupGlobalShortcuts() {
 // ================================================================
 
 function init() {
-  console.log('🧠 Brain-5D Operator Dashboard v3.0.0');
+  console.log('🧠 MHRN Operator Dashboard v3.0.0');
 
   sharedExperimentMode = new ExperimentMode();
   sharedExperimentMode.refresh();

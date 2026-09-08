@@ -1,4 +1,4 @@
-"""Frontend regressions for the animated Brain-5D embodiment map."""
+"""Frontend regressions for the animated MHRN embodiment map."""
 
 from __future__ import annotations
 

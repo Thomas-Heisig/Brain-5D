@@ -1,6 +1,10 @@
-# Brain-5D Scientific Evidence Framework (B5D-SEF)
+## Naming update — 2026-09-08
 
-Ein wissenschaftliches Evidenzsystem für Brain-5D, das technische Implementierung, Experimentdaten, akzeptierte Evidenz und Interpretation strikt trennt.
+MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Epistemics / Rekursive Epistemik. [Migration and compatibility](../NAMING.md). Historical scientific artifacts remain unchanged. Platform completion is recorded separately from requested names.
+
+# MHRN Scientific Evidence Framework (B5D-SEF)
+
+Ein wissenschaftliches Evidenzsystem für MHRN, das technische Implementierung, Experimentdaten, akzeptierte Evidenz und Interpretation strikt trennt.
 
 ## Aktueller technischer Stand — 2026-09-07
 

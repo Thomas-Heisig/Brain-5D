@@ -1,4 +1,4 @@
-"""Canonical Brain-5D version source.
+"""Canonical MHRN version source.
 
 All version strings in the project should derive from this single source.
 Use ``BRAIN5D_VERSION`` for the PEP-440 compatible version string and
@@ -45,7 +45,7 @@ except Exception:
     pass
 
 try:
-    _pkg_version_str: str = _pkg_version("brain5d-core")
+    _pkg_version_str: str = _pkg_version("mhrn-core")
     # If the installed version is older than the pyproject.toml version,
     # prefer pyproject.toml (likely running from source with stale install)
     if _pyproject_version is not None and _pkg_version_str != _pyproject_version:
@@ -70,3 +70,7 @@ else:
 
 BRAIN5D_VERSION_DISPLAY: str = _display
 """Human-readable version string (e.g. '0.5.0-alpha.7')."""
+
+# Public MHRN names; historical imports remain supported.
+MHRN_VERSION: str = BRAIN5D_VERSION
+MHRN_VERSION_DISPLAY: str = BRAIN5D_VERSION_DISPLAY

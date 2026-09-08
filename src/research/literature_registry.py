@@ -34,12 +34,12 @@ class LiteratureRegistry:
 
     def generate_literature_matrix(self) -> str:
         """
-        Generate a markdown literature → Brain-5D relevance matrix.
+        Generate a markdown literature → MHRN relevance matrix.
         """
         lines = [
-            "# Literatur → Brain-5D Relevanzmatrix",
+            "# Literatur → MHRN Relevanzmatrix",
             "",
-            "| Quelle | Aussage | Brain-5D-Frage(n) | Status |",
+            "| Quelle | Aussage | MHRN-Frage(n) | Status |",
             "|--------|---------|-------------------|--------|",
         ]
 

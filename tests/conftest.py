@@ -1,4 +1,4 @@
-"""Shared fixtures and automatic test marker assignment for Brain-5D tests."""
+"""Shared fixtures and automatic test marker assignment for MHRN tests."""
 
 from __future__ import annotations
 

@@ -1,4 +1,15 @@
-# Brain-5D
+# Multi-Scale Homeostatic Recurrence Network (MHRN)
+
+## Mehrskaliges homöostatisches Rekurrenznetzwerk
+
+**A Spiking Neural Architecture with Topological Plasticity**
+
+*Eine spikende neuronale Architektur mit topologischer Plastizität*
+
+[Scientific treatise / Wissenschaftliche Abhandlung](research/publications/README.md) · [Naming and compatibility / Benennung und Kompatibilität](NAMING.md).
+
+MHRN is the current project name. Historical publications, scientific coordinates, evidence identifiers and compatible `.b5d` files retain their original meaning. The name does not establish consciousness or a performance advantage. The observed platform migration results are in [the status record](docs/05-quality/mhrn-platform-migration.json).
+
 
 **Experimental sparse 5D spiking-neural research framework with deterministic persistence, controlled plasticity, embodiment, multi-network peripheral integration and scientific provenance.**
 
@@ -6,9 +17,9 @@
 [![Version](https://img.shields.io/badge/version-0.5.0a7-orange.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-Brain-5D is a research framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network (SNN). The SNN remains the primary adaptive system. Language models, research assistants and peripheral neural networks are bounded components and do not acquire implicit authority over canonical neural state, reward, memory, experiment DATA or accepted EVID.
+MHRN is a research framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network (SNN). The SNN remains the primary adaptive system. Language models, research assistants and peripheral neural networks are bounded components and do not acquire implicit authority over canonical neural state, reward, memory, experiment DATA or accepted EVID.
 
-> **Scientific status:** Brain-5D is an experimental engineering and research platform. Implementation, passing tests, dashboards, reachable devices, generated reports or available AI/network adapters are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
+> **Scientific status:** MHRN is an experimental engineering and research platform. Implementation, passing tests, dashboards, reachable devices, generated reports or available AI/network adapters are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
 
 ## Current `main` baseline
 
@@ -74,7 +85,7 @@ Logic engine → neuro-symbolic projector → gateway → 5D-SNN
 5D-SNN → gateway → GRU / control MLP → robotics adapter
 ```
 
-The adapter contract is deliberately open-set and framework-neutral. CNNs, Transformers, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoders, peripheral SNNs, multimodal/neuro-symbolic networks and future custom architectures can be represented through `NetworkAreaAdapter` without importing their implementation framework into the Brain-5D core.
+The adapter contract is deliberately open-set and framework-neutral. CNNs, Transformers, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoders, peripheral SNNs, multimodal/neuro-symbolic networks and future custom architectures can be represented through `NetworkAreaAdapter` without importing their implementation framework into the MHRN core.
 
 Virtual cognitive systems such as logic engines, databases, knowledge graphs, retrieval systems or external memory stores can participate through explicit virtual-area adapters.
 
@@ -112,7 +123,7 @@ Large raw run series are preserved as immutable/compressed artifacts while bound
 
 ## Wesen and Embodiment
 
-Brain-5D intentionally separates the technical body interface from the live body visualization:
+MHRN intentionally separates the technical body interface from the live body visualization:
 
 - **Embodiment** configures/observes sensors, devices, actuators, permissions, connection quality and body boundaries.
 - **Wesen** is a read-only live projection of the observed machine body.
@@ -156,8 +167,8 @@ See:
 ## Quick start
 
 ```bash
-git clone https://github.com/Thomas-Heisig/Brain-5D.git
-cd Brain-5D
+git clone https://github.com/Thomas-Heisig/Brain-5D.git MHRN
+cd MHRN
 python -m venv .venv
 ```
 
@@ -288,9 +299,9 @@ The dashboard binds to loopback by default. It exposes operator and file-managem
 ## Citation
 
 ```bibtex
-@software{heisig2026brain5d,
+@software{heisig2026mhrn,
   author  = {Thomas Heisig},
-  title   = {Brain-5D: Sparse 5D Spiking-Neural Research Framework},
+  title   = {Multi-Scale Homeostatic Recurrence Network (MHRN)},
   year    = {2026},
   version = {0.5.0a7},
   url     = {https://github.com/Thomas-Heisig/Brain-5D},

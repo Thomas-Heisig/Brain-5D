@@ -1,4 +1,4 @@
-"""Quality gate for Brain-5D v0.5.0-alpha.5."""
+"""Quality gate for MHRN v0.5.0-alpha.5."""
 
 from __future__ import annotations
 

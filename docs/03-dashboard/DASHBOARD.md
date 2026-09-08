@@ -1,8 +1,8 @@
-# Brain-5D Operator & Research Dashboard
+# MHRN Operator & Research Dashboard
 
 ## Purpose
 
-The dashboard is the operator and research interface for Brain-5D. It visualizes published state, exposes explicit operator controls and connects research workflows without becoming an alternative simulation engine.
+The dashboard is the operator and research interface for MHRN. It visualizes published state, exposes explicit operator controls and connects research workflows without becoming an alternative simulation engine.
 
 The current UI is a responsive, full-width workspace system with one shared visual language. Presentation layers do not manufacture scientific state and do not acquire hidden runtime authority.
 

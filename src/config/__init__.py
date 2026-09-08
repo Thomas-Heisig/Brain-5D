@@ -1,8 +1,8 @@
 """
-Brain-5D configuration management.
+MHRN configuration management.
 
 This package provides loading, validation, and management of
-Brain-5D configuration files in YAML format.
+MHRN configuration files in YAML format.
 """
 
 from .loader import (

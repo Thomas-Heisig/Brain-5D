@@ -1,5 +1,5 @@
 /**
- * Brain-5D Operator Console — ES Module
+ * MHRN Operator Console — ES Module
  *
  * This module is a pure ES module. It does NOT self-initialize and does NOT
  * register any DOMContentLoaded listeners. The sole lifecycle owner is
@@ -401,7 +401,7 @@ export class OperatorConsole {
     // Initialize logger and bind to shared console log
     this.logger = new ConsoleLogger('console-output');
     this.logger.bindSharedLog().then(() => {
-      this.logger.log('🧠 Brain-5D Operator Console initialized', 'info');
+      this.logger.log('🧠 MHRN Operator Console initialized', 'info');
       this.logger.log(`📡 API endpoint: /api/control`, 'info');
       this.proposalPanel = new StructuralProposalPanel({
         api: OperatorAPI,

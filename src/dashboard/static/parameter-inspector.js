@@ -1,5 +1,5 @@
 /**
- * Brain-5D Parameter Inspector — ES Module
+ * MHRN Parameter Inspector — ES Module
  *
  * Displays runtime/config parameters, lets operators propose changes,
  * and manages the pending-changes workflow (apply / apply+save / cancel).

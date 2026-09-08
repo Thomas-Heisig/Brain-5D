@@ -38,7 +38,7 @@ def main():
     print(f"  neuron 0 v = {net.neurons[0].v!r}")
     print(f"  homeo rate 0 = {homeo._rates_hz.get(0, 0.0)!r}")
 
-    tmp_path = Path("F:/Brain-5D/tmp/trace_diag/path_b")
+    tmp_path = Path("F:/MHRN/tmp/trace_diag/path_b")
     tmp_path.mkdir(parents=True, exist_ok=True)
     rt = StorageRuntimeConfig(
         snapshot_path=tmp_path / "base.b5d",

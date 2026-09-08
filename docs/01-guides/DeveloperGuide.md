@@ -1,8 +1,8 @@
-# Brain-5D Developer Guide
+# MHRN Developer Guide
 
 ## 1. Architecture
 
-Brain-5D is organized around explicit boundaries:
+MHRN is organized around explicit boundaries:
 
 1. `src/core/` — neural network, neurons, synapses, spatial indexing.
 2. `src/learning/` — STDP, eligibility traces, reward learning.

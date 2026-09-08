@@ -3,7 +3,7 @@
 Usage:
     python scripts/rebuild_dashboard_html.py
 
-This script regenerates the complete index.html for the Brain-5D operator
+This script regenerates the complete index.html for the MHRN operator
 dashboard by composing all section templates.
 """
 

@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Startet Brain-5D mit Dashboard und Browser.
+    Startet MHRN mit Dashboard und Browser.
 .DESCRIPTION
-    Startet die Brain-5D-Simulation mit integriertem Dashboard und oeffnet
+    Startet die MHRN-Simulation mit integriertem Dashboard und oeffnet
     den Browser. Der Launcher startet src.main als einzigen Prozess.
     Verwendet bevorzugt die venv-Umgebung.
 
@@ -73,13 +73,13 @@ if (Test-Path $VenvPython) {
 
 # Hilfe
 if ($Help) {
-    & $PythonExe (Join-Path $ProjectRoot "scripts" "brain5d_launcher.py") start --help
+    & $PythonExe (Join-Path $ProjectRoot "scripts" "mhrn_launcher.py") start --help
     exit 0
 }
 
 # Launcher-Argumente bauen
 $arguments = @(
-    (Join-Path $ProjectRoot "scripts" "brain5d_launcher.py"),
+    (Join-Path $ProjectRoot "scripts" "mhrn_launcher.py"),
     "start",
     "--config", (Join-Path $ProjectRoot $Config)
 )
@@ -108,7 +108,7 @@ if ($PassThru) {
 }
 
 # Ausfuehren
-Write-Host "Brain-5D wird gestartet ..." -ForegroundColor Cyan
+Write-Host "MHRN wird gestartet ..." -ForegroundColor Cyan
 Write-Host "  Config: $Config" -ForegroundColor Gray
 
 try {

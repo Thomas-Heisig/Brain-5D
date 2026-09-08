@@ -1,4 +1,8 @@
-# Brain-5D Current TODO
+## Naming update — 2026-09-08
+
+MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Epistemics / Rekursive Epistemik. [Migration and compatibility](../../NAMING.md). Historical scientific artifacts remain unchanged. Platform completion is recorded separately from requested names.
+
+# MHRN Current TODO
 
 **Canonical TODO for `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
@@ -62,7 +66,7 @@
 ## 2026-09-07 Hugging Face Space
 
 - [x] Configure the Docker image to start the integrated dashboard on the Space port.
-- [x] Publish the dashboard as `superdigger/Brain-5D-Space`.
+- [x] Publish the dashboard as `superdigger/MHRN-Space`.
 - [x] Synchronize future GitHub updates to both the model repository and the Space repository.
 - [x] Add a Space-specific smoke check against the local Docker dashboard API.
 - [ ] Re-run the public Space browser smoke check after HF proxy rate limits clear.
@@ -104,7 +108,7 @@
 
 ## 2026-09-07 Dissertation results synchronization
 
-- [x] Insert verified Brain-5D experiment results into the dissertation-basis DOCX.
+- [x] Insert verified MHRN experiment results into the dissertation-basis DOCX.
 - [x] Preserve dirty-source and human-review limitations in the document.
 - [x] Keep the DOCX update repeatable through `scripts/update_dissertation_results.py`.
 - [ ] Synchronize future reviewed EVID records into the DOCX after human approval. No reviewed EVID record exists yet.

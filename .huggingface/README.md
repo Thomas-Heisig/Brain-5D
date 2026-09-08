@@ -1,6 +1,6 @@
 # Hugging Face Repository Konfiguration
 
-Dieses Verzeichnis enthält Konfigurationsdateien für das Hugging Face Repository von Brain-5D.
+Dieses Verzeichnis enthält Konfigurationsdateien für das Hugging Face Repository von MHRN.
 
 ## Dateien
 
@@ -28,9 +28,9 @@ pip install huggingface-hub
 huggingface-cli login
 
 # Repository erstellen (einmalig)
-huggingface-cli repo create Brain-5D --type model --organization <your-org>
+huggingface-cli repo create MHRN --type model --organization <your-org>
 
 # Zum lokalen HF-Zweig pushen
-git remote add huggingface https://huggingface.co/<your-org>/Brain-5D
+git remote add huggingface https://huggingface.co/<your-org>/MHRN
 git push huggingface main
 ```

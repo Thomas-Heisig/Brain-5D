@@ -1,4 +1,4 @@
-# Brain-5D Research Positioning and Evidence Program
+# MHRN Research Positioning and Evidence Program
 
 **Status:** canonical research-positioning document  
 **Baseline:** `brain5d-core 0.5.0a7`  
@@ -6,7 +6,7 @@
 
 ## 1. Project classification
 
-Brain-5D is an experimental research framework at the intersection of computational neuroscience, neuromorphic artificial intelligence, embodied adaptive systems and reproducible AI-assisted research.
+MHRN is an experimental research framework at the intersection of computational neuroscience, neuromorphic artificial intelligence, embodied adaptive systems and reproducible AI-assisted research.
 
 Its technical core is a sparse five-dimensional spiking neural network using Izhikevich-type neurons, delayed event propagation, local plasticity, homeostatic regulation and bounded structural plasticity. Around that core, the project provides deterministic persistence, embodiment interfaces, experience loops, observability, experiment registries, evidence gates and read-only/proposal-only AI research assistance.
 
@@ -14,7 +14,7 @@ The project explicitly does **not** treat implementation, visual complexity, pas
 
 ## 2. Distinguishing characteristics
 
-Brain-5D is differentiated by the combination of the following properties rather than by any single mechanism:
+MHRN is differentiated by the combination of the following properties rather than by any single mechanism:
 
 1. **Sparse 5D neural organization** with explicit coordinates and experimentally testable dimensionality claims.
 2. **Deterministic persistence** through snapshots, journals, checkpoints and reproducible RNG/state restoration.
@@ -56,7 +56,7 @@ A higher level may use lower levels as prerequisites, but no lower level may be 
 
 ### 5.1 Internal reference benchmarks
 
-Brain-5D should maintain a small, versioned benchmark suite whose purpose is scientific comparability rather than leaderboard optimization. At minimum it should include:
+MHRN should maintain a small, versioned benchmark suite whose purpose is scientific comparability rather than leaderboard optimization. At minimum it should include:
 
 - deterministic spike-response benchmark;
 - propagation/recurrence benchmark;
@@ -70,7 +70,7 @@ Brain-5D should maintain a small, versioned benchmark suite whose purpose is sci
 
 ### 5.2 External comparison tasks
 
-Where compatible with the research question, standardized tasks may be added to compare Brain-5D with conventional baselines. Candidate classes include event/spike-coded classification tasks, temporal sequence tasks and simple control environments. The purpose is not to claim broad superiority, but to establish whether an effect survives comparison with simpler alternatives.
+Where compatible with the research question, standardized tasks may be added to compare MHRN with conventional baselines. Candidate classes include event/spike-coded classification tasks, temporal sequence tasks and simple control environments. The purpose is not to claim broad superiority, but to establish whether an effect survives comparison with simpler alternatives.
 
 For any external benchmark:
 
@@ -103,7 +103,7 @@ The preregistration artifact should be immutable after the first scientific run.
 
 ## 7. Causal inference standard
 
-Because Brain-5D is highly recurrent and adaptive, correlations between activity, topology and behavior are insufficient for causal claims.
+Because MHRN is highly recurrent and adaptive, correlations between activity, topology and behavior are insufficient for causal claims.
 
 Causal questions should use interventions such as:
 
@@ -175,7 +175,7 @@ Which intervention and replay methods provide stable causal estimates when topol
 
 ### RQ-REPL-001 — Independent replication reliability
 
-What fraction of accepted Brain-5D findings survives clean-process replication across seeds, operators and supported Python/runtime environments?
+What fraction of accepted MHRN findings survives clean-process replication across seeds, operators and supported Python/runtime environments?
 
 ### RQ-AI-DESIGN-001 — Model-specific design fingerprints
 
@@ -198,4 +198,4 @@ A preprint should not be released as a claim-bearing scientific result until the
 
 ## 12. Success criteria for the next phase
 
-The next phase is successful if Brain-5D produces a smaller number of stronger results rather than a larger number of mechanisms. The target is a chain of preregistered experiments in which at least one central architectural claim is either supported or clearly rejected by replicated evidence.
+The next phase is successful if MHRN produces a smaller number of stronger results rather than a larger number of mechanisms. The target is a chain of preregistered experiments in which at least one central architectural claim is either supported or clearly rejected by replicated evidence.

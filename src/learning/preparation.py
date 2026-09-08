@@ -1,4 +1,4 @@
-"""Guarded preparation contracts for Brain-5D learning runs.
+"""Guarded preparation contracts for MHRN learning runs.
 
 The learning preparation layer sits *before* the existing LearningEngine.  It may
 organize objectives, source provenance, baselines, training/evaluation phases and

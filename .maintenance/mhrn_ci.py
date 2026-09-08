@@ -57,10 +57,8 @@ def main() -> None:
     await viewer.getByRole('button', { name: 'Publikationsübersicht', exact: true }).click();
     await viewer.getByRole('button', { name: 'Lesefassung 1.0', exact: true }).click();""")
     browser.write_text(text, encoding="utf-8")
-    # New script entrypoints must work without relying on an editable install.
-    script = Path("scripts/publication_naming.py")
-    text = script.read_text(encoding="utf-8").replace("from scripts.publication_revision import check_links", "try:\n    from scripts.publication_revision import check_links\nexcept ModuleNotFoundError:\n    from publication_revision import check_links")
-    script.write_text(text, encoding="utf-8")
+    # Workflow files are committed through the authorized connector, not the runner token.
+    subprocess.run(["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", ".github/workflows"], check=True)
     run("format", [sys.executable, "-m", "black", "src", "tests", "scripts"])
     run("lint_fix", [sys.executable, "-m", "ruff", "check", "--fix", "src", "tests", "scripts"])
     run("format_check", [sys.executable, "-m", "black", "--check", "src", "tests", "scripts"])

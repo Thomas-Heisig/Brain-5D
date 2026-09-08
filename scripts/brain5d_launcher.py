@@ -1,11 +1,11 @@
-"""Typed cross-platform launcher for Brain-5D.
+"""Typed cross-platform launcher for MHRN.
 
 Usage:
     python scripts/brain5d_launcher.py start [options]   # Start simulation
     python scripts/brain5d_launcher.py stop               # Stop all processes
     python scripts/brain5d_launcher.py --help             # Show help
 
-The launcher starts exactly one Brain-5D application process (src.main),
+The launcher starts exactly one MHRN application process (src.main),
 which owns the simulation, runtime controller, OperatorBridge and dashboard.
 
 Important architecture rule:
@@ -107,7 +107,7 @@ def spawn(
     *,
     cwd: Path = ROOT,
 ) -> subprocess.Popen[bytes]:
-    """Start one Brain-5D child process with concrete Popen argument types."""
+    """Start one MHRN child process with concrete Popen argument types."""
     creationflags = 0
     if os.name == "nt":
         creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
@@ -124,7 +124,7 @@ def spawn(
 
 
 def build_command(args: argparse.Namespace) -> list[str]:
-    """Build the single Brain-5D application command.
+    """Build the single MHRN application command.
 
     ``src.main`` is the application composition root. It owns:
 
@@ -186,15 +186,15 @@ def add_start_parser(subparsers: Any) -> None:
     """Add the ``start`` subcommand parser."""
     parser: argparse.ArgumentParser = subparsers.add_parser(
         "start",
-        help="Start the Brain-5D simulation",
-        description="Start the Brain-5D simulation with optional dashboard.",
+        help="Start the MHRN simulation",
+        description="Start the MHRN simulation with optional dashboard.",
     )
     parser.set_defaults(func=_cmd_start)
 
     parser.add_argument(
         "--dashboard",
         action="store_true",
-        help="Start Brain-5D with the integrated operator dashboard.",
+        help="Start MHRN with the integrated operator dashboard.",
     )
     parser.add_argument(
         "--open-browser",
@@ -216,7 +216,7 @@ def add_start_parser(subparsers: Any) -> None:
         "--config",
         type=Path,
         default=Path("configs/poc_config.yaml"),
-        help="Brain-5D configuration file.",
+        help="MHRN configuration file.",
     )
     parser.add_argument(
         "--observe",
@@ -271,7 +271,7 @@ def _cmd_start(args: argparse.Namespace) -> int:
     if existing_pid is not None:
         if pid_is_running(existing_pid):
             print(
-                f"Error: Brain-5D is already running (PID {existing_pid}).",
+                f"Error: MHRN is already running (PID {existing_pid}).",
                 file=sys.stderr,
             )
             return 1
@@ -290,13 +290,13 @@ def _cmd_start(args: argparse.Namespace) -> int:
         process = spawn(command)
     except OSError as exc:
         print(
-            f"Failed to start Brain-5D: {type(exc).__name__}: {exc}",
+            f"Failed to start MHRN: {type(exc).__name__}: {exc}",
             file=sys.stderr,
         )
         return 1
 
     _write_pid(process.pid)
-    print(f"Brain-5D started (PID {process.pid})")
+    print(f"MHRN started (PID {process.pid})")
     print(f"  Command: {' '.join(command)}")
 
     if args.dashboard:
@@ -329,8 +329,8 @@ def add_stop_parser(subparsers: Any) -> None:
     """Add the ``stop`` subcommand parser."""
     parser: argparse.ArgumentParser = subparsers.add_parser(
         "stop",
-        help="Stop the Brain-5D simulation",
-        description="Stop the running Brain-5D simulation process.",
+        help="Stop the MHRN simulation",
+        description="Stop the running MHRN simulation process.",
     )
     parser.set_defaults(func=_cmd_stop)
 
@@ -339,11 +339,11 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
     """Execute the ``stop`` subcommand."""
     pid = _read_pid()
     if pid is None:
-        print("No Brain-5D process found (no PID file).", file=sys.stderr)
+        print("No MHRN process found (no PID file).", file=sys.stderr)
         return 1
 
     if not pid_is_running(pid):
-        print(f"Brain-5D process {pid} not found (already exited).")
+        print(f"MHRN process {pid} not found (already exited).")
         _remove_pid()
         return 0
 
@@ -361,15 +361,15 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
         else:
             os.kill(pid, signal.SIGTERM)
 
-        print(f"Brain-5D process {pid} stopped.")
+        print(f"MHRN process {pid} stopped.")
         _remove_pid()
         return 0
     except ProcessLookupError:
-        print(f"Brain-5D process {pid} not found (already exited).")
+        print(f"MHRN process {pid} not found (already exited).")
         _remove_pid()
         return 0
     except OSError as exc:
-        print(f"Failed to stop Brain-5D process {pid}: {exc}", file=sys.stderr)
+        print(f"Failed to stop MHRN process {pid}: {exc}", file=sys.stderr)
         return 1
 
 
@@ -381,7 +381,7 @@ def _cmd_stop(_args: argparse.Namespace) -> int:
 def main() -> int:
     """Parse arguments and dispatch to the appropriate subcommand."""
     parser = argparse.ArgumentParser(
-        description="Brain-5D application launcher",
+        description="MHRN application launcher",
     )
     subparsers = parser.add_subparsers(
         dest="command",

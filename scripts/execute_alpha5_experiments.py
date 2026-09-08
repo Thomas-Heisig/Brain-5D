@@ -52,7 +52,7 @@ def _sha256_file(path: Path) -> str:
 
 
 def _brain5d_version() -> str:
-    """Read Brain-5D version from pyproject.toml, fallback to import."""
+    """Read MHRN version from pyproject.toml, fallback to import."""
     pyproject = REPO_ROOT / "pyproject.toml"
     if pyproject.exists():
         try:

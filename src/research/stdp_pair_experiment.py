@@ -159,7 +159,7 @@ def _render_report(
             "",
             "## Wissenschaftliche Einordnung",
             "Pilot- und Methodenvalidierung. Der Lauf bestaetigt die deterministische Implementierung der isolierten Pair-STDP-Regel: negatives Delta t fuehrt zu LTD, positives Delta t zu LTP und Delta t = 0 zu keiner Aenderung.",
-            "Er erzeugt absichtlich keine wissenschaftliche EVID und zaehlt nicht fuer Claim oder Forschungsfrage, weil ein produktiver Brain-5D-Lernpfad hier nicht gemessen wird.",
+            "Er erzeugt absichtlich keine wissenschaftliche EVID und zaehlt nicht fuer Claim oder Forschungsfrage, weil ein produktiver MHRN-Lernpfad hier nicht gemessen wird.",
             "",
             "## Reproduzierbarkeit und Grenzen",
             "Der Protokoll-Snapshot, Startgewicht und STDP-Parameter sind im Manifest und in `protocol.json` hinterlegt. Der angegebene Seed ist fuer dieses deterministische Laborprotokoll nicht Teil des Messpfads.",

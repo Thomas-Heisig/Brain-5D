@@ -1,4 +1,4 @@
-"""Robust Brain-5D binary snapshot container (``.b5d``), format V1.
+"""Robust MHRN binary snapshot container (``.b5d``), format V1.
 
 Format V1 is a deterministic, little-endian, memory-mappable snapshot format.
 It deliberately contains only immutable snapshot sections. Delta journaling,
@@ -774,7 +774,7 @@ def _parse_header_bytes(data: bytes) -> B5DHeader:
 
 
 class B5DSnapshotWriter:
-    """Write deterministic Brain-5D V1 snapshot containers.
+    """Write deterministic MHRN V1 snapshot containers.
 
     The writer produces immutable .b5d files with:
     - Fixed-size records for efficient random access.
@@ -953,7 +953,7 @@ class B5DSnapshotWriter:
 
 
 class B5DReader:
-    """Memory-mapped random-access reader for frozen Brain-5D V1 snapshots.
+    """Memory-mapped random-access reader for frozen MHRN V1 snapshots.
 
     The reader provides O(log n) binary search for neurons and synapses,
     and O(1) sequential iteration over all records.

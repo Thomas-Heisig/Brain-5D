@@ -1,5 +1,5 @@
 """
-Experiment Recorder — Captures experiment manifests during Brain-5D runs.
+Experiment Recorder — Captures experiment manifests during MHRN runs.
 
 Every scientifically relevant run produces a manifest.json with full metadata
 for reproducibility: git state, software versions, simulation parameters,

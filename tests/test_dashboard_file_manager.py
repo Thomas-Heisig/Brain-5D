@@ -1,4 +1,4 @@
-"""Tests for the Brain-5D dashboard file manager save endpoints."""
+"""Tests for the MHRN dashboard file manager save endpoints."""
 
 import json
 import tempfile

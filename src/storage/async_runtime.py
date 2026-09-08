@@ -1,4 +1,4 @@
-"""Bounded asynchronous journal writer for Brain-5D runtime persistence."""
+"""Bounded asynchronous journal writer for MHRN runtime persistence."""
 
 from __future__ import annotations
 

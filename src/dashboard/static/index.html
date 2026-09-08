@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Brain-5D Operator Dashboard</title>
+  <title>MHRN Operator Dashboard</title>
   <style>
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -22,7 +22,9 @@
       <button id="nav-back" class="icon-btn" title="Zur vorherigen Ansicht" aria-label="Zurück">←</button>
       <button id="nav-home" class="icon-btn" title="Zur Übersicht" aria-label="Übersicht">⌂</button>
       <div>
-      <p class="eyebrow">Brain-5D</p>
+      <p class="eyebrow">MHRN</p>
+      <p class="project-title">Multi-Scale Homeostatic Recurrence Network</p>
+      <p class="project-subtitle">Mehrskaliges homöostatisches Rekurrenznetzwerk</p>
       <h1>Operator Dashboard</h1>
       </div>
     </div>
@@ -225,7 +227,7 @@
         </details>
         <div class="console-output-wrapper">
           <div class="console-output-header"><span class="console-output-title">Console Log</span><span class="console-output-hint">Auto-scroll &middot; Max 1000 entries</span></div>
-          <div id="console-output" class="console-output" role="log" aria-live="polite"><div class="log-entry log-info"><span class="log-time">[00:00:00]</span> Brain-5D Operator Console ready</div></div>
+          <div id="console-output" class="console-output" role="log" aria-live="polite"><div class="log-entry log-info"><span class="log-time">[00:00:00]</span> MHRN Operator Console ready</div></div>
         </div>
         <p class="operator-note">Structural proposals remain approval-gated. No autonomous mutation is enabled by this panel.</p>
       </section>
@@ -361,7 +363,7 @@
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-embodiment">
       <header class="workspace-header" data-workspace="embodiment">
-        <div><span class="workspace-kicker">LIVING SYSTEM</span><h2>Brain-5D Embodiment</h2><p>Alle publizierten Quellen und Funktionen als ein lebender Wahrnehmungs-Aktions-Körper</p></div>
+        <div><span class="workspace-kicker">LIVING SYSTEM</span><h2>MHRN Embodiment</h2><p>Alle publizierten Quellen und Funktionen als ein lebender Wahrnehmungs-Aktions-Körper</p></div>
         <div class="workspace-status-strip">
           <span>Environment<strong id="embodiment-kind">unconfigured</strong></span>
           <span>Sensors<strong id="embodiment-sensors">0</strong></span>
@@ -388,7 +390,7 @@
           <div class="organism-node-key" aria-label="Sichtbare Pipeline-Elemente">
             <span title="Sensor: Eingang aus einem Adapter">SENSOR</span>
             <span title="Encoder: SensorFrame zu neuronalen Strömen">ENCODER</span>
-            <span title="Brain-5D SNN: neuronaler Zustand">SNN</span>
+            <span title="MHRN SNN: neuronaler Zustand">SNN</span>
             <span title="Decoder: neuronales Ergebnis zu ActionCommand">DECODER</span>
             <span title="Actuator: autorisierter Ausgang">ACTUATOR</span>
             <span title="Feedback: EnvironmentObservation nach einer Aktion">FEEDBACK</span>
@@ -440,7 +442,7 @@
         <div class="embodiment-loop-node" data-loop-node="environment" title="Environment: Quelle der EnvironmentObservation"><span>1</span><strong>Environment</strong><small id="embodiment-loop-environment">unconfigured</small></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor" title="Sensor: Eingang aus einem realen oder digitalen Adapter"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder" title="Encoder: SensorFrame wird zu neuronalen Strömen"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="encoder"><span>ON</span></label></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="snn" title="Brain-5D SNN: neuronaler Datenbankzustand verarbeitet den Strom"><span>4</span><strong>Brain-5D SNN</strong><small id="embodiment-loop-snn">idle</small></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="snn" title="MHRN SNN: neuronaler Datenbankzustand verarbeitet den Strom"><span>4</span><strong>MHRN SNN</strong><small id="embodiment-loop-snn">idle</small></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder" title="Decoder: neuronales Ergebnis wird zu ActionCommand"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="decoder"><span>ON</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="actuator" title="Actuator: autorisierter Ausgang mit Sicherheitsgrenze"><span>6</span><strong>Actuator</strong><small id="embodiment-loop-actuator">unavailable</small></div>
         <i title="Feedback-Schleife: EnvironmentObservation zurück zum System">↻</i>
@@ -734,7 +736,7 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-segment footer-product">
-      <strong>Brain-5D</strong><span>v<span id="footer-version">loading</span></span>
+      <strong>MHRN</strong><span>v<span id="footer-version">loading</span></span>
     </div>
     <div class="footer-segment footer-runtime">
       <div class="footer-runtime-copy">

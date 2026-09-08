@@ -108,7 +108,7 @@ class RecoveryInspection:
 
 
 class RecoveryManager:
-    """Reconstruct a restart-capable Brain-5D snapshot from committed deltas."""
+    """Reconstruct a restart-capable MHRN snapshot from committed deltas."""
 
     def __init__(self, snapshot_path: str | Path, journal_path: str | Path) -> None:
         self.snapshot_path = Path(snapshot_path)

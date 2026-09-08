@@ -1,4 +1,4 @@
-# Brain-5D Documentation
+# MHRN Documentation
 
 This directory contains both **current canonical documentation** and **historical/versioned records**. Historical Alpha, Sprint, Release and dated change documents remain traceability artifacts and must not be read as the current repository state.
 
@@ -113,7 +113,7 @@ Current gateway rules:
 - Neural-Symbiosis and MSBA gateway learning/growth/allocation are disabled by default;
 - gateway RNG belongs to an experiment runner and must be persisted;
 - endpoint reachability is not evidence of learned use;
-- fixed semantics are not imposed on the five Brain-5D axes;
+- fixed semantics are not imposed on the five MHRN axes;
 - measured joules are never inferred from normalized units without explicit calibration/provenance;
 - historical DATA/EVID is never rewritten to reflect new adapters.
 

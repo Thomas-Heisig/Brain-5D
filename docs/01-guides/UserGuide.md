@@ -1,19 +1,19 @@
-# Brain-5D User Guide
+# MHRN User Guide
 
 ## Purpose
 
 This guide covers installation, simulation startup, dashboard startup, basic
-operator controls, persistence and troubleshooting for Brain-5D
+operator controls, persistence and troubleshooting for MHRN
 `v0.5.0-alpha.5`.
 
-Brain-5D is an experimental research and engineering platform. It does not
+MHRN is an experimental research and engineering platform. It does not
 claim AGI, consciousness, sentience or biological equivalence.
 
 ## 1. Installation
 
 ```powershell
 git clone https://github.com/Thomas-Heisig/Brain-5D.git
-cd Brain-5D
+cd MHRN
 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -77,7 +77,7 @@ If PowerShell scripts are permitted:
 ```
 
 If execution policy blocks `.ps1`, prefer the Python launcher or `.cmd`
-wrappers. Do not weaken machine-wide PowerShell policy solely to start Brain-5D.
+wrappers. Do not weaken machine-wide PowerShell policy solely to start MHRN.
 
 ## 4. Dashboard functions
 

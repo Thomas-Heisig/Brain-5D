@@ -1,4 +1,4 @@
-"""Typed adapter registry for the Brain-5D embodiment layer."""
+"""Typed adapter registry for the MHRN embodiment layer."""
 
 from __future__ import annotations
 

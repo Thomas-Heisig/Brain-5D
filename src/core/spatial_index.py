@@ -1,7 +1,7 @@
-"""5D spatial indexing for Brain-5D neural networks.
+"""5D spatial indexing for MHRN neural networks.
 
 This module provides coordinate manipulation and spatial indexing for
-the 5-dimensional neuron space used in Brain-5D. It supports:
+the 5-dimensional neuron space used in MHRN. It supports:
 
 - Packing/unpacking 5D coordinates into 64-bit integers
 - Conversion between linear indices and 5D coordinates

@@ -1,4 +1,4 @@
-"""Dependency-free local HTTP server for the Brain-5D operator dashboard.
+"""Dependency-free local HTTP server for the MHRN operator dashboard.
 
 The dashboard server is intentionally lightweight and uses only Python's
 standard HTTP server infrastructure.
@@ -16,7 +16,7 @@ The request handler never relies on module-global runtime state. In
 particular, the OperatorBridge is obtained exclusively through the active
 DashboardServer instance.
 
-This is important because the dashboard, controller and Brain-5D runtime
+This is important because the dashboard, controller and MHRN runtime
 must operate inside one coherent application process.
 
 API requests are strictly separated from SPA/static-file routing:
@@ -153,7 +153,7 @@ class UnsupportedMediaTypeError(DashboardError):
 
 
 class DashboardServer(ThreadingHTTPServer):
-    """Threaded Brain-5D dashboard HTTP server.
+    """Threaded MHRN dashboard HTTP server.
 
     All dependencies used by request handlers are stored on this server
     instance. No mutable module-global runtime state is used.
@@ -222,7 +222,7 @@ class DashboardServer(ThreadingHTTPServer):
 
 
 class DashboardRequestHandler(BaseHTTPRequestHandler):
-    """HTTP request handler for Brain-5D dashboard and operator APIs."""
+    """HTTP request handler for MHRN dashboard and operator APIs."""
 
     from src.version import BRAIN5D_VERSION_DISPLAY
 
@@ -230,7 +230,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
     @property
     def dashboard_server(self) -> DashboardServer:
-        """Return the concrete Brain-5D dashboard server."""
+        """Return the concrete MHRN dashboard server."""
         return cast(DashboardServer, self.server)
 
     # ========================================================================
@@ -845,7 +845,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:  # noqa: ARG001
         """Suppress BaseHTTPRequestHandler's default stderr logging.
 
-        Runtime/dashboard logging is handled by Brain-5D itself.
+        Runtime/dashboard logging is handled by MHRN itself.
         """
         return
 
@@ -2536,7 +2536,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         """Read a small set of structured public search results."""
         request = Request(
             "https://api.duckduckgo.com/?q=" + quote(query) + "&format=json&no_html=1",
-            headers={"User-Agent": "Brain-5D Research Assistant/1.0"},
+            headers={"User-Agent": "MHRN Research Assistant/1.0"},
         )
         with urlopen(request, timeout=10) as response:  # nosec B310: fixed HTTPS host
             payload = cast(
@@ -3785,7 +3785,7 @@ def _setup_signal_handlers(
         del signum
         del frame
 
-        print("\n⏹️ Shutting down Brain-5D dashboard...")
+        print("\n⏹️ Shutting down MHRN dashboard...")
 
         server.shutdown()
 
@@ -3815,7 +3815,7 @@ def serve_dashboard(
     research_root: Path | None = None,
     chat_settings: Mapping[str, Any] | None = None,
 ) -> None:
-    """Run the local Brain-5D operator dashboard until interrupted."""
+    """Run the local MHRN operator dashboard until interrupted."""
 
     store = state if state is not None else DashboardStateStore()
 
@@ -3979,7 +3979,7 @@ def serve_dashboard(
                 "operator bridge; control APIs are unavailable."
             )
 
-        print(f"🧠 Brain-5D dashboard: " f"http://{host}:{port}")
+        print(f"🧠 MHRN dashboard: " f"http://{host}:{port}")
 
         print("Press Ctrl+C to stop")
 
@@ -4000,12 +4000,12 @@ def serve_dashboard(
 def main() -> None:
     """Run a standalone dashboard.
 
-    A standalone dashboard has no Brain-5D OperatorBridge and therefore
+    A standalone dashboard has no MHRN OperatorBridge and therefore
     exposes monitoring/documentation only. Runtime control requires the
     integrated ``src.main`` application path.
     """
 
-    parser = argparse.ArgumentParser(description=("Brain-5D operator dashboard"))
+    parser = argparse.ArgumentParser(description=("MHRN operator dashboard"))
 
     parser.add_argument(
         "--host",

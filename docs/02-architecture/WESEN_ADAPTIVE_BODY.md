@@ -2,7 +2,7 @@
 
 ## Status
 
-`Wesen` is the dedicated real-time body visualization in the Brain-5D dashboard. It is a **read-only presentation surface** over observed runtime, embodiment, connection and peripheral-pipeline state. It does not run learning, issue language output, authorize actuators, activate Neural Symbiosis pipelines or fabricate missing telemetry.
+`Wesen` is the dedicated real-time body visualization in the MHRN dashboard. It is a **read-only presentation surface** over observed runtime, embodiment, connection and peripheral-pipeline state. It does not run learning, issue language output, authorize actuators, activate Neural Symbiosis pipelines or fabricate missing telemetry.
 
 The current view is intentionally **body-like without claiming biological equivalence**. It uses a readable anatomy metaphor while preserving machine-native semantics.
 

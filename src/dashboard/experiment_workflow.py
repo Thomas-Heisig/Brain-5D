@@ -1276,7 +1276,7 @@ def _assert_loaded_callable_matches_source(
     source_digest = _code_digest(source_code)
     if runtime_digest != source_digest:
         raise WorkflowValidationError(
-            f"Running process contains stale code for {function_name}. Restart the Brain-5D "
+            f"Running process contains stale code for {function_name}. Restart the MHRN "
             "dashboard/runtime before creating a scientific experiment."
         )
     return runtime_digest, source_digest

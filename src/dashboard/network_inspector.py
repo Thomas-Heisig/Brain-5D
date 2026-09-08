@@ -1,6 +1,6 @@
-"""Real 5D network inspector for the Brain-5D operator dashboard.
+"""Real 5D network inspector for the MHRN operator dashboard.
 
-This module provides data-backed inspection of the live Brain-5D network.
+This module provides data-backed inspection of the live MHRN network.
 It surfaces real neuron 5D coordinates, membrane potentials, energies,
 synapse weights/delays/eligibilities, and a real 5D→3D projection.
 
@@ -146,7 +146,7 @@ class ProjectionPayload:
 
 
 class NetworkInspector:
-    """Inspect the live Brain-5D network with real 5D coordinates.
+    """Inspect the live MHRN network with real 5D coordinates.
 
     The inspector is constructed with the live ``NeuralNetwork`` instance
     obtained through the OperatorBridge → RuntimeController → network chain.

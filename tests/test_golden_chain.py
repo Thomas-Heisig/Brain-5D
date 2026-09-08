@@ -1,5 +1,5 @@
 """
-Configuration loader for Brain‑5D experiments.
+Configuration loader for MHRN experiments.
 
 This module provides validation and loading of YAML configuration files,
 ensuring all parameters meet the constraints required by the reference core.

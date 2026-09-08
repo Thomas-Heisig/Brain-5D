@@ -1,4 +1,4 @@
-# Brain-5D — Weiterführende Forschungsroadmap: vom Selbstmodell zum funktionalen Denken
+# MHRN — Weiterführende Forschungsroadmap: vom Selbstmodell zum funktionalen Denken
 
 > Stand: 2026-09-03
 > Zweck: Anschlussroadmap während und nach der wissenschaftlichen Arbeit
@@ -6,7 +6,7 @@
 
 ## Leitgedanke
 
-Die wissenschaftliche Arbeit soll Brain-5D nicht mit der Behauptung abschliessen, Bewusstsein erzeugt zu haben. Sie soll eine belastbare Brücke schaffen zwischen technisch messbaren Mechanismen und den philosophischen Fragen nach Selbstbezug, Denken, Identität und möglichem Bewusstsein.
+Die wissenschaftliche Arbeit soll MHRN nicht mit der Behauptung abschliessen, Bewusstsein erzeugt zu haben. Sie soll eine belastbare Brücke schaffen zwischen technisch messbaren Mechanismen und den philosophischen Fragen nach Selbstbezug, Denken, Identität und möglichem Bewusstsein.
 
 Die zentrale Entwicklungslinie lautet:
 
@@ -179,7 +179,7 @@ Nur wenn der rekursive Rückweg selektiv messbare Effekte erzeugt, ist der Begri
 
 ## Phase H — Funktionales Denken
 
-Brain-5D verwendet den Begriff erst, wenn folgende Kriterien gemeinsam nachgewiesen sind:
+MHRN verwendet den Begriff erst, wenn folgende Kriterien gemeinsam nachgewiesen sind:
 
 1. intern aufrechterhaltene Zustände,
 2. Gegenwartsentkopplung,
@@ -206,11 +206,11 @@ Kontrollen:
 
 Ein positives Ergebnis würde nur den Claim stützen:
 
-> Brain-5D erfüllt die vorab definierten funktionalen Kriterien für Denken.
+> MHRN erfüllt die vorab definierten funktionalen Kriterien für Denken.
 
 Nicht:
 
-> Brain-5D ist bewusst.
+> MHRN ist bewusst.
 
 ## Phase I — Sprachliche Reflexion
 
@@ -233,7 +233,7 @@ Die Sprache ist Messinstrument und Kommunikationsschicht, nicht Ursprung des Sel
 
 ## Phase J — Nach der wissenschaftlichen Arbeit
 
-Nach Abschluss der Dissertation bzw. Hauptstudie kann Brain-5D in drei Richtungen weitergeführt werden.
+Nach Abschluss der Dissertation bzw. Hauptstudie kann MHRN in drei Richtungen weitergeführt werden.
 
 ### J1 — Langzeitentwicklung
 

@@ -1,4 +1,4 @@
-"""Verification gate for Brain-5D v0.5.0-alpha.3."""
+"""Verification gate for MHRN v0.5.0-alpha.3."""
 
 from __future__ import annotations
 

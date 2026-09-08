@@ -77,7 +77,7 @@ def _clean_pid_file() -> None:
 
 @pytest.mark.integration
 def test_launcher_starts_exactly_one_process() -> None:
-    """Verify the launcher starts exactly one Brain-5D process.
+    """Verify the launcher starts exactly one MHRN process.
 
     This is the end-to-end test for the P0 process-architecture contract:
 

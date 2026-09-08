@@ -1,7 +1,7 @@
-"""Digital optical equivalent for a Brain-5D neuron state.
+"""Digital optical equivalent for a MHRN neuron state.
 
 The on-disk optical record is exactly 128 bytes. Five-dimensional coordinates
-are not duplicated because Brain-5D already packs five 8-bit coordinates into
+are not duplicated because MHRN already packs five 8-bit coordinates into
 the neuron ID.
 """
 

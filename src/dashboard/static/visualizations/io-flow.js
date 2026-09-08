@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — IO Flow Visualization
+ * MHRN Dashboard — IO Flow Visualization
  *
  * @version 1.0.0
  * @license MIT

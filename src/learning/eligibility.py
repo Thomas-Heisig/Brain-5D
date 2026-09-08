@@ -1,4 +1,4 @@
-"""Eligibility traces for Brain 5D Sprint 2B.
+"""Eligibility traces for MHRN Sprint 2B.
 
 The trace is updated lazily. Mathematically this is equivalent to decaying it
 on every tick, but it avoids O(E) work across all synapses when only a small

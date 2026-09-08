@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The control plane turns the Brain-5D dashboard from a passive observatory into an
+The control plane turns the MHRN dashboard from a passive observatory into an
 operator console while preserving deterministic core execution.
 
 ## API

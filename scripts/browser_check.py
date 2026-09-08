@@ -1,4 +1,4 @@
-"""Run a Chromium smoke check against the Brain-5D dashboard."""
+"""Run a Chromium smoke check against the MHRN dashboard."""
 
 from __future__ import annotations
 

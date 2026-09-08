@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Console Log (pure output component)
+ * MHRN Dashboard — Console Log (pure output component)
  *
  * This module provides only the console log output. It does not send
  * control commands; it only displays command results and system events.

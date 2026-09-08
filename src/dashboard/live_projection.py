@@ -1,4 +1,4 @@
-"""Live runtime projection service for the Brain-5D dashboard.
+"""Live runtime projection service for the MHRN dashboard.
 
 This module provides a read-only projection service that queries the
 in-memory NeuralNetwork directly — never from a .b5d snapshot file.

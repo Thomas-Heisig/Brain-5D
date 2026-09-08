@@ -1,4 +1,4 @@
-"""Reward signals for Brain 5D three-factor plasticity.
+"""Reward signals for MHRN three-factor plasticity.
 
 This module provides the RewardSignal dataclass, which represents an
 immutable scalar reward emitted at a specific simulation tick.

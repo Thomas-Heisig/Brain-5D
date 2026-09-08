@@ -1,7 +1,7 @@
 """Typed dashboard control service for runtime and self-organization commands.
 
 This module provides a validation layer between HTTP dashboard requests and
-the Brain-5D runtime components. It handles command validation, type checking,
+the MHRN runtime components. It handles command validation, type checking,
 and error handling for all control operations.
 
 The DashboardControlService is used by the HTTP server to process operator
@@ -125,7 +125,7 @@ class DashboardControlService:
     """Validate dashboard commands before they reach runtime components.
 
     This service provides a clean, type-safe interface for executing control
-    commands on the Brain-5D runtime. It validates all command parameters
+    commands on the MHRN runtime. It validates all command parameters
     before forwarding to the runtime components.
 
     The service supports:

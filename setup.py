@@ -1,5 +1,5 @@
 """
-Brain-5D — Compatibility shim for legacy build frontends.
+MHRN — Compatibility shim for legacy build frontends.
 
 The authoritative project configuration lives in ``pyproject.toml``
 (``[project]``, ``[build-system]``, ``[tool.*]``).

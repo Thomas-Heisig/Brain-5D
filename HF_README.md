@@ -2,11 +2,12 @@
 license: mit
 sdk: docker
 app_port: 8765
-title: Brain-5D
-short_description: Sparse 5D spiking-neural research dashboard
+title: MHRN
+short_description: Multi-scale homeostatic recurrent spiking research
 language:
   - en
-library_name: brain5d-core
+  - de
+library_name: mhrn-core
 tags:
   - spiking-neural-networks
   - STDP
@@ -16,33 +17,25 @@ tags:
   - multimodal
   - neuromorphic
   - simulation
-  - 5D
+  - recurrence
   - neuroscience
   - brain-inspired
 pipeline_tag: reinforcement-learning
 ---
 
-# Brain-5D
+# Multi-Scale Homeostatic Recurrence Network (MHRN)
+
+## Mehrskaliges homöostatisches Rekurrenznetzwerk
 
 **Sparse 5D spiking-neural research framework with controlled plasticity, embodiment, peripheral multi-network integration and scientific provenance.**
 
-Brain-5D is an experimental framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network. The SNN remains the primary adaptive system; language models, research assistants and peripheral neural networks are bounded interpretation/proposal/adapter components unless explicitly registered as experimental treatments.
+MHRN is an experimental framework for studying learning, self-organization and embodied closed-loop behavior in a sparse five-dimensional spiking neural network. The SNN remains the primary adaptive system; language models, research assistants and peripheral neural networks are bounded interpretation/proposal/adapter components unless explicitly registered as experimental treatments.
 
-> Brain-5D does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests, reachable devices or available neural pipelines are not the same as scientific evidence.
+> MHRN does not claim AGI, consciousness, sentience or biological equivalence. Passing implementation tests, reachable devices or available neural pipelines are not the same as scientific evidence.
 
-## Current baseline — 2026-09-07
+## Status and provenance
 
-- version: `0.5.0a7`
-- Python: 3.11–3.13
-- latest local fast-suite snapshot: **849 passed, 5 skipped, 3 failed**; 32 slow tests deselected
-- the three known failures are Windows line-ending and publication-path contract expectations; this local snapshot is not fully green
-- last recorded browser suite: **5 passed** with Chromium
-- current `main` HEAD: `a5cdfa7b4fcce97eea8b68c9b81fe2fea1757c56`
-- Research Catalog / variable-projection-dimension integration is merged to `main`
-- merge commit: `85e7209509b348bf7912dde01d3d9ebb078a2e61`
-- latest fully completed pre-merge `main` CI baseline: run #598, success
-- the post-merge CI run is authoritative for the merged baseline and must complete before that baseline is described as fully green
-- GitHub `main` is canonical; this file is published as the Hugging Face repository README during mirror synchronization
+The package version describes software, not validated cognition. GitHub main is canonical; this mirror is derived. Current verification must be checked against its exact source hashes in the repository. Historical reports remain dated records.
 
 ## Live dashboard Space
 
@@ -89,15 +82,15 @@ Logic engine → neuro-symbolic projector → gateway → 5D-SNN
 5D-SNN → gateway → speech/control network → audio/robotics output
 ```
 
-The adapter model is open-set and framework-neutral. CNN, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoder, peripheral SNN, multimodal, neuro-symbolic and custom architectures can be represented without importing their runtime frameworks into the Brain-5D core.
+The adapter model is open-set and framework-neutral. CNN, Transformer, LSTM/GRU/RNN, GNN, Modern Hopfield, reservoir/ESN, MLP, VAE/GAN/diffusion, autoencoder, peripheral SNN, multimodal, neuro-symbolic and custom architectures can be represented without importing their runtime frameworks into the MHRN core.
 
 Gateway plasticity is **disabled by default**. Pipeline reachability or area registration is not evidence that the SNN learned to use an external area. Plastic gateway experiments require explicit preregistration, persisted RNG/model/version provenance, matched controls and the normal DATA/EVID review path.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/Thomas-Heisig/Brain-5D.git
-cd Brain-5D
+git clone https://github.com/Thomas-Heisig/Brain-5D.git MHRN
+cd MHRN
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -156,9 +149,9 @@ Observed values remain distinct from inferred values. Missing telemetry remains 
 MIT License — see `LICENSE`.
 
 ```bibtex
-@software{heisig2026brain5d,
+@software{heisig2026mhrn,
   author  = {Thomas Heisig},
-  title   = {Brain-5D: Sparse 5D Spiking-Neural Research Framework},
+  title   = {Multi-Scale Homeostatic Recurrence Network (MHRN)},
   year    = {2026},
   version = {0.5.0a7},
   url     = {https://github.com/Thomas-Heisig/Brain-5D},

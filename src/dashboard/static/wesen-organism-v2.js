@@ -1,4 +1,4 @@
-/* Brain-5D adaptive organism v2. Presentation-only and read-only. */
+/* MHRN adaptive organism v2. Presentation-only and read-only. */
 const NS = "http://www.w3.org/2000/svg";
 const FRAME_LIMIT = 240;
 const SNAP_LIMIT = 180;

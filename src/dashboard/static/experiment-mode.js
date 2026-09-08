@@ -1,5 +1,5 @@
 /**
- * Brain-5D Experiment Mode — ES Module
+ * MHRN Experiment Mode — ES Module
  *
  * Manages Operator / Experiment / Debug mode switching and structured
  * experiment session metadata (hypothesis, notes, session history).

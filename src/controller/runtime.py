@@ -1,4 +1,4 @@
-"""Thread-safe runtime controller for interactive Brain-5D operation.
+"""Thread-safe runtime controller for interactive MHRN operation.
 
 The controller owns *when* ticks run, not the network implementation itself.
 It is intentionally dependency-light and works against a small typed Protocol.
@@ -237,7 +237,7 @@ ErrorCallback = Callable[[Exception], None]
 class RuntimeController:
     """Own the simulation clock and expose safe operator commands.
 
-    This controller provides thread-safe control over the Brain-5D simulation:
+    This controller provides thread-safe control over the MHRN simulation:
     - Start/stop continuous execution in a daemon thread
     - Pause/resume execution
     - Execute finite batches of ticks synchronously

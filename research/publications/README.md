@@ -1,28 +1,30 @@
-# Wissenschaftliche Abhandlung - zentrale Publikationsquelle
+# Recursive Epistemics
 
-## Aktuelle Fassung 1.2
+## Rekursive Epistemik
 
-**Thomas Heisig: KI - Die geliehene Intelligenz.** Ergänzung vom 7. September 2026 zu Bewusstseinskritik, Kognitionsprüfungen, unabhängiger Evidenz und Forschungsethik.
+**Recursive Epistemics in Embodied Spiking Neural Architectures: A Framework for Delegated Agency and Multi-Scale Recurrence**
 
-[Aktuelle Abhandlung vollständig lesen](2026-09-07_ki-die-geliehene-intelligenz_v1.2/README.md)
+*Rekursive Epistemik in verkörperten spikenden neuronalen Architekturen: Ein Framework für delegierte Handlungsmacht und mehrskalige Rekurrenz*
 
-Die kapitelweise Fassung 1.2 ist die aktuelle redaktionelle Single Source of Truth. 22 neue Fragen und Hypothesen, prospektive Testverträge und eine 38-Punkte-Kritikprüfung sind mit der Abhandlung verbunden. Ausgewählte Instrumente und Start-/Promotionsgrenzen sind implementiert; native Adapter der neuen Batterie, empirische Bewusstseinsbefunde und externe Ethikfreigaben werden nicht behauptet.
+Thomas Heisig · MHRN · Edition 1.3 · 8 September 2026.
 
-[Kritik vollständig prüfen](../critique/CONSCIOUSNESS_CRITIQUE.md) · [Testprogramm](../protocols/COGNITION_CONSCIOUSNESS.md) · [Ethik und Abschaltdilemma](../ethics/AI_WELFARE_POLICY.md) · [Quellen und tatsächliche Nutzung](../literature/COGNITION_SOURCES.md)
+[Die vollständige aktuelle wissenschaftliche Abhandlung lesen](2026-09-08_recursive-epistemics_v1.3/README.md)
 
-## Historische Fassungen
+Die kapitelweise Edition 1.3 ist die redaktionelle Single Source of Truth. Sie führt alle Kapitel der Fassung 1.2 unter der neuen Benennung fort. Umfang, empirische Grenzen und Ethikregeln bleiben erhalten. Die Titeländerung ist kein neuer Funktions- oder Bewusstseinsnachweis. Die unveränderten Word-Dateien früherer Ausgaben bleiben historische Artefakte; ein aktueller DOCX-Export wird hier nicht behauptet.
 
-[Fassung 1.1](2026-09-07_ki-die-geliehene-intelligenz_v1.1/README.md) · [Historische Lesefassung 1.0](reader/README.md) · [Word-Datei 1.0](2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.docx) · [Originalpaket](archives/Brain5D_Wissenschaftliche_Abhandlung_2026-09-07.zip) · [Originalprüfsummen](integrity.json)
+[Benennung und Kontinuität](../../NAMING.md) · [Kognitionsprüfungen](../protocols/COGNITION_CONSCIOUSNESS.md) · [Wohlfahrt und Abschaltdilemma](../ethics/AI_WELFARE_POLICY.md) · [Kritikregister](../critique/CONSCIOUSNESS_CRITIQUE.md)
 
-Frühere Originale bleiben unverändert. Eine neue Word-Datei wurde in dieser Ergänzung nicht erstellt. Die Publikation hat `authority=interpretation_only`; kanonische Forschungsregister und historische DATA/EVID werden nicht durch Textrevisionen freigegeben.
+## Historical editions / Historische Ausgaben
 
-## Prüfung
+[Fassung 1.2](2026-09-07_ki-die-geliehene-intelligenz_v1.2/README.md) · [Fassung 1.1](2026-09-07_ki-die-geliehene-intelligenz_v1.1/README.md) · [Lesefassung 1.0](reader/README.md) · [Word-Datei 1.0](2026-09-07_ki-die-geliehene-intelligenz/wissenschaftliche_abhandlung.docx) · [Originalpaket](archives/Brain5D_Wissenschaftliche_Abhandlung_2026-09-07.zip).
+
+Alte Titel und Dateinamen bleiben absichtlich zitierbar. Kanonische Forschungsregister, präregistrierte Protokolle und DATA/EVID werden durch eine Publikationsrevision nicht umgeschrieben. [Katalog](catalog.json).
+
+## Verification / Prüfung
 
 ```bash
 python scripts/publication_bundle.py
 python scripts/publication_revision.py
 python scripts/publication_cognition.py
-python -m pytest tests/test_cognition_program.py -q
+python scripts/publication_naming.py
 ```
-
-[Katalog](catalog.json). Technische Testresultate sind keine wissenschaftliche oder institutionelle Ethikfreigabe.

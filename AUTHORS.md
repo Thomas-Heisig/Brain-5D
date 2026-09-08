@@ -14,5 +14,5 @@ To contribute, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Citation
 
-If you use Brain-5D in your research, please see [CITATION.cff](CITATION.cff)
+If you use MHRN in your research, please see [CITATION.cff](CITATION.cff)
 for the preferred citation format.

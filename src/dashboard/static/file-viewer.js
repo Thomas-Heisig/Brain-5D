@@ -1,5 +1,5 @@
 /**
- * Brain-5D Operator Dashboard – Unified File Manager Module
+ * MHRN Operator Dashboard – Unified File Manager Module
  *
  * Self-contained ES module for browsing, searching, and previewing
  * research and documentation files. Exports:

@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Alpha.5 Release Gate Board
+ * MHRN Dashboard — Alpha.5 Release Gate Board
  *
  * Renders the VERIFY/Gate tab from the central dashboard store.
  * Does NOT issue its own HTTP requests; all data arrives via store subscription.

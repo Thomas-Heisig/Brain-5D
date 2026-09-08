@@ -702,7 +702,7 @@ class GateStatusBuilder:
                 gate=GATE_A,
                 id="A-SINGLE-LISTENER",
                 category="technical_integration",
-                label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by Brain-5D PID",
+                label="Exactly one TCP LISTEN socket on 127.0.0.1:8765 owned by MHRN PID",
                 status=G_PASSED if listener_verified else G_PENDING,
                 maturity=VERIFIED if listener_verified else IMPLEMENTED,
                 source=(

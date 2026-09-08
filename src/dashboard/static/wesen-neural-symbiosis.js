@@ -1,4 +1,4 @@
-/* Brain-5D Neural Symbiosis + MSBA view.
+/* MHRN Neural Symbiosis + MSBA view.
  * Read-only presentation only: no control, learning or actuator writes.
  */
 

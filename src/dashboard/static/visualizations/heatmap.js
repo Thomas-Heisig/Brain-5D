@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Heatmap & 5D Projection Visualization
+ * MHRN Dashboard — Heatmap & 5D Projection Visualization
  *
  * Polls scientific endpoints directly; large data remains lazy-loaded.
  *

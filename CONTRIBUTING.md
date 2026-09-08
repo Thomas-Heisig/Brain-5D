@@ -1,8 +1,8 @@
-# Contributing to Brain-5D
+# Contributing to MHRN
 
-Thank you for your interest in Brain-5D.
+Thank you for your interest in MHRN.
 
-Brain-5D is an experimental engineering and research platform. Contributions
+MHRN is an experimental engineering and research platform. Contributions
 should preserve the project's deterministic persistence contracts, typed
 boundaries, safety limits and test coverage.
 
@@ -18,7 +18,7 @@ https://github.com/Thomas-Heisig/Brain-5D/issues
 
 For bugs, include:
 
-- Brain-5D version or commit;
+- MHRN version or commit;
 - operating system;
 - Python version;
 - exact command;

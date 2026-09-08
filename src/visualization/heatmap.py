@@ -1,4 +1,4 @@
-"""Headless-testable 5D-to-2D heatmap projection for Brain 5D."""
+"""Headless-testable 5D-to-2D heatmap projection for MHRN."""
 
 from __future__ import annotations
 

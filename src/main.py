@@ -1,4 +1,4 @@
-"""Brain-5D command-line simulation entry point with dashboard integration.
+"""MHRN command-line simulation entry point with dashboard integration.
 
 This module runs the simulation and optionally starts the dashboard in the
 main thread (to handle signals). The simulation runs in a daemon thread
@@ -247,7 +247,7 @@ def _configure_utf8_streams() -> None:
 def main() -> int:
     _configure_utf8_streams()
     parser = argparse.ArgumentParser(
-        description="Brain 5D v0.5 - homeostatic self-regulation with dashboard"
+        description="MHRN v0.5 - homeostatic self-regulation with dashboard"
     )
     parser.add_argument("--config", default="configs/poc_config.yaml")
     parser.add_argument("--observe", action="store_true")
@@ -294,7 +294,7 @@ def main() -> int:
         config_dict["_sha256"] = ""
         config_dict["_path"] = str(args.config)
 
-    print(f"🚀 Brain 5D - v{BRAIN5D_VERSION_DISPLAY} with dashboard")
+    print(f"🚀 MHRN - v{BRAIN5D_VERSION_DISPLAY} with dashboard")
     print(f"📄 Config: {args.config} (sha256={config_dict['_sha256'][:16]}...)")
 
     # --- Build network ---
@@ -1127,7 +1127,7 @@ def main() -> int:
             _dashboard_host = args.dashboard_host
             _dashboard_port = args.dashboard_port
             print(
-                f"🧠 Starting Brain-5D dashboard on http://{_dashboard_host}:{_dashboard_port}"
+                f"🧠 Starting MHRN dashboard on http://{_dashboard_host}:{_dashboard_port}"
             )
             print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
             if _serve_dashboard is not None:

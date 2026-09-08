@@ -1,4 +1,4 @@
-"""Typed bridge used by HTTP handlers to control Brain-5D safely.
+"""Typed bridge used by HTTP handlers to control MHRN safely.
 
 This module provides the OperatorBridge class, which translates dashboard
 HTTP requests into typed controller operations with proper error handling
@@ -53,7 +53,7 @@ class OperatorBridge:
     """Translate dashboard requests into typed controller operations.
 
     This bridge provides a clean, type-safe interface between the HTTP
-    dashboard endpoints and the Brain-5D runtime controller. It handles
+    dashboard endpoints and the MHRN runtime controller. It handles
     structural plasticity coordination, heatmap generation, and all
     controller commands.
 

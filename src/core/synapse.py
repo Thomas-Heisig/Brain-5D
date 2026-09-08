@@ -1,7 +1,7 @@
 """Synapse data model with STDP eligibility and plasticity support.
 
 This module defines the Synapse class, which represents a connection between
-two neurons in the Brain-5D network. It supports:
+two neurons in the MHRN network. It supports:
 - Weighted synaptic transmission with configurable delay
 - Spike-Timing-Dependent Plasticity (STDP) eligibility traces
 - Pair-based and triplet STDP variants

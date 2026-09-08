@@ -1,6 +1,6 @@
 import { defineConfig } from "@playwright/test";
 
-const python = process.env.BRAIN5D_TEST_PYTHON || "python";
+const python = process.env.MHRN_TEST_PYTHON || process.env.BRAIN5D_TEST_PYTHON || "python";
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
 export default defineConfig({
   testDir: "./tests/browser",

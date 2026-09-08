@@ -1,4 +1,4 @@
-"""Real integration status for the Brain-5D Alpha.5 gate.
+"""Real integration status for the MHRN Alpha.5 gate.
 
 This module computes the real integration status of every dashboard
 subsystem by probing live backend components. It replaces the previous

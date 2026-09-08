@@ -1,5 +1,5 @@
 """
-Thread-safe runtime controller for interactive Brain-5D operation.
+Thread-safe runtime controller for interactive MHRN operation.
 
 This package provides the RuntimeController, which owns the simulation clock
 and exposes safe operator commands for interactive control.

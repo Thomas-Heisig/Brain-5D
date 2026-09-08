@@ -1,4 +1,4 @@
-"""Sparse 5D spiking neural network for Brain-5D.
+"""Sparse 5D spiking neural network for MHRN.
 
 This module defines the NeuralNetwork class, which manages:
 - Neurons in a 5D spatial grid
@@ -87,7 +87,7 @@ class NetworkConfig:
 
 @dataclass(frozen=True, slots=True)
 class Brain5DConfig:
-    """Complete configuration for Brain-5D network."""
+    """Complete configuration for MHRN network."""
 
     dimensions: Dim5D
     simulation: SimulationConfig = field(default_factory=SimulationConfig)

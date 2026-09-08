@@ -1,6 +1,6 @@
 """Canonical Scientific State Definition and Full-State Digest.
 
-This module defines *exactly* what ``State(t)`` means for Brain-5D
+This module defines *exactly* what ``State(t)`` means for MHRN
 scientific experiments, and provides a deterministic SHA-256 digest
 for verifying deterministic execution.
 
@@ -12,7 +12,7 @@ GLOBAL
 - current_tick
 - dimensions
 - config SHA-256
-- Brain-5D version
+- MHRN version
 
 NEURONS
 - deterministic neuron order (sorted by neuron_id)
@@ -261,7 +261,7 @@ def capture_canonical_state(
     Args:
         network: The neural network (must implement CanonicalNetworkLike).
         config_sha256: SHA-256 of the active configuration file.
-        brain5d_version: Brain-5D version string.
+        brain5d_version: MHRN version string.
         homeostasis_rates: Optional dict of neuron_id -> smoothed firing rate.
         learning_state: Optional dict with learning engine state.
         structural_state: Optional dict with structural subsystem state.

@@ -1,4 +1,4 @@
-/* Brain-5D persistent footer controller.
+/* MHRN persistent footer controller.
  * Adds reliable runtime controls and immediate command/mode feedback without
  * changing the scientific runtime or evidence paths.
  */

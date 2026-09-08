@@ -1,4 +1,4 @@
-"""Crash-tolerant append-only journal for structural Brain-5D changes."""
+"""Crash-tolerant append-only journal for structural MHRN changes."""
 
 from __future__ import annotations
 

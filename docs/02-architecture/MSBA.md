@@ -4,13 +4,13 @@
 
 MSBA is an **experimental embodiment contract** below Neural Symbiosis. It is implemented in `src/embodiment/msba.py` and visualized read-only in `Wesen`.
 
-MSBA does **not** change the canonical Brain-5D SNN core, its neuron model, canonical STDP, structural-plasticity engine or historical DATA/EVID. All MSBA learning/growth/allocation flags are disabled by default and require a separate preregistered experiment before activation.
+MSBA does **not** change the canonical MHRN SNN core, its neuron model, canonical STDP, structural-plasticity engine or historical DATA/EVID. All MSBA learning/growth/allocation flags are disabled by default and require a separate preregistered experiment before activation.
 
 ## Scientific correction to the biological analogy
 
 The architecture uses modality-specific engineering constraints without claiming a one-to-one cortical mapping. Audio is strongly temporal but not exclusively phase-coded. Vision is massively parallel but still temporal and hierarchical. The prefrontal cortex is not a biological digital bus. Therefore MSBA treats the three pathways as engineering abstractions whose value must be experimentally established.
 
-The persisted productive Brain-5D core remains **five-dimensional**. MSBA does not assign fixed semantics such as time, x, y or frequency to those axes. Modality adapters instead define explicit feature tuples and a projection mapping. The external/MSBA projection space now supports **1 through 32 dimensions** via `MSBAGatewayConfig.projection_dimensions`; increasing this value does not mutate the productive 5D neuron-ID/storage format.
+The persisted productive MHRN core remains **five-dimensional**. MSBA does not assign fixed semantics such as time, x, y or frequency to those axes. Modality adapters instead define explicit feature tuples and a projection mapping. The external/MSBA projection space now supports **1 through 32 dimensions** via `MSBAGatewayConfig.projection_dimensions`; increasing this value does not mutate the productive 5D neuron-ID/storage format.
 
 This distinction is scientific and technical: an increased-dimensional MSBA projection is **not** evidence that the productive SNN core is N-D. A future versioned neuron-ID/`.b5d` migration is required before the core itself can persist more than five coordinates. Experiments must keep projection dimensionality, productive core dimensionality and mapping provenance separate.
 

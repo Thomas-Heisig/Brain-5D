@@ -1,4 +1,4 @@
-# Brain-5D Development Roadmap
+# MHRN Development Roadmap
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
@@ -56,7 +56,7 @@
 ## 2026-09-07 Hugging Face Space
 
 - Prepared the Docker entrypoint for the integrated dashboard on `0.0.0.0:8765`.
-- Added Docker Space metadata and published the live dashboard as `superdigger/Brain-5D-Space`.
+- Added Docker Space metadata and published the live dashboard as `superdigger/MHRN-Space`.
 - Added the Space repository to the automatic GitHub-to-Hugging-Face synchronization workflow.
 
 ## 2026-09-07 Space API rate-limit handling
@@ -224,7 +224,7 @@
 
 ## 2026-09-07 Dissertation results synchronization
 
-- Added the verified Brain-5D experiment results to `KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx`.
+- Added the verified MHRN experiment results to `KI_Die_geliehene_Intelligenz_Kontrollverlust_Embodiment_Dissertationsbasis.docx`.
 - The DOCX now distinguishes technical completion, exploratory/replication status, dirty-tree provenance and pending human review.
 - A repeatable updater is retained at `scripts/update_dissertation_results.py`.
 

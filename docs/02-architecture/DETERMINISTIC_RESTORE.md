@@ -2,7 +2,7 @@
 
 ## Status
 
-Brain-5D v0.4.0-alpha.6 closes a precision gap discovered by the end-to-end
+MHRN v0.4.0-alpha.6 closes a precision gap discovered by the end-to-end
 `restore-and-continue` test.
 
 ## Why the extra runtime layer is required

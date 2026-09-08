@@ -1,4 +1,4 @@
-# Brain-5D repository overlay — v0.5.0-alpha.5
+# MHRN repository overlay — v0.5.0-alpha.5
 
 This overlay combines the current alpha.5 README/documentation update with
 community, security, GitHub template, CI, user-guide and developer-guide files.

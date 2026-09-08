@@ -1,4 +1,4 @@
-# Brain-5D — TODO: Learning Preparation Studio
+# MHRN — TODO: Learning Preparation Studio
 
 > Stand: 2026-09-03
 > Ergänzt die kanonische Roadmap um einen eigenen Lern-Arbeitsbereich.
@@ -123,7 +123,7 @@ Lernziel
   -> menschliche Freigabe
   -> Pre-Baseline
   -> registrierter Experience Run
-  -> Brain-5D LearningEngine
+  -> MHRN LearningEngine
   -> Post-Evaluation
   -> Holdout / Generalisierung
   -> Mechanismusdiagnostik

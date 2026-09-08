@@ -64,7 +64,7 @@ def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
         return "grounded answer", {"provider": "test"}
 
     research = Source({"registry/questions.yaml": "RQ-1"})
-    docs = Source({"README.md": "Brain-5D"})
+    docs = Source({"README.md": "MHRN"})
     chat = ResearchChat(research, docs, backend)
     answer, metadata = chat.answer("What is the current research status?")
 
@@ -76,7 +76,7 @@ def test_chat_prompt_contains_research_and_docs_and_forbids_execution() -> None:
     assert metadata["retrieval"]["enabled"] is True
     assert metadata["retrieval"]["mode"] == "FROZEN_CORPUS"
     assert metadata["retrieval"]["protocol_version"] == 1
-    assert "RQ-1" in prompts[0] and "Brain-5D" in prompts[0]
+    assert "RQ-1" in prompts[0] and "MHRN" in prompts[0]
     assert "never execute an experiment from free text" in prompts[0]
     assert "WEB SOURCES must never appear under EVIDENCE" in prompts[0]
 

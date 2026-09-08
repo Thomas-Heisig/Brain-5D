@@ -1,4 +1,4 @@
-"""Real-host body inventory for the Brain-5D embodiment dashboard.
+"""Real-host body inventory for the MHRN embodiment dashboard.
 
 This module deliberately extends connection discovery without changing its
 fail-closed authorization semantics. Availability is observation; it is not

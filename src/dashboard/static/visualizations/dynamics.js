@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Dynamics Visualizations (Raster, Histogram, Layer Explorer)
+ * MHRN Dashboard — Dynamics Visualizations (Raster, Histogram, Layer Explorer)
  *
  * @version 1.0.0
  * @license MIT

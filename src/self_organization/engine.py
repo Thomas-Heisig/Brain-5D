@@ -1,4 +1,4 @@
-"""Conservative topology self-organization for Brain-5D.
+"""Conservative topology self-organization for MHRN.
 
 The engine is optional and disabled by default. It uses the public manipulator
 instead of mutating core dictionaries directly. STDP/reward learning stays in

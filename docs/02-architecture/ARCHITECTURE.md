@@ -1,8 +1,8 @@
-# Brain-5D Architecture
+# MHRN Architecture
 
 ## Purpose
 
-Brain-5D is a modular research framework around a sparse five-dimensional spiking neural network. Its architecture separates **neural dynamics**, **learning**, **structural adaptation**, **embodiment**, **peripheral multi-network processing**, **persistence**, **research evidence**, **AI interpretation** and **operator tooling** so that changes in one layer do not silently redefine the scientific meaning of another.
+MHRN is a modular research framework around a sparse five-dimensional spiking neural network. Its architecture separates **neural dynamics**, **learning**, **structural adaptation**, **embodiment**, **peripheral multi-network processing**, **persistence**, **research evidence**, **AI interpretation** and **operator tooling** so that changes in one layer do not silently redefine the scientific meaning of another.
 
 The SNN is the primary adaptive system. External AI components and peripheral neural networks may observe, interpret, transform or propose within explicit contracts, but they do not gain implicit authority to write canonical neural state, rewards, memory or scientific evidence.
 
@@ -68,7 +68,7 @@ Wesen observes published state read-only.
 
 ## 1. Sparse 5D neural core
 
-Brain-5D does not materialize a full five-dimensional tensor. Existing neurons are stored sparsely and identified by packed 5D coordinates. Synapses are explicit graph edges with delay and weight state.
+MHRN does not materialize a full five-dimensional tensor. Existing neurons are stored sparsely and identified by packed 5D coordinates. Synapses are explicit graph edges with delay and weight state.
 
 Core responsibilities include deterministic neuron integration, delayed event delivery, spike propagation, topology accounting, I/O boundaries, deterministic RNG state capture and bounded post-step integrations.
 

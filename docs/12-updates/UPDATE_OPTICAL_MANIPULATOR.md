@@ -1,4 +1,4 @@
-# Brain-5D Update: Optical Equivalent + Manipulator + Self-Organization
+# MHRN Update: Optical Equivalent + Manipulator + Self-Organization
 
 ## Ziel
 

@@ -12,18 +12,32 @@ from typing import Any
 import pytest
 
 from scripts.publication_naming import export_markdown, verify
-from src.identity import PROJECT_NAME, PROJECT_SUBTITLE_DE, PROJECT_TITLE, legacy_environment_aliases
-from src.version import BRAIN5D_VERSION, BRAIN5D_VERSION_DISPLAY, MHRN_VERSION, MHRN_VERSION_DISPLAY
+from src.identity import (
+    PROJECT_NAME,
+    PROJECT_SUBTITLE_DE,
+    PROJECT_TITLE,
+    legacy_environment_aliases,
+)
+from src.version import (
+    BRAIN5D_VERSION,
+    BRAIN5D_VERSION_DISPLAY,
+    MHRN_VERSION,
+    MHRN_VERSION_DISPLAY,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_current_identity_and_distribution() -> None:
-    identity: dict[str, Any] = json.loads((ROOT / "project_identity.json").read_text(encoding="utf-8"))
+    identity: dict[str, Any] = json.loads(
+        (ROOT / "project_identity.json").read_text(encoding="utf-8")
+    )
     assert PROJECT_NAME == identity["project"]["short_name"] == "MHRN"
     assert PROJECT_TITLE == identity["project"]["title_en"]
     assert PROJECT_SUBTITLE_DE == identity["project"]["subtitle_de"]
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))[
+        "project"
+    ]
     assert project["name"] == "mhrn-core"
     assert project["version"] == MHRN_VERSION == BRAIN5D_VERSION
     assert MHRN_VERSION_DISPLAY == BRAIN5D_VERSION_DISPLAY
@@ -31,7 +45,11 @@ def test_current_identity_and_distribution() -> None:
 
 @pytest.mark.parametrize("new_value", ["", "0", "1", "custom"])
 def test_environment_new_prefix_precedes_legacy_without_logging(new_value: str) -> None:
-    environment = {"MHRN_TEST": new_value, "BRAIN5D_TEST": "legacy", "OTHER": "untouched"}
+    environment = {
+        "MHRN_TEST": new_value,
+        "BRAIN5D_TEST": "legacy",
+        "OTHER": "untouched",
+    }
     assert legacy_environment_aliases(environment) == {"BRAIN5D_TEST": new_value}
     assert environment["BRAIN5D_TEST"] == "legacy"
     assert legacy_environment_aliases({"BRAIN5D_ONLY": "retained"}) == {}
@@ -59,7 +77,13 @@ def test_export_rejects_unpinned_revision() -> None:
 
 def test_both_launcher_names_remain_callable() -> None:
     for name in ("mhrn_launcher.py", "brain5d_launcher.py"):
-        result = subprocess.run([sys.executable, str(ROOT / "scripts" / name), "--help"], cwd=ROOT, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / name), "--help"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         assert result.returncode == 0, result.stderr
         assert "start" in result.stdout
 
@@ -77,9 +101,15 @@ def test_visible_dashboard_names_and_hf_card() -> None:
 
 
 def test_no_scientific_promotion_by_renaming() -> None:
-    identity: dict[str, Any] = json.loads((ROOT / "project_identity.json").read_text(encoding="utf-8"))
+    identity: dict[str, Any] = json.loads(
+        (ROOT / "project_identity.json").read_text(encoding="utf-8")
+    )
     assert identity["scientific_scope"]["renaming_is_new_evidence"] is False
     assert identity["compatibility"]["unchanged_storage_format"] == ".b5d"
-    manifest: dict[str, Any] = json.loads((ROOT / identity["publication"]["path"] / "manifest.json").read_text(encoding="utf-8"))
+    manifest: dict[str, Any] = json.loads(
+        (ROOT / identity["publication"]["path"] / "manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
     assert manifest["new_empirical_findings"] is False
     assert manifest["automatic_evidence_promotion"] is False

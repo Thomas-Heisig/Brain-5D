@@ -1,4 +1,4 @@
-"""Homeostatic self-regulation tests for Brain-5D v0.5."""
+"""Homeostatic self-regulation tests for MHRN v0.5."""
 
 from __future__ import annotations
 

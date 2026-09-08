@@ -1,4 +1,4 @@
-"""Persistent storage primitives for Brain-5D."""
+"""Persistent storage primitives for MHRN."""
 
 from .b5d import (
     ALIGNMENT,

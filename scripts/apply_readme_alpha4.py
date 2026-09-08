@@ -12,7 +12,7 @@ END = "<!-- BRAIN5D:ALPHA4:END -->"
 
 
 def main() -> int:
-    text = README.read_text(encoding="utf-8") if README.exists() else "# Brain-5D\n\n"
+    text = README.read_text(encoding="utf-8") if README.exists() else "# MHRN\n\n"
     if START in text and END in text:
         before = text.split(START, 1)[0]
         after = text.split(END, 1)[1]

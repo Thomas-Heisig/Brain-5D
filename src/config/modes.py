@@ -7,7 +7,7 @@ from typing import Final
 
 
 class StateMode(StrEnum):
-    """Persistence and lifecycle boundary for a running Brain-5D state."""
+    """Persistence and lifecycle boundary for a running MHRN state."""
 
     OPERATOR = "operator"
     EXPERIMENT = "experiment"

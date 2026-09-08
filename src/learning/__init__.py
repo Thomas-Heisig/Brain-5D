@@ -1,4 +1,4 @@
-"""Learning and plasticity for Brain-5D.
+"""Learning and plasticity for MHRN.
 
 This package provides:
 - Pair-based STDP (isolated and production variants)

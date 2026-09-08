@@ -1,8 +1,8 @@
 @echo off
 :: ============================================================================
-:: Brain-5D Stop Script (CMD)
+:: MHRN Stop Script (CMD)
 :: ============================================================================
-:: Stoppt alle Brain-5D-Prozesse ueber den Launcher.
+:: Stoppt alle MHRN-Prozesse ueber den Launcher.
 ::
 :: Usage:
 ::   stop.cmd
@@ -16,15 +16,15 @@ cd /d "%~dp0"
 set "PYTHON_CMD=python"
 if exist ".venv\Scripts\python.exe" set "PYTHON_CMD=.venv\Scripts\python.exe"
 
-echo [Brain-5D] Stopping Brain-5D ...
+echo [MHRN] Stopping MHRN ...
 
-%PYTHON_CMD% scripts\brain5d_launcher.py stop
+%PYTHON_CMD% scripts\mhrn_launcher.py stop
 set "EXIT_CODE=%ERRORLEVEL%"
 
 if %EXIT_CODE% equ 0 (
-    echo [Brain-5D] Successfully stopped.
+    echo [MHRN] Successfully stopped.
 ) else (
-    echo [Brain-5D] Stop finished with exit code %EXIT_CODE%.
+    echo [MHRN] Stop finished with exit code %EXIT_CODE%.
 )
 
 endlocal

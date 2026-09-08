@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-    Stoppt Brain-5D und alle verwalteten Prozesse.
+    Stoppt MHRN und alle verwalteten Prozesse.
 .DESCRIPTION
     Ruft den Launcher mit dem stop-Befehl auf, der die PID-Datei liest
-    und alle registrierten Brain-5D-Prozesse terminiert.
+    und alle registrierten MHRN-Prozesse terminiert.
     Gibt 0 bei Erfolg zurück, 1 bei Fehler.
 .EXAMPLE
     .\stop.ps1
@@ -15,12 +15,12 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 # Projekt-Root ermitteln
 $ProjectRoot = $ScriptDir
 
-Write-Host "Brain-5D wird gestoppt ..." -ForegroundColor Yellow
+Write-Host "MHRN wird gestoppt ..." -ForegroundColor Yellow
 
 try {
     $PidFile = Join-Path $ProjectRoot "artifacts" "brain5d.pid"
     if (-not (Test-Path $PidFile)) {
-        Write-Host "Brain-5D ist bereits gestoppt." -ForegroundColor Green
+        Write-Host "MHRN ist bereits gestoppt." -ForegroundColor Green
         return
     }
 
@@ -32,7 +32,7 @@ try {
     }
 
     Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
-    Write-Host "Brain-5D erfolgreich gestoppt." -ForegroundColor Green
+    Write-Host "MHRN erfolgreich gestoppt." -ForegroundColor Green
     return
 }
 catch {

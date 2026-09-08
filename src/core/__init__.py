@@ -1,6 +1,6 @@
-"""Brain-5D core neural network components.
+"""MHRN core neural network components.
 
-This package provides the fundamental building blocks of the Brain-5D
+This package provides the fundamental building blocks of the MHRN
 spiking neural network, including:
 - 5D spatial indexing and coordinate transformations
 - Izhikevich neuron model with multiple types, homeostasis, and energy

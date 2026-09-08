@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Network Inspector (5D coordinates, tables, projection)
+ * MHRN Dashboard — Network Inspector (5D coordinates, tables, projection)
  *
  * @version 1.0.0
  * @license MIT

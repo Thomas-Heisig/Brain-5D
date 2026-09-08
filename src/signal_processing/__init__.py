@@ -1,4 +1,4 @@
-"""Deterministic signal interpretation contracts for Brain-5D."""
+"""Deterministic signal interpretation contracts for MHRN."""
 
 from .interpreter import SignalInterpreter
 from .models import RegionActivity, SignalFrame, SpikeSample

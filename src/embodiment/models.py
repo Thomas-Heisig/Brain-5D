@@ -1,4 +1,4 @@
-"""Typed data contracts for the Brain-5D embodiment layer."""
+"""Typed data contracts for the MHRN embodiment layer."""
 
 from __future__ import annotations
 

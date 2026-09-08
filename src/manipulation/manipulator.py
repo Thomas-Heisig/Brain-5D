@@ -1,4 +1,4 @@
-"""Safe read/write façade for Brain-5D.
+"""Safe read/write façade for MHRN.
 
 All topology mutations go through the existing NeuralNetwork API. Extended
 optical and graph properties are sidecars so Sprint-1/2 core determinism and
@@ -164,7 +164,7 @@ class Brain5DManipulator:
     """Instrument for inspection, mutation, journaling and rollback.
 
     The manipulator provides a safe, audited interface for modifying the
-    Brain-5D network state. All operations are logged and can be rolled back
+    MHRN network state. All operations are logged and can be rolled back
     using transactions.
 
     Design Principles:

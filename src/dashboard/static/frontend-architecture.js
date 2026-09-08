@@ -1,4 +1,4 @@
-/* Brain-5D three-area frontend architecture.
+/* MHRN three-area frontend architecture.
  *
  * Primary navigation is deliberately limited to:
  *   1. Dashboard
@@ -78,12 +78,27 @@ function ensurePrimaryNavigation() {
   if (!topbar) return;
   const nav = document.createElement("nav");
   nav.className = "brain5d-primary-nav";
-  nav.setAttribute("aria-label", "Brain-5D Hauptbereiche");
+  nav.setAttribute("aria-label", "MHRN Hauptbereiche");
   nav.innerHTML = `
     <button type="button" class="active" data-primary-area="dashboard"><strong>📊 Dashboard</strong><span>Operator</span></button>
     <button type="button" data-primary-area="science"><strong>🔬 Wissenschaft</strong><span>Research & Analysis</span></button>
     <button type="button" data-primary-area="wesen"><strong>🧠 Runtime & Wesen</strong><span>Living System</span></button>`;
   topbar.insertAdjacentElement("afterend", nav);
+  const mhrnStickyInsets = () => {
+    const headerHeight = Math.ceil(topbar.getBoundingClientRect().height);
+    const navHeight = Math.ceil(nav.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--dashboard-topbar-height', `${headerHeight}px`);
+    document.documentElement.style.setProperty('--mhrn-sticky-offset', `${headerHeight + navHeight + 12}px`);
+  };
+  mhrnStickyInsets();
+  if (typeof ResizeObserver === 'function') {
+    const observer = new ResizeObserver(mhrnStickyInsets);
+    observer.observe(topbar);
+    observer.observe(nav);
+  } else {
+    window.addEventListener('resize', mhrnStickyInsets);
+  }
+
   nav.addEventListener("click", (event) => {
     const button = event.target.closest("[data-primary-area]");
     if (!button) return;

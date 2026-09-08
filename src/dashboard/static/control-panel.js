@@ -1,5 +1,5 @@
 /**
- * Brain-5D Control Panel — ES Module
+ * MHRN Control Panel — ES Module
  *
  * This module is a pure ES module. It does NOT self-initialize and does NOT
  * register any DOMContentLoaded listeners. The sole lifecycle owner is

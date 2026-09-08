@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Central Frontend State Store
+ * MHRN Dashboard — Central Frontend State Store
  *
  * Replaces panel-individual fetch calls with a single source of truth.
  * Polls /api/status, /api/components, /api/parameters and /api/health

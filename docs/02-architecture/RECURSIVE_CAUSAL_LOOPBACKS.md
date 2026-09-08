@@ -1,10 +1,10 @@
-# Brain-5D — Recursive Causal Loopbacks and Multirate Control
+# MHRN — Recursive Causal Loopbacks and Multirate Control
 
 ## Status
 
 Architecture proposal for `v0.5.0-alpha.8`.
 
-This document defines a non-anthropomorphic recursive self-causality layer for Brain-5D. It does **not** claim consciousness, subjective self-awareness, biological equivalence, or human-like introspection. The goal is narrower and experimentally testable: Brain-5D should be able to distinguish between effects caused by its own authorized actions, effects caused externally, and cases where causality remains uncertain.
+This document defines a non-anthropomorphic recursive self-causality layer for MHRN. It does **not** claim consciousness, subjective self-awareness, biological equivalence, or human-like introspection. The goal is narrower and experimentally testable: MHRN should be able to distinguish between effects caused by its own authorized actions, effects caused externally, and cases where causality remains uncertain.
 
 ## 1. Problem
 
@@ -192,7 +192,7 @@ This is the intended meaning of self-reflection in Alpha.8: measurable recursive
 
 ## 6. Multirate architecture
 
-Brain-5D should not force all mechanisms to run at the same cadence.
+MHRN should not force all mechanisms to run at the same cadence.
 
 The SNN remains tick-based and event-driven. The multirate controller is an additional scheduler above the existing runtime.
 
@@ -268,7 +268,7 @@ Requirements:
 
 "Parallel" must not mean uncontrolled nondeterministic threading in scientific runs.
 
-Brain-5D should distinguish:
+MHRN should distinguish:
 
 - **logical parallelism**: many signals, regions, sensors or causal hypotheses evaluated in the same logical step;
 - **physical parallelism**: CPU/GPU/thread/process execution used as an optimization.

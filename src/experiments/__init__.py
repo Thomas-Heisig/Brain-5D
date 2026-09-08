@@ -1,1 +1,1 @@
-"""Deterministic system-level experiments for Brain 5D."""
+"""Deterministic system-level experiments for MHRN."""

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Propose a measured Brain-5D enhancement
+about: Propose a measured MHRN enhancement
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""

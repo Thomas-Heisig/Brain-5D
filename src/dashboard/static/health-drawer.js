@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Health / Problems Drawer
+ * MHRN Dashboard — Health / Problems Drawer
  *
  * Renders a persistent health bar and an expandable drawer with
  * errors, warnings, unavailable and stale component statuses.

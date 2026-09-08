@@ -1,1 +1,1 @@
-"""Brain 5D package."""
+"""MHRN package."""

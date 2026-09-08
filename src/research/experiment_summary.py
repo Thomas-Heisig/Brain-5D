@@ -1,4 +1,4 @@
-"""Deterministic, data-first experiment summaries for Brain-5D research runs."""
+"""Deterministic, data-first experiment summaries for MHRN research runs."""
 
 # pyright: reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportUnnecessaryIsInstance=false
 

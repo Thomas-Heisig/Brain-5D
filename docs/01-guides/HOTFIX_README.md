@@ -1,6 +1,6 @@
 # Applying v0.4.0-alpha.4
 
-1. Extract this overlay into the Brain-5D repository.
+1. Extract this overlay into the MHRN repository.
 2. Run `python scripts/prepare_alpha4.py` once. This applies the narrow legacy
    mypy fixes identified by the 104-test alpha.3 acceptance run and normalizes
    Python files with Black.

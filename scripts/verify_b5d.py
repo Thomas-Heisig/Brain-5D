@@ -1,4 +1,4 @@
-"""Cross-platform verification runner for Brain-5D persistence releases."""
+"""Cross-platform verification runner for MHRN persistence releases."""
 
 from __future__ import annotations
 
@@ -140,7 +140,7 @@ def _large_tests_enabled(environment: dict[str, str]) -> bool:
 def main(arguments: Sequence[str] | None = None) -> int:
     """Run all release checks and optional large persistence smoke tests."""
     del arguments
-    print("Brain-5D v0.4.0-alpha.4 persistence verification")
+    print("MHRN v0.4.0-alpha.4 persistence verification")
     print("===================================================")
 
     for step in _base_steps():

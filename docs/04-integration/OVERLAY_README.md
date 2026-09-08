@@ -1,7 +1,7 @@
-# Brain-5D v0.5.0-alpha.3 Overlay
+# MHRN v0.5.0-alpha.3 Overlay
 
 This overlay is designed for the alpha.2 architecture described in the current
-Brain-5D development state. It deliberately avoids blindly replacing `main.py` or
+MHRN development state. It deliberately avoids blindly replacing `main.py` or
 `server.py`, because those files are integration hubs and may already contain
 local alpha.2 fixes.
 
@@ -19,7 +19,7 @@ local alpha.2 fixes.
 
 ## Integration order
 
-1. Copy/extract the overlay into `F:\Brain-5D`.
+1. Copy/extract the overlay into `F:\MHRN`.
 2. Review and apply `patches/server_v050a3.patch` to the current dashboard server.
 3. Insert the HTML fragment into the existing dashboard layout and load the new
    CSS/JS assets. `patches/index_v050a3.patch` shows the required includes.
@@ -32,7 +32,7 @@ local alpha.2 fixes.
 ## Suggested PowerShell checks
 
 ```powershell
-cd F:\Brain-5D
+cd F:\MHRN
 .venv\Scripts\Activate.ps1
 
 black src tests scripts

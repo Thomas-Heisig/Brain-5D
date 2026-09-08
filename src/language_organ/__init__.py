@@ -1,10 +1,10 @@
-"""Read-only, replaceable language model organ for Brain-5D.
+"""Read-only, replaceable language model organ for MHRN.
 
 This package provides a controlled, replaceable interface between
-Brain-5D and external language models. The Language Organ is:
+MHRN and external language models. The Language Organ is:
 
 - Optional and replaceable (NullBackend, LlamaCppBackend, etc.)
-- Read-only (never mutates Brain-5D state)
+- Read-only (never mutates MHRN state)
 - Fault-tolerant (failures do not stop the simulation)
 - Asynchronous (does not block the simulation loop)
 

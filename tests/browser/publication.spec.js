@@ -12,8 +12,23 @@ for (const port of [4174, 4175]) {
     await page.getByRole('button', { name: 'Abhandlung lesen', exact: true }).click();
     const viewer = page.locator('#fm-viewer');
     await expect(viewer).toHaveAttribute('data-render-state', 'ready');
-    await expect(viewer).toContainText('Aktuelle Fassung 1.2');
-    await viewer.getByRole('button', { name: 'Historische Lesefassung 1.0', exact: true }).click();
+    await expect(viewer).toContainText('Edition 1.3');
+    // mhrn_new_edition: new source plus historical source remain reachable.
+    const newBase = 'publications/2026-09-08_recursive-epistemics_v1.3/';
+    await viewer.getByRole('button', { name: 'Die vollständige aktuelle wissenschaftliche Abhandlung lesen', exact: true }).click();
+    await expect(viewer).toContainText('Recursive Epistemics in Embodied');
+    await expect(viewer).toContainText('Rekursive Epistemik in verkörperten');
+    const currentManifestResponse = await page.request.get(`http://127.0.0.1:${port}/api/files/preview/` + encodeURIComponent(newBase + 'manifest.json') + '?source=research');
+    const currentManifest = JSON.parse((await currentManifestResponse.json()).content);
+    expect(currentManifest.section_count).toBe(57);
+    for (const name of currentManifest.section_order) {
+      const r = await page.request.get(`http://127.0.0.1:${port}/api/files/preview/` + encodeURIComponent(newBase + name) + '?source=research');
+      const d = await r.json();
+      expect(d.truncated, name).toBe(false);
+      expect(d.read_only, name).toBe(true);
+    }
+    await viewer.getByRole('button', { name: 'Publikationsübersicht', exact: true }).click();
+    await viewer.getByRole('button', { name: 'Lesefassung 1.0', exact: true }).click();
     await expect(viewer).toContainText('vollstaendige Lesefassung');
     await expect(page.locator('.fm-source-btn[data-source="research"]')).toHaveClass(/active/);
     await expect(viewer.getByRole('button', { name: 'Bearbeiten', exact: true })).toHaveCount(0);

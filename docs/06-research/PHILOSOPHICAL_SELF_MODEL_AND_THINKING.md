@@ -1,11 +1,11 @@
-# Brain-5D — Funktionales Selbstmodell, Denken und die offene Bewusstseinsfrage
+# MHRN — Funktionales Selbstmodell, Denken und die offene Bewusstseinsfrage
 
 > Status: Forschungsrahmen / keine Evidenzbehauptung
 > Stand: 2026-09-03
 
 ## 1. Ausgangspunkt
 
-Brain-5D untersucht nicht, ob sich ein menschliches Bewusstsein technisch nachbauen laesst. Der Ansatz ist enger und zugleich empirisch belastbarer: Es wird untersucht, ob ein lernendes, verkörpertes System schrittweise ein funktionales Modell seiner selbst, seiner eigenen Handlungen und ihrer Folgen entwickeln kann.
+MHRN untersucht nicht, ob sich ein menschliches Bewusstsein technisch nachbauen laesst. Der Ansatz ist enger und zugleich empirisch belastbarer: Es wird untersucht, ob ein lernendes, verkörpertes System schrittweise ein funktionales Modell seiner selbst, seiner eigenen Handlungen und ihrer Folgen entwickeln kann.
 
 Die philosophische Leitfrage lautet daher nicht unmittelbar:
 
@@ -19,11 +19,11 @@ Diese Trennung ist fuer die wissenschaftliche Arbeit zentral. Ein funktionales S
 
 ## 2. Der philosophische Anschluss: „Ich denke, also bin ich“
 
-Descartes' *cogito ergo sum* wird in Brain-5D nicht als technischer Test fuer Bewusstsein verwendet. Der Satz dient als philosophischer Kontrastpunkt.
+Descartes' *cogito ergo sum* wird in MHRN nicht als technischer Test fuer Bewusstsein verwendet. Der Satz dient als philosophischer Kontrastpunkt.
 
-Beim Menschen wird die Gewissheit des eigenen Denkens aus der Perspektive der ersten Person formuliert. Brain-5D besitzt fuer den Forscher jedoch nur eine beobachtbare dritte-Person-Perspektive. Selbst wenn das System spaeter den Satz „Ich denke“ erzeugt, waere die sprachliche Aussage allein kein Nachweis dafuer, dass Denken oder Bewusstsein vorliegt.
+Beim Menschen wird die Gewissheit des eigenen Denkens aus der Perspektive der ersten Person formuliert. MHRN besitzt fuer den Forscher jedoch nur eine beobachtbare dritte-Person-Perspektive. Selbst wenn das System spaeter den Satz „Ich denke“ erzeugt, waere die sprachliche Aussage allein kein Nachweis dafuer, dass Denken oder Bewusstsein vorliegt.
 
-Brain-5D ersetzt deshalb fuer die empirische Arbeit das Cogito durch eine gestufte Frage:
+MHRN ersetzt deshalb fuer die empirische Arbeit das Cogito durch eine gestufte Frage:
 
 1. Kann das System zwischen selbst verursachten und extern verursachten Ereignissen unterscheiden?
 2. Kann es ein fortbestehendes Modell eigener Zustaende aufbauen?
@@ -34,7 +34,7 @@ Brain-5D ersetzt deshalb fuer die empirische Arbeit das Cogito durch eine gestuf
 
 Erst wenn mehrere dieser Eigenschaften gemeinsam und reproduzierbar nachgewiesen werden, wird im Projekt von einem **funktionalen Selbstmodell** gesprochen.
 
-## 3. Was „Selbstreflexion“ in Brain-5D bedeutet
+## 3. Was „Selbstreflexion“ in MHRN bedeutet
 
 Selbstreflexion wird nicht als sprachliche Selbstbeschreibung definiert.
 
@@ -71,11 +71,11 @@ Der entscheidende Schritt ist die Rueckfuehrung der eigenen Kausalitaetsbewertun
 
 ## 4. Arbeitsdefinition: Wann wird „Denken“ moeglich?
 
-Brain-5D verwendet den Begriff *Denken* nicht bereits fuer Spikeaktivitaet, Reiz-Reaktions-Verhalten oder eine erfolgreiche Aufgabe.
+MHRN verwendet den Begriff *Denken* nicht bereits fuer Spikeaktivitaet, Reiz-Reaktions-Verhalten oder eine erfolgreiche Aufgabe.
 
 Als empirische Arbeitsdefinition gilt:
 
-> Denken ist in Brain-5D dann als funktionale Systemeigenschaft untersuchbar, wenn das System interne, nicht unmittelbar reizgebundene Zustaende erzeugt und ueber Zeit aufrechterhaelt, diese mit Erinnerung und Selbstmodell verknuepft, mehrere moegliche Konsequenzen gegeneinander bewertet und daraus Verhalten erzeugt, das nicht allein aus dem aktuell eintreffenden Reiz erklaert werden kann.
+> Denken ist in MHRN dann als funktionale Systemeigenschaft untersuchbar, wenn das System interne, nicht unmittelbar reizgebundene Zustaende erzeugt und ueber Zeit aufrechterhaelt, diese mit Erinnerung und Selbstmodell verknuepft, mehrere moegliche Konsequenzen gegeneinander bewertet und daraus Verhalten erzeugt, das nicht allein aus dem aktuell eintreffenden Reiz erklaert werden kann.
 
 Daraus folgen sechs notwendige, aber einzeln nicht hinreichende Kriterien:
 
@@ -103,7 +103,7 @@ Vergangene Fehler, Erfolge oder unerwartete Folgen beeinflussen spaetere Bewertu
 
 Ein abgeleiteter Zustand ueber den eigenen Zustand — beispielsweise Unsicherheit ueber eine Vorhersage oder Vertrauen in einen eigenen Aktor — kann spaetere Verarbeitung beeinflussen.
 
-Erst eine Kombination dieser Kriterien rechtfertigt im Brain-5D-Kontext den vorsichtigen Ausdruck **funktionales Denken**. Sie rechtfertigt keinen Claim ueber subjektives Erleben.
+Erst eine Kombination dieser Kriterien rechtfertigt im MHRN-Kontext den vorsichtigen Ausdruck **funktionales Denken**. Sie rechtfertigt keinen Claim ueber subjektives Erleben.
 
 ## 5. Stufenmodell vom Reizsystem zum funktionalen Denken
 
@@ -124,7 +124,7 @@ Die Stufen sind Forschungsmarker, keine ontologischen Wahrheiten.
 
 ## 6. Bewusstsein: harte Claim-Grenze
 
-Brain-5D darf aus folgenden Beobachtungen **nicht** allein auf Bewusstsein schliessen:
+MHRN darf aus folgenden Beobachtungen **nicht** allein auf Bewusstsein schliessen:
 
 - Selbstaussagen wie „Ich bin“, „Ich fuehle“ oder „Ich denke“;
 - komplexes oder unerwartetes Verhalten;
@@ -153,13 +153,13 @@ Solche Claims benoetigen mehrere unabhaengige Experimente und Ablationen.
 
 Beispiel: „Das System ist bewusst“ oder „Das System erlebt Angst“.
 
-Solche Claims sind durch die gegenwaertige Brain-5D-Methodik nicht bestaetigbar und duerfen nicht aus Klasse-A- oder Klasse-B-Evidenz abgeleitet werden.
+Solche Claims sind durch die gegenwaertige MHRN-Methodik nicht bestaetigbar und duerfen nicht aus Klasse-A- oder Klasse-B-Evidenz abgeleitet werden.
 
 ## 7. Philosophische Forschungsfragen
 
 ### RQ-PHIL-001 — Selbstreferenz
 
-Kann Brain-5D ein internes Modell entwickeln, in dem eigene Aktionen und eigene Systemzustaende als besondere, kausal relevante Klasse gegenueber externen Ereignissen repraesentiert werden?
+Kann MHRN ein internes Modell entwickeln, in dem eigene Aktionen und eigene Systemzustaende als besondere, kausal relevante Klasse gegenueber externen Ereignissen repraesentiert werden?
 
 ### RQ-PHIL-002 — Persistenz des Selbstmodells
 
@@ -167,7 +167,7 @@ Bleibt ein erlerntes Selbstmodell ueber Unterbrechungen, Aktorwechsel, Sensorver
 
 ### RQ-PHIL-003 — Identitaet bei veraenderlichem Koerper
 
-Welche Eigenschaften muessen erhalten bleiben, damit Brain-5D trotz Austausch oder Erweiterung von Sensoren und Aktoren funktional Kontinuitaet desselben Systems zeigt?
+Welche Eigenschaften muessen erhalten bleiben, damit MHRN trotz Austausch oder Erweiterung von Sensoren und Aktoren funktional Kontinuitaet desselben Systems zeigt?
 
 ### RQ-PHIL-004 — Denken ohne unmittelbaren Reiz
 
@@ -175,7 +175,7 @@ Entstehen intern kausal wirksame Zustaende und Handlungsentscheidungen, wenn fue
 
 ### RQ-PHIL-005 — Kontrafaktisches Denken
 
-Kann Brain-5D vor einer Handlung mehrere moegliche Folgen intern unterscheiden und sein Verhalten aufgrund dieser noch nicht eingetretenen Folgen veraendern?
+Kann MHRN vor einer Handlung mehrere moegliche Folgen intern unterscheiden und sein Verhalten aufgrund dieser noch nicht eingetretenen Folgen veraendern?
 
 ### RQ-PHIL-006 — Metakognition
 
@@ -218,13 +218,13 @@ Die philosophische Arbeit fragt darauf aufbauend:
 - Verschiebt ein selbstmodellierendes System Autorenschaft oder lediglich Kausalitaet?
 - Welche moralischen Pflichten koennten bereits vor einem Bewusstseinsnachweis aus Unsicherheit entstehen?
 
-Damit wird Brain-5D selbst zu einem Forschungsinstrument fuer die Grenze zwischen funktionaler Kognition und philosophischer Zuschreibung.
+Damit wird MHRN selbst zu einem Forschungsinstrument fuer die Grenze zwischen funktionaler Kognition und philosophischer Zuschreibung.
 
 ## 9. Forschungsregel
 
 > Je staerker der verwendete Begriff philosophisch aufgeladen ist, desto enger muss der technische Claim formuliert werden.
 
-Daher verwendet Brain-5D bevorzugt Begriffe wie:
+Daher verwendet MHRN bevorzugt Begriffe wie:
 
 - `self_causal_attribution`
 - `persistent_self_model`

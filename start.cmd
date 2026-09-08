@@ -1,8 +1,8 @@
 @echo off
 :: ============================================================================
-:: Brain-5D Start Script (CMD)
+:: MHRN Start Script (CMD)
 :: ============================================================================
-:: Startet die Brain-5D-Simulation ueber den Launcher.
+:: Startet die MHRN-Simulation ueber den Launcher.
 :: Verwendet bevorzugt die venv-Umgebung, falls vorhanden.
 ::
 :: Usage:
@@ -31,19 +31,19 @@ set "PYTHON_CMD=python"
 if exist "%PROJECT_ROOT%\.venv\Scripts\python.exe" (
     set "PYTHON_CMD=%PROJECT_ROOT%\.venv\Scripts\python.exe"
 ) else (
-    echo [Brain-5D] Using system Python
+    echo [MHRN] Using system Python
 )
 
 :: Hilfe anzeigen
 if "%1"=="--help" (
-    %PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start --help
+    %PYTHON_CMD% %PROJECT_ROOT%\scripts\mhrn_launcher.py start --help
     endlocal
     exit /b 0
 )
 
 :: Banner
 echo ===========================================================================
-echo   Brain-5D v0.5.0-alpha.7
+echo   MHRN v0.5.0-alpha.7
 echo   Project: %PROJECT_ROOT%
 echo ===========================================================================
 
@@ -53,12 +53,12 @@ echo %* | findstr /C:"--no-dashboard" >nul
 if errorlevel 1 set "EXTRA=--dashboard --open-browser --config configs\poc_alpha5_live.yaml"
 
 :: Launcher starten
-%PYTHON_CMD% %PROJECT_ROOT%\scripts\brain5d_launcher.py start %EXTRA% %*
+%PYTHON_CMD% %PROJECT_ROOT%\scripts\mhrn_launcher.py start %EXTRA% %*
 set "EXIT_CODE=%ERRORLEVEL%"
 
 if %EXIT_CODE% equ 0 (
     echo.
-    echo ✅ Brain-5D is running.
+    echo ✅ MHRN is running.
     echo    Stop with: stop.cmd
 ) else (
     echo.

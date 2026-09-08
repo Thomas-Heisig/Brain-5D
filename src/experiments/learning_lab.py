@@ -1,4 +1,4 @@
-"""Deterministic end-to-end learning experiment for Brain 5D.
+"""Deterministic end-to-end learning experiment for MHRN.
 
 The experiment demonstrates a complete causal chain:
 

@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Overview Panel
+ * MHRN Dashboard — Overview Panel
  *
  * Renders the OVERVIEW tab from the central dashboard store.
  * Does NOT issue its own HTTP requests; all data arrives via store subscription.

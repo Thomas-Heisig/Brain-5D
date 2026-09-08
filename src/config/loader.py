@@ -1,12 +1,12 @@
 """
-Configuration loader and validator for Brain‑5D experiments.
+Configuration loader and validator for MHRN experiments.
 
 This module provides robust loading and validation of YAML configuration files,
-ensuring all parameters meet the constraints required by the Brain-5D core.
+ensuring all parameters meet the constraints required by the MHRN core.
 
 Features:
 - Full YAML configuration loading with comprehensive validation
-- Support for all Brain-5D configuration sections (simulation, topology, network, neuron, energy, STDP)
+- Support for all MHRN configuration sections (simulation, topology, network, neuron, energy, STDP)
 - Clear error messages with context
 - Default values for optional parameters
 - Type-safe configuration return with TypedDict
@@ -125,7 +125,7 @@ class LoggingConfig(TypedDict, total=False):
 
 
 class ConfigDict(TypedDict, total=False):
-    """Complete Brain-5D configuration dictionary.
+    """Complete MHRN configuration dictionary.
 
     All fields are optional with defaults applied during validation.
     """

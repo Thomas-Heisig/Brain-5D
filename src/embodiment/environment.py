@@ -1,4 +1,4 @@
-"""Environment contracts for embodied Brain-5D experiments."""
+"""Environment contracts for embodied MHRN experiments."""
 
 from __future__ import annotations
 

@@ -1,12 +1,12 @@
-# Brain-5D Embodiment Foundation
+# MHRN Embodiment Foundation
 
 ## Purpose
 
-Brain-5D treats embodiment as a perception-action loop, not as a requirement
+MHRN treats embodiment as a perception-action loop, not as a requirement
 for one specific physical robot.  An environment may be simulated, physical,
 digital, or hybrid.  The common contract is:
 
-`observation -> Brain-5D processing -> bounded action -> environment feedback`
+`observation -> MHRN processing -> bounded action -> environment feedback`
 
 Alpha.7 introduces only the typed architecture boundary.  It does **not** grant
 unbounded browser, operating-system, network, or physical-device control.
@@ -33,7 +33,7 @@ unbounded browser, operating-system, network, or physical-device control.
 
 ## Dynamic body boundary
 
-Brain-5D does not equate network reachability with body ownership. Its body is
+MHRN does not equate network reachability with body ownership. Its body is
 the changing graph of resources whose state can be perceived, whose use is
 authorized, whose effects can be observed, and whose causal model has been
 integrated. `src/embodiment/connections.py` represents this boundary.
@@ -80,7 +80,7 @@ payloads are null. This is a scientific boundary, not a visual fallback.
 
 The Embodiment workspace visualizes the causal loop and current episode,
 reward, action, text-input and history state. Its central living-system map
-uses the Brain-5D creature asset to place every currently published dashboard
+uses the MHRN creature asset to place every currently published dashboard
 source into one body:
 
 - neural body: `system`, `network`, `spikes`;

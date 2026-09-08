@@ -1,4 +1,4 @@
-"""Append-only delta journal for Brain-5D snapshot persistence.
+"""Append-only delta journal for MHRN snapshot persistence.
 
 The journal is deliberately separate from the frozen ``.b5d`` V1 snapshot
 format.  A journal header is immutable after creation.  Data records and
@@ -165,7 +165,7 @@ class JournalScan:
 
 
 class DeltaJournal:
-    """Append-only Brain-5D delta journal with explicit commit boundaries."""
+    """Append-only MHRN delta journal with explicit commit boundaries."""
 
     def __init__(
         self,

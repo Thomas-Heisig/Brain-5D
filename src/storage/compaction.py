@@ -1,4 +1,4 @@
-"""Crash-safe generation compaction for Brain-5D persistence."""
+"""Crash-safe generation compaction for MHRN persistence."""
 
 from __future__ import annotations
 

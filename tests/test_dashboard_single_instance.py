@@ -1,4 +1,4 @@
-"""Single-instance binding regression tests for the Brain-5D dashboard.
+"""Single-instance binding regression tests for the MHRN dashboard.
 
 These tests verify the P0 process-architecture contract from
 ``docs/TODO.md`` (section *v0.5.0-alpha.5 — Integration Hardening*):

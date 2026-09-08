@@ -1,4 +1,4 @@
-/* Brain-5D Operator Experience
+/* MHRN Operator Experience
  *
  * Presentation and navigation only. This module never issues runtime control
  * commands and never fabricates scientific state. Values shown in the chrome
@@ -136,7 +136,7 @@ function buildWelcome() {
     <div class="experience-welcome-copy">
       <span class="experience-eyebrow">OPERATOR ORIENTATION</span>
       <h2>Vom Systemzustand zur belastbaren Evidenz</h2>
-      <p>Brain-5D trennt Beobachtung, Eingriff, Experiment und Freigabe. Diese Oberfläche führt entlang derselben Kausalitätskette; sie erzeugt keine Messwerte und ersetzt keine wissenschaftlichen Nachweise.</p>
+      <p>MHRN trennt Beobachtung, Eingriff, Experiment und Freigabe. Diese Oberfläche führt entlang derselben Kausalitätskette; sie erzeugt keine Messwerte und ersetzt keine wissenschaftlichen Nachweise.</p>
     </div>
     <div class="experience-welcome-steps">
       <button type="button" data-jump-workspace="overview"><b>01</b><span><strong>Zustand lesen</strong><small>Health, Aktivität, Speicher</small></span></button>
@@ -159,7 +159,7 @@ function buildPalette() {
   dialog.className = "experience-dialog experience-command-palette";
   dialog.innerHTML = `
     <form method="dialog" class="experience-dialog-frame">
-      <header><div><span class="experience-eyebrow">COMMAND PALETTE</span><h2>Navigate Brain-5D</h2></div><button value="cancel" aria-label="Close">×</button></header>
+      <header><div><span class="experience-eyebrow">COMMAND PALETTE</span><h2>Navigate MHRN</h2></div><button value="cancel" aria-label="Close">×</button></header>
       <label class="experience-command-search"><span>⌕</span><input type="search" autocomplete="off" placeholder="Workspace oder Funktion suchen …" data-experience-search></label>
       <div class="experience-command-results" data-experience-results></div>
       <footer><span><kbd>↑</kbd><kbd>↓</kbd> wählen</span><span><kbd>Enter</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></footer>

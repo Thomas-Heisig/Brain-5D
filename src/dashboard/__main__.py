@@ -1,6 +1,6 @@
-"""Run the Brain-5D operator dashboard with ``python -m src.dashboard``.
+"""Run the MHRN operator dashboard with ``python -m src.dashboard``.
 
-This module serves as the entry point for the Brain-5D dashboard application.
+This module serves as the entry point for the MHRN dashboard application.
 It delegates to the server's main() function with enhanced error handling
 and user-friendly messages.
 """
@@ -25,7 +25,7 @@ def _configure_logging(level: str = "INFO") -> None:
 
 
 def main() -> int:
-    """Main entry point for the Brain-5D dashboard.
+    """Main entry point for the MHRN dashboard.
 
     Returns:
         Exit code (0 for success, non-zero for errors).

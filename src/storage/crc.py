@@ -1,4 +1,4 @@
-"""CRC32 helpers used by the Brain-5D append-only journal."""
+"""CRC32 helpers used by the MHRN append-only journal."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Optional runtime bridge between a live network and Brain-5D persistence."""
+"""Optional runtime bridge between a live network and MHRN persistence."""
 
 from __future__ import annotations
 

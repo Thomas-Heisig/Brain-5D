@@ -12,7 +12,7 @@
 @import url("./wesen-neural-symbiosis.css");
 
 /* ============================================================================
-   Brain-5D Operator Dashboard – Complete Stylesheet
+   MHRN Operator Dashboard – Complete Stylesheet
 
    This file combines all dashboard styles including:
    - Base theme (dark, gradient, cards)
@@ -9866,7 +9866,7 @@ body.accessibility-mode .health-bar {
 #tab-network { display: none !important; }
 
 
-/* Brain-5D unified file viewer modal */
+/* MHRN unified file viewer modal */
 body.fm-viewer-open { overflow: hidden; }
 .fm-viewer.fm-viewer-modal:not(.fm-viewer-hidden) {
   position: fixed !important;
@@ -10327,3 +10327,17 @@ iframe.file-renderer-media { width: 100%; height: 65vh; border: 0; }
 .chat-file-card summary { cursor: pointer; padding: .5rem; overflow-wrap: anywhere; }
 .chat-file-card .file-renderer-body { max-height: 45vh; }
 .chat-output { min-width: 0; overflow-wrap: anywhere; }
+
+/* Bilingual identity; wrap naturally on narrow dashboards. */
+.project-title, .project-subtitle { margin: 0.15rem 0; max-width: 36rem; overflow-wrap: anywhere; }
+.project-title { font-size: 0.9rem; font-weight: 600; }
+.project-subtitle { font-size: 0.8rem; opacity: 0.8; }
+
+/* MHRN identity flex bounds retain narrow-screen navigation. */
+.topbar-brand, .topbar-brand > div { min-width: 0; }
+@media (max-width: 760px) { .topbar { flex-wrap: wrap; } .topbar-right { flex-wrap: wrap; } }
+
+/* MHRN sticky navigation clearance uses the measured bilingual header height. */
+.brain5d-primary-nav { top: var(--dashboard-topbar-height, 0px) !important; }
+html { scroll-padding-top: var(--mhrn-sticky-offset, 180px); }
+[data-workspace-view], .tab-content button, .tab-content a { scroll-margin-top: var(--mhrn-sticky-offset, 180px); }

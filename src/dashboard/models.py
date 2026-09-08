@@ -1,4 +1,4 @@
-"""Typed data models used by the Brain-5D operator dashboard."""
+"""Typed data models used by the MHRN operator dashboard."""
 
 from __future__ import annotations
 

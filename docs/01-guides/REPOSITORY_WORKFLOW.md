@@ -1,10 +1,10 @@
-# Brain-5D Repository Workflow
+# MHRN Repository Workflow
 
 > Verbindliche Projektkonvention ab 2026-09-03
 
 ## Kanonischer Entwicklungsstand
 
-Der verbindliche, gemeinsame Projektstand von Brain-5D ist:
+Der verbindliche, gemeinsame Projektstand von MHRN ist:
 
 ```text
 origin/main
@@ -25,7 +25,7 @@ Lokale Branches oder Feature-Branches dürfen für isolierte Änderungen, Review
 
 ## Wichtige Klarstellung
 
-„Immer in origin/main schreiben“ bedeutet für Brain-5D:
+„Immer in origin/main schreiben“ bedeutet für MHRN:
 
 > `origin/main` ist der einzige dauerhafte kanonische Zielstand.
 

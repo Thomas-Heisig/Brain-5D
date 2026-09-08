@@ -1,4 +1,4 @@
-"""Typed binary payload codecs for Brain-5D journal deltas."""
+"""Typed binary payload codecs for MHRN journal deltas."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""CRC tests for the Brain-5D journal."""
+"""CRC tests for the MHRN journal."""
 
 from src.storage.crc import compute_crc32, verify_crc32
 

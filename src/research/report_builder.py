@@ -93,7 +93,7 @@ class ReportBuilder:
     def build_research_catalog(self) -> str:
         """Generate a complete research catalog."""
         lines = [
-            "# Brain-5D Research Catalog",
+            "# MHRN Research Catalog",
             "",
             f"*Generiert am {datetime.now().strftime('%Y-%m-%d')}*",
             "",
@@ -192,7 +192,7 @@ class ReportBuilder:
     def build_evidence_matrix(self) -> str:
         """Generate an evidence matrix showing status per question."""
         lines = [
-            "# Brain-5D Evidence Matrix",
+            "# MHRN Evidence Matrix",
             "",
             f"*Generiert am {datetime.now().strftime('%Y-%m-%d')}*",
             "",
@@ -254,7 +254,7 @@ class ReportBuilder:
     def build_open_questions(self) -> str:
         """Generate a document listing all unanswered research questions."""
         lines = [
-            "# Brain-5D Open Questions",
+            "# MHRN Open Questions",
             "",
             f"*Generiert am {datetime.now().strftime('%Y-%m-%d')}*",
             "",
@@ -301,7 +301,7 @@ class ReportBuilder:
     def build_claim_register(self) -> str:
         """Generate a register of all scientific claims."""
         lines = [
-            "# Brain-5D Claim Register",
+            "# MHRN Claim Register",
             "",
             f"*Generiert am {datetime.now().strftime('%Y-%m-%d')}*",
             "",
@@ -392,11 +392,11 @@ class ReportBuilder:
         }
 
         lines = [
-            "# Brain-5D Dissertation Map",
+            "# MHRN Dissertation Map",
             "",
             f"*Generiert am {datetime.now().strftime('%Y-%m-%d')}*",
             "",
-            "Diese Karte zeigt, wie die Forschungsergebnisse von Brain-5D in eine",
+            "Diese Karte zeigt, wie die Forschungsergebnisse von MHRN in eine",
             "Dissertationsstruktur eingeordnet werden können.",
             "",
         ]

@@ -1,4 +1,4 @@
-"""Quality verification for the Brain-5D operator dashboard and embodiment bridge."""
+"""Quality verification for the MHRN operator dashboard and embodiment bridge."""
 
 from __future__ import annotations
 

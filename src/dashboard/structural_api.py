@@ -2,7 +2,7 @@
 
 This module defines the protocol and data types for the structural operator
 bridge, which provides a clean interface between the dashboard HTTP layer
-and the Brain-5D structural plasticity subsystem.
+and the MHRN structural plasticity subsystem.
 
 The StructuralOperatorBridge protocol defines all operations that can be
 performed on the structural plasticity system, including:

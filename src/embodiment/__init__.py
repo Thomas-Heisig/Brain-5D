@@ -1,4 +1,4 @@
-"""Embodiment interfaces for Brain-5D perception-action experiments."""
+"""Embodiment interfaces for MHRN perception-action experiments."""
 
 from .actuator import ActuatorAdapter
 from .actuator_hub import ActionRouter, ActuatorHub

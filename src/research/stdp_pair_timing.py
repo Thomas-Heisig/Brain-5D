@@ -22,7 +22,7 @@ PARAMETERS = STDPParameters(
 def run_pair_timing_protocol() -> dict[str, Any]:
     """Measure the STDP timing curve with fixed, isolated conditions.
 
-    The protocol does not access the Brain-5D runtime, filesystem, network,
+    The protocol does not access the MHRN runtime, filesystem, network,
     or any language model. Each replication receives a new synapse and the
     same pre/post timing, making the measurement deterministic and auditable.
     """

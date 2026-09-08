@@ -1,4 +1,4 @@
-/* Brain-5D Wesen integration shell.
+/* MHRN Wesen integration shell.
  * The existing adaptive Wesen implementation remains in wesen-base.js.
  * This shell merges the technical Embodiment surface into Wesen and keeps
  * Settings/Release as footer utilities instead of primary workspaces.

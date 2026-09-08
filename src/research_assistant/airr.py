@@ -19,7 +19,7 @@ BRAIN-5D - AI GENERATED SCIENTIFIC ANALYSIS
 
 Dieser Bericht wurde durch ein kuenstliches Intelligenzsystem erzeugt.
 
-Er stellt eine wissenschaftliche Interpretation von Brain-5D-Forschungsdaten dar.
+Er stellt eine wissenschaftliche Interpretation von MHRN-Forschungsdaten dar.
 
 Er ist KEINE wissenschaftliche Evidenz.
 

@@ -1,11 +1,11 @@
 """Read-only, replaceable language model backend contracts.
 
 This module defines the core protocols and data types for the Language Organ,
-a controlled, replaceable interface between Brain-5D and external language models.
+a controlled, replaceable interface between MHRN and external language models.
 
 The Language Organ is designed as a read-only adapter that:
 - Translates between symbolic text and subsymbolic SignalFrames
-- Never mutates Brain-5D state directly
+- Never mutates MHRN state directly
 - Is replaceable (NullBackend, LlamaCppBackend, etc.)
 - Is fault-tolerant (failures do not stop the simulation)
 
@@ -54,7 +54,7 @@ class LanguageRequest:
 
     This represents a self-contained, immutable request for language
     processing. It is intentionally limited to text and optional
-    SignalFrame data to prevent any mutation of Brain-5D state.
+    SignalFrame data to prevent any mutation of MHRN state.
 
     Attributes:
         request_id: Unique identifier for this request (for traceability).
@@ -89,7 +89,7 @@ class LanguageResponse:
     """Language-organ result. It is data, never a runtime command.
 
     This response contains only text and metadata. It must never contain
-    commands that could mutate the Brain-5D network state.
+    commands that could mutate the MHRN network state.
 
     Attributes:
         request_id: ID of the original request (for traceability).
@@ -125,17 +125,17 @@ class LanguageResponse:
 
 
 class LanguageModelBackend(Protocol):
-    """Backend contract that deliberately exposes no Brain-5D runtime object.
+    """Backend contract that deliberately exposes no MHRN runtime object.
 
     This protocol defines the minimal interface that any language model
     backend must implement. It is designed to be:
 
     1. Replaceable – Backends can be swapped at runtime (NullBackend, LlamaCppBackend, etc.)
-    2. Read-only – No Brain-5D state mutation
+    2. Read-only – No MHRN state mutation
     3. Fault-tolerant – Errors are returned in the response, not raised
     4. Asynchronous-capable – Inference should be non-blocking where possible
 
-    The backend is intentionally decoupled from the Brain-5D runtime to
+    The backend is intentionally decoupled from the MHRN runtime to
     prevent accidental mutation of network state. All communication is
     through immutable request/response objects.
 
@@ -165,7 +165,7 @@ class LanguageModelBackend(Protocol):
     def infer(self, request: LanguageRequest) -> LanguageResponse:
         """Process a language request and return text data only.
 
-        This method must never mutate Brain-5D state. It receives a
+        This method must never mutate MHRN state. It receives a
         self-contained request and returns a self-contained response.
 
         Args:

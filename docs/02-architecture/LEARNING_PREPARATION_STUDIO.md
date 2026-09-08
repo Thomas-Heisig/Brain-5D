@@ -1,11 +1,11 @@
-# Brain-5D — Learning Preparation Studio
+# MHRN — Learning Preparation Studio
 
 > Status: architecture and guarded-contract foundation
-> Canonical principle: AI may prepare learning; Brain-5D performs learning.
+> Canonical principle: AI may prepare learning; MHRN performs learning.
 
 ## 1. Purpose
 
-Brain-5D already contains the neural learning mechanisms (`LearningEngine`, STDP,
+MHRN already contains the neural learning mechanisms (`LearningEngine`, STDP,
 eligibility traces and reward-modulated plasticity). What is still missing is a
 coherent operator-facing workflow that answers a different question:
 
@@ -44,7 +44,7 @@ PreparedLearningPlan
 Experience / Environment / Sensor pipeline
         |
         v
-Brain-5D SNN
+MHRN SNN
         |
         v
 LearningEngine
@@ -330,5 +330,5 @@ measurement.
 ## 10. Scientific principle
 
 > The AI may design the lesson. The environment may present the lesson. The
-> plasticity mechanisms may change the network. Only the Brain-5D system may
+> plasticity mechanisms may change the network. Only the MHRN system may
 > develop the internal neural representation.

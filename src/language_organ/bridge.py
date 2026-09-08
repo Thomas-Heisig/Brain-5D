@@ -1,11 +1,11 @@
 """Non-invasive data bridge between signal interpretation and a language backend.
 
 This module provides the LanguageOrgan class, which acts as a controlled,
-read-only bridge between the Brain-5D signal processing subsystem and an
+read-only bridge between the MHRN signal processing subsystem and an
 optional language model backend.
 
 The LanguageOrgan is designed to be:
-- Non-invasive – Never mutates Brain-5D state
+- Non-invasive – Never mutates MHRN state
 - Replaceable – Uses the LanguageModelBackend protocol
 - Optional – Can be disabled without affecting the simulation
 - Observable – Provides status information for the dashboard
@@ -15,7 +15,7 @@ SignalFrames, enabling semantic interpretation and monitoring without
 allowing direct network mutation.
 
 Design Principle:
-    The LanguageOrgan does not own the Brain-5D runtime loop. It only
+    The LanguageOrgan does not own the MHRN runtime loop. It only
     processes requests and returns data. The simulation continues even
     if the language organ is disabled or fails.
 
@@ -73,12 +73,12 @@ class LanguageOrganStatus:
 
 
 class LanguageOrgan:
-    """Own only language requests; never own the Brain-5D runtime loop.
+    """Own only language requests; never own the MHRN runtime loop.
 
     This class acts as a controlled adapter between the signal processing
     subsystem and a language model backend. It processes requests for
     signal interpretation and text translation, but never mutates the
-    Brain-5D state.
+    MHRN state.
 
     The LanguageOrgan is designed to be used with the dashboard and
     operator console for semantic interpretation of network activity.

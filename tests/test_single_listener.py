@@ -1,7 +1,7 @@
 """Test that exactly one TCP listener owns the dashboard port.
 
-This test launches Brain-5D, inspects TCP listeners for the dashboard port,
-and asserts exactly one LISTEN socket owned by the Brain-5D PID.
+This test launches MHRN, inspects TCP listeners for the dashboard port,
+and asserts exactly one LISTEN socket owned by the MHRN PID.
 
 Uses a dynamically allocated free port so the test never conflicts with
 pre-existing processes on port 8765.
@@ -232,11 +232,11 @@ def _get_listener_pids_linux(port: int) -> dict[int, list[int]]:
 
 
 def test_exactly_one_listener_owns_port() -> None:
-    """Launch Brain-5D and verify exactly one TCP listener on the dashboard port.
+    """Launch MHRN and verify exactly one TCP listener on the dashboard port.
 
     Uses a dynamically allocated port to avoid conflicts. Verifies:
     - exactly one LISTEN socket
-    - listener PID == launched Brain-5D PID
+    - listener PID == launched MHRN PID
     - process remains alive
     - no other PID listens on the same port
     - /healthz answers from the launched runtime
@@ -246,7 +246,7 @@ def test_exactly_one_listener_owns_port() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     config_path = repo_root / "configs" / "poc_config.yaml"
 
-    # ---- Phase 1: Launch Brain-5D in background with test port -----------
+    # ---- Phase 1: Launch MHRN in background with test port -----------
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
     command = [
@@ -278,7 +278,7 @@ def test_exactly_one_listener_owns_port() -> None:
             exit_code = proc.poll()
             if exit_code is not None:
                 raise AssertionError(
-                    f"Brain-5D process (PID {brain_pid}) exited prematurely "
+                    f"MHRN process (PID {brain_pid}) exited prematurely "
                     f"with code {exit_code}; command={command!r}; cwd={repo_root}; "
                     f"config={config_path}; port={test_port}; pid={brain_pid}; "
                     f"stdout={proc.stdout.read() if proc.stdout else ''!r}; "
@@ -296,7 +296,7 @@ def test_exactly_one_listener_owns_port() -> None:
 
         assert dashboard_ready, (
             f"Port {test_port} did not become listening within 15 seconds "
-            f"(Brain-5D PID {brain_pid})"
+            f"(MHRN PID {brain_pid})"
         )
 
         # ---- Phase 3: Verify exactly one LISTEN socket owned by our PID ---
@@ -307,7 +307,7 @@ def test_exactly_one_listener_owns_port() -> None:
 
         assert brain_pid in listeners, (
             f"Listener PID(s) {list(set(listeners.keys()))} does not include "
-            f"Brain-5D PID {brain_pid}"
+            f"MHRN PID {brain_pid}"
         )
 
         our_sockets = listeners[brain_pid]
@@ -324,7 +324,7 @@ def test_exactly_one_listener_owns_port() -> None:
         # ---- Phase 4: Verify process is still alive -----------------------
         assert (
             proc.poll() is None
-        ), f"Brain-5D process (PID {brain_pid}) died after port check"
+        ), f"MHRN process (PID {brain_pid}) died after port check"
 
         # ---- Phase 5: Verify /healthz belongs to this process -------------
         import urllib.request

@@ -1,14 +1,14 @@
-Brain-5D Storage -- Theoretisches optisches Speichermodell und digitaler Zwilling
+MHRN Storage -- Theoretisches optisches Speichermodell und digitaler Zwilling
 
-Projekt: Brain-5D
+Projekt: MHRN
 Dokumenttyp: Technische Theorie- und Architekturgrundlage
 Status: Forschungs-/Entwurfsmodell
 Ziel: Beschreibung eines theoretischen optischen 5D-Speichers und
-des im Brain-5D-System verwendeten digitalen Zwillings.
+des im MHRN-System verwendeten digitalen Zwillings.
 
 1. Zweck und Abgrenzung
 
-Brain-5D benötigt langfristig einen Speicher für sehr große Mengen
+MHRN benötigt langfristig einen Speicher für sehr große Mengen
 dynamischer neuronaler Zustände. Neben den Neuronen selbst müssen
 insbesondere Synapsen, elektrische Zustände, chemische Zustände,
 räumliche Beziehungen und zeitliche Veränderungen abgebildet werden.
@@ -20,10 +20,10 @@ hypothetisches physisches Speichermedium, in dem Information über
 räumliche und optische Freiheitsgrade eines Punktes kodiert wird.
 
 Digitaler Zwilling: die praktisch implementierbare digitale
-Repräsentation desselben Informationsmodells im Brain-5D-Projekt.
+Repräsentation desselben Informationsmodells im MHRN-Projekt.
 
 Das optische Original ist kein Nachweis einer bereits realisierten
-Brain-5D-Hardware. Einige zugrunde liegende Prinzipien --
+MHRN-Hardware. Einige zugrunde liegende Prinzipien --
 dreidimensionale optische Speicherung, spektrale Kodierung,
 Polarisation, Phase und holografische Verfahren -- sind physikalisch
 bekannte Konzepte. Ihre gemeinsame Nutzung in genau der hier
@@ -33,7 +33,7 @@ experimentell validiert werden.
 Der digitale Zwilling ist dagegen unabhängig von einer späteren
 optischen Hardware implementierbar und testbar.
 
-2. Ausgangsgröße des Brain-5D-Raums
+2. Ausgangsgröße des MHRN-Raums
 
 Die vorgesehene logische Zielausdehnung lautet
 
@@ -151,7 +151,7 @@ Statt nur RGB wird ein Spektrum als diskreter Vektor modelliert:
 (I_{\lambda{=tex}0},I{\lambda{=tex}1},\ldots{=tex},I{\lambda{=tex}_{K-1}}).
 ]
 
-Brain-5D kann beispielsweise (K=32) Spektralkanäle verwenden. Die Kanäle
+MHRN kann beispielsweise (K=32) Spektralkanäle verwenden. Die Kanäle
 müssen im digitalen Zwilling nicht zwingend reale Wellenlängen
 darstellen; sie können zunächst als optische Äquivalentkanäle dienen.
 
@@ -308,7 +308,7 @@ wurden.
 6. Synapsen als Graph
 
 Neuronale Beziehungen werden nicht sinnvoll durch bloße Nachbarschaft im
-Voxelraum beschrieben. Deshalb ergänzt Brain-5D den
+Voxelraum beschrieben. Deshalb ergänzt MHRN den
 Punkt-/Voxel-Speicher durch einen gerichteten Graphen
 
 [ G=(V,E). ]
@@ -435,7 +435,7 @@ S_{\mathrm{naiv}{=tex}}=T\cdot {=tex}S_{\mathrm{snapshot}{=tex}}.
 
 Das ist bei großen Netzen ungeeignet.
 
-Brain-5D verwendet konzeptionell deshalb
+MHRN verwendet konzeptionell deshalb
 
 [ State(t)=State(t_0)+\sum{=tex}_{k=t_0+1}^{t}\Delta{=tex}_k. ]
 
@@ -477,7 +477,7 @@ Synapse                  Graphkante
 chemisches Umfeld        Feldarray
 Zeitentwicklung          Snapshot + Delta
 
-Dadurch bleibt die Brain-5D-Logik unabhängig davon, ob der Speicher
+Dadurch bleibt die MHRN-Logik unabhängig davon, ob der Speicher
 später auf SSD, RAM, mmap-Dateien oder einer experimentellen optischen
 Hardware liegt.
 
@@ -564,7 +564,7 @@ beschreibt Shannon:
 
 mit Bandbreite (B) und Signal-Rausch-Verhältnis (\mathrm{SNR}{=tex}).
 
-Für den Brain-5D-Speicher bedeutet dies: Die bloße mathematische Zahl
+Für den MHRN-Speicher bedeutet dies: Die bloße mathematische Zahl
 möglicher Kombinationen ist nicht automatisch die praktisch
 speicherbare Informationsmenge. Auslesbarkeit, Kanalübersprechen und
 Fehlerwahrscheinlichkeit sind entscheidend.
@@ -620,7 +620,7 @@ wobei:
 
 (a_i,a_j): Aktivitätsgrößen.
 
-Die tatsächliche Brain-5D-Lernlogik kann davon abweichen; die Formel
+Die tatsächliche MHRN-Lernlogik kann davon abweichen; die Formel
 beschreibt nur das Grundprinzip korrelationsbasierter Verstärkung.
 
 15.2 Pruning
@@ -775,7 +775,7 @@ Die zentrale Architekturentscheidung lautet:
 \boxed{\text{Semantik des Speichers von der Hardware trennen}}{=tex}
 ]
 
-Brain-5D entwickelt zuerst ein stabiles logisches Modell.
+MHRN entwickelt zuerst ein stabiles logisches Modell.
 
 Der digitale Zwilling dient dabei als:
 
@@ -807,7 +807,7 @@ das physische Speicherkonzept ändert.
 
 19. Empfohlene logische Architektur
 
-Brain-5D
+MHRN
 |
 +-- Simulation / Learning
 |
@@ -837,7 +837,7 @@ optischen Speichers interpretiert werden können.
 
 20. Zusammenfassung
 
-Das Brain-5D-Speichermodell basiert auf vier Informationsklassen:
+Das MHRN-Speichermodell basiert auf vier Informationsklassen:
 
 [ \boxed{
 \text{Punkt}+\text{Graph}+\text{Feld}+\text{Zeit}
@@ -862,7 +862,7 @@ Der digitale Zwilling bildet diese Größen deterministisch auf Binärdaten
 ab und erweitert sie um neuronale, elektrische, chemische und
 graphbasierte Zustände.
 
-Damit ist Brain-5D nicht von der erfolgreichen Entwicklung einer
+Damit ist MHRN nicht von der erfolgreichen Entwicklung einer
 optischen Hardware abhängig. Das digitale System ist eigenständig
 nutzbar, während das optische Modell als theoretische
 Hardwareperspektive und Forschungsrichtung erhalten bleibt.
@@ -874,5 +874,5 @@ Zustand im Punkt, Beziehung im Graphen, Umgebung im Feld und
 Veränderung in der Zeit.
 
 Dieses Prinzip soll unnötige Redundanz vermeiden und gleichzeitig
-gewährleisten, dass der digitale Brain-5D-Speicher später auf andere
+gewährleisten, dass der digitale MHRN-Speicher später auf andere
 physische Speichertechnologien abgebildet werden kann.

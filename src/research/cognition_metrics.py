@@ -1,7 +1,7 @@
 """Bounded cognitive-task instruments, not a consciousness detector.
 
 Stimulus generators and scoring operate on explicit inputs only. Test fixtures
-are synthetic; these functions never execute, train, or certify Brain-5D.
+are synthetic; these functions never execute, train, or certify MHRN.
 """
 
 from __future__ import annotations

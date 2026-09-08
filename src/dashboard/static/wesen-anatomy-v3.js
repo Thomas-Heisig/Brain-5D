@@ -1,4 +1,4 @@
-/* Brain-5D Wesen anatomy v3.
+/* MHRN Wesen anatomy v3.
  * Read-only presentation layer. It does not mutate runtime, learning,
  * actuator, evidence, or authorization state.
  */

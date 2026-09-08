@@ -3,7 +3,7 @@
 MSBA is an embodiment-only, fail-closed contract below Neural Symbiosis. It
 models modality-specific gateway geometry, candidate plasticity mathematics,
 resource/energy accounting and adaptive allocation without importing or
-mutating the Brain-5D neural core.
+mutating the MHRN neural core.
 
 All learning and structural growth flags default to disabled. The functions in
 this module calculate candidate values only; applying them to a live gateway

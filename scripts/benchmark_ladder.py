@@ -1,4 +1,4 @@
-"""Run a bounded, reproducible Brain-5D scaling benchmark ladder.
+"""Run a bounded, reproducible MHRN scaling benchmark ladder.
 
 Examples:
     python scripts/benchmark_ladder.py --tiers 100,500,5000 --ticks 20

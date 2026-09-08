@@ -1,4 +1,4 @@
-# Brain 5D Heatmap Observatory
+# MHRN Heatmap Observatory
 
 Sprint 2C projects sparse 5D state onto the X-Y plane while averaging neurons
 that share the same X-Y coordinate across Z, D4 and D5.

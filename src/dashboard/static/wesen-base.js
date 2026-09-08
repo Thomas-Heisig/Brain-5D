@@ -1,4 +1,4 @@
-/* Brain-5D Wesen workspace
+/* MHRN Wesen workspace
  * Read-only, machine-native body visualization.
  * Observed state only: no learning, language output or actuator writes.
  */

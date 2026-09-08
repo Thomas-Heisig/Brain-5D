@@ -40,3 +40,5 @@ The directory on Windows may be renamed to `MHRN` after processes and editors us
 ## Sources for platform behavior
 
 GitHub, “Renaming a repository”: https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository . Hugging Face, “Create and manage a repository”, `move_repo`: https://huggingface.co/docs/huggingface_hub/guides/repository . Consulted 2026-09-08; the actual operation is documented separately from the intended configuration.
+
+The migration inventory is a dated byte-preservation record, not a ban on future canonical research updates. Persistent checks protect the historical publication editions; legitimate future registry and run changes remain possible.

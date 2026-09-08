@@ -1,4 +1,4 @@
-"""Homeostatic self-regulation for Brain-5D v0.5.
+"""Homeostatic self-regulation for MHRN v0.5.
 
 This module provides firing-rate and energy homeostasis through a post-step
 observer that continuously adjusts neuron thresholds and energy levels

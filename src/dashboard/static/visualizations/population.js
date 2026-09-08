@@ -1,5 +1,5 @@
 /**
- * Brain-5D Dashboard — Population Overview Visualization
+ * MHRN Dashboard — Population Overview Visualization
  *
  * @version 1.0.0
  * @license MIT

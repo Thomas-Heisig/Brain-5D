@@ -1,4 +1,4 @@
-"""Knowledge intake and provenance tracking for Brain-5D.
+"""Knowledge intake and provenance tracking for MHRN.
 
 This package provides validation, provenance tracking, and management
 of external knowledge before it enters the learning pipeline.

@@ -1,4 +1,4 @@
-"""Runtime control primitives for Brain-5D."""
+"""Runtime control primitives for MHRN."""
 
 from .control import (
     ControlCommand,

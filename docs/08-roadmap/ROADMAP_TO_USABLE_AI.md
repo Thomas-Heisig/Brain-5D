@@ -1,8 +1,8 @@
-# Brain-5D Roadmap – From Persistent SNN to Usable AI
+# MHRN Roadmap – From Persistent SNN to Usable AI
 
 ## Definition of usable AI
 
-Brain-5D v1.0 is an engineering milestone, not a claim of AGI, consciousness,
+MHRN v1.0 is an engineering milestone, not a claim of AGI, consciousness,
 or biological equivalence.  A usable system must demonstrate persistent
 learning, stable self-regulation, measurable task improvement, multimodal
 inputs, retained context, bounded actions, observability, deterministic
@@ -138,7 +138,7 @@ API, and actions remain bounded and auditable.
 - clean install/reproduction tests;
 - operator runbook and API stability review.
 
-## v1.0 – Usable Brain-5D AI
+## v1.0 – Usable MHRN AI
 
 Release only after demonstrated persistent learning, stable self-regulation,
 held-out task improvement, multimodal perception, retained context, bounded

@@ -1,7 +1,7 @@
-"""Brain-5D local operator dashboard.
+"""MHRN local operator dashboard.
 
 This package provides a web-based dashboard for monitoring and controlling
-the Brain-5D runtime. It includes:
+the MHRN runtime. It includes:
 
 - A lightweight HTTP server with no external dependencies
 - Real-time telemetry visualization
@@ -10,7 +10,7 @@ the Brain-5D runtime. It includes:
 - Documentation browsing with multi-format support (MD, DOCX, XLSX, CSV, JSON, PDF)
 - Thread-safe state management with event notifications
 
-The dashboard is designed to be run locally alongside the Brain-5D runtime
+The dashboard is designed to be run locally alongside the MHRN runtime
 and accessed via a web browser.
 
 Example:

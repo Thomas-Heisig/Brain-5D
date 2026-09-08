@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a reproducible Brain-5D defect
+about: Report a reproducible MHRN defect
 title: "[BUG] "
 labels: bug
 assignees: ""
@@ -29,7 +29,7 @@ Paste the minimal relevant output.
 
 - OS:
 - Python version:
-- Brain-5D version / commit:
+- MHRN version / commit:
 - Installation method:
 - Dashboard involved: yes/no
 - Persistence / restore involved: yes/no

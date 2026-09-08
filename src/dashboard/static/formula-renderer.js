@@ -144,7 +144,7 @@ async function typesetMarkdownMath() {
     await mathJax.typesetPromise(roots);
     for (const root of roots) root.dataset.mathProcessed = "true";
   } catch (error) {
-    console.warn("Brain-5D formula renderer fallback:", error);
+    console.warn("MHRN formula renderer fallback:", error);
     for (const root of roots) fallbackMath(root);
   }
 }

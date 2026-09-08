@@ -1,11 +1,11 @@
-# Brain-5D v0.5.0-alpha.6 Cognitive Bridge Overlay
+# MHRN v0.5.0-alpha.6 Cognitive Bridge Overlay
 
 This overlay is intentionally additive. It does not replace `src.core`, the runtime loop,
 learning, homeostasis, self-organization, storage, or the existing dashboard.
 
 ## Purpose
 
-Prepare the next Brain-5D evolution step with three isolated contracts:
+Prepare the next MHRN evolution step with three isolated contracts:
 
 1. deterministic SNN signal interpretation (`SignalFrame`),
 2. an optional, replaceable language organ (`LanguageModelBackend`),

@@ -6,7 +6,7 @@
 
 `Neural Symbiosis` is the international-facing name for the multi-network
 embodiment layer shown inside the `Wesen` workspace. It extends the technical
-embodiment boundary; it does **not** redefine the canonical Brain-5D neural
+embodiment boundary; it does **not** redefine the canonical MHRN neural
 core, canonical learning rules, historical DATA, accepted EVID, or scientific
 gates.
 
@@ -19,7 +19,7 @@ optional dedicated neural area(s)
         ↓
 explicit embodiment gateway
         ↓
-Brain-5D 5D-SNN core
+MHRN 5D-SNN core
         ↓
 explicit embodiment gateway
         ↓
@@ -88,7 +88,7 @@ Common built-in catalog families include:
 The adapter boundary is deliberately backend-neutral. A future adapter may be
 implemented with PyTorch, TensorFlow, JAX, ONNX Runtime, a remote inference
 service or a custom runtime without importing those frameworks into the
-Brain-5D core package.
+MHRN core package.
 
 ## 3. Virtual cognitive areas
 

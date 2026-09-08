@@ -1,8 +1,8 @@
-# Brain-5D – Git-Arbeitsablauf
+# MHRN – Git-Arbeitsablauf
 
 ## Grundprinzip
 
-Für das Projekt **Brain-5D** gilt:
+Für das Projekt **MHRN** gilt:
 
 * Der **lokale Arbeitsstand ist die Single Source of Truth**.
 * Der maßgebliche Branch ist immer **`main`**.
@@ -95,7 +95,7 @@ git status
 Beispiel:
 
 ```bash
-git commit -m "Update Brain-5D"
+git commit -m "Update MHRN"
 ```
 
 Besser sind möglichst konkrete Commit-Nachrichten.
@@ -132,7 +132,7 @@ Wenn der aktuelle Stand bereits geprüft wurde:
 git checkout main
 git status
 git add -A
-git commit -m "Update Brain-5D - alpha 5 cognitive bridge "
+git commit -m "Update MHRN - alpha 5 cognitive bridge "
 git push origin main --force
 ```
 
@@ -188,7 +188,7 @@ git push origin main
 
 # 5. GitHub enthält Änderungen, lokal bleibt aber maßgeblich
 
-Da im Brain-5D-Projekt der lokale Stand die **Single Source of Truth** ist, wird nicht automatisch ausgeführt:
+Da im MHRN-Projekt der lokale Stand die **Single Source of Truth** ist, wird nicht automatisch ausgeführt:
 
 ```bash
 git pull
@@ -196,7 +196,7 @@ git pull
 
 Ein `git pull` würde Remote-Änderungen in den lokalen Arbeitsstand integrieren.
 
-Das ist für den definierten Brain-5D-Workflow ausdrücklich nicht der Standard.
+Das ist für den definierten MHRN-Workflow ausdrücklich nicht der Standard.
 
 Zunächst wird geprüft:
 
@@ -458,7 +458,7 @@ Bei bereits veröffentlichten Releases sollten Tags jedoch möglichst nicht nach
 
 ---
 
-# 16. Versionierung der Brain-5D-Tags
+# 16. Versionierung der MHRN-Tags
 
 Empfohlenes Schema:
 
@@ -845,7 +845,7 @@ Damit kann der alte Zustand separat untersucht werden.
 
 # 35. Remote-Informationen aktualisieren, ohne den lokalen Code zu verändern
 
-Das ist für Brain-5D der bevorzugte Weg:
+Das ist für MHRN der bevorzugte Weg:
 
 ```bash
 git fetch origin
@@ -859,7 +859,7 @@ Deshalb:
 git fetch origin
 ```
 
-ist im Brain-5D-Modell normalerweise sinnvoller als:
+ist im MHRN-Modell normalerweise sinnvoller als:
 
 ```bash
 git pull
@@ -879,7 +879,7 @@ plus anschließendem Merge oder Rebase.
 
 Damit können Änderungen von GitHub in den lokalen Branch gelangen.
 
-Da für Brain-5D gilt:
+Da für MHRN gilt:
 
 ```text
 LOCAL = Single Source of Truth
@@ -957,7 +957,7 @@ Damit bleibt die Entscheidung über die Integration beim lokalen Repository.
 
 # 39. `develop`-Branch
 
-Für den festgelegten Brain-5D-Workflow wird `develop` grundsätzlich nicht benötigt.
+Für den festgelegten MHRN-Workflow wird `develop` grundsätzlich nicht benötigt.
 
 Der normale Ablauf lautet:
 
@@ -1077,7 +1077,7 @@ Erwartet:
 origin
 ```
 
-mit dem Brain-5D-GitHub-Repository.
+mit dem MHRN-GitHub-Repository.
 
 ---
 
@@ -1127,7 +1127,7 @@ Danach reicht künftig:
 git push
 ```
 
-Für maximale Klarheit wird im Brain-5D-Projekt dennoch empfohlen:
+Für maximale Klarheit wird im MHRN-Projekt dennoch empfohlen:
 
 ```bash
 git push origin main
@@ -1157,7 +1157,7 @@ Dies ist kein normaler täglicher Push, sondern ein bewusster Synchronisationsvo
 
 ---
 
-# 50. Empfohlener Brain-5D-Standardworkflow
+# 50. Empfohlener MHRN-Standardworkflow
 
 ## Normal
 
@@ -1296,7 +1296,7 @@ git push origin brain5d-core-vX.Y.Z
 
 ---
 
-# 55. Regeln für Brain-5D
+# 55. Regeln für MHRN
 
 ## Regel 1
 
@@ -1390,7 +1390,7 @@ git tag -a brain5d-core-v0.1.0 -m "Sprint 1C VERIFIED - observable deterministic
 git push origin main --tags
 ```
 
-wird für den neuen Brain-5D-Workflow nicht mehr als Standard verwendet.
+wird für den neuen MHRN-Workflow nicht mehr als Standard verwendet.
 
 Problematisch sind insbesondere:
 
@@ -1468,11 +1468,11 @@ git push --force-with-lease origin main
 
 ---
 
-# 61. Grundsätzliches Brain-5D-Modell
+# 61. Grundsätzliches MHRN-Modell
 
 ```text
 ┌──────────────────────────────┐
-│ Lokales Brain-5D Repository  │
+│ Lokales MHRN Repository  │
 │                              │
 │ SINGLE SOURCE OF TRUTH       │
 └──────────────┬───────────────┘
@@ -1504,7 +1504,7 @@ Eine Übernahme erfolgt nur nach bewusster Entscheidung.
 
 ---
 
-# 62. Brain-5D Git-Leitsatz
+# 62. MHRN Git-Leitsatz
 
 ```text
 LOCAL FIRST.
@@ -1515,4 +1515,4 @@ TAG VERIFIED STATES.
 FORCE-WITH-LEASE ONLY WHEN LOCAL MUST WIN.
 ```
 
-Damit bleibt der lokale Brain-5D-Projektstand kontrolliert, nachvollziehbar und eindeutig die maßgebliche Entwicklungsquelle.
+Damit bleibt der lokale MHRN-Projektstand kontrolliert, nachvollziehbar und eindeutig die maßgebliche Entwicklungsquelle.

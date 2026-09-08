@@ -1,4 +1,4 @@
-"""Restore a real Brain-5D core from snapshot, journal, and runtime sidecar."""
+"""Restore a real MHRN core from snapshot, journal, and runtime sidecar."""
 
 from __future__ import annotations
 

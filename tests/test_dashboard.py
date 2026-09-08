@@ -1,4 +1,4 @@
-"""Tests for the dependency-free Brain-5D operator dashboard."""
+"""Tests for the dependency-free MHRN operator dashboard."""
 
 from pathlib import Path
 

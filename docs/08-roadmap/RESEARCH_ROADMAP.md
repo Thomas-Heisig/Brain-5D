@@ -1,4 +1,4 @@
-# Brain-5D Research Roadmap
+# MHRN Research Roadmap
 
 **Canonical research roadmap**
 **Updated:** 2026-09-04
@@ -6,7 +6,7 @@
 
 ## Research objective
 
-Brain-5D investigates whether a sparse, locally learning, structurally adaptive and embodied spiking system can develop reproducible functional organization under controlled causal conditions. The project also studies what changes when language models participate as bounded interpreters/proposers rather than hidden controllers.
+MHRN investigates whether a sparse, locally learning, structurally adaptive and embodied spiking system can develop reproducible functional organization under controlled causal conditions. The project also studies what changes when language models participate as bounded interpreters/proposers rather than hidden controllers.
 
 The research program deliberately separates four levels:
 

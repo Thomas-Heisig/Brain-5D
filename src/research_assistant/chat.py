@@ -133,7 +133,7 @@ class ResearchChat:
         return (
             f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else ""
         ) + (
-            "You are the Brain-5D Research Self-Knowledge Assistant.\n"
+            "You are the MHRN Research Self-Knowledge Assistant.\n"
             "You are an AI assistant, not a person and not a trained researcher.\n"
             "Answer only from the supplied repository context and cite exact paths.\n"
             "If WEB SOURCES are supplied, cite their URLs and label them as external and unverified.\n"

@@ -1,4 +1,4 @@
-/* Brain-5D Neuron Model Viewer
+/* MHRN Neuron Model Viewer
  *
  * Scientific, bounded replacement for the legacy nested 5D projection.
  * Default path: deterministic backend sampling + client-side PCA on N x 5.

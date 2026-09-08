@@ -1,6 +1,6 @@
-"""Safe read/write manipulation and inspection for Brain-5D.
+"""Safe read/write manipulation and inspection for MHRN.
 
-This package provides a safe, audited façade for modifying the Brain-5D
+This package provides a safe, audited façade for modifying the MHRN
 network state with transaction support and rollback capabilities.
 """
 

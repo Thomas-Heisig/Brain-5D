@@ -1,4 +1,4 @@
-# Integration der strategischen Brain-5D-Dokumente
+# Integration der strategischen MHRN-Dokumente
 
 ## Ziel
 

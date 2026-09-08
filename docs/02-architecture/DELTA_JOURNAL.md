@@ -1,4 +1,4 @@
-# Brain-5D Delta Journal v1
+# MHRN Delta Journal v1
 
 ## Status
 

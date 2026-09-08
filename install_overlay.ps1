@@ -1,12 +1,12 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Brain-5D v0.5.0-alpha.3 overlay"
+Write-Host "MHRN v0.5.0-alpha.3 overlay"
 Write-Host "This script does not overwrite integration hubs automatically."
 Write-Host "New modules/assets are already placed by extracting the overlay."
 Write-Host ""
 
 if (-not (Test-Path "pyproject.toml")) {
-    throw "Run this script from the Brain-5D repository root."
+    throw "Run this script from the MHRN repository root."
 }
 
 Write-Host "Checking server patch..."
