@@ -10350,3 +10350,13 @@ html { scroll-padding-top: var(--mhrn-sticky-offset, 180px); }
   z-index: 12;
   background: var(--shell-surface-strong, var(--panel)) !important;
 }
+
+/* TODO completion: canonical file viewer advanced surfaces */
+.file-renderer-editor-split { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1rem; min-height:22rem; }
+.file-renderer-editor-source,.file-renderer-editor-preview { min-width:0; display:flex; flex-direction:column; gap:.65rem; }
+.file-renderer-editor-split .file-renderer-editor { flex:1; min-height:18rem; width:100%; resize:vertical; font-family:var(--font-mono, monospace); }
+.file-renderer-editor-controls,.file-renderer-bib-controls { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+.fm-docx-page-break,.fm-docx-section-break { border:0; border-top:1px dashed var(--border-color, #777); margin:1.5rem 0; }
+.file-renderer-pdf-text pre { max-height:18rem; overflow:auto; }
+.fm-local-diagram svg { max-width:100%; height:auto; }
+@media (max-width: 900px) { .file-renderer-editor-split { grid-template-columns:1fr; } }

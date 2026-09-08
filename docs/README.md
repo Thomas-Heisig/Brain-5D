@@ -150,3 +150,7 @@ Historical experiment DATA must not be silently rewritten when instrumentation i
 Avoid copying fixed test counts or commit hashes into many current documents. Where a fixed number is useful, date it and treat it as a verified snapshot. Scientific conclusions must cite experiment/evidence artifacts, not README prose or dashboard state alone.
 
 **Current development policy:** `main` is canonical. Short-lived branches start from current `origin/main`, are verified before merge, and should be deleted after merge when repository tooling permits. A branch with no commits ahead of `main` contains nothing to integrate and must not be merged merely to make the branch list empty.
+
+## Full-stack File Viewer completion — 2026-09-08
+
+The repository File Viewer is the canonical renderer for Dashboard, Research and Chat file cards. It now includes bounded media metadata, bounded PDF metadata/text when local tools are available, optional local Graphviz/PlantUML-to-SVG conversion, DOCX page/section markers, RIS export with selectable citation styles, and a responsive split editor with live preview and optimistic-lock conflict diff. Scientific artifacts remain read-only and local converters never upload source material.

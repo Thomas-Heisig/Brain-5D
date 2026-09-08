@@ -2,7 +2,7 @@
  * Untrusted content is built with text nodes, never executable HTML. File paths
  * remain explicit research/docs references. Preview and mutation are separate.
  */
-import { parseBibTeX } from './bibtex-viewer.js';
+import { parseBibTeX, formatCitationStyle, formatRis } from './bibtex-viewer.js';
 import { createSpeechControls } from './speech-reader.js';
 
 const requests = new WeakMap();
@@ -217,6 +217,24 @@ function renderBibTeXTable(container, entries) {
     row.append(links); table.append(row);
   }
   container.append(table);
+  const controls = node('div', '', 'file-renderer-bib-controls');
+  const style = document.createElement('select');
+  style.className = 'file-renderer-citation-style';
+  style.setAttribute('aria-label', 'Zitierstil');
+  for (const [value, label] of [['short', 'Kurz'], ['apa', 'APA'], ['ieee', 'IEEE']]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = label; style.append(option);
+  }
+  controls.append(style);
+  controls.append(button('Zitate kopieren', async () => {
+    const citations = entries.map((entry, index) => formatCitationStyle(entry, style.value, index + 1)).join('\n');
+    try { await navigator.clipboard.writeText(citations); } catch { /* optional */ }
+  }));
+  controls.append(button('RIS exportieren', () => {
+    const blob = new Blob([formatRis(entries)], { type: 'application/x-research-info-systems;charset=utf-8' });
+    const url = URL.createObjectURL(blob); const anchor = document.createElement('a');
+    anchor.href = url; anchor.download = 'references.ris'; document.body.append(anchor); anchor.click(); anchor.remove(); URL.revokeObjectURL(url);
+  }));
+  container.append(controls);
 }
 
 function renderHighlightedCode(container, data) {
@@ -269,7 +287,13 @@ async function renderDocx(container, data) {
   try {
     const response = await fetch(data.safeRawUrl);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const result = await window.mammoth.convertToHtml({ arrayBuffer: await response.arrayBuffer() });
+    const result = await window.mammoth.convertToHtml({
+      arrayBuffer: await response.arrayBuffer(),
+      styleMap: [
+        "p[style-name='Page Break'] => hr.fm-docx-page-break:fresh",
+        "p[style-name='Section Break'] => hr.fm-docx-section-break:fresh",
+      ],
+    });
     const article = node('article', '', 'fm-docx-content');
     article.append(safeDocumentFragment(result.value));
     container.append(article);
@@ -412,11 +436,15 @@ async function renderDiagram(container, data) {
   const source = node('code', data.content || '', `language-${format}`);
   pre.append(source);
   container.append(pre);
-  if (format === 'mermaid') {
-    await renderMermaidBlocks(container);
+  if (format === 'mermaid') { await renderMermaidBlocks(container); return; }
+  if (data.diagram_svg) {
+    const figure = node('figure', '', 'file-renderer-diagram fm-local-diagram');
+    figure.append(safeDocumentFragment(data.diagram_svg));
+    container.prepend(figure);
+    container.append(node('p', `${format} wurde lokal in eine bereinigte SVG-Vorschau konvertiert.`, 'file-renderer-notice'));
     return;
   }
-  container.append(node('p', `${format === 'graphviz' ? 'Graphviz' : 'PlantUML'}-Quellen werden sicher als Text angezeigt. Eine lokale SVG-Konvertierung ist nicht aktiviert.`, 'file-renderer-notice'));
+  container.append(node('p', `Lokale ${format}-Konvertierung: ${data.diagram_renderer || 'nicht verfuegbar'}. Die Quelle bleibt sichtbar.`, 'file-renderer-notice'));
 }
 
 async function renderFormulaSource(container, data) {
@@ -437,9 +465,15 @@ registerFileRenderer('diagram', renderDiagram);
 registerFileRenderer('archive', renderArchive);
 for (const kind of ['image', 'audio', 'video', 'pdf']) {
   registerFileRenderer(kind, (container, data) => {
+    const metadata = kind === 'pdf' ? data.pdf_metadata : data.media_metadata;
+    if (metadata && Object.keys(metadata).length) renderTable(container, { rows: [['Metadatum', 'Wert'], ...Object.entries(metadata).map(([key, value]) => [key, Array.isArray(value) ? value.join(', ') : String(value ?? '')])] });
+    if (kind === 'pdf' && data.content) {
+      const details = node('details', '', 'file-renderer-pdf-text');
+      details.append(node('summary', 'Begrenzte PDF-Textvorschau'), node('pre', data.content));
+      container.append(details);
+    }
     const media = node(kind === 'image' ? 'img' : kind === 'pdf' ? 'iframe' : kind);
-    media.src = data.safeRawUrl;
-    media.className = 'file-renderer-media';
+    media.src = data.safeRawUrl; media.className = 'file-renderer-media';
     if (kind === 'image') { media.alt = data.name; media.loading = 'lazy'; }
     if (kind === 'audio' || kind === 'video') { media.controls = true; media.preload = 'metadata'; }
     if (kind === 'pdf') { media.title = data.name; media.setAttribute('sandbox', 'allow-same-origin allow-downloads'); }
@@ -447,6 +481,33 @@ for (const kind of ['image', 'audio', 'video', 'pdf']) {
   });
 }
 registerFileRenderer('binary', (container) => container.append(node('p', 'Fuer dieses Format ist keine sichere Vorschau verfuegbar. Das unveraenderte Original kann heruntergeladen werden.')));
+
+
+function lineDiff(localText, remoteText) {
+  const local = String(localText || '').split('\n');
+  const remote = String(remoteText || '').split('\n');
+  const rows = [['Zeile', 'Lokal', 'Aktuell']];
+  const count = Math.min(Math.max(local.length, remote.length), 500);
+  for (let index = 0; index < count; index += 1) if ((local[index] || '') !== (remote[index] || '')) rows.push([String(index + 1), local[index] || '', remote[index] || '']);
+  return rows;
+}
+
+function renderConflictDiff(container, localText, remoteText) {
+  container.replaceChildren(node('h4', 'Speicherkonflikt'));
+  container.append(node('p', 'Die Datei wurde zwischenzeitlich geaendert. Lokal und aktueller Stand werden verglichen.', 'file-renderer-error'));
+  renderTable(container, { rows: lineDiff(localText, remoteText) });
+}
+
+async function renderEditorPreview(container, data, value, options) {
+  const preview = { ...data, content: value, raw_content: value };
+  if (preview.ext === '.json') {
+    try { preview.content = JSON.stringify(JSON.parse(value), null, 2); preview.kind = 'json'; } catch { preview.kind = 'text'; }
+  } else if (['.md', '.markdown'].includes(preview.ext)) preview.kind = 'markdown';
+  else preview.kind = 'text';
+  container.replaceChildren();
+  await (renderers.get(preview.kind) || renderers.get('text'))(container, preview, options);
+}
+
 
 async function mutate(reference, action) {
   const path = canonicalFilePath(reference.path);
@@ -502,13 +563,32 @@ export async function renderFile(container, reference, options = {}) {
         options.onChange?.();
         if (action.action === 'trash') { container.replaceChildren(node('p', 'Datei in den lokalen Papierkorb verschoben.')); return; }
         await renderFile(container, { source, path: result.file.path }, options);
-      } catch (error) { notice.textContent = error.message; notice.setAttribute('role', 'alert'); }
+      } catch (error) {
+        notice.textContent = error.message; notice.setAttribute('role', 'alert');
+        if (action.action === 'write' && /version|conflict|changed/i.test(error.message || '')) {
+          try {
+            const latestResponse = await fetch(`/api/files/preview/${encodeURIComponent(path)}?source=${encodeURIComponent(source)}`);
+            const latest = await latestResponse.json();
+            if (latestResponse.ok) renderConflictDiff(body, action.content, latest.raw_content ?? latest.content ?? '');
+          } catch { /* retain original error */ }
+        }
+      }
     };
     if (data.editable && options.manage !== false) {
       actions.append(button('Bearbeiten', () => {
+        const split = node('div', '', 'file-renderer-editor-split');
+        const sourcePane = node('section', '', 'file-renderer-editor-source');
+        const previewPane = node('section', '', 'file-renderer-editor-preview');
         const editor = node('textarea', '', 'file-renderer-editor'); editor.value = data.raw_content ?? data.content;
         editor.setAttribute('aria-label', 'Dateiinhalt bearbeiten');
-        body.replaceChildren(editor, button('Speichern', () => operation({ action: 'write', content: editor.value })), button('Abbrechen', () => renderFile(container, { source, path }, options)));
+        const controls = node('div', '', 'file-renderer-editor-controls');
+        controls.append(button('Speichern', () => operation({ action: 'write', content: editor.value })), button('Abbrechen', () => renderFile(container, { source, path }, options)));
+        sourcePane.append(node('h4', 'Quelle'), editor, controls); previewPane.append(node('h4', 'Vorschau'));
+        split.append(sourcePane, previewPane); body.replaceChildren(split);
+        let timer = null;
+        const refresh = () => renderEditorPreview(previewPane, data, editor.value, renderOptions);
+        editor.addEventListener('input', () => { window.clearTimeout(timer); timer = window.setTimeout(refresh, 120); });
+        refresh();
       }));
     }
     if (!data.read_only && data.sha256 && options.manage !== false) {

@@ -121,6 +121,32 @@ function formatCitation(entry) {
   return `(${author}, ${year})`;
 }
 
+function formatCitationStyle(entry, style = 'short', index = 1) {
+  const author = entry.fields.author || 'Anonym';
+  const year = entry.fields.year || 'o.J.';
+  const title = entry.fields.title || entry.key;
+  const venue = entry.fields.journal || entry.fields.booktitle || entry.fields.publisher || '';
+  if (style === 'apa') return `${author} (${year}). ${title}.${venue ? ` ${venue}.` : ''}`;
+  if (style === 'ieee') return `[${index}] ${author}, “${title},”${venue ? ` ${venue},` : ''} ${year}.`;
+  return formatCitation(entry);
+}
+
+function formatRis(entries) {
+  const typeMap = { article: 'JOUR', book: 'BOOK', inproceedings: 'CPAPER', phdthesis: 'THES', mastersthesis: 'THES', techreport: 'RPRT' };
+  return entries.map((entry) => {
+    const lines = [`TY  - ${typeMap[entry.type] || 'GEN'}`, `ID  - ${entry.key}`];
+    for (const author of String(entry.fields.author || '').split(' and ').filter(Boolean)) lines.push(`AU  - ${author}`);
+    if (entry.fields.title) lines.push(`TI  - ${entry.fields.title}`);
+    if (entry.fields.journal) lines.push(`JO  - ${entry.fields.journal}`);
+    if (entry.fields.booktitle) lines.push(`T2  - ${entry.fields.booktitle}`);
+    if (entry.fields.year) lines.push(`PY  - ${entry.fields.year}`);
+    if (entry.fields.doi) lines.push(`DO  - ${entry.fields.doi}`);
+    if (entry.fields.url) lines.push(`UR  - ${entry.fields.url}`);
+    lines.push('ER  - ');
+    return lines.join('\r\n');
+  }).join('\r\n\r\n');
+}
+
 function formatBibTeXSnippet(entry) {
   const fields = Object.entries(entry.fields)
     .map(([k, v]) => `  ${k} = {${v}}`)
@@ -160,7 +186,9 @@ function renderBibTeXViewer(content, fileName, filePath) {
       <button class="bibtex-view-btn active" data-view="table" title="Table view">📋 Table</button>
       <button class="bibtex-view-btn" data-view="code" title="Code view">💻 Code</button>
       <button class="bibtex-view-btn" data-view="edit" title="Form editor">✏️ Edit</button>
+      <select class="bibtex-citation-style" title="Citation style" aria-label="Citation style"><option value="short">Short</option><option value="apa">APA</option><option value="ieee">IEEE</option></select>
       <button class="bibtex-copy-all-btn" title="Copy all as BibTeX">📋 Copy all</button>
+      <button class="bibtex-export-ris-btn" title="Download RIS file">⬇ RIS</button>
       <button class="bibtex-export-btn" title="Download .bib file">💾 Download</button>
     </div>
   </div>
@@ -530,6 +558,17 @@ function wireBibTeXEvents() {
     });
   }
 
+  // RIS export
+  const risBtn = document.querySelector('.bibtex-export-ris-btn');
+  if (risBtn) {
+    risBtn.addEventListener('click', () => {
+      const blob = new Blob([formatRis(bibtexEntries)], { type: 'application/x-research-info-systems;charset=utf-8' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = (bibtexFileName || 'references.bib').replace(/\.bib$/i, '.ris');
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+  }
+
   // Export / Download
   const exportBtn = document.querySelector('.bibtex-export-btn');
   if (exportBtn) {
@@ -569,7 +608,8 @@ function wireBibTeXActions() {
       const idx = parseInt(btn.dataset.idx);
       const entry = bibtexEntries[idx];
       if (!entry) return;
-      const citation = formatCitation(entry);
+      const style = document.querySelector('.bibtex-citation-style')?.value || 'short';
+      const citation = formatCitationStyle(entry, style, idx + 1);
       try {
         await navigator.clipboard.writeText(citation);
         const orig = btn.textContent;
@@ -614,4 +654,4 @@ function wireBibTeXActions() {
 // EXPORTS
 // ================================================================
 
-export { initBibTeXViewer, wireBibTeXEvents, parseBibTeX, formatCitation, formatBibTeXSnippet, formatBibTeXFull, validateEntry };
+export { initBibTeXViewer, wireBibTeXEvents, parseBibTeX, formatCitation, formatCitationStyle, formatRis, formatBibTeXSnippet, formatBibTeXFull, validateEntry };

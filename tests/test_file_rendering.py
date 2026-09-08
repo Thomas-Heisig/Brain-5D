@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import struct
 import zipfile
 from collections.abc import Iterator
 from http.client import HTTPConnection
@@ -469,3 +470,59 @@ def test_encoded_office_dtd_is_rejected(
     assert preview["content"] == ""
     assert "Unsafe" in preview["notice"]
     assert path.read_bytes() == original
+
+
+def test_media_pdf_and_local_diagram_todo_contracts(
+    service: FilePreviewService, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from types import SimpleNamespace
+
+    from src.dashboard import file_rendering
+
+    png = service.roots["docs"] / "sample.png"
+    png.write_bytes(
+        b"\x89PNG\r\n\x1a\n" + b"\x00" * 8 + struct.pack(">II", 320, 200) + b"\x00" * 8
+    )
+    image = service.preview("docs", png.name)
+    assert image["media_metadata"]["width"] == 320
+    assert image["media_metadata"]["height"] == 200
+
+    pdf = service.roots["docs"] / "sample.pdf"
+    pdf.write_bytes(b"%PDF-1.7\n1 0 obj << /Type /Page >> endobj\n%%EOF")
+    pdf_preview = service.preview("docs", pdf.name)
+    assert pdf_preview["pdf_metadata"]["pdf_version"] == "1.7"
+    assert pdf_preview["pdf_metadata"]["page_count"] == 1
+
+    graph = service.roots["docs"] / "flow.dot"
+    graph.write_text("digraph G { a -> b; }")
+
+    def fake_which(name: str) -> str | None:
+        return "/usr/bin/dot" if name == "dot" else None
+
+    def fake_run(*args: object, **kwargs: object) -> SimpleNamespace:
+        del args, kwargs
+        return SimpleNamespace(
+            stdout='<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>'
+        )
+
+    monkeypatch.setattr(file_rendering.shutil, "which", fake_which)
+    monkeypatch.setattr(file_rendering.subprocess, "run", fake_run)
+    diagram = service.preview("docs", graph.name)
+    assert diagram["diagram_renderer"] == "local"
+    assert diagram["diagram_svg"].startswith("<svg")
+
+
+def test_file_viewer_advanced_frontend_contracts_present() -> None:
+    root = Path(__file__).resolve().parents[1]
+    renderer = (root / "src/dashboard/static/file-renderer.js").read_text(
+        encoding="utf-8"
+    )
+    bibtex = (root / "src/dashboard/static/bibtex-viewer.js").read_text(
+        encoding="utf-8"
+    )
+    assert "file-renderer-editor-split" in renderer
+    assert "renderConflictDiff" in renderer
+    assert "diagram_svg" in renderer
+    assert "pdf_metadata" in renderer
+    assert "formatRis" in renderer
+    assert "bibtex-export-ris-btn" in bibtex

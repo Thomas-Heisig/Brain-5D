@@ -113,3 +113,38 @@ test('real inventory changes reach the Wesen pipeline view without authorizing d
   await expect(robot).toContainText('endpoint unavailable');
   await expect(page.locator('#wesen-neural-symbiosis')).toContainText('READ-ONLY');
 });
+
+test('canonical file viewer: split editor live preview and stale-write conflict diff', async ({ page }) => {
+  await page.goto('http://127.0.0.1:4174/');
+  const reference = `notes/split-editor-${Date.now()}.md`;
+  const url = `/api/files/document/${encodeURIComponent(reference)}?source=docs`;
+  const created = await page.request.put(url, { data: { action: 'create', content: '# Initial\n\nBody\n' } });
+  expect(created.ok()).toBeTruthy();
+  const createdData = await created.json();
+
+  await page.evaluate(async (filePath) => {
+    const module = await import('/file-renderer.js');
+    const host = document.createElement('section');
+    host.id = 'split-editor-artifact';
+    document.body.append(host);
+    await module.renderFile(host, { source: 'docs', path: filePath });
+  }, reference);
+
+  const host = page.locator('#split-editor-artifact');
+  await expect(host).toHaveAttribute('data-render-state', 'ready');
+  await host.getByRole('button', { name: 'Bearbeiten', exact: true }).click();
+  await expect(host.locator('.file-renderer-editor-split')).toBeVisible();
+  const editor = host.locator('.file-renderer-editor');
+  await editor.fill('# Live Preview\n\nUpdated in browser');
+  await expect(host.locator('.file-renderer-editor-preview')).toContainText('Live Preview');
+  await expect(host.locator('.file-renderer-editor-preview')).toContainText('Updated in browser');
+
+  const remote = await page.request.put(url, {
+    data: { action: 'write', content: '# Remote Version\n', expected_sha256: createdData.file.sha256 },
+  });
+  expect(remote.ok()).toBeTruthy();
+  await host.getByRole('button', { name: 'Speichern', exact: true }).click();
+  await expect(host.locator('.file-renderer-body')).toContainText('Speicherkonflikt');
+  await expect(host.locator('.file-renderer-body')).toContainText('Remote Version');
+  await expect(host.locator('.file-renderer-body')).toContainText('Live Preview');
+});

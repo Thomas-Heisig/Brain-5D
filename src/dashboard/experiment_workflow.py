@@ -11,6 +11,10 @@ from time import perf_counter
 from types import CodeType, ModuleType
 from typing import Any, Callable, Protocol, Sequence, cast
 
+from src.experiments.msba_lab import (
+    MSBA_RUNNERS,
+    persist_gateway_state_sidecar,
+)
 from src.research.catalog_status import (
     CATALOG_FACET_FIELDS,
     question_facet_options,
@@ -20,10 +24,6 @@ from src.research.cognition_governance import (
     CognitionGovernanceError,
     cognition_catalog,
     guard_cognition_launch,
-)
-from src.experiments.msba_lab import (
-    MSBA_RUNNERS,
-    persist_gateway_state_sidecar,
 )
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder

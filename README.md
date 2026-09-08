@@ -325,3 +325,7 @@ Main integration decisions and verification scope are recorded in
 ## Consciousness critique and research safeguards
 
 The [current treatise](research/publications/README.md) integrates a [38-topic critique audit](research/critique/CONSCIOUSNESS_CRITIQUE.md), [22 registered research questions and protocol contracts](research/protocols/COGNITION_CONSCIOUSNESS.md), and a [precautionary ethics policy](research/ethics/AI_WELFARE_POLICY.md). Cognitive-task success is not a consciousness verdict. The new battery has tested stimulus/scoring instruments; unvalidated native adapters cannot silently fall back to generic experiments. No empirical consciousness findings or external ethics approval are claimed.
+
+## Full-stack File Viewer completion — 2026-09-08
+
+The repository File Viewer is the canonical renderer for Dashboard, Research and Chat file cards. It now includes bounded media metadata, bounded PDF metadata/text when local tools are available, optional local Graphviz/PlantUML-to-SVG conversion, DOCX page/section markers, RIS export with selectable citation styles, and a responsive split editor with live preview and optimistic-lock conflict diff. Scientific artifacts remain read-only and local converters never upload source material.
