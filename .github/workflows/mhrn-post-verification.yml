@@ -1,0 +1,35 @@
+name: MHRN Full Baseline Verification
+
+on:
+  push:
+    branches: ['fix/mhrn-verification-20260908']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  full-verification:
+    if: github.ref == 'refs/heads/fix/mhrn-verification-20260908'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[dev,docs]'
+      - name: Apply exact catalog correction and run complete source-bound baseline
+        run: python .maintenance/mhrn_post_ci.py
+      - name: Retain source-bound result
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mhrn-post-migration-verification
+          path: |
+            docs/05-quality/mhrn-post-migration-verification.json
+            research/generated/CATALOG_AUDIT_REPORT.json
+            tests/test_baseline.json
