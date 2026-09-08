@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "effective_date": "2026-09-08",
+  "project": {
+    "short_name": "MHRN",
+    "title_en": "Multi-Scale Homeostatic Recurrence Network",
+    "subtitle_de": "Mehrskaliges homöostatisches Rekurrenznetzwerk",
+    "description_en": "A Spiking Neural Architecture with Topological Plasticity",
+    "description_de": "Eine spikende neuronale Architektur mit topologischer Plastizität",
+    "package_name": "mhrn-core"
+  },
+  "publication": {
+    "short_title_en": "Recursive Epistemics",
+    "short_title_de": "Rekursive Epistemik",
+    "title_en": "Recursive Epistemics in Embodied Spiking Neural Architectures: A Framework for Delegated Agency and Multi-Scale Recurrence",
+    "subtitle_de": "Rekursive Epistemik in verkörperten spikenden neuronalen Architekturen: Ein Framework für delegierte Handlungsmacht und mehrskalige Rekurrenz",
+    "edition": "1.3",
+    "path": "research/publications/2026-09-08_recursive-epistemics_v1.3",
+    "classification": "scientific_treatise_not_degree_or_peer_review_claim"
+  },
+  "platforms": {
+    "github_repository_id": 1335973891,
+    "github_requested": "Thomas-Heisig/MHRN",
+    "github_legacy": "Thomas-Heisig/Brain-5D",
+    "huggingface_namespace": "superdigger",
+    "huggingface_model_requested": "superdigger/MHRN",
+    "huggingface_model_legacy": "superdigger/Brain-5D",
+    "huggingface_space_requested": "superdigger/MHRN",
+    "huggingface_space_legacy": "superdigger/Brain-5D-Space"
+  },
+  "compatibility": {
+    "historical_titles": ["Brain-4D", "Brain-5D", "KI – Die geliehene Intelligenz"],
+    "unchanged_storage_format": ".b5d",
+    "legacy_python_namespace": "src",
+    "legacy_launcher": "scripts/brain5d_launcher.py",
+    "preferred_launcher": "scripts/mhrn_launcher.py",
+    "preserve_evidence_ids": true,
+    "preserve_published_checksums": true,
+    "preserve_old_tags_and_anchors": true,
+    "new_environment_prefix": "MHRN_",
+    "legacy_environment_prefix": "BRAIN5D_"
+  },
+  "scientific_scope": {
+    "renaming_is_new_evidence": false,
+    "five_dimensions_describe": "the existing core neuron coordinate/address layout, not the full dynamical state space",
+    "phenomenal_consciousness_claim": "not_established",
+    "epistemic_dependency_is_not_identical_to_delegation": true
+  }
+}

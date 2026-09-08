@@ -1,0 +1,32 @@
+name: Naming and Publication Identity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'project_identity.json'
+      - 'NAMING.md'
+      - 'src/identity.py'
+      - 'research/publications/**'
+      - 'scripts/publication_naming.py'
+      - 'tests/test_mhrn_naming.py'
+      - '.github/workflows/naming-integrity.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  naming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[dev,docs]'
+      - run: python scripts/publication_naming.py
+      - run: python -m pytest tests/test_mhrn_naming.py -q
+      - run: git diff --exit-code -- research/publications project_identity.json
