@@ -9,6 +9,7 @@ from __future__ import annotations
 import random
 import statistics
 import time
+from pathlib import Path
 from typing import Any, Mapping
 
 from src.core import NeuralNetwork
@@ -19,6 +20,7 @@ from src.embodiment import (
     derive_regulatory_state,
     normalize_vital_signals,
 )
+from src.experiments import msba_lab as _msba_lab
 from src.experiments.learning_lab import (
     probe_learning_response,
     run_learning_experiment,
@@ -27,6 +29,7 @@ from src.experiments.learning_lab import (
 from src.research.canonical_state import canonical_state_digest
 from src.research.experiment_suite import ScientificRun
 from src.research.network_probe import NetworkImpulseProbe
+from src.research.protocol_registry import validate_operational_protocol
 
 Config = Mapping[str, Any]
 Coord5D = tuple[int, int, int, int, int]
@@ -154,12 +157,7 @@ def run_generalization(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
 ) -> list[ScientificRun]:
-    """Train once, then evaluate frozen weights on registered perturbation probes.
-
-    Perturbation strength is changed only after adaptation. This prevents the
-    treatment from leaking into training and makes the off/sham/on comparison a
-    genuine held-out probe of the learned weight state.
-    """
+    """Train once, then evaluate frozen weights on registered perturbation probes."""
     runs: list[ScientificRun] = []
     for seed in seeds:
         values = dict(config)
@@ -169,14 +167,12 @@ def run_generalization(
         pre_count = int(exp.get("presynaptic_neurons", 48))
         initial_weight = float(exp.get("initial_weight", 0.05))
         initial_weights = tuple(initial_weight for _ in range(pre_count))
-
         for condition in ("learning_on", "learning_off", "sham_replay"):
             trained_weights, learning, partitions = train_learning_weights(
                 values, condition
             )
             initial_mean = statistics.mean(initial_weights)
             final_mean = statistics.mean(trained_weights)
-
             for drive_scale in (0.85, 1.0, 1.15):
                 probe_config = dict(values)
                 probe_exp = dict(exp)
@@ -333,14 +329,12 @@ def run_regulation_recovery(
                 functional = derive_functional_state(frame)
                 current = 100.0
                 if enabled and phase == "pressure":
-                    uncertainty = functional.uncertainty
                     pressure = regulatory.values.get("resource_pressure")
                     if isinstance(pressure, (int, float)):
                         current *= max(0.25, 1.0 - 0.5 * float(pressure))
-                    current *= max(0.5, 1.0 - 0.25 * float(uncertainty))
+                    current *= max(0.5, 1.0 - 0.25 * float(functional.uncertainty))
                 network.inject_current(source, current)
-                step = network.step()
-                count = len(step.spike_ids)
+                count = len(network.step().spike_ids)
                 total_spikes += count
                 if phase == "pressure":
                     pressure_spikes += count
@@ -390,8 +384,7 @@ def run_temporal_order(
             for tick in range(ticks):
                 if tick in schedule:
                     network.inject_current(input_id, 100.0)
-                step = network.step()
-                spikes.extend(step.spike_ids)
+                spikes.extend(network.step().spike_ids)
             runs.append(
                 ScientificRun(
                     "EXP-TEMP-0002",
@@ -521,3 +514,102 @@ def run_learning_interference(
             )
         )
     return runs
+
+
+def _run_msba_registered(
+    config: Config,
+    seeds: tuple[int, ...],
+    *,
+    question_id: str,
+    hypothesis_id: str,
+    protocol_id: str,
+    runner_name: str,
+) -> list[ScientificRun]:
+    """Validate the frozen preregistration before any adaptive MSBA mechanism runs."""
+    research_root = Path(__file__).resolve().parents[2] / "research"
+    preregistration = validate_operational_protocol(
+        research_root,
+        question_id=question_id,
+        hypothesis_id=hypothesis_id,
+        protocol_id=protocol_id,
+        seed_count=len(set(seeds)),
+    )
+    runner = getattr(_msba_lab, runner_name)
+    runs = runner(config, seeds=seeds, preregistration=preregistration)
+    return [
+        ScientificRun(
+            run.experiment_id,
+            run.condition,
+            run.seed,
+            run.metrics,
+            run.state_digest_before,
+            run.state_digest_after,
+            run.runtime_error,
+        )
+        for run in runs
+    ]
+
+
+def run_msba_e01(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E01",
+        hypothesis_id="H-MSBA-E01-A",
+        protocol_id="msba_energy_efficiency_v1",
+        runner_name="run_msba_e01",
+    )
+
+
+def run_msba_e02(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E02",
+        hypothesis_id="H-MSBA-E02-A",
+        protocol_id="msba_resource_allocation_v1",
+        runner_name="run_msba_e02",
+    )
+
+
+def run_msba_e03(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E03",
+        hypothesis_id="H-MSBA-E03-A",
+        protocol_id="msba_visual_roi_v1",
+        runner_name="run_msba_e03",
+    )
+
+
+def run_msba_e04(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E04",
+        hypothesis_id="H-MSBA-E04-A",
+        protocol_id="msba_digital_integrity_v1",
+        runner_name="run_msba_e04",
+    )
+
+
+def run_msba_e05(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+) -> list[ScientificRun]:
+    return _run_msba_registered(
+        config,
+        seeds,
+        question_id="RQ-MSBA-E05",
+        hypothesis_id="H-MSBA-E05-A",
+        protocol_id="msba_modality_compensation_v1",
+        runner_name="run_msba_e05",
+    )

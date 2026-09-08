@@ -29,6 +29,11 @@ EXPECTED = {
         "learning_interference_screen_v1",
         20,
     ),
+    "RQ-MSBA-E01": ("H-MSBA-E01-A", "msba_energy_efficiency_v1", 3),
+    "RQ-MSBA-E02": ("H-MSBA-E02-A", "msba_resource_allocation_v1", 3),
+    "RQ-MSBA-E03": ("H-MSBA-E03-A", "msba_visual_roi_v1", 3),
+    "RQ-MSBA-E04": ("H-MSBA-E04-A", "msba_digital_integrity_v1", 3),
+    "RQ-MSBA-E05": ("H-MSBA-E05-A", "msba_modality_compensation_v1", 3),
 }
 
 
@@ -45,9 +50,17 @@ def _yaml_ids(path: Path) -> set[str]:
     return ids
 
 
+def _registry_ids(prefix: str) -> set[str]:
+    registry = ROOT / "registry"
+    ids: set[str] = set()
+    for path in sorted(registry.glob(f"{prefix}*.yaml")):
+        ids.update(_yaml_ids(path))
+    return ids
+
+
 def test_followup_questions_and_hypotheses_are_canonical() -> None:
-    questions = _yaml_ids(ROOT / "registry" / "questions.yaml")
-    hypotheses = _yaml_ids(ROOT / "registry" / "hypotheses.yaml")
+    questions = _registry_ids("questions")
+    hypotheses = _registry_ids("hypotheses")
     assert set(EXPECTED).issubset(questions)
     assert {value[0] for value in EXPECTED.values()}.issubset(hypotheses)
 

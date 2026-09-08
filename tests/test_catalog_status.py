@@ -22,7 +22,7 @@ def test_catalog_facets_preserve_evidence_boundary(tmp_path: Path) -> None:
     registry = ResearchRegistry(tmp_path / "registry").load_all()
     rows = {row["id"]: row for row in question_facets(tmp_path, registry)}
     assert len(rows) == len(registry.questions)
-    assert rows["RQ-MSBA-E01"]["operational"] is False
+    assert rows["RQ-MSBA-E01"]["operational"] is True
     assert rows["RQ-MSBA-E01"]["experiment_progress"] == "data_available"
     assert rows["RQ-MSBA-E01"]["evidence_status"] == "none"
     assert rows["RQ-DET-001"]["evidence_status"] == "review_required"

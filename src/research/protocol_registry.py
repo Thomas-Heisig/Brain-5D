@@ -35,6 +35,11 @@ OPERATIONAL_RUNNERS: dict[str, str] = {
     "recurrence_scale_v1": "run_recurrence_scale",
     "learning_interference_screen_v1": "run_learning_interference",
     "sustained_activity_stability_v1": "run_sustained_stability",
+    "msba_energy_efficiency_v1": "run_msba_e01",
+    "msba_resource_allocation_v1": "run_msba_e02",
+    "msba_visual_roi_v1": "run_msba_e03",
+    "msba_digital_integrity_v1": "run_msba_e04",
+    "msba_modality_compensation_v1": "run_msba_e05",
 }
 
 
