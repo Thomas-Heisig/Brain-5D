@@ -7,7 +7,7 @@ import hashlib
 import json
 import re
 import zipfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from urllib.parse import quote
 
 PACKAGE = "2026-09-07_ki-die-geliehene-intelligenz"
@@ -26,7 +26,11 @@ def digest(data: bytes) -> str:
 def safe_path(root: Path, relative: str) -> Path:
     """Resolve a manifest path without accepting traversal or symlink escapes."""
     candidate = root / relative
-    if Path(relative).is_absolute() or ".." in Path(relative).parts:
+    if (
+        PurePosixPath(relative).is_absolute()
+        or relative.startswith("\\")
+        or ".." in PurePosixPath(relative).parts
+    ):
         raise ValueError(f"Unsafe manifest path: {relative}")
     if not candidate.resolve().is_relative_to(root.resolve()):
         raise ValueError(f"Manifest path escapes root: {relative}")

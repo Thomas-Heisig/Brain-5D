@@ -105,7 +105,7 @@ class ControlledEmbodimentAgent:
                 reason=reason,
             )
             return None
-        actuator_result = self.actuator.apply(command)
+        actuator_result: ActuatorResult = self.actuator.apply(command)
         if not actuator_result.accepted:
             self.last_receipt = ActionReceipt(
                 command_id,

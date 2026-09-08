@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-08 — Cross-platform gate and browser contract repair
+
+- Pinned manifest-backed publication citation, TeX and checksum artifacts to LF so Windows `core.autocrlf` checkouts preserve their recorded bytes.
+- Made file-rendering tests byte-exact and rejected POSIX absolute manifest paths with the same unsafe-path contract as traversal attempts.
+- Normalized CRLF Markdown in the shared browser renderer and made inventory E2E fixtures override canonical host-detected endpoints.
+- Revalidated the affected Python contracts and the full Chromium dashboard suite.
+
 ## 2026-09-07 — Natural-language read-aloud
 
 - Added shared German speech controls with start, pause, resume and stop behavior.

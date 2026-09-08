@@ -124,7 +124,9 @@ def main() -> None:
                 value = cast(dict[str, Any], self._read_json_body())
                 available = value.get("available") is True
                 for connection_id, kind in (
+                    ("sensor.camera", ConnectionKind.SENSOR),
                     ("sensor.camera.browser", ConnectionKind.SENSOR),
+                    ("actuator.robotics", ConnectionKind.ACTUATOR),
                     ("actuator.robotics.browser", ConnectionKind.ACTUATOR),
                 ):
                     connections.register(

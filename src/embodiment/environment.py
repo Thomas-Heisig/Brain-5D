@@ -14,17 +14,17 @@ class EnvironmentAdapter(Protocol):
     @property
     def environment_id(self) -> str:
         """Return a stable environment identifier."""
-        ...
+        raise NotImplementedError
 
     @property
     def kind(self) -> EnvironmentKind:
         """Return the environment category."""
-        ...
+        raise NotImplementedError
 
     def reset(self, seed: int | None = None) -> EnvironmentObservation:
         """Start a new episode and return its initial observation."""
-        ...
+        raise NotImplementedError
 
     def step(self, action: ActionCommand) -> EnvironmentObservation:
         """Advance the environment by applying one action."""
-        ...
+        raise NotImplementedError
