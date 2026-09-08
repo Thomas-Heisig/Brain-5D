@@ -1,0 +1,39 @@
+{
+  "experiment_id": "EXP-SNN-002-R2",
+  "research_question": "RQ-SNN-002",
+  "hypothesis": "H-SNN-002-A",
+  "title": "RQ-SNN-002 constant-input spike reproducibility replication",
+  "conditions": "Constant impulse input; recurrence_off versus recurrence_on; 10 independent seeds",
+  "ticks": 8,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "protocol": "science_suite_v1",
+  "resolved_runner": "run_ping",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 8,
+    "observed_min": 8,
+    "observed_max": 8
+  },
+  "notes": "Clean-tree technical replication; AI post-hoc interpretation only; no evidence promotion.",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only.",
+  "epistemic_layers": {
+    "ui_state": "operator/dashboard progress only; not a scientific result",
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input"
+  }
+}
