@@ -41,7 +41,9 @@ def test_exact_namespace_is_scoped_to_its_defining_module(
     assert registry.hypotheses == {}
 
 
-def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(tmp_path: Path) -> None:
+def test_real_missing_entity_is_not_covered_by_a_namespace_prefix(
+    tmp_path: Path,
+) -> None:
     identifier = "RQ-" + "EPI-19999"
     registry_dir = tmp_path / "research/registry"
     registry_dir.mkdir(parents=True)
