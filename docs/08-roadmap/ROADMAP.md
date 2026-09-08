@@ -595,3 +595,10 @@ Before a new major research milestone is declared:
 ## Historical roadmaps
 
 Files such as `ROADMAP_ALPHA4.md`, `ROADMAP_ALPHA5*.md`, `ROADMAP_V*.md` and sprint-specific plans are historical records and do not override this roadmap.
+
+### 2026-09-08 — File Viewer backlog completion
+
+- Completed the remaining executable File Viewer backlog through the shared Dashboard/Research Chat renderer.
+- Added bounded media/PDF metadata and optional local-only Graphviz/PlantUML rendering.
+- Added DOCX structural markers, RIS/APA/IEEE citation output and a responsive split editor with live preview/conflict diff.
+- Human-review/EVID promotions remain deliberately gated and are never auto-approved by CI or AI tooling.

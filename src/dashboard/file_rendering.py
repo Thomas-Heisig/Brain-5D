@@ -16,6 +16,8 @@ import os
 import re
 import secrets
 import shutil
+import struct
+import subprocess
 import tempfile
 import threading
 import time
@@ -33,6 +35,9 @@ PREVIEW_BYTES = 256 * 1024
 EDIT_BYTES = 1024 * 1024
 DIGEST_BYTES = 64 * 1024 * 1024
 ARCHIVE_BYTES = 32 * 1024 * 1024
+MEDIA_PROBE_BYTES = 64 * 1024
+PDF_TEXT_BYTES = 128 * 1024
+DIAGRAM_OUTPUT_BYTES = 2 * 1024 * 1024
 ARCHIVE_EXTENSIONS = frozenset({".zip", ".epub", ".whl", ".jar", ".cbz"})
 TEXT_EXTENSIONS = frozenset(
     ".md .markdown .txt .text .json .jsonl .ndjson .yaml .yml .toml .csv .tsv "
@@ -76,6 +81,182 @@ class FileContractError(ValueError):
 def _sha256(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def _image_dimensions(path: Path) -> tuple[int, int] | None:
+    """Read dimensions from bounded image headers without decoding pixels."""
+    with path.open("rb") as stream:
+        header = stream.read(32)
+        if header.startswith(b"\x89PNG\r\n\x1a\n") and len(header) >= 24:
+            return cast(tuple[int, int], struct.unpack(">II", header[16:24]))
+        if header[:6] in {b"GIF87a", b"GIF89a"} and len(header) >= 10:
+            return cast(tuple[int, int], struct.unpack("<HH", header[6:10]))
+    return None
+
+
+def _ffprobe_metadata(path: Path) -> dict[str, Any]:
+    executable = shutil.which("ffprobe")
+    if not executable:
+        return {}
+    try:
+        completed = subprocess.run(
+            [
+                executable,
+                "-v",
+                "error",
+                "-probesize",
+                str(MEDIA_PROBE_BYTES),
+                "-analyzeduration",
+                "1000000",
+                "-show_entries",
+                "format=duration,format_name:stream=codec_name,codec_type,width,height",
+                "-of",
+                "json",
+                str(path),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=4,
+        )
+        payload = json.loads(completed.stdout[:PDF_TEXT_BYTES])
+    except (OSError, subprocess.SubprocessError, ValueError, TypeError):
+        return {}
+    result: dict[str, Any] = {}
+    format_info = payload.get("format") if isinstance(payload, dict) else None
+    if isinstance(format_info, dict):
+        if format_info.get("duration") is not None:
+            try:
+                result["duration_seconds"] = round(float(format_info["duration"]), 3)
+            except (TypeError, ValueError):
+                pass
+        if format_info.get("format_name"):
+            result["container"] = str(format_info["format_name"])
+    streams = payload.get("streams") if isinstance(payload, dict) else None
+    if isinstance(streams, list):
+        codecs = sorted(
+            {
+                str(item.get("codec_name"))
+                for item in streams
+                if isinstance(item, dict) and item.get("codec_name")
+            }
+        )
+        if codecs:
+            result["codecs"] = codecs
+        for item in streams:
+            if isinstance(item, dict) and item.get("codec_type") == "video":
+                if item.get("width") is not None:
+                    result["width"] = int(item["width"])
+                if item.get("height") is not None:
+                    result["height"] = int(item["height"])
+                break
+    return result
+
+
+def _media_metadata(path: Path, mime: str) -> dict[str, Any]:
+    result: dict[str, Any] = {"mime_type": mime}
+    if mime.startswith("image/"):
+        dimensions = _image_dimensions(path)
+        if dimensions:
+            result["width"], result["height"] = dimensions
+        result["metadata_probe"] = "header"
+    elif mime.startswith(("audio/", "video/")):
+        result.update(_ffprobe_metadata(path))
+        result["metadata_probe"] = "ffprobe-bounded"
+    return result
+
+
+def _pdf_metadata(path: Path) -> tuple[dict[str, Any], str]:
+    size = path.stat().st_size
+    with path.open("rb") as stream:
+        head = stream.read(MEDIA_PROBE_BYTES)
+        tail = b""
+        if size > MEDIA_PROBE_BYTES:
+            stream.seek(max(0, size - MEDIA_PROBE_BYTES))
+            tail = stream.read(MEDIA_PROBE_BYTES)
+    sample = head + tail
+    version = "unknown"
+    match = re.match(rb"%PDF-([0-9.]+)", head)
+    if match:
+        version = match.group(1).decode("ascii", errors="replace")
+    page_estimate = len(re.findall(rb"/Type\s*/Page(?!s)\b", sample))
+    metadata: dict[str, Any] = {
+        "pdf_version": version,
+        "page_count": page_estimate or None,
+        "page_count_source": (
+            "bounded-structure-estimate" if page_estimate else "unavailable"
+        ),
+    }
+    text_preview = ""
+    pdftotext = shutil.which("pdftotext")
+    if pdftotext and size <= DIGEST_BYTES:
+        try:
+            completed = subprocess.run(
+                [pdftotext, "-f", "1", "-l", "5", "-nopgbrk", str(path), "-"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            text_preview = completed.stdout[:PDF_TEXT_BYTES]
+            metadata["text_preview_pages"] = 5
+            metadata["text_preview_source"] = "pdftotext"
+        except (OSError, subprocess.SubprocessError):
+            metadata["text_preview_source"] = "unavailable"
+    else:
+        metadata["text_preview_source"] = "unavailable"
+    return metadata, text_preview
+
+
+def _sanitize_local_svg(svg: str) -> str:
+    if (
+        not svg
+        or len(svg.encode("utf-8")) > DIAGRAM_OUTPUT_BYTES
+        or not re.search(r"<svg\b", svg, re.IGNORECASE)
+    ):
+        return ""
+    if re.search(
+        r"<(?:script|foreignObject|iframe|object|embed)\b", svg, re.IGNORECASE
+    ):
+        return ""
+    svg = re.sub(
+        r"\son[a-z]+\s*=\s*(['\"]).*?\1", "", svg, flags=re.IGNORECASE | re.DOTALL
+    )
+    svg = re.sub(
+        r"\s(?:xlink:)?href\s*=\s*(['\"])(?!#).*?\1",
+        "",
+        svg,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    return svg
+
+
+def _local_diagram_svg(diagram_format: str, source: str) -> tuple[str, str]:
+    if diagram_format == "graphviz":
+        executable = shutil.which("dot")
+        if not executable:
+            return "", "unavailable"
+        command = [executable, "-Tsvg"]
+    elif diagram_format == "plantuml":
+        executable = shutil.which("plantuml")
+        if not executable:
+            return "", "unavailable"
+        command = [executable, "-tsvg", "-pipe"]
+    else:
+        return "", "unsupported"
+    try:
+        completed = subprocess.run(
+            command,
+            input=source[:PREVIEW_BYTES],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return "", "failed"
+    safe = _sanitize_local_svg(completed.stdout)
+    return (safe, "local") if safe else ("", "rejected")
 
 
 def file_is_read_only(source: str, path: str) -> bool:
@@ -275,8 +456,13 @@ class FilePreviewService:
             ".html",
         }:
             result["kind"] = mime.split("/", 1)[0]
+            result["media_metadata"] = _media_metadata(candidate, mime)
         elif ext == ".pdf":
             result["kind"] = "pdf"
+            pdf_metadata, pdf_text = _pdf_metadata(candidate)
+            result["pdf_metadata"] = pdf_metadata
+            result["content"] = pdf_text
+            result["truncated"] = len(pdf_text) >= PDF_TEXT_BYTES
         elif ext in {".docx", ".pptx", ".xlsx", ".xlsm"}:
             try:
                 result["content"] = self._office_text(candidate)
@@ -359,6 +545,12 @@ class FilePreviewService:
                         result["formula_format"] = "latex"
                     if ext in DIAGRAM_FORMATS:
                         result["diagram_format"] = DIAGRAM_FORMATS[ext]
+                        diagram_svg, renderer = _local_diagram_svg(
+                            DIAGRAM_FORMATS[ext], content
+                        )
+                        result["diagram_renderer"] = renderer
+                        if diagram_svg:
+                            result["diagram_svg"] = diagram_svg
                     if ext == ".json" and not result["truncated"]:
                         try:
                             result["content"] = json.dumps(

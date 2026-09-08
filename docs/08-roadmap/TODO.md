@@ -6,7 +6,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 **Canonical TODO for `main`**  
 **Baseline:** `brain5d-core 0.5.0a7`  
-**Updated:** 2026-09-07
+**Updated:** 2026-09-08
 
 ## 2026-09-08 Cross-platform gate and browser contract repair
 
@@ -20,7 +20,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 - [x] Remove the nested white DOCX card from the viewer modal.
 - [x] Align DOCX headings, links, tables, lists and images with the base dashboard CSS.
-- [ ] Add optional page-break and section markers when Mammoth exposes them without recreating a nested paper surface.
+- [x] Add optional page-break and section markers when Mammoth exposes them without recreating a nested paper surface.
 
 ## 2026-09-07 BibTeX links and prose rendering
 
@@ -28,7 +28,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 - [x] Reuse base table/link styling for BibTeX output.
 - [x] Preserve flowing prose when Markdown source lines are wrapped.
 - [x] Reserve stable width for four-digit BibTeX years in both table previews.
-- [ ] Add RIS export and richer citation style previews.
+- [x] Add RIS export and richer citation style previews.
 
 ## 2026-09-07 Functional viewer restoration
 
@@ -37,7 +37,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 - [x] Add natural-language read-aloud controls to the viewer, shared file cards and Research Chat.
 - [x] Restore sanitized DOCX layout rendering through Mammoth.
 - [x] Add safe multicolor syntax rendering for common source formats.
-- [ ] Add a richer split-pane editor with language-aware preview and conflict diff.
+- [x] Add a richer split-pane editor with language-aware preview and conflict diff.
 
 ## 2026-09-07 Viewer regression restoration
 
@@ -54,8 +54,8 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 - [x] Add bounded ZIP-compatible archive manifests without extraction.
 - [x] Mark unsafe archive member paths in the preview.
 - [x] Add a bounded expandable JSON tree to the shared renderer.
-- [ ] Add browser media metadata (dimensions, duration and codec) without decoding full files.
-- [ ] Add bounded PDF text/page metadata and optional local Graphviz/PlantUML conversion.
+- [x] Add browser media metadata (dimensions, duration and codec) without decoding full files.
+- [x] Add bounded PDF text/page metadata and optional local Graphviz/PlantUML conversion.
 
 ## 2026-09-07 File Viewer format and rendering pass
 
@@ -63,7 +63,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 - [x] Render Markdown fenced Mermaid blocks through the shared safe viewer path.
 - [x] Improve formula-aware Markdown and notebook cell rendering, including bounded image outputs.
 - [x] Keep BibTeX structured previews free of duplicate raw source output.
-- [ ] Add an optional local Graphviz/PlantUML to SVG converter without sending research sources to a remote service.
+- [x] Add an optional local Graphviz/PlantUML to SVG converter without sending research sources to a remote service.
 
 ## 2026-09-07 GitHub/Hugging Face mirror synchronization
 

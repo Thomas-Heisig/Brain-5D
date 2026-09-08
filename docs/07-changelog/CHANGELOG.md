@@ -1878,3 +1878,8 @@
   - Spiking vs silent neuron activity difference (K)
   - TelemetryFrame tick/neuron/synapse coherence (L)
   - Invalid dimension axes and values (M)
+
+### 2026-09-08 — Full-stack File Viewer completion
+
+- Added bounded media/PDF metadata and local-only optional Graphviz/PlantUML SVG previews.
+- Added DOCX structural markers, RIS export, short/APA/IEEE citation formatting and split editing with conflict comparison.
