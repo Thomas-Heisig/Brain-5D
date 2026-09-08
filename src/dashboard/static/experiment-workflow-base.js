@@ -175,10 +175,11 @@ export class ExperimentWorkflowPanel {
           <div><span class="workspace-kicker">RESEARCH ORGANIZER</span><h3>Experimentreihen &amp; Archiv</h3><p>Reihen laufen über den kontrollierten Batch-Workflow. Abgeschlossene Experimente bleiben unverändert und können aus der aktiven Ansicht ins Archiv verschoben werden.</p></div>
           <div class="experiment-library-actions"><button type="button" id="workflow-series-open" class="btn-primary">Neue Reihe</button><button type="button" id="workflow-library-refresh" class="btn-secondary" title="Experimentliste aktualisieren" aria-label="Experimentliste aktualisieren">↻</button></div>
         </div>
-        <div class="experiment-library-summary"><span id="workflow-active-count">0 aktiv</span><span id="workflow-archived-count">0 archiviert</span></div>
+        <div class="experiment-library-summary"><span id="workflow-series-count">0 Reihen</span><span id="workflow-active-count">0 aktiv</span><span id="workflow-archived-count">0 archiviert</span></div>
+        <section class="experiment-series-section"><div class="experiment-library-section-head"><h4>Experimentreihen</h4><small>Jede Reihe ist separat technisch bewertbar.</small></div><div id="workflow-experiment-series" class="experiment-series-list"><p class="experiment-library-empty">Lade Reihen …</p></div></section>
         <div class="experiment-library-grid">
           <section><h4>Aktive Experimente</h4><div id="workflow-active-experiments" class="experiment-library-list"><p class="experiment-library-empty">Lade Experimente …</p></div></section>
-          <section><h4>Archiv</h4><div id="workflow-archived-experiments" class="experiment-library-list"><p class="experiment-library-empty">Lade Archiv …</p></div></section>
+          <details id="workflow-archive-section" class="experiment-archive-section"><summary><span>Archiv</span><span id="workflow-archive-summary-count">0 archiviert</span></summary><div id="workflow-archived-experiments" class="experiment-library-list"><p class="experiment-library-empty">Archiv ist leer.</p></div></details>
         </div>`;
       form.insertAdjacentElement("afterend", library);
       byId("workflow-series-open")?.addEventListener("click", () => this._openBatchWorkflow());
@@ -413,16 +414,24 @@ export class ExperimentWorkflowPanel {
     const archived = byId("workflow-archived-experiments");
     if (!active || !archived) return;
     try {
-      const [activePayload, archivedPayload] = await Promise.all([
+      const [activePayload, archivedPayload, seriesPayload] = await Promise.all([
         fetchJson("/api/research/experiments"),
         fetchJson("/api/research/experiments/archive"),
+        fetchJson("/api/research/experiment-series"),
       ]);
       const activeItems = Array.isArray(activePayload.experiments) ? activePayload.experiments : [];
       const archivedItems = Array.isArray(archivedPayload.experiments) ? archivedPayload.experiments : [];
+      const seriesItems = Array.isArray(seriesPayload.series) ? seriesPayload.series : [];
+      const seriesCount = byId("workflow-series-count");
       const activeCount = byId("workflow-active-count");
       const archivedCount = byId("workflow-archived-count");
+      if (seriesCount) seriesCount.textContent = `${seriesItems.length} Reihen`;
       if (activeCount) activeCount.textContent = `${activeItems.length} aktiv`;
       if (archivedCount) archivedCount.textContent = `${archivedItems.length} archiviert`;
+      const archiveSummaryCount = byId("workflow-archive-summary-count");
+      if (archiveSummaryCount) archiveSummaryCount.textContent = `${archivedItems.length} archiviert`;
+      const series = byId("workflow-experiment-series");
+      if (series) series.innerHTML = seriesItems.length ? seriesItems.map((item) => this._experimentSeriesItem(item)).join("") : '<p class="experiment-library-empty">Noch keine Experimentreihe.</p>';
       active.innerHTML = activeItems.length ? activeItems.map((item) => this._experimentLibraryItem(item, false)).join("") : '<p class="experiment-library-empty">Keine aktiven Experimente.</p>';
       archived.innerHTML = archivedItems.length ? archivedItems.map((item) => this._experimentLibraryItem(item, true)).join("") : '<p class="experiment-library-empty">Archiv ist leer.</p>';
     } catch (error) {
@@ -443,11 +452,27 @@ export class ExperimentWorkflowPanel {
     return `<article class="experiment-library-item ${archived ? "is-archived" : ""}"><div><strong>${escapeHtml(item.experiment_id || item.id)}</strong><small>${escapeHtml(meta)}</small></div><div class="experiment-library-item-actions">${action}</div></article>`;
   }
 
+  _experimentSeriesItem(item) {
+    const results = Array.isArray(item.results) ? item.results : [];
+    const resultRows = results.length
+      ? results.map((result) => `<li><strong>${escapeHtml(result.protocol || result.experiment_id || "Experiment")}</strong><span>${escapeHtml(result.status || "unknown")}</span></li>`).join("")
+      : "<li>Keine Teilresultate</li>";
+    const reportButton = item.report
+      ? `<button type="button" class="btn-small" data-series-report="${escapeHtml(item.report)}">Reihenbericht</button>`
+      : "";
+    return `<details class="experiment-series-item"><summary><span><strong>${escapeHtml(item.series_id)}</strong><small>${escapeHtml(item.created_at || "")}</small></span><em class="series-status-${escapeHtml(item.status)}">${escapeHtml(item.status)} · ${escapeHtml(item.assessment_status)}</em></summary><div class="experiment-series-assessment"><div class="experiment-series-kpis"><span><small>Erfolgreich</small><strong>${Number(item.completed || 0)}</strong></span><span><small>Fehlgeschlagen</small><strong>${Number(item.failed || 0)}</strong></span><span><small>Ticks</small><strong>${escapeHtml(item.requested_ticks ?? "—")}</strong></span><span><small>Seeds</small><strong>${escapeHtml(item.seeds ?? "—")}</strong></span></div><p>${escapeHtml(item.assessment_boundary || "Technische Bewertung; Human Review erforderlich.")}</p><ul class="experiment-series-results">${resultRows}</ul>${reportButton}</div></details>`;
+  }
+
   async _handleExperimentLibraryAction(event) {
-    const button = event.target.closest?.("[data-experiment-action]");
+    const button = event.target.closest?.("[data-experiment-action], [data-series-report]");
     if (!button) return;
     const experimentId = button.dataset.experimentId;
     const action = button.dataset.experimentAction;
+    const seriesReport = button.dataset.seriesReport;
+    if (seriesReport) {
+      await this._openArtifact(seriesReport);
+      return;
+    }
     if (!experimentId || !action) return;
     const reason = action === "archive" ? (window.prompt("Warum wird dieses Experiment archiviert?", "manuelle Archivierung") || "manuelle Archivierung") : "";
     if (action === "archive" && !window.confirm(`${experimentId} archivieren? Die Artefakte bleiben unverändert.`)) return;
