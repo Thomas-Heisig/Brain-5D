@@ -115,15 +115,15 @@ class ExperimentArchiveService:
                 manifest = directory / "manifest.json"
                 if not manifest.is_file():
                     continue
-                metadata: dict[str, Any] = {}
+                legacy_metadata: dict[str, Any] = {}
                 metadata_path = directory / "archive.json"
                 if metadata_path.is_file():
                     try:
                         loaded = json.loads(metadata_path.read_text(encoding="utf-8"))
                         if isinstance(loaded, dict):
-                            metadata = cast(dict[str, Any], loaded)
+                            legacy_metadata = cast(dict[str, Any], loaded)
                     except (OSError, json.JSONDecodeError):
-                        metadata = {}
+                        legacy_metadata = {}
                 items.append(
                     {
                         "experiment_id": directory.name,
@@ -132,7 +132,7 @@ class ExperimentArchiveService:
                         "legacy": True,
                         "canonical_path": f"experiments/{directory.name}",
                         "available": True,
-                        **metadata,
+                        **legacy_metadata,
                     }
                 )
         return items
