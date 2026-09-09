@@ -39,6 +39,12 @@
 - Kept the consciousness frontier operational and non-assertive: stage 10 can display research criteria only and never produces a consciousness claim.
 - Added detail panels, responsive browser coverage and backend/API tests for planned-feature handling, runtime fallback and engineering/evidence separation.
 
+## 2026-09-09 Trusted-LAN dashboard access
+
+- Windows `start.cmd` and `start.ps1` now bind the integrated dashboard to `0.0.0.0:8765` by default so it is reachable through the host machine's LAN IP.
+- Direct Python startup remains loopback-only by default; explicit host overrides remain available for local-only or explicitly selected bindings.
+- Documented the Windows Firewall and trusted-network boundary; public exposure remains unsupported without an authentication layer.
+
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 
 - Scientific source-freeze digests now use canonical Git text content across LF/CRLF checkouts while preserving byte-exact binary files.

@@ -6,7 +6,7 @@
 :: Verwendet bevorzugt die venv-Umgebung, falls vorhanden.
 ::
 :: Usage:
-::   start.cmd                          (Start mit Dashboard + Browser, Alpha.5 Live Config)
+::   start.cmd                          (Start mit Dashboard + Browser, vertrauenswuerdiges LAN)
 ::   start.cmd --no-dashboard           (Start ohne Dashboard)
 ::   start.cmd --config configs\...     (Eigene Config)
 ::   start.cmd --host 0.0.0.0            (Dashboard im vertrauenswuerdigen LAN)
@@ -47,10 +47,11 @@ echo   MHRN v0.5.0-alpha.7
 echo   Project: %PROJECT_ROOT%
 echo ===========================================================================
 
-:: Standard: Dashboard + Browser, Alpha.5 Live Config, es sei denn --no-dashboard wurde uebergeben
+:: Standard: Dashboard + Browser auf allen lokalen Interfaces, es sei denn --no-dashboard wurde uebergeben.
+:: Ein explizites --host in den Argumenten ueberschreibt den LAN-Standard.
 set "EXTRA="
 echo %* | findstr /C:"--no-dashboard" >nul
-if errorlevel 1 set "EXTRA=--dashboard --open-browser --config configs\poc_alpha5_live.yaml"
+if errorlevel 1 set "EXTRA=--dashboard --open-browser --config configs\poc_alpha5_live.yaml --host 0.0.0.0"
 
 :: Launcher starten
 %PYTHON_CMD% %PROJECT_ROOT%\scripts\mhrn_launcher.py start %EXTRA% %*

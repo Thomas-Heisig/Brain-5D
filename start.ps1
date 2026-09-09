@@ -22,7 +22,7 @@
 .PARAMETER Ticks
     Simulations-Ticks ueberschreiben.
 .PARAMETER DashboardHost
-    Dashboard-Bind-Adresse (default: 127.0.0.1; 0.0.0.0 fuer Intranet).
+    Dashboard-Bind-Adresse (default: 0.0.0.0 fuer vertrauenswuerdiges LAN; 127.0.0.1 fuer lokal).
 .PARAMETER DashboardPort
     Dashboard-Port (default: 8765).
 .PARAMETER PassThru
@@ -52,7 +52,7 @@ param(
     [switch]$NoLearning,
     [switch]$NoHomeostasis,
     [int]$Ticks = 0,
-    [string]$DashboardHost = "127.0.0.1",
+    [string]$DashboardHost = "0.0.0.0",
     [int]$DashboardPort = 8765,
 
     [switch]$PassThru,

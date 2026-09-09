@@ -7,6 +7,11 @@
 - Connected active runtime telemetry and `last_observed` B5D snapshot sizes without inventing unavailable values.
 - Added detail panels and backend/browser tests while preserving the boundary that engineering maturity is not scientific evidence and never implies consciousness.
 
+## 2026-09-09 - Trusted-LAN dashboard access
+
+- Windows `start.cmd` and `start.ps1` now bind the dashboard to `0.0.0.0:8765` by default for access via the host machine's LAN IP.
+- Kept direct Python startup loopback-only and documented the firewall/trusted-network boundary.
+
 ## 2026-09-09 - v0.6 roadmap and acceptance audit
 
 - Verified the compatibility, bounded telemetry/storage, scaling-budget, deterministic identity and migration/rollback contracts for v0.6.

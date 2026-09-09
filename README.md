@@ -197,7 +197,11 @@ Or on Windows:
 .\start.ps1
 ```
 
-The dashboard defaults to `http://127.0.0.1:8765`.
+The direct Python start defaults to `http://127.0.0.1:8765`. The Windows wrappers
+`start.ps1` and `start.cmd` bind the dashboard to `0.0.0.0:8765` by default so
+it can be opened from another device via the host machine's LAN IP, for example
+`http://192.168.1.25:8765`. Use `-DashboardHost 127.0.0.1` in PowerShell or
+`--host 127.0.0.1` in CMD when local-only access is required.
 
 ## Testing and verification
 
@@ -293,7 +297,12 @@ Historical DATA is immutable in meaning: instrumentation improvements create new
 
 ## Security
 
-The dashboard binds to loopback by default. It exposes operator and file-management capabilities and must not be directly port-forwarded to the public Internet. See [`docs/03-dashboard/DASHBOARD.md`](docs/03-dashboard/DASHBOARD.md) and [`SECURITY.md`](SECURITY.md).
+The direct Python entry point binds to loopback by default; the Windows wrappers
+use `0.0.0.0` for trusted-LAN access. The dashboard exposes operator and
+file-management capabilities: allow TCP port `8765` only on the intended
+private network, and never port-forward it directly to the public Internet.
+See [`docs/03-dashboard/DASHBOARD.md`](docs/03-dashboard/DASHBOARD.md) and
+[`SECURITY.md`](SECURITY.md).
 
 ## Citation
 

@@ -90,6 +90,12 @@ The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the develo
 - [x] Keep Stage 10 as a research frontier with `consciousness_claim=unsupported` and no automatic consciousness assertion.
 - [x] Add stage detail panels, runtime `unavailable`/`last_observed` handling and responsive browser/API coverage.
 
+## 2026-09-09 Trusted-LAN dashboard access
+
+- [x] Make the standard Windows start wrappers bind the dashboard to `0.0.0.0:8765` for access through the machine's network IP.
+- [x] Preserve loopback-only defaults for direct Python startup and support explicit host overrides.
+- [x] Document private-network and Windows Firewall requirements; do not claim public Internet exposure is supported.
+
 ### Non-blocking roadmap backlog
 
 These items remain open but are not release blockers for the v0.6 engineering foundation. Their detailed task lists remain in the linked roadmap documents.

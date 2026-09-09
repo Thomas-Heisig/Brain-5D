@@ -42,9 +42,12 @@ No fixed response-time SLA is promised in this experimental development phase.
 
 ## Current security assumptions
 
-- The dashboard is designed primarily for local operation.
-- Do not expose it directly to an untrusted network without an authentication
-  and authorization layer.
+- The direct Python entry point is loopback-only by default. The Windows
+  wrappers intentionally bind to `0.0.0.0` for trusted-LAN access; this does
+  not provide authentication or authorization.
+- Allow inbound TCP port `8765` only on the intended private network profile.
+- Never expose the dashboard directly to an untrusted network or the public
+  Internet without an authentication and authorization layer.
 - Configuration files are trusted operator inputs; parsing code should still
   validate types and bounds.
 - Dashboard write endpoints must use explicit typed commands and must not expose

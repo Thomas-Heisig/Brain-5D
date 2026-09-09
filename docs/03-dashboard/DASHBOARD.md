@@ -168,6 +168,12 @@ Release readiness separates engineering verification from scientific evidence. T
 
 CI success, typing, security and deterministic tests are engineering gates. Experimental claims require valid evidence artifacts.
 
+## Network access
+
+The integrated dashboard can be opened from another device on the same trusted network. The Windows wrappers `start.cmd` and `start.ps1` bind to `0.0.0.0:8765` by default; use the host machine's LAN address, for example `http://192.168.1.25:8765`. The direct Python entry point remains loopback-only unless `--dashboard-host 0.0.0.0` is supplied.
+
+If Windows Firewall blocks the connection, allow inbound TCP `8765` only on the intended private network profile. This dashboard has operator and file-management endpoints and has no network authentication layer; do not expose it through public port forwarding.
+
 ### Development Timeline
 
 Release includes a repository-derived **Entwicklungs-Timeline** alongside Gate, release history, preview, the chronological release timeline and source documents. The read-only endpoint is `GET /api/release/development-timeline`.
