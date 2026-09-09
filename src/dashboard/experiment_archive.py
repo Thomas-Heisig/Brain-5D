@@ -1,7 +1,7 @@
 """Non-destructive research experiment work-view archive.
 
-Scientific experiment directories are canonical artifacts.  Archiving therefore
-must never move or rewrite ``research/experiments/<id>``.  The dashboard archive
+Scientific experiment directories are canonical artifacts. Archiving therefore
+must never move or rewrite ``research/experiments/<id>``. The dashboard archive
 is a small metadata index that controls visibility in the active work view.
 
 Legacy moved archives created by older dashboard versions remain discoverable
@@ -54,14 +54,15 @@ class ExperimentArchiveService:
         if not self.index_path.is_file():
             return {}
         try:
-            payload = json.loads(self.index_path.read_text(encoding="utf-8"))
+            payload: object = json.loads(self.index_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise ExperimentArchiveError(
                 "experiment archive index is unreadable"
             ) from exc
         if not isinstance(payload, dict):
             raise ExperimentArchiveError("experiment archive index must be an object")
-        raw_items = payload.get("experiments", {})
+        payload_map = cast(dict[object, object], payload)
+        raw_items: object = payload_map.get("experiments", {})
         if not isinstance(raw_items, dict):
             raise ExperimentArchiveError(
                 "experiment archive index experiments must be an object"
@@ -119,7 +120,9 @@ class ExperimentArchiveService:
                 metadata_path = directory / "archive.json"
                 if metadata_path.is_file():
                     try:
-                        loaded = json.loads(metadata_path.read_text(encoding="utf-8"))
+                        loaded: object = json.loads(
+                            metadata_path.read_text(encoding="utf-8")
+                        )
                         if isinstance(loaded, dict):
                             legacy_metadata = cast(dict[str, Any], loaded)
                     except (OSError, json.JSONDecodeError):
