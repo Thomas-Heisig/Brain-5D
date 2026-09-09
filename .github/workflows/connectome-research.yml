@@ -3,30 +3,26 @@ name: Connectome research integrity
 on:
   push:
     branches: [research/connectome-embodiment-20260909]
-    paths:
-      - '.github/workflows/connectome-research.yml'
+    paths: ['.github/workflows/connectome-research.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  baseline:
+  tools:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Export exact source baseline
+          python-version: '3.13'
+      - name: Collect pinned verification tools
         run: |
-          mkdir -p "$RUNNER_TEMP/connectome-baseline"
-          git archive --format=tar.gz HEAD -o "$RUNNER_TEMP/connectome-baseline/source.tar.gz"
-          git rev-parse HEAD > "$RUNNER_TEMP/connectome-baseline/HEAD.txt"
-          git status --porcelain > "$RUNNER_TEMP/connectome-baseline/status.txt"
+          mkdir -p "$RUNNER_TEMP/tools"
+          python -m pip download -d "$RUNNER_TEMP/tools" black==26.5.1 ruff==0.16.6 mypy==2.3.1 pyright==1.1.411 pylint==4.0.8 types-PyYAML types-psutil bandit
       - uses: actions/upload-artifact@v7
         with:
-          name: connectome-integration-baseline
-          path: ${{ runner.temp }}/connectome-baseline/
-          retention-days: 3
+          name: connectome-verification-tools
+          path: ${{ runner.temp }}/tools/
+          retention-days: 1
