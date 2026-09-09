@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "proposal_id": "PROPOSED-POST-AIRR-2026-0001",
+  "source_experiment": "EXP-BATCH-20260908200906-01",
+  "source_report": "experiments/EXP-BATCH-20260908200906-01/reports/AIRR-2026-0001.json",
+  "status": "PROPOSED_NOT_REGISTERED",
+  "scientific_evidence": false,
+  "automatic_evidence_promotion": false,
+  "human_preregistration_required_before_evidence_use": true,
+  "rationale": [
+    "The 100000-tick run demonstrates finite numerical trajectories and unchanged topology under both registered conditions.",
+    "The no-input control is quiescent after burn-in, so numerical stability must be distinguished from sustained active spike dynamics.",
+    "The fixed small-network conditions can produce identical trajectories across seed labels; parameter perturbation is required before treating seed-labelled runs as a robustness distribution.",
+    "The existing learning_interference_screen_v1 is an independent-task precursor screen and is not a shared-network catastrophic-forgetting test."
+  ],
+  "proposed_experiments": [
+    {
+      "id": "snn_drive_response_curve_v1",
+      "implementation": "src.research.stability_followups:run_drive_response_curve",
+      "status": "EXECUTABLE_EXPLORATORY",
+      "question": "At which tonic-drive levels does the model transition from quiescence to stable or variable active spiking while remaining numerically stable?",
+      "conditions": ["drive=0", "drive=25", "drive=50", "drive=75", "drive=100"],
+      "recommended_seeds": "101-110",
+      "recommended_ticks": 20000,
+      "primary_outcomes": [
+        "numerical_stability_pass",
+        "active_dynamics_pass",
+        "activity_regime",
+        "post_burn_in_mean_spikes",
+        "post_burn_in_spike_cv",
+        "post_burn_in_spike_relative_drift",
+        "active_window_fraction"
+      ]
+    },
+    {
+      "id": "snn_stimulus_class_stability_v1",
+      "implementation": "src.research.stability_followups:run_stimulus_class_stability",
+      "status": "EXECUTABLE_EXPLORATORY",
+      "question": "Are long-horizon activity regimes specific to tonic stimulation or robust to temporal and stochastic input structure?",
+      "conditions": ["no_input", "tonic", "rhythmic_50_percent_duty", "seeded_bounded_noise"],
+      "recommended_seeds": "101-110",
+      "recommended_ticks": 20000,
+      "primary_outcomes": [
+        "activity_regime",
+        "post_burn_in_mean_spikes",
+        "post_burn_in_spike_cv",
+        "post_burn_in_spike_relative_drift",
+        "post_burn_in_voltage_relative_drift",
+        "active_window_fraction"
+      ]
+    },
+    {
+      "id": "snn_parameter_robustness_v1",
+      "implementation": "src.research.stability_followups:run_parameter_robustness",
+      "status": "EXECUTABLE_EXPLORATORY",
+      "question": "Does the observed stable active regime survive small seed-bound perturbations of synaptic weight and drive magnitude?",
+      "conditions": ["joint_drive_and_weight_jitter_plus_minus_5_percent"],
+      "recommended_seeds": "101-130",
+      "recommended_ticks": 20000,
+      "primary_outcomes": [
+        "numerical_stability_pass",
+        "active_dynamics_pass",
+        "activity_regime",
+        "weight_scale",
+        "drive_scale",
+        "post_burn_in_mean_spikes",
+        "post_burn_in_spike_cv"
+      ]
+    },
+    {
+      "id": "snn_extended_horizon_v1",
+      "implementation": "src.research.stability_followups:run_stimulus_class_stability",
+      "status": "EXECUTABLE_EXPLORATORY",
+      "question": "Do the classified activity regimes persist substantially beyond the original 100000-tick observation horizon?",
+      "conditions": ["no_input", "tonic", "rhythmic", "seeded_bounded_noise"],
+      "recommended_seeds": "101-110",
+      "recommended_ticks": 250000,
+      "primary_outcomes": [
+        "numerical_stability_pass",
+        "active_dynamics_pass",
+        "post_burn_in_spike_relative_drift",
+        "post_burn_in_voltage_relative_drift",
+        "activity_regime"
+      ]
+    },
+    {
+      "id": "learning_shared_network_interference_v2",
+      "implementation": null,
+      "status": "DESIGN_REQUIRED_NOT_EXECUTABLE",
+      "question": "Does sequential acquisition on one persistent network reduce previously acquired task performance compared with matched single-task and replay controls?",
+      "required_controls": [
+        "single_task_acquisition",
+        "sequential_training_without_replay",
+        "sequential_training_with_replay_or_rehearsal",
+        "frozen_weights_probe"
+      ],
+      "required_outcomes": [
+        "task_A_score_after_A",
+        "task_A_score_after_B",
+        "task_A_score_after_C",
+        "forgetting_delta_A",
+        "forward_transfer_B_C",
+        "weight_or_state_change_between_tasks"
+      ],
+      "design_note": "The current v1 screen creates independent task instances and therefore cannot by itself establish catastrophic forgetting in a shared persistent network."
+    }
+  ],
+  "recommended_execution_order": [
+    "snn_drive_response_curve_v1",
+    "snn_stimulus_class_stability_v1",
+    "snn_parameter_robustness_v1",
+    "snn_extended_horizon_v1",
+    "learning_shared_network_interference_v2_after_preregistration_and_implementation"
+  ]
+}
