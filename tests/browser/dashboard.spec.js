@@ -120,14 +120,21 @@ async function openDashboard(page, batchResponse = null) {
   await expect(page.locator("#workflow-status")).toHaveText("Bereit");
 }
 
+async function selectResearchView(page, view) {
+  await page.locator(`[data-research-workspace-view="${view}"]`).click();
+  await expect(page.locator(`[data-research-workspace-panel="${view}"]`)).toBeVisible();
+}
+
 test("batch dialog edits per-protocol options, reports completion, and updates footer", async ({ page }) => {
   const batchResponse = { body: null };
   await openDashboard(page, batchResponse);
+  await selectResearchView(page, "runs");
   await expect(page.locator("#workflow-experiment-library")).toBeVisible();
   await expect(page.locator("#workflow-series-open")).toHaveText("Neue Reihe");
   await expect(page.locator("#workflow-active-experiments")).toContainText("Keine aktiven Experimente.");
   await expect(page.locator("#workflow-archived-experiments")).toContainText("Archiv ist leer.");
 
+  await selectResearchView(page, "plan");
   await page.locator("#workflow-batch-open").click();
   await expect(page.locator("#workflow-batch-dialog")).toBeVisible();
   await page.locator('[data-batch-select="none"]').click();
@@ -163,9 +170,10 @@ test("navigation and box-state controls remain usable", async ({ page }) => {
 
   const box = page.locator(".tab-content.active .box-state-ready").first();
   await expect(box).toBeVisible();
-  await box.locator('[data-box-state="minimized"]').click();
+  const ownControls = box.locator(":scope > .box-state-header > .box-state-tools");
+  await ownControls.locator('[data-box-state="minimized"]').click();
   await expect(box).toHaveClass(/box-state-minimized/);
-  await box.locator('[data-box-state="maximized"]').click();
+  await ownControls.locator('[data-box-state="maximized"]').click();
   await expect(box).toHaveClass(/box-state-maximized/);
   await page.keyboard.press("Escape");
   await expect(box).not.toHaveClass(/box-state-maximized/);
