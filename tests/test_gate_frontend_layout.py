@@ -9,7 +9,9 @@ def test_gate_board_uses_full_release_workspace_width() -> None:
     assert ".release-gate-panel {\n  width: 100%;\n  max-width: none;\n}" in css
 
 
-def test_next_version_todo_tracks_completed_engineering_without_faking_release() -> None:
+def test_next_version_todo_tracks_completed_engineering_without_faking_release() -> (
+    None
+):
     todo = (ROOT / "docs/08-roadmap/TODO.md").read_text(encoding="utf-8")
     assert "Current release-blocking backlog:** **0**" in todo
     assert (
