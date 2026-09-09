@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "de14fd5b7225f2fd218a9576e30d8fa5af939627",
-  "tested_tree_digest": "7ce1b738e369e36547abde8152a0ce86e58f08bf9c30843dff37003a7b106cfd",
+  "tested_commit": "c325acdfac5341f2b25627b1d762eef044e149ef",
+  "tested_tree_digest": "ec95b6e0e763036b5bdca4621d5fc1a03da40959983fc4ea02a3fed17c17ee1c",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-09T18:45:51.524764+00:00",
+  "timestamp": "2026-09-09T18:57:00.872436+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -123,10 +123,10 @@
     "src/dashboard/static/wesen-anatomy-v3.js": "5613cee64bf4c5eb47a372ddefcdb517db4f2779c5cf18be1770608414eff6ac",
     "src/dashboard/static/wesen-base.js": "9c76a0cc703cbbf1018a8da065de4ba0f4950b57b8d4777744d26a9080d69e33",
     "src/dashboard/static/wesen-neural-symbiosis.css": "d8acdcd808f3842398882ad283a5a326bbd230397539f0a8f0fdee9246e19ee4",
-    "src/dashboard/static/wesen-neural-symbiosis.js": "837b6863bb1351e8d20c268a49dd2a9c3c685b461deba4c70212d0c8f97d2cc9",
+    "src/dashboard/static/wesen-neural-symbiosis.js": "c9a6069a6947eb0cea6df8152ee001fdfdd38b9eedf4e22891ee061b7ad80e8b",
     "src/dashboard/static/wesen-organism-v2.js": "ea40a21c18a85050e70b24aa05019ba7ed7fa6667db28d40d617e21968331287",
     "src/dashboard/static/wesen-organism.css": "8f068f134535afbd4961336a86af42120b388479925fb16792908d74bf281044",
-    "src/dashboard/static/wesen-profile.css": "0d773c726eff1f3d750c8fc77536f150ca442e873128800b09aafef9f7e6f4a7",
+    "src/dashboard/static/wesen-profile.css": "907448fe8f296f1ac640ace50abdafaa27b4f5eab10daf5d693831e4f8006a84",
     "src/dashboard/static/wesen-profile.js": "b49370b63618054d9e6ad8284102df29cdcf104dacf6bc8ce485d2300c8765f1",
     "src/dashboard/static/wesen.css": "92545110c4b3cf0cb5740d77cb29fa0d7aef79a6604e995d7c24ba94fa283421",
     "src/dashboard/static/wesen.js": "a90a705b3da22aa1fb2453be59620462def477d9d8ff68bfb97858824b57da27",
