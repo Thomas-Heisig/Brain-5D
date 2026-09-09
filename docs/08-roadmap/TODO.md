@@ -96,6 +96,7 @@ The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the develo
 - [x] Preserve loopback-only defaults for direct Python startup and support explicit host overrides.
 - [x] Document private-network and Windows Firewall requirements; do not claim public Internet exposure is supported.
 - [x] Improve terminal startup output with missing version, configuration, runtime mode, URL and process information; keep UTF-8 symbols readable on Windows.
+- [x] Report the owning listener PID for occupied dashboard ports, including localized Windows `netstat` states.
 
 ### Non-blocking roadmap backlog
 

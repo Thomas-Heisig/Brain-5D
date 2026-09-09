@@ -13,9 +13,9 @@ from pathlib import Path
 import pytest
 
 from scripts.brain5d_launcher import (
-    _parse_listening_pid,
     build_command,
     dashboard_access_urls,
+    parse_listening_pid,
     pid_is_running,
     port_is_available,
 )
@@ -91,7 +91,13 @@ def test_parse_listening_pid_from_windows_netstat_output() -> None:
             TCP    127.0.0.1:8765     127.0.0.1:1     TIME_WAIT       0
         """
 
-    assert _parse_listening_pid(output, 8765) == 11868
+    assert parse_listening_pid(output, 8765) == 11868
+
+
+def test_parse_localized_windows_netstat_listener_state() -> None:
+    output = "TCP    0.0.0.0:8765    0.0.0.0:0    ABHÖREN    11868"
+
+    assert parse_listening_pid(output, 8765) == 11868
 
 
 # ============================================================================

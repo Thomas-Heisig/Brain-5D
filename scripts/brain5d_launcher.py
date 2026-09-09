@@ -102,20 +102,22 @@ def port_is_available(host: str, port: int) -> bool:
     return True
 
 
-def _parse_listening_pid(netstat_output: str, port: int) -> int | None:
+def parse_listening_pid(netstat_output: str, port: int) -> int | None:
     """Extract a TCP listener PID from Windows ``netstat -ano`` output."""
     suffix = f":{port}"
     for line in netstat_output.splitlines():
         fields = line.split()
         if len(fields) < 5:
             continue
-        local_address, state, pid_text = fields[1], fields[3].upper(), fields[4]
-        if not local_address.endswith(suffix) or state != "LISTENING":
+        local_address, foreign_address, pid_text = fields[1], fields[2], fields[4]
+        if not local_address.endswith(suffix) or not foreign_address.endswith(":0"):
             continue
         try:
-            return int(pid_text)
+            pid = int(pid_text)
         except ValueError:
             continue
+        if pid > 0:
+            return pid
     return None
 
 
@@ -135,7 +137,7 @@ def dashboard_listener_pid(port: int) -> int | None:
         )
     except (OSError, subprocess.SubprocessError):
         return None
-    return _parse_listening_pid(result.stdout or "", port)
+    return parse_listening_pid(result.stdout or "", port)
 
 
 def spawn(

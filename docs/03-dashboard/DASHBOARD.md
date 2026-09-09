@@ -176,6 +176,8 @@ If Windows Firewall blocks the connection, allow inbound TCP `8765` only on the 
 
 Startup output distinguishes the bind endpoint, local URL, detected LAN URL, browser URL, configuration path, process ID and runtime mode. On Windows, the wrapper enables UTF-8 console output so status symbols remain readable instead of appearing as mojibake.
 
+If port `8765` is already occupied, startup stops safely and reports the listener PID, including localized Windows `netstat` output. This prevents a second dashboard process from being started accidentally.
+
 ### Development Timeline
 
 Release includes a repository-derived **Entwicklungs-Timeline** alongside Gate, release history, preview, the chronological release timeline and source documents. The read-only endpoint is `GET /api/release/development-timeline`.
