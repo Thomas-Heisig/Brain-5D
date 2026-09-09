@@ -7,9 +7,9 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Canonical TODO for `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-09  
-**Current release-blocking backlog:** **1 publication step after green source-freeze CI**
+**Current release-blocking backlog:** **0**
 
-This file contains **active release-blocking work only**. Long-horizon engineering and scientific work is tracked in [ROADMAP.md](ROADMAP.md) and in the versioned research programme. Moving an item out of this file does **not** claim that the future research has already been performed.
+This file contains **active release-blocking work only**. Long-horizon engineering and scientific work is tracked in [ROADMAP.md](ROADMAP.md) and in the versioned research programme. Moving an item out of this file does **not** claim that the future research has already been performed. Source-freeze CI verification and the subsequent immutable release-record publication are gate/publication steps, not unfinished implementation backlog.
 
 ## 2026-09-08 Review and gate closure
 
@@ -109,6 +109,7 @@ A scientific milestone is complete only when all applicable requirements are sat
 
 ## Current status
 
-**Engineering implementation TODO:** complete pending source-freeze CI verification.  
-**Release-record TODO:** intentionally open until the exact verified source freeze is green.  
+**Engineering implementation TODO:** none.  
+**Source-freeze verification:** pending the exact final branch/main gate run; this is verification, not implementation backlog.  
+**Release-record publication:** intentionally deferred until that verified source freeze is green.  
 **Scientific roadmap:** active and intentionally not represented as completed work.
