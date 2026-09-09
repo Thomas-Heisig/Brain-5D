@@ -23,9 +23,7 @@ def _write_report(
                 "workflow_id": workflow_id,
                 "requested_ticks": 1000,
                 "seeds": "42-44",
-                "completed": sum(
-                    item.get("status") == "completed" for item in results
-                ),
+                "completed": sum(item.get("status") == "completed" for item in results),
                 "failed": sum(item.get("status") == "failed" for item in results),
                 "results": results,
             },
