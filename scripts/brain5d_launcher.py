@@ -128,12 +128,14 @@ def dashboard_listener_pid(port: int) -> int | None:
             ["netstat", "-ano", "-p", "TCP"],
             capture_output=True,
             text=True,
+            encoding="mbcs" if os.name == "nt" else "utf-8",
+            errors="replace",
             check=False,
             timeout=5,
         )
     except (OSError, subprocess.SubprocessError):
         return None
-    return _parse_listening_pid(result.stdout, port)
+    return _parse_listening_pid(result.stdout or "", port)
 
 
 def spawn(
@@ -352,8 +354,11 @@ def _cmd_start(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         print(
-            "  Check the owner with: Get-Process -Id "
-            f"{owner_pid}" if owner_pid else "  Check the active listener with: netstat -ano",
+            (
+                "  Check the owner with: Get-Process -Id " f"{owner_pid}"
+                if owner_pid
+                else "  Check the active listener with: netstat -ano"
+            ),
             file=sys.stderr,
         )
         print(

@@ -86,12 +86,12 @@ def test_dashboard_access_urls_separate_bind_local_and_lan_addresses(
 
 
 def test_parse_listening_pid_from_windows_netstat_output() -> None:
-        output = """
+    output = """
             TCP    0.0.0.0:8765       0.0.0.0:0       LISTENING       11868
             TCP    127.0.0.1:8765     127.0.0.1:1     TIME_WAIT       0
         """
 
-        assert _parse_listening_pid(output, 8765) == 11868
+    assert _parse_listening_pid(output, 8765) == 11868
 
 
 # ============================================================================
