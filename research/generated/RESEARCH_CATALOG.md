@@ -4,8 +4,8 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 86
-- **Hypothesen:** 88
+- **Forschungsfragen:** 89
+- **Hypothesen:** 91
 - **Claims:** 8
 - **Literaturquellen:** 39
 
@@ -162,6 +162,20 @@
 
 **Literatur:**
 - `SRC-CNS-ODDBALL`: Tristan A. Bekinschtein and others et al. (2009)
+
+---
+
+## Behavioral Profile
+
+### RQ-PROFILE-001
+
+**Frage:** Verändert ein operationales adaptives Verhaltensprofil die Auswahl expliziter Handlungsalternativen reproduzierbar unter gleichen Seeds und Aufgaben?
+
+**Status:** open
+**Relevanz:** Prüft einen messbaren Steuerpfad ohne psychologische oder Bewusstseinslabels.
+
+**Hypothesen:**
+- `H-PROFILE-001-A`: Fixed, adaptive and frozen-profile conditions produce preregistered, reproducible differences in candidate-action selection while safety permissions and SNN learning remain unchanged. *(untested)*
 
 ---
 
@@ -814,6 +828,18 @@
 
 ---
 
+### RQ-MEM-002
+
+**Frage:** Verbessert begrenztes episodisches Gedächtnis die Leistung bei verzögerten sensorischen Informationen gegenüber gleich behandelten Memory-off-Kontrollen?
+
+**Status:** open
+**Relevanz:** Prüft funktionalen Nutzen eines explizit begrenzten Erinnerungsinhalts statt bloßer Persistenz oder zusätzlicher Laufzeit.
+
+**Hypothesen:**
+- `H-MEM-002-A`: Memory-on improves delayed-information task performance over matched Memory-off, while SNN state, plasticity, seed and execution budget remain unchanged. *(untested)*
+
+---
+
 ## Metacognition
 
 ### RQ-CNS-106
@@ -1364,6 +1390,20 @@
 
 **Literatur:**
 - `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
+
+---
+
+## World Model
+
+### RQ-WM-001
+
+**Frage:** Verbessert der adaptive Ein-Schritt-Prädiktor die Vorhersage gegenüber Persistenz- und gedächtnislosen Referenzen auf zurückgehaltenen Episoden?
+
+**Status:** open
+**Relevanz:** Trennt technische Vorhersagegüte von kausalem Weltverständnis.
+
+**Hypothesen:**
+- `H-WM-001-A`: The adaptive transition predictor reduces held-out one-step prediction error relative to persistence and memoryless references without using future or hidden environment state. *(untested)*
 
 ---
 
