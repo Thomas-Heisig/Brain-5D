@@ -1,0 +1,207 @@
+{
+  "run_count": 20,
+  "runs": [
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-sequential_three_task_screen-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "23e3fe38c81747b7d5b324e2186c6d4875e11434acec2c0ea41243b2f134e0ab",
+      "size_bytes": 375,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-sequential_three_task_screen-seed-102.json.gz",
+      "run_index": 1,
+      "seed": 102,
+      "sha256": "de0dd726c61f9ffd90284188f47b5dbab13b0cf26324f9420ed28beba8c6f7b2",
+      "size_bytes": 375,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-sequential_three_task_screen-seed-103.json.gz",
+      "run_index": 2,
+      "seed": 103,
+      "sha256": "3888b41f4f60ec720c77e29bed6d4037f48c51476586818b406a10301d4c1141",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-sequential_three_task_screen-seed-104.json.gz",
+      "run_index": 3,
+      "seed": 104,
+      "sha256": "765c086e1bc240f84d1c9ab00972dd825e682cb840dc32301aa9e33facf84ae9",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-sequential_three_task_screen-seed-105.json.gz",
+      "run_index": 4,
+      "seed": 105,
+      "sha256": "b93d81652e51304d2b98b9a401e1ec5ec340127539ab1cc39912127f9100b9ee",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-sequential_three_task_screen-seed-106.json.gz",
+      "run_index": 5,
+      "seed": 106,
+      "sha256": "53cebb84fdb60c9453a6195f7307860316ce3221bc9151cdefd40a9922a6995a",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-sequential_three_task_screen-seed-107.json.gz",
+      "run_index": 6,
+      "seed": 107,
+      "sha256": "f12fe78d5aa4c22d122daf35d2c008631b800d55f93516e7427603c144e2ab3d",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-sequential_three_task_screen-seed-108.json.gz",
+      "run_index": 7,
+      "seed": 108,
+      "sha256": "39b213d05af53d96ba3955f6dbc529ad5ba9c2637cd55bfe09502753721c9fa9",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-sequential_three_task_screen-seed-109.json.gz",
+      "run_index": 8,
+      "seed": 109,
+      "sha256": "aac005cdc5bdb748c10e735ee42d455bfeab1832499475078b76e75e69a7bd59",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-sequential_three_task_screen-seed-110.json.gz",
+      "run_index": 9,
+      "seed": 110,
+      "sha256": "39f1462ae499c3b6196b6c8b39ec78b4cd931b39f0d7a800ca0b4486876e4770",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0010-sequential_three_task_screen-seed-111.json.gz",
+      "run_index": 10,
+      "seed": 111,
+      "sha256": "163f1a9b7c04bf58f5131bb99a8ad5de15aff944c07ab551568d8ac4ad2ffa32",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0011-sequential_three_task_screen-seed-112.json.gz",
+      "run_index": 11,
+      "seed": 112,
+      "sha256": "8ec78f49306e6b6794e0ddf73d730d57436fb8eb119390b7edbc2b70629e4937",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0012-sequential_three_task_screen-seed-113.json.gz",
+      "run_index": 12,
+      "seed": 113,
+      "sha256": "899b562db748b85b71fce71d0c4f38ad73ee3a29ed06e7066fef753cc31632c1",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0013-sequential_three_task_screen-seed-114.json.gz",
+      "run_index": 13,
+      "seed": 114,
+      "sha256": "83e18f1ea188debc72ee2eead13deb6d6f2a7533e9d4bbe712ae0444c9a85007",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0014-sequential_three_task_screen-seed-115.json.gz",
+      "run_index": 14,
+      "seed": 115,
+      "sha256": "230197cbd10c5bbbb9ad60e7aefd77f2cd108112b223d13f0d2f497155c4a9f5",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0015-sequential_three_task_screen-seed-116.json.gz",
+      "run_index": 15,
+      "seed": 116,
+      "sha256": "e8dfd0f37d56150ead0e0a2af0f5037c9c2e895371975f667615003c8496673f",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0016-sequential_three_task_screen-seed-117.json.gz",
+      "run_index": 16,
+      "seed": 117,
+      "sha256": "81e12a4d0638a89050d493e9fa82dfbbafda1d978bfd731708fc36d8b7221242",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0017-sequential_three_task_screen-seed-118.json.gz",
+      "run_index": 17,
+      "seed": 118,
+      "sha256": "9b07344635935596c6f8f2c9ea38023e661177d90dd57f3518ca190840acf8a3",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0018-sequential_three_task_screen-seed-119.json.gz",
+      "run_index": 18,
+      "seed": 119,
+      "sha256": "a5b0f2d2d6dc8df13ededef73c867886027843c16e70ba45cea822611e361085",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    },
+    {
+      "condition": "sequential_three_task_screen",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0019-sequential_three_task_screen-seed-120.json.gz",
+      "run_index": 19,
+      "seed": 120,
+      "sha256": "4aed957bfe653da312ce01a974c1f58b4c3900841c75bf075eb457a60fb3536d",
+      "size_bytes": 376,
+      "uncompressed_bytes": 477
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}
