@@ -28,7 +28,9 @@ def _validate_workflow_id(workflow_id: str) -> str:
     return value
 
 
-def load_workflow_report(research_root: Path, workflow_id: str) -> dict[str, object]:
+def load_workflow_report(
+    research_root: Path, workflow_id: str
+) -> dict[str, object]:
     """Load one aggregate workflow report from ``research/workflows``."""
     safe_id = _validate_workflow_id(workflow_id)
     path = research_root / "workflows" / f"{safe_id}.json"
@@ -121,7 +123,9 @@ def build_retry_request(
         seeds = record.get("seeds", default_seeds)
         protocol_options[protocol] = {"ticks": ticks, "seeds": seeds}
 
-    retry_id = _validate_workflow_id(batch_id) if batch_id else _default_retry_id(safe_id)
+    retry_id = (
+        _validate_workflow_id(batch_id) if batch_id else _default_retry_id(safe_id)
+    )
     recovery_note = (
         notes.strip()
         if isinstance(notes, str) and notes.strip()
@@ -160,7 +164,9 @@ def execute_failed_protocol_retry(
         raise WorkflowRecoveryError("Internal recovery request lost protocol list")
     protocols = cast(list[object], protocols_value)
     exploratory = [
-        item for item in protocols if isinstance(item, str) and item.startswith("exploratory:")
+        item
+        for item in protocols
+        if isinstance(item, str) and item.startswith("exploratory:")
     ]
     if exploratory:
         raise WorkflowRecoveryError(
