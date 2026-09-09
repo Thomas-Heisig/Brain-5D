@@ -67,7 +67,7 @@ def connectome_catalog(research_root: Path) -> list[dict[str, Any]]:
         raise ConnectomeGovernanceError("Malformed programme protocols")
     ids: set[str] = set()
     result: list[dict[str, Any]] = []
-    for value in cast(list[Any], values):
+    for value in cast(list[object], values):
         if not isinstance(value, dict):
             raise ConnectomeGovernanceError("Malformed programme entry")
         value = cast(dict[str, Any], value)

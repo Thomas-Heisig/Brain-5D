@@ -71,7 +71,7 @@ def load_operational_protocols(research_root: Path) -> list[dict[str, Any]]:
         values = _json_object(path).get("protocols")
         if not isinstance(values, list):
             raise PreregistrationError("Operational protocol registry is malformed.")
-        for item in cast(list[Any], values):
+        for item in cast(list[object], values):
             if not isinstance(item, dict):
                 raise PreregistrationError("Operational protocol must be an object.")
             item = cast(dict[str, Any], item)

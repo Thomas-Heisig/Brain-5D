@@ -312,7 +312,7 @@ class PreregistrationGuard:
                 if isinstance(item, Mapping)
                 else str(item)
             )
-            for item in cast(Sequence[Any], conditions)
+            for item in cast(Sequence[object], conditions)
         }
         required = {item.value for item in GatewayCondition}
         if not required.issubset(labels):
@@ -671,7 +671,7 @@ class GatewayRuntime:
             )
             for edge in (
                 cast(Mapping[str, Any], value)
-                for value in cast(Sequence[Any], edges_value)
+                for value in cast(Sequence[object], edges_value)
                 if isinstance(value, Mapping)
             )
         )
@@ -717,18 +717,18 @@ class GatewayRuntime:
         weight_window = checkpoint.get("weight_delta_window", [])
         if isinstance(weight_window, Sequence):
             self._weight_delta_window.extend(
-                float(value) for value in cast(Sequence[Any], weight_window)
+                float(value) for value in cast(Sequence[float | str], weight_window)
             )
         self._structural_window.clear()
         structural_window = checkpoint.get("structural_window", [])
         if isinstance(structural_window, Sequence):
             self._structural_window.extend(
-                int(value) for value in cast(Sequence[Any], structural_window)
+                int(value) for value in cast(Sequence[int | str], structural_window)
             )
         journal_value = checkpoint.get("journal", [])
         self._journal.clear()
         if isinstance(journal_value, Sequence):
-            for event in cast(Sequence[Any], journal_value):
+            for event in cast(Sequence[object], journal_value):
                 if isinstance(event, Mapping):
                     self._journal.append(
                         GatewayJournalEvent(**cast(dict[str, Any], event))

@@ -107,17 +107,16 @@ def load_reference(
     nodes = raw.get("node_ids")
     if not isinstance(nodes, list):
         raise ValueError("Node IDs must be a list")
-    nodes = cast(list[Any], nodes)
-    if (
-        not 1 <= len(nodes) <= max_nodes
-        or any(not isinstance(node, str) or not node for node in nodes)
-        or len(set(nodes)) != len(nodes)
-    ):
+    node_values = cast(list[object], nodes)
+    if any(not isinstance(node, str) or not node for node in node_values):
+        raise ValueError("Original node IDs must be nonempty strings")
+    nodes = [str(node) for node in node_values]
+    if not 1 <= len(nodes) <= max_nodes or len(set(nodes)) != len(nodes):
         raise ValueError("Invalid, duplicate or excessive original node IDs")
     edge_values = raw.get("edges")
     if not isinstance(edge_values, list):
         raise ValueError("Edge records must be a list")
-    edge_values = cast(list[Any], edge_values)
+    edge_values = cast(list[object], edge_values)
     if len(edge_values) > max_edges:
         raise ValueError("Invalid or excessive edge list")
     edges: list[ReferenceEdge] = []
