@@ -28,9 +28,7 @@ def _validate_workflow_id(workflow_id: str) -> str:
     return value
 
 
-def load_workflow_report(
-    research_root: Path, workflow_id: str
-) -> dict[str, object]:
+def load_workflow_report(research_root: Path, workflow_id: str) -> dict[str, object]:
     """Load one aggregate workflow report from ``research/workflows``."""
     safe_id = _validate_workflow_id(workflow_id)
     path = research_root / "workflows" / f"{safe_id}.json"
