@@ -2,12 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.use({ baseURL: 'http://127.0.0.1:4174' });
 
+async function selectResearchView(page, view) {
+  await page.locator(`[data-research-workspace-view="${view}"]`).click();
+  await expect(page.locator(`[data-research-workspace-panel="${view}"]`)).toBeVisible();
+}
+
 for (const port of [4174, 4175]) {
   test(`publication ${port}: complete research reader, central rendering and immutable originals`, async ({ page }) => {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`http://127.0.0.1:${port}/`);
     await page.locator('[data-primary-area="science"]').click();
+    await selectResearchView(page, 'files');
     await page.locator('.fm-source-btn[data-source="docs"]').click();
     await page.getByRole('button', { name: 'Abhandlung lesen', exact: true }).click();
     const viewer = page.locator('#fm-viewer');
