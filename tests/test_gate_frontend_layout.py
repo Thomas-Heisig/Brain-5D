@@ -9,6 +9,7 @@ def test_gate_board_uses_full_release_workspace_width() -> None:
     assert ".release-gate-panel {\n  width: 100%;\n  max-width: none;\n}" in css
 
 
+# The release record stays gated by the verified final source freeze.
 def test_next_version_todo_tracks_completed_engineering_without_faking_release() -> (
     None
 ):
