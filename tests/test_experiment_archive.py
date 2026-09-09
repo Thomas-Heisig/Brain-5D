@@ -4,18 +4,19 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from src.dashboard.experiment_archive import ExperimentArchiveService
 
 
-def _write_experiment(root: Path, experiment_id: str) -> tuple[Path, dict[str, object]]:
+def _write_experiment(root: Path, experiment_id: str) -> tuple[Path, dict[str, Any]]:
     experiment = root / "experiments" / experiment_id
     experiment.mkdir(parents=True)
     manifest: dict[str, object] = {
         "experiment_id": experiment_id,
         "experiment_status": "completed",
     }
-    payload = {"runs": [{"seed": 42, "condition": "control"}]}
+    payload: dict[str, Any] = {"runs": [{"seed": 42, "condition": "control"}]}
     (experiment / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (experiment / "DATA.json").write_text(json.dumps(payload), encoding="utf-8")
     return experiment, payload
