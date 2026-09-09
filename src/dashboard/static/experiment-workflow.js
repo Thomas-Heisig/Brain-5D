@@ -60,7 +60,17 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
           <input id="workflow-projection-dimensions" type="number" min="1" max="32" value="5">
         </label>
         <small>1–32 Dimensionen für externe/MSBA-Projektionsräume. Der persistierte produktive SNN-Core bleibt aus Kompatibilitätsgründen derzeit 5D.</small>
-      </div>`;
+      </div>
+      <section class="research-gateway-experiment" aria-label="Gateway Experiment">
+        <div class="research-review-head"><strong>Gateway Experiment</strong><span class="gate-badge pending">EXPERIMENTAL</span></div>
+        <div class="research-gateway-controls">
+          <label>Experiment ID<input id="workflow-gateway-experiment-id" type="text" placeholder="EXP-GW-..." autocomplete="off"></label>
+          <label>Condition<select id="workflow-gateway-condition"><option value="frozen">Frozen</option><option value="random">Random</option><option value="shuffle">Shuffle</option><option value="plastic">Plastic</option></select></label>
+          <label>Seed<input id="workflow-gateway-seed" type="number" value="101"></label>
+          <button id="workflow-gateway-activate" type="button">Gateway aktivieren</button>
+        </div>
+        <small id="workflow-gateway-message">Plastic erfordert eine registrierte, eingefrorene Preregistration; produktive Gateway-Plastizität bleibt gesperrt.</small>
+      </section>`;
     host.insertAdjacentElement("beforebegin", catalog);
     for (const [field, label] of Object.entries({domain: "Domain", status: "Status", evidence_status: "Evidenzpruefung", experiment_progress: "Versuchsfortschritt"})) {
       const wrapper = document.createElement("label");
@@ -97,6 +107,10 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
       .research-review-card{border:1px solid var(--border-color,#30363d);border-radius:9px;padding:10px}
       .research-review-card textarea{width:100%;min-height:72px;margin:8px 0;resize:vertical}
       .research-review-meta{font-size:.78rem;opacity:.75}.research-review-empty{opacity:.75;font-style:italic}
+      .research-gateway-experiment{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-color,#30363d)}
+      .research-gateway-controls{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:8px 0}
+      .research-gateway-controls label{display:grid;gap:4px;min-width:140px}.research-gateway-controls input,.research-gateway-controls select{min-width:120px}
+      .research-gateway-controls button{cursor:pointer}.research-gateway-experiment small{display:block;opacity:.78}
     `;
     document.head.appendChild(style);
 
@@ -104,12 +118,37 @@ export class ExperimentWorkflowPanel extends BaseExperimentWorkflowPanel {
     byId("workflow-research-operational")?.addEventListener("change", () => this._renderResearchCatalog());
     byId("workflow-review-refresh")?.addEventListener("click", () => this._loadReviewInbox());
     byId("workflow-review-list")?.addEventListener("click", (event) => this._handleReviewAction(event));
+    byId("workflow-gateway-activate")?.addEventListener("click", () => this._activateGateway());
     this._loadReviewInbox();
     byId("workflow-projection-dimensions")?.addEventListener("change", (event) => {
       const value = Math.max(1, Math.min(32, Number(event.target.value) || 5));
       event.target.value = String(value);
       this._syncProjectionDimensions(value);
     });
+  }
+
+  async _activateGateway() {
+    const message = byId("workflow-gateway-message");
+    const experimentId = (byId("workflow-gateway-experiment-id")?.value || "").trim();
+    const condition = byId("workflow-gateway-condition")?.value || "frozen";
+    const seed = Number(byId("workflow-gateway-seed")?.value || 101);
+    if (!experimentId || !Number.isInteger(seed)) {
+      if (message) message.textContent = "Experiment ID und ganzzahliger Seed sind erforderlich.";
+      return;
+    }
+    try {
+      const response = await fetch(`/api/experiments/${encodeURIComponent(experimentId)}/gateway/activate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ condition, seed, experiment_mode: true }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+      if (message) message.textContent = `Gateway ${condition} aktiv: ${payload.gateway.state}. Productive: LOCKED.`;
+      document.dispatchEvent(new CustomEvent("mhrn:gateway-status-updated", { detail: payload }));
+    } catch (error) {
+      if (message) message.textContent = `Gateway-Start blockiert: ${error.message || error}`;
+    }
   }
 
   async _loadReviewInbox() {

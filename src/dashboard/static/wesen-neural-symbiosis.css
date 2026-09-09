@@ -127,6 +127,36 @@
   gap: 0.55rem;
 }
 
+.wesen-symbiosis-topology {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 92px;
+}
+
+.wesen-symbiosis-topology-node,
+.wesen-symbiosis-topology-edge {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.06);
+  text-align: center;
+}
+
+.wesen-symbiosis-topology-node span,
+.wesen-symbiosis-topology-edge strong {
+  font-size: 0.72rem;
+  opacity: 0.72;
+}
+
+.wesen-symbiosis-topology-edge {
+  border-color: currentColor;
+}
+
 .wesen-symbiosis-gateway > div {
   padding-bottom: 0.45rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);

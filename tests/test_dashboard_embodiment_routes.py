@@ -259,3 +259,39 @@ def test_embodiment_connections_reflect_runtime_appearance_change() -> None:
         assert dynamic["message"] == "Device disappeared during discovery."
     finally:
         _stop(server, thread)
+
+
+def test_neural_symbiosis_gateway_status_and_experiment_guard() -> None:
+    server, thread, host, port = _start(DashboardStateStore())
+    try:
+        status = _get(host, port, "/api/embodiment/neural-symbiosis")
+        assert status["status"] == "implemented_experimental"
+        assert status["gateway"]["state"] == "disabled"
+        assert status["productive_gateway"]["available"] is False
+
+        gateway_id = status["gateway"]["gateway_id"]
+        collection = _get(host, port, "/api/embodiment/gateways")
+        assert collection["count"] == 1
+        detail = _get(host, port, f"/api/embodiment/gateways/{gateway_id}")
+        assert detail["gateway_id"] == gateway_id
+
+        rejected_status, rejected = _post(
+            host,
+            port,
+            "/api/experiments/EXP-GW-HTTP/gateway/activate",
+            {"condition": "plastic", "seed": 101, "experiment_mode": True},
+        )
+        assert rejected_status == 400
+        assert "preregistration" in rejected["error"]
+
+        accepted_status, accepted = _post(
+            host,
+            port,
+            "/api/experiments/EXP-GW-HTTP/gateway/activate",
+            {"condition": "frozen", "seed": 101, "experiment_mode": True},
+        )
+        assert accepted_status == 200
+        assert accepted["gateway"]["state"] == "active_frozen"
+        assert accepted["gateway"]["productive_gateway"]["available"] is False
+    finally:
+        _stop(server, thread)

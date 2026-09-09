@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-09 - Controlled Neural Symbiosis gateway runtime
+
+- Added a core-independent, experiment-only gateway runtime with explicit lifecycle states, Frozen/Random/Shuffle controls and guarded Plastic activation.
+- Added deterministic topology, checkpoint/resume state, bounded structural journaling, traffic/resource metrics and throttling limits.
+- Added read-only gateway status/topology APIs and an experiment-scoped lifecycle API; no general productive plasticity endpoint exists.
+- Updated Wesen to show real gateway state, maturity, aggregated topology and `Productive: LOCKED`.
+- Added gateway research questions for learning, modality, stability, transfer/interference, structure, closed loop and resources.
+- Productive gateway activation remains unavailable pending preregistered validation and human scientific review.
+
 ## 2026-09-09 - Repository-derived Development Timeline
 
 - Added the Release **Entwicklungs-Timeline** tab and a second development bar inside the chronological release timeline.

@@ -13,6 +13,19 @@ from .connections import (
 from .controlled import ControlledEmbodimentAgent, ControlledSensorAdapter
 from .deterministic import DeterministicTargetEnvironment
 from .environment import EnvironmentAdapter
+from .gateway_runtime import (
+    GatewayCondition,
+    GatewayEdge,
+    GatewayGuardError,
+    GatewayJournalEvent,
+    GatewayLimits,
+    GatewayResourceMode,
+    GatewayRuntime,
+    GatewayRuntimeError,
+    GatewayState,
+    GatewayTopology,
+    PreregistrationGuard,
+)
 from .interoception import (
     DriveState,
     FunctionalState,
@@ -106,6 +119,16 @@ __all__ = [
     "EnvironmentAdapter",
     "EnvironmentKind",
     "EnvironmentObservation",
+    "GatewayCondition",
+    "GatewayEdge",
+    "GatewayGuardError",
+    "GatewayJournalEvent",
+    "GatewayLimits",
+    "GatewayResourceMode",
+    "GatewayRuntime",
+    "GatewayRuntimeError",
+    "GatewayState",
+    "GatewayTopology",
     "DriveState",
     "EnergyCoefficients",
     "EnergyEstimate",
@@ -122,6 +145,7 @@ __all__ = [
     "PipelineDirection",
     "PipelineTemplate",
     "PlasticGatewayConfig",
+    "PreregistrationGuard",
     "RegulatoryState",
     "ResourcePressure",
     "EmbodimentPipeline",

@@ -332,7 +332,36 @@ registry/runner and declare at minimum:
 - stopping criteria;
 - DATA/EVID provenance.
 
-## 9. Frontend representation
+## 9. Controlled gateway runtime
+
+The experiment-only gateway runtime is implemented in
+`src/embodiment/gateway_runtime.py`. It is a separate, persistable topology
+and never receives a canonical SNN network or an AI write command.
+
+Supported lifecycle states are `disabled`, `registered`, `experiment_ready`,
+`active_frozen`, `active_random`, `active_shuffle`, `active_plastic`, `paused`
+and `error`. Frozen, random and shuffle controls are deterministic; plastic
+activation requires experiment mode, a frozen preregistration, explicit seeds,
+all four conditions, stopping/inclusion/exclusion rules, metrics and AI
+authority boundaries. Missing requirements fail closed.
+
+The runtime persists topology, weights, delays, RNG state, condition, tick,
+plasticity windows, eligibility-relevant state, resource metrics and a bounded
+structural journal. It exposes traffic, latency, queue depth, estimated energy,
+dropped events and throttling. Productive activation remains locked:
+
+```json
+{
+  "available": false,
+  "reason": "experimental_validation_incomplete"
+}
+```
+
+Gateway activity is not evidence of learning, useful adaptation or
+consciousness. AI interpretation remains non-evidentiary and cannot promote
+an experiment.
+
+## 10. Frontend representation
 
 `Wesen` contains a `Neural Symbiosis` panel. It shows:
 
@@ -340,35 +369,61 @@ registry/runner and declare at minimum:
 - real/virtual pipeline templates;
 - endpoint reachability derived from `/api/embodiment/connections`;
 - explicit `disabled` state for all pipelines;
-- explicit `INERT` state for gateway learning;
+- live gateway lifecycle state and aggregated topology;
+- maturity level 0 through 4 from the runtime state;
+- explicit `Experimental` and `Productive: LOCKED` status for gateway learning;
 - the scientific boundary.
 
 The panel performs GET-only observation. It contains no POST/PUT/DELETE path,
 no `/api/control` call and no mechanism to activate an actuator or learning
 rule.
 
-## 10. Implementation files
+## 11. API and implementation files
+
+Read-only status endpoints:
+
+- `GET /api/embodiment/neural-symbiosis`;
+- `GET /api/embodiment/gateways`;
+- `GET /api/embodiment/gateways/{gateway_id}`;
+- `GET /api/embodiment/gateway-experiments`.
+
+Experiment-scoped lifecycle endpoints:
+
+- `POST /api/experiments/{id}/gateway/activate`;
+- `POST /api/experiments/{id}/gateway/pause`;
+- `POST /api/experiments/{id}/gateway/resume`;
+- `POST /api/experiments/{id}/gateway/stop`.
+
+There is deliberately no general `/api/gateway/plasticity/on` endpoint.
+
+Implementation files:
 
 - `src/embodiment/neural_symbiosis.py` — typed open-set adapter, area, pipeline
   and gateway-math contracts;
 - `src/dashboard/static/wesen-neural-symbiosis.js` — read-only Wesen panel;
 - `src/dashboard/static/wesen-neural-symbiosis.css` — responsive presentation;
-- `tests/test_neural_symbiosis.py` — fail-closed, open-set, math and frontend
-  boundary tests.
+- `src/embodiment/gateway_runtime.py` — bounded lifecycle, controls,
+  deterministic checkpointing, resource limits and structural journal;
+- `tests/test_neural_symbiosis.py` and `tests/test_gateway_runtime.py` —
+  contract, control, determinism and safety coverage;
+- `tests/test_dashboard_embodiment_routes.py` — API status and activation guard.
 
-## 11. Next implementation stage
+## 12. Next implementation stage
 
 The next stage should not directly connect production peripherals to plastic
-gateways. It should first add an **experiment-only runner adapter** that:
+gateways. The runtime foundation now exists; validation must add an
+experiment-only runner adapter that:
 
 1. constructs one declared peripheral area;
 2. records exact model/version hashes;
 3. uses a deterministic gateway state with explicit persistence;
 4. writes new DATA rather than changing canonical historical records;
 5. exposes gateway metrics separately from core synapse metrics;
-6. supports frozen/random/shuffled controls;
+6. supports frozen/random/shuffled/plastic controls;
 7. produces EVID only after the existing scientific review path accepts the
    corresponding run.
 
 Only after those controls are validated should runtime activation outside
-experiments be considered.
+experiments be considered. The promotion gate remains closed until technical
+tests, deterministic reproduction, all controls, independent seeds, resource
+limits, scientific review and rollback rules are satisfied.

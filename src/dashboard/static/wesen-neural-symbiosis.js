@@ -36,6 +36,7 @@ const MSBA = [
 
 let timer = null;
 let lastConnections = [];
+let lastSymbiosis = null;
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
@@ -63,13 +64,15 @@ function ensurePanel() {
   panel.innerHTML = `
     <header class="wesen-symbiosis-header">
       <div><span>EMBODIED MULTI-NETWORK INTERFACE</span><h3>Neural Symbiosis · MSBA</h3>
-      <p>Framework-neutrale Pipeline-Schicht mit modalitätsspezifischen Audio-, Vision- und Digitalbahnen sowie expliziter Ressourcenökonomie.</p></div>
-      <div class="wesen-symbiosis-state"><strong>READ-ONLY</strong><small>Embodiment boundary</small></div>
+      <p>Kontrollierte Vermittlungsschicht mit modalitätsspezifischen Audio-, Vision- und Digitalbahnen sowie expliziter Ressourcenökonomie.</p></div>
+      <div class="wesen-symbiosis-state"><strong id="wesen-symbiosis-state">DISABLED</strong><small id="wesen-symbiosis-maturity">Maturity 0 · Contract only</small></div>
     </header>
     <div class="wesen-symbiosis-boundary"><strong>Scientific boundary</strong>
-      <span>Keine Core-Mutation · keine automatische Gateway-Plastizität · Reachability ≠ learned use · geschätzte Energie ≠ gemessene Joule.</span>
+      <span>Experiment-only · Productive Gateway: LOCKED · keine Core-Mutation · Gateway-Aktivität ist kein Lernnachweis.</span>
     </div>
     <div class="wesen-symbiosis-grid">
+      <article><header><strong>Gateway status</strong><span id="wesen-symbiosis-condition">EXPERIMENT ONLY</span></header><div id="wesen-symbiosis-status" class="wesen-symbiosis-gateway"></div></article>
+      <article><header><strong>Topology</strong><span id="wesen-symbiosis-topology-count">0 edges</span></header><div id="wesen-symbiosis-topology" class="wesen-symbiosis-topology"></div></article>
       <article><header><strong>Network areas</strong><span id="wesen-symbiosis-area-count">0</span></header><div id="wesen-symbiosis-areas" class="wesen-symbiosis-list"></div></article>
       <article><header><strong>Pipelines</strong><span id="wesen-symbiosis-pipeline-count">0</span></header><div id="wesen-symbiosis-pipelines" class="wesen-symbiosis-list"></div></article>
       <article><header><strong>MSBA pathways</strong><span>3 MODALITIES</span></header><div id="wesen-msba-pathways" class="wesen-symbiosis-list"></div></article>
@@ -107,9 +110,31 @@ function renderPanel() {
   const msba = document.getElementById("wesen-msba-pathways");
   const areaCount = document.getElementById("wesen-symbiosis-area-count");
   const pipelineCount = document.getElementById("wesen-symbiosis-pipeline-count");
+  const gatewayState = document.getElementById("wesen-symbiosis-state");
+  const maturity = document.getElementById("wesen-symbiosis-maturity");
+  const condition = document.getElementById("wesen-symbiosis-condition");
+  const status = document.getElementById("wesen-symbiosis-status");
+  const topology = document.getElementById("wesen-symbiosis-topology");
+  const topologyCount = document.getElementById("wesen-symbiosis-topology-count");
   if (!areas || !pipelines || !msba || !areaCount || !pipelineCount) return;
-  areaCount.textContent = `${NETWORK_AREAS.length} + open set`;
-  areas.innerHTML = NETWORK_AREAS.map(([name, family, purpose]) => `<div class="wesen-symbiosis-item"><span class="wesen-symbiosis-dot"></span><div><strong>${escapeHtml(name)}</strong><small>${escapeHtml(family)} · ${escapeHtml(purpose)}</small></div></div>`).join("");
+  const gateway = lastSymbiosis?.gateway || {};
+  const catalog = lastSymbiosis?.catalog || {};
+  const catalogAreas = Array.isArray(catalog.areas) ? catalog.areas : [];
+  const areaRows = catalogAreas.length ? catalogAreas.map((item) => [item.name, item.architecture, item.implementation_status]) : NETWORK_AREAS;
+  areaCount.textContent = `${areaRows.length} + open set`;
+  areas.innerHTML = areaRows.map(([name, family, purpose]) => `<div class="wesen-symbiosis-item"><span class="wesen-symbiosis-dot"></span><div><strong>${escapeHtml(name)}</strong><small>${escapeHtml(family)} · ${escapeHtml(purpose)}</small></div></div>`).join("");
+  if (gatewayState) gatewayState.textContent = String(gateway.state || "disabled").replaceAll("_", " ").toUpperCase();
+  if (condition) condition.textContent = gateway.condition ? String(gateway.condition).toUpperCase() : "EXPERIMENT ONLY";
+  if (maturity) maturity.textContent = `Maturity ${Number(lastSymbiosis?.maturity_level || 0)} · ${gateway.productive_gateway?.available ? "candidate" : "Productive locked"}`;
+  if (status) status.innerHTML = [
+    ["Plasticity", gateway.gateway_plasticity_allowed ? "experimental" : "disabled"],
+    ["Resource mode", gateway.resource_mode || "unknown"],
+    ["Experiment", gateway.experiment_id || "none"],
+    ["Productive", "LOCKED"],
+  ].map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
+  const topologyData = gateway.topology || {};
+  if (topologyCount) topologyCount.textContent = `${Number(topologyData.edges || 0)} edges`;
+  if (topology) topology.innerHTML = `<div class="wesen-symbiosis-topology-node"><strong>${escapeHtml(topologyData.source_area || "source")}</strong><span>${escapeHtml(topologyData.modality || "unknown")}</span></div><div class="wesen-symbiosis-topology-edge"><span>GW</span><strong>${escapeHtml(gateway.state || "disabled")}</strong></div><div class="wesen-symbiosis-topology-node"><strong>${escapeHtml(topologyData.target_area || "target")}</strong><span>${Number(topologyData.edges || 0)} aggregated edges</span></div>`;
   const available = availableConnectionIds(lastConnections);
   const reachable = PIPELINES.filter((item) => pipelineReachable(item, available)).length;
   pipelineCount.textContent = `${reachable}/${PIPELINES.length} reachable`;
@@ -122,9 +147,12 @@ function renderPanel() {
 
 async function refreshConnections() {
   try {
-    const response = await fetch("/api/embodiment/connections", { cache: "no-store" });
-    if (!response.ok) return;
-    lastConnections = connectionArray(await response.json());
+    const [connectionsResponse, symbiosisResponse] = await Promise.all([
+      fetch("/api/embodiment/connections", { cache: "no-store" }),
+      fetch("/api/embodiment/neural-symbiosis", { cache: "no-store" }),
+    ]);
+    if (connectionsResponse.ok) lastConnections = connectionArray(await connectionsResponse.json());
+    if (symbiosisResponse.ok) lastSymbiosis = await symbiosisResponse.json();
     renderPanel();
   } catch (_) { /* unavailable telemetry remains unavailable */ }
 }

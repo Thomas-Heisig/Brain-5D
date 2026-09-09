@@ -1,0 +1,98 @@
+- id: RQ-GW-001
+  domain: Gateway Learning
+  question: Verbessert strukturierte Gateway-Plastizitaet das Lernen gegenueber Frozen-, Random- und Shuffle-Kontrollen?
+  relevance: Direkter Vergleich der experiment-only Gateway-Bedingungen.
+  literature: []
+  hypotheses: [H-GW-001-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Keine Bestaetigung ohne preregistrierte Laeufe und Seed-weiser Auswertung.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-002
+  domain: Modality-Specific Gateway Rules
+  question: Sind modalitaetsspezifische Audio-, Vision- und Digital-Regeln besser als eine generische Gateway-Regel?
+  relevance: Trennt zeitliche, raeumliche und exakte symbolische Anforderungen.
+  literature: []
+  hypotheses: [H-GW-002-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Gateway-Aktivitaet allein ist kein Nachweis modalitaetsspezifischen Nutzens.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-003
+  domain: Gateway Stability
+  question: Fuehrt Gateway-Plastizitaet zu einer Destabilisierung des Core-Netzes?
+  relevance: Prueft Stabilitaet, Limits, Latenz und Ressourcenverbrauch getrennt vom Lernnutzen.
+  literature: []
+  hypotheses: [H-GW-003-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Technische Stabilitaetsmetriken sind keine Bewusstseins- oder Verstehensmetriken.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-004
+  domain: Gateway Transfer and Interference
+  question: Generalisiert ein gelerntes Gateway auf neue Inputs, ohne erworbene Faehigkeiten zu stoeren?
+  relevance: Verbindet Transfer- und Interferenzkontrollen in einem getrennten Evaluationsfenster.
+  literature: []
+  hypotheses: [H-GW-004-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Erfordert Holdout-Daten und vorab definierte Exklusionsregeln.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-005
+  domain: Gateway Structure
+  question: Entstehen unter identischen Seeds reproduzierbare Strukturmuster im Gateway?
+  relevance: Prueft Strukturveraenderungen mit deterministischem Journal und Seed-weiser Replikation.
+  literature: []
+  hypotheses: [H-GW-005-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Reproduzierbarkeit von Struktur ist kein Nachweis sinnvoller Adaption.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-006
+  domain: Closed-Loop Gateway
+  question: Verbessert bidirektionale Gateway-Kopplung die Leistung gegenueber reiner Feedforward-Kopplung?
+  relevance: Macht Feedback-Contracts, Limits und Stabilitaetspruefungen explizit.
+  literature: []
+  hypotheses: [H-GW-006-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Keine rekursiven Feedback-Loops ohne separaten Contract und Rollback-Regeln.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-GW-007
+  domain: Gateway Resources
+  question: Wie skalieren Gateway-Latenz, Traffic, synaptische Operationen und Energie unter wachsender Topologie?
+  relevance: Operationalisiert Bandbreiten- und Ressourcenlimits fuer spaetere Promotion-Gates.
+  literature: []
+  hypotheses: [H-GW-007-A]
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Normalisierte Energieeinheiten sind keine gemessenen Joule.
+  created: '2026-09-09'
+  updated: '2026-09-09'

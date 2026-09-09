@@ -547,6 +547,16 @@ Required comparisons include replay/open-loop, sensor-loss, degraded-quality and
 
 The first implementation stage is **experiment-only**. Production peripheral activation remains out of scope until controls are validated.
 
+### Current implementation status — 2026-09-09
+
+- [x] First-class bounded gateway runtime with `disabled` through `active_plastic`, `paused` and `error` lifecycle states;
+- [x] Frozen, deterministic Random and deterministic Shuffle controls;
+- [x] Experiment-only plasticity guard with frozen preregistration and explicit AI authority boundaries;
+- [x] Persistable topology, RNG/checkpoint state, bounded structural journal and resource/throttling telemetry;
+- [x] Read-only Neural Symbiosis/gateway APIs and Wesen topology/status view;
+- [x] Productive gateway capability remains `available: false` pending validation;
+- [ ] Execute the new gateway RQ programme with independent seeds, statistical comparisons and human scientific review.
+
 Required work:
 
 1. add an experiment-runner adapter that constructs explicitly declared peripheral areas;

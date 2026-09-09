@@ -45,7 +45,14 @@ from typing import Any, cast
 from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
-from src.embodiment import ConnectionManager
+from src.embodiment import (
+    ConnectionManager,
+    GatewayCondition,
+    GatewayGuardError,
+    GatewayRuntime,
+    GatewayState,
+    NeuralSymbiosisCatalog,
+)
 from src.learning import (
     LearningDataPartition,
     LearningObjective,
@@ -176,6 +183,7 @@ class DashboardServer(ThreadingHTTPServer):
         docs_source: DocumentationSource | None = None,
         research_source: ResearchSource | None = None,
         connection_manager: ConnectionManager | None = None,
+        gateway_state_path: Path | None = None,
     ) -> None:
         super().__init__(address, DashboardRequestHandler)
 
@@ -210,6 +218,12 @@ class DashboardServer(ThreadingHTTPServer):
             "handoff_prompt": "",
         }
         self.connection_manager = connection_manager or ConnectionManager()
+        self.gateway_state_path = gateway_state_path
+        self.gateway_runtime = (
+            GatewayRuntime.load(gateway_state_path)
+            if gateway_state_path is not None
+            else GatewayRuntime()
+        )
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
             "encoder": False,
@@ -383,6 +397,22 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/embodiment/pipeline":
                 self._send_embodiment_pipeline()
+                return
+
+            if path == "/api/embodiment/neural-symbiosis":
+                self._send_neural_symbiosis()
+                return
+
+            if path == "/api/embodiment/gateways":
+                self._send_gateway_collection()
+                return
+
+            if path.startswith("/api/embodiment/gateways/"):
+                self._send_gateway_detail(path)
+                return
+
+            if path == "/api/embodiment/gateway-experiments":
+                self._send_gateway_experiments()
                 return
 
             # ----------------------------------------------------------------
@@ -670,6 +700,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                     return
 
                 self._send_command_result(result)
+                return
+
+            if path.startswith("/api/experiments/") and "/gateway/" in path:
+                body = self._read_json_object()
+                self._gateway_action(path, body)
                 return
 
             # ----------------------------------------------------------------
@@ -1112,6 +1147,119 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_embodiment_connections(self) -> None:
         """Serve discovered and configured body connections without activating them."""
         self._send_json(self.dashboard_server.connection_manager.to_json())
+
+    def _send_neural_symbiosis(self) -> None:
+        """Serve the catalog and the separately governed gateway runtime."""
+        catalog = NeuralSymbiosisCatalog().to_json([])
+        gateway = self.dashboard_server.gateway_runtime.status()
+        self._send_json(
+            {
+                "name": "Neural Symbiosis",
+                "status": "implemented_experimental",
+                "maturity_level": self._gateway_maturity(gateway),
+                "catalog": catalog,
+                "gateway": gateway,
+                "productive_gateway": {
+                    "available": False,
+                    "reason": "experimental_validation_incomplete",
+                },
+            }
+        )
+
+    @staticmethod
+    def _gateway_maturity(gateway: Mapping[str, JSONValue]) -> int:
+        state = str(gateway.get("state", GatewayState.DISABLED.value))
+        if state == GatewayState.ACTIVE_PLASTIC.value:
+            return 4
+        if state in {
+            GatewayState.ACTIVE_FROZEN.value,
+            GatewayState.ACTIVE_RANDOM.value,
+            GatewayState.ACTIVE_SHUFFLE.value,
+        }:
+            return 3
+        if state == GatewayState.EXPERIMENT_READY.value:
+            return 2
+        if state == GatewayState.REGISTERED.value:
+            return 1
+        return 0
+
+    def _send_gateway_collection(self) -> None:
+        gateway = self.dashboard_server.gateway_runtime.status()
+        self._send_json({"gateways": [gateway], "count": 1})
+
+    def _send_gateway_detail(self, path: str) -> None:
+        gateway_id = unquote(path[len("/api/embodiment/gateways/") :])
+        gateway = self.dashboard_server.gateway_runtime.status()
+        if gateway_id != gateway.get("gateway_id"):
+            self._send_json({"error": "Gateway not found."}, HTTPStatus.NOT_FOUND)
+            return
+        self._send_json(gateway)
+
+    def _send_gateway_experiments(self) -> None:
+        gateway = self.dashboard_server.gateway_runtime.status()
+        experiment_id = gateway.get("experiment_id")
+        experiments: list[JSONValue] = []
+        if experiment_id:
+            experiments.append(
+                {
+                    "experiment_id": experiment_id,
+                    "condition": gateway.get("condition"),
+                    "state": gateway.get("state"),
+                    "preregistration_required": True,
+                    "evidentiary": False,
+                }
+            )
+        self._send_json({"experiments": experiments, "count": len(experiments)})
+
+    def _gateway_action(self, path: str, body: dict[str, object]) -> None:
+        """Dispatch only experiment-scoped gateway lifecycle actions."""
+        parts = [unquote(part) for part in path.split("/") if part]
+        if (
+            len(parts) != 5
+            or parts[:2] != ["api", "experiments"]
+            or parts[3] != "gateway"
+        ):
+            self._send_api_not_found(path)
+            return
+        experiment_id = parts[2]
+        action = parts[4]
+        runtime = self.dashboard_server.gateway_runtime
+        if action == "activate":
+            condition_value = body.get("condition", GatewayCondition.FROZEN.value)
+            seed_value = body.get("seed", 42)
+            if (
+                not isinstance(condition_value, str)
+                or not isinstance(seed_value, int)
+                or isinstance(seed_value, bool)
+            ):
+                raise InvalidRequestError(
+                    "gateway condition and integer seed are required"
+                )
+            preregistration_value = body.get("preregistration")
+            preregistration = (
+                cast(Mapping[str, Any], preregistration_value)
+                if isinstance(preregistration_value, Mapping)
+                else None
+            )
+            runtime.activate(
+                condition_value,
+                experiment_id=experiment_id,
+                seed=seed_value,
+                preregistration=preregistration,
+                experiment_mode=body.get("experiment_mode") is True,
+            )
+        elif action == "pause":
+            runtime.pause(str(body.get("reason") or "operator_pause"))
+        elif action == "resume":
+            runtime.resume()
+        elif action == "stop":
+            runtime.stop()
+        else:
+            self._send_api_not_found(path)
+            return
+        if self.dashboard_server.gateway_state_path is not None:
+            runtime.persist(self.dashboard_server.gateway_state_path)
+        self._send_json({"ok": True, "gateway": runtime.status()})
 
     def _send_embodiment_pipeline(self) -> None:
         """Serve pipeline switches separately from hardware availability."""
@@ -3679,6 +3827,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         if isinstance(
             exc,
+            GatewayGuardError,
+        ):
+            self._send_json(
+                {
+                    "error": str(exc),
+                },
+                HTTPStatus.BAD_REQUEST,
+            )
+            return
+
+        if isinstance(
+            exc,
             (
                 InvalidRequestError,
                 TypeError,
@@ -4056,6 +4216,7 @@ def serve_dashboard(
         structural_bridge,
         docs_source,
         research_source,
+        gateway_state_path=Path("artifacts/gateway_runtime.json"),
     ) as server:
         server.research_chat_backend = chat_backend
         server.research_ai_backend = cast(AnalysisBackend | None, ollama_backend)
