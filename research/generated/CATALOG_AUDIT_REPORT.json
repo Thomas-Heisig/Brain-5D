@@ -2,8 +2,8 @@
   "status": "clean",
   "audit": {
     "clean": false,
-    "question_reference_count": 1486,
-    "hypothesis_reference_count": 1251,
+    "question_reference_count": 1761,
+    "hypothesis_reference_count": 1493,
     "missing_questions": [
       "RQ-AI-DESIGN-001",
       "RQ-AI-EFF-001",
@@ -327,7 +327,8 @@
         "tests/test_neural_symbiosis.py",
         "tests/test_research_catalog_audit.py",
         "tests/test_research_question_maturity.py",
-        "tests/test_research_report_generation.py"
+        "tests/test_research_report_generation.py",
+        "tests/test_review_inbox.py"
       ]
     }
   },

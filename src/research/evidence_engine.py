@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from .cognition_governance import guard_cognition_promotion
+from .connectome_governance import guard_connectome_promotion
 from .registry import (
     REGISTRY_DIR,
     REPO_ROOT,
@@ -194,6 +195,7 @@ class EvidenceEngine:
     ) -> str:
         """Promote DATA to EVID only after source freeze and human review."""
         guard_cognition_promotion(hypothesis_id, claim_id)
+        guard_connectome_promotion(hypothesis_id, claim_id)
         manifest = _check_experiment_valid(experiment_id)
         if manifest is None:
             raise ValueError("Experiment is not eligible for validated promotion")
@@ -292,6 +294,7 @@ class EvidenceEngine:
 
         # Phase 1: Reject scientifically invalid experiments
         guard_cognition_promotion(hypothesis_id, claim_id)
+        guard_connectome_promotion(hypothesis_id, claim_id)
         manifest = _check_experiment_valid(experiment_id)
         if manifest is None:
             raise ValueError(

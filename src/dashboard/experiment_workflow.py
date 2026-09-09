@@ -26,6 +26,17 @@ from src.research.cognition_governance import (
     cognition_catalog,
     guard_cognition_launch,
 )
+from src.research.connectome_embodiment import (
+    RUNNERS as CONNECTOME_RUNNERS,
+)
+from src.research.connectome_embodiment import (
+    persist_boundary_state,
+)
+from src.research.connectome_governance import (
+    ConnectomeGovernanceError,
+    connectome_catalog,
+    guard_connectome_launch,
+)
 from src.research.data_v2 import prepare_research_data_v2
 from src.research.experiment_recorder import ExperimentRecorder
 from src.research.experiment_summary import (
@@ -155,6 +166,9 @@ class ExperimentWorkflowService:
                     },
                     *protocol_catalog(self._research_root),
                 ],
+            ),
+            "connectome_protocols": cast(
+                JSONValue, connectome_catalog(self._research_root)
             ),
             "cognition_protocols": cast(
                 JSONValue, cognition_catalog(self._research_root)
@@ -384,7 +398,9 @@ class ExperimentWorkflowService:
                 "profile_revision": profile["revision"],
                 "profile_digest": profile["provenance"]["profile_digest"],
                 "snapshot_digest": (
-                    binding.get("digest") if isinstance(binding, dict) else None
+                    cast(dict[str, Any], binding).get("digest")
+                    if isinstance(binding, dict)
+                    else None
                 ),
             }
         runner_name = self._science_runner(science_body, workflow)
@@ -432,7 +448,39 @@ class ExperimentWorkflowService:
                 "write_detailed_experiment_summary",
             )
         )
+        connectome_sources: dict[str, object] = {}
+        if runner_name in CONNECTOME_RUNNERS.values():
+            from src.embodiment import joint_world
+            from src.research import connectome_embodiment, connectome_reference
+
+            specifications = (
+                (connectome_embodiment, ("_network", "_simulate", "run_protocol")),
+                (connectome_reference, ("synthetic_graph", "transform_graph")),
+                (joint_world, ()),
+            )
+            for module, names in specifications:
+                source_path = Path(str(module.__file__)).resolve()
+                matches = {
+                    name: _assert_loaded_callable_matches_source(
+                        getattr(module, name), source_path, name
+                    )
+                    for name in names
+                }
+                if module is joint_world:
+                    matches["advance"] = _assert_loaded_callable_matches_source(
+                        joint_world.JointWorld.advance, source_path, "advance"
+                    )
+                connectome_sources[str(source_path)] = {
+                    "sha256": _sha256_file(source_path),
+                    "callables": matches,
+                }
         tick_aware_runners = {
+            "run_embodied_closed_loop",
+            "run_embodied_proprioception",
+            "run_embodied_perturbation",
+            "run_connectome_topology",
+            "run_embodied_controller",
+            "run_embodied_timing",
             "run_all",
             "run_ping",
             "run_ping_v2",
@@ -452,15 +500,36 @@ class ExperimentWorkflowService:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
         else:
             runs = runner(config, seeds=effective_seeds)
+        for path, observation in connectome_sources.items():
+            if (
+                _sha256_file(Path(path))
+                != cast(dict[str, object], observation)["sha256"]
+            ):
+                raise WorkflowValidationError(
+                    "Connectome source changed during execution"
+                )
         runs = [replace(run, experiment_id=workflow.experiment_id) for run in runs]
         duration = perf_counter() - started
 
-        tick_validation = self._validate_tick_execution(
-            runner_name,
-            workflow.ticks,
-            effective_seeds,
-            cast(Sequence[_ScientificRunLike], runs),
-        )
+        tick_validation: dict[str, object]
+        try:
+            tick_validation = self._validate_tick_execution(
+                runner_name,
+                workflow.ticks,
+                effective_seeds,
+                cast(Sequence[_ScientificRunLike], runs),
+            )
+        except WorkflowValidationError as exc:
+            if runner_name not in CONNECTOME_RUNNERS.values():
+                raise
+            # Preserve incomplete native trajectories as failed observations.
+            # They must not disappear simply because the tick gate failed.
+            tick_validation = {
+                "status": "VIOLATED",
+                "requested_ticks": workflow.ticks,
+                "reason": str(exc),
+                "retained_failed_observations": True,
+            }
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
         if profile_subject is not None:
             recorder.manifest["subject"] = profile_subject
@@ -472,6 +541,21 @@ class ExperimentWorkflowService:
             gateway_state_path = persist_gateway_state_sidecar(
                 output_dir, serialized_runs
             )
+        if runner_name in CONNECTOME_RUNNERS.values():
+            contract = protocol_by_id(self._research_root, workflow.protocol)
+            if contract is None:
+                raise WorkflowValidationError("Missing connectome execution contract")
+            expected_hash = _sha256_file(
+                self._research_root / contract["preregistration"]
+            )
+            if any(
+                run.metrics.get("preregistration_sha256") != expected_hash
+                for run in runs
+            ):
+                raise WorkflowValidationError(
+                    "Runner/workflow preregistration bytes differ"
+                )
+            gateway_state_path = persist_boundary_state(output_dir, serialized_runs)
         # Compute statistics from the complete in-memory observations first. Large
         # per-tick traces are then moved to compressed sidecars so runs.json remains
         # reviewable without discarding raw observations.
@@ -577,7 +661,15 @@ class ExperimentWorkflowService:
                 output_dir,
             ),
         )
-        recorder.record_runtime(duration).mark_completed().save()
+        recorder.record_runtime(duration)
+        failed_native = runner_name in CONNECTOME_RUNNERS.values() and (
+            tick_validation.get("status") != "SATISFIED"
+            or any(run.runtime_error for run in runs)
+        )
+        if failed_native:
+            recorder.mark_failed().save()
+        else:
+            recorder.mark_completed().save()
 
         ai_report = self._append_ai_report(workflow.experiment_id)
         manifest_path = output_dir / "manifest.json"
@@ -599,6 +691,16 @@ class ExperimentWorkflowService:
             "source_summary_bytecode_sha256": summary_source_digest,
             "source_runtime_consistency": "MATCH",
         }
+        if connectome_sources:
+            manifest["execution_contract"]["connectome_sources"] = {
+                Path(path)
+                .relative_to(Path(__file__).resolve().parents[2])
+                .as_posix(): value
+                for path, value in connectome_sources.items()
+            }
+            manifest["execution_contract"]["data_kind"] = "SYNTHETIC"
+            manifest["execution_contract"]["learning_enabled"] = False
+            manifest["execution_contract"]["automatic_evidence_promotion"] = False
         manifest["epistemic_layers"] = EPISTEMIC_LAYERS
         artifacts["raw_run_index"] = "DATA/runs_index.json"
         artifacts["current_run"] = "DATA/current_run.json"
@@ -707,6 +809,12 @@ class ExperimentWorkflowService:
     ) -> dict[str, object]:
         """Verify that tick-aware runners really respected the requested window."""
         exact_window_runners = {
+            "run_embodied_closed_loop",
+            "run_embodied_proprioception",
+            "run_embodied_perturbation",
+            "run_connectome_topology",
+            "run_embodied_controller",
+            "run_embodied_timing",
             "run_ping",
             "run_ping_v2",
             "run_5d",
@@ -1016,12 +1124,19 @@ class ExperimentWorkflowService:
                 f"Ticks must be an integer between 1 and {tick_limit}."
             )
 
+        if protocol in CONNECTOME_RUNNERS and not 60 <= ticks <= 10000:
+            raise WorkflowValidationError(
+                "Connectome engineering screens require 60..10000 ticks"
+            )
         seeds = self._parse_seeds(body.get("seeds"))
         question_id = required("question_id")
         hypothesis_id = required("hypothesis_id")
         try:
             guard_cognition_launch(self._research_root, question_id, protocol)
-        except CognitionGovernanceError as exc:
+            guard_connectome_launch(
+                self._research_root, question_id, hypothesis_id, protocol
+            )
+        except (CognitionGovernanceError, ConnectomeGovernanceError) as exc:
             raise WorkflowValidationError(str(exc)) from exc
         registry = ResearchRegistry(self._research_root / "registry").load_all()
         question = registry.questions.get(question_id)

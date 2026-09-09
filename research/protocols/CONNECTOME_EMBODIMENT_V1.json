@@ -1,0 +1,319 @@
+{
+  "schema_version": "1.0",
+  "program_id": "CONNECTOME-EMBODIMENT-V1",
+  "created": "2026-09-09",
+  "ai_generated": true,
+  "human_review": "not_recorded",
+  "automatic_evidence_promotion": false,
+  "source_baseline_commit": "16bb8d1d82756074f9dc13efa0597d732e9bbc4a",
+  "protocols": [
+    {
+      "id": "embodied_closed_loop_v1",
+      "research_question": "RQ-EMB-001",
+      "hypothesis": "H-EMB-001-B",
+      "kind": "closed_loop",
+      "runner": "run_embodied_closed_loop",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/embodied_closed_loop_v1.json",
+      "primary_metric": "tracking_rmse_rad",
+      "conditions": [
+        "closed_loop",
+        "yoked_replay",
+        "feedback_absent"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Hand-designed sensor error encoding and fixed spike-to-torque readout; no learned body schema.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_proprioception_v1",
+      "research_question": "RQ-EMB-002",
+      "hypothesis": "H-EMB-002-A",
+      "kind": "proprioception",
+      "runner": "run_embodied_proprioception",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/embodied_proprioception_v1.json",
+      "primary_metric": "tracking_rmse_rad",
+      "conditions": [
+        "closed_loop",
+        "feedback_absent",
+        "delayed_proprioception",
+        "timing_shuffle"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Temporal shuffle uses a declared offline donor tape, not future online observations.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_mapping_learning_v1",
+      "research_question": "RQ-EMB-003",
+      "hypothesis": "H-EMB-003-A",
+      "kind": "mapping",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/embodied_mapping_learning_v1.json",
+      "primary_metric": "holdout_success_fraction",
+      "conditions": [
+        "plasticity_on",
+        "frozen_snn",
+        "frozen_gateway",
+        "random_gateway",
+        "shuffled_reward"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Requires native eligibility/reward integration, separate training/holdout and validated gateway-state persistence.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_perturbation_screen_v1",
+      "research_question": "RQ-EMB-004",
+      "hypothesis": "H-EMB-004-A",
+      "kind": "perturbation",
+      "runner": "run_embodied_perturbation",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/embodied_perturbation_screen_v1.json",
+      "primary_metric": "tracking_rmse_rad",
+      "conditions": [
+        "closed_loop",
+        "weak_actuator",
+        "blocked_joint",
+        "restored_actuator"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Diagnostic fixed-network perturbation screen. Recovery is not evidence of learning; adaptive extension remains open.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_sensor_compensation_v1",
+      "research_question": "RQ-MSBA-E05",
+      "hypothesis": "H-MSBA-E05-B",
+      "kind": "sensor_loss",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/embodied_sensor_compensation_v1.json",
+      "primary_metric": "holdout_success_fraction",
+      "conditions": [
+        "adaptive",
+        "fixed",
+        "shuffled_compensation",
+        "no_compensation",
+        "noisy_area_suppression"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Extends existing MSBA-E05; requires at least two informative embodied modalities, equal budgets and activity-matched destroyed-information controls.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_homeostasis_v1",
+      "research_question": "RQ-REG-002",
+      "hypothesis": "H-REG-002-B",
+      "kind": "homeostasis",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/embodied_homeostasis_v1.json",
+      "primary_metric": "integrity_violation_fraction",
+      "conditions": [
+        "body_modulation",
+        "frozen_modulation",
+        "shuffled_modulation",
+        "task_reward_baseline"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Requires documented modulation equation and coupled state/action/plasticity integration. Modelled work is not measured hardware energy.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_efference_copy_v1",
+      "research_question": "RQ-EMB-007",
+      "hypothesis": "H-EMB-007-A",
+      "kind": "prediction",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/embodied_efference_copy_v1.json",
+      "primary_metric": "holdout_prediction_rmse_rad",
+      "conditions": [
+        "efference_copy",
+        "no_copy",
+        "shuffled_copy",
+        "delayed_copy"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Requires a trained and frozen forward model with leakage-free held-out trajectories; not a consciousness measure.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_morphology_transfer_v1",
+      "research_question": "RQ-EMB-008",
+      "hypothesis": "H-EMB-008-A",
+      "kind": "morphology",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/embodied_morphology_transfer_v1.json",
+      "primary_metric": "recovery_ticks",
+      "conditions": [
+        "adaptive",
+        "frozen",
+        "reinitialized",
+        "random_gateway"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Requires validated learned controller; retain same pre-perturbation checkpoint, disjoint morphology holdout, censored failures.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "connectome_reference_replication_v1",
+      "research_question": "RQ-CONN-001",
+      "hypothesis": "H-CONN-001-A",
+      "kind": "reference",
+      "runner": null,
+      "implementation_status": "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED",
+      "preregistration": "preregistrations/connectome/connectome_reference_replication_v1.json",
+      "primary_metric": "heldout_reference_agreement",
+      "conditions": [
+        "matched_lif_reference",
+        "weight_shuffle",
+        "transmitter_sensitivity",
+        "izhikevich_model_variant"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026",
+        "SRC-CONN-DORKENWALD-2024",
+        "SRC-CONN-BERG-2026"
+      ],
+      "limitations": "Needs a licensed, hashed biological subset, exact source parameters and independent reference outcomes; Izhikevich is a variant, not an exact LIF replication.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "connectome_topology_screen_v1",
+      "research_question": "RQ-CONN-002",
+      "hypothesis": "H-CONN-002-A",
+      "kind": "topology",
+      "runner": "run_connectome_topology",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/connectome_topology_screen_v1.json",
+      "primary_metric": "tracking_rmse_rad",
+      "conditions": [
+        "structured",
+        "degree_preserving",
+        "weight_shuffle",
+        "random_edges"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026",
+        "SRC-CONN-DORKENWALD-2024",
+        "SRC-CONN-BERG-2026"
+      ],
+      "limitations": "Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_controller_attribution_v1",
+      "research_question": "RQ-EMB-009",
+      "hypothesis": "H-EMB-009-A",
+      "kind": "controller",
+      "runner": "run_embodied_controller",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/embodied_controller_attribution_v1.json",
+      "primary_metric": "tracking_rmse_rad",
+      "conditions": [
+        "closed_loop",
+        "disconnected_motor",
+        "controller_only",
+        "shuffled_motor"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "No claim that a hand-designed decoder is unintelligent or that SNN activity alone proves learned competence.",
+      "automatic_evidence_promotion": false
+    },
+    {
+      "id": "embodied_timing_v1",
+      "research_question": "RQ-TIME-002",
+      "hypothesis": "H-TIME-002-A",
+      "kind": "timing",
+      "runner": "run_embodied_timing",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "preregistration": "preregistrations/connectome/embodied_timing_v1.json",
+      "primary_metric": "batch_digest_identity",
+      "conditions": [
+        "batch_1",
+        "batch_16",
+        "batch_128",
+        "physics_5ms",
+        "physics_15ms",
+        "sensor_5ms",
+        "sensor_15ms"
+      ],
+      "sources": [
+        "SRC-CONN-SHIU-2024",
+        "SRC-CONN-WANGCHEN-2024",
+        "SRC-CONN-EON-2026"
+      ],
+      "limitations": "Batching is not a change of neural dt; wall time is excluded from canonical state. Cross-hardware bitwise identity is not asserted.",
+      "automatic_evidence_promotion": false
+    }
+  ],
+  "source_ids": [
+    "SRC-CONN-DORKENWALD-2024",
+    "SRC-CONN-SHIU-2024",
+    "SRC-CONN-WANGCHEN-2024",
+    "SRC-CONN-LAPPALAINEN-2024",
+    "SRC-CONN-VAXENBURG-2025",
+    "SRC-CONN-BERG-2026",
+    "SRC-CONN-EON-2026",
+    "SRC-CONN-MALECNS-RELEASES"
+  ],
+  "reuse_existing_questions": [
+    "RQ-EMB-001",
+    "RQ-REG-002",
+    "RQ-MSBA-E05"
+  ],
+  "related_questions": [
+    "RQ-5D-005",
+    "RQ-GW-001",
+    "RQ-GW-006",
+    "RQ-MSBA-E01",
+    "RQ-MSBA-E02",
+    "RQ-MSBA-E03",
+    "RQ-MSBA-E04"
+  ]
+}

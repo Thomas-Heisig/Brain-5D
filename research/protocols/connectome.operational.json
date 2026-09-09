@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "authority": "exploratory_execution_only",
+  "protocols": [
+    {
+      "id": "embodied_closed_loop_v1",
+      "research_question": "RQ-EMB-001",
+      "hypothesis": "H-EMB-001-B",
+      "title": "Kann Brain-5D in einer Sensor-Aktor-Schleife (Embodiment) sinnvoll agieren?",
+      "runner": "run_embodied_closed_loop",
+      "preregistration": "preregistrations/connectome/embodied_closed_loop_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "Hand-designed sensor error encoding and fixed spike-to-torque readout; no learned body schema."
+    },
+    {
+      "id": "embodied_proprioception_v1",
+      "research_question": "RQ-EMB-002",
+      "hypothesis": "H-EMB-002-A",
+      "title": "Welchen messbaren Beitrag leisten korrekte, fehlende, verzoegerte und zeitlich verschobene propriozeptive Rueckmeldungen zur Gelenkregelung?",
+      "runner": "run_embodied_proprioception",
+      "preregistration": "preregistrations/connectome/embodied_proprioception_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "Temporal shuffle uses a declared offline donor tape, not future online observations."
+    },
+    {
+      "id": "embodied_perturbation_screen_v1",
+      "research_question": "RQ-EMB-004",
+      "hypothesis": "H-EMB-004-A",
+      "title": "Wie veraendern Aktuatorschwaechung, Blockade und Wiederherstellung die beobachtete SNN-Koerper-Dynamik?",
+      "runner": "run_embodied_perturbation",
+      "preregistration": "preregistrations/connectome/embodied_perturbation_screen_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "Diagnostic fixed-network perturbation screen. Recovery is not evidence of learning; adaptive extension remains open."
+    },
+    {
+      "id": "connectome_topology_screen_v1",
+      "research_question": "RQ-CONN-002",
+      "hypothesis": "H-CONN-002-A",
+      "title": "Welche Strukturmerkmale beeinflussen die sensorimotorische Leistung bei kontrolliert gleicher Netzwerk- und Aufgabengroesse?",
+      "runner": "run_connectome_topology",
+      "preregistration": "preregistrations/connectome/connectome_topology_screen_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005."
+    },
+    {
+      "id": "embodied_controller_attribution_v1",
+      "research_question": "RQ-EMB-009",
+      "hypothesis": "H-EMB-009-A",
+      "title": "Welcher Anteil der beobachteten Koerperleistung stammt vom SNN, vom Decoder oder von einem eigenstaendigen Bewegungscontroller?",
+      "runner": "run_embodied_controller",
+      "preregistration": "preregistrations/connectome/embodied_controller_attribution_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "No claim that a hand-designed decoder is unintelligent or that SNN activity alone proves learned competence."
+    },
+    {
+      "id": "embodied_timing_v1",
+      "research_question": "RQ-TIME-002",
+      "hypothesis": "H-TIME-002-A",
+      "title": "Wie wirken Sensor-/Physik-Abtastzeiten auf den Regelkreis, und bleibt sein Zustand von Ausfuehrungsbatch und UI unabhaengig?",
+      "runner": "run_embodied_timing",
+      "preregistration": "preregistrations/connectome/embodied_timing_v1.json",
+      "mode": "EXPLORATORY",
+      "implementation_status": "NATIVE_EXPLORATORY_SCREEN",
+      "limitations": "Batching is not a change of neural dt; wall time is excluded from canonical state. Cross-hardware bitwise identity is not asserted."
+    }
+  ]
+}

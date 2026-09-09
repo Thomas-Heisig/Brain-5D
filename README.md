@@ -21,7 +21,10 @@ MHRN is a research framework for studying learning, self-organization and embodi
 
 > **Scientific status:** MHRN is an experimental engineering and research platform. Implementation, passing tests, dashboards, reachable devices, generated reports or available AI/network adapters are not by themselves scientific evidence. The project makes no claim of AGI, consciousness, sentience or biological equivalence.
 
-## Current `main` baseline
+## Historical baseline snapshot (2026-09-08)
+
+For current source-bound checks, consult CI at the exact commit and
+`tests/test_baseline.json`; older counts below are not current green-status claims.
 
 Updated on **2026-09-08** after the v0.6 development line opened:
 
@@ -137,6 +140,17 @@ See:
 - [`docs/02-architecture/WESEN_ADAPTIVE_BODY.md`](docs/02-architecture/WESEN_ADAPTIVE_BODY.md)
 - [`docs/02-architecture/NEURAL_SYMBIOSIS.md`](docs/02-architecture/NEURAL_SYMBIOSIS.md)
 - [`docs/02-architecture/EMBODIMENT_REAL_BODY.md`](docs/02-architecture/EMBODIMENT_REAL_BODY.md)
+
+## Connectome-informed embodiment research
+
+An additive [research extension](docs/02-architecture/CONNECTOME_EMBODIMENT.md) registers
+nine new questions and twelve hypotheses, reusing existing embodiment, regulation and
+MSBA questions where appropriate. Six native **SYNTHETIC, learning-disabled engineering
+screens** run through the existing workflow with body-state sidecars and preserved DATA.
+Six advanced learning/replication designs remain explicitly blocked until their adapters
+and review are complete. None automatically promote EVID. The [scientific supplement](research/publications/2026-09-09_connectome-embodiment_supplement/README.md)
+corrects the fly-source chronology and separates anatomy, dynamics, embodiment and
+controller contribution. No complete biological dataset or human anatomical mapping is claimed.
 
 ## What remains scientifically open
 

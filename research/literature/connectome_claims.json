@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "verified_on": "2026-09-09",
+  "ai_generated": true,
+  "claims": [
+    {
+      "id": "CONN-C01",
+      "source_id": "SRC-CONN-BERG-2026",
+      "claim": "Cell male CNS publication is dated 2026-09-03; summary reports 166700 neurons.",
+      "scope": "anatomical reconstruction",
+      "not_implied": [
+        "functional whole-brain equivalence",
+        "human neuroanatomical mapping",
+        "MHRN superiority"
+      ]
+    },
+    {
+      "id": "CONN-C02",
+      "source_id": "SRC-CONN-MALECNS-RELEASES",
+      "claim": "MaleCNS v0.9 release 2025-10-03; v1.0 release 2026-06-08.",
+      "scope": "release history",
+      "not_implied": [
+        "first dataset availability on 2026-09-03"
+      ]
+    },
+    {
+      "id": "CONN-C03",
+      "source_id": "SRC-CONN-EON-2026",
+      "claim": "Technical report dated 2026-03-10 discloses pre-existing controllers, manual mappings and 15 ms coupling.",
+      "scope": "company demonstration",
+      "not_implied": [
+        "independent replication",
+        "plasticity learned all behavior",
+        "male CNS dataset was the substrate"
+      ]
+    },
+    {
+      "id": "CONN-C04",
+      "source_id": "SRC-CONN-SHIU-2024",
+      "claim": "LIF model predicts selected feeding and grooming circuit responses with biological tests.",
+      "scope": "tested sensorimotor transformations",
+      "not_implied": [
+        "exact reproduction by an Izhikevich variant",
+        "all fly behavior"
+      ]
+    }
+  ],
+  "excluded_or_unresolved": [
+    {
+      "claim": "FlyWire / Dorkenwald et al. 2026 male CNS",
+      "reason": "Misattribution; use Dorkenwald 2024 female brain and Berg 2026 male CNS."
+    },
+    {
+      "claim": "166691 is an invariant count across datasets",
+      "reason": "Use version/filter-specific measured counts; published 2026 Cell summary is 166700."
+    },
+    {
+      "claim": "125 million synapses are the adapter dataset size",
+      "reason": "No biological dataset imported; count must be derived from actual pinned data and counting convention."
+    },
+    {
+      "claim": "UMAP/t-SNE maps fly neurons to human anatomy",
+      "reason": "Layout is not anatomical homology."
+    },
+    {
+      "claim": "A connectomic graph model guarantees sample-efficiency advantage for MHRN",
+      "reason": "No independently verified matched MHRN comparison in this integration."
+    },
+    {
+      "claim": "Fluorescent avatar is EEG/fMRI or a consciousness measure",
+      "reason": "Telemetry is not a biological imaging modality or a subjective-experience measurement."
+    }
+  ]
+}

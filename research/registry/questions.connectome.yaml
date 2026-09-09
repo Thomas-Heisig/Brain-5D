@@ -1,0 +1,189 @@
+- id: RQ-EMB-002
+  domain: Connectome-Informed Embodiment
+  question: Welchen messbaren Beitrag leisten korrekte, fehlende, verzoegerte und zeitlich verschobene
+    propriozeptive Rueckmeldungen zur Gelenkregelung?
+  relevance: Temporal shuffle uses a declared offline donor tape, not future online observations.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Temporal shuffle uses a declared offline donor tape, not future online observations.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-EMB-003
+  domain: Connectome-Informed Embodiment
+  question: Laesst sich eine unbekannte Sensor-Aktor-Zuordnung durch SNN-Plastizitaet erlernen, statt
+    sie im Decoder vorzugeben?
+  relevance: Requires native eligibility/reward integration, separate training/holdout and validated gateway-state
+    persistence.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-003-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Requires native eligibility/reward integration, separate training/holdout and validated
+      gateway-state persistence.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-EMB-004
+  domain: Connectome-Informed Embodiment
+  question: Wie veraendern Aktuatorschwaechung, Blockade und Wiederherstellung die beobachtete SNN-Koerper-Dynamik?
+  relevance: Diagnostic fixed-network perturbation screen. Recovery is not evidence of learning; adaptive
+    extension remains open.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-004-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Diagnostic fixed-network perturbation screen. Recovery is not evidence of learning; adaptive
+      extension remains open.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-EMB-007
+  domain: Connectome-Informed Embodiment
+  question: Verbessert eine Aktionskopie die Vorhersage kommender propriozeptiver Zustaende gegenueber
+    gleich grossen Modellen ohne Aktionsinformation?
+  relevance: Requires a trained and frozen forward model with leakage-free held-out trajectories; not
+    a consciousness measure.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-007-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Requires a trained and frozen forward model with leakage-free held-out trajectories;
+      not a consciousness measure.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-EMB-008
+  domain: Connectome-Informed Embodiment
+  question: Generalisiert eine gelernte sensorimotorische Regelung auf zuvor ungesehene Koerperparameter?
+  relevance: Requires validated learned controller; retain same pre-perturbation checkpoint, disjoint
+    morphology holdout, censored failures.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-008-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Requires validated learned controller; retain same pre-perturbation checkpoint, disjoint
+      morphology holdout, censored failures.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-CONN-001
+  domain: Connectome-Informed Embodiment
+  question: Welche veroeffentlichten sensorimotorischen Teilnetzvorhersagen lassen sich mit explizit versioniertem
+    Connectome und Neuronenmodell reproduzieren?
+  relevance: Needs a licensed, hashed biological subset, exact source parameters and independent reference
+    outcomes; Izhikevich is a variant, not an exact LIF replication.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  - SRC-CONN-DORKENWALD-2024
+  - SRC-CONN-BERG-2026
+  hypotheses:
+  - H-CONN-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Needs a licensed, hashed biological subset, exact source parameters and independent reference
+      outcomes; Izhikevich is a variant, not an exact LIF replication.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-CONN-002
+  domain: Connectome-Informed Embodiment
+  question: Welche Strukturmerkmale beeinflussen die sensorimotorische Leistung bei kontrolliert gleicher
+    Netzwerk- und Aufgabengroesse?
+  relevance: Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer
+    and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  - SRC-CONN-DORKENWALD-2024
+  - SRC-CONN-BERG-2026
+  hypotheses:
+  - H-CONN-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer
+      and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-EMB-009
+  domain: Connectome-Informed Embodiment
+  question: Welcher Anteil der beobachteten Koerperleistung stammt vom SNN, vom Decoder oder von einem
+    eigenstaendigen Bewegungscontroller?
+  relevance: No claim that a hand-designed decoder is unintelligent or that SNN activity alone proves
+    learned competence.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-EMB-009-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: No claim that a hand-designed decoder is unintelligent or that SNN activity alone proves
+      learned competence.
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: RQ-TIME-002
+  domain: Connectome-Informed Embodiment
+  question: Wie wirken Sensor-/Physik-Abtastzeiten auf den Regelkreis, und bleibt sein Zustand von Ausfuehrungsbatch
+    und UI unabhaengig?
+  relevance: Batching is not a change of neural dt; wall time is excluded from canonical state. Cross-hardware
+    bitwise identity is not asserted.
+  literature:
+  - SRC-CONN-SHIU-2024
+  - SRC-CONN-WANGCHEN-2024
+  - SRC-CONN-EON-2026
+  hypotheses:
+  - H-TIME-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Batching is not a change of neural dt; wall time is excluded from canonical state. Cross-hardware
+      bitwise identity is not asserted.
+  created: '2026-09-09'
+  updated: '2026-09-09'

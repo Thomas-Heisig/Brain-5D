@@ -192,6 +192,21 @@ class Source:
         self.claims = data.get("claims", [])
         self.brain5d_questions = data.get("brain5d_questions", [])
         self.brain5d_relevance = data.get("brain5d_relevance")
+        # Preserve source provenance through the API and registry round trips.
+        self.metadata: dict[str, Any] = {
+            key: data[key]
+            for key in (
+                "source_type",
+                "url",
+                "publication_date",
+                "verified_on",
+                "verification_scope",
+                "limitations",
+                "license",
+                "dataset_version",
+            )
+            if key in data
+        }
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -206,6 +221,7 @@ class Source:
             "claims": self.claims,
             "brain5d_questions": self.brain5d_questions,
             "brain5d_relevance": self.brain5d_relevance,
+            **self.metadata,
         }
 
 

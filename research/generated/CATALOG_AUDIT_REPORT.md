@@ -5,8 +5,8 @@
 The canonical ResearchRegistry remains authoritative. Historical/design references and test-only fixtures are listed with explicit reasons; an unknown missing identifier fails CI.
 
 ## Summary
-- Question references: 1486
-- Hypothesis references: 1251
+- Question references: 1761
+- Hypothesis references: 1493
 - Missing questions: 25
 - Missing hypotheses: 21
 - Registry link issues: 0
@@ -52,7 +52,7 @@ The canonical ResearchRegistry remains authoritative. Historical/design referenc
 - `RQ-DUP-001`: Duplicate-registry test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_registry_fragments.py`
 - `RQ-EXTRA-E01`: Registry-fragment test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_registry_fragments.py`
 - `RQ-MISSING-001`: Catalog-audit negative test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_research_catalog_audit.py`
-- `RQ-TEST-001`: Catalog-audit test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_dashboard_batch_routes.py`, `tests/test_experiment_validity.py`, `tests/test_neural_symbiosis.py`, `tests/test_research_catalog_audit.py`, `tests/test_research_question_maturity.py`, `tests/test_research_report_generation.py`
+- `RQ-TEST-001`: Catalog-audit test fixture. Sources: `research/registry/catalog_audit_allow_list.yaml`, `tests/test_dashboard_batch_routes.py`, `tests/test_experiment_validity.py`, `tests/test_neural_symbiosis.py`, `tests/test_research_catalog_audit.py`, `tests/test_research_question_maturity.py`, `tests/test_research_report_generation.py`, `tests/test_review_inbox.py`
 
 ## Code namespace selectors - not research entities
 

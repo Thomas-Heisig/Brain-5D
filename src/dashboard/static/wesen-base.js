@@ -29,6 +29,9 @@ const state = {
 };
 
 function num(value) {
+  if (value === null || value === undefined || typeof value === "boolean" ||
+      (typeof value === "string" && value.trim() === "") ||
+      !["number", "string"].includes(typeof value)) return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
 }

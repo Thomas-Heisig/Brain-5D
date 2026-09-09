@@ -67,7 +67,7 @@ function ensurePanel() {
       <p>Kontrollierte Vermittlungsschicht mit modalitätsspezifischen Audio-, Vision- und Digitalbahnen sowie expliziter Ressourcenökonomie.</p></div>
       <div class="wesen-symbiosis-state"><strong id="wesen-symbiosis-state">DISABLED</strong><small id="wesen-symbiosis-maturity">Maturity 0 · Contract only</small></div>
     </header>
-    <div class="wesen-symbiosis-boundary"><strong>Scientific boundary</strong>
+    <div class="wesen-symbiosis-boundary"><strong>Scientific boundary / READ-ONLY view</strong>
       <span>Experiment-only · Productive Gateway: LOCKED · keine Core-Mutation · Gateway-Aktivität ist kein Lernnachweis.</span>
     </div>
     <div class="wesen-symbiosis-grid">

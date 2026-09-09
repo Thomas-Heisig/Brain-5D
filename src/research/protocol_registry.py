@@ -40,6 +40,12 @@ OPERATIONAL_RUNNERS: dict[str, str] = {
     "msba_visual_roi_v1": "run_msba_e03",
     "msba_digital_integrity_v1": "run_msba_e04",
     "msba_modality_compensation_v1": "run_msba_e05",
+    "embodied_closed_loop_v1": "run_embodied_closed_loop",
+    "embodied_proprioception_v1": "run_embodied_proprioception",
+    "embodied_perturbation_screen_v1": "run_embodied_perturbation",
+    "connectome_topology_screen_v1": "run_connectome_topology",
+    "embodied_controller_attribution_v1": "run_embodied_controller",
+    "embodied_timing_v1": "run_embodied_timing",
 }
 
 
@@ -55,17 +61,27 @@ def _json_object(path: Path) -> dict[str, Any]:
 
 
 def load_operational_protocols(research_root: Path) -> list[dict[str, Any]]:
-    path = research_root / PROTOCOL_FILE
-    if not path.is_file():
-        return []
-    raw = _json_object(path)
-    protocol_values: object = raw.get("protocols")
-    if not isinstance(protocol_values, list):
-        raise PreregistrationError("Operational protocol registry is malformed.")
+    paths = [research_root / PROTOCOL_FILE]
+    paths.extend(sorted((research_root / "protocols").glob("*.operational.json")))
     protocols: list[dict[str, Any]] = []
-    for item_value in cast(list[object], protocol_values):
-        if isinstance(item_value, dict):
-            protocols.append(cast(dict[str, Any], item_value))
+    seen: set[str] = set()
+    for path in paths:
+        if not path.is_file():
+            continue
+        values = _json_object(path).get("protocols")
+        if not isinstance(values, list):
+            raise PreregistrationError("Operational protocol registry is malformed.")
+        for item in cast(list[object], values):
+            if not isinstance(item, dict):
+                raise PreregistrationError("Operational protocol must be an object.")
+            item = cast(dict[str, Any], item)
+            identifier = item.get("id")
+            if not isinstance(identifier, str) or not identifier or identifier in seen:
+                raise PreregistrationError(
+                    "Missing or duplicate operational protocol ID."
+                )
+            seen.add(identifier)
+            protocols.append(item)
     return protocols
 
 
