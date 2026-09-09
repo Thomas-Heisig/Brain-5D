@@ -31,7 +31,7 @@
 | `RQ-SELF-002` | `H-SELF-002-A` | 0 | — | — | offen |
 | `RQ-STRUCT-001` | `H-STRUCT-001-A` | 0 | — | — | offen |
 | `RQ-MEM-001` | `H-MEM-001-A` | 0 | — | — | offen |
-| `RQ-EMB-001` | `H-EMB-001-A` | 0 | — | — | offen |
+| `RQ-EMB-001` | `H-EMB-001-A`, `H-EMB-001-B` | 0 | — | — | offen |
 | `RQ-LLM-001` | `H-LLM-001-A` | 0 | — | — | offen |
 | `RQ-ETH-001` | `H-ETH-001-A` | 0 | — | — | offen |
 | `RQ-ETH-002` | `H-ETH-002-A` | 0 | — | — | offen |
@@ -42,7 +42,7 @@
 | `RQ-GEN-001` | `H-GEN-001-A` | 0 | — | — | offen |
 | `RQ-REPL-001` | `H-REPL-001-A` | 0 | — | — | offen |
 | `RQ-5D-005` | `H-5D-005-A` | 0 | — | — | offen |
-| `RQ-REG-002` | `H-REG-002-A` | 0 | — | — | offen |
+| `RQ-REG-002` | `H-REG-002-A`, `H-REG-002-B` | 0 | — | — | offen |
 | `RQ-TEMP-002` | `H-TEMP-002-A` | 0 | — | — | offen |
 | `RQ-PERF-001` | `H-PERF-001-A` | 0 | — | — | offen |
 | `RQ-REC-002` | `H-REC-002-A` | 0 | — | — | offen |
@@ -69,6 +69,15 @@
 | `RQ-WEL-101` | `H-WEL-101-A` | 1 | — | — | offen |
 | `RQ-WEL-102` | `H-WEL-102-A` | 2 | — | — | offen |
 | `RQ-WEL-103` | `H-WEL-103-A` | 4 | — | — | offen |
+| `RQ-EMB-002` | `H-EMB-002-A` | 3 | — | — | offen |
+| `RQ-EMB-003` | `H-EMB-003-A` | 3 | — | — | offen |
+| `RQ-EMB-004` | `H-EMB-004-A` | 3 | — | — | offen |
+| `RQ-EMB-007` | `H-EMB-007-A` | 3 | — | — | offen |
+| `RQ-EMB-008` | `H-EMB-008-A` | 3 | — | — | offen |
+| `RQ-CONN-001` | `H-CONN-001-A` | 5 | — | — | offen |
+| `RQ-CONN-002` | `H-CONN-002-A` | 5 | — | — | offen |
+| `RQ-EMB-009` | `H-EMB-009-A` | 3 | — | — | offen |
+| `RQ-TIME-002` | `H-TIME-002-A` | 3 | — | — | offen |
 | `RQ-GW-001` | `H-GW-001-A` | 0 | — | — | offen |
 | `RQ-GW-002` | `H-GW-002-A` | 0 | — | — | offen |
 | `RQ-GW-003` | `H-GW-003-A` | 0 | — | — | offen |
@@ -80,7 +89,7 @@
 | `RQ-MSBA-E02` | `H-MSBA-E02-A` | 0 | — | — | offen |
 | `RQ-MSBA-E03` | `H-MSBA-E03-A` | 0 | — | — | offen |
 | `RQ-MSBA-E04` | `H-MSBA-E04-A` | 0 | — | — | offen |
-| `RQ-MSBA-E05` | `H-MSBA-E05-A` | 0 | — | — | offen |
+| `RQ-MSBA-E05` | `H-MSBA-E05-B`, `H-MSBA-E05-A` | 0 | — | — | offen |
 
 ## Zusammenfassung
 

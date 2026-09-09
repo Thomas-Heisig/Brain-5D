@@ -33,6 +33,14 @@
 | Deutschland (2026) |  | RQ-WEL-103 | open |
 | Deutschland (2026) |  | RQ-WEL-103 | open |
 | Deutschland (2026) |  | RQ-WEL-103 | open |
+| others (2024) |  | RQ-CONN-001, RQ-CONN-002 | open |
+| others (2024) |  | RQ-EMB-001, RQ-EMB-002, RQ-EMB-003, RQ-EMB-004, RQ-MSBA-E05, RQ-REG-002, RQ-EMB-007, RQ-EMB-008, RQ-CONN-001, RQ-CONN-002, RQ-EMB-009, RQ-TIME-002 | open |
+| others (2024) |  | RQ-EMB-001, RQ-EMB-002, RQ-EMB-003, RQ-EMB-004, RQ-MSBA-E05, RQ-REG-002, RQ-EMB-007, RQ-EMB-008, RQ-CONN-001, RQ-CONN-002, RQ-EMB-009, RQ-TIME-002 | open |
+| others (2024) |  |  |  |
+| others (2025) |  |  |  |
+| others (2026) |  | RQ-CONN-001, RQ-CONN-002 | open |
+| team (2026) |  | RQ-EMB-001, RQ-EMB-002, RQ-EMB-003, RQ-EMB-004, RQ-MSBA-E05, RQ-REG-002, RQ-EMB-007, RQ-EMB-008, RQ-CONN-001, RQ-CONN-002, RQ-EMB-009, RQ-TIME-002 | open |
+| FlyEM (2026) |  |  |  |
 
 ---
 *Automatisch generiert am 2026-09-09*

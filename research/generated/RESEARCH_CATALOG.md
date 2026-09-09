@@ -4,10 +4,10 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 77
-- **Hypothesen:** 76
+- **Forschungsfragen:** 86
+- **Hypothesen:** 88
 - **Claims:** 8
-- **Literaturquellen:** 31
+- **Literaturquellen:** 39
 
 ---
 
@@ -224,6 +224,166 @@
 
 **Hypothesen:**
 - `H-REG-002-A`: Der registrierte Regulationsfeedbackpfad verbessert die Recovery-Metrik nach einer identischen Druckphase gegenüber Regulation-off. *(untested)*
+- `H-REG-002-B`: Koerperbasierte Neuromodulation reduziert Integritaetsverletzungen gegenueber frozen und shuffled Modulation ohne externen Aufgabenscore als Lernsignal. *(untested)*
+
+---
+
+## Connectome-Informed Embodiment
+
+### RQ-EMB-002
+
+**Frage:** Welchen messbaren Beitrag leisten korrekte, fehlende, verzoegerte und zeitlich verschobene propriozeptive Rueckmeldungen zur Gelenkregelung?
+
+**Status:** open
+**Relevanz:** Temporal shuffle uses a declared offline donor tape, not future online observations.
+
+**Hypothesen:**
+- `H-EMB-002-A`: Die mittlere quadratische Zielabweichung ist bei intakter Propriozeption niedriger als bei fehlender oder um 20 Ticks verzoegerter Propriozeption. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-EMB-003
+
+**Frage:** Laesst sich eine unbekannte Sensor-Aktor-Zuordnung durch SNN-Plastizitaet erlernen, statt sie im Decoder vorzugeben?
+
+**Status:** open
+**Relevanz:** Requires native eligibility/reward integration, separate training/holdout and validated gateway-state persistence.
+
+**Hypothesen:**
+- `H-EMB-003-A`: Nach einem unbekannten Aktuatortausch verbessert aktivierte Dreifaktor-Plastizitaet den Holdout-Erfolg gegenueber frozen, random-gateway und shuffled-reward Kontrollen. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-EMB-004
+
+**Frage:** Wie veraendern Aktuatorschwaechung, Blockade und Wiederherstellung die beobachtete SNN-Koerper-Dynamik?
+
+**Status:** open
+**Relevanz:** Diagnostic fixed-network perturbation screen. Recovery is not evidence of learning; adaptive extension remains open.
+
+**Hypothesen:**
+- `H-EMB-004-A`: Gelenkblockade und Aktuatorschwaechung erzeugen reproduzierbare Unterschiede in Position, Kontakt und sensorischer Aktivitaet gegenueber nominalem Betrieb. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-EMB-007
+
+**Frage:** Verbessert eine Aktionskopie die Vorhersage kommender propriozeptiver Zustaende gegenueber gleich grossen Modellen ohne Aktionsinformation?
+
+**Status:** open
+**Relevanz:** Requires a trained and frozen forward model with leakage-free held-out trajectories; not a consciousness measure.
+
+**Hypothesen:**
+- `H-EMB-007-A`: Ein trainierter Praediktor mit Aktionskopie erzielt geringeren Holdout-Fehler als no-copy, shuffled-copy und zeitverschobene-copy Kontrollen. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-EMB-008
+
+**Frage:** Generalisiert eine gelernte sensorimotorische Regelung auf zuvor ungesehene Koerperparameter?
+
+**Status:** open
+**Relevanz:** Requires validated learned controller; retain same pre-perturbation checkpoint, disjoint morphology holdout, censored failures.
+
+**Hypothesen:**
+- `H-EMB-008-A`: Weiterlernen reduziert die Recovery-Zeit nach ungesehener Aenderung von Traegheit, Gelenklaenge oder Aktuatorstaerke gegenueber eingefrorenem Netzwerk bei gleichem Budget. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-CONN-001
+
+**Frage:** Welche veroeffentlichten sensorimotorischen Teilnetzvorhersagen lassen sich mit explizit versioniertem Connectome und Neuronenmodell reproduzieren?
+
+**Status:** open
+**Relevanz:** Needs a licensed, hashed biological subset, exact source parameters and independent reference outcomes; Izhikevich is a variant, not an exact LIF replication.
+
+**Hypothesen:**
+- `H-CONN-001-A`: Ein eingefrorener, parametergleicher LIF-Referenzpfad erreicht die vorab deklarierte Uebereinstimmung mit unabhaengigen Feeding/Grooming-Referenzresultaten. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+- `SRC-CONN-DORKENWALD-2024`: Dorkenwald, S. and others et al. (2024)
+- `SRC-CONN-BERG-2026`: Berg, S. and others et al. (2026)
+
+---
+
+### RQ-CONN-002
+
+**Frage:** Welche Strukturmerkmale beeinflussen die sensorimotorische Leistung bei kontrolliert gleicher Netzwerk- und Aufgabengroesse?
+
+**Status:** open
+**Relevanz:** Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005.
+
+**Hypothesen:**
+- `H-CONN-002-A`: Gezieltes Umverdrahten oder Gewichtsvertauschen veraendert den sensorimotorischen Outcome gegenueber derselben synthetischen Ausgangstopologie bei gleichem Knoten-, Kanten- und Tickbudget. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+- `SRC-CONN-DORKENWALD-2024`: Dorkenwald, S. and others et al. (2024)
+- `SRC-CONN-BERG-2026`: Berg, S. and others et al. (2026)
+
+---
+
+### RQ-EMB-009
+
+**Frage:** Welcher Anteil der beobachteten Koerperleistung stammt vom SNN, vom Decoder oder von einem eigenstaendigen Bewegungscontroller?
+
+**Status:** open
+**Relevanz:** No claim that a hand-designed decoder is unintelligent or that SNN activity alone proves learned competence.
+
+**Hypothesen:**
+- `H-EMB-009-A`: Die SNN-abgetrennte Bedingung aendert die Zielabweichung gegenueber SNN-Regelung; ein expliziter PD-Controller wird als separate Leistungsquelle ausgewiesen. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
+
+---
+
+### RQ-TIME-002
+
+**Frage:** Wie wirken Sensor-/Physik-Abtastzeiten auf den Regelkreis, und bleibt sein Zustand von Ausfuehrungsbatch und UI unabhaengig?
+
+**Status:** open
+**Relevanz:** Batching is not a change of neural dt; wall time is excluded from canonical state. Cross-hardware bitwise identity is not asserted.
+
+**Hypothesen:**
+- `H-TIME-002-A`: Bei fixem neuralem dt=1 ms bleiben kanonische Endzustaende fuer Batchgroessen 1,16,128 identisch; geaenderte Sensor-/Physikraten koennen den Outcome veraendern. *(untested)*
+
+**Literatur:**
+- `SRC-CONN-SHIU-2024`: Shiu, P. K. and others et al. (2024)
+- `SRC-CONN-WANGCHEN-2024`: Wang-Chen, S. and others et al. (2024)
+- `SRC-CONN-EON-2026`: Eon Systems research team et al. (2026)
 
 ---
 
@@ -330,6 +490,7 @@
 
 **Hypothesen:**
 - `H-EMB-001-A`: Brain-5D kann in einer geschlossenen Sensor-Aktor-Schleife zielgerichtet agieren. *(untested)*
+- `H-EMB-001-B`: Unter einer identischen externen Stoerung unterscheiden sich tracking_rmse_rad und Sensorkonsequenzen zwischen geschlossenem Kreis, yoked Replay und unterbrochener Rueckmeldung. *(untested)*
 
 ---
 
@@ -695,6 +856,7 @@
 **Relevanz:** Prueft adaptive Kompensation unter kontrolliertem Modalitaetsausfall und gleichen Ressourcenbudgets.
 
 **Hypothesen:**
+- `H-MSBA-E05-B`: Bei Sensorverlust verbessert adaptive Kompensation den Holdout-Aufgabenerfolg gegenueber fixer, vertauschter und deaktivierter Kompensation unter gleichem Budget. *(untested)*
 - `H-MSBA-E05-A`: Nach kontrolliertem Modalitaetsausfall steigt die alternative Gateway-Allokation nur bei guenstigem Utility-Kosten-Verhaeltnis und verbessert die Aufgaben-Recovery gegenueber fixen und No-Compensation-Kontrollen. *(untested)*
 
 ---
