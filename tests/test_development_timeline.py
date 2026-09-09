@@ -76,7 +76,9 @@ def test_baseline_refresh_does_not_promote_scientific_evidence() -> None:
 
     assert current["verification_score"] > stale["verification_score"]
     assert current["scientific_evidence_score"] == stale["scientific_evidence_score"]
-    assert current["consciousness_claim"] == stale["consciousness_claim"] == "unsupported"
+    assert (
+        current["consciousness_claim"] == stale["consciousness_claim"] == "unsupported"
+    )
 
 
 def test_planned_features_do_not_count_as_implemented() -> None:
