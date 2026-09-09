@@ -2,6 +2,13 @@ import { test, expect } from '@playwright/test';
 
 test.use({ baseURL: 'http://127.0.0.1:4174' });
 
+async function selectResearchView(page, view) {
+  await page
+    .locator(`[data-research-workspace-view="${view}"]`)
+    .evaluate((button) => button.click());
+  await expect(page.locator(`[data-research-workspace-panel="${view}"]`)).toBeVisible();
+}
+
 for (const port of [4174, 4175]) {
   test(`real server ${port}: routing, catalog, MSBA and shared file/chat renderer`, async ({ page }) => {
     const errors = [];
@@ -20,6 +27,7 @@ for (const port of [4174, 4175]) {
     await expect(page.locator('#wesen-neural-symbiosis')).toBeVisible();
     await expect(page.locator('#wesen-msba-pathways')).toContainText('Audio');
     await page.locator('[data-primary-area="science"]').click();
+    await selectResearchView(page, 'files');
     await page.locator('.fm-source-btn[data-source="docs"]').click();
     await page.locator('.fm-file-label').filter({ hasText: 'preview.md' }).click();
     const viewer = page.locator('#fm-viewer');
@@ -152,6 +160,7 @@ test('canonical file viewer: split editor live preview and stale-write conflict 
 test('research review inbox completes an append-only human review', async ({ page }) => {
   await page.goto('http://127.0.0.1:4174/');
   await page.locator('[data-primary-area="science"]').click();
+  await selectResearchView(page, 'review');
   await expect(page.locator('#workflow-review-inbox')).toBeVisible();
   const inboxResponse = await page.request.get('/api/research/reviews');
   expect(inboxResponse.ok()).toBeTruthy();

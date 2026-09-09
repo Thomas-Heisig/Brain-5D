@@ -4,9 +4,9 @@ Examples:
     python scripts/benchmark_ladder.py --tiers 100,500,5000 --ticks 20
     python scripts/benchmark_ladder.py --tiers 5000,50000,1000000 --ticks 10 --allow-large
 
-The benchmark reports construction and step throughput. It does not claim
-scientific performance evidence; hardware, Python version and configuration
-are recorded in the JSON output.
+The benchmark reports construction, Python allocation peak, tick cost and
+throughput. It does not claim scientific performance evidence; hardware,
+Python version and configuration are recorded in the JSON output.
 """
 
 from __future__ import annotations
@@ -18,11 +18,10 @@ import platform
 import random
 import sys
 import time
+import tracemalloc
 from pathlib import Path
 from typing import Any
 
-# Make direct ``python scripts/benchmark_ladder.py`` invocation equivalent to
-# running the module from the repository root.
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -62,15 +61,22 @@ def run_tier(
     seed: int,
     connections_per_neuron: int = 0,
 ) -> dict[str, Any]:
-    started = time.perf_counter()
-    network = build_network(neuron_count, seed, connections_per_neuron)
-    construction_seconds = time.perf_counter() - started
+    """Run one bounded tier and return engineering-only performance metrics."""
+    tracemalloc.start()
+    try:
+        started = time.perf_counter()
+        network = build_network(neuron_count, seed, connections_per_neuron)
+        construction_seconds = time.perf_counter() - started
 
-    step_started = time.perf_counter()
-    for _ in range(ticks):
-        network.step()
-    step_seconds = time.perf_counter() - step_started
+        step_started = time.perf_counter()
+        for _ in range(ticks):
+            network.step()
+        step_seconds = time.perf_counter() - step_started
+        _, peak_bytes = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
 
+    mean_tick_cost_ms = (step_seconds * 1000.0 / ticks) if ticks else None
     return {
         "neurons": neuron_count,
         "synapses": network.get_state_summary().get("synapses", 0),
@@ -78,6 +84,11 @@ def run_tier(
         "connections_per_neuron_requested": connections_per_neuron,
         "construction_seconds": round(construction_seconds, 6),
         "step_seconds": round(step_seconds, 6),
+        "mean_tick_cost_ms": (
+            round(mean_tick_cost_ms, 6) if mean_tick_cost_ms is not None else None
+        ),
+        "python_peak_memory_bytes": int(peak_bytes),
+        "python_peak_bytes_per_neuron": round(peak_bytes / neuron_count, 3),
         "ticks_per_second": round(ticks / step_seconds, 3) if step_seconds else None,
         "neurons_per_second": (
             round(neuron_count * ticks / step_seconds, 3) if step_seconds else None
@@ -124,13 +135,14 @@ def main() -> int:
         )
 
     report = {
-        "schema_version": 1,
-        "benchmark": "brain5d_scaling_ladder",
+        "schema_version": 2,
+        "benchmark": "mhrn_scaling_ladder",
         "python": platform.python_version(),
         "platform": platform.platform(),
         "seed": args.seed,
         "requested_ticks": args.ticks,
         "connections_per_neuron": args.connections_per_neuron,
+        "memory_metric": "tracemalloc_python_peak_bytes",
         "tiers": [
             run_tier(
                 value,

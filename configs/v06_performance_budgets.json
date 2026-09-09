@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scope": "engineering_regression_only",
+  "scientific_claim": false,
+  "runtime": {
+    "max_tick_latency_ms": 1000.0
+  },
+  "phases_ms_per_tick": {
+    "learning": 500.0,
+    "homeostasis": 500.0,
+    "structural": 500.0,
+    "embodiment": 500.0,
+    "neural_symbiosis_msba": 500.0,
+    "dashboard_telemetry": 500.0,
+    "storage": 500.0
+  },
+  "pacing": {
+    "minimum_target_fraction": 0.75,
+    "realtime_ratio_absolute_tolerance": 1e-09
+  },
+  "scaling": {
+    "max_mean_tick_cost_ms": 1000.0,
+    "max_python_peak_bytes_per_neuron": 262144.0
+  },
+  "notes": [
+    "Budgets are conservative cross-runner regression ceilings, not performance claims.",
+    "Tighter hardware-specific budgets belong in benchmark artifacts, not scientific evidence."
+  ]
+}
