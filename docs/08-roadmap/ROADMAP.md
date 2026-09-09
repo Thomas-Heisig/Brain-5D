@@ -710,3 +710,18 @@ Files such as `ROADMAP_ALPHA4.md`, `ROADMAP_ALPHA5*.md`, `ROADMAP_V*.md` and spr
 - Human-auditable policy/decision ledger for adaptive system changes.
 - Long-horizon stability, rollback, safety isolation and failure-recovery experiments.
 - Production enablement remains opt-in and requires validated controls plus human approval.
+
+## Connectome-informed embodiment integration (2026-09-09)
+
+- [x] Add canonical questions/hypotheses/source provenance without duplicate RQ-EMB-001, RQ-REG-002 or RQ-MSBA-E05.
+- [x] Register six native exploratory joint/SNN screens and six explicitly blocked advanced designs.
+- [x] Add bounded reference import, topology controls, body-state sidecars and design/evidence gates.
+- [x] Add source-bytecode consistency, uncertainty-aware Wesen telemetry and a scientific supplement.
+- [ ] Obtain and independently validate a pinned licensed biological subset; implement exact source-model replication.
+- [ ] Validate three-factor sensorimotor learning, frozen/random gateway controls and disjoint holdout.
+- [ ] Execute sensor-compensation, homeostasis, efference-copy and morphology-transfer studies after adapter review.
+- [ ] Extend Wesen with separately labelled live/replay/reference modes, causal intervention links and File Viewer inspection.
+- [ ] Run prospectively reviewed multi-seed confirmatory experiments and independent replication; no automatic EVID promotion.
+
+[Architecture and execution](../02-architecture/CONNECTOME_EMBODIMENT.md) and
+[scientific supplement](../../research/publications/2026-09-09_connectome-embodiment_supplement/README.md).

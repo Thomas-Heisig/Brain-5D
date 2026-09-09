@@ -153,3 +153,18 @@ A scientific milestone is complete only when all applicable requirements are sat
 **Source-freeze verification:** pending the exact final branch/main gate run; this is verification, not implementation backlog.  
 **Release-record publication:** intentionally deferred until that verified source freeze is green.  
 **Scientific roadmap:** active and intentionally not represented as completed work.
+
+## Connectome-informed embodiment integration (2026-09-09)
+
+- [x] Add canonical questions/hypotheses/source provenance without duplicate RQ-EMB-001, RQ-REG-002 or RQ-MSBA-E05.
+- [x] Register six native exploratory joint/SNN screens and six explicitly blocked advanced designs.
+- [x] Add bounded reference import, topology controls, body-state sidecars and design/evidence gates.
+- [x] Add source-bytecode consistency, uncertainty-aware Wesen telemetry and a scientific supplement.
+- [ ] Obtain and independently validate a pinned licensed biological subset; implement exact source-model replication.
+- [ ] Validate three-factor sensorimotor learning, frozen/random gateway controls and disjoint holdout.
+- [ ] Execute sensor-compensation, homeostasis, efference-copy and morphology-transfer studies after adapter review.
+- [ ] Extend Wesen with separately labelled live/replay/reference modes, causal intervention links and File Viewer inspection.
+- [ ] Run prospectively reviewed multi-seed confirmatory experiments and independent replication; no automatic EVID promotion.
+
+[Architecture and execution](../02-architecture/CONNECTOME_EMBODIMENT.md) and
+[scientific supplement](../../research/publications/2026-09-09_connectome-embodiment_supplement/README.md).

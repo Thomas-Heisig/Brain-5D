@@ -4489,7 +4489,9 @@ def serve_dashboard(
 
         print(f"✅ Dashboard server ready: bind={host}:{port}")
         print(f"   Local URL: http://127.0.0.1:{port}")
-        if host in {"0.0.0.0", "::"}:
+        # This comparison only controls the LAN URL printed below; it does not
+        # open a listener or change the user-selected bind address.
+        if host in {"0.0.0.0", "::"}:  # nosec B104
             lan_address: str | None = None
             try:
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:

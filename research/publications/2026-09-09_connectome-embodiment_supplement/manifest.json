@@ -1,0 +1,14 @@
+{
+  "id": "SUP-CONNECTOME-EMBODIMENT-20260909",
+  "parent_edition": "Recursive Epistemics 1.3",
+  "date": "2026-09-09",
+  "ai_generated": true,
+  "human_review": "not_recorded",
+  "authority": "interpretation_and_design_only",
+  "automatic_evidence_promotion": false,
+  "historical_editions_modified": false,
+  "sha256": {
+    "README.md": "50f7e3d8b959e4e3a321c000e9afdd34bdc9d1d868d310e3d568506a0e3091e7",
+    "references.bib": "d9a76e2f3f8191570c57b8533644367c143425c76d8cff3731f5b32c76f6dfe6"
+  }
+}

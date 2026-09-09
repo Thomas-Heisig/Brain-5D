@@ -34,6 +34,12 @@ EXPECTED = {
     "RQ-MSBA-E03": ("H-MSBA-E03-A", "msba_visual_roi_v1", 3),
     "RQ-MSBA-E04": ("H-MSBA-E04-A", "msba_digital_integrity_v1", 3),
     "RQ-MSBA-E05": ("H-MSBA-E05-A", "msba_modality_compensation_v1", 3),
+    "RQ-EMB-001": ("H-EMB-001-B", "embodied_closed_loop_v1", 3),
+    "RQ-EMB-002": ("H-EMB-002-A", "embodied_proprioception_v1", 3),
+    "RQ-EMB-004": ("H-EMB-004-A", "embodied_perturbation_screen_v1", 3),
+    "RQ-CONN-002": ("H-CONN-002-A", "connectome_topology_screen_v1", 3),
+    "RQ-EMB-009": ("H-EMB-009-A", "embodied_controller_attribution_v1", 3),
+    "RQ-TIME-002": ("H-TIME-002-A", "embodied_timing_v1", 3),
 }
 
 
@@ -77,7 +83,12 @@ def test_every_operational_protocol_has_a_valid_frozen_preregistration() -> None
             protocol_id=protocol_id,
             seed_count=minimum_seeds,
         )
-        assert prereg["freeze"]["status"] == "FROZEN"
+        if protocol_id.startswith(("embodied_", "connectome_")):
+            assert prereg["freeze"]["status"] == "REGISTERED"
+            assert prereg["mode"] == "EXPLORATORY"
+            assert prereg["freeze"]["human_review"] == "not_recorded"
+        else:
+            assert prereg["freeze"]["status"] == "FROZEN"
         assert prereg["freeze"]["immutable_after_first_run"] is True
         assert prereg["freeze"]["human_review_required"] is True
 

@@ -281,7 +281,7 @@ class PreregistrationGuard:
         preregistration: Mapping[str, Any] | None,
         *,
         condition: GatewayCondition,
-        seed: int,
+        seed: object,
         experiment_mode: bool,
     ) -> None:
         if not experiment_mode:
@@ -296,6 +296,7 @@ class PreregistrationGuard:
         freeze = preregistration.get("freeze")
         if not isinstance(freeze, Mapping):
             raise GatewayGuardError("preregistration freeze block is invalid")
+        freeze = cast(Mapping[str, Any], freeze)
         if freeze.get("status") not in {"REGISTERED", "FROZEN", "AMENDED"}:
             raise GatewayGuardError("preregistration is not frozen/registered")
         if freeze.get("immutable_after_first_run") is not True:
@@ -306,8 +307,12 @@ class PreregistrationGuard:
         if not isinstance(conditions, Sequence) or isinstance(conditions, (str, bytes)):
             raise GatewayGuardError("preregistration conditions must be a list")
         labels = {
-            str(item.get("id")) if isinstance(item, Mapping) else str(item)
-            for item in conditions
+            (
+                str(cast(Mapping[str, Any], item).get("id"))
+                if isinstance(item, Mapping)
+                else str(item)
+            )
+            for item in cast(Sequence[Any], conditions)
         }
         required = {item.value for item in GatewayCondition}
         if not required.issubset(labels):
@@ -317,7 +322,9 @@ class PreregistrationGuard:
         seed_strategy = preregistration.get("seed_strategy")
         if not isinstance(seed_strategy, Mapping):
             raise GatewayGuardError("seed_strategy must be an object")
-        minimum = seed_strategy.get("minimum_independent_seeds")
+        minimum = cast(Mapping[str, Any], seed_strategy).get(
+            "minimum_independent_seeds"
+        )
         if isinstance(minimum, bool) or not isinstance(minimum, int) or minimum < 1:
             raise GatewayGuardError(
                 "seed_strategy.minimum_independent_seeds is invalid"
@@ -384,7 +391,7 @@ class GatewayRuntime:
             payload = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(payload, Mapping):
                 raise GatewayRuntimeError("gateway checkpoint root must be an object")
-            runtime.restore(payload)
+            runtime.restore(cast(Mapping[str, Any], payload))
         return runtime
 
     @property
@@ -651,6 +658,7 @@ class GatewayRuntime:
         topology_value = checkpoint.get("topology")
         if not isinstance(topology_value, Mapping):
             raise GatewayRuntimeError("checkpoint topology is missing")
+        topology_value = cast(Mapping[str, Any], topology_value)
         edges_value = topology_value.get("edge_records", [])
         if not isinstance(edges_value, Sequence):
             raise GatewayRuntimeError("checkpoint edge records are invalid")
@@ -661,8 +669,11 @@ class GatewayRuntime:
                 float(edge["weight"]),
                 float(edge["delay_ms"]),
             )
-            for edge in edges_value
-            if isinstance(edge, Mapping)
+            for edge in (
+                cast(Mapping[str, Any], value)
+                for value in cast(Sequence[Any], edges_value)
+                if isinstance(value, Mapping)
+            )
         )
         self.topology = GatewayTopology(
             gateway_id=str(topology_value["gateway_id"]),
@@ -700,20 +711,24 @@ class GatewayRuntime:
         if isinstance(metrics_value, Mapping):
             self._metrics = {
                 str(key): cast(float | int, value)
-                for key, value in metrics_value.items()
+                for key, value in cast(Mapping[str, Any], metrics_value).items()
             }
         self._weight_delta_window.clear()
         weight_window = checkpoint.get("weight_delta_window", [])
         if isinstance(weight_window, Sequence):
-            self._weight_delta_window.extend(float(value) for value in weight_window)
+            self._weight_delta_window.extend(
+                float(value) for value in cast(Sequence[Any], weight_window)
+            )
         self._structural_window.clear()
         structural_window = checkpoint.get("structural_window", [])
         if isinstance(structural_window, Sequence):
-            self._structural_window.extend(int(value) for value in structural_window)
+            self._structural_window.extend(
+                int(value) for value in cast(Sequence[Any], structural_window)
+            )
         journal_value = checkpoint.get("journal", [])
         self._journal.clear()
         if isinstance(journal_value, Sequence):
-            for event in journal_value:
+            for event in cast(Sequence[Any], journal_value):
                 if isinstance(event, Mapping):
                     self._journal.append(
                         GatewayJournalEvent(**cast(dict[str, Any], event))

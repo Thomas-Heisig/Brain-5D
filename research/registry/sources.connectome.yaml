@@ -1,0 +1,217 @@
+- source_id: SRC-CONN-DORKENWALD-2024
+  authors:
+  - Dorkenwald, S. and others
+  title: Neuronal wiring diagram of an adult brain
+  year: 2024
+  journal: Nature
+  doi: 10.1038/s41586-024-07558-y
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions:
+  - RQ-CONN-001
+  - RQ-CONN-002
+  brain5d_relevance: 'An anatomical adult female brain connectome; not a functional brain upload. Source:
+    https://www.nature.com/articles/s41586-024-07558-y'
+  source_type: peer_reviewed
+  url: https://www.nature.com/articles/s41586-024-07558-y
+  publication_date: '2024-10-02'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: An anatomical adult female brain connectome; not a functional brain upload.
+- source_id: SRC-CONN-SHIU-2024
+  authors:
+  - Shiu, P. K. and others
+  title: A Drosophila computational brain model reveals sensorimotor processing
+  year: 2024
+  journal: Nature
+  doi: 10.1038/s41586-024-07763-9
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions:
+  - RQ-EMB-001
+  - RQ-EMB-002
+  - RQ-EMB-003
+  - RQ-EMB-004
+  - RQ-MSBA-E05
+  - RQ-REG-002
+  - RQ-EMB-007
+  - RQ-EMB-008
+  - RQ-CONN-001
+  - RQ-CONN-002
+  - RQ-EMB-009
+  - RQ-TIME-002
+  brain5d_relevance: 'LIF simulation with connectivity and inferred transmitter signs; tested feeding/grooming
+    predictions. Limited neuron/synapse dynamics and no complete behavioral equivalence. Source: https://www.nature.com/articles/s41586-024-07763-9'
+  source_type: peer_reviewed
+  url: https://www.nature.com/articles/s41586-024-07763-9
+  publication_date: '2024-10-02'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: LIF simulation with connectivity and inferred transmitter signs; tested feeding/grooming
+    predictions. Limited neuron/synapse dynamics and no complete behavioral equivalence.
+- source_id: SRC-CONN-WANGCHEN-2024
+  authors:
+  - Wang-Chen, S. and others
+  title: 'NeuroMechFly v2: simulating embodied sensorimotor control in adult Drosophila'
+  year: 2024
+  journal: Nature Methods
+  doi: 10.1038/s41592-024-02497-y
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions:
+  - RQ-EMB-001
+  - RQ-EMB-002
+  - RQ-EMB-003
+  - RQ-EMB-004
+  - RQ-MSBA-E05
+  - RQ-REG-002
+  - RQ-EMB-007
+  - RQ-EMB-008
+  - RQ-CONN-001
+  - RQ-CONN-002
+  - RQ-EMB-009
+  - RQ-TIME-002
+  brain5d_relevance: 'Neuromechanical body, sensors and explicit controllers. Controller performance is
+    not automatically connectome performance. Source: https://www.nature.com/articles/s41592-024-02497-y'
+  source_type: peer_reviewed
+  url: https://www.nature.com/articles/s41592-024-02497-y
+  publication_date: '2024-11-12'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: Neuromechanical body, sensors and explicit controllers. Controller performance is not automatically
+    connectome performance.
+- source_id: SRC-CONN-LAPPALAINEN-2024
+  authors:
+  - Lappalainen, J. K. and others
+  title: Connectome-constrained networks predict neural activity across the fly visual system
+  year: 2024
+  journal: Nature
+  doi: 10.1038/s41586-024-07939-3
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions: []
+  brain5d_relevance: 'Connectivity plus task constraints for visual-system models; not topology alone
+    or human anatomical homology. Source: https://www.nature.com/articles/s41586-024-07939-3'
+  source_type: peer_reviewed
+  url: https://www.nature.com/articles/s41586-024-07939-3
+  publication_date: '2024-09-11'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: Connectivity plus task constraints for visual-system models; not topology alone or human
+    anatomical homology.
+- source_id: SRC-CONN-VAXENBURG-2025
+  authors:
+  - Vaxenburg, R. and others
+  title: Whole-body physics simulation of fruit fly locomotion
+  year: 2025
+  journal: Nature
+  doi: 10.1038/s41586-025-09029-4
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions: []
+  brain5d_relevance: 'Whole-body locomotion with learned controllers; distinct from the body actually
+    used by Eon. Source: https://www.nature.com/articles/s41586-025-09029-4'
+  source_type: peer_reviewed
+  url: https://www.nature.com/articles/s41586-025-09029-4
+  publication_date: '2025-04-23'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: Whole-body locomotion with learned controllers; distinct from the body actually used by
+    Eon.
+- source_id: SRC-CONN-BERG-2026
+  authors:
+  - Berg, S. and others
+  title: Sexual dimorphism in the complete Drosophila male central nervous system connectome
+  year: 2026
+  journal: Cell
+  doi: 10.1016/j.cell.2026.08.015
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions:
+  - RQ-CONN-001
+  - RQ-CONN-002
+  brain5d_relevance: 'Male brain and nerve cord; published summary counts 166700 neurons. Version-specific
+    anatomy, not a complete functional simulation. Source: https://www.sciencedirect.com/science/article/pii/S0092867426009426'
+  source_type: peer_reviewed
+  url: https://www.sciencedirect.com/science/article/pii/S0092867426009426
+  publication_date: '2026-09-03'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: Male brain and nerve cord; published summary counts 166700 neurons. Version-specific anatomy,
+    not a complete functional simulation.
+- source_id: SRC-CONN-EON-2026
+  authors:
+  - Eon Systems research team
+  title: How the Eon Team Produced a Virtual Embodied Fly
+  year: 2026
+  journal: null
+  doi: null
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions:
+  - RQ-EMB-001
+  - RQ-EMB-002
+  - RQ-EMB-003
+  - RQ-EMB-004
+  - RQ-MSBA-E05
+  - RQ-REG-002
+  - RQ-EMB-007
+  - RQ-EMB-008
+  - RQ-CONN-001
+  - RQ-CONN-002
+  - RQ-EMB-009
+  - RQ-TIME-002
+  brain5d_relevance: 'Integration demonstration: LIF brain, NeuroMechFly, imitation-trained controllers,
+    manual mappings, 15 ms coupling; learning/internal states largely absent. Visual activity not yet
+    a substantial behavioral driver in this report. Source: https://eon.systems/updates/embodied-brain-emulation'
+  source_type: company_technical_report
+  url: https://eon.systems/updates/embodied-brain-emulation
+  publication_date: '2026-03-10'
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: 'Integration demonstration: LIF brain, NeuroMechFly, imitation-trained controllers, manual
+    mappings, 15 ms coupling; learning/internal states largely absent. Visual activity not yet a substantial
+    behavioral driver in this report.'
+- source_id: SRC-CONN-MALECNS-RELEASES
+  authors:
+  - HHMI Janelia FlyEM
+  title: 'Male CNS Connectome: data and release history'
+  year: 2026
+  journal: null
+  doi: null
+  topic:
+  - connectomics
+  - embodiment
+  - methodology
+  claims: []
+  brain5d_questions: []
+  brain5d_relevance: 'v0.9 released 2025-10-03; v1.0 released 2026-06-08; CC-BY. Release date is distinct
+    from Cell publication date. Source: https://www.janelia.org/project-team/flyem/male-cns-connectome'
+  source_type: official_dataset_documentation
+  url: https://www.janelia.org/project-team/flyem/male-cns-connectome
+  publication_date: null
+  verified_on: '2026-09-09'
+  verification_scope: metadata and cited accessible primary-source content; no independent replication
+  limitations: v0.9 released 2025-10-03; v1.0 released 2026-06-08; CC-BY. Release date is distinct from
+    Cell publication date.

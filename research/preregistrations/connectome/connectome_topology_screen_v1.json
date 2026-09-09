@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "PREREG-CONNECTOME_TOPOLOGY_SCREEN_V1",
+  "research_question": "RQ-CONN-002",
+  "hypothesis": "H-CONN-002-A",
+  "protocol_id": "connectome_topology_screen_v1",
+  "mode": "EXPLORATORY",
+  "status": "REGISTERED_EXPLORATORY",
+  "primary_outcomes": [
+    "tracking_rmse_rad"
+  ],
+  "conditions": [
+    "structured",
+    "degree_preserving",
+    "weight_shuffle",
+    "random_edges"
+  ],
+  "seed_strategy": {
+    "minimum_independent_seeds": 3,
+    "confirmatory_minimum_seeds": 20,
+    "rule": "paired seeds across arms; seed is the inferential unit, not ticks or neurons; confirmatory N requires prospective power/precision review"
+  },
+  "stopping_rule": "Fixed requested tick window (60..10000) for native screens; no outcome-dependent stopping. Abort and retain failures on nonfinite state or safety contract violation.",
+  "inclusion_criteria": [
+    "all requested seeds and arms, including failures",
+    "all provenance, timing and parameter records present"
+  ],
+  "exclusion_criteria": [
+    "invalid configuration or corrupted artifacts; retain in audit log, never silently replace seeds"
+  ],
+  "analysis_plan": {
+    "unit": "independent seed",
+    "primary_comparison": "structured versus each declared control",
+    "estimand": "within-seed difference in primary outcome; report all arms and negative results",
+    "uncertainty": "exploratory paired effect distribution; no p-value from 3 smoke seeds",
+    "confirmatory": "freeze seed count, effect threshold, multiplicity correction (Holm) and holdout before first confirmatory run",
+    "automatic_evidence_promotion": false
+  },
+  "freeze": {
+    "status": "REGISTERED",
+    "immutable_after_first_run": true,
+    "human_review_required": true,
+    "human_review": "not_recorded"
+  },
+  "independent_seed_plan": [
+    101,
+    102,
+    103
+  ],
+  "authority": "experiment_design_not_evidence",
+  "interpretation_limit": "Native screen uses a SYNTHETIC six-neuron fixture, not fly data. Biological motif transfer and 3D/4D/5D superiority require separate matched experiments linked to RQ-5D-005.",
+  "raw_data_path": "DATA/runs-*.json.gz via existing runner",
+  "compact_ai_projection_path": "analysis/ai_packet.json",
+  "production_activation": false
+}

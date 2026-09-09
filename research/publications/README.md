@@ -28,3 +28,7 @@ python scripts/publication_revision.py
 python scripts/publication_cognition.py
 python scripts/publication_naming.py
 ```
+
+## Forschungszusatz vom 9. September 2026
+
+[Connectomics, Koerperkreislauf und kontrollierte MHRN-Versuche](2026-09-09_connectome-embodiment_supplement/README.md) ergaenzt Edition 1.3, ohne historische Kapitel zu ersetzen. Neun neue Fragen, zwoelf Hypothesen, sechs ausfuehrbare Entwicklungsprotokolle und sechs gesperrte Forschungsentwuerfe. KI-generiert; keine neue akzeptierte EVID und kein aktualisierter Word-Export behauptet.

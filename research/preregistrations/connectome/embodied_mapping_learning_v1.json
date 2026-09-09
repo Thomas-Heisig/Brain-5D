@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "PREREG-EMBODIED_MAPPING_LEARNING_V1",
+  "research_question": "RQ-EMB-003",
+  "hypothesis": "H-EMB-003-A",
+  "protocol_id": "embodied_mapping_learning_v1",
+  "mode": "EXPLORATORY",
+  "status": "DRAFT_NOT_PREREGISTERED",
+  "primary_outcomes": [
+    "holdout_success_fraction"
+  ],
+  "conditions": [
+    "plasticity_on",
+    "frozen_snn",
+    "frozen_gateway",
+    "random_gateway",
+    "shuffled_reward"
+  ],
+  "seed_strategy": {
+    "minimum_independent_seeds": 3,
+    "confirmatory_minimum_seeds": 20,
+    "rule": "paired seeds across arms; seed is the inferential unit, not ticks or neurons; confirmatory N requires prospective power/precision review"
+  },
+  "stopping_rule": "Fixed requested tick window (60..10000) for native screens; no outcome-dependent stopping. Abort and retain failures on nonfinite state or safety contract violation.",
+  "inclusion_criteria": [
+    "all requested seeds and arms, including failures",
+    "all provenance, timing and parameter records present"
+  ],
+  "exclusion_criteria": [
+    "invalid configuration or corrupted artifacts; retain in audit log, never silently replace seeds"
+  ],
+  "analysis_plan": {
+    "unit": "independent seed",
+    "primary_comparison": "plasticity_on versus each declared control",
+    "estimand": "within-seed difference in primary outcome; report all arms and negative results",
+    "uncertainty": "exploratory paired effect distribution; no p-value from 3 smoke seeds",
+    "confirmatory": "freeze seed count, effect threshold, multiplicity correction (Holm) and holdout before first confirmatory run",
+    "automatic_evidence_promotion": false
+  },
+  "freeze": {
+    "status": "DRAFT",
+    "immutable_after_first_run": true,
+    "human_review_required": true,
+    "human_review": "not_recorded"
+  },
+  "independent_seed_plan": [
+    101,
+    102,
+    103
+  ],
+  "authority": "experiment_design_not_evidence",
+  "interpretation_limit": "Requires native eligibility/reward integration, separate training/holdout and validated gateway-state persistence.",
+  "raw_data_path": "DATA/runs-*.json.gz via existing runner",
+  "compact_ai_projection_path": "analysis/ai_packet.json",
+  "production_activation": false
+}

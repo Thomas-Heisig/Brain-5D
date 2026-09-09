@@ -13,11 +13,19 @@ const anatomy = {
   population: null,
   timer: null,
   controller: null,
+  availability: {},
+  requestGeneration: 0,
 };
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const finite = (v) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
+const finite = (v) => {
+  if (v === null || v === undefined || typeof v === "boolean" ||
+      (typeof v === "string" && v.trim() === "") ||
+      !["number", "string"].includes(typeof v)) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+};
 const clamp = (v, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, v));
 const safe = (v) => v === undefined || v === null || v === "" ? "—" : String(v);
 
@@ -158,7 +166,11 @@ function ensureEmpiricalPanel() {
   section.id = "wesen-empirical-card";
   section.className = "wesen-card wesen-empirical-card";
   section.innerHTML = `
-    <header><span>EMPIRISCHE DATEN</span><small>LIVE_RUNTIME</small></header>
+    <header><span>EMPIRISCHE DATEN</span><small id="wesen-data-availability">NO_DATA</small></header>
+    <p class="wesen-data-legend">Funktionales Neuro-Abbild, keine menschliche Neuroanatomie.
+      Struktur zeigt Verbindungen; Aktivität nur Messwerte. Plastizität und kausaler
+      Einfluss benötigen eigene Nachweise. Kein EEG/fMRT.</p>
+    <small id="wesen-data-sources" aria-live="polite"></small>
     <div id="wesen-empirical-grid" class="wesen-empirical-grid"></div>
     <div id="wesen-pipeline-body" class="wesen-pipeline-body" aria-label="Embodiment pipeline"></div>`;
   sidebar.prepend(section);
@@ -198,6 +210,12 @@ function renderEmpirical() {
     const style = ratio === null ? "" : ` style="--empirical-fill:${(ratio * 100).toFixed(1)}%"`;
     return `<div class="wesen-empirical-row"${style}><span>${label}</span><strong>${formatMetric(value, mode)}</strong><i></i></div>`;
   }).join("");
+  const entries = Object.entries(anatomy.availability);
+  const available = entries.filter(([, state]) => state.status === "observed").length;
+  const badge = $("#wesen-data-availability");
+  if (badge) badge.textContent = available === 0 ? "NO_DATA" : available === entries.length ? "LIVE_RUNTIME" : "PARTIAL_DATA";
+  const sources = $("#wesen-data-sources");
+  if (sources) sources.textContent = entries.map(([name, state]) => `${name}: ${state.status}`).join(" | ");
   renderPipeline();
   applyEmpiricalBodyState();
 }
@@ -213,10 +231,10 @@ function renderPipeline() {
   const p = pipelineObject();
   const stages = ["sensor", "encoder", "snn", "decoder", "actuator", "feedback"];
   root.innerHTML = stages.map((name) => {
-    const raw = firstValue(p, [name, `${name}.enabled`, `${name}.status`]);
-    const active = raw === true || /active|ready|enabled|ok|connected/i.test(String(raw));
+    const raw = firstValue(p, [`${name}.status`, `${name}.enabled`, name]);
+    const active = raw === true || /^(active|ready|enabled|ok|connected)$/i.test(String(raw));
     const unknown = raw === null;
-    return `<span class="${active ? "active" : unknown ? "unknown" : "inactive"}" title="${name}: ${safe(raw)}">${name === "sensor" ? "◉" : name === "encoder" ? "◇" : name === "snn" ? "◆" : name === "decoder" ? "◈" : name === "actuator" ? "▷" : "↻"}</span>`;
+    return `<span class="${active ? "active" : unknown ? "unknown" : "inactive"}" title="${name}: ${String(safe(raw)).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}">${name === "sensor" ? "◉" : name === "encoder" ? "◇" : name === "snn" ? "◆" : name === "decoder" ? "◈" : name === "actuator" ? "▷" : "↻"}</span>`;
   }).join('<b aria-hidden="true">→</b>');
 }
 
@@ -227,14 +245,20 @@ function applyEmpiricalBodyState() {
   const integrity = normalizePercent(firstNumber(m, ["sensory_integrity", "metrics.sensory_integrity", "functional.sensory_integrity"]));
   const continuity = normalizePercent(firstNumber(m, ["continuity_risk", "metrics.continuity_risk", "regulation.continuity_risk"]));
   if (pressure !== null) workspace.style.setProperty("--wesen-pressure", String(pressure));
+  else workspace.style.removeProperty("--wesen-pressure");
   if (integrity !== null) workspace.style.setProperty("--wesen-integrity", String(integrity));
+  else workspace.style.removeProperty("--wesen-integrity");
   if (continuity !== null) workspace.style.setProperty("--wesen-continuity", String(continuity));
+  else workspace.style.removeProperty("--wesen-continuity");
 }
 
 async function pollEmpirical() {
   anatomy.controller?.abort();
   anatomy.controller = new AbortController();
   const signal = anatomy.controller.signal;
+  const generation = ++anatomy.requestGeneration;
+  const requestController = anatomy.controller;
+  const deadline = setTimeout(() => requestController.abort(), 5000);
   const calls = [
     ["metrics", "/api/embodiment/metrics"],
     ["history", "/api/embodiment/history?limit=24"],
@@ -243,8 +267,15 @@ async function pollEmpirical() {
     ["population", "/api/live/population"],
   ];
   const results = await Promise.allSettled(calls.map(([, url]) => readJson(url, signal)));
+  clearTimeout(deadline);
+  if (generation !== anatomy.requestGeneration) return;
   results.forEach((result, index) => {
-    if (result.status === "fulfilled") anatomy[calls[index][0]] = result.value;
+    const name = calls[index][0];
+    anatomy[name] = result.status === "fulfilled" ? result.value : null;
+    anatomy.availability[name] = {
+      status: result.status === "fulfilled" ? "observed" : "unavailable",
+      receivedAt: result.status === "fulfilled" ? Date.now() : null,
+    };
   });
   renderEmpirical();
   positionNodes();

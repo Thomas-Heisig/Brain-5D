@@ -59,7 +59,7 @@
   question: Erhoeht das System nach Ausfall oder Degradation einer Modalitaet gezielt die Allokation einer anderen Modalitaet, wenn deren erwarteter Nutzen die Mehrkosten rechtfertigt?
   relevance: Prueft adaptive Kompensation unter kontrolliertem Modalitaetsausfall und gleichen Ressourcenbudgets.
   literature: []
-  hypotheses: [H-MSBA-E05-A]
+  hypotheses: [H-MSBA-E05-A, H-MSBA-E05-B]
   evidence: []
   status: open
   answer:

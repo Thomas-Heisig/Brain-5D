@@ -86,5 +86,15 @@
       "current": false
     }
   ],
-  "current_publication": "PUB-RECURSIVE-EPISTEMICS-20260908"
+  "current_publication": "PUB-RECURSIVE-EPISTEMICS-20260908",
+  "supplements": [
+    {
+      "id": "SUP-CONNECTOME-EMBODIMENT-20260909",
+      "title": "Connectomics und geschlossene sensorimotorische Forschung in MHRN",
+      "entrypoint": "publications/2026-09-09_connectome-embodiment_supplement/README.md",
+      "manifest": "publications/2026-09-09_connectome-embodiment_supplement/manifest.json",
+      "authority": "interpretation_and_design_only",
+      "automatic_evidence_promotion": false
+    }
+  ]
 }

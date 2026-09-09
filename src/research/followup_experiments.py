@@ -613,3 +613,57 @@ def run_msba_e05(
         protocol_id="msba_modality_compensation_v1",
         runner_name="run_msba_e05",
     )
+
+
+def run_embodied_closed_loop(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("embodied_closed_loop_v1", config, seeds, ticks)
+
+
+def run_embodied_proprioception(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("embodied_proprioception_v1", config, seeds, ticks)
+
+
+def run_embodied_perturbation(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("embodied_perturbation_screen_v1", config, seeds, ticks)
+
+
+def run_connectome_topology(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("connectome_topology_screen_v1", config, seeds, ticks)
+
+
+def run_embodied_controller(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("embodied_controller_attribution_v1", config, seeds, ticks)
+
+
+def run_embodied_timing(
+    config: Config, seeds: tuple[int, ...] = (101, 102, 103), ticks: int = 600
+) -> list[ScientificRun]:
+    """Run a registered exploratory SNN/body screen, never promote evidence."""
+    from src.research.connectome_embodiment import run_protocol
+
+    return run_protocol("embodied_timing_v1", config, seeds, ticks)

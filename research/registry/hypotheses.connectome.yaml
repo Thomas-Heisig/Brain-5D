@@ -1,0 +1,96 @@
+- id: H-EMB-001-B
+  research_question: RQ-EMB-001
+  hypothesis: Unter einer identischen externen Stoerung unterscheiden sich tracking_rmse_rad und Sensorkonsequenzen
+    zwischen geschlossenem Kreis, yoked Replay und unterbrochener Rueckmeldung.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-002-A
+  research_question: RQ-EMB-002
+  hypothesis: Die mittlere quadratische Zielabweichung ist bei intakter Propriozeption niedriger als bei
+    fehlender oder um 20 Ticks verzoegerter Propriozeption.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-003-A
+  research_question: RQ-EMB-003
+  hypothesis: Nach einem unbekannten Aktuatortausch verbessert aktivierte Dreifaktor-Plastizitaet den
+    Holdout-Erfolg gegenueber frozen, random-gateway und shuffled-reward Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-004-A
+  research_question: RQ-EMB-004
+  hypothesis: Gelenkblockade und Aktuatorschwaechung erzeugen reproduzierbare Unterschiede in Position,
+    Kontakt und sensorischer Aktivitaet gegenueber nominalem Betrieb.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-MSBA-E05-B
+  research_question: RQ-MSBA-E05
+  hypothesis: Bei Sensorverlust verbessert adaptive Kompensation den Holdout-Aufgabenerfolg gegenueber
+    fixer, vertauschter und deaktivierter Kompensation unter gleichem Budget.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-REG-002-B
+  research_question: RQ-REG-002
+  hypothesis: Koerperbasierte Neuromodulation reduziert Integritaetsverletzungen gegenueber frozen und
+    shuffled Modulation ohne externen Aufgabenscore als Lernsignal.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-007-A
+  research_question: RQ-EMB-007
+  hypothesis: Ein trainierter Praediktor mit Aktionskopie erzielt geringeren Holdout-Fehler als no-copy,
+    shuffled-copy und zeitverschobene-copy Kontrollen.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-008-A
+  research_question: RQ-EMB-008
+  hypothesis: Weiterlernen reduziert die Recovery-Zeit nach ungesehener Aenderung von Traegheit, Gelenklaenge
+    oder Aktuatorstaerke gegenueber eingefrorenem Netzwerk bei gleichem Budget.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-CONN-001-A
+  research_question: RQ-CONN-001
+  hypothesis: Ein eingefrorener, parametergleicher LIF-Referenzpfad erreicht die vorab deklarierte Uebereinstimmung
+    mit unabhaengigen Feeding/Grooming-Referenzresultaten.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-CONN-002-A
+  research_question: RQ-CONN-002
+  hypothesis: Gezieltes Umverdrahten oder Gewichtsvertauschen veraendert den sensorimotorischen Outcome
+    gegenueber derselben synthetischen Ausgangstopologie bei gleichem Knoten-, Kanten- und Tickbudget.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-EMB-009-A
+  research_question: RQ-EMB-009
+  hypothesis: Die SNN-abgetrennte Bedingung aendert die Zielabweichung gegenueber SNN-Regelung; ein expliziter
+    PD-Controller wird als separate Leistungsquelle ausgewiesen.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'
+- id: H-TIME-002-A
+  research_question: RQ-TIME-002
+  hypothesis: Bei fixem neuralem dt=1 ms bleiben kanonische Endzustaende fuer Batchgroessen 1,16,128 identisch;
+    geaenderte Sensor-/Physikraten koennen den Outcome veraendern.
+  status: untested
+  evidence: []
+  created: '2026-09-09'
+  updated: '2026-09-09'

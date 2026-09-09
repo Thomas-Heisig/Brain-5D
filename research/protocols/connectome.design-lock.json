@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "created": "2026-09-09",
+  "stage": "DEVELOPMENT_DESIGNS_NOT_CONFIRMATORY",
+  "human_review": "not_recorded",
+  "prior_activity": "Developer smoke tests occurred during implementation; this is not a retrospective confirmatory preregistration.",
+  "rule": "After first versioned run, change designs through a new version, never reinterpret historical runs.",
+  "sha256": {
+    "preregistrations/connectome/connectome_reference_replication_v1.json": "a34df5b913f501b76b165543d8cc0736ce800e1eb135343aef8dc9b1c1960774",
+    "preregistrations/connectome/connectome_topology_screen_v1.json": "eba9705dc5e51771db42c338f1bb9a729404b8c5bbd0349ca0431940cdda7074",
+    "preregistrations/connectome/embodied_closed_loop_v1.json": "6d720a0a9cee725ac0896735054fafb625c19d98ab4821490c0865eaa4f88639",
+    "preregistrations/connectome/embodied_controller_attribution_v1.json": "0ad8f653fc763a8793c489cfe75b08c5d239c9209b2eb23c16f4527f3b04d12a",
+    "preregistrations/connectome/embodied_efference_copy_v1.json": "c5cf41ce215876dce0cd6de7e2b5586ce1c189c428c52e49681c8d0f948c6902",
+    "preregistrations/connectome/embodied_homeostasis_v1.json": "4c5c486f78e581556f87eb34f580058c353ac7afcc414993a912cbabe0d83cae",
+    "preregistrations/connectome/embodied_mapping_learning_v1.json": "947afd5cb222e56fade2cf52f6e25c05b9ca1faaf99f79ac8b8c52f37a3dada3",
+    "preregistrations/connectome/embodied_morphology_transfer_v1.json": "9fcafa10d10a6d16066cecf599bfec6842c434529c745de89128ae9212118694",
+    "preregistrations/connectome/embodied_perturbation_screen_v1.json": "9de96b3bf305477dffeb9421bf7b6a985f810f5c0038a43228ecfebd76694955",
+    "preregistrations/connectome/embodied_proprioception_v1.json": "be4ce4d116c7ba60335ad3e14ae04b6de091b8c2e3505f905dbad4eb4bf479ea",
+    "preregistrations/connectome/embodied_sensor_compensation_v1.json": "092ed1bf14fdb6a626bfaac0e1e8113721e8183f5fea1bd43ca70261c7aa7812",
+    "preregistrations/connectome/embodied_timing_v1.json": "1844b214e647d291c1a9940941e9a56efb5e8416f8aeb1f72b0efd88896b4d7c",
+    "protocols/CONNECTOME_EMBODIMENT_V1.json": "36474891a5a41c2059f02e2911764be89b6d8143b81b01da6c06c307cba04a7c",
+    "protocols/connectome.operational.json": "8437ddb5d2ebdac42d09803ad30b98ac5d1d97ccc993612128e946722df9a644"
+  }
+}

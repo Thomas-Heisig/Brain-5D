@@ -437,6 +437,7 @@
     System.
   literature: []
   hypotheses:
+  - H-EMB-001-B
   - H-EMB-001-A
   evidence: []
   status: open
@@ -606,6 +607,7 @@
   relevance: EXP-GEN-0021 validierte Regulationszustände, aber noch keinen funktionalen Closed-loop-Nutzen.
   literature: []
   hypotheses:
+  - H-REG-002-B
   - H-REG-002-A
   evidence: []
   status: open
