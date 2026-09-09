@@ -6,8 +6,8 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 **Canonical TODO for `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-08  
-**Current release-blocking backlog:** **0**
+**Updated:** 2026-09-09  
+**Current release-blocking backlog:** **1 publication step after green source-freeze CI**
 
 This file contains **active release-blocking work only**. Long-horizon engineering and scientific work is tracked in [ROADMAP.md](ROADMAP.md) and in the versioned research programme. Moving an item out of this file does **not** claim that the future research has already been performed.
 
@@ -53,24 +53,31 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 
 ## Current development milestone — v0.6 Scaling & Deterministic Performance
 
-The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the development line; the following checklist remains open and does not claim that v0.6 research or engineering is complete.
+The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the development line. The engineering acceptance contract is documented in [V06_ACCEPTANCE.md](V06_ACCEPTANCE.md). The final release-record step deliberately remains open until the exact source-freeze CI and release-readiness snapshot are green.
 
-- [ ] Freeze the v0.6 compatibility contract for runtime state, snapshots and resumable runs.
-- [ ] Add reproducible scaling benchmarks across increasing neuron/synapse counts with explicit memory and tick-cost budgets.
-- [ ] Introduce bounded telemetry/storage compaction so long experiment histories never require an AI consumer to ingest unbounded `runs.json` files.
-- [ ] Persist one compact current-run packet plus immutable raw-run indexes with SHA-verified provenance.
-- [ ] Verify deterministic pause/resume/restart identity for the v0.6 runtime contract across supported Python versions.
-- [ ] Add performance regression thresholds for RuntimeController, structural phases, learning, storage and dashboard telemetry.
-- [ ] Make target-Hz pacing and unlimited mode observable with achieved-Hz/realtime-ratio acceptance criteria.
-- [ ] Add clean migration/rollback tests for all v0.6 persisted-state schema changes.
-- [ ] Require full Python 3.11/3.12/3.13, browser, type, lint, security, build and Docker gates before v0.6 release.
-- [ ] Generate the v0.6 release record only after the exact source-freeze CI and release-readiness snapshot are both green.
+- [x] Freeze the v0.6 compatibility contract for runtime state, snapshots and resumable runs. (`src/storage/v06_contract.py`, frozen B5D V1 + journal V1)
+- [x] Add reproducible scaling benchmarks across increasing neuron/synapse counts with explicit memory and tick-cost budgets. (`scripts/benchmark_ladder.py`, `configs/v06_performance_budgets.json`)
+- [x] Introduce bounded telemetry/storage compaction so long experiment histories never require an AI consumer to ingest unbounded `runs.json` files. (`src/research/data_v2.py`, bounded compact projection + compressed raw runs)
+- [x] Persist one compact current-run packet plus immutable raw-run indexes with SHA-verified provenance. (`DATA/current_run.json`, `DATA/runs_index.json`, deterministic detail extraction)
+- [x] Verify deterministic pause/resume/restart identity for the v0.6 runtime contract across supported Python versions. (`tests/test_v06_pause_resume_identity.py`, existing restore/golden-chain tests, CI Python matrix)
+- [x] Add performance regression thresholds for RuntimeController, structural phases, learning, storage and dashboard telemetry. (`src/diagnostics/performance_contract.py`)
+- [x] Make target-Hz pacing and unlimited mode observable with achieved-Hz/realtime-ratio acceptance criteria. (`tests/test_runtime_controller_alpha4.py`, `tests/test_v06_contract.py`)
+- [x] Add clean migration/rollback tests for all v0.6 persisted-state schema changes. v0.6 keeps the frozen binary formats; migration is an explicitly tested byte-identical no-op rather than an untracked rewrite.
+- [x] Require full Python 3.11/3.12/3.13, browser, type, lint, security, build and Docker gates before v0.6 release. (`.github/workflows/ci.yml`; aggregate `ci-status`)
+- [ ] Generate the v0.6 release record only after the exact source-freeze CI and release-readiness snapshot are both green. **Do not close this checkbox before the post-merge source-freeze gate is green.**
+
+## 2026-09-09 Research workspace cleanup
+
+- [x] Replace move-based experiment archiving with a non-destructive metadata-only work-view index; canonical experiment paths remain stable.
+- [x] Preserve one-time restore compatibility for legacy archives that were physically moved by older dashboard versions.
+- [x] Split Research into Planen & Ausführen, Läufe & Reihen, Reviews, and Dateien & Analyse work views.
+- [x] Extend shared panel state controls to Research workspace surfaces so working areas can be minimized, restored and maximized.
+- [x] Keep Review/AIRR handling separate from automatic EVID promotion.
 
 ## Future work is roadmap work, not an open release blocker
 
 The following programmes remain intentionally **future research/engineering**, and are therefore maintained in [ROADMAP.md](ROADMAP.md) rather than as release-blocking TODO checkboxes:
 
-- v0.6 scaling, bounded storage/telemetry, deterministic performance and resume;
 - v0.7 knowledge/learning experiments, interference, retention, transfer and retrieval;
 - v0.8 Embodiment / Neural Symbiosis / MSBA validation and governed peripheral adapters;
 - v0.9 bounded memory, world model and operational self-model experiments;
@@ -102,6 +109,6 @@ A scientific milestone is complete only when all applicable requirements are sat
 
 ## Current status
 
-**Engineering/release TODO: CLEAN.**  
-**Scientific Integrity Gate: GREEN on the reviewed main lineage.**  
-**Scientific roadmap: active and intentionally not represented as completed work.**
+**Engineering implementation TODO:** complete pending source-freeze CI verification.  
+**Release-record TODO:** intentionally open until the exact verified source freeze is green.  
+**Scientific roadmap:** active and intentionally not represented as completed work.
