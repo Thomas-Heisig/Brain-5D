@@ -120,10 +120,6 @@ class ResearchSource:
     def __init__(self, research_root: Path) -> None:
         self._root = research_root.resolve()
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
-
     def is_available(self) -> bool:
         """Return True when the research root exists and is a directory."""
         return self._root.is_dir()
@@ -135,7 +131,6 @@ class ResearchSource:
         """List all research artifacts grouped by category."""
         if not self.is_available():
             return []
-
         documents: list[ResearchDocument] = []
         for category in self._CATEGORIES:
             directory = self._root / category
@@ -178,7 +173,6 @@ class ResearchSource:
         }
         if not self.is_available():
             return summary
-
         counts: dict[str, JSONValue] = {}
         for category in self._CATEGORIES:
             directory = self._root / category
@@ -196,7 +190,6 @@ class ResearchSource:
         directory = self._root / "generated"
         if not directory.is_dir():
             return []
-
         reports: list[dict[str, JSONValue]] = []
         for entry in sorted(directory.glob("*.md")):
             reports.append(
@@ -222,11 +215,10 @@ class ResearchSource:
         if legacy_directory.is_dir():
             directories.append(legacy_directory)
         for directory in directories:
-            experiment_id = directory.parent.name
+            current_experiment = directory.parent.name
             for entry in sorted(directory.glob("AIRR-*.json")):
                 if entry.name.endswith(".review.json"):
                     continue
-                current_experiment = experiment_id
                 reports.append(
                     {
                         "report_id": entry.stem,
@@ -257,14 +249,32 @@ class ResearchSource:
             return None
         return data  # type: ignore[no-any-return]
 
+    def _work_view_archived_ids(self) -> frozenset[str]:
+        """Read the optional metadata-only archive index without mutating it."""
+        index = self._root / "archive" / "experiment_index.json"
+        if not index.is_file():
+            return frozenset()
+        try:
+            payload: object = json.loads(index.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return frozenset()
+        if not isinstance(payload, dict):
+            return frozenset()
+        experiments = cast(dict[object, object], payload).get("experiments", {})
+        if not isinstance(experiments, dict):
+            return frozenset()
+        return frozenset(str(key) for key in cast(dict[object, object], experiments))
+
     def list_experiments(self) -> list[dict[str, JSONValue]]:
-        """List experiment directories that contain a manifest."""
+        """List canonical experiments visible in the active research work view."""
         directory = self._root / "experiments"
         if not directory.is_dir():
             return []
-
+        hidden = self._work_view_archived_ids()
         experiments: list[dict[str, JSONValue]] = []
         for entry in directory.iterdir():
+            if entry.name in hidden:
+                continue
             manifest = entry / "manifest.json"
             if not manifest.is_file():
                 continue
@@ -302,10 +312,6 @@ class ResearchSource:
             key=lambda item: str(item.get("created_at") or ""), reverse=True
         )
         return experiments
-
-    # ------------------------------------------------------------------
-    # Internals
-    # ------------------------------------------------------------------
 
     def _safe_resolve(self, relative_path: str) -> Path | None:
         if not relative_path or ".." in relative_path:
