@@ -19,8 +19,10 @@
 	decoder candidates and logs bounded simulation-tick updates.
 - Focused engineering screen: 18 tests passed for memory, profile, experience
 	and existing profile lifecycle paths. No scientific promotion was performed.
+- Added the existing dashboard's read-only `/api/cognition/state` contract;
+	File Viewer inspection and frontend presentation remain open.
 - Open: coupled runtime snapshot boundary, delayed-cue controls, frozen-model
-	and no-memory comparisons, held-out episodes, dashboard/File Viewer exposure
+	and no-memory comparisons, held-out episodes, frontend/File Viewer exposure
 	and independent replication.
 
 ## 2026-09-08 Versioned embedding and cluster analysis

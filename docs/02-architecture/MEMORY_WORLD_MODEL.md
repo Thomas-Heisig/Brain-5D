@@ -68,7 +68,8 @@ source. Estimated observer values are not fed back into the profile.
 
 Focused checks cover the real ExperienceEngine path, independent memory
 switches, capacity/retention, persistence integrity, target-state leakage
-boundary and profile update provenance. They are engineering-screen checks.
+boundary, profile update provenance and the existing read-only dashboard
+endpoint `/api/cognition/state`. They are engineering-screen checks.
 Delayed-information task performance, matched no-memory controls, frozen and
 adaptive world-model comparisons, held-out episodes and independent replication
 remain open research work.

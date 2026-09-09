@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from http.client import HTTPConnection
 from threading import Thread
+from types import SimpleNamespace
 from typing import Any, cast
 
 from src.dashboard.models import DashboardSnapshot, SystemMetrics
@@ -18,6 +19,8 @@ from src.embodiment import (
     RelationshipClass,
 )
 from src.embodiment.models import EmbodimentMetrics
+from src.memory import MemoryStore, MemoryWorldModel, TransitionWorldModel
+from src.profiles import BehaviorProfile
 
 
 def _start(state: DashboardStateStore) -> tuple[DashboardServer, Thread, str, int]:
@@ -70,6 +73,31 @@ def test_embodiment_state_is_honest_when_unconfigured() -> None:
         assert payload["loop_status"] == "unconfigured"
         assert payload["details"]["sensor_values"] is None
         assert len(payload["loop"]) == 6
+    finally:
+        _stop(server, thread)
+
+
+def test_cognition_state_exposes_bounded_read_only_status() -> None:
+    store = MemoryStore(run_id="run-dashboard")
+    profile = BehaviorProfile("WESEN-0001")
+    cognition = MemoryWorldModel(store, TransitionWorldModel(), "run-dashboard")
+    experience = SimpleNamespace(memory=cognition, behavior_profile=profile)
+    server = DashboardServer(
+        ("127.0.0.1", 0), DashboardStateStore(), heatmaps=None, experience=experience
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    host, port = server.server_address[:2]
+    assert isinstance(host, str)
+    try:
+        payload = _get(host, port, "/api/cognition/state")
+        assert payload["available"] is True
+        assert payload["memory"]["controls"] == {
+            "read_enabled": True,
+            "write_enabled": True,
+        }
+        assert payload["behavior_profile"]["owner"] == "profiles.behavior"
+        assert payload["world_model_influences_actions"] is False
     finally:
         _stop(server, thread)
 

@@ -46,6 +46,7 @@ class BehaviorProfile:
     disposition: dict[str, float] = field(default_factory=dict)
     update_rate: float = 0.05
     update_log: list[dict[str, Any]] = field(default_factory=list[dict[str, Any]])
+    max_update_log: int = 256
     schema_version: int = BEHAVIOR_SCHEMA_VERSION
 
     def __post_init__(self) -> None:
@@ -66,6 +67,9 @@ class BehaviorProfile:
             )
         if not 0.0 < self.update_rate <= 1.0:
             raise ValueError("update_rate must be between 0 and 1")
+        if self.max_update_log <= 0:
+            raise ValueError("max_update_log must be positive")
+        self.update_log = self.update_log[-self.max_update_log :]
 
     def value(self, dimension: str) -> float:
         if dimension not in _DIMENSIONS:
@@ -116,6 +120,7 @@ class BehaviorProfile:
                 "after": dict(self.disposition),
             }
         )
+        self.update_log = self.update_log[-self.max_update_log :]
 
     def state_dict(self) -> dict[str, Any]:
         state: dict[str, Any] = {
@@ -127,6 +132,7 @@ class BehaviorProfile:
             "disposition": dict(self.disposition),
             "update_rate": self.update_rate,
             "update_log": list(self.update_log),
+            "max_update_log": self.max_update_log,
         }
         state["integrity_digest"] = _digest(state)
         return state
@@ -167,4 +173,5 @@ class BehaviorProfile:
             dict(state["disposition"]),
             float(state["update_rate"]),
             list(state["update_log"]),
+            int(state.get("max_update_log", 256)),
         )

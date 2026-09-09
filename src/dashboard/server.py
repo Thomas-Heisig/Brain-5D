@@ -192,6 +192,7 @@ class DashboardServer(ThreadingHTTPServer):
         connection_manager: ConnectionManager | None = None,
         gateway_state_path: Path | None = None,
         profiles_root: Path | None = None,
+        experience: Any | None = None,
     ) -> None:
         super().__init__(address, DashboardRequestHandler)
 
@@ -208,6 +209,7 @@ class DashboardServer(ThreadingHTTPServer):
         self.research_chat_handoff_prompt = ""
         self.research_chat_vision_enabled = False
         self.research_chat_tools_enabled = False
+        self.experience = experience
         self.research_chat_oauth_state: str | None = None
         self.research_chat_oauth_token: str | None = None
         self.research_chat_ollama_backend: OllamaBackend | None = None
@@ -389,6 +391,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/embodiment/state":
                 self._send_embodiment_state()
+                return
+
+            if path == "/api/cognition/state":
+                self._send_cognition_state()
                 return
 
             if path == "/api/embodiment/metrics":
@@ -1281,6 +1287,60 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_embodiment_state(self) -> None:
         """Serve the current closed-loop embodiment contract."""
         self._send_json(self._embodiment_payload())
+
+    def _send_cognition_state(self) -> None:
+        """Serve bounded memory/profile status without exposing mutation paths."""
+        experience = self.dashboard_server.experience
+        cognition = None if experience is None else getattr(experience, "memory", None)
+        profile = (
+            None
+            if experience is None
+            else getattr(experience, "behavior_profile", None)
+        )
+        if cognition is None and profile is None:
+            self._send_json(
+                {
+                    "available": False,
+                    "status": "unavailable",
+                    "influences_behavior": False,
+                    "world_model_influences_actions": False,
+                    "scientific_status": "engineering_screen_only",
+                }
+            )
+            return
+        memory_state: dict[str, JSONValue] | None = None
+        if cognition is not None:
+            store = cognition.store
+            memory_state = {
+                "enabled": bool(cognition.enabled),
+                "controls": cast(dict[str, JSONValue], store.controls()),
+                "episode_count": len(store.episodes),
+                "working_count": len(store.working),
+                "prediction_count": len(store.predictions),
+                "latest_prediction": (
+                    None
+                    if not store.predictions
+                    else cast(JSONValue, store.predictions[-1].to_dict())
+                ),
+                "source": "ExperienceEngine",
+            }
+        self._send_json(
+            {
+                "available": True,
+                "status": (
+                    "active"
+                    if cognition is not None and cognition.enabled
+                    else "observing"
+                ),
+                "memory": memory_state,
+                "behavior_profile": (
+                    None if profile is None else cast(JSONValue, profile.state_dict())
+                ),
+                "influences_behavior": profile is not None,
+                "world_model_influences_actions": False,
+                "scientific_status": "engineering_screen_only",
+            }
+        )
 
     def _send_embodiment_metrics(self) -> None:
         """Serve only measured embodiment metrics from the latest snapshot."""
@@ -4321,6 +4381,7 @@ def serve_dashboard(
     docs_root: Path | None = None,
     research_root: Path | None = None,
     chat_settings: Mapping[str, Any] | None = None,
+    experience: Any | None = None,
 ) -> None:
     """Run the local MHRN operator dashboard until interrupted."""
 
@@ -4458,6 +4519,7 @@ def serve_dashboard(
         docs_source,
         research_source,
         gateway_state_path=Path("artifacts/gateway_runtime.json"),
+        experience=experience,
     ) as server:
         server.research_chat_backend = chat_backend
         server.research_ai_backend = cast(AnalysisBackend | None, ollama_backend)

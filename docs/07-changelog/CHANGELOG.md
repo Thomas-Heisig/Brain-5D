@@ -4,6 +4,8 @@
 
 - Connected optional bounded working/episodic memory and an observation-only
   one-step transition predictor to the existing `ExperienceEngine`.
+- Exposed bounded current cognition status through the existing read-only
+  dashboard API at `/api/cognition/state`; no mutation route was added.
 - Added independent read/write controls, bounded retention, atomic persistence,
   schema ownership and integrity checks, plus auditable profile updates.
 - Focused engineering checks pass; no scientific evidence or consciousness
