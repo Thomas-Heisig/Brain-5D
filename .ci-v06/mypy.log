@@ -1,0 +1,5 @@
+src/dashboard/experiment_archive.py:118: error: Name "metadata" already defined
+on line 97  [no-redef]
+                    metadata: dict[str, Any] = {}
+                    ^~~~~~~~
+Found 1 error in 1 file (checked 160 source files)
