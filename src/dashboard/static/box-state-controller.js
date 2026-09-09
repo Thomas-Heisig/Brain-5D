@@ -29,6 +29,17 @@ const BOX_SELECTOR = [
   ".research-review-inbox",
 ].join(",");
 
+const NESTED_RESEARCH_BOX_SELECTOR = [
+  ".experiment-workflow",
+  ".research-focus-rail",
+  ".research-catalog-selector",
+  ".research-contract-card",
+  ".experiment-library-card",
+  ".human-review-card",
+  ".rq-proposal-card",
+  ".research-review-inbox",
+].join(",");
+
 const EXCLUDED_SELECTOR = [
   ".site-footer",
   ".workspace-header",
@@ -135,7 +146,15 @@ function setState(box, key, state, persist = true) {
 }
 
 function enhanceBox(box, index) {
-  if (box.classList.contains("box-state-ready") || box.matches(EXCLUDED_SELECTOR) || isNestedBox(box)) return;
+  const nestedResearchBox =
+    isNestedBox(box) && box.matches(NESTED_RESEARCH_BOX_SELECTOR);
+  if (
+    box.classList.contains("box-state-ready") ||
+    box.matches(EXCLUDED_SELECTOR) ||
+    (isNestedBox(box) && !nestedResearchBox)
+  ) {
+    return;
+  }
   const header = ensureHeader(box);
   const key = boxKey(box, index);
   const tools = document.createElement("div");
@@ -191,31 +210,45 @@ function panelHeader(title, description) {
 
 function moveIfPresent(selector, target) {
   const element = document.querySelector(selector);
-  if (element && element.parentElement !== target && !target.contains(element)) target.appendChild(element);
+  if (element && element.parentElement !== target && !target.contains(element)) {
+    target.appendChild(element);
+  }
 }
 
 function selectResearchView(view) {
   const shell = document.querySelector(".research-workspace-shell");
   const tabs = document.querySelector(".research-workspace-tabs");
   if (!shell || !tabs) return;
-  const valid = [...shell.querySelectorAll(":scope > [data-research-workspace-panel]")].map((panel) => panel.dataset.researchWorkspacePanel);
+  const valid = [
+    ...shell.querySelectorAll(":scope > [data-research-workspace-panel]"),
+  ].map((panel) => panel.dataset.researchWorkspacePanel);
   const next = valid.includes(view) ? view : "plan";
   tabs.querySelectorAll("[data-research-workspace-view]").forEach((button) => {
     const active = button.dataset.researchWorkspaceView === next;
     button.classList.toggle("active", active);
     button.setAttribute("aria-selected", String(active));
   });
-  shell.querySelectorAll(":scope > [data-research-workspace-panel]").forEach((panel) => {
-    panel.hidden = panel.dataset.researchWorkspacePanel !== next;
-  });
-  try { localStorage.setItem(RESEARCH_VIEW_KEY, next); } catch (_) { /* optional */ }
+  shell
+    .querySelectorAll(":scope > [data-research-workspace-panel]")
+    .forEach((panel) => {
+      panel.hidden = panel.dataset.researchWorkspacePanel !== next;
+    });
+  try {
+    localStorage.setItem(RESEARCH_VIEW_KEY, next);
+  } catch (_) {
+    // Preference persistence is optional.
+  }
 }
 
 function routeResearchElements() {
   const plan = document.querySelector('[data-research-workspace-panel="plan"]');
   const runs = document.querySelector('[data-research-workspace-panel="runs"]');
-  const review = document.querySelector('[data-research-workspace-panel="review"]');
-  const files = document.querySelector('[data-research-workspace-panel="files"] .research-file-surface');
+  const review = document.querySelector(
+    '[data-research-workspace-panel="review"]',
+  );
+  const files = document.querySelector(
+    '[data-research-workspace-panel="files"] .research-file-surface',
+  );
   if (!plan || !runs || !review || !files) return;
 
   moveIfPresent("#tab-research > .research-focus-rail", plan);
@@ -233,7 +266,9 @@ function routeResearchElements() {
     "#tab-research > .fm-breadcrumb",
     "#tab-research > .fm-filters",
     "#tab-research > .fm-layout",
-  ]) moveIfPresent(selector, files);
+  ]) {
+    moveIfPresent(selector, files);
+  }
 }
 
 function initResearchWorkspace() {
@@ -268,10 +303,22 @@ function initResearchWorkspace() {
   const shell = document.createElement("div");
   shell.className = "research-workspace-shell";
   const panels = {
-    plan: ["Planen & Ausführen", "Forschungsfrage, Vertrag, Bedingungen und kontrollierter Experimentstart."],
-    runs: ["Läufe & Reihen", "Aktive und ausgeblendete Experimente, Serienstatus und aktuelle Resultate."],
-    review: ["Reviews", "Human Review, offene Interpretation und neue Forschungsfragen getrennt von Evidenz-Promotion."],
-    files: ["Dateien & Analyse", "Kanonischer File Viewer, Evidenz, AIRR, Matrizen, Dokumentation und technische Analyse."],
+    plan: [
+      "Planen & Ausführen",
+      "Forschungsfrage, Vertrag, Bedingungen und kontrollierter Experimentstart.",
+    ],
+    runs: [
+      "Läufe & Reihen",
+      "Aktive und ausgeblendete Experimente, Serienstatus und aktuelle Resultate.",
+    ],
+    review: [
+      "Reviews",
+      "Human Review, offene Interpretation und neue Forschungsfragen getrennt von Evidenz-Promotion.",
+    ],
+    files: [
+      "Dateien & Analyse",
+      "Kanonischer File Viewer, Evidenz, AIRR, Matrizen, Dokumentation und technische Analyse.",
+    ],
   };
   for (const [key, [title, description]] of Object.entries(panels)) {
     const panel = document.createElement("section");
@@ -295,7 +342,11 @@ function initResearchWorkspace() {
   researchWorkspaceReady = true;
   routeResearchElements();
   let initial = "plan";
-  try { initial = localStorage.getItem(RESEARCH_VIEW_KEY) || initial; } catch (_) { /* optional */ }
+  try {
+    initial = localStorage.getItem(RESEARCH_VIEW_KEY) || initial;
+  } catch (_) {
+    // Preference persistence is optional.
+  }
   selectResearchView(initial);
 }
 
@@ -304,7 +355,9 @@ function scan() {
   initResearchWorkspace();
   routeResearchElements();
   let index = 0;
-  document.querySelectorAll(`.tab-content ${BOX_SELECTOR}`).forEach((box) => enhanceBox(box, index++));
+  document
+    .querySelectorAll(`.tab-content ${BOX_SELECTOR}`)
+    .forEach((box) => enhanceBox(box, index++));
 }
 
 function queueScan() {
@@ -328,5 +381,8 @@ export function initBoxStates() {
     if (event.key === "Escape") restoreStandard();
   });
   const observer = new MutationObserver(queueScan);
-  observer.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
+  observer.observe(document.querySelector("main") || document.body, {
+    childList: true,
+    subtree: true,
+  });
 }
