@@ -110,8 +110,8 @@ The frontend intentionally shows both present and planned capability classes:
 - experimental Neural Symbiosis gateway activation, Frozen/Random/Shuffle controls and bounded experimental plasticity — **implemented / unvalidated**;
 - productive Neural Symbiosis gateway activation/plasticity — **Planned / Locked pending validation**;
 - canonical SNN snapshots/persistence — **implemented**;
-- holistic Wesen profiles containing senses, SNN state, learning parameters, morphology and actuators — **Not implemented yet**;
-- profile load/save/export/delete — **Not implemented yet**;
+- holistic Wesen profiles containing senses, SNN configuration, learning parameters, morphology and actuators — **implemented**;
+- profile load/save/clone/import/export/archive with revision and snapshot binding — **implemented**;
 - personality profiles — **Not implemented yet**;
 - Memory/World-Model layer — **Not implemented yet**.
 

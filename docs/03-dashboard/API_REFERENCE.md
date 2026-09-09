@@ -45,6 +45,29 @@ Parameter changes are staged before application:
 Experiment execution is isolated from the persistent operator state. A
 workflow cannot promote state automatically.
 
+## Profile & Identity
+
+Profiles are bounded technical configuration identities. They are separate from
+the `.b5d` snapshot and runtime checkpoint, and do not imply psychological or
+conscious identity.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/api/profiles` | List bounded registry metadata. |
+| `GET` | `/api/profiles/current` | Current persisted technical identity. |
+| `GET` | `/api/profiles/{id}` | Validate and return one profile. |
+| `POST` | `/api/profiles` | Create a schema-validated profile. |
+| `PUT` | `/api/profiles/{id}` | Create a revision from explicit changes. |
+| `POST` | `/api/profiles/{id}/load` | Load profile-only or profile plus bound state. |
+| `POST` | `/api/profiles/{id}/save-state` | Bind an existing snapshot by digest. |
+| `POST` | `/api/profiles/{id}/clone` | Create a new profile with lineage. |
+| `POST` | `/api/profiles/{id}/archive` | Archive a profile and clear active assignment safely. |
+| `GET` | `/api/profiles/{id}/history` | Revision and parent history. |
+| `GET` | `/api/profiles/{id}/snapshots` | Snapshot references, not snapshot contents. |
+| `GET` | `/api/profiles/{id}/export` | Download bounded ZIP export. |
+| `POST` | `/api/profiles/import` | Import a base64 ZIP after security/digest validation. |
+| `DELETE` | `/api/profiles/{id}` | Hard delete only when no active/provenance guard applies; otherwise archive. |
+
 ## Embodiment Read APIs
 
 These endpoints are read-only and publish only measured or discovered state:

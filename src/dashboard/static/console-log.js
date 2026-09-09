@@ -20,6 +20,7 @@ import "./wesen.js";
 import "./wesen-organism-v2.js";
 import "./wesen-anatomy-v3.js";
 import "./wesen-neural-symbiosis.js";
+import "./wesen-profile.js";
 import "./neuron-model-viewer.js";
 import "./frontend-architecture.js";
 import "./footer-controller.js";
@@ -30,6 +31,7 @@ const CANONICAL_WESEN_STYLES = Object.freeze([
   "/wesen-organism.css",
   "/wesen-anatomy-v3.css",
   "/wesen-neural-symbiosis.css",
+  "/wesen-profile.css",
 ]);
 
 function byId(id) {

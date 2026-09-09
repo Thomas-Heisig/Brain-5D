@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-09 - Versioned Wesen profile identity
+
+- Added bounded schema-v1 technical profiles under `profiles/<profile_id>` with a metadata-only registry, canonical SHA-256 digests and revision history.
+- Added profile lifecycle APIs for create, update, load, profile-only/state-bound loading, clone, snapshot binding, history, export/import and archive-safe deletion.
+- Added ZIP path-traversal, size, duplicate-ID and digest validation; imported actuator declarations do not activate devices.
+- Added a Wesen Profile & Identitaet view with current identity, configuration, lineage, snapshot status and lifecycle actions.
+- Kept profile configuration separate from `.b5d` snapshots and runtime checkpoints; autonomous identity mutation remains locked.
+
 ## 2026-09-09 - Controlled Neural Symbiosis gateway runtime
 
 - Added a core-independent, experiment-only gateway runtime with explicit lifecycle states, Frozen/Random/Shuffle controls and guarded Plastic activation.

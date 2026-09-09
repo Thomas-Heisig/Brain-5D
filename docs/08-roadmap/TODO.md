@@ -11,6 +11,8 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 Neural Symbiosis gateway status: **experimental activation implemented; Frozen / Random / Shuffle controls implemented; experimental plasticity implemented; productive activation locked pending validation**.
 
+Profile & Identitaet status: **holistic technical profile implemented; senses / learning / morphology / actuators implemented; save / load / clone / import / export implemented; versioned identity + snapshot binding implemented; autonomous identity mutation locked**.
+
 This file contains **active release-blocking work only**. Long-horizon engineering and scientific work is tracked in [ROADMAP.md](ROADMAP.md) and in the versioned research programme. Moving an item out of this file does **not** claim that the future research has already been performed. Source-freeze CI verification and the subsequent immutable release-record publication are gate/publication steps, not unfinished implementation backlog.
 
 ## 2026-09-08 Review and gate closure

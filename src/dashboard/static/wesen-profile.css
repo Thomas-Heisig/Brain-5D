@@ -1,0 +1,61 @@
+.wesen-profile-panel {
+  margin: 1rem 0 0;
+  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
+  border-radius: 18px;
+  background: var(--surface, rgba(15, 23, 42, 0.72));
+  padding: 1rem;
+}
+
+.wesen-profile-header,
+.wesen-profile-panel article > header,
+.wesen-profile-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wesen-profile-header h2 { margin: 0.2rem 0; }
+.wesen-profile-header p { margin: 0; opacity: 0.78; }
+.wesen-profile-health { min-width: 150px; text-align: right; }
+.wesen-profile-health strong,
+.wesen-profile-health small { display: block; }
+.wesen-profile-health small { opacity: 0.72; }
+
+.wesen-profile-boundary {
+  display: grid;
+  gap: 0.25rem;
+  margin: 1rem 0;
+  padding: 0.8rem 0.9rem;
+  border-left: 3px solid currentColor;
+  background: rgba(148, 163, 184, 0.07);
+}
+.wesen-profile-boundary span { opacity: 0.82; font-size: 0.86rem; }
+.wesen-profile-toolbar { justify-content: flex-start; flex-wrap: wrap; margin-bottom: 1rem; }
+.wesen-profile-toolbar input { min-width: 220px; flex: 1 1 220px; }
+.wesen-profile-toolbar button { cursor: pointer; }
+.wesen-profile-toolbar span { min-width: 220px; opacity: 0.76; font-size: 0.82rem; }
+
+.wesen-profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+.wesen-profile-panel article { min-width: 0; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 14px; padding: 0.8rem; background: rgba(2, 6, 23, 0.16); }
+.wesen-profile-panel article > header { margin-bottom: 0.65rem; }
+.wesen-profile-panel article > header span { font-size: 0.72rem; opacity: 0.72; }
+.wesen-profile-kv { display: grid; gap: 0.45rem; }
+.wesen-profile-kv > div,
+.wesen-profile-history > div { display: flex; justify-content: space-between; gap: 0.7rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+.wesen-profile-kv span,
+.wesen-profile-history small { opacity: 0.7; }
+.wesen-profile-list,
+.wesen-profile-history { display: grid; gap: 0.45rem; max-height: 250px; overflow: auto; }
+.wesen-profile-card { display: grid; gap: 0.2rem; text-align: left; padding: 0.6rem; border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; background: rgba(148, 163, 184, 0.06); color: inherit; cursor: pointer; }
+.wesen-profile-card.active { border-color: currentColor; }
+.wesen-profile-card small { opacity: 0.72; }
+.wesen-profile-empty { opacity: 0.7; }
+.wesen-profile-lineage { display: grid; gap: 0.15rem; margin-bottom: 0.4rem; }
+.wesen-profile-lineage span { opacity: 0.72; font-size: 0.8rem; }
+
+@media (max-width: 760px) {
+  .wesen-profile-header { align-items: flex-start; flex-direction: column; }
+  .wesen-profile-health { text-align: left; }
+  .wesen-profile-grid { grid-template-columns: 1fr; }
+}

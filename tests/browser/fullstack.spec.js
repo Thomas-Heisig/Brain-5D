@@ -26,6 +26,8 @@ for (const port of [4174, 4175]) {
     await page.locator('[data-primary-area="wesen"]').click();
     await expect(page.locator('#wesen-neural-symbiosis')).toBeVisible();
     await expect(page.locator('#wesen-msba-pathways')).toContainText('Audio');
+    await expect(page.locator('#wesen-profile-identity')).toBeVisible();
+    await expect(page.locator('#wesen-profile-identity')).toContainText('Profile & Identität');
     await page.locator('[data-primary-area="science"]').click();
     await selectResearchView(page, 'files');
     await page.locator('.fm-source-btn[data-source="docs"]').click();

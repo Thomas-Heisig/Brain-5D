@@ -15,6 +15,7 @@ from src.experiments.msba_lab import (
     MSBA_RUNNERS,
     persist_gateway_state_sidecar,
 )
+from src.profiles import ProfileService
 from src.research.catalog_status import (
     CATALOG_FACET_FIELDS,
     question_facet_options,
@@ -372,6 +373,20 @@ class ExperimentWorkflowService:
         science_body = dict(body)
         science_body.setdefault("protocol", "science_suite_v1")
         workflow = self._validate(science_body)
+        profile_subject: dict[str, Any] | None = None
+        profile_service = ProfileService(self._research_root.parent / "profiles")
+        profile_id_value = science_body.get("profile_id")
+        if isinstance(profile_id_value, str) and profile_id_value.strip():
+            profile = profile_service.get(profile_id_value.strip())
+            binding = profile.get("snapshot_binding")
+            profile_subject = {
+                "profile_id": profile["profile_id"],
+                "profile_revision": profile["revision"],
+                "profile_digest": profile["provenance"]["profile_digest"],
+                "snapshot_digest": (
+                    binding.get("digest") if isinstance(binding, dict) else None
+                ),
+            }
         runner_name = self._science_runner(science_body, workflow)
         effective_seeds = seeds if seeds is not None else workflow.seeds
         workflow = replace(workflow, seeds=effective_seeds)
@@ -447,6 +462,8 @@ class ExperimentWorkflowService:
             cast(Sequence[_ScientificRunLike], runs),
         )
         recorder = ExperimentRecorder(workflow.experiment_id, output_dir=output_dir)
+        if profile_subject is not None:
+            recorder.manifest["subject"] = profile_subject
         data_path = output_dir / "DATA" / "runs.json"
         data_path.parent.mkdir(parents=True, exist_ok=True)
         serialized_runs = [asdict(run) for run in runs]
@@ -531,6 +548,11 @@ class ExperimentWorkflowService:
                     "notes": workflow.notes,
                     "execution": "registered experiment_suite runner",
                     "assistant_policy": "AI is post-hoc interpretation only.",
+                    **(
+                        {"subject": profile_subject}
+                        if profile_subject is not None
+                        else {}
+                    ),
                     "epistemic_layers": EPISTEMIC_LAYERS,
                 },
                 indent=2,

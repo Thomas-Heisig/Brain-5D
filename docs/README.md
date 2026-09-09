@@ -42,6 +42,7 @@ Historical `EXP-GEN-0009` to `EXP-GEN-0012` artifacts remain untouched. They rec
 | Architecture | [`02-architecture/ARCHITECTURE.md`](02-architecture/ARCHITECTURE.md) |
 | Adaptive Wesen body view | [`02-architecture/WESEN_ADAPTIVE_BODY.md`](02-architecture/WESEN_ADAPTIVE_BODY.md) |
 | Neural Symbiosis / multi-network embodiment | [`02-architecture/NEURAL_SYMBIOSIS.md`](02-architecture/NEURAL_SYMBIOSIS.md) |
+| Profile & Identitaet / technical Wesen profiles | [`02-architecture/PROFILE_IDENTITY.md`](02-architecture/PROFILE_IDENTITY.md) |
 | MSBA / modality-specific pathways and energy homeostasis | [`02-architecture/MSBA.md`](02-architecture/MSBA.md) |
 | Storage format | [`02-architecture/B5D_FORMAT.md`](02-architecture/B5D_FORMAT.md) |
 | Real-body embodiment | [`02-architecture/EMBODIMENT_REAL_BODY.md`](02-architecture/EMBODIMENT_REAL_BODY.md) |

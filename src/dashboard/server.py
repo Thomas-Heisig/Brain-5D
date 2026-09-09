@@ -29,6 +29,7 @@ Mutation is possible only through explicit operator endpoints.
 from __future__ import annotations
 
 import argparse
+import base64
 import datetime
 import json
 import os
@@ -59,6 +60,12 @@ from src.learning import (
     LearningPlanOrigin,
     LearningPreparationService,
     LearningSourceRef,
+)
+from src.profiles import (
+    ProfileCompatibilityError,
+    ProfileError,
+    ProfileNotFoundError,
+    ProfileService,
 )
 from src.research_assistant import (
     AIRRPipeline,
@@ -184,6 +191,7 @@ class DashboardServer(ThreadingHTTPServer):
         research_source: ResearchSource | None = None,
         connection_manager: ConnectionManager | None = None,
         gateway_state_path: Path | None = None,
+        profiles_root: Path | None = None,
     ) -> None:
         super().__init__(address, DashboardRequestHandler)
 
@@ -224,6 +232,7 @@ class DashboardServer(ThreadingHTTPServer):
             if gateway_state_path is not None
             else GatewayRuntime()
         )
+        self.profile_service = ProfileService(profiles_root or Path("profiles"))
         self.embodiment_pipeline_config: dict[str, bool] = {
             "sensor": False,
             "encoder": False,
@@ -413,6 +422,55 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/embodiment/gateway-experiments":
                 self._send_gateway_experiments()
+                return
+
+            if path == "/api/profiles":
+                self._send_json(
+                    cast(dict[str, JSONValue], server.profile_service.list_profiles())
+                )
+                return
+
+            if path == "/api/profiles/current":
+                current = server.profile_service.current()
+                self._send_json(
+                    {"profile": cast(JSONValue, current), "active": current is not None}
+                )
+                return
+
+            if path.endswith("/export") and path.startswith("/api/profiles/"):
+                profile_id = unquote(path[len("/api/profiles/") : -len("/export")])
+                content = server.profile_service.export_zip(profile_id)
+                self._send_bytes(
+                    content, "application/zip", f"{profile_id}.mhrn-profile.zip"
+                )
+                return
+
+            if path.endswith("/history") and path.startswith("/api/profiles/"):
+                profile_id = unquote(path[len("/api/profiles/") : -len("/history")])
+                self._send_json(
+                    cast(
+                        dict[str, JSONValue], server.profile_service.history(profile_id)
+                    )
+                )
+                return
+
+            if path.endswith("/snapshots") and path.startswith("/api/profiles/"):
+                profile_id = unquote(path[len("/api/profiles/") : -len("/snapshots")])
+                profile = server.profile_service.get(profile_id)
+                binding = profile.get("snapshot_binding")
+                self._send_json(
+                    {
+                        "profile_id": profile_id,
+                        "snapshots": [cast(JSONValue, binding)] if binding else [],
+                    }
+                )
+                return
+
+            if path.startswith("/api/profiles/"):
+                profile_id = unquote(path[len("/api/profiles/") :])
+                self._send_json(
+                    cast(dict[str, JSONValue], server.profile_service.get(profile_id))
+                )
                 return
 
             # ----------------------------------------------------------------
@@ -707,6 +765,106 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._gateway_action(path, body)
                 return
 
+            if path == "/api/profiles/import":
+                body = self._read_json_object()
+                encoded = body.get("archive_base64")
+                if not isinstance(encoded, str):
+                    raise InvalidRequestError("archive_base64 is required")
+                try:
+                    archive = base64.b64decode(encoded, validate=True)
+                except ValueError as exc:
+                    raise InvalidRequestError("archive_base64 is invalid") from exc
+                profile_id = body.get("profile_id")
+                profile_imported = self.dashboard_server.profile_service.import_zip(
+                    archive,
+                    profile_id=profile_id if isinstance(profile_id, str) else None,
+                )
+                self._send_json(
+                    cast(
+                        dict[str, JSONValue], {"ok": True, "profile": profile_imported}
+                    )
+                )
+                return
+
+            if path == "/api/profiles":
+                body = self._read_json_object()
+                source = body.pop("source", None)
+                if source == "current_runtime":
+                    body["runtime"] = dict(
+                        self.dashboard_server.dashboard_state.snapshot().runtime
+                    )
+                    body["provenance"] = {
+                        "source": "current_runtime",
+                        "history": [],
+                        "autonomous_profile_mutation": {
+                            "enabled": False,
+                            "status": "locked",
+                        },
+                    }
+                requested_profile_id = body.get("profile_id")
+                requested_name = body.get("name")
+                profile_created = self.dashboard_server.profile_service.create(
+                    body,
+                    profile_id=(
+                        requested_profile_id
+                        if isinstance(requested_profile_id, str)
+                        else None
+                    ),
+                    name=requested_name if isinstance(requested_name, str) else None,
+                )
+                self._send_json(
+                    cast(
+                        dict[str, JSONValue], {"ok": True, "profile": profile_created}
+                    ),
+                    HTTPStatus.CREATED,
+                )
+                return
+
+            if path.startswith("/api/profiles/"):
+                remainder = path[len("/api/profiles/") :]
+                parts = [unquote(part) for part in remainder.split("/") if part]
+                if not parts:
+                    self._send_api_not_found(path)
+                    return
+                profile_id = parts[0]
+                body = self._read_json_object()
+                profile_service = self.dashboard_server.profile_service
+                if len(parts) == 2 and parts[1] == "load":
+                    profile_result: dict[str, Any] = profile_service.load(
+                        profile_id, with_state=body.get("with_state") is True
+                    )
+                    self._apply_profile_runtime(profile_result)
+                elif len(parts) == 2 and parts[1] == "save-state":
+                    snapshot_value = body.get("snapshot_path", "artifacts/latest.b5d")
+                    if not isinstance(snapshot_value, str):
+                        raise InvalidRequestError("snapshot_path must be a string")
+                    profile_result = {
+                        "profile": profile_service.save_state(
+                            profile_id, Path(snapshot_value)
+                        )
+                    }
+                elif len(parts) == 2 and parts[1] == "clone":
+                    clone_name = body.get("name")
+                    clone_profile_id = body.get("profile_id")
+                    profile_result = profile_service.clone(
+                        profile_id,
+                        name=clone_name if isinstance(clone_name, str) else None,
+                        profile_id_new=(
+                            clone_profile_id
+                            if isinstance(clone_profile_id, str)
+                            else None
+                        ),
+                    )
+                elif len(parts) == 2 and parts[1] == "archive":
+                    profile_result = {"profile": profile_service.archive(profile_id)}
+                else:
+                    self._send_api_not_found(path)
+                    return
+                self._send_json(
+                    cast(dict[str, JSONValue], {"ok": True, **profile_result})
+                )
+                return
+
             # ----------------------------------------------------------------
             # Parameter pending changes
             # ----------------------------------------------------------------
@@ -848,6 +1006,22 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._send_command_result(result)
                 return
 
+            if path.startswith("/api/profiles/"):
+                remainder = path[len("/api/profiles/") :]
+                if not remainder or "/" in remainder:
+                    self._send_api_not_found(path)
+                    return
+                profile_id = remainder
+                body = self._read_json_object()
+                reason = body.pop("reason", "profile_update")
+                profile_updated = self.dashboard_server.profile_service.update(
+                    unquote(profile_id), body, reason=str(reason)
+                )
+                self._send_json(
+                    cast(dict[str, JSONValue], {"ok": True, "profile": profile_updated})
+                )
+                return
+
             if path.startswith("/api/"):
                 self._send_api_not_found(path)
                 return
@@ -883,6 +1057,15 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 },
                 HTTPStatus.METHOD_NOT_ALLOWED,
             )
+            return
+
+        if path.startswith("/api/profiles/"):
+            profile_id = unquote(path[len("/api/profiles/") :])
+            try:
+                result = self.dashboard_server.profile_service.delete(profile_id)
+                self._send_json(cast(dict[str, JSONValue], {"ok": True, **result}))
+            except Exception as exc:
+                self._handle_exception(exc)
             return
 
         if path.startswith("/api/"):
@@ -1143,6 +1326,42 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "history": history,
             }
         )
+
+    def _apply_profile_runtime(self, result: dict[str, Any]) -> None:
+        """Apply only the RuntimeController settings with an explicit boundary."""
+        if result.get("mode") == "profile_with_state":
+            result["runtime_applied"] = False
+            result["runtime_application"] = (
+                "snapshot restore requires the canonical restore hook; no partial state load performed"
+            )
+            return
+        bridge = self.dashboard_server.structural_bridge
+        controller = getattr(bridge, "controller", None) if bridge is not None else None
+        if controller is None or not callable(getattr(controller, "configure", None)):
+            result["runtime_applied"] = False
+            result["runtime_application"] = "runtime controller unavailable"
+            return
+        profile_value = result.get("profile")
+        profile = (
+            cast(dict[str, Any], profile_value)
+            if isinstance(profile_value, dict)
+            else {}
+        )
+        runtime_value = profile.get("runtime", {})
+        runtime_config = (
+            cast(dict[str, Any], runtime_value)
+            if isinstance(runtime_value, dict)
+            else {}
+        )
+        options: dict[str, Any] = {
+            key: runtime_config[key]
+            for key in ("loop_size", "delay_ms", "target_hz")
+            if key in runtime_config
+        }
+        controller.pause()
+        controller.configure(**options)
+        result["runtime_applied"] = True
+        result["runtime_application"] = "RuntimeController paused and configured"
 
     def _send_embodiment_connections(self) -> None:
         """Serve discovered and configured body connections without activating them."""
@@ -3686,6 +3905,16 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         ):
             pass
 
+    def _send_bytes(self, payload: bytes, content_type: str, filename: str) -> None:
+        """Send a bounded binary export without routing it through JSON."""
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+        self.send_header("Content-Length", str(len(payload)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(payload)
+
     def _send_api_not_found(
         self,
         path: str,
@@ -3799,6 +4028,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 },
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
+            return
+
+        if isinstance(exc, ProfileNotFoundError):
+            self._send_json({"error": str(exc)}, HTTPStatus.NOT_FOUND)
+            return
+
+        if isinstance(exc, ProfileCompatibilityError):
+            self._send_json({"error": str(exc)}, HTTPStatus.CONFLICT)
+            return
+
+        if isinstance(exc, ProfileError):
+            self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
             return
 
         if isinstance(

@@ -46,6 +46,18 @@
 - Documented the Windows Firewall and trusted-network boundary; public exposure remains unsupported without an authentication layer.
 - Improved startup diagnostics with the canonical version, configuration, runtime mode, bind/local/LAN URLs, process ID and UTF-8 console handling.
 
+## 2026-09-09 Profile & Identitaet
+
+- [x] Add schema-v1 holistic technical Wesen profiles and bounded registry metadata.
+- [x] Add canonical digest, revision history, parent lineage and atomic writes.
+- [x] Bind profiles to existing snapshots by digest without copying neural state into `profile.json`.
+- [x] Add profile-only/state-bound load modes, clone, archive/delete guards and secure ZIP import/export.
+- [x] Integrate senses, learning, morphology, actuators, gateway, memory, self-model, resources and safety declarations.
+- [x] Add the Wesen Profile & Identitaet dashboard view and lifecycle actions.
+- [x] Apply supported runtime pacing settings during profile-only load and bind optional profile identity into experiment manifests.
+- [ ] Connect the canonical snapshot restore hook for Profile + State loading; it remains fail-closed with `runtime_applied: false`.
+- [ ] Keep autonomous profile mutation locked until bounded domains, journal, rollback and experiment gates exist.
+
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 
 - Scientific source-freeze digests now use canonical Git text content across LF/CRLF checkouts while preserving byte-exact binary files.
