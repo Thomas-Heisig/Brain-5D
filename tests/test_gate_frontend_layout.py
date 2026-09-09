@@ -17,4 +17,6 @@ def test_next_version_todo_tracks_completed_engineering_without_faking_release()
         in todo
     )
     assert "- [x] Freeze the v0.6 compatibility contract" in todo
-    assert "Generate the v0.6 release record only after the exact source-freeze CI" in todo
+    assert (
+        "Generate the v0.6 release record only after the exact source-freeze CI" in todo
+    )
