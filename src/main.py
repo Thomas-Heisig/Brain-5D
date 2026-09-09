@@ -1103,7 +1103,7 @@ def main() -> int:
         f"🧠 Neurons={len(network.neurons)} Synapses={network.synapse_count} "
         f"Input={len(network.input_cells)} Output={len(network.output_cells)} "
         f"Learning={'on' if learning and learning.enabled else 'off'} "
-        f"Homeostasis={'on' if homeostasis and homeostasis.enabled else 'off'}"
+        f"Homeostasis={'on' if homeostasis and homeostasis.enabled else 'off'} "
         f"Controller={'idle' if controller else 'none'}"
     )
 
@@ -1127,9 +1127,9 @@ def main() -> int:
             _dashboard_host = args.dashboard_host
             _dashboard_port = args.dashboard_port
             print(
-                f"🧠 Starting MHRN dashboard on http://{_dashboard_host}:{_dashboard_port}"
+                f"🧠 Dashboard startup requested: bind={_dashboard_host}:{_dashboard_port}"
             )
-            print("⏸️  Simulation starts in idle state. Use dashboard controls to run.")
+            print("⏸️  Runtime mode: idle; use dashboard controls to run.")
             if _serve_dashboard is not None:
                 _serve_dashboard(host=_dashboard_host, port=_dashboard_port, state=state_store, snapshot_path=_snapshot_path, structural_bridge=operator_bridge, docs_root=docs_root, research_root=research_root, chat_settings=cast(dict[str, Any], config_dict.get("research_chat", {})))  # type: ignore[reportOptionalCall, call-arg, operator]
 

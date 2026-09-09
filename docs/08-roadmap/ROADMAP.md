@@ -44,6 +44,7 @@
 - Windows `start.cmd` and `start.ps1` now bind the integrated dashboard to `0.0.0.0:8765` by default so it is reachable through the host machine's LAN IP.
 - Direct Python startup remains loopback-only by default; explicit host overrides remain available for local-only or explicitly selected bindings.
 - Documented the Windows Firewall and trusted-network boundary; public exposure remains unsupported without an authentication layer.
+- Improved startup diagnostics with the canonical version, configuration, runtime mode, bind/local/LAN URLs, process ID and UTF-8 console handling.
 
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 

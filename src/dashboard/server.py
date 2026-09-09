@@ -34,6 +34,7 @@ import json
 import os
 import secrets
 import signal
+import socket
 import subprocess
 import threading
 from collections.abc import Mapping
@@ -4084,9 +4085,26 @@ def serve_dashboard(
                 "operator bridge; control APIs are unavailable."
             )
 
-        print(f"🧠 MHRN dashboard: " f"http://{host}:{port}")
-
-        print("Press Ctrl+C to stop")
+        print(f"✅ Dashboard server ready: bind={host}:{port}")
+        print(f"   Local URL: http://127.0.0.1:{port}")
+        if host in {"0.0.0.0", "::"}:
+            lan_address: str | None = None
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+                    probe.connect(("8.8.8.8", 80))
+                    candidate = str(probe.getsockname()[0])
+                    if candidate and not candidate.startswith("127."):
+                        lan_address = candidate
+            except OSError:
+                pass
+            if lan_address:
+                print(f"   LAN URL: http://{lan_address}:{port}")
+            else:
+                print("   LAN URL: unavailable (no non-loopback IPv4 detected)")
+        else:
+            print(f"   Access URL: http://{host}:{port}")
+        print("   Runtime controls: dashboard API enabled")
+        print("   Stop: Ctrl+C")
 
         _setup_signal_handlers(server)
 

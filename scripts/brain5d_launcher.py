@@ -177,6 +177,39 @@ def dashboard_url(args: argparse.Namespace) -> str:
     return f"http://{args.host}:{args.port}"
 
 
+def _lan_address() -> str | None:
+    """Return the preferred local IPv4 address without sending network data."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+            probe.connect(("8.8.8.8", 80))
+            address = str(probe.getsockname()[0])
+            if address and not address.startswith("127."):
+                return address
+    except OSError:
+        pass
+    try:
+        candidates = socket.gethostbyname_ex(socket.gethostname())[2]
+    except OSError:
+        return None
+    return next((item for item in candidates if not item.startswith("127.")), None)
+
+
+def dashboard_access_urls(host: str, port: int) -> dict[str, str | None]:
+    """Build clear local/LAN access URLs for the launcher summary."""
+    if host in {"0.0.0.0", "::"}:
+        lan_address = _lan_address()
+        return {
+            "bind": f"{host}:{port}",
+            "local": f"http://127.0.0.1:{port}",
+            "lan": f"http://{lan_address}:{port}" if lan_address else None,
+        }
+    return {
+        "bind": f"{host}:{port}",
+        "local": f"http://{host}:{port}",
+        "lan": None,
+    }
+
+
 # ============================================================================
 # Subcommand: start
 # ============================================================================
@@ -285,6 +318,23 @@ def _cmd_start(args: argparse.Namespace) -> int:
         return 1
 
     command = build_command(args)
+    access = dashboard_access_urls(args.host, args.port) if args.dashboard else None
+
+    print("[MHRN] Launching integrated application")
+    print(f"  Config: {args.config}")
+    print(f"  Mode: {'dashboard / idle' if args.dashboard else 'headless / automatic'}")
+    if access is not None:
+        print(
+            f"  Dashboard bind: {access['bind']} (all interfaces)"
+            if args.host in {"0.0.0.0", "::"}
+            else f"  Dashboard bind: {access['bind']}"
+        )
+        print(f"  Dashboard local: {access['local']}")
+        if access["lan"] is not None:
+            print(f"  Dashboard LAN: {access['lan']}")
+        else:
+            print("  Dashboard LAN: unavailable (no non-loopback IPv4 detected)")
+        print(f"  Browser: {access['local'] if args.open_browser else 'disabled'}")
 
     try:
         process = spawn(command)
@@ -298,24 +348,14 @@ def _cmd_start(args: argparse.Namespace) -> int:
     _write_pid(process.pid)
     print(f"MHRN started (PID {process.pid})")
     print(f"  Command: {' '.join(command)}")
-
-    if args.dashboard:
-        url = dashboard_url(args)
-        print(f"  Dashboard bind: {url}")
+    if args.dashboard and args.open_browser:
         browser_url = (
-            f"http://{DEFAULT_HOST}:{args.port}"
-            if args.host in {"0.0.0.0", "::"}
-            else url
+            str(access["local"]) if access is not None else dashboard_url(args)
         )
-        print(f"  Dashboard local: {browser_url}")
-        if args.open_browser:
-            try:
-                webbrowser.open(browser_url)
-            except webbrowser.Error as exc:
-                print(
-                    f"  Warning: could not open browser: {exc}",
-                    file=sys.stderr,
-                )
+        try:
+            webbrowser.open(browser_url)
+        except webbrowser.Error as exc:
+            print(f"  Warning: could not open browser: {exc}", file=sys.stderr)
 
     return 0
 

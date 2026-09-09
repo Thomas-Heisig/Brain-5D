@@ -11,6 +11,7 @@
 
 - Windows `start.cmd` and `start.ps1` now bind the dashboard to `0.0.0.0:8765` by default for access via the host machine's LAN IP.
 - Kept direct Python startup loopback-only and documented the firewall/trusted-network boundary.
+- Improved terminal diagnostics with canonical version, config, mode, PID and bind/local/LAN URL information; enabled UTF-8 console output in `start.cmd`.
 
 ## 2026-09-09 - v0.6 roadmap and acceptance audit
 

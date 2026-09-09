@@ -16,6 +16,10 @@
 :: ============================================================================
 setlocal enabledelayedexpansion
 
+:: Python emits UTF-8 status lines and symbols; keep CMD from decoding them as CP437.
+chcp 65001 >nul
+set "PYTHONUTF8=1"
+
 :: Projekt-Root ermitteln
 cd /d "%~dp0"
 set "PROJECT_ROOT=%CD%"
@@ -43,7 +47,9 @@ if "%1"=="--help" (
 
 :: Banner
 echo ===========================================================================
-echo   MHRN v0.5.0-alpha.7
+for /f "delims=" %%V in ('"%PYTHON_CMD%" -c "from src.version import BRAIN5D_VERSION_DISPLAY; print(BRAIN5D_VERSION_DISPLAY)"') do set "MHRN_VERSION=%%V"
+if not defined MHRN_VERSION set "MHRN_VERSION=unknown"
+echo   MHRN !MHRN_VERSION! - startup
 echo   Project: %PROJECT_ROOT%
 echo ===========================================================================
 

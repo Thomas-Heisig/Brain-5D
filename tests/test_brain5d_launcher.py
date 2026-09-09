@@ -12,7 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from scripts.brain5d_launcher import build_command, pid_is_running, port_is_available
+from scripts.brain5d_launcher import (
+    build_command,
+    dashboard_access_urls,
+    pid_is_running,
+    port_is_available,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 PID_FILE = ROOT / "artifacts" / "brain5d.pid"
@@ -60,6 +65,23 @@ def test_launcher_detects_live_pid_and_occupied_port() -> None:
         host, port = listener.getsockname()
         assert isinstance(host, str)
         assert port_is_available(host, port) is False
+
+
+def test_dashboard_access_urls_separate_bind_local_and_lan_addresses(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "scripts.brain5d_launcher._lan_address",
+        lambda: "192.168.1.25",
+    )
+
+    urls = dashboard_access_urls("0.0.0.0", 8765)
+
+    assert urls == {
+        "bind": "0.0.0.0:8765",
+        "local": "http://127.0.0.1:8765",
+        "lan": "http://192.168.1.25:8765",
+    }
 
 
 # ============================================================================

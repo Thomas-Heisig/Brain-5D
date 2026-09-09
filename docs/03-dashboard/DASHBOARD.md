@@ -174,6 +174,8 @@ The integrated dashboard can be opened from another device on the same trusted n
 
 If Windows Firewall blocks the connection, allow inbound TCP `8765` only on the intended private network profile. This dashboard has operator and file-management endpoints and has no network authentication layer; do not expose it through public port forwarding.
 
+Startup output distinguishes the bind endpoint, local URL, detected LAN URL, browser URL, configuration path, process ID and runtime mode. On Windows, the wrapper enables UTF-8 console output so status symbols remain readable instead of appearing as mojibake.
+
 ### Development Timeline
 
 Release includes a repository-derived **Entwicklungs-Timeline** alongside Gate, release history, preview, the chronological release timeline and source documents. The read-only endpoint is `GET /api/release/development-timeline`.
