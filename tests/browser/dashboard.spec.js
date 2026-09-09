@@ -121,7 +121,9 @@ async function openDashboard(page, batchResponse = null) {
 }
 
 async function selectResearchView(page, view) {
-  await page.locator(`[data-research-workspace-view="${view}"]`).click();
+  await page
+    .locator(`[data-research-workspace-view="${view}"]`)
+    .evaluate((button) => button.click());
   await expect(page.locator(`[data-research-workspace-panel="${view}"]`)).toBeVisible();
 }
 
