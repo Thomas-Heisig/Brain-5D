@@ -1,0 +1,72 @@
+{
+  "conditions": {
+    "no_input_control": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 10,
+          "std": 0.0
+        }
+      },
+      "run_count": 10,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110
+      ]
+    },
+    "tonic_drive": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 100000.0,
+          "mean": 100000.0,
+          "median": 100000.0,
+          "min": 100000.0,
+          "n": 10,
+          "std": 0.0
+        }
+      },
+      "run_count": 10,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 20,
+  "schema_version": "2.0",
+  "two_condition_effects": {
+    "ticks_executed": {
+      "absolute_difference": 0.0,
+      "comparison_condition": "tonic_drive",
+      "ratio": 1.0,
+      "reference_condition": "no_input_control"
+    }
+  }
+}
