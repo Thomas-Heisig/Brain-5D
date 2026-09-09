@@ -1,11 +1,11 @@
 # MHRN Research Catalog
 
-*Generiert am 2026-09-08*
+*Generiert am 2026-09-09*
 
 ## Übersicht
 
-- **Forschungsfragen:** 70
-- **Hypothesen:** 69
+- **Forschungsfragen:** 77
+- **Hypothesen:** 76
 - **Claims:** 8
 - **Literaturquellen:** 31
 
@@ -196,6 +196,20 @@
 
 **Literatur:**
 - `SRC-CNS-PCI`: Adenauer G. Casali and others et al. (2013)
+
+---
+
+## Closed-Loop Gateway
+
+### RQ-GW-006
+
+**Frage:** Verbessert bidirektionale Gateway-Kopplung die Leistung gegenueber reiner Feedforward-Kopplung?
+
+**Status:** open
+**Relevanz:** Macht Feedback-Contracts, Limits und Stabilitaetspruefungen explizit.
+
+**Hypothesen:**
+- `H-GW-006-A`: Ein explizit begrenzter bidirektionaler Gateway-Contract verbessert den primaeren Outcome gegenueber Feedforward-Kopplung ohne Stabilitaetsverletzung. *(untested)*
 
 ---
 
@@ -394,6 +408,76 @@
 
 ---
 
+## Gateway Learning
+
+### RQ-GW-001
+
+**Frage:** Verbessert strukturierte Gateway-Plastizitaet das Lernen gegenueber Frozen-, Random- und Shuffle-Kontrollen?
+
+**Status:** open
+**Relevanz:** Direkter Vergleich der experiment-only Gateway-Bedingungen.
+
+**Hypothesen:**
+- `H-GW-001-A`: Strukturierte experimentelle Gateway-Plastizitaet verbessert eine vorab definierte Lernmetrik gegenueber Frozen-, Random- und Shuffle-Kontrollen. *(untested)*
+
+---
+
+## Gateway Resources
+
+### RQ-GW-007
+
+**Frage:** Wie skalieren Gateway-Latenz, Traffic, synaptische Operationen und Energie unter wachsender Topologie?
+
+**Status:** open
+**Relevanz:** Operationalisiert Bandbreiten- und Ressourcenlimits fuer spaetere Promotion-Gates.
+
+**Hypothesen:**
+- `H-GW-007-A`: Gateway-Traffic, Latenz und Energie skalieren innerhalb definierter Limits nachvollziehbar mit der aggregierten Topologie. *(untested)*
+
+---
+
+## Gateway Stability
+
+### RQ-GW-003
+
+**Frage:** Fuehrt Gateway-Plastizitaet zu einer Destabilisierung des Core-Netzes?
+
+**Status:** open
+**Relevanz:** Prueft Stabilitaet, Limits, Latenz und Ressourcenverbrauch getrennt vom Lernnutzen.
+
+**Hypothesen:**
+- `H-GW-003-A`: Ein gebundener Gateway-Lernpfad verletzt unter den definierten Limits keine vorab festgelegte Core-Stabilitaetsgrenze. *(untested)*
+
+---
+
+## Gateway Structure
+
+### RQ-GW-005
+
+**Frage:** Entstehen unter identischen Seeds reproduzierbare Strukturmuster im Gateway?
+
+**Status:** open
+**Relevanz:** Prueft Strukturveraenderungen mit deterministischem Journal und Seed-weiser Replikation.
+
+**Hypothesen:**
+- `H-GW-005-A`: Strukturveraenderungen zeigen unter identischen Seeds eine reproduzierbare Verteilung, die von Shuffle- und Random-Kontrollen unterscheidbar ist. *(untested)*
+
+---
+
+## Gateway Transfer and Interference
+
+### RQ-GW-004
+
+**Frage:** Generalisiert ein gelerntes Gateway auf neue Inputs, ohne erworbene Faehigkeiten zu stoeren?
+
+**Status:** open
+**Relevanz:** Verbindet Transfer- und Interferenzkontrollen in einem getrennten Evaluationsfenster.
+
+**Hypothesen:**
+- `H-GW-004-A`: Ein gelerntes Gateway erhaelt Holdout-Leistung und verursacht keine vorab definierte Interferenzregression. *(untested)*
+
+---
+
 ## Generalization
 
 ### RQ-CNS-116
@@ -584,6 +668,20 @@
 **Literatur:**
 - `SRC-CNS-META`: Brian Maniscalco and Hakwan Lau et al. (2012)
 - `SRC-CNS-NEUROGYM`: NeuroGym contributors et al. (2026)
+
+---
+
+## Modality-Specific Gateway Rules
+
+### RQ-GW-002
+
+**Frage:** Sind modalitaetsspezifische Audio-, Vision- und Digital-Regeln besser als eine generische Gateway-Regel?
+
+**Status:** open
+**Relevanz:** Trennt zeitliche, raeumliche und exakte symbolische Anforderungen.
+
+**Hypothesen:**
+- `H-GW-002-A`: Modalitaetsspezifische Regeln erzielen unter matched tasks bessere primaere Outcomes als eine generische Gateway-Regel. *(untested)*
 
 ---
 

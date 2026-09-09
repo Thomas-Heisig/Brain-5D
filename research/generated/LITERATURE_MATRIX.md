@@ -35,4 +35,4 @@
 | Deutschland (2026) |  | RQ-WEL-103 | open |
 
 ---
-*Automatisch generiert am 2026-09-08*
+*Automatisch generiert am 2026-09-09*

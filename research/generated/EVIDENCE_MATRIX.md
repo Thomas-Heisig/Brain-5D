@@ -1,6 +1,6 @@
 # MHRN Evidence Matrix
 
-*Generiert am 2026-09-08*
+*Generiert am 2026-09-09*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
@@ -69,6 +69,13 @@
 | `RQ-WEL-101` | `H-WEL-101-A` | 1 | — | — | offen |
 | `RQ-WEL-102` | `H-WEL-102-A` | 2 | — | — | offen |
 | `RQ-WEL-103` | `H-WEL-103-A` | 4 | — | — | offen |
+| `RQ-GW-001` | `H-GW-001-A` | 0 | — | — | offen |
+| `RQ-GW-002` | `H-GW-002-A` | 0 | — | — | offen |
+| `RQ-GW-003` | `H-GW-003-A` | 0 | — | — | offen |
+| `RQ-GW-004` | `H-GW-004-A` | 0 | — | — | offen |
+| `RQ-GW-005` | `H-GW-005-A` | 0 | — | — | offen |
+| `RQ-GW-006` | `H-GW-006-A` | 0 | — | — | offen |
+| `RQ-GW-007` | `H-GW-007-A` | 0 | — | — | offen |
 | `RQ-MSBA-E01` | `H-MSBA-E01-A` | 0 | — | — | offen |
 | `RQ-MSBA-E02` | `H-MSBA-E02-A` | 0 | — | — | offen |
 | `RQ-MSBA-E03` | `H-MSBA-E03-A` | 0 | — | — | offen |

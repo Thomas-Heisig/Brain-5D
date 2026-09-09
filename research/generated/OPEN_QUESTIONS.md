@@ -1,6 +1,6 @@
 # MHRN Open Questions
 
-*Generiert am 2026-09-08*
+*Generiert am 2026-09-09*
 
 Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evidenz.
 
@@ -969,6 +969,97 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
+## RQ-GW-001
+
+**Domäne:** Gateway Learning
+
+**Frage:** Verbessert strukturierte Gateway-Plastizitaet das Lernen gegenueber Frozen-, Random- und Shuffle-Kontrollen?
+
+**Relevanz:** Direkter Vergleich der experiment-only Gateway-Bedingungen.
+
+**Hypothesen:**
+- `H-GW-001-A`: Strukturierte experimentelle Gateway-Plastizitaet verbessert eine vorab definierte Lernmetrik gegenueber Frozen-, Random- und Shuffle-Kontrollen.
+
+---
+
+## RQ-GW-002
+
+**Domäne:** Modality-Specific Gateway Rules
+
+**Frage:** Sind modalitaetsspezifische Audio-, Vision- und Digital-Regeln besser als eine generische Gateway-Regel?
+
+**Relevanz:** Trennt zeitliche, raeumliche und exakte symbolische Anforderungen.
+
+**Hypothesen:**
+- `H-GW-002-A`: Modalitaetsspezifische Regeln erzielen unter matched tasks bessere primaere Outcomes als eine generische Gateway-Regel.
+
+---
+
+## RQ-GW-003
+
+**Domäne:** Gateway Stability
+
+**Frage:** Fuehrt Gateway-Plastizitaet zu einer Destabilisierung des Core-Netzes?
+
+**Relevanz:** Prueft Stabilitaet, Limits, Latenz und Ressourcenverbrauch getrennt vom Lernnutzen.
+
+**Hypothesen:**
+- `H-GW-003-A`: Ein gebundener Gateway-Lernpfad verletzt unter den definierten Limits keine vorab festgelegte Core-Stabilitaetsgrenze.
+
+---
+
+## RQ-GW-004
+
+**Domäne:** Gateway Transfer and Interference
+
+**Frage:** Generalisiert ein gelerntes Gateway auf neue Inputs, ohne erworbene Faehigkeiten zu stoeren?
+
+**Relevanz:** Verbindet Transfer- und Interferenzkontrollen in einem getrennten Evaluationsfenster.
+
+**Hypothesen:**
+- `H-GW-004-A`: Ein gelerntes Gateway erhaelt Holdout-Leistung und verursacht keine vorab definierte Interferenzregression.
+
+---
+
+## RQ-GW-005
+
+**Domäne:** Gateway Structure
+
+**Frage:** Entstehen unter identischen Seeds reproduzierbare Strukturmuster im Gateway?
+
+**Relevanz:** Prueft Strukturveraenderungen mit deterministischem Journal und Seed-weiser Replikation.
+
+**Hypothesen:**
+- `H-GW-005-A`: Strukturveraenderungen zeigen unter identischen Seeds eine reproduzierbare Verteilung, die von Shuffle- und Random-Kontrollen unterscheidbar ist.
+
+---
+
+## RQ-GW-006
+
+**Domäne:** Closed-Loop Gateway
+
+**Frage:** Verbessert bidirektionale Gateway-Kopplung die Leistung gegenueber reiner Feedforward-Kopplung?
+
+**Relevanz:** Macht Feedback-Contracts, Limits und Stabilitaetspruefungen explizit.
+
+**Hypothesen:**
+- `H-GW-006-A`: Ein explizit begrenzter bidirektionaler Gateway-Contract verbessert den primaeren Outcome gegenueber Feedforward-Kopplung ohne Stabilitaetsverletzung.
+
+---
+
+## RQ-GW-007
+
+**Domäne:** Gateway Resources
+
+**Frage:** Wie skalieren Gateway-Latenz, Traffic, synaptische Operationen und Energie unter wachsender Topologie?
+
+**Relevanz:** Operationalisiert Bandbreiten- und Ressourcenlimits fuer spaetere Promotion-Gates.
+
+**Hypothesen:**
+- `H-GW-007-A`: Gateway-Traffic, Latenz und Energie skalieren innerhalb definierter Limits nachvollziehbar mit der aggregierten Topologie.
+
+---
+
 ## RQ-MSBA-E01
 
 **Domäne:** Multimodal Energy Efficiency
@@ -1034,6 +1125,6 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 70 offene Fragen.*
+*Insgesamt 77 offene Fragen.*
 
 > Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.
