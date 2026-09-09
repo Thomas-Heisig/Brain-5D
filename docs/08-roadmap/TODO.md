@@ -74,6 +74,25 @@ The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the develo
 - [x] Extend shared panel state controls to Research workspace surfaces so working areas can be minimized, restored and maximized.
 - [x] Keep Review/AIRR handling separate from automatic EVID promotion.
 
+## 2026-09-09 Complete roadmap audit
+
+- [x] Verify the five requested v0.6 acceptance areas against implementation and focused tests: 10 passed.
+- [x] Reconcile the roadmap archive description with the current metadata-only archive index and stable canonical experiment paths.
+- [x] Separate the remaining v0.6 release publication gate from unfinished engineering implementation.
+- [x] Record the remaining research backlog explicitly without promoting engineering completion to scientific evidence.
+
+### Non-blocking roadmap backlog
+
+These items remain open but are not release blockers for the v0.6 engineering foundation. Their detailed task lists remain in the linked roadmap documents.
+
+- [ ] Close R0 research-catalog operationalization: assign unmapped RQ/H entries or mark them `design_pending`, freeze confirmatory controls/preregistrations, and publish the registry audit artifact. ([ROADMAP.md](ROADMAP.md))
+- [ ] Execute and review the evidence programme for R1-R4: recurrence, productive learning, closed-loop embodiment and Neural Symbiosis/MSBA controls. ([ROADMAP.md](ROADMAP.md), [RESEARCH_ROADMAP.md](RESEARCH_ROADMAP.md))
+- [ ] Design the versioned productive N-D storage/core migration and its equivalence tests before any productive core beyond 5D. ([ROADMAP.md](ROADMAP.md))
+- [ ] Complete the remaining R6-R12 research tracks: time calibration, 5D ablations, regulation/sensor loss, memory/world model, multimodal grounding, AI treatments and evidence-driven scaling. ([ROADMAP.md](ROADMAP.md), [RESEARCH_ROADMAP.md](RESEARCH_ROADMAP.md))
+- [ ] Implement the persistent Learning Studio/API and execution-boundary work before productive-learning claims. ([TODO_LEARNING_STUDIO.md](TODO_LEARNING_STUDIO.md))
+- [ ] Complete the Alpha.8 recursive loopback, multirate and deterministic parallelism programme only after the release freeze. ([TODO_ALPHA8_RECURSIVE_LOOPBACKS.md](TODO_ALPHA8_RECURSIVE_LOOPBACKS.md))
+- [ ] Complete self-model, functional-thinking, metacognition and philosophical research only through preregistered, controlled experiments. ([TODO_SELF_MODEL_THINKING.md](TODO_SELF_MODEL_THINKING.md), [RESEARCH_ROADMAP_POST_THESIS.md](RESEARCH_ROADMAP_POST_THESIS.md))
+
 ## Future work is roadmap work, not an open release blocker
 
 The following programmes remain intentionally **future research/engineering**, and are therefore maintained in [ROADMAP.md](ROADMAP.md) rather than as release-blocking TODO checkboxes:

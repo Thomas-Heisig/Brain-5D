@@ -2,7 +2,7 @@
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-08
+**Updated:** 2026-09-09
 
 ## 2026-09-08 Versioned embedding and cluster analysis
 
@@ -13,13 +13,23 @@
 ## 2026-09-08 Research experiment organizer
 
 - Research now exposes experiment-series launch, active experiment inventory, immutable archive and restore controls in the existing dashboard workflow.
-- Archive operations move complete experiment directories and record only archive metadata; scientific artifacts remain unchanged.
+- Archive operations now use a non-destructive metadata-only work-view index; canonical experiment paths and scientific artifacts remain unchanged.
 
 ## 2026-09-08 v0.6.0a1 development line opened
 
 - Opened the v0.6 Scaling & Deterministic Performance line after the reviewed v0.5.0-alpha.7 gate closure.
 - Kept the v0.6 milestone explicitly open: version movement is release engineering, not evidence of completed scaling or scientific validation.
 - The active v0.6 criteria remain the source of truth for future compatibility, benchmark, storage, resume and migration work.
+
+## 2026-09-09 v0.6 engineering foundation review
+
+- Verified the v0.6 compatibility contract for runtime state, restart-capable snapshots, resumable runs and frozen B5D/journal formats.
+- Verified reproducible scaling measurements with explicit memory, tick-cost, runtime-phase and pacing budgets.
+- Verified bounded telemetry/storage compaction, immutable raw-run indexes and deterministic detail extraction.
+- Verified deterministic pause/resume/restart identity and byte-identical migration/rollback behavior.
+- The focused acceptance suite passes: 10 tests passed across persistence, benchmarks, runtime identity, pacing, research-data compaction and workspace contracts.
+- The only v0.6 release item still open is publication of the immutable release record after the exact source-freeze CI and release-readiness snapshot are green. This is a gate/publication step, not missing implementation.
+- Open research operationalization remains tracked in R0-R12 and the linked specialist TODOs; the engineering foundation does not constitute scientific evidence.
 
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 

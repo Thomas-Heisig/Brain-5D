@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-09 - v0.6 roadmap and acceptance audit
+
+- Verified the compatibility, bounded telemetry/storage, scaling-budget, deterministic identity and migration/rollback contracts for v0.6.
+- Focused acceptance tests pass: 10 passed across persistence, benchmarks, runtime pacing, pause/resume, research-data compaction and workspace behavior.
+- Corrected the roadmap to describe experiment archiving as a metadata-only work-view index rather than a directory move.
+- Recorded the remaining release-record publication gate and the non-blocking R0-R12 research backlog in the canonical TODO.
+
 ## 2026-09-08 - Versioned embedding and cluster analysis jobs
 
 - Replaced the t-SNE / UMAP / Clusterexport placeholder with a bounded backend analysis job.
