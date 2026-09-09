@@ -35,7 +35,9 @@ class _DeterministicNetwork:
 
     def step(self) -> _Result:
         self._tick += 1
-        self.accumulator = (self.accumulator * 1103515245 + 12345 + self._tick) & 0xFFFFFFFF
+        self.accumulator = (
+            self.accumulator * 1103515245 + 12345 + self._tick
+        ) & 0xFFFFFFFF
         return _Result(spikes_this_tick=self.accumulator % 3)
 
     def digest(self) -> str:

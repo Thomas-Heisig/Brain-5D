@@ -84,7 +84,9 @@ def run_tier(
         "connections_per_neuron_requested": connections_per_neuron,
         "construction_seconds": round(construction_seconds, 6),
         "step_seconds": round(step_seconds, 6),
-        "mean_tick_cost_ms": round(mean_tick_cost_ms, 6) if mean_tick_cost_ms is not None else None,
+        "mean_tick_cost_ms": (
+            round(mean_tick_cost_ms, 6) if mean_tick_cost_ms is not None else None
+        ),
         "python_peak_memory_bytes": int(peak_bytes),
         "python_peak_bytes_per_neuron": round(peak_bytes / neuron_count, 3),
         "ticks_per_second": round(ticks / step_seconds, 3) if step_seconds else None,

@@ -56,12 +56,16 @@ class ExperimentArchiveService:
         try:
             payload = json.loads(self.index_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
-            raise ExperimentArchiveError("experiment archive index is unreadable") from exc
+            raise ExperimentArchiveError(
+                "experiment archive index is unreadable"
+            ) from exc
         if not isinstance(payload, dict):
             raise ExperimentArchiveError("experiment archive index must be an object")
         raw_items = payload.get("experiments", {})
         if not isinstance(raw_items, dict):
-            raise ExperimentArchiveError("experiment archive index experiments must be an object")
+            raise ExperimentArchiveError(
+                "experiment archive index experiments must be an object"
+            )
         result: dict[str, dict[str, Any]] = {}
         for key, value in cast(dict[object, object], raw_items).items():
             if isinstance(key, str) and isinstance(value, dict):

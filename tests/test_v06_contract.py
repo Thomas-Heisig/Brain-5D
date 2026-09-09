@@ -12,11 +12,11 @@ from src.diagnostics.performance_contract import (
     evaluate_scaling_tier,
     load_performance_budgets,
 )
-from src.storage.b5d import B5DSnapshotWriter, FORMAT_VERSION
+from src.storage.b5d import FORMAT_VERSION, B5DSnapshotWriter
 from src.storage.delta_journal import JOURNAL_VERSION
 from src.storage.v06_contract import (
-    V06CompatibilityError,
     V06_CONTRACT,
+    V06CompatibilityError,
     migration_plan,
     sha256_file,
     validate_v06_snapshot,
@@ -88,22 +88,28 @@ def test_performance_contract_covers_every_runtime_phase() -> None:
 
 def test_targeted_and_unlimited_pacing_have_explicit_acceptance_criteria() -> None:
     budgets = _budgets()
-    assert evaluate_pacing(
-        target_hz=100.0,
-        achieved_hz=95.0,
-        realtime_ratio=0.095,
-        dt_seconds=0.001,
-        runtime_mode="TARGETED",
-        budgets=budgets,
-    ) == ()
-    assert evaluate_pacing(
-        target_hz=None,
-        achieved_hz=1250.0,
-        realtime_ratio=1.25,
-        dt_seconds=0.001,
-        runtime_mode="MAX",
-        budgets=budgets,
-    ) == ()
+    assert (
+        evaluate_pacing(
+            target_hz=100.0,
+            achieved_hz=95.0,
+            realtime_ratio=0.095,
+            dt_seconds=0.001,
+            runtime_mode="TARGETED",
+            budgets=budgets,
+        )
+        == ()
+    )
+    assert (
+        evaluate_pacing(
+            target_hz=None,
+            achieved_hz=1250.0,
+            realtime_ratio=1.25,
+            dt_seconds=0.001,
+            runtime_mode="MAX",
+            budgets=budgets,
+        )
+        == ()
+    )
     violations = evaluate_pacing(
         target_hz=100.0,
         achieved_hz=50.0,

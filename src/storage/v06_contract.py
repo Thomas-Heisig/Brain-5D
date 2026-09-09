@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .b5d import B5DReader, FORMAT_VERSION
+from .b5d import FORMAT_VERSION, B5DReader
 from .delta_journal import JOURNAL_VERSION
 
 
@@ -58,8 +58,13 @@ def validate_v06_snapshot(path: Path) -> dict[str, Any]:
             raise V06CompatibilityError(
                 f"snapshot version {header.version} != {V06_CONTRACT.snapshot_format_version}"
             )
-        if V06_CONTRACT.snapshot_restart_capable_required and not header.restart_capable:
-            raise V06CompatibilityError("v0.6 resumable snapshot must be restart-capable")
+        if (
+            V06_CONTRACT.snapshot_restart_capable_required
+            and not header.restart_capable
+        ):
+            raise V06CompatibilityError(
+                "v0.6 resumable snapshot must be restart-capable"
+            )
         tick = int(header.snapshot_tick)
         neurons = int(header.neuron_count)
         synapses = int(header.synapse_count)
