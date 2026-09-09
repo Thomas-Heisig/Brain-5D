@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "c325acdfac5341f2b25627b1d762eef044e149ef",
-  "tested_tree_digest": "ec95b6e0e763036b5bdca4621d5fc1a03da40959983fc4ea02a3fed17c17ee1c",
+  "tested_commit": "4cbaefbaafa3598d47332e1833456f3eb9ed9efa",
+  "tested_tree_digest": "4bd3afd8a43ecaa275f76fa319bf661081a4f73027b13426f19fbdb573d29779",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,20 +12,20 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-09T18:57:00.872436+00:00",
+  "timestamp": "2026-09-09T22:02:35.607337+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
   "full_collection": {
     "status": "passed",
-    "collected": 1085,
+    "collected": 1087,
     "collection_errors": 0
   },
   "full_suite": {
     "command": "python -m pytest tests/ -q -ra --junitxml=<temporary-report>",
     "status": "passed",
     "exit_code": 0,
-    "passed": 1083,
+    "passed": 1085,
     "failed": 0,
     "errors": 0,
     "skipped": 2,
@@ -366,7 +366,7 @@
     "tests/test_dashboard_ui_integration.py": "4317665d0056ece97441501096596f5af834f7d8b3bcedd7daeaef0a948b1f4b",
     "tests/test_dashboard_wesen.py": "3f53c9c3f84b06b4377b2043b484a709faf17ba570056cbad14644bb47ec954d",
     "tests/test_delta_journal.py": "68bccda03bd5db2e3022d3193d661e7e4960d721d1a9577a05293c80d069a08e",
-    "tests/test_development_timeline.py": "0a639c328ecb1abcd8097999775af992cdffb7007626de41c596e50b13b14ee3",
+    "tests/test_development_timeline.py": "b75b93166bc1323af1929433d6c6aed52e8edf58e0209c196e8fb3802a41b99a",
     "tests/test_doc_consistency.py": "006b1c5ff390ac0a0750db18e71f6750036a10c4d1ba72135d0ff1cce71c6c59",
     "tests/test_eligibility.py": "7d7e70a37bf4a569489bbe2257e686a39e1b7814ee29a6f568395d390f37c840",
     "tests/test_embedding_jobs.py": "ef8f0f266107bca6616bc67cceadfcbb4fc0722abea6b8338e4bde2b5121da3c",
