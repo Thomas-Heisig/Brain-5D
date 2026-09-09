@@ -28,15 +28,15 @@ class ExperimentOrganizerService:
                 continue
             data = cast(dict[str, Any], raw)
             results_value = data.get("results", [])
-            results = (
-                [
+            if isinstance(results_value, list):
+                result_items = cast(list[object], results_value)
+                results = [
                     cast(dict[str, Any], item)
-                    for item in results_value
+                    for item in result_items
                     if isinstance(item, dict)
                 ]
-                if isinstance(results_value, list)
-                else []
-            )
+            else:
+                results = []
             completed = int(
                 data.get(
                     "completed",
