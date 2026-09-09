@@ -81,6 +81,15 @@ The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the develo
 - [x] Separate the remaining v0.6 release publication gate from unfinished engineering implementation.
 - [x] Record the remaining research backlog explicitly without promoting engineering completion to scientific evidence.
 
+## 2026-09-09 Development Timeline
+
+- [x] Add the routed Release tab **Entwicklungs-Timeline** without creating a separate application.
+- [x] Add the second development bar to the existing chronological release timeline.
+- [x] Derive stage classification from structured repository artifacts, implementation paths, tests, verification artifacts, registries and runtime/snapshot data.
+- [x] Expose separate technical and scientific markers plus Engineering, Verification and Scientific Evidence scores.
+- [x] Keep Stage 10 as a research frontier with `consciousness_claim=unsupported` and no automatic consciousness assertion.
+- [x] Add stage detail panels, runtime `unavailable`/`last_observed` handling and responsive browser/API coverage.
+
 ### Non-blocking roadmap backlog
 
 These items remain open but are not release blockers for the v0.6 engineering foundation. Their detailed task lists remain in the linked roadmap documents.

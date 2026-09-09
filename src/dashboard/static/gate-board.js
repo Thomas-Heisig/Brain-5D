@@ -274,6 +274,186 @@ function renderReleaseTimeline(entries, sources, asOf) {
   `;
 }
 
+function scorePercent(value) {
+  return `${Math.round(Math.max(0, Math.min(1, Number(value) || 0)) * 100)}%`;
+}
+
+function runtimeLabel(value) {
+  return value === null || value === undefined ? 'unavailable' : Number(value).toLocaleString('de-DE');
+}
+
+function renderDevelopmentScales(data) {
+  const container = $('development-scale-grid');
+  if (!container) return;
+  const runtime = data.current_runtime || {};
+  const observed = data.last_observed_runtime || {};
+  const valueFor = (key) => (typeof runtime[key] === 'number' ? runtime[key] : observed[key]);
+  const scales = [
+    { key: 'neurons', label: 'Neuronen', maximum: 11 },
+    { key: 'synapses', label: 'Synapsen', maximum: 15 },
+  ];
+  container.innerHTML = scales.map((scale) => {
+    const value = valueFor(scale.key);
+    const position = typeof value === 'number' && value > 0
+      ? Math.max(0, Math.min(100, Math.log10(value) / scale.maximum * 100))
+      : null;
+    const ticks = Array.from({ length: scale.maximum + 1 }, (_, exponent) => {
+      const tickPosition = exponent / scale.maximum * 100;
+      const label = exponent === 0 ? '1' : `10^${exponent}`;
+      return `<span class="development-scale-tick" style="left: ${tickPosition}%"><i></i><small>${label}</small></span>`;
+    }).join('');
+    return `
+      <section class="development-scale" aria-label="Logarithmische ${scale.label}-Skala">
+        <header><strong>${scale.label}</strong><span>${runtime.status === 'active' ? 'aktuell' : 'last observed'}</span></header>
+        <div class="development-scale-line">
+          ${ticks}
+          ${position === null ? '<span class="development-scale-unavailable">unavailable</span>' : `<span class="development-scale-marker" style="left: ${position}%" title="${escapeHtml(runtimeLabel(value))}"></span>`}
+        </div>
+        <small class="development-scale-value">${escapeHtml(runtimeLabel(value))}</small>
+      </section>
+    `;
+  }).join('');
+}
+
+function renderDevelopmentTrack(data, containerId) {
+  const container = $(containerId);
+  if (!container) return;
+  const stages = Array.isArray(data.stages) ? data.stages : [];
+  const technicalPosition = Math.max(0, Math.min(10, Number(data.current_stage) || 0)) * 10;
+  const scientificPosition = Math.max(0, Math.min(10, Number(data.scientific_stage) || 0)) * 10;
+  container.innerHTML = `
+    <div class="development-track-header">
+      <span>Entwicklung</span>
+      <small>Maschinenlesbare Repository-Klassifikation</small>
+    </div>
+    <div class="development-track-line" role="list" aria-label="Entwicklungsstufen">
+      ${stages.map((stage) => `
+        <button type="button" class="development-track-node development-track-node-${escapeHtml(stage.status || 'planned')}" data-development-stage="${stage.stage}" role="listitem" title="Stufe ${stage.stage}: ${escapeHtml(stage.name)}">
+          <span class="development-track-node-dot"></span>
+          <span class="development-track-node-label">${escapeHtml(stage.short_label || stage.name)}</span>
+        </button>
+      `).join('')}
+      <span class="development-marker development-marker-technical" style="--marker-position: ${technicalPosition}%" aria-label="Du bist hier: ${escapeHtml(data.current_label || '')}">
+        <strong>Du bist hier</strong>
+        <small>${escapeHtml(data.current_label || '')}</small>
+      </span>
+      <span class="development-marker development-marker-scientific" style="--marker-position: ${scientificPosition}%" aria-label="Wissenschaftlich hier: ${escapeHtml(data.scientific_label || '')}">
+        <strong>Wissenschaftlich hier</strong>
+        <small>${escapeHtml(data.scientific_label || '')}</small>
+      </span>
+    </div>
+  `;
+}
+
+function renderDevelopmentDetail(stage) {
+  const detail = $('development-detail');
+  if (!detail || !stage) return;
+  const list = (items) => (Array.isArray(items) && items.length)
+    ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '<p class="development-empty">Keine strukturierten Einträge vorhanden.</p>';
+  const criteria = Array.isArray(stage.criteria) ? stage.criteria : [];
+  detail.hidden = false;
+  detail.innerHTML = `
+    <div class="development-detail-header">
+      <div><span class="workspace-kicker">STUFE ${stage.stage}</span><h3>${escapeHtml(stage.name)}</h3></div>
+      <button type="button" class="modal-close" data-development-detail-close aria-label="Detail schließen">&times;</button>
+    </div>
+    <p>${escapeHtml((stage.description || []).join(' · '))}</p>
+    <div class="development-detail-scores">
+      <span>Engineering <strong>${scorePercent(stage.implementation_score)}</strong></span>
+      <span>Verification <strong>${scorePercent(stage.verification_score)}</strong></span>
+      <span>Scientific readiness <strong>${scorePercent(stage.research_readiness_score)}</strong></span>
+    </div>
+    <div class="development-criteria-list">
+      ${criteria.map((criterion) => `
+        <div class="development-criterion development-criterion-${escapeHtml(criterion.status || 'missing')}">
+          <span>${escapeHtml(criterion.label || criterion.id)}</span>
+          <strong>${escapeHtml(criterion.status || 'missing')}</strong>
+          ${Array.isArray(criterion.evidence) && criterion.evidence.length ? `<small>${escapeHtml(criterion.evidence.join(' · '))}</small>` : ''}
+        </div>
+      `).join('')}
+    </div>
+    <div class="development-detail-columns">
+      <section><h4>Module</h4>${list(stage.relevant_modules)}</section>
+      <section><h4>Tests</h4>${list(stage.relevant_tests)}</section>
+      <section><h4>Experimente / RQ</h4>${list([...(stage.relevant_experiments || []), ...(stage.relevant_research_questions || [])])}</section>
+      <section><h4>Grenzen</h4>${list(stage.known_limits)}</section>
+      <section><h4>Offene TODOs</h4>${list(stage.open_todos)}</section>
+      <section><h4>Nächste technische Schritte</h4>${list(stage.next_technical_steps)}</section>
+    </div>
+  `;
+}
+
+function renderDevelopmentTimeline(data) {
+  const stages = Array.isArray(data.stages) ? data.stages : [];
+  const scoreGrid = $('development-score-grid');
+  const stageList = $('development-stage-list');
+  const runtimeGrid = $('development-runtime-grid');
+  const notice = $('development-timeline-notice');
+  const updated = $('development-timeline-updated');
+  if (updated) updated.textContent = `Stand ${formatTimelineDate((data.last_updated || '').slice(0, 10))}`;
+  if (notice) notice.innerHTML = `<strong>Research frontier:</strong> ${escapeHtml(data.scientific_note || 'Keine automatische Bewusstseinsbehauptung.')} <span class="development-consciousness-guard">${escapeHtml(data.consciousness_claim || 'unsupported')}</span>`;
+  if (scoreGrid) {
+    scoreGrid.innerHTML = [
+      ['Engineering', data.engineering_score, 'Implementiert / integriert'],
+      ['Verification', data.verification_score, 'Technisch reproduziert'],
+      ['Scientific Evidence', data.scientific_evidence_score, 'EVID bleibt gate- und reviewgebunden'],
+    ].map(([label, score, hint]) => `<div class="development-score-card"><span>${label}</span><strong>${scorePercent(score)}</strong><small>${hint}</small></div>`).join('');
+  }
+  if (runtimeGrid) {
+    const runtime = data.current_runtime || {};
+    const last = data.last_observed_runtime;
+    runtimeGrid.innerHTML = `
+      <div><span>Aktuelle Runtime</span><strong>${runtime.status === 'active' ? `${runtimeLabel(runtime.neurons)} Neuronen · ${runtimeLabel(runtime.synapses)} Synapsen` : 'unavailable'}</strong><small>Quelle: ${escapeHtml(runtime.source || 'unavailable')}</small></div>
+      <div><span>Last observed</span><strong>${last ? `${runtimeLabel(last.neurons)} Neuronen · ${runtimeLabel(last.synapses)} Synapsen` : 'unavailable'}</strong><small>Snapshot-Größe ist keine aktive Runtime.</small></div>
+      <div><span>Confidence</span><strong>${scorePercent(data.confidence)}</strong><small>Fehlt bei stale/fehlenden Verifikationsdaten.</small></div>
+    `;
+  }
+  renderDevelopmentScales(data);
+  renderDevelopmentTrack(data, 'development-timeline-track');
+  renderDevelopmentTrack(data, 'release-development-track');
+  if (stageList) {
+    stageList.innerHTML = stages.map((stage) => `
+      <button type="button" class="development-stage-card development-stage-${escapeHtml(stage.status || 'planned')}" data-development-stage="${stage.stage}">
+        <span class="development-stage-number">${stage.stage}</span>
+        <span class="development-stage-copy"><strong>${escapeHtml(stage.name)}</strong><small>${escapeHtml((stage.description || []).join(' · '))}</small></span>
+        <span class="development-stage-metrics"><b>${scorePercent(stage.implementation_score)}</b><em>${escapeHtml(stage.status || 'planned')}</em></span>
+      </button>
+    `).join('');
+  }
+  window.__mhrnDevelopmentTimeline = data;
+}
+
+let developmentTimelineLinksBound = false;
+
+function bindDevelopmentTimeline() {
+  if (developmentTimelineLinksBound) return;
+  developmentTimelineLinksBound = true;
+  document.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-development-stage]');
+    if (target && window.__mhrnDevelopmentTimeline) {
+      const stage = window.__mhrnDevelopmentTimeline.stages?.find((item) => String(item.stage) === String(target.dataset.developmentStage));
+      renderDevelopmentDetail(stage);
+    }
+    if (event.target.closest('[data-development-detail-close]')) {
+      const detail = $('development-detail');
+      if (detail) detail.hidden = true;
+    }
+  });
+}
+
+async function loadDevelopmentTimeline() {
+  try {
+    const response = await fetch('/api/release/development-timeline', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    renderDevelopmentTimeline(await response.json());
+    bindDevelopmentTimeline();
+  } catch (err) {
+    const notice = $('development-timeline-notice');
+    if (notice) notice.textContent = 'Entwicklungs-Timeline unavailable.';
+  }
+}
+
 let releaseDocumentLinksBound = false;
 
 function bindReleaseDocumentLinks() {
@@ -336,5 +516,6 @@ export function renderGateBoard(state) {
   // Load immutable release history once per render cycle.
   loadReleaseTree();
   loadReleaseTimeline();
+  loadDevelopmentTimeline();
   bindReleaseDocumentLinks();
 }

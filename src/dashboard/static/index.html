@@ -622,6 +622,7 @@
         <button type="button" data-workspace-view="releases">Releases 0.1 bis jetzt</button>
         <button type="button" data-workspace-view="preview">Aktuelle Vorschau</button>
         <button type="button" data-workspace-view="timeline">Timeline chronologisch</button>
+        <button type="button" data-workspace-view="development">Entwicklungs-Timeline</button>
         <button type="button" data-workspace-view="documents">TODO / CHANGELOG / ROADMAP</button>
       </nav>
       <div class="release-board">
@@ -652,7 +653,26 @@
             <span class="release-timeline-count" id="release-timeline-count">Loading...</span>
           </div>
           <div class="release-timeline-sources" id="release-timeline-sources" aria-label="Timeline sources"></div>
+          <div class="development-track-inline" id="release-development-track" aria-label="Development timeline"></div>
           <div class="release-timeline-list" id="release-timeline-list" aria-live="polite"></div>
+        </section>
+
+        <section class="release-view-panel development-timeline-panel" data-release-view="development" data-workspace-panel hidden aria-labelledby="development-timeline-title">
+          <div class="release-timeline-header">
+            <div>
+              <span class="workspace-kicker">ENGINEERING MATURITY</span>
+              <h2 id="development-timeline-title">Entwicklungs-Timeline</h2>
+              <p class="release-subtitle">Repository-basierte technische Reife, technische Verifikation und wissenschaftliche Evidenz bleiben getrennt.</p>
+            </div>
+            <span class="release-timeline-count" id="development-timeline-updated">Loading...</span>
+          </div>
+          <div class="development-timeline-notice" id="development-timeline-notice"></div>
+          <div class="development-score-grid" id="development-score-grid"></div>
+          <div class="development-track" id="development-timeline-track"></div>
+          <div class="development-runtime-grid" id="development-runtime-grid"></div>
+          <div class="development-scale-grid" id="development-scale-grid"></div>
+          <div class="development-stage-list" id="development-stage-list" aria-live="polite"></div>
+          <aside class="development-detail" id="development-detail" hidden></aside>
         </section>
 
         <section class="release-view-panel release-documents-panel" data-release-view="documents" data-workspace-panel hidden aria-labelledby="release-documents-title">

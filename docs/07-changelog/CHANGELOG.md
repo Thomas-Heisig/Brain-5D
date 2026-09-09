@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-09 - Repository-derived Development Timeline
+
+- Added the Release **Entwicklungs-Timeline** tab and a second development bar inside the chronological release timeline.
+- Added `GET /api/release/development-timeline` with eleven machine-derived stages, dual technical/scientific markers, score separation and confidence.
+- Connected active runtime telemetry and `last_observed` B5D snapshot sizes without inventing unavailable values.
+- Added detail panels and backend/browser tests while preserving the boundary that engineering maturity is not scientific evidence and never implies consciousness.
+
 ## 2026-09-09 - v0.6 roadmap and acceptance audit
 
 - Verified the compatibility, bounded telemetry/storage, scaling-budget, deterministic identity and migration/rollback contracts for v0.6.

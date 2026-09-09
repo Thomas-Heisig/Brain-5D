@@ -65,6 +65,7 @@ from src.research_assistant.ollama_backend import OllamaBackend
 
 from .control_http import handle_control_get, handle_control_post
 from .control_service import DashboardControlService
+from .development_timeline import build_development_timeline
 from .docs_source import DocumentationSource, create_docs_source
 from .embedding_jobs import EmbeddingJobError, list_embedding_jobs, run_embedding_job
 from .experiment_archive import ExperimentArchiveError, ExperimentArchiveService
@@ -564,6 +565,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/releases/timeline":
                 self._serve_release_timeline()
+                return
+
+            if path == "/api/release/development-timeline":
+                self._serve_development_timeline()
                 return
 
             if path == "/api/releases/current":
@@ -1360,6 +1365,38 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         self._send_json(
             cast(dict[str, JSONValue], dict(build_release_timeline(repo_root)))
         )
+
+    def _serve_development_timeline(self) -> None:
+        """Serve repository-derived engineering and research maturity."""
+        server = self.dashboard_server
+        repo_root = Path(__file__).resolve().parents[2]
+        runtime: dict[str, object] | None = None
+        bridge = server.structural_bridge
+        if bridge is not None:
+            try:
+                metrics = bridge.get_system_metrics()
+                runtime = {
+                    "neurons": metrics.neurons,
+                    "synapses": metrics.synapses,
+                }
+            except (AttributeError, RuntimeError, TypeError, ValueError):
+                runtime = None
+        gate_builder = GateStatusBuilder(
+            bridge=bridge,
+            research_source=server.research_source,
+            repo_root=repo_root,
+            config_dict=cast(
+                "dict[str, object]",
+                getattr(bridge, "config_dict", None) or {},
+            ),
+        )
+        gate_status = gate_builder.build()
+        payload = build_development_timeline(
+            repo_root,
+            runtime=runtime,
+            gate_status=cast("dict[str, object]", gate_status),
+        )
+        self._send_json(cast(dict[str, JSONValue], dict(payload)))
 
     # ========================================================================
     # Structural / runtime POST dispatch

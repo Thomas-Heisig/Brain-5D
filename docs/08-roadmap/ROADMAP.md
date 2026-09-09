@@ -31,6 +31,14 @@
 - The only v0.6 release item still open is publication of the immutable release record after the exact source-freeze CI and release-readiness snapshot are green. This is a gate/publication step, not missing implementation.
 - Open research operationalization remains tracked in R0-R12 and the linked specialist TODOs; the engineering foundation does not constitute scientific evidence.
 
+## 2026-09-09 Repository-derived development timeline
+
+- Added the Release **Entwicklungs-Timeline** as a new routed tab and added its development bar to the chronological release timeline.
+- Added `GET /api/release/development-timeline` with eleven explicit stages, structured criteria, continuous technical/scientific markers, score separation and confidence.
+- Classified stages from module/test paths, registry objects, verification artifacts, test-baseline state and real runtime or snapshot sizes; roadmap prose remains context-only.
+- Kept the consciousness frontier operational and non-assertive: stage 10 can display research criteria only and never produces a consciousness claim.
+- Added detail panels, responsive browser coverage and backend/API tests for planned-feature handling, runtime fallback and engineering/evidence separation.
+
 ## 2026-09-08 Cross-platform source-freeze digest mismatch on Windows
 
 - Scientific source-freeze digests now use canonical Git text content across LF/CRLF checkouts while preserving byte-exact binary files.

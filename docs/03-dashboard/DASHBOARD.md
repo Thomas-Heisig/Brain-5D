@@ -168,6 +168,16 @@ Release readiness separates engineering verification from scientific evidence. T
 
 CI success, typing, security and deterministic tests are engineering gates. Experimental claims require valid evidence artifacts.
 
+### Development Timeline
+
+Release includes a repository-derived **Entwicklungs-Timeline** alongside Gate, release history, preview, the chronological release timeline and source documents. The read-only endpoint is `GET /api/release/development-timeline`.
+
+The backend classifier in `src/dashboard/development_timeline.py` evaluates concrete module/test paths, structured research registries, verification JSON, test-baseline state and runtime or snapshot sizes. Roadmap and TODO Markdown are context-only sources and cannot make a stage pass by text alone.
+
+The response exposes eleven canonical stages from a single neuron to consciousness research, a continuous technical marker (`Du bist hier`) and a separate scientific marker (`Wissenschaftlich hier`). Engineering, technical verification and scientific evidence each have independent scores. Stage 10 is a research frontier only: `consciousness_claim` is always `unsupported`, and the UI states that engineering maturity does not imply consciousness.
+
+Runtime size is read from active bridge telemetry when available. A `.b5d` snapshot is shown only as `last_observed`; missing active telemetry remains `unavailable`. Stage details expose machine-derived criteria, source evidence, relevant modules/tests/experiments, limits and open work.
+
 ## Security
 
 The supported default is:

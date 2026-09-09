@@ -95,6 +95,55 @@ async function openDashboard(page, batchResponse = null) {
       });
       return;
     }
+    if (url.pathname === "/api/release/development-timeline") {
+      const stages = Array.from({ length: 11 }, (_, stage) => ({
+        stage,
+        id: `stage_${stage}`,
+        name: stage === 3 ? "Plastisches Nervengewebe" : `Entwicklungsstufe ${stage}`,
+        short_label: stage === 3 ? "Plastizität" : `Stufe ${stage}`,
+        description: [`Beschreibung für Stufe ${stage}`],
+        scale: { neurons: "1", synapses: "1" },
+        criteria: [{ id: `criterion_${stage}`, label: "Structured criterion", status: stage <= 3 ? "verified" : "planned", evidence: [] }],
+        implementation_score: stage <= 3 ? 1 : 0,
+        verification_score: stage <= 2 ? 0.8 : stage === 3 ? 0.6 : 0,
+        research_readiness_score: stage === 3 ? 0.25 : 0,
+        status: stage < 3 ? "reached" : stage === 3 ? "active" : "planned",
+        relevant_modules: [],
+        relevant_tests: [],
+        relevant_experiments: [],
+        relevant_research_questions: [],
+        known_limits: [],
+        open_todos: [],
+        next_technical_steps: [],
+      }));
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          schema_version: 1,
+          current_stage: 3.4,
+          scientific_stage: 2.8,
+          stage_floor: 3,
+          stage_next: 4,
+          progress_to_next: 0.4,
+          scientific_progress_to_next: 0.8,
+          current_label: "Plastisches Nervengewebe -> Spezialisierten Arealen",
+          scientific_label: "Rekurrenz -> Plastisches Nervengewebe",
+          current_runtime: { neurons: 5000, synapses: 3631, source: "runtime", status: "active", snapshot_tick: null },
+          last_observed_runtime: null,
+          stages,
+          engineering_score: 0.74,
+          verification_score: 0.61,
+          scientific_evidence_score: 0.29,
+          confidence: 0.86,
+          sources: [],
+          last_updated: "2026-09-09T00:00:00Z",
+          scientific_note: "Engineering maturity does not imply evidence of consciousness.",
+          consciousness_claim: "unsupported",
+        }),
+      });
+      return;
+    }
     if (url.pathname === "/api/experiment/workflow/batch" && request.method() === "POST") {
       const body = JSON.parse(request.postData() || "{}");
       if (batchResponse) batchResponse.body = body;
@@ -187,15 +236,29 @@ test("Release workspace renders the documentation timeline", async ({ page }) =>
   await expect(page.locator("#release-timeline-list .release-timeline-entry")).toHaveCount(1);
   await expect(page.locator("#release-timeline-list")).toContainText("Release timeline restoration");
   await expect(page.locator("#release-timeline-sources")).toContainText("TODO");
+  await expect(page.locator("#release-development-track .development-marker-technical")).toContainText("Du bist hier");
+  await expect(page.locator("#release-development-track .development-marker-scientific")).toContainText("Wissenschaftlich hier");
+  await expect(page.locator("#release-development-track .development-track-node")).toHaveCount(11);
+  await page.locator('[data-workspace-view="timeline"]').click();
+  await expect(page.locator("#release-development-track")).toBeVisible();
   await expect(page.locator("[data-timeline-phase]")).toHaveCount(3);
   await expect(page.locator('[data-timeline-phase="past"]')).toContainText("Was war");
   await expect(page.locator('[data-timeline-phase="current"]')).toContainText("Was ist");
   await expect(page.locator('[data-timeline-phase="future"]')).toContainText("Was wird");
 
-  for (const view of ["releases", "preview", "timeline", "documents", "gate"]) {
+  for (const view of ["releases", "preview", "timeline", "development", "documents", "gate"]) {
     await page.locator(`[data-workspace-view="${view}"]`).click();
     await expect(page.locator(`[data-release-view="${view}"]`)).toBeVisible();
   }
+
+  await page.locator('[data-workspace-view="development"]').click();
+  await expect(page.locator("#development-timeline-track .development-marker-technical")).toContainText("Du bist hier");
+  await expect(page.locator("#development-score-grid")).toContainText("Scientific Evidence");
+  await expect(page.locator("#development-scale-grid .development-scale")).toHaveCount(2);
+  await expect(page.locator("#development-scale-grid")).toContainText("5.000");
+  await page.locator('#development-stage-list [data-development-stage="3"]').click();
+  await expect(page.locator("#development-detail")).toBeVisible();
+  await expect(page.locator("#development-detail")).toContainText("Plastisches Nervengewebe");
 
   await page.locator('[data-workspace-view="documents"]').click();
   await page.locator('[data-release-document="08-roadmap/TODO.md"]').click();
