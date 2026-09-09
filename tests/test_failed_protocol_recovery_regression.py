@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import yaml
 
@@ -13,11 +14,11 @@ ROOT = Path(__file__).parents[1]
 
 
 def _config() -> dict[str, object]:
-    raw = yaml.safe_load(
+    raw: object = yaml.safe_load(
         (ROOT / "configs" / "learning_experiment.yaml").read_text(encoding="utf-8")
     )
     assert isinstance(raw, dict)
-    return raw
+    return cast(dict[str, object], raw)
 
 
 def test_independent_replication_runner_executes_both_arms() -> None:
