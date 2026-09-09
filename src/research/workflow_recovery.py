@@ -165,7 +165,7 @@ def execute_failed_protocol_retry(
     if exploratory:
         raise WorkflowRecoveryError(
             "Standalone recovery cannot execute exploratory runtime children: "
-            + ", ".join(cast(list[str], exploratory))
+            + ", ".join(exploratory)
         )
 
     from src.dashboard.experiment_workflow import ExperimentWorkflowService
