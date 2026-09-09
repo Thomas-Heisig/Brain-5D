@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-10 - Bounded memory, prediction and behavior profile foundation
+
+- Connected optional bounded working/episodic memory and an observation-only
+  one-step transition predictor to the existing `ExperienceEngine`.
+- Added independent read/write controls, bounded retention, atomic persistence,
+  schema ownership and integrity checks, plus auditable profile updates.
+- Focused engineering checks pass; no scientific evidence or consciousness
+  claim is created.
+
 ## 2026-09-09 - Versioned Wesen profile identity
 
 - Added bounded schema-v1 technical profiles under `profiles/<profile_id>` with a metadata-only registry, canonical SHA-256 digests and revision history.

@@ -56,6 +56,8 @@ The dashboard uses explicit unknown-state rendering. Missing telemetry is never 
 | Neural Symbiosis | Open-set peripheral neural/virtual areas, disabled pipeline templates and inert plastic-gateway candidate math at the embodiment boundary |
 | MSBA | Modality-specific audio/vision/digital gateway contracts, energy/resource accounting and configurable external projection spaces from 1–32 dimensions |
 | Experience loop | Sensor → encoding → SNN → action → observed outcome → reward path with explicit authorization |
+| Memory and prediction | Optional bounded working/episodic memory plus one-step observation-only transition prediction with independent read/write controls and integrity-checked state |
+| Behavior profile | Optional bounded operational profile that can select among explicit decoder action candidates; initial, situational and adaptive values remain separate |
 | Research | Fragmentable RQ/H registries, searchable Research Catalog, manifests, DATA/EVID separation, scientific integrity gate, AI provenance, frozen replay and causal-taint contracts |
 | Experiment observability | Tick, spike, neuron, synapse, latency, recurrence and digest measurements persisted per run |
 | Dashboard | Responsive operator/research shell plus dedicated adaptive `Wesen` body view |

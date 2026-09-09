@@ -11,9 +11,11 @@ from src.embodiment.models import ActionCommand, EnvironmentObservation, SensorF
 from src.embodiment.sensor import SensorAdapter
 from src.embodiment.task_outcome import TaskOutcome, TaskOutcomeVerifier
 from src.learning.learning_engine import LearningEngine
+from src.memory import MemoryWorldModel
+from src.profiles import BehaviorProfile
 
 Encoder = Callable[[SensorFrame], Mapping[int, float]]
-Decoder = Callable[[Any, SensorFrame], ActionCommand | None]
+Decoder = Callable[[Any, SensorFrame], ActionCommand | tuple[ActionCommand, ...] | None]
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,15 +45,22 @@ class ExperienceEngine:
     embodiment: ControlledEmbodimentAgent
     learning: LearningEngine | None = None
     outcome_verifier: TaskOutcomeVerifier = field(default_factory=TaskOutcomeVerifier)
+    memory: MemoryWorldModel | None = None
+    behavior_profile: BehaviorProfile | None = None
     last_step: ExperienceStep | None = None
     _pending_frame: SensorFrame | None = None
+    _pending_prediction: Any = None
 
     def reset(self, seed: int | None = None) -> EnvironmentObservation:
         """Reset the controlled environment and clear the last cycle."""
 
         self.last_step = None
         self._pending_frame = None
-        return self.embodiment.reset(seed)
+        self._pending_prediction = None
+        observation = self.embodiment.reset(seed)
+        if self.memory is not None:
+            self.memory.reset_episode(f"episode-{self.embodiment.episode}")
+        return observation
 
     def step(self, tick: int) -> ExperienceStep:
         """Run one complete sensor, network, action, feedback and reward step."""
@@ -77,7 +86,14 @@ class ExperienceEngine:
         if frame is None or frame.tick != tick:
             raise RuntimeError("complete() requires a matching prepare() call")
         observation = None
-        action = self.decoder(result, frame)
+        decoded = self.decoder(result, frame)
+        action = (
+            self.behavior_profile.select_action(decoded, tick=tick)
+            if self.behavior_profile is not None and isinstance(decoded, tuple)
+            else decoded
+        )
+        if self.memory is not None:
+            self._pending_prediction = self.memory.predict(frame, action, tick)
         if action is not None:
             observation = self.embodiment.step(action)
         outcome = (
@@ -89,8 +105,15 @@ class ExperienceEngine:
         if self.learning is not None and observation is not None:
             self.learning.set_reward(reward, tick)
         record = ExperienceStep(tick, frame, action, observation, reward, outcome)
+        if self.memory is not None:
+            self.memory.complete(
+                frame, action, observation, tick, self._pending_prediction
+            )
+        if self.behavior_profile is not None and outcome is not None:
+            self.behavior_profile.update(success=outcome.success, tick=tick)
         self.last_step = record
         self._pending_frame = None
+        self._pending_prediction = None
         return record
 
     def attach_runtime(self, runtime: Any) -> None:

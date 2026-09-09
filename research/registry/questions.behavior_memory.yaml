@@ -1,0 +1,45 @@
+- id: RQ-MEM-002
+  domain: Memory
+  question: Verbessert begrenztes episodisches Gedächtnis die Leistung bei verzögerten sensorischen Informationen gegenüber gleich behandelten Memory-off-Kontrollen?
+  relevance: Prüft funktionalen Nutzen eines explizit begrenzten Erinnerungsinhalts statt bloßer Persistenz oder zusätzlicher Laufzeit.
+  literature: []
+  hypotheses:
+  - H-MEM-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Engineering implementation exists; no registered confirmatory run has been executed.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-WM-001
+  domain: World Model
+  question: Verbessert der adaptive Ein-Schritt-Prädiktor die Vorhersage gegenüber Persistenz- und gedächtnislosen Referenzen auf zurückgehaltenen Episoden?
+  relevance: Trennt technische Vorhersagegüte von kausalem Weltverständnis.
+  literature: []
+  hypotheses:
+  - H-WM-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: The current predictor is observational and is not connected to action selection.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-PROFILE-001
+  domain: Behavioral Profile
+  question: Verändert ein operationales adaptives Verhaltensprofil die Auswahl expliziter Handlungsalternativen reproduzierbar unter gleichen Seeds und Aufgaben?
+  relevance: Prüft einen messbaren Steuerpfad ohne psychologische oder Bewusstseinslabels.
+  literature: []
+  hypotheses:
+  - H-PROFILE-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Profile effects require preregistered controls and must not alter safety or scientific gates.
+  created: '2026-09-10'
+  updated: '2026-09-10'

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, cast
 
 from src.embodiment import (
@@ -20,6 +21,7 @@ from src.embodiment import (
 )
 from src.experience.engine import ExperienceEngine
 from src.learning.learning_engine import LearningEngine
+from src.memory import MemoryStore, MemoryWorldModel, TransitionWorldModel
 
 
 @dataclass(slots=True)
@@ -127,6 +129,31 @@ def build_experience_subsystem(
         descriptor=descriptor,
     )
     embodiment.reset(seed=int(config.get("seed", 42)))
+    memory = None
+    memory_config = raw.get("memory", {})
+    if isinstance(memory_config, Mapping) and bool(memory_config.get("enabled", False)):
+        persistence_value = memory_config.get("persistence_path")
+        persistence_path = (
+            None if persistence_value is None else Path(str(persistence_value))
+        )
+        store = MemoryStore(
+            run_id=str(memory_config.get("run_id", "experience-run")),
+            root=persistence_path,
+            episode_capacity=int(memory_config.get("episode_capacity", 128)),
+            working_capacity=int(memory_config.get("working_capacity", 16)),
+            prediction_capacity=int(memory_config.get("prediction_capacity", 128)),
+            retention_ticks=int(memory_config.get("retention_ticks", 1024)),
+            read_enabled=bool(memory_config.get("read_enabled", True)),
+            write_enabled=bool(memory_config.get("write_enabled", True)),
+        )
+        memory = MemoryWorldModel(
+            store,
+            TransitionWorldModel(
+                max_contexts=int(memory_config.get("max_contexts", 128))
+            ),
+            store.run_id,
+            persistence_path=persistence_path,
+        )
     return ExperienceEngine(
         sensor=SystemSensorAdapter(provider),
         network=network,
@@ -134,6 +161,7 @@ def build_experience_subsystem(
         decoder=_controlled_decoder,
         embodiment=embodiment,
         learning=learning,
+        memory=memory,
     )
 
 

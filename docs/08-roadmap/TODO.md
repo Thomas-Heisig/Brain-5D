@@ -9,6 +9,21 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Updated:** 2026-09-09  
 **Current release-blocking backlog:** **0**
 
+## 2026-09-10 Memory / World Model / Behavior Profile foundation
+
+- [x] Connect bounded working and episodic memory to the existing
+	`ExperienceEngine` data flow with independent read/write controls.
+- [x] Add one-step observation-only prediction before environment feedback and
+	record later error and uncertainty without target-state leakage.
+- [x] Add atomic, versioned and integrity-checked memory/world-model state plus
+	bounded retention and capacity controls.
+- [x] Add an operational, non-psychological behavior profile with explicit
+	candidate-action influence and auditable bounded updates.
+- [ ] Connect coupled cognition state to the canonical runtime snapshot/
+	checkpoint boundary and prove pause/resume equivalence.
+- [ ] Add registered delayed-information control runs and dashboard/File Viewer
+	inspection; engineering implementation is not scientific evidence.
+
 Neural Symbiosis gateway status: **experimental activation implemented; Frozen / Random / Shuffle controls implemented; experimental plasticity implemented; productive activation locked pending validation**.
 
 Profile & Identitaet status: **holistic technical profile implemented; senses / learning / morphology / actuators implemented; save / load / clone / import / export implemented; versioned identity + snapshot binding implemented; autonomous identity mutation locked**.
@@ -120,7 +135,7 @@ The following programmes remain intentionally **future research/engineering**, a
 
 - v0.7 knowledge/learning experiments, interference, retention, transfer and retrieval;
 - v0.8 Embodiment / Neural Symbiosis / MSBA validation and governed peripheral adapters;
-- v0.9 bounded memory, world model and operational self-model experiments;
+- v0.9 controlled memory, world model and operational self-model experiments;
 - v1.0 stable reproducible research-platform APIs and artifact schemas;
 - v1.1 independent replication, cross-hardware reproducibility and control families;
 - v1.2 governed adaptive allocation, structural growth, peripheral plasticity, rollback and failure recovery;

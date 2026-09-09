@@ -4,6 +4,25 @@
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-09
 
+## 2026-09-10 Bounded memory, prediction and behavior profile foundation
+
+- Implemented an optional `ExperienceEngine` data path for bounded
+	working/episodic memory and later prediction comparisons.
+- Added independent read/write controls, capacity and retention limits,
+	duplicate suppression, atomic persistence, schema ownership and integrity
+	checks. Memory eviction does not delete research artifacts.
+- Added a one-step observation-only transition predictor with an explicit
+	persistence reference, target-state leakage boundary and error/uncertainty
+	records. It is not yet used for action selection.
+- Added an operational behavior profile with separate initial, situational and
+	slow disposition state. It affects behavior only through an explicit tuple of
+	decoder candidates and logs bounded simulation-tick updates.
+- Focused engineering screen: 18 tests passed for memory, profile, experience
+	and existing profile lifecycle paths. No scientific promotion was performed.
+- Open: coupled runtime snapshot boundary, delayed-cue controls, frozen-model
+	and no-memory comparisons, held-out episodes, dashboard/File Viewer exposure
+	and independent replication.
+
 ## 2026-09-08 Versioned embedding and cluster analysis
 
 - t-SNE, UMAP and K-Means cluster export now run through a bounded, provenance-bound backend job.

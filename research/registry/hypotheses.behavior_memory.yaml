@@ -1,0 +1,21 @@
+- id: H-MEM-002-A
+  research_question: RQ-MEM-002
+  hypothesis: Memory-on improves delayed-information task performance over matched Memory-off, while SNN state, plasticity, seed and execution budget remain unchanged.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-WM-001-A
+  research_question: RQ-WM-001
+  hypothesis: The adaptive transition predictor reduces held-out one-step prediction error relative to persistence and memoryless references without using future or hidden environment state.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-PROFILE-001-A
+  research_question: RQ-PROFILE-001
+  hypothesis: Fixed, adaptive and frozen-profile conditions produce preregistered, reproducible differences in candidate-action selection while safety permissions and SNN learning remain unchanged.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
