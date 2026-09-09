@@ -64,6 +64,38 @@ jobs:
           PY
           git diff --cached --check
           git commit -m 'feat(research): integrate connectome sources, controlled embodiment studies and integrity gates'
+      - name: Apply reviewed strict type compatibility correction
+        run: |
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          fixes = {
+              'src/research/protocol_registry.py': [('cast(list[Any], values)', 'cast(list[object], values)')],
+              'src/research/connectome_governance.py': [('cast(list[Any], values)', 'cast(list[object], values)')],
+              'src/embodiment/gateway_runtime.py': [
+                  ('cast(Sequence[Any], conditions)', 'cast(Sequence[object], conditions)'),
+                  ('cast(Sequence[Any], edges_value)', 'cast(Sequence[object], edges_value)'),
+                  ('cast(Sequence[Any], journal_value)', 'cast(Sequence[object], journal_value)'),
+                  ('cast(Sequence[Any], weight_window)', 'cast(Sequence[float | str], weight_window)'),
+                  ('cast(Sequence[Any], structural_window)', 'cast(Sequence[int | str], structural_window)'),
+              ],
+              'src/research/connectome_reference.py': [
+                  ('    nodes = cast(list[Any], nodes)\n    if (\n        not 1 <= len(nodes) <= max_nodes\n        or any(not isinstance(node, str) or not node for node in nodes)\n        or len(set(nodes)) != len(nodes)\n    ):', '    node_values = cast(list[object], nodes)\n    if any(not isinstance(node, str) or not node for node in node_values):\n        raise ValueError("Original node IDs must be nonempty strings")\n    nodes = [str(node) for node in node_values]\n    if not 1 <= len(nodes) <= max_nodes or len(set(nodes)) != len(nodes):'),
+                  ('cast(list[Any], edge_values)', 'cast(list[object], edge_values)'),
+              ],
+          }
+          for filename, replacements in fixes.items():
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              for before, after in replacements:
+                  if text.count(before) != 1:
+                      raise SystemExit('Reviewed type-fix precondition failed: ' + filename)
+                  text = text.replace(before, after)
+              path.write_text(text, encoding='utf-8')
+          subprocess.run(['git', 'add', '--', *fixes], check=True)
+          PY
+          git diff --cached --check
+          git commit -m 'fix(types): preserve strict Pyright and Mypy compatibility at validated input boundaries'
       - name: Install canonical verification tools
         run: |
           python -m pip install --upgrade pip setuptools wheel
