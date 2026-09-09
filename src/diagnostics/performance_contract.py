@@ -55,7 +55,9 @@ def evaluate_scaling_tier(
     scaling = _string_mapping(budgets.get("scaling", {}), label="scaling budget")
     violations: list[str] = []
     tick_cost = _number(tier.get("mean_tick_cost_ms"), default=0.0)
-    peak_per_neuron = _number(tier.get("python_peak_bytes_per_neuron"), default=0.0)
+    peak_per_neuron = _number(
+        tier.get("python_peak_bytes_per_neuron"), default=0.0
+    )
     max_tick = _number(scaling.get("max_mean_tick_cost_ms"), default=float("inf"))
     max_peak = _number(
         scaling.get("max_python_peak_bytes_per_neuron"), default=float("inf")
@@ -132,7 +134,9 @@ def evaluate_pacing(
         return tuple(violations)
     if target_hz <= 0.0:
         return (*violations, "target_hz must be positive or null")
-    minimum_fraction = _number(pacing.get("minimum_target_fraction"), default=0.75)
+    minimum_fraction = _number(
+        pacing.get("minimum_target_fraction"), default=0.75
+    )
     if achieved_hz < target_hz * minimum_fraction:
         violations.append(
             f"achieved_hz {achieved_hz:.6f} below "
