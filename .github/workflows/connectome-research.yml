@@ -1,0 +1,32 @@
+name: Connectome research integrity
+
+on:
+  push:
+    branches: [research/connectome-embodiment-20260909]
+    paths:
+      - '.github/workflows/connectome-research.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export exact source baseline
+        run: |
+          mkdir -p "$RUNNER_TEMP/connectome-baseline"
+          git archive --format=tar.gz HEAD -o "$RUNNER_TEMP/connectome-baseline/source.tar.gz"
+          git rev-parse HEAD > "$RUNNER_TEMP/connectome-baseline/HEAD.txt"
+          git status --porcelain > "$RUNNER_TEMP/connectome-baseline/status.txt"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: connectome-integration-baseline
+          path: ${{ runner.temp }}/connectome-baseline/
+          retention-days: 3
