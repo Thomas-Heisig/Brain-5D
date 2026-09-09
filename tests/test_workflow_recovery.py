@@ -12,7 +12,9 @@ from src.research.workflow_recovery import (
 )
 
 
-def _write_report(root: Path, workflow_id: str, results: list[dict[str, object]]) -> Path:
+def _write_report(
+    root: Path, workflow_id: str, results: list[dict[str, object]]
+) -> Path:
     path = root / "workflows" / f"{workflow_id}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -21,7 +23,9 @@ def _write_report(root: Path, workflow_id: str, results: list[dict[str, object]]
                 "workflow_id": workflow_id,
                 "requested_ticks": 1000,
                 "seeds": "42-44",
-                "completed": sum(item.get("status") == "completed" for item in results),
+                "completed": sum(
+                    item.get("status") == "completed" for item in results
+                ),
                 "failed": sum(item.get("status") == "failed" for item in results),
                 "results": results,
             },
@@ -89,7 +93,10 @@ def test_failed_protocol_results_keeps_historical_order() -> None:
             {"protocol": "c", "status": "failed"},
         ]
     }
-    assert [item["protocol"] for item in failed_protocol_results(report)] == ["a", "c"]
+    assert [item["protocol"] for item in failed_protocol_results(report)] == [
+        "a",
+        "c",
+    ]
 
 
 def test_retry_plan_rejects_workflow_without_failures(tmp_path: Path) -> None:
