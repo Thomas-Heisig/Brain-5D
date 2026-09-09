@@ -106,6 +106,7 @@ def run_embedding_job(
         "n_clusters": n_clusters,
     }
     started = datetime.now(timezone.utc)
+    clusters: list[int | None]
     if method == "tsne":
         if perplexity <= 0 or perplexity >= len(neuron_ids):
             raise EmbeddingJobError(
