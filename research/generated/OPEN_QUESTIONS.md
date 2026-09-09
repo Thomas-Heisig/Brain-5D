@@ -604,6 +604,45 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
+## RQ-MEM-002
+
+**Domäne:** Memory
+
+**Frage:** Verbessert begrenztes episodisches Gedächtnis die Leistung bei verzögerten sensorischen Informationen gegenüber gleich behandelten Memory-off-Kontrollen?
+
+**Relevanz:** Prüft funktionalen Nutzen eines explizit begrenzten Erinnerungsinhalts statt bloßer Persistenz oder zusätzlicher Laufzeit.
+
+**Hypothesen:**
+- `H-MEM-002-A`: Memory-on improves delayed-information task performance over matched Memory-off, while SNN state, plasticity, seed and execution budget remain unchanged.
+
+---
+
+## RQ-WM-001
+
+**Domäne:** World Model
+
+**Frage:** Verbessert der adaptive Ein-Schritt-Prädiktor die Vorhersage gegenüber Persistenz- und gedächtnislosen Referenzen auf zurückgehaltenen Episoden?
+
+**Relevanz:** Trennt technische Vorhersagegüte von kausalem Weltverständnis.
+
+**Hypothesen:**
+- `H-WM-001-A`: The adaptive transition predictor reduces held-out one-step prediction error relative to persistence and memoryless references without using future or hidden environment state.
+
+---
+
+## RQ-PROFILE-001
+
+**Domäne:** Behavioral Profile
+
+**Frage:** Verändert ein operationales adaptives Verhaltensprofil die Auswahl expliziter Handlungsalternativen reproduzierbar unter gleichen Seeds und Aufgaben?
+
+**Relevanz:** Prüft einen messbaren Steuerpfad ohne psychologische oder Bewusstseinslabels.
+
+**Hypothesen:**
+- `H-PROFILE-001-A`: Fixed, adaptive and frozen-profile conditions produce preregistered, reproducible differences in candidate-action selection while safety permissions and SNN learning remain unchanged.
+
+---
+
 ## RQ-CNS-101
 
 **Domäne:** Consciousness methodology
@@ -1294,6 +1333,6 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 86 offene Fragen.*
+*Insgesamt 89 offene Fragen.*
 
 > Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.
