@@ -1,0 +1,132 @@
+{
+  "workflow_id": "EXP-RETRY-AIRR-2026-0001",
+  "created_at": "2026-09-09T06:55:21.236651+00:00",
+  "protocols": [
+    "independent_replication_v1",
+    "learning_interference_screen_v1"
+  ],
+  "requested_ticks": 1000,
+  "seeds": "42-44",
+  "completed": 2,
+  "failed": 0,
+  "results": [
+    {
+      "protocol": "independent_replication_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-RETRY-AIRR-2026-0001-01",
+      "manifest": "experiments/EXP-RETRY-AIRR-2026-0001-01/manifest.json",
+      "report": "experiments/EXP-RETRY-AIRR-2026-0001-01/report.md",
+      "workflow": "experiments/EXP-RETRY-AIRR-2026-0001-01/workflow.json",
+      "statistics": "experiments/EXP-RETRY-AIRR-2026-0001-01/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-RETRY-AIRR-2026-0001-01/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-RETRY-AIRR-2026-0001-01/DATA/runs_index.json",
+      "data_id": "DATA-EXP-RETRY-AIRR-2026-0001-01",
+      "ai_report": {
+        "status": "unavailable",
+        "reason": "AI backend not configured"
+      },
+      "summary": "experiments/EXP-RETRY-AIRR-2026-0001-01/summary.md",
+      "result": {
+        "run_count": 40,
+        "duration_seconds": 0.1597151259999947,
+        "runner": "run_replication",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "learning_interference_screen_v1",
+      "ticks": 1000,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+      "manifest": "experiments/EXP-RETRY-AIRR-2026-0001-02/manifest.json",
+      "report": "experiments/EXP-RETRY-AIRR-2026-0001-02/report.md",
+      "workflow": "experiments/EXP-RETRY-AIRR-2026-0001-02/workflow.json",
+      "statistics": "experiments/EXP-RETRY-AIRR-2026-0001-02/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-RETRY-AIRR-2026-0001-02/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-RETRY-AIRR-2026-0001-02/DATA/runs_index.json",
+      "data_id": "DATA-EXP-RETRY-AIRR-2026-0001-02",
+      "ai_report": {
+        "status": "unavailable",
+        "reason": "AI backend not configured"
+      },
+      "summary": "experiments/EXP-RETRY-AIRR-2026-0001-02/summary.md",
+      "result": {
+        "run_count": 20,
+        "duration_seconds": 8.160896397999991,
+        "runner": "run_learning_interference",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    }
+  ]
+}

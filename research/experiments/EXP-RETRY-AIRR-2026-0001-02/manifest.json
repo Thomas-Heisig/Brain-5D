@@ -1,0 +1,132 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "preregistration": "preregistrations/PREREG-LIFE-001.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "/home/runner/work/MHRN/MHRN/configs/learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-09T06:55:21.221477+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "execution_contract": {
+    "hypothesis_id": "H-LIFE-001-A",
+    "protocol": "learning_interference_screen_v1",
+    "question_id": "RQ-LIFE-001",
+    "resolved_runner": "run_learning_interference",
+    "runtime_runner_bytecode_sha256": "912a9ba3fe4c028944b3af598edef549d234c1bf263084963af51b97da38991b",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "912a9ba3fe4c028944b3af598edef549d234c1bf263084963af51b97da38991b",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 1000,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 1000
+  },
+  "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "research/airr-0001-experiment-results",
+    "commit": "a8b5ea31b92e263c63acd0e83d7dda2d856a6dc6",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-LIFE-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "5a11ea288e7e695c2dcd456642b533cbb3e6daf38b72e150134e60e69059531f",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "d77bb268c9a2d4fe9dcdb5decdea25160848af3a187d899a7b441e796df3411f",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-LIFE-001"
+  ],
+  "research_run_mode": "EXPLORATORY",
+  "results": {
+    "protocol": "learning_interference_screen_v1",
+    "run_count": 20,
+    "runner": "run_learning_interference",
+    "tick_contract": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 1000,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 1000
+  },
+  "runtime": {
+    "duration_seconds": 8.160896397999991
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "learning_interference_screen_v1",
+    "seed": 101,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "ticks": 1000
+  },
+  "software": {
+    "brain5d_version": "0.6.0a1",
+    "os": "Linux 6.17.0-1022-azure",
+    "python": "3.13.15"
+  },
+  "source_freeze_sha": "3c1f15686362283521fe7ee2df0e9883d38912730b7537c835abdf93113a689d",
+  "timestamp": "2026-09-09T06:55:21.221463",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

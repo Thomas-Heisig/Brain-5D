@@ -1,0 +1,543 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 20,
+    "sha256": "42d2173264c50bab6ae9fbcacf7bec31794cdbb473acc145278701b9abfb9c5f"
+  },
+  "run_count": 20,
+  "run_preview": {
+    "_projection": "bounded_sequence",
+    "head": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0000-sequential_three_task_screen-seed-101.json.gz",
+          "sha256": "23e3fe38c81747b7d5b324e2186c6d4875e11434acec2c0ea41243b2f134e0ab",
+          "size_bytes": 375,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 101,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0001-sequential_three_task_screen-seed-102.json.gz",
+          "sha256": "de0dd726c61f9ffd90284188f47b5dbab13b0cf26324f9420ed28beba8c6f7b2",
+          "size_bytes": 375,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 102,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0002-sequential_three_task_screen-seed-103.json.gz",
+          "sha256": "3888b41f4f60ec720c77e29bed6d4037f48c51476586818b406a10301d4c1141",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 103,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0003-sequential_three_task_screen-seed-104.json.gz",
+          "sha256": "765c086e1bc240f84d1c9ab00972dd825e682cb840dc32301aa9e33facf84ae9",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 104,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0004-sequential_three_task_screen-seed-105.json.gz",
+          "sha256": "b93d81652e51304d2b98b9a401e1ec5ec340127539ab1cc39912127f9100b9ee",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 105,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0005-sequential_three_task_screen-seed-106.json.gz",
+          "sha256": "53cebb84fdb60c9453a6195f7307860316ce3221bc9151cdefd40a9922a6995a",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 106,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0006-sequential_three_task_screen-seed-107.json.gz",
+          "sha256": "f12fe78d5aa4c22d122daf35d2c008631b800d55f93516e7427603c144e2ab3d",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 107,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0007-sequential_three_task_screen-seed-108.json.gz",
+          "sha256": "39b213d05af53d96ba3955f6dbc529ad5ba9c2637cd55bfe09502753721c9fa9",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 108,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      }
+    ],
+    "item_count": 20,
+    "tail": [
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0012-sequential_three_task_screen-seed-113.json.gz",
+          "sha256": "899b562db748b85b71fce71d0c4f38ad73ee3a29ed06e7066fef753cc31632c1",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 113,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0013-sequential_three_task_screen-seed-114.json.gz",
+          "sha256": "83e18f1ea188debc72ee2eead13deb6d6f2a7533e9d4bbe712ae0444c9a85007",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 114,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0014-sequential_three_task_screen-seed-115.json.gz",
+          "sha256": "230197cbd10c5bbbb9ad60e7aefd77f2cd108112b223d13f0d2f497155c4a9f5",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 115,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0015-sequential_three_task_screen-seed-116.json.gz",
+          "sha256": "e8dfd0f37d56150ead0e0a2af0f5037c9c2e895371975f667615003c8496673f",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 116,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0016-sequential_three_task_screen-seed-117.json.gz",
+          "sha256": "81e12a4d0638a89050d493e9fa82dfbbafda1d978bfd731708fc36d8b7221242",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 117,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0017-sequential_three_task_screen-seed-118.json.gz",
+          "sha256": "9b07344635935596c6f8f2c9ea38023e661177d90dd57f3518ca190840acf8a3",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 118,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0018-sequential_three_task_screen-seed-119.json.gz",
+          "sha256": "a5b0f2d2d6dc8df13ededef73c867886027843c16e70ba45cea822611e361085",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 119,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      },
+      {
+        "_raw_artifact": {
+          "format": "json.gz",
+          "path": "DATA/raw/run-0019-sequential_three_task_screen-seed-120.json.gz",
+          "sha256": "4aed957bfe653da312ce01a974c1f58b4c3900841c75bf075eb457a60fb3536d",
+          "size_bytes": 376,
+          "uncompressed_bytes": 477
+        },
+        "condition": "sequential_three_task_screen",
+        "experiment_id": "EXP-RETRY-AIRR-2026-0001-02",
+        "metrics": {
+          "interpretation_limit": "independent task instances; precursor screen, not yet shared-network catastrophic-forgetting proof",
+          "retained_success_fraction": 1.0,
+          "task_final_mean_weights": [
+            0.5987452014839845,
+            0.5987452014839845,
+            0.5987452014839845
+          ],
+          "task_successes": [
+            true,
+            true,
+            true
+          ],
+          "weight_range": 0.0
+        },
+        "runtime_error": null,
+        "seed": 120,
+        "state_digest_after": "",
+        "state_digest_before": ""
+      }
+    ]
+  },
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "sequential_three_task_screen": {
+        "metrics": {},
+        "run_count": 20,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 20,
+    "schema_version": "2.0"
+  }
+}
