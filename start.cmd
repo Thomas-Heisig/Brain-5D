@@ -47,7 +47,7 @@ if "%1"=="--help" (
 
 :: Banner
 echo ===========================================================================
-for /f "delims=" %%V in ('"%PYTHON_CMD%" -c "from src.version import BRAIN5D_VERSION_DISPLAY; print(BRAIN5D_VERSION_DISPLAY)"') do set "MHRN_VERSION=%%V"
+for /f "tokens=2 delims== " %%V in ('findstr /B "version =" pyproject.toml') do set "MHRN_VERSION=%%~V"
 if not defined MHRN_VERSION set "MHRN_VERSION=unknown"
 echo   MHRN !MHRN_VERSION! - startup
 echo   Project: %PROJECT_ROOT%

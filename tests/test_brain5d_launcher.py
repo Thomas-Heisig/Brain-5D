@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from scripts.brain5d_launcher import (
+    _parse_listening_pid,
     build_command,
     dashboard_access_urls,
     pid_is_running,
@@ -82,6 +83,15 @@ def test_dashboard_access_urls_separate_bind_local_and_lan_addresses(
         "local": "http://127.0.0.1:8765",
         "lan": "http://192.168.1.25:8765",
     }
+
+
+def test_parse_listening_pid_from_windows_netstat_output() -> None:
+        output = """
+            TCP    0.0.0.0:8765       0.0.0.0:0       LISTENING       11868
+            TCP    127.0.0.1:8765     127.0.0.1:1     TIME_WAIT       0
+        """
+
+        assert _parse_listening_pid(output, 8765) == 11868
 
 
 # ============================================================================

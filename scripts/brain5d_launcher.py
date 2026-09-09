@@ -102,6 +102,40 @@ def port_is_available(host: str, port: int) -> bool:
     return True
 
 
+def _parse_listening_pid(netstat_output: str, port: int) -> int | None:
+    """Extract a TCP listener PID from Windows ``netstat -ano`` output."""
+    suffix = f":{port}"
+    for line in netstat_output.splitlines():
+        fields = line.split()
+        if len(fields) < 5:
+            continue
+        local_address, state, pid_text = fields[1], fields[3].upper(), fields[4]
+        if not local_address.endswith(suffix) or state != "LISTENING":
+            continue
+        try:
+            return int(pid_text)
+        except ValueError:
+            continue
+    return None
+
+
+def dashboard_listener_pid(port: int) -> int | None:
+    """Return the owner PID of a listening TCP dashboard port when available."""
+    if os.name != "nt":
+        return None
+    try:
+        result = subprocess.run(
+            ["netstat", "-ano", "-p", "TCP"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return _parse_listening_pid(result.stdout, port)
+
+
 def spawn(
     command: list[str],
     *,
@@ -311,8 +345,19 @@ def _cmd_start(args: argparse.Namespace) -> int:
         _remove_pid()
 
     if args.dashboard and not port_is_available(args.host, args.port):
+        owner_pid = dashboard_listener_pid(args.port)
+        owner_hint = f" (listener PID {owner_pid})" if owner_pid else ""
         print(
-            f"Error: dashboard address {args.host}:{args.port} is already in use.",
+            f"Error: dashboard address {args.host}:{args.port} is already in use{owner_hint}.",
+            file=sys.stderr,
+        )
+        print(
+            "  Check the owner with: Get-Process -Id "
+            f"{owner_pid}" if owner_pid else "  Check the active listener with: netstat -ano",
+            file=sys.stderr,
+        )
+        print(
+            "  Stop the existing MHRN instance before starting another dashboard.",
             file=sys.stderr,
         )
         return 1
