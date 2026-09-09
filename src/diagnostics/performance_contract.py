@@ -20,7 +20,9 @@ def _number(value: object, *, default: float) -> float:
     if value is None:
         return default
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise PerformanceContractError(f"expected numeric performance value, got {value!r}")
+        raise PerformanceContractError(
+            f"expected numeric performance value, got {value!r}"
+        )
     return float(value)
 
 
@@ -38,7 +40,9 @@ def load_performance_budgets(path: Path) -> dict[str, object]:
     data = dict(_string_mapping(payload, label="performance budget"))
     schema_version = data.get("schema_version", 0)
     if isinstance(schema_version, bool) or not isinstance(schema_version, int):
-        raise PerformanceContractError("performance budget schema_version must be an integer")
+        raise PerformanceContractError(
+            "performance budget schema_version must be an integer"
+        )
     if schema_version != 1:
         raise PerformanceContractError("unsupported performance budget schema")
     return data
@@ -131,7 +135,8 @@ def evaluate_pacing(
     minimum_fraction = _number(pacing.get("minimum_target_fraction"), default=0.75)
     if achieved_hz < target_hz * minimum_fraction:
         violations.append(
-            f"achieved_hz {achieved_hz:.6f} below {minimum_fraction:.3f} of target {target_hz:.6f}"
+            f"achieved_hz {achieved_hz:.6f} below "
+            f"{minimum_fraction:.3f} of target {target_hz:.6f}"
         )
     if runtime_mode not in {"TARGETED", "COMPUTE LIMITED"}:
         violations.append("finite target requires TARGETED or COMPUTE LIMITED mode")
