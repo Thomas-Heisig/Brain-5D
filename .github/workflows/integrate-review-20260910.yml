@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.13'
           cache: pip
-      - name: Apply checksum-verified reviewed patch
+      - name: Apply checksum-verified reviewed source patch
         run: |
           python - <<'PY'
           import hashlib, os, subprocess
@@ -35,7 +35,10 @@ jobs:
           subprocess.run(['git', 'apply', '--unidiff-zero', str(patch)], check=True)
           for path in parts:
               path.unlink()
-          Path('.github/workflows/integrate-review-20260910.yml').unlink()
+          # Workflow edits are committed separately through the authorized API.
+          # This runner only pushes source, tests, documentation and verification.
+          subprocess.run(['git', 'restore', '--source=HEAD', '--worktree', '.github/workflows'], check=True)
+          subprocess.run(['git', 'diff', '--exit-code', '--', '.github/workflows'], check=True)
           PY
       - name: Install project and validation tools
         run: |
@@ -56,6 +59,7 @@ jobs:
           git config user.name 'MHRN integration'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
+          git diff --cached --exit-code -- .github/workflows
           git commit -m 'feat: integrate external review with cognition and preserve assessment boundaries'
           git push origin HEAD:fix/complete-experiments-provider-repo-context-20260910
       - name: Generate actual clean full-suite baseline
