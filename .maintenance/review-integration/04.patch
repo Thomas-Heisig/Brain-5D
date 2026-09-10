@@ -1,0 +1,131 @@
+diff --git a/src/dashboard/experiment_workflow.py b/src/dashboard/experiment_workflow.py
+index 2ff3596a..9f3ee9ca 100644
+--- a/src/dashboard/experiment_workflow.py
++++ b/src/dashboard/experiment_workflow.py
+@@ -607,0 +608,14 @@ class ExperimentWorkflowService:
++            execution_kind = operational_protocol.get("execution_kind")
++            if execution_kind in {"conceptual_audit", "functional_experiment"}:
++                recorder.manifest["execution_semantics"] = {
++                    "kind": execution_kind,
++                    "snn_involved": False,
++                    "human_assessment": "not_recorded",
++                    "claim_scope": (
++                        "method_template_only"
++                        if execution_kind == "conceptual_audit"
++                        else "component_engineering_screen_not_snn_learning"
++                    ),
++                    "external_review": "external_review/INTEGRATION.md",
++                }
++
+diff --git a/src/dashboard/external_review.py b/src/dashboard/external_review.py
+new file mode 100644
+index 00000000..dbaee479
+--- /dev/null
++++ b/src/dashboard/external_review.py
+@@ -0,0 +1,74 @@
++"""Read-only public review readiness, isolated from private participant responses."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any, cast
++
++_PUBLIC_INSTRUMENT_FILES = (
++    "review_portal/catalogue.py",
++    "src/dashboard/static/review/instrument.js",
++)
++
++
++def build_external_review_status(repository_root: Path) -> dict[str, Any]:
++    """Verify public instrument bytes; neither import the collector nor read responses."""
++    unavailable: dict[str, Any] = {
++        "available": False,
++        "status": "unavailable",
++        "human_review_status": "unknown",
++        "external_ethics_approval": "not_claimed",
++        "automatic_evidence_promotion": False,
++        "scientific_evidence": False,
++        "response_count": None,
++    }
++    try:
++        raw: object = json.loads(
++            (repository_root / "research/external_review/integration.json").read_text(
++                encoding="utf-8"
++            )
++        )
++        if not isinstance(raw, dict):
++            raise ValueError("Invalid review metadata")
++        data = cast(dict[str, Any], raw)
++        if (
++            data.get("schema_version") != 1
++            or data.get("owner") != "research.external_review"
++        ):
++            raise ValueError("Unknown review metadata schema or owner")
++        if data.get("automatic_evidence_promotion") is not False:
++            raise ValueError("Review data cannot promote evidence")
++        if (
++            data.get("human_review_status") != "not_recorded"
++            or data.get("external_ethics_approval") != "not_claimed"
++        ):
++            raise ValueError(
++                "This public contract cannot grant review or ethics approval"
++            )
++        sources_value = data.get("source_files")
++        if not isinstance(sources_value, dict):
++            raise ValueError("Public instrument sources incomplete")
++        sources = cast(dict[str, Any], sources_value)
++        if set(sources) != set(_PUBLIC_INSTRUMENT_FILES):
++            raise ValueError("Public instrument sources incomplete")
++        for relative in _PUBLIC_INSTRUMENT_FILES:
++            source = repository_root / relative
++            if source.is_symlink() or not source.resolve().is_relative_to(
++                repository_root.resolve()
++            ):
++                raise ValueError("Unsafe public instrument path")
++            if hashlib.sha256(source.read_bytes()).hexdigest() != sources[relative]:
++                raise ValueError("Public instrument version drift")
++        return {
++            **data,
++            "available": True,
++            "status": "instrument_available_assessment_pending",
++            "scientific_evidence": False,
++            "response_count": None,
++            "response_storage": "private_external_not_accessed",
++            "public_deployment": "not_verified_by_dashboard",
++        }
++    except (OSError, ValueError, TypeError, KeyError) as exc:
++        return {**unavailable, "reason": str(exc)}
+diff --git a/src/dashboard/research_source.py b/src/dashboard/research_source.py
+index 51dbad18..fc51e6ab 100644
+--- a/src/dashboard/research_source.py
++++ b/src/dashboard/research_source.py
+@@ -117,0 +118,2 @@ class ResearchSource:
++        "external_review",
++        "ethics",
+diff --git a/src/dashboard/server.py b/src/dashboard/server.py
+index 567b112c..0dc8fdb6 100644
+--- a/src/dashboard/server.py
++++ b/src/dashboard/server.py
+@@ -92,0 +93 @@ from .experiment_workflow import (
++from .external_review import build_external_review_status
+@@ -596,0 +598,5 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
++            if path == "/api/research/external-review":
++                source = self._require_research_source()
++                self._send_json(build_external_review_status(source.root().parent))
++                return
++
+diff --git a/src/dashboard/static/app.js b/src/dashboard/static/app.js
+index f79c2076..413ceeb7 100644
+--- a/src/dashboard/static/app.js
++++ b/src/dashboard/static/app.js
+@@ -49,0 +50 @@ import { ExperimentWorkflowPanel } from './experiment-workflow.js';
++import { initExternalReview } from './external-review.js';
+@@ -2484,0 +2486,6 @@ if (document.readyState === 'loading') {
++
++if (document.readyState === 'loading') {
++  document.addEventListener('DOMContentLoaded', initExternalReview, { once: true });
++} else {
++  initExternalReview();
++}

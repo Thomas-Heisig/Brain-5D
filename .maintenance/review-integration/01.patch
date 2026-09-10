@@ -1,0 +1,106 @@
+diff --git a/.github/workflows/review-portal.yml b/.github/workflows/review-portal.yml
+index 1354e3ee..d3d9d19b 100644
+--- a/.github/workflows/review-portal.yml
++++ b/.github/workflows/review-portal.yml
+@@ -5 +5 @@ on:
+-    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', '.github/workflows/review-portal.yml']
++    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', 'research/external_review/**', 'src/dashboard/external_review.py', 'src/dashboard/static/external-review.js', '.github/workflows/review-portal.yml']
+@@ -8 +8 @@ on:
+-    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', '.github/workflows/review-portal.yml']
++    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', 'research/external_review/**', 'src/dashboard/external_review.py', 'src/dashboard/static/external-review.js', '.github/workflows/review-portal.yml']
+diff --git a/.github/workflows/review-source-20260910.yml b/.github/workflows/review-source-20260910.yml
+deleted file mode 100644
+index ebb50453..00000000
+--- a/.github/workflows/review-source-20260910.yml
++++ /dev/null
+@@ -1,28 +0,0 @@
+-name: Scientific integration source capture
+-# Include the external review portal merged from main on 2026-09-10.
+-on:
+-  push:
+-    branches: [fix/complete-experiments-provider-repo-context-20260910]
+-    paths: ['.github/workflows/review-source-20260910.yml']
+-permissions:
+-  contents: read
+-jobs:
+-  capture:
+-    runs-on: ubuntu-latest
+-    timeout-minutes: 5
+-    steps:
+-      - uses: actions/checkout@v7
+-        with:
+-          fetch-depth: 0
+-          persist-credentials: false
+-      - name: Export source and immutable ref inventory
+-        run: |
+-          mkdir -p "$RUNNER_TEMP/review-source"
+-          git bundle create "$RUNNER_TEMP/review-source/repository.bundle" --all
+-          git rev-parse HEAD > "$RUNNER_TEMP/review-source/HEAD.txt"
+-          git show-ref > "$RUNNER_TEMP/review-source/refs.txt"
+-      - uses: actions/upload-artifact@v7
+-        with:
+-          name: scientific-integration-source
+-          path: ${{ runner.temp }}/review-source/
+-          retention-days: 1
+diff --git a/docs/03-dashboard/API_REFERENCE.md b/docs/03-dashboard/API_REFERENCE.md
+index c7972c4e..68df15fa 100644
+--- a/docs/03-dashboard/API_REFERENCE.md
++++ b/docs/03-dashboard/API_REFERENCE.md
+@@ -120,0 +121,8 @@ The machine-readable backend/frontend contract is maintained in
++
++## External review integration
++
++`GET /api/research/external-review` returns public, instrument-digest-bound
++readiness and pending assessment stages. It does not query the private
++collector, expose participant identities, record reviewer decisions, or grant
++ethics approval. Response counts remain null. Missing or changed instrument
++bytes yield `available: false`. No write route exists.
+diff --git a/docs/03-dashboard/BACKEND_FRONTEND_COVERAGE.json b/docs/03-dashboard/BACKEND_FRONTEND_COVERAGE.json
+index d35cada4..4c8fa174 100644
+--- a/docs/03-dashboard/BACKEND_FRONTEND_COVERAGE.json
++++ b/docs/03-dashboard/BACKEND_FRONTEND_COVERAGE.json
+@@ -158,0 +159,11 @@
++    },
++    {
++      "method": "GET",
++      "path": "/api/research/external-review",
++      "backend_owner": "build_external_review_status",
++      "frontend_consumer": "external-review.js",
++      "surface": "Research / Probanden & Ethik",
++      "read_write": "read",
++      "experiment_only": false,
++      "safety_class": "public_metadata_only_no_responses_no_evidence_promotion",
++      "coverage_status": "COVERED"
+diff --git a/docs/08-roadmap/TODO.md b/docs/08-roadmap/TODO.md
+index 387b3cb6..9b3c8613 100644
+--- a/docs/08-roadmap/TODO.md
++++ b/docs/08-roadmap/TODO.md
+@@ -197,0 +198,10 @@ A scientific milestone is complete only when all applicable requirements are sat
++
++## 2026-09-10 External review integration
++
++- [x] Preserve the 135-question portal and bind its public instrument provenance.
++- [x] Connect the Research subtab Probanden & Ethik, read-only readiness API and central File Viewer.
++- [x] Separate generated methodological templates from completed human reviews.
++- [x] Exclude private response exports and symlinks from repository AI retrieval.
++- [ ] Organize independent administration, pilot the instrument and freeze each cohort/wave.
++- [ ] Obtain actual qualified reviews and any required institutional ethics decision; a questionnaire alone cannot close these findings.
++- [ ] Complete coupled cognition snapshot/restore and controlled SNN-specific learning validation; component screens do not establish these capabilities.
+diff --git a/research/ethics/EXTERNAL_REVIEW_INTEGRATION.md b/research/ethics/EXTERNAL_REVIEW_INTEGRATION.md
+new file mode 100644
+index 00000000..84ce69b3
+--- /dev/null
++++ b/research/ethics/EXTERNAL_REVIEW_INTEGRATION.md
+@@ -0,0 +1,12 @@
++# Externe Begutachtung und Vorsorge
++
++Die bestehende Vorsorgerichtlinie bleibt unveraendert. Das neue
++[Erhebungsinstrument](../external_review/README.md) unterstuetzt getrennte
++Probanden-, Fach- und Ethikbewertungen. Der
++[Abschlussprozess](../external_review/INTEGRATION.md) legt dar, welche
++Kritikpunkte technisch bearbeitet sind und welche reale Nachweise benoetigen.
++
++Ein bereiter Collector, eine Rollenangabe, positive Antworten oder
++automatisch erzeugte Methodenaudit-Vorlagen ersetzen keine unabhaengige
++Fachentscheidung und keine externe Ethikfreigabe. Die sichere Erhebung und
++ihre Auswertung sind von neuronalen Experimenten und EVID-Promotion getrennt.

@@ -1,0 +1,108 @@
+diff --git a/src/research/cognition_experiments.py b/src/research/cognition_experiments.py
+index f0eecc59..b072b3b1 100644
+--- a/src/research/cognition_experiments.py
++++ b/src/research/cognition_experiments.py
+@@ -166,0 +167,2 @@ def run_memory_delayed_information(
++                        "snn_involved": False,
++                        "claim_scope": "component_engineering_screen_not_snn_learning",
+@@ -230,3 +232 @@ def run_world_model_prediction(
+-                    adaptive_sources += int(
+-                        prediction.source == "adaptive_transition"
+-                    )
++                    adaptive_sources += int(prediction.source == "adaptive_transition")
+@@ -255 +255,6 @@ def run_world_model_prediction(
+-                        "held_out": True,
++                        "held_out": condition != "adaptive",
++                        "evaluation_mode": (
++                            "prequential_online_update"
++                            if condition == "adaptive"
++                            else "frozen_evaluation"
++                        ),
+@@ -258,0 +264,2 @@ def run_world_model_prediction(
++                        "snn_involved": False,
++                        "claim_scope": "component_engineering_screen_not_snn_learning",
+@@ -334,0 +342,2 @@ def run_behavior_profile_control(
++                        "snn_involved": False,
++                        "claim_scope": "component_engineering_screen_not_snn_learning",
+@@ -376 +385,5 @@ def run_methodological_audit(
+-                        "audit_complete": True,
++                        "audit_complete": False,
++                        "audit_template_generated": True,
++                        "human_assessment": "not_recorded",
++                        "external_review_instrument": "research/external_review/README.md",
++                        "external_ethics_approval": "not_claimed",
+@@ -382,0 +396,2 @@ def run_methodological_audit(
++                        "snn_involved": False,
++                        "claim_scope": "component_engineering_screen_not_snn_learning",
+@@ -407,4 +422 @@ _AUDIT_IDS = {
+-    **{
+-        f"cog_cns_{number}_v1": f"RQ-CNS-{number}"
+-        for number in range(101, 118)
+-    },
++    **{f"cog_cns_{number}_v1": f"RQ-CNS-{number}" for number in range(101, 118)},
+@@ -427 +438,0 @@ __all__ = [
+-    *["run_" + protocol_id for protocol_id in _AUDIT_IDS],
+@@ -428,0 +440,4 @@ __all__ = [
++
++RUNNER_NAMES = tuple(name for name in __all__ if name.startswith("run_")) + tuple(
++    "run_" + protocol_id for protocol_id in _AUDIT_IDS
++)
+diff --git a/src/research/cognition_governance.py b/src/research/cognition_governance.py
+index 9e6b6236..b72856c4 100644
+--- a/src/research/cognition_governance.py
++++ b/src/research/cognition_governance.py
+@@ -68,3 +68 @@ def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
+-            raise CognitionGovernanceError(
+-                "Missing or duplicate cognition protocol ID"
+-            )
++            raise CognitionGovernanceError("Missing or duplicate cognition protocol ID")
+@@ -147,3 +145,4 @@ def _texts(value: object) -> bool:
+-    return isinstance(value, list) and bool(value) and all(
+-        _nonempty_text(item) for item in cast(list[object], value)
+-    )
++    if not isinstance(value, list):
++        return False
++    items = cast(list[object], value)
++    return len(items) > 0 and all(_nonempty_text(item) for item in items)
+diff --git a/src/research/protocol_registry.py b/src/research/protocol_registry.py
+index 250bba14..0b4cee0f 100644
+--- a/src/research/protocol_registry.py
++++ b/src/research/protocol_registry.py
+@@ -54,4 +54 @@ OPERATIONAL_RUNNERS.update(
+-    {
+-        f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1"
+-        for number in range(101, 118)
+-    }
++    {f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1" for number in range(101, 118)}
+@@ -97,5 +94 @@ def load_operational_protocols(research_root: Path) -> list[dict[str, Any]]:
+-            if (
+-                not isinstance(identifier, str)
+-                or not identifier
+-                or identifier in seen
+-            ):
++            if not isinstance(identifier, str) or not identifier or identifier in seen:
+@@ -156 +149,4 @@ def _merge_bundle_preregistration(
+-    if resolved.get("execution_kind") == "conceptual_audit":
++    execution_kind = resolved.get("execution_kind", protocol.get("execution_kind"))
++    if execution_kind != protocol.get("execution_kind"):
++        raise PreregistrationError("Bundled execution kind disagrees with protocol.")
++    if execution_kind == "conceptual_audit":
+@@ -209,2 +205,6 @@ def _validate_prereg_object(
+-    if not isinstance(outcomes, list) or not outcomes or not all(
+-        isinstance(item, str) and item for item in outcomes
++    if (
++        not isinstance(outcomes, list)
++        or not outcomes
++        or not all(
++            isinstance(item, str) and item for item in cast(list[object], outcomes)
++        )
+@@ -294,3 +294 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
+-            raise PreregistrationError(
+-                "Operational protocol ID/RQ/H must be strings."
+-            )
++            raise PreregistrationError("Operational protocol ID/RQ/H must be strings.")
+@@ -312,3 +310 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
+-            label
+-            for value in condition_values
+-            if (label := _condition_label(value))
++            label for value in condition_values if (label := _condition_label(value))
