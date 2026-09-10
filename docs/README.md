@@ -77,9 +77,9 @@ The repository-wide RQ/H audit reports references that are not represented in th
 - **Control** — explicit operator controls;
 - **Research** — research/evidence workflows and searchable Research Catalog;
 - **Settings** — configuration;
-- **Wesen** — adaptive read-only live machine-body visualization;
+- **Wesen** — adaptive primarily observational live machine-body visualization with explicit fail-closed sensor controls;
 - **Embodiment** — technical sensor/device/actuator/body-boundary surface;
-- **Neural Symbiosis** — read-only multi-network/virtual-pipeline view inside `Wesen`;
+- **Neural Symbiosis** — observational multi-network/virtual-pipeline view inside `Wesen` with experiment-only lifecycle controls;
 - **MSBA** — modality-specific audio/vision/digital gateway contract plus resource/energy model inside Neural Symbiosis;
 - **Release/Gate** — footer-accessed release-readiness surface;
 - **Network** — no longer a primary user-facing workspace.
@@ -112,6 +112,8 @@ Current gateway rules:
 - framework-neutral peripheral implementations;
 - pipeline templates are disabled until explicitly instantiated;
 - Neural-Symbiosis and MSBA gateway learning/growth/allocation are disabled by default;
+- experiment-scoped gateway activation/lifecycle control is available only behind the existing research gates;
+- productive gateway activation remains locked;
 - gateway RNG belongs to an experiment runner and must be persisted;
 - endpoint reachability is not evidence of learned use;
 - fixed semantics are not imposed on the five MHRN axes;

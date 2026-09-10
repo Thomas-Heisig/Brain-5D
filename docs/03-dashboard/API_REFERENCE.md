@@ -70,7 +70,8 @@ conscious identity.
 
 ## Embodiment Read APIs
 
-These endpoints are read-only and publish only measured or discovered state:
+The GET endpoints publish only measured or discovered state. Sensor lifecycle
+mutations are explicit and fail closed:
 
 | Method | Endpoint | Purpose |
 |---|---|---|

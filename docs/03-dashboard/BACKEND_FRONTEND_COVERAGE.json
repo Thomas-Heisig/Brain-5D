@@ -4,6 +4,17 @@
   "entries": [
     {
       "method": "GET",
+      "path": "/api/embodiment/state|metrics|history|pipeline",
+      "backend_owner": "DashboardRequestHandler embodiment telemetry",
+      "frontend_consumer": "wesen-base.js, wesen-anatomy-v3.js",
+      "surface": "Wesen / Embodiment",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "published_telemetry",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
       "path": "/api/embodiment/connections",
       "backend_owner": "DashboardRequestHandler._send_embodiment_connections",
       "frontend_consumer": "wesen-base.js, wesen-neural-symbiosis.js",
@@ -11,6 +22,17 @@
       "read_write": "read",
       "experiment_only": false,
       "safety_class": "discovery_only",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/embodiment/sensors/{id}",
+      "backend_owner": "SensorActivationService",
+      "frontend_consumer": "wesen.js",
+      "surface": "Wesen / Sensor lifecycle",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "lifecycle_audit_read",
       "coverage_status": "COVERED"
     },
     {
@@ -61,6 +83,17 @@
       "method": "GET",
       "path": "/api/cognition/status|memory|memory/episodes|predictions|world-model|behavior-profile",
       "backend_owner": "ExperienceEngine / MemoryWorldModel",
+      "frontend_consumer": "wesen-profile.js",
+      "surface": "Wesen / Cognition",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "bounded_read_only_telemetry",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cognition/state",
+      "backend_owner": "DashboardRequestHandler._send_cognition_state",
       "frontend_consumer": "wesen-profile.js",
       "surface": "Wesen / Cognition",
       "read_write": "read",

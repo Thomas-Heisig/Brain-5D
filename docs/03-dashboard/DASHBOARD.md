@@ -87,7 +87,7 @@ These capabilities must not be simulated in the browser merely to make the UI ap
 
 ## Wesen workspace
 
-`Runtime & Wesen` is the primary living-system area. The existing `Wesen` implementation remains adaptive and read-only: it reads published status, embodiment state and connection inventory. It does not send learning commands, generate language output or issue actuator writes.
+`Runtime & Wesen` is the primary living-system area. The existing `Wesen` implementation remains primarily observational: it reads published status, embodiment state and connection inventory, and exposes only explicit sensor lifecycle, memory-control and experiment-scoped gateway actions. It does not send learning commands, generate language output or issue actuator writes.
 
 The body is machine-native rather than human-shaped:
 
@@ -106,14 +106,14 @@ The frontend intentionally shows both present and planned capability classes:
 
 - dynamic connection inventory/body morphology — **implemented, read-only**;
 - host interoception/body boundary — **implemented** where telemetry exists;
-- per-sense activate/deactivate control — **Not implemented yet**;
+- per-sense activate/deactivate control — **implemented for explicitly registered adapters; fail-closed otherwise**;
 - experimental Neural Symbiosis gateway activation, Frozen/Random/Shuffle controls and bounded experimental plasticity — **implemented / unvalidated**;
 - productive Neural Symbiosis gateway activation/plasticity — **Planned / Locked pending validation**;
 - canonical SNN snapshots/persistence — **implemented**;
 - holistic Wesen profiles containing senses, SNN configuration, learning parameters, morphology and actuators — **implemented**;
 - profile load/save/clone/import/export/archive with revision and snapshot binding — **implemented**;
-- personality profiles — **Not implemented yet**;
-- Memory/World-Model layer — **Not implemented yet**.
+- operational Behavior Profile telemetry — **implemented / experimental; no psychological claim**;
+- bounded Memory/World-Model telemetry and Memory Read/Write controls — **implemented / experimental**.
 
 This maturity display follows the canonical TODO/roadmap and is not evidence that a planned feature exists.
 

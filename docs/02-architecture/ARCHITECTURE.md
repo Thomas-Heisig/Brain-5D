@@ -63,7 +63,9 @@ authorization/safety -> ActuatorHub -> observed outcome -> feedback/reward
 
 Persistence surrounds mutable state.
 Research provenance surrounds execution.
-Wesen observes published state read-only.
+Wesen is primarily observational and consumes published state; its explicit
+sensor, memory-control and experiment-only gateway actions remain bounded by
+their backend safety and research gates.
 ```
 
 ## 1. Sparse 5D neural core
@@ -158,7 +160,7 @@ Detailed contract: [`NEURAL_SYMBIOSIS.md`](NEURAL_SYMBIOSIS.md).
 
 ## 8. Adaptive machine-native body view (`Wesen`)
 
-`Wesen` is a **dashboard projection**, not a new runtime subsystem. It consumes published status, embodiment, connection and selected read-only pipeline state and renders a machine-native body whose visible morphology changes with observed endpoints.
+`Wesen` is a **dashboard projection**, not a new runtime subsystem. It consumes published status, embodiment, connection and selected pipeline state and renders a machine-native body whose visible morphology changes with observed endpoints. Explicit controls do not grant productive learning or actuator authority.
 
 Architecture rules:
 
@@ -167,7 +169,7 @@ Architecture rules:
 - discovered sensor endpoints become input branches;
 - discovered actuator endpoints become output branches;
 - feedback/loopback remains a distinct return structure;
-- Neural Symbiosis is displayed as a read-only peripheral-pipeline layer;
+- Neural Symbiosis is displayed as an observational peripheral-pipeline layer with experiment-only lifecycle controls;
 - missing sensors/actuators remain explicit placeholders/unavailable states;
 - the visualization does not write `/api/control` or actuator state;
 - visual connectivity or reachability is not automatically causal evidence;
