@@ -51,7 +51,10 @@ OPERATIONAL_RUNNERS: dict[str, str] = {
     "behavior_profile_control_v1": "run_behavior_profile_control",
 }
 OPERATIONAL_RUNNERS.update(
-    {f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1" for number in range(101, 118)}
+    {
+        f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1"
+        for number in range(101, 118)
+    }
 )
 OPERATIONAL_RUNNERS.update(
     {
@@ -91,8 +94,14 @@ def load_operational_protocols(research_root: Path) -> list[dict[str, Any]]:
                 raise PreregistrationError("Operational protocol must be an object.")
             item = cast(dict[str, Any], value)
             identifier = item.get("id")
-            if not isinstance(identifier, str) or not identifier or identifier in seen:
-                raise PreregistrationError("Missing or duplicate operational protocol ID.")
+            if (
+                not isinstance(identifier, str)
+                or not identifier
+                or identifier in seen
+            ):
+                raise PreregistrationError(
+                    "Missing or duplicate operational protocol ID."
+                )
             seen.add(identifier)
             protocols.append(item)
     return protocols
@@ -140,7 +149,10 @@ def _merge_bundle_preregistration(
     defaults_value = bundle.get("defaults")
     if not isinstance(defaults_value, dict):
         raise PreregistrationError("Bundled preregistration defaults are malformed.")
-    resolved = {**cast(dict[str, Any], defaults_value), **cast(dict[str, Any], raw)}
+    resolved = {
+        **cast(dict[str, Any], defaults_value),
+        **cast(dict[str, Any], raw),
+    }
     if resolved.get("execution_kind") == "conceptual_audit":
         audit_defaults = bundle.get("audit_defaults")
         if not isinstance(audit_defaults, dict):
@@ -149,7 +161,9 @@ def _merge_bundle_preregistration(
     resolved.update(
         {
             "schema_version": "1.0",
-            "preregistration_id": f"{bundle.get('bundle_id', 'PREREG-BUNDLE')}:{protocol_id}",
+            "preregistration_id": (
+                f"{bundle.get('bundle_id', 'PREREG-BUNDLE')}:{protocol_id}"
+            ),
             "protocol_id": protocol_id,
             "freeze": bundle.get("freeze"),
         }
@@ -247,7 +261,8 @@ def validate_operational_protocol(
         raise PreregistrationError("Invalid minimum independent seed count.")
     if seed_count < minimum:
         raise PreregistrationError(
-            f"Protocol '{protocol_id}' requires at least {minimum} independent seeds; got {seed_count}."
+            f"Protocol '{protocol_id}' requires at least {minimum} independent "
+            f"seeds; got {seed_count}."
         )
     return prereg
 
@@ -255,7 +270,9 @@ def validate_operational_protocol(
 def _condition_label(item: object) -> str:
     if isinstance(item, dict):
         mapping = cast(dict[str, Any], item)
-        condition_id = mapping.get("id") or mapping.get("condition_id") or mapping.get("name")
+        condition_id = (
+            mapping.get("id") or mapping.get("condition_id") or mapping.get("name")
+        )
         role = mapping.get("role")
         if condition_id:
             return f"{condition_id}{f' ({role})' if role else ''}"
@@ -270,17 +287,32 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
         protocol_id = protocol.get("id")
         question_id = protocol.get("research_question")
         hypothesis_id = protocol.get("hypothesis")
-        if not all(isinstance(value, str) for value in (protocol_id, question_id, hypothesis_id)):
-            raise PreregistrationError("Operational protocol ID/RQ/H must be strings.")
+        if not all(
+            isinstance(value, str)
+            for value in (protocol_id, question_id, hypothesis_id)
+        ):
+            raise PreregistrationError(
+                "Operational protocol ID/RQ/H must be strings."
+            )
         prereg, _ = _load_preregistration(research_root, protocol)
         _validate_prereg_object(prereg, protocol=protocol)
         seed_strategy = cast(dict[str, Any], prereg["seed_strategy"])
         analysis_plan = cast(dict[str, Any], prereg["analysis_plan"])
         minimum_seeds = int(seed_strategy.get("minimum_independent_seeds", 1))
-        default_seed_expression = "101" if minimum_seeds <= 1 else f"101-{100 + minimum_seeds}"
+        default_seed_expression = (
+            "101" if minimum_seeds <= 1 else f"101-{100 + minimum_seeds}"
+        )
         raw_conditions = prereg.get("conditions", [])
-        condition_values = cast(list[object], raw_conditions) if isinstance(raw_conditions, list) else []
-        condition_labels = [label for value in condition_values if (label := _condition_label(value))]
+        condition_values = (
+            cast(list[object], raw_conditions)
+            if isinstance(raw_conditions, list)
+            else []
+        )
+        condition_labels = [
+            label
+            for value in condition_values
+            if (label := _condition_label(value))
+        ]
         controls = [str(item) for item in protocol.get("controls", [])]
         treatments = [str(item) for item in protocol.get("treatments", [])]
         catalog.append(
