@@ -45,7 +45,7 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
     for run in runs:
         by_condition[str(run.get("condition", "unknown"))].append(run)
 
-    numeric_metric_names = (
+    numeric_metric_names: tuple[str, ...] = (
         "ticks_executed",
         "total_spikes",
         "activated_neurons",
@@ -69,6 +69,16 @@ def build_descriptive_statistics(runs: list[dict[str, Any]]) -> dict[str, Any]:
         "validation_trial_count",
         "holdout_trial_count",
     )
+    discovered_numeric_metrics = {
+        str(name)
+        for run in runs
+        for name, value in (run.get("metrics") or {}).items()
+        if _number(value) is not None
+    }
+    numeric_metric_names = tuple(
+        sorted(set(numeric_metric_names) | discovered_numeric_metrics)
+    )
+
     conditions: dict[str, Any] = {}
     for condition, condition_runs in sorted(by_condition.items()):
         metric_stats: dict[str, Any] = {}

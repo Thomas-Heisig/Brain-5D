@@ -80,8 +80,10 @@ class SensorActivationService:
         current = self.get(connection_id)
         if current is None:
             raise KeyError(connection_id)
-        previous_state = "ACTIVE" if current.active else (
-            "DISABLED" if current.enabled else current.health
+        previous_state = (
+            "ACTIVE"
+            if current.active
+            else ("DISABLED" if current.enabled else current.health)
         )
         requested_state = "ACTIVE" if enabled else "DISABLED"
         error: str | None = None
@@ -102,7 +104,11 @@ class SensorActivationService:
                     connection_id,
                     active=False,
                     enabled=False,
-                    health=current.health if current.health != "UNAVAILABLE" else "UNAVAILABLE",
+                    health=(
+                        current.health
+                        if current.health != "UNAVAILABLE"
+                        else "UNAVAILABLE"
+                    ),
                     last_error=error,
                     message=error,
                 )

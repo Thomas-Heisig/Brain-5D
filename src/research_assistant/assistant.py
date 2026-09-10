@@ -26,9 +26,9 @@ class ResearchAssistant:
 
     def build_packet(self, experiment_id: str) -> ResearchPacket:
         manifest = self._read_json(f"experiments/{experiment_id}/manifest.json")
-        questions = self._read_yaml("registry/questions.yaml")
-        hypotheses = self._read_yaml("registry/hypotheses.yaml")
-        claims = self._read_yaml("registry/claims.yaml")
+        questions = self._read_yaml_family("registry/questions.yaml")
+        hypotheses = self._read_yaml_family("registry/hypotheses.yaml")
+        claims = self._read_yaml_family("registry/claims.yaml")
         question_id = _one_str(manifest, "research_questions")
         question = _by_id(questions, question_id)
         hypothesis_ids = _string_list(manifest, "hypotheses")
@@ -201,7 +201,9 @@ class ResearchAssistant:
     ) -> list[dict[str, Any]]:
         source_ids = _string_list(question, "literature")
         try:
-            sources = self._read_yaml("registry/sources.yaml")
+            sources = self._read_yaml_family(
+                "registry/sources.yaml", identity_key="source_id"
+            )
         except FileNotFoundError:
             return []
         return [source for source in sources if source.get("source_id") in source_ids]
@@ -257,6 +259,36 @@ class ResearchAssistant:
         return [
             cast(dict[str, Any], item) for item in entries if isinstance(item, dict)
         ]
+
+    def _read_yaml_family(
+        self, relative_path: str, *, identity_key: str = "id"
+    ) -> list[dict[str, Any]]:
+        """Read a canonical YAML registry plus its same-stem fragment files."""
+        base = self._safe_path(relative_path)
+        paths = [base, *sorted(base.parent.glob(f"{base.stem}.*{base.suffix}"))]
+        records: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for path in paths:
+            raw_data: Any = yaml.safe_load(path.read_text(encoding="utf-8"))
+            if raw_data is None:
+                continue
+            if not isinstance(raw_data, list):
+                raise ValueError(
+                    f"Research registry fragment must be a list: {path.name}"
+                )
+            for value in cast(list[object], raw_data):
+                if not isinstance(value, dict):
+                    continue
+                item = cast(dict[str, Any], value)
+                identifier = item.get(identity_key)
+                if isinstance(identifier, str):
+                    if identifier in seen:
+                        raise ValueError(
+                            f"Duplicate research registry identifier {identifier}: {path.name}"
+                        )
+                    seen.add(identifier)
+                records.append(item)
+        return records
 
     def _safe_path(self, relative_path: str) -> Path:
         if Path(relative_path).parts and Path(relative_path).parts[0] == "benchmarks":

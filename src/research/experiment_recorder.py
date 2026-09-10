@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import platform
+import tempfile
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -543,10 +545,25 @@ class ExperimentRecorder:
         return self
 
     def save(self) -> Path:
-        """Write the manifest to disk as JSON."""
+        """Atomically persist the manifest and fail if it is not immediately readable."""
         manifest_path = self.output_dir / "manifest.json"
-        with open(manifest_path, "w", encoding="utf-8") as f:
-            json.dump(self._manifest, f, indent=2, ensure_ascii=False)
+        payload = (
+            json.dumps(self._manifest, indent=2, ensure_ascii=False) + "\n"
+        ).encode("utf-8")
+        fd, temporary = tempfile.mkstemp(
+            prefix=".manifest.", suffix=".json.tmp", dir=str(self.output_dir)
+        )
+        try:
+            with os.fdopen(fd, "wb") as stream:
+                stream.write(payload)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, manifest_path)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        if not manifest_path.is_file():
+            raise FileNotFoundError(f"Manifest persistence failed: {manifest_path}")
         return manifest_path
 
     @property

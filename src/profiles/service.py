@@ -173,9 +173,15 @@ def _default_profile(profile_id: str, name: str) -> dict[str, Any]:
             "active_weights_in_profile": False,
         },
         "memory": {
-            "episodic": {"enabled": False, "implementation_status": "implemented_optional"},
+            "episodic": {
+                "enabled": False,
+                "implementation_status": "implemented_optional",
+            },
             "semantic": {"enabled": False, "implementation_status": "planned"},
-            "working": {"enabled": True, "implementation_status": "implemented_optional"},
+            "working": {
+                "enabled": True,
+                "implementation_status": "implemented_optional",
+            },
         },
         "self_model": {
             "enabled": False,

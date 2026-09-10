@@ -87,11 +87,14 @@ class ExperienceEngine:
             raise RuntimeError("complete() requires a matching prepare() call")
         observation = None
         decoded = self.decoder(result, frame)
-        action = (
-            self.behavior_profile.select_action(decoded, tick=tick)
-            if self.behavior_profile is not None and isinstance(decoded, tuple)
-            else decoded
-        )
+        if isinstance(decoded, tuple):
+            action: ActionCommand | None = (
+                self.behavior_profile.select_action(decoded, tick=tick)
+                if self.behavior_profile is not None
+                else (decoded[0] if decoded else None)
+            )
+        else:
+            action = decoded
         if self.memory is not None:
             self._pending_prediction = self.memory.predict(frame, action, tick)
         if action is not None:
