@@ -10,8 +10,9 @@ from __future__ import annotations
 import hashlib
 import json
 import random
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 
 from src.embodiment.models import (
     ActionCommand,
@@ -22,6 +23,7 @@ from src.memory import MemoryStore, TransitionWorldModel
 from src.profiles import BehaviorProfile
 
 Config = Mapping[str, Any]
+AuditRunner = Callable[[Config, tuple[int, ...]], list["CognitionRun"]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,9 +39,12 @@ class CognitionRun:
 
 def _digest(value: object) -> str:
     return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
+        json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+        ).encode("utf-8")
     ).hexdigest()
 
 
@@ -51,7 +56,9 @@ def _action(tick: int, value: str) -> ActionCommand:
     return ActionCommand("choice", tick, value)
 
 
-def _observation(tick: int, state: dict[str, Any], reward: float = 0.0) -> EnvironmentObservation:
+def _observation(
+    tick: int, state: dict[str, Any], reward: float = 0.0
+) -> EnvironmentObservation:
     return EnvironmentObservation(tick, state, reward, False, False)
 
 
@@ -70,7 +77,10 @@ def run_memory_delayed_information(
     trials = 24
     delay = 8
     for seed in seeds:
-        cues = ["A" if random.Random(seed * 1000 + trial).random() < 0.5 else "B" for trial in range(trials)]
+        cues = [
+            "A" if random.Random(seed * 1000 + trial).random() < 0.5 else "B"
+            for trial in range(trials)
+        ]
         for condition in conditions:
             store = MemoryStore(
                 run_id=f"mem-{seed}-{condition}",
@@ -94,22 +104,46 @@ def run_memory_delayed_information(
                 )
                 decision_tick = cue_tick + delay
                 recalled = list(store.recall(modality="symbol", limit=16))
-                if condition == "memory_time_shuffled" and recalled:
-                    shift = (seed + trial + 1) % len(recalled)
-                    recalled = recalled[shift:] + recalled[:shift]
                 selected: str | None = None
-                for record in recalled:
-                    if record.episode_id == f"trial-{trial}":
-                        selected = str(record.observation["payload"]["cue"])
+                if condition == "memory_time_shuffled" and recalled:
+                    # Information-destroying temporal control: select from a
+                    # deterministic *different* episode rather than merely
+                    # permuting the list and then looking up the correct ID.
+                    alternatives = [
+                        record
+                        for record in recalled
+                        if record.episode_id != f"trial-{trial}"
+                    ]
+                    if alternatives:
+                        source_record = alternatives[(seed + trial) % len(alternatives)]
+                        selected = str(source_record.observation["payload"]["cue"])
                         retrievals += 1
-                        break
+                else:
+                    for record in recalled:
+                        if record.episode_id == f"trial-{trial}":
+                            selected = str(record.observation["payload"]["cue"])
+                            retrievals += 1
+                            break
                 if selected is None:
-                    selected = "A" if random.Random(seed ^ (trial * 7919)).random() < 0.5 else "B"
+                    selected = (
+                        "A"
+                        if random.Random(seed ^ (trial * 7919)).random() < 0.5
+                        else "B"
+                    )
                 correct += int(selected == cue)
                 store.record(
-                    SensorFrame("decision", decision_tick, "choice", {"selected": selected}),
+                    SensorFrame(
+                        "decision",
+                        decision_tick,
+                        "choice",
+                        {"selected": selected},
+                    ),
                     _action(decision_tick, selected),
-                    _observation(decision_tick, {"target": cue}, 1.0 if selected == cue else 0.0),
+                    _observation(
+                        decision_tick,
+                        {"target": cue},
+                        1.0 if selected == cue else 0.0,
+                    ),
                     episode_id=f"decision-{trial}",
                     source="cognition_experiment.outcome",
                 )
@@ -180,11 +214,12 @@ def run_world_model_prediction(
                 action = _action(tick, choice)
                 actual = _transition_state(cue, choice)
                 if condition == "no_model":
-                    predicted = None
                     error = None
                 elif condition == "persistence":
-                    predicted = {"position": 0, "matched": False}
-                    error = model.error(predicted, actual)
+                    error = model.error(
+                        {"position": 0, "matched": False},
+                        actual,
+                    )
                 else:
                     prediction = model.predict(
                         frame,
@@ -192,13 +227,18 @@ def run_world_model_prediction(
                         target_tick=tick + 1,
                         persistence_state={"position": 0, "matched": False},
                     )
-                    predicted = prediction.predicted_state
-                    adaptive_sources += int(prediction.source == "adaptive_transition")
-                    error = model.error(predicted, actual)
+                    adaptive_sources += int(
+                        prediction.source == "adaptive_transition"
+                    )
+                    error = model.error(prediction.predicted_state, actual)
                 if error is not None:
                     errors.append(float(error))
                 if condition == "adaptive":
-                    model.update(frame, action, _observation(tick + 1, actual))
+                    model.update(
+                        frame,
+                        action,
+                        _observation(tick + 1, actual),
+                    )
             mean_error = sum(errors) / len(errors) if errors else None
             after = _digest(model.state_dict())
             runs.append(
@@ -229,13 +269,26 @@ def run_behavior_profile_control(
 ) -> list[CognitionRun]:
     """Measure deterministic behavioral-profile influence and adaptation logging."""
     del config
-    conditions = ("fixed_low_exploration", "fixed_high_exploration", "adaptive", "shuffled_profile")
+    conditions = (
+        "fixed_low_exploration",
+        "fixed_high_exploration",
+        "adaptive",
+        "shuffled_profile",
+    )
     runs: list[CognitionRun] = []
     trials = 40
     for seed in seeds:
-        target_schedule = ["left" if random.Random(seed * 101 + i).random() < 0.5 else "right" for i in range(trials)]
+        target_schedule = [
+            "left" if random.Random(seed * 101 + i).random() < 0.5 else "right"
+            for i in range(trials)
+        ]
         for condition in conditions:
-            initial_exploration = 0.0 if condition == "fixed_low_exploration" else 1.0 if condition == "fixed_high_exploration" else 0.35
+            if condition == "fixed_low_exploration":
+                initial_exploration = 0.0
+            elif condition == "fixed_high_exploration":
+                initial_exploration = 1.0
+            else:
+                initial_exploration = 0.35
             profile = BehaviorProfile(
                 f"WESEN-{seed % 10000:04d}",
                 initial={"exploration": initial_exploration},
@@ -245,8 +298,11 @@ def run_behavior_profile_control(
             correct = 0
             selections: list[str] = []
             for trial, target in enumerate(target_schedule, start=1):
-                ordered = ("left", "right")
-                if condition == "shuffled_profile" and random.Random(seed ^ trial).random() < 0.5:
+                ordered: tuple[str, ...] = ("left", "right")
+                if (
+                    condition == "shuffled_profile"
+                    and random.Random(seed ^ trial).random() < 0.5
+                ):
                     ordered = tuple(reversed(ordered))
                 candidates = tuple(_action(trial, value) for value in ordered)
                 selected = profile.select_action(candidates, tick=trial)
@@ -255,7 +311,11 @@ def run_behavior_profile_control(
                 success = value == target
                 correct += int(success)
                 if condition == "adaptive":
-                    profile.update(success=success, tick=trial, source="registered_profile_control")
+                    profile.update(
+                        success=success,
+                        tick=trial,
+                        source="registered_profile_control",
+                    )
             after = _digest(profile.state_dict())
             runs.append(
                 CognitionRun(
@@ -328,10 +388,15 @@ def run_methodological_audit(
     return runs
 
 
-def _audit_runner(protocol_id: str, question_id: str):
-    def run(config: Config, seeds: tuple[int, ...] = (101, 102, 103)) -> list[CognitionRun]:
+def _audit_runner(protocol_id: str, question_id: str) -> AuditRunner:
+    def run(
+        config: Config, seeds: tuple[int, ...] = (101, 102, 103)
+    ) -> list[CognitionRun]:
         return run_methodological_audit(
-            config, seeds, protocol_id=protocol_id, question_id=question_id
+            config,
+            seeds,
+            protocol_id=protocol_id,
+            question_id=question_id,
         )
 
     run.__name__ = "run_" + protocol_id
@@ -339,7 +404,10 @@ def _audit_runner(protocol_id: str, question_id: str):
 
 
 _AUDIT_IDS = {
-    **{f"cog_cns_{number}_v1": f"RQ-CNS-{number}" for number in range(101, 118)},
+    **{
+        f"cog_cns_{number}_v1": f"RQ-CNS-{number}"
+        for number in range(101, 118)
+    },
     "cog_epi_101_v1": "RQ-EPI-101",
     "cog_epi_102_v1": "RQ-EPI-102",
     "cog_wel_101_v1": "RQ-WEL-101",
