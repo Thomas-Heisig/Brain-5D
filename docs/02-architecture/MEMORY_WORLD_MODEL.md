@@ -4,7 +4,9 @@
 
 The first bounded implementation is **implemented** and its focused technical
 checks are **verified**. It is not scientific evidence for memory, world-model
-understanding, personality, consciousness or subjective experience.
+understanding, personality, consciousness or subjective experience. The
+dashboard exposes bounded telemetry and explicit read/write controls; it cannot
+inject arbitrary memory content.
 
 ## Ownership and data flow
 
@@ -57,7 +59,9 @@ mean absolute error and categorical error is mismatch rate. This is a
 technical predictor, not a causal model. Action selection is not driven by the
 world model in this stage.
 
-`BehaviorProfile` is not an LLM role prompt. It can influence behavior only
+`BehaviorProfile` is not an LLM role prompt. It is constructed from explicit
+configuration in `build_experience_subsystem()` and passed to the existing
+`ExperienceEngine`. It can influence behavior only
 when a decoder explicitly returns a tuple of candidate `ActionCommand` values.
 Selection is deterministic from simulation tick and bounded exploration. Failed
 or successful task outcomes update the slow disposition with a disclosed
@@ -68,8 +72,9 @@ source. Estimated observer values are not fed back into the profile.
 
 Focused checks cover the real ExperienceEngine path, independent memory
 switches, capacity/retention, persistence integrity, target-state leakage
-boundary, profile update provenance and the existing read-only dashboard
-endpoint `/api/cognition/state`. They are engineering-screen checks.
+boundary, profile composition/update provenance and the dashboard endpoints
+`/api/cognition/state` and `/api/cognition/*`. They are engineering-screen
+checks.
 Delayed-information task performance, matched no-memory controls, frozen and
 adaptive world-model comparisons, held-out episodes and independent replication
 remain open research work.

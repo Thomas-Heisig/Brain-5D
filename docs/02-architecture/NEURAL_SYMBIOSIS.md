@@ -374,9 +374,10 @@ an experiment.
 - explicit `Experimental` and `Productive: LOCKED` status for gateway learning;
 - the scientific boundary.
 
-The panel performs GET-only observation. It contains no POST/PUT/DELETE path,
-no `/api/control` call and no mechanism to activate an actuator or learning
-rule.
+Status rendering is observational. In Experiment Mode the panel also exposes
+the existing experiment-scoped gateway lifecycle actions (activate, pause,
+resume and stop). These actions remain preregistration-gated and cannot
+activate productive gateway use, actuators or SNN learning rules.
 
 ## 11. API and implementation files
 
@@ -400,7 +401,8 @@ Implementation files:
 
 - `src/embodiment/neural_symbiosis.py` — typed open-set adapter, area, pipeline
   and gateway-math contracts;
-- `src/dashboard/static/wesen-neural-symbiosis.js` — read-only Wesen panel;
+- `src/dashboard/static/wesen-neural-symbiosis.js` — observational Wesen panel
+  with experiment-only lifecycle controls;
 - `src/dashboard/static/wesen-neural-symbiosis.css` — responsive presentation;
 - `src/embodiment/gateway_runtime.py` — bounded lifecycle, controls,
   deterministic checkpointing, resource limits and structural journal;

@@ -2,7 +2,7 @@
 
 ## Status
 
-`Wesen` is the dedicated real-time body visualization in the MHRN dashboard. It is a **read-only presentation surface** over observed runtime, embodiment, connection and peripheral-pipeline state. It does not run learning, issue language output, authorize actuators, activate Neural Symbiosis pipelines or fabricate missing telemetry.
+`Wesen` is the dedicated real-time body visualization in the MHRN dashboard. It is a **primarily observational presentation surface** over observed runtime, embodiment, connection and peripheral-pipeline state. It may issue only explicit, fail-closed sensor lifecycle actions, memory read/write control changes and experiment-scoped gateway lifecycle actions. It does not run learning, issue language output, authorize actuators, activate productive Neural Symbiosis pipelines or fabricate missing telemetry.
 
 The current view is intentionally **body-like without claiming biological equivalence**. It uses a readable anatomy metaphor while preserving machine-native semantics.
 
@@ -10,7 +10,7 @@ The current view is intentionally **body-like without claiming biological equiva
 
 - **Embodiment** is the technical connection/configuration surface for sensors, devices, actuators, permissions and body boundaries.
 - **Neural Symbiosis** is the embodiment-level contract for optional peripheral neural/virtual processing areas and explicit gateways.
-- **Wesen** is the live visual projection of body state and includes a read-only Neural Symbiosis panel showing catalog/pipeline reachability only.
+- **Wesen** is the live visual projection of body state and includes Neural Symbiosis status plus experiment-only lifecycle controls.
 - **Release** is no longer a primary workspace; its legacy gate surface is opened from the footer.
 - **Network** is no longer a primary user-facing workspace. Network state remains available through domain APIs and inspector/research surfaces where needed.
 
@@ -18,7 +18,8 @@ Detailed Neural Symbiosis contract: [`NEURAL_SYMBIOSIS.md`](NEURAL_SYMBIOSIS.md)
 
 ## Read-only data sources
 
-The Wesen stack reads only GET endpoints. Current sources include:
+The observational Wesen stack reads the following endpoints; explicit controls
+are listed separately below:
 
 - `GET /api/status`
 - `GET /api/embodiment/state`
@@ -29,17 +30,23 @@ The Wesen stack reads only GET endpoints. Current sources include:
 - `GET /api/live/io-flow`
 - `GET /api/live/population`
 
+Control endpoints are:
+
+- `GET /api/embodiment/sensors` and `POST /api/embodiment/sensors/{id}/enable|disable`;
+- `POST /api/cognition/memory/controls`;
+- `POST /api/experiments/{id}/gateway/{activate|pause|resume|stop}` in Experiment Mode only.
+
 The primary state loop remains 750 ms; the anatomy/empirical overlay and Neural Symbiosis reachability view refresh independently at bounded cadences. Unknown/missing values remain `—`, `unknown` or equivalent. The UI must never replace missing measurements with plausible-looking constants.
 
 ## Neural Symbiosis panel
 
-The panel is a read-only presentation of the peripheral multi-network boundary. It can show:
+The panel is an observational presentation of the peripheral multi-network boundary. It can show:
 
 - common neural-network families and the open-set adapter capability;
 - virtual logic/knowledge/memory area categories;
 - camera, microphone, web/API, database, logic, memory, audio, display, printer and robotics pipeline templates;
 - whether the required source/sink endpoint is currently reachable;
-- explicit disabled/inert status for gateway learning.
+- explicit experimental availability and productive-lock status for gateway learning.
 
 It does **not** instantiate a model, enable an actuator, mutate the SNN or run plasticity. A reachable pipeline is only an engineering availability observation. It is not evidence that the SNN selected, learned, benefited from or causally used that pipeline.
 
@@ -129,7 +136,7 @@ The current body view remains browser-native SVG/CSS/JavaScript. Future 3D rende
 1. No fabricated fallback telemetry.
 2. Observed, derived, unknown and scientifically established causal claims remain distinct.
 3. Availability never implies actuator authorization.
-4. The view is read-only; no hidden `/api/control` or actuator write is issued.
+4. The view has no hidden `/api/control` or actuator write path; all available controls are explicit, bounded and backend-gated.
 5. Neural Symbiosis reachability never implies learned area/tool use.
 6. Neural Symbiosis gateway plasticity is not activated by the presentation layer.
 7. Recurrence/loopback is not equated with consciousness.
