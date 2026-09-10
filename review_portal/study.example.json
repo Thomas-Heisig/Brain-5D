@@ -1,0 +1,15 @@
+{
+  "enabled": false,
+  "study_id": "mhrn-external-review-01",
+  "wave": "baseline",
+  "title": "MHRN - freiwilliges externes Review",
+  "controller": "VERANTWORTLICHE STELLE EINTRAGEN",
+  "contact": "DATENSCHUTZ- UND RUECKTRITTSKONTAKT EINTRAGEN",
+  "purpose": "Verstaendlichkeit und wahrgenommene wissenschaftliche, technische und ethische Qualitaet der bezeichneten Projektunterlagen beurteilen.",
+  "retention_days": 90,
+  "compensation": "Keine Aufwandsentschaedigung vorgesehen; vor Start verbindlich pruefen.",
+  "privacy_notice": "VERFAHREN EINTRAGEN: Zugriffsberechtigte, Rechtsgrundlage, Widerruf, Backup-Loeschfrist, Hosting/Protokolle und Rechte vor Erhebungsbeginn unabhaengig pruefen. Keine automatische Rohdatenveroeffentlichung.",
+  "reviewed_revision": "fc2a8de9161480191658148b73a545449ce33ce7",
+  "materials_url": "https://github.com/Thomas-Heisig/MHRN/tree/fc2a8de9161480191658148b73a545449ce33ce7",
+  "public_origin": "https://review.example.org"
+}
