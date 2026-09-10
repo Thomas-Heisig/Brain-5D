@@ -23,6 +23,13 @@ jobs:
         run: |
           python .maintenance/amend_scaling.py
           rm .maintenance/amend_scaling.py
+          python - <<'PY'
+          from pathlib import Path
+          for name in ('src/research/empirical_evaluation.py', 'tests/test_empirical_evaluation.py'):
+              path = Path(name)
+              text = path.read_text().replace('_network(', 'build_empirical_network(').replace('import _network', 'import build_empirical_network')
+              path.write_text(text)
+          PY
           python -m black src tests scripts
           python -m ruff check src tests scripts
           python -m mypy src
