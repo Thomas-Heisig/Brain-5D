@@ -1,4 +1,5 @@
 name: Scientific integration source capture
+# Include the external review portal merged from main on 2026-09-10.
 on:
   push:
     branches: [fix/complete-experiments-provider-repo-context-20260910]
