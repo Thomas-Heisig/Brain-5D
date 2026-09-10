@@ -317,6 +317,24 @@ class ExperimentWorkflowService:
                         **result,
                     }
                 )
+            except WorkflowValidationError as exc:
+                message = str(exc)
+                intentionally_blocked = message.startswith(
+                    (
+                        "COGNITION_ADAPTER_NOT_VALIDATED:",
+                        "CONNECTOME_ADAPTER_NOT_VALIDATED:",
+                    )
+                )
+                results.append(
+                    {
+                        "protocol": protocol_id,
+                        "ticks": child_ticks,
+                        "seeds": child_seeds,
+                        "experiment_id": experiment_id,
+                        "status": "blocked" if intentionally_blocked else "failed",
+                        "error": f"{type(exc).__name__}: {exc}",
+                    }
+                )
             except Exception as exc:
                 results.append(
                     {
@@ -332,7 +350,8 @@ class ExperimentWorkflowService:
         workflow_root.mkdir(parents=True, exist_ok=True)
         report_path = workflow_root / f"{batch_id}.json"
         completed = sum(item["status"] == "completed" for item in results)
-        failed = len(results) - completed
+        blocked = sum(item["status"] == "blocked" for item in results)
+        failed = sum(item["status"] == "failed" for item in results)
         report = {
             "workflow_id": batch_id,
             "created_at": datetime.now(timezone.utc).isoformat(),
@@ -340,6 +359,7 @@ class ExperimentWorkflowService:
             "requested_ticks": ticks,
             "seeds": seeds,
             "completed": completed,
+            "blocked": blocked,
             "failed": failed,
             "results": results,
         }
@@ -356,6 +376,7 @@ class ExperimentWorkflowService:
                     f"- Requested ticks: `{ticks}`",
                     f"- Seeds: `{seeds}`",
                     f"- Completed: `{completed}`",
+                    f"- Blocked by design: `{blocked}`",
                     f"- Failed: `{failed}`",
                     "",
                     "## Protocol results",
@@ -376,6 +397,7 @@ class ExperimentWorkflowService:
             "report": f"workflows/{batch_id}.json",
             "report_markdown": f"workflows/{batch_id}.md",
             "completed": completed,
+            "blocked": blocked,
             "failed": failed,
             "results": results,
         }

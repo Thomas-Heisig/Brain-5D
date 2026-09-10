@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from .cognition_governance import PREFIXES
+from .connectome_governance import PROTECTED_QUESTIONS
 from .protocol_registry import protocol_catalog
 from .registry import ResearchRegistry
 
@@ -67,6 +68,10 @@ def question_facets(root: Path, registry: ResearchRegistry) -> list[dict[str, An
     result: list[dict[str, Any]] = []
     for question in registry.questions.values():
         progress = counts[question.id]
+        is_operational = question.id in operational
+        blocked_design = not is_operational and (
+            question.id.startswith(PREFIXES) or question.id in PROTECTED_QUESTIONS
+        )
         state = "not_run"
         if progress:
             state = "data_available" if progress["completed"] else "incomplete"
@@ -78,10 +83,11 @@ def question_facets(root: Path, registry: ResearchRegistry) -> list[dict[str, An
                 "label": question.question,
                 "domain": question.domain,
                 "status": question.status,
-                "operational": question.id in operational,
+                "operational": is_operational,
+                "workflow_selectable": not blocked_design,
                 "execution_status": (
                     "BLOCKED_ADAPTER_AND_REVIEW_REQUIRED"
-                    if question.id.startswith(PREFIXES)
+                    if blocked_design
                     else "existing_workflow_contract"
                 ),
                 "consciousness_inference": "not_established",

@@ -124,8 +124,14 @@ def test_cognition_routes_expose_telemetry_and_confirm_memory_controls() -> None
         assert memory["controls"] == {"read_enabled": True, "write_enabled": True}
         assert _get(host, port, "/api/cognition/memory/episodes")["available"] is True
 
-        assert _get(host, port, "/api/cognition/world-model")["causal_understanding_claim"] is False
-        assert _get(host, port, "/api/cognition/behavior-profile")["profile"]["profile_id"] == "WESEN-0001"
+        assert (
+            _get(host, port, "/api/cognition/world-model")["causal_understanding_claim"]
+            is False
+        )
+        assert (
+            _get(host, port, "/api/cognition/behavior-profile")["profile"]["profile_id"]
+            == "WESEN-0001"
+        )
 
         status_code, changed = _post(
             host,

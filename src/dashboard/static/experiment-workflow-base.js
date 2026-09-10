@@ -309,7 +309,12 @@ export class ExperimentWorkflowPanel {
         const hypothesisId = hypothesis?.id || "EXPLORATORY-UNSPECIFIED";
         const selection = `exploratory:${question.id}:${hypothesisId}`;
         label.classList.add("workflow-batch-protocol-exploratory");
-        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}" checked><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"} · automatische Diagnosevorgaben</small><em><span>Seeds</span><input type="text" data-batch-seeds value="42-44" readonly><span>Ticks</span><input type="number" data-batch-ticks min="1" value="1000" readonly></em></span>`;
+        const selectable = question.workflow_selectable !== false;
+        if (!selectable) label.classList.add("workflow-batch-protocol-blocked");
+        const executionLabel = selectable
+          ? `EXPLORATORY · Runtime-Ticks${hypothesis ? ` · ${escapeHtml(hypothesis.id)}` : " · ohne registrierte Hypothese"} · automatische Diagnosevorgaben`
+          : `BLOCKED · ${escapeHtml(question.execution_status || "native adapter/review required")} · kein Generic-Ticks-Fallback`;
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(selection)}" ${selectable ? "checked" : "disabled"}><span><strong>${escapeHtml(question.id)} · ${escapeHtml(question.label || "")}</strong><small>${executionLabel}</small><em><span>Seeds</span><input type="text" data-batch-seeds value="42-44" readonly><span>Ticks</span><input type="number" data-batch-ticks min="1" value="1000" readonly></em></span>`;
       }
       return label;
     }));

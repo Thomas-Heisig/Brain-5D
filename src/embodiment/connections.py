@@ -11,7 +11,7 @@ import threading
 import time
 from dataclasses import dataclass, replace
 from enum import StrEnum
-from typing import cast
+from typing import Any, cast
 
 from .models import JSONValue
 
@@ -290,7 +290,7 @@ class ConnectionManager:
             current = self._connections.get(connection_id)
             if current is None:
                 raise KeyError(connection_id)
-            updated = replace(current, **changes)
+            updated = replace(current, **cast(Any, changes))
             self._connections[connection_id] = updated
             return updated
 

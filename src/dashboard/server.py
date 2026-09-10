@@ -1424,7 +1424,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         self._send_json(
             {
                 "available": True,
-                "status": "active" if cognition is not None and cognition.enabled else "observing",
+                "status": (
+                    "active"
+                    if cognition is not None and cognition.enabled
+                    else "observing"
+                ),
                 "memory": memory,
                 "behavior_profile": (
                     None if profile is None else cast(JSONValue, profile.state_dict())
@@ -1479,12 +1483,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         if cognition is None:
             self._send_json({"available": False, "predictions": []})
             return
-        records = () if not cognition.store.read_enabled else tuple(cognition.store.predictions[-limit:])
+        records = (
+            ()
+            if not cognition.store.read_enabled
+            else tuple(cognition.store.predictions[-limit:])
+        )
         self._send_json(
             {
                 "available": True,
                 "read_enabled": cognition.store.read_enabled,
-                "predictions": [cast(JSONValue, record.to_dict()) for record in records],
+                "predictions": [
+                    cast(JSONValue, record.to_dict()) for record in records
+                ],
             }
         )
 
@@ -1679,7 +1689,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             or isinstance(tick_value, bool)
             or not isinstance(source_value, str)
         ):
-            raise InvalidRequestError("tick must be an integer and operator_source a string")
+            raise InvalidRequestError(
+                "tick must be an integer and operator_source a string"
+            )
         try:
             sensor, audit = self.dashboard_server.sensor_activation.set_enabled(
                 parts[3],

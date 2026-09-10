@@ -9,6 +9,11 @@ from typing import Callable
 from .connections import ConnectionDescriptor, ConnectionKind, ConnectionManager
 
 
+def _allow_sensor(_descriptor: ConnectionDescriptor) -> bool:
+    """Default policy used only when no stricter caller policy is supplied."""
+    return True
+
+
 @dataclass(frozen=True, slots=True)
 class SensorActivationAudit:
     """One requested sensor transition, including rejected requests."""
@@ -47,7 +52,9 @@ class SensorActivationService:
         safety_policy: Callable[[ConnectionDescriptor], bool] | None = None,
     ) -> None:
         self.connections = connections
-        self.safety_policy = safety_policy or (lambda _descriptor: True)
+        self.safety_policy: Callable[[ConnectionDescriptor], bool] = (
+            safety_policy or _allow_sensor
+        )
         self._audit: list[SensorActivationAudit] = []
 
     @property
@@ -80,8 +87,10 @@ class SensorActivationService:
         current = self.get(connection_id)
         if current is None:
             raise KeyError(connection_id)
-        previous_state = "ACTIVE" if current.active else (
-            "DISABLED" if current.enabled else current.health
+        previous_state = (
+            "ACTIVE"
+            if current.active
+            else ("DISABLED" if current.enabled else current.health)
         )
         requested_state = "ACTIVE" if enabled else "DISABLED"
         error: str | None = None
@@ -102,7 +111,11 @@ class SensorActivationService:
                     connection_id,
                     active=False,
                     enabled=False,
-                    health=current.health if current.health != "UNAVAILABLE" else "UNAVAILABLE",
+                    health=(
+                        current.health
+                        if current.health != "UNAVAILABLE"
+                        else "UNAVAILABLE"
+                    ),
                     last_error=error,
                     message=error,
                 )

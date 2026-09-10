@@ -121,7 +121,8 @@ test('real inventory changes reach the Wesen pipeline view without authorizing d
   }).toBe(true);
   await expect(camera).toContainText('endpoint unavailable');
   await expect(robot).toContainText('endpoint unavailable');
-  await expect(page.locator('#wesen-neural-symbiosis')).toContainText('READ-ONLY');
+  await expect(page.locator('#wesen-neural-symbiosis')).toContainText('EXPERIMENT CONTROL');
+  await expect(page.locator('#wesen-neural-symbiosis')).toContainText('Productive Gateway: LOCKED');
 });
 
 test('canonical file viewer: split editor live preview and stale-write conflict diff', async ({ page }) => {

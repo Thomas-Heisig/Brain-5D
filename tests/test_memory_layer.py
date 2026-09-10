@@ -29,6 +29,7 @@ from src.profiles import BehaviorProfile
 
 @dataclass
 class _Actuator:
+    actuator_id: str = "target-actuator"
     active: bool = True
 
     def apply(self, command: ActionCommand) -> ActuatorResult:
