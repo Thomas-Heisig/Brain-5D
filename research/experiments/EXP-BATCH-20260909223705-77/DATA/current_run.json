@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 20,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0020-sensor_15ms-seed-103.json.gz",
+    "sha256": "ad49cd90c949bfb66435ee0c5a429b40f4becb551fec7ba399ee3578bbf23320",
+    "size_bytes": 43278,
+    "uncompressed_bytes": 298724
+  },
+  "status": "idle"
+}

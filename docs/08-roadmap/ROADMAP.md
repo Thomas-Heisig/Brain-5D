@@ -2,7 +2,7 @@
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-09
+**Updated:** 2026-09-10
 
 ## 2026-09-10 Bounded memory, prediction and behavior profile foundation
 
@@ -17,13 +17,22 @@
 - Added an operational behavior profile with separate initial, situational and
 	slow disposition state. It affects behavior only through an explicit tuple of
 	decoder candidates and logs bounded simulation-tick updates.
+- Wired configured Behavior Profiles into `build_experience_subsystem()` and
+	the existing `ExperienceEngine`; no LLM personality or psychological claim
+	is introduced.
 - Focused engineering screen: 18 tests passed for memory, profile, experience
 	and existing profile lifecycle paths. No scientific promotion was performed.
-- Added the existing dashboard's read-only `/api/cognition/state` contract;
-	File Viewer inspection and frontend presentation remain open.
+- Added granular cognition telemetry and explicit read/write controls at
+	`/api/cognition/*`; the Wesen page now shows memory, prediction and
+	operational Behavior Profile state.
+- Added individual sensor lifecycle controls with fail-closed adapter,
+	authorization and safety checks; discovery never activates hardware.
+- Added experiment-only Gateway lifecycle controls in Wesen while productive
+	Gateway activation remains locked.
+- Added explicit profile snapshot binding and central File Viewer access, plus
+	the machine-readable backend/frontend coverage contract.
 - Open: coupled runtime snapshot boundary, delayed-cue controls, frozen-model
-	and no-memory comparisons, held-out episodes, frontend/File Viewer exposure
-	and independent replication.
+	and no-memory comparisons, held-out episodes and independent replication.
 
 ## 2026-09-08 Versioned embedding and cluster analysis
 

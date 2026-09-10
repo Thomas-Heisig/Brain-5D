@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 11,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0011-restored_actuator-seed-103.json.gz",
+    "sha256": "fc1083c615a844904aae39e9c0af6d0c9895f60b93d3e9380f1a98b6ac4b852d",
+    "size_bytes": 52566,
+    "uncompressed_bytes": 296369
+  },
+  "status": "idle"
+}

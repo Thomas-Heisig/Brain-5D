@@ -102,6 +102,47 @@ def test_cognition_state_exposes_bounded_read_only_status() -> None:
         _stop(server, thread)
 
 
+def test_cognition_routes_expose_telemetry_and_confirm_memory_controls() -> None:
+    store = MemoryStore(run_id="run-granular")
+    profile = BehaviorProfile("WESEN-0001")
+    cognition = MemoryWorldModel(store, TransitionWorldModel(), "run-granular")
+    experience = SimpleNamespace(memory=cognition, behavior_profile=profile)
+    server = DashboardServer(
+        ("127.0.0.1", 0), DashboardStateStore(), heatmaps=None, experience=experience
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    host, port = server.server_address[:2]
+    assert isinstance(host, str)
+    try:
+        status = _get(host, port, "/api/cognition/status")
+        assert status["memory"]["run_id"] == "run-granular"
+        assert status["memory"]["retention_ticks"] == 1024
+
+        memory = _get(host, port, "/api/cognition/memory")
+        assert memory["integrity_digest"]
+        assert memory["controls"] == {"read_enabled": True, "write_enabled": True}
+        assert _get(host, port, "/api/cognition/memory/episodes")["available"] is True
+
+        assert _get(host, port, "/api/cognition/world-model")["causal_understanding_claim"] is False
+        assert _get(host, port, "/api/cognition/behavior-profile")["profile"]["profile_id"] == "WESEN-0001"
+
+        status_code, changed = _post(
+            host,
+            port,
+            "/api/cognition/memory/controls",
+            {"read_enabled": False, "write_enabled": True},
+        )
+        assert status_code == 200
+        assert changed["memory"]["controls"] == {
+            "read_enabled": False,
+            "write_enabled": True,
+        }
+        assert _get(host, port, "/api/cognition/memory/episodes")["episodes"] == []
+    finally:
+        _stop(server, thread)
+
+
 def test_embodiment_metrics_expose_published_values() -> None:
     state = DashboardStateStore(
         initial=DashboardSnapshot(
@@ -219,6 +260,68 @@ def test_embodiment_connections_are_read_only_and_explicitly_authorized() -> Non
         assert camera["available"] is True
         assert camera["authorized"] is True
         assert camera["permissions"] == ["capture"]
+    finally:
+        _stop(server, thread)
+
+
+def test_sensor_lifecycle_requires_adapter_and_audits_transitions() -> None:
+    manager = ConnectionManager(cache_seconds=60)
+    manager.register(
+        ConnectionDescriptor(
+            connection_id="sensor.lifecycle",
+            name="Lifecycle sensor",
+            kind=ConnectionKind.SENSOR,
+            relationship=RelationshipClass.USABLE,
+            status=ConnectionStatus.AVAILABLE,
+            capabilities=("sample",),
+            available=True,
+            authorized=True,
+            source="test_adapter",
+        )
+    )
+    manager.register(
+        ConnectionDescriptor(
+            connection_id="sensor.adapter",
+            name="Configured test sensor",
+            kind=ConnectionKind.SENSOR,
+            relationship=RelationshipClass.USABLE,
+            status=ConnectionStatus.CONNECTED,
+            capabilities=("sample",),
+            available=True,
+            authorized=True,
+            adapter_id="test.adapter",
+            configured=True,
+            source="test_adapter",
+        )
+    )
+    server, thread, host, port = _start(DashboardStateStore())
+    server.connection_manager = manager
+    from src.embodiment import SensorActivationService
+
+    server.sensor_activation = SensorActivationService(manager)
+    try:
+        status, rejected = _post(
+            host, port, "/api/embodiment/sensors/sensor.lifecycle/enable", {"tick": 7}
+        )
+        assert status == 409
+        assert rejected["audit"]["result"] == "rejected"
+        assert "adapter unavailable" in rejected["audit"]["error"]
+
+        status, enabled = _post(
+            host, port, "/api/embodiment/sensors/sensor.adapter/enable", {"tick": 8}
+        )
+        assert status == 200
+        assert enabled["sensor"]["active"] is True
+        assert enabled["sensor"]["health"] == "ACTIVE"
+
+        status, disabled = _post(
+            host, port, "/api/embodiment/sensors/sensor.adapter/disable", {"tick": 9}
+        )
+        assert status == 200
+        assert disabled["sensor"]["active"] is False
+        assert disabled["audit"]["previous_state"] == "ACTIVE"
+        collection = _get(host, port, "/api/embodiment/sensors")
+        assert len(collection["audit"]) == 3
     finally:
         _stop(server, thread)
 

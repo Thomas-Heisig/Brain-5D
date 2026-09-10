@@ -1,0 +1,32 @@
+{
+  "experiment_id": "EXP-BATCH-20260909223705-77",
+  "research_question": "RQ-TIME-002",
+  "hypothesis": "H-TIME-002-A",
+  "title": "Experiment workflow: embodied_timing_v1",
+  "conditions": "Registered protocol conditions",
+  "ticks": 1000,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    101,
+    102,
+    103
+  ],
+  "protocol": "embodied_timing_v1",
+  "resolved_runner": "run_embodied_timing",
+  "tick_validation": {
+    "status": "SATISFIED",
+    "mode": "minimum_per_run",
+    "requested_ticks": 1000,
+    "observed_min": 1000,
+    "observed_max": 1000
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only.",
+  "epistemic_layers": {
+    "ui_state": "operator/dashboard progress only; not a scientific result",
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input"
+  }
+}

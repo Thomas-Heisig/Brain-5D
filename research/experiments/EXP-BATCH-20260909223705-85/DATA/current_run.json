@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 8,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0008-digital-seed-103.json.gz",
+    "sha256": "8b51458f3de5f791f39f73d4f311ebba3b7ef4baff708b87f0d5e3c2513242a0",
+    "size_bytes": 971,
+    "uncompressed_bytes": 2088
+  },
+  "status": "idle"
+}

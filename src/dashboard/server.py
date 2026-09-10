@@ -53,6 +53,7 @@ from src.embodiment import (
     GatewayRuntime,
     GatewayState,
     NeuralSymbiosisCatalog,
+    SensorActivationService,
 )
 from src.learning import (
     LearningDataPartition,
@@ -228,6 +229,7 @@ class DashboardServer(ThreadingHTTPServer):
             "handoff_prompt": "",
         }
         self.connection_manager = connection_manager or ConnectionManager()
+        self.sensor_activation = SensorActivationService(self.connection_manager)
         self.gateway_state_path = gateway_state_path
         self.gateway_runtime = (
             GatewayRuntime.load(gateway_state_path)
@@ -397,6 +399,32 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._send_cognition_state()
                 return
 
+            if path == "/api/cognition/status":
+                self._send_cognition_status()
+                return
+
+            if path == "/api/cognition/memory":
+                self._send_cognition_memory()
+                return
+
+            if path == "/api/cognition/memory/episodes":
+                limit = self._query_int(query, "limit", default=32, maximum=128)
+                self._send_cognition_episodes(limit)
+                return
+
+            if path == "/api/cognition/predictions":
+                limit = self._query_int(query, "limit", default=32, maximum=128)
+                self._send_cognition_predictions(limit)
+                return
+
+            if path == "/api/cognition/world-model":
+                self._send_cognition_world_model()
+                return
+
+            if path == "/api/cognition/behavior-profile":
+                self._send_cognition_behavior_profile()
+                return
+
             if path == "/api/embodiment/metrics":
                 self._send_embodiment_metrics()
                 return
@@ -408,6 +436,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/embodiment/connections":
                 self._send_embodiment_connections()
+                return
+
+            if path == "/api/embodiment/sensors":
+                self._send_sensor_collection()
+                return
+
+            if path.startswith("/api/embodiment/sensors/"):
+                self._send_sensor_detail(path)
                 return
 
             if path == "/api/embodiment/pipeline":
@@ -893,6 +929,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 self._set_embodiment_pipeline(body)
                 return
 
+            if path.startswith("/api/embodiment/sensors/"):
+                self._set_sensor_state(path, body)
+                return
+
+            if path == "/api/cognition/memory/controls":
+                self._set_cognition_memory_controls(body)
+                return
+
             if path.startswith("/api/parameters/") and path.endswith("/pending"):
                 name = unquote(path[len("/api/parameters/") : -len("/pending")])
                 self._set_pending_parameter(name, body)
@@ -1342,6 +1386,168 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             }
         )
 
+    def _cognition_components(self) -> tuple[Any, Any]:
+        experience = self.dashboard_server.experience
+        if experience is None:
+            return None, None
+        return getattr(experience, "memory", None), getattr(
+            experience, "behavior_profile", None
+        )
+
+    def _send_cognition_status(self) -> None:
+        """Serve the canonical cognition summary used by the Wesen surface."""
+        cognition, profile = self._cognition_components()
+        if cognition is None and profile is None:
+            self._send_json(
+                {
+                    "available": False,
+                    "status": "unavailable",
+                    "scientific_status": "engineering_screen_only",
+                }
+            )
+            return
+        memory = None
+        if cognition is not None:
+            store = cognition.store
+            memory = {
+                "enabled": bool(cognition.enabled),
+                "controls": cast(dict[str, JSONValue], store.controls()),
+                "episode_count": len(store.episodes),
+                "working_count": len(store.working),
+                "prediction_count": len(store.predictions),
+                "retention_ticks": store.retention_ticks,
+                "last_write_tick": (
+                    store.episodes[-1].tick if store.episodes else None
+                ),
+                "run_id": store.run_id,
+            }
+        self._send_json(
+            {
+                "available": True,
+                "status": "active" if cognition is not None and cognition.enabled else "observing",
+                "memory": memory,
+                "behavior_profile": (
+                    None if profile is None else cast(JSONValue, profile.state_dict())
+                ),
+                "scientific_status": "engineering_screen_only",
+            }
+        )
+
+    def _send_cognition_memory(self) -> None:
+        """Serve memory configuration and bounded counters only."""
+        cognition, _ = self._cognition_components()
+        if cognition is None:
+            self._send_json({"available": False, "status": "unavailable"})
+            return
+        store = cognition.store
+        self._send_json(
+            {
+                "available": True,
+                "status": "active" if cognition.enabled else "disabled",
+                "controls": cast(dict[str, JSONValue], store.controls()),
+                "episode_count": len(store.episodes),
+                "working_count": len(store.working),
+                "prediction_count": len(store.predictions),
+                "episode_capacity": store.episode_capacity,
+                "working_capacity": store.working_capacity,
+                "prediction_capacity": store.prediction_capacity,
+                "retention_ticks": store.retention_ticks,
+                "last_write_tick": store.episodes[-1].tick if store.episodes else None,
+                "integrity_digest": store.state_dict()["integrity_digest"],
+                "run_id": store.run_id,
+            }
+        )
+
+    def _send_cognition_episodes(self, limit: int) -> None:
+        """Serve recalled episodes without bypassing the read control."""
+        cognition, _ = self._cognition_components()
+        if cognition is None:
+            self._send_json({"available": False, "episodes": []})
+            return
+        records = cognition.store.recall(limit=limit)
+        self._send_json(
+            {
+                "available": True,
+                "read_enabled": cognition.store.read_enabled,
+                "episodes": [cast(JSONValue, record.to_dict()) for record in records],
+            }
+        )
+
+    def _send_cognition_predictions(self, limit: int) -> None:
+        """Serve bounded prediction records when memory read is enabled."""
+        cognition, _ = self._cognition_components()
+        if cognition is None:
+            self._send_json({"available": False, "predictions": []})
+            return
+        records = () if not cognition.store.read_enabled else tuple(cognition.store.predictions[-limit:])
+        self._send_json(
+            {
+                "available": True,
+                "read_enabled": cognition.store.read_enabled,
+                "predictions": [cast(JSONValue, record.to_dict()) for record in records],
+            }
+        )
+
+    def _send_cognition_world_model(self) -> None:
+        """Serve the bounded observation-only model and its scientific boundary."""
+        cognition, _ = self._cognition_components()
+        if cognition is None:
+            self._send_json({"available": False, "status": "unavailable"})
+            return
+        self._send_json(
+            {
+                "available": cognition.store.read_enabled,
+                "status": "observation_only",
+                "model": (
+                    cast(JSONValue, cognition.world_model.state_dict())
+                    if cognition.store.read_enabled
+                    else None
+                ),
+                "condition": "PERSISTENCE_REFERENCE_OR_ADAPTIVE_TRANSITION",
+                "scientific_status": "experimental_bounded_predictor",
+                "causal_understanding_claim": False,
+            }
+        )
+
+    def _send_cognition_behavior_profile(self) -> None:
+        """Serve operational disposition state without psychological claims."""
+        _, profile = self._cognition_components()
+        if profile is None:
+            self._send_json({"available": False, "status": "unavailable"})
+            return
+        self._send_json(
+            {
+                "available": True,
+                "status": "operational_experimental",
+                "profile": cast(JSONValue, profile.state_dict()),
+                "scientific_boundary": "operational disposition; no psychological personality claim",
+            }
+        )
+
+    def _set_cognition_memory_controls(self, body: dict[str, object]) -> None:
+        """Apply only explicit read/write controls; content injection is impossible."""
+        cognition, _ = self._cognition_components()
+        if cognition is None:
+            raise InvalidRequestError("memory subsystem is unavailable")
+        read_enabled = body.get("read_enabled")
+        write_enabled = body.get("write_enabled")
+        if not isinstance(read_enabled, bool) or not isinstance(write_enabled, bool):
+            raise InvalidRequestError(
+                "read_enabled and write_enabled must be boolean values"
+            )
+        cognition.store.set_controls(
+            read_enabled=read_enabled, write_enabled=write_enabled
+        )
+        self._send_json(
+            {
+                "ok": True,
+                "memory": {
+                    "controls": cast(dict[str, JSONValue], cognition.store.controls()),
+                    "run_id": cognition.store.run_id,
+                },
+            }
+        )
+
     def _send_embodiment_metrics(self) -> None:
         """Serve only measured embodiment metrics from the latest snapshot."""
         payload = self._embodiment_payload()
@@ -1426,6 +1632,73 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_embodiment_connections(self) -> None:
         """Serve discovered and configured body connections without activating them."""
         self._send_json(self.dashboard_server.connection_manager.to_json())
+
+    def _send_sensor_collection(self) -> None:
+        """Serve only registered sensor descriptors and recent lifecycle audit."""
+        service = self.dashboard_server.sensor_activation
+        self._send_json(
+            {
+                "count": len(service.sensors()),
+                "sensors": [item.to_json() for item in service.sensors()],
+                "audit": [
+                    cast(JSONValue, item.to_json()) for item in service.audit[-32:]
+                ],
+            }
+        )
+
+    def _send_sensor_detail(self, path: str) -> None:
+        connection_id = unquote(path[len("/api/embodiment/sensors/") :])
+        sensor = self.dashboard_server.sensor_activation.get(connection_id)
+        if sensor is None:
+            self._send_json({"error": "Sensor not found."}, HTTPStatus.NOT_FOUND)
+            return
+        self._send_json(
+            {
+                "sensor": sensor.to_json(),
+                "audit": [
+                    cast(JSONValue, item.to_json())
+                    for item in self.dashboard_server.sensor_activation.audit
+                    if item.connection_id == connection_id
+                ][-32:],
+            }
+        )
+
+    def _set_sensor_state(self, path: str, body: dict[str, object]) -> None:
+        parts = [unquote(part) for part in path.split("/") if part]
+        if len(parts) != 5 or parts[:3] != ["api", "embodiment", "sensors"]:
+            self._send_api_not_found(path)
+            return
+        action = parts[4]
+        if action not in {"enable", "disable"}:
+            self._send_api_not_found(path)
+            return
+        tick_value = body.get("tick", 0)
+        source_value = body.get("operator_source", "dashboard")
+        if (
+            not isinstance(tick_value, int)
+            or isinstance(tick_value, bool)
+            or not isinstance(source_value, str)
+        ):
+            raise InvalidRequestError("tick must be an integer and operator_source a string")
+        try:
+            sensor, audit = self.dashboard_server.sensor_activation.set_enabled(
+                parts[3],
+                action == "enable",
+                tick=tick_value,
+                operator_source=source_value,
+            )
+        except KeyError:
+            self._send_json({"error": "Sensor not found."}, HTTPStatus.NOT_FOUND)
+            return
+        status = HTTPStatus.OK if audit.result == "accepted" else HTTPStatus.CONFLICT
+        self._send_json(
+            {
+                "ok": audit.result == "accepted",
+                "sensor": sensor.to_json(),
+                "audit": cast(JSONValue, audit.to_json()),
+            },
+            status,
+        )
 
     def _send_neural_symbiosis(self) -> None:
         """Serve the catalog and the separately governed gateway runtime."""

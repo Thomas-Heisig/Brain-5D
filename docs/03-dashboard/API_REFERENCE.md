@@ -78,11 +78,37 @@ These endpoints are read-only and publish only measured or discovered state:
 | `GET` | `/api/embodiment/metrics` | Latest embodiment metrics. |
 | `GET` | `/api/embodiment/history?limit=N` | Retained metrics history, bounded by `limit`. |
 | `GET` | `/api/embodiment/connections` | Discovered connections and authorization state. |
+| `GET` | `/api/embodiment/sensors` | Registered sensor lifecycle state and recent activation audit. |
+| `GET` | `/api/embodiment/sensors/{id}` | One sensor lifecycle descriptor and its audit records. |
+| `POST` | `/api/embodiment/sensors/{id}/enable` | Enable one sensor only when adapter, authorization and safety checks pass. |
+| `POST` | `/api/embodiment/sensors/{id}/disable` | Explicitly disable one sensor and append an audit record. |
 
 Device discovery does not authorize or activate a connection. Writable adapter
 execution requires the fail-closed embodiment safety boundary: availability,
 explicit authorization, capability permission, rate limit, audit record and
 emergency-stop/override checks.
+
+## Cognition Read APIs
+
+Memory and world-model records remain bounded engineering telemetry. The
+dashboard cannot inject arbitrary memory content.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/api/cognition/status` | Shared cognition summary for the Wesen surface. |
+| `GET` | `/api/cognition/memory` | Memory controls, capacities, retention and integrity digest. |
+| `GET` | `/api/cognition/memory/episodes?limit=N` | Recalled bounded episodes, subject to `read_enabled`. |
+| `GET` | `/api/cognition/predictions?limit=N` | Prediction/error records, subject to `read_enabled`. |
+| `GET` | `/api/cognition/world-model` | Observation-only bounded model state and boundary. |
+| `GET` | `/api/cognition/behavior-profile` | Operational behavior profile and update log. |
+| `POST` | `/api/cognition/memory/controls` | Explicitly set `read_enabled` and `write_enabled` only. |
+
+Gateway lifecycle mutations remain experiment-scoped at
+`/api/experiments/{id}/gateway/{activate|pause|resume|stop}`. Productive gateway
+activation has no general endpoint and remains locked.
+
+The machine-readable backend/frontend contract is maintained in
+`docs/03-dashboard/BACKEND_FRONTEND_COVERAGE.json`.
 
 ## Contract Rules
 

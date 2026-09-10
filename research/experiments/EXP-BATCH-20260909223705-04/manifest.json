@@ -1,0 +1,85 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "data": "DATA/runs.json",
+    "workflow": "experiments/EXP-BATCH-20260909223705-04/workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {},
+  "created_at": "2026-09-09T22:52:17.886136+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "experiment_id": "EXP-BATCH-20260909223705-04",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "8184fc74654169e4d01552f093dd807f065c34e3",
+    "dirty": true
+  },
+  "hypotheses": [
+    "EXPLORATORY-UNSPECIFIED"
+  ],
+  "network_mode": "OFFLINE",
+  "research_questions": [
+    "RQ-SNN-003"
+  ],
+  "research_run_mode": "EXPLORATORY",
+  "results": {
+    "end": {
+      "neurons": 5000,
+      "synapses": 36031,
+      "tick": 3000
+    },
+    "observed_ticks": 1000,
+    "passed": true,
+    "start": {
+      "neurons": 5000,
+      "synapses": 36031,
+      "tick": 2000
+    },
+    "tick_contract": "SATISFIED",
+    "ticks_requested": 1000
+  },
+  "runtime": {
+    "duration_seconds": 485.59091729999636
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "runtime_ticks_v1",
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "ticks": 1000
+  },
+  "software": {
+    "brain5d_version": "0.6.0a1",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "timestamp": "2026-09-10T00:52:17.886129",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

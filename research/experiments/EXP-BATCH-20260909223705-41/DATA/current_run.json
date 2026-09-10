@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 9,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0009-subsystem_profile-seed-110.json.gz",
+    "sha256": "658ec8a9d35533e409856348c570e2e80fadf16a20deca94c6b4016a2b038874",
+    "size_bytes": 407,
+    "uncompressed_bytes": 549
+  },
+  "status": "idle"
+}

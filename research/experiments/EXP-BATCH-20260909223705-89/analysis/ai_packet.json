@@ -1,0 +1,1099 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 12,
+    "sha256": "0c1e876f495c2e5746403d33bfdd47ce4ddba1af90a061127798c9ad9a045c60"
+  },
+  "run_count": 12,
+  "run_preview": [
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0000-adaptive_compensation-seed-101.json.gz",
+        "sha256": "caa1b4bb0875d5eb7bfab9eca793609f194bb85615486a1281c4d1fe09a6639b",
+        "size_bytes": 902,
+        "uncompressed_bytes": 2025
+      },
+      "condition": "adaptive_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "adaptive_compensation",
+        "compensatory_gate_change": 0.5,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 73.8070639455293,
+            "task_accuracy": 0.31833801317472715,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 30.56044926477381
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.09999999999999998,
+        "post_lesion_allocation": {
+          "audio": 1.0,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.85
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0001-fixed_allocation-seed-101.json.gz",
+        "sha256": "e967e561db6546046ba5c4d7ec0a1ebd840b105d7ae43d4b1395afd985c4ab08",
+        "size_bytes": 882,
+        "uncompressed_bytes": 2000
+      },
+      "condition": "fixed_allocation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "fixed_allocation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 73.8070639455293,
+            "task_accuracy": 0.31833801317472715,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 30.56044926477381
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.0,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0002-shuffled_utility-seed-101.json.gz",
+        "sha256": "cdd38f520f2c56276b1b5e53279760ca4da080df80483091fb706aede052e3d9",
+        "size_bytes": 927,
+        "uncompressed_bytes": 2061
+      },
+      "condition": "shuffled_utility",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "shuffled_utility",
+        "compensatory_gate_change": 0.03309975355812078,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 73.8070639455293,
+            "task_accuracy": 0.31833801317472715,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 30.56044926477381
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.3202102217976913,
+        "post_lesion_allocation": {
+          "audio": 0.5330997535581208,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.45313479052440264
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0003-no_compensation-seed-101.json.gz",
+        "sha256": "3c9cc44e1f9dac93218c4017ef542ee26b6b6e5ed34445776c47f479ec863253",
+        "size_bytes": 888,
+        "uncompressed_bytes": 2015
+      },
+      "condition": "no_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "no_compensation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 73.8070639455293,
+            "task_accuracy": 0.31833801317472715,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 30.56044926477381
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.35000000000000003,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0004-adaptive_compensation-seed-102.json.gz",
+        "sha256": "fe96af882b6d1561bf64c4117ad7b192d02a5e5c072f3ed16dbbcda84092a65f",
+        "size_bytes": 910,
+        "uncompressed_bytes": 2037
+      },
+      "condition": "adaptive_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "adaptive_compensation",
+        "compensatory_gate_change": 0.5,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 81.21940500832038,
+            "task_accuracy": 0.3422898544694381,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 32.859826029066056
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.09999999999999998,
+        "post_lesion_allocation": {
+          "audio": 1.0,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.85
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0005-fixed_allocation-seed-102.json.gz",
+        "sha256": "feb013732b15ad63fb64a36bc82b0c60fc2982e84818cd88390173bac20b5984",
+        "size_bytes": 891,
+        "uncompressed_bytes": 2012
+      },
+      "condition": "fixed_allocation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "fixed_allocation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 81.21940500832038,
+            "task_accuracy": 0.3422898544694381,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 32.859826029066056
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.0,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0006-shuffled_utility-seed-102.json.gz",
+        "sha256": "265b6040b2d538ec6e7f069db3638600eb47d0f21310c2e70433f325a18c311b",
+        "size_bytes": 941,
+        "uncompressed_bytes": 2073
+      },
+      "condition": "shuffled_utility",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "shuffled_utility",
+        "compensatory_gate_change": -0.4089365378652059,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 81.21940500832038,
+            "task_accuracy": 0.3422898544694381,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 32.859826029066056
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.7180428840786853,
+        "post_lesion_allocation": {
+          "audio": 0.0910634621347941,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.07740394281457498
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0007-no_compensation-seed-102.json.gz",
+        "sha256": "78eda281ae6f0f7c6afe8900abbc3d01390206a23ee1ae3827b8b98c4dcf3840",
+        "size_bytes": 896,
+        "uncompressed_bytes": 2027
+      },
+      "condition": "no_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "no_compensation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 81.21940500832038,
+            "task_accuracy": 0.3422898544694381,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 32.859826029066056
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.35000000000000003,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0008-adaptive_compensation-seed-103.json.gz",
+        "sha256": "b02a8b323cd5fcfe5914c9615ccdfe66cb7a628f2807c3372dc062141c5026ee",
+        "size_bytes": 901,
+        "uncompressed_bytes": 2023
+      },
+      "condition": "adaptive_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "adaptive_compensation",
+        "compensatory_gate_change": 0.5,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 78.4355044778919,
+            "task_accuracy": 0.344105565960793,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.03413433223613
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.09999999999999998,
+        "post_lesion_allocation": {
+          "audio": 1.0,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.85
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0009-fixed_allocation-seed-103.json.gz",
+        "sha256": "df26f8d75dca650d8129e4c1d4f8dfaba6526913b6d0931eb51a797db5e6eadc",
+        "size_bytes": 881,
+        "uncompressed_bytes": 1998
+      },
+      "condition": "fixed_allocation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "fixed_allocation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 78.4355044778919,
+            "task_accuracy": 0.344105565960793,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.03413433223613
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": 0.0,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0010-shuffled_utility-seed-103.json.gz",
+        "sha256": "c8e4ac4a889243c55af2dfe93f62c517748a37b4b1fb26cb00b1f571295dd5b5",
+        "size_bytes": 932,
+        "uncompressed_bytes": 2060
+      },
+      "condition": "shuffled_utility",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "shuffled_utility",
+        "compensatory_gate_change": -0.0726231992910622,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 78.4355044778919,
+            "task_accuracy": 0.344105565960793,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.03413433223613
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.41536087936195604,
+        "post_lesion_allocation": {
+          "audio": 0.4273768007089378,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.36327028060259714
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0011-no_compensation-seed-103.json.gz",
+        "sha256": "5151ee9c4553710baf341597abeaa93adfc9ae81b833989491ed24f3a6627d3b",
+        "size_bytes": 885,
+        "uncompressed_bytes": 2013
+      },
+      "condition": "no_compensation",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "metrics": {
+        "baseline_allocation": {
+          "audio": 0.5,
+          "vision": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "compensation_mode": "no_compensation",
+        "compensatory_gate_change": 0.0,
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "random_gateway_control": {
+            "allocation_mode": "random",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 78.4355044778919,
+            "task_accuracy": 0.344105565960793,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.03413433223613
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          },
+          "sensor_lesion_compensation": true,
+          "timing_and_information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          }
+        },
+        "gateway_state_separate_persistence_required": true,
+        "incremental_energy_cost": -0.35000000000000003,
+        "post_lesion_allocation": {
+          "audio": 0.5,
+          "vision": 0.0
+        },
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E05",
+        "sensor_lesion": "vision",
+        "task_recovery": 0.425
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    }
+  ],
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "adaptive_compensation": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "fixed_allocation": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "no_compensation": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "shuffled_utility": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 12,
+    "schema_version": "2.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 59,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0059-simultaneous-seed-120.json.gz",
+    "sha256": "546e35141798561e54a328b354a77ca1f494a51e58b37b63c3a41b210555fadd",
+    "size_bytes": 340,
+    "uncompressed_bytes": 457
+  },
+  "status": "idle"
+}

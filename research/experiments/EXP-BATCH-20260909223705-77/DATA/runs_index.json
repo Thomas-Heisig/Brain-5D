@@ -1,0 +1,217 @@
+{
+  "run_count": 21,
+  "runs": [
+    {
+      "condition": "batch_1",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-batch_1-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "fd4dc5ea0d9907e06e0e7063be1a0b1d7ac8a1b4ebe46dbf8f0b21eca05cd376",
+      "size_bytes": 50997,
+      "uncompressed_bytes": 297584
+    },
+    {
+      "condition": "batch_16",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-batch_16-seed-101.json.gz",
+      "run_index": 1,
+      "seed": 101,
+      "sha256": "5c534e304a4f328aae2e0e8bb81a87719730d702240d619981c2421b3bb753e9",
+      "size_bytes": 51000,
+      "uncompressed_bytes": 297586
+    },
+    {
+      "condition": "batch_128",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-batch_128-seed-101.json.gz",
+      "run_index": 2,
+      "seed": 101,
+      "sha256": "c420b9c5bd77d1e53e31bf414f120b0e0506eb3ff9226cfff6752e245d7e1c72",
+      "size_bytes": 51001,
+      "uncompressed_bytes": 297588
+    },
+    {
+      "condition": "physics_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-physics_5ms-seed-101.json.gz",
+      "run_index": 3,
+      "seed": 101,
+      "sha256": "93ba41399a4c4a282bbdbdbff67f358dc082798dc2f9e14c9a6b6d9eb603a833",
+      "size_bytes": 26549,
+      "uncompressed_bytes": 284136
+    },
+    {
+      "condition": "physics_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-physics_15ms-seed-101.json.gz",
+      "run_index": 4,
+      "seed": 101,
+      "sha256": "334d292784a7d68ef823b36842d2cd83f35c781cfdc376e4cf24479d673b3335",
+      "size_bytes": 20538,
+      "uncompressed_bytes": 281766
+    },
+    {
+      "condition": "sensor_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-sensor_5ms-seed-101.json.gz",
+      "run_index": 5,
+      "seed": 101,
+      "sha256": "004b3ac14eaa4a6406d085eb0d235157640bf74d2295b0a34c9ed23541fadc81",
+      "size_bytes": 44695,
+      "uncompressed_bytes": 297410
+    },
+    {
+      "condition": "sensor_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-sensor_15ms-seed-101.json.gz",
+      "run_index": 6,
+      "seed": 101,
+      "sha256": "e77f16aa3dd5d31455abfad4fcaf76a34b51ac83ac1a5b6843fb5afeee396030",
+      "size_bytes": 43447,
+      "uncompressed_bytes": 297147
+    },
+    {
+      "condition": "batch_1",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-batch_1-seed-102.json.gz",
+      "run_index": 7,
+      "seed": 102,
+      "sha256": "061056614a4b75540659a7223c53e65034fd48a1115b98ad565121c67855e563",
+      "size_bytes": 50813,
+      "uncompressed_bytes": 298721
+    },
+    {
+      "condition": "batch_16",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-batch_16-seed-102.json.gz",
+      "run_index": 8,
+      "seed": 102,
+      "sha256": "bee6f81bf95481d0ff1b9fc6acbce26077270fa715708d127a2ec30277545a43",
+      "size_bytes": 50818,
+      "uncompressed_bytes": 298723
+    },
+    {
+      "condition": "batch_128",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-batch_128-seed-102.json.gz",
+      "run_index": 9,
+      "seed": 102,
+      "sha256": "1e308486b47b00061fa2a8b6538d104b4676cdcf09bd1b5f1ec9d3e9836c960d",
+      "size_bytes": 50818,
+      "uncompressed_bytes": 298725
+    },
+    {
+      "condition": "physics_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0010-physics_5ms-seed-102.json.gz",
+      "run_index": 10,
+      "seed": 102,
+      "sha256": "cd2d5f5aa510f05470c880fc4f6392be6d0bd2119e4c268e75abf1c3e6805796",
+      "size_bytes": 26630,
+      "uncompressed_bytes": 284261
+    },
+    {
+      "condition": "physics_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0011-physics_15ms-seed-102.json.gz",
+      "run_index": 11,
+      "seed": 102,
+      "sha256": "c58d74617fdfa6d006409f82d04dddc1094ffd058b326734b3eed5703c99963e",
+      "size_bytes": 20598,
+      "uncompressed_bytes": 281962
+    },
+    {
+      "condition": "sensor_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0012-sensor_5ms-seed-102.json.gz",
+      "run_index": 12,
+      "seed": 102,
+      "sha256": "244aef7fb8cdf05afac9146324174807374e0a64e909da8ac9ba1ece50278290",
+      "size_bytes": 44468,
+      "uncompressed_bytes": 298702
+    },
+    {
+      "condition": "sensor_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0013-sensor_15ms-seed-102.json.gz",
+      "run_index": 13,
+      "seed": 102,
+      "sha256": "7ea28525d97b923d7a0d30b4b1d2bd7465fee09191f7e77f103f38a488d8ad9a",
+      "size_bytes": 43280,
+      "uncompressed_bytes": 298594
+    },
+    {
+      "condition": "batch_1",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0014-batch_1-seed-103.json.gz",
+      "run_index": 14,
+      "seed": 103,
+      "sha256": "45f8237a290e9493496101bf2c50686927f6183307fb3cd6291eda78cb71e86a",
+      "size_bytes": 50652,
+      "uncompressed_bytes": 298772
+    },
+    {
+      "condition": "batch_16",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0015-batch_16-seed-103.json.gz",
+      "run_index": 15,
+      "seed": 103,
+      "sha256": "6a6b593eb2de0395de6ca17c6722d23bbe7a8e519ef5732fea2c192a72b8b3b9",
+      "size_bytes": 50655,
+      "uncompressed_bytes": 298774
+    },
+    {
+      "condition": "batch_128",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0016-batch_128-seed-103.json.gz",
+      "run_index": 16,
+      "seed": 103,
+      "sha256": "6de19204f1d117075b0d9f6a8bd9bb5d638771be4e7f9f312acf141ca8a660c6",
+      "size_bytes": 50658,
+      "uncompressed_bytes": 298776
+    },
+    {
+      "condition": "physics_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0017-physics_5ms-seed-103.json.gz",
+      "run_index": 17,
+      "seed": 103,
+      "sha256": "be042a0c83aaaf41bbf4d64a5607e9e204028e1549fb9f145f66dd910e46a89a",
+      "size_bytes": 26523,
+      "uncompressed_bytes": 284832
+    },
+    {
+      "condition": "physics_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0018-physics_15ms-seed-103.json.gz",
+      "run_index": 18,
+      "seed": 103,
+      "sha256": "3953aae1addf4134a11aeda5a83235eebdf51be0c79c268666b2a1a7110de14f",
+      "size_bytes": 20531,
+      "uncompressed_bytes": 282168
+    },
+    {
+      "condition": "sensor_5ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0019-sensor_5ms-seed-103.json.gz",
+      "run_index": 19,
+      "seed": 103,
+      "sha256": "069a716a7e94513e335bdd7049fd0a3ce2b1e6abae39abf280779a91619f2470",
+      "size_bytes": 44486,
+      "uncompressed_bytes": 298698
+    },
+    {
+      "condition": "sensor_15ms",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0020-sensor_15ms-seed-103.json.gz",
+      "run_index": 20,
+      "seed": 103,
+      "sha256": "ad49cd90c949bfb66435ee0c5a429b40f4becb551fec7ba399ee3578bbf23320",
+      "size_bytes": 43278,
+      "uncompressed_bytes": 298724
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

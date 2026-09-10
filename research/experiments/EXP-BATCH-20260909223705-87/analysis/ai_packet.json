@@ -1,0 +1,727 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 12,
+    "sha256": "d0d6cb5b08601b7717047882328890b666b5887e8996007c205ea310cc89cfa8"
+  },
+  "run_count": 12,
+  "run_preview": [
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0000-adaptive_roi-seed-101.json.gz",
+        "sha256": "2b246656887c0946d384065cb6852f6651f89b081f6e4a93c654da1420be32b0",
+        "size_bytes": 578,
+        "uncompressed_bytes": 1041
+      },
+      "condition": "adaptive_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_per_energy_unit": 1.0,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "adaptive_roi",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0001-fixed_center_roi-seed-101.json.gz",
+        "sha256": "b15a30ce0e486b782f88048017edafc2d75aec6dabbc4e69a26a4208be043cd4",
+        "size_bytes": 598,
+        "uncompressed_bytes": 1096
+      },
+      "condition": "fixed_center_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.08854166666666667,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "fixed_center_roi",
+        "roi_overlap_with_task_relevant_region": 0.3541666666666667,
+        "task_accuracy": 0.3541666666666667,
+        "visual_energy_units": 192.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0002-random_roi-seed-101.json.gz",
+        "sha256": "a734f72bd6bc5fb7afedfc31652fbfbe7929a60ecf694e264402cb736971a677",
+        "size_bytes": 575,
+        "uncompressed_bytes": 1046
+      },
+      "condition": "random_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "random_roi",
+        "roi_overlap_with_task_relevant_region": 0.0625,
+        "task_accuracy": 0.0625,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0003-full_image-seed-101.json.gz",
+        "sha256": "6e89fc6677f2e0f634080aa43d891761bc8fb2ec131746bdddb4aed2d3579a68",
+        "size_bytes": 579,
+        "uncompressed_bytes": 1041
+      },
+      "condition": "full_image",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "full_image",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 768.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0004-adaptive_roi-seed-102.json.gz",
+        "sha256": "b7493e6a152eb30e73b7530b86987b4757d8bf777e1c3bafa2c20e31c1b07928",
+        "size_bytes": 576,
+        "uncompressed_bytes": 1038
+      },
+      "condition": "adaptive_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_per_energy_unit": 1.0,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "adaptive_roi",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0005-fixed_center_roi-seed-102.json.gz",
+        "sha256": "cfbd7e075d7327c8d933e3b3f18749315b7b7eea3b775477289b77c088265abb",
+        "size_bytes": 587,
+        "uncompressed_bytes": 1052
+      },
+      "condition": "fixed_center_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "fixed_center_roi",
+        "roi_overlap_with_task_relevant_region": 0.25,
+        "task_accuracy": 0.25,
+        "visual_energy_units": 192.0
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0006-random_roi-seed-102.json.gz",
+        "sha256": "778f8d04f1047eb532b2d839e942cc936096a33ace2280d085bf9e1761885f94",
+        "size_bytes": 578,
+        "uncompressed_bytes": 1082
+      },
+      "condition": "random_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.08333333333333333,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "random_roi",
+        "roi_overlap_with_task_relevant_region": 0.08333333333333333,
+        "task_accuracy": 0.08333333333333333,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0007-full_image-seed-102.json.gz",
+        "sha256": "1adc4cd8dc361c4b62723d910069ac0d0097a63c02f38feaa2eadf39bde326d3",
+        "size_bytes": 576,
+        "uncompressed_bytes": 1038
+      },
+      "condition": "full_image",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "full_image",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 768.0
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0008-adaptive_roi-seed-103.json.gz",
+        "sha256": "9f16c2b447731b2a6f89ce6b2b57bcc0d72e585bf594beb5f3dc114316e0799d",
+        "size_bytes": 575,
+        "uncompressed_bytes": 1040
+      },
+      "condition": "adaptive_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_per_energy_unit": 1.0,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "adaptive_roi",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0009-fixed_center_roi-seed-103.json.gz",
+        "sha256": "de31358b623920a6fe4ba63bea96dfc849c215a8cf4abaa654155fdd19c4d575",
+        "size_bytes": 593,
+        "uncompressed_bytes": 1098
+      },
+      "condition": "fixed_center_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.052083333333333336,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "fixed_center_roi",
+        "roi_overlap_with_task_relevant_region": 0.20833333333333334,
+        "task_accuracy": 0.20833333333333334,
+        "visual_energy_units": 192.0
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0010-random_roi-seed-103.json.gz",
+        "sha256": "db1340097ecbb91cbcc45859a4819f78c8bce84ba276e1f4a5431104ee4afc6f",
+        "size_bytes": 572,
+        "uncompressed_bytes": 1045
+      },
+      "condition": "random_roi",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "random_roi",
+        "roi_overlap_with_task_relevant_region": 0.0625,
+        "task_accuracy": 0.0625,
+        "visual_energy_units": 48.0
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0011-full_image-seed-103.json.gz",
+        "sha256": "c304525cc19063f38f9bbc3d007fc7fc3585c4b0a772ac075712edbcf5a12d5c",
+        "size_bytes": 576,
+        "uncompressed_bytes": 1040
+      },
+      "condition": "full_image",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "metrics": {
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_per_energy_unit": 0.0625,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E03",
+        "roi_mode": "full_image",
+        "roi_overlap_with_task_relevant_region": 1.0,
+        "task_accuracy": 1.0,
+        "visual_energy_units": 768.0
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    }
+  ],
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "adaptive_roi": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "fixed_center_roi": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "full_image": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "random_roi": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 12,
+    "schema_version": "2.0"
+  }
+}

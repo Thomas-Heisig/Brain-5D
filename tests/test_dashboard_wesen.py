@@ -16,7 +16,7 @@ def test_wesen_workspace_is_loaded_from_dashboard_module_graph() -> None:
     assert '"/wesen-anatomy-v3.css"' in console
 
 
-def test_wesen_is_read_only_and_uses_real_observation_endpoints() -> None:
+def test_wesen_uses_real_observation_endpoints_and_explicit_sensor_controls() -> None:
     base = (STATIC / "wesen-base.js").read_text(encoding="utf-8")
     shell = (STATIC / "wesen.js").read_text(encoding="utf-8")
     organism = (STATIC / "wesen-organism-v2.js").read_text(encoding="utf-8")
@@ -33,7 +33,8 @@ def test_wesen_is_read_only_and_uses_real_observation_endpoints() -> None:
     ):
         assert endpoint in anatomy
     combined = base + shell + organism + anatomy
-    assert 'method: "POST"' not in combined
+    assert "/api/embodiment/sensors/" in shell
+    assert 'method: "POST"' in shell
     assert 'method: "PUT"' not in combined
     assert 'method: "DELETE"' not in combined
     assert "/api/control" not in combined

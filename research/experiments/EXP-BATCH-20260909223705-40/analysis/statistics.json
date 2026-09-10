@@ -1,0 +1,143 @@
+{
+  "conditions": {
+    "forward": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 32.0,
+          "mean": 32.0,
+          "median": 32.0,
+          "min": 32.0,
+          "n": 20,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 6.0,
+          "mean": 6.0,
+          "median": 6.0,
+          "min": 6.0,
+          "n": 20,
+          "std": 0.0
+        }
+      },
+      "run_count": 20,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ]
+    },
+    "reverse": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 32.0,
+          "mean": 32.0,
+          "median": 32.0,
+          "min": 32.0,
+          "n": 20,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 6.0,
+          "mean": 6.0,
+          "median": 6.0,
+          "min": 6.0,
+          "n": 20,
+          "std": 0.0
+        }
+      },
+      "run_count": 20,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ]
+    },
+    "simultaneous": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 32.0,
+          "mean": 32.0,
+          "median": 32.0,
+          "min": 32.0,
+          "n": 20,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 3.0,
+          "mean": 3.0,
+          "median": 3.0,
+          "min": 3.0,
+          "n": 20,
+          "std": 0.0
+        }
+      },
+      "run_count": 20,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 60,
+  "schema_version": "2.0"
+}

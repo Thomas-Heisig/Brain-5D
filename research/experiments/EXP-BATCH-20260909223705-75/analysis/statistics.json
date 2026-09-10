@@ -1,0 +1,118 @@
+{
+  "conditions": {
+    "degree_preserving": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 241.0,
+          "mean": 155.66666666666666,
+          "median": 182.0,
+          "min": 44.0,
+          "n": 3,
+          "std": 82.55234029928461
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "random_edges": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 302.0,
+          "mean": 182.33333333333334,
+          "median": 168.0,
+          "min": 77.0,
+          "n": 3,
+          "std": 92.41332275284891
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "structured": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 51.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 2.449489742783178
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "weight_shuffle": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 106.0,
+          "mean": 63.666666666666664,
+          "median": 45.0,
+          "min": 40.0,
+          "n": 3,
+          "std": 30.00370347510824
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 12,
+  "schema_version": "2.0"
+}

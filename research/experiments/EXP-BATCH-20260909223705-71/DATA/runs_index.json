@@ -1,0 +1,127 @@
+{
+  "run_count": 12,
+  "runs": [
+    {
+      "condition": "closed_loop",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-closed_loop-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "285e5847113a26a3e6d21e1a1531d7795aa1f1db32825e8af6d65689ebff01e0",
+      "size_bytes": 50996,
+      "uncompressed_bytes": 297572
+    },
+    {
+      "condition": "weak_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-weak_actuator-seed-101.json.gz",
+      "run_index": 1,
+      "seed": 101,
+      "sha256": "4c7391a6ebe9b74aceb7b523987d64ee0f97f400bbaa5cc68a8c31369fe53049",
+      "size_bytes": 54434,
+      "uncompressed_bytes": 295758
+    },
+    {
+      "condition": "blocked_joint",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-blocked_joint-seed-101.json.gz",
+      "run_index": 2,
+      "seed": 101,
+      "sha256": "b04c068939e33e9e35e0c2ae9f118c51c9fa50035242dfec95e7477739866272",
+      "size_bytes": 30842,
+      "uncompressed_bytes": 272862
+    },
+    {
+      "condition": "restored_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-restored_actuator-seed-101.json.gz",
+      "run_index": 3,
+      "seed": 101,
+      "sha256": "e6b85551b5a70b715938135684f50ebbedc012c1d17ebc58bdc9c2c278f16d0d",
+      "size_bytes": 52761,
+      "uncompressed_bytes": 296368
+    },
+    {
+      "condition": "closed_loop",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-closed_loop-seed-102.json.gz",
+      "run_index": 4,
+      "seed": 102,
+      "sha256": "dd72b149864de410bdaa204a9ff74577a46bc4b93e7372e87296e4d15dcaf652",
+      "size_bytes": 50809,
+      "uncompressed_bytes": 298709
+    },
+    {
+      "condition": "weak_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-weak_actuator-seed-102.json.gz",
+      "run_index": 5,
+      "seed": 102,
+      "sha256": "dc98cf4c63954290045b363737d3f045fce64f01227028389548196b5cc17d43",
+      "size_bytes": 54417,
+      "uncompressed_bytes": 295681
+    },
+    {
+      "condition": "blocked_joint",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-blocked_joint-seed-102.json.gz",
+      "run_index": 6,
+      "seed": 102,
+      "sha256": "79eeaed9984cd8cba1989a3da7502b396e73f4514fb8ed436d19f6965b50a8b3",
+      "size_bytes": 30803,
+      "uncompressed_bytes": 270297
+    },
+    {
+      "condition": "restored_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-restored_actuator-seed-102.json.gz",
+      "run_index": 7,
+      "seed": 102,
+      "sha256": "592189d297abe756950bd720e68d4228931ab77da6e0cb4dc8e5b863105b4775",
+      "size_bytes": 52697,
+      "uncompressed_bytes": 296275
+    },
+    {
+      "condition": "closed_loop",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-closed_loop-seed-103.json.gz",
+      "run_index": 8,
+      "seed": 103,
+      "sha256": "71551986e1a53cda927e9ccaef2b2c0093bed7848d64e3dbac47613816f668ec",
+      "size_bytes": 50653,
+      "uncompressed_bytes": 298760
+    },
+    {
+      "condition": "weak_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-weak_actuator-seed-103.json.gz",
+      "run_index": 9,
+      "seed": 103,
+      "sha256": "649be89965a8391b1330b5541c33f795bb29077a9483bcbd1e57f054a1047b1d",
+      "size_bytes": 54285,
+      "uncompressed_bytes": 295565
+    },
+    {
+      "condition": "blocked_joint",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0010-blocked_joint-seed-103.json.gz",
+      "run_index": 10,
+      "seed": 103,
+      "sha256": "9262f4ff0587f69386c6ee5f0dabf611934f1bb74c53f45d508e1d21fc82b407",
+      "size_bytes": 29500,
+      "uncompressed_bytes": 273068
+    },
+    {
+      "condition": "restored_actuator",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0011-restored_actuator-seed-103.json.gz",
+      "run_index": 11,
+      "seed": 103,
+      "sha256": "fc1083c615a844904aae39e9c0af6d0c9895f60b93d3e9380f1a98b6ac4b852d",
+      "size_bytes": 52566,
+      "uncompressed_bytes": 296369
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

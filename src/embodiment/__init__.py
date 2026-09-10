@@ -88,6 +88,7 @@ from .pipeline import EmbodimentPipeline
 from .real_body import ConnectionManager
 from .registry import EmbodimentRegistry
 from .sensor import SensorAdapter
+from .sensor_activation import SensorActivationAudit, SensorActivationService
 from .system_sensor import (
     SystemSensorAdapter,
     host_system_readings,
@@ -151,6 +152,8 @@ __all__ = [
     "EmbodimentPipeline",
     "RelationshipClass",
     "SensorAdapter",
+    "SensorActivationAudit",
+    "SensorActivationService",
     "SensorFrame",
     "SymbolFrame",
     "TaskOutcome",

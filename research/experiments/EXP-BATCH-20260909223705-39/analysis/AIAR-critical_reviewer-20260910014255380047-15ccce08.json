@@ -1,0 +1,56 @@
+{
+  "analysis_id": "AIAR-critical_reviewer-20260910014255380047-15ccce08",
+  "role": "critical_reviewer",
+  "model": {
+    "provider": "system-fallback",
+    "model_name": "unavailable",
+    "model_digest": "not_applicable",
+    "quantization": "unknown",
+    "context_length": "unknown",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": "not_reported",
+    "backend_version": "unknown"
+  },
+  "inputs": {
+    "experiment_id": "EXP-BATCH-20260909223705-39",
+    "packet_digest": "15ccce08476029a722e57c866dd423f9b49807228564458b7d9ee44ea7992b83"
+  },
+  "output": {
+    "assessment": "Die Rolle critical_reviewer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+    "observations": [],
+    "effect_direction": "not_determined",
+    "methodological_concerns": [
+      "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+      "Technical reason: TimeoutError: timed out"
+    ],
+    "alternative_explanations": [],
+    "recommended_experiments": [],
+    "requested_evidence": [
+      "Run the role again with a schema-conforming backend response.",
+      "Complete mandatory human review before interpreting this report."
+    ],
+    "confidence": 0.0,
+    "analysis_unavailable": true
+  },
+  "provenance": {
+    "prompt_sha256": "8fbe02987c9b85833de5342a21296321655dd638759a31873dd84c1b135e3545",
+    "research_packet_digest": "15ccce08476029a722e57c866dd423f9b49807228564458b7d9ee44ea7992b83",
+    "prompt_protocol_version": "research_assistant_v1",
+    "assistant_schema_version": "1.2",
+    "git_commit": "8184fc74654169e4d01552f093dd807f065c34e3",
+    "model_self_confidence": "0.0"
+  },
+  "epistemic_status": {
+    "evidence": false,
+    "interpretation_only": true,
+    "human_review_required": true
+  },
+  "review": {
+    "status": "pending",
+    "reviewer": null,
+    "reviewed_at": null,
+    "disposition": null
+  },
+  "generated_at": "2026-09-10T01:42:55.380047+00:00"
+}

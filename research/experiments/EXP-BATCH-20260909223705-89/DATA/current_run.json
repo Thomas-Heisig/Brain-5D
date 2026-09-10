@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 11,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0011-no_compensation-seed-103.json.gz",
+    "sha256": "5151ee9c4553710baf341597abeaa93adfc9ae81b833989491ed24f3a6627d3b",
+    "size_bytes": 885,
+    "uncompressed_bytes": 2013
+  },
+  "status": "idle"
+}

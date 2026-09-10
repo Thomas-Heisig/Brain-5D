@@ -1,0 +1,97 @@
+{
+  "run_count": 9,
+  "runs": [
+    {
+      "condition": "throttled",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-throttled-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "08e412614603eb3cf0c7b734192c0672117bc6e541813af0505504f1064a747f",
+      "size_bytes": 2956,
+      "uncompressed_bytes": 12104
+    },
+    {
+      "condition": "deterministic_replay",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-deterministic_replay-seed-101.json.gz",
+      "run_index": 1,
+      "seed": 101,
+      "sha256": "52fe69c421d80dbd269cf2ae5409dc135333bd0b7f3c8793604db83a481632ed",
+      "size_bytes": 2963,
+      "uncompressed_bytes": 12126
+    },
+    {
+      "condition": "no_throttling",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-no_throttling-seed-101.json.gz",
+      "run_index": 2,
+      "seed": 101,
+      "sha256": "a94fa21a8cc7ae646735fe7f506a9a34d2c46b89b58176a1e46480e408fb1b83",
+      "size_bytes": 4020,
+      "uncompressed_bytes": 17399
+    },
+    {
+      "condition": "throttled",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-throttled-seed-102.json.gz",
+      "run_index": 3,
+      "seed": 102,
+      "sha256": "4b6e6dd5168dc7ed2e285a75d24bfd76ea3c5f4b349c6c9d822a5d8950c2ef77",
+      "size_bytes": 2953,
+      "uncompressed_bytes": 12104
+    },
+    {
+      "condition": "deterministic_replay",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-deterministic_replay-seed-102.json.gz",
+      "run_index": 4,
+      "seed": 102,
+      "sha256": "bfbe90a21b5c51bc433d08e8f45bba67a6ef1c9ba87d54ee7df32ec3de979ac2",
+      "size_bytes": 2958,
+      "uncompressed_bytes": 12126
+    },
+    {
+      "condition": "no_throttling",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-no_throttling-seed-102.json.gz",
+      "run_index": 5,
+      "seed": 102,
+      "sha256": "83f71d41507b6ffc916050f3298e0c7598eaefe93f965702b77baaadeed51054",
+      "size_bytes": 4010,
+      "uncompressed_bytes": 17399
+    },
+    {
+      "condition": "throttled",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-throttled-seed-103.json.gz",
+      "run_index": 6,
+      "seed": 103,
+      "sha256": "39281c8c4a4273b1f788332b0e5b1d9d0be0d257cd41ce14d231bbe29e04d902",
+      "size_bytes": 2966,
+      "uncompressed_bytes": 12104
+    },
+    {
+      "condition": "deterministic_replay",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-deterministic_replay-seed-103.json.gz",
+      "run_index": 7,
+      "seed": 103,
+      "sha256": "43f5296f9c090ff6a7ad1f385bc0e2a02db68a80eec41de7908a22665c0ec7c6",
+      "size_bytes": 2972,
+      "uncompressed_bytes": 12126
+    },
+    {
+      "condition": "no_throttling",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-no_throttling-seed-103.json.gz",
+      "run_index": 8,
+      "seed": 103,
+      "sha256": "72e12d98bbbf055e3b5fdf86943ea31bc5077a64da453ac6fd7dda382b258635",
+      "size_bytes": 4026,
+      "uncompressed_bytes": 17399
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

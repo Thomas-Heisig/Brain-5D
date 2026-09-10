@@ -1,0 +1,116 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "gateway_state": "DATA/gateway_state.json",
+    "preregistration": "preregistrations/PREREG-MSBA-E03.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-10T02:24:45.564707+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "execution_contract": {
+    "hypothesis_id": "H-MSBA-E03-A",
+    "protocol": "msba_visual_roi_v1",
+    "question_id": "RQ-MSBA-E03",
+    "resolved_runner": "run_msba_e03",
+    "runtime_runner_bytecode_sha256": "ddc3639196e0af5e639126e3cb4e3d7686d83ee6311b31e98fcb3321aadf6889",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "ddc3639196e0af5e639126e3cb4e3d7686d83ee6311b31e98fcb3321aadf6889",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 48,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 48
+  },
+  "experiment_id": "EXP-BATCH-20260909223705-87",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "8184fc74654169e4d01552f093dd807f065c34e3",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-MSBA-E03-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "5a11ea288e7e695c2dcd456642b533cbb3e6daf38b72e150134e60e69059531f",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "f0d0ed2ef2570517292ac278a976f29343ba06c575551441f4443328f862a872",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-MSBA-E03"
+  ],
+  "research_run_mode": "CONFIRMATORY",
+  "results": {
+    "protocol": "msba_visual_roi_v1",
+    "run_count": 12,
+    "runner": "run_msba_e03",
+    "tick_contract": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 48,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 48
+  },
+  "runtime": {
+    "duration_seconds": 0.5975225000001956
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "msba_visual_roi_v1",
+    "seed": 101,
+    "seeds": [
+      101,
+      102,
+      103
+    ],
+    "ticks": 48
+  },
+  "software": {
+    "brain5d_version": "0.6.0a1",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "e00c1761ddfc39c511fb36c35dcc196eaafecfcf2d0229de17ab216aa560f4b3",
+  "timestamp": "2026-09-10T04:24:45.564701",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

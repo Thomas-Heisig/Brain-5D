@@ -1,0 +1,107 @@
+{
+  "run_count": 10,
+  "runs": [
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-subsystem_profile-seed-101.json.gz",
+      "run_index": 0,
+      "seed": 101,
+      "sha256": "afff7cc69fb157cc6d30a888b2e45d7fe9856b7b33630631c37f39fb549e880a",
+      "size_bytes": 406,
+      "uncompressed_bytes": 548
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-subsystem_profile-seed-102.json.gz",
+      "run_index": 1,
+      "seed": 102,
+      "sha256": "22d79875f6fd2f1dc8d1bb61724dece8cae9c16cc2544632b83d7a27fcfabe6e",
+      "size_bytes": 409,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-subsystem_profile-seed-103.json.gz",
+      "run_index": 2,
+      "seed": 103,
+      "sha256": "872e0d2c6d68fcac69c97d709e28f1d794c789effc608c77b5d7732109dd17c5",
+      "size_bytes": 406,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-subsystem_profile-seed-104.json.gz",
+      "run_index": 3,
+      "seed": 104,
+      "sha256": "305059ea5aab547551859e99192f3b50d4a05e527dc7683c688a35fa69aea7c4",
+      "size_bytes": 408,
+      "uncompressed_bytes": 550
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-subsystem_profile-seed-105.json.gz",
+      "run_index": 4,
+      "seed": 105,
+      "sha256": "88c70e43bff7a34ee24a390c0e0503b66a16a4bce235aae9316a4bb3306f9026",
+      "size_bytes": 404,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-subsystem_profile-seed-106.json.gz",
+      "run_index": 5,
+      "seed": 106,
+      "sha256": "09521426d77d50312a96686763f10ff94b512b49753091a2ec9be431e2a86700",
+      "size_bytes": 405,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0006-subsystem_profile-seed-107.json.gz",
+      "run_index": 6,
+      "seed": 107,
+      "sha256": "497427f9019fd85471fbbd224fc0aa38bd0d05022c9d70608e77b187a307b47a",
+      "size_bytes": 407,
+      "uncompressed_bytes": 551
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0007-subsystem_profile-seed-108.json.gz",
+      "run_index": 7,
+      "seed": 108,
+      "sha256": "085f16feb555a7cd45c979dd89624bdb9987a4ffe637106bb2640091d72ec4b3",
+      "size_bytes": 409,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0008-subsystem_profile-seed-109.json.gz",
+      "run_index": 8,
+      "seed": 109,
+      "sha256": "31ace23cdd623dfca847a05dc369e97143ad3ac5e610b26c2dd605bb54fcac17",
+      "size_bytes": 405,
+      "uncompressed_bytes": 549
+    },
+    {
+      "condition": "subsystem_profile",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0009-subsystem_profile-seed-110.json.gz",
+      "run_index": 9,
+      "seed": 110,
+      "sha256": "658ec8a9d35533e409856348c570e2e80fadf16a20deca94c6b4016a2b038874",
+      "size_bytes": 407,
+      "uncompressed_bytes": 549
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

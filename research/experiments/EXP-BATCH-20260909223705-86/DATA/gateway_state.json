@@ -1,0 +1,232 @@
+{
+  "canonical_snn_synapse_state": "not_accessed",
+  "namespace": "experiment_gateway_state",
+  "records": [
+    {
+      "condition": "adaptive",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.47202380952380957
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 96,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 0,
+      "seed": 101
+    },
+    {
+      "condition": "fixed",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 1,
+      "seed": 101
+    },
+    {
+      "condition": "random",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.4740339870398053
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 2,
+      "seed": 101
+    },
+    {
+      "condition": "adaptive",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.47202380952380957
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 96,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 3,
+      "seed": 102
+    },
+    {
+      "condition": "fixed",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 4,
+      "seed": 102
+    },
+    {
+      "condition": "random",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.49741307427605125
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 5,
+      "seed": 102
+    },
+    {
+      "condition": "adaptive",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.47202380952380957
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 96,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 6,
+      "seed": 103
+    },
+    {
+      "condition": "fixed",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.5
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 7,
+      "seed": 103
+    },
+    {
+      "condition": "random",
+      "gateway_state": {
+        "allocation": {
+          "shared": 0.512227280898731
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 8,
+      "seed": 103
+    }
+  ],
+  "schema_version": 1
+}

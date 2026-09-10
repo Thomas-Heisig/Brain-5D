@@ -1,0 +1,134 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "ai_report_json": "experiments/EXP-BATCH-20260909223705-36/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-BATCH-20260909223705-36/reports/AIRR-2026-0001.md",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "preregistration": "preregistrations/PREREG-GEN-001.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-10T01:31:49.214949+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "execution_contract": {
+    "hypothesis_id": "H-GEN-001-A",
+    "protocol": "learning_generalization_v1",
+    "question_id": "RQ-GEN-001",
+    "resolved_runner": "run_generalization",
+    "runtime_runner_bytecode_sha256": "d8a32103d8792837b873aa8404ce40cb3c08cec0d0a35afcad483c59ab44ea11",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "d8a32103d8792837b873aa8404ce40cb3c08cec0d0a35afcad483c59ab44ea11",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 1000,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 1000
+  },
+  "experiment_id": "EXP-BATCH-20260909223705-36",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "8184fc74654169e4d01552f093dd807f065c34e3",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-GEN-001-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "5a11ea288e7e695c2dcd456642b533cbb3e6daf38b72e150134e60e69059531f",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "62bb301ef357f626888c6ebe0a0c9a31d64438ca0fbbf876afd06453319c5782",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-GEN-001"
+  ],
+  "research_run_mode": "CONFIRMATORY",
+  "results": {
+    "protocol": "learning_generalization_v1",
+    "run_count": 180,
+    "runner": "run_generalization",
+    "tick_contract": {
+      "mode": "protocol_defined_internal_trials",
+      "requested_ticks": 1000,
+      "status": "NOT_APPLICABLE"
+    },
+    "ticks_requested": 1000
+  },
+  "runtime": {
+    "duration_seconds": 1.7243159000063315
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "learning_generalization_v1",
+    "seed": 101,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "ticks": 1000
+  },
+  "software": {
+    "brain5d_version": "0.6.0a1",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "0efd5d52b6ddeed37ab4737b46f241c0aa5112841092e0bbd9829456b899ea81",
+  "timestamp": "2026-09-10T03:31:49.214938",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

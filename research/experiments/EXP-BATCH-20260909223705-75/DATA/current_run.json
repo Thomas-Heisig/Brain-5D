@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 11,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0011-random_edges-seed-103.json.gz",
+    "sha256": "a9ca7cf150007476752b056f04af7f55be75344f9d0b4c1009cd81734c8ceffc",
+    "size_bytes": 26994,
+    "uncompressed_bytes": 254337
+  },
+  "status": "idle"
+}

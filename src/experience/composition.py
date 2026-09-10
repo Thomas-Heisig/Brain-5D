@@ -22,6 +22,7 @@ from src.embodiment import (
 from src.experience.engine import ExperienceEngine
 from src.learning.learning_engine import LearningEngine
 from src.memory import MemoryStore, MemoryWorldModel, TransitionWorldModel
+from src.profiles import BehaviorProfile
 
 
 @dataclass(slots=True)
@@ -154,6 +155,19 @@ def build_experience_subsystem(
             store.run_id,
             persistence_path=persistence_path,
         )
+    behavior_profile = None
+    behavior_value = raw.get("behavior", config.get("behavior", {}))
+    if not isinstance(behavior_value, Mapping):
+        raise TypeError("experience.behavior config must be a mapping")
+    if bool(behavior_value.get("enabled", False)):
+        initial_value = behavior_value.get("initial", {})
+        if not isinstance(initial_value, Mapping):
+            raise TypeError("experience.behavior.initial config must be a mapping")
+        behavior_profile = BehaviorProfile(
+            profile_id=str(behavior_value.get("profile_id", "WESEN-0001")),
+            initial={str(key): float(value) for key, value in initial_value.items()},
+            update_rate=float(behavior_value.get("update_rate", 0.05)),
+        )
     return ExperienceEngine(
         sensor=SystemSensorAdapter(provider),
         network=network,
@@ -162,6 +176,7 @@ def build_experience_subsystem(
         embodiment=embodiment,
         learning=learning,
         memory=memory,
+        behavior_profile=behavior_profile,
     )
 
 

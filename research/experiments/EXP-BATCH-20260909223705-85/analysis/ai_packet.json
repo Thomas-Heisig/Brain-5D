@@ -1,0 +1,868 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 9,
+    "sha256": "3381e87699f3e48cc7384e4191222e37c36b79688947c6668924b81e30cd2bdf"
+  },
+  "run_count": 9,
+  "run_preview": [
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0000-audio-seed-101.json.gz",
+        "sha256": "2fc5ea8c4af17cbb95f6aeaeed7776808d33ccd119e0dc3ff765933d387099b6",
+        "size_bytes": 963,
+        "uncompressed_bytes": 2049
+      },
+      "condition": "audio",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "audio.reference",
+          "artifact_sha256": "06900b2f67607a0781084f984a3064c9914e736bdc31ba1c9a1cc1cb4b093458",
+          "endpoint_identity": "experiment://msba/audio",
+          "framework": "python-reference",
+          "modality": "audio",
+          "model": "msba-audio-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "f89f429e575d125bc60292244eee4506ff496f0bcebce61d63ccf25c4865d998",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_decisions": 48,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "audio",
+        "normalized_energy_units": 891.0144000000006,
+        "normalized_energy_units_per_correct_decision": 18.562800000000014,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 768,
+        "synaptic_events_per_correct_decision": 16.0,
+        "task_accuracy": 1.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0001-vision-seed-101.json.gz",
+        "sha256": "0acb3d4bc6c4f3d091e6a0b739a5f4727837485645b22270053f2003eb1b2f2e",
+        "size_bytes": 964,
+        "uncompressed_bytes": 2056
+      },
+      "condition": "vision",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "vision.reference",
+          "artifact_sha256": "32805ca95d8cee3d04492af4b3232b9c6bd04ed8da2c89cee445937b668bfc2b",
+          "endpoint_identity": "experiment://msba/vision",
+          "framework": "python-reference",
+          "modality": "vision",
+          "model": "msba-vision-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "0a42766b71ed4bbfa1038e088e77689437993ddacd40769ce40aa7e91875dc1d",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_decisions": 48,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "vision",
+        "normalized_energy_units": 2071.8144000000007,
+        "normalized_energy_units_per_correct_decision": 43.16280000000001,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 1920,
+        "synaptic_events_per_correct_decision": 40.0,
+        "task_accuracy": 1.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0002-digital-seed-101.json.gz",
+        "sha256": "69918f922f9099723613c3b85eea52c41c03e16235ca24f3f82054f94e86667a",
+        "size_bytes": 966,
+        "uncompressed_bytes": 2060
+      },
+      "condition": "digital",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "digital.reference",
+          "artifact_sha256": "08cabe99e23a73e6ed690a599735dfcc4b15b9e39f9a276096c73349b42da403",
+          "endpoint_identity": "experiment://msba/digital",
+          "framework": "python-reference",
+          "modality": "digital",
+          "model": "msba-digital-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "d7ee7a303907ec983e7f7ae25e1f1574e50c90538449a0eeaf60fad678ed3eec",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "intact": {
+              "accuracy": 1.0,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 194.18504898937218
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.3552636711963997
+            },
+            "random": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 2.311579089845818
+            },
+            "reduced_dimensional": {
+              "decision": 1,
+              "dimensions": 4,
+              "l2_norm": 0.27562901390367206
+            },
+            "shuffled": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.6525467604104336
+            }
+          }
+        },
+        "correct_decisions": 48,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "digital",
+        "normalized_energy_units": 495.0143999999997,
+        "normalized_energy_units_per_correct_decision": 10.312799999999994,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 384,
+        "synaptic_events_per_correct_decision": 8.0,
+        "task_accuracy": 1.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0003-audio-seed-102.json.gz",
+        "sha256": "4fc8790b730f0cd949fcd193a51c4c1e376ff09871c583070c506b99cce60fb6",
+        "size_bytes": 985,
+        "uncompressed_bytes": 2087
+      },
+      "condition": "audio",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "audio.reference",
+          "artifact_sha256": "06900b2f67607a0781084f984a3064c9914e736bdc31ba1c9a1cc1cb4b093458",
+          "endpoint_identity": "experiment://msba/audio",
+          "framework": "python-reference",
+          "modality": "audio",
+          "model": "msba-audio-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "f89f429e575d125bc60292244eee4506ff496f0bcebce61d63ccf25c4865d998",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_decisions": 46,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "audio",
+        "normalized_energy_units": 891.0144000000006,
+        "normalized_energy_units_per_correct_decision": 19.369878260869577,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 768,
+        "synaptic_events_per_correct_decision": 16.695652173913043,
+        "task_accuracy": 0.9583333333333334
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0004-vision-seed-102.json.gz",
+        "sha256": "ef810535024fc4ce36496a4e253f45155498d69ca7b0f83d7c3dee7dc43e11d2",
+        "size_bytes": 984,
+        "uncompressed_bytes": 2094
+      },
+      "condition": "vision",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "vision.reference",
+          "artifact_sha256": "32805ca95d8cee3d04492af4b3232b9c6bd04ed8da2c89cee445937b668bfc2b",
+          "endpoint_identity": "experiment://msba/vision",
+          "framework": "python-reference",
+          "modality": "vision",
+          "model": "msba-vision-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "0a42766b71ed4bbfa1038e088e77689437993ddacd40769ce40aa7e91875dc1d",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_decisions": 46,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "vision",
+        "normalized_energy_units": 2071.8144000000007,
+        "normalized_energy_units_per_correct_decision": 45.039443478260885,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 1920,
+        "synaptic_events_per_correct_decision": 41.73913043478261,
+        "task_accuracy": 0.9583333333333334
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0005-digital-seed-102.json.gz",
+        "sha256": "8537a316d0418223f3e9e8ab04790c8a40ff65276e62da0a3d7e1455227fd0c0",
+        "size_bytes": 985,
+        "uncompressed_bytes": 2098
+      },
+      "condition": "digital",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "digital.reference",
+          "artifact_sha256": "08cabe99e23a73e6ed690a599735dfcc4b15b9e39f9a276096c73349b42da403",
+          "endpoint_identity": "experiment://msba/digital",
+          "framework": "python-reference",
+          "modality": "digital",
+          "model": "msba-digital-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "d7ee7a303907ec983e7f7ae25e1f1574e50c90538449a0eeaf60fad678ed3eec",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.4166666666666667,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "intact": {
+              "accuracy": 0.9583333333333334,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            },
+            "timing_shuffle": {
+              "accuracy": 0.4583333333333333,
+              "activity_matched": true,
+              "activity_sum": 193.4863398805681
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 0,
+              "dimensions": 16,
+              "l2_norm": 1.4162296898250915
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 0.641173524802001
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.4272375946992002
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            },
+            "structured": {
+              "decision": 0,
+              "dimensions": 8,
+              "l2_norm": 1.157063269858866
+            }
+          }
+        },
+        "correct_decisions": 46,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "digital",
+        "normalized_energy_units": 495.0143999999997,
+        "normalized_energy_units_per_correct_decision": 10.761182608695645,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 384,
+        "synaptic_events_per_correct_decision": 8.347826086956522,
+        "task_accuracy": 0.9583333333333334
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0006-audio-seed-103.json.gz",
+        "sha256": "50c94f282fd3796b9af69f588a62622b5f5ace9656d3cc88c8fd5dc83b2b7cb7",
+        "size_bytes": 970,
+        "uncompressed_bytes": 2077
+      },
+      "condition": "audio",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "audio.reference",
+          "artifact_sha256": "06900b2f67607a0781084f984a3064c9914e736bdc31ba1c9a1cc1cb4b093458",
+          "endpoint_identity": "experiment://msba/audio",
+          "framework": "python-reference",
+          "modality": "audio",
+          "model": "msba-audio-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "f89f429e575d125bc60292244eee4506ff496f0bcebce61d63ccf25c4865d998",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_decisions": 44,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "audio",
+        "normalized_energy_units": 891.0144000000006,
+        "normalized_energy_units_per_correct_decision": 20.250327272727286,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 768,
+        "synaptic_events_per_correct_decision": 17.454545454545453,
+        "task_accuracy": 0.9166666666666666
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0007-vision-seed-103.json.gz",
+        "sha256": "57f283c42fb3d66d5e0968df50f732a99e4276cd154e638a81318d3763bd0694",
+        "size_bytes": 971,
+        "uncompressed_bytes": 2084
+      },
+      "condition": "vision",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "vision.reference",
+          "artifact_sha256": "32805ca95d8cee3d04492af4b3232b9c6bd04ed8da2c89cee445937b668bfc2b",
+          "endpoint_identity": "experiment://msba/vision",
+          "framework": "python-reference",
+          "modality": "vision",
+          "model": "msba-vision-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "0a42766b71ed4bbfa1038e088e77689437993ddacd40769ce40aa7e91875dc1d",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_decisions": 44,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "vision",
+        "normalized_energy_units": 2071.8144000000007,
+        "normalized_energy_units_per_correct_decision": 47.086690909090926,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 1920,
+        "synaptic_events_per_correct_decision": 43.63636363636363,
+        "task_accuracy": 0.9166666666666666
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0008-digital-seed-103.json.gz",
+        "sha256": "8b51458f3de5f791f39f73d4f311ebba3b7ef4baff708b87f0d5e3c2513242a0",
+        "size_bytes": 971,
+        "uncompressed_bytes": 2088
+      },
+      "condition": "digital",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "metrics": {
+        "adapter_provenance": {
+          "adapter_class": "DeterministicPeripheralAdapter",
+          "area_id": "digital.reference",
+          "artifact_sha256": "08cabe99e23a73e6ed690a599735dfcc4b15b9e39f9a276096c73349b42da403",
+          "endpoint_identity": "experiment://msba/digital",
+          "framework": "python-reference",
+          "modality": "digital",
+          "model": "msba-digital-reference",
+          "production_activation_enabled": false,
+          "provenance_sha256": "d7ee7a303907ec983e7f7ae25e1f1574e50c90538449a0eeaf60fad678ed3eec",
+          "scope": "experiment_only",
+          "transform": "identity",
+          "version": "1.0.0"
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "information_controls": {
+            "activity_matched_information_destroyed": {
+              "accuracy": 0.5833333333333334,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "intact": {
+              "accuracy": 0.9166666666666666,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            },
+            "timing_shuffle": {
+              "accuracy": 0.5,
+              "activity_matched": true,
+              "activity_sum": 192.94960181285933
+            }
+          },
+          "projection_treatments": {
+            "increased_dimensional": {
+              "decision": 1,
+              "dimensions": 16,
+              "l2_norm": 2.2851856250305325
+            },
+            "random": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.532529736085419
+            },
+            "reduced_dimensional": {
+              "decision": 0,
+              "dimensions": 4,
+              "l2_norm": 0.6151300067488722
+            },
+            "shuffled": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            },
+            "structured": {
+              "decision": 1,
+              "dimensions": 8,
+              "l2_norm": 1.7289285452458567
+            }
+          }
+        },
+        "correct_decisions": 44,
+        "energy_source_type": "NORMALIZED_MODEL_ESTIMATE",
+        "gateway_state_separate_persistence_required": true,
+        "matched_task_count": 48,
+        "modality": "digital",
+        "normalized_energy_units": 495.0143999999997,
+        "normalized_energy_units_per_correct_decision": 11.250327272727265,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E01",
+        "synaptic_events": 384,
+        "synaptic_events_per_correct_decision": 8.727272727272727,
+        "task_accuracy": 0.9166666666666666
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    }
+  ],
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "audio": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "digital": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "vision": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 9,
+    "schema_version": "2.0"
+  }
+}

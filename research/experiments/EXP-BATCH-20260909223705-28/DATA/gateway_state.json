@@ -1,0 +1,539 @@
+{
+  "canonical_snn_state": false,
+  "kind": "synthetic_joint_boundary",
+  "resume_supported": false,
+  "runs": [
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.004715948645326781,
+          "omega_rad_s": 0.7776678733365624,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.2571579501489215,
+          "saturation_count": 18
+        },
+        "filtered_motor": 0.26813978335705974,
+        "neural_digest": "f8fd11391391affa49a40baf92c8dfdafed85bf75a53e1e26ac21257ea25617b",
+        "pending_steps": 0,
+        "sensor": [
+          -0.25793561802225806,
+          0.7653807374994092
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.008115213250456464,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "closed_loop",
+      "neural_digest_after": "f8fd11391391affa49a40baf92c8dfdafed85bf75a53e1e26ac21257ea25617b",
+      "neural_digest_before": "698fb31486b5cc429d46042f61e634d60146db77f698bbb1ecc4cbfdadc487f6",
+      "seed": 101
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.0037167109716510147,
+          "omega_rad_s": -0.5480320740310854,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.10933653680095733,
+          "saturation_count": 15
+        },
+        "filtered_motor": -0.05106148590023465,
+        "neural_digest": "97e1cbc261893755e89c36abdf5543f68ac727915a5d593f4027c79780d2101c",
+        "pending_steps": 0,
+        "sensor": [
+          0.10988456887498842,
+          -0.5623564961323415
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.008115213250456464,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "yoked_replay",
+      "neural_digest_after": "97e1cbc261893755e89c36abdf5543f68ac727915a5d593f4027c79780d2101c",
+      "neural_digest_before": "698fb31486b5cc429d46042f61e634d60146db77f698bbb1ecc4cbfdadc487f6",
+      "seed": 101
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 264,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.012823570237832847,
+          "omega_rad_s": -3.1186859804529083,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.597634670081505,
+          "saturation_count": 0
+        },
+        "filtered_motor": -1.2482424063476498,
+        "neural_digest": "57ca647605ea4f8f54c6ad0b7257294437a574dc172851ab9cd2e8ed27c16245",
+        "pending_steps": 0,
+        "sensor": [
+          -0.594515984101052,
+          -3.0405908285805046
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.008115213250456464,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "feedback_absent",
+      "neural_digest_after": "57ca647605ea4f8f54c6ad0b7257294437a574dc172851ab9cd2e8ed27c16245",
+      "neural_digest_before": "698fb31486b5cc429d46042f61e634d60146db77f698bbb1ecc4cbfdadc487f6",
+      "seed": 101
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.004779734529603738,
+          "omega_rad_s": -0.0002084336954652607,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.2632096771411738,
+          "saturation_count": 20
+        },
+        "filtered_motor": -7.98144445400078e-07,
+        "neural_digest": "5b50014bba0698bdac720e765fd7d09a45e31102bcf73f372c2b8b50a5171bd0",
+        "pending_steps": 0,
+        "sensor": [
+          -0.26320946870747836,
+          -0.0002169854087020799
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.03518287936129164,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "closed_loop",
+      "neural_digest_after": "5b50014bba0698bdac720e765fd7d09a45e31102bcf73f372c2b8b50a5171bd0",
+      "neural_digest_before": "9a5a681566fdf055b29b3fde037f456c59fa4b6f79e9338749358a845dd2f886",
+      "seed": 102
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.004219452408243823,
+          "omega_rad_s": -5.934587379167537e-05,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.10761079475616697,
+          "saturation_count": 7
+        },
+        "filtered_motor": -1.6219273581229527e-07,
+        "neural_digest": "d36935fee36128d8546e83906fafa231178f3ceb27ba5b49992dab1d588960fa",
+        "pending_steps": 0,
+        "sensor": [
+          0.10761085410204077,
+          -6.17915864103598e-05
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.03518287936129164,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "yoked_replay",
+      "neural_digest_after": "d36935fee36128d8546e83906fafa231178f3ceb27ba5b49992dab1d588960fa",
+      "neural_digest_before": "9a5a681566fdf055b29b3fde037f456c59fa4b6f79e9338749358a845dd2f886",
+      "seed": 102
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 249,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.012977066059403066,
+          "omega_rad_s": -3.118685979119941,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.594237148087,
+          "saturation_count": 0
+        },
+        "filtered_motor": -1.2482424063471342,
+        "neural_digest": "001107269f029c9afa41d600e0211a6b1c64a7bab06ce4f3a1f3b62806163ee5",
+        "pending_steps": 0,
+        "sensor": [
+          -0.5911184621078801,
+          -3.0405908271920827
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.03518287936129164,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "feedback_absent",
+      "neural_digest_after": "001107269f029c9afa41d600e0211a6b1c64a7bab06ce4f3a1f3b62806163ee5",
+      "neural_digest_before": "9a5a681566fdf055b29b3fde037f456c59fa4b6f79e9338749358a845dd2f886",
+      "seed": 102
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.0048878428656121894,
+          "omega_rad_s": -0.00011029850331950988,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.2579154275691286,
+          "saturation_count": 21
+        },
+        "filtered_motor": -3.524942739527705e-07,
+        "neural_digest": "fb93b2aeff9d1a0794714fff2648a9c1a6ad7e9cf3389679cd778abf6fa88402",
+        "pending_steps": 0,
+        "sensor": [
+          -0.2579153172706253,
+          -0.00011483552524549733
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.04790501200727744,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "closed_loop",
+      "neural_digest_after": "fb93b2aeff9d1a0794714fff2648a9c1a6ad7e9cf3389679cd778abf6fa88402",
+      "neural_digest_before": "a5cf88ee525e75cb59ba6bee596519e3f1b1faa526f3cc6538ad7b2491953a8c",
+      "seed": 103
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.003766348635941403,
+          "omega_rad_s": -0.00013842565307686783,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.10392361090755348,
+          "saturation_count": 3
+        },
+        "filtered_motor": -4.762727326623596e-07,
+        "neural_digest": "88d994a534c9c92f350bb695ca269baefd76367784d7af81e896875e0884a027",
+        "pending_steps": 0,
+        "sensor": [
+          0.10392374933320656,
+          -0.00014411400983296027
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.04790501200727744,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "yoked_replay",
+      "neural_digest_after": "88d994a534c9c92f350bb695ca269baefd76367784d7af81e896875e0884a027",
+      "neural_digest_before": "a5cf88ee525e75cb59ba6bee596519e3f1b1faa526f3cc6538ad7b2491953a8c",
+      "seed": 103
+    },
+    {
+      "after": {
+        "body": {
+          "contact_count": 278,
+          "elapsed_s": 1.0000000000000007,
+          "modelled_absolute_work_j": 0.012568594303613586,
+          "omega_rad_s": -3.1186859804529083,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": -0.597634670081505,
+          "saturation_count": 0
+        },
+        "filtered_motor": -1.2482424063476498,
+        "neural_digest": "515ebf38973e4b537b408b338d6fc629dfd2abd9f2ce77011004a72aac7ebbc9",
+        "pending_steps": 0,
+        "sensor": [
+          -0.594515984101052,
+          -3.0405908285805046
+        ],
+        "ticks": 1000
+      },
+      "before": {
+        "body": {
+          "contact_count": 0,
+          "elapsed_s": 0.0,
+          "modelled_absolute_work_j": 0.0,
+          "omega_rad_s": 0.0,
+          "parameters": {
+            "damping_nm_s": 0.002,
+            "inertia_kg_m2": 5e-05,
+            "lower_rad": -0.75,
+            "torque_limit_nm": 0.015,
+            "upper_rad": 0.75
+          },
+          "q_rad": 0.04790501200727744,
+          "saturation_count": 0
+        },
+        "filtered_motor": 0.0
+      },
+      "boundary_contract": {
+        "UI_dependency": "none",
+        "decoder_decay": 0.95,
+        "decoder_nm_per_unit": 0.008,
+        "input_gain": 70.0,
+        "learning": "disabled",
+        "tonic_current": 2.0,
+        "velocity_gain": 1.5,
+        "version": "joint-v1"
+      },
+      "condition": "feedback_absent",
+      "neural_digest_after": "515ebf38973e4b537b408b338d6fc629dfd2abd9f2ce77011004a72aac7ebbc9",
+      "neural_digest_before": "a5cf88ee525e75cb59ba6bee596519e3f1b1faa526f3cc6538ad7b2491953a8c",
+      "seed": 103
+    }
+  ],
+  "schema_version": "1.0"
+}

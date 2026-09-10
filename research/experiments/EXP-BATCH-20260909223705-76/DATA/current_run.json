@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 11,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0011-shuffled_motor-seed-103.json.gz",
+    "sha256": "4e6fad825430fa592c21935b12a5c30916918c331836eeaee725edfbef9c0692",
+    "size_bytes": 52273,
+    "uncompressed_bytes": 299369
+  },
+  "status": "idle"
+}

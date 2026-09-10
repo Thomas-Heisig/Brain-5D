@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "generated_for": "mhrn-core 0.6.0a1",
+  "entries": [
+    {
+      "method": "GET",
+      "path": "/api/embodiment/connections",
+      "backend_owner": "DashboardRequestHandler._send_embodiment_connections",
+      "frontend_consumer": "wesen-base.js, wesen-neural-symbiosis.js",
+      "surface": "Wesen / Embodiment",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "discovery_only",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/embodiment/sensors",
+      "backend_owner": "SensorActivationService",
+      "frontend_consumer": "wesen.js",
+      "surface": "Wesen / Sensor lifecycle",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "no_hardware_activation",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/embodiment/sensors/{id}/enable|disable",
+      "backend_owner": "SensorActivationService",
+      "frontend_consumer": "wesen.js",
+      "surface": "Wesen / Sensor lifecycle",
+      "read_write": "write",
+      "experiment_only": false,
+      "safety_class": "explicit_adapter_authorization_required",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/embodiment/neural-symbiosis",
+      "backend_owner": "GatewayRuntime",
+      "frontend_consumer": "wesen-neural-symbiosis.js",
+      "surface": "Wesen / Neural Symbiosis",
+      "read_write": "read",
+      "experiment_only": true,
+      "safety_class": "productive_gateway_locked",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/experiments/{id}/gateway/{activate|pause|resume|stop}",
+      "backend_owner": "GatewayRuntime",
+      "frontend_consumer": "wesen-neural-symbiosis.js, experiment-workflow.js",
+      "surface": "Research / Gateway Controls",
+      "read_write": "write",
+      "experiment_only": true,
+      "safety_class": "preregistration_and_experiment_mode",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cognition/status|memory|memory/episodes|predictions|world-model|behavior-profile",
+      "backend_owner": "ExperienceEngine / MemoryWorldModel",
+      "frontend_consumer": "wesen-profile.js",
+      "surface": "Wesen / Cognition",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "bounded_read_only_telemetry",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cognition/memory/controls",
+      "backend_owner": "MemoryStore.set_controls",
+      "frontend_consumer": "wesen-profile.js",
+      "surface": "Wesen / Cognition",
+      "read_write": "write",
+      "experiment_only": false,
+      "safety_class": "controls_only_no_content_injection",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/profiles/{id}/save-state",
+      "backend_owner": "ProfileService.save_state",
+      "frontend_consumer": "wesen-profile.js",
+      "surface": "Wesen / Profile",
+      "read_write": "write",
+      "experiment_only": false,
+      "safety_class": "explicit_snapshot_binding",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/profiles/{id}/snapshots",
+      "backend_owner": "ProfileService",
+      "frontend_consumer": "wesen-profile.js",
+      "surface": "Wesen / Profile",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "metadata_only",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "GET",
+      "path": "/api/files/{path}",
+      "backend_owner": "FileManager",
+      "frontend_consumer": "file-viewer.js",
+      "surface": "Central File Viewer",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "path_allowlist",
+      "coverage_status": "COVERED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/structural/*",
+      "backend_owner": "StructuralCommandAPI",
+      "frontend_consumer": "operator_console.js",
+      "surface": "Operator",
+      "read_write": "write",
+      "experiment_only": false,
+      "safety_class": "operator_bridge_and_policy",
+      "coverage_status": "BACKEND_ONLY",
+      "backend_only_reason": "Structural mutations are intentionally restricted to the operator workbench and are not exposed in Wesen."
+    }
+  ]
+}

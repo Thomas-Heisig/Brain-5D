@@ -1,0 +1,11 @@
+{
+  "last_archived_run": 19,
+  "raw_artifact": {
+    "format": "json.gz",
+    "path": "DATA/raw/run-0019-sequential_three_task_screen-seed-120.json.gz",
+    "sha256": "2c0796e09d91cff18cb1aed8841a6d5cb1b1aaa0bd6570a01f1b30ece8c3af7a",
+    "size_bytes": 376,
+    "uncompressed_bytes": 477
+  },
+  "status": "idle"
+}

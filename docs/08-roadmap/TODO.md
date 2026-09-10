@@ -6,7 +6,7 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 **Canonical TODO for `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-09  
+**Updated:** 2026-09-10
 **Current release-blocking backlog:** **0**
 
 ## 2026-09-10 Memory / World Model / Behavior Profile foundation
@@ -19,6 +19,18 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 	bounded retention and capacity controls.
 - [x] Add an operational, non-psychological behavior profile with explicit
 	candidate-action influence and auditable bounded updates.
+- [x] Construct configured Behavior Profiles in the canonical
+	`ExperienceEngine` composition path.
+- [x] Expose cognition status, memory, episodes, predictions, world-model and
+	Behavior Profile telemetry in the existing Wesen surface.
+- [x] Add backend-confirmed Memory Read/Write controls without arbitrary
+	memory-content injection.
+- [x] Add individual sensor lifecycle routes and UI controls with fail-closed
+	adapter/authorization/safety checks and audit records.
+- [x] Add experiment-only Gateway lifecycle controls while keeping productive
+	Gateway activation locked.
+- [x] Add explicit Profile Snapshot binding metadata and central File Viewer
+	access, plus a machine-readable backend/frontend coverage contract.
 - [ ] Connect coupled cognition state to the canonical runtime snapshot/
 	checkpoint boundary and prove pause/resume equivalence.
 - [ ] Add registered delayed-information control runs and dashboard/File Viewer

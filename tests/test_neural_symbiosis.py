@@ -228,13 +228,15 @@ def test_structural_probabilities_are_clipped_and_rng_free() -> None:
     assert "import src.core" not in source
 
 
-def test_wesen_neural_symbiosis_is_read_only() -> None:
+def test_wesen_neural_symbiosis_has_experiment_only_controls() -> None:
     static = Path("src/dashboard/static")
     source = (static / "wesen-neural-symbiosis.js").read_text(encoding="utf-8")
     console = (static / "console-log.js").read_text(encoding="utf-8")
 
     assert 'fetch("/api/embodiment/connections"' in source
-    assert 'method: "POST"' not in source
+    assert 'method: "POST"' in source
+    assert "/api/experiments/" in source
+    assert "Productive Gateway" in source
     assert 'method: "PUT"' not in source
     assert 'method: "DELETE"' not in source
     assert "/api/control" not in source

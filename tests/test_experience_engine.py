@@ -224,6 +224,12 @@ def test_composition_builds_deterministic_experience_subsystem() -> None:
             "encoder": {"type": "system_v1"},
             "decoder": {"type": "controlled_v1"},
             "environment": {"type": "deterministic_target"},
+            "behavior": {
+                "enabled": True,
+                "profile_id": "WESEN-0001",
+                "update_rate": 0.05,
+                "initial": {"exploration": 0.4, "persistence": 0.6},
+            },
         },
     }
 
@@ -232,6 +238,9 @@ def test_composition_builds_deterministic_experience_subsystem() -> None:
     assert engine is not None
     assert engine.sensor.sample(0).payload == {"cpu_percent": 25.0}
     assert engine.embodiment.environment.environment_id == "deterministic-target-v1"
+    assert engine.behavior_profile is not None
+    assert engine.behavior_profile.profile_id == "WESEN-0001"
+    assert engine.behavior_profile.initial["exploration"] == 0.4
 
 
 def test_composition_rejects_unknown_sensor_provider() -> None:

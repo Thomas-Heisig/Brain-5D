@@ -4,8 +4,16 @@
 
 - Connected optional bounded working/episodic memory and an observation-only
   one-step transition predictor to the existing `ExperienceEngine`.
-- Exposed bounded current cognition status through the existing read-only
-  dashboard API at `/api/cognition/state`; no mutation route was added.
+- Exposed granular cognition telemetry and explicit read/write controls through
+  the dashboard; arbitrary memory-content injection remains unavailable.
+- Added individual sensor lifecycle endpoints and Wesen controls with explicit
+  adapter, authorization, safety and audit boundaries.
+- Added experiment-only Gateway lifecycle controls, productive Gateway remains
+  locked, and added Profile Snapshot binding plus central File Viewer access.
+- Added the machine-readable backend/frontend coverage contract and focused
+  HTTP tests for these boundaries.
+- Connected configured operational Behavior Profiles to the canonical
+  `build_experience_subsystem()` path and `ExperienceEngine`.
 - Added independent read/write controls, bounded retention, atomic persistence,
   schema ownership and integrity checks, plus auditable profile updates.
 - Focused engineering checks pass; no scientific evidence or consciousness

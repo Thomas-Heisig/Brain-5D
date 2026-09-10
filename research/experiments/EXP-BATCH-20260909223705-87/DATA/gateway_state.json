@@ -1,0 +1,307 @@
+{
+  "canonical_snn_synapse_state": "not_accessed",
+  "namespace": "experiment_gateway_state",
+  "records": [
+    {
+      "condition": "adaptive_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 48,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 0,
+      "seed": 101
+    },
+    {
+      "condition": "fixed_center_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed_center_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 1,
+      "seed": 101
+    },
+    {
+      "condition": "random_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 2,
+      "seed": 101
+    },
+    {
+      "condition": "full_image",
+      "gateway_state": {
+        "allocation": {
+          "vision": 1.0
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "full_image",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 101,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 3,
+      "seed": 101
+    },
+    {
+      "condition": "adaptive_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 48,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 4,
+      "seed": 102
+    },
+    {
+      "condition": "fixed_center_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed_center_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 5,
+      "seed": 102
+    },
+    {
+      "condition": "random_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 6,
+      "seed": 102
+    },
+    {
+      "condition": "full_image",
+      "gateway_state": {
+        "allocation": {
+          "vision": 1.0
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "full_image",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 102,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 7,
+      "seed": 102
+    },
+    {
+      "condition": "adaptive_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "adaptive_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 48,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 8,
+      "seed": 103
+    },
+    {
+      "condition": "fixed_center_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "fixed_center_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 9,
+      "seed": 103
+    },
+    {
+      "condition": "random_roi",
+      "gateway_state": {
+        "allocation": {
+          "vision": 0.25
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "random_roi",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 10,
+      "seed": 103
+    },
+    {
+      "condition": "full_image",
+      "gateway_state": {
+        "allocation": {
+          "vision": 1.0
+        },
+        "canonical_snn_synapse_state": "not_accessed",
+        "condition": "full_image",
+        "namespace": "experiment_gateway_state",
+        "plasticity_updates": 0,
+        "projection": "structured",
+        "projection_dimensions": 8,
+        "schema_version": 1,
+        "seed": 103,
+        "structural_events": 0,
+        "weights": [
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "run_index": 11,
+      "seed": 103
+    }
+  ],
+  "schema_version": 1
+}

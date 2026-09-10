@@ -1,0 +1,196 @@
+{
+  "conditions": {
+    "batch_1": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 51.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 2.449489742783178
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "batch_128": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 51.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 2.449489742783178
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "batch_16": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 51.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 2.449489742783178
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "physics_15ms": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 57.0,
+          "mean": 55.0,
+          "median": 54.0,
+          "min": 54.0,
+          "n": 3,
+          "std": 1.4142135623730951
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "physics_5ms": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 52.0,
+          "median": 51.0,
+          "min": 51.0,
+          "n": 3,
+          "std": 1.4142135623730951
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "sensor_15ms": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 57.0,
+          "mean": 52.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 3.7416573867739413
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "sensor_5ms": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 1000.0,
+          "mean": 1000.0,
+          "median": 1000.0,
+          "min": 1000.0,
+          "n": 3,
+          "std": 0.0
+        },
+        "total_spikes": {
+          "max": 54.0,
+          "mean": 51.0,
+          "median": 51.0,
+          "min": 48.0,
+          "n": 3,
+          "std": 2.449489742783178
+        }
+      },
+      "run_count": 3,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 21,
+  "schema_version": "2.0"
+}

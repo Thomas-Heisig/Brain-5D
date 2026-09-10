@@ -1,0 +1,2692 @@
+{
+  "workflow_id": "EXP-BATCH-20260909223705",
+  "created_at": "2026-09-10T02:24:49.586592+00:00",
+  "protocols": [
+    "sustained_activity_stability_v1",
+    "exploratory:RQ-SNN-002:H-SNN-002-A",
+    "exploratory:RQ-DET-001:H-SNN-003-A",
+    "exploratory:RQ-SNN-003:EXPLORATORY-UNSPECIFIED",
+    "exploratory:RQ-SNN-004:H-SNN-004-A",
+    "exploratory:RQ-SNN-005:H-SNN-005-A",
+    "exploratory:RQ-PING-001:H-PING-001-A",
+    "exploratory:RQ-TEMP-001:H-TEMP-001-A",
+    "exploratory:RQ-TIME-001:H-TIME-001-A",
+    "exploratory:RQ-REG-001:H-REG-001-A",
+    "exploratory:RQ-STDP-001:H-STDP-001-A",
+    "exploratory:RQ-STDP-002:H-STDP-002-A",
+    "exploratory:RQ-HOM-001:H-HOM-001-A",
+    "exploratory:RQ-HOM-002:H-HOM-002-A",
+    "exploratory:RQ-5D-001:H-5D-001-A",
+    "exploratory:RQ-5D-002:H-5D-002-A",
+    "exploratory:RQ-5D-003:H-5D-003-A",
+    "exploratory:RQ-5D-004:H-5D-004-A",
+    "exploratory:RQ-STORAGE-001:H-STOR-001-A",
+    "exploratory:RQ-STORAGE-002:H-STOR-002-A",
+    "exploratory:RQ-STORAGE-003:H-STOR-003-A",
+    "exploratory:RQ-STORAGE-004:H-STOR-004-A",
+    "exploratory:RQ-SCALE-001:H-SCALE-001-A",
+    "exploratory:RQ-SELF-001:H-SELF-001-A",
+    "exploratory:RQ-SELF-002:H-SELF-002-A",
+    "exploratory:RQ-STRUCT-001:H-STRUCT-001-A",
+    "exploratory:RQ-MEM-001:H-MEM-001-A",
+    "embodied_closed_loop_v1",
+    "exploratory:RQ-LLM-001:H-LLM-001-A",
+    "exploratory:RQ-ETH-001:H-ETH-001-A",
+    "exploratory:RQ-ETH-002:H-ETH-002-A",
+    "exploratory:RQ-EPIST-001:H-EPIST-001-A",
+    "exploratory:RQ-AIR-001:H-AIR-001-A",
+    "exploratory:RQ-SUITE-001:H-SUITE-001-A",
+    "recurrence_map_v1",
+    "learning_generalization_v1",
+    "independent_replication_v1",
+    "topology_matched_5d_v1",
+    "closed_loop_regulation_v1",
+    "temporal_order_spiking_v1",
+    "subsystem_performance_v1",
+    "recurrence_scale_v1",
+    "learning_interference_screen_v1",
+    "exploratory:RQ-MEM-002:H-MEM-002-A",
+    "exploratory:RQ-WM-001:H-WM-001-A",
+    "exploratory:RQ-PROFILE-001:H-PROFILE-001-A",
+    "exploratory:RQ-CNS-101:H-CNS-101-A",
+    "exploratory:RQ-CNS-102:H-CNS-102-A",
+    "exploratory:RQ-CNS-103:H-CNS-103-A",
+    "exploratory:RQ-CNS-104:H-CNS-104-A",
+    "exploratory:RQ-CNS-105:H-CNS-105-A",
+    "exploratory:RQ-CNS-106:H-CNS-106-A",
+    "exploratory:RQ-CNS-107:H-CNS-107-A",
+    "exploratory:RQ-CNS-108:H-CNS-108-A",
+    "exploratory:RQ-CNS-109:H-CNS-109-A",
+    "exploratory:RQ-CNS-110:H-CNS-110-A",
+    "exploratory:RQ-CNS-111:H-CNS-111-A",
+    "exploratory:RQ-CNS-112:H-CNS-112-A",
+    "exploratory:RQ-CNS-113:H-CNS-113-A",
+    "exploratory:RQ-CNS-114:H-CNS-114-A",
+    "exploratory:RQ-CNS-115:H-CNS-115-A",
+    "exploratory:RQ-CNS-116:H-CNS-116-A",
+    "exploratory:RQ-CNS-117:H-CNS-117-A",
+    "exploratory:RQ-EPI-101:H-EPI-101-A",
+    "exploratory:RQ-EPI-102:H-EPI-102-A",
+    "exploratory:RQ-WEL-101:H-WEL-101-A",
+    "exploratory:RQ-WEL-102:H-WEL-102-A",
+    "exploratory:RQ-WEL-103:H-WEL-103-A",
+    "embodied_proprioception_v1",
+    "exploratory:RQ-EMB-003:H-EMB-003-A",
+    "embodied_perturbation_screen_v1",
+    "exploratory:RQ-EMB-007:H-EMB-007-A",
+    "exploratory:RQ-EMB-008:H-EMB-008-A",
+    "exploratory:RQ-CONN-001:H-CONN-001-A",
+    "connectome_topology_screen_v1",
+    "embodied_controller_attribution_v1",
+    "embodied_timing_v1",
+    "exploratory:RQ-GW-001:H-GW-001-A",
+    "exploratory:RQ-GW-002:H-GW-002-A",
+    "exploratory:RQ-GW-003:H-GW-003-A",
+    "exploratory:RQ-GW-004:H-GW-004-A",
+    "exploratory:RQ-GW-005:H-GW-005-A",
+    "exploratory:RQ-GW-006:H-GW-006-A",
+    "exploratory:RQ-GW-007:H-GW-007-A",
+    "msba_energy_efficiency_v1",
+    "msba_resource_allocation_v1",
+    "msba_visual_roi_v1",
+    "msba_digital_integrity_v1",
+    "msba_modality_compensation_v1"
+  ],
+  "requested_ticks": 1000,
+  "seeds": "42-44",
+  "completed": 62,
+  "failed": 27,
+  "results": [
+    {
+      "protocol": "sustained_activity_stability_v1",
+      "ticks": 100000,
+      "seeds": "101-110",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-01",
+      "manifest": "experiments/EXP-BATCH-20260909223705-01/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-01/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-01/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-01/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-01/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-01/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-01",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-01/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-01/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-01/summary.md",
+      "result": {
+        "run_count": 20,
+        "duration_seconds": 11.449624599990784,
+        "runner": "run_sustained_stability",
+        "ticks_requested": 100000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run_with_control_and_treatment",
+          "requested_ticks": 100000,
+          "observed_min": 100000,
+          "observed_max": 100000,
+          "run_count": 20
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-002:H-SNN-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-02",
+      "manifest": "experiments/EXP-BATCH-20260909223705-02/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-02/report.md",
+      "result": {
+        "start": {
+          "tick": 0,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 1000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 234.21573289998923
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-02/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-DET-001:H-SNN-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-03",
+      "status": "failed",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: 'F:\\\\Brain-5D\\\\research\\\\experiments\\\\EXP-BATCH-20260909223705-03\\\\manifest.json'"
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-003:EXPLORATORY-UNSPECIFIED",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-04",
+      "manifest": "experiments/EXP-BATCH-20260909223705-04/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-04/report.md",
+      "result": {
+        "start": {
+          "tick": 2000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 3000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 485.59091729999636
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-04/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-004:H-SNN-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-05",
+      "manifest": "experiments/EXP-BATCH-20260909223705-05/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-05/report.md",
+      "result": {
+        "start": {
+          "tick": 3000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 4000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 487.5800569999992
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-05/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SNN-005:H-SNN-005-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-06",
+      "manifest": "experiments/EXP-BATCH-20260909223705-06/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-06/report.md",
+      "result": {
+        "start": {
+          "tick": 4000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 5000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 498.5685669999948
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-06/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-PING-001:H-PING-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-07",
+      "manifest": "experiments/EXP-BATCH-20260909223705-07/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-07/report.md",
+      "result": {
+        "start": {
+          "tick": 5000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 6000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 497.09675250000146
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-07/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-TEMP-001:H-TEMP-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-08",
+      "manifest": "experiments/EXP-BATCH-20260909223705-08/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-08/report.md",
+      "result": {
+        "start": {
+          "tick": 6000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 7000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 507.1024305000028
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-08/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-TIME-001:H-TIME-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-09",
+      "manifest": "experiments/EXP-BATCH-20260909223705-09/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-09/report.md",
+      "result": {
+        "start": {
+          "tick": 7000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 8000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 505.0149822999956
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-09/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-REG-001:H-REG-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-10",
+      "manifest": "experiments/EXP-BATCH-20260909223705-10/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-10/report.md",
+      "result": {
+        "start": {
+          "tick": 8000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 9000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 513.6403007000044
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-10/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STDP-001:H-STDP-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-11",
+      "manifest": "experiments/EXP-BATCH-20260909223705-11/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-11/report.md",
+      "result": {
+        "start": {
+          "tick": 9000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 10000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 508.8830897000007
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-11/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STDP-002:H-STDP-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-12",
+      "manifest": "experiments/EXP-BATCH-20260909223705-12/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-12/report.md",
+      "result": {
+        "start": {
+          "tick": 10000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 11000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 507.97838890001003
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-12/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-HOM-001:H-HOM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-13",
+      "manifest": "experiments/EXP-BATCH-20260909223705-13/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-13/report.md",
+      "result": {
+        "start": {
+          "tick": 11000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 12000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 511.057914399993
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-13/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-HOM-002:H-HOM-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-14",
+      "manifest": "experiments/EXP-BATCH-20260909223705-14/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-14/report.md",
+      "result": {
+        "start": {
+          "tick": 12000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 13000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 508.77711479998834
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-14/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-001:H-5D-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-15",
+      "manifest": "experiments/EXP-BATCH-20260909223705-15/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-15/report.md",
+      "result": {
+        "start": {
+          "tick": 13000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 14000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 517.4316528000054
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-15/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-002:H-5D-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-16",
+      "manifest": "experiments/EXP-BATCH-20260909223705-16/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-16/report.md",
+      "result": {
+        "start": {
+          "tick": 14000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 15000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 454.4433679000067
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-16/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-003:H-5D-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-17",
+      "manifest": "experiments/EXP-BATCH-20260909223705-17/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-17/report.md",
+      "result": {
+        "start": {
+          "tick": 15000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 16000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 167.38218760000018
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-17/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-5D-004:H-5D-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-18",
+      "manifest": "experiments/EXP-BATCH-20260909223705-18/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-18/report.md",
+      "result": {
+        "start": {
+          "tick": 16000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 17000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 166.6271698999917
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-18/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-001:H-STOR-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-19",
+      "manifest": "experiments/EXP-BATCH-20260909223705-19/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-19/report.md",
+      "result": {
+        "start": {
+          "tick": 17000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 18000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 160.7564691000007
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-19/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-002:H-STOR-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-20",
+      "manifest": "experiments/EXP-BATCH-20260909223705-20/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-20/report.md",
+      "result": {
+        "start": {
+          "tick": 18000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 19000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 159.03122579999035
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-20/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-003:H-STOR-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-21",
+      "manifest": "experiments/EXP-BATCH-20260909223705-21/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-21/report.md",
+      "result": {
+        "start": {
+          "tick": 19000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 20000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 157.52361879999808
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-21/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STORAGE-004:H-STOR-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-22",
+      "manifest": "experiments/EXP-BATCH-20260909223705-22/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-22/report.md",
+      "result": {
+        "start": {
+          "tick": 20000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 21000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 157.73753769999894
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-22/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SCALE-001:H-SCALE-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-23",
+      "manifest": "experiments/EXP-BATCH-20260909223705-23/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-23/report.md",
+      "result": {
+        "start": {
+          "tick": 21000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 22000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 157.4790747000079
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-23/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SELF-001:H-SELF-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-24",
+      "manifest": "experiments/EXP-BATCH-20260909223705-24/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-24/report.md",
+      "result": {
+        "start": {
+          "tick": 22000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 23000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 156.94414490000054
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-24/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SELF-002:H-SELF-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-25",
+      "manifest": "experiments/EXP-BATCH-20260909223705-25/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-25/report.md",
+      "result": {
+        "start": {
+          "tick": 23000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 24000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 155.23711750000075
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-25/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-STRUCT-001:H-STRUCT-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-26",
+      "manifest": "experiments/EXP-BATCH-20260909223705-26/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-26/report.md",
+      "result": {
+        "start": {
+          "tick": 24000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 25000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 151.40121910000744
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-26/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-MEM-001:H-MEM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-27",
+      "manifest": "experiments/EXP-BATCH-20260909223705-27/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-27/report.md",
+      "result": {
+        "start": {
+          "tick": 25000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 26000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 151.79776070000662
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-27/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "embodied_closed_loop_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-28",
+      "manifest": "experiments/EXP-BATCH-20260909223705-28/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-28/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-28/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-28/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-28/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-28/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-28",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-28/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-28/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-28/summary.md",
+      "result": {
+        "run_count": 9,
+        "duration_seconds": 0.304554599992116,
+        "runner": "run_embodied_closed_loop",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-LLM-001:H-LLM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-29",
+      "manifest": "experiments/EXP-BATCH-20260909223705-29/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-29/report.md",
+      "result": {
+        "start": {
+          "tick": 26000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 27000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 164.0866657000006
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-29/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-ETH-001:H-ETH-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-30",
+      "manifest": "experiments/EXP-BATCH-20260909223705-30/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-30/report.md",
+      "result": {
+        "start": {
+          "tick": 27000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 28000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 157.6863480000029
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-30/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-ETH-002:H-ETH-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-31",
+      "manifest": "experiments/EXP-BATCH-20260909223705-31/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-31/report.md",
+      "result": {
+        "start": {
+          "tick": 28000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 29000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 152.45292699999118
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-31/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-EPIST-001:H-EPIST-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-32",
+      "manifest": "experiments/EXP-BATCH-20260909223705-32/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-32/report.md",
+      "result": {
+        "start": {
+          "tick": 29000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 30000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 158.3660579999996
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-32/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-AIR-001:H-AIR-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-33",
+      "manifest": "experiments/EXP-BATCH-20260909223705-33/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-33/report.md",
+      "result": {
+        "start": {
+          "tick": 30000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 31000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 160.94574710000597
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-33/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-SUITE-001:H-SUITE-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-34",
+      "manifest": "experiments/EXP-BATCH-20260909223705-34/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-34/report.md",
+      "result": {
+        "start": {
+          "tick": 31000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 32000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 157.56058789999224
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-34/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "recurrence_map_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-35",
+      "manifest": "experiments/EXP-BATCH-20260909223705-35/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-35/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-35/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-35/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-35/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-35/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-35",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-35/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-35/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-35/summary.md",
+      "result": {
+        "run_count": 300,
+        "duration_seconds": 0.5824941000028048,
+        "runner": "run_recurrence_map",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "learning_generalization_v1",
+      "ticks": 1000,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-36",
+      "manifest": "experiments/EXP-BATCH-20260909223705-36/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-36/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-36/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-36/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-36/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-36/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-36",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-36/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-36/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-36/summary.md",
+      "result": {
+        "run_count": 180,
+        "duration_seconds": 1.7243159000063315,
+        "runner": "run_generalization",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "independent_replication_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-37",
+      "manifest": "experiments/EXP-BATCH-20260909223705-37/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-37/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-37/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-37/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-37/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-37/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-37",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-37/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-37/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-37/summary.md",
+      "result": {
+        "run_count": 40,
+        "duration_seconds": 0.15903179999440908,
+        "runner": "run_replication",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "topology_matched_5d_v1",
+      "ticks": 64,
+      "seeds": "101-130",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-38",
+      "manifest": "experiments/EXP-BATCH-20260909223705-38/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-38/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-38/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-38/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-38/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-38/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-38",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-38/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-38/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-38/summary.md",
+      "result": {
+        "run_count": 120,
+        "duration_seconds": 0.15392720000818372,
+        "runner": "run_5d_matched",
+        "ticks_requested": 64,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 64,
+          "observed_min": 64,
+          "observed_max": 64
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "closed_loop_regulation_v1",
+      "ticks": 128,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-39",
+      "manifest": "experiments/EXP-BATCH-20260909223705-39/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-39/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-39/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-39/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-39/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-39/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-39",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-39/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-39/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-39/summary.md",
+      "result": {
+        "run_count": 40,
+        "duration_seconds": 0.3609339000104228,
+        "runner": "run_regulation_recovery",
+        "ticks_requested": 128,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 128,
+          "observed_min": 128,
+          "observed_max": 128
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "temporal_order_spiking_v1",
+      "ticks": 32,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-40",
+      "manifest": "experiments/EXP-BATCH-20260909223705-40/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-40/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-40/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-40/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-40/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-40/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-40",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-40/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-40/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-40/summary.md",
+      "result": {
+        "run_count": 60,
+        "duration_seconds": 0.041945899996790104,
+        "runner": "run_temporal_order",
+        "ticks_requested": 32,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 32,
+          "observed_min": 32,
+          "observed_max": 32
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "subsystem_performance_v1",
+      "ticks": 10000,
+      "seeds": "101-110",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-41",
+      "manifest": "experiments/EXP-BATCH-20260909223705-41/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-41/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-41/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-41/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-41/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-41/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-41",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-41/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-41/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-41/summary.md",
+      "result": {
+        "run_count": 10,
+        "duration_seconds": 0.7142192000028444,
+        "runner": "run_performance_profile",
+        "ticks_requested": 10000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 10000,
+          "observed_min": 10000,
+          "observed_max": 10000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "recurrence_scale_v1",
+      "ticks": 256,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-42",
+      "manifest": "experiments/EXP-BATCH-20260909223705-42/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-42/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-42/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-42/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-42/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-42/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-42",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-42/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-42/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-42/summary.md",
+      "result": {
+        "run_count": 80,
+        "duration_seconds": 0.29080570000223815,
+        "runner": "run_recurrence_scale",
+        "ticks_requested": 256,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 256,
+          "observed_min": 256,
+          "observed_max": 256
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "learning_interference_screen_v1",
+      "ticks": 1000,
+      "seeds": "101-120",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-43",
+      "manifest": "experiments/EXP-BATCH-20260909223705-43/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-43/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-43/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-43/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-43/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-43/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-43",
+      "ai_report": {
+        "status": "generated",
+        "report_id": "AIRR-2026-0001",
+        "json": "experiments/EXP-BATCH-20260909223705-43/reports/AIRR-2026-0001.json",
+        "markdown": "experiments/EXP-BATCH-20260909223705-43/reports/AIRR-2026-0001.md",
+        "human_review": "PENDING",
+        "scientific_evidence": false
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-43/summary.md",
+      "result": {
+        "run_count": 20,
+        "duration_seconds": 5.525580000001355,
+        "runner": "run_learning_interference",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-MEM-002:H-MEM-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-44",
+      "manifest": "experiments/EXP-BATCH-20260909223705-44/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-44/report.md",
+      "result": {
+        "start": {
+          "tick": 32000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 33000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 171.5562604000006
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-44/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-WM-001:H-WM-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-45",
+      "manifest": "experiments/EXP-BATCH-20260909223705-45/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-45/report.md",
+      "result": {
+        "start": {
+          "tick": 33000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 34000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 170.57343140000012
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-45/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-PROFILE-001:H-PROFILE-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-46",
+      "manifest": "experiments/EXP-BATCH-20260909223705-46/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-46/report.md",
+      "result": {
+        "start": {
+          "tick": 34000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 35000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 169.99761289999878
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-46/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-101:H-CNS-101-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-47",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-102:H-CNS-102-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-48",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-103:H-CNS-103-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-49",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-104:H-CNS-104-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-50",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-105:H-CNS-105-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-51",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-106:H-CNS-106-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-52",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-107:H-CNS-107-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-53",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-108:H-CNS-108-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-54",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-109:H-CNS-109-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-55",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-110:H-CNS-110-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-56",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-111:H-CNS-111-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-57",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-112:H-CNS-112-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-58",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-113:H-CNS-113-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-59",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-114:H-CNS-114-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-60",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-115:H-CNS-115-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-61",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-116:H-CNS-116-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-62",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-CNS-117:H-CNS-117-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-63",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-EPI-101:H-EPI-101-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-64",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-EPI-102:H-EPI-102-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-65",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-WEL-101:H-WEL-101-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-66",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-WEL-102:H-WEL-102-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-67",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "exploratory:RQ-WEL-103:H-WEL-103-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-68",
+      "status": "failed",
+      "error": "WorkflowValidationError: COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. No fallback to generic ticks, PING or unrelated suites is permitted."
+    },
+    {
+      "protocol": "embodied_proprioception_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-69",
+      "manifest": "experiments/EXP-BATCH-20260909223705-69/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-69/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-69/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-69/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-69/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-69/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-69",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-EMB-002"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-69/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 0.4483697999967262,
+        "runner": "run_embodied_proprioception",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-EMB-003:H-EMB-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-70",
+      "status": "failed",
+      "error": "WorkflowValidationError: CONNECTOME_ADAPTER_NOT_VALIDATED: no generic ticks/PING substitution; select a matching native exploratory protocol or complete adapter review."
+    },
+    {
+      "protocol": "embodied_perturbation_screen_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-71",
+      "manifest": "experiments/EXP-BATCH-20260909223705-71/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-71/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-71/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-71/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-71/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-71/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-71",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-EMB-004"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-71/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 0.30515200000081677,
+        "runner": "run_embodied_perturbation",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-EMB-007:H-EMB-007-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-72",
+      "status": "failed",
+      "error": "WorkflowValidationError: CONNECTOME_ADAPTER_NOT_VALIDATED: no generic ticks/PING substitution; select a matching native exploratory protocol or complete adapter review."
+    },
+    {
+      "protocol": "exploratory:RQ-EMB-008:H-EMB-008-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-73",
+      "status": "failed",
+      "error": "WorkflowValidationError: CONNECTOME_ADAPTER_NOT_VALIDATED: no generic ticks/PING substitution; select a matching native exploratory protocol or complete adapter review."
+    },
+    {
+      "protocol": "exploratory:RQ-CONN-001:H-CONN-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "experiment_id": "EXP-BATCH-20260909223705-74",
+      "status": "failed",
+      "error": "WorkflowValidationError: CONNECTOME_ADAPTER_NOT_VALIDATED: no generic ticks/PING substitution; select a matching native exploratory protocol or complete adapter review."
+    },
+    {
+      "protocol": "connectome_topology_screen_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-75",
+      "manifest": "experiments/EXP-BATCH-20260909223705-75/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-75/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-75/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-75/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-75/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-75/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-75",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-CONN-002"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-75/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 1.1778044999955455,
+        "runner": "run_connectome_topology",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "embodied_controller_attribution_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-76",
+      "manifest": "experiments/EXP-BATCH-20260909223705-76/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-76/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-76/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-76/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-76/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-76/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-76",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-EMB-009"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-76/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 0.2565523000084795,
+        "runner": "run_embodied_controller",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "embodied_timing_v1",
+      "ticks": 1000,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-77",
+      "manifest": "experiments/EXP-BATCH-20260909223705-77/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-77/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-77/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-77/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-77/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-77/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-77",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-TIME-002"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-77/summary.md",
+      "result": {
+        "run_count": 21,
+        "duration_seconds": 0.338182899999083,
+        "runner": "run_embodied_timing",
+        "ticks_requested": 1000,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "SATISFIED",
+          "mode": "minimum_per_run",
+          "requested_ticks": 1000,
+          "observed_min": 1000,
+          "observed_max": 1000
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "exploratory:RQ-GW-001:H-GW-001-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-78",
+      "manifest": "experiments/EXP-BATCH-20260909223705-78/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-78/report.md",
+      "result": {
+        "start": {
+          "tick": 35000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 36000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 167.5537875000009
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-78/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-002:H-GW-002-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-79",
+      "manifest": "experiments/EXP-BATCH-20260909223705-79/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-79/report.md",
+      "result": {
+        "start": {
+          "tick": 36000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 37000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 170.49957440000435
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-79/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-003:H-GW-003-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-80",
+      "manifest": "experiments/EXP-BATCH-20260909223705-80/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-80/report.md",
+      "result": {
+        "start": {
+          "tick": 37000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 38000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 171.70415680001315
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-80/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-004:H-GW-004-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-81",
+      "manifest": "experiments/EXP-BATCH-20260909223705-81/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-81/report.md",
+      "result": {
+        "start": {
+          "tick": 38000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 39000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 170.00383699999657
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-81/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-005:H-GW-005-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-82",
+      "manifest": "experiments/EXP-BATCH-20260909223705-82/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-82/report.md",
+      "result": {
+        "start": {
+          "tick": 39000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 40000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 173.36566900000616
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-82/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-006:H-GW-006-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-83",
+      "manifest": "experiments/EXP-BATCH-20260909223705-83/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-83/report.md",
+      "result": {
+        "start": {
+          "tick": 40000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 41000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 165.72868139999628
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-83/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "exploratory:RQ-GW-007:H-GW-007-A",
+      "ticks": 1000,
+      "seeds": "42-44",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-84",
+      "manifest": "experiments/EXP-BATCH-20260909223705-84/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-84/report.md",
+      "result": {
+        "start": {
+          "tick": 41000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "end": {
+          "tick": 42000,
+          "neurons": 5000,
+          "synapses": 36031
+        },
+        "duration_seconds": 169.63667360000545
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-84/summary.md",
+      "research_run_mode": "EXPLORATORY",
+      "test_run": true
+    },
+    {
+      "protocol": "msba_energy_efficiency_v1",
+      "ticks": 48,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-85",
+      "manifest": "experiments/EXP-BATCH-20260909223705-85/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-85/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-85/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-85/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-85/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-85/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-85",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-MSBA-E01"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-85/summary.md",
+      "result": {
+        "run_count": 9,
+        "duration_seconds": 0.4401734999992186,
+        "runner": "run_msba_e01",
+        "ticks_requested": 48,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 48
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "msba_resource_allocation_v1",
+      "ticks": 96,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "manifest": "experiments/EXP-BATCH-20260909223705-86/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-86/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-86/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-86/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-86/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-86/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-86",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-MSBA-E02"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-86/summary.md",
+      "result": {
+        "run_count": 9,
+        "duration_seconds": 0.6578574000013759,
+        "runner": "run_msba_e02",
+        "ticks_requested": 96,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 96
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "msba_visual_roi_v1",
+      "ticks": 48,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-87",
+      "manifest": "experiments/EXP-BATCH-20260909223705-87/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-87/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-87/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-87/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-87/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-87/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-87",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-MSBA-E03"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-87/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 0.5975225000001956,
+        "runner": "run_msba_e03",
+        "ticks_requested": 48,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 48
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "msba_digital_integrity_v1",
+      "ticks": 64,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-88",
+      "manifest": "experiments/EXP-BATCH-20260909223705-88/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-88/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-88/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-88/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-88/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-88/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-88",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-MSBA-E04"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-88/summary.md",
+      "result": {
+        "run_count": 9,
+        "duration_seconds": 0.49589629999536555,
+        "runner": "run_msba_e04",
+        "ticks_requested": 64,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 64
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    {
+      "protocol": "msba_modality_compensation_v1",
+      "ticks": 48,
+      "seeds": "101-103",
+      "status": "completed",
+      "experiment_id": "EXP-BATCH-20260909223705-89",
+      "manifest": "experiments/EXP-BATCH-20260909223705-89/manifest.json",
+      "report": "experiments/EXP-BATCH-20260909223705-89/report.md",
+      "workflow": "experiments/EXP-BATCH-20260909223705-89/workflow.json",
+      "statistics": "experiments/EXP-BATCH-20260909223705-89/analysis/statistics.json",
+      "ai_packet": "experiments/EXP-BATCH-20260909223705-89/analysis/ai_packet.json",
+      "raw_run_index": "experiments/EXP-BATCH-20260909223705-89/DATA/runs_index.json",
+      "data_id": "DATA-EXP-BATCH-20260909223705-89",
+      "ai_report": {
+        "status": "failed",
+        "error": "ValueError",
+        "message": "Research registry entry not found: RQ-MSBA-E05"
+      },
+      "summary": "experiments/EXP-BATCH-20260909223705-89/summary.md",
+      "result": {
+        "run_count": 12,
+        "duration_seconds": 0.04224310000427067,
+        "runner": "run_msba_e05",
+        "ticks_requested": 48,
+        "seeds_executed": [
+          101,
+          102,
+          103
+        ],
+        "tick_validation": {
+          "status": "NOT_APPLICABLE",
+          "mode": "protocol_defined_internal_trials",
+          "requested_ticks": 48
+        }
+      },
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    }
+  ]
+}

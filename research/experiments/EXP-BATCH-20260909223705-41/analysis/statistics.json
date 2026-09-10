@@ -1,0 +1,55 @@
+{
+  "conditions": {
+    "subsystem_profile": {
+      "metrics": {
+        "ticks_executed": {
+          "max": 10000.0,
+          "mean": 10000.0,
+          "median": 10000.0,
+          "min": 10000.0,
+          "n": 10,
+          "std": 0.0
+        },
+        "ticks_per_second": {
+          "max": 175169.38880406215,
+          "mean": 145951.94311529768,
+          "median": 141258.02863698715,
+          "min": 123059.20254465562,
+          "n": 10,
+          "std": 17245.254001177775
+        },
+        "total_spikes": {
+          "max": 33.0,
+          "mean": 33.0,
+          "median": 33.0,
+          "min": 33.0,
+          "n": 10,
+          "std": 0.0
+        }
+      },
+      "run_count": 10,
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110
+      ]
+    }
+  },
+  "formulas": {
+    "difference": "Delta_x = mean(x_B) - mean(x_A)",
+    "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+    "mean": "mean(x) = (1/n) * sum_i x_i",
+    "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+    "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+  },
+  "generated_by": "deterministic_statistics_engine",
+  "run_count": 10,
+  "schema_version": "2.0"
+}

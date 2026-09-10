@@ -1,0 +1,30 @@
+{
+  "experiment_id": "EXP-BATCH-20260909223705-85",
+  "research_question": "RQ-MSBA-E01",
+  "hypothesis": "H-MSBA-E01-A",
+  "title": "Experiment workflow: msba_energy_efficiency_v1",
+  "conditions": "Registered protocol conditions",
+  "ticks": 48,
+  "ticks_contract": "minimum requested observation window",
+  "seeds": [
+    101,
+    102,
+    103
+  ],
+  "protocol": "msba_energy_efficiency_v1",
+  "resolved_runner": "run_msba_e01",
+  "tick_validation": {
+    "status": "NOT_APPLICABLE",
+    "mode": "protocol_defined_internal_trials",
+    "requested_ticks": 48
+  },
+  "notes": "",
+  "execution": "registered experiment_suite runner",
+  "assistant_policy": "AI is post-hoc interpretation only.",
+  "epistemic_layers": {
+    "ui_state": "operator/dashboard progress only; not a scientific result",
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input"
+  }
+}

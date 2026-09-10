@@ -68,6 +68,12 @@ class ConnectionDescriptor:
     hazard_level: str = "none"
     source: str = "catalog"
     message: str = ""
+    adapter_id: str | None = None
+    configured: bool = False
+    enabled: bool = False
+    health: str = "UNAVAILABLE"
+    last_sample_tick: int | None = None
+    last_error: str | None = None
 
     def to_json(self) -> dict[str, JSONValue]:
         """Return the public read-only connection representation."""
@@ -88,6 +94,12 @@ class ConnectionDescriptor:
             "hazard_level": self.hazard_level,
             "source": self.source,
             "message": self.message,
+            "adapter_id": self.adapter_id,
+            "configured": self.configured,
+            "enabled": self.enabled,
+            "health": self.health,
+            "last_sample_tick": self.last_sample_tick,
+            "last_error": self.last_error,
         }
 
 
@@ -267,6 +279,21 @@ class ConnectionManager:
             "connections": [item.to_json() for item in connections],
         }
 
+    def get(self, connection_id: str) -> ConnectionDescriptor | None:
+        """Return one registered connection without opening or probing it."""
+        with self._lock:
+            return self._connections.get(connection_id)
+
+    def update(self, connection_id: str, **changes: object) -> ConnectionDescriptor:
+        """Update lifecycle metadata for an existing registered connection."""
+        with self._lock:
+            current = self._connections.get(connection_id)
+            if current is None:
+                raise KeyError(connection_id)
+            updated = replace(current, **changes)
+            self._connections[connection_id] = updated
+            return updated
+
     def _update_detected(
         self, connection_id: str, detected: bool, message: str
     ) -> None:
@@ -286,6 +313,8 @@ class ConnectionManager:
             active=False,
             source="system_discovery",
             message=message,
+            health=("DETECTED" if detected else "UNAVAILABLE"),
+            last_error=None if detected else message,
         )
 
     def _discover_local_resources(self) -> None:

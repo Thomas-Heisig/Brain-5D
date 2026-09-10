@@ -1,0 +1,138 @@
+{
+  "ai_exposure": "none",
+  "ai_interactions": [],
+  "ai_protocol": {
+    "bump_reason": "initial registration",
+    "version": 1
+  },
+  "ai_reproducibility": "R0",
+  "artifacts": {
+    "ai_packet": "analysis/ai_packet.json",
+    "ai_packet_digest": "analysis/ai_packet_digest.json",
+    "ai_report_json": "experiments/EXP-BATCH-20260909223705-39/reports/AIRR-2026-0001.json",
+    "ai_report_markdown": "experiments/EXP-BATCH-20260909223705-39/reports/AIRR-2026-0001.md",
+    "current_run": "DATA/current_run.json",
+    "data": "DATA/runs.json",
+    "data_index": "DATA/runs_index.json",
+    "preregistration": "preregistrations/PREREG-REG-002.json",
+    "raw_run_index": "DATA/runs_index.json",
+    "report": "report.md",
+    "statistics": "analysis/statistics.json",
+    "workflow": "workflow.json"
+  },
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "causal_taint": "PURE",
+  "config": {
+    "path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "created_at": "2026-09-10T01:40:54.766631+00:00",
+  "data_partitions": [],
+  "epistemic_layers": {
+    "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+    "evid": "not_created; requires semantic validation, clean freeze and human review",
+    "interpretation": "post-hoc AI or human interpretation; never execution input",
+    "ui_state": "operator/dashboard progress only; not a scientific result"
+  },
+  "execution_contract": {
+    "hypothesis_id": "H-REG-002-A",
+    "protocol": "closed_loop_regulation_v1",
+    "question_id": "RQ-REG-002",
+    "resolved_runner": "run_regulation_recovery",
+    "runtime_runner_bytecode_sha256": "2873fb6aa9052851394630b688c5d8d1168c7e1a6cb1a3475ba051bc7e9baf70",
+    "runtime_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "source_runner_bytecode_sha256": "2873fb6aa9052851394630b688c5d8d1168c7e1a6cb1a3475ba051bc7e9baf70",
+    "source_runtime_consistency": "MATCH",
+    "source_summary_bytecode_sha256": "8d311e523e6093b1bbb23954dae163406f1836fb0defa5b8c4479ac68a929395",
+    "tick_validation": {
+      "mode": "minimum_per_run",
+      "observed_max": 128,
+      "observed_min": 128,
+      "requested_ticks": 128,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 128
+  },
+  "experiment_id": "EXP-BATCH-20260909223705-39",
+  "experiment_status": "completed",
+  "git": {
+    "branch": "main",
+    "commit": "8184fc74654169e4d01552f093dd807f065c34e3",
+    "dirty": true
+  },
+  "hypotheses": [
+    "H-REG-002-A"
+  ],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "5a11ea288e7e695c2dcd456642b533cbb3e6daf38b72e150134e60e69059531f",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "data": "eee1b4283c8c0ee358b2e0a1f511cd811dc33144e7d3855e79ab7c1d35d51332",
+    "prompt": "dd18e473908e7e75b1717c240bac221729ea38753abfd28b701b37b20d5f5e14"
+  },
+  "research_questions": [
+    "RQ-REG-002"
+  ],
+  "research_run_mode": "CONFIRMATORY",
+  "results": {
+    "protocol": "closed_loop_regulation_v1",
+    "run_count": 40,
+    "runner": "run_regulation_recovery",
+    "tick_contract": {
+      "mode": "minimum_per_run",
+      "observed_max": 128,
+      "observed_min": 128,
+      "requested_ticks": 128,
+      "status": "SATISFIED"
+    },
+    "ticks_requested": 128
+  },
+  "runtime": {
+    "duration_seconds": 0.3609339000104228
+  },
+  "runtime_errors": [],
+  "simulation": {
+    "protocol": "closed_loop_regulation_v1",
+    "seed": 101,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "ticks": 128
+  },
+  "software": {
+    "brain5d_version": "0.6.0a1",
+    "os": "Windows 11",
+    "python": "3.13.14"
+  },
+  "source_freeze_sha": "9237d2c60c363c4ecd21c54d1ded46bef72282fb7c4e75076e166f214ac2b9e3",
+  "timestamp": "2026-09-10T03:40:54.766621",
+  "validity": {
+    "fatal_error_count": 0,
+    "reason": null,
+    "runtime_error_count": 0,
+    "valid": true
+  }
+}

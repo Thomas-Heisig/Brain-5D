@@ -1,0 +1,526 @@
+{
+  "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+  "generated_by": "deterministic_research_data_v2",
+  "limits": {
+    "ai_packet_max_bytes": 1000000,
+    "run_summary_max_bytes": 5000000,
+    "sequence_preview_items": 16
+  },
+  "raw_index": {
+    "path": "DATA/runs_index.json",
+    "run_count": 9,
+    "sha256": "d1f896c04765a0469360544f3c95ac9cd06cb72663f6b79c8c2190330f5bba24"
+  },
+  "run_count": 9,
+  "run_preview": [
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0000-adaptive-seed-101.json.gz",
+        "sha256": "4f82ccc5245f6fedd998619b6407563b0537f8761ed0333369dbfbd49b3836e4",
+        "size_bytes": 666,
+        "uncompressed_bytes": 1282
+      },
+      "condition": "adaptive",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "adaptive",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 66.0,
+        "task_accuracy": 0.30235119047619025,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 29.025714285714265
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0001-fixed-seed-101.json.gz",
+        "sha256": "ace2f4bfe9f400ed7112babb4154f15df57e682e15696a65e853d161157e1db9",
+        "size_bytes": 632,
+        "uncompressed_bytes": 1263
+      },
+      "condition": "fixed",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "fixed",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 80.39999999999999,
+        "task_accuracy": 0.34375,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 33.0
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0002-random-seed-101.json.gz",
+        "sha256": "075b5f6cba6de272b495801cffce60796e17f6463dd928ea798fde2b564e32bb",
+        "size_bytes": 670,
+        "uncompressed_bytes": 1289
+      },
+      "condition": "random",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "random",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8458591144862583,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14674066286251525
+          },
+          "reward_formulations": {
+            "absolute": -2.2866263812054224,
+            "local_homeostatic": -5.963686849465752,
+            "signed": 0.5701773246553464,
+            "squared": -6.580969148173916
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 73.8070639455293,
+        "task_accuracy": 0.31833801317472715,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 30.56044926477381
+      },
+      "runtime_error": null,
+      "seed": 101,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0003-adaptive-seed-102.json.gz",
+        "sha256": "1746badff797d395b9232b0a6a8a52732f5dce3ec58ae06f05e727edbae7d39a",
+        "size_bytes": 665,
+        "uncompressed_bytes": 1281
+      },
+      "condition": "adaptive",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "adaptive",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 66.0,
+        "task_accuracy": 0.30235119047619025,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 29.025714285714265
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0004-fixed-seed-102.json.gz",
+        "sha256": "2782b0a023b60834c0042b79e3535b095b54da303ca397a804927d5ce5e0f753",
+        "size_bytes": 632,
+        "uncompressed_bytes": 1262
+      },
+      "condition": "fixed",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "fixed",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 80.39999999999999,
+        "task_accuracy": 0.34375,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 33.0
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0005-random-seed-102.json.gz",
+        "sha256": "07021ff8b7a2d8b15e2f2638695c534292ef638ed57de4aea5a95bca5753a6db",
+        "size_bytes": 671,
+        "uncompressed_bytes": 1289
+      },
+      "condition": "random",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "random",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.863763276715837,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.17326932729525502
+          },
+          "reward_formulations": {
+            "absolute": -1.9355160879645048,
+            "local_homeostatic": -7.185226472037142,
+            "signed": -0.690335521758173,
+            "squared": -5.734402361137648
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 81.21940500832038,
+        "task_accuracy": 0.3422898544694381,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 32.859826029066056
+      },
+      "runtime_error": null,
+      "seed": 102,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0006-adaptive-seed-103.json.gz",
+        "sha256": "9752f7872a88aa231bb3200279e956d8ce85df498479bffdaa5b15523a6ffde0",
+        "size_bytes": 664,
+        "uncompressed_bytes": 1282
+      },
+      "condition": "adaptive",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "adaptive",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 66.0,
+        "task_accuracy": 0.30235119047619025,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 29.025714285714265
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0007-fixed-seed-103.json.gz",
+        "sha256": "e27b81e7280280b9d616eb61cfec36bcda0185b42c1a5b8729f84db03e6ed671",
+        "size_bytes": 631,
+        "uncompressed_bytes": 1263
+      },
+      "condition": "fixed",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "fixed",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 80.39999999999999,
+        "task_accuracy": 0.34375,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 33.0
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    },
+    {
+      "_raw_artifact": {
+        "format": "json.gz",
+        "path": "DATA/raw/run-0008-random-seed-103.json.gz",
+        "sha256": "6da544857f42f53677a4837e5d60280a2a2e717d8a90c51d50304d3e4f8d3d08",
+        "size_bytes": 666,
+        "uncompressed_bytes": 1287
+      },
+      "condition": "random",
+      "experiment_id": "EXP-BATCH-20260909223705-86",
+      "metrics": {
+        "allocation_mode": "random",
+        "canonical_snn_synapse_state": "not_accessed",
+        "control_matrix": {
+          "frozen_gateway_control": {
+            "allocation_mode": "frozen",
+            "equal_budget_verified": true,
+            "research_question": "RQ-MSBA-E02",
+            "resource_budget": 120.0,
+            "resource_budget_consumed": 80.39999999999999,
+            "task_accuracy": 0.34375,
+            "time_to_budget_exhaustion": 96,
+            "utility_captured": 33.0
+          },
+          "noisy_area_suppression": {
+            "activity_budget_matched": true,
+            "informative_gate": 0.8428385375996289,
+            "noisy_area_suppressed": true,
+            "noisy_gate": 0.14101482025395407
+          },
+          "reward_formulations": {
+            "absolute": -1.425009375683699,
+            "local_homeostatic": -2.993075382772344,
+            "signed": -0.8533778443695658,
+            "squared": -2.669743070769667
+          }
+        },
+        "equal_budget_verified": true,
+        "gateway_state_separate_persistence_required": true,
+        "production_peripheral_activation_enabled": false,
+        "research_question": "RQ-MSBA-E02",
+        "resource_budget": 120.0,
+        "resource_budget_consumed": 78.4355044778919,
+        "task_accuracy": 0.344105565960793,
+        "time_to_budget_exhaustion": 96,
+        "utility_captured": 33.03413433223613
+      },
+      "runtime_error": null,
+      "seed": 103,
+      "state_digest_after": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1",
+      "state_digest_before": "9162226e57a97a906ba42dac5aab4d0647e392ad4528e98d114954f3fd5b5de1"
+    }
+  ],
+  "schema_version": "2.0",
+  "statistics": {
+    "conditions": {
+      "adaptive": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "fixed": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      },
+      "random": {
+        "metrics": {},
+        "run_count": 3,
+        "seeds": [
+          101,
+          102,
+          103
+        ]
+      }
+    },
+    "formulas": {
+      "difference": "Delta_x = mean(x_B) - mean(x_A)",
+      "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+      "mean": "mean(x) = (1/n) * sum_i x_i",
+      "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+      "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+    },
+    "run_count": 9,
+    "schema_version": "2.0"
+  }
+}
