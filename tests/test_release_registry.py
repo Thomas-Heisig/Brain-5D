@@ -27,6 +27,10 @@ def test_current_release_matches_canonical_development_version() -> None:
     assert current["pep440"] == project["version"]
     assert current["status"] == "development"
     assert current["parent"] == "v0.5.0-alpha.7"
+    assert current["as_of"] == "2026-09-10"
+    assert current["milestone_status"] == "foundation_complete"
+    assert current["release_blockers"] == 0
+    assert current["open"]
 
 
 def test_alpha6_release_preserves_verified_historical_boundary() -> None:

@@ -9676,6 +9676,58 @@ body.accessibility-mode .health-bar {
   margin: 1rem 0 0.35rem;
 }
 
+.release-preview-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.release-preview-facts span {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 9rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.release-preview-facts strong,
+.release-preview-section h4 {
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.release-preview-section {
+  margin-top: 1rem;
+}
+
+.release-preview-section h4 {
+  margin: 0 0 0.35rem;
+}
+
+.release-preview-scope {
+  border-top: 1px solid var(--line);
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+}
+
+.release-preview-scope summary {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.release-preview-boundary {
+  border-left: 2px solid var(--color-warning);
+  color: var(--muted);
+  margin: 1rem 0 0;
+  padding-left: 0.65rem;
+}
+
 .release-preview-note {
   color: var(--muted);
   max-width: 80ch;

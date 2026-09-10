@@ -6,12 +6,32 @@
   "title": "Scaling & Deterministic Performance",
   "parent": "v0.5.0-alpha.7",
   "gate": "open",
+  "as_of": "2026-09-10",
+  "milestone_status": "foundation_complete",
+  "release_blockers": 0,
   "scope": [
     "compatibility contract for runtime state, snapshots and resumable runs",
     "reproducible scaling benchmarks with explicit memory and tick-cost budgets",
     "bounded telemetry and storage compaction",
     "deterministic pause/resume/restart identity",
-    "migration and rollback tests for persisted-state schema changes"
+    "migration and rollback tests for persisted-state schema changes",
+    "bounded memory, observation-only prediction and operational behavior profile foundation",
+    "Wesen telemetry and fail-closed sensor and experimental Gateway lifecycle controls"
   ],
-  "note": "v0.6.0a1 is a development baseline. Its release gate remains open until the milestone compatibility, benchmark, storage, determinism and migration criteria are verified."
+  "completed": [
+    "v0.6 compatibility, benchmark, storage, determinism and migration foundation",
+    "bounded working and episodic memory with independent read/write controls",
+    "one-step observation-only prediction with later error and uncertainty records",
+    "atomic versioned memory/world-model state and bounded retention",
+    "operational Behavior Profile with bounded auditable updates",
+    "cognition telemetry, backend-confirmed controls and fail-closed lifecycle checks"
+  ],
+  "open": [
+    "connect coupled cognition state to the canonical snapshot/checkpoint boundary",
+    "prove pause/resume equivalence for coupled cognition state",
+    "add registered delayed-information control runs and File Viewer inspection",
+    "generate the immutable v0.6 release record after the exact source-freeze gate is green"
+  ],
+  "research_boundary": "Engineering completion and a green gate do not constitute scientific evidence; controlled runs, review and replication remain open.",
+  "note": "Stand 2026-09-10: v0.6.0a1 has a completed engineering foundation and no active release-blocking implementation backlog. The release gate remains open for the coupled cognition snapshot boundary, controlled delayed-information runs and final source-freeze publication."
 }

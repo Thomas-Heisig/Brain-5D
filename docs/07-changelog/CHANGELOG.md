@@ -2,6 +2,9 @@
 
 ## 2026-09-10 - Bounded memory, prediction and behavior profile foundation
 
+- Aktualisierte Release-Workspace-Projektion: v0.6.0a1 zeigt den Stand vom
+  2026-09-10, null aktive Release-Blocker, abgeschlossene Foundation,
+  verbleibende Gate-Schritte und die wissenschaftliche Evidenzgrenze.
 - Connected optional bounded working/episodic memory and an observation-only
   one-step transition predictor to the existing `ExperienceEngine`.
 - Exposed granular cognition telemetry and explicit read/write controls through

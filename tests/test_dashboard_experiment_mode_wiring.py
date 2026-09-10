@@ -79,6 +79,8 @@ class TestExperimentModeFrontendWiring:
         assert "TIMELINE_PHASES" in gate_board
         assert 'data-release-document="08-roadmap/TODO.md"' in html
         assert "openDocumentationFile" in gate_board
+        assert "release-preview-facts" in gate_board
+        assert "research_boundary" in gate_board
         assert "export function openDocumentationFile" in file_viewer
         assert "loadReleaseDocuments" not in gate_board
         for phase in ("past", "current", "future"):

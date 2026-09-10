@@ -155,14 +155,27 @@ function renderCurrentReleasePreview(current) {
     return;
   }
   const scope = Array.isArray(current.scope) ? current.scope : [];
+  const completed = Array.isArray(current.completed) ? current.completed : [];
+  const open = Array.isArray(current.open) ? current.open : [];
+  const releaseBlockers = Number.isFinite(Number(current.release_blockers))
+    ? Number(current.release_blockers)
+    : null;
   container.innerHTML = `
     <div class="release-preview-header">
       <div><span class="release-node-version">${escapeHtml(current.version || 'unknown')}</span><span class="release-node-status release-status-current">${escapeHtml(current.status || 'development')}</span></div>
       <span class="release-preview-gate">Gate: ${escapeHtml(current.gate || 'open')}</span>
     </div>
     <h3>${escapeHtml(current.title || 'Current release')}</h3>
+    <div class="release-preview-facts">
+      <span><strong>Stand</strong>${escapeHtml(current.as_of || '—')}</span>
+      <span><strong>Milestone</strong>${escapeHtml(current.milestone_status || 'development')}</span>
+      <span><strong>Release-Blocker</strong>${releaseBlockers === null ? '—' : releaseBlockers}</span>
+    </div>
     <p class="release-preview-note">${escapeHtml(current.note || current.subtitle || '')}</p>
-    ${scope.length ? `<ul>${scope.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+    ${completed.length ? `<section class="release-preview-section"><h4>Abgeschlossen</h4><ul>${completed.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
+    ${open.length ? `<section class="release-preview-section"><h4>Offen</h4><ul>${open.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
+    ${scope.length ? `<details class="release-preview-scope"><summary>Meilenstein-Scope</summary><ul>${scope.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>` : ''}
+    ${current.research_boundary ? `<p class="release-preview-boundary"><strong>Wissenschaftliche Grenze:</strong> ${escapeHtml(current.research_boundary)}</p>` : ''}
   `;
 }
 

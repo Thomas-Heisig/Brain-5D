@@ -6,6 +6,10 @@
 
 ## 2026-09-10 Bounded memory, prediction and behavior profile foundation
 
+- Updated the Release workspace's canonical current-release projection to the
+	2026-09-10 state: engineering foundation complete, zero active
+	release-blocking implementation items, and explicit snapshot/control and
+	final source-freeze follow-ups.
 - Implemented an optional `ExperienceEngine` data path for bounded
 	working/episodic memory and later prediction comparisons.
 - Added independent read/write controls, capacity and retention limits,
