@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from src.research.cognition_experiments import (
+    CognitionRun,
     run_behavior_profile_control,
     run_memory_delayed_information,
     run_methodological_audit,
@@ -24,8 +25,10 @@ ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "research"
 
 
-def _by_condition(runs: list[object], condition: str) -> list[object]:
-    return [run for run in runs if getattr(run, "condition") == condition]
+def _by_condition(
+    runs: list[CognitionRun], condition: str
+) -> list[CognitionRun]:
+    return [run for run in runs if run.condition == condition]
 
 
 def test_memory_delayed_information_uses_independent_real_controls() -> None:
@@ -53,11 +56,11 @@ def test_world_model_has_holdout_and_beats_persistence_reference() -> None:
     assert all(run.metrics["held_out"] is True for run in runs)
     assert all(run.metrics["target_leakage"] is False for run in runs)
     assert all(run.metrics["world_model_influences_actions"] is False for run in runs)
-    adaptive_mean = sum(run.metrics["mean_prediction_error"] for run in adaptive) / len(
-        adaptive
-    )
+    adaptive_mean = sum(
+        float(run.metrics["mean_prediction_error"]) for run in adaptive
+    ) / len(adaptive)
     persistence_mean = sum(
-        run.metrics["mean_prediction_error"] for run in persistence
+        float(run.metrics["mean_prediction_error"]) for run in persistence
     ) / len(persistence)
     assert adaptive_mean < persistence_mean
 
@@ -73,7 +76,9 @@ def test_behavior_profile_control_uses_real_profile_causal_path() -> None:
         run.metrics["behavioral_causal_path"] == "BehaviorProfile.select_action"
         for run in runs
     )
-    assert all(run.metrics["psychological_personality_claim"] is False for run in runs)
+    assert all(
+        run.metrics["psychological_personality_claim"] is False for run in runs
+    )
 
 
 def test_methodological_audit_never_masquerades_as_empirical_evidence() -> None:
@@ -87,7 +92,9 @@ def test_methodological_audit_never_masquerades_as_empirical_evidence() -> None:
     assert all(run.metrics["audit_complete"] is True for run in runs)
     assert all(run.metrics["native_empirical_experiment"] is False for run in runs)
     assert all(run.metrics["scientific_evidence"] is False for run in runs)
-    assert all(run.metrics["consciousness_inference"] == "not_established" for run in runs)
+    assert all(
+        run.metrics["consciousness_inference"] == "not_established" for run in runs
+    )
 
 
 @pytest.mark.parametrize(
@@ -95,7 +102,11 @@ def test_methodological_audit_never_masquerades_as_empirical_evidence() -> None:
     [
         ("RQ-MEM-002", "H-MEM-002-A", "memory_delayed_information_v1"),
         ("RQ-WM-001", "H-WM-001-A", "world_model_prediction_v1"),
-        ("RQ-PROFILE-001", "H-PROFILE-001-A", "behavior_profile_control_v1"),
+        (
+            "RQ-PROFILE-001",
+            "H-PROFILE-001-A",
+            "behavior_profile_control_v1",
+        ),
         ("RQ-CNS-101", "H-CNS-101-A", "cog_cns_101_v1"),
         ("RQ-EPI-101", "H-EPI-101-A", "cog_epi_101_v1"),
         ("RQ-WEL-101", "H-WEL-101-A", "cog_wel_101_v1"),
@@ -121,6 +132,11 @@ def test_operational_cognition_protocols_are_validated_and_executable(
 
 
 def test_generic_runtime_fallback_is_blocked_for_native_cognition_questions() -> None:
-    for question_id in ("RQ-MEM-002", "RQ-WM-001", "RQ-PROFILE-001", "RQ-CNS-101"):
+    for question_id in (
+        "RQ-MEM-002",
+        "RQ-WM-001",
+        "RQ-PROFILE-001",
+        "RQ-CNS-101",
+    ):
         with pytest.raises(CognitionGovernanceError, match="No fallback"):
             guard_cognition_launch(RESEARCH, question_id, "runtime_ticks_v1")
