@@ -65,9 +65,7 @@ def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
             or not identifier.strip()
             or identifier in ids
         ):
-            raise CognitionGovernanceError(
-                "Missing or duplicate cognition protocol ID"
-            )
+            raise CognitionGovernanceError("Missing or duplicate cognition protocol ID")
         ids.add(identifier)
         if item.get("consciousness_inference") != "not_established":
             raise CognitionGovernanceError("Catalogue cannot certify consciousness")
@@ -144,9 +142,10 @@ def _nonempty_text(value: object) -> bool:
 
 
 def _texts(value: object) -> bool:
-    return isinstance(value, list) and bool(value) and all(
-        _nonempty_text(item) for item in cast(list[object], value)
-    )
+    if not isinstance(value, list):
+        return False
+    items = cast(list[object], value)
+    return len(items) > 0 and all(_nonempty_text(item) for item in items)
 
 
 def _matches(value: object, pattern: str) -> bool:

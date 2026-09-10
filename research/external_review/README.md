@@ -11,3 +11,10 @@ Antworten gehoeren in einen privaten externen Erhebungsspeicher, niemals diesen 
 Vor echter Erhebung: unabhaengige Administration organisieren, unvalidierten/wertenden Wortlaut pilotieren, unveraenderliche Pruefunterlagen/Kohorte/Welle definieren, Interessenkonflikte offenlegen, legitimen Datenschutz-/Aufbewahrungsprozess etablieren und inferenzstatistische Analysen/Ausschluesse praeregistrieren. Institutionelle Beteiligung und Unabhaengigkeit benoetigen reale Nachweise, nicht nur eine Beschriftung.
 
 Rohantworten sind nicht automatisch veroeffentlichbar. Gesonderte Anonymisierungs-/Reidentifikationspruefung und Freigabe erforderlich. Keine ausgefuellten Boegen, Einladungs-/Ruecktrittscodes, Datenbanken, Backups oder Geheimnisse in GitHub, Aktionsartefakte oder einen Modellkontext laden.
+
+## Integration in die wissenschaftliche Beurteilung
+
+[Verfahrensschritte und kritikpunktbezogene Abschlusskriterien](INTEGRATION.md)
+sind im Research-Untertab **Probanden & Ethik** mit lesendem Instrumentstatus
+verbunden. Das Instrument ist vorhanden; tatsaechliche externe Fachurteile und
+institutionelle Ethikentscheidungen werden dadurch nicht vorweggenommen.

@@ -90,6 +90,7 @@ from .experiment_workflow import (
     ExperimentWorkflowService,
     write_experiment_summary,
 )
+from .external_review import build_external_review_status
 from .file_manager import register_file_manager_routes
 from .gate_status import GateStatusBuilder
 from .heatmap_source import SnapshotHeatmapSource, create_heatmap_source
@@ -592,6 +593,11 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/research/reports":
                 self._serve_research_reports()
+                return
+
+            if path == "/api/research/external-review":
+                source = self._require_research_source()
+                self._send_json(build_external_review_status(source.root().parent))
                 return
 
             if path == "/api/research/reviews":

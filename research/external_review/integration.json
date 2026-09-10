@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "owner": "research.external_review",
+  "classification": "HUMAN_REVIEW_DATA_NOT_EVIDENCE",
+  "instrument_id": "MHRN-EXTERNAL-REVIEW",
+  "instrument_version": "1.0.0",
+  "instrument_sha256": "a61ef0c24716684d4f07ed3541ad11878fe1f4c976f3755c7a04e1802cc88ab4",
+  "reviewed_material_revision": "fc2a8de9161480191658148b73a545449ce33ce7",
+  "source_files": {
+    "review_portal/catalogue.py": "719a71d06aa1d69fecd7ef8c27387e59fb2b4b84dd9cc03a3d645d5ee877444a",
+    "src/dashboard/static/review/instrument.js": "a7f678489a0cfe0b7ba17c765bbb12c5740a231b1638814de91dcbaa684299f6"
+  },
+  "portal_path": "/review/index.html",
+  "base_questions": 75,
+  "specialist_questions": 60,
+  "human_review_status": "not_recorded",
+  "external_ethics_approval": "not_claimed",
+  "criticism_status": "instrument_available_assessment_pending",
+  "automatic_evidence_promotion": false,
+  "stages": [
+    {
+      "id": "instrument",
+      "label": "Standardisierter Fragenkatalog",
+      "status": "implemented",
+      "requirement": "Versioniertes Basisinstrument und optionale Fachmodule vorhanden."
+    },
+    {
+      "id": "administration",
+      "label": "Unabhaengige Administration",
+      "status": "not_recorded",
+      "requirement": "Zustaendigkeit, Interessenkonflikte und Zugriffsrechte ausserhalb des oeffentlichen Repositorys dokumentieren."
+    },
+    {
+      "id": "pilot",
+      "label": "Pilotierung und Messguete",
+      "status": "not_recorded",
+      "requirement": "Wortlaut, Verstaendlichkeit, Einwilligung und Analyseplan vor Erhebung pruefen."
+    },
+    {
+      "id": "collection",
+      "label": "Erhebung und Auswertung",
+      "status": "not_recorded",
+      "requirement": "Kohorte, Welle, unveraenderliche Unterlagen und getrennte Fehlwertkategorien festlegen."
+    },
+    {
+      "id": "judgment",
+      "label": "Fachliche Beurteilung",
+      "status": "not_recorded",
+      "requirement": "Reale Prueferentscheidungen mit Begruendung, Einwaenden und Geltungsbereich dokumentieren."
+    },
+    {
+      "id": "ethics",
+      "label": "Institutionelle Ethikentscheidung",
+      "status": "not_claimed",
+      "requirement": "Nur mit echtem Beschluss einer zustaendigen Stelle, soweit erforderlich; kein Ersatz durch Fragebogenscore."
+    },
+    {
+      "id": "closure",
+      "label": "Kritikpunkt abschliessen",
+      "status": "pending",
+      "requirement": "Nachweiskette und verbleibende Auflagen pro Kritikpunkt menschlich beurteilen. Kein automatisches EVID."
+    }
+  ]
+}

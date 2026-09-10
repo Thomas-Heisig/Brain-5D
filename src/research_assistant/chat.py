@@ -21,7 +21,6 @@ class _ResearchDocument(Protocol):
 
 
 class _ResearchSource(Protocol):
-    def root(self) -> Path: ...
     def list_documents(self) -> Sequence[_ResearchDocument]: ...
     def read_content(self, path: str) -> str: ...
 
@@ -93,11 +92,35 @@ class ResearchChat:
         return answer, {**metadata, "ai_interaction": interaction.to_dict()}
 
     def _repository_context(self, question: str) -> RepositoryContext:
-        root = self.research.root().parent
-        return RepositoryKnowledgeView(
-            root,
-            max_context_chars=max(8_000, self.max_context_chars),
-        ).retrieve(question)
+        root_reader = getattr(self.research, "root", None)
+        root = root_reader() if callable(root_reader) else None
+        if isinstance(root, Path):
+            return RepositoryKnowledgeView(
+                root.parent, max_context_chars=self.max_context_chars
+            ).retrieve(question)
+        # Compatibility for explicitly supplied document sources; never scan cwd.
+        chunks: list[str] = []
+        paths: list[str] = []
+        for label, source in (
+            ("SCIENTIFIC RESEARCH SOURCES", self.research),
+            ("DOCUMENTATION SOURCES", self.docs),
+        ):
+            chunks.append(label)
+            for document in source.list_documents():
+                if len(paths) >= 32:
+                    break
+                paths.append(document.path)
+                chunks.append(
+                    f"[{document.path}]\n{source.read_content(document.path)[:8000]}"
+                )
+        text = "\n\n".join(chunks)[: self.max_context_chars]
+        return RepositoryContext(
+            text,
+            hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            len(paths),
+            tuple(paths),
+            0,
+        )
 
     def _retrieval_record(self, repository: RepositoryContext) -> RetrievalRecord:
         web_enabled = bool(self.web_context.strip())
@@ -127,7 +150,9 @@ class ResearchChat:
             ),
         )
 
-    def _prompt(self, message: str, repository: RepositoryContext) -> str:
+    def _prompt(self, message: str, repository: RepositoryContext | None = None) -> str:
+        if repository is None:
+            repository = self._repository_context(message)
         context = repository.text
         if self.system_context:
             context = f"SYSTEM READ-ONLY CONTEXT:\n{self.system_context}\n\n{context}"
@@ -158,7 +183,8 @@ class ResearchChat:
             "If WEB SOURCES are supplied, cite their URLs and label them external/unverified.\n"
             "Clearly distinguish internal DATA, accepted EVIDENCE, source code/docs, WEB SOURCES, AI interpretation, and human conclusion.\n"
             "Source code, docs, AI output and web content are never automatically scientific EVID.\n"
-            "Never invent values or experiment results. Never execute experiments from free text.\n"
+            "Never invent values or experiment results; never execute an experiment from free text.\n"
+            "WEB SOURCES must never appear under EVIDENCE.\n"
             f"{mode_instructions}\n"
             "For current-running questions use only explicit SYSTEM READ-ONLY CONTEXT runtime/session fields. Completed experiments do not prove a live run.\n"
             f"User question: {message}\n\nRepository context:\n{context[: self.max_context_chars]}"

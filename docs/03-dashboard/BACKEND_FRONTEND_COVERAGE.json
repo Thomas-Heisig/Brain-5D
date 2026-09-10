@@ -156,6 +156,17 @@
       "safety_class": "operator_bridge_and_policy",
       "coverage_status": "BACKEND_ONLY",
       "backend_only_reason": "Structural mutations are intentionally restricted to the operator workbench and are not exposed in Wesen."
+    },
+    {
+      "method": "GET",
+      "path": "/api/research/external-review",
+      "backend_owner": "build_external_review_status",
+      "frontend_consumer": "external-review.js",
+      "surface": "Research / Probanden & Ethik",
+      "read_write": "read",
+      "experiment_only": false,
+      "safety_class": "public_metadata_only_no_responses_no_evidence_promotion",
+      "coverage_status": "COVERED"
     }
   ]
 }

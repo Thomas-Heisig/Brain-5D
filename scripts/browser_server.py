@@ -54,9 +54,18 @@ def main() -> None:
             "schemas",
             "publications",
             "ethics",
+            "external_review",
         ):
             shutil.copytree(ROOT / "research" / name, research / name)
         shutil.copytree(ROOT / "configs", root / "configs")
+        # Public instrument metadata only; never copy actual response stores.
+        for relative in (
+            "review_portal/catalogue.py",
+            "src/dashboard/static/review/instrument.js",
+        ):
+            target = root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / relative, target)
         (docs / "preview.md").write_text(
             "# Gemeinsamer Renderer\n\n**Dateiinhalt** im Viewer und Chat.\n\n"
             "[Messdaten](sample.json)\n\n<script>window.unsafeExecuted=true</script>\n",

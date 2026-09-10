@@ -195,3 +195,13 @@ A scientific milestone is complete only when all applicable requirements are sat
 
 [Architecture and execution](../02-architecture/CONNECTOME_EMBODIMENT.md) and
 [scientific supplement](../../research/publications/2026-09-09_connectome-embodiment_supplement/README.md).
+
+## 2026-09-10 External review integration
+
+- [x] Preserve the 135-question portal and bind its public instrument provenance.
+- [x] Connect the Research subtab Probanden & Ethik, read-only readiness API and central File Viewer.
+- [x] Separate generated methodological templates from completed human reviews.
+- [x] Exclude private response exports and symlinks from repository AI retrieval.
+- [ ] Organize independent administration, pilot the instrument and freeze each cohort/wave.
+- [ ] Obtain actual qualified reviews and any required institutional ethics decision; a questionnaire alone cannot close these findings.
+- [ ] Complete coupled cognition snapshot/restore and controlled SNN-specific learning validation; component screens do not establish these capabilities.

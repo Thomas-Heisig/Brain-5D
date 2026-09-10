@@ -46,7 +46,7 @@ class OllamaBackend:
         retrieval_snapshot_digest: str | None = None,
         provider_revision: str | None = None,
         knowledge_origin: str = "UNKNOWN",
-        retries: int = 2,
+        retries: int = 0,
         retry_backoff_seconds: float = 0.25,
         repository_root: Path | None = None,
         repository_context_chars: int = 80_000,
@@ -81,9 +81,7 @@ class OllamaBackend:
         self.retries = retries
         self.retry_backoff_seconds = retry_backoff_seconds
         self.repository_root = (
-            repository_root.resolve()
-            if repository_root is not None
-            else Path(__file__).resolve().parents[2]
+            repository_root.resolve() if repository_root is not None else None
         )
         self.repository_context_chars = max(8_000, int(repository_context_chars))
         self._last_failure_event: AIInferenceFailureEvent | None = None
@@ -116,7 +114,7 @@ class OllamaBackend:
                 backend=self.name,
                 request_digest=request_digest,
                 latency_ms=(perf_counter_ns() - started_ns) / 1_000_000,
-                retry_status="exhausted",
+                retry_status="exhausted" if self.retries else "not_retried",
                 error=str(exc),
             )
             return LanguageResponse(
@@ -171,7 +169,11 @@ class OllamaBackend:
         return self._generate(prompt, images=images, tools=tools)
 
     def _repository_prompt(self, prompt: str) -> str:
-        if "[REPOSITORY FILE:" in prompt or "REPOSITORY READ-ONLY RETRIEVAL" in prompt:
+        if (
+            self.repository_root is None
+            or "[REPOSITORY FILE:" in prompt
+            or "REPOSITORY READ-ONLY RETRIEVAL" in prompt
+        ):
             self._last_repository_context = None
             return prompt
         context = RepositoryKnowledgeView(
@@ -264,6 +266,8 @@ class OllamaBackend:
             ) as exc:
                 last_error = exc
                 if attempt + 1 >= attempts:
+                    if not self.retries:
+                        raise
                     break
                 if self.retry_backoff_seconds:
                     time.sleep(self.retry_backoff_seconds * (attempt + 1))
@@ -304,7 +308,7 @@ class OllamaBackend:
             "timeout_seconds": self.timeout,
             "retry_count": retry_count,
             "retry_limit": self.retries,
-            "retry_policy": "bounded_linear_backoff",
+            "retry_policy": "bounded_linear_backoff" if self.retries else "disabled",
             "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "response_fingerprint": hashlib.sha256(
@@ -315,16 +319,22 @@ class OllamaBackend:
             "system_prompt_digest": self.system_prompt_digest,
             "toolset_digest": self.toolset_digest,
             "retrieval_snapshot_digest": (
-                context.digest if context is not None else self.retrieval_snapshot_digest
+                context.digest
+                if context is not None
+                else self.retrieval_snapshot_digest
             ),
             "repository_indexed_files": (
                 context.indexed_files if context is not None else "provided_upstream"
             ),
             "repository_selected_files": (
-                list(context.selected_files) if context is not None else "provided_upstream"
+                list(context.selected_files)
+                if context is not None
+                else "provided_upstream"
             ),
             "repository_omitted_large_files": (
-                context.omitted_large_files if context is not None else "provided_upstream"
+                context.omitted_large_files
+                if context is not None
+                else "provided_upstream"
             ),
             "repository_authority": "read_only_non_evidentiary",
             "created_at": str(payload.get("created_at", "not_reported")),
@@ -403,4 +413,8 @@ def _request_prompt(request: LanguageRequest) -> str:
 
 
 def _numeric_metadata(value: object) -> int | str:
-    return value if isinstance(value, int) and not isinstance(value, bool) else "not_reported"
+    return (
+        value
+        if isinstance(value, int) and not isinstance(value, bool)
+        else "not_reported"
+    )

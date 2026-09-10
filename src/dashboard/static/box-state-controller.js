@@ -258,6 +258,8 @@ function routeResearchElements() {
   moveIfPresent("#workflow-review-inbox", review);
   moveIfPresent("#workflow-human-review", review);
   moveIfPresent("#workflow-rq-proposal", review);
+  const external = document.querySelector('[data-research-workspace-panel="external"]');
+  if (external) moveIfPresent("#external-review-status", external);
 
   for (const selector of [
     "#tab-research > #research-lanes",
@@ -289,6 +291,7 @@ function initResearchWorkspace() {
     ["plan", "Planen & Ausführen"],
     ["runs", "Läufe & Reihen"],
     ["review", "Reviews"],
+    ["external", "Probanden & Ethik"],
     ["files", "Dateien & Analyse"],
   ];
   for (const [key, label] of definitions) {
@@ -314,6 +317,10 @@ function initResearchWorkspace() {
     review: [
       "Reviews",
       "Human Review, offene Interpretation und neue Forschungsfragen getrennt von Evidenz-Promotion.",
+    ],
+    external: [
+      "Probanden & Ethik",
+      "Erhebungsinstrument, fachliche Beurteilung und Ethikentscheidung getrennt von EVID.",
     ],
     files: [
       "Dateien & Analyse",

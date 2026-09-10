@@ -67,6 +67,13 @@ _SKIP_PARTS = {
     ".pytest_cache",
     ".ruff_cache",
     "htmlcov",
+    "private",
+    "review_private",
+    "review-private",
+    "review_responses",
+    "review-responses",
+    "responses",
+    "backups",
 }
 _SENSITIVE_NAME_FRAGMENTS = (
     ".env",
@@ -120,7 +127,11 @@ class RepositoryKnowledgeView:
             return RepositoryContext("", hashlib.sha256(b"").hexdigest(), 0, (), 0)
 
         for path in sorted(self.root.rglob("*")):
-            if not path.is_file():
+            if not path.is_file() or path.is_symlink():
+                continue
+            try:
+                path.resolve().relative_to(self.root)
+            except ValueError:
                 continue
             relative = path.relative_to(self.root)
             if self._skip(relative):
@@ -147,6 +158,13 @@ class RepositoryKnowledgeView:
                 content = path.read_text(encoding="utf-8")
             except (OSError, UnicodeError):
                 continue
+            # Exported questionnaire payloads are private even if misfiled in Git.
+            if (
+                "instrument_sha256" in content
+                and "participant_code" in content
+                and (path.suffix.lower() in {".json", ".jsonl", ".csv", ".tsv"})
+            ):
+                continue
             score = self._score(relative.as_posix(), content, tokens)
             if score <= 0 and tokens:
                 continue
@@ -171,6 +189,7 @@ class RepositoryKnowledgeView:
             "Scientific authority is unchanged: source code/docs/AI output are not EVID.\n"
             f"indexed_files={indexed} selected_files={len(selected)} "
             f"omitted_large_files={omitted_large}\n"
+            + ("binary_or_large_index_only=true\n" if omitted_large else "")
         )
         text = header + "\n\n".join(item[2] for item in selected)
         text = text[: self.max_context_chars]
@@ -188,9 +207,9 @@ class RepositoryKnowledgeView:
             return True
         if parts[0] in self.blocked_roots:
             return True
-        if any(part in _SKIP_PARTS for part in parts):
+        if any(part.lower() in _SKIP_PARTS for part in parts):
             return True
-        lower_name = relative.name.lower()
+        lower_name = relative.as_posix().lower()
         return any(fragment in lower_name for fragment in _SENSITIVE_NAME_FRAGMENTS)
 
     @staticmethod

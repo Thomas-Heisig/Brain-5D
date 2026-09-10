@@ -25,9 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "research"
 
 
-def _by_condition(
-    runs: list[CognitionRun], condition: str
-) -> list[CognitionRun]:
+def _by_condition(runs: list[CognitionRun], condition: str) -> list[CognitionRun]:
     return [run for run in runs if run.condition == condition]
 
 
@@ -53,7 +51,14 @@ def test_world_model_has_holdout_and_beats_persistence_reference() -> None:
     adaptive = _by_condition(runs, "adaptive")
     persistence = _by_condition(runs, "persistence")
     assert len(runs) == 12
-    assert all(run.metrics["held_out"] is True for run in runs)
+    assert all(run.metrics["held_out"] is False for run in adaptive)
+    assert all(
+        run.metrics["held_out"] is True for run in runs if run.condition != "adaptive"
+    )
+    assert all(
+        run.metrics["evaluation_mode"] == "prequential_online_update"
+        for run in adaptive
+    )
     assert all(run.metrics["target_leakage"] is False for run in runs)
     assert all(run.metrics["world_model_influences_actions"] is False for run in runs)
     adaptive_mean = sum(
@@ -76,9 +81,7 @@ def test_behavior_profile_control_uses_real_profile_causal_path() -> None:
         run.metrics["behavioral_causal_path"] == "BehaviorProfile.select_action"
         for run in runs
     )
-    assert all(
-        run.metrics["psychological_personality_claim"] is False for run in runs
-    )
+    assert all(run.metrics["psychological_personality_claim"] is False for run in runs)
 
 
 def test_methodological_audit_never_masquerades_as_empirical_evidence() -> None:
@@ -89,7 +92,9 @@ def test_methodological_audit_never_masquerades_as_empirical_evidence() -> None:
         question_id="RQ-CNS-101",
     )
     assert len(runs) == 12
-    assert all(run.metrics["audit_complete"] is True for run in runs)
+    assert all(run.metrics["audit_complete"] is False for run in runs)
+    assert all(run.metrics["audit_template_generated"] is True for run in runs)
+    assert all(run.metrics["human_assessment"] == "not_recorded" for run in runs)
     assert all(run.metrics["native_empirical_experiment"] is False for run in runs)
     assert all(run.metrics["scientific_evidence"] is False for run in runs)
     assert all(

@@ -22,7 +22,7 @@ __version__ = "0.1.0"
 # Explicit extension registration. The dashboard resolves operational runner
 # names against ``src.research.experiment_suite``. Keep this list derived from
 # the cognition module's public contract rather than duplicating implementation.
-for _name in cognition_experiments.__all__:
+for _name in cognition_experiments.RUNNER_NAMES:
     if _name.startswith("run_"):
         setattr(experiment_suite, _name, getattr(cognition_experiments, _name))
 

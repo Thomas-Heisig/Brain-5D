@@ -164,6 +164,8 @@ def run_memory_delayed_information(
                         "independent_seed": True,
                         "target_leakage": False,
                         "scientific_evidence": False,
+                        "snn_involved": False,
+                        "claim_scope": "component_engineering_screen_not_snn_learning",
                     },
                     before,
                     after,
@@ -227,9 +229,7 @@ def run_world_model_prediction(
                         target_tick=tick + 1,
                         persistence_state={"position": 0, "matched": False},
                     )
-                    adaptive_sources += int(
-                        prediction.source == "adaptive_transition"
-                    )
+                    adaptive_sources += int(prediction.source == "adaptive_transition")
                     error = model.error(prediction.predicted_state, actual)
                 if error is not None:
                     errors.append(float(error))
@@ -252,10 +252,17 @@ def run_world_model_prediction(
                         "evaluated_predictions": len(errors),
                         "mean_prediction_error": mean_error,
                         "adaptive_prediction_count": adaptive_sources,
-                        "held_out": True,
+                        "held_out": condition != "adaptive",
+                        "evaluation_mode": (
+                            "prequential_online_update"
+                            if condition == "adaptive"
+                            else "frozen_evaluation"
+                        ),
                         "target_leakage": False,
                         "world_model_influences_actions": False,
                         "scientific_evidence": False,
+                        "snn_involved": False,
+                        "claim_scope": "component_engineering_screen_not_snn_learning",
                     },
                     before,
                     after,
@@ -332,6 +339,8 @@ def run_behavior_profile_control(
                         "behavioral_causal_path": "BehaviorProfile.select_action",
                         "psychological_personality_claim": False,
                         "scientific_evidence": False,
+                        "snn_involved": False,
+                        "claim_scope": "component_engineering_screen_not_snn_learning",
                     },
                     before,
                     after,
@@ -373,13 +382,19 @@ def run_methodological_audit(
                     seed,
                     {
                         "audit_item": index + 1,
-                        "audit_complete": True,
+                        "audit_complete": False,
+                        "audit_template_generated": True,
+                        "human_assessment": "not_recorded",
+                        "external_review_instrument": "research/external_review/README.md",
+                        "external_ethics_approval": "not_claimed",
                         "native_empirical_experiment": False,
                         "conceptual_or_normative": True,
                         "consciousness_inference": "not_established",
                         "phenomenal_claim_identified": False,
                         "automatic_evidence_promotion": False,
                         "scientific_evidence": False,
+                        "snn_involved": False,
+                        "claim_scope": "component_engineering_screen_not_snn_learning",
                     },
                     digest,
                     digest,
@@ -404,10 +419,7 @@ def _audit_runner(protocol_id: str, question_id: str) -> AuditRunner:
 
 
 _AUDIT_IDS = {
-    **{
-        f"cog_cns_{number}_v1": f"RQ-CNS-{number}"
-        for number in range(101, 118)
-    },
+    **{f"cog_cns_{number}_v1": f"RQ-CNS-{number}" for number in range(101, 118)},
     "cog_epi_101_v1": "RQ-EPI-101",
     "cog_epi_102_v1": "RQ-EPI-102",
     "cog_wel_101_v1": "RQ-WEL-101",
@@ -424,5 +436,8 @@ __all__ = [
     "run_world_model_prediction",
     "run_behavior_profile_control",
     "run_methodological_audit",
-    *["run_" + protocol_id for protocol_id in _AUDIT_IDS],
 ]
+
+RUNNER_NAMES = tuple(name for name in __all__ if name.startswith("run_")) + tuple(
+    "run_" + protocol_id for protocol_id in _AUDIT_IDS
+)

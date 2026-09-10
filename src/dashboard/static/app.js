@@ -47,6 +47,7 @@ import { consoleLog } from './console-log.js';
 import { ParameterInspector } from './parameter-inspector.js';
 import { ExperimentMode } from './experiment-mode.js';
 import { ExperimentWorkflowPanel } from './experiment-workflow.js';
+import { initExternalReview } from './external-review.js';
 import { renderOverviewCommandCenter, setupOverviewActions } from './overview-panel.js';
 import { SettingsPanel } from './settings-panel.js';
 import { initEmbodimentDetails, initEmbodimentPipelineControls, renderWorkspaceSummaries } from './workspace-panels.js';
@@ -2481,4 +2482,10 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initExternalReview, { once: true });
+} else {
+  initExternalReview();
 }

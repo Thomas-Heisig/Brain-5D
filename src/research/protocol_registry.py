@@ -51,10 +51,7 @@ OPERATIONAL_RUNNERS: dict[str, str] = {
     "behavior_profile_control_v1": "run_behavior_profile_control",
 }
 OPERATIONAL_RUNNERS.update(
-    {
-        f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1"
-        for number in range(101, 118)
-    }
+    {f"cog_cns_{number}_v1": f"run_cog_cns_{number}_v1" for number in range(101, 118)}
 )
 OPERATIONAL_RUNNERS.update(
     {
@@ -94,11 +91,7 @@ def load_operational_protocols(research_root: Path) -> list[dict[str, Any]]:
                 raise PreregistrationError("Operational protocol must be an object.")
             item = cast(dict[str, Any], value)
             identifier = item.get("id")
-            if (
-                not isinstance(identifier, str)
-                or not identifier
-                or identifier in seen
-            ):
+            if not isinstance(identifier, str) or not identifier or identifier in seen:
                 raise PreregistrationError(
                     "Missing or duplicate operational protocol ID."
                 )
@@ -153,7 +146,10 @@ def _merge_bundle_preregistration(
         **cast(dict[str, Any], defaults_value),
         **cast(dict[str, Any], raw),
     }
-    if resolved.get("execution_kind") == "conceptual_audit":
+    execution_kind = resolved.get("execution_kind", protocol.get("execution_kind"))
+    if execution_kind != protocol.get("execution_kind"):
+        raise PreregistrationError("Bundled execution kind disagrees with protocol.")
+    if execution_kind == "conceptual_audit":
         audit_defaults = bundle.get("audit_defaults")
         if not isinstance(audit_defaults, dict):
             raise PreregistrationError("Audit preregistration defaults are malformed.")
@@ -206,8 +202,12 @@ def _validate_prereg_object(
                 f"Preregistration {key} does not match operational protocol."
             )
     outcomes = prereg.get("primary_outcomes")
-    if not isinstance(outcomes, list) or not outcomes or not all(
-        isinstance(item, str) and item for item in outcomes
+    if (
+        not isinstance(outcomes, list)
+        or not outcomes
+        or not all(
+            isinstance(item, str) and item for item in cast(list[object], outcomes)
+        )
     ):
         raise PreregistrationError("primary_outcomes must be a non-empty string list.")
     conditions = prereg.get("conditions")
@@ -291,9 +291,7 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
             isinstance(value, str)
             for value in (protocol_id, question_id, hypothesis_id)
         ):
-            raise PreregistrationError(
-                "Operational protocol ID/RQ/H must be strings."
-            )
+            raise PreregistrationError("Operational protocol ID/RQ/H must be strings.")
         prereg, _ = _load_preregistration(research_root, protocol)
         _validate_prereg_object(prereg, protocol=protocol)
         seed_strategy = cast(dict[str, Any], prereg["seed_strategy"])
@@ -309,9 +307,7 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
             else []
         )
         condition_labels = [
-            label
-            for value in condition_values
-            if (label := _condition_label(value))
+            label for value in condition_values if (label := _condition_label(value))
         ]
         controls = [str(item) for item in protocol.get("controls", [])]
         treatments = [str(item) for item in protocol.get("treatments", [])]

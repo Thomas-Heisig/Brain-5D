@@ -118,3 +118,11 @@ The machine-readable backend/frontend contract is maintained in
 - Experiment and operator state are separate lifecycle boundaries.
 - `compute` observability may suppress rendering, but mandatory health,
   provenance and safety evidence remain available.
+
+## External review integration
+
+`GET /api/research/external-review` returns public, instrument-digest-bound
+readiness and pending assessment stages. It does not query the private
+collector, expose participant identities, record reviewer decisions, or grant
+ethics approval. Response counts remain null. Missing or changed instrument
+bytes yield `available: false`. No write route exists.

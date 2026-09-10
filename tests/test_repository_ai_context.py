@@ -49,3 +49,29 @@ def test_repository_context_excludes_secrets_and_bounds_large_content(
     assert result.omitted_large_files == 1
     assert "binary_or_large_index_only=true" in result.text
     assert len(result.text) <= 2000
+
+
+def test_repository_ai_does_not_read_private_review_exports_or_symlinks(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    private = root / "review_private"
+    private.mkdir()
+    (private / "participant.json").write_text('"PRIVATE_REVIEW_MARKER"')
+    # A misfiled plaintext questionnaire export must also be excluded.
+    (root / "export.json").write_text(
+        '{"instrument_sha256":"fake", "participant_code":"PRIVATE_REVIEW_MARKER", "answers":{}}'
+    )
+    outside = tmp_path / "outside.txt"
+    outside.write_text("PRIVATE_REVIEW_MARKER")
+    link = root / "linked.txt"
+    try:
+        link.symlink_to(outside)
+    except OSError:
+        pass  # Other privacy assertions remain active without symlink capability.
+    result = RepositoryKnowledgeView(root).retrieve("PRIVATE_REVIEW_MARKER")
+    assert "PRIVATE_REVIEW_MARKER" not in result.text
+    assert "export.json" not in result.selected_files
+    assert "linked.txt" not in result.selected_files
+    assert not any(path.startswith("review_private/") for path in result.selected_files)

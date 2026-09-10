@@ -605,6 +605,20 @@ class ExperimentWorkflowService:
             recorder.record_research_run_mode(
                 str(preregistration.get("mode", "EXPLORATORY")).upper()
             )
+            execution_kind = operational_protocol.get("execution_kind")
+            if execution_kind in {"conceptual_audit", "functional_experiment"}:
+                recorder.manifest["execution_semantics"] = {
+                    "kind": execution_kind,
+                    "snn_involved": False,
+                    "human_assessment": "not_recorded",
+                    "claim_scope": (
+                        "method_template_only"
+                        if execution_kind == "conceptual_audit"
+                        else "component_engineering_screen_not_snn_learning"
+                    ),
+                    "external_review": "external_review/INTEGRATION.md",
+                }
+
         recorder.record_config(str(config_path), config_digest)
         recorder.record_simulation_params(
             seed=effective_seeds[0],

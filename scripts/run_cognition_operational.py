@@ -5,7 +5,7 @@ import hashlib
 import json
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from src.research import experiment_suite
 from src.research.protocol_registry import (
@@ -102,6 +102,12 @@ def run_matrix(output_dir: Path, seeds: tuple[int, ...]) -> dict[str, Any]:
             {
                 "protocol_id": protocol_id,
                 "question_id": question_id,
+                "execution_kind": contract.get("execution_kind"),
+                "assessment_status": (
+                    "human_review_pending"
+                    if contract.get("execution_kind") == "conceptual_audit"
+                    else "component_screen_only"
+                ),
                 "run_count": len(serialized),
                 "runtime_error_count": len(runtime_errors),
                 "artifact": path.name,
@@ -113,6 +119,14 @@ def run_matrix(output_dir: Path, seeds: tuple[int, ...]) -> dict[str, Any]:
         "schema_version": 1,
         "programme": "cognition-operational-v1",
         "protocol_count": len(results),
+        "component_experiment_protocols": sum(
+            item["execution_kind"] == "functional_experiment" for item in results
+        ),
+        "method_template_protocols": sum(
+            item["execution_kind"] == "conceptual_audit" for item in results
+        ),
+        "completed_human_assessments": 0,
+        "external_ethics_approval": "not_claimed",
         "seeds": list(seeds),
         "completed_protocols": sum(
             item["runtime_error_count"] == 0 for item in results
@@ -135,7 +149,9 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seeds", default="101,102,103")
     args = parser.parse_args()
-    seeds = tuple(int(value.strip()) for value in args.seeds.split(",") if value.strip())
+    seeds = tuple(
+        int(value.strip()) for value in args.seeds.split(",") if value.strip()
+    )
     if len(set(seeds)) != len(seeds) or len(seeds) < 3:
         raise SystemExit("At least three distinct seeds are required.")
     report = run_matrix(args.output, seeds)
