@@ -1,0 +1,28 @@
+# docker compose -f review_portal/compose.example.yaml up --build -d
+# REVIEW_PRIVATE_DIR must point outside this repository.
+services:
+  collector:
+    build:
+      context: ..
+      dockerfile: review_portal/Dockerfile
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 100
+    mem_limit: 512m
+    cpus: 1.0
+    ports:
+      - "127.0.0.1:8766:8766"
+    environment:
+      MHRN_REVIEW_STUDY: /run/secrets/study.json
+      MHRN_REVIEW_DATA_DIR: /data
+      MHRN_REVIEW_KEY_FILE: /run/secrets/encryption.key
+      MHRN_REVIEW_ADMIN_TOKEN_FILE: /run/secrets/admin.token
+    volumes:
+      - review-data:/data
+      - ${REVIEW_PRIVATE_DIR:?Set an external private directory}:/run/secrets:ro
+volumes:
+  review-data:

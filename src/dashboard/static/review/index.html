@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <title>MHRN | Externes Review</title>
+  <link rel="stylesheet" href="./review.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt</a>
+<header class="masthead"><a class="brand" href="./index.html">MHRN <span>EXTERNES REVIEW</span></a><span id="mode" class="badge">Lokales Formular</span></header>
+<main id="main">
+<section id="intro" class="card intro">
+  <p class="eyebrow">UNABH&#196;NGIGE PERSPEKTIVEN</p>
+  <h1>Pr&#252;fen. Einordnen.<br>Nachvollziehbar antworten.</h1>
+  <p>Ein gemeinsamer Fragenkatalog f&#252;r Probandinnen und Probanden, externe Pr&#252;fende und Gremien. 75 Basisfragen und 60 zus&#228;tzliche Fach- und Querschnittsfragen.</p>
+  <p class="notice">Basis-Screening, kein validierter Test. Kein Ersatz f&#252;r Peer-Review, Ethikkommission oder unabh&#228;ngige Replikation. Die Fragen setzen weder Bewusstsein noch Empfindungsf&#228;higkeit des Systems voraus.</p>
+  <div id="study" class="study"></div>
+  <details><summary>Teilnahme, Datenschutz und Grenzen</summary>
+    <p>Alle Sachfragen und pers&#246;nlichen Angaben sind freiwillig. Nicht beurteilbar ist nicht dasselbe wie die mittlere Skalenstufe. Bitte antworten Sie unabh&#228;ngig, anhand der angegebenen Unterlagen; Belege und Grenzen Ihres Urteils k&#246;nnen Sie zu jeder Frage notieren.</p>
+    <p>Ohne eingerichteten Erhebungsdienst bleiben Ihre Antworten in diesem Browser, bis Sie selbst eine Datei exportieren. Keine Analyse-Tracker, keine KI-Auswertung, kein automatischer Versand. Der Webhost kann beim Seitenaufruf technische Verbindungsdaten erhalten.</p>
+    <p>Lokale Speicherung auf diesem Ger&#228;t ist standardm&#228;&#223;ig aus. Aktivieren Sie sie nicht auf einem gemeinsam genutzten Ger&#228;t. Exportierte Dateien sind unverschl&#252;sselt und k&#246;nnen personenbezogene Angaben enthalten. Bewahren Sie sie gesch&#252;tzt auf.</p>
+    <p>Im Online-Erhebungsmodus erfolgt die Abgabe freiwillig mit Einladungscode. Antworten werden getrennt vom neuronalen System verschl&#252;sselt gespeichert und sind nur f&#252;r die Erhebungsverwaltung abrufbar. Ein R&#252;cktrittscode erlaubt das L&#246;schen der Serverabgabe w&#228;hrend der Aufbewahrungszeit. Ohne diesen Code kann eine Zuordnung unm&#246;glich sein. Bereits anonymisierte Zusammenfassungen lassen sich nicht individuell zur&#252;ckholen.</p>
+    <p>Ein Pseudonym ist keine garantierte Anonymit&#228;t: Beruf, Alter, Freitext, Interessenkonflikte oder eine Unterschrift k&#246;nnen Personen erkennbar machen. Nennen Sie keine Dritten und keine sensiblen pers&#246;nlichen Details. Namen und Rohantworten werden nicht automatisch ver&#246;ffentlicht.</p>
+    <p>Der Pilot ist auf vollj&#228;hrige Personen begrenzt. Die Verwaltung muss Zweck, Verantwortliche, Kontakt, Aufbewahrung und etwaige Verg&#252;tung vor einer Online-Erhebung festlegen. Eine Konfiguration ersetzt keine rechtliche oder institutionelle Pr&#252;fung.</p>
+    <p>Die Vorlage enth&#228;lt wertende Begriffe wie &#8222;Hybris&#8220; und &#8222;Spinnerei&#8220;. Sie wurden zur Nachvollziehbarkeit beibehalten, gelten jedoch nicht als validierte Messkonstrukte. Religi&#246;se Zugeh&#246;rigkeit wird nicht abgefragt. Positive Bewertungen sind kein Nachweis wissenschaftlicher G&#252;ltigkeit.</p>
+  </details>
+  <label class="check"><input type="checkbox" id="adult"> Ich bin mindestens 18 Jahre alt.</label>
+  <label class="check"><input type="checkbox" id="consent"> Ich habe die Teilnahmeinformationen gelesen und willige freiwillig in die beschriebene Verarbeitung meiner Antworten ein.</label>
+  <button id="start" type="button" class="primary">Fragenkatalog &#246;ffnen</button>
+  <p id="intro-error" role="alert"></p>
+</section>
+<section id="workspace" hidden>
+  <div class="card controls">
+    <div><p class="eyebrow">IHRE EINZELSTIMME</p><h1>Externes Review</h1></div>
+    <p id="context"></p>
+    <label>Teilnahme als <select id="participant-type"><option value="reviewer">Externe pr&#252;fende Person</option><option value="proband">Probandin / Proband</option><option value="committee">Gremiumsmitglied (Einzelstimme)</option></select></label>
+    <label>Pseudonym f&#252;r wiederholte Erhebungen (kein Name)<input id="participant-code" maxlength="80" autocomplete="off"></label>
+    <fieldset id="modules"><legend>Zus&#228;tzliche Module (frei w&#228;hlbar, unver&#228;nderte Fragen)</legend></fieldset>
+    <label class="check"><input id="persist" type="checkbox"> Entwurf auf diesem Ger&#228;t speichern (unverschl&#252;sselt, nur mit meiner Zustimmung).</label>
+    <div class="actions"><button id="save" type="button">Entwurf als JSON sichern</button><label class="file-button">Entwurf laden<input id="import" type="file" accept=".json,application/json"></label><button id="restore" type="button">Ger&#228;teentwurf laden</button><button id="clear" type="button" class="danger">Lokalen Entwurf l&#246;schen</button></div>
+  </div>
+  <div class="layout"><aside class="card sidebar"><label for="progress">Bearbeitet</label><progress id="progress" value="0" max="75"></progress><p id="count" aria-live="polite"></p><nav id="sections" aria-label="Abschnitte"></nav></aside>
+    <div><form id="question-form" class="card" novalidate><h2 id="section-title" tabindex="-1"></h2><p id="section-help"></p><div id="questions"></div><div class="actions"><button id="previous" type="button">Zur&#252;ck</button><button id="next" type="button" class="primary">Weiter</button></div></form>
+      <section id="completion" class="card" hidden><h2 tabindex="-1">Pr&#252;fen und abschlie&#223;en</h2><p id="completion-status"></p><p>Auch unvollst&#228;ndige Antworten sind zul&#228;ssig. Kontrollhinweise f&#252;hren nicht automatisch zum Ausschluss. Namensangaben und Belege sind nicht f&#252;r eine &#246;ffentliche Rohdatenver&#246;ffentlichung freigegeben.</p><ul id="flags"></ul><div class="actions"><button id="export-json" type="button">Antworten als JSON</button><button id="export-csv" type="button">Antworten als CSV</button><button id="print" type="button">Druckansicht</button></div>
+        <div id="online" hidden><label>Einladungscode<input id="invitation" type="password" autocomplete="off" maxlength="100"></label><button id="submit" class="primary" type="button">Verbindlich an Erhebungsverwaltung senden</button><p>Vor dem Versand wird Ihr pers&#246;nlicher R&#252;cktrittsbeleg als Datei erzeugt. Bitte sicher aufbewahren. Ein Code gilt f&#252;r genau eine Abgabe; bei Netzfehlern denselben Vorgang wiederholen.</p></div>
+        <p id="receipt" role="status"></p><p id="offline">Lokaler Modus: Ein Export ist noch keine Serverabgabe. Geben Sie die Datei nur auf einem vereinbarten, gesch&#252;tzten Weg an die unabh&#228;ngige Erhebungsverwaltung weiter.</p>
+      </section>
+    </div>
+  </div>
+  <p id="status" role="status" aria-live="polite"></p>
+</section>
+<section class="card withdrawal"><details><summary>Bereits abgegebene Antworten zur&#252;ckziehen</summary><p>Dieser Vorgang betrifft die Serverabgabe. Lokale Kopien m&#252;ssen Sie selbst l&#246;schen. R&#252;ckfragen und Backup-L&#246;schung kl&#228;ren Sie mit dem angegebenen Kontakt.</p><label>Abgabe-ID<input id="withdraw-id" autocomplete="off" maxlength="36"></label><label>R&#252;cktrittscode<input id="withdraw-token" type="password" autocomplete="off" maxlength="100"></label><button id="withdraw" type="button" class="danger">Serverabgabe l&#246;schen</button><p id="withdraw-status" role="status"></p></details></section>
+</main>
+<footer><span id="version">Instrument 1.0.0</span><a href="./admin.html">Erhebungsverwaltung</a><span>Keine automatische DATA-zu-EVID-Freigabe.</span></footer>
+<noscript><p>Bitte JavaScript aktivieren. Alternativ kann die Erhebungsverwaltung einen gedruckten Katalog bereitstellen.</p></noscript>
+</body></html>

@@ -1,0 +1,9 @@
+# Real responses and secrets must never be committed.
+__pycache__/
+.pytest_cache/
+*.sqlite3
+*.sqlite3-*
+*.key
+*.token
+study.json
+private/

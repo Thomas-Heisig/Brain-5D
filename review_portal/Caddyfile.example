@@ -1,0 +1,13 @@
+# Replace with a domain you control; DNS must point to this host.
+# Caddy runs on the HOST; collector port is bound to host loopback only.
+review.example.org {
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    request_body {
+        max_size 2MB
+    }
+    reverse_proxy 127.0.0.1:8766
+    # Do not enable access logging containing participant identifiers or tokens.
+}
