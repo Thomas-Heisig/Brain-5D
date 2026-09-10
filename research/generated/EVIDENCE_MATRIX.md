@@ -81,6 +81,11 @@
 | `RQ-CONN-002` | `H-CONN-002-A` | 5 | — | — | offen |
 | `RQ-EMB-009` | `H-EMB-009-A` | 3 | — | — | offen |
 | `RQ-TIME-002` | `H-TIME-002-A` | 3 | — | — | offen |
+| `RQ-EVAL-001` | `H-EVAL-001-A` | 0 | — | — | offen |
+| `RQ-EVAL-002` | `H-EVAL-002-A` | 0 | — | — | offen |
+| `RQ-EVAL-003` | `H-EVAL-003-A` | 0 | — | — | offen |
+| `RQ-EVAL-004` | `H-EVAL-004-A` | 0 | — | — | offen |
+| `RQ-EVAL-005` | `H-EVAL-005-A` | 0 | — | — | offen |
 | `RQ-GW-001` | `H-GW-001-A` | 0 | — | — | offen |
 | `RQ-GW-002` | `H-GW-002-A` | 0 | — | — | offen |
 | `RQ-GW-003` | `H-GW-003-A` | 0 | — | — | offen |

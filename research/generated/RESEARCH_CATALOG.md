@@ -4,8 +4,8 @@
 
 ## Übersicht
 
-- **Forschungsfragen:** 89
-- **Hypothesen:** 91
+- **Forschungsfragen:** 94
+- **Hypothesen:** 96
 - **Claims:** 8
 - **Literaturquellen:** 39
 
@@ -505,6 +505,68 @@
 **Hypothesen:**
 - `H-EMB-001-A`: Brain-5D kann in einer geschlossenen Sensor-Aktor-Schleife zielgerichtet agieren. *(untested)*
 - `H-EMB-001-B`: Unter einer identischen externen Stoerung unterscheiden sich tracking_rmse_rad und Sensorkonsequenzen zwischen geschlossenem Kreis, yoked Replay und unterbrochener Rueckmeldung. *(untested)*
+
+---
+
+## Empirical Evaluation
+
+### RQ-EVAL-001
+
+**Frage:** Do dimension-guided 2D/3D/4D/5D/6D/8D graphs differ in output spike propagation under matched graph budgets?
+
+**Status:** open
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-001-A`: The 5D-guided connectivity yields different output spike counts from at least one non-5D geometry; no optimal-dimension claim. *(untested)*
+
+---
+
+### RQ-EVAL-002
+
+**Frage:** Does native reward/eligibility acquisition improve teacher-free frozen novel association probes against four matched controls?
+
+**Status:** open
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-002-A`: Learning-on has higher paired seed-level test accuracy than off, sham, reset and weight-shuffled controls on the declared synthetic task. *(untested)*
+
+---
+
+### RQ-EVAL-003
+
+**Frage:** Does native single-cell split-Euler dynamics agree with Brian2 under identical updates, currents and disabled adaptation?
+
+**Status:** open
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-003-A`: Spike events agree exactly and maximum absolute v/u discrepancy is at most 1e-8 for every tested seed. *(untested)*
+
+---
+
+### RQ-EVAL-004
+
+**Frage:** What throughput and sampled process memory arise in short active four-outgoing-edge workloads through 100000 neurons?
+
+**Status:** open
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-004-A`: All declared 32-tick active sparse workloads complete with finite states; no linear-scaling or real-time claim. *(untested)*
+
+---
+
+### RQ-EVAL-005
+
+**Frage:** Does corrected canonical base256 addressing execute the declared active-scaling workload through100000 neurons without changing graph budgets?
+
+**Status:** open
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-005-A`: All declared 32-tick active sparse workloads complete with finite states; no linear-scaling or real-time claim. *(untested)*
 
 ---
 

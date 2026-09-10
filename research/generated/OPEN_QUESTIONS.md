@@ -1176,6 +1176,71 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
+## RQ-EVAL-001
+
+**Domäne:** Empirical Evaluation
+
+**Frage:** Do dimension-guided 2D/3D/4D/5D/6D/8D graphs differ in output spike propagation under matched graph budgets?
+
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-001-A`: The 5D-guided connectivity yields different output spike counts from at least one non-5D geometry; no optimal-dimension claim.
+
+---
+
+## RQ-EVAL-002
+
+**Domäne:** Empirical Evaluation
+
+**Frage:** Does native reward/eligibility acquisition improve teacher-free frozen novel association probes against four matched controls?
+
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-002-A`: Learning-on has higher paired seed-level test accuracy than off, sham, reset and weight-shuffled controls on the declared synthetic task.
+
+---
+
+## RQ-EVAL-003
+
+**Domäne:** Empirical Evaluation
+
+**Frage:** Does native single-cell split-Euler dynamics agree with Brian2 under identical updates, currents and disabled adaptation?
+
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-003-A`: Spike events agree exactly and maximum absolute v/u discrepancy is at most 1e-8 for every tested seed.
+
+---
+
+## RQ-EVAL-004
+
+**Domäne:** Empirical Evaluation
+
+**Frage:** What throughput and sampled process memory arise in short active four-outgoing-edge workloads through 100000 neurons?
+
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-004-A`: All declared 32-tick active sparse workloads complete with finite states; no linear-scaling or real-time claim.
+
+---
+
+## RQ-EVAL-005
+
+**Domäne:** Empirical Evaluation
+
+**Frage:** Does corrected canonical base256 addressing execute the declared active-scaling workload through100000 neurons without changing graph budgets?
+
+**Relevanz:** Bounded exploratory observation; preserves historical records and requires human evidence review.
+
+**Hypothesen:**
+- `H-EVAL-005-A`: All declared 32-tick active sparse workloads complete with finite states; no linear-scaling or real-time claim.
+
+---
+
 ## RQ-GW-001
 
 **Domäne:** Gateway Learning
@@ -1333,6 +1398,6 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 ---
 
-*Insgesamt 89 offene Fragen.*
+*Insgesamt 94 offene Fragen.*
 
 > Pruefstatus: RQ/H- und EVID-Statuswerte geben den Registry-Inhalt wieder. Insbesondere historische supports/supported-Eintraege sind keine Bestaetigung einer Freigabe nach den heutigen Clean-Freeze- und Human-Review-Gates. Ein abgeschlossener Lauf ist DATA, nicht automatisch akzeptierte Evidenz.
