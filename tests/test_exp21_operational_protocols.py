@@ -71,9 +71,12 @@ def test_followup_questions_and_hypotheses_are_canonical() -> None:
     assert {value[0] for value in EXPECTED.values()}.issubset(hypotheses)
 
 
-def test_every_operational_protocol_has_a_valid_frozen_preregistration() -> None:
+def test_every_exp21_protocol_has_a_valid_frozen_preregistration() -> None:
     protocols = load_operational_protocols(ROOT)
-    assert {str(item["research_question"]) for item in protocols} == set(EXPECTED)
+    registered_questions = {str(item["research_question"]) for item in protocols}
+    # EXP-GEN-0021 is a frozen historical minimum contract, not a declaration
+    # that the global operational registry can never gain later protocols.
+    assert set(EXPECTED).issubset(registered_questions)
 
     for question_id, (hypothesis_id, protocol_id, minimum_seeds) in EXPECTED.items():
         prereg = validate_operational_protocol(
