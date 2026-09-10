@@ -18,7 +18,8 @@ def test_research_assistant_reads_registry_fragments_and_rejects_duplicates(
         "- id: RQ-FRAGMENT\n  question: fragment\n", encoding="utf-8"
     )
     assistant = ResearchAssistant(root)
-    rows = assistant._read_yaml_family("registry/questions.yaml")
+    read_family = getattr(assistant, "_read_yaml_family")
+    rows = read_family("registry/questions.yaml")
     assert [row["id"] for row in rows] == ["RQ-BASE", "RQ-FRAGMENT"]
     (registry / "questions.duplicate.yaml").write_text(
         "- id: RQ-BASE\n  question: duplicate\n", encoding="utf-8"
@@ -26,4 +27,4 @@ def test_research_assistant_reads_registry_fragments_and_rejects_duplicates(
     with pytest.raises(
         ValueError, match="Duplicate research registry identifier RQ-BASE"
     ):
-        assistant._read_yaml_family("registry/questions.yaml")
+        read_family("registry/questions.yaml")
