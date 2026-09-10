@@ -295,7 +295,9 @@ def worker(output: Path, index: int) -> None:
     )
 
 
-def execute(output: Path) -> None:
+def execute(
+    output: Path, protocols: list[str] | None = None, campaign: str = "EXP-EMP-20260910"
+) -> None:
     """Freeze input first, run each selection once, retain interrupted attempts."""
     output = output.resolve()
     if output == ROOT or ROOT in output.parents:
@@ -313,6 +315,16 @@ def execute(output: Path) -> None:
         raise ValueError("Commit source and preregistration before campaign execution")
     output.mkdir(parents=True)
     plan = make_plan()
+    plan["campaign"] = campaign
+    if protocols:
+        known = {item["protocol"] for item in plan["selections"]}
+        if set(protocols) - known:
+            raise ValueError("Unknown or human-review-only selected protocol")
+        plan["not_selected_protocols"] = sorted(known - set(protocols))
+        plan["selections"] = [
+            item for item in plan["selections"] if item["protocol"] in protocols
+        ]
+        plan["selection_scope"] = "explicitly selected amendment; not a full rerun"
     save(output / "plan.json", plan)
 
     def launch(index: int) -> None:
@@ -528,6 +540,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--worker", type=int)
+    parser.add_argument("--protocol", action="append")
+    parser.add_argument("--campaign-id", default="EXP-EMP-20260910")
     parser.add_argument("--analyze", action="store_true")
     args = parser.parse_args()
     if args.worker is not None:
@@ -535,7 +549,7 @@ def main() -> None:
     elif args.analyze:
         analyze(args.output)
     else:
-        execute(args.output)
+        execute(args.output, args.protocol, args.campaign_id)
 
 
 if __name__ == "__main__":

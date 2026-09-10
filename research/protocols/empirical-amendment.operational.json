@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "program": "addressing-amendment-v2",
+  "protocols": [
+    {
+      "id": "active_scaling_v2",
+      "research_question": "RQ-EVAL-005",
+      "hypothesis": "H-EVAL-005-A",
+      "preregistration": "preregistrations/operational/active_scaling_v2.json",
+      "default_ticks": null,
+      "tick_aware": false,
+      "adapter_validated": true,
+      "execution_kind": "functional_experiment",
+      "treatments": [
+        "n128"
+      ],
+      "controls": [
+        "n1024",
+        "n5000",
+        "n25000",
+        "n100000"
+      ]
+    }
+  ]
+}

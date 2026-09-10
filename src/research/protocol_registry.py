@@ -70,6 +70,7 @@ OPERATIONAL_RUNNERS.update(
         "native_association_holdout_v1": "run_eval_association",
         "brian2_single_neuron_v1": "run_eval_brian2",
         "active_scaling_v1": "run_eval_scaling",
+        "active_scaling_v2": "run_eval_scaling_v2",
     }
 )
 

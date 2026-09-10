@@ -705,3 +705,12 @@ def run_eval_scaling(
     from .empirical_evaluation import run_active_scaling
 
     return run_active_scaling(config, seeds)
+
+
+def run_eval_scaling_v2(
+    config: Mapping[str, Any], seeds: tuple[int, ...] = (21001, 21002, 21003)
+) -> list[ScientificRun]:
+    """Addressing-only amendment; the original failed v1 receipt is retained."""
+    from .empirical_evaluation import run_active_scaling
+
+    return run_active_scaling(config, seeds)

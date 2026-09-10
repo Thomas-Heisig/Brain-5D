@@ -136,15 +136,31 @@ def dimensional_edges(
     return edges
 
 
-def _network(
+def build_empirical_network(
     config: Mapping[str, Any], neurons: int, seed: int
 ) -> tuple[NeuralNetwork, list[int]]:
     values = dict(config)
-    values["dimensions"] = [neurons, 1, 1, 1, 1]
+    if not 1 <= neurons <= 256**5:
+        raise ValueError("Neuron count exceeds the canonical five-axis ID space")
+    # Canonical persisted IDs allocate eight bits to each coordinate.
+    values["dimensions"] = [
+        min(256, max(1, (neurons + 256**axis - 1) // 256**axis)) for axis in range(5)
+    ]
     values["initial_neurons"] = 0
     values["simulation"] = {"max_delay": 20, "dt_ms": 1.0, "debug_invariants": True}
     net = NeuralNetwork(values, random.Random(seed))
-    ids = [net.add_neuron((index, 0, 0, 0, 0)) for index in range(neurons)]
+    ids = [
+        net.add_neuron(
+            (
+                index % 256,
+                (index // 256) % 256,
+                (index // 256**2) % 256,
+                (index // 256**3) % 256,
+                (index // 256**4) % 256,
+            )
+        )
+        for index in range(neurons)
+    ]
     return net, ids
 
 
@@ -169,7 +185,7 @@ def run_dimensional_ablation(
         cases += [(f"fixed_graph_label_{dim}d", dim, fixed) for dim in DIMENSIONS]
         cases.append(("random_graph", 5, dimensional_edges(seed, 5, random_graph=True)))
         for condition, dimensions, edges in cases:
-            net, ids = _network(config, neurons, seed)
+            net, ids = build_empirical_network(config, neurons, seed)
             for source, target, weight, delay in edges:
                 net.connect(
                     ids[source],
@@ -246,7 +262,7 @@ def _association_probe(
     injection_ticks: Sequence[int],
     seed: int,
 ) -> bool:
-    net, ids = _network(config, len(weights) + 1, seed)
+    net, ids = build_empirical_network(config, len(weights) + 1, seed)
     target = ids[-1]
     for index, weight in enumerate(weights):
         net.connect(ids[index], target, weight, 1, config=SynapseConfig(w_max=1.0))
@@ -506,7 +522,7 @@ def run_active_scaling(
     for seed in seeds:
         for count in (128, 1024, 5000, 25000, 100000):
             started = time.perf_counter()
-            net, ids = _network(config, count, seed)
+            net, ids = build_empirical_network(config, count, seed)
             for source in range(count):
                 for rank, offset in enumerate((1, 17, 31, 61)):
                     net.connect(
@@ -529,6 +545,8 @@ def run_active_scaling(
             metrics = {
                 "neurons": count,
                 "synapses": count * 4,
+                "address_encoding": "canonical_5d_base256_v2",
+                "coordinate_repair_not_nd_migration": True,
                 "ticks_executed": 32,
                 "construction_seconds": construction_seconds,
                 "step_seconds": elapsed,

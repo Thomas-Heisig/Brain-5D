@@ -75,3 +75,14 @@ def test_frozen_seed_lists_are_not_replaced_by_ui_defaults() -> None:
     assert catalog["native_association_holdout_v1"][
         "default_seed_expression"
     ] == ",".join(map(str, range(20001, 20011)))
+
+
+def test_canonical_coordinate_boundary_repair() -> None:
+    from src.core.spatial_index import unpack_coords
+    from src.research.empirical_evaluation import build_empirical_network
+
+    net, ids = build_empirical_network({}, 1024, 7)
+    assert len(set(ids)) == len(net.neurons) == 1024
+    assert unpack_coords(ids[255]) == (255, 0, 0, 0, 0)
+    assert unpack_coords(ids[256]) == (0, 1, 0, 0, 0)
+    assert unpack_coords(ids[1023]) == (255, 3, 0, 0, 0)

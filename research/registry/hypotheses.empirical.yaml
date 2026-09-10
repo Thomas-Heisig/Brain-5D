@@ -27,6 +27,14 @@
   hypothesis: All declared 32-tick active sparse workloads complete with finite states;
     no linear-scaling or real-time claim.
   status: untested
-  evidence: []
+  evidence: &id001 []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-EVAL-005-A
+  research_question: RQ-EVAL-005
+  hypothesis: All declared 32-tick active sparse workloads complete with finite states;
+    no linear-scaling or real-time claim.
+  status: untested
+  evidence: *id001
   created: '2026-09-10'
   updated: '2026-09-10'

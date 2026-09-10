@@ -55,14 +55,28 @@
     workloads through 100000 neurons?
   relevance: Bounded exploratory observation; preserves historical records and requires
     human evidence review.
-  literature: []
+  literature: &id001 []
   hypotheses:
   - H-EVAL-004-A
-  evidence: []
+  evidence: &id002 []
   status: open
-  answer:
+  answer: &id003
     current: null
     confidence: none
     limitations: Protocol/data availability does not mean accepted EVID.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-EVAL-005
+  domain: Empirical Evaluation
+  question: Does corrected canonical base256 addressing execute the declared active-scaling
+    workload through100000 neurons without changing graph budgets?
+  relevance: Bounded exploratory observation; preserves historical records and requires
+    human evidence review.
+  literature: *id001
+  hypotheses:
+  - H-EVAL-005-A
+  evidence: *id002
+  status: open
+  answer: *id003
   created: '2026-09-10'
   updated: '2026-09-10'
