@@ -2,10 +2,10 @@ name: External review portal
 on:
   pull_request:
     branches: [main]
-    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', '.github/workflows/review-portal.yml']
+    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', 'research/external_review/**', 'src/dashboard/external_review.py', 'src/dashboard/static/external-review.js', '.github/workflows/review-portal.yml']
   push:
     branches: [main, 'feature/external-review-portal-*']
-    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', '.github/workflows/review-portal.yml']
+    paths: ['review_portal/**', 'src/dashboard/static/review/**', 'src/dashboard/static/dashboard-shell.js', 'research/external_review/**', 'src/dashboard/external_review.py', 'src/dashboard/static/external-review.js', '.github/workflows/review-portal.yml']
   workflow_dispatch:
     inputs:
       publish_pages:

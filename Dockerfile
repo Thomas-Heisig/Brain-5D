@@ -46,6 +46,10 @@ COPY research/ research/
 COPY docs/ docs/
 COPY project_identity.json NAMING.md README.md ./
 
+# Public instrument bytes only; the response collector and private data stay separate.
+COPY review_portal/catalogue.py review_portal/catalogue.py
+RUN python -c "from pathlib import Path; from src.dashboard.external_review import build_external_review_status; status = build_external_review_status(Path('/app')); assert status['available'], status"
+
 # Expose dashboard port
 EXPOSE 8765
 

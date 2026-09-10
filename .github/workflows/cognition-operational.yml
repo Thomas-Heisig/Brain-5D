@@ -1,0 +1,72 @@
+name: Cognition Operational Matrix
+
+on:
+  pull_request:
+    paths:
+      - "src/research/cognition_experiments.py"
+      - "src/research/cognition_governance.py"
+      - "src/research/protocol_registry.py"
+      - "research/protocols/cognition.operational.json"
+      - "research/preregistrations/operational/cognition_bundle_v1.json"
+      - "scripts/run_cognition_operational.py"
+      - "tests/test_cognition_operational_experiments.py"
+      - ".github/workflows/cognition-operational.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/research/cognition_experiments.py"
+      - "src/research/cognition_governance.py"
+      - "src/research/protocol_registry.py"
+      - "research/protocols/cognition.operational.json"
+      - "research/preregistrations/operational/cognition_bundle_v1.json"
+      - "scripts/run_cognition_operational.py"
+      - "tests/test_cognition_operational_experiments.py"
+      - ".github/workflows/cognition-operational.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  cognition-operational:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install project
+        run: python -m pip install -e '.[dev]'
+      - name: Run focused cognition contracts
+        run: python -m pytest -q tests/test_cognition_operational_experiments.py tests/test_repository_ai_context.py
+      - name: Execute component screens and generate methodological review templates
+        run: python scripts/run_cognition_operational.py --output "$RUNNER_TEMP/cognition-operational" --seeds 101,102,103
+      - name: Verify execution and human-assessment separation
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path(os.environ["RUNNER_TEMP"]) / "cognition-operational" / "matrix.json"
+          report = json.loads(path.read_text(encoding="utf-8"))
+          assert report["protocol_count"] == 25, report
+          assert report["completed_protocols"] == 25, report
+          assert report["failed_protocols"] == 0, report
+          assert report["component_experiment_protocols"] == 3, report
+          assert report["method_template_protocols"] == 22, report
+          assert report["completed_human_assessments"] == 0, report
+          assert report["external_ethics_approval"] == "not_claimed", report
+          assert report["automatic_evidence_promotion"] is False
+          for item in report["execution_results"]:
+              expected = "human_review_pending" if item["execution_kind"] == "conceptual_audit" else "component_screen_only"
+              assert item["assessment_status"] == expected, item
+          print("Engineering matrix verified: 3 component screens, 22 review templates; no completed human assessment or ethics approval inferred.")
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: cognition-operational-matrix
+          path: ${{ runner.temp }}/cognition-operational/
+          retention-days: 30

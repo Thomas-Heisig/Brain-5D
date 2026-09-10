@@ -171,3 +171,30 @@ test('research review inbox completes an append-only human review', async ({ pag
   expect(Array.isArray(inbox.items)).toBeTruthy();
   await expect(page.locator('#workflow-review-count')).toContainText('offen');
 });
+
+test('external review: subtab, public readiness and central viewer without private responses', async ({ page }) => {
+  await page.goto('http://127.0.0.1:4174/');
+  await page.locator('[data-primary-area="science"]').click();
+  await selectResearchView(page, 'external');
+  const panel = page.locator('#external-review-status');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('135 Fragen');
+  await expect(panel).toContainText('Beurteilung ausstehend');
+  const metadata = await (await page.request.get('/api/research/external-review')).json();
+  expect(metadata.response_count).toBeNull();
+  expect(metadata.scientific_evidence).toBe(false);
+  await panel.locator('#external-review-method').click();
+  await expect(page.locator('#fm-viewer')).toHaveAttribute('data-render-state', 'ready');
+  await expect(page.locator('#fm-viewer')).toContainText('Abschlusskriterien');
+});
+
+test('external review: stale success is cleared after failed status fetch', async ({ page }) => {
+  await page.goto('http://127.0.0.1:4174/');
+  await page.locator('[data-primary-area="science"]').click();
+  await selectResearchView(page, 'external');
+  await expect(page.locator('#external-review-summary')).toContainText('135 Fragen');
+  await page.route('**/api/research/external-review', route => route.fulfill({ status: 503, body: '{}' }));
+  await page.locator('#external-review-refresh').click();
+  await expect(page.locator('#external-review-summary')).toContainText('Nicht verfuegbar');
+  await expect(page.locator('#external-review-stages dt')).toHaveCount(0);
+});

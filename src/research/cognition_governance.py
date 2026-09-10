@@ -1,9 +1,8 @@
-"""Fail-closed launch and candidate boundaries; never a consciousness detector.
+"""Fail-closed cognition launch and evidence-promotion boundaries.
 
-These guards cover dashboard experiment entry points and EvidenceEngine writes,
-not arbitrary Python processes or an already running simulation. Independent
-stop/isolate actions must remain available. Local metadata is not external
-review authentication, and a complete candidate is never accepted evidence.
+A validated operational adapter may execute functional measurements or a
+methodological audit. Neither path is a consciousness detector and neither may
+promote itself to EVID.
 """
 
 from __future__ import annotations
@@ -13,14 +12,23 @@ import re
 from pathlib import Path
 from typing import Any, cast
 
+from .protocol_registry import protocol_by_id
+
 PROGRAM = Path("protocols/COGNITION_CONSCIOUSNESS_V1.json")
 PREFIXES = ("RQ-CNS-", "RQ-WEL-", "RQ-EPI-1")
+PROTECTED_FUNCTIONAL_QUESTIONS = frozenset(
+    {"RQ-MEM-002", "RQ-WM-001", "RQ-PROFILE-001"}
+)
 HYPOTHESIS_PREFIXES = ("H-CNS-", "H-WEL-", "H-EPI-1")
+PROTECTED_FUNCTIONAL_HYPOTHESES = frozenset(
+    {"H-MEM-002-A", "H-WM-001-A", "H-PROFILE-001-A"}
+)
 MAX_RECORD_BYTES = 262144
+_ALLOWED_EXECUTION_KINDS = {"functional_experiment", "conceptual_audit"}
 
 
 class CognitionGovernanceError(ValueError):
-    """A cognitive study cannot enter an unvalidated or held legacy path."""
+    """A cognitive study cannot enter an unvalidated or held path."""
 
 
 def _read_record(path: Path) -> dict[str, Any]:
@@ -38,11 +46,11 @@ def _read_record(path: Path) -> dict[str, Any]:
 
 
 def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
-    """Expose proposals, without declaring native adapters operational."""
+    """Expose original proposals without rewriting their historical maturity."""
     path = research_root / PROGRAM
     if not path.is_file():
         return []
-    values: object = _read_record(path).get("protocols")
+    values = _read_record(path).get("protocols")
     if not isinstance(values, list):
         raise CognitionGovernanceError("Cognition protocols must be a list")
     result: list[dict[str, Any]] = []
@@ -59,13 +67,8 @@ def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
         ):
             raise CognitionGovernanceError("Missing or duplicate cognition protocol ID")
         ids.add(identifier)
-        if (
-            item.get("consciousness_inference") != "not_established"
-            or item.get("native_adapter_validated") is not False
-        ):
-            raise CognitionGovernanceError(
-                "Catalogue cannot certify consciousness or an unimplemented adapter"
-            )
+        if item.get("consciousness_inference") != "not_established":
+            raise CognitionGovernanceError("Catalogue cannot certify consciousness")
         result.append(dict(item))
     return result
 
@@ -73,8 +76,18 @@ def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
 def guard_cognition_launch(
     research_root: Path, question_id: str, protocol: str
 ) -> None:
-    """Reject protected launches and generic fallbacks; a payload cannot opt out."""
-    protected = question_id.startswith(PREFIXES) or protocol.startswith("cog_")
+    """Permit only explicitly registered validated adapters; reject generic fallback."""
+    protected = (
+        question_id.startswith(PREFIXES)
+        or question_id in PROTECTED_FUNCTIONAL_QUESTIONS
+        or protocol.startswith("cog_")
+        or protocol
+        in {
+            "memory_delayed_information_v1",
+            "world_model_prediction_v1",
+            "behavior_profile_control_v1",
+        }
+    )
     state_path = research_root / "ethics/operational_state.json"
     if state_path.exists():
         state = _read_record(state_path).get("state")
@@ -94,23 +107,33 @@ def guard_cognition_launch(
         raise CognitionGovernanceError(
             "Ethics state missing for installed programme; new launches blocked"
         )
-    if protected:
+    if not protected:
+        return
+    contract = protocol_by_id(research_root, protocol)
+    if (
+        contract is None
+        or contract.get("research_question") != question_id
+        or contract.get("adapter_validated") is not True
+        or contract.get("execution_kind") not in _ALLOWED_EXECUTION_KINDS
+    ):
         raise CognitionGovernanceError(
             "COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; "
-            "instruments are not native experiments. No fallback to generic "
-            "ticks, PING or unrelated suites is permitted."
+            "a validated native functional experiment or conceptual audit is required. "
+            "No fallback to generic ticks, PING or unrelated suites is permitted."
         )
 
 
 def guard_cognition_promotion(hypothesis_id: str, claim_id: str) -> None:
-    """Do not turn unreviewed indicators or instrument tests into accepted EVID."""
-    if hypothesis_id.startswith(HYPOTHESIS_PREFIXES) or claim_id.startswith(
-        ("CLAIM-CNS-", "CLAIM-WEL-", "CLAIM-EPI-1")
+    """Never turn cognition/audit output into accepted evidence automatically."""
+    if (
+        hypothesis_id.startswith(HYPOTHESIS_PREFIXES)
+        or hypothesis_id in PROTECTED_FUNCTIONAL_HYPOTHESES
+        or claim_id.startswith(("CLAIM-CNS-", "CLAIM-WEL-", "CLAIM-EPI-1"))
     ):
         raise CognitionGovernanceError(
             "INDEPENDENT_COGNITION_REVIEW_REQUIRED: automatic EVID promotion "
-            "disabled for the new programme. Functional observations require a "
-            "candidate dossier and external review, not a phenomenal verdict."
+            "disabled for the cognition programme. Functional observations require "
+            "a candidate dossier and external review, not a phenomenal verdict."
         )
 
 
@@ -119,11 +142,10 @@ def _nonempty_text(value: object) -> bool:
 
 
 def _texts(value: object) -> bool:
-    return (
-        isinstance(value, list)
-        and bool(cast(list[object], value))
-        and all(_nonempty_text(item) for item in cast(list[object], value))
-    )
+    if not isinstance(value, list):
+        return False
+    items = cast(list[object], value)
+    return len(items) > 0 and all(_nonempty_text(item) for item in items)
 
 
 def _matches(value: object, pattern: str) -> bool:
@@ -131,11 +153,7 @@ def _matches(value: object, pattern: str) -> bool:
 
 
 def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
-    """Check metadata shape/consistency, not raw bytes, truth or reviewer identity.
-
-    READY_FOR_EXTERNAL_REVIEW means only a structurally complete review request.
-    Pending reviews are permitted, but no declaration can grant accepted EVID.
-    """
+    """Check dossier metadata shape/consistency, never phenomenal truth."""
     reasons: list[str] = []
     patterns = {
         "candidate_id": r"CAND-CNS-[A-Za-z0-9_-]+",
@@ -154,10 +172,7 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
         reasons.append("unsupported_claim_scope")
     if candidate.get("consciousness_verdict") != "not_established":
         reasons.append("phenomenal_verdict_not_authorized")
-    if (
-        candidate.get("accepted_evidence") is not None
-        and candidate.get("accepted_evidence") is not False
-    ):
+    if candidate.get("accepted_evidence") not in {None, False}:
         reasons.append("candidate_cannot_accept_itself")
     question = candidate.get("question_id")
     hypothesis = candidate.get("hypothesis_id")
@@ -189,7 +204,6 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
             if (
                 not _nonempty_text(path_value)
                 or not _matches(record.get("sha256"), r"[0-9a-f]{64}")
-                or not isinstance(role, str)
                 or role
                 not in {
                     "primary_observation",
@@ -225,7 +239,7 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
             reasons.append(f"invalid:{key}")
             continue
         record = cast(dict[str, object], review)
-        if not isinstance(record.get("status"), str) or record.get("status") not in {
+        if record.get("status") not in {
             "PENDING",
             "RECEIVED_UNVERIFIED",
             "VERIFIED_EXTERNALLY",

@@ -1,4 +1,4 @@
-"""Bounded research chat with read-only knowledge and explicit run actions."""
+"""Bounded research chat with repository-wide read-only retrieval."""
 
 from __future__ import annotations
 
@@ -6,11 +6,13 @@ import hashlib
 import json
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Protocol, cast
 
 from .contracts import AIExposure, AIInteractionRecord, CausalTaint
 from .firewall import ScientificAIFirewall
 from .governance import KnowledgeOrigin, NetworkMode, RetrievalRecord
+from .repository_context import RepositoryContext, RepositoryKnowledgeView
 
 
 class _ResearchDocument(Protocol):
@@ -38,12 +40,12 @@ ChatBackend = Callable[[str], tuple[str, dict[str, Any]]]
 
 @dataclass(frozen=True, slots=True)
 class ResearchChat:
-    """Construct grounded prompts; no chat response has mutation authority."""
+    """Construct grounded repository prompts; responses have no mutation authority."""
 
     research: _ResearchSource
     docs: _DocsSource
     backend: ChatBackend
-    max_context_chars: int = 24_000
+    max_context_chars: int = 80_000
     system_context: str = ""
     web_context: str = ""
     system_prompt: str = ""
@@ -60,10 +62,21 @@ class ResearchChat:
             raise ValueError("Unsupported response mode.")
         self.firewall.assert_read_only()
         self.firewall.authorize("interpret")
-        prompt = self._prompt(question)
+        repository = self._repository_context(question)
+        prompt = self._prompt(question, repository)
         answer, metadata = self.backend(prompt)
-        retrieval = self._retrieval_record()
-        metadata = {**metadata, "retrieval": retrieval.to_dict()}
+        retrieval = self._retrieval_record(repository)
+        metadata = {
+            **metadata,
+            "retrieval": retrieval.to_dict(),
+            "repository_retrieval": {
+                "digest": repository.digest,
+                "indexed_files": repository.indexed_files,
+                "selected_files": list(repository.selected_files),
+                "omitted_large_files": repository.omitted_large_files,
+                "authority": "read_only_non_evidentiary",
+            },
+        }
         interaction = AIInteractionRecord.create(
             role="research_ai",
             experiment_id=None,
@@ -78,33 +91,53 @@ class ResearchChat:
         )
         return answer, {**metadata, "ai_interaction": interaction.to_dict()}
 
-    def _retrieval_record(self) -> RetrievalRecord:
-        context = self._context()
+    def _repository_context(self, question: str) -> RepositoryContext:
+        root_reader = getattr(self.research, "root", None)
+        root = root_reader() if callable(root_reader) else None
+        if isinstance(root, Path):
+            return RepositoryKnowledgeView(
+                root.parent, max_context_chars=self.max_context_chars
+            ).retrieve(question)
+        # Compatibility for explicitly supplied document sources; never scan cwd.
+        chunks: list[str] = []
+        paths: list[str] = []
+        for label, source in (
+            ("SCIENTIFIC RESEARCH SOURCES", self.research),
+            ("DOCUMENTATION SOURCES", self.docs),
+        ):
+            chunks.append(label)
+            for document in source.list_documents():
+                if len(paths) >= 32:
+                    break
+                paths.append(document.path)
+                chunks.append(
+                    f"[{document.path}]\n{source.read_content(document.path)[:8000]}"
+                )
+        text = "\n\n".join(chunks)[: self.max_context_chars]
+        return RepositoryContext(
+            text,
+            hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            len(paths),
+            tuple(paths),
+            0,
+        )
+
+    def _retrieval_record(self, repository: RepositoryContext) -> RetrievalRecord:
         web_enabled = bool(self.web_context.strip())
         mode = NetworkMode.LIVE_NETWORK if web_enabled else NetworkMode.FROZEN_CORPUS
-        research_documents = list(self.research.list_documents())
-        doc_documents = list(self.docs.list_documents(recursive=True))
-        source_count = sum(
-            1
-            for document in research_documents
-            if document.kind in {"md", "json", "yaml", "yml", "txt"}
-        )
-        source_count += sum(
-            1
-            for document in doc_documents
-            if getattr(document, "file_type", None) is not None
-            and getattr(document, "file_type").value
-            in {"markdown", "text", "json", "yaml"}
-        )
-        if web_enabled:
-            source_count += 1
         snapshot_digest = hashlib.sha256(
             json.dumps(
-                {"context": context, "web_context": self.web_context},
+                {
+                    "repository_digest": repository.digest,
+                    "system_context": self.system_context,
+                    "web_context": self.web_context,
+                    "conversation_context": self.conversation_context,
+                },
                 sort_keys=True,
                 ensure_ascii=True,
             ).encode("utf-8")
         ).hexdigest()
+        source_count = len(repository.selected_files) + (1 if web_enabled else 0)
         return RetrievalRecord(
             enabled=True,
             mode=mode,
@@ -117,78 +150,49 @@ class ResearchChat:
             ),
         )
 
-    def _prompt(self, message: str) -> str:
-        context = self._context()
+    def _prompt(self, message: str, repository: RepositoryContext | None = None) -> str:
+        if repository is None:
+            repository = self._repository_context(message)
+        context = repository.text
         if self.system_context:
             context = f"SYSTEM READ-ONLY CONTEXT:\n{self.system_context}\n\n{context}"
         if self.web_context:
             context = f"WEB SOURCES (external and unverified):\n{self.web_context}\n\n{context}"
         if self.conversation_context:
-            context = f"CHAT HIERARCHY (conversation context, not evidence):\n{self.conversation_context}\n\n{context}"
+            context = (
+                "CHAT HIERARCHY (conversation context, not evidence):\n"
+                f"{self.conversation_context}\n\n{context}"
+            )
         if self.handoff_prompt.strip():
-            context = f"HANDOFF INSTRUCTIONS (editable operator context, not evidence):\n{self.handoff_prompt.strip()}\n\n{context}"
+            context = (
+                "HANDOFF INSTRUCTIONS (editable operator context, not evidence):\n"
+                f"{self.handoff_prompt.strip()}\n\n{context}"
+            )
         mode_instructions = {
             "short": "Response mode: SHORT. Answer in at most 5 concise bullet points. Lead with the direct answer and omit background.",
-            "detailed": "Response mode: DETAILED. Explain the answer with relevant context, status, sources, uncertainty, and a concise conclusion.",
+            "detailed": "Response mode: DETAILED. Explain the answer with relevant context, status, exact repository paths, uncertainty, and a concise conclusion.",
             "scientific": "Response mode: SCIENTIFIC. Separate research question, method/protocol, DATA, EVIDENCE, limitations, AI interpretation, and human conclusion. Never upgrade inconclusive or untested status.",
         }[self.response_mode]
         return (
-            f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else ""
-        ) + (
-            "You are the MHRN Research Self-Knowledge Assistant.\n"
-            "You are an AI assistant, not a person and not a trained researcher.\n"
-            "Answer only from the supplied repository context and cite exact paths.\n"
-            "If WEB SOURCES are supplied, cite their URLs and label them as external and unverified.\n"
-            "Return clean Markdown only, using short paragraphs, headings, and bullet lists.\n"
-            "For research questions use exactly these headings when relevant: ## DATA, ## EVIDENCE, ## WEB SOURCES (EXTERNAL, UNVERIFIED), ## AI interpretation, ## Human conclusion.\n"
-            "Do not use horizontal rules, decorative emojis, or raw JSON unless requested.\n"
-            "Clearly distinguish internal DATA, internal EVIDENCE, WEB SOURCES, AI interpretation, and human conclusion.\n"
-            "WEB SOURCES must never appear under EVIDENCE and are never scientific evidence.\n"
-            "Never claim that AI output or web content is evidence. Never invent values or experiment results.\n"
-            "You may explain registered experiments, but never execute an experiment from free text.\n"
+            (f"{self.system_prompt.strip()}\n" if self.system_prompt.strip() else "")
+            + "You are the MHRN Research Self-Knowledge Assistant.\n"
+            "You are an AI assistant, not a person and not a scientific authority.\n"
+            "The repository retrieval layer can inspect the whole eligible repository tree, but only selected bounded snippets are supplied per question.\n"
+            "Answer only from supplied read-only context and cite exact repository paths.\n"
+            "Large/binary files may be represented by index metadata/digests; never pretend their omitted bytes were read.\n"
+            "If WEB SOURCES are supplied, cite their URLs and label them external/unverified.\n"
+            "Clearly distinguish internal DATA, accepted EVIDENCE, source code/docs, WEB SOURCES, AI interpretation, and human conclusion.\n"
+            "Source code, docs, AI output and web content are never automatically scientific EVID.\n"
+            "Never invent values or experiment results; never execute an experiment from free text.\n"
+            "WEB SOURCES must never appear under EVIDENCE.\n"
             f"{mode_instructions}\n"
-            "For questions about what is currently running, use only the SYSTEM READ-ONLY CONTEXT runtime/session fields. Completed experiments, registry entries, claims, and evidence do not prove that an experiment is running now. If no active session is explicitly listed, answer: 'Kein aktiver Lauf im bereitgestellten Runtime-Status nachweisbar.'\n"
-            f"User question: {message}\n\nRepository context:\n{context}"
+            "For current-running questions use only explicit SYSTEM READ-ONLY CONTEXT runtime/session fields. Completed experiments do not prove a live run.\n"
+            f"User question: {message}\n\nRepository context:\n{context[: self.max_context_chars]}"
         )
-
-    def _context(self) -> str:
-        research_chunks: list[str] = []
-        docs_chunks: list[str] = []
-        research_documents = list(self.research.list_documents())
-        doc_documents = list(self.docs.list_documents(recursive=True))
-        for document in research_documents:
-            if document.kind not in {"md", "json", "yaml", "yml", "txt"}:
-                continue
-            try:
-                content = str(self.research.read_content(document.path))
-            except (OSError, UnicodeError):
-                continue
-            research_chunks.append(f"[RESEARCH: {document.path}]\n{content[:4000]}")
-        for doc_document in doc_documents:
-            file_type = getattr(doc_document, "file_type", None)
-            if file_type is None or file_type.value not in {
-                "markdown",
-                "text",
-                "json",
-                "yaml",
-            }:
-                continue
-            try:
-                content = str(self.docs.read_content(doc_document.path))
-            except (OSError, UnicodeError, ValueError):
-                continue
-            docs_chunks.append(f"[DOCS: docs/{doc_document.path}]\n{content[:4000]}")
-        sections = [
-            "SCIENTIFIC RESEARCH SOURCES (claims, protocols, DATA/EVIDENCE records; scientific authority is limited by their stated status):\n"
-            + "\n\n".join(research_chunks),
-            "DOCUMENTATION SOURCES (technical and operational reference; not scientific evidence):\n"
-            + "\n\n".join(docs_chunks),
-        ]
-        return "\n\n".join(sections)[: self.max_context_chars]
 
 
 def chat_backend_from_text_backend(backend: Callable[[str], Any]) -> ChatBackend:
-    """Adapt a text backend that returns either text or ``(text, metadata)``."""
+    """Adapt a shared provider backend returning text or ``(text, metadata)``."""
 
     def call(prompt: str) -> tuple[str, dict[str, Any]]:
         result = backend(prompt)

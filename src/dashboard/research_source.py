@@ -115,6 +115,8 @@ class ResearchSource:
         "literature",
         "publications",
         "schemas",
+        "external_review",
+        "ethics",
     )
 
     def __init__(self, research_root: Path) -> None:
