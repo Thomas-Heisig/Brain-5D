@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "0f140f7bfcb3135ecee3e357611dc16947811551",
-  "tested_tree_digest": "12705eb57dfbc40ea301932fdab3e483236282702b3174658cf457d65c414d46",
+  "tested_commit": "c9d2bd33655112906c29871407e60de3a5f16bb4",
+  "tested_tree_digest": "7b084ff80e6cd3dd15c8fc6fef4d47de9708b3b621b33a4d8a2a0518f98d23ba",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-10T06:16:33.743455+00:00",
+  "timestamp": "2026-09-10T06:25:04.091474+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -158,7 +158,7 @@
     "src/embodiment/real_body.py": "277f93e31ee49c7c3b87e063f09c413bd8e2afb79dd2db1205b2f874a50103a3",
     "src/embodiment/registry.py": "7eb1ff26222413cf7c6473c7472f7289c410ab9d000862c855e233af99c8e878",
     "src/embodiment/sensor.py": "a433db5afcf60e41561cfa45d54b29ce0ed1fed4d245e3a4f83e382c1320d259",
-    "src/embodiment/sensor_activation.py": "e3f6f414caaeb2775984acb9b6b5825a76427285399733b48d1181533b50c7e3",
+    "src/embodiment/sensor_activation.py": "8bf9a8eb8cb16fe7fa2edf0b56906e7a8f129a52da7ce9749c7c996f7c10b18e",
     "src/embodiment/system_sensor.py": "4f7d32e3004af2d05bb27d82d5b6ee01675588a0a860f250a901be13fb827d1b",
     "src/embodiment/task_outcome.py": "cd2b459002dc6c3c356739fbb0017c0021f75155acaeeb911acd18f8de1d291b",
     "src/experience/__init__.py": "31316dcba795180413c014a0d396eae1a0fd5ccfb95af7b42f45b0e1c37f04fb",
@@ -334,7 +334,7 @@
     "tests/test_auto_approval.py": "7af470efff88dddd60499b938cc8da0798468426d4d5b15a98cb987d49513329",
     "tests/test_b5d_storage.py": "597a66a3d9e433e7d7a1035b731d5cb0a3dc52798837725fbb95d12d1f86bffe",
     "tests/test_backend_frontend_coverage.py": "c532c7275eaaf1265d6fb9d8c838c859f4f7b565f821fe5db08ad4a7aea9e346",
-    "tests/test_batch_20260910_regressions.py": "f09389ae48a76fa2fa2f3461e585d7de978d9728f80df44c834df6cb58bc3c7b",
+    "tests/test_batch_20260910_regressions.py": "c54192e75d4df202ec9a0733becb5c52c5c867a3b91e4480ba080bfff3432ae5",
     "tests/test_benchmark_ladder.py": "420699fb62ab539f8ae8173f3c7758cfc1e65cb6ef287fd6e086f685986f6324",
     "tests/test_brain5d_launcher.py": "e9ff93f8376c24f1a01df9a0d5cfb6d430f01cb4eb16b5622c61953fca2b61c3",
     "tests/test_canonical_state.py": "c79a8106a6f0677e6778b8e8a13a3a2c4148ca9675172e5d59645b966a5b52b9",
@@ -412,7 +412,7 @@
     "tests/test_learning_preparation.py": "e54fd18746bd006549cded9fc35aa5b5632292503c78b33f3e481bcd1073ff6c",
     "tests/test_live_projection.py": "51b85e7b42d443f6b98360221c03f02edc38131622db10fba828132787c26d7e",
     "tests/test_manipulator.py": "045c26645a0936813250b807c6402e8d10b3551fe972758cf9d4dde473485a92",
-    "tests/test_memory_layer.py": "666a0f454c755ed3a61a2cbf314b17c818a54cd72dd7ea2ddc4f7097b8e21345",
+    "tests/test_memory_layer.py": "2ee0a7826811981ca14d558df27ddc89bf018b0a0cdab8d7b0522104410b8e28",
     "tests/test_mhrn_naming.py": "4fafbe1641478bbabd816db39c36a199dec6a1071c32f33a9d6ac4373b4b151f",
     "tests/test_morphology_ledger.py": "ece7e21cb2c6aed8a46bba0890e31116deff2be785ab740288d4ec9a139ea77c",
     "tests/test_msba.py": "c181e3a52092a4271705f2d9274a392f0b7872495ab7df64200361d56fee853e",
