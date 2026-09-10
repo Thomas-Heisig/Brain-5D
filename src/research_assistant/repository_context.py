@@ -153,7 +153,8 @@ class RepositoryKnowledgeView:
             snippet = content[: self.per_file_chars]
             if len(content) > self.per_file_chars:
                 snippet += (
-                    f"\n[TRUNCATED: chars={len(content)} sha256={self._digest_file(path)}]"
+                    "\n[TRUNCATED: "
+                    f"chars={len(content)} sha256={self._digest_file(path)}]"
                 )
             candidates.append(
                 (
