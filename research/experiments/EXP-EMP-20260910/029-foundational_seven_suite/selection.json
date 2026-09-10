@@ -1,0 +1,1 @@
+{"execution_mode": "EXPLORATORY", "hypothesis": null, "primary_outcomes": [], "protocol": "foundational_seven_suite", "research_question": null, "runner": "run_all", "seeds": [42, 43, 44], "ticks": 1000, "timeout_seconds": 1200}

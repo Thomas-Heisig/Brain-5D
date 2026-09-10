@@ -54,6 +54,12 @@ class LearningExperimentResult:
     protocol_id: str
     protocol_version: int
     condition: str = "learning_on"
+    # Partition counts declare a design, not executed validation episodes.
+    partition_counts_are_declared: bool = True
+    validation_episodes_executed: int = 0
+    holdout_episodes_executed: int = 0
+    baseline_probes_executed: int = 1
+    post_training_probes_executed: int = 1
 
     @property
     def learned(self) -> bool:

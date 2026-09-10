@@ -1,0 +1,129 @@
+{
+  "experiment_id": "EXP-EMP-20260910",
+  "experiment_status": "failed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-10T15:53:33.547155",
+  "created_at": "2026-09-10T15:53:33.547165+00:00",
+  "git": {
+    "commit": "f9ed3c2153858b14face0b1d8410741c662fb028",
+    "dirty": false,
+    "branch": "HEAD"
+  },
+  "software": {
+    "python": "3.13.15",
+    "os": "Linux 6.17.0-1022-azure",
+    "brain5d_version": "0.6.0a1"
+  },
+  "simulation": {
+    "campaign_plan": "plan.json",
+    "stored_run_count": 1272
+  },
+  "artifacts": {
+    "summary": "summary.json",
+    "report": "REPORT.md",
+    "index": "campaign-index.json"
+  },
+  "research_questions": [
+    "RQ-5D-005",
+    "RQ-CONN-002",
+    "RQ-EMB-001",
+    "RQ-EMB-002",
+    "RQ-EMB-004",
+    "RQ-EMB-009",
+    "RQ-EVAL-001",
+    "RQ-EVAL-002",
+    "RQ-EVAL-003",
+    "RQ-EVAL-004",
+    "RQ-GEN-001",
+    "RQ-LIFE-001",
+    "RQ-MEM-002",
+    "RQ-MSBA-E01",
+    "RQ-MSBA-E02",
+    "RQ-MSBA-E03",
+    "RQ-MSBA-E04",
+    "RQ-MSBA-E05",
+    "RQ-PERF-001",
+    "RQ-PROFILE-001",
+    "RQ-REC-001",
+    "RQ-REC-002",
+    "RQ-REG-002",
+    "RQ-REPL-001",
+    "RQ-SNN-001",
+    "RQ-TEMP-002",
+    "RQ-TIME-002",
+    "RQ-WM-001"
+  ],
+  "hypotheses": [
+    "H-5D-005-A",
+    "H-CONN-002-A",
+    "H-EMB-001-B",
+    "H-EMB-002-A",
+    "H-EMB-004-A",
+    "H-EMB-009-A",
+    "H-EVAL-001-A",
+    "H-EVAL-002-A",
+    "H-EVAL-003-A",
+    "H-EVAL-004-A",
+    "H-GEN-001-A",
+    "H-LIFE-001-A",
+    "H-MEM-002-A",
+    "H-MSBA-E01-A",
+    "H-MSBA-E02-A",
+    "H-MSBA-E03-A",
+    "H-MSBA-E04-A",
+    "H-MSBA-E05-A",
+    "H-PERF-001-A",
+    "H-PROFILE-001-A",
+    "H-REC-001-A",
+    "H-REC-002-A",
+    "H-REG-002-A",
+    "H-REPL-001-A",
+    "H-SNN-001-A",
+    "H-TEMP-002-A",
+    "H-TIME-002-A",
+    "H-WM-001-A"
+  ],
+  "config": {
+    "path": "configs/learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": false,
+    "reason": "Aggregate navigation index; assess original child runs separately",
+    "runtime_error_count": 1,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "results": {
+    "execution_states": {
+      "completed": 28,
+      "failed": 1
+    },
+    "stored_run_count": 1272,
+    "accepted_evidence": false,
+    "analysis_ai_assisted": true
+  },
+  "record_kind": "campaign_index",
+  "original_provenance_in_child_manifests": true,
+  "automatic_evidence_promotion": false,
+  "index_provenance": {
+    "source_commit": "f9ed3c2153858b14face0b1d8410741c662fb028",
+    "source_digest": "bac59880cc48e43f315b768750c00cdfabcb97180f04a1b25103d603b6308fd5",
+    "summary_sha256": "107337900c6e790fd1d6fa0661a4b82caa892699538778f70bb921a02384b495"
+  }
+}

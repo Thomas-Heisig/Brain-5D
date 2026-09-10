@@ -47,6 +47,7 @@ Changelog = "https://github.com/Thomas-Heisig/Brain-5D/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Thomas-Heisig/Brain-5D/issues"
 
 [project.optional-dependencies]
+empirical = ["brian2==2.10.1"]
 analysis = [
   "scikit-learn>=1.5",
   "umap-learn>=0.5",

@@ -1,0 +1,240 @@
+{
+  "campaign": "EXP-EMP-20260910",
+  "record_kind": "navigation_index_not_new_experiment",
+  "original_child_ids_require_campaign_scope": true,
+  "records": [
+    {
+      "qualified_record_id": "EXP-EMP-20260910/001-recurrence_map_v1",
+      "protocol": "recurrence_map_v1",
+      "status": "completed",
+      "runs": 300,
+      "manifest": "001-recurrence_map_v1/manifest.json",
+      "raw": "001-recurrence_map_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/002-learning_generalization_v1",
+      "protocol": "learning_generalization_v1",
+      "status": "completed",
+      "runs": 180,
+      "manifest": "002-learning_generalization_v1/manifest.json",
+      "raw": "002-learning_generalization_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/003-independent_replication_v1",
+      "protocol": "independent_replication_v1",
+      "status": "completed",
+      "runs": 40,
+      "manifest": "003-independent_replication_v1/manifest.json",
+      "raw": "003-independent_replication_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/004-topology_matched_5d_v1",
+      "protocol": "topology_matched_5d_v1",
+      "status": "completed",
+      "runs": 120,
+      "manifest": "004-topology_matched_5d_v1/manifest.json",
+      "raw": "004-topology_matched_5d_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/005-closed_loop_regulation_v1",
+      "protocol": "closed_loop_regulation_v1",
+      "status": "completed",
+      "runs": 40,
+      "manifest": "005-closed_loop_regulation_v1/manifest.json",
+      "raw": "005-closed_loop_regulation_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/006-temporal_order_spiking_v1",
+      "protocol": "temporal_order_spiking_v1",
+      "status": "completed",
+      "runs": 60,
+      "manifest": "006-temporal_order_spiking_v1/manifest.json",
+      "raw": "006-temporal_order_spiking_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/007-subsystem_performance_v1",
+      "protocol": "subsystem_performance_v1",
+      "status": "completed",
+      "runs": 10,
+      "manifest": "007-subsystem_performance_v1/manifest.json",
+      "raw": "007-subsystem_performance_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/008-recurrence_scale_v1",
+      "protocol": "recurrence_scale_v1",
+      "status": "completed",
+      "runs": 80,
+      "manifest": "008-recurrence_scale_v1/manifest.json",
+      "raw": "008-recurrence_scale_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/009-learning_interference_screen_v1",
+      "protocol": "learning_interference_screen_v1",
+      "status": "completed",
+      "runs": 20,
+      "manifest": "009-learning_interference_screen_v1/manifest.json",
+      "raw": "009-learning_interference_screen_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/010-sustained_activity_stability_v1",
+      "protocol": "sustained_activity_stability_v1",
+      "status": "completed",
+      "runs": 20,
+      "manifest": "010-sustained_activity_stability_v1/manifest.json",
+      "raw": "010-sustained_activity_stability_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/011-msba_energy_efficiency_v1",
+      "protocol": "msba_energy_efficiency_v1",
+      "status": "completed",
+      "runs": 9,
+      "manifest": "011-msba_energy_efficiency_v1/manifest.json",
+      "raw": "011-msba_energy_efficiency_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/012-msba_resource_allocation_v1",
+      "protocol": "msba_resource_allocation_v1",
+      "status": "completed",
+      "runs": 9,
+      "manifest": "012-msba_resource_allocation_v1/manifest.json",
+      "raw": "012-msba_resource_allocation_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/013-msba_visual_roi_v1",
+      "protocol": "msba_visual_roi_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "013-msba_visual_roi_v1/manifest.json",
+      "raw": "013-msba_visual_roi_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/014-msba_digital_integrity_v1",
+      "protocol": "msba_digital_integrity_v1",
+      "status": "completed",
+      "runs": 9,
+      "manifest": "014-msba_digital_integrity_v1/manifest.json",
+      "raw": "014-msba_digital_integrity_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/015-msba_modality_compensation_v1",
+      "protocol": "msba_modality_compensation_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "015-msba_modality_compensation_v1/manifest.json",
+      "raw": "015-msba_modality_compensation_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/016-memory_delayed_information_v1",
+      "protocol": "memory_delayed_information_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "016-memory_delayed_information_v1/manifest.json",
+      "raw": "016-memory_delayed_information_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/017-world_model_prediction_v1",
+      "protocol": "world_model_prediction_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "017-world_model_prediction_v1/manifest.json",
+      "raw": "017-world_model_prediction_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/018-behavior_profile_control_v1",
+      "protocol": "behavior_profile_control_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "018-behavior_profile_control_v1/manifest.json",
+      "raw": "018-behavior_profile_control_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/019-embodied_closed_loop_v1",
+      "protocol": "embodied_closed_loop_v1",
+      "status": "completed",
+      "runs": 9,
+      "manifest": "019-embodied_closed_loop_v1/manifest.json",
+      "raw": "019-embodied_closed_loop_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/020-embodied_proprioception_v1",
+      "protocol": "embodied_proprioception_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "020-embodied_proprioception_v1/manifest.json",
+      "raw": "020-embodied_proprioception_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/021-embodied_perturbation_screen_v1",
+      "protocol": "embodied_perturbation_screen_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "021-embodied_perturbation_screen_v1/manifest.json",
+      "raw": "021-embodied_perturbation_screen_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/022-connectome_topology_screen_v1",
+      "protocol": "connectome_topology_screen_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "022-connectome_topology_screen_v1/manifest.json",
+      "raw": "022-connectome_topology_screen_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/023-embodied_controller_attribution_v1",
+      "protocol": "embodied_controller_attribution_v1",
+      "status": "completed",
+      "runs": 12,
+      "manifest": "023-embodied_controller_attribution_v1/manifest.json",
+      "raw": "023-embodied_controller_attribution_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/024-embodied_timing_v1",
+      "protocol": "embodied_timing_v1",
+      "status": "completed",
+      "runs": 21,
+      "manifest": "024-embodied_timing_v1/manifest.json",
+      "raw": "024-embodied_timing_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/025-dimensional_connectivity_v1",
+      "protocol": "dimensional_connectivity_v1",
+      "status": "completed",
+      "runs": 130,
+      "manifest": "025-dimensional_connectivity_v1/manifest.json",
+      "raw": "025-dimensional_connectivity_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/026-native_association_holdout_v1",
+      "protocol": "native_association_holdout_v1",
+      "status": "completed",
+      "runs": 50,
+      "manifest": "026-native_association_holdout_v1/manifest.json",
+      "raw": "026-native_association_holdout_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/027-brian2_single_neuron_v1",
+      "protocol": "brian2_single_neuron_v1",
+      "status": "completed",
+      "runs": 3,
+      "manifest": "027-brian2_single_neuron_v1/manifest.json",
+      "raw": "027-brian2_single_neuron_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/028-active_scaling_v1",
+      "protocol": "active_scaling_v1",
+      "status": "failed",
+      "runs": 0,
+      "manifest": "028-active_scaling_v1/manifest.json",
+      "raw": "028-active_scaling_v1/runs.json.gz"
+    },
+    {
+      "qualified_record_id": "EXP-EMP-20260910/029-foundational_seven_suite",
+      "protocol": "foundational_seven_suite",
+      "status": "completed",
+      "runs": 54,
+      "manifest": "029-foundational_seven_suite/manifest.json",
+      "raw": "029-foundational_seven_suite/runs.json.gz"
+    }
+  ],
+  "accepted_evidence": false
+}

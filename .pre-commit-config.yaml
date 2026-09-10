@@ -44,6 +44,7 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
-        # Delivered publication sizes are enforced by the SHA-256 manifest test.
-        exclude: ^research/publications/
+        # Publication and these two immutable trace sizes/hashes are checked
+        # by empirical-data-integrity. All other paths retain the 500 KiB cap.
+        exclude: ^(research/publications/|research/experiments/EXP-EMP-20260910/(024-embodied_timing_v1|027-brian2_single_neuron_v1)/runs\.json\.gz$)
         args: [--maxkb=500]

@@ -251,7 +251,7 @@ def worker(output: Path, index: int) -> None:
     ) as stream:
         stream.write(raw)
     recorder = ExperimentRecorder(
-        f"EXP-EMP-20260910-{index + 1:03d}", output_dir=folder
+        f"{plan['campaign']}-{index + 1:03d}", output_dir=folder
     )
     recorder.record_config(plan["config"], plan["config_sha256"])
     recorder.record_simulation_params(seeds=spec["seeds"], ticks=spec["ticks"])

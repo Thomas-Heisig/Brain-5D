@@ -1,0 +1,221 @@
+{
+  "measurements": [
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_2d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_3d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_4d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_5d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_6d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "fixed_graph_label_8d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_2d",
+      "metric": "output_spikes",
+      "max": 83.0,
+      "mean": 72.4,
+      "min": 60.0,
+      "unique_values": 10
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_3d",
+      "metric": "output_spikes",
+      "max": 101.0,
+      "mean": 80.4,
+      "min": 63.0,
+      "unique_values": 9
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_4d",
+      "metric": "output_spikes",
+      "max": 90.0,
+      "mean": 75.0,
+      "min": 62.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_5d",
+      "metric": "output_spikes",
+      "max": 94.0,
+      "mean": 77.4,
+      "min": 66.0,
+      "unique_values": 7
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_6d",
+      "metric": "output_spikes",
+      "max": 99.0,
+      "mean": 77.1,
+      "min": 59.0,
+      "unique_values": 9
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "geometry_8d",
+      "metric": "output_spikes",
+      "max": 90.0,
+      "mean": 74.6,
+      "min": 61.0,
+      "unique_values": 10
+    },
+    {
+      "protocol": "dimensional_connectivity_v1",
+      "condition": "random_graph",
+      "metric": "output_spikes",
+      "max": 92.0,
+      "mean": 69.6,
+      "min": 40.0,
+      "unique_values": 10
+    },
+    {
+      "protocol": "native_association_holdout_v1",
+      "condition": "learning_off",
+      "metric": "test_accuracy",
+      "max": 0.5,
+      "mean": 0.5,
+      "min": 0.5,
+      "unique_values": 1
+    },
+    {
+      "protocol": "native_association_holdout_v1",
+      "condition": "learning_on",
+      "metric": "test_accuracy",
+      "max": 1.0,
+      "mean": 0.7849999999999999,
+      "min": 0.575,
+      "unique_values": 8
+    },
+    {
+      "protocol": "native_association_holdout_v1",
+      "condition": "sham_replay",
+      "metric": "test_accuracy",
+      "max": 0.5,
+      "mean": 0.5,
+      "min": 0.5,
+      "unique_values": 1
+    },
+    {
+      "protocol": "native_association_holdout_v1",
+      "condition": "weight_reset",
+      "metric": "test_accuracy",
+      "max": 0.5,
+      "mean": 0.5,
+      "min": 0.5,
+      "unique_values": 1
+    },
+    {
+      "protocol": "native_association_holdout_v1",
+      "condition": "weight_shuffle",
+      "metric": "test_accuracy",
+      "max": 0.5,
+      "mean": 0.5,
+      "min": 0.5,
+      "unique_values": 1
+    },
+    {
+      "protocol": "brian2_single_neuron_v1",
+      "condition": "matched_split_euler",
+      "metric": "max_abs_voltage_error",
+      "max": 99.58106769895082,
+      "mean": 99.5810676989508,
+      "min": 99.58106769895082,
+      "unique_values": 1
+    },
+    {
+      "protocol": "active_scaling_v2",
+      "condition": "n100000",
+      "metric": "ticks_per_second",
+      "max": 2.046181273415541,
+      "mean": 2.0027297579916827,
+      "min": 1.9676110399353108,
+      "unique_values": 3
+    },
+    {
+      "protocol": "active_scaling_v2",
+      "condition": "n1024",
+      "metric": "ticks_per_second",
+      "max": 397.49862067992774,
+      "mean": 384.3741301631708,
+      "min": 374.9783069190673,
+      "unique_values": 3
+    },
+    {
+      "protocol": "active_scaling_v2",
+      "condition": "n128",
+      "metric": "ticks_per_second",
+      "max": 3080.7764172703314,
+      "mean": 3005.178955707994,
+      "min": 2874.1741352493896,
+      "unique_values": 3
+    },
+    {
+      "protocol": "active_scaling_v2",
+      "condition": "n25000",
+      "metric": "ticks_per_second",
+      "max": 10.719472948598735,
+      "mean": 10.615959153171948,
+      "min": 10.546680496269591,
+      "unique_values": 3
+    },
+    {
+      "protocol": "active_scaling_v2",
+      "condition": "n5000",
+      "metric": "ticks_per_second",
+      "max": 72.74217230803859,
+      "mean": 69.15806259215401,
+      "min": 64.63399368059991,
+      "unique_values": 3
+    }
+  ],
+  "accepted_evidence": false
+}
