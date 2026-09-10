@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "program": "empirical-evaluation-v1",
+  "protocols": [
+    {
+      "id": "dimensional_connectivity_v1",
+      "research_question": "RQ-EVAL-001",
+      "hypothesis": "H-EVAL-001-A",
+      "preregistration": "preregistrations/operational/dimensional_connectivity_v1.json",
+      "default_ticks": 256,
+      "tick_aware": true,
+      "adapter_validated": true,
+      "execution_kind": "functional_experiment",
+      "treatments": [
+        "geometry_2d"
+      ],
+      "controls": [
+        "geometry_3d",
+        "geometry_4d",
+        "geometry_5d",
+        "geometry_6d",
+        "geometry_8d",
+        "fixed_graph_label_2d",
+        "fixed_graph_label_3d",
+        "fixed_graph_label_4d",
+        "fixed_graph_label_5d",
+        "fixed_graph_label_6d",
+        "fixed_graph_label_8d",
+        "random_graph"
+      ]
+    },
+    {
+      "id": "native_association_holdout_v1",
+      "research_question": "RQ-EVAL-002",
+      "hypothesis": "H-EVAL-002-A",
+      "preregistration": "preregistrations/operational/native_association_holdout_v1.json",
+      "default_ticks": null,
+      "tick_aware": false,
+      "adapter_validated": true,
+      "execution_kind": "functional_experiment",
+      "treatments": [
+        "learning_on"
+      ],
+      "controls": [
+        "learning_off",
+        "sham_replay",
+        "weight_reset",
+        "weight_shuffle"
+      ]
+    },
+    {
+      "id": "brian2_single_neuron_v1",
+      "research_question": "RQ-EVAL-003",
+      "hypothesis": "H-EVAL-003-A",
+      "preregistration": "preregistrations/operational/brian2_single_neuron_v1.json",
+      "default_ticks": null,
+      "tick_aware": false,
+      "adapter_validated": true,
+      "execution_kind": "functional_experiment",
+      "treatments": [
+        "matched_split_euler"
+      ],
+      "controls": []
+    },
+    {
+      "id": "active_scaling_v1",
+      "research_question": "RQ-EVAL-004",
+      "hypothesis": "H-EVAL-004-A",
+      "preregistration": "preregistrations/operational/active_scaling_v1.json",
+      "default_ticks": null,
+      "tick_aware": false,
+      "adapter_validated": true,
+      "execution_kind": "functional_experiment",
+      "treatments": [
+        "n128"
+      ],
+      "controls": [
+        "n1024",
+        "n5000",
+        "n25000",
+        "n100000"
+      ]
+    }
+  ]
+}

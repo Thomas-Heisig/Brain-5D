@@ -1,0 +1,68 @@
+- id: RQ-EVAL-001
+  domain: Empirical Evaluation
+  question: Do dimension-guided 2D/3D/4D/5D/6D/8D graphs differ in output spike propagation
+    under matched graph budgets?
+  relevance: Bounded exploratory observation; preserves historical records and requires
+    human evidence review.
+  literature: []
+  hypotheses:
+  - H-EVAL-001-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Protocol/data availability does not mean accepted EVID.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-EVAL-002
+  domain: Empirical Evaluation
+  question: Does native reward/eligibility acquisition improve teacher-free frozen
+    novel association probes against four matched controls?
+  relevance: Bounded exploratory observation; preserves historical records and requires
+    human evidence review.
+  literature: []
+  hypotheses:
+  - H-EVAL-002-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Protocol/data availability does not mean accepted EVID.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-EVAL-003
+  domain: Empirical Evaluation
+  question: Does native single-cell split-Euler dynamics agree with Brian2 under identical
+    updates, currents and disabled adaptation?
+  relevance: Bounded exploratory observation; preserves historical records and requires
+    human evidence review.
+  literature: []
+  hypotheses:
+  - H-EVAL-003-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Protocol/data availability does not mean accepted EVID.
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: RQ-EVAL-004
+  domain: Empirical Evaluation
+  question: What throughput and sampled process memory arise in short active four-outgoing-edge
+    workloads through 100000 neurons?
+  relevance: Bounded exploratory observation; preserves historical records and requires
+    human evidence review.
+  literature: []
+  hypotheses:
+  - H-EVAL-004-A
+  evidence: []
+  status: open
+  answer:
+    current: null
+    confidence: none
+    limitations: Protocol/data availability does not mean accepted EVID.
+  created: '2026-09-10'
+  updated: '2026-09-10'

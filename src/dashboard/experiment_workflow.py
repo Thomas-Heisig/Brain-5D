@@ -497,6 +497,7 @@ class ExperimentWorkflowService:
                     "callables": matches,
                 }
         tick_aware_runners = {
+            "run_eval_dimensional",
             "run_embodied_closed_loop",
             "run_embodied_proprioception",
             "run_embodied_perturbation",

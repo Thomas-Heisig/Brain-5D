@@ -1,0 +1,32 @@
+- id: H-EVAL-001-A
+  research_question: RQ-EVAL-001
+  hypothesis: The 5D-guided connectivity yields different output spike counts from
+    at least one non-5D geometry; no optimal-dimension claim.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-EVAL-002-A
+  research_question: RQ-EVAL-002
+  hypothesis: Learning-on has higher paired seed-level test accuracy than off, sham,
+    reset and weight-shuffled controls on the declared synthetic task.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-EVAL-003-A
+  research_question: RQ-EVAL-003
+  hypothesis: Spike events agree exactly and maximum absolute v/u discrepancy is at
+    most 1e-8 for every tested seed.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'
+- id: H-EVAL-004-A
+  research_question: RQ-EVAL-004
+  hypothesis: All declared 32-tick active sparse workloads complete with finite states;
+    no linear-scaling or real-time claim.
+  status: untested
+  evidence: []
+  created: '2026-09-10'
+  updated: '2026-09-10'

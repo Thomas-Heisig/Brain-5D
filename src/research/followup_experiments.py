@@ -667,3 +667,41 @@ def run_embodied_timing(
     from src.research.connectome_embodiment import run_protocol
 
     return run_protocol("embodied_timing_v1", config, seeds, ticks)
+
+
+def run_eval_dimensional(
+    config: Config,
+    seeds: tuple[int, ...] = tuple(range(20001, 20011)),
+    ticks: int = 256,
+) -> list[ScientificRun]:
+    """Execute the separately registered bounded empirical protocol."""
+    from .empirical_evaluation import run_dimensional_ablation
+
+    return run_dimensional_ablation(config, seeds, ticks)
+
+
+def run_eval_association(
+    config: Config, seeds: tuple[int, ...] = tuple(range(20001, 20011))
+) -> list[ScientificRun]:
+    """Execute the separately registered bounded empirical protocol."""
+    from .empirical_evaluation import run_association_generalization
+
+    return run_association_generalization(config, seeds)
+
+
+def run_eval_brian2(
+    config: Config, seeds: tuple[int, ...] = (20001, 20002, 20003)
+) -> list[ScientificRun]:
+    """Execute the separately registered bounded empirical protocol."""
+    from .empirical_evaluation import run_brian2_conformance
+
+    return run_brian2_conformance(config, seeds)
+
+
+def run_eval_scaling(
+    config: Config, seeds: tuple[int, ...] = (20001, 20002, 20003)
+) -> list[ScientificRun]:
+    """Execute the separately registered bounded empirical protocol."""
+    from .empirical_evaluation import run_active_scaling
+
+    return run_active_scaling(config, seeds)
