@@ -1,0 +1,67 @@
+{
+  "run_count": 6,
+  "runs": [
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0000-recurrence_off-seed-42.json.gz",
+      "run_index": 0,
+      "seed": 42,
+      "sha256": "20208f49995f31160c45f924ce6569346dc8cb3d62a738bccda8af1fa9eb5d6a",
+      "size_bytes": 574,
+      "uncompressed_bytes": 1083
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0001-recurrence_on-seed-42.json.gz",
+      "run_index": 1,
+      "seed": 42,
+      "sha256": "d7faf4d36e34125a61039efaf08e7a9a2e953f7a0d3f66848b29fb0c22ca06f3",
+      "size_bytes": 591,
+      "uncompressed_bytes": 1179
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0002-recurrence_off-seed-43.json.gz",
+      "run_index": 2,
+      "seed": 43,
+      "sha256": "f87c3454b944f999ee787f04753f8cb0abc88100133d25a28a24014be4fe991f",
+      "size_bytes": 573,
+      "uncompressed_bytes": 1083
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0003-recurrence_on-seed-43.json.gz",
+      "run_index": 3,
+      "seed": 43,
+      "sha256": "d7a91689653f4d4b6ecba9d0e64f286928750f7a9191e28b1548f914a9db9bcc",
+      "size_bytes": 589,
+      "uncompressed_bytes": 1179
+    },
+    {
+      "condition": "recurrence_off",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0004-recurrence_off-seed-44.json.gz",
+      "run_index": 4,
+      "seed": 44,
+      "sha256": "a9528c63018d525f17ce756717094d751f22b9534ea6ea521daafb215e47fded",
+      "size_bytes": 573,
+      "uncompressed_bytes": 1083
+    },
+    {
+      "condition": "recurrence_on",
+      "format": "json.gz",
+      "path": "DATA/raw/run-0005-recurrence_on-seed-44.json.gz",
+      "run_index": 5,
+      "seed": 44,
+      "sha256": "b9fdbc6847b1c00bbbeed5814ee54c8f18e871eaddc76cf6c93f392ce915aaff",
+      "size_bytes": 591,
+      "uncompressed_bytes": 1179
+    }
+  ],
+  "schema_version": "2.0",
+  "storage_policy": "immutable_raw_runs_plus_compact_current_experiment"
+}

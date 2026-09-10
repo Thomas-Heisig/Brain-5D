@@ -1,0 +1,1517 @@
+{
+  "report_id": "AIRR-2026-0001",
+  "experiment_id": "EXP-GEN-0035",
+  "research_question_id": "RQ-SNN-002",
+  "hypothesis_ids": [
+    "H-SNN-002-A"
+  ],
+  "claim_ids": [],
+  "generated_at": "2026-09-10T16:58:10.539107+00:00",
+  "report_schema_version": "1.0",
+  "report_protocol_version": "PROTOCOL-AIRR-001",
+  "generated_by": "artificial_intelligence",
+  "ai_generated": true,
+  "scientific_evidence": false,
+  "human_review_required": true,
+  "status": "review_pending",
+  "content": {
+    "identification": {
+      "experiment": "EXP-GEN-0035",
+      "research_question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "hypotheses": [
+        {
+          "id": "H-SNN-002-A",
+          "research_question": "RQ-SNN-002",
+          "hypothesis": "Das Izhikevich-Neuronenmodell erzeugt bei identischem Input reproduzierbare Spikefolgen.",
+          "status": "untested",
+          "evidence": [],
+          "created": "2026-08-23",
+          "updated": "2026-08-23"
+        }
+      ],
+      "date": "2026-09-10",
+      "source_sha": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f"
+    },
+    "executive_summary": "Die Rolle scientific_writer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+    "research_question": {
+      "id": "RQ-SNN-002",
+      "domain": "Spiking Neural Networks",
+      "question": "Kann das eingesetzte Neuronenmodell bei konstantem Input reproduzierbare Spikefolgen erzeugen?",
+      "relevance": "Basis für deterministische Reproduzierbarkeit aller Experimente.",
+      "literature": [
+        "SRC-IZHIKEVICH-2003",
+        "SRC-GERSTNER-2014"
+      ],
+      "hypotheses": [
+        "H-SNN-002-A"
+      ],
+      "evidence": [],
+      "status": "open",
+      "answer": {
+        "current": null,
+        "confidence": "none",
+        "limitations": null
+      },
+      "created": "2026-08-23",
+      "updated": "2026-08-23"
+    },
+    "experimental_design": {
+      "experiment_id": "EXP-GEN-0035",
+      "research_question": "RQ-SNN-002",
+      "hypothesis": "H-SNN-002-A",
+      "title": "Network impulse response",
+      "conditions": "Seeds 42,43,44; identical initial state per seed; impulse current 100.0; recurrence as controlled treatment.",
+      "ticks": 8,
+      "ticks_contract": "minimum requested observation window",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "protocol": "science_suite_v1",
+      "resolved_runner": "run_ping",
+      "tick_validation": {
+        "status": "SATISFIED",
+        "mode": "minimum_per_run",
+        "requested_ticks": 8,
+        "observed_min": 8,
+        "observed_max": 8
+      },
+      "notes": "",
+      "execution": "registered experiment_suite runner",
+      "assistant_policy": "AI is post-hoc interpretation only.",
+      "epistemic_layers": {
+        "ui_state": "operator/dashboard progress only; not a scientific result",
+        "data": "DATA artifacts and deterministic statistics are authoritative run outputs",
+        "evid": "not_created; requires semantic validation, clean freeze and human review",
+        "interpretation": "post-hoc AI or human interpretation; never execution input"
+      }
+    },
+    "data_basis": {
+      "data": {
+        "ai_input_policy": "compact_only_raw_on_explicit_deterministic_extract",
+        "generated_by": "deterministic_research_data_v2",
+        "limits": {
+          "ai_packet_max_bytes": 1000000,
+          "run_summary_max_bytes": 5000000,
+          "sequence_preview_items": 16
+        },
+        "raw_index": {
+          "path": "DATA/runs_index.json",
+          "run_count": 6,
+          "sha256": "62dc697f149e15ae016366d5b26f93ef34e17bc9a1502fcedfd97aaa00c5ef19"
+        },
+        "run_count": 6,
+        "run_preview": [
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0000-recurrence_off-seed-42.json.gz",
+              "sha256": "20208f49995f31160c45f924ce6569346dc8cb3d62a738bccda8af1fa9eb5d6a",
+              "size_bytes": 574,
+              "uncompressed_bytes": 1083
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "379699de7ffe04fa175a30b98c2fc374521c3a82e0170f791cbcfd8e79801076",
+              "network_state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "379699de7ffe04fa175a30b98c2fc374521c3a82e0170f791cbcfd8e79801076",
+            "state_digest_before": "948e46105c1fae911b2d633441056fd71c90db468e07a70b59b4ac9be2f506c6"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0001-recurrence_on-seed-42.json.gz",
+              "sha256": "d7faf4d36e34125a61039efaf08e7a9a2e953f7a0d3f66848b29fb0c22ca06f3",
+              "size_bytes": 591,
+              "uncompressed_bytes": 1179
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 6,
+              "first_response_latency": 2,
+              "last_response_latency": 5,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "2a7bb08531f853c59a743d775e3c3bb8d12457951c50db153d7c69d129e8d78e",
+              "network_state_digest_before": "0a8ad1a7fb422030d84c0c2b79bb4aaa9a365de2f1561a3cab47e7c869f23874",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 4,
+              "recurrent_events": 2,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 3
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 5
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 7
+                }
+              ],
+              "spike_sequence_digest": "80bf86c92783d7abcc862fe33fe53d42e0fd6b7cd206e64f59e1e39f39ec2135",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 6,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 7,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 42,
+            "state_digest_after": "2a7bb08531f853c59a743d775e3c3bb8d12457951c50db153d7c69d129e8d78e",
+            "state_digest_before": "0a8ad1a7fb422030d84c0c2b79bb4aaa9a365de2f1561a3cab47e7c869f23874"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0002-recurrence_off-seed-43.json.gz",
+              "sha256": "f87c3454b944f999ee787f04753f8cb0abc88100133d25a28a24014be4fe991f",
+              "size_bytes": 573,
+              "uncompressed_bytes": 1083
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "8919356551433f8d89ef43deef7973bee94a69afe7423432891a638782e4de46",
+              "network_state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "8919356551433f8d89ef43deef7973bee94a69afe7423432891a638782e4de46",
+            "state_digest_before": "4fcc89d08159461ca910a6e6689e6ae8ac36cccb0c84cfa4affdda374e64465d"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0003-recurrence_on-seed-43.json.gz",
+              "sha256": "d7a91689653f4d4b6ecba9d0e64f286928750f7a9191e28b1548f914a9db9bcc",
+              "size_bytes": 589,
+              "uncompressed_bytes": 1179
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 6,
+              "first_response_latency": 2,
+              "last_response_latency": 5,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "8faec730bfec869c497d91c9e5cb6449d3f5d9792b35605912ada2fafc553ae5",
+              "network_state_digest_before": "c10c3887580e114ae492a7ccdcffe32fab38635f6ee73fcf8f7d7d5938618b50",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 4,
+              "recurrent_events": 2,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 3
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 5
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 7
+                }
+              ],
+              "spike_sequence_digest": "80bf86c92783d7abcc862fe33fe53d42e0fd6b7cd206e64f59e1e39f39ec2135",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 6,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 7,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 43,
+            "state_digest_after": "8faec730bfec869c497d91c9e5cb6449d3f5d9792b35605912ada2fafc553ae5",
+            "state_digest_before": "c10c3887580e114ae492a7ccdcffe32fab38635f6ee73fcf8f7d7d5938618b50"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0004-recurrence_off-seed-44.json.gz",
+              "sha256": "a9528c63018d525f17ce756717094d751f22b9534ea6ea521daafb215e47fded",
+              "size_bytes": 573,
+              "uncompressed_bytes": 1083
+            },
+            "condition": "recurrence_off",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 2,
+              "first_response_latency": 2,
+              "last_response_latency": 2,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "a0bc237b7e2e67fc90c4c0c282d283d59c67f3ddd4b87132503d98925b8d79b6",
+              "network_state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 1,
+              "recurrent_events": 0,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": null,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                }
+              ],
+              "spike_sequence_digest": "58ad40d6c47a726bd0da836d74ef392565bdbce0f9ce59000d4de3b9569a3442",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 2,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 3,
+              "total_synapses": 2
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "a0bc237b7e2e67fc90c4c0c282d283d59c67f3ddd4b87132503d98925b8d79b6",
+            "state_digest_before": "ced23c5f0af4831be2c3092bcf3aaa9fa97f5aea32c602ba63302492034005a6"
+          },
+          {
+            "_raw_artifact": {
+              "format": "json.gz",
+              "path": "DATA/raw/run-0005-recurrence_on-seed-44.json.gz",
+              "sha256": "b9fdbc6847b1c00bbbeed5814ee54c8f18e871eaddc76cf6c93f392ce915aaff",
+              "size_bytes": 591,
+              "uncompressed_bytes": 1179
+            },
+            "condition": "recurrence_on",
+            "experiment_id": "EXP-GEN-0035",
+            "metrics": {
+              "activated_neurons": 3,
+              "delivered_synaptic_events": 6,
+              "first_response_latency": 2,
+              "last_response_latency": 5,
+              "max_synaptic_current_targets": 1,
+              "network_state_digest_after": "82c75e8d015754adeebabb3fa920d67cf6135bb384fe277b58a81c4dc4ebdd43",
+              "network_state_digest_before": "57ae9847ec97986b82bd27956de09c6827806196b4cc2880af3b6bb4d2170e3f",
+              "peak_spike_rate": 1.0,
+              "propagation_depth": 4,
+              "recurrent_events": 2,
+              "reproducibility_sample_count": 3,
+              "reproducible_across_seeds": true,
+              "return_latency": 3,
+              "spike_sequence": [
+                {
+                  "neuron_id": 0,
+                  "tick": 0
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 1
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 2
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 3
+                },
+                {
+                  "neuron_id": 1,
+                  "tick": 4
+                },
+                {
+                  "neuron_id": 2,
+                  "tick": 5
+                },
+                {
+                  "neuron_id": 0,
+                  "tick": 7
+                }
+              ],
+              "spike_sequence_digest": "80bf86c92783d7abcc862fe33fe53d42e0fd6b7cd206e64f59e1e39f39ec2135",
+              "stopped_on_quiescence": false,
+              "synaptic_activity_ticks": 6,
+              "ticks_executed": 8,
+              "ticks_requested": 8,
+              "total_spikes": 7,
+              "total_synapses": 3
+            },
+            "runtime_error": null,
+            "seed": 44,
+            "state_digest_after": "82c75e8d015754adeebabb3fa920d67cf6135bb384fe277b58a81c4dc4ebdd43",
+            "state_digest_before": "57ae9847ec97986b82bd27956de09c6827806196b4cc2880af3b6bb4d2170e3f"
+          }
+        ],
+        "schema_version": "2.0",
+        "statistics": {
+          "conditions": {
+            "recurrence_off": {
+              "metrics": {
+                "activated_neurons": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "delivered_synaptic_events": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "first_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "last_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "max_synaptic_current_targets": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "peak_spike_rate": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "propagation_depth": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "recurrent_events": {
+                  "max": 0.0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "min": 0.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "reproducibility_sample_count": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "synaptic_activity_ticks": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_executed": {
+                  "max": 8.0,
+                  "mean": 8.0,
+                  "median": 8.0,
+                  "min": 8.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_requested": {
+                  "max": 8.0,
+                  "mean": 8.0,
+                  "median": 8.0,
+                  "min": 8.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_synapses": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                }
+              },
+              "run_count": 3,
+              "seeds": [
+                42,
+                43,
+                44
+              ]
+            },
+            "recurrence_on": {
+              "metrics": {
+                "activated_neurons": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "delivered_synaptic_events": {
+                  "max": 6.0,
+                  "mean": 6.0,
+                  "median": 6.0,
+                  "min": 6.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "first_response_latency": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "last_response_latency": {
+                  "max": 5.0,
+                  "mean": 5.0,
+                  "median": 5.0,
+                  "min": 5.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "max_synaptic_current_targets": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "peak_spike_rate": {
+                  "max": 1.0,
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "min": 1.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "propagation_depth": {
+                  "max": 4.0,
+                  "mean": 4.0,
+                  "median": 4.0,
+                  "min": 4.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "recurrent_events": {
+                  "max": 2.0,
+                  "mean": 2.0,
+                  "median": 2.0,
+                  "min": 2.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "reproducibility_sample_count": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "return_latency": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "synaptic_activity_ticks": {
+                  "max": 6.0,
+                  "mean": 6.0,
+                  "median": 6.0,
+                  "min": 6.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_executed": {
+                  "max": 8.0,
+                  "mean": 8.0,
+                  "median": 8.0,
+                  "min": 8.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "ticks_requested": {
+                  "max": 8.0,
+                  "mean": 8.0,
+                  "median": 8.0,
+                  "min": 8.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_spikes": {
+                  "max": 7.0,
+                  "mean": 7.0,
+                  "median": 7.0,
+                  "min": 7.0,
+                  "n": 3,
+                  "std": 0.0
+                },
+                "total_synapses": {
+                  "max": 3.0,
+                  "mean": 3.0,
+                  "median": 3.0,
+                  "min": 3.0,
+                  "n": 3,
+                  "std": 0.0
+                }
+              },
+              "run_count": 3,
+              "seeds": [
+                42,
+                43,
+                44
+              ]
+            }
+          },
+          "formulas": {
+            "difference": "Delta_x = mean(x_B) - mean(x_A)",
+            "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+            "mean": "mean(x) = (1/n) * sum_i x_i",
+            "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+            "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+          },
+          "generated_by": "deterministic_statistics_engine",
+          "inter_spike_intervals": {
+            "recurrence_off": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 6,
+              "std": 0.0
+            },
+            "recurrence_on": {
+              "max": 2.0,
+              "mean": 1.1666666666666667,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 18,
+              "std": 0.37267799624996495
+            }
+          },
+          "run_count": 6,
+          "schema_version": "2.0",
+          "two_condition_effects": {
+            "activated_neurons": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "delivered_synaptic_events": {
+              "absolute_difference": 4.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 3.0,
+              "reference_condition": "recurrence_off"
+            },
+            "first_response_latency": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "last_response_latency": {
+              "absolute_difference": 3.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 2.5,
+              "reference_condition": "recurrence_off"
+            },
+            "max_synaptic_current_targets": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "peak_spike_rate": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "propagation_depth": {
+              "absolute_difference": 3.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 4.0,
+              "reference_condition": "recurrence_off"
+            },
+            "recurrent_events": {
+              "absolute_difference": 2.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": null,
+              "reference_condition": "recurrence_off"
+            },
+            "reproducibility_sample_count": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "synaptic_activity_ticks": {
+              "absolute_difference": 4.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 3.0,
+              "reference_condition": "recurrence_off"
+            },
+            "ticks_executed": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "ticks_requested": {
+              "absolute_difference": 0.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.0,
+              "reference_condition": "recurrence_off"
+            },
+            "total_spikes": {
+              "absolute_difference": 4.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 2.3333333333333335,
+              "reference_condition": "recurrence_off"
+            },
+            "total_synapses": {
+              "absolute_difference": 1.0,
+              "comparison_condition": "recurrence_on",
+              "ratio": 1.5,
+              "reference_condition": "recurrence_off"
+            }
+          }
+        }
+      },
+      "evid": [],
+      "literature": [
+        {
+          "source_id": "SRC-IZHIKEVICH-2003",
+          "authors": [
+            "Eugene M. Izhikevich"
+          ],
+          "title": "Simple model of spiking neurons",
+          "year": 2003,
+          "journal": "IEEE Transactions on Neural Networks",
+          "doi": "10.1109/TNN.2003.820440",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics"
+          ],
+          "claims": [
+            "Simple spiking models can reproduce multiple cortical firing patterns."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002",
+            "RQ-DET-001"
+          ],
+          "brain5d_relevance": "Referenz für Neuronendynamik und Parametrisierung der Izhikevich-Neuronen in Brain-5D."
+        },
+        {
+          "source_id": "SRC-GERSTNER-2014",
+          "authors": [
+            "Wulfram Gerstner",
+            "Werner M. Kistler",
+            "Richard Naud",
+            "Liam Paninski"
+          ],
+          "title": "Neuronal Dynamics: From Single Neurons to Networks and Models of Cognition",
+          "year": 2014,
+          "publisher": "Cambridge University Press",
+          "topic": [
+            "neuron_model",
+            "spiking",
+            "snn_dynamics",
+            "plasticity"
+          ],
+          "claims": [
+            "Spiking neural networks can model cognitive processes."
+          ],
+          "brain5d_questions": [
+            "RQ-SNN-001",
+            "RQ-SNN-002"
+          ],
+          "brain5d_relevance": "Standardreferenz für SNN-Theorie und Dynamik."
+        }
+      ]
+    },
+    "quantitative_results": {
+      "conditions": {
+        "recurrence_off": {
+          "metrics": {
+            "activated_neurons": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "delivered_synaptic_events": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "first_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "last_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "max_synaptic_current_targets": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "peak_spike_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "propagation_depth": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "recurrent_events": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "reproducibility_sample_count": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "synaptic_activity_ticks": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_executed": {
+              "max": 8.0,
+              "mean": 8.0,
+              "median": 8.0,
+              "min": 8.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_requested": {
+              "max": 8.0,
+              "mean": 8.0,
+              "median": 8.0,
+              "min": 8.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_synapses": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            }
+          },
+          "run_count": 3,
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        },
+        "recurrence_on": {
+          "metrics": {
+            "activated_neurons": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "delivered_synaptic_events": {
+              "max": 6.0,
+              "mean": 6.0,
+              "median": 6.0,
+              "min": 6.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "first_response_latency": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "last_response_latency": {
+              "max": 5.0,
+              "mean": 5.0,
+              "median": 5.0,
+              "min": 5.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "max_synaptic_current_targets": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "peak_spike_rate": {
+              "max": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "min": 1.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "propagation_depth": {
+              "max": 4.0,
+              "mean": 4.0,
+              "median": 4.0,
+              "min": 4.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "recurrent_events": {
+              "max": 2.0,
+              "mean": 2.0,
+              "median": 2.0,
+              "min": 2.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "reproducibility_sample_count": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "return_latency": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "synaptic_activity_ticks": {
+              "max": 6.0,
+              "mean": 6.0,
+              "median": 6.0,
+              "min": 6.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_executed": {
+              "max": 8.0,
+              "mean": 8.0,
+              "median": 8.0,
+              "min": 8.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "ticks_requested": {
+              "max": 8.0,
+              "mean": 8.0,
+              "median": 8.0,
+              "min": 8.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_spikes": {
+              "max": 7.0,
+              "mean": 7.0,
+              "median": 7.0,
+              "min": 7.0,
+              "n": 3,
+              "std": 0.0
+            },
+            "total_synapses": {
+              "max": 3.0,
+              "mean": 3.0,
+              "median": 3.0,
+              "min": 3.0,
+              "n": 3,
+              "std": 0.0
+            }
+          },
+          "run_count": 3,
+          "seeds": [
+            42,
+            43,
+            44
+          ]
+        }
+      },
+      "formulas": {
+        "difference": "Delta_x = mean(x_B) - mean(x_A)",
+        "inter_spike_interval": "ISI_i = t_(i+1) - t_i",
+        "mean": "mean(x) = (1/n) * sum_i x_i",
+        "population_std": "sigma = sqrt((1/n) * sum_i (x_i - mean(x))^2)",
+        "ratio": "R_x = mean(x_B) / mean(x_A), defined only when mean(x_A) != 0"
+      },
+      "generated_by": "deterministic_statistics_engine",
+      "inter_spike_intervals": {
+        "recurrence_off": {
+          "max": 1.0,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 6,
+          "std": 0.0
+        },
+        "recurrence_on": {
+          "max": 2.0,
+          "mean": 1.1666666666666667,
+          "median": 1.0,
+          "min": 1.0,
+          "n": 18,
+          "std": 0.37267799624996495
+        }
+      },
+      "run_count": 6,
+      "schema_version": "2.0",
+      "two_condition_effects": {
+        "activated_neurons": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "delivered_synaptic_events": {
+          "absolute_difference": 4.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 3.0,
+          "reference_condition": "recurrence_off"
+        },
+        "first_response_latency": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "last_response_latency": {
+          "absolute_difference": 3.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 2.5,
+          "reference_condition": "recurrence_off"
+        },
+        "max_synaptic_current_targets": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "peak_spike_rate": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "propagation_depth": {
+          "absolute_difference": 3.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 4.0,
+          "reference_condition": "recurrence_off"
+        },
+        "recurrent_events": {
+          "absolute_difference": 2.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": null,
+          "reference_condition": "recurrence_off"
+        },
+        "reproducibility_sample_count": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "synaptic_activity_ticks": {
+          "absolute_difference": 4.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 3.0,
+          "reference_condition": "recurrence_off"
+        },
+        "ticks_executed": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "ticks_requested": {
+          "absolute_difference": 0.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.0,
+          "reference_condition": "recurrence_off"
+        },
+        "total_spikes": {
+          "absolute_difference": 4.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 2.3333333333333335,
+          "reference_condition": "recurrence_off"
+        },
+        "total_synapses": {
+          "absolute_difference": 1.0,
+          "comparison_condition": "recurrence_on",
+          "ratio": 1.5,
+          "reference_condition": "recurrence_off"
+        }
+      }
+    },
+    "observations": [],
+    "interpretation": {
+      "assessment": "Die Rolle scientific_writer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+      "observations": [],
+      "effect_direction": "not_determined",
+      "methodological_concerns": [
+        "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+        "Technical reason: TimeoutError: timed out"
+      ],
+      "alternative_explanations": [],
+      "recommended_experiments": [],
+      "requested_evidence": [
+        "Run the role again with a schema-conforming backend response.",
+        "Complete mandatory human review before interpreting this report."
+      ],
+      "confidence": 0.0,
+      "analysis_unavailable": true
+    },
+    "methodological_critique": [
+      "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+      "Technical reason: TimeoutError: timed out"
+    ],
+    "alternative_explanations": [],
+    "reproducibility": {
+      "git_commit": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "False",
+      "source_freeze_sha": "74b7268e6c89fe80c4374266a6d0ae508324a268bde0aba5cd666731c1743fc8",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "ad537f87a814efa1db0c58a303e25cbc569016bebd20460b666ba8b796be6620",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "810ca54b0bb8d0147f7b4d7747ee1362891f44798b5829c5ea94e992f85288ee",
+      "data_digest": "cf008bba2cb425e2013ae7e649a9c99bb11e594028b433531ad610e3e39634e8",
+      "evid_digests": "[]"
+    },
+    "epistemic_status": {
+      "implementation": "NOT_DETERMINED",
+      "experiment_data": "PRESENT",
+      "registered_evidence": "ABSENT",
+      "ai_interpretation": "PRESENT",
+      "human_review": "PENDING",
+      "claim_support": "NOT_DETERMINED",
+      "rq_status": "IN_PROGRESS"
+    },
+    "ai_confidence": 0.0,
+    "missing_evidence": [
+      "Run the role again with a schema-conforming backend response.",
+      "Complete mandatory human review before interpreting this report."
+    ],
+    "recommended_follow_up": [],
+    "conclusion": "Die Rolle scientific_writer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+    "human_review": {
+      "status": "PENDING",
+      "reviewer": null,
+      "reviewed_at": null,
+      "disposition": null,
+      "comments": null
+    },
+    "aiar": {
+      "analyst": {
+        "analysis_id": "AIAR-scientific_analyst-20260910165610488856-a9974fd4",
+        "role": "scientific_analyst",
+        "model": {
+          "provider": "system-fallback",
+          "model_name": "unavailable",
+          "model_digest": "not_applicable",
+          "quantization": "unknown",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0035",
+          "packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57"
+        },
+        "output": {
+          "assessment": "Die Rolle scientific_analyst konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+          "observations": [],
+          "effect_direction": "not_determined",
+          "methodological_concerns": [
+            "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+            "Technical reason: TimeoutError: timed out"
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [],
+          "requested_evidence": [
+            "Run the role again with a schema-conforming backend response.",
+            "Complete mandatory human review before interpreting this report."
+          ],
+          "confidence": 0.0,
+          "analysis_unavailable": true
+        },
+        "provenance": {
+          "prompt_sha256": "a2f70412cedd86cdcdf09f11c369181895a78a49629b6b3dcef9c657fb249a0c",
+          "research_packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f",
+          "model_self_confidence": "0.0"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-10T16:56:10.488856+00:00"
+      },
+      "reviewer": {
+        "analysis_id": "AIAR-critical_reviewer-20260910165710516717-a9974fd4",
+        "role": "critical_reviewer",
+        "model": {
+          "provider": "system-fallback",
+          "model_name": "unavailable",
+          "model_digest": "not_applicable",
+          "quantization": "unknown",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0035",
+          "packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57"
+        },
+        "output": {
+          "assessment": "Die Rolle critical_reviewer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+          "observations": [],
+          "effect_direction": "not_determined",
+          "methodological_concerns": [
+            "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+            "Technical reason: TimeoutError: timed out"
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [],
+          "requested_evidence": [
+            "Run the role again with a schema-conforming backend response.",
+            "Complete mandatory human review before interpreting this report."
+          ],
+          "confidence": 0.0,
+          "analysis_unavailable": true
+        },
+        "provenance": {
+          "prompt_sha256": "8b6cfce8067ae7d5d86c74cd8f173b36eeb143207b41492839154f3bde5ffdd6",
+          "research_packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f",
+          "model_self_confidence": "0.0"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-10T16:57:10.516717+00:00"
+      },
+      "writer": {
+        "analysis_id": "AIAR-scientific_writer-20260910165810536265-a9974fd4",
+        "role": "scientific_writer",
+        "model": {
+          "provider": "system-fallback",
+          "model_name": "unavailable",
+          "model_digest": "not_applicable",
+          "quantization": "unknown",
+          "context_length": "unknown",
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "seed": "not_reported",
+          "backend_version": "unknown"
+        },
+        "inputs": {
+          "experiment_id": "EXP-GEN-0035",
+          "packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57"
+        },
+        "output": {
+          "assessment": "Die Rolle scientific_writer konnte nicht ausgeführt werden. Es liegt keine schema-konforme Modellanalyse vor.",
+          "observations": [],
+          "effect_direction": "not_determined",
+          "methodological_concerns": [
+            "AI analysis unavailable; deterministic experiment artifacts remain the authoritative data basis.",
+            "Technical reason: TimeoutError: timed out"
+          ],
+          "alternative_explanations": [],
+          "recommended_experiments": [],
+          "requested_evidence": [
+            "Run the role again with a schema-conforming backend response.",
+            "Complete mandatory human review before interpreting this report."
+          ],
+          "confidence": 0.0,
+          "analysis_unavailable": true
+        },
+        "provenance": {
+          "prompt_sha256": "f8fdc7a5375ed081d4174ab53b5c220b7b390947febb2f0aaf55e2153e7f7c1f",
+          "research_packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57",
+          "prompt_protocol_version": "research_assistant_v1",
+          "assistant_schema_version": "1.2",
+          "git_commit": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f",
+          "model_self_confidence": "0.0"
+        },
+        "epistemic_status": {
+          "evidence": false,
+          "interpretation_only": true,
+          "human_review_required": true
+        },
+        "review": {
+          "status": "pending",
+          "reviewer": null,
+          "reviewed_at": null,
+          "disposition": null
+        },
+        "generated_at": "2026-09-10T16:58:10.536265+00:00"
+      }
+    }
+  },
+  "provenance": {
+    "research_packet_digest": "a9974fd4bdc2262e78c7c8f2b59f8b4cea429ab370c2ca80a0499cd29b35be57",
+    "source": {
+      "git_commit": "98edbe9dd566886a329c0ae488a9ab5a987d5d6f",
+      "experiment_status": "completed",
+      "evidence_mode": "not_reported",
+      "git_dirty": "False",
+      "source_freeze_sha": "74b7268e6c89fe80c4374266a6d0ae508324a268bde0aba5cd666731c1743fc8",
+      "configuration_path": "F:\\Brain-5D\\configs\\learning_experiment.yaml",
+      "configuration_sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+      "experiment_manifest_digest": "ad537f87a814efa1db0c58a303e25cbc569016bebd20460b666ba8b796be6620",
+      "data_ids": "NOT_AVAILABLE",
+      "evid_ids": "NOT_AVAILABLE",
+      "protocol_id": "NOT_AVAILABLE",
+      "protocol_digest": "810ca54b0bb8d0147f7b4d7747ee1362891f44798b5829c5ea94e992f85288ee",
+      "data_digest": "cf008bba2cb425e2013ae7e649a9c99bb11e594028b433531ad610e3e39634e8",
+      "evid_digests": "[]"
+    }
+  },
+  "analysis_ids": [
+    "AIAR-scientific_analyst-20260910165610488856-a9974fd4",
+    "AIAR-critical_reviewer-20260910165710516717-a9974fd4",
+    "AIAR-scientific_writer-20260910165810536265-a9974fd4"
+  ],
+  "supersedes": null,
+  "content_digest": "f0ca12aaeb3d83110ceb018b9a07777316182fffa35db3f7a0c0aba69f434325",
+  "markdown_digest": "ce5b5681817281e98ab5375d217e673d50b089a2a5de7780f1b317790c4816cc"
+}
