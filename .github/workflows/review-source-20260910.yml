@@ -1,0 +1,27 @@
+name: Scientific integration source capture
+on:
+  push:
+    branches: [fix/complete-experiments-provider-repo-context-20260910]
+    paths: ['.github/workflows/review-source-20260910.yml']
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export source and immutable ref inventory
+        run: |
+          mkdir -p "$RUNNER_TEMP/review-source"
+          git bundle create "$RUNNER_TEMP/review-source/repository.bundle" --all
+          git rev-parse HEAD > "$RUNNER_TEMP/review-source/HEAD.txt"
+          git show-ref > "$RUNNER_TEMP/review-source/refs.txt"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: scientific-integration-source
+          path: ${{ runner.temp }}/review-source/
+          retention-days: 1
