@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "bundle_id": "PREREG-COGNITION-OPERATIONAL-V1",
+  "freeze": {"immutable_after_first_run": true, "human_review_required": true, "status": "FROZEN"},
+  "defaults": {
+    "mode": "EXPLORATORY",
+    "seed_strategy": {"minimum_independent_seeds": 3, "rule": "each seed independently initializes all mutable study state"},
+    "stopping_rule": "fixed protocol-defined trial or audit count; retain all runtime failures",
+    "inclusion_criteria": ["declared condition/audit item completed under the registered native runner"],
+    "exclusion_criteria": ["runtime errors remain in DATA and may be excluded from aggregates only with an explicit reason"],
+    "analysis_plan": {"inference_policy": "descriptive exploratory; no automatic EVID promotion"},
+    "secondary_outcomes": ["runtime_error", "state_digest_after"],
+    "scientific_boundary": "functional or methodological observations only; no phenomenal, consciousness, welfare, or moral-status inference"
+  },
+  "preregistrations": {
+    "memory_delayed_information_v1": {"research_question":"RQ-MEM-002","hypothesis":"H-MEM-002-A","primary_outcomes":["accuracy","retrievals"],"conditions":["memory_read_write","memory_read_off","memory_write_off","memory_time_shuffled"],"execution_kind":"functional_experiment"},
+    "world_model_prediction_v1": {"research_question":"RQ-WM-001","hypothesis":"H-WM-001-A","primary_outcomes":["mean_prediction_error"],"conditions":["adaptive","frozen","persistence","no_model"],"execution_kind":"functional_experiment"},
+    "behavior_profile_control_v1": {"research_question":"RQ-PROFILE-001","hypothesis":"H-PROFILE-001-A","primary_outcomes":["accuracy","update_count"],"conditions":["fixed_low_exploration","fixed_high_exploration","adaptive","shuffled_profile"],"execution_kind":"functional_experiment"},
+    "cog_cns_101_v1": {"research_question":"RQ-CNS-101","hypothesis":"H-CNS-101-A"},
+    "cog_cns_102_v1": {"research_question":"RQ-CNS-102","hypothesis":"H-CNS-102-A"},
+    "cog_cns_103_v1": {"research_question":"RQ-CNS-103","hypothesis":"H-CNS-103-A"},
+    "cog_cns_104_v1": {"research_question":"RQ-CNS-104","hypothesis":"H-CNS-104-A"},
+    "cog_cns_105_v1": {"research_question":"RQ-CNS-105","hypothesis":"H-CNS-105-A"},
+    "cog_cns_106_v1": {"research_question":"RQ-CNS-106","hypothesis":"H-CNS-106-A"},
+    "cog_cns_107_v1": {"research_question":"RQ-CNS-107","hypothesis":"H-CNS-107-A"},
+    "cog_cns_108_v1": {"research_question":"RQ-CNS-108","hypothesis":"H-CNS-108-A"},
+    "cog_cns_109_v1": {"research_question":"RQ-CNS-109","hypothesis":"H-CNS-109-A"},
+    "cog_cns_110_v1": {"research_question":"RQ-CNS-110","hypothesis":"H-CNS-110-A"},
+    "cog_cns_111_v1": {"research_question":"RQ-CNS-111","hypothesis":"H-CNS-111-A"},
+    "cog_cns_112_v1": {"research_question":"RQ-CNS-112","hypothesis":"H-CNS-112-A"},
+    "cog_cns_113_v1": {"research_question":"RQ-CNS-113","hypothesis":"H-CNS-113-A"},
+    "cog_cns_114_v1": {"research_question":"RQ-CNS-114","hypothesis":"H-CNS-114-A"},
+    "cog_cns_115_v1": {"research_question":"RQ-CNS-115","hypothesis":"H-CNS-115-A"},
+    "cog_cns_116_v1": {"research_question":"RQ-CNS-116","hypothesis":"H-CNS-116-A"},
+    "cog_cns_117_v1": {"research_question":"RQ-CNS-117","hypothesis":"H-CNS-117-A"},
+    "cog_epi_101_v1": {"research_question":"RQ-EPI-101","hypothesis":"H-EPI-101-A"},
+    "cog_epi_102_v1": {"research_question":"RQ-EPI-102","hypothesis":"H-EPI-102-A"},
+    "cog_wel_101_v1": {"research_question":"RQ-WEL-101","hypothesis":"H-WEL-101-A"},
+    "cog_wel_102_v1": {"research_question":"RQ-WEL-102","hypothesis":"H-WEL-102-A"},
+    "cog_wel_103_v1": {"research_question":"RQ-WEL-103","hypothesis":"H-WEL-103-A"}
+  },
+  "audit_defaults": {"primary_outcomes":["audit_complete"],"conditions":["assumption_explicit","alternative_model","measurement_limit","claim_boundary"],"execution_kind":"conceptual_audit"}
+}
