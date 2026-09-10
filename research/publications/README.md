@@ -1,3 +1,13 @@
+# Recursive Epistemics in Embodied Spiking Neural Architectures
+
+## Fassung 1.4: Explorative Messdaten, negative Befunde und Grenzen
+
+Thomas Heisig, 10. September 2026. KI-unterstuetzte wissenschaftliche Abhandlung; keine EVID-Freigabe, kein externer Ethikbeschluss. Kapitel 0-56 bleiben datierte historische Uebernahmen aus 1.3; Kapitel 57-60 aktualisieren den Messstand.
+
+[Aktuelle Fassung 1.4](2026-09-10_recursive-epistemics_v1.4/README.md) - [Messdaten und Auswertung](../experiments/EXP-EMP-20260910/ANALYSIS.md)
+
+<details><summary>Historischer Index bis 1.3 (damaliger Stand)</summary>
+
 # Recursive Epistemics
 
 ## Rekursive Epistemik
@@ -40,3 +50,5 @@ verbindet das versionierte Erhebungsinstrument mit kritikpunktbezogenen
 Abschlusskriterien. Der Zusatz dokumentiert technische Integration, keine
 vorliegende externe Ethikfreigabe oder akzeptierte Kognitions-EVID.
 Fruehere veroeffentlichte Fassungen bleiben unveraendert.
+
+</details>

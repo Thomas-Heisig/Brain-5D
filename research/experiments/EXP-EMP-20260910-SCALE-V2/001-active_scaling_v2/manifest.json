@@ -1,0 +1,76 @@
+{
+  "experiment_id": "EXP-EMP-20260910-001",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-10T16:05:53.961881",
+  "created_at": "2026-09-10T16:05:53.961895+00:00",
+  "git": {
+    "commit": "a0652860d28a2fd237ad385efb533159e56a9318",
+    "dirty": false,
+    "branch": "HEAD"
+  },
+  "software": {
+    "python": "3.13.15",
+    "os": "Linux 6.17.0-1022-azure",
+    "brain5d_version": "0.6.0a1"
+  },
+  "simulation": {
+    "seeds": [
+      21001,
+      21002,
+      21003
+    ],
+    "ticks": null
+  },
+  "artifacts": {
+    "raw_runs": "runs.json.gz"
+  },
+  "research_questions": [
+    "RQ-EVAL-005"
+  ],
+  "hypotheses": [
+    "H-EVAL-005-A"
+  ],
+  "config": {
+    "path": "configs/learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "aba99e52418d07251aa51906ebb3813b984a81791563979b9b31cecae60ce58e",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "prompt": "9aade1ef66a6c8b5bd1ceb86129cbd635d801b4040f0db9b985f64f35ee3b98e",
+    "data": "fc8b7e69c675ac3152dc02a16723e905cb730d3086f646e6b858765c1369e519"
+  },
+  "source_freeze_sha": "018dd6152d24baa49b4bc6fe104b8ad4a01fdb8230886bd49c5ae4ad212fd56a",
+  "results": {
+    "protocol": "active_scaling_v2",
+    "run_count": 15,
+    "execution_status": "completed",
+    "ai_assisted_design": true,
+    "runtime_ai_calls": 0,
+    "pre_execution_source_digest": "aba99e52418d07251aa51906ebb3813b984a81791563979b9b31cecae60ce58e",
+    "accepted_evidence": false
+  }
+}

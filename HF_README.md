@@ -160,3 +160,11 @@ MIT License — see `LICENSE`.
 ```
 
 GitHub: https://github.com/Thomas-Heisig/MHRN
+
+## Empirical results / Messstand 2026-09-10
+
+Original campaign: 1272 seed/condition records; execution states `{'completed': 28, 'failed': 1}`. Addressing-only amendment: 15 records; states `{'completed': 1}`. Twenty-two human reviews remain pending; 43 questions still lack their own operational runner.
+
+Native synthetic association: 78.5% vs 50% for each of four controls, paired difference 28.5 percentage points, pointwise 95% bootstrap CI [20,37], Holm-p 0.0078125 (ten paired seeds). No supported 5D propagation advantage (all Holm-p 1). Brian2 exact single-cell conformance failed in all three runs; this negative is retained. Original scaling failed at coordinate 256; its addressing amendment and results are recorded separately. These are exploratory DATA, not accepted EVID, general cognition, independent replication or ethics approval.
+
+[Full measurements, limitations and failure inventory](research/experiments/EXP-EMP-20260910/ANALYSIS.md) - [Complete manuscript 1.4](research/publications/2026-09-10_recursive-epistemics_v1.4/README.md).

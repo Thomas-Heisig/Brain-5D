@@ -1,0 +1,16 @@
+{
+  "campaign": "EXP-EMP-20260910-SCALE-V2",
+  "record_kind": "navigation_index_not_new_experiment",
+  "original_child_ids_require_campaign_scope": true,
+  "records": [
+    {
+      "qualified_record_id": "EXP-EMP-20260910-SCALE-V2/001-active_scaling_v2",
+      "protocol": "active_scaling_v2",
+      "status": "completed",
+      "runs": 15,
+      "manifest": "001-active_scaling_v2/manifest.json",
+      "raw": "001-active_scaling_v2/runs.json.gz"
+    }
+  ],
+  "accepted_evidence": false
+}

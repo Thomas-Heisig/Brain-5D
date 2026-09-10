@@ -107,9 +107,10 @@ def test_no_scientific_promotion_by_renaming() -> None:
     assert identity["scientific_scope"]["renaming_is_new_evidence"] is False
     assert identity["compatibility"]["unchanged_storage_format"] == ".b5d"
     manifest: dict[str, Any] = json.loads(
-        (ROOT / identity["publication"]["path"] / "manifest.json").read_text(
-            encoding="utf-8"
-        )
+        (
+            ROOT
+            / "research/publications/2026-09-08_recursive-epistemics_v1.3/manifest.json"
+        ).read_text(encoding="utf-8")
     )
     assert manifest["new_empirical_findings"] is False
     assert manifest["automatic_evidence_promotion"] is False

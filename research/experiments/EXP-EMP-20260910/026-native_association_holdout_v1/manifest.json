@@ -1,0 +1,83 @@
+{
+  "experiment_id": "EXP-EMP-20260910-026",
+  "experiment_status": "completed",
+  "ai_exposure": "none",
+  "ai_reproducibility": "R0",
+  "ai_protocol": {
+    "version": 1,
+    "bump_reason": "initial registration"
+  },
+  "causal_taint": "PURE",
+  "ai_interactions": [],
+  "causal_card": {
+    "classification": "PURE",
+    "interaction_ids": [],
+    "roles": []
+  },
+  "timestamp": "2026-09-10T15:54:53.094781",
+  "created_at": "2026-09-10T15:54:53.094791+00:00",
+  "git": {
+    "commit": "f9ed3c2153858b14face0b1d8410741c662fb028",
+    "dirty": false,
+    "branch": "HEAD"
+  },
+  "software": {
+    "python": "3.13.15",
+    "os": "Linux 6.17.0-1022-azure",
+    "brain5d_version": "0.6.0a1"
+  },
+  "simulation": {
+    "seeds": [
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008,
+      20009,
+      20010
+    ],
+    "ticks": null
+  },
+  "artifacts": {
+    "raw_runs": "runs.json.gz"
+  },
+  "research_questions": [
+    "RQ-EVAL-002"
+  ],
+  "hypotheses": [
+    "H-EVAL-002-A"
+  ],
+  "config": {
+    "path": "configs/learning_experiment.yaml",
+    "sha256": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c"
+  },
+  "validity": {
+    "valid": true,
+    "reason": null,
+    "runtime_error_count": 0,
+    "fatal_error_count": 0
+  },
+  "runtime_errors": [],
+  "research_run_mode": "EXPLORATORY",
+  "data_partitions": [],
+  "network_mode": "OFFLINE",
+  "provenance_digests": {
+    "code": "bac59880cc48e43f315b768750c00cdfabcb97180f04a1b25103d603b6308fd5",
+    "config": "6f6cd457caf6216c286fee47ef03b529a0b496ed2dd53ee96b85d3b51e7b3a1c",
+    "prompt": "9aade1ef66a6c8b5bd1ceb86129cbd635d801b4040f0db9b985f64f35ee3b98e",
+    "data": "50dd7f5c6cf9c52b58e815ed655694f4e85315a47b90bd0da112dc7ddcf4fff9"
+  },
+  "source_freeze_sha": "c6be5193cd65b913a8288abbbb9ee85e8ae8424b5ff01acc72e2671fe8148cbb",
+  "results": {
+    "protocol": "native_association_holdout_v1",
+    "run_count": 50,
+    "execution_status": "completed",
+    "ai_assisted_design": true,
+    "runtime_ai_calls": 0,
+    "pre_execution_source_digest": "bac59880cc48e43f315b768750c00cdfabcb97180f04a1b25103d603b6308fd5",
+    "accepted_evidence": false
+  }
+}

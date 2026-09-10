@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "PREREG-RQ-EVAL-004",
+  "protocol_id": "active_scaling_v1",
+  "research_question": "RQ-EVAL-004",
+  "hypothesis": "H-EVAL-004-A",
+  "mode": "EXPLORATORY",
+  "primary_outcomes": [
+    "ticks_per_second",
+    "finite_state"
+  ],
+  "conditions": [
+    {
+      "id": "n128"
+    },
+    {
+      "id": "n1024"
+    },
+    {
+      "id": "n5000"
+    },
+    {
+      "id": "n25000"
+    },
+    {
+      "id": "n100000"
+    }
+  ],
+  "seed_strategy": {
+    "minimum_independent_seeds": 3,
+    "seeds": [
+      20001,
+      20002,
+      20003
+    ],
+    "rule": "Fixed evaluation seeds; development seeds 0-9 disjoint. Paired conditions per seed; trials are not independent seeds."
+  },
+  "stopping_rule": "Complete every declared seed/condition budget once; 1200s safety timeout per protocol; retain all failures, non-finite states and scientific negatives. No outcome-based retuning or retries.",
+  "inclusion_criteria": [
+    "Exact source/config/protocol receipt before run",
+    "All declared controls and fixed seeds",
+    "Complete raw observations and finite-value validation"
+  ],
+  "exclusion_criteria": [
+    "No post-hoc statistical exclusions. Invalid/incomplete attempts remain in the campaign inventory."
+  ],
+  "analysis_plan": {
+    "inference_policy": "Exploratory; no automatic EVID promotion; no external preregistration or independent replication claimed.",
+    "planned_tests": [
+      "For dimensions: output_spikes, 5D minus each of 2D,3D,4D,6D,8D, paired per seed; Holm family of five. Random graph descriptive only.",
+      "For association: accuracy learning_on minus each of off, sham, reset, shuffle; Holm family of four.",
+      "Each family: exact two-sided seed sign flips, 2000 seed-paired bootstrap resamples using RNG910, percentile 95% CI; degenerate dz is null.",
+      "Brian2: absolute v/u errors and exact spike equality, no p-value. Scaling: descriptive per seed/N, no p-value."
+    ],
+    "limitations": [
+      "n=10 or3 only; engineered workload; sign-flip symmetry not demonstrated",
+      "No universal 5D optimality, AGI, cognition, consciousness, full-framework speed advantage or independent ethical approval"
+    ]
+  },
+  "freeze": {
+    "status": "REGISTERED",
+    "immutable_after_first_run": true,
+    "human_review_required": true
+  },
+  "implementation": "src/research/empirical_evaluation.py",
+  "ai_treatment": {
+    "design": "AI-assisted; human review pending",
+    "runtime_calls": 0,
+    "automatic_evidence_promotion": false
+  },
+  "budgets": "N128,1024,5000,25000,100000;4 outgoingedges offset1,17,31,61,weight25,delay1..4;32ticks;8sources100currentticks0,16;3seeds;serial execution; RSSsample notpeak."
+}

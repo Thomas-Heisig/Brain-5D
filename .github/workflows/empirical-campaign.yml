@@ -1,0 +1,59 @@
+name: Source-frozen empirical campaign
+on:
+  workflow_dispatch:
+    inputs:
+      campaign_id:
+        description: 'New campaign identifier; earlier DATA are never overwritten'
+        required: true
+        default: EXP-EMP-REPLICATION
+        type: string
+      protocols:
+        description: 'Optional comma-separated registered machine protocol IDs; empty executes the available catalogue'
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: read
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[empirical]'
+      - name: Execute declared budgets and retain negative outcomes
+        env:
+          CAMPAIGN_ID: ${{ inputs.campaign_id }}
+          PROTOCOL_IDS: ${{ inputs.protocols }}
+        run: |
+          python - <<'PY'
+          import os, re, subprocess, sys
+          from pathlib import Path
+          campaign = os.environ['CAMPAIGN_ID']
+          if not re.fullmatch(r'[A-Z0-9][A-Z0-9-]{2,80}', campaign):
+              raise ValueError('Use an explicit alphanumeric campaign identifier')
+          output = Path(os.environ['RUNNER_TEMP']) / 'empirical-campaign'
+          command = [sys.executable, 'scripts/empirical_campaign.py', '--output', str(output), '--campaign-id', campaign]
+          for protocol in filter(None, (p.strip() for p in os.environ['PROTOCOL_IDS'].split(','))):
+              command += ['--protocol', protocol]
+          subprocess.run(command, check=True)
+          PY
+      - name: Record exact source revision
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/empirical-campaign"
+          git rev-parse HEAD > "$RUNNER_TEMP/empirical-campaign/HEAD.txt"
+          git status --porcelain > "$RUNNER_TEMP/empirical-campaign/tree-status.txt"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: empirical-campaign-${{ github.run_id }}
+          path: ${{ runner.temp }}/empirical-campaign/
+          retention-days: 30

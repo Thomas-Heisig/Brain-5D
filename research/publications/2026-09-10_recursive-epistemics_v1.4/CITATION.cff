@@ -1,0 +1,30 @@
+{
+  "cff-version": "1.2.0",
+  "message": "For the scientific treatise use preferred-citation; the top-level record identifies its reproducible publication package.",
+  "type": "software",
+  "title": "Recursive Epistemics: reproducible publication package",
+  "version": "1.4",
+  "date-released": "2026-09-10",
+  "authors": [
+    {
+      "family-names": "Heisig",
+      "given-names": "Thomas"
+    }
+  ],
+  "repository-code": "https://github.com/Thomas-Heisig/Brain-5D",
+  "preferred-citation": {
+    "type": "report",
+    "title": "Recursive Epistemics in Embodied Spiking Neural Architectures: A Framework for Delegated Agency and Multi-Scale Recurrence",
+    "authors": [
+      {
+        "family-names": "Heisig",
+        "given-names": "Thomas"
+      }
+    ],
+    "year": 2026,
+    "month": 9,
+    "version": "1.4",
+    "abstract": "Rekursive Epistemik in verkörperten spikenden neuronalen Architekturen: Ein Framework für delegierte Handlungsmacht und mehrskalige Rekurrenz",
+    "url": "https://github.com/Thomas-Heisig/Brain-5D/tree/main/research/publications/2026-09-10_recursive-epistemics_v1.4"
+  }
+}

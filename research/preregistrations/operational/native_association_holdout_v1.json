@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "PREREG-RQ-EVAL-002",
+  "protocol_id": "native_association_holdout_v1",
+  "research_question": "RQ-EVAL-002",
+  "hypothesis": "H-EVAL-002-A",
+  "mode": "EXPLORATORY",
+  "primary_outcomes": [
+    "test_accuracy"
+  ],
+  "conditions": [
+    {
+      "id": "learning_on"
+    },
+    {
+      "id": "learning_off"
+    },
+    {
+      "id": "sham_replay"
+    },
+    {
+      "id": "weight_reset"
+    },
+    {
+      "id": "weight_shuffle"
+    }
+  ],
+  "seed_strategy": {
+    "minimum_independent_seeds": 10,
+    "seeds": [
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008,
+      20009,
+      20010
+    ],
+    "rule": "Fixed evaluation seeds; development seeds 0-9 disjoint. Paired conditions per seed; trials are not independent seeds."
+  },
+  "stopping_rule": "Complete every declared seed/condition budget once; 1200s safety timeout per protocol; retain all failures, non-finite states and scientific negatives. No outcome-based retuning or retries.",
+  "inclusion_criteria": [
+    "Exact source/config/protocol receipt before run",
+    "All declared controls and fixed seeds",
+    "Complete raw observations and finite-value validation"
+  ],
+  "exclusion_criteria": [
+    "No post-hoc statistical exclusions. Invalid/incomplete attempts remain in the campaign inventory."
+  ],
+  "analysis_plan": {
+    "inference_policy": "Exploratory; no automatic EVID promotion; no external preregistration or independent replication claimed.",
+    "planned_tests": [
+      "For dimensions: output_spikes, 5D minus each of 2D,3D,4D,6D,8D, paired per seed; Holm family of five. Random graph descriptive only.",
+      "For association: accuracy learning_on minus each of off, sham, reset, shuffle; Holm family of four.",
+      "Each family: exact two-sided seed sign flips, 2000 seed-paired bootstrap resamples using RNG910, percentile 95% CI; degenerate dz is null.",
+      "Brian2: absolute v/u errors and exact spike equality, no p-value. Scaling: descriptive per seed/N, no p-value."
+    ],
+    "limitations": [
+      "n=10 or3 only; engineered workload; sign-flip symmetry not demonstrated",
+      "No universal 5D optimality, AGI, cognition, consciousness, full-framework speed advantage or independent ethical approval"
+    ]
+  },
+  "freeze": {
+    "status": "REGISTERED",
+    "immutable_after_first_run": true,
+    "human_review_required": true
+  },
+  "implementation": "src/research/empirical_evaluation.py",
+  "ai_treatment": {
+    "design": "AI-assisted; human review pending",
+    "runtime_calls": 0,
+    "automatic_evidence_promotion": false
+  },
+  "budgets": "10 initializations;44..52 presynaptic cells per class;initialweight uniform.025..075; native12 teacher-paired training episodes from canonicalconfig.40 new balanced positive/negative episodes per seed/arm,12ticks each,8-or-fewer random input omissions and jitter0..2. No teacher or LearningEngine in test. Five arms; reset/shuffle after acquisition."
+}

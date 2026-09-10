@@ -205,3 +205,13 @@ A scientific milestone is complete only when all applicable requirements are sat
 - [ ] Organize independent administration, pilot the instrument and freeze each cohort/wave.
 - [ ] Obtain actual qualified reviews and any required institutional ethics decision; a questionnaire alone cannot close these findings.
 - [ ] Complete coupled cognition snapshot/restore and controlled SNN-specific learning validation; component screens do not establish these capabilities.
+
+## Empirical evaluation, 2026-09-10
+
+- [x] Execute the available protocol campaign with immutable raw observations, failures and source receipts.
+- [x] Add real graph geometry ablations, frozen native association tests, Brian2 conformance and active scaling with explicit amendment.
+- [x] Publish manuscript 1.4 and data-bound uncertainty analysis without automatic EVID promotion.
+- [ ] Diagnose Brian2 numerical divergence using separately frozen interventions.
+- [ ] Implement the remaining 43 question-specific native protocols; retain 22 human-review tasks as pending.
+- [ ] Obtain independent replication, human EVID review and required external ethics decisions.
+- [ ] Add NEST/Lava task-matched network/learning benchmarks and long-horizon scaling.

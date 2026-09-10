@@ -1,0 +1,18 @@
+{
+  "files_sha256": {
+    "001-active_scaling_v2/manifest.json": "f8f1d81577f38ad51cddadeb6a5443dd9d2933580063651e8362011951d9969b",
+    "001-active_scaling_v2/receipt.json": "a1c9a49b4839f63e1597af3d0193dc5c4b03800a964675abf19c56b871655b35",
+    "001-active_scaling_v2/runs.json.gz": "46dfe6a7525353dc8ed99583368967f415e181e01d1317f89880267fa9e549ee",
+    "001-active_scaling_v2/selection.json": "0464f990337099afb72fab3a656f7b3390fe2efe332bd6acb7aa1609a08242ce",
+    "REPORT.md": "c83f28c477d5002a544980b4fefb6d9077b31aab8926393344e9a667c77da77b",
+    "campaign-index.json": "c620e144ac8ac4955a4f621a5e671f5d2c8be54e7a198e575b865d445c0b0e28",
+    "completion.json": "a87eba6e1a991ccd80b27fab407ae06237daa961ed627b91fd52c84d62041c73",
+    "manifest.json": "025419b88ace10e7c57b46d19a71f0a38819b6270cee750d94091efee1adabd6",
+    "plan.json": "c041fcfdbbc12b05a1c5f9ed988112986a2e9703a3e3997ecfdc81e8d47f016b",
+    "process-001.json": "ca6e2bbb741f75712b8501ae81a96436274715d0a8a4192f7f2ba81b5be1d58b",
+    "summary.json": "93e7637fc714d61c3a7ff85e00b08073929e79058abf4741078b23a80fcd36d4"
+  },
+  "source_commit": "a0652860d28a2fd237ad385efb533159e56a9318",
+  "accepted_evidence": false,
+  "original_data_unchanged": true
+}

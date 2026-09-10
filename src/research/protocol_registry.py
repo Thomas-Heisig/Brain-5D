@@ -64,6 +64,17 @@ OPERATIONAL_RUNNERS.update(
 )
 
 
+OPERATIONAL_RUNNERS.update(
+    {
+        "dimensional_connectivity_v1": "run_eval_dimensional",
+        "native_association_holdout_v1": "run_eval_association",
+        "brian2_single_neuron_v1": "run_eval_brian2",
+        "active_scaling_v1": "run_eval_scaling",
+        "active_scaling_v2": "run_eval_scaling_v2",
+    }
+)
+
+
 class PreregistrationError(ValueError):
     """Raised when a scientific protocol lacks a valid frozen preregistration."""
 
@@ -300,6 +311,15 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
         default_seed_expression = (
             "101" if minimum_seeds <= 1 else f"101-{100 + minimum_seeds}"
         )
+        explicit_seeds = seed_strategy.get("seeds")
+        if isinstance(explicit_seeds, list):
+            values = cast(list[object], explicit_seeds)
+            if len(values) < minimum_seeds or any(
+                isinstance(value, bool) or not isinstance(value, int)
+                for value in values
+            ):
+                raise PreregistrationError("Invalid explicit protocol seeds.")
+            default_seed_expression = ",".join(str(value) for value in values)
         raw_conditions = prereg.get("conditions", [])
         condition_values = (
             cast(list[object], raw_conditions)
