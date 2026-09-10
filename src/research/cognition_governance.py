@@ -16,7 +16,13 @@ from .protocol_registry import protocol_by_id
 
 PROGRAM = Path("protocols/COGNITION_CONSCIOUSNESS_V1.json")
 PREFIXES = ("RQ-CNS-", "RQ-WEL-", "RQ-EPI-1")
+PROTECTED_FUNCTIONAL_QUESTIONS = frozenset(
+    {"RQ-MEM-002", "RQ-WM-001", "RQ-PROFILE-001"}
+)
 HYPOTHESIS_PREFIXES = ("H-CNS-", "H-WEL-", "H-EPI-1")
+PROTECTED_FUNCTIONAL_HYPOTHESES = frozenset(
+    {"H-MEM-002-A", "H-WM-001-A", "H-PROFILE-001-A"}
+)
 MAX_RECORD_BYTES = 262144
 _ALLOWED_EXECUTION_KINDS = {"functional_experiment", "conceptual_audit"}
 
@@ -31,7 +37,9 @@ def _read_record(path: Path) -> dict[str, Any]:
             raise CognitionGovernanceError("Oversized governance record")
         raw: object = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise CognitionGovernanceError("Unreadable governance record; launch blocked") from exc
+        raise CognitionGovernanceError(
+            "Unreadable governance record; launch blocked"
+        ) from exc
     if not isinstance(raw, dict):
         raise CognitionGovernanceError("Governance record must be an object")
     return cast(dict[str, Any], raw)
@@ -52,8 +60,14 @@ def cognition_catalog(research_root: Path) -> list[dict[str, Any]]:
             raise CognitionGovernanceError("Malformed cognition protocol")
         item = cast(dict[str, Any], value)
         identifier = item.get("id")
-        if not isinstance(identifier, str) or not identifier.strip() or identifier in ids:
-            raise CognitionGovernanceError("Missing or duplicate cognition protocol ID")
+        if (
+            not isinstance(identifier, str)
+            or not identifier.strip()
+            or identifier in ids
+        ):
+            raise CognitionGovernanceError(
+                "Missing or duplicate cognition protocol ID"
+            )
         ids.add(identifier)
         if item.get("consciousness_inference") != "not_established":
             raise CognitionGovernanceError("Catalogue cannot certify consciousness")
@@ -65,12 +79,28 @@ def guard_cognition_launch(
     research_root: Path, question_id: str, protocol: str
 ) -> None:
     """Permit only explicitly registered validated adapters; reject generic fallback."""
-    protected = question_id.startswith(PREFIXES) or protocol.startswith("cog_")
+    protected = (
+        question_id.startswith(PREFIXES)
+        or question_id in PROTECTED_FUNCTIONAL_QUESTIONS
+        or protocol.startswith("cog_")
+        or protocol
+        in {
+            "memory_delayed_information_v1",
+            "world_model_prediction_v1",
+            "behavior_profile_control_v1",
+        }
+    )
     state_path = research_root / "ethics/operational_state.json"
     if state_path.exists():
         state = _read_record(state_path).get("state")
-        if not isinstance(state, str) or state not in {"NORMAL", "REVIEW_REQUIRED", "HOLD"}:
-            raise CognitionGovernanceError("Invalid ethics state; new research launches blocked")
+        if not isinstance(state, str) or state not in {
+            "NORMAL",
+            "REVIEW_REQUIRED",
+            "HOLD",
+        }:
+            raise CognitionGovernanceError(
+                "Invalid ethics state; new research launches blocked"
+            )
         if state != "NORMAL":
             raise CognitionGovernanceError(
                 "ETHICS_HOLD: new experiment launches blocked; stop/isolate remains available"
@@ -89,19 +119,23 @@ def guard_cognition_launch(
         or contract.get("execution_kind") not in _ALLOWED_EXECUTION_KINDS
     ):
         raise CognitionGovernanceError(
-            "COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; instruments are not native experiments. "
+            "COGNITION_ADAPTER_NOT_VALIDATED: registered question/protocol; "
+            "a validated native functional experiment or conceptual audit is required. "
             "No fallback to generic ticks, PING or unrelated suites is permitted."
         )
 
 
 def guard_cognition_promotion(hypothesis_id: str, claim_id: str) -> None:
     """Never turn cognition/audit output into accepted evidence automatically."""
-    if hypothesis_id.startswith(HYPOTHESIS_PREFIXES) or claim_id.startswith(
-        ("CLAIM-CNS-", "CLAIM-WEL-", "CLAIM-EPI-1")
+    if (
+        hypothesis_id.startswith(HYPOTHESIS_PREFIXES)
+        or hypothesis_id in PROTECTED_FUNCTIONAL_HYPOTHESES
+        or claim_id.startswith(("CLAIM-CNS-", "CLAIM-WEL-", "CLAIM-EPI-1"))
     ):
         raise CognitionGovernanceError(
-            "INDEPENDENT_COGNITION_REVIEW_REQUIRED: automatic EVID promotion disabled for the cognition programme. "
-            "Functional observations require a candidate dossier and external review, not a phenomenal verdict."
+            "INDEPENDENT_COGNITION_REVIEW_REQUIRED: automatic EVID promotion "
+            "disabled for the cognition programme. Functional observations require "
+            "a candidate dossier and external review, not a phenomenal verdict."
         )
 
 
@@ -144,7 +178,11 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
     question = candidate.get("question_id")
     hypothesis = candidate.get("hypothesis_id")
     protocol = candidate.get("protocol_id")
-    if isinstance(question, str) and isinstance(hypothesis, str) and isinstance(protocol, str):
+    if (
+        isinstance(question, str)
+        and isinstance(hypothesis, str)
+        and isinstance(protocol, str)
+    ):
         key = question.removeprefix("RQ-")
         if not hypothesis.startswith("H-" + key + "-") or not protocol.startswith(
             "cog_" + key.lower().replace("-", "_") + "_v"
@@ -167,7 +205,13 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
             if (
                 not _nonempty_text(path_value)
                 or not _matches(record.get("sha256"), r"[0-9a-f]{64}")
-                or role not in {"primary_observation", "stimulus_schedule", "state", "configuration"}
+                or role
+                not in {
+                    "primary_observation",
+                    "stimulus_schedule",
+                    "state",
+                    "configuration",
+                }
             ):
                 reasons.append(f"invalid:raw_artifacts:{index}")
             if isinstance(path_value, str):
@@ -179,7 +223,13 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
         reasons.append("invalid:measurement_validity")
     else:
         record = cast(dict[str, object], measurement)
-        for key in ("observation_model", "units", "holdout", "independent_unit", "uncertainty"):
+        for key in (
+            "observation_model",
+            "units",
+            "holdout",
+            "independent_unit",
+            "uncertainty",
+        ):
             if not _nonempty_text(record.get(key)):
                 reasons.append(f"invalid:measurement_validity:{key}")
         if not _texts(record.get("controls")):
@@ -190,11 +240,21 @@ def assess_candidate(candidate: dict[str, object]) -> dict[str, object]:
             reasons.append(f"invalid:{key}")
             continue
         record = cast(dict[str, object], review)
-        if record.get("status") not in {"PENDING", "RECEIVED_UNVERIFIED", "VERIFIED_EXTERNALLY", "REJECTED"}:
+        if record.get("status") not in {
+            "PENDING",
+            "RECEIVED_UNVERIFIED",
+            "VERIFIED_EXTERNALLY",
+            "REJECTED",
+        }:
             reasons.append(f"invalid:{key}:status")
-        if not all(field in record for field in ("reviewer", "artifact", "independence", "authentication")):
+        if not all(
+            field in record
+            for field in ("reviewer", "artifact", "independence", "authentication")
+        ):
             reasons.append(f"incomplete:{key}")
-        if not _nonempty_text(record.get("independence")) or not _nonempty_text(record.get("authentication")):
+        if not _nonempty_text(record.get("independence")) or not _nonempty_text(
+            record.get("authentication")
+        ):
             reasons.append(f"invalid:{key}:provenance")
         if record.get("status") == "REJECTED":
             reasons.append(f"rejected:{key}")
