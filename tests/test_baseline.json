@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "ffc92d80eda196784f9d17298fb5d1becb073ede",
-  "tested_tree_digest": "7d21d1ad63cb4cad0f6681734b3e07b43ac0922d1a16072fc79b0623922d52cb",
+  "tested_commit": "0f140f7bfcb3135ecee3e357611dc16947811551",
+  "tested_tree_digest": "12705eb57dfbc40ea301932fdab3e483236282702b3174658cf457d65c414d46",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-10T06:09:52.557313+00:00",
+  "timestamp": "2026-09-10T06:16:33.743455+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -207,7 +207,7 @@
     "src/research/connectome_reference.py": "b07955c93b9b91fe47df6e633dd3a31144a1076e7b96426389d82cd4dfe858bc",
     "src/research/data_v2.py": "5e5983dfbe3e0df3752c4692ef995a5a04d8e80aa4f1e73d3ba10561b60fd1fa",
     "src/research/evidence_engine.py": "085af2f3e3919dddaeeaa86be6b50bbabef519c8d322a78942c0b3bbc8d20277",
-    "src/research/experiment_recorder.py": "29deb53bf601aa928a9b56308106939f69f7a1b3e31b69f42845237ffc7f8215",
+    "src/research/experiment_recorder.py": "856e0d587713eeca423a1c42a76957f589ae9800231cf3eb7affe62af00ff16e",
     "src/research/experiment_suite.py": "5a11ea288e7e695c2dcd456642b533cbb3e6daf38b72e150134e60e69059531f",
     "src/research/experiment_summary.py": "eeb9d6ae64fd7aaf9076b236ab69fb391967f3e9ec9adf4814d2ff123f1d6a32",
     "src/research/followup_experiments.py": "339139fa3cf1a5c279f0da5f9f5774eed7f4ce5bc19152417ad6ba6f16db896b",
