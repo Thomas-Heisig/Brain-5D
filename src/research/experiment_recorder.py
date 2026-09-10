@@ -12,8 +12,8 @@ import hashlib
 import json
 import os
 import platform
-import tempfile
 import subprocess
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol, cast
