@@ -1,0 +1,57 @@
+name: Execute addressing amendment
+on:
+  push:
+    branches: [research/empirical-evaluation-20260910]
+    paths: [.github/workflows/empirical-amendment.yml]
+permissions:
+  contents: write
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -e '.[dev,docs]'
+      - name: Apply explicit source repair and check address boundary
+        run: |
+          python .maintenance/amend_scaling.py
+          rm .maintenance/amend_scaling.py
+          python -m black src tests scripts
+          python -m ruff check src tests scripts
+          python -m mypy src
+          python -m pyright
+          python -m pytest tests/test_empirical_evaluation.py -q
+      - name: Freeze source and amendment before new measurements
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'MHRN empirical study (AI-assisted)'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src scripts tests research .maintenance/amend_scaling.py
+          git diff --cached --check
+          git commit -m 'research: amend scaling addressing without changing original DATA'
+          git fetch origin "$TARGET_BRANCH"
+          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+      - name: Run only the amended scaling protocol
+        run: python scripts/empirical_campaign.py --output "$RUNNER_TEMP/scaling-amendment" --protocol active_scaling_v2 --campaign-id EXP-EMP-20260910-SCALE-V2
+      - name: Preserve source and diagnostics
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/scaling-amendment"
+          git bundle create "$RUNNER_TEMP/scaling-amendment/source.bundle" --all
+          git rev-parse HEAD > "$RUNNER_TEMP/scaling-amendment/HEAD.txt"
+          git status --porcelain > "$RUNNER_TEMP/scaling-amendment/tree-status.txt"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: scaling-amendment-data
+          path: ${{ runner.temp }}/scaling-amendment/
+          retention-days: 14
