@@ -6,6 +6,7 @@ import hashlib
 import json
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from time import perf_counter_ns
 from typing import Any, cast
 from urllib.error import HTTPError, URLError
@@ -14,6 +15,7 @@ from urllib.request import Request, urlopen
 from src.language_organ.protocols import LanguageRequest, LanguageResponse
 
 from .contracts import AIInferenceFailureEvent
+from .repository_context import RepositoryContext, RepositoryKnowledgeView
 
 
 class OllamaBackend:
@@ -46,6 +48,8 @@ class OllamaBackend:
         knowledge_origin: str = "UNKNOWN",
         retries: int = 2,
         retry_backoff_seconds: float = 0.25,
+        repository_root: Path | None = None,
+        repository_context_chars: int = 80_000,
     ) -> None:
         if retries < 0 or retries > 5:
             raise ValueError("retries must be between 0 and 5")
@@ -76,7 +80,14 @@ class OllamaBackend:
         self.knowledge_origin = knowledge_origin.strip() or "UNKNOWN"
         self.retries = retries
         self.retry_backoff_seconds = retry_backoff_seconds
+        self.repository_root = (
+            repository_root.resolve()
+            if repository_root is not None
+            else Path(__file__).resolve().parents[2]
+        )
+        self.repository_context_chars = max(8_000, int(repository_context_chars))
         self._last_failure_event: AIInferenceFailureEvent | None = None
+        self._last_repository_context: RepositoryContext | None = None
 
     @property
     def last_failure_event(self) -> AIInferenceFailureEvent | None:
@@ -117,12 +128,7 @@ class OllamaBackend:
             )
 
     def __call__(self, prompt: str) -> tuple[dict[str, Any], dict[str, Any]]:
-        """Return a schema-shaped analysis even when provider formatting fails.
-
-        Transport errors still raise after bounded retries so callers can record
-        provider unavailability. Malformed model JSON is retained as a zero-
-        confidence interpretation failure instead of aborting the whole AIRR chain.
-        """
+        """Return schema-shaped analysis and preserve invalid provider output as failure."""
         text, metadata = self._generate(prompt, format_json=True)
         try:
             parsed = _parse_json_object(text)
@@ -164,6 +170,23 @@ class OllamaBackend:
     ) -> tuple[str, dict[str, Any]]:
         return self._generate(prompt, images=images, tools=tools)
 
+    def _repository_prompt(self, prompt: str) -> str:
+        if "[REPOSITORY FILE:" in prompt or "REPOSITORY READ-ONLY RETRIEVAL" in prompt:
+            self._last_repository_context = None
+            return prompt
+        context = RepositoryKnowledgeView(
+            self.repository_root,
+            max_context_chars=self.repository_context_chars,
+        ).retrieve(prompt[:16_000])
+        self._last_repository_context = context
+        if not context.text:
+            return prompt
+        return (
+            prompt
+            + "\n\nSHARED REPOSITORY CONTEXT (read-only; source/docs are not scientific EVID):\n"
+            + context.text
+        )
+
     def _generate(
         self,
         prompt: str,
@@ -171,9 +194,10 @@ class OllamaBackend:
         tools: list[dict[str, object]] | None = None,
         format_json: bool = False,
     ) -> tuple[str, dict[str, Any]]:
+        grounded_prompt = self._repository_prompt(prompt)
         payload: dict[str, object] = {
             "model": self.model,
-            "prompt": prompt,
+            "prompt": grounded_prompt,
             "stream": False,
             "options": {
                 "temperature": self.temperature,
@@ -231,7 +255,13 @@ class OllamaBackend:
                     request_timestamp=request_timestamp,
                     retry_count=attempt,
                 )
-            except (OSError, ValueError, json.JSONDecodeError, HTTPError, URLError) as exc:
+            except (
+                OSError,
+                ValueError,
+                json.JSONDecodeError,
+                HTTPError,
+                URLError,
+            ) as exc:
                 last_error = exc
                 if attempt + 1 >= attempts:
                     break
@@ -250,6 +280,7 @@ class OllamaBackend:
         request_timestamp: str,
         retry_count: int,
     ) -> dict[str, Any]:
+        context = self._last_repository_context
         return {
             "provider": "ollama",
             "provider_revision": self.provider_revision,
@@ -283,7 +314,19 @@ class OllamaBackend:
             "prompt_template_digest": self.prompt_template_digest,
             "system_prompt_digest": self.system_prompt_digest,
             "toolset_digest": self.toolset_digest,
-            "retrieval_snapshot_digest": self.retrieval_snapshot_digest,
+            "retrieval_snapshot_digest": (
+                context.digest if context is not None else self.retrieval_snapshot_digest
+            ),
+            "repository_indexed_files": (
+                context.indexed_files if context is not None else "provided_upstream"
+            ),
+            "repository_selected_files": (
+                list(context.selected_files) if context is not None else "provided_upstream"
+            ),
+            "repository_omitted_large_files": (
+                context.omitted_large_files if context is not None else "provided_upstream"
+            ),
+            "repository_authority": "read_only_non_evidentiary",
             "created_at": str(payload.get("created_at", "not_reported")),
             "done_reason": str(payload.get("done_reason", "not_reported")),
             "total_duration_ns": _numeric_metadata(payload.get("total_duration")),
@@ -293,7 +336,9 @@ class OllamaBackend:
         }
 
 
-def _structured_failure(first_error: BaseException, repair_error: BaseException) -> dict[str, Any]:
+def _structured_failure(
+    first_error: BaseException, repair_error: BaseException
+) -> dict[str, Any]:
     return {
         "assessment": "Provider output could not be validated as structured analysis; no scientific interpretation is inferred.",
         "observations": [],
@@ -303,7 +348,9 @@ def _structured_failure(first_error: BaseException, repair_error: BaseException)
         ],
         "alternative_explanations": [],
         "recommended_experiments": [],
-        "requested_evidence": ["Repeat provider analysis from the same immutable research packet."],
+        "requested_evidence": [
+            "Repeat provider analysis from the same immutable research packet."
+        ],
         "effect_direction": "not_assessed",
         "confidence": 0.0,
     }
