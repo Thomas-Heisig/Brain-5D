@@ -1,12 +1,14 @@
-"""Optional local Ollama adapter with no execution or filesystem authority."""
+"""Optional local Ollama adapter with bounded retries and no mutation authority."""
 
 from __future__ import annotations
 
 import hashlib
 import json
+import time
 from datetime import datetime, timezone
 from time import perf_counter_ns
 from typing import Any, cast
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from src.language_organ.protocols import LanguageRequest, LanguageResponse
@@ -15,7 +17,7 @@ from .contracts import AIInferenceFailureEvent
 
 
 class OllamaBackend:
-    """Call Ollama through the read-only language-backend contract."""
+    """Shared read-only provider for chat, insights and AIRR evaluation."""
 
     def __init__(
         self,
@@ -42,7 +44,13 @@ class OllamaBackend:
         retrieval_snapshot_digest: str | None = None,
         provider_revision: str | None = None,
         knowledge_origin: str = "UNKNOWN",
+        retries: int = 2,
+        retry_backoff_seconds: float = 0.25,
     ) -> None:
+        if retries < 0 or retries > 5:
+            raise ValueError("retries must be between 0 and 5")
+        if retry_backoff_seconds < 0.0 or retry_backoff_seconds > 5.0:
+            raise ValueError("retry_backoff_seconds must be between 0 and 5")
         self.model = model
         self.endpoint = endpoint
         self.temperature = temperature
@@ -66,40 +74,38 @@ class OllamaBackend:
         self.retrieval_snapshot_digest = retrieval_snapshot_digest or "not_reported"
         self.provider_revision = provider_revision or "not_reported"
         self.knowledge_origin = knowledge_origin.strip() or "UNKNOWN"
+        self.retries = retries
+        self.retry_backoff_seconds = retry_backoff_seconds
         self._last_failure_event: AIInferenceFailureEvent | None = None
 
     @property
     def last_failure_event(self) -> AIInferenceFailureEvent | None:
-        """Return the most recent failed inference audit event, if any."""
         return self._last_failure_event
 
     @property
     def name(self) -> str:
-        """Return a stable backend identifier for dashboard and provenance."""
         return "ollama"
 
     def infer(self, request: LanguageRequest) -> LanguageResponse:
-        """Process immutable language data and convert failures to responses."""
         started_ns = perf_counter_ns()
-        request_digest = hashlib.sha256(
-            _request_prompt(request).encode("utf-8")
-        ).hexdigest()
+        prompt = _request_prompt(request)
+        request_digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         self._last_failure_event = None
         try:
-            text, _metadata = self._generate(_request_prompt(request))
+            text, _metadata = self._generate(prompt)
             return LanguageResponse(
                 request_id=request.request_id,
                 text=text,
                 backend_name=self.name,
                 success=True,
             )
-        except (OSError, ValueError) as exc:
+        except (OSError, ValueError, HTTPError, URLError) as exc:
             self._last_failure_event = AIInferenceFailureEvent.create(
                 request_id=request.request_id,
                 backend=self.name,
                 request_digest=request_digest,
                 latency_ms=(perf_counter_ns() - started_ns) / 1_000_000,
-                retry_status="not_retried",
+                retry_status="exhausted",
                 error=str(exc),
             )
             return LanguageResponse(
@@ -111,8 +117,44 @@ class OllamaBackend:
             )
 
     def __call__(self, prompt: str) -> tuple[dict[str, Any], dict[str, Any]]:
+        """Return a schema-shaped analysis even when provider formatting fails.
+
+        Transport errors still raise after bounded retries so callers can record
+        provider unavailability. Malformed model JSON is retained as a zero-
+        confidence interpretation failure instead of aborting the whole AIRR chain.
+        """
         text, metadata = self._generate(prompt, format_json=True)
-        return _parse_json_object(text), metadata
+        try:
+            parsed = _parse_json_object(text)
+            metadata["structured_output_valid"] = True
+            return parsed, metadata
+        except ValueError as first_error:
+            repair_prompt = (
+                "Convert the following assistant output to ONE valid JSON object only. "
+                "Required keys: assessment (string), observations (array), "
+                "methodological_concerns (array), alternative_explanations (array), "
+                "recommended_experiments (array), requested_evidence (array), "
+                "confidence (number 0..1), effect_direction (string). Do not add facts.\n\n"
+                + text[:12000]
+            )
+            try:
+                repaired_text, repaired_metadata = self._generate(
+                    repair_prompt, format_json=True
+                )
+                parsed = _parse_json_object(repaired_text)
+                repaired_metadata["structured_output_valid"] = True
+                repaired_metadata["structured_output_repaired"] = True
+                repaired_metadata["original_response_digest"] = metadata.get(
+                    "response_digest", "not_reported"
+                )
+                return parsed, repaired_metadata
+            except (OSError, ValueError, HTTPError, URLError) as repair_error:
+                failure = _structured_failure(first_error, repair_error)
+                metadata["structured_output_valid"] = False
+                metadata["structured_output_repaired"] = False
+                metadata["structured_output_error"] = str(first_error)
+                metadata["structured_repair_error"] = str(repair_error)
+                return failure, metadata
 
     def generate_text(
         self,
@@ -120,7 +162,6 @@ class OllamaBackend:
         images: list[str] | None = None,
         tools: list[dict[str, object]] | None = None,
     ) -> tuple[str, dict[str, Any]]:
-        """Return plain text for read-only chat consumers."""
         return self._generate(prompt, images=images, tools=tools)
 
     def _generate(
@@ -141,13 +182,16 @@ class OllamaBackend:
             },
         }
         options = cast(dict[str, object], payload["options"])
-        optional_options = {
-            "top_k": self.top_k,
-            "num_ctx": self.num_ctx,
-            "seed": self.seed,
-        }
         options.update(
-            {key: value for key, value in optional_options.items() if value is not None}
+            {
+                key: value
+                for key, value in {
+                    "top_k": self.top_k,
+                    "num_ctx": self.num_ctx,
+                    "seed": self.seed,
+                }.items()
+                if value is not None
+            }
         )
         if self.stop:
             options["stop"] = self.stop
@@ -157,23 +201,56 @@ class OllamaBackend:
             payload["tools"] = tools
         if format_json:
             payload["format"] = "json"
-        request_data = json.dumps(payload).encode()
-        request = Request(
-            self.endpoint,
-            data=request_data,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+        request_data = json.dumps(payload).encode("utf-8")
         request_digest = hashlib.sha256(request_data).hexdigest()
-        request_timestamp = datetime.now(timezone.utc).isoformat()
-        with urlopen(
-            request, timeout=self.timeout
-        ) as response:  # nosec B310: local, explicit endpoint
-            payload = json.loads(response.read().decode("utf-8"))
-        text = payload.get("response")
-        if not isinstance(text, str):
-            raise ValueError("Ollama returned no analysis text.")
-        return text, {
+        last_error: BaseException | None = None
+        attempts = self.retries + 1
+        for attempt in range(attempts):
+            request_timestamp = datetime.now(timezone.utc).isoformat()
+            request = Request(
+                self.endpoint,
+                data=request_data,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            try:
+                with urlopen(  # nosec B310: local/configured explicit provider endpoint
+                    request, timeout=self.timeout
+                ) as response:
+                    raw = response.read().decode("utf-8")
+                response_payload = json.loads(raw)
+                if not isinstance(response_payload, dict):
+                    raise ValueError("Ollama response must be a JSON object.")
+                text = response_payload.get("response")
+                if not isinstance(text, str) or not text.strip():
+                    raise ValueError("Ollama returned no analysis text.")
+                return text, self._metadata(
+                    response_payload,
+                    text,
+                    request_digest=request_digest,
+                    request_timestamp=request_timestamp,
+                    retry_count=attempt,
+                )
+            except (OSError, ValueError, json.JSONDecodeError, HTTPError, URLError) as exc:
+                last_error = exc
+                if attempt + 1 >= attempts:
+                    break
+                if self.retry_backoff_seconds:
+                    time.sleep(self.retry_backoff_seconds * (attempt + 1))
+        raise OSError(
+            f"Ollama inference failed after {attempts} attempt(s): {last_error}"
+        ) from last_error
+
+    def _metadata(
+        self,
+        payload: dict[str, Any],
+        text: str,
+        *,
+        request_digest: str,
+        request_timestamp: str,
+        retry_count: int,
+    ) -> dict[str, Any]:
+        return {
             "provider": "ollama",
             "provider_revision": self.provider_revision,
             "request_timestamp": request_timestamp,
@@ -194,8 +271,9 @@ class OllamaBackend:
             "stop": list(self.stop),
             "max_tokens": self.max_tokens,
             "timeout_seconds": self.timeout,
-            "retry_count": 0,
-            "retry_policy": "disabled",
+            "retry_count": retry_count,
+            "retry_limit": self.retries,
+            "retry_policy": "bounded_linear_backoff",
             "request_digest": request_digest,
             "response_digest": hashlib.sha256(text.encode("utf-8")).hexdigest(),
             "response_fingerprint": hashlib.sha256(
@@ -215,16 +293,29 @@ class OllamaBackend:
         }
 
 
+def _structured_failure(first_error: BaseException, repair_error: BaseException) -> dict[str, Any]:
+    return {
+        "assessment": "Provider output could not be validated as structured analysis; no scientific interpretation is inferred.",
+        "observations": [],
+        "methodological_concerns": [
+            f"Initial structured output invalid: {type(first_error).__name__}: {first_error}",
+            f"Repair attempt failed: {type(repair_error).__name__}: {repair_error}",
+        ],
+        "alternative_explanations": [],
+        "recommended_experiments": [],
+        "requested_evidence": ["Repeat provider analysis from the same immutable research packet."],
+        "effect_direction": "not_assessed",
+        "confidence": 0.0,
+    }
+
+
 def _parse_json_object(text: str) -> dict[str, Any]:
-    """Parse an object from strict JSON or a model-wrapped JSON response."""
     decoder = json.JSONDecoder()
     stripped = text.strip()
     candidates = [stripped]
     if "```" in stripped:
         candidates.extend(
-            block.strip()
-            for block in stripped.split("```")[1::2]
-            if block.strip().removeprefix("json").strip()
+            block.strip() for block in stripped.split("```")[1::2] if block.strip()
         )
     for candidate in candidates:
         candidate = candidate.removeprefix("json").strip()
@@ -247,7 +338,6 @@ def _parse_json_object(text: str) -> dict[str, Any]:
 
 
 def _normalize_analysis_output(output: dict[str, Any]) -> dict[str, Any]:
-    """Normalize numeric fields that local models occasionally quote as text."""
     if "confidence" not in output:
         return output
     confidence = output.get("confidence")
@@ -262,13 +352,8 @@ def _normalize_analysis_output(output: dict[str, Any]) -> dict[str, Any]:
 
 
 def _request_prompt(request: LanguageRequest) -> str:
-    """Serialize only the immutable request contract for Ollama."""
     return json.dumps(request.to_dict(), sort_keys=True, ensure_ascii=True)
 
 
 def _numeric_metadata(value: object) -> int | str:
-    return (
-        value
-        if isinstance(value, int) and not isinstance(value, bool)
-        else "not_reported"
-    )
+    return value if isinstance(value, int) and not isinstance(value, bool) else "not_reported"
