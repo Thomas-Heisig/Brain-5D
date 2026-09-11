@@ -1,0 +1,52 @@
+name: Format final integration
+
+on:
+  push:
+    branches:
+      - fix/final-integration-20260911
+    paths:
+      - .github/integration/format-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install exact formatter
+        run: python -m pip install black==26.5.1
+      - name: Format integration Python files
+        run: |
+          python -m black \
+            src/dashboard/embedding_jobs.py \
+            src/dashboard/experiment_workflow.py \
+            src/research/protocol_registry.py \
+            src/research/followup_experiments.py \
+            src/dashboard/server.py \
+            tests/test_dashboard_ui_integration.py \
+            tests/test_embedding_jobs.py \
+            tests/test_final_integration_20260911.py
+      - name: Remove one-shot verification plumbing
+        run: |
+          rm -f .github/integration/format-trigger
+          rm -f .github/integration/baseline-trigger
+          rm -f .github/workflows/format-final-integration.yml
+          rm -f .github/workflows/refresh-final-integration-baseline.yml
+      - name: Commit formatting
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git add -A
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "style: format final integration"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
