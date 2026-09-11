@@ -13,7 +13,7 @@ permissions:
 jobs:
   finalize:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
         with:
@@ -21,26 +21,27 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - name: Apply strict typed Runtime I/O fix
+      - name: Apply capability-specific Runtime I/O typing
         shell: python
         run: |
           from pathlib import Path
 
-          runtime = Path("src/controller/runtime.py")
-          text = runtime.read_text(encoding="utf-8")
-          needle = "    def step(self) -> StepResultLike: ...\n\n\nclass HomeostasisLike(Protocol):"
-          replacement = "    def step(self) -> StepResultLike: ...\n\n    def is_input_cell(self, neuron_id: int) -> bool: ...\n\n    def inject_current(self, neuron_id: int, current: float) -> None: ...\n\n\nclass HomeostasisLike(Protocol):"
-          if needle in text:
-              runtime.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
-          elif "def is_input_cell(self, neuron_id: int) -> bool" not in text:
-              raise SystemExit("RuntimeNetworkLike insertion point not found")
-
           server = Path("src/dashboard/server.py")
           text = server.read_text(encoding="utf-8")
-          text = text.replace("from typing import Any, cast", "from typing import Any, Iterable, cast", 1)
+          text = text.replace("from typing import Any, cast", "from typing import Any, Iterable, Protocol, cast", 1)
+          anchor = 'class UnsupportedMediaTypeError(DashboardError):\n    """Raised when a JSON endpoint receives an unsupported content type."""\n\n\n'
+          capability = 'class UnsupportedMediaTypeError(DashboardError):\n    """Raised when a JSON endpoint receives an unsupported content type."""\n\n\nclass _RuntimeIOCapable(Protocol):\n    """Optional operator I/O capability without widening RuntimeNetworkLike."""\n\n    def is_input_cell(self, neuron_id: int) -> bool: ...\n\n    def inject_current(self, neuron_id: int, current: float) -> None: ...\n\n\n'
+          if anchor not in text:
+              raise SystemExit("Runtime I/O protocol insertion point not found")
+          text = text.replace(anchor, capability, 1)
           text = text.replace(
               '        input_ids = sorted(\n            int(value) for value in getattr(network, "input_cells", set())\n        )\n        output_ids = sorted(\n            int(value) for value in getattr(network, "output_cells", set())\n        )\n',
               '        input_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "input_cells", ()))\n        )\n        output_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "output_cells", ()))\n        )\n',
+              1,
+          )
+          text = text.replace(
+              '        network = bridge.controller.network\n        if not network.is_input_cell(neuron_id):\n',
+              '        network = bridge.controller.network\n        io_network = cast(_RuntimeIOCapable, network)\n        if not io_network.is_input_cell(neuron_id):\n',
               1,
           )
           text = text.replace(
@@ -48,6 +49,7 @@ jobs:
               '        output_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "output_cells", ()))\n        )\n        before_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(\n                JSONValue, self._runtime_io_neuron_state(network, output_id)\n            )\n            for output_id in output_ids[:200]\n        }\n',
               1,
           )
+          text = text.replace('        network.inject_current(neuron_id, current)\n', '        io_network.inject_current(neuron_id, current)\n', 1)
           text = text.replace(
               '        after_outputs = {\n            str(output_id): self._runtime_io_neuron_state(network, output_id)\n            for output_id in sorted(getattr(network, "output_cells", set()))[:200]\n        }\n',
               '        after_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(\n                JSONValue, self._runtime_io_neuron_state(network, output_id)\n            )\n            for output_id in output_ids[:200]\n        }\n',
@@ -65,25 +67,40 @@ jobs:
           text = text.replace("from typing import Any, cast", "from typing import Any, Iterable, cast", 1)
           text = text.replace(
               '    input_cells = set(getattr(network, "input_cells", set()))\n    output_cells = set(getattr(network, "output_cells", set()))\n',
-              '    input_cells = set(\n        cast(Iterable[int], getattr(network, "input_cells", ()))\n    )\n    output_cells = set(\n        cast(Iterable[int], getattr(network, "output_cells", ()))\n    )\n',
+              '    input_cells = set(cast(Iterable[int], getattr(network, "input_cells", ())))\n    output_cells = set(cast(Iterable[int], getattr(network, "output_cells", ())))\n',
               1,
           )
           embedding.write_text(text, encoding="utf-8")
+
+          test_path = Path("tests/test_final_integration_20260911.py")
+          text = test_path.read_text(encoding="utf-8")
+          text = text.replace(
+              "from src.research.protocol_registry import OPERATIONAL_RUNNERS, load_operational_protocols\n",
+              "from src.research.protocol_registry import OPERATIONAL_RUNNERS, load_operational_protocols\nfrom src.research.registry import ResearchRegistry\n",
+              1,
+          )
+          start = text.index("def test_operational_registry_covers_every_registered_question_once() -> None:\n")
+          marker = "    protocols = load_operational_protocols(ROOT / \"research\")\n"
+          protocol_at = text.index(marker, start)
+          prefix = text[:start] + "def test_operational_registry_covers_every_registered_question_once() -> None:\n    registry = ResearchRegistry(ROOT / \"research\" / \"registry\").load_all()\n    question_ids = set(registry.questions)\n"
+          text = prefix + text[protocol_at:]
+          test_path.write_text(text, encoding="utf-8")
       - name: Install full development environment
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ".[dev,docs]"
       - name: Verify exact repository quality gates
         run: |
-          python -m black src/controller/runtime.py src/dashboard/server.py src/dashboard/embedding_jobs.py
+          python -m black src/dashboard/server.py src/dashboard/embedding_jobs.py tests/test_final_integration_20260911.py
           python -m black --check src tests scripts
           python -m ruff check src tests scripts
           python -m mypy src
           python -m pyright
+          python -m pytest -q tests/test_final_integration_20260911.py tests/test_embedding_jobs.py tests/test_dashboard_experiment_mode.py tests/test_dashboard_control_api.py
       - name: Remove temporary diagnostic and fixer plumbing
         run: |
-          rm -f .github/integration/finalize-types-trigger .github/integration/diagnose-types-trigger .github/integration/typefix-trigger .github/integration/typefix-full-trigger .github/integration/verify-trigger
-          rm -f .github/workflows/finalize-runtime-io-types.yml .github/workflows/diagnose-final-types.yml .github/workflows/fix-final-integration-types.yml .github/workflows/fix-final-integration-types-full.yml .github/workflows/verify-final-integration.yml
+          rm -f .github/integration/finalize-types-trigger .github/integration/final-pyright-trigger .github/integration/diagnose-types-trigger .github/integration/typefix-trigger .github/integration/typefix-full-trigger .github/integration/verify-trigger
+          rm -f .github/workflows/finalize-runtime-io-types.yml .github/workflows/fix-final-pyright.yml .github/workflows/diagnose-final-types.yml .github/workflows/fix-final-integration-types.yml .github/workflows/fix-final-integration-types-full.yml .github/workflows/verify-final-integration.yml
       - name: Commit verified type-safe fix
         env:
           TARGET_BRANCH: ${{ github.ref_name }}
