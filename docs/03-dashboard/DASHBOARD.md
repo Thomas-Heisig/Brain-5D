@@ -239,3 +239,22 @@ See also:
 - [`DASHBOARD_CONTROL_PLANE.md`](DASHBOARD_CONTROL_PLANE.md)
 - [`../02-architecture/EMBODIMENT_REAL_BODY.md`](../02-architecture/EMBODIMENT_REAL_BODY.md)
 - [`../../research/README.md`](../../research/README.md)
+
+## Final integration contract (2026-09-11)
+
+The dashboard frontend now has an explicit modular layer under `src/dashboard/static/frontend/`:
+
+- `core/` contains shared API/DOM helpers;
+- `components/` contains the permanent global status bar, notification center and panel help;
+- `modules/` contains Runtime I/O, science-transparency and external-review sharing;
+- `styles/` contains tokens, reset, base, layout, components, modules, utilities and print layers.
+
+The legacy workspaces remain routing targets so existing operator/research capabilities are not lost in a big-bang rewrite. Header and footer both expose Dashboard, Wissenschaft and Runtime & Wesen; Release and Settings remain global work areas.
+
+`GET /api/runtime/io` exposes only real registered runtime inputs/outputs. `POST /api/runtime/io/inject` accepts a registered input neuron, finite current and bounded tick count only in `operator` or `debug` mode. It is fail-closed in `experiment` mode and every result is marked `operator_intervention=true`, `scientific_evidence=false` and `automatic_evidence_promotion=false`.
+
+The Neuron Model Viewer keeps deterministic client-side PCA and now connects t-SNE, UMAP and cluster export to the provenance-bound `/api/research/analysis-jobs` backend. Job exports include D1-D5, `v`, `u`, energy, spike counter, I/O role, runtime tick, input digest, source-tree digest and Git commit. Missing optional analysis dependencies remain explicit runtime errors rather than fabricated projections.
+
+`/review` is a direct static route. The Research workspace derives an absolute share link from the current dashboard origin. Review response data and reviewer identities are not added to the Research-AI context by this frontend integration.
+
+Neuron settings distinguish construction-time `neuron.initial_v` and `neuron.initial_u` from the live dynamic `v`/`u` state. `a/b/c/d/initial_v/initial_u` are applied when new neurons are constructed; changing a settings value does not rewrite the running `u` state of existing neurons.

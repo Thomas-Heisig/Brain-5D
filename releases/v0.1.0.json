@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "version": "0.1.0",
+  "pep440": "0.1.0",
+  "status": "released",
+  "title": "Historical tagged release",
+  "tag": "brain5d-core-v0.1.0",
+  "tag_object": "a41c1009fc2246a00edae60dded6c745e5f07592",
+  "commit": "c40cace62d7e65386dfaf9c53d208933d80e8c8d",
+  "date": "2026-08-16",
+  "gate": "unknown",
+  "historical_tag_only": true,
+  "note": "Sprint 1C VERIFIED - observable deterministic reference core"
+}

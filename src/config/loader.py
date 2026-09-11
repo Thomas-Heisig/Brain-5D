@@ -68,6 +68,8 @@ class NeuronConfig(TypedDict, total=False):
     b: float
     c: float
     d: float
+    initial_v: float
+    initial_u: float
 
 
 class EnergyConfig(TypedDict, total=False):
@@ -184,6 +186,8 @@ DEFAULT_CONFIG: ConfigDict = {
         "b": 0.2,
         "c": -65.0,
         "d": 8.0,
+        "initial_v": -65.0,
+        "initial_u": -13.0,
     },
     "energy": {
         "initial": 1.0,
@@ -400,7 +404,7 @@ def _validate_neuron_config(
     """Validate and merge neuron configuration."""
     result: NeuronConfig = {}
 
-    for key in ["a", "b", "c", "d"]:
+    for key in ["a", "b", "c", "d", "initial_v", "initial_u"]:
         value = raw.get(key, defaults.get(key))
         if value is None:
             continue

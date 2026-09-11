@@ -1,6 +1,6 @@
 # MHRN Open Questions
 
-*Generiert am 2026-09-10*
+*Generiert am 2026-09-11*
 
 Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evidenz.
 
@@ -60,11 +60,14 @@ Die folgenden Forschungsfragen sind noch offen und warten auf experimentelle Evi
 
 **Frage:** Wie variiert die Propagation mit der Topologie?
 
-**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
+**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in multidimensionalen SNNs.
 
 **Literatur:**
 - `SRC-WATTS-STROGATZ-1998`: Duncan J. Watts et al. (1998)
 - `SRC-BARABASI-1999`: Albert-László Barabási et al. (1999)
+
+**Hypothesen:**
+- `H-SNN-003-B`: Unter gleicher Neuronenzahl, Dichte und Stimulusbedingung unterscheiden sich Propagationslatenz oder -reichweite zwischen mindestens zwei vorab definierten Topologien; ein Vorteil einer 5D-Anordnung wird nicht vorausgesetzt.
 
 ---
 

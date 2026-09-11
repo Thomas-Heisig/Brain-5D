@@ -1,0 +1,1 @@
+[data-state="ok"]{color:var(--mhrn-ok)} [data-state="pending"]{color:var(--mhrn-warn)} [data-state="failed"]{color:var(--mhrn-danger)}

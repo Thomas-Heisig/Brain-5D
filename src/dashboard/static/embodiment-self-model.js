@@ -91,7 +91,7 @@ function createShell() {
       <article class="real-body-core" id="real-body-core">
         <div class="core-aura" aria-hidden="true"></div>
         <img src="/assets/brain5d-being.svg" alt="" class="real-body-being">
-        <span class="real-body-kicker">BRAIN-5D</span>
+        <span class="real-body-kicker">MHRN</span>
         <strong id="real-body-runtime-state">IDLE</strong>
         <small id="real-body-hostname">host unknown</small>
         <div class="real-body-vitals">

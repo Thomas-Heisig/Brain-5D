@@ -148,7 +148,7 @@ ist **keine validierte Standarddefinition**, weil gegenläufige Populationseffek
 
 ### 1. Registry-Operationalisierung
 
-- alle noch nicht gemappten kanonischen RQ/H einem dedizierten Runner oder explizitem `design_pending`-Status zuordnen;
+- [x] Alle 94 kanonischen Forschungsfragen besitzen einen eindeutigen operationalen Protokollvertrag. Direkt instrumentierbare Fragen verwenden registrierte Runner; methodische, ethische oder noch nicht kausal instrumentierte Fragen verwenden explizite `boundary_audit`-Verträge (`direct_test_of_hypothesis=false`, `scientific_evidence=false`).
 - Kontrollen, Stopping Rules, Outcomes und Preregistrations vor confirmatory execution einfrieren;
 - Audit als CI-Artefakt veröffentlichen;
 - aktuelle generierte Katalog-/Evidence-/Open-Question-Ansichten nach Registry-Änderungen neu erzeugen, historische Experimentberichte aber nicht umschreiben.

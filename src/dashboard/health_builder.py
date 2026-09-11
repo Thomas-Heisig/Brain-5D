@@ -547,6 +547,34 @@ def build_parameters(config_dict: dict[str, Any] | None) -> dict[str, ParameterS
         scientific_sensitive=True,
     )
 
+    # Neuron construction parameters. initial_v/initial_u are creation-time
+    # values only; they never rewrite the live dynamic state of existing neurons.
+    neuron_defaults = {
+        "a": (0.02, 0.0, 1.0),
+        "b": (0.2, 0.0, 1.0),
+        "c": (-65.0, -120.0, 0.0),
+        "d": (8.0, 0.0, 100.0),
+        "initial_v": (-65.0, -120.0, 60.0),
+        "initial_u": (-13.0, -200.0, 200.0),
+    }
+    for neuron_name, (default_value, minimum, maximum) in neuron_defaults.items():
+        parameter_name = f"neuron.{neuron_name}"
+        params[parameter_name] = _param(
+            parameter_name,
+            _nested_get(config_dict, "neuron", neuron_name, default=default_value),
+            default=default_value,
+            min=minimum,
+            max=maximum,
+            description=(
+                "Initial dynamic state applied only when constructing new neurons."
+                if neuron_name in {"initial_v", "initial_u"}
+                else "Izhikevich neuron construction parameter."
+            ),
+            runtime_mutable=False,
+            requires_restart=True,
+            scientific_sensitive=True,
+        )
+
     # Learning
     params["stdp.enabled"] = _param(
         "stdp.enabled",

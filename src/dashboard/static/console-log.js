@@ -23,6 +23,7 @@ import "./wesen-neural-symbiosis.js";
 import "./wesen-profile.js";
 import "./neuron-model-viewer.js";
 import "./frontend-architecture.js";
+import "./frontend/index.js";
 import "./footer-controller.js";
 
 const CANONICAL_WESEN_STYLES = Object.freeze([

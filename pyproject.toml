@@ -40,11 +40,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Thomas-Heisig/Brain-5D"
-Repository = "https://github.com/Thomas-Heisig/Brain-5D"
-Documentation = "https://github.com/Thomas-Heisig/Brain-5D#readme"
-Changelog = "https://github.com/Thomas-Heisig/Brain-5D/blob/main/CHANGELOG.md"
-Issues = "https://github.com/Thomas-Heisig/Brain-5D/issues"
+Homepage = "https://github.com/Thomas-Heisig/MHRN"
+Repository = "https://github.com/Thomas-Heisig/MHRN"
+Documentation = "https://github.com/Thomas-Heisig/MHRN#readme"
+Changelog = "https://github.com/Thomas-Heisig/MHRN/blob/main/CHANGELOG.md"
+Issues = "https://github.com/Thomas-Heisig/MHRN/issues"
 
 [project.optional-dependencies]
 empirical = ["brian2==2.10.1"]

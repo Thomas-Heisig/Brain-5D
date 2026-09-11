@@ -66,7 +66,23 @@ def _input_digest(neuron_ids: list[int], features: np.ndarray) -> str:
 
 
 def _write_csv(path: Path, rows: list[dict[str, Any]], method: str) -> None:
-    fields = ["neuron_id", "method", "x", "y", "cluster"]
+    fields = [
+        "neuron_id",
+        "method",
+        "x",
+        "y",
+        "cluster",
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "d5",
+        "v",
+        "u",
+        "energy",
+        "spike_counter",
+        "io_role",
+    ]
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
@@ -167,16 +183,40 @@ def run_embedding_job(
         transformed = features[:, :2]
         algorithm_version = _package_version("scikit-learn")
 
-    rows = [
-        {
-            "neuron_id": neuron_id,
-            "method": method,
-            "x": float(transformed[index, 0]),
-            "y": float(transformed[index, 1]),
-            "cluster": clusters[index],
-        }
-        for index, neuron_id in enumerate(neuron_ids)
-    ]
+    input_cells = set(getattr(network, "input_cells", set()))
+    output_cells = set(getattr(network, "output_cells", set()))
+    rows: list[dict[str, Any]] = []
+    for index, neuron_id in enumerate(neuron_ids):
+        feature = features[index]
+        is_input = neuron_id in input_cells
+        is_output = neuron_id in output_cells
+        if is_input and is_output:
+            io_role = "input_output"
+        elif is_input:
+            io_role = "input"
+        elif is_output:
+            io_role = "output"
+        else:
+            io_role = "internal"
+        rows.append(
+            {
+                "neuron_id": neuron_id,
+                "method": method,
+                "x": float(transformed[index, 0]),
+                "y": float(transformed[index, 1]),
+                "cluster": clusters[index],
+                "d1": float(feature[0]),
+                "d2": float(feature[1]),
+                "d3": float(feature[2]),
+                "d4": float(feature[3]),
+                "d5": float(feature[4]),
+                "v": float(feature[5]),
+                "u": float(feature[6]),
+                "energy": float(feature[7]),
+                "spike_counter": int(feature[8]),
+                "io_role": io_role,
+            }
+        )
     output_root = repo_root / "research" / "generated" / "analysis_jobs"
     output_root.mkdir(parents=True, exist_ok=True)
     job_id = f"{started.strftime('%Y%m%dT%H%M%S%fZ')}-{method}"
@@ -196,6 +236,12 @@ def run_embedding_job(
             "neuron_count": len(neuron_ids),
             "input_digest": input_digest,
             "network_tick": int(getattr(network, "current_tick", 0)),
+            "feature_columns": [
+                "D1", "D2", "D3", "D4", "D5",
+                "v", "u", "energy", "spike_counter"
+            ],
+            "input_neuron_count": sum(1 for neuron_id in neuron_ids if neuron_id in input_cells),
+            "output_neuron_count": sum(1 for neuron_id in neuron_ids if neuron_id in output_cells),
         },
         "provenance": {
             "git_commit": current_git_head(repo_root),

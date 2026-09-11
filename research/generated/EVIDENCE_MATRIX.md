@@ -1,13 +1,13 @@
 # MHRN Evidence Matrix
 
-*Generiert am 2026-09-10*
+*Generiert am 2026-09-11*
 
 | Forschungsfrage | Hypothese | Literatur | Experimente | Evidenz | Antwort |
 |----------------|-----------|-----------|-------------|---------|---------|
 | `RQ-SNN-001` | `H-SNN-001-A` | 2 | — | — | offen |
 | `RQ-SNN-002` | `H-SNN-002-A` | 2 | — | — | offen |
 | `RQ-DET-001` | `H-SNN-003-A` | 1 | `CLAIM-DET-001` | `EVID-2026-01`, `EVID-2026-03`, `EVID-2026-05`, `EVID-2026-07`, `EVID-2026-09`, `EVID-2026-11`, `EVID-2026-13`, `EVID-2026-15` | offen |
-| `RQ-SNN-003` | — | 2 | — | — | offen |
+| `RQ-SNN-003` | `H-SNN-003-B` | 2 | — | — | offen |
 | `RQ-SNN-004` | `H-SNN-004-A` | 2 | `CLAIM-SNN-001` | — | offen |
 | `RQ-SNN-005` | `H-SNN-005-A` | 2 | — | — | offen |
 | `RQ-PING-001` | `H-PING-001-A` | 0 | — | — | offen |

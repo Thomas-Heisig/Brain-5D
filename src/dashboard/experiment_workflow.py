@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
@@ -496,30 +497,21 @@ class ExperimentWorkflowService:
                     "sha256": _sha256_file(source_path),
                     "callables": matches,
                 }
-        tick_aware_runners = {
-            "run_eval_dimensional",
-            "run_embodied_closed_loop",
-            "run_embodied_proprioception",
-            "run_embodied_perturbation",
-            "run_connectome_topology",
-            "run_embodied_controller",
-            "run_embodied_timing",
-            "run_all",
-            "run_ping",
-            "run_ping_v2",
-            "run_5d",
-            "run_time",
-            "run_temporal",
-            "run_recurrence_map",
-            "run_replication",
-            "run_5d_matched",
-            "run_regulation_recovery",
-            "run_temporal_order",
-            "run_performance_profile",
-            "run_recurrence_scale",
-            "run_sustained_stability",
-        }
-        if runner_name in tick_aware_runners:
+        runner_parameters = inspect.signature(runner).parameters
+        runner_accepts_ticks = "ticks" in runner_parameters
+        protocol_contract = protocol_by_id(self._research_root, workflow.protocol)
+        if protocol_contract is not None:
+            tick_aware = protocol_contract.get("tick_aware", False) is True
+            if tick_aware and not runner_accepts_ticks:
+                raise WorkflowValidationError(
+                    f"Protocol '{workflow.protocol}' declares tick_aware=true, "
+                    f"but runner '{runner_name}' has no ticks parameter."
+                )
+        else:
+            # Legacy science-suite protocols are not operational registry entries.
+            # Their runner signature is the only authoritative call contract.
+            tick_aware = runner_accepts_ticks
+        if tick_aware:
             runs = runner(config, seeds=effective_seeds, ticks=workflow.ticks)
         else:
             runs = runner(config, seeds=effective_seeds)
@@ -607,16 +599,30 @@ class ExperimentWorkflowService:
                 str(preregistration.get("mode", "EXPLORATORY")).upper()
             )
             execution_kind = operational_protocol.get("execution_kind")
-            if execution_kind in {"conceptual_audit", "functional_experiment"}:
+            if execution_kind in {
+                "conceptual_audit",
+                "functional_experiment",
+                "boundary_audit",
+            }:
+                direct_test = operational_protocol.get("direct_test_of_hypothesis") is True
+                snn_value = operational_protocol.get("snn_involved")
+                snn_involved = snn_value if isinstance(snn_value, bool) else None
+                if execution_kind == "conceptual_audit":
+                    claim_scope = "method_template_only"
+                elif execution_kind == "boundary_audit":
+                    claim_scope = "instrumentation_gap_contract_only"
+                elif snn_involved:
+                    claim_scope = "direct_technical_measurement_not_automatic_evidence"
+                else:
+                    claim_scope = "component_engineering_screen_not_snn_learning"
                 recorder.manifest["execution_semantics"] = {
                     "kind": execution_kind,
-                    "snn_involved": False,
+                    "snn_involved": snn_involved,
+                    "direct_test_of_hypothesis": direct_test,
+                    "scientific_evidence": False,
+                    "automatic_evidence_promotion": False,
                     "human_assessment": "not_recorded",
-                    "claim_scope": (
-                        "method_template_only"
-                        if execution_kind == "conceptual_audit"
-                        else "component_engineering_screen_not_snn_learning"
-                    ),
+                    "claim_scope": claim_scope,
                     "external_review": "external_review/INTEGRATION.md",
                 }
 

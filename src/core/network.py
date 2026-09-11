@@ -133,6 +133,8 @@ class Brain5DConfig:
                 b=float(data.get("neuron", {}).get("b", 0.2)),
                 c=float(data.get("neuron", {}).get("c", -65.0)),
                 d=float(data.get("neuron", {}).get("d", 8.0)),
+                initial_v=float(data.get("neuron", {}).get("initial_v", -65.0)),
+                initial_u=float(data.get("neuron", {}).get("initial_u", -13.0)),
                 spike_cost=float(data.get("energy", {}).get("spike_cost", 0.001)),
                 resting_energy=float(data.get("energy", {}).get("initial", 1.0)),
             ),

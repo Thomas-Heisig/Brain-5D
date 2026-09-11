@@ -1,0 +1,515 @@
+{
+  "schema_version": "1.0",
+  "bundle_id": "PREREG-CATALOG-COMPLETION-V1",
+  "freeze": {
+    "immutable_after_first_run": true,
+    "human_review_required": true,
+    "status": "FROZEN"
+  },
+  "defaults": {
+    "mode": "EXPLORATORY",
+    "seed_strategy": {
+      "minimum_independent_seeds": 3,
+      "rule": "each seed is recorded independently when the runner uses stochastic state; audit rows remain non-evidence"
+    },
+    "stopping_rule": "fixed runner-defined observation window; runtime failures remain in DATA",
+    "inclusion_criteria": [
+      "registered protocol contract selected without substitution"
+    ],
+    "exclusion_criteria": [
+      "no silent exclusion; failures and unavailable adapters remain explicit"
+    ],
+    "analysis_plan": {
+      "inference_policy": "descriptive/exploratory only; no automatic EVID promotion"
+    },
+    "secondary_outcomes": [
+      "runtime_error",
+      "state_digest_after"
+    ],
+    "scientific_boundary": "technical execution or gap audit only; direct_test_of_hypothesis=false never supports the hypothesis"
+  },
+  "preregistrations": {
+    "dimension_dynamics_v1": {
+      "research_question": "RQ-5D-001",
+      "hypothesis": "H-5D-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "dimension_propagation_v1": {
+      "research_question": "RQ-5D-002",
+      "hypothesis": "H-5D-002-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "dimension_modularity_boundary_v1": {
+      "research_question": "RQ-5D-003",
+      "hypothesis": "H-5D-003-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "dimension_information_boundary_v1": {
+      "research_question": "RQ-5D-004",
+      "hypothesis": "H-5D-004-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "research_assistant_methodology_audit_v1": {
+      "research_question": "RQ-AIR-001",
+      "hypothesis": "H-AIR-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "connectome_reference_gap_audit_v1": {
+      "research_question": "RQ-CONN-001",
+      "hypothesis": "H-CONN-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "deterministic_replica_v1": {
+      "research_question": "RQ-DET-001",
+      "hypothesis": "H-SNN-003-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "embodied_mapping_learning_gap_audit_v1": {
+      "research_question": "RQ-EMB-003",
+      "hypothesis": "H-EMB-003-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "embodied_efference_copy_gap_audit_v1": {
+      "research_question": "RQ-EMB-007",
+      "hypothesis": "H-EMB-007-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "embodied_morphology_transfer_gap_audit_v1": {
+      "research_question": "RQ-EMB-008",
+      "hypothesis": "H-EMB-008-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "epistemic_boundary_audit_v1": {
+      "research_question": "RQ-EPIST-001",
+      "hypothesis": "H-EPIST-001-A",
+      "execution_kind": "conceptual_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "authorship_responsibility_audit_v1": {
+      "research_question": "RQ-ETH-001",
+      "hypothesis": "H-ETH-001-A",
+      "execution_kind": "conceptual_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "control_responsibility_audit_v1": {
+      "research_question": "RQ-ETH-002",
+      "hypothesis": "H-ETH-002-A",
+      "execution_kind": "conceptual_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_learning_boundary_v1": {
+      "research_question": "RQ-GW-001",
+      "hypothesis": "H-GW-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_modality_rules_boundary_v1": {
+      "research_question": "RQ-GW-002",
+      "hypothesis": "H-GW-002-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_stability_boundary_v1": {
+      "research_question": "RQ-GW-003",
+      "hypothesis": "H-GW-003-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_transfer_boundary_v1": {
+      "research_question": "RQ-GW-004",
+      "hypothesis": "H-GW-004-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_structure_boundary_v1": {
+      "research_question": "RQ-GW-005",
+      "hypothesis": "H-GW-005-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_closed_loop_boundary_v1": {
+      "research_question": "RQ-GW-006",
+      "hypothesis": "H-GW-006-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "gateway_resources_boundary_v1": {
+      "research_question": "RQ-GW-007",
+      "hypothesis": "H-GW-007-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "homeostasis_rate_boundary_v1": {
+      "research_question": "RQ-HOM-001",
+      "hypothesis": "H-HOM-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "homeostasis_stdp_boundary_v1": {
+      "research_question": "RQ-HOM-002",
+      "hypothesis": "H-HOM-002-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "language_organ_boundary_v1": {
+      "research_question": "RQ-LLM-001",
+      "hypothesis": "H-LLM-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "synaptic_memory_boundary_v1": {
+      "research_question": "RQ-MEM-001",
+      "hypothesis": "H-MEM-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "network_impulse_reproducibility_v1": {
+      "research_question": "RQ-PING-001",
+      "hypothesis": "H-PING-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "regulation_telemetry_v1": {
+      "research_question": "RQ-REG-001",
+      "hypothesis": "H-REG-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "million_neuron_scaling_boundary_v1": {
+      "research_question": "RQ-SCALE-001",
+      "hypothesis": "H-SCALE-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "self_organization_clusters_boundary_v1": {
+      "research_question": "RQ-SELF-001",
+      "hypothesis": "H-SELF-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "self_organization_emergence_boundary_v1": {
+      "research_question": "RQ-SELF-002",
+      "hypothesis": "H-SELF-002-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "tonic_spike_reproducibility_v1": {
+      "research_question": "RQ-SNN-002",
+      "hypothesis": "H-SNN-002-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "topology_propagation_v1": {
+      "research_question": "RQ-SNN-003",
+      "hypothesis": "H-SNN-003-B",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "stdp_weight_matrix_v1": {
+      "research_question": "RQ-SNN-004",
+      "hypothesis": "H-SNN-004-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "stdp_learning_performance_v1": {
+      "research_question": "RQ-SNN-005",
+      "hypothesis": "H-SNN-005-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "stdp_pair_timing_registered_v1": {
+      "research_question": "RQ-STDP-001",
+      "hypothesis": "H-STDP-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "stdp_long_stability_boundary_v1": {
+      "research_question": "RQ-STDP-002",
+      "hypothesis": "H-STDP-002-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "storage_roundtrip_boundary_v1": {
+      "research_question": "RQ-STORAGE-001",
+      "hypothesis": "H-STOR-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "storage_causal_resume_boundary_v1": {
+      "research_question": "RQ-STORAGE-002",
+      "hypothesis": "H-STOR-002-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "storage_density_boundary_v1": {
+      "research_question": "RQ-STORAGE-003",
+      "hypothesis": "H-STOR-003-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "storage_scale_boundary_v1": {
+      "research_question": "RQ-STORAGE-004",
+      "hypothesis": "H-STOR-004-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "structural_efficiency_boundary_v1": {
+      "research_question": "RQ-STRUCT-001",
+      "hypothesis": "H-STRUCT-001-A",
+      "execution_kind": "boundary_audit",
+      "primary_outcomes": [
+        "audit_contract_complete"
+      ],
+      "conditions": [
+        "gap_and_claim_boundary"
+      ]
+    },
+    "science_suite_registered_v1": {
+      "research_question": "RQ-SUITE-001",
+      "hypothesis": "H-SUITE-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "temporal_state_registered_v1": {
+      "research_question": "RQ-TEMP-001",
+      "hypothesis": "H-TEMP-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    },
+    "learning_timescale_registered_v1": {
+      "research_question": "RQ-TIME-001",
+      "hypothesis": "H-TIME-001-A",
+      "execution_kind": "functional_experiment",
+      "primary_outcomes": [
+        "registered_runner_outputs"
+      ],
+      "conditions": [
+        "registered_protocol_conditions"
+      ]
+    }
+  },
+  "audit_defaults": {
+    "primary_outcomes": [
+      "audit_contract_complete"
+    ],
+    "conditions": [
+      "gap_and_claim_boundary"
+    ],
+    "execution_kind": "conceptual_audit"
+  }
+}

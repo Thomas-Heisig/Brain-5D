@@ -521,6 +521,116 @@ def run_learning_interference(
     return runs
 
 
+
+def run_tonic_spike_reproducibility(
+    config: Config,
+    seeds: tuple[int, ...] = (42, 43, 44),
+    ticks: int = 256,
+) -> list[ScientificRun]:
+    """Compare same-seed replica spike trains under identical tonic input."""
+    runs: list[ScientificRun] = []
+    for seed in seeds:
+        replicas: list[dict[str, Any]] = []
+        before_digest = ""
+        for replica in ("a", "b"):
+            network = _three_node_network(config, seed)
+            if not before_digest:
+                before_digest = canonical_state_digest(network)
+            source = min(network.input_cells)
+            spike_ticks: list[int] = []
+            for tick in range(ticks):
+                network.inject_current(source, 10.0)
+                result = network.step()
+                if source in result.spike_ids:
+                    spike_ticks.append(tick)
+            replicas.append(
+                {
+                    "replica": replica,
+                    "source_neuron": source,
+                    "spike_ticks": spike_ticks,
+                    "spike_count": len(spike_ticks),
+                    "state_digest_after": canonical_state_digest(network),
+                }
+            )
+        identical = replicas[0]["spike_ticks"] == replicas[1]["spike_ticks"]
+        runs.append(
+            ScientificRun(
+                "EXP-SNN-TONIC-0001",
+                "same_seed_tonic_replica_pair",
+                seed,
+                {
+                    "ticks_requested": ticks,
+                    "tonic_current": 10.0,
+                    "replicas": replicas,
+                    "spike_sequence_identical": identical,
+                    "direct_test_of_hypothesis": True,
+                    "scientific_evidence": False,
+                    "automatic_evidence_promotion": False,
+                },
+                before_digest,
+                str(replicas[0]["state_digest_after"]),
+            )
+        )
+    return runs
+
+
+def run_stdp_pair_registered(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
+    """Wrap the isolated pair-timing laboratory protocol in ScientificRun rows."""
+    del config
+    from src.research.stdp_pair_timing import run_pair_timing_protocol
+
+    observation = run_pair_timing_protocol()
+    return [
+        ScientificRun(
+            "EXP-STDP-PAIR-0001",
+            "registered_pair_timing_curve",
+            seed,
+            {
+                **observation,
+                "replication_note": (
+                    "The isolated curve is deterministic; repeated seed labels do not "
+                    "create statistical independence and must not be treated as n>1."
+                ),
+                "direct_test_of_hypothesis": True,
+                "scientific_evidence": False,
+                "automatic_evidence_promotion": False,
+            },
+            "",
+            "",
+        )
+        for seed in seeds
+    ]
+
+
+def run_boundary_audit(
+    config: Config, seeds: tuple[int, ...] = (42, 43, 44)
+) -> list[ScientificRun]:
+    """Record an executable gap contract without pretending to test a hypothesis."""
+    del config
+    return [
+        ScientificRun(
+            "EXP-BOUNDARY-AUDIT-0001",
+            "instrumentation_gap_audit",
+            seed,
+            {
+                "audit_complete": True,
+                "direct_test_of_hypothesis": False,
+                "scientific_evidence": False,
+                "automatic_evidence_promotion": False,
+                "claim_boundary": (
+                    "No direct causal measurement is performed by this runner. "
+                    "Completion means only that the registered gap/boundary contract "
+                    "was executed and preserved for review."
+                ),
+            },
+            "",
+            "",
+        )
+        for seed in seeds
+    ]
+
 def _run_msba_registered(
     config: Config,
     seeds: tuple[int, ...],

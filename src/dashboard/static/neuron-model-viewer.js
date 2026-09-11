@@ -22,6 +22,11 @@ const viewerState = {
   timer: null,
   screenPoints: [],
   three: null,
+  sourceTick: null,
+  sourceName: "unknown",
+  analysisJobId: null,
+  inputDigest: null,
+  artifacts: null,
 };
 
 function byId(id) { return document.getElementById(id); }
@@ -83,10 +88,10 @@ function createViewer() {
   section.innerHTML = `
     <header class="nmv-head">
       <div><span class="workspace-kicker">NETWORK WORKBENCH · DIMENSIONALITY REDUCTION</span><h2>Neuron Model Viewer</h2><p>Deterministisch gesampelte reale 5D-Neuronen. PCA läuft lokal auf einer 5×5-Kovarianzmatrix; keine verschachtelten Würfel und kein permanentes Re-Rendering.</p></div>
-      <span class="nmv-badge">PCA · implemented</span>
+      <span class="nmv-badge" id="nmv-method-badge">PCA · implemented</span>
     </header>
     <div class="nmv-toolbar">
-      <label>Projektionsmodus<select id="nmv-method"><option value="pca">PCA · schnell</option><option value="tsne" disabled>t-SNE · Not implemented yet</option><option value="umap" disabled>UMAP · Not implemented yet</option></select></label>
+      <label>Projektionsmodus<select id="nmv-method"><option value="pca">PCA · schnell</option><option value="tsne">t-SNE · Backend job</option><option value="umap">UMAP · Backend job</option><option value="cluster_export">Clusterexport · Backend job</option></select></label>
       <label>Zieldimension<select id="nmv-dim"><option value="2" selected>2D · Canvas</option><option value="3">3D · Three.js</option></select></label>
       <label>Stichprobe<select id="nmv-sample"><option value="200">200 Neuronen</option><option value="500" selected>500 Neuronen</option><option value="2000">2000 Neuronen</option></select></label>
       <label>Aktualisierung<select id="nmv-interval"><option value="0" selected>Manuell</option><option value="5000">Alle 5 s</option><option value="30000">Alle 30 s</option></select></label>
@@ -105,11 +110,12 @@ function createViewer() {
     </div>
     <footer class="nmv-footer">
       <div class="nmv-stat"><span>Erklärte Varianz</span><strong id="nmv-variance">—</strong></div>
-      <div class="nmv-stat"><span>Cluster-Kennzahl</span><strong class="nmv-pending">Not implemented yet · keine Clusterlabels</strong></div>
+      <div class="nmv-stat"><span>Cluster-Kennzahl</span><strong id="nmv-clusters">—</strong></div>
       <div class="nmv-stat"><span>Verbindungsdichte</span><strong id="nmv-density">—</strong></div>
       <div class="nmv-stat"><span>Backend / Status</span><strong id="nmv-status">bereit · manuell</strong></div>
-      <div class="nmv-stat"><span>Non-linear embeddings</span><strong class="nmv-pending">t-SNE / UMAP · Not implemented yet</strong></div>
-      <div class="nmv-stat"><span>Lasso / Cluster export</span><strong class="nmv-pending">Not implemented yet</strong></div>
+      <div class="nmv-stat"><span>Runtime-Tick / Sample</span><strong id="nmv-source-meta">unknown</strong></div>
+      <div class="nmv-stat"><span>Analysis Job / Input Digest</span><strong id="nmv-job-meta">client PCA · no job</strong></div>
+      <div class="nmv-stat"><span>JSON / CSV Artefakte</span><strong id="nmv-artifacts">—</strong></div>
       <div class="nmv-stat"><span>Per-neuron Hz</span><strong class="nmv-pending">Not implemented yet · Farbe nutzt Activity-Proxy</strong></div>
       <div class="nmv-stat"><span>Profil-Cache</span><strong class="nmv-pending">Not implemented yet</strong></div>
     </footer>`;
@@ -123,6 +129,7 @@ function createViewer() {
 
 function bindViewer() {
   byId("nmv-refresh")?.addEventListener("click", refreshViewer);
+  byId("nmv-method")?.addEventListener("change", refreshViewer);
   byId("nmv-sample")?.addEventListener("change", (event) => {
     viewerState.sampleCount = number(event.target.value, 500);
   });
@@ -157,12 +164,12 @@ async function fetchJson(url) {
 
 async function refreshViewer() {
   const method = byId("nmv-method")?.value || "pca";
-  if (method !== "pca") {
-    setText("nmv-status", `${method.toUpperCase()} · Not implemented yet`);
-    return;
-  }
-  setText("nmv-status", "lade reale 5D-Stichprobe …");
+  setText("nmv-status", method === "pca" ? "lade reale 5D-Stichprobe …" : `${method} · starte provenance-bound Backend-Job …`);
   try {
+    if (method !== "pca") {
+      await refreshFromAnalysisJob(method);
+      return;
+    }
     const limit = viewerState.sampleCount;
     const [projection, synapses] = await Promise.all([
       fetchJson(`/api/network/projection?limit=${limit}&mode=activity`),
@@ -181,17 +188,58 @@ async function refreshViewer() {
     viewerState.projected = pca.projected;
     viewerState.eigenvalues = pca.eigenvalues;
     viewerState.explained = pca.explained;
+    viewerState.sourceTick = projection.tick ?? projection.network_tick ?? null;
+    viewerState.sourceName = projection.source || "live_runtime";
+    viewerState.analysisJobId = null; viewerState.inputDigest = null; viewerState.artifacts = null;
     const used = viewerState.targetDimensions === 3 ? 3 : 2;
     const explained = viewerState.explained.slice(0, used).reduce((a, b) => a + b, 0) * 100;
     setText("nmv-variance", viewerState.points.length > 1 ? `PC1–PC${used}: ${explained.toFixed(1)} %` : "—");
-    setText("nmv-status", `${projection.source || "live_runtime"} · ${viewerState.points.length}/${projection.total_count ?? viewerState.points.length} · ${projection.sampling_method || "bounded"}`);
+    setText("nmv-clusters", "— · PCA ohne Clusterlabels");
+    setText("nmv-status", `${viewerState.sourceName} · ${viewerState.points.length}/${projection.total_count ?? viewerState.points.length} · ${projection.sampling_method || "bounded"}`);
+    setText("nmv-method-badge", "PCA · implemented");
+    updateProvenanceStats();
     renderCurrentView();
   } catch (error) {
-    viewerState.points = [];
-    viewerState.projected = [];
+    viewerState.points = []; viewerState.projected = [];
     setText("nmv-status", `nicht verfügbar · ${error.message}`);
     renderEmpty(`Neuron Model Viewer kann die Live-Daten nicht lesen: ${error.message}`);
   }
+}
+
+async function postAnalysisJob(body) {
+  const response = await fetch("/api/research/analysis-jobs", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body) });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+  return payload.job || payload;
+}
+
+async function refreshFromAnalysisJob(method) {
+  const job = await postAnalysisJob({ method, random_state:42, max_points:viewerState.sampleCount, perplexity:2, n_neighbors:2, n_clusters:2 });
+  const rows = Array.isArray(job.rows) ? job.rows : [];
+  viewerState.points = rows.map((row) => ({
+    id: row.neuron_id,
+    coords: [row.d1,row.d2,row.d3,row.d4,row.d5].map((v) => number(v)),
+    activity: number(row.spike_counter, number(row.v)),
+    input: row.io_role === "input" || row.io_role === "input_output",
+    output: row.io_role === "output" || row.io_role === "input_output",
+    degree: null,
+  }));
+  viewerState.projected = rows.map((row) => [number(row.x), number(row.y), 0]);
+  viewerState.eigenvalues = []; viewerState.explained = []; viewerState.densityComplete = false;
+  viewerState.sourceTick = job.input?.network_tick ?? null; viewerState.sourceName = job.input?.source || "live_runtime";
+  viewerState.analysisJobId = job.job_id || null; viewerState.inputDigest = job.input?.input_digest || null; viewerState.artifacts = job.artifacts || null;
+  setText("nmv-variance", method === "cluster_export" ? "n/a · Clusterexport" : "n/a · nichtlineare Projektion");
+  const labels = new Set(rows.map((row) => row.cluster).filter((value) => value !== null && value !== undefined));
+  setText("nmv-clusters", labels.size ? `${labels.size} Cluster` : "— · keine Clusterlabels");
+  setText("nmv-density", "nicht Teil des Analysis-Jobs");
+  setText("nmv-status", `${method} · completed · ${rows.length} Punkte · scientific_evidence=false`);
+  setText("nmv-method-badge", `${method} · backend job`); updateProvenanceStats(); renderCurrentView();
+}
+
+function updateProvenanceStats() {
+  setText("nmv-source-meta", `${viewerState.sourceName} · tick ${viewerState.sourceTick ?? "unknown"} · sample ${viewerState.points.length}`);
+  setText("nmv-job-meta", viewerState.analysisJobId ? `${viewerState.analysisJobId} · ${viewerState.inputDigest || "digest unknown"}` : "client PCA · no backend job");
+  setText("nmv-artifacts", viewerState.artifacts ? `JSON ${viewerState.artifacts.json || "—"} · CSV ${viewerState.artifacts.csv || "—"}` : "—");
 }
 
 function applyDensity(payload) {
