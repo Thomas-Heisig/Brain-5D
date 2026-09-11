@@ -1,0 +1,97 @@
+name: Finalize Runtime I/O typing
+
+on:
+  push:
+    branches:
+      - fix/final-integration-20260911
+    paths:
+      - .github/integration/finalize-types-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Apply strict typed Runtime I/O fix
+        shell: python
+        run: |
+          from pathlib import Path
+
+          runtime = Path("src/controller/runtime.py")
+          text = runtime.read_text(encoding="utf-8")
+          needle = "    def step(self) -> StepResultLike: ...\n\n\nclass HomeostasisLike(Protocol):"
+          replacement = "    def step(self) -> StepResultLike: ...\n\n    def is_input_cell(self, neuron_id: int) -> bool: ...\n\n    def inject_current(self, neuron_id: int, current: float) -> None: ...\n\n\nclass HomeostasisLike(Protocol):"
+          if needle in text:
+              runtime.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
+          elif "def is_input_cell(self, neuron_id: int) -> bool" not in text:
+              raise SystemExit("RuntimeNetworkLike insertion point not found")
+
+          server = Path("src/dashboard/server.py")
+          text = server.read_text(encoding="utf-8")
+          text = text.replace("from typing import Any, cast", "from typing import Any, Iterable, cast", 1)
+          text = text.replace(
+              '        input_ids = sorted(\n            int(value) for value in getattr(network, "input_cells", set())\n        )\n        output_ids = sorted(\n            int(value) for value in getattr(network, "output_cells", set())\n        )\n',
+              '        input_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "input_cells", ()))\n        )\n        output_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "output_cells", ()))\n        )\n',
+              1,
+          )
+          text = text.replace(
+              '        before_outputs = {\n            str(output_id): self._runtime_io_neuron_state(network, output_id)\n            for output_id in sorted(getattr(network, "output_cells", set()))[:200]\n        }\n',
+              '        output_ids = sorted(\n            int(value)\n            for value in cast(Iterable[int], getattr(network, "output_cells", ()))\n        )\n        before_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(\n                JSONValue, self._runtime_io_neuron_state(network, output_id)\n            )\n            for output_id in output_ids[:200]\n        }\n',
+              1,
+          )
+          text = text.replace(
+              '        after_outputs = {\n            str(output_id): self._runtime_io_neuron_state(network, output_id)\n            for output_id in sorted(getattr(network, "output_cells", set()))[:200]\n        }\n',
+              '        after_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(\n                JSONValue, self._runtime_io_neuron_state(network, output_id)\n            )\n            for output_id in output_ids[:200]\n        }\n',
+              1,
+          )
+          text = text.replace(
+              '                    "input_v": float(after_input["v"]) - float(before_input["v"]),\n                    "input_u": float(after_input["u"]) - float(before_input["u"]),\n',
+              '                    "input_v": cast(float, after_input["v"])\n                    - cast(float, before_input["v"]),\n                    "input_u": cast(float, after_input["u"])\n                    - cast(float, before_input["u"]),\n',
+              1,
+          )
+          server.write_text(text, encoding="utf-8")
+
+          embedding = Path("src/dashboard/embedding_jobs.py")
+          text = embedding.read_text(encoding="utf-8")
+          text = text.replace("from typing import Any", "from typing import Any, Iterable, cast", 1)
+          text = text.replace(
+              '    input_cells = set(getattr(network, "input_cells", set()))\n    output_cells = set(getattr(network, "output_cells", set()))\n',
+              '    input_cells = set(\n        cast(Iterable[int], getattr(network, "input_cells", ()))\n    )\n    output_cells = set(\n        cast(Iterable[int], getattr(network, "output_cells", ()))\n    )\n',
+              1,
+          )
+          embedding.write_text(text, encoding="utf-8")
+      - name: Install full development environment
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e ".[dev,docs]"
+      - name: Verify exact repository quality gates
+        run: |
+          python -m black src/controller/runtime.py src/dashboard/server.py src/dashboard/embedding_jobs.py
+          python -m black --check src tests scripts
+          python -m ruff check src tests scripts
+          python -m mypy src
+          python -m pyright
+      - name: Remove temporary diagnostic and fixer plumbing
+        run: |
+          rm -f .github/integration/finalize-types-trigger .github/integration/diagnose-types-trigger .github/integration/typefix-trigger .github/integration/typefix-full-trigger .github/integration/verify-trigger
+          rm -f .github/workflows/finalize-runtime-io-types.yml .github/workflows/diagnose-final-types.yml .github/workflows/fix-final-integration-types.yml .github/workflows/fix-final-integration-types-full.yml .github/workflows/verify-final-integration.yml
+      - name: Commit verified type-safe fix
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git add -A
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: make Runtime I/O strict-type clean"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
