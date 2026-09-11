@@ -7,3 +7,12 @@
 @import url("./utilities.css");
 @import url("./visual-shell.css");
 @import url("./print.css");
+
+/* Keep the bilingual project identity visible in the compact visual shell. */
+body.mhrn-visual-shell-v2 .topbar-brand .project-subtitle {
+  display: block;
+  grid-column: 2;
+  margin: 0;
+  color: var(--mhrn-v2-muted);
+  font-size: 0.68rem;
+}
