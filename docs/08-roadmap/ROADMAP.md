@@ -4,6 +4,14 @@
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-10
 
+## 2026-09-11 Frontend shell accessibility
+
+- Corrected the fixed visual shell's content clearance: the active workspace
+	now starts below the measured topbar and primary navigation, while dynamic
+	footer height is reserved for scrolling on desktop and mobile.
+- Added a Playwright regression covering both top chrome clearance and footer
+	clearance at the end of the document.
+
 ## 2026-09-10 Bounded memory, prediction and behavior profile foundation
 
 - Updated the Release workspace's canonical current-release projection to the

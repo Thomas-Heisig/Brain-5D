@@ -9,6 +9,13 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Updated:** 2026-09-10
 **Current release-blocking backlog:** **0**
 
+## 2026-09-11 Frontend shell accessibility
+
+- [x] Reserve measured fixed header/navigation and footer space so the active
+	workspace remains reachable and scrollable at desktop and mobile widths.
+- [x] Add a browser regression check for workspace clearance from fixed chrome
+	and footer overlays.
+
 ## 2026-09-10 Memory / World Model / Behavior Profile foundation
 
 - [x] Connect bounded working and episodic memory to the existing

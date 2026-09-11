@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-11 - Frontend shell accessibility
+
+- Fixed the central workspace being covered by the fixed header and primary
+  navigation; measured shell heights now determine the main content offset.
+- Reserved the actual responsive footer height and added a browser regression
+  test so the workspace remains reachable at the top and bottom of the page.
+
 ## 2026-09-10 - Bounded memory, prediction and behavior profile foundation
 
 - Aktualisierte Release-Workspace-Projektion: v0.6.0a1 zeigt den Stand vom

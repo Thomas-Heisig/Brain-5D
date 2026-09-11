@@ -266,6 +266,27 @@ test("Release workspace renders the documentation timeline", async ({ page }) =>
   await expect(page.locator("#fm-viewer")).not.toHaveClass(/fm-viewer-hidden/);
 });
 
+test("active workspace remains clear of fixed chrome and footer", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openDashboard(page);
+  const metrics = await page.evaluate(() => {
+    const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
+    const topbar = rect(".topbar");
+    const primaryNav = rect(".brain5d-primary-nav");
+    const active = rect(".tab-content.active");
+    const footer = rect(".site-footer");
+    const chromeBottom = Math.max(topbar?.bottom || 0, primaryNav?.bottom || 0);
+    const startTop = active?.top || 0;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    window.scrollTo(0, maxScroll);
+    const endBottom = rect(".tab-content.active")?.bottom || 0;
+    return { chromeBottom, startTop, footerTop: footer?.top || window.innerHeight, endBottom };
+  });
+
+  expect(metrics.startTop).toBeGreaterThanOrEqual(metrics.chromeBottom);
+  expect(metrics.endBottom).toBeLessThanOrEqual(metrics.footerTop + 1);
+});
+
 for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
   test(`responsive shell has no horizontal overflow at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);

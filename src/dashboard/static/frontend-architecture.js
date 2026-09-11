@@ -245,11 +245,16 @@ function observeWorkspaceChanges() {
 function syncFixedChrome() {
   const topbar = document.querySelector(".topbar");
   const primaryNav = document.querySelector(".brain5d-primary-nav");
+  const footer = document.querySelector(".site-footer");
   if (!topbar || !primaryNav) return;
   const headerHeight = Math.ceil(topbar.getBoundingClientRect().height);
   const navHeight = Math.ceil(primaryNav.getBoundingClientRect().height);
   document.body.style.setProperty("--dashboard-header-height", `${headerHeight}px`);
   document.body.style.setProperty("--dashboard-primary-nav-height", `${navHeight}px`);
+  if (footer) {
+    const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
+    document.body.style.setProperty("--dashboard-footer-space", `${footerHeight}px`);
+  }
 }
 
 function init() {
@@ -267,8 +272,10 @@ function init() {
     const observer = new ResizeObserver(refreshChrome);
     const topbar = document.querySelector(".topbar");
     const primaryNav = document.querySelector(".brain5d-primary-nav");
+    const footer = document.querySelector(".site-footer");
     if (topbar) observer.observe(topbar);
     if (primaryNav) observer.observe(primaryNav);
+    if (footer) observer.observe(footer);
   }
   setTimeout(() => { ensureRuntimeCapabilityBoard(); syncNavigation(); refreshChrome(); }, 0);
 }
