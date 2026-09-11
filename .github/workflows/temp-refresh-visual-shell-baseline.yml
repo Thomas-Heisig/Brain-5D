@@ -48,3 +48,5 @@ jobs:
           git fetch origin "$TARGET_BRANCH"
           test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+
+# Temporary branch-local finalizer; removed before merge.
