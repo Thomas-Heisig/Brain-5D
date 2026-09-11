@@ -9,7 +9,7 @@ import importlib.metadata
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Iterable, cast
 
 import numpy as np
 
@@ -183,8 +183,8 @@ def run_embedding_job(
         transformed = features[:, :2]
         algorithm_version = _package_version("scikit-learn")
 
-    input_cells = set(getattr(network, "input_cells", set()))
-    output_cells = set(getattr(network, "output_cells", set()))
+    input_cells = set(cast(Iterable[int], getattr(network, "input_cells", ())))
+    output_cells = set(cast(Iterable[int], getattr(network, "output_cells", ())))
     rows: list[dict[str, Any]] = []
     for index, neuron_id in enumerate(neuron_ids):
         feature = features[index]

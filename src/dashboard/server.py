@@ -43,7 +43,7 @@ from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Iterable, Protocol, cast
 from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
@@ -168,6 +168,14 @@ class RequestBodyTooLargeError(DashboardError):
 
 class UnsupportedMediaTypeError(DashboardError):
     """Raised when a JSON endpoint receives an unsupported content type."""
+
+
+class _RuntimeIOCapable(Protocol):
+    """Optional operator I/O capability without widening RuntimeNetworkLike."""
+
+    def is_input_cell(self, neuron_id: int) -> bool: ...
+
+    def inject_current(self, neuron_id: int, current: float) -> None: ...
 
 
 # ============================================================================
@@ -2163,10 +2171,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         mode = snapshot.experiment_state.current_mode
         input_ids = sorted(
-            int(value) for value in getattr(network, "input_cells", set())
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "input_cells", ()))
         )
         output_ids = sorted(
-            int(value) for value in getattr(network, "output_cells", set())
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "output_cells", ()))
         )
         controller_state = bridge.controller.telemetry.controller_state
         controller_state_value = getattr(
@@ -2242,7 +2252,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             raise InvalidRequestError("current must be finite and within [-1000, 1000]")
 
         network = bridge.controller.network
-        if not network.is_input_cell(neuron_id):
+        io_network = cast(_RuntimeIOCapable, network)
+        if not io_network.is_input_cell(neuron_id):
             raise InvalidRequestError(
                 f"neuron_id {neuron_id} is not a registered input neuron"
             )
@@ -2265,17 +2276,25 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         before_tick = int(getattr(network, "current_tick", 0))
         before_input = self._runtime_io_neuron_state(network, neuron_id)
-        before_outputs = {
-            str(output_id): self._runtime_io_neuron_state(network, output_id)
-            for output_id in sorted(getattr(network, "output_cells", set()))[:200]
+        output_ids = sorted(
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "output_cells", ()))
+        )
+        before_outputs: dict[str, JSONValue] = {
+            str(output_id): cast(
+                JSONValue, self._runtime_io_neuron_state(network, output_id)
+            )
+            for output_id in output_ids[:200]
         }
         spike_before = int(getattr(network, "total_spikes", 0))
-        network.inject_current(neuron_id, current)
+        io_network.inject_current(neuron_id, current)
         telemetry = bridge.controller.run_ticks(ticks)
         after_input = self._runtime_io_neuron_state(network, neuron_id)
-        after_outputs = {
-            str(output_id): self._runtime_io_neuron_state(network, output_id)
-            for output_id in sorted(getattr(network, "output_cells", set()))[:200]
+        after_outputs: dict[str, JSONValue] = {
+            str(output_id): cast(
+                JSONValue, self._runtime_io_neuron_state(network, output_id)
+            )
+            for output_id in output_ids[:200]
         }
         after_tick = int(getattr(network, "current_tick", 0))
         spike_after = int(getattr(network, "total_spikes", 0))
@@ -2305,8 +2324,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 "delta": {
                     "ticks": after_tick - before_tick,
                     "total_spikes": spike_after - spike_before,
-                    "input_v": float(after_input["v"]) - float(before_input["v"]),
-                    "input_u": float(after_input["u"]) - float(before_input["u"]),
+                    "input_v": cast(float, after_input["v"])
+                    - cast(float, before_input["v"]),
+                    "input_u": cast(float, after_input["u"])
+                    - cast(float, before_input["u"]),
                 },
                 "scientific_boundary": (
                     "This result records a manual operator/debug intervention and must not "
