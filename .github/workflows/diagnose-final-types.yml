@@ -1,0 +1,57 @@
+name: Diagnose final integration types
+
+on:
+  push:
+    branches:
+      - fix/final-integration-20260911
+    paths:
+      - .github/integration/diagnose-types-trigger
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Apply candidate typing fix in workspace
+        shell: python
+        run: |
+          from pathlib import Path
+          runtime = Path("src/controller/runtime.py")
+          text = runtime.read_text()
+          needle = "    def step(self) -> StepResultLike: ...\n\n\nclass HomeostasisLike(Protocol):"
+          replacement = "    def step(self) -> StepResultLike: ...\n\n    def is_input_cell(self, neuron_id: int) -> bool: ...\n\n    def inject_current(self, neuron_id: int, current: float) -> None: ...\n\n\nclass HomeostasisLike(Protocol):"
+          if needle in text:
+              runtime.write_text(text.replace(needle, replacement, 1))
+          server = Path("src/dashboard/server.py")
+          text = server.read_text()
+          text = text.replace('        before_outputs = {\n            str(output_id): self._runtime_io_neuron_state(network, output_id)\n','        before_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(JSONValue, self._runtime_io_neuron_state(network, output_id))\n',1)
+          text = text.replace('        after_outputs = {\n            str(output_id): self._runtime_io_neuron_state(network, output_id)\n','        after_outputs: dict[str, JSONValue] = {\n            str(output_id): cast(JSONValue, self._runtime_io_neuron_state(network, output_id))\n',1)
+          text = text.replace('                    "input_v": float(after_input["v"]) - float(before_input["v"]),\n                    "input_u": float(after_input["u"]) - float(before_input["u"]),\n','                    "input_v": cast(float, after_input["v"]) - cast(float, before_input["v"]),\n                    "input_u": cast(float, after_input["u"]) - cast(float, before_input["u"]),\n',1)
+          server.write_text(text)
+      - name: Install full environment
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e ".[dev,docs]"
+      - name: Capture type diagnostics
+        shell: bash
+        run: |
+          set +e
+          python -m mypy src > "$RUNNER_TEMP/mypy.txt" 2>&1
+          echo $? > "$RUNNER_TEMP/mypy.rc"
+          python -m pyright src > "$RUNNER_TEMP/pyright.txt" 2>&1
+          echo $? > "$RUNNER_TEMP/pyright.rc"
+          python -m black --check src/controller/runtime.py src/dashboard/server.py > "$RUNNER_TEMP/black.txt" 2>&1
+          echo $? > "$RUNNER_TEMP/black.rc"
+          exit 0
+      - uses: actions/upload-artifact@v7
+        with:
+          name: final-type-diagnostics
+          path: ${{ runner.temp }}/*.txt
+          retention-days: 3
