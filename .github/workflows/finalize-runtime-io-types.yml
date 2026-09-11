@@ -62,7 +62,7 @@ jobs:
 
           embedding = Path("src/dashboard/embedding_jobs.py")
           text = embedding.read_text(encoding="utf-8")
-          text = text.replace("from typing import Any", "from typing import Any, Iterable, cast", 1)
+          text = text.replace("from typing import Any, cast", "from typing import Any, Iterable, cast", 1)
           text = text.replace(
               '    input_cells = set(getattr(network, "input_cells", set()))\n    output_cells = set(getattr(network, "output_cells", set()))\n',
               '    input_cells = set(\n        cast(Iterable[int], getattr(network, "input_cells", ()))\n    )\n    output_cells = set(\n        cast(Iterable[int], getattr(network, "output_cells", ()))\n    )\n',
