@@ -54,9 +54,7 @@ def test_wesen_shell_keeps_embodiment_sibling_and_moves_utilities_to_footer() ->
 
 def test_visual_shell_v2_is_visible_and_exposes_global_routes() -> None:
     frontend = (STATIC / "frontend" / "index.js").read_text(encoding="utf-8")
-    styles = (STATIC / "frontend" / "styles" / "index.css").read_text(
-        encoding="utf-8"
-    )
+    styles = (STATIC / "frontend" / "styles" / "index.css").read_text(encoding="utf-8")
     visual = (STATIC / "frontend" / "styles" / "visual-shell.css").read_text(
         encoding="utf-8"
     )
