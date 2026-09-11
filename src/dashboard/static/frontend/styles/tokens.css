@@ -1,0 +1,1 @@
+:root { --mhrn-panel-bg: color-mix(in srgb, var(--bg, #08131c) 94%, white 6%); --mhrn-line: var(--line, rgba(127,127,127,.22)); --mhrn-ok:#51d6ad; --mhrn-warn:#efb45e; --mhrn-danger:#ef8b8b; }

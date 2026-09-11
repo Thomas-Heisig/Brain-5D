@@ -27,7 +27,11 @@
         "fixed_graph_label_6d",
         "fixed_graph_label_8d",
         "random_graph"
-      ]
+      ],
+      "snn_involved": true,
+      "direct_test_of_hypothesis": true,
+      "scientific_evidence": false,
+      "automatic_evidence_promotion": false
     },
     {
       "id": "native_association_holdout_v1",
@@ -46,7 +50,11 @@
         "sham_replay",
         "weight_reset",
         "weight_shuffle"
-      ]
+      ],
+      "snn_involved": true,
+      "direct_test_of_hypothesis": true,
+      "scientific_evidence": false,
+      "automatic_evidence_promotion": false
     },
     {
       "id": "brian2_single_neuron_v1",
@@ -60,7 +68,11 @@
       "treatments": [
         "matched_split_euler"
       ],
-      "controls": []
+      "controls": [],
+      "snn_involved": true,
+      "direct_test_of_hypothesis": true,
+      "scientific_evidence": false,
+      "automatic_evidence_promotion": false
     },
     {
       "id": "active_scaling_v1",
@@ -79,7 +91,11 @@
         "n5000",
         "n25000",
         "n100000"
-      ]
+      ],
+      "snn_involved": true,
+      "direct_test_of_hypothesis": true,
+      "scientific_evidence": false,
+      "automatic_evidence_promotion": false
     }
   ]
 }

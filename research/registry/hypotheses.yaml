@@ -29,6 +29,15 @@
   - EVID-2026-15
   created: '2026-08-23'
   updated: '2026-08-23'
+- id: H-SNN-003-B
+  research_question: RQ-SNN-003
+  hypothesis: Unter gleicher Neuronenzahl, Dichte und Stimulusbedingung unterscheiden
+    sich Propagationslatenz oder -reichweite zwischen mindestens zwei vorab definierten
+    Topologien; ein Vorteil einer 5D-Anordnung wird nicht vorausgesetzt.
+  status: untested
+  evidence: []
+  created: '2026-09-11'
+  updated: '2026-09-11'
 - id: H-SNN-004-A
   research_question: RQ-SNN-004
   hypothesis: STDP führt zu einer meßbaren asymmetrischen Verschiebung der synaptischen

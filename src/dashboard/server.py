@@ -32,6 +32,7 @@ import argparse
 import base64
 import datetime
 import json
+import math
 import os
 import secrets
 import signal
@@ -42,10 +43,11 @@ from collections.abc import Mapping
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Iterable, Protocol, cast
 from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
+from src.core.spatial_index import unpack_coords
 from src.embodiment import (
     ConnectionManager,
     GatewayCondition,
@@ -166,6 +168,14 @@ class RequestBodyTooLargeError(DashboardError):
 
 class UnsupportedMediaTypeError(DashboardError):
     """Raised when a JSON endpoint receives an unsupported content type."""
+
+
+class _RuntimeIOCapable(Protocol):
+    """Optional operator I/O capability without widening RuntimeNetworkLike."""
+
+    def is_input_cell(self, neuron_id: int) -> bool: ...
+
+    def inject_current(self, neuron_id: int, current: float) -> None: ...
 
 
 # ============================================================================
@@ -350,6 +360,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             if path == "/api/config":
                 snapshot = server.dashboard_state.snapshot()
                 self._send_json({"runtime": snapshot.runtime})
+                return
+
+            if path == "/api/runtime/io":
+                self._send_runtime_io()
                 return
 
             # ----------------------------------------------------------------
@@ -790,6 +804,12 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             # ----------------------------------------------------------------
             # Structural / runtime operator commands
             # ----------------------------------------------------------------
+
+            if path == "/api/runtime/io/inject":
+                bridge = self._require_bridge()
+                body = self._read_json_object()
+                self._send_runtime_io_injection(bridge, body)
+                return
 
             if path.startswith("/api/structural/") or path.startswith("/api/runtime/"):
                 bridge = self._require_bridge()
@@ -2120,6 +2140,201 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     # ========================================================================
     # Structural / runtime POST dispatch
     # ========================================================================
+
+    def _runtime_io_neuron_state(
+        self, network: Any, neuron_id: int
+    ) -> dict[str, JSONValue]:
+        neuron = network.get_neuron(neuron_id)
+        if neuron is None:
+            raise InvalidRequestError(f"Unknown neuron_id: {neuron_id}")
+        coordinates = unpack_coords(int(neuron_id))
+        return {
+            "neuron_id": int(neuron_id),
+            "coordinates": [int(value) for value in coordinates],
+            "v": float(getattr(neuron, "v", 0.0)),
+            "u": float(getattr(neuron, "u", 0.0)),
+            "energy": float(getattr(neuron, "energy", 0.0)),
+            "spike_counter": int(getattr(neuron, "spike_counter", 0)),
+            "last_spike_tick": int(getattr(neuron, "last_spike_tick", -1)),
+            "last_external_current": float(
+                getattr(neuron, "last_external_current", 0.0)
+            ),
+            "last_synaptic_current": float(
+                getattr(neuron, "last_synaptic_current", 0.0)
+            ),
+            "is_input": bool(network.is_input_cell(neuron_id)),
+            "is_output": bool(network.is_output_cell(neuron_id)),
+        }
+
+    def _runtime_io_payload(self, bridge: OperatorBridge) -> dict[str, JSONValue]:
+        network = bridge.controller.network
+        snapshot = self.dashboard_server.dashboard_state.snapshot()
+        mode = snapshot.experiment_state.current_mode
+        input_ids = sorted(
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "input_cells", ()))
+        )
+        output_ids = sorted(
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "output_cells", ()))
+        )
+        controller_state = bridge.controller.telemetry.controller_state
+        controller_state_value = getattr(
+            controller_state, "value", str(controller_state)
+        )
+        return {
+            "tick": int(getattr(network, "current_tick", 0)),
+            "mode": mode,
+            "controller_state": str(controller_state_value),
+            "manual_injection_allowed": (
+                mode in {"operator", "debug"} and controller_state_value != "running"
+            ),
+            "operator_intervention": False,
+            "scientific_evidence": False,
+            "automatic_evidence_promotion": False,
+            "input_neurons": [
+                self._runtime_io_neuron_state(network, neuron_id)
+                for neuron_id in input_ids[:200]
+            ],
+            "output_neurons": [
+                self._runtime_io_neuron_state(network, neuron_id)
+                for neuron_id in output_ids[:200]
+            ],
+            "counts": {
+                "input_neurons": len(input_ids),
+                "output_neurons": len(output_ids),
+            },
+            "limits": {
+                "max_visible_per_role": 200,
+                "max_ticks_per_injection": 10_000,
+                "max_abs_current": 1_000.0,
+            },
+            "scientific_boundary": (
+                "Manual runtime I/O is an operator/debug intervention only. "
+                "It is disabled in experiment mode and never counts as scientific evidence."
+            ),
+        }
+
+    def _send_runtime_io(self) -> None:
+        bridge = self._require_bridge()
+        self._send_json(self._runtime_io_payload(bridge))
+
+    def _send_runtime_io_injection(
+        self, bridge: OperatorBridge, body: dict[str, object]
+    ) -> None:
+        mode = (
+            self.dashboard_server.dashboard_state.snapshot().experiment_state.current_mode
+        )
+        if mode == "experiment":
+            self._send_json(
+                {
+                    "ok": False,
+                    "error": "Manual current injection is locked in experiment mode.",
+                    "mode": mode,
+                    "operator_intervention": True,
+                    "scientific_evidence": False,
+                },
+                HTTPStatus.CONFLICT,
+            )
+            return
+        if mode not in {"operator", "debug"}:
+            raise InvalidRequestError(
+                f"Manual injection is not permitted in mode: {mode}"
+            )
+
+        neuron_id = self._int_field(body, "neuron_id", minimum=0, maximum=(1 << 63) - 1)
+        ticks = self._int_field(body, "ticks", minimum=1, maximum=10_000)
+        current_raw = body.get("current")
+        if isinstance(current_raw, bool) or not isinstance(current_raw, (int, float)):
+            raise InvalidRequestError("current must be a finite number")
+        current = float(current_raw)
+        if not math.isfinite(current) or abs(current) > 1_000.0:
+            raise InvalidRequestError("current must be finite and within [-1000, 1000]")
+
+        network = bridge.controller.network
+        io_network = cast(_RuntimeIOCapable, network)
+        if not io_network.is_input_cell(neuron_id):
+            raise InvalidRequestError(
+                f"neuron_id {neuron_id} is not a registered input neuron"
+            )
+        controller_state = bridge.controller.telemetry.controller_state
+        controller_state_value = getattr(
+            controller_state, "value", str(controller_state)
+        )
+        if controller_state_value == "running":
+            self._send_json(
+                {
+                    "ok": False,
+                    "error": "Manual current injection is unavailable while runtime is running.",
+                    "mode": mode,
+                    "operator_intervention": True,
+                    "scientific_evidence": False,
+                },
+                HTTPStatus.CONFLICT,
+            )
+            return
+
+        before_tick = int(getattr(network, "current_tick", 0))
+        before_input = self._runtime_io_neuron_state(network, neuron_id)
+        output_ids = sorted(
+            int(value)
+            for value in cast(Iterable[int], getattr(network, "output_cells", ()))
+        )
+        before_outputs: dict[str, JSONValue] = {
+            str(output_id): cast(
+                JSONValue, self._runtime_io_neuron_state(network, output_id)
+            )
+            for output_id in output_ids[:200]
+        }
+        spike_before = int(getattr(network, "total_spikes", 0))
+        io_network.inject_current(neuron_id, current)
+        telemetry = bridge.controller.run_ticks(ticks)
+        after_input = self._runtime_io_neuron_state(network, neuron_id)
+        after_outputs: dict[str, JSONValue] = {
+            str(output_id): cast(
+                JSONValue, self._runtime_io_neuron_state(network, output_id)
+            )
+            for output_id in output_ids[:200]
+        }
+        after_tick = int(getattr(network, "current_tick", 0))
+        spike_after = int(getattr(network, "total_spikes", 0))
+        self._send_json(
+            {
+                "ok": True,
+                "mode": mode,
+                "operator_intervention": True,
+                "scientific_evidence": False,
+                "automatic_evidence_promotion": False,
+                "request": {
+                    "neuron_id": neuron_id,
+                    "current": current,
+                    "ticks": ticks,
+                },
+                "before": {
+                    "tick": before_tick,
+                    "input": before_input,
+                    "outputs": before_outputs,
+                },
+                "after": {
+                    "tick": after_tick,
+                    "input": after_input,
+                    "outputs": after_outputs,
+                    "telemetry": telemetry.to_dict(),
+                },
+                "delta": {
+                    "ticks": after_tick - before_tick,
+                    "total_spikes": spike_after - spike_before,
+                    "input_v": cast(float, after_input["v"])
+                    - cast(float, before_input["v"]),
+                    "input_u": cast(float, after_input["u"])
+                    - cast(float, before_input["u"]),
+                },
+                "scientific_boundary": (
+                    "This result records a manual operator/debug intervention and must not "
+                    "be interpreted as an experimental observation."
+                ),
+            }
+        )
 
     def _dispatch_structural_post(
         self,
@@ -4112,6 +4327,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
         if request_path in {"", "/"}:
             relative = "index.html"
+        elif request_path in {"/review", "/review/"}:
+            relative = "review/index.html"
         else:
             relative = request_path.lstrip("/")
 

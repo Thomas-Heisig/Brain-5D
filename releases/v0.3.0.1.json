@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "version": "0.3.0.1",
+  "pep440": "0.3.0.1",
+  "status": "released",
+  "title": "Historical tagged release",
+  "tag": "brain5d-core-v0.3.0.1",
+  "tag_object": "2b1586adf4fc53f97f45f0d20fa38b70507b2677",
+  "commit": "6115da174abea181ab5d564bb946da76cb0dd8e6",
+  "date": "2026-08-16",
+  "gate": "unknown",
+  "historical_tag_only": true,
+  "note": "Sprint 2C - reward-modulated plasticity and heatmap after error"
+}

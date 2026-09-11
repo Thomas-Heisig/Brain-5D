@@ -1,6 +1,6 @@
 /* MHRN Wesen integration shell.
  * The existing adaptive Wesen implementation remains in wesen-base.js.
- * This shell merges the technical Embodiment surface into Wesen and keeps
+ * This shell keeps technical Embodiment as a sibling workspace of Wesen and keeps
  * Settings/Release as footer utilities instead of primary workspaces.
  */
 import "./wesen-base.js";
@@ -24,7 +24,10 @@ function injectIntegrationStyles() {
     .wesen-technical-body > summary small { opacity: .68; }
     .wesen-technical-body-content { padding: 0 1rem 1rem; }
     .wesen-technical-body-content > .workspace-header { margin-top: .25rem; }
-    .footer-tools { display: flex; gap: .45rem; align-items: center; }
+    .wesen-subnav { display:flex; flex-wrap:wrap; gap:.45rem; margin:.7rem 0 1rem; }
+    .wesen-subnav button { border:1px solid var(--line,#1c4155); background:transparent; color:inherit; border-radius:8px; padding:.5rem .75rem; cursor:pointer; }
+    .wesen-subnav button.active { background:rgba(127,127,127,.12); box-shadow:inset 0 -2px 0 currentColor; }
+    .footer-tools { display: flex; gap: .45rem; align-items: center; flex-wrap:wrap; }
     .footer-nav-btn { border: 1px solid var(--line, #1c4155); background: transparent; color: inherit; border-radius: 8px; padding: .45rem .7rem; cursor: pointer; font: inherit; }
     .footer-nav-btn:hover, .footer-nav-btn:focus-visible { background: rgba(127,127,127,.12); outline: none; }
     .wesen-sensor-controls { margin-top: 1rem; border: 1px solid var(--line, #1c4155); border-radius: 10px; padding: 1rem; background: rgba(127,127,127,.035); }
@@ -43,22 +46,23 @@ function injectIntegrationStyles() {
 function mergeEmbodimentIntoWesen() {
   const wesen = byId("tab-wesen");
   const embodiment = byId("tab-embodiment");
-  if (!wesen || !embodiment || embodiment.closest("#tab-wesen")) return;
+  if (!wesen || !embodiment) return;
 
-  const details = document.createElement("details");
-  details.className = "wesen-technical-body";
-  details.innerHTML = `
-    <summary>
-      <div><span class="workspace-kicker">TECHNISCHE KÖRPERGRENZE</span><strong>Sensoren, Aktoren, Adapter & Runtime</strong></div>
-      <small>einklappbar · Basis für kommende Embodiment-Generationen</small>
-    </summary>`;
-
-  embodiment.classList.remove("tab-content", "active");
-  embodiment.classList.add("wesen-technical-body-content");
-  embodiment.hidden = false;
-  embodiment.removeAttribute("aria-hidden");
-  details.appendChild(embodiment);
-  wesen.appendChild(details);
+  for (const [workspace, current] of [[wesen, "wesen"], [embodiment, "embodiment"]]) {
+    if (workspace.querySelector(":scope > .wesen-subnav")) continue;
+    const nav = document.createElement("nav");
+    nav.className = "wesen-subnav";
+    nav.setAttribute("aria-label", "Runtime und Wesen Unterbereiche");
+    nav.innerHTML = `
+      <button type="button" data-wesen-tab="wesen" ${current === "wesen" ? 'class="active"' : ''}>🧠 Wesen</button>
+      <button type="button" data-wesen-tab="embodiment" ${current === "embodiment" ? 'class="active"' : ''}>◈ Embodiment</button>`;
+    const header = workspace.querySelector(":scope > .workspace-header, :scope > header");
+    if (header) header.insertAdjacentElement("afterend", nav); else workspace.prepend(nav);
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-wesen-tab]");
+      if (button) activateUtilityTab(button.dataset.wesenTab);
+    });
+  }
 }
 
 function sensorEscape(value) {
@@ -74,7 +78,7 @@ function sensorReason(sensor) {
 }
 
 function ensureSensorControls() {
-  const content = document.querySelector(".wesen-technical-body-content");
+  const content = byId("tab-embodiment");
   if (!content || document.getElementById("wesen-sensor-controls")) return;
   const panel = document.createElement("section");
   panel.id = "wesen-sensor-controls";
@@ -119,7 +123,11 @@ function configurePrimaryNavigation() {
   if (!nav) return;
 
   const embodimentButton = nav.querySelector('.tab-btn[data-tab="embodiment"]');
-  embodimentButton?.remove();
+  if (embodimentButton) {
+    embodimentButton.classList.add("wesen-utility-hidden");
+    embodimentButton.setAttribute("aria-hidden", "true");
+    embodimentButton.tabIndex = -1;
+  }
 
   for (const name of ["network", "settings", "gate"]) {
     const button = nav.querySelector(`.tab-btn[data-tab="${name}"]`);
@@ -148,8 +156,11 @@ function ensureFooterTools() {
   tools.className = "footer-tools";
   tools.setAttribute("aria-label", "Systembereiche");
   tools.innerHTML = `
-    <button type="button" class="footer-nav-btn" data-footer-tab="settings">⚙ Settings</button>
-    <button type="button" class="footer-nav-btn" data-footer-tab="gate">🚀 Release</button>`;
+    <button type="button" class="footer-nav-btn" data-footer-tab="overview">📊 Dashboard</button>
+    <button type="button" class="footer-nav-btn" data-footer-tab="research">🔬 Wissenschaft</button>
+    <button type="button" class="footer-nav-btn" data-footer-tab="wesen">🧠 Runtime & Wesen</button>
+    <button type="button" class="footer-nav-btn" data-footer-tab="gate">🚀 Release</button>
+    <button type="button" class="footer-nav-btn" data-footer-tab="settings">⚙ Settings</button>`;
   const health = byId("footer-status");
   if (health) health.insertBefore(tools, health.firstChild);
   else footer.appendChild(tools);

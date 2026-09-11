@@ -19,7 +19,11 @@
         "n5000",
         "n25000",
         "n100000"
-      ]
+      ],
+      "snn_involved": true,
+      "direct_test_of_hypothesis": true,
+      "scientific_evidence": false,
+      "automatic_evidence_promotion": false
     }
   ]
 }

@@ -17,15 +17,17 @@ Generates all markdown reports from the research registries:
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+# Add the repository root so the canonical ``src`` package resolves even
+# when this file is executed directly as ``python research/generate_reports.py``.
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
 
-from research.literature_registry import LiteratureRegistry
-from research.registry import ResearchRegistry
-from research.report_builder import ReportBuilder
+from src.research.literature_registry import LiteratureRegistry
+from src.research.registry import ResearchRegistry
+from src.research.report_builder import ReportBuilder
 
 
-def main():
+def main() -> None:
     print("Loading research registry...")
     registry = ResearchRegistry()
     registry.load_all()

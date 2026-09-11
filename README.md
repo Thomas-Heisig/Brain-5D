@@ -182,7 +182,7 @@ See:
 ## Quick start
 
 ```bash
-git clone https://github.com/Thomas-Heisig/Brain-5D.git MHRN
+git clone https://github.com/Thomas-Heisig/MHRN.git
 cd MHRN
 python -m venv .venv
 ```
@@ -328,7 +328,7 @@ See [`docs/03-dashboard/DASHBOARD.md`](docs/03-dashboard/DASHBOARD.md) and
   title   = {Multi-Scale Homeostatic Recurrence Network (MHRN)},
   year    = {2026},
   version = {0.5.0a7},
-  url     = {https://github.com/Thomas-Heisig/Brain-5D},
+  url     = {https://github.com/Thomas-Heisig/MHRN},
   license = {MIT}
 }
 ```

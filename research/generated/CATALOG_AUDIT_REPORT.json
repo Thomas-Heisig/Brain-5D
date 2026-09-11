@@ -2,8 +2,8 @@
   "status": "clean",
   "audit": {
     "clean": false,
-    "question_reference_count": 1761,
-    "hypothesis_reference_count": 1493,
+    "question_reference_count": 2895,
+    "hypothesis_reference_count": 2295,
     "missing_questions": [
       "RQ-AI-DESIGN-001",
       "RQ-AI-EFF-001",
@@ -342,6 +342,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -355,6 +357,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -368,6 +372,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -381,6 +387,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -394,6 +402,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -407,6 +417,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -420,6 +432,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]
@@ -433,6 +447,8 @@
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.1/section-035.md",
         "research/publications/2026-09-07_ki-die-geliehene-intelligenz_v1.2/section-035.md",
         "research/publications/2026-09-08_recursive-epistemics_v1.3/section-035.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/MANUSCRIPT.md",
+        "research/publications/2026-09-10_recursive-epistemics_v1.4/section-035.md",
         "research/publications/reader/section-035.md",
         "research/registry/catalog_audit_allow_list.yaml"
       ]

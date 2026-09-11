@@ -67,6 +67,11 @@ class NeuronConfig:
     c: float = -65.0
     d: float = 8.0
 
+    # Initial dynamic state. These values are applied only when a neuron is
+    # created; the live per-neuron v/u state remains independently mutable.
+    initial_v: float = -65.0
+    initial_u: float = -13.0
+
     # Threshold adaptation
     threshold_adaptation_rate: float = 0.01  # per spike
     threshold_adaptation_decay: float = 0.999  # per tick (homeostasis)
@@ -494,18 +499,28 @@ def create_neuron(
         >>> neuron = create_neuron(42, NeuronType.FAST_SPIKING, v=-60.0)
         >>> neuron.step(0.0, 0)
     """
-    # Get default parameters for this type
+    # Explicit kwargs have highest priority. When a NeuronConfig is supplied,
+    # its dynamics are the canonical construction parameters; neuron-type
+    # defaults are used only when no configuration is attached.
     params = neuron_type.default_params
+    config_a = config.a if config is not None else params[0]
+    config_b = config.b if config is not None else params[1]
+    config_c = config.c if config is not None else params[2]
+    config_d = config.d if config is not None else params[3]
+    initial_v = config.initial_v if config is not None else -65.0
+    initial_u = config.initial_u if config is not None else -13.0
+    initial_energy = config.resting_energy if config is not None else 1.0
+    spike_cost = config.spike_cost if config is not None else 0.001
     neuron = Neuron(
         neuron_id=neuron_id,
-        a=kwargs.get("a", params[0]),
-        b=kwargs.get("b", params[1]),
-        c=kwargs.get("c", params[2]),
-        d=kwargs.get("d", params[3]),
-        v=kwargs.get("v", -65.0),
-        u=kwargs.get("u", -13.0),
-        energy=kwargs.get("energy", 1.0),
-        spike_cost=kwargs.get("spike_cost", 0.001),
+        a=kwargs.get("a", config_a),
+        b=kwargs.get("b", config_b),
+        c=kwargs.get("c", config_c),
+        d=kwargs.get("d", config_d),
+        v=kwargs.get("v", initial_v),
+        u=kwargs.get("u", initial_u),
+        energy=kwargs.get("energy", initial_energy),
+        spike_cost=kwargs.get("spike_cost", spike_cost),
         spike_counter=kwargs.get("spike_counter", 0),
         last_spike_tick=kwargs.get("last_spike_tick", -1),
         threshold_adaptation=kwargs.get("threshold_adaptation", 0.0),

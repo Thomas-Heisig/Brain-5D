@@ -61,7 +61,7 @@ function addUtilityBars() {
     bar.innerHTML = `
       <span class="dashboard-utility-context" data-dashboard-context>${TAB_META[tabName].context}</span>
       <div class="dashboard-utility-actions">
-        <a class="dashboard-utility-button" href="/review/index.html" target="_blank" rel="noopener noreferrer">Externes Review</a>
+        <a class="dashboard-utility-button" href="/review" target="_blank" rel="noopener noreferrer">Externes Review</a>
         <button type="button" class="dashboard-utility-button" data-dashboard-action="refresh">↻ Refresh</button>
         <button type="button" class="dashboard-utility-button" data-dashboard-action="density">Compact</button>
         <button type="button" class="dashboard-utility-button" data-dashboard-action="top">↑ Top</button>

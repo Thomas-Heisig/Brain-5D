@@ -1,11 +1,11 @@
 # MHRN Research Catalog
 
-*Generiert am 2026-09-10*
+*Generiert am 2026-09-11*
 
 ## Übersicht
 
 - **Forschungsfragen:** 94
-- **Hypothesen:** 96
+- **Hypothesen:** 97
 - **Claims:** 8
 - **Literaturquellen:** 39
 
@@ -1250,7 +1250,10 @@
 **Frage:** Wie variiert die Propagation mit der Topologie?
 
 **Status:** open
-**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in 5D-SNNs.
+**Relevanz:** Grundlegendes Verständnis der Signalausbreitung in multidimensionalen SNNs.
+
+**Hypothesen:**
+- `H-SNN-003-B`: Unter gleicher Neuronenzahl, Dichte und Stimulusbedingung unterscheiden sich Propagationslatenz oder -reichweite zwischen mindestens zwei vorab definierten Topologien; ein Vorteil einer 5D-Anordnung wird nicht vorausgesetzt. *(untested)*
 
 **Literatur:**
 - `SRC-WATTS-STROGATZ-1998`: Duncan J. Watts et al. (1998)

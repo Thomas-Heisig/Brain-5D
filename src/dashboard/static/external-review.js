@@ -11,7 +11,7 @@ export function initExternalReview() {
     <h3>Externe Begutachtung</h3>
     <p>Der Fragebogen ist ein Screening. Antworten ersetzen weder eine Fachpruefung noch eine institutionelle Ethikfreigabe oder wissenschaftliche Evidenz.</p>
     <p id="external-review-summary" role="status">Status wird geprueft.</p>
-    <a href="/review/index.html" target="_blank" rel="noopener noreferrer">Fragenkatalog oeffnen</a>
+    <a href="/review" target="_blank" rel="noopener noreferrer">Fragenkatalog oeffnen</a>
     <button type="button" id="external-review-refresh">Status pruefen</button>
     <button type="button" id="external-review-method">Pruefverfahren im File Viewer</button>
     <div id="external-review-stages"></div>

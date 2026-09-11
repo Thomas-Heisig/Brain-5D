@@ -212,6 +212,7 @@ A scientific milestone is complete only when all applicable requirements are sat
 - [x] Add real graph geometry ablations, frozen native association tests, Brian2 conformance and active scaling with explicit amendment.
 - [x] Publish manuscript 1.4 and data-bound uncertainty analysis without automatic EVID promotion.
 - [ ] Diagnose Brian2 numerical divergence using separately frozen interventions.
-- [ ] Implement the remaining 43 question-specific native protocols; retain 22 human-review tasks as pending.
+- [x] Register operational contracts for the remaining 43 RQs: directly instrumentable questions resolve to dedicated runners; non-instrumented or non-causal questions resolve to explicit `boundary_audit` contracts with `direct_test_of_hypothesis=false`.
+- [ ] Replace boundary-audit contracts with validated causal instruments only where scientifically appropriate; protected Connectome/Embodiment designs remain blocked until their native adapter/reference requirements are met.
 - [ ] Obtain independent replication, human EVID review and required external ethics decisions.
 - [ ] Add NEST/Lava task-matched network/learning benchmarks and long-horizon scaling.

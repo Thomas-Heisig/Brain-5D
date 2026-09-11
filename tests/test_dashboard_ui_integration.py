@@ -39,7 +39,7 @@ def test_experiment_workflow_batch_ui_is_bound_and_lists_all_questions() -> None
     assert 'id="workflow-batch-start"' in html
 
 
-def test_wesen_shell_merges_embodiment_and_moves_utilities_to_footer() -> None:
+def test_wesen_shell_keeps_embodiment_sibling_and_moves_utilities_to_footer() -> None:
     source = (STATIC / "wesen.js").read_text(encoding="utf-8")
     assert 'import "./wesen-base.js"' in source
     assert "mergeEmbodimentIntoWesen" in source
@@ -47,4 +47,6 @@ def test_wesen_shell_merges_embodiment_and_moves_utilities_to_footer() -> None:
     assert 'data-footer-tab="settings"' in source
     assert 'data-footer-tab="gate"' in source
     assert 'data-tab="embodiment"' in source
-    assert "embodimentButton?.remove()" in source
+    assert "embodimentButton?.remove()" not in source
+    assert "appendChild(embodiment)" not in source
+    assert 'embodimentButton.classList.add("wesen-utility-hidden")' in source

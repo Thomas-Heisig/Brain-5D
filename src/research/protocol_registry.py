@@ -74,6 +74,54 @@ OPERATIONAL_RUNNERS.update(
     }
 )
 
+OPERATIONAL_RUNNERS.update(
+    {
+        "dimension_dynamics_v1": "run_5d",
+        "dimension_propagation_v1": "run_5d",
+        "dimension_modularity_boundary_v1": "run_boundary_audit",
+        "dimension_information_boundary_v1": "run_boundary_audit",
+        "research_assistant_methodology_audit_v1": "run_boundary_audit",
+        "connectome_reference_gap_audit_v1": "run_boundary_audit",
+        "deterministic_replica_v1": "run_ping_v2",
+        "embodied_mapping_learning_gap_audit_v1": "run_boundary_audit",
+        "embodied_efference_copy_gap_audit_v1": "run_boundary_audit",
+        "embodied_morphology_transfer_gap_audit_v1": "run_boundary_audit",
+        "epistemic_boundary_audit_v1": "run_boundary_audit",
+        "authorship_responsibility_audit_v1": "run_boundary_audit",
+        "control_responsibility_audit_v1": "run_boundary_audit",
+        "gateway_learning_boundary_v1": "run_boundary_audit",
+        "gateway_modality_rules_boundary_v1": "run_boundary_audit",
+        "gateway_stability_boundary_v1": "run_boundary_audit",
+        "gateway_transfer_boundary_v1": "run_boundary_audit",
+        "gateway_structure_boundary_v1": "run_boundary_audit",
+        "gateway_closed_loop_boundary_v1": "run_boundary_audit",
+        "gateway_resources_boundary_v1": "run_boundary_audit",
+        "homeostasis_rate_boundary_v1": "run_boundary_audit",
+        "homeostasis_stdp_boundary_v1": "run_boundary_audit",
+        "language_organ_boundary_v1": "run_boundary_audit",
+        "synaptic_memory_boundary_v1": "run_boundary_audit",
+        "network_impulse_reproducibility_v1": "run_ping_v2",
+        "regulation_telemetry_v1": "run_regulation",
+        "million_neuron_scaling_boundary_v1": "run_boundary_audit",
+        "self_organization_clusters_boundary_v1": "run_boundary_audit",
+        "self_organization_emergence_boundary_v1": "run_boundary_audit",
+        "tonic_spike_reproducibility_v1": "run_tonic_spike_reproducibility",
+        "topology_propagation_v1": "run_5d",
+        "stdp_weight_matrix_v1": "run_stdp",
+        "stdp_learning_performance_v1": "run_learning_repeat",
+        "stdp_pair_timing_registered_v1": "run_stdp_pair_registered",
+        "stdp_long_stability_boundary_v1": "run_boundary_audit",
+        "storage_roundtrip_boundary_v1": "run_boundary_audit",
+        "storage_causal_resume_boundary_v1": "run_boundary_audit",
+        "storage_density_boundary_v1": "run_boundary_audit",
+        "storage_scale_boundary_v1": "run_boundary_audit",
+        "structural_efficiency_boundary_v1": "run_boundary_audit",
+        "science_suite_registered_v1": "run_all",
+        "temporal_state_registered_v1": "run_temporal",
+        "learning_timescale_registered_v1": "run_time",
+    }
+)
+
 
 class PreregistrationError(ValueError):
     """Raised when a scientific protocol lacks a valid frozen preregistration."""
@@ -360,6 +408,14 @@ def protocol_catalog(research_root: Path) -> list[dict[str, Any]]:
                 "freeze": prereg.get("freeze", {}),
                 "execution_kind": protocol.get("execution_kind"),
                 "adapter_validated": protocol.get("adapter_validated", False),
+                "snn_involved": protocol.get("snn_involved"),
+                "direct_test_of_hypothesis": protocol.get(
+                    "direct_test_of_hypothesis", False
+                ),
+                "scientific_evidence": protocol.get("scientific_evidence", False),
+                "automatic_evidence_promotion": protocol.get(
+                    "automatic_evidence_promotion", False
+                ),
             }
         )
     return catalog
