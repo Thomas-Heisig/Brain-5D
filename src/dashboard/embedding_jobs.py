@@ -237,11 +237,22 @@ def run_embedding_job(
             "input_digest": input_digest,
             "network_tick": int(getattr(network, "current_tick", 0)),
             "feature_columns": [
-                "D1", "D2", "D3", "D4", "D5",
-                "v", "u", "energy", "spike_counter"
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "D5",
+                "v",
+                "u",
+                "energy",
+                "spike_counter",
             ],
-            "input_neuron_count": sum(1 for neuron_id in neuron_ids if neuron_id in input_cells),
-            "output_neuron_count": sum(1 for neuron_id in neuron_ids if neuron_id in output_cells),
+            "input_neuron_count": sum(
+                1 for neuron_id in neuron_ids if neuron_id in input_cells
+            ),
+            "output_neuron_count": sum(
+                1 for neuron_id in neuron_ids if neuron_id in output_cells
+            ),
         },
         "provenance": {
             "git_commit": current_git_head(repo_root),

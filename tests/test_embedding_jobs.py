@@ -53,11 +53,21 @@ def test_analysis_job_persists_method_and_provenance(
     assert job["provenance"]["scientific_evidence"] is False
     assert job["provenance"]["human_review_required"] is True
     assert job["input"]["feature_columns"] == [
-        "D1", "D2", "D3", "D4", "D5", "v", "u", "energy", "spike_counter"
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "v",
+        "u",
+        "energy",
+        "spike_counter",
     ]
     assert job["rows"][0]["io_role"] == "input"
     assert job["rows"][-1]["io_role"] == "output"
-    assert {"d1", "d2", "d3", "d4", "d5", "v", "u", "energy", "spike_counter"} <= set(job["rows"][0])
+    assert {"d1", "d2", "d3", "d4", "d5", "v", "u", "energy", "spike_counter"} <= set(
+        job["rows"][0]
+    )
     json_path = tmp_path / "research" / job["artifacts"]["json"]
     csv_path = tmp_path / "research" / job["artifacts"]["csv"]
     assert json_path.is_file()

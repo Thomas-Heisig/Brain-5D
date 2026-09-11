@@ -604,7 +604,9 @@ class ExperimentWorkflowService:
                 "functional_experiment",
                 "boundary_audit",
             }:
-                direct_test = operational_protocol.get("direct_test_of_hypothesis") is True
+                direct_test = (
+                    operational_protocol.get("direct_test_of_hypothesis") is True
+                )
                 snn_value = operational_protocol.get("snn_involved")
                 snn_involved = snn_value if isinstance(snn_value, bool) else None
                 if execution_kind == "conceptual_audit":

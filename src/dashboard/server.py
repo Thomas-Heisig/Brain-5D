@@ -2133,7 +2133,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     # Structural / runtime POST dispatch
     # ========================================================================
 
-    def _runtime_io_neuron_state(self, network: Any, neuron_id: int) -> dict[str, JSONValue]:
+    def _runtime_io_neuron_state(
+        self, network: Any, neuron_id: int
+    ) -> dict[str, JSONValue]:
         neuron = network.get_neuron(neuron_id)
         if neuron is None:
             raise InvalidRequestError(f"Unknown neuron_id: {neuron_id}")
@@ -2160,10 +2162,16 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         network = bridge.controller.network
         snapshot = self.dashboard_server.dashboard_state.snapshot()
         mode = snapshot.experiment_state.current_mode
-        input_ids = sorted(int(value) for value in getattr(network, "input_cells", set()))
-        output_ids = sorted(int(value) for value in getattr(network, "output_cells", set()))
+        input_ids = sorted(
+            int(value) for value in getattr(network, "input_cells", set())
+        )
+        output_ids = sorted(
+            int(value) for value in getattr(network, "output_cells", set())
+        )
         controller_state = bridge.controller.telemetry.controller_state
-        controller_state_value = getattr(controller_state, "value", str(controller_state))
+        controller_state_value = getattr(
+            controller_state, "value", str(controller_state)
+        )
         return {
             "tick": int(getattr(network, "current_tick", 0)),
             "mode": mode,
@@ -2204,7 +2212,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
     def _send_runtime_io_injection(
         self, bridge: OperatorBridge, body: dict[str, object]
     ) -> None:
-        mode = self.dashboard_server.dashboard_state.snapshot().experiment_state.current_mode
+        mode = (
+            self.dashboard_server.dashboard_state.snapshot().experiment_state.current_mode
+        )
         if mode == "experiment":
             self._send_json(
                 {
@@ -2218,7 +2228,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             )
             return
         if mode not in {"operator", "debug"}:
-            raise InvalidRequestError(f"Manual injection is not permitted in mode: {mode}")
+            raise InvalidRequestError(
+                f"Manual injection is not permitted in mode: {mode}"
+            )
 
         neuron_id = self._int_field(body, "neuron_id", minimum=0, maximum=(1 << 63) - 1)
         ticks = self._int_field(body, "ticks", minimum=1, maximum=10_000)
@@ -2235,7 +2247,9 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 f"neuron_id {neuron_id} is not a registered input neuron"
             )
         controller_state = bridge.controller.telemetry.controller_state
-        controller_state_value = getattr(controller_state, "value", str(controller_state))
+        controller_state_value = getattr(
+            controller_state, "value", str(controller_state)
+        )
         if controller_state_value == "running":
             self._send_json(
                 {

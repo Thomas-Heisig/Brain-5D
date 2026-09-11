@@ -49,4 +49,4 @@ def test_wesen_shell_keeps_embodiment_sibling_and_moves_utilities_to_footer() ->
     assert 'data-tab="embodiment"' in source
     assert "embodimentButton?.remove()" not in source
     assert "appendChild(embodiment)" not in source
-    assert "embodimentButton.classList.add(\"wesen-utility-hidden\")" in source
+    assert 'embodimentButton.classList.add("wesen-utility-hidden")' in source

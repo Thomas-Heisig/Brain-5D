@@ -521,7 +521,6 @@ def run_learning_interference(
     return runs
 
 
-
 def run_tonic_spike_reproducibility(
     config: Config,
     seeds: tuple[int, ...] = (42, 43, 44),
@@ -630,6 +629,7 @@ def run_boundary_audit(
         )
         for seed in seeds
     ]
+
 
 def _run_msba_registered(
     config: Config,

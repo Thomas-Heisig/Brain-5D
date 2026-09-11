@@ -17,7 +17,10 @@ from src.dashboard.models import DashboardSnapshot
 from src.dashboard.operator_bridge import OperatorBridge
 from src.dashboard.server import DashboardServer
 from src.dashboard.state import DashboardStateStore
-from src.research.protocol_registry import OPERATIONAL_RUNNERS, load_operational_protocols
+from src.research.protocol_registry import (
+    OPERATIONAL_RUNNERS,
+    load_operational_protocols,
+)
 
 ROOT = Path(__file__).parents[1]
 
@@ -58,7 +61,10 @@ def _live_server() -> tuple[DashboardServer, DashboardStateStore, int, int]:
     controller = RuntimeController(network)
     state = DashboardStateStore(initial=DashboardSnapshot())
     server = DashboardServer(
-        ("127.0.0.1", 0), state, heatmaps=None, structural_bridge=OperatorBridge(controller)
+        ("127.0.0.1", 0),
+        state,
+        heatmaps=None,
+        structural_bridge=OperatorBridge(controller),
     )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -67,7 +73,9 @@ def _live_server() -> tuple[DashboardServer, DashboardStateStore, int, int]:
 
 
 def test_neuron_config_controls_initial_construction_without_live_u_override() -> None:
-    config = NeuronConfig(a=0.03, b=0.25, c=-62.0, d=6.0, initial_v=-61.5, initial_u=-9.25)
+    config = NeuronConfig(
+        a=0.03, b=0.25, c=-62.0, d=6.0, initial_v=-61.5, initial_u=-9.25
+    )
     neuron = create_neuron(7, config=config)
     assert (neuron.a, neuron.b, neuron.c, neuron.d) == (0.03, 0.25, -62.0, 6.0)
     assert (neuron.v, neuron.u) == (-61.5, -9.25)
@@ -79,16 +87,27 @@ def test_neuron_config_controls_initial_construction_without_live_u_override() -
 def test_network_uses_neuron_construction_config() -> None:
     config = Brain5DConfig(
         dimensions=(1, 1, 1, 1, 1),
-        neuron=NeuronConfig(a=0.04, b=0.3, c=-60.0, d=4.0, initial_v=-58.0, initial_u=-8.0),
+        neuron=NeuronConfig(
+            a=0.04, b=0.3, c=-60.0, d=4.0, initial_v=-58.0, initial_u=-8.0
+        ),
     )
     network = NeuralNetwork(config)
     neuron_id = network.add_neuron((0, 0, 0, 0, 0))
     neuron = network.get_neuron(neuron_id)
     assert neuron is not None
-    assert (neuron.a, neuron.b, neuron.c, neuron.d, neuron.v, neuron.u) == (0.04, 0.3, -60.0, 4.0, -58.0, -8.0)
+    assert (neuron.a, neuron.b, neuron.c, neuron.d, neuron.v, neuron.u) == (
+        0.04,
+        0.3,
+        -60.0,
+        4.0,
+        -58.0,
+        -8.0,
+    )
 
 
-def test_runtime_io_get_and_operator_injection_are_observable_and_non_evidentiary() -> None:
+def test_runtime_io_get_and_operator_injection_are_observable_and_non_evidentiary() -> (
+    None
+):
     server, _state, input_id, output_id = _live_server()
     try:
         status, payload = _request(server, "GET", "/api/runtime/io")
@@ -126,7 +145,9 @@ def test_runtime_io_is_fail_closed_in_experiment_mode_and_rejects_non_input() ->
             {"neuron_id": output_id, "current": 10.0, "ticks": 1},
         )
         assert status == HTTPStatus.BAD_REQUEST
-        assert isinstance(payload, dict) and "not a registered input" in payload["error"]
+        assert (
+            isinstance(payload, dict) and "not a registered input" in payload["error"]
+        )
 
         state.set_experiment_mode("experiment")
         status, payload = _request(
@@ -177,7 +198,9 @@ def test_operational_registry_covers_every_registered_question_once() -> None:
     assert len(protocol_questions) == len(set(protocol_questions))
     assert all(item["id"] in OPERATIONAL_RUNNERS for item in protocols)
     assert all(item.get("scientific_evidence", False) is False for item in protocols)
-    assert all(item.get("automatic_evidence_promotion", False) is False for item in protocols)
+    assert all(
+        item.get("automatic_evidence_promotion", False) is False for item in protocols
+    )
 
 
 def test_frontend_final_integration_contract_is_present() -> None:
