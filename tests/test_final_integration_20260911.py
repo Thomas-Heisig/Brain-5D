@@ -21,6 +21,7 @@ from src.research.protocol_registry import (
     OPERATIONAL_RUNNERS,
     load_operational_protocols,
 )
+from src.research.registry import ResearchRegistry
 
 ROOT = Path(__file__).parents[1]
 
@@ -180,16 +181,8 @@ def test_review_route_is_directly_addressable() -> None:
 
 
 def test_operational_registry_covers_every_registered_question_once() -> None:
-    import yaml
-
-    questions: list[dict[str, Any]] = []
-    for path in sorted((ROOT / "research" / "registry").glob("questions*.yaml")):
-        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        if isinstance(data, dict):
-            questions.extend(data.get("questions", []))
-        elif isinstance(data, list):
-            questions.extend(data)
-    question_ids = {item["id"] for item in questions}
+    registry = ResearchRegistry(ROOT / "research" / "registry").load_all()
+    question_ids = set(registry.questions)
     protocols = load_operational_protocols(ROOT / "research")
     protocol_questions = [item["research_question"] for item in protocols]
     assert len(question_ids) == 94
