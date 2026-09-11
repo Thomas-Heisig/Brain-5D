@@ -16,3 +16,12 @@ body.mhrn-visual-shell-v2 .topbar-brand .project-subtitle {
   color: var(--mhrn-v2-muted);
   font-size: 0.68rem;
 }
+
+/* Telemetry is informational and must not block workspace controls below it. */
+body.mhrn-visual-shell-v2 .mhrn-global-status {
+  pointer-events: none;
+}
+
+body.mhrn-visual-shell-v2 #mhrn-notification-toggle {
+  pointer-events: auto;
+}
