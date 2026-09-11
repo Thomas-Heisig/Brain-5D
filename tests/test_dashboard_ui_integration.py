@@ -64,8 +64,8 @@ def test_visual_shell_v2_is_visible_and_exposes_global_routes() -> None:
     assert 'data-global-workspace="gate"' in frontend
     assert 'data-global-workspace="settings"' in frontend
     assert 'href="/review"' in frontend
-    assert './visual-shell.css' in styles
-    assert '.mhrn-area-tabs' in visual
-    assert '.mhrn-global-actions' in visual
-    assert '.overview-command-bar' in visual
-    assert '.overview-status-rail' in visual
+    assert "./visual-shell.css" in styles
+    assert ".mhrn-area-tabs" in visual
+    assert ".mhrn-global-actions" in visual
+    assert ".overview-command-bar" in visual
+    assert ".overview-status-rail" in visual
