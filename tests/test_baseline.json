@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "tested_commit": "53bb6040cbad2cf808d6770d761ff4231f69682f",
-  "tested_tree_digest": "681cac6030b6544d4e4f41514f997b0db74dfbb3f0c9c446295b00fc70c935bd",
+  "tested_commit": "e2a7e6cd5369638e36a3fee10acc37fa497f3875",
+  "tested_tree_digest": "0f7f2b7483dbbaeed250dcfb8f1dcee0bf3fd15bad5b59a7e8d11f50a2e481a9",
   "tree_digest_paths": [
     "src/",
     "configs/",
@@ -12,7 +12,7 @@
   "tree_digest_excludes": [
     "tests/test_baseline.json"
   ],
-  "timestamp": "2026-09-11T12:13:43.572113+00:00",
+  "timestamp": "2026-09-11T12:22:59.039072+00:00",
   "python": "3.13.15",
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
   "source_unchanged_during_run": true,
@@ -108,7 +108,7 @@
     "src/dashboard/static/frontend/modules/science-transparency.js": "b218f18fee95dec01cf5328f2c8612664207c0655a84f0e06e885f760214ff9d",
     "src/dashboard/static/frontend/styles/base.css": "3c55ae081bab45b687a9bba9a5b40bc980a0a3bdddf134e26fa6c8c8e66d1daf",
     "src/dashboard/static/frontend/styles/components.css": "5a6cab04db5e8105117f928f86a02ee26e444c06c708a2767620e4e3e569b442",
-    "src/dashboard/static/frontend/styles/index.css": "2caeb52057a52cc5e306aa80cd71f57c917d5440121b41aec39b01b82fd2c681",
+    "src/dashboard/static/frontend/styles/index.css": "2b27a8d0468a3036bfdaee6136bd8aca32df71557733184ed6cd77b36e249eb6",
     "src/dashboard/static/frontend/styles/layout.css": "9430df497a4167cd898528cc32319f1654cb4eaa742ebbcd054e09231a716527",
     "src/dashboard/static/frontend/styles/modules.css": "df29a5ccb0316f8b15cd6f8c76fb3d70343d277da0c102cccfde43416b736418",
     "src/dashboard/static/frontend/styles/print.css": "0159722fe478b2db241ae1af81dff90f89d5e1a8479cbea2c4c438c5262ef853",
