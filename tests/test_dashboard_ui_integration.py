@@ -45,7 +45,7 @@ def test_wesen_shell_keeps_embodiment_sibling_and_moves_utilities_to_footer() ->
     assert "mergeEmbodimentIntoWesen" in source
     assert 'byId("tab-embodiment")' in source
     assert 'data-footer-tab="settings"' in source
-    assert 'data-footer-tab="gate"' in source
+    assert 'data-footer-tab="gate"' not in source
     assert 'data-tab="embodiment"' in source
     assert "embodimentButton?.remove()" not in source
     assert "appendChild(embodiment)" not in source
@@ -63,6 +63,9 @@ def test_visual_shell_v2_is_visible_and_exposes_global_routes() -> None:
     assert 'class="mhrn-area-tabs"' in frontend or "mhrn-area-tabs" in frontend
     assert 'data-global-workspace="gate"' in frontend
     assert 'data-global-workspace="settings"' in frontend
+    assert 'ws === "parameter"' in frontend
+    assert 'document.body.dataset.globalWorkspace = "parameter"' in frontend
+    assert 'id="parameter-inspector-card"' in frontend
     assert 'href="/review"' in frontend
     assert "./visual-shell.css" in styles
     assert ".mhrn-area-tabs" in visual

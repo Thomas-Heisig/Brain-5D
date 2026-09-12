@@ -4,6 +4,7 @@ import { initNotificationCenter } from "./components/notification-center.js";
 import { initPanelHelp } from "./components/help.js";
 import { initRuntimeIO } from "./modules/runtime-io.js";
 import { initScienceTransparency } from "./modules/science-transparency.js";
+import { initScientificMetrics } from "./modules/scientific-metrics.js";
 import { initReviewLink } from "./modules/review-link.js";
 import { startDataStyleObserver } from "./modules/data-styles.js";
 import { initCognition } from "./modules/cognition.js";
@@ -15,6 +16,7 @@ import { initLearningPrep } from "./modules/learning-prep.js";
 import { initStructuralInspector } from "./modules/structural-inspector.js";
 import { initSystemInfo } from "./modules/system-info.js";
 import { initOverviewSubtabs } from "./modules/overview-subtabs.js";
+import { initResearchSubtabs } from "./modules/research-subtabs.js";
 
 const AREA_COPY = {
   dashboard: { icon: "📊", title: "Dashboard", subtitle: "Operator · Systemzustand & Steuerung" },
@@ -97,6 +99,7 @@ function decoratePrimaryNavigation() {
     }
     if (ws === "parameter") {
       activateLegacyWorkspace("settings");
+      document.body.dataset.globalWorkspace = "parameter";
       requestAnimationFrame(() => {
         const card = document.getElementById("parameter-inspector-card");
         if (card) {
@@ -107,13 +110,17 @@ function decoratePrimaryNavigation() {
       });
       return;
     }
+    delete document.body.dataset.globalWorkspace;
     activateLegacyWorkspace(ws);
   });
 }
 
 function syncGlobalNavigation() {
   const active = document.querySelector(".tab-content.active[id^='tab-']");
-  const workspace = active?.id?.replace("tab-", "") || "overview";
+  const currentTab = active?.id?.replace("tab-", "") || "overview";
+  const workspace = currentTab === "settings" && document.body.dataset.globalWorkspace === "parameter"
+    ? "parameter"
+    : currentTab;
   document.querySelectorAll("[data-global-workspace]").forEach((button) => {
     button.classList.toggle("active", button.dataset.globalWorkspace === workspace);
   });
@@ -125,6 +132,10 @@ function initVisualShell() {
   syncGlobalNavigation();
 
   document.addEventListener("click", (event) => {
+    const globalButton = event.target.closest("[data-global-workspace]");
+    if (!globalButton || globalButton.dataset.globalWorkspace !== "parameter") {
+      delete document.body.dataset.globalWorkspace;
+    }
     if (event.target.closest(".tab-btn[data-tab], [data-primary-area], [data-global-workspace], [data-science-route]")) {
       requestAnimationFrame(syncGlobalNavigation);
     }
@@ -138,6 +149,7 @@ function init() {
   initPanelHelp();
   initRuntimeIO();
   initScienceTransparency();
+  initScientificMetrics();
   initReviewLink();
   startDataStyleObserver();
   initCognition();
@@ -149,6 +161,7 @@ function init() {
   initStructuralInspector();
   initSystemInfo();
   initOverviewSubtabs();
+  initResearchSubtabs();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(init, 0), { once: true }); else setTimeout(init, 0);
 window.MHRNFrontend = { refresh: init };

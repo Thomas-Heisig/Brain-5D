@@ -2,7 +2,33 @@
 
 **Canonical roadmap for current `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-10
+**Updated:** 2026-09-12
+
+## 2026-09-12 Scientific metrics workbench
+
+- Added a live `/api/science/metrics` contract derived from the retained
+	telemetry window and real network topology; unavailable analyses remain
+	null/`UNKNOWN` rather than being inferred from operational zeros.
+- Added a Research scientific instrument covering spike trains, topology and
+	5D geometry, criticality, learning, homeostasis/energy, replication
+	statistics, provenance, falsification notes and comparison capture.
+- Reorganized the instrument into twelve navigable analysis layers while
+	preserving the existing Experiment Runner, Files and Registry surfaces.
+- Added bounded operator links to network drill-down and runtime input/output
+	controls. Local annotations are explicitly not scientific evidence until
+	exported with an experiment record.
+
+## 2026-09-12 Parameter sidebar route
+
+- Linked sidebar menu 07 to the runtime Parameter Inspector and retained its
+	active state after opening the Settings workspace.
+
+## 2026-09-12 Research workspace tabs
+
+- Grouped the Research workspace into Experiments, Files and Registry tabs.
+- Kept the experiment runner and quick-access lanes together, isolated the file
+	manager, and mounted the dynamic research registry in its own panel.
+- Added browser coverage for switching between all three Research sub-tabs.
 
 ## 2026-09-11 Full backend API integration into frontend
 

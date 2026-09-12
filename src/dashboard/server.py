@@ -117,6 +117,7 @@ from .operator_bridge import OperatorBridge
 from .release_timeline import build_release_timeline
 from .research_source import ResearchSource, create_research_source
 from .review_inbox import build_review_inbox
+from .scientific_metrics import build_scientific_metrics
 from .state import DashboardStateStore
 from .structural_api import StructuralCommandResult
 
@@ -556,6 +557,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/live/raster":
                 self._serve_live_raster()
+                return
+
+            if path == "/api/science/metrics":
+                self._serve_scientific_metrics()
                 return
 
             if path == "/api/snapshots":
@@ -2700,6 +2705,29 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         self._send_json(data.to_json())
+
+    def _serve_scientific_metrics(self) -> None:
+        try:
+            bridge = self._require_bridge()
+        except BridgeNotConfiguredError:
+            self._send_json({"error": "No live runtime available."}, HTTPStatus.SERVICE_UNAVAILABLE)
+            return
+        network = getattr(bridge.controller, "network", None)
+        if network is None:
+            self._send_json({"error": "Live network is not available."}, HTTPStatus.SERVICE_UNAVAILABLE)
+            return
+        telemetry_store = bridge.live_projection.frame_store
+        accumulator = telemetry_store.accumulator if telemetry_store is not None else None
+        runtime_tick = getattr(network, "current_tick", 0)
+        telemetry = telemetry_store.stats_at(runtime_tick) if telemetry_store is not None else None
+        self._send_json(
+            build_scientific_metrics(
+                network,
+                accumulator,
+                self.dashboard_server.dashboard_state.snapshot(),
+                telemetry,
+            )
+        )
 
     # ========================================================================
     # Snapshots

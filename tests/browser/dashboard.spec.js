@@ -212,6 +212,26 @@ test("research help explains operational and exploratory status", async ({ page 
   await expect(page.locator("#context-help-text")).toContainText("niemals automatisch");
 });
 
+test("research workspace switches between experiments, files and registry", async ({ page }) => {
+  await openDashboard(page);
+  await page.locator('[data-tab="research"]').evaluate((button) => button.click());
+
+  await expect(page.locator(".research-subtab")).toHaveCount(3);
+  await expect(page.locator('.research-subpanel[data-subpanel="experiments"]')).toBeVisible();
+  await expect(page.locator('.research-subpanel[data-subpanel="files"]')).toBeHidden();
+  await expect(page.locator('.research-subpanel[data-subpanel="registry"]')).toBeHidden();
+
+  await page.locator('[data-subtab="files"]').click();
+  await expect(page.locator('.research-subpanel[data-subpanel="files"]')).toBeVisible();
+  await expect(page.locator('.research-subpanel[data-subpanel="experiments"]')).toBeHidden();
+
+  await page.locator('[data-subtab="registry"]').click();
+  await expect(page.locator('.research-subpanel[data-subpanel="registry"]')).toBeVisible();
+  await expect(page.locator('#mhrn-research-docs')).toBeVisible();
+  await expect(page.locator('.research-subpanel[data-subpanel="experiments"]')).toBeHidden();
+  await expect(page.locator('.research-subpanel[data-subpanel="files"]')).toBeHidden();
+});
+
 test("navigation and box-state controls remain usable", async ({ page }) => {
   await openDashboard(page);
   await page.locator('[data-tab="network"]').evaluate((button) => button.click());

@@ -100,20 +100,6 @@ function adaptDashboardNavigation() {
   }
 }
 
-function ensureReleaseFooterButton() {
-  const footer = document.querySelector(".mhrn-footer, .site-footer");
-  if (!footer || footer.querySelector(".footer-tools, [data-footer-release]")) return;
-  const target = byId("footer-status") || footer.lastElementChild || footer;
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "wesen-release-button";
-  button.dataset.footerRelease = "true";
-  button.textContent = "Release";
-  button.title = "Scientific Gate und Release Readiness öffnen";
-  button.addEventListener("click", () => activateLegacyWorkspace("gate"));
-  target.appendChild(button);
-}
-
 function simplifyEmbodimentCopy() {
   const tab = byId("tab-embodiment");
   if (!tab || tab.querySelector("[data-simple-embodiment-note]")) return;
@@ -134,7 +120,6 @@ function simplifyEmbodimentCopy() {
 function initWesenShellIntegration() {
   ensureWesenStylesheet();
   adaptDashboardNavigation();
-  ensureReleaseFooterButton();
   simplifyEmbodimentCopy();
   requestAnimationFrame(() => adaptDashboardNavigation());
 }

@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-09-12 - Scientific metrics workbench
+
+- Added `GET /api/science/metrics`, including live spike-window metrics
+  (ISI/CV, Fano, Victor-Purpura, van Rossum, entropy, avalanches and
+  branching), network degree/topology/5D distance, learning, homeostasis,
+  provenance and replication-statistics groups.
+- Added a Research scientific instrument with explicit `UNKNOWN` states,
+  telemetry age, falsification annotation, comparison capture and drill-down
+  links to network and runtime manipulators.
+- Rebuilt the instrument as a twelve-tab Research Observatory covering
+  Observatory, Spike trains, Topology/5D, Criticality, Learning,
+  Energy/Homeostasis, Statistics, Causality, Embodiment, Provenance,
+  Benchmarks and Falsification, without removing the existing experiment,
+  file and registry workflows.
+- Kept advanced metrics that lack a validated data contract unavailable:
+  Lyapunov/attractor dynamics, UMAP latent evidence, causal information flow,
+  null/surrogate models, confidence intervals, effect sizes and statistical
+  power.
+
+## 2026-09-12 - Parameter sidebar route
+
+- Linked sidebar menu 07 directly to the runtime Parameter Inspector in the
+  Settings workspace.
+- Preserved menu 07 as the active route after navigation so it remains
+  distinct from the general Settings entry.
+
+## 2026-09-12 - Research workspace sub-tabs
+
+- Split the Research workspace into `Experiments`, `Files` and `Registry`
+  sub-tabs.
+- Moved the dynamic research documents and reports panel into the Registry tab.
+- Added browser coverage for the sub-tab switching behavior.
+
 ## 2026-09-12 - Sidebar navigation fix and dashboard cleanup
 
 - Fixed critical sidebar navigation bug: `nav` click handler in

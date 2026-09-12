@@ -149,6 +149,10 @@ class ActivityWindowAccumulator:
         """Return firing rate in spikes/tick for a neuron."""
         return self.spikes_in_window(neuron_id) / self.window_ticks
 
+    def recent_events(self) -> list[tuple[int, tuple[int, ...]]]:
+        """Return a snapshot of the retained tick-indexed spike events."""
+        return list(self._window)
+
 
 # ============================================================================
 # Telemetry Frame

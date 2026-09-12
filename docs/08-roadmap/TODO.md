@@ -6,12 +6,38 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 
 **Canonical TODO for `main`**  
 **Baseline:** `mhrn-core 0.6.0a1`
-**Updated:** 2026-09-10
+**Updated:** 2026-09-12
 **Current release-blocking backlog:** **0**
+
+## 2026-09-12 Scientific metrics workbench
+
+- [x] Add `GET /api/science/metrics` with bounded live spike-window,
+	topology, criticality, learning, homeostasis, statistics and provenance
+	groups.
+- [x] Expose ISI, CV(ISI), Fano factor, Victor-Purpura, van Rossum,
+	Avalanche/Branching, degree/fan-in/fan-out and 5D synapse-distance metrics
+	when the retained telemetry window supports them.
+- [x] Add Research UI panels for measured values, explicit `UNKNOWN` states,
+	falsification annotations, baseline comparison and drill-down controls.
+- [x] Keep Lyapunov, UMAP/latent dynamics, null/surrogate statistics,
+	confidence intervals, effect sizes, power and causal information flow
+	`UNKNOWN` until a validated experiment data contract exists.
+- [x] Rebuild the Research scientific surface as a twelve-layer workbench:
+	Observatory, Spike trains, Topology/5D, Criticality, Learning,
+	Energy/Homeostasis, Statistics, Causality, Embodiment, Provenance,
+	Benchmarks and Falsification.
+
+## 2026-09-12 Research workspace sub-tabs
+
+- [x] Group Research into Experiments, Files and Registry tabs.
+- [x] Keep the experiment runner and quick-access lanes in Experiments.
+- [x] Mount research documents and reports in the Registry tab.
+- [x] Add browser coverage for Research sub-tab switching.
 
 ## 2026-09-12 Sidebar navigation fix and dashboard cleanup
 
-- [x] Add Parameter button to sidebar (opens settings tab).
+- [x] Link sidebar menu 07 to the runtime Parameter Inspector and keep it
+	active while the inspector is open.
 - [x] Remove all redundant dashboard elements: experience-status-cluster,
 	⌘K button, header-context span, workspace headers, utility bars, ribbons,
 	welcome panel, overview-command-bar, overview-actions, overview-status-rail.

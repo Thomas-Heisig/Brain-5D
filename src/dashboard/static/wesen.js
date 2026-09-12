@@ -159,7 +159,6 @@ function ensureFooterTools() {
     <button type="button" class="footer-nav-btn" data-footer-tab="overview">📊 Dashboard</button>
     <button type="button" class="footer-nav-btn" data-footer-tab="research">🔬 Wissenschaft</button>
     <button type="button" class="footer-nav-btn" data-footer-tab="wesen">🧠 Runtime & Wesen</button>
-    <button type="button" class="footer-nav-btn" data-footer-tab="gate">🚀 Release</button>
     <button type="button" class="footer-nav-btn" data-footer-tab="settings">⚙ Settings</button>`;
   const health = byId("footer-status");
   if (health) health.insertBefore(tools, health.firstChild);

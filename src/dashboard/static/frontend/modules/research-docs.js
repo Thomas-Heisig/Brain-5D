@@ -38,9 +38,17 @@ function ensurePanel() {
       <header><h3 id="research-doc-viewer-title">—</h3><button type="button" id="research-doc-viewer-close" class="btn-secondary">Schließen</button></header>
       <pre id="research-doc-viewer-content" class="research-doc-viewer-content"></pre>
     </div>`;
-  const anchor = workspace.querySelector(".fm-toolbar");
-  if (anchor) anchor.insertAdjacentElement("beforebegin", panel);
-  else workspace.append(panel);
+  // Insert into the Registry sub-panel if available, otherwise fall back
+  const registryPanel = workspace.querySelector('.research-subpanel[data-subpanel="registry"]');
+  if (registryPanel) {
+    const placeholder = registryPanel.querySelector("#research-registry-placeholder");
+    if (placeholder) placeholder.remove();
+    registryPanel.appendChild(panel);
+  } else {
+    const anchor = workspace.querySelector(".fm-toolbar");
+    if (anchor) anchor.insertAdjacentElement("beforebegin", panel);
+    else workspace.append(panel);
+  }
   panel.querySelector("#research-doc-viewer-close").addEventListener("click", () => {
     panel.querySelector("#research-doc-viewer").classList.add("is-hidden");
   });

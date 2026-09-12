@@ -177,8 +177,8 @@ def test_primary_frontend_uses_three_areas_and_keeps_utility_routes() -> None:
     assert 'data-primary-area="wesen"' in architecture
     assert 'for (const name of ["network", "gate"])' in console
     assert 'button.classList.add("wesen-utility-hidden")' in console
-    assert "dataset.footerRelease" in console
-    assert "wesen-release-button" in console
+    assert "ensureReleaseFooterButton" not in console
+    assert "wesen-release-button" not in console
     assert '.tab-btn[data-tab="network"]' in styles
     assert '.tab-btn[data-tab="gate"]' in styles
 

@@ -199,7 +199,7 @@ label,.input-label { color:var(--ink-3); font-size:.72rem; }
 
 /* ── Sidebar Navigation (vertikal, links) ── */
 body .brain5d-primary-nav { position:fixed !important; top:var(--dashboard-topbar-height,68px) !important; bottom:70px; left:0; z-index:90 !important; display:flex !important; flex-direction:column !important; gap:0 !important; width:210px !important; margin:0 !important; padding:0 !important; border:0 !important; border-right:1px solid var(--rule-2) !important; background:color-mix(in srgb,var(--paper) 96%,transparent) !important; backdrop-filter:blur(10px) !important; overflow-y:auto; }
-body .brain5d-primary-nav button { position:relative !important; min-height:auto !important; display:flex !important; align-items:center !important; gap:8px !important; padding:10px 14px !important; border:0 !important; border-bottom:1px solid var(--rule) !important; border-radius:0 !important; background:transparent !important; color:var(--ink-3) !important; box-shadow:none !important; text-align:left !important; width:100% !important; font-family:var(--font-ui) !important; cursor:pointer !important; text-decoration:none !important; }
+body .brain5d-primary-nav button { position:relative !important; min-height:auto !important; display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:8px !important; padding:10px 14px !important; border:0 !important; border-bottom:1px solid var(--rule) !important; border-radius:0 !important; background:transparent !important; color:var(--ink-3) !important; box-shadow:none !important; text-align:left !important; width:100% !important; font-family:var(--font-ui) !important; cursor:pointer !important; text-decoration:none !important; }
 body .brain5d-primary-nav button::before { color:var(--ink-4); font:700 .50rem/1 var(--font-mono); letter-spacing:.10em; flex-shrink:0; width:18px; }
 body .brain5d-primary-nav .mhrn-area-tabs button:nth-child(1)::before { content:"01"; }
 body .brain5d-primary-nav .mhrn-area-tabs button:nth-child(2)::before { content:"02"; }
@@ -212,7 +212,7 @@ body .brain5d-primary-nav button.active::before { color:var(--accent); }
 /* Sidebar: globale Actions (Control, Release, Settings, Parameter, Review) */
 .mhrn-area-tabs { display:flex; flex-direction:column; gap:0; }
 .mhrn-global-actions { display:flex; flex-direction:column; gap:0; margin-top:auto; border-top:1px solid var(--rule-2); }
-.mhrn-global-actions .mhrn-global-route { display:flex !important; align-items:center !important; gap:8px !important; padding:10px 14px !important; border:0 !important; border-bottom:1px solid var(--rule) !important; border-radius:0 !important; background:transparent !important; color:var(--ink-3) !important; text-decoration:none !important; text-align:left !important; width:100% !important; cursor:pointer !important; font-family:var(--font-ui) !important; box-shadow:none !important; min-height:auto !important; position:relative; }
+.mhrn-global-actions .mhrn-global-route { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:8px !important; padding:10px 14px !important; border:0 !important; border-bottom:1px solid var(--rule) !important; border-radius:0 !important; background:transparent !important; color:var(--ink-3) !important; text-decoration:none !important; text-align:left !important; width:100% !important; cursor:pointer !important; font-family:var(--font-ui) !important; box-shadow:none !important; min-height:auto !important; position:relative; }
 .mhrn-global-actions .mhrn-global-route::before { color:var(--ink-4); font:700 .50rem/1 var(--font-mono); letter-spacing:.10em; flex-shrink:0; width:18px; }
 .mhrn-global-actions .mhrn-global-route:nth-child(1)::before { content:"04"; }
 .mhrn-global-actions .mhrn-global-route:nth-child(2)::before { content:"05"; }
@@ -281,6 +281,17 @@ main { position:relative; z-index:1; width:min(calc(100% - var(--gutter)*2 - 210
 .overview-subpanel { display:none; }
 .overview-subpanel.active { display:block !important; }
 .overview-subpanel .overview-operations-grid:has(> :only-child) { grid-template-columns:1fr; }
+
+/* ── Research Sub-Tabs ── */
+.research-subtabs { display:flex; gap:0; margin:0 0 16px; border:0; border-bottom:2px solid var(--rule-2); }
+.research-subtab { position:relative; min-height:36px; padding:7px 16px; border:0; background:transparent; color:var(--ink-4); font:600 .68rem/1.2 var(--font-ui); cursor:pointer; white-space:nowrap; transition:color .15s; }
+.research-subtab:hover { color:var(--ink-2); background:var(--paper-2); }
+.research-subtab.active { color:var(--ink); }
+.research-subtab.active::after { content:""; position:absolute; left:0; right:0; bottom:-2px; height:2px; background:var(--accent); }
+.research-subpanel { display:none; }
+.research-subpanel.active { display:block !important; }
+.research-subpanel[hidden] { display:none !important; }
+.research-registry-placeholder { padding:24px; text-align:center; color:var(--ink-4); font:.7rem/1.5 var(--font-ui); }
 
 .overview-operations-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:14px; margin-bottom:14px; }
 .overview-metrics-row { grid-template-columns:repeat(3,minmax(0,1fr)); }

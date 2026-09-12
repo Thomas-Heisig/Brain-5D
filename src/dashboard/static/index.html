@@ -486,6 +486,15 @@
           <span>Schemas<strong id="research-workspace-schemas">0</strong></span>
         </div>
       </header>
+      <!-- Sub-Tabs für den Research-Tab -->
+      <nav class="research-subtabs" role="tablist" aria-label="Research-Bereiche">
+        <button class="research-subtab active" id="research-tab-experiments" type="button" role="tab" data-subtab="experiments" aria-controls="research-panel-experiments" aria-selected="true">🔬 Experiments</button>
+        <button class="research-subtab" id="research-tab-files" type="button" role="tab" data-subtab="files" aria-controls="research-panel-files" aria-selected="false">📁 Files</button>
+        <button class="research-subtab" id="research-tab-registry" type="button" role="tab" data-subtab="registry" aria-controls="research-panel-registry" aria-selected="false">📊 Registry</button>
+      </nav>
+
+      <!-- Sub-Tab: Experiments (Lanes + Focus-Rail + Experiment Runner) -->
+      <div class="research-subpanel active" id="research-panel-experiments" data-subpanel="experiments" role="tabpanel" aria-labelledby="research-tab-experiments">
       <nav class="research-lanes" id="research-lanes" aria-label="Research quick access">
         <button type="button" data-research-workflow>Experiment Runner</button>
         <button type="button" class="active" data-research-source="research" data-research-query="">All Research</button>
@@ -543,6 +552,10 @@
           <footer><button value="cancel" type="submit" class="btn-secondary">Abbrechen</button><button id="workflow-batch-start" type="button" class="btn-success">Auswahl starten</button></footer>
         </form>
       </dialog>
+      </div><!-- /research-subpanel experiments -->
+
+      <!-- Sub-Tab: Files (File Manager) -->
+      <div class="research-subpanel" id="research-panel-files" data-subpanel="files" role="tabpanel" aria-labelledby="research-tab-files" hidden>
       <!-- Source selector toolbar -->
       <div class="fm-toolbar">
         <div class="fm-source-selector">
@@ -615,11 +628,16 @@
           </div>
         </div>
       </div>
-    </section> <!-- /tab-research -->
+      </div><!-- /research-subpanel files -->
 
-    <!-- ========================================================== -->
-    <!-- TAB: RELEASE -->
-    <!-- ========================================================== -->
+      <!-- Sub-Tab: Registry (Research-Dokumente & Berichte — dynamisch von research-docs.js eingefügt) -->
+      <div class="research-subpanel" id="research-panel-registry" data-subpanel="registry" role="tabpanel" aria-labelledby="research-tab-registry" hidden>
+        <div id="research-registry-placeholder" class="research-registry-placeholder">
+          <p>Registry wird geladen …</p>
+        </div>
+      </div>
+
+    </section> <!-- /tab-research -->
     <section class="tab-content" id="tab-gate">
       <header class="workspace-header" data-workspace="release">
         <div><span class="workspace-kicker">VERIFY</span><h2>Release Workspace</h2><p>Aktueller Entwicklungsstand, Source Freeze, Evidenz und Release-Entscheidung</p></div>

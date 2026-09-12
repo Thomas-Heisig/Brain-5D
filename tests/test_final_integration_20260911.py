@@ -228,6 +228,6 @@ def test_frontend_final_integration_contract_is_present() -> None:
     assert '<option value="cluster_export">' in viewer
     assert "t-SNE · Not implemented yet" not in viewer
     assert "appendChild(embodiment)" not in wesen
-    for route in ("overview", "research", "wesen", "gate", "settings"):
+    for route in ("overview", "research", "wesen", "settings"):
         assert f'data-footer-tab="{route}"' in wesen
     assert "BRAIN-5D" not in html
