@@ -6,8 +6,8 @@ let refreshTimer = null;
 function ensurePanel() {
   let panel = document.getElementById("mhrn-system-info");
   if (panel) return panel;
-  const workspace = document.getElementById("tab-overview");
-  if (!workspace) return null;
+  const sysInfoPanel = document.querySelector('.overview-subpanel[data-subpanel="sysinfo"]');
+  if (!sysInfoPanel) return null;
   panel = document.createElement("section");
   panel.id = "mhrn-system-info";
   panel.className = "mhrn-system-info card";
@@ -38,26 +38,62 @@ function ensurePanel() {
         <div id="system-snapshots-detail" class="system-info-detail">lade …</div>
       </div>
     </div>`;
-  workspace.append(panel);
+  sysInfoPanel.append(panel);
   return panel;
+}
+
+const MAX_VISIBLE_ENTRIES = 8;
+
+function formatValue(v) {
+  if (typeof v === "object") {
+    const json = JSON.stringify(v);
+    return json.length > 120 ? json.slice(0, 117) + "…" : json;
+  }
+  const s = String(v);
+  return s.length > 200 ? s.slice(0, 197) + "…" : s;
+}
+
+function renderEntries(el, data, emptyMsg) {
+  if (!data) { el.textContent = emptyMsg; return; }
+  const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined);
+  if (!entries.length) { el.textContent = emptyMsg; return; }
+  const visible = entries.slice(0, MAX_VISIBLE_ENTRIES);
+  const remaining = entries.length - visible.length;
+  const dl = `<dl>${visible.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(formatValue(v))}</dd>`).join("")}</dl>`;
+  if (remaining > 0) {
+    el.innerHTML = `${dl}<div class="si-more"><button class="si-toggle" data-expanded="false">+ ${remaining} weitere anzeigen</button></div>`;
+    const btn = el.querySelector(".si-toggle");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        const expanded = btn.dataset.expanded === "true";
+        if (expanded) {
+          btn.dataset.expanded = "false";
+          btn.textContent = `+ ${remaining} weitere anzeigen`;
+          el.querySelector("dl").innerHTML = visible.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(formatValue(v))}</dd>`).join("");
+        } else {
+          btn.dataset.expanded = "true";
+          btn.textContent = "− weniger anzeigen";
+          el.querySelector("dl").innerHTML = entries.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(formatValue(v))}</dd>`).join("");
+        }
+      });
+    }
+  } else {
+    el.innerHTML = dl;
+  }
 }
 
 function renderConfig(data) {
   const el = document.getElementById("system-config-detail");
   if (!el) return;
-  if (!data) { el.textContent = "Keine Konfigurationsdaten."; return; }
-  const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined);
-  el.innerHTML = `<dl>${entries.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v))}</dd>`).join("")}</dl>`;
+  renderEntries(el, data, "Keine Konfigurationsdaten.");
 }
 
 function renderState(data) {
   const el = document.getElementById("system-state-detail");
   if (!el) return;
-  if (!data) { el.textContent = "Keine State-Daten."; return; }
-  const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined);
-  el.innerHTML = `<dl>${entries.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v))}</dd>`).join("")}</dl>`;
+  renderEntries(el, data, "Keine State-Daten.");
   const badge = document.getElementById("system-info-badge");
-  if (badge) badge.textContent = data.status || data.mode || "aktiv";
+  if (badge) badge.textContent = data?.status || data?.mode || "aktiv";
 }
 
 function renderRelease(data) {

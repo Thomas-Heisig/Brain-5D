@@ -108,7 +108,11 @@ async function execute(id) {
     const runtime = result.runtime || {};
     const state = String(runtime.controller_state || runtime.status || command);
     setText("footer-runtime-state-value", state);
-    setText("system-status", state);
+    const ss = byId("system-status");
+    if (ss) {
+      ss.textContent = state;
+      ss.dataset.state = /failed|blocked|error/.test(state) ? "failed" : /stale|pending|unknown/.test(state) ? "pending" : /passed|running|idle|operator|debug/.test(state) ? "ok" : "neutral";
+    }
     feedback(`${command} bestätigt · ${state}`, "success");
     await dashboardStore.refresh();
   } catch (error) {
@@ -124,7 +128,12 @@ function render(state) {
   const runtime = state?.runtime || {};
   setText("footer-runtime-state-value", runtime.controller_state || runtime.status || state?.status || "unknown");
   if (!byId("footer-runtime-state-value")) {
-    setText("system-status", runtime.controller_state || runtime.status || state?.status || "unknown");
+    const ss = byId("system-status");
+    if (ss) {
+      const state2 = String(runtime.controller_state || runtime.status || state?.status || "unknown");
+      ss.textContent = state2;
+      ss.dataset.state = /failed|blocked|error/.test(state2) ? "failed" : /stale|pending|unknown/.test(state2) ? "pending" : /passed|running|idle|operator|debug/.test(state2) ? "ok" : "neutral";
+    }
   }
   setText("footer-runtime-tick", runtime.tick ?? state?.system?.tick ?? "—");
   const mode = state?.experiment_state?.current_mode || state?.experiment_state?.mode;

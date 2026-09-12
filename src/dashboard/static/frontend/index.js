@@ -14,6 +14,7 @@ import { initAIReportTools } from "./modules/ai-report-tools.js";
 import { initLearningPrep } from "./modules/learning-prep.js";
 import { initStructuralInspector } from "./modules/structural-inspector.js";
 import { initSystemInfo } from "./modules/system-info.js";
+import { initOverviewSubtabs } from "./modules/overview-subtabs.js";
 
 const AREA_COPY = {
   dashboard: { icon: "📊", title: "Dashboard", subtitle: "Operator · Systemzustand & Steuerung" },
@@ -23,7 +24,32 @@ const AREA_COPY = {
 
 function activateLegacyWorkspace(name) {
   const button = document.querySelector(`.tab-nav .tab-btn[data-tab="${name}"]`);
-  if (button) button.click();
+  if (!button) return false;
+  // Directly switch the tab without relying on click() event delegation
+  document.querySelectorAll(".tab-btn[data-tab]").forEach((item) => {
+    item.classList.toggle("active", item === button);
+  });
+  document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => {
+    const selected = tab.id === `tab-${name}`;
+    tab.classList.toggle("active", selected);
+    tab.hidden = !selected;
+  });
+  document.body.dataset.currentTab = name;
+  // Trigger lazy init via click, but after we've already set the correct state
+  button.click();
+  // Re-assert in the next frame to override any competing handlers
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".tab-btn[data-tab]").forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+    document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => {
+      const selected = tab.id === `tab-${name}`;
+      tab.classList.toggle("active", selected);
+      tab.hidden = !selected;
+    });
+    document.body.dataset.currentTab = name;
+  });
+  return true;
 }
 
 function decoratePrimaryNavigation() {
@@ -45,18 +71,43 @@ function decoratePrimaryNavigation() {
     areaTabs.appendChild(button);
   }
 
+  const GLOBAL_ACTIONS = [
+    { ws: "control", icon: "🎮", title: "Control", subtitle: "Runtime · Pacing · Experiment", label: "Control Workbench öffnen" },
+    { ws: "gate", icon: "🚀", title: "Release", subtitle: "Gate & CI", label: "Release öffnen" },
+    { ws: "settings", icon: "⚙", title: "Settings", subtitle: "Konfiguration", label: "Settings öffnen" },
+    { ws: "parameter", icon: "🎛", title: "Parameter", subtitle: "Runtime-Parameter", label: "Parameter öffnen" },
+    { ws: "review", icon: "↗", title: "Review", subtitle: "Prüferportal", label: "Review Portal öffnen" },
+  ];
+
   const actions = document.createElement("div");
   actions.className = "mhrn-global-actions";
   actions.setAttribute("aria-label", "Globale Arbeitsbereiche");
-  actions.innerHTML = `
-    <button type="button" class="mhrn-global-route" data-global-workspace="gate" aria-label="Release öffnen"><strong>🚀 Release</strong><span>Gate & CI</span></button>
-    <button type="button" class="mhrn-global-route" data-global-workspace="settings" aria-label="Settings öffnen"><strong>⚙ Settings</strong><span>Parameter</span></button>
-    <a class="mhrn-review-route" href="/review" target="_blank" rel="noopener noreferrer" aria-label="Externes Review öffnen"><strong>↗ Review</strong><span>Prüferportal</span></a>`;
+  actions.innerHTML = GLOBAL_ACTIONS.map((a) =>
+    `<button type="button" class="mhrn-global-route" data-global-workspace="${a.ws}" aria-label="${a.label}"><span class="mhrn-nav-icon" aria-hidden="true">${a.icon}</span><span class="mhrn-nav-copy"><strong>${a.title}</strong><span>${a.subtitle}</span></span></button>`
+  ).join("");
 
   nav.replaceChildren(areaTabs, actions);
   actions.addEventListener("click", (event) => {
     const button = event.target.closest("[data-global-workspace]");
-    if (button) activateLegacyWorkspace(button.dataset.globalWorkspace);
+    if (!button) return;
+    const ws = button.dataset.globalWorkspace;
+    if (ws === "review") {
+      window.open("/review", "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (ws === "parameter") {
+      activateLegacyWorkspace("settings");
+      requestAnimationFrame(() => {
+        const card = document.getElementById("parameter-inspector-card");
+        if (card) {
+          card.scrollIntoView({ behavior: "smooth", block: "start" });
+          card.classList.add("parameter-highlight");
+          setTimeout(() => card.classList.remove("parameter-highlight"), 2000);
+        }
+      });
+      return;
+    }
+    activateLegacyWorkspace(ws);
   });
 }
 
@@ -97,6 +148,7 @@ function init() {
   initLearningPrep();
   initStructuralInspector();
   initSystemInfo();
+  initOverviewSubtabs();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(init, 0), { once: true }); else setTimeout(init, 0);
 window.MHRNFrontend = { refresh: init };

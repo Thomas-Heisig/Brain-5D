@@ -109,7 +109,7 @@ function ensurePrimaryNavigation() {
 
   nav.addEventListener("click", (event) => {
     const button = event.target.closest("[data-primary-area]");
-    if (!button) return;
+    if (!button || !nav.contains(button)) return;
     const area = button.dataset.primaryArea;
     if (area === "dashboard") activateWorkspace("overview");
     if (area === "science") activateWorkspace("research");

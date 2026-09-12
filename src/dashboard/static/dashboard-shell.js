@@ -29,45 +29,11 @@ function fitVisibleCanvases(root = document) {
 }
 
 function ensureWorkspaceHeaders() {
-  Object.entries(TAB_META).forEach(([tabName, meta]) => {
-    const tab = document.getElementById(`tab-${tabName}`);
-    if (!tab) return;
-    tab.classList.add("dashboard-workspace");
-    if (tab.querySelector(":scope > .workspace-header, :scope > .overview-command-bar, :scope > .dashboard-generated-header")) return;
-
-    const header = document.createElement("header");
-    header.className = "dashboard-generated-header";
-    header.dataset.workspace = tabName;
-    header.innerHTML = `
-      <div>
-        <span class="dashboard-workspace-kicker">${meta.kicker}</span>
-        <h2>${meta.title}</h2>
-        <p>${meta.context}</p>
-      </div>`;
-    tab.prepend(header);
-  });
+  // Workspace headers removed — sidebar provides all navigation context.
 }
 
 function addUtilityBars() {
-  Object.keys(TAB_META).forEach((tabName) => {
-    const tab = document.getElementById(`tab-${tabName}`);
-    if (!tab || tab.querySelector(":scope > .dashboard-utility-bar")) return;
-
-    const header = tab.querySelector(":scope > .workspace-header, :scope > .overview-command-bar, :scope > .dashboard-generated-header");
-    if (!header) return;
-
-    const bar = document.createElement("div");
-    bar.className = "dashboard-utility-bar";
-    bar.innerHTML = `
-      <span class="dashboard-utility-context" data-dashboard-context>${TAB_META[tabName].context}</span>
-      <div class="dashboard-utility-actions">
-        <a class="dashboard-utility-button" href="/review" target="_blank" rel="noopener noreferrer">Externes Review</a>
-        <button type="button" class="dashboard-utility-button" data-dashboard-action="refresh">↻ Refresh</button>
-        <button type="button" class="dashboard-utility-button" data-dashboard-action="density">Compact</button>
-        <button type="button" class="dashboard-utility-button" data-dashboard-action="top">↑ Top</button>
-      </div>`;
-    header.insertAdjacentElement("afterend", bar);
-  });
+  // Utility bars removed — sidebar provides all navigation and context.
 }
 
 function refreshReadOnlyData() {

@@ -9,6 +9,17 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Updated:** 2026-09-10
 **Current release-blocking backlog:** **0**
 
+## 2026-09-12 Sidebar navigation fix and dashboard cleanup
+
+- [x] Add Parameter button to sidebar (opens settings tab).
+- [x] Remove all redundant dashboard elements: experience-status-cluster,
+	⌘K button, header-context span, workspace headers, utility bars, ribbons,
+	welcome panel, overview-command-bar, overview-actions, overview-status-rail.
+- [x] Fix sidebar navigation: `nav` click handler was matching
+	`data-primary-area` on `document.body` via `closest()`, causing all
+	sidebar global-workspace button clicks to reset to overview.
+- [x] Verify all 8 sidebar links navigate to correct destinations.
+
 ## 2026-09-11 Full backend API integration into frontend
 
 - [x] Audit all 130 backend API routes and identify 25 endpoints not yet used

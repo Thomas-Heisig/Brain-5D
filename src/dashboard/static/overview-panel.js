@@ -142,11 +142,8 @@ function renderSystemMetrics(state) {
 
   const statusEl = $('system-status');
   if (statusEl) {
-    statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
-    const workerFailed = storage.worker_failed;
-    statusEl.className = workerFailed === true
-      ? 'status-pill error'
-      : (workerFailed === false ? 'status-pill online' : 'status-pill');
+    statusEl.textContent = `${data.status || 'idle'}`;
+    statusEl.dataset.state = data.status === 'idle' || data.status === 'running' ? 'ok' : 'pending';
   }
   setText('overview-system-status', data.status || 'idle');
 }

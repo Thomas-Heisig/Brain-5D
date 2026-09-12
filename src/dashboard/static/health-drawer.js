@@ -108,8 +108,24 @@ export class HealthDrawer {
   }
 
   _bindEvents() {
-    this.toggleBtn?.addEventListener("click", () => this.toggleDrawer());
+    this.toggleBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggleDrawer();
+    });
     this.unsubscribe = this.store.subscribe((state) => this.render(state));
+
+    // Click outside to close
+    document.addEventListener("click", (e) => {
+      if (!this.open) return;
+      const t = e.target;
+      if (this.drawer?.contains(t) || this.bar?.contains(t) || t === this.toggleBtn) return;
+      this.closeDrawer();
+    });
+
+    // ESC to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this.open) this.closeDrawer();
+    });
   }
 
   toggleDrawer() {

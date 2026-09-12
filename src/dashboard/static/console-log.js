@@ -101,7 +101,7 @@ function adaptDashboardNavigation() {
 }
 
 function ensureReleaseFooterButton() {
-  const footer = document.querySelector(".site-footer");
+  const footer = document.querySelector(".mhrn-footer, .site-footer");
   if (!footer || footer.querySelector(".footer-tools, [data-footer-release]")) return;
   const target = byId("footer-status") || footer.lastElementChild || footer;
   const button = document.createElement("button");

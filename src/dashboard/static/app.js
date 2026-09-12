@@ -287,17 +287,13 @@ let experimentRunActive = false;
 let sharedExperimentMode = null;
 
 function renderExperimentRunFooter() {
-  const vitals = document.querySelector('.footer-vitals');
-  if (!vitals) return;
-  vitals.classList.toggle('is-test-running', experimentRunActive);
+  const footer = document.getElementById('footer-experiment');
+  if (!footer) return;
+  footer.classList.toggle('is-test-running', experimentRunActive);
   if (!experimentRunActive) return;
 
   setText('footer-activity-value', 'Testlauf');
   setText('footer-spikes-value', 'Testlauf');
-  const activityBar = $('footer-activity-bar');
-  const spikesBar = $('footer-spikes-bar');
-  if (activityBar) activityBar.style.width = '0%';
-  if (spikesBar) spikesBar.style.width = '0%';
 }
 
 document.addEventListener('brain5d:experiment-progress', (event) => {
@@ -435,19 +431,10 @@ function renderStatus(state) {
   setText('footer-activity-value', activity == null ? '—' : `${(activity * 100).toFixed(1)}%`);
   setText('footer-spikes-value', spikes == null ? '—' : formatNumber(spikes));
   setText('footer-pressure-value', pressure == null ? '—' : `${Math.min(100, pressure * 100).toFixed(1)}%`);
-  const activityBar = $('footer-activity-bar');
-  const spikesBar = $('footer-spikes-bar');
-  const pressureBar = $('footer-pressure-bar');
-  if (activityBar) activityBar.style.width = `${Math.min(100, Math.max(0, (activity || 0) * 100))}%`;
-  if (spikesBar) spikesBar.style.width = `${spikesPerTick == null ? 0 : Math.min(100, Math.max(0, spikesPerTick * 100))}%`;
-  if (pressureBar) pressureBar.style.width = `${pressure == null ? 0 : Math.min(100, Math.max(0, pressure * 100))}%`;
   renderExperimentRunFooter();
   if (statusEl) {
-    statusEl.textContent = `${data.status || 'idle'} · ${data.version || 'unknown'}`;
-    const workerFailed = storage.worker_failed;
-    statusEl.className = workerFailed === true
-      ? 'status-pill error'
-      : (workerFailed === false ? 'status-pill online' : 'status-pill');
+    statusEl.textContent = `${data.status || 'idle'}`;
+    statusEl.dataset.state = data.status === 'idle' || data.status === 'running' ? 'ok' : 'pending';
   }
 
   // Integration status badges (dashboard tab)
@@ -1002,9 +989,10 @@ async function refreshIOFlow() {
     if (meta) {
       meta.textContent = `Tick ${data.current_tick} · Input ${data.input_mean_rate.toFixed(4)} → Hidden ${data.hidden_mean_rate.toFixed(4)} → Output ${data.output_mean_rate.toFixed(4)} · ${data.source}`;
     }
-    setText('footer-input-value', `${formatNumber(data.input_count)} · ${formatFloat(data.input_mean_rate, 3)}`);
-    setText('footer-output-value', `${formatNumber(data.output_count)} · ${formatFloat(data.output_mean_rate, 3)}`);
-    setText('footer-io-state', data.propagation_active ? 'Signalfluss aktiv' : 'kein aktueller Signalfluss');
+    setText('footer-input-value', formatNumber(data.input_count));
+    setText('footer-output-value', formatNumber(data.output_count));
+    const ioEl = document.getElementById('footer-io');
+    if (ioEl) ioEl.title = `${data.propagation_active ? 'Signalfluss aktiv' : 'kein aktueller Signalfluss'} · IN ${formatFloat(data.input_mean_rate, 3)} OUT ${formatFloat(data.output_mean_rate, 3)}`;
   } catch (e) {
     const badge = document.getElementById('io-flow-badge');
     if (badge) {
@@ -1015,7 +1003,8 @@ async function refreshIOFlow() {
     if (meta) meta.textContent = '⚠️ IO-Fluss nicht verfügbar';
     setText('footer-input-value', '—');
     setText('footer-output-value', '—');
-    setText('footer-io-state', 'I/O offline');
+    const ioEl = document.getElementById('footer-io');
+    if (ioEl) ioEl.title = 'I/O offline';
   }
 }
 
@@ -2467,7 +2456,6 @@ function init() {
   // Setup header controls
   setupThemeToggle();
   setupAccessibilityToggle();
-  setupReaderToggle();
   setupGlobalChrome();
 
   console.log('✅ Dashboard ready');

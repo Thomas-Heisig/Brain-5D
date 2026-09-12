@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-09-12 - Sidebar navigation fix and dashboard cleanup
+
+- Fixed critical sidebar navigation bug: `nav` click handler in
+  `frontend-architecture.js` used `event.target.closest("[data-primary-area]")`
+  which traversed up to `document.body` (where `data-primary-area` is set by
+  `syncNavigation()`), causing ALL sidebar `[data-global-workspace]` button
+  clicks to be hijacked and reset the tab to `overview`.
+  Fix: added `!nav.contains(button)` guard so only buttons within the nav
+  element itself are processed.
+- Removed `experience-status-cluster` (WORKSPACE/RUNTIME/TICK) and `⌘K`
+  command-palette button from topbar by disabling `enhanceTopbar()`.
+- Removed `header-context` span from topbar HTML.
+- Disabled `restorePreferences()` focus-mode restoration (focus mode removed
+  entirely — always show everything).
+- Unified all sidebar elements: area tabs (01–03) and global actions (04–08)
+  now share identical structure (`mhrn-nav-icon` + `mhrn-nav-copy`), numbering
+  (01–08), typography, padding, hover/active states, and accent bar.
+- Parameter button now scrolls to Parameter Inspector card with 2-second
+  highlight animation, differentiated from Settings (top of settings tab).
+- Verified all 8 sidebar links navigate to correct destinations:
+  Dashboard → overview, Wissenschaft → research, Runtime & Wesen → wesen,
+  Control → control, Release → gate, Settings → settings, Parameter →
+  settings + scroll to Parameter Inspector, Review → /review (new tab).
+
 ## 2026-09-11 - Full backend API integration into frontend
 
 - Integrated all 25 previously unused backend API endpoints into the dashboard

@@ -70,25 +70,7 @@ function makeButton(label, action, title = "") {
 }
 
 function enhanceTopbar() {
-  const topbar = document.querySelector(".topbar");
-  if (!topbar || topbar.querySelector(".experience-status-cluster")) return;
-
-  const cluster = document.createElement("div");
-  cluster.className = "experience-status-cluster";
-  cluster.setAttribute("aria-label", "Operator context");
-  cluster.innerHTML = `
-    <span class="experience-live-dot" aria-hidden="true"></span>
-    <span class="experience-status-copy"><small>WORKSPACE</small><strong data-experience-workspace>Overview</strong></span>
-    <span class="experience-status-copy"><small>RUNTIME</small><strong data-experience-runtime>unknown</strong></span>
-    <span class="experience-status-copy"><small>TICK</small><strong data-experience-tick>—</strong></span>`;
-
-  const right = topbar.querySelector(".topbar-right");
-  topbar.insertBefore(cluster, right || null);
-
-  if (right) {
-    right.prepend(makeButton("⌘K", "palette", "Command palette (Ctrl/Cmd+K)"));
-    right.prepend(makeButton("◎", "focus", "Focus mode (F)"));
-  }
+  // Topbar status cluster removed — sidebar provides all navigation context.
 }
 
 function enhanceNavigation() {
@@ -103,53 +85,11 @@ function enhanceNavigation() {
 }
 
 function addWorkspaceRibbons() {
-  Object.entries(WORKSPACES).forEach(([name, meta]) => {
-    const tab = document.getElementById(`tab-${name}`);
-    if (!tab || tab.querySelector(":scope > .experience-ribbon")) return;
-    const utility = tab.querySelector(":scope > .dashboard-utility-bar");
-    const ribbon = document.createElement("aside");
-    ribbon.className = "experience-ribbon";
-    ribbon.setAttribute("aria-label", `${meta.label} workspace context`);
-    ribbon.innerHTML = `
-      <div class="experience-ribbon-copy">
-        <span>${meta.group.toUpperCase()} / ${meta.label.toUpperCase()}</span>
-        <strong>${meta.hint}</strong>
-      </div>
-      <div class="experience-ribbon-actions">
-        <button type="button" data-experience-action="palette">⌘ Command</button>
-        <button type="button" data-experience-action="shortcuts">? Shortcuts</button>
-        <button type="button" data-experience-action="focus">◎ Focus</button>
-      </div>`;
-    if (utility) utility.insertAdjacentElement("afterend", ribbon);
-    else tab.prepend(ribbon);
-  });
+  // Ribbons removed — sidebar provides all navigation context.
 }
 
 function buildWelcome() {
-  if (localStorage.getItem(STORAGE.welcome) === "true") return;
-  const overview = document.getElementById("tab-overview");
-  if (!overview || overview.querySelector(".experience-welcome")) return;
-
-  const panel = document.createElement("section");
-  panel.className = "experience-welcome";
-  panel.innerHTML = `
-    <div class="experience-welcome-copy">
-      <span class="experience-eyebrow">OPERATOR ORIENTATION</span>
-      <h2>Vom Systemzustand zur belastbaren Evidenz</h2>
-      <p>MHRN trennt Beobachtung, Eingriff, Experiment und Freigabe. Diese Oberfläche führt entlang derselben Kausalitätskette; sie erzeugt keine Messwerte und ersetzt keine wissenschaftlichen Nachweise.</p>
-    </div>
-    <div class="experience-welcome-steps">
-      <button type="button" data-jump-workspace="overview"><b>01</b><span><strong>Zustand lesen</strong><small>Health, Aktivität, Speicher</small></span></button>
-      <button type="button" data-jump-workspace="network"><b>02</b><span><strong>Dynamik prüfen</strong><small>Spikes, Populationen, Topologie</small></span></button>
-      <button type="button" data-jump-workspace="control"><b>03</b><span><strong>Gezielt eingreifen</strong><small>Operator-bestätigte Controls</small></span></button>
-      <button type="button" data-jump-workspace="research"><b>04</b><span><strong>Evidenz erzeugen</strong><small>Experiment und Provenienz</small></span></button>
-      <button type="button" data-jump-workspace="gate"><b>05</b><span><strong>Freigabe prüfen</strong><small>Gate, CI, Reproduzierbarkeit</small></span></button>
-    </div>
-    <button type="button" class="experience-dismiss" data-experience-action="dismiss-welcome" aria-label="Einführung schließen">×</button>`;
-
-  const header = overview.querySelector(":scope > .overview-command-bar");
-  const anchor = overview.querySelector(":scope > .experience-ribbon") || header;
-  anchor?.insertAdjacentElement("afterend", panel);
+  // Welcome panel removed — sidebar provides all navigation.
 }
 
 function buildPalette() {
@@ -184,7 +124,6 @@ function commandItems() {
   return [
     ...workspaceItems,
     { id: "action:refresh", icon: "↻", label: "Refresh active view", meta: "Read-only UI refresh", run: () => document.querySelector(".tab-content.active [data-dashboard-action='refresh']")?.click() },
-    { id: "action:focus", icon: "◎", label: "Toggle focus mode", meta: "Hide secondary chrome", run: toggleFocus },
     { id: "action:shortcuts", icon: "?", label: "Keyboard shortcuts", meta: "Show operator navigation keys", run: openShortcuts },
   ];
 }
@@ -241,7 +180,6 @@ function buildShortcuts() {
       <div class="experience-shortcut-grid">
         <div><kbd>Ctrl</kbd><span>+</span><kbd>K</kbd><strong>Command palette</strong></div>
         <div><kbd>?</kbd><strong>Shortcut map</strong></div>
-        <div><kbd>F</kbd><strong>Focus mode</strong></div>
         <div><kbd>1</kbd>…<kbd>7</kbd><strong>Workspace wechseln</strong></div>
         <div><kbd>Esc</kbd><strong>Overlay schließen</strong></div>
       </div>
@@ -259,15 +197,6 @@ function openPalette() {
 
 function openShortcuts() {
   document.getElementById("experience-shortcuts")?.showModal();
-}
-
-function toggleFocus() {
-  const enabled = document.body.dataset.experienceFocus !== "true";
-  document.body.dataset.experienceFocus = String(enabled);
-  localStorage.setItem(STORAGE.focus, String(enabled));
-  document.querySelectorAll('[data-experience-action="focus"]').forEach((button) => {
-    button.classList.toggle("active", enabled);
-  });
 }
 
 function syncChrome() {
@@ -298,7 +227,6 @@ function bindActions() {
     if (!action) return;
     if (action === "palette") openPalette();
     if (action === "shortcuts") openShortcuts();
-    if (action === "focus") toggleFocus();
     if (action === "dismiss-welcome") {
       localStorage.setItem(STORAGE.welcome, "true");
       document.querySelector(".experience-welcome")?.remove();
@@ -315,7 +243,6 @@ function bindActions() {
     }
     if (typing) return;
     if (event.key === "?") openShortcuts();
-    if (event.key.toLowerCase() === "f") toggleFocus();
     if (/^[1-7]$/.test(event.key)) activateWorkspace(Object.keys(WORKSPACES)[Number(event.key) - 1]);
   });
 
@@ -337,7 +264,7 @@ function observeRenderedState() {
 }
 
 function restorePreferences() {
-  document.body.dataset.experienceFocus = localStorage.getItem(STORAGE.focus) === "true" ? "true" : "false";
+  // Focus mode removed — always show everything.
 }
 
 function init() {

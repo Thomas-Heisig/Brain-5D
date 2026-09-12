@@ -78,8 +78,6 @@ kbd { display:inline-grid; min-width:21px; min-height:20px; place-items:center; 
 .experience-shortcut-grid > div { display:flex; min-height:48px; align-items:center; gap:6px; padding:9px 10px; background:var(--paper-2); }
 .experience-shortcut-grid strong { margin-left:auto; color:var(--ink-3); font-size:.65rem; }
 .experience-integrity-note { margin:0; padding:10px 13px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:.66rem; line-height:1.5; }
-[data-experience-focus="true"] .topbar-brand .icon-btn,[data-experience-focus="true"] .topbar-brand .eyebrow,[data-experience-focus="true"] .header-context,[data-experience-focus="true"] .dashboard-utility-bar,[data-experience-focus="true"] .experience-welcome { display:none !important; }
-
 /* -------------------------------------------------------------------------
    Real body / technical self-model                                             
    ------------------------------------------------------------------------- */

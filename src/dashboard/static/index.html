@@ -25,12 +25,10 @@
       </div>
     </div>
     <div class="topbar-right">
-      <span class="header-context" id="header-context">Overview</span>
       <button id="help-toggle" class="icon-btn" title="Hilfe zur aktuellen Ansicht" aria-label="Hilfe">?</button>
       <button id="theme-toggle" class="icon-btn" title="Dark / Light" aria-label="Dark oder Light Mode">◐</button>
       <button id="contrast-toggle" class="icon-btn" title="Kontrastmodus" aria-label="Kontrastmodus">◩</button>
       <button id="accessibility-toggle" class="icon-btn" title="Größere Bedienelemente" aria-label="Barrierearme Darstellung">A+</button>
-      <button id="reader-toggle" class="icon-btn" title="Reader-Ansicht" aria-label="Reader-Ansicht" aria-pressed="false">▤</button>
       <button id="chat-toggle" class="multifunction-btn" title="Research Chat öffnen" aria-label="Research Chat öffnen">✦ CHAT</button>
     </div>
   </header>
@@ -50,46 +48,65 @@
 
   <main>
     <section class="tab-content active" id="tab-overview">
-      <header class="overview-command-bar">
-        <div class="overview-command-copy">
-          <span class="overview-kicker">LIVING SYSTEM / COMMAND CENTER</span>
-          <h2>Der aktuelle Körperzustand</h2>
-          <p id="overview-context">Tick — · runtime wird verbunden</p>
-        </div>
-        <div class="overview-actions" aria-label="Schnellzugriff">
-          <button class="overview-action" type="button" data-overview-tab="control">▶ Ausführen</button>
-          <button class="overview-action" type="button" data-overview-tab="embodiment">◈ Körper öffnen</button>
-          <button class="overview-action" type="button" data-overview-tab="research">⌕ Nachweise</button>
-          <button class="overview-action" type="button" data-overview-tab="settings">⚙ Parameter</button>
-        </div>
+      <header class="workspace-header" data-workspace="overview">
+        <div><span class="workspace-kicker">OPERATOR</span><h2>Dashboard</h2><p>Systemzustand &amp; Steuerung — vitale Signe, Komponenten, Gedächtnis und Struktur</p></div>
+        <div class="workspace-status-strip"><span>Status<strong id="overview-header-status">idle</strong></span><span>Tick<strong id="overview-header-tick">0</strong></span></div>
       </header>
-      <section class="overview-status-rail" aria-label="Systemstatus">
-        <div class="overview-status-item"><span>Runtime</span><strong id="overview-runtime-status">unknown</strong></div>
-        <div class="overview-status-item"><span>Health</span><strong id="overview-health-status">unknown</strong></div>
-        <div class="overview-status-item"><span>Scientific Gate</span><strong id="overview-scientific-status">unknown</strong></div>
-        <div class="overview-status-item"><span>CI</span><strong id="overview-ci-status">unknown</strong></div>
-        <div class="overview-status-item"><span>Release</span><strong id="overview-release-status">not_ready</strong></div>
-        <div class="overview-status-item"><span>Mode</span><strong id="overview-mode-status">operator</strong></div>
-      </section>
-      <section class="overview-operations-grid">
-        <article class="overview-surface overview-body-surface">
-          <div class="overview-surface-title"><div><span>NEURONALES INNERES</span><h3>Aktivität und Regulation</h3></div><strong id="overview-system-status">idle</strong></div>
-          <div class="overview-dynamics-grid">
-            <div><span>Aktive Neuronen</span><strong id="overview-active-neurons">—</strong></div><div><span>Stille Neuronen</span><strong id="overview-silent-neurons">—</strong></div><div><span>Feuerrate</span><strong id="overview-mean-rate">—</strong></div><div><span>Synchronität</span><strong id="overview-synchrony">—</strong></div><div><span>Burst Index</span><strong id="overview-burst-index">—</strong></div><div><span>E / I Ratio</span><strong id="overview-ei-ratio">—</strong></div>
-          </div>
-          <div class="overview-dynamics-grid overview-core-metrics">
-            <div><span>Tick</span><strong id="tick">—</strong></div><div><span>Neuronen</span><strong id="neurons">—</strong></div><div><span>Synapsen</span><strong id="synapses">—</strong></div><div><span>Spikes</span><strong id="spikes">—</strong></div><div><span>Core ms</span><strong id="core-ms">—</strong></div><div><span>Energie</span><strong id="energy">—</strong></div>
-          </div>
-        </article>
-        <article class="overview-surface"><div class="overview-surface-title"><div><span>ORGANE</span><h3>Lebende Komponenten</h3></div><strong id="overview-component-count">0 / 0</strong></div><div class="overview-component-grid" id="overview-component-grid"><span class="overview-empty">Waiting for component state</span></div></article>
-        <article class="overview-surface"><div class="overview-surface-title"><div><span>RÜCKMELDUNG</span><h3>Aufmerksamkeit</h3></div><strong id="overview-problem-count">0</strong></div><div class="overview-problem-list" id="overview-problem-list"><span class="overview-empty overview-clear">No problems detected</span></div></article>
-      </section>
-      <section class="overview-operations-grid overview-metrics-row">
-        <article class="overview-surface"><div class="overview-surface-title"><div><span>SPEICHER</span><h3>Gedächtnis des Systems</h3></div><strong id="queue-badge">—</strong></div><div class="overview-dynamics-grid"><div><span>Deltas</span><strong id="deltas">—</strong></div><div><span>Bytes</span><strong id="bytes">—</strong></div><div><span>Journal</span><strong id="journal-size">—</strong></div><div><span>Drops</span><strong id="drops">—</strong></div><div><span>Write</span><strong id="write-ms">—</strong></div><div><span>Commit</span><strong id="commit-ms">—</strong></div></div><div class="bar"><div class="bar-fill" id="queue-fill"></div></div></article>
-        <article class="overview-surface"><div class="overview-surface-title"><div><span>LERNEN</span><h3>Plastizität</h3></div><strong id="learning-ms">—</strong></div><div class="overview-dynamics-grid"><div><span>STDP</span><strong id="stdp">—</strong></div><div><span>Rewards</span><strong id="rewards">—</strong></div><div><span>Pending</span><strong id="pending">—</strong></div><div><span>Reward Updates</span><strong id="reward-updates">—</strong></div><div><span>Homeostasis</span><strong id="homeostasis-state">—</strong></div><div><span>Active</span><strong id="active-neurons">—</strong></div></div></article>
-        <article class="overview-surface"><div class="overview-surface-title"><div><span>STRUKTUR</span><h3>Wachstum und Umbau</h3></div><strong>live</strong></div><div class="overview-dynamics-grid"><div><span>Neuronen +</span><strong id="neurons-created">—</strong></div><div><span>Neuronen −</span><strong id="neurons-removed">—</strong></div><div><span>Synapsen +</span><strong id="synapses-created">—</strong></div><div><span>Synapsen −</span><strong id="synapses-pruned">—</strong></div><div><span>Target Rate</span><strong id="target-rate">—</strong></div><div><span>Mean Rate</span><strong id="mean-rate">—</strong></div></div></article>
-      </section>
-      <section class="snapshot-info-card overview-surface" aria-label="Snapshot-Nachweis"><div class="overview-surface-title"><div><span>IDENTITÄT</span><h3>Aktueller Snapshot</h3></div><strong id="snapshot-status">⏳</strong></div><div class="overview-dynamics-grid"><div><span>Datei</span><strong id="snapshot-file">—</strong></div><div><span>Tick</span><strong id="snapshot-tick">—</strong></div><div><span>Größe</span><strong id="snapshot-size">—</strong></div><div><span>Rate Error</span><strong id="rate-error">—</strong></div><div><span>Threshold</span><strong id="threshold-adaptation">—</strong></div><div><span>Energy Error</span><strong id="energy-error">—</strong></div></div></section>
+      <!-- Sub-Tabs für das Overview-Dashboard -->
+      <nav class="overview-subtabs" role="tablist" aria-label="Dashboard-Bereiche">
+        <button class="overview-subtab active" type="button" role="tab" data-subtab="vitals" aria-selected="true">🫀 Vitals</button>
+        <button class="overview-subtab" type="button" role="tab" data-subtab="organs" aria-selected="false">◈ Organe</button>
+        <button class="overview-subtab" type="button" role="tab" data-subtab="memory" aria-selected="false">🧠 Gedächtnis</button>
+        <button class="overview-subtab" type="button" role="tab" data-subtab="structure" aria-selected="false">📐 Struktur</button>
+        <button class="overview-subtab" type="button" role="tab" data-subtab="snapshot" aria-selected="false">📸 Snapshot</button>
+        <button class="overview-subtab" type="button" role="tab" data-subtab="sysinfo" aria-selected="false">⚙ System Info</button>
+      </nav>
+
+      <!-- Sub-Tab: Vitals (Aktivität + Regulation + Core-Metriken) -->
+      <div class="overview-subpanel active" data-subpanel="vitals" role="tabpanel">
+        <section class="overview-operations-grid">
+          <article class="overview-surface overview-body-surface">
+            <div class="overview-surface-title"><div><span>NEURONALES INNERES</span><h3>Aktivität und Regulation</h3></div><strong id="overview-system-status">idle</strong></div>
+            <div class="overview-dynamics-grid">
+              <div><span>Aktive Neuronen</span><strong id="overview-active-neurons">—</strong></div><div><span>Stille Neuronen</span><strong id="overview-silent-neurons">—</strong></div><div><span>Feuerrate</span><strong id="overview-mean-rate">—</strong></div><div><span>Synchronität</span><strong id="overview-synchrony">—</strong></div><div><span>Burst Index</span><strong id="overview-burst-index">—</strong></div><div><span>E / I Ratio</span><strong id="overview-ei-ratio">—</strong></div>
+            </div>
+            <div class="overview-dynamics-grid overview-core-metrics">
+              <div><span>Tick</span><strong id="tick">—</strong></div><div><span>Neuronen</span><strong id="neurons">—</strong></div><div><span>Synapsen</span><strong id="synapses">—</strong></div><div><span>Spikes</span><strong id="spikes">—</strong></div><div><span>Core ms</span><strong id="core-ms">—</strong></div><div><span>Energie</span><strong id="energy">—</strong></div>
+            </div>
+          </article>
+          <article class="overview-surface"><div class="overview-surface-title"><div><span>RÜCKMELDUNG</span><h3>Aufmerksamkeit</h3></div><strong id="overview-problem-count">0</strong></div><div class="overview-problem-list" id="overview-problem-list"><span class="overview-empty overview-clear">No problems detected</span></div></article>
+        </section>
+      </div>
+
+      <!-- Sub-Tab: Organe (Komponenten) -->
+      <div class="overview-subpanel" data-subpanel="organs" role="tabpanel" hidden>
+        <section class="overview-operations-grid">
+          <article class="overview-surface"><div class="overview-surface-title"><div><span>ORGANE</span><h3>Lebende Komponenten</h3></div><strong id="overview-component-count">0 / 0</strong></div><div class="overview-component-grid" id="overview-component-grid"><span class="overview-empty">Waiting for component state</span></div></article>
+        </section>
+      </div>
+
+      <!-- Sub-Tab: Gedächtnis (Speicher + Lernen) -->
+      <div class="overview-subpanel" data-subpanel="memory" role="tabpanel" hidden>
+        <section class="overview-operations-grid overview-metrics-row">
+          <article class="overview-surface"><div class="overview-surface-title"><div><span>SPEICHER</span><h3>Gedächtnis des Systems</h3></div><strong id="queue-badge">—</strong></div><div class="overview-dynamics-grid"><div><span>Deltas</span><strong id="deltas">—</strong></div><div><span>Bytes</span><strong id="bytes">—</strong></div><div><span>Journal</span><strong id="journal-size">—</strong></div><div><span>Drops</span><strong id="drops">—</strong></div><div><span>Write</span><strong id="write-ms">—</strong></div><div><span>Commit</span><strong id="commit-ms">—</strong></div></div><div class="bar"><div class="bar-fill" id="queue-fill"></div></div></article>
+          <article class="overview-surface"><div class="overview-surface-title"><div><span>LERNEN</span><h3>Plastizität</h3></div><strong id="learning-ms">—</strong></div><div class="overview-dynamics-grid"><div><span>STDP</span><strong id="stdp">—</strong></div><div><span>Rewards</span><strong id="rewards">—</strong></div><div><span>Pending</span><strong id="pending">—</strong></div><div><span>Reward Updates</span><strong id="reward-updates">—</strong></div><div><span>Homeostasis</span><strong id="homeostasis-state">—</strong></div><div><span>Active</span><strong id="active-neurons">—</strong></div></div></article>
+        </section>
+      </div>
+
+      <!-- Sub-Tab: Struktur (Wachstum) -->
+      <div class="overview-subpanel" data-subpanel="structure" role="tabpanel" hidden>
+        <section class="overview-operations-grid overview-metrics-row">
+          <article class="overview-surface"><div class="overview-surface-title"><div><span>STRUKTUR</span><h3>Wachstum und Umbau</h3></div><strong>live</strong></div><div class="overview-dynamics-grid"><div><span>Neuronen +</span><strong id="neurons-created">—</strong></div><div><span>Neuronen −</span><strong id="neurons-removed">—</strong></div><div><span>Synapsen +</span><strong id="synapses-created">—</strong></div><div><span>Synapsen −</span><strong id="synapses-pruned">—</strong></div><div><span>Target Rate</span><strong id="target-rate">—</strong></div><div><span>Mean Rate</span><strong id="mean-rate">—</strong></div></div></article>
+        </section>
+      </div>
+
+      <!-- Sub-Tab: Snapshot (Identität) -->
+      <div class="overview-subpanel" data-subpanel="snapshot" role="tabpanel" hidden>
+        <section class="snapshot-info-card overview-surface" aria-label="Snapshot-Nachweis"><div class="overview-surface-title"><div><span>IDENTITÄT</span><h3>Aktueller Snapshot</h3></div><strong id="snapshot-status">⏳</strong></div><div class="overview-dynamics-grid"><div><span>Datei</span><strong id="snapshot-file">—</strong></div><div><span>Tick</span><strong id="snapshot-tick">—</strong></div><div><span>Größe</span><strong id="snapshot-size">—</strong></div><div><span>Rate Error</span><strong id="rate-error">—</strong></div><div><span>Threshold</span><strong id="threshold-adaptation">—</strong></div><div><span>Energy Error</span><strong id="energy-error">—</strong></div></div></section>
+      </div>
+
+      <!-- Sub-Tab: System Info (Konfiguration + Zustand) -->
+      <div class="overview-subpanel" data-subpanel="sysinfo" role="tabpanel" hidden></div>
     </section>
 
     <!-- ========================================================== -->
@@ -749,49 +766,49 @@
     <p id="context-help-text"></p>
   </dialog>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-segment footer-product">
-      <strong>MHRN</strong><span>v<span id="footer-version">loading</span></span>
+  <!-- Footer — zweizeilig: oben stabil, unten Telemetrie -->
+  <footer class="mhrn-footer" id="mhrn-global-status">
+    <div class="mhrn-footer-row mhrn-footer-primary">
+      <span class="mhrn-brand">MHRN <em>v<span id="footer-version">loading</span></em></span>
+      <span class="mhrn-divider" aria-hidden="true"></span>
+      <span class="mhrn-transport" role="group" aria-label="Runtime-Steuerung">
+        <button id="footer-runtime-start" type="button" title="Start" aria-label="Runtime starten">▶</button>
+        <button id="footer-runtime-pause" type="button" title="Pause" aria-label="Runtime pausieren">Ⅱ</button>
+        <button id="footer-runtime-stop" type="button" title="Stop" aria-label="Runtime stoppen">■</button>
+      </span>
+      <em class="mhrn-feedback" id="footer-command-feedback" aria-live="polite">bereit</em>
+      <span class="mhrn-divider" aria-hidden="true"></span>
+      <span class="mhrn-mode-switch" id="experiment-mode-switcher" title="Experiment-Modus">
+        <button class="mode-btn active" data-mode="operator" title="Operator">🎮</button>
+        <button class="mode-btn" data-mode="experiment" title="Experiment">🔬</button>
+        <button class="mode-btn" data-mode="debug" title="Debug">🐛</button>
+      </span>
+      <span class="mhrn-spacer"></span>
+      <span class="mhrn-badge mhrn-badge-ok" id="mhrn-mode-badge">✓ operator</span>
     </div>
-    <div class="footer-segment footer-runtime">
-      <div class="footer-runtime-copy">
-        <span>Runtime</span><strong class="status-pill" id="system-status">offline</strong>
-        <small>Tick <span id="footer-runtime-tick">—</span></small>
-      </div>
-      <div class="footer-runtime-actions" aria-label="Runtime-Steuerung">
-        <button id="footer-runtime-start" type="button" title="Runtime starten" aria-label="Runtime starten">▶</button>
-        <button id="footer-runtime-pause" type="button" title="Runtime pausieren" aria-label="Runtime pausieren">Ⅱ</button>
-        <button id="footer-runtime-stop" type="button" title="Runtime stoppen" aria-label="Runtime stoppen">■</button>
-      </div>
-      <small class="footer-command-feedback" id="footer-command-feedback" aria-live="polite">bereit</small>
-    </div>
-    <div class="footer-vitals" aria-label="Live Aktivität und Ressourcen">
-      <div class="footer-vital"><span>Aktivität</span><strong id="footer-activity-value">—</strong><i><b id="footer-activity-bar"></b></i></div>
-      <div class="footer-vital"><span>Spikes</span><strong id="footer-spikes-value">—</strong><i><b id="footer-spikes-bar"></b></i></div>
-      <div class="footer-vital"><span>Ressourcendruck</span><strong id="footer-pressure-value">—</strong><i><b id="footer-pressure-bar"></b></i></div>
-    </div>
-    <div class="footer-io" aria-label="Runtime Input und Output" aria-live="polite">
-      <span class="footer-io-label">I/O</span>
-      <span><small>IN</small><strong id="footer-input-value">—</strong></span>
-      <span><small>OUT</small><strong id="footer-output-value">—</strong></span>
-      <em id="footer-io-state">warte auf Signal</em>
-    </div>
-    <div class="footer-segment footer-experiment" id="footer-experiment" data-active="false">
-      <span class="footer-experiment-dot"></span>
-      <div><small>Experiment</small><strong id="footer-experiment-state">inactive</strong><small id="footer-experiment-progress">kein Lauf</small></div>
-      <span id="footer-experiment-id">no session</span>
-    </div>
-    <div class="footer-segment footer-mode">
-      <span>Mode</span>
-      <div class="experiment-mode-switcher" id="experiment-mode-switcher" title="Experiment mode">
-        <button class="mode-btn active" data-mode="operator" title="Operator mode">🎮</button>
-        <button class="mode-btn" data-mode="experiment" title="Experiment mode">🔬</button>
-        <button class="mode-btn" data-mode="debug" title="Debug mode">🐛</button>
-      </div>
-    </div>
-    <div class="footer-segment footer-health" id="footer-status">
-      <!-- Health bar is rendered here by health-drawer.js -->
+    <div class="mhrn-footer-row mhrn-footer-status">
+      <span class="mhrn-kpi kpi-rt"><b>RT</b><strong class="status-pill" id="system-status">offline</strong></span>
+      <span class="mhrn-kpi kpi-tick"><b>T</b><strong id="footer-runtime-tick">—</strong></span>
+      <span class="mhrn-kpi kpi-ci" data-gs-wrap="ci"><b>CI</b><strong data-gs="ci">—</strong></span>
+      <span class="mhrn-kpi kpi-gate" data-gs-wrap="gate"><b>Gate</b><strong data-gs="gate">—</strong></span>
+      <span class="mhrn-kpi kpi-act"><b>Act</b><strong id="footer-activity-value">—</strong></span>
+      <span class="mhrn-kpi kpi-spk"><b>Spk</b><strong id="footer-spikes-value">—</strong></span>
+      <span class="mhrn-kpi kpi-drk"><b>Drk</b><strong id="footer-pressure-value">—</strong></span>
+      <span class="mhrn-kpi kpi-io" id="footer-io" title="kein aktueller Signalfluss"><b>I/O</b><strong><span id="footer-input-value">—</span>/<span id="footer-output-value">—</span></strong></span>
+      <span class="mhrn-kpi kpi-exp mhrn-kpi-muted" id="footer-experiment" data-active="false" hidden>
+        <span class="footer-experiment-dot"></span>
+        <b>Exp</b><strong id="footer-experiment-state">inactive</strong>
+        <small id="footer-experiment-progress">kein Lauf</small>
+        <span id="footer-experiment-id">no session</span>
+      </span>
+      <span class="mhrn-ticker" id="mhrn-ticker">
+        <span class="mhrn-ticker-empty">Bereit · keine Ereignisse</span>
+      </span>
+      <span class="mhrn-health" id="footer-status"></span>
+      <span class="mhrn-kpi kpi-warn">
+        <button type="button" id="mhrn-notification-toggle" aria-label="Benachrichtigungen">⚠ <b id="mhrn-notification-count">0</b></button>
+      </span>
+      <span class="mhrn-kpi kpi-age mhrn-kpi-muted"><b>Age</b><strong data-gs="age">—</strong></span>
     </div>
   </footer>
 
