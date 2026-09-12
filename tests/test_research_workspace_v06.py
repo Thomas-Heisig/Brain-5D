@@ -9,16 +9,15 @@ from src.dashboard.research_source import ResearchSource
 STATIC = Path("src/dashboard/static")
 
 
-def test_research_workspace_is_grouped_into_four_work_views() -> None:
-    source = (STATIC / "box-state-controller.js").read_text(encoding="utf-8")
-    for view in ("plan", "runs", "review", "files"):
-        assert f"[{chr(34)}{view}{chr(34)}," in source
-    assert "Planen & Ausführen" in source
-    assert "Läufe & Reihen" in source
-    assert "Dateien & Analyse" in source
-    assert "research-workspace-panel" in source
-    assert "research-review-inbox" in source
-    assert "experiment-library-card" in source
+def test_research_workspace_is_owned_by_central_workspace_router() -> None:
+    router = (STATIC / "frontend" / "workspace-router.js").read_text(encoding="utf-8")
+    controller = (STATIC / "box-state-controller.js").read_text(encoding="utf-8")
+    for route in ("observatory", "experiments", "network", "dynamics", "inspect", "data", "files", "registry"):
+        assert f'["{route}",' in router
+    assert 'label: "Wissenschaft"' in router
+    assert "research-workspace-tabs" not in controller
+    assert "installResearchWorkspaceStyle" not in controller
+    assert "brain5d:open-file" in (STATIC / "frontend" / "modules" / "research-docs.js").read_text(encoding="utf-8")
 
 
 def test_metadata_archive_filters_work_view_without_moving_artifacts(
