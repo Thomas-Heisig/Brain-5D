@@ -9,6 +9,18 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 **Updated:** 2026-09-10
 **Current release-blocking backlog:** **0**
 
+## 2026-09-11 Full backend API integration into frontend
+
+- [x] Audit all 130 backend API routes and identify 25 endpoints not yet used
+	in the frontend.
+- [x] Create 7 new ES-module panels covering all 25 missing endpoints:
+	cognition, gateway-monitor, docs-browser, research-docs, ai-report-tools,
+	learning-prep, structural-inspector, system-info.
+- [x] Wire all new modules into `index.js` `init()` and add shared CSS layout
+	rules in `shell.css`.
+- [x] Verify all relevant dashboard shell tests pass (7/7; 2 pre-existing
+	failures from commit 9ef87300 remain unrelated).
+
 ## 2026-09-11 Frontend shell accessibility
 
 - [x] Reserve measured fixed header/navigation and footer space so the active

@@ -4,6 +4,17 @@
 **Baseline:** `mhrn-core 0.6.0a1`
 **Updated:** 2026-09-10
 
+## 2026-09-11 Full backend API integration into frontend
+
+- Completed a repo-wide API audit identifying 25 backend endpoints not yet
+	consumed by the frontend.
+- Created 7 new ES-module panels (cognition, gateway-monitor, docs-browser,
+	research-docs, ai-report-tools, learning-prep, structural-inspector,
+	system-info) that integrate all 25 endpoints with auto-refresh and
+	resilient parallel fetching via `Promise.allSettled`.
+- Added shared CSS layout rules in `shell.css` and wired all modules into
+	`index.js` `init()`.
+
 ## 2026-09-11 Frontend shell accessibility
 
 - Corrected the fixed visual shell's content clearance: the active workspace

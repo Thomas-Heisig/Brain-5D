@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-09-11 - Full backend API integration into frontend
+
+- Integrated all 25 previously unused backend API endpoints into the dashboard
+  frontend via 7 new ES-module panels:
+  - `modules/cognition.js` — `/api/cognition/state`, `/api/cognition/memory`,
+    `/api/cognition/world-model` (GET, auto-refresh 5s).
+  - `modules/gateway-monitor.js` — `/api/embodiment/gateways`,
+    `/api/embodiment/gateway-experiments` (GET, auto-refresh 5s).
+  - `modules/docs-browser.js` — `/api/docs/tree`, `/api/docs/statistics`,
+    `/api/docs/search`, `/api/docs-files/{path}` (GET, auto-refresh 30s).
+  - `modules/research-docs.js` — `/api/research/documents`,
+    `/api/research/reports`, `/api/research/ai-reports`,
+    `/api/research/ai-reports/{ref}`, `/api/research-files/{path}` (GET,
+    auto-refresh 30s).
+  - `modules/ai-report-tools.js` — `/api/research/ai-reports/generate` (POST),
+    `/api/research/ai-reports/{ref}/review` (POST).
+  - `modules/learning-prep.js` — `/api/learning/preparation` (GET+POST,
+    auto-refresh 10s).
+  - `modules/structural-inspector.js` — `/api/structural/heatmap`,
+    `/api/structural/history`, `/api/structural/config` (GET, auto-refresh 5s).
+  - `modules/system-info.js` — `/api/config`, `/api/state`,
+    `/api/releases/current`, `/api/snapshots` (GET, auto-refresh 5s).
+- All modules follow the existing `ensurePanel()` → `render()` → `refresh()`
+  pattern with `Promise.allSettled` for resilient parallel fetches.
+- Added shared CSS layout rules for all new panels in `shell.css`.
+- Wired all 7 new modules into `index.js` `init()`.
+- All 7 relevant dashboard shell tests pass; 2 pre-existing failures from
+  commit 9ef87300 remain unrelated.
+
 ## 2026-09-11 - Frontend shell accessibility
 
 - Fixed the central workspace being covered by the fixed header and primary

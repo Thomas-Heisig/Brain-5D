@@ -6,6 +6,14 @@ import { initRuntimeIO } from "./modules/runtime-io.js";
 import { initScienceTransparency } from "./modules/science-transparency.js";
 import { initReviewLink } from "./modules/review-link.js";
 import { startDataStyleObserver } from "./modules/data-styles.js";
+import { initCognition } from "./modules/cognition.js";
+import { initGatewayMonitor } from "./modules/gateway-monitor.js";
+import { initDocsBrowser } from "./modules/docs-browser.js";
+import { initResearchDocs } from "./modules/research-docs.js";
+import { initAIReportTools } from "./modules/ai-report-tools.js";
+import { initLearningPrep } from "./modules/learning-prep.js";
+import { initStructuralInspector } from "./modules/structural-inspector.js";
+import { initSystemInfo } from "./modules/system-info.js";
 
 const AREA_COPY = {
   dashboard: { icon: "📊", title: "Dashboard", subtitle: "Operator · Systemzustand & Steuerung" },
@@ -81,6 +89,14 @@ function init() {
   initScienceTransparency();
   initReviewLink();
   startDataStyleObserver();
+  initCognition();
+  initGatewayMonitor();
+  initDocsBrowser();
+  initResearchDocs();
+  initAIReportTools();
+  initLearningPrep();
+  initStructuralInspector();
+  initSystemInfo();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(init, 0), { once: true }); else setTimeout(init, 0);
 window.MHRNFrontend = { refresh: init };
