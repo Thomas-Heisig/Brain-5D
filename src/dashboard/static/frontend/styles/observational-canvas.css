@@ -1,0 +1,39 @@
+/* Canvas colour adaptation for the warm observational theme.
+ * The scientific renderers keep their data and drawing logic unchanged; only
+ * the final presentation is toned down so old neon/dark canvas pixels do not
+ * visually break out of the paper system.
+ */
+
+body:not([data-theme="light"]) #spike-raster,
+body:not([data-theme="light"]) #rate-histogram {
+  background: var(--paper-2);
+  filter: invert(.91) sepia(.22) saturate(.58) hue-rotate(332deg) contrast(.92);
+}
+
+body:not([data-theme="light"]) #heatmap,
+body:not([data-theme="light"]) #projection-5d,
+body:not([data-theme="light"]) #inspect-projection,
+body:not([data-theme="light"]) #layer-canvas {
+  background: var(--paper-2);
+  filter: sepia(.14) saturate(.72) contrast(.94);
+}
+
+body[data-theme="light"] #spike-raster,
+body[data-theme="light"] #rate-histogram,
+body[data-theme="light"] #heatmap,
+body[data-theme="light"] #projection-5d,
+body[data-theme="light"] #inspect-projection,
+body[data-theme="light"] #layer-canvas {
+  filter: saturate(.82) contrast(.96);
+}
+
+/* Canvas should still read as recorded scientific material, not a glowing UI. */
+#heatmap,
+#projection-5d,
+#spike-raster,
+#rate-histogram,
+#inspect-projection,
+#layer-canvas {
+  border-color: var(--rule-2);
+  box-shadow: none;
+}
