@@ -4,14 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MHRN Operator Dashboard</title>
-  <style>
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    /* The three-area navigation is the visible shell; legacy tab buttons remain routing targets. */
-    .tab-nav { display: none !important; }
-  </style>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/frontend/styles/index.css">
+  <link rel="stylesheet" href="/frontend/styles/shell.css">
 </head>
 <body>
 
@@ -344,7 +339,7 @@
         <div class="pending-changes-bar" id="pending-changes-bar">
           <div class="pending-changes-bar__info">
             <strong id="pending-count">0</strong> pending change(s)
-            <span id="pending-restart-hint" class="pending-hint" style="display:none;">⚠️ At least one change requires restart</span>
+            <span id="pending-restart-hint" class="pending-hint is-hidden">⚠️ At least one change requires restart</span>
           </div>
           <div class="pending-changes-bar__actions">
             <button id="pending-apply" type="button" class="btn-primary">✓ Apply</button>
@@ -587,7 +582,7 @@
             <span class="fm-loading">Loading directory tree…</span>
           </div>
           <!-- Recent files panel (collapsible) -->
-          <div class="fm-recent" id="fm-recent" style="display:none;">
+          <div class="fm-recent is-hidden" id="fm-recent">
             <div class="fm-recent-header">
               <span>🕐 Recent</span>
               <button id="fm-clear-recent" class="fm-sidebar-action-btn" title="Clear recent">✕</button>
@@ -741,7 +736,7 @@
   </aside>
 
   <!-- Integration Status Modal -->
-  <div id="integration-modal" class="modal-overlay" style="display:none;">
+  <div id="integration-modal" class="modal-overlay is-hidden">
     <div class="modal-content">
       <div class="modal-header"><h2>Integration Status &ndash; Alle Versionen</h2><button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button></div>
       <div class="modal-body" id="integration-modal-body"><div class="modal-loading">Lade Integrationsdaten...</div></div>

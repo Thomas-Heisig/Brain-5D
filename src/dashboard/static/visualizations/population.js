@@ -75,7 +75,7 @@ export async function refreshPopulation() {
               <div class="population-stat"><dt>Aktiv</dt><dd>${formatNumber(p.active_count)} / ${formatNumber(p.count)} (${activePct}%)</dd></div>
             </div>
             <div class="population-bar">
-              <div class="population-bar-fill" style="width:${activePct}%;background:${barColor};"></div>
+              <div class="population-bar-fill" data-width="${activePct}" data-color="${barColor}"></div>
             </div>
           </div>
         `;

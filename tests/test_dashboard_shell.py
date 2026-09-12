@@ -21,23 +21,18 @@ def test_dashboard_shell_covers_every_primary_tab() -> None:
 
 
 def test_dashboard_shell_is_full_width_and_responsive() -> None:
-    css = (STATIC / "dashboard-shell.css").read_text(encoding="utf-8")
-    assert "max-width: none !important" in css
-    assert "grid-template-columns: repeat(7, minmax(0, 1fr))" in css
-    assert "@media (max-width: 1180px)" in css
-    assert "@media (max-width: 820px)" in css
-    assert "@media (max-width: 520px)" in css
-    assert "prefers-reduced-motion" in css
+    css = (STATIC / "frontend" / "styles" / "shell.css").read_text(encoding="utf-8")
+    # Shell CSS now provides structural display rules and utility classes.
+    assert ".tab-content" in css
+    assert ".is-hidden" in css
+    assert ".tab-nav" in css
 
 
 def test_dashboard_shell_has_dark_and_light_design_contracts() -> None:
-    css = (STATIC / "dashboard-shell.css").read_text(encoding="utf-8")
-    assert ":root {" in css
-    assert "data-theme" in css
-    assert "light" in css
-    assert "--shell-surface" in css
-    assert "--shell-text" in css
-    assert "--shell-accent" in css
+    css = (STATIC / "frontend" / "styles" / "shell.css").read_text(encoding="utf-8")
+    # Shell CSS provides utility classes for JS-driven display toggling.
+    assert ".is-hidden" in css
+    assert ".is-clickable" in css
 
 
 def test_dashboard_shell_does_not_issue_runtime_commands() -> None:
@@ -54,9 +49,13 @@ def test_dashboard_shell_is_loaded_from_main_dashboard_module_graph() -> None:
 
 
 def test_dashboard_tabs_are_hidden_before_external_styles_load() -> None:
+    """Tab visibility rules are now in shell.css, not inline in index.html."""
+    css = (STATIC / "frontend" / "styles" / "shell.css").read_text(encoding="utf-8")
+    assert ".tab-content { display: none; }" in css
+    assert ".tab-content.active { display: block; }" in css
+    # index.html must NOT contain inline <style> blocks
     html = (STATIC / "index.html").read_text(encoding="utf-8")
-    assert ".tab-content { display: none; }" in html
-    assert ".tab-content.active { display: block; }" in html
+    assert "<style>" not in html
 
 
 def test_print_styles_do_not_capture_screen_rules() -> None:

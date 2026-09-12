@@ -50,7 +50,7 @@ export class StructuralProposalPanel {
         <div class="proposal-item" data-id="${id}">
           <span class="proposal-kind">${escapeHtml(proposal.kind || "unknown")}</span>
           <span class="proposal-desc">Neuron ${proposal.neuron_id || "?"} → ${proposal.target_id || "?"}</span>
-          <span class="proposal-conf" style="--conf: ${confidence}%">${confidence.toFixed(0)}%</span>
+          <span class="proposal-conf" data-conf="${confidence}">${confidence.toFixed(0)}%</span>
           <span class="proposal-reason">${escapeHtml(proposal.reason || "")}</span>
           <div class="proposal-actions">
             <button class="btn-approve" data-id="${id}">✓ Approve</button>

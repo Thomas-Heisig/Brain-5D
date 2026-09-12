@@ -313,14 +313,14 @@ function renderDevelopmentScales(data) {
     const ticks = Array.from({ length: scale.maximum + 1 }, (_, exponent) => {
       const tickPosition = exponent / scale.maximum * 100;
       const label = exponent === 0 ? '1' : `10^${exponent}`;
-      return `<span class="development-scale-tick" style="left: ${tickPosition}%"><i></i><small>${label}</small></span>`;
+      return `<span class="development-scale-tick" data-left="${tickPosition}"><i></i><small>${label}</small></span>`;
     }).join('');
     return `
       <section class="development-scale" aria-label="Logarithmische ${scale.label}-Skala">
         <header><strong>${scale.label}</strong><span>${runtime.status === 'active' ? 'aktuell' : 'last observed'}</span></header>
         <div class="development-scale-line">
           ${ticks}
-          ${position === null ? '<span class="development-scale-unavailable">unavailable</span>' : `<span class="development-scale-marker" style="left: ${position}%" title="${escapeHtml(runtimeLabel(value))}"></span>`}
+          ${position === null ? '<span class="development-scale-unavailable">unavailable</span>' : `<span class="development-scale-marker" data-left="${position}" title="${escapeHtml(runtimeLabel(value))}"></span>`}
         </div>
         <small class="development-scale-value">${escapeHtml(runtimeLabel(value))}</small>
       </section>
@@ -346,11 +346,11 @@ function renderDevelopmentTrack(data, containerId) {
           <span class="development-track-node-label">${escapeHtml(stage.short_label || stage.name)}</span>
         </button>
       `).join('')}
-      <span class="development-marker development-marker-technical" style="--marker-position: ${technicalPosition}%" aria-label="Du bist hier: ${escapeHtml(data.current_label || '')}">
+      <span class="development-marker development-marker-technical" data-marker-position="${technicalPosition}" aria-label="Du bist hier: ${escapeHtml(data.current_label || '')}">
         <strong>Du bist hier</strong>
         <small>${escapeHtml(data.current_label || '')}</small>
       </span>
-      <span class="development-marker development-marker-scientific" style="--marker-position: ${scientificPosition}%" aria-label="Wissenschaftlich hier: ${escapeHtml(data.scientific_label || '')}">
+      <span class="development-marker development-marker-scientific" data-marker-position="${scientificPosition}" aria-label="Wissenschaftlich hier: ${escapeHtml(data.scientific_label || '')}">
         <strong>Wissenschaftlich hier</strong>
         <small>${escapeHtml(data.scientific_label || '')}</small>
       </span>

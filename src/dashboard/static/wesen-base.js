@@ -366,7 +366,7 @@ function renderEcho(nodes, positions) {
     const p = positions[n.id], c = positions.kern;
     return `<line x1="${18 + c.x * scaleX}" y1="${12 + c.y * scaleY}" x2="${18 + p.x * scaleX}" y2="${12 + p.y * scaleY}"/>`;
   }).join("");
-  svg.innerHTML = `<g class="wesen-self-body" style="opacity:${opacity}">${lines}${dots}</g><text x="150" y="172" text-anchor="middle">Echo ${esc(delay)}</text>`;
+  svg.innerHTML = `<g class="wesen-self-body" data-opacity="${opacity}">${lines}${dots}</g><text x="150" y="172" text-anchor="middle">Echo ${esc(delay)}</text>`;
   document.getElementById("wesen-self-metrics").innerHTML = `<div><span>Recurrence</span><strong>${m.recurrence === null ? "—" : m.recurrence.toFixed(2)}</strong></div><div><span>Loop-Latenz</span><strong>${esc(delay)}</strong></div>`;
 }
 

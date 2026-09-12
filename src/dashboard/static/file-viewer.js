@@ -92,7 +92,7 @@ function renderFMRecent() {
   const list = document.getElementById('fm-recent-list');
   if (!list) return;
   if (fmRecentFiles.length === 0) {
-    list.innerHTML = '<div class="fm-empty" style="padding:12px;">(no recent files)</div>';
+    list.innerHTML = '<div class="fm-empty fm-empty-recent">(no recent files)</div>';
     return;
   }
   list.innerHTML = fmRecentFiles.map(r => {
@@ -279,7 +279,7 @@ function setupFMFilters() {
 function applyFMFilter() {
   const items = document.querySelectorAll('.fm-tree-file');
   if (fmActiveFilter === 'all') {
-    items.forEach(el => el.style.display = '');
+    items.forEach(el => el.classList.remove('is-hidden'));
     return;
   }
   const exts = fmActiveFilter.split(',');
@@ -289,7 +289,7 @@ function applyFMFilter() {
     const name = label.textContent || '';
     const ext = '.' + name.split('.').pop().split(' ')[0].toLowerCase();
     const match = exts.some(e => name.toLowerCase().endsWith(e) || ext === e);
-    el.style.display = match ? '' : 'none';
+    el.classList.toggle('is-hidden', !match);
   });
 }
 
@@ -315,10 +315,9 @@ function setupFMToggleRecent() {
   const panel = document.getElementById('fm-recent');
   if (!btn || !panel) return;
   btn.addEventListener('click', () => {
-    const visible = panel.style.display !== 'none';
-    panel.style.display = visible ? 'none' : 'block';
-    btn.style.opacity = visible ? '' : '1';
-    btn.style.color = visible ? '' : '#7aabff';
+    const visible = !panel.classList.contains('is-hidden');
+    panel.classList.toggle('is-hidden', visible);
+    btn.classList.toggle('fm-toggle-active', !visible);
   });
 }
 
@@ -361,7 +360,7 @@ async function performFMSearch(query) {
       el.addEventListener('click', () => openFMFile(el.dataset.path));
     });
   } catch (e) {
-    treeEl.innerHTML = `<span style="color:#f06070;">⚠️ ${escapeHtml(e.message)}</span>`;
+    treeEl.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(e.message)}</span>`;
   }
 }
 
@@ -397,14 +396,14 @@ async function loadFMTree() {
     const tree = await res.json();
 
     if (!tree.available) {
-      treeEl.innerHTML = `<span style="color:#f06070;">⚠️ ${escapeHtml(tree.error || 'Source not available')}</span>`;
+      treeEl.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(tree.error || 'Source not available')}</span>`;
       return;
     }
 
     treeEl.innerHTML = '';
     renderFMTree(tree, treeEl, 0);
   } catch (e) {
-    treeEl.innerHTML = `<span style="color:#f06070;">⚠️ ${escapeHtml(e.message)}</span>`;
+    treeEl.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(e.message)}</span>`;
   }
 }
 
@@ -444,8 +443,6 @@ function renderFMTree(node, container, depth) {
       const toggle = document.createElement('span');
       toggle.className = 'fm-dir-toggle';
       toggle.textContent = '▶';
-      toggle.style.display = 'inline-block';
-      toggle.style.transition = 'transform 0.15s';
 
       const label = document.createElement('span');
       label.className = 'fm-dir-label';
@@ -455,13 +452,12 @@ function renderFMTree(node, container, depth) {
       li.appendChild(label);
 
       const childContainer = document.createElement('div');
-      childContainer.className = 'fm-dir-children';
-      childContainer.style.display = 'none';
+      childContainer.className = 'fm-dir-children is-hidden';
 
       toggle.onclick = () => {
-        const expanded = childContainer.style.display !== 'none';
-        childContainer.style.display = expanded ? 'none' : 'block';
-        toggle.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
+        const expanded = !childContainer.classList.contains('is-hidden');
+        childContainer.classList.toggle('is-hidden', expanded);
+        toggle.classList.toggle('fm-dir-toggle-expanded', !expanded);
         // Load children lazily on first expand
         if (!childContainer.dataset.loaded) {
           renderFMTree(child, childContainer, depth + 1);
@@ -514,11 +510,11 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
     onReady: (data, { actions }) => {
       for (const [label, loader] of [['History', loadFMHistory], ['Analyse', loadFMAnalyze], ['Notizen', loadFMMeta]]) {
         if (label === 'Notizen' && data.read_only) continue;
-        const panel = document.createElement('div'); panel.style.display = 'none'; viewer.append(panel);
+        const panel = document.createElement('div'); panel.classList.add('is-hidden'); viewer.append(panel);
         const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
         button.addEventListener('click', () => loader(path, source, panel)); actions.append(button);
       }
-      const aiPanel = document.createElement('div'); aiPanel.style.display = 'none'; viewer.append(aiPanel);
+      const aiPanel = document.createElement('div'); aiPanel.classList.add('is-hidden'); viewer.append(aiPanel);
       const aiButton = document.createElement('button'); aiButton.type = 'button'; aiButton.textContent = 'KI-Analyse';
       aiButton.addEventListener('click', () => loadFMAIAnalysis(path, source, aiPanel, data)); actions.append(aiButton);
       const exportButton = document.createElement('button'); exportButton.type = 'button'; exportButton.textContent = 'Export';
@@ -543,8 +539,8 @@ async function goBackFMViewer() {
 }
 
 async function loadFMHistory(path, source, container) {
-  container.style.display = container.style.display === 'none' ? 'block' : 'none';
-  if (container.style.display === 'none' || container.dataset.loaded) return;
+  container.classList.toggle('is-hidden');
+  if (container.classList.contains('is-hidden') || container.dataset.loaded) return;
 
   container.innerHTML = '<div class="fm-history-loading">Loading history…</div>';
   try {
@@ -582,8 +578,8 @@ async function loadFMHistory(path, source, container) {
 }
 
 async function loadFMAnalyze(path, source, container) {
-  container.style.display = container.style.display === 'none' ? 'block' : 'none';
-  if (container.style.display === 'none' || container.dataset.loaded) return;
+  container.classList.toggle('is-hidden');
+  if (container.classList.contains('is-hidden') || container.dataset.loaded) return;
 
   container.innerHTML = '<div class="fm-analyze-loading">Analyzing…</div>';
   try {
@@ -640,8 +636,8 @@ async function loadFMAnalyze(path, source, container) {
 }
 
 async function loadFMAIAnalysis(path, source, container, data) {
-  container.style.display = container.style.display === 'none' ? 'block' : 'none';
-  if (container.style.display === 'none' || container.dataset.loaded) return;
+  container.classList.toggle('is-hidden');
+  if (container.classList.contains('is-hidden') || container.dataset.loaded) return;
   container.replaceChildren(document.createElement('p'));
   container.firstChild.textContent = 'Zentrale KI analysiert das Dokument ...';
   const content = String(data?.raw_content ?? data?.content ?? '').slice(0, 16000);
@@ -669,8 +665,8 @@ async function loadFMAIAnalysis(path, source, container, data) {
 }
 
 async function loadFMMeta(path, source, container) {
-  container.style.display = container.style.display === 'none' ? 'block' : 'none';
-  if (container.style.display === 'none' || container.dataset.loaded) return;
+  container.classList.toggle('is-hidden');
+  if (container.classList.contains('is-hidden') || container.dataset.loaded) return;
 
   container.innerHTML = '<div class="fm-meta-loading">Loading notes…</div>';
   try {

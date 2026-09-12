@@ -219,11 +219,11 @@ function renderBibTeXViewer(content, fileName, filePath) {
     </table>
   </div>
 
-  <div class="bibtex-code-container" style="display:none;">
+  <div class="bibtex-code-container is-hidden">
     <pre class="bibtex-code">${escapeHtml(content)}</pre>
   </div>
 
-  <div class="bibtex-edit-container" style="display:none;">
+  <div class="bibtex-edit-container is-hidden">
     ${renderBibTeXForm(entries)}
   </div>
 
@@ -458,9 +458,9 @@ function wireBibTeXEvents() {
       const tableContainer = document.querySelector('.bibtex-table-container');
       const codeContainer = document.querySelector('.bibtex-code-container');
       const editContainer = document.querySelector('.bibtex-edit-container');
-      if (tableContainer) tableContainer.style.display = view === 'table' ? 'block' : 'none';
-      if (codeContainer) codeContainer.style.display = view === 'code' ? 'block' : 'none';
-      if (editContainer) editContainer.style.display = view === 'edit' ? 'block' : 'none';
+      if (tableContainer) tableContainer.classList.toggle('is-hidden', view !== 'table');
+      if (codeContainer) codeContainer.classList.toggle('is-hidden', view !== 'code');
+      if (editContainer) editContainer.classList.toggle('is-hidden', view !== 'edit');
     });
   });
 
@@ -594,8 +594,7 @@ function wireBibTeXEvents() {
       // Toggle highlight on warning rows
       const warnRows = document.querySelectorAll('.bibtex-row-warn');
       warnRows.forEach(row => {
-        row.style.outline = row.style.outline ? '' : '2px solid var(--color-warning, #e6aa28)';
-        row.style.outlineOffset = row.style.outline ? '' : '-1px';
+        row.classList.toggle('bibtex-row-highlighted');
       });
     });
   }

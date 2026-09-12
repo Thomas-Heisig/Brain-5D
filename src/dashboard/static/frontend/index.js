@@ -5,6 +5,7 @@ import { initPanelHelp } from "./components/help.js";
 import { initRuntimeIO } from "./modules/runtime-io.js";
 import { initScienceTransparency } from "./modules/science-transparency.js";
 import { initReviewLink } from "./modules/review-link.js";
+import { startDataStyleObserver } from "./modules/data-styles.js";
 
 const AREA_COPY = {
   dashboard: { icon: "📊", title: "Dashboard", subtitle: "Operator · Systemzustand & Steuerung" },
@@ -79,6 +80,7 @@ function init() {
   initRuntimeIO();
   initScienceTransparency();
   initReviewLink();
+  startDataStyleObserver();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(init, 0), { once: true }); else setTimeout(init, 0);
 window.MHRNFrontend = { refresh: init };

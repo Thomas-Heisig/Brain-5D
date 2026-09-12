@@ -1074,7 +1074,7 @@ async function refreshPopulation() {
               <div class="population-stat"><dt>Aktiv</dt><dd>${formatNumber(p.active_count)} / ${formatNumber(p.count)} (${activePct}%)</dd></div>
             </div>
             <div class="population-bar">
-              <div class="population-bar-fill" style="width:${activePct}%;background:${barColor};"></div>
+              <div class="population-bar-fill" data-width="${activePct}" data-color="${barColor}"></div>
             </div>
           </div>
         `;
@@ -2158,7 +2158,7 @@ async function openIntegrationModal() {
   const body = document.getElementById('integration-modal-body');
   if (!modal || !body) return;
 
-  modal.style.display = 'flex';
+  modal.classList.remove('is-hidden');
   body.innerHTML = '<div class="modal-loading">🔄 Lade Integrationsdaten…</div>';
 
   const versions = getVersionChecks();
@@ -2198,7 +2198,7 @@ async function openIntegrationModal() {
  */
 function closeIntegrationModal() {
   const modal = document.getElementById('integration-modal');
-  if (modal) modal.style.display = 'none';
+  if (modal) modal.classList.add('is-hidden');
 }
 
 // ================================================================
@@ -2213,13 +2213,13 @@ function setupIntegrationClickHandlers() {
   // Click on the integration section header or badge opens the modal
   const header = document.querySelector('.integration-status .panel-title h2');
   if (header) {
-    header.style.cursor = 'pointer';
+    header.classList.add('is-clickable');
     header.addEventListener('click', openIntegrationModal);
   }
 
   const badge = document.getElementById('integration-badge');
   if (badge) {
-    badge.style.cursor = 'pointer';
+    badge.classList.add('is-clickable');
     badge.addEventListener('click', openIntegrationModal);
   }
 

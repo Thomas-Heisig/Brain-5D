@@ -354,7 +354,7 @@ export class ParameterInspector {
     }
     if (this._elements.pendingRestartHint) {
       const needsRestart = Object.values(this.pending).some((c) => c.requires_restart);
-      this._elements.pendingRestartHint.style.display = needsRestart ? "inline" : "none";
+      this._elements.pendingRestartHint.classList.toggle("is-hidden", !needsRestart);
     }
   }
 

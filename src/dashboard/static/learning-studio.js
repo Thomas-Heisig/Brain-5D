@@ -101,7 +101,7 @@ function createLearningWorkspace() {
 
       <article class="overview-surface">
         <div class="overview-surface-title"><div><span>AI PROPOSAL</span><h3>Vorbereitungsentwurf</h3></div><strong id="learning-ai-status">not requested</strong></div>
-        <pre id="learning-ai-proposal" style="white-space:pre-wrap;overflow-wrap:anywhere;min-height:18rem;">Noch kein KI-Vorschlag erstellt.</pre>
+        <pre id="learning-ai-proposal" class="learning-ai-proposal">Noch kein KI-Vorschlag erstellt.</pre>
       </article>
     </section>
 

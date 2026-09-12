@@ -207,8 +207,8 @@ function renderEmpirical() {
   if (!grid) return;
   grid.innerHTML = empiricalRows().map(([label, value, mode]) => {
     const ratio = mode === "ratio" && value !== null ? normalizePercent(value) : null;
-    const style = ratio === null ? "" : ` style="--empirical-fill:${(ratio * 100).toFixed(1)}%"`;
-    return `<div class="wesen-empirical-row"${style}><span>${label}</span><strong>${formatMetric(value, mode)}</strong><i></i></div>`;
+    const fillAttr = ratio === null ? "" : ` data-empirical-fill="${(ratio * 100).toFixed(1)}"`;
+    return `<div class="wesen-empirical-row"${fillAttr}><span>${label}</span><strong>${formatMetric(value, mode)}</strong><i></i></div>`;
   }).join("");
   const entries = Object.entries(anatomy.availability);
   const available = entries.filter(([, state]) => state.status === "observed").length;

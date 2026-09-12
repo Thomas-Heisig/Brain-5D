@@ -1,0 +1,65 @@
+/*
+ * MHRN OBSERVATIONAL CONSOLE — shell-level rules
+ * Extracted from the inline <style> block in index.html.
+ * These are structural display rules for the tab-content shell and
+ * legacy tab navigation visibility.
+ */
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* The three-area navigation is the visible shell; legacy tab buttons remain routing targets. */
+.tab-nav { display: none !important; }
+
+/* Utility: hide elements that are toggled by JS.
+   JS toggles .is-hidden instead of setting element.style.display directly. */
+.is-hidden { display: none !important; }
+
+/* Clickable cursor for elements that were previously styled inline */
+.is-clickable { cursor: pointer; }
+
+/* File viewer: error text colour (was inline style="color:#f06070") */
+.fm-error-text { color: #f06070; }
+
+/* File viewer: empty recent padding (was inline style="padding:12px") */
+.fm-empty-recent { padding: 12px; }
+
+/* File viewer: active toggle state (replaces inline opacity/color) */
+.fm-toggle-active { opacity: 1; color: #7aabff; }
+
+/* File viewer: directory toggle expansion (replaces inline transform) */
+.fm-dir-toggle { display: inline-block; transition: transform 0.15s; }
+.fm-dir-toggle-expanded { transform: rotate(90deg); }
+
+/* BibTeX: row highlight (was inline outline) */
+.bibtex-row-highlighted {
+  outline: 2px solid var(--color-warning, #e6aa28);
+  outline-offset: -1px;
+}
+
+/* Learning studio: AI proposal pre (was inline style) */
+.learning-ai-proposal {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-height: 18rem;
+}
+
+/* Population bar fill: width and colour set via data-* attributes */
+.population-bar-fill { width: 0; background: transparent; }
+
+/* Gate board: development scale ticks and markers (was inline left:%) */
+.development-scale-tick { position: absolute; }
+.development-scale-marker { position: absolute; }
+
+/* Gate board: development markers (was inline --marker-position) */
+.development-marker { position: absolute; }
+
+/* Structural proposal: confidence (was inline --conf) */
+.proposal-conf { }
+
+/* Wesen: self-body opacity (was inline style="opacity:...") */
+.wesen-self-body { opacity: 1; }
+
+/* Wesen: empirical fill (was inline --empirical-fill) */
+.wesen-empirical-row { }
+
