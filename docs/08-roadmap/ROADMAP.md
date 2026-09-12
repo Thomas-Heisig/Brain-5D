@@ -14,6 +14,8 @@
 	statistics, provenance, falsification notes and comparison capture.
 - Reorganized the instrument into twelve navigable analysis layers while
 	preserving the existing Experiment Runner, Files and Registry surfaces.
+- Wired the Research Observatory directly from `app.js` and added an asset
+	version marker to make the new frontend deterministic after reload.
 - Added bounded operator links to network drill-down and runtime input/output
 	controls. Local annotations are explicitly not scientific evidence until
 	exported with an experiment record.

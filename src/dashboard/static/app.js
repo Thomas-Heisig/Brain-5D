@@ -55,6 +55,7 @@ import { initResearchChat } from './research-chat.js';
 import { initBoxStates } from './box-state-controller.js';
 import { renderGateBoard } from './gate-board.js';
 import { pollInterval, readJson } from './api-client.js';
+import { initScientificMetrics } from './frontend/modules/scientific-metrics.js';
 
 // ================================================================
 // DOM HELPERS
@@ -2437,6 +2438,7 @@ function init() {
   setupOverviewActions();
   setupWorkspaceViews();
   setupResearchLanes();
+  initScientificMetrics();
   initBoxStates();
   initEmbodimentDetails();
   initEmbodimentPipelineControls();

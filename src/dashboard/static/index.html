@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MHRN Operator Dashboard</title>
   <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/frontend/styles/index.css">
-  <link rel="stylesheet" href="/frontend/styles/shell.css">
+  <link rel="stylesheet" href="/frontend/styles/index.css?v=research-workbench-20260912">
+  <link rel="stylesheet" href="/frontend/styles/shell.css?v=research-workbench-20260912">
 </head>
 <body>
 
@@ -372,7 +372,7 @@
     </section> <!-- /tab-settings -->
 
     <!-- ========================================================== -->
-    <!-- TAB: EMBODIMENT -->
+    <!-- TAB: EMBODIMENT (Runtime & Wesen) -->
     <!-- ========================================================== -->
     <section class="tab-content" id="tab-embodiment">
       <header class="workspace-header" data-workspace="embodiment">
@@ -384,6 +384,18 @@
           <span>Episode<strong id="embodiment-episode">0</strong></span>
         </div>
       </header>
+
+      <!-- Sub-Tabs für den Embodiment-Tab -->
+      <nav class="embodiment-subtabs" role="tablist" aria-label="Embodiment-Bereiche">
+        <button class="embodiment-subtab active" type="button" role="tab" data-subtab="anatomy" aria-selected="true">🫀 Anatomie</button>
+        <button class="embodiment-subtab" type="button" role="tab" data-subtab="connections" aria-selected="false">🔗 Verbindungen</button>
+        <button class="embodiment-subtab" type="button" role="tab" data-subtab="pipeline" aria-selected="false">🔁 Pipeline</button>
+        <button class="embodiment-subtab" type="button" role="tab" data-subtab="clock" aria-selected="false">⏱ Runtime-Clock</button>
+        <button class="embodiment-subtab" type="button" role="tab" data-subtab="self" aria-selected="false">📸 Selbstbild</button>
+      </nav>
+
+      <!-- Sub-Panel: Anatomie (Sinne, Kern, Aktoren, Inneres) -->
+      <div class="embodiment-subpanel active" data-subpanel="anatomy" role="tabpanel">
       <section class="embodiment-living-map embodiment-anatomy" id="embodiment-living-map" data-system-state="idle" aria-label="Dynamische Embodiment-Anatomie">
         <div class="anatomy-zone anatomy-senses" data-detail-key="senses" tabindex="0" role="button">
           <header><span class="zone-index">01</span><div><span class="zone-kicker">EINGÄNGE</span><h3>Sinne</h3><p>Alles, was die Umwelt meldet</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></header>
@@ -854,6 +866,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-graphviz/5.0.2/d3-graphviz.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="module" src="/formula-renderer.js"></script>
-  <script type="module" src="/app.js"></script>
+  <script type="module" src="/app.js?v=research-workbench-20260912"></script>
 </body>
 </html>

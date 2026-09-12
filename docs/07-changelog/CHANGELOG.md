@@ -14,6 +14,9 @@
   Energy/Homeostasis, Statistics, Causality, Embodiment, Provenance,
   Benchmarks and Falsification, without removing the existing experiment,
   file and registry workflows.
+- Made the Observatory a direct `app.js` lifecycle dependency and added
+  cache-busted frontend asset URLs so the rebuilt Research surface is loaded
+  on a normal browser refresh.
 - Kept advanced metrics that lack a validated data contract unavailable:
   Lyapunov/attractor dynamics, UMAP latent evidence, causal information flow,
   null/surrogate models, confidence intervals, effect sizes and statistical

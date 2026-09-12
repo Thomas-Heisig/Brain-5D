@@ -26,6 +26,8 @@ MHRN / Multi-Scale Homeostatic Recurrence Network. Publication: Recursive Episte
 	Observatory, Spike trains, Topology/5D, Criticality, Learning,
 	Energy/Homeostasis, Statistics, Causality, Embodiment, Provenance,
 	Benchmarks and Falsification.
+- [x] Wire the Observatory directly into the primary dashboard lifecycle and
+	version the frontend assets so stale browser bundles cannot hide the new UI.
 
 ## 2026-09-12 Research workspace sub-tabs
 
