@@ -392,6 +392,12 @@ function reconcileRouteVisibility(areaId, routeId) {
     setRouteElementVisibility(node, false);
   });
 
+  // Hide all generated panels that don't belong to the current route
+  document.querySelectorAll("[data-generated-panel]").forEach((node) => {
+    if (isPersistent(node)) return;
+    setRouteElementVisibility(node, false);
+  });
+
   // Show route-specific content
   showRouteContent(areaId, route);
 
