@@ -181,7 +181,10 @@ function initFileManager() {
       cb.checked = fmUsePopup;
       cb.addEventListener('change', () => { fmUsePopup = cb.checked; localStorage.setItem('mhrn-fm-popup', String(cb.checked)); });
       label.append(cb, ' Popup');
-      toolbar.append(label);
+      // Insert before the refresh button
+      const refBtn = document.getElementById('fm-refresh');
+      if (refBtn) toolbar.insertBefore(label, refBtn);
+      else toolbar.append(label);
     }
 
     loadFMRecent();

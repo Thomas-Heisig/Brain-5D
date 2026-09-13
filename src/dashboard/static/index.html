@@ -420,21 +420,21 @@
             <span title="Actuator: autorisierter Ausgang">ACTUATOR</span>
             <span title="Feedback: EnvironmentObservation nach einer Aktion">FEEDBACK</span>
           </div>
-          <div class="brain-core-mark"><span class="core-pulse"></span><span class="core-label">MHRN</span><strong>NEURONALE<br>DATENBANK</strong><small id="being-core-state">idle</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="snn"><span>AKTIV</span></label></div>
+          <div class="brain-core-mark"><span class="core-pulse"></span><span class="core-label">MHRN</span><strong>NEURONALE<br>DATENBANK</strong><small id="being-core-state">idle</small><label class="pipeline-toggle"><input type="checkbox" id="pipe-snn" data-pipeline-toggle="snn"><span>AKTIV</span></label></div>
           <div class="brain-core-metrics"><span><b id="being-neurons">0</b> Neuronen</span><span><b id="being-synapses">0</b> Synapsen</span><span>Tick <b id="being-tick">0</b></span></div>
           <div class="organism-vital"><span class="vital-ring"></span><strong id="being-system-status">IDLE</strong><small id="being-vital-caption">live telemetry</small></div>
           <figcaption id="organism-caption"><strong>VERARBEITUNG</strong><span id="embodiment-readiness">No environment adapter is configured.</span></figcaption>
         </figure>
 
         <div class="anatomy-zone anatomy-actuators" data-detail-key="actuators" tabindex="0" role="button">
-          <header><span class="zone-index">03</span><div><span class="zone-kicker">AUSGÄNGE</span><h3>Extremitäten</h3><p>Alles, was das Wesen verändern kann</p></div><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="actuator"><span>OUT</span></label></header>
+          <header><span class="zone-index">03</span><div><span class="zone-kicker">AUSGÄNGE</span><h3>Extremitäten</h3><p>Alles, was das Wesen verändern kann</p></div><label class="pipeline-toggle"><input type="checkbox" id="pipe-actuator" data-pipeline-toggle="actuator"><span>OUT</span></label></header>
           <div class="limb-stack"><i title="Bewegungsausgang">MOVE</i><i title="Greifausgang">GRIP</i><i title="Sprachausgang; nur bei vorhandenem Adapter">SPEAK</i><i title="Schreibausgang; nur bei vorhandenem Adapter">WRITE</i></div>
           <dl class="anatomy-stats"><div><dt>veränderbare Aktoren</dt><dd id="being-actuators">0</dd></div><div><dt>letzte Aktion</dt><dd id="embodiment-action-detail">—</dd></div><div><dt>Aktionwerte</dt><dd id="embodiment-actuator-detail">not published</dd></div><div><dt>Reward</dt><dd id="embodiment-last-reward">0.000</dd></div></dl>
           <strong class="zone-state" id="embodiment-actuator-state">Not connected</strong>
         </div>
 
         <section class="anatomy-inner" data-detail-key="inner" tabindex="0" role="button" aria-label="Innere Zustände und Regulation">
-          <header><span class="zone-index">02</span><div><span class="zone-kicker">INNERES ERLEBEN</span><h3>Innere Zustände</h3></div><span id="being-homeostasis" class="inner-status">disabled</span><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="feedback"><span>LOOP</span></label></header>
+          <header><span class="zone-index">02</span><div><span class="zone-kicker">INNERES ERLEBEN</span><h3>Innere Zustände</h3></div><span id="being-homeostasis" class="inner-status">disabled</span><label class="pipeline-toggle"><input type="checkbox" id="pipe-feedback" data-pipeline-toggle="feedback"><span>LOOP</span></label></header>
           <div class="inner-state-grid"><span><b id="being-energy">0.000</b><small>ENERGIE</small></span><span><b id="being-rate">0.00 Hz</b><small>AKTIVITÄT</small></span><span><b id="being-synchrony">0.000</b><small>SYNCHRONITÄT</small></span><span><b id="being-burst">0.000</b><small>BURST</small></span><span><b id="being-active">0</b><small>AKTIVE NEURONEN</small></span><span><b id="being-stdp">0</b><small>PLASTIZITÄT</small></span></div>
           <div class="inner-detail"><span>Rate-Fehler <b id="being-rate-error">0.000 Hz</b></span><span>Schwellenanpassung <b id="being-threshold">0.000</b></span><span>Spikes / Tick <b id="being-spikes">0</b></span><span>Episode Reward <b id="embodiment-episode-reward">0.000</b></span></div>
         </section>
@@ -465,10 +465,10 @@
 
       <section class="embodiment-loop" data-detail-key="adapter-loop" tabindex="0" role="button" aria-label="Closed perception action loop">
         <div class="embodiment-loop-node" data-loop-node="environment" title="Environment: Quelle der EnvironmentObservation"><span>1</span><strong>Environment</strong><small id="embodiment-loop-environment">unconfigured</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor" title="Sensor: Eingang aus einem realen oder digitalen Adapter"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="sensor"><span>IN</span></label></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder" title="Encoder: SensorFrame wird zu neuronalen Strömen"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="encoder"><span>ON</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="sensor" title="Sensor: Eingang aus einem realen oder digitalen Adapter"><span>2</span><strong>Sensor</strong><small id="embodiment-loop-sensor">unavailable</small><label class="pipeline-toggle"><input type="checkbox" id="pipe-loop-sensor" data-pipeline-toggle="sensor"><span>IN</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="encoder" title="Encoder: SensorFrame wird zu neuronalen Strömen"><span>3</span><strong>Encoder</strong><small id="embodiment-loop-encoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" id="pipe-encoder" data-pipeline-toggle="encoder"><span>ON</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="snn" title="MHRN SNN: neuronaler Datenbankzustand verarbeitet den Strom"><span>4</span><strong>MHRN SNN</strong><small id="embodiment-loop-snn">idle</small></div>
-        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder" title="Decoder: neuronales Ergebnis wird zu ActionCommand"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" data-pipeline-toggle="decoder"><span>ON</span></label></div>
+        <i>→</i><div class="embodiment-loop-node" data-loop-node="decoder" title="Decoder: neuronales Ergebnis wird zu ActionCommand"><span>5</span><strong>Decoder</strong><small id="embodiment-loop-decoder">not reported</small><label class="pipeline-toggle"><input type="checkbox" id="pipe-decoder" data-pipeline-toggle="decoder"><span>ON</span></label></div>
         <i>→</i><div class="embodiment-loop-node" data-loop-node="actuator" title="Actuator: autorisierter Ausgang mit Sicherheitsgrenze"><span>6</span><strong>Actuator</strong><small id="embodiment-loop-actuator">unavailable</small></div>
         <i title="Feedback-Schleife: EnvironmentObservation zurück zum System">↻</i>
         <p class="embodiment-contract-note" id="embodiment-contract-note">Sensor, actuator and environment detail payloads are intentionally unavailable until adapters publish them.</p>
@@ -618,18 +618,14 @@
             <span class="fm-sidebar-title" id="fm-sidebar-title">📁 Files</span>
             <div class="fm-sidebar-actions">
               <button id="fm-toggle-recent" class="fm-sidebar-action-btn" title="Recent files">🕐</button>
+              <button id="fm-clear-recent" class="fm-sidebar-action-btn" title="Clear recent">✕</button>
             </div>
+          </div>
+          <div id="fm-recent" class="fm-recent is-hidden">
+            <div id="fm-recent-list" class="fm-recent-list"></div>
           </div>
           <div id="fm-tree" class="fm-tree">
             <span class="fm-loading">Loading directory tree…</span>
-          </div>
-          <!-- Recent files panel (collapsible) -->
-          <div class="fm-recent is-hidden" id="fm-recent">
-            <div class="fm-recent-header">
-              <span>🕐 Recent</span>
-              <button id="fm-clear-recent" class="fm-sidebar-action-btn" title="Clear recent">✕</button>
-            </div>
-            <div id="fm-recent-list" class="fm-recent-list"></div>
           </div>
         </div>
         <!-- Viewer: Overlay panel that opens on top of sidebar when a file is clicked -->
