@@ -140,6 +140,31 @@ This file contains **active release-blocking work only**. Long-horizon engineeri
 - [x] Review records are append-only and preserve reviewer identity, decision semantics, comments and provenance digests.
 - [x] Historical experiment artifacts remain immutable; dirty, exploratory or AI-generated records are not rewritten to appear scientifically validated.
 
+## 2026-09-13 Frontend deterministic tab routing
+
+- [x] Rewrite `workspace-router.js` with a central `setRouteElementVisibility()` function
+	that consistently sets `hidden`, `aria-hidden`, `inert` and CSS classes.
+- [x] Add `reconcileRouteVisibility()` as the single authority for panel visibility after
+	every navigation, eliminating content leakage between subtabs.
+- [x] Fix Science tab isolation: Observatory, Experiments, Network, Dynamics, Inspect,
+	Data, Files and Registry subtabs now exclusively show their own panels.
+- [x] Fix `focus` action: no longer just `scrollIntoView()` — now hides all other content
+	in the workspace and shows only the targeted element(s).
+- [x] Fix `focusOnly` action: properly isolates deeply nested panels, not just direct children.
+- [x] Add `data-mhrn-persistent` attribute support for elements that must remain visible
+	across routes (e.g. context navigation).
+- [x] Update `MutationObserver` to re-apply route visibility after dynamically loaded
+	modules appear in the DOM, with debounce guard against infinite loops.
+- [x] Remove old three-area `frontend-architecture.js` import from `console-log.js` to
+	prevent conflicting navigation systems.
+- [x] Strengthen CSS hide rules with `!important` cascade for all route-hidden states
+	including `[hidden]`, `[aria-hidden="true"]`, `.mhrn-route-hidden`, etc.
+- [x] Add 18 new automated tests covering: central visibility function, reconciliation,
+	all route action handlers, valid workspace references, CSS hide rules,
+	MutationObserver integration, old architecture removal, and route-specific ownership.
+- [x] Verify: 24 workspace-architecture tests pass, 1130/1156 full suite pass
+	(26 pre-existing failures from missing CSS files, sklearn dependency, etc.).
+
 ## Current development milestone — v0.6 Scaling & Deterministic Performance
 
 The reviewed v0.5.0a7 release gate is closed. Version `0.6.0a1` opens the development line. The engineering acceptance contract is documented in [V06_ACCEPTANCE.md](V06_ACCEPTANCE.md). The final release-record step deliberately remains open until the exact source-freeze CI and release-readiness snapshot are green.

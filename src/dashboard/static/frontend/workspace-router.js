@@ -2,7 +2,27 @@
 
 const STORAGE_KEY = "mhrn-workspace-router-v1";
 const ROUTED_CLASS = "mhrn-routed-local-tabs";
+const HIDDEN_CLASS = "mhrn-route-hidden";
 
+// ── Central visibility controller ──────────────────────────────
+// Every visibility change goes through this function.
+function setRouteElementVisibility(element, visible) {
+  if (!element) return;
+  element.hidden = !visible;
+  element.classList.toggle(HIDDEN_CLASS, !visible);
+  element.classList.toggle("mhrn-route-focus-hidden", !visible);
+  element.setAttribute("aria-hidden", String(!visible));
+  if (!visible && !element.hasAttribute("inert")) {
+    element.inert = true;
+  } else if (visible && element.inert) {
+    element.inert = false;
+  }
+}
+
+function isPersistent(element) {
+  return element.matches && element.matches("[data-mhrn-persistent]");
+}
+// ── Route configuration ────────────────────────────────────────
 const AREAS = Object.freeze({
   dashboard: {
     number: "01", label: "Dashboard", subtitle: "System & Betrieb", owner: "overview",
@@ -80,14 +100,15 @@ const AREAS = Object.freeze({
     routes: [["overview", "Übersicht", "review"], ["inbox", "Review Inbox", "review", "generated", "inbox"], ["ai", "AI Reports", "review", "generated", "ai"], ["external", "External Review", "review", "generated", "external"], ["portal", "Prüferportal", "review", "generated", "portal"], ["method", "Methoden & Ethik", "review", "generated", "method"]],
   },
 });
-
 let currentArea = "dashboard";
 let currentRoute = "overview";
 let refreshTimer = null;
+let reconcileDebounceTimer = null;
 
 const byId = (id) => document.getElementById(id);
 const rootFor = (workspace) => byId(`tab-${workspace}`);
 
+// ── Legacy workspace activation ────────────────────────────────
 function activateLegacy(workspace) {
   const button = document.querySelector(`.tab-nav .tab-btn[data-tab="${workspace}"]`);
   if (!button) return false;
@@ -103,7 +124,7 @@ function activateLegacy(workspace) {
   });
   return true;
 }
-
+// ── Generated workspaces ───────────────────────────────────────
 function createGeneratedWorkspace(id, label, kicker) {
   if (rootFor(id)) return rootFor(id);
   const main = document.querySelector("main");
@@ -145,7 +166,7 @@ function ensureGeneratedWorkspaces() {
       <section data-generated-panel="method"><h3>Methoden & Ethik</h3><p>Standardisierte Fragen, Einwilligung, Anonymität, Rücktritt, Auswertungsplan und Trennung von AI-Interpretation und wissenschaftlicher Evidenz.</p><button type="button" data-review-file="external_review/INTEGRATION.md">Methodik im File Viewer</button></section>
     </div>`);
 }
-
+// ── Overview markup ────────────────────────────────────────────
 function overviewMarkup(areaId, area) {
   const routes = area.routes.filter(([id]) => id !== "overview");
   return `<section class="mhrn-area-overview" data-area-overview="${areaId}">
@@ -197,21 +218,176 @@ function ensureContextNav(areaId) {
 function hideLocalTabs() {
   ["#tab-overview > .overview-subtabs", "#tab-research > .research-subtabs", "#tab-network > .workspace-view-tabs", "#tab-gate > .workspace-view-tabs", "#tab-embodiment > .embodiment-subtabs", ".science-context-nav", ".research-workspace-tabs"].forEach((selector) => document.querySelectorAll(selector).forEach((node) => node.classList.add(ROUTED_CLASS)));
 }
+// ── Route reconciliation — THE central visibility authority ────
+// Called after every navigation. Resets all managed elements in the
+// active workspace, then shows only elements belonging to the current route.
+// Persistent elements (data-mhrn-persistent) are excluded from hiding.
+
+function resetWorkspaceVisibility(workspace) {
+  const root = rootFor(workspace);
+  if (!root) return;
+  root.querySelectorAll("section, article, .card, .panel, .overview-subpanel, .research-subpanel, .embodiment-subpanel, .operator-console, .experiment-panel, [data-generated-panel], [data-workspace-panel], [data-network-view], .mhrn-scientific-metrics, .mhrn-cognition, .mhrn-gateway-monitor, .wesen-profile-panel, #wesen-neural-symbiosis, .mhrn-area-overview, .mhrn-learning-prep, .mhrn-structural-inspector").forEach((node) => {
+    if (isPersistent(node)) return;
+    setRouteElementVisibility(node, false);
+  });
+}
+
+function showRouteContent(areaId, route) {
+  const [id, label, workspace, action, arg] = route;
+
+  // Always show the overview if this is the overview route
+  if (id === "overview") {
+    const area = AREAS[areaId];
+    const root = rootFor(area.owner);
+    if (root) {
+      const overview = root.querySelector(`[data-area-overview="${areaId}"]`);
+      if (overview) setRouteElementVisibility(overview, true);
+    }
+    return;
+  }
+
+  // For "research" action: show the matching research-subpanel
+  if (action === "research") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll(".research-subpanel").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset.subpanel === arg);
+      });
+    }
+    return;
+  }
+
+  // For "overview" action (dashboard subtabs): show matching overview-subpanel
+  if (action === "overview") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll(".overview-subpanel").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset.subpanel === arg);
+      });
+    }
+    return;
+  }
+
+  // For "embodiment" action: show matching embodiment-subpanel
+  if (action === "embodiment") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll(".embodiment-subpanel").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset.subpanel === arg);
+      });
+    }
+    return;
+  }
+
+  // For "view" action (network/release workspace views): show matching data-workspace-panel
+  if (action === "view") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll("[data-workspace-panel]").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset[`${workspace}View`] === arg);
+      });
+      // Also handle data-network-view panels
+      root.querySelectorAll("[data-network-view]").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset.networkView === arg);
+      });
+    }
+    return;
+  }
+
+  // For "focus" action: show only the targeted element(s)
+  if (action === "focus" && arg) {
+    const targets = arg.split(",").map((s) => s.trim());
+    targets.forEach((sel) => {
+      document.querySelectorAll(sel).forEach((node) => setRouteElementVisibility(node, true));
+    });
+    return;
+  }
+
+  // For "focusOnly" action: hide everything except the specified selectors
+  if (action === "focusOnly" && arg) {
+    const keep = new Set(arg.split(",").map((s) => s.trim()));
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll(":scope > section, :scope > article, :scope > .card, :scope > .panel, :scope > .operator-console, :scope > .experiment-panel").forEach((node) => {
+        if (isPersistent(node)) return;
+        const matches = [...keep].some((sel) => node.matches(sel));
+        setRouteElementVisibility(node, matches);
+      });
+    }
+    return;
+  }
+
+  // For "generated" action: show matching generated panel
+  if (action === "generated") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll("[data-generated-panel]").forEach((node) => {
+        setRouteElementVisibility(node, node.dataset.generatedPanel === arg);
+      });
+    }
+    return;
+  }
+
+  // For "release" action: show matching release view panel
+  if (action === "release") {
+    const root = rootFor(workspace);
+    if (root) {
+      root.querySelectorAll("[data-release-view]").forEach((panel) => {
+        setRouteElementVisibility(panel, panel.dataset.releaseView === arg);
+      });
+    }
+    return;
+  }
+
+  // Fallback: show all children of workspace (for legacy routes without action)
+  const root = rootFor(workspace);
+  if (root) {
+    [...root.children].forEach((node) => {
+      if (isPersistent(node)) return;
+      if (node.classList.contains("workspace-header") || node.classList.contains("mhrn-context-nav") || node.classList.contains("overview-command-bar")) return;
+      setRouteElementVisibility(node, true);
+    });
+  }
+}
+
+function reconcileRouteVisibility(areaId, routeId) {
+  const area = AREAS[areaId] || AREAS.dashboard;
+  const route = area.routes.find(([id]) => id === routeId) || area.routes[0];
+  const [, , workspace] = route;
+
+  // Reset all managed panels in the active workspace
+  resetWorkspaceVisibility(workspace);
+
+  // Also reset in any secondary workspaces this area uses
+  const allWorkspaces = new Set(area.routes.map((r) => r[2]));
+  allWorkspaces.forEach((ws) => {
+    if (ws !== workspace) resetWorkspaceVisibility(ws);
+  });
+
+  // Show route-specific content
+  showRouteContent(areaId, route);
+
+  // Ensure context nav is visible (it is persistent)
+  document.querySelectorAll(`.mhrn-context-nav[data-area="${areaId}"]`).forEach((nav) => {
+    setRouteElementVisibility(nav, true);
+  });
+}
 
 function clickMatch(selector, dataName, value) {
   const button = [...document.querySelectorAll(selector)].find((node) => node.dataset[dataName] === value);
   button?.click();
 }
-
 function clearFocused(workspace) {
   rootFor(workspace)?.querySelectorAll(".mhrn-route-focus-hidden").forEach((node) => node.classList.remove("mhrn-route-focus-hidden"));
 }
 
 function applyRoute(areaId, route) {
-  const [id,,workspace,action,arg] = route;
+  const [id, , workspace, action, arg] = route;
   activateLegacy(workspace);
   requestAnimationFrame(() => {
     clearFocused(workspace);
+
+    // Legacy click triggers (for modules that listen to these events)
     if (action === "overview") clickMatch(".overview-subtab", "subtab", arg);
     if (action === "research") clickMatch(".research-subtab", "subtab", arg);
     if (action === "embodiment") clickMatch(".embodiment-subtab", "subtab", arg);
@@ -219,93 +395,232 @@ function applyRoute(areaId, route) {
       const name = workspace === "gate" ? "release" : "network";
       clickMatch(`[data-workspace-views="${name}"] [data-workspace-view]`, "workspaceView", arg);
     }
-    if (action === "focus" && arg) document.querySelector(arg)?.scrollIntoView({ block: "start" });
-    if (action === "focusOnly") {
-      const root = rootFor(workspace); const keep = new Set(String(arg).split(",").map((s) => s.trim()));
-      root?.querySelectorAll(":scope > section, :scope > article, :scope > .card, :scope > .panel, :scope > .operator-console, :scope > .experiment-panel").forEach((node) => { if (![...keep].some((sel) => node.matches(sel))) node.classList.add("mhrn-route-focus-hidden"); });
-    }
+
     if (workspace === "settings") {
-      const h2 = rootFor("settings")?.querySelector(".workspace-header h2"); if (h2) h2.textContent = "Parameter & Provenienz";
+      const h2 = rootFor("settings")?.querySelector(".workspace-header h2");
+      if (h2) h2.textContent = "Parameter & Provenienz";
     }
+
     if (action === "generated") showGenerated(workspace, arg);
+
+    // Set overview visibility
     setOverview(areaId, id === "overview");
+
+    // RUN RECONCILIATION — this is the central visibility authority
+    reconcileRouteVisibility(areaId, id);
+
     syncNav();
   });
 }
 
+// ── Legacy helpers (preserved for backward compat) ─────────────
 function showGenerated(workspace, id) {
-  rootFor(workspace)?.querySelectorAll("[data-generated-panel]").forEach((node) => { node.hidden = node.dataset.generatedPanel !== id; });
+  rootFor(workspace)?.querySelectorAll("[data-generated-panel]").forEach((node) => {
+    node.hidden = node.dataset.generatedPanel !== id;
+  });
 }
 
 function setOverview(areaId, visible) {
-  const area = AREAS[areaId]; const root = rootFor(area.owner); if (!root) return;
-  const overview = root.querySelector(`[data-area-overview="${areaId}"]`); if (overview) overview.hidden = !visible;
+  const area = AREAS[areaId];
+  const root = rootFor(area.owner);
+  if (!root) return;
+  const overview = root.querySelector(`[data-area-overview="${areaId}"]`);
+  if (overview) overview.hidden = !visible;
   [...root.children].forEach((node) => {
     if (node === overview || node.classList?.contains("mhrn-context-nav") || node.classList?.contains("workspace-header") || node.classList?.contains("overview-command-bar")) return;
-    if (visible) node.classList.add("mhrn-overview-content-hidden"); else node.classList.remove("mhrn-overview-content-hidden");
+    if (visible) node.classList.add("mhrn-overview-content-hidden");
+    else node.classList.remove("mhrn-overview-content-hidden");
   });
 }
 
 function syncNav() {
-  document.body.dataset.currentArea = currentArea; document.body.dataset.currentRoute = currentRoute;
+  document.body.dataset.currentArea = currentArea;
+  document.body.dataset.currentRoute = currentRoute;
   document.querySelectorAll("[data-mhrn-area]").forEach((node) => node.classList.toggle("active", node.dataset.mhrnArea === currentArea));
   document.querySelectorAll(".mhrn-context-nav").forEach((nav) => {
     nav.hidden = nav.dataset.area !== currentArea;
-    nav.querySelectorAll("[data-area-route]").forEach((node) => { const active = nav.dataset.area === currentArea && node.dataset.areaRoute === currentRoute; node.classList.toggle("active", active); node.setAttribute("aria-selected", String(active)); });
+    nav.querySelectorAll("[data-area-route]").forEach((node) => {
+      const active = nav.dataset.area === currentArea && node.dataset.areaRoute === currentRoute;
+      node.classList.toggle("active", active);
+      node.setAttribute("aria-selected", String(active));
+    });
   });
 }
-
+// ── Contract probing and data refresh ──────────────────────────
 async function probeContracts(areaId) {
-  const area = AREAS[areaId]; const overview = rootFor(area.owner)?.querySelector(`[data-area-overview="${areaId}"]`); if (!overview) return;
+  const area = AREAS[areaId];
+  const overview = rootFor(area.owner)?.querySelector(`[data-area-overview="${areaId}"]`);
+  if (!overview) return;
   await Promise.all(area.contracts.map(async (endpoint) => {
-    const row = [...overview.querySelectorAll("[data-contract]")].find((node) => node.dataset.contract === endpoint); if (!row) return;
-    try { const response = await fetch(endpoint, { cache: "no-store", headers: { Accept: "application/json" } }); row.dataset.state = response.ok ? "ok" : "failed"; row.querySelector("span").textContent = `HTTP ${response.status}`; }
-    catch (_) { row.dataset.state = "offline"; row.querySelector("span").textContent = "offline"; }
+    const row = [...overview.querySelectorAll("[data-contract]")].find((node) => node.dataset.contract === endpoint);
+    if (!row) return;
+    try {
+      const response = await fetch(endpoint, { cache: "no-store", headers: { Accept: "application/json" } });
+      row.dataset.state = response.ok ? "ok" : "failed";
+      row.querySelector("span").textContent = `HTTP ${response.status}`;
+    } catch (_) {
+      row.dataset.state = "offline";
+      row.querySelector("span").textContent = "offline";
+    }
   }));
 }
 
-async function readJson(url) { const response = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } }); const payload = await response.json(); if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`); return payload; }
-function kv(data, limit=16) { return Object.entries(data || {}).filter(([,v]) => v !== null && v !== undefined).slice(0,limit).map(([k,v]) => `<div><span>${k}</span><strong>${typeof v === "object" ? JSON.stringify(v).slice(0,180) : String(v).slice(0,180)}</strong></div>`).join("") || "<p>Keine Daten.</p>"; }
+async function readJson(url) {
+  const response = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+  return payload;
+}
+
+function kv(data, limit = 16) {
+  return Object.entries(data || {}).filter(([, v]) => v !== null && v !== undefined).slice(0, limit).map(([k, v]) => `<div><span>${k}</span><strong>${typeof v === "object" ? JSON.stringify(v).slice(0, 180) : String(v).slice(0, 180)}</strong></div>`).join("") || "<p>Keine Daten.</p>";
+}
 
 async function refreshSettings() {
   if (currentArea !== "settings") return;
-  try { const [settings,providers,health] = await Promise.all([readJson("/api/research/chat/settings"),readJson("/api/research/chat/providers"),readJson("/api/research/chat/health")]); byId("appsettings-ai-detail").innerHTML = kv({ provider:settings.provider, model:settings.model, endpoint:settings.endpoint, vision:settings.vision_enabled, tools:settings.tools_enabled, models:providers.models?.length ?? 0, health:health.ok ? "online" : "offline" }); } catch (error) { if (byId("appsettings-ai-detail")) byId("appsettings-ai-detail").textContent = `Nicht verfügbar: ${error.message}`; }
-  try { byId("appsettings-integration-detail").innerHTML = kv(await readJson("/api/integration/status"),24); } catch (error) { if (byId("appsettings-integration-detail")) byId("appsettings-integration-detail").textContent = `Nicht verfügbar: ${error.message}`; }
+  try {
+    const [settings, providers, health] = await Promise.all([
+      readJson("/api/research/chat/settings"),
+      readJson("/api/research/chat/providers"),
+      readJson("/api/research/chat/health")
+    ]);
+    byId("appsettings-ai-detail").innerHTML = kv({
+      provider: settings.provider, model: settings.model, endpoint: settings.endpoint,
+      vision: settings.vision_enabled, tools: settings.tools_enabled,
+      models: providers.models?.length ?? 0, health: health.ok ? "online" : "offline"
+    });
+  } catch (error) {
+    if (byId("appsettings-ai-detail")) byId("appsettings-ai-detail").textContent = `Nicht verfügbar: ${error.message}`;
+  }
+  try {
+    byId("appsettings-integration-detail").innerHTML = kv(await readJson("/api/integration/status"), 24);
+  } catch (error) {
+    if (byId("appsettings-integration-detail")) byId("appsettings-integration-detail").textContent = `Nicht verfügbar: ${error.message}`;
+  }
 }
 
-function reviewItem(item) { const path = item.artifact_path || ""; return `<article class="mhrn-review-item"><header><strong>${item.title || item.report_id || path || "Review"}</strong><span>${[item.kind,item.experiment_id,item.research_question_id].filter(Boolean).join(" · ")}</span></header><p>${item.summary || "Human review erforderlich."}</p>${path ? `<button type="button" data-review-path="${path}">Im File Viewer öffnen</button>` : ""}</article>`; }
+function reviewItem(item) {
+  const path = item.artifact_path || "";
+  return `<article class="mhrn-review-item"><header><strong>${item.title || item.report_id || path || "Review"}</strong><span>${[item.kind, item.experiment_id, item.research_question_id].filter(Boolean).join(" · ")}</span></header><p>${item.summary || "Human review erforderlich."}</p>${path ? `<button type="button" data-review-path="${path}">Im File Viewer öffnen</button>` : ""}</article>`;
+}
+
 async function refreshReview() {
   if (currentArea !== "review") return;
-  try { const inbox = await readJson("/api/research/reviews"); byId("review-open-count").textContent = String(inbox.open ?? 0); byId("review-completed-count").textContent = String(inbox.completed ?? 0); const list = byId("review-inbox-list"); const items = Array.isArray(inbox.items) ? inbox.items : []; list.innerHTML = items.length ? items.map(reviewItem).join("") : "<p>Keine offenen Review-Items.</p>"; list.querySelectorAll("[data-review-path]").forEach((button) => button.addEventListener("click", () => { document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: button.dataset.reviewPath } })); selectRoute("science","files"); })); } catch (error) { if (byId("review-inbox-list")) byId("review-inbox-list").textContent = `Nicht verfügbar: ${error.message}`; }
+  try {
+    const inbox = await readJson("/api/research/reviews");
+    byId("review-open-count").textContent = String(inbox.open ?? 0);
+    byId("review-completed-count").textContent = String(inbox.completed ?? 0);
+    const list = byId("review-inbox-list");
+    const items = Array.isArray(inbox.items) ? inbox.items : [];
+    list.innerHTML = items.length ? items.map(reviewItem).join("") : "<p>Keine offenen Review-Items.</p>";
+    list.querySelectorAll("[data-review-path]").forEach((button) => button.addEventListener("click", () => {
+      document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: button.dataset.reviewPath } }));
+      selectRoute("science", "files");
+    }));
+  } catch (error) {
+    if (byId("review-inbox-list")) byId("review-inbox-list").textContent = `Nicht verfügbar: ${error.message}`;
+  }
 }
-
+// ── Generated actions ──────────────────────────────────────────
 function bindGeneratedActions() {
   document.addEventListener("click", (event) => {
-    const proxy = event.target.closest("[data-proxy]"); if (proxy) document.querySelector(proxy.dataset.proxy)?.click();
-    const jump = event.target.closest("[data-route-jump]"); if (jump) { const [a,r] = jump.dataset.routeJump.split(":"); selectRoute(a,r); }
-    const file = event.target.closest("[data-review-file]"); if (file) { document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: file.dataset.reviewFile } })); selectRoute("science","files"); }
+    const proxy = event.target.closest("[data-proxy]");
+    if (proxy) document.querySelector(proxy.dataset.proxy)?.click();
+    const jump = event.target.closest("[data-route-jump]");
+    if (jump) {
+      const [a, r] = jump.dataset.routeJump.split(":");
+      selectRoute(a, r);
+    }
+    const file = event.target.closest("[data-review-file]");
+    if (file) {
+      document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: file.dataset.reviewFile } }));
+      selectRoute("science", "files");
+    }
   });
-  byId("appsettings-open-chat")?.addEventListener("click", () => { byId("chat-toggle")?.click(); requestAnimationFrame(() => byId("chat-settings-toggle")?.click()); });
-  byId("review-copy-link")?.addEventListener("click", async (event) => { try { await navigator.clipboard.writeText(new URL("/review", location.href).href); event.currentTarget.textContent = "Kopiert"; } catch (_) { event.currentTarget.textContent = "Kopieren fehlgeschlagen"; } });
+  byId("appsettings-open-chat")?.addEventListener("click", () => {
+    byId("chat-toggle")?.click();
+    requestAnimationFrame(() => byId("chat-settings-toggle")?.click());
+  });
+  byId("review-copy-link")?.addEventListener("click", async (event) => {
+    try {
+      await navigator.clipboard.writeText(new URL("/review", location.href).href);
+      event.currentTarget.textContent = "Kopiert";
+    } catch (_) {
+      event.currentTarget.textContent = "Kopieren fehlgeschlagen";
+    }
+  });
 }
 
-function addHoverInfo() { document.querySelectorAll("button,a,summary,input,select,textarea,[role='button'],[role='tab']").forEach((node) => { if (!node.title) { const text = (node.getAttribute("aria-label") || node.textContent || node.placeholder || "").trim().replace(/\s+/g," "); if (text) node.title = text.slice(0,220); } }); }
-
-export function selectRoute(areaId, routeId="overview") {
-  const area = AREAS[areaId] || AREAS.dashboard; const route = area.routes.find(([id]) => id === routeId) || area.routes[0];
-  currentArea = AREAS[areaId] ? areaId : "dashboard"; currentRoute = route[0];
-  ensureContextNav(currentArea); applyRoute(currentArea, route); probeContracts(currentArea);
-  if (currentArea === "settings") refreshSettings(); if (currentArea === "review") refreshReview();
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ area:currentArea, route:currentRoute })); } catch (_) {}
+function addHoverInfo() {
+  document.querySelectorAll("button, a, summary, input, select, textarea, [role='button'], [role='tab']").forEach((node) => {
+    if (!node.title) {
+      const text = (node.getAttribute("aria-label") || node.textContent || node.placeholder || "").trim().replace(/\s+/g, " ");
+      if (text) node.title = text.slice(0, 220);
+    }
+  });
 }
 
-function restore() { try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); if (saved && AREAS[saved.area] && AREAS[saved.area].routes.some(([id]) => id === saved.route)) return saved; } catch (_) {} return { area:"dashboard", route:"overview" }; }
+// ── Public API ─────────────────────────────────────────────────
+export function selectRoute(areaId, routeId = "overview") {
+  const area = AREAS[areaId] || AREAS.dashboard;
+  const route = area.routes.find(([id]) => id === routeId) || area.routes[0];
+  currentArea = AREAS[areaId] ? areaId : "dashboard";
+  currentRoute = route[0];
+  ensureContextNav(currentArea);
+  applyRoute(currentArea, route);
+  probeContracts(currentArea);
+  if (currentArea === "settings") refreshSettings();
+  if (currentArea === "review") refreshReview();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ area: currentArea, route: currentRoute }));
+  } catch (_) {}
+}
+
+function restore() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (saved && AREAS[saved.area] && AREAS[saved.area].routes.some(([id]) => id === saved.route)) return saved;
+  } catch (_) {}
+  return { area: "dashboard", route: "overview" };
+}
 
 export function initWorkspaceRouter() {
-  ensureGeneratedWorkspaces(); ensureNavigation(); Object.keys(AREAS).forEach((id) => { ensureOverview(id); ensureContextNav(id); }); hideLocalTabs(); bindGeneratedActions(); addHoverInfo();
-  const saved = restore(); selectRoute(saved.area,saved.route);
-  const observer = new MutationObserver(() => { hideLocalTabs(); addHoverInfo(); Object.keys(AREAS).forEach(ensureContextNav); }); observer.observe(document.querySelector("main") || document.body,{childList:true,subtree:true});
-  refreshTimer = window.setInterval(() => { probeContracts(currentArea); if (currentArea === "settings") refreshSettings(); if (currentArea === "review") refreshReview(); },30000);
-  window.addEventListener("beforeunload", () => refreshTimer && clearInterval(refreshTimer), { once:true });
-  window.MHRNWorkspaceArchitecture = { selectRoute, areas:AREAS, refreshContracts:probeContracts };
+  ensureGeneratedWorkspaces();
+  ensureNavigation();
+  Object.keys(AREAS).forEach((id) => {
+    ensureOverview(id);
+    ensureContextNav(id);
+  });
+  hideLocalTabs();
+  bindGeneratedActions();
+  addHoverInfo();
+
+  const saved = restore();
+  selectRoute(saved.area, saved.route);
+
+  // MutationObserver: re-apply visibility after DOM changes (e.g. dynamically loaded modules)
+  let observerRunning = false;
+  const observer = new MutationObserver(() => {
+    if (observerRunning) return;
+    observerRunning = true;
+    requestAnimationFrame(() => {
+      hideLocalTabs();
+      addHoverInfo();
+      Object.keys(AREAS).forEach(ensureContextNav);
+      // Reconcile current route visibility — dynamically added panels get hidden if not for this route
+      reconcileRouteVisibility(currentArea, currentRoute);
+      observerRunning = false;
+    });
+  });
+  observer.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
+
+  refreshTimer = window.setInterval(() => {
+    probeContracts(currentArea);
+    if (currentArea === "settings") refreshSettings();
+    if (currentArea === "review") refreshReview();
+  }, 30000);
+
+  window.addEventListener("beforeunload", () => refreshTimer && clearInterval(refreshTimer), { once: true });
+
+  window.MHRNWorkspaceArchitecture = { selectRoute, areas: AREAS, refreshContracts: probeContracts };
 }
