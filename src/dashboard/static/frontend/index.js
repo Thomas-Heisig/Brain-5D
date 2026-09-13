@@ -7,6 +7,7 @@ import { initRuntimeIO } from "./modules/runtime-io.js";
 import { initScienceTransparency } from "./modules/science-transparency.js";
 import { initScientificMetrics } from "./modules/scientific-metrics.js";
 import { initExperimentLab } from "./modules/experiment-lab.js";
+import { initFunctionalCompletion } from "./modules/functional-completion.js";
 import { startDataStyleObserver } from "./modules/data-styles.js";
 import { initCognition } from "./modules/cognition.js";
 import { initGatewayMonitor } from "./modules/gateway-monitor.js";
@@ -31,6 +32,7 @@ function init() {
   initScienceTransparency();
   initScientificMetrics();
   initExperimentLab();
+  initFunctionalCompletion();
   startDataStyleObserver();
   initCognition();
   initGatewayMonitor();
