@@ -157,6 +157,7 @@ function organizeDynamicWorkflow() {
   moveSelector("#workflow-human-review", "evidence");
   moveSelector("#workflow-rq-proposal", "evidence");
   moveSelector("#workflow-review-inbox", "evidence");
+  moveSelector("#mhrn-review-share", "evidence");
 
   const lab = byId("mhrn-experiment-lab");
   flattenNestedSurfaces(lab);
