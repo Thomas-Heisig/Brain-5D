@@ -170,12 +170,27 @@ export class ExperimentWorkflowPanel {
       const library = document.createElement("section");
       library.id = "workflow-experiment-library";
       library.className = "experiment-library-card";
+      this._viewMode = localStorage.getItem("mhrn-exp-library-view") || "grid";
+      this._sortMode = localStorage.getItem("mhrn-exp-library-sort") || "date-desc";
       library.innerHTML = `
         <div class="panel-title">
           <div><span class="workspace-kicker">RESEARCH ORGANIZER</span><h3>Experimentreihen &amp; Archiv</h3><p>Reihen laufen über den kontrollierten Batch-Workflow. Abgeschlossene Experimente bleiben unverändert und können aus der aktiven Ansicht ins Archiv verschoben werden.</p></div>
           <div class="experiment-library-actions"><button type="button" id="workflow-series-open" class="btn-primary">Neue Reihe</button><button type="button" id="workflow-library-refresh" class="btn-secondary" title="Experimentliste aktualisieren" aria-label="Experimentliste aktualisieren">↻</button></div>
         </div>
         <div class="experiment-library-summary"><span id="workflow-series-count">0 Reihen</span><span id="workflow-active-count">0 aktiv</span><span id="workflow-archived-count">0 archiviert</span></div>
+        <div class="experiment-library-view-toolbar">
+          <div class="exp-view-toggle">
+            <button type="button" class="exp-view-btn" data-exp-view="grid" title="Grid-Ansicht" aria-label="Grid-Ansicht">▦</button>
+            <button type="button" class="exp-view-btn" data-exp-view="list" title="Listen-Ansicht" aria-label="Listen-Ansicht">☰</button>
+          </div>
+          <label class="exp-sort-label">Sortieren<select id="exp-library-sort" class="exp-sort-select">
+            <option value="date-desc">Neueste zuerst</option>
+            <option value="date-asc">Älteste zuerst</option>
+            <option value="name-asc">A–Z</option>
+            <option value="name-desc">Z–A</option>
+            <option value="status">Status</option>
+          </select></label>
+        </div>
         <section class="experiment-series-section"><div class="experiment-library-section-head"><h4>Experimentreihen</h4><small>Jede Reihe ist separat technisch bewertbar.</small></div><div id="workflow-experiment-series" class="experiment-series-list"><p class="experiment-library-empty">Lade Reihen …</p></div></section>
         <div class="experiment-library-grid">
           <section><h4>Aktive Experimente</h4><div id="workflow-active-experiments" class="experiment-library-list"><p class="experiment-library-empty">Lade Experimente …</p></div></section>
@@ -185,6 +200,32 @@ export class ExperimentWorkflowPanel {
       byId("workflow-series-open")?.addEventListener("click", () => this._openBatchWorkflow());
       byId("workflow-library-refresh")?.addEventListener("click", () => this._loadExperimentCollections());
       library.addEventListener("click", (event) => this._handleExperimentLibraryAction(event));
+
+      // View mode toggle
+      library.querySelectorAll("[data-exp-view]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.expView === this._viewMode);
+        btn.addEventListener("click", () => {
+          this._viewMode = btn.dataset.expView;
+          localStorage.setItem("mhrn-exp-library-view", this._viewMode);
+          library.querySelectorAll("[data-exp-view]").forEach((b) => b.classList.toggle("active", b.dataset.expView === this._viewMode));
+          const list = byId("workflow-active-experiments");
+          if (list) { list.dataset.expView = this._viewMode; }
+          const archivedList = byId("workflow-archived-experiments");
+          if (archivedList) { archivedList.dataset.expView = this._viewMode; }
+        });
+      });
+
+      // Sort
+      const sortSelect = byId("exp-library-sort");
+      if (sortSelect) {
+        sortSelect.value = this._sortMode;
+        sortSelect.addEventListener("change", () => {
+          this._sortMode = sortSelect.value;
+          localStorage.setItem("mhrn-exp-library-sort", this._sortMode);
+          this._loadExperimentCollections();
+        });
+      }
+
       this._loadExperimentCollections();
     }
 
@@ -439,12 +480,41 @@ export class ExperimentWorkflowPanel {
       if (archiveSummaryCount) archiveSummaryCount.textContent = `${archivedItems.length} archiviert`;
       const series = byId("workflow-experiment-series");
       if (series) series.innerHTML = seriesItems.length ? seriesItems.map((item) => this._experimentSeriesItem(item)).join("") : '<p class="experiment-library-empty">Noch keine Experimentreihe.</p>';
+
+      // Apply sort
+      const sortMode = this._sortMode || "date-desc";
+      const sortFn = this._sortExperimentItems(sortMode);
+      activeItems.sort(sortFn);
+      archivedItems.sort(sortFn);
+
       active.innerHTML = activeItems.length ? activeItems.map((item) => this._experimentLibraryItem(item, false)).join("") : '<p class="experiment-library-empty">Keine aktiven Experimente.</p>';
       archived.innerHTML = archivedItems.length ? archivedItems.map((item) => this._experimentLibraryItem(item, true)).join("") : '<p class="experiment-library-empty">Archiv ist leer.</p>';
+
+      // Apply view mode
+      active.dataset.expView = this._viewMode || "grid";
+      archived.dataset.expView = this._viewMode || "grid";
     } catch (error) {
       active.innerHTML = `<p class="experiment-library-empty">Experimentliste nicht verfügbar: ${escapeHtml(error.message || error)}</p>`;
       archived.innerHTML = `<p class="experiment-library-empty">Archiv nicht verfügbar: ${escapeHtml(error.message || error)}</p>`;
     }
+  }
+
+  _sortExperimentItems(mode) {
+    return (a, b) => {
+      const aId = a.experiment_id || a.id || "";
+      const bId = b.experiment_id || b.id || "";
+      const aDate = a.created_at || (a.manifest && a.manifest.created_at) || a.timestamp || "";
+      const bDate = b.created_at || (b.manifest && b.manifest.created_at) || b.timestamp || "";
+      const aStatus = String(a.manifest?.experiment_status || a.status || "");
+      const bStatus = String(b.manifest?.experiment_status || b.status || "");
+      switch (mode) {
+        case "date-asc": return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
+        case "name-asc": return aId.localeCompare(bId);
+        case "name-desc": return bId.localeCompare(aId);
+        case "status": return aStatus.localeCompare(bStatus) || (aDate < bDate ? 1 : -1);
+        default: return aDate > bDate ? -1 : aDate < bDate ? 1 : 0; // date-desc
+      }
+    };
   }
 
   _experimentLibraryItem(item, archived) {
@@ -452,11 +522,16 @@ export class ExperimentWorkflowPanel {
     const status = String(manifest.experiment_status || item.status || (archived ? "archived" : "unknown"));
     const question = Array.isArray(manifest.research_questions) ? manifest.research_questions.join(", ") : "Research experiment";
     const created = item.created_at || manifest.created_at || manifest.timestamp || "";
-    const meta = [question, status, created].filter(Boolean).join(" · ");
+    const meta = [question, created].filter(Boolean).join(" · ");
+    const statusClass = status === "completed" ? "exp-status-ok" : status === "running" || status === "active" ? "exp-status-active" : "exp-status-pending";
     const action = archived
       ? `<button type="button" class="btn-small" data-experiment-action="restore" data-experiment-id="${escapeHtml(item.experiment_id)}">↶ Wiederherstellen</button>`
       : `<button type="button" class="btn-small" data-experiment-action="archive" data-experiment-id="${escapeHtml(item.id)}">▣ Archivieren</button>`;
-    return `<article class="experiment-library-item ${archived ? "is-archived" : ""}"><div><strong>${escapeHtml(item.experiment_id || item.id)}</strong><small>${escapeHtml(meta)}</small></div><div class="experiment-library-item-actions">${action}</div></article>`;
+    return `<article class="experiment-library-item ${archived ? "is-archived" : ""}">
+      <div class="exp-item-header"><strong>${escapeHtml(item.experiment_id || item.id)}</strong><span class="exp-status-badge ${statusClass}">${escapeHtml(status)}</span></div>
+      <small class="exp-item-meta">${escapeHtml(meta)}</small>
+      <div class="experiment-library-item-actions">${action}</div>
+    </article>`;
   }
 
   _experimentSeriesItem(item) {
