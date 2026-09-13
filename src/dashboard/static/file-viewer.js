@@ -491,7 +491,7 @@ function ensureFMViewerDialog() {
   dialog = document.createElement('dialog');
   dialog.id = 'fm-viewer-dialog';
   dialog.className = 'fm-viewer-dialog';
-  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><div class="fm-viewer-dialog-main"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-viewer" class="fm-viewer-content"></div></div></div>';
+  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><div class="fm-viewer-dialog-main"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-dialog-viewer" class="fm-viewer-content"></div></div></div>';
   document.body.appendChild(dialog);
   dialog.querySelector('#fm-dialog-close').addEventListener('click', () => closeFMViewer());
   dialog.querySelector('#fm-dialog-back').addEventListener('click', () => goBackFMViewer());
@@ -502,7 +502,8 @@ function ensureFMViewerDialog() {
 
 export async function openFMFile(path, { recordHistory = true } = {}) {
   const dialog = ensureFMViewerDialog();
-  const viewer = document.getElementById('fm-viewer');
+  // Use dialog viewer when dialog is open, fall back to tab viewer
+  const viewer = dialog?.open ? document.getElementById('fm-dialog-viewer') : document.getElementById('fm-viewer');
   if (!viewer) return;
   path = String(path || '').replaceAll('\\', '/');
   const source = fmCurrentSource;
