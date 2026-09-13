@@ -68,6 +68,19 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
 .exp-status-pending { background: var(--paper-3); color: var(--ink-4); }
 .experiment-library-item-actions { display: flex; gap: 4px; }
 
+/* Registry view/sort toolbar */
+.registry-view-toolbar { display: flex; align-items: center; gap: 8px; padding: 6px 15px; border-bottom: 1px solid var(--rule); background: var(--paper-2); }
+.registry-list[data-reg-view="grid"] { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; padding: 8px; }
+.registry-list[data-reg-view="list"] { display: flex; flex-direction: column; gap: 2px; padding: 4px 8px; }
+.registry-list[data-reg-view="list"] .research-item { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 6px 8px; align-items: center; }
+.registry-list[data-reg-view="list"] .research-item > div { grid-column: 1; }
+.registry-list[data-reg-view="list"] .research-item > button { grid-column: 2; grid-row: 1; }
+.research-item { padding: 8px; border: 1px solid var(--rule); border-radius: var(--r-sm); background: var(--paper-2); }
+.research-item > div strong { display: block; font-size: .72rem; font-family: var(--font-mono); margin-bottom: 2px; }
+.research-item > div small { display: block; color: var(--ink-3); font-size: .6rem; }
+.research-item > button { margin-top: 4px; padding: .25rem .5rem; border: 1px solid var(--rule-2); border-radius: var(--r-xs); background: var(--paper-3); color: var(--ink); font-size: .58rem; cursor: pointer; }
+.research-item > button:hover { background: var(--accent-wash); border-color: var(--accent); }
+
 /* Research / Experimente subtab — lanes as tab bar, cards below */
 .research-lanes { display: flex; gap: 4px; margin-bottom: 10px; padding: 4px; border-bottom: 1px solid var(--rule); overflow-x: auto; }
 .research-lanes button { flex: 0 0 auto; min-height: 30px; padding: 0 10px; border: 0; border-radius: 0; background: transparent; color: var(--ink-3); font: 600 .58rem/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
