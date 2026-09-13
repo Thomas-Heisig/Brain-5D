@@ -62,14 +62,26 @@ class NetworkConfig(TypedDict, total=False):
 
 
 class NeuronConfig(TypedDict, total=False):
-    """Configuration for neuron parameters."""
+    """Configuration for neuron parameters and dynamics model."""
 
+    model: str
     a: float
     b: float
     c: float
     d: float
     initial_v: float
     initial_u: float
+    izhikevich_threshold: float
+    lif_resting_potential: float
+    lif_tau_m_ms: float
+    lif_resistance: float
+    lif_threshold: float
+    lif_reset: float
+    refractory_ticks: int
+    enable_threshold_adaptation: bool
+    enable_energy_dynamics: bool
+    enable_traces: bool
+    enable_homeostasis: bool
 
 
 class EnergyConfig(TypedDict, total=False):
@@ -182,12 +194,24 @@ DEFAULT_CONFIG: ConfigDict = {
         "neighbour_radius": 5.0,
     },
     "neuron": {
+        "model": "izhikevich-2003",
         "a": 0.02,
         "b": 0.2,
         "c": -65.0,
         "d": 8.0,
         "initial_v": -65.0,
         "initial_u": -13.0,
+        "izhikevich_threshold": 30.0,
+        "lif_resting_potential": -65.0,
+        "lif_tau_m_ms": 20.0,
+        "lif_resistance": 1.0,
+        "lif_threshold": -50.0,
+        "lif_reset": -65.0,
+        "refractory_ticks": 0,
+        "enable_threshold_adaptation": True,
+        "enable_energy_dynamics": True,
+        "enable_traces": True,
+        "enable_homeostasis": True,
     },
     "energy": {
         "initial": 1.0,
@@ -398,21 +422,71 @@ def _validate_network_config(
 
 
 def _validate_neuron_config(
-    raw: dict[str, Any],
-    defaults: NeuronConfig,
+    raw: dict[str, Any], defaults: NeuronConfig
 ) -> NeuronConfig:
-    """Validate and merge neuron configuration."""
+    """Validate and normalize neuron model configuration."""
     result: NeuronConfig = {}
 
-    for key in ["a", "b", "c", "d", "initial_v", "initial_u"]:
+    model_raw = raw.get("model", defaults.get("model", "izhikevich-2003"))
+    if not isinstance(model_raw, str):
+        raise ValueError(
+            f"neuron.model must be a string, got {type(model_raw).__name__}"
+        )
+    aliases = {
+        "izh": "izhikevich-2003",
+        "izhikevich": "izhikevich-2003",
+        "izhikevich-2003": "izhikevich-2003",
+        "lif": "lif-current-v1",
+        "leaky-integrate-and-fire": "lif-current-v1",
+        "lif-current-v1": "lif-current-v1",
+    }
+    try:
+        result["model"] = aliases[model_raw.strip().lower()]
+    except KeyError as exc:
+        raise ValueError(
+            f"unsupported neuron.model {model_raw!r}; expected izhikevich or lif"
+        ) from exc
+
+    numeric_keys = (
+        "a",
+        "b",
+        "c",
+        "d",
+        "initial_v",
+        "initial_u",
+        "izhikevich_threshold",
+        "lif_resting_potential",
+        "lif_tau_m_ms",
+        "lif_resistance",
+        "lif_threshold",
+        "lif_reset",
+    )
+    for key in numeric_keys:
         value = raw.get(key, defaults.get(key))
-        if value is None:
-            continue
         if not isinstance(value, (int, float)):
-            raise ValueError(
-                f"neuron.{key} must be numeric, got {type(value).__name__}"
-            )
+            raise ValueError(f"neuron.{key} must be numeric")
         result[key] = float(value)  # type: ignore[literal-required]
+
+    if result["lif_tau_m_ms"] <= 0.0:
+        raise ValueError("neuron.lif_tau_m_ms must be > 0")
+
+    refractory = raw.get("refractory_ticks", defaults.get("refractory_ticks", 0))
+    if not isinstance(refractory, (int, float)):
+        raise ValueError("neuron.refractory_ticks must be numeric")
+    result["refractory_ticks"] = int(refractory)
+    if result["refractory_ticks"] < 0:
+        raise ValueError("neuron.refractory_ticks must be >= 0")
+
+    for key in (
+        "enable_threshold_adaptation",
+        "enable_energy_dynamics",
+        "enable_traces",
+        "enable_homeostasis",
+    ):
+        value = raw.get(key, defaults.get(key, True))
+        if not isinstance(value, bool):
+            raise ValueError(f"neuron.{key} must be a boolean")
+        result[key] = value  # type: ignore[literal-required]
 
     return result
 
@@ -854,6 +928,12 @@ def validate_config(config: ConfigDict) -> None:
     if net:
         _validate_network_config(
             cast("dict[str, Any]", net), cast("NetworkConfig", defaults["network"])
+        )
+
+    neuron = config.get("neuron")
+    if neuron:
+        _validate_neuron_config(
+            cast("dict[str, Any]", neuron), cast("NeuronConfig", defaults["neuron"])
         )
 
 

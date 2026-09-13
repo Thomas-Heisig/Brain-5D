@@ -21,7 +21,7 @@ import random
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from .neuron import Neuron, NeuronConfig, NeuronType, create_neuron
 from .spatial_index import (
@@ -106,6 +106,16 @@ class Brain5DConfig:
         sim = data.get("simulation", {})
         topo = data.get("topology", {})
         net = data.get("network", {})
+        neuron_data = cast(dict[str, Any], data.get("neuron", {}))
+        energy_data = cast(dict[str, Any], data.get("energy", {}))
+        neuron_payload = dict(neuron_data)
+        neuron_payload.setdefault("dt_ms", float(sim.get("dt_ms", 1.0)))
+        neuron_payload["spike_cost"] = float(
+            energy_data.get("spike_cost", neuron_payload.get("spike_cost", 0.001))
+        )
+        neuron_payload["resting_energy"] = float(
+            energy_data.get("initial", neuron_payload.get("resting_energy", 1.0))
+        )
 
         return cls(
             dimensions=tuple(dims),
@@ -128,16 +138,7 @@ class Brain5DConfig:
                 ),
                 neighbour_radius=float(net.get("neighbour_radius", 5.0)),
             ),
-            neuron=NeuronConfig(
-                a=float(data.get("neuron", {}).get("a", 0.02)),
-                b=float(data.get("neuron", {}).get("b", 0.2)),
-                c=float(data.get("neuron", {}).get("c", -65.0)),
-                d=float(data.get("neuron", {}).get("d", 8.0)),
-                initial_v=float(data.get("neuron", {}).get("initial_v", -65.0)),
-                initial_u=float(data.get("neuron", {}).get("initial_u", -13.0)),
-                spike_cost=float(data.get("energy", {}).get("spike_cost", 0.001)),
-                resting_energy=float(data.get("energy", {}).get("initial", 1.0)),
-            ),
+            neuron=NeuronConfig.from_dict(neuron_payload),
             synapse=SynapseConfig(
                 a_plus=float(data.get("stdp", {}).get("a_plus", 0.1)),
                 a_minus=float(data.get("stdp", {}).get("a_minus", 0.12)),
