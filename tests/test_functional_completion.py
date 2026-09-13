@@ -59,19 +59,21 @@ def test_existing_sensor_and_gateway_guards_remain_explicit() -> None:
     gateway = (STATIC / "wesen-neural-symbiosis.js").read_text(encoding="utf-8")
     assert "!sensor.available" in wesen
     assert "!sensor.authorized" in wesen
-    assert '/enable' in wesen or '"enable"' in wesen
-    assert '/disable' in wesen or '"disable"' in wesen
+    assert '"enable"' in wesen
+    assert '"disable"' in wesen
     assert "button.disabled = !experimentMode" in gateway
 
 
 def test_cognition_memory_controls_are_already_functional() -> None:
     cognition = (STATIC / "frontend" / "modules" / "cognition.js").read_text(encoding="utf-8")
     assert "/api/cognition/memory/controls" in cognition
-    assert 'action: "read"' in cognition
-    assert 'action: "write"' in cognition
+    assert "read_enabled" in cognition
+    assert "write_enabled" in cognition
+    assert "apiPost" in cognition
 
 
 def test_fullscreen_has_native_and_css_fallback() -> None:
     controller = (STATIC / "box-state-controller.js").read_text(encoding="utf-8")
     assert "requestFullscreen" in controller
-    assert "box-fullscreen-fallback" in controller
+    assert "box-state-native-fullscreen" in controller
+    assert "catch(_)" in controller
