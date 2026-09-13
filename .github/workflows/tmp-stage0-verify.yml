@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .github/workflows/tmp-stage0-verify.yml scripts/tmp_stage0_integrate.py
+          git rm -f .github/workflows/tmp-stage0-verify.yml scripts/tmp_stage0_integrate.py
           git add src/core/network.py src/config/loader.py src/dashboard/development_timeline.py tests/test_single_neuron_contract.py research/generated/verification/single_neuron_reference.json src/core/neuron.py src/core/neuron_models.py
           git commit -m "feat(neuron): integrate selectable model contract end to end"
           git push origin HEAD:feature/single-neuron-model-contract
