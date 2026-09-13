@@ -170,7 +170,7 @@ function ensureGeneratedWorkspaces() {
 function overviewMarkup(areaId, area) {
   const routes = area.routes.filter(([id]) => id !== "overview");
   return `<section class="mhrn-area-overview" data-area-overview="${areaId}">
-    <div class="mhrn-area-overview-breadcrumb"><span class="mhrn-breadcrumb-area">${area.number} · ${area.label}</span><span class="mhrn-breadcrumb-divider">/</span><span class="mhrn-breadcrumb-current">Übersicht</span><span class="mhrn-breadcrumb-count">${routes.length} Unterbereiche</span></div>
+    <div class="mhrn-area-overview-breadcrumb"><span class="mhrn-breadcrumb-area">${area.number} · ${area.label}</span><span class="mhrn-breadcrumb-divider">/</span><span class="mhrn-breadcrumb-current">Übersicht</span><span class="mhrn-breadcrumb-pipe">|</span><span class="mhrn-breadcrumb-count">${routes.length} Unterbereiche</span></div>
     <div class="mhrn-area-overview-grid"><article><h3>How to</h3><ol>${area.howto.map((item) => `<li>${item}</li>`).join("")}</ol></article><article><h3>Backend-Verträge</h3><div class="mhrn-contract-list">${area.contracts.map((endpoint) => `<div data-contract="${endpoint}"><code>${endpoint}</code><span>prüfe …</span></div>`).join("")}</div></article></div>
     <div class="mhrn-area-route-grid">${routes.map(([id,label], index) => `<button type="button" data-route-card="${id}" title="${label} öffnen"><span>${String(index + 1).padStart(2,"0")}</span><strong>${label}</strong></button>`).join("")}</div>
   </section>`;
