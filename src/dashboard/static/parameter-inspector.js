@@ -4,11 +4,77 @@
  * Displays runtime/config parameters, lets operators propose changes,
  * and manages the pending-changes workflow (apply / apply+save / cancel).
  *
- * @version 1.0.0
+ * The dedicated neuron model editor intentionally stages changes through the
+ * same ParameterAPI. Model selection therefore keeps the existing provenance,
+ * scientific-sensitivity and restart semantics instead of bypassing them.
+ *
+ * @version 1.1.0
  * @license MIT
  */
 
 "use strict";
+
+const NEURON_MODEL_CATALOG = Object.freeze({
+  "izhikevich-2003": Object.freeze({
+    label: "Izhikevich 2003",
+    version: "mhrn-1.0",
+    maturity: "canonical",
+    equation: "Izhikevich two-variable spiking model",
+    note: "Canonical Stage-0 reference model. Model changes require a new run/restart.",
+    fields: [
+      "neuron.a",
+      "neuron.b",
+      "neuron.c",
+      "neuron.d",
+      "neuron.initial_v",
+      "neuron.initial_u",
+      "neuron.izhikevich_threshold",
+    ],
+  }),
+  "lif-current-v1": Object.freeze({
+    label: "Current-based LIF",
+    version: "mhrn-1.0",
+    maturity: "experimental",
+    equation: "Current-based leaky integrate-and-fire",
+    note: "Alternative experimental treatment. Selecting it is a scientific condition change and requires a new run/restart.",
+    fields: [
+      "neuron.initial_v",
+      "neuron.lif_resting_potential",
+      "neuron.lif_tau_m_ms",
+      "neuron.lif_resistance",
+      "neuron.lif_threshold",
+      "neuron.lif_reset",
+    ],
+  }),
+});
+
+const COMMON_NEURON_FIELDS = Object.freeze([
+  "neuron.refractory_ticks",
+  "neuron.enable_threshold_adaptation",
+  "neuron.enable_energy_dynamics",
+  "neuron.enable_traces",
+  "neuron.enable_homeostasis",
+]);
+
+const NEURON_FIELD_LABELS = Object.freeze({
+  "neuron.a": "a · recovery time scale",
+  "neuron.b": "b · recovery sensitivity",
+  "neuron.c": "c · reset potential",
+  "neuron.d": "d · recovery reset increment",
+  "neuron.initial_v": "Initial membrane potential",
+  "neuron.initial_u": "Initial recovery variable",
+  "neuron.izhikevich_threshold": "Spike threshold",
+  "neuron.lif_resting_potential": "Resting potential",
+  "neuron.lif_tau_m_ms": "Membrane time constant",
+  "neuron.lif_resistance": "Input resistance",
+  "neuron.lif_threshold": "Spike threshold",
+  "neuron.lif_reset": "Reset potential",
+  "neuron.refractory_ticks": "Absolute refractory ticks",
+  "neuron.enable_threshold_adaptation": "Threshold adaptation",
+  "neuron.enable_energy_dynamics": "Energy dynamics",
+  "neuron.enable_traces": "STDP traces",
+  "neuron.enable_homeostasis": "Homeostatic regulation",
+});
 
 function byId(id) {
   return document.getElementById(id);
@@ -108,6 +174,8 @@ export class ParameterInspector {
     this.filter = "";
     this.commandInFlight = false;
 
+    this._ensureNeuronModelUI();
+
     this._elements = {
       tableBody: byId("parameter-table-body"),
       search: byId("parameter-search"),
@@ -119,9 +187,87 @@ export class ParameterInspector {
       saveProfileBtn: byId("pending-save-profile"),
       cancelBtn: byId("pending-cancel"),
       historyList: byId("change-history-list"),
+      neuronCard: byId("neuron-model-settings"),
+      neuronModel: byId("neuron-model-select"),
+      neuronMaturity: byId("neuron-model-maturity"),
+      neuronVersion: byId("neuron-model-version"),
+      neuronEquation: byId("neuron-model-equation"),
+      neuronNotice: byId("neuron-model-notice"),
+      neuronFields: byId("neuron-model-fields"),
+      neuronStage: byId("neuron-model-stage"),
+      neuronFocus: byId("neuron-model-focus-parameters"),
+      neuronStatus: byId("neuron-model-status"),
     };
 
     this._bindEvents();
+  }
+
+  _ensureNeuronModelUI() {
+    if (!document.querySelector('link[data-neuron-model-settings]')) {
+      const stylesheet = document.createElement("link");
+      stylesheet.rel = "stylesheet";
+      stylesheet.href = "/neuron-model-settings.css";
+      stylesheet.dataset.neuronModelSettings = "true";
+      document.head.appendChild(stylesheet);
+    }
+
+    const filterRoot = byId("settings-domain-filter");
+    if (filterRoot && !filterRoot.querySelector('[data-settings-filter="neuron."]')) {
+      const neuronFilter = document.createElement("button");
+      neuronFilter.type = "button";
+      neuronFilter.dataset.settingsFilter = "neuron.";
+      neuronFilter.textContent = "Neuron";
+      const networkButton = filterRoot.querySelector('[data-settings-filter="network."]');
+      if (networkButton?.nextSibling) {
+        filterRoot.insertBefore(neuronFilter, networkButton.nextSibling);
+      } else {
+        filterRoot.appendChild(neuronFilter);
+      }
+    }
+
+    if (byId("neuron-model-settings")) return;
+    const parameterCard = byId("parameter-inspector-card");
+    if (!parameterCard?.parentElement) return;
+
+    const card = document.createElement("section");
+    card.className = "card neuron-model-settings";
+    card.id = "neuron-model-settings";
+    card.setAttribute("aria-labelledby", "neuron-model-settings-title");
+    card.innerHTML = `
+      <div class="panel-title neuron-model-settings__header">
+        <div>
+          <span class="workspace-kicker">STAGE 0 · SINGLE CELL</span>
+          <h2 id="neuron-model-settings-title">Neuron / Cell Model</h2>
+          <p class="panel-subtitle">Select the membrane model and stage scientifically sensitive construction parameters.</p>
+        </div>
+        <div class="neuron-model-provenance" aria-label="Model provenance">
+          <span id="neuron-model-maturity" class="neuron-model-badge">unknown</span>
+          <span><b id="neuron-model-version">—</b><small>implementation</small></span>
+        </div>
+      </div>
+      <div class="neuron-model-selector-row">
+        <label for="neuron-model-select">Dynamics model
+          <select id="neuron-model-select" aria-describedby="neuron-model-notice">
+            <option value="izhikevich-2003">Izhikevich 2003 · canonical</option>
+            <option value="lif-current-v1">Current-based LIF · experimental</option>
+          </select>
+        </label>
+        <div class="neuron-model-equation">
+          <span>Equation family</span>
+          <strong id="neuron-model-equation">—</strong>
+        </div>
+      </div>
+      <div id="neuron-model-notice" class="neuron-model-warning" role="note">
+        Model and construction parameter changes are scientifically sensitive and require a new run/restart. Existing live neuron state is not silently rewritten.
+      </div>
+      <div id="neuron-model-fields" class="neuron-model-fields" aria-live="polite"></div>
+      <div class="neuron-model-actions">
+        <span id="neuron-model-status" class="neuron-model-status">Load parameters to edit the Stage-0 cell model.</span>
+        <button id="neuron-model-focus-parameters" type="button" class="btn-secondary">Show raw neuron parameters</button>
+        <button id="neuron-model-stage" type="button" class="btn-primary">Stage neuron changes</button>
+      </div>
+    `;
+    parameterCard.parentElement.insertBefore(card, parameterCard);
   }
 
   _bindEvents() {
@@ -148,6 +294,18 @@ export class ParameterInspector {
       this._elements.cancelBtn.addEventListener("click", () => this._cancel());
     }
 
+    if (this._elements.neuronModel) {
+      this._elements.neuronModel.addEventListener("change", () => this._renderNeuronModelEditor());
+    }
+
+    if (this._elements.neuronStage) {
+      this._elements.neuronStage.addEventListener("click", () => this._stageNeuronModelChanges());
+    }
+
+    if (this._elements.neuronFocus) {
+      this._elements.neuronFocus.addEventListener("click", () => this._focusNeuronParameters());
+    }
+
     const table = byId("parameter-table");
     if (table) {
       table.addEventListener("click", (e) => this._handleTableClick(e));
@@ -164,6 +322,7 @@ export class ParameterInspector {
       this._render();
     } catch (error) {
       this._log(`Failed to load parameters: ${error.message}`, "error");
+      this._setNeuronStatus(`Failed to load neuron settings: ${error.message}`, "error");
     }
   }
 
@@ -201,7 +360,7 @@ export class ParameterInspector {
 
     let value;
     try {
-      value = this._parseInput(raw, parameter);
+      value = this._parseInput(raw, parameter, name);
     } catch (error) {
       this._log(`Invalid value for ${name}: ${error.message}`, "error");
       return;
@@ -262,16 +421,29 @@ export class ParameterInspector {
     }
   }
 
-  _parseInput(raw, parameter) {
+  _parseInput(raw, parameter, name = parameter?.name || "") {
     if (typeof parameter.value === "boolean") {
-      return ["true", "1", "yes", "on"].includes(raw.toLowerCase());
+      const normalized = raw.toLowerCase().trim();
+      if (!["true", "1", "yes", "on", "false", "0", "no", "off"].includes(normalized)) {
+        throw new Error("expected true/false");
+      }
+      return ["true", "1", "yes", "on"].includes(normalized);
     }
     if (typeof parameter.value === "number") {
       const num = Number(raw);
-      if (!Number.isFinite(num)) throw new Error("not a number");
+      if (!Number.isFinite(num)) throw new Error("not a finite number");
+      if (parameter.min !== null && parameter.min !== undefined && num < Number(parameter.min)) {
+        throw new Error(`must be >= ${parameter.min}`);
+      }
+      if (parameter.max !== null && parameter.max !== undefined && num > Number(parameter.max)) {
+        throw new Error(`must be <= ${parameter.max}`);
+      }
       return Number.isInteger(parameter.value) ? Math.trunc(num) : num;
     }
     if (typeof parameter.value === "string") {
+      if (name === "neuron.model" && !Object.hasOwn(NEURON_MODEL_CATALOG, raw)) {
+        throw new Error(`unsupported neuron model '${raw}'`);
+      }
       return raw;
     }
     try {
@@ -281,10 +453,171 @@ export class ParameterInspector {
     }
   }
 
+  _effectiveParameterValue(name) {
+    const pending = this.pending[name];
+    if (pending && Object.hasOwn(pending, "proposed_value")) return pending.proposed_value;
+    return this.parameters[name]?.value;
+  }
+
+  _renderNeuronModelEditor() {
+    const select = this._elements.neuronModel;
+    const fieldsRoot = this._elements.neuronFields;
+    if (!select || !fieldsRoot) return;
+
+    const configuredModel = this._effectiveParameterValue("neuron.model");
+    if (!select.dataset.userTouched && configuredModel && Object.hasOwn(NEURON_MODEL_CATALOG, configuredModel)) {
+      select.value = configuredModel;
+    }
+    select.oninput = () => {
+      select.dataset.userTouched = "true";
+    };
+
+    const selectedModel = Object.hasOwn(NEURON_MODEL_CATALOG, select.value)
+      ? select.value
+      : "izhikevich-2003";
+    const descriptor = NEURON_MODEL_CATALOG[selectedModel];
+
+    if (this._elements.neuronMaturity) {
+      this._elements.neuronMaturity.textContent = descriptor.maturity;
+      this._elements.neuronMaturity.dataset.maturity = descriptor.maturity;
+    }
+    if (this._elements.neuronVersion) this._elements.neuronVersion.textContent = descriptor.version;
+    if (this._elements.neuronEquation) this._elements.neuronEquation.textContent = descriptor.equation;
+    if (this._elements.neuronNotice) this._elements.neuronNotice.textContent = descriptor.note;
+
+    const names = [...descriptor.fields, ...COMMON_NEURON_FIELDS];
+    fieldsRoot.innerHTML = names.map((name) => this._renderNeuronField(name)).join("");
+
+    const modelPending = this.pending["neuron.model"];
+    const modelChanged = modelPending
+      ? modelPending.proposed_value !== this.parameters["neuron.model"]?.value
+      : selectedModel !== configuredModel;
+    this._setNeuronStatus(
+      modelChanged
+        ? "Model treatment differs from the active configuration. Stage changes, then apply through the global pending-change bar."
+        : "Editor is synchronized with the active/pending neuron configuration.",
+      modelChanged ? "warning" : "ok"
+    );
+  }
+
+  _renderNeuronField(name) {
+    const parameter = this.parameters[name];
+    if (!parameter) {
+      return `<label class="neuron-model-field neuron-model-field--missing"><span>${escapeHtml(NEURON_FIELD_LABELS[name] || name)}</span><input disabled value="not exposed" /></label>`;
+    }
+
+    const value = this._effectiveParameterValue(name);
+    const label = NEURON_FIELD_LABELS[name] || name;
+    const pending = this.pending[name];
+    const pendingBadge = pending ? '<small class="neuron-field-pending">pending</small>' : "";
+
+    if (typeof parameter.value === "boolean") {
+      return `
+        <label class="neuron-model-field neuron-model-field--toggle" title="${escapeHtml(parameter.description || name)}">
+          <span>${escapeHtml(label)} ${pendingBadge}</span>
+          <input type="checkbox" data-neuron-parameter="${escapeHtml(name)}" ${value ? "checked" : ""} />
+        </label>
+      `;
+    }
+
+    const min = parameter.min !== null && parameter.min !== undefined ? ` min="${escapeHtml(parameter.min)}"` : "";
+    const max = parameter.max !== null && parameter.max !== undefined ? ` max="${escapeHtml(parameter.max)}"` : "";
+    const step = Number.isInteger(parameter.value) ? "1" : "any";
+    const unit = parameter.unit ? `<small>${escapeHtml(parameter.unit)}</small>` : "";
+    return `
+      <label class="neuron-model-field" title="${escapeHtml(parameter.description || name)}">
+        <span>${escapeHtml(label)} ${pendingBadge}</span>
+        <div class="neuron-model-field__input">
+          <input type="number" data-neuron-parameter="${escapeHtml(name)}" value="${escapeHtml(value)}" step="${step}"${min}${max} />
+          ${unit}
+        </div>
+      </label>
+    `;
+  }
+
+  async _stageNeuronModelChanges() {
+    if (this.commandInFlight) return;
+    const select = this._elements.neuronModel;
+    const fieldsRoot = this._elements.neuronFields;
+    if (!select || !fieldsRoot) return;
+
+    const model = select.value;
+    if (!Object.hasOwn(NEURON_MODEL_CATALOG, model)) {
+      this._setNeuronStatus(`Unsupported neuron model: ${model}`, "error");
+      return;
+    }
+
+    const proposals = [];
+    const modelParameter = this.parameters["neuron.model"];
+    if (!modelParameter) {
+      this._setNeuronStatus("neuron.model is not exposed by the runtime configuration.", "error");
+      return;
+    }
+    if (this._effectiveParameterValue("neuron.model") !== model) {
+      proposals.push(["neuron.model", model]);
+    }
+
+    for (const input of fieldsRoot.querySelectorAll("[data-neuron-parameter]")) {
+      const name = input.dataset.neuronParameter;
+      const parameter = this.parameters[name];
+      if (!name || !parameter) continue;
+
+      let value;
+      try {
+        value = typeof parameter.value === "boolean"
+          ? Boolean(input.checked)
+          : this._parseInput(input.value, parameter, name);
+      } catch (error) {
+        this._setNeuronStatus(`${name}: ${error.message}`, "error");
+        input.focus();
+        return;
+      }
+
+      if (value !== this._effectiveParameterValue(name)) proposals.push([name, value]);
+    }
+
+    if (proposals.length === 0) {
+      this._setNeuronStatus("No neuron changes to stage.", "ok");
+      return;
+    }
+
+    this.commandInFlight = true;
+    this._elements.neuronStage.disabled = true;
+    try {
+      for (const [name, value] of proposals) {
+        await ParameterAPI.proposeChange(name, value);
+      }
+      delete select.dataset.userTouched;
+      this._log(`Staged ${proposals.length} neuron parameter change(s)`, "info");
+      this._setNeuronStatus(`Staged ${proposals.length} change(s). Review and apply them below; restart/new run is required for fixed model parameters.`, "warning");
+      await this.refresh();
+    } catch (error) {
+      this._setNeuronStatus(`Failed to stage neuron changes: ${error.message}`, "error");
+      this._log(`Failed to stage neuron changes: ${error.message}`, "error");
+    } finally {
+      this.commandInFlight = false;
+      this._elements.neuronStage.disabled = false;
+    }
+  }
+
+  _focusNeuronParameters() {
+    if (!this._elements.search) return;
+    this._elements.search.value = "neuron.";
+    this._elements.search.dispatchEvent(new Event("input", { bubbles: true }));
+    byId("parameter-inspector-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  _setNeuronStatus(message, state = "ok") {
+    if (!this._elements?.neuronStatus) return;
+    this._elements.neuronStatus.textContent = message;
+    this._elements.neuronStatus.dataset.state = state;
+  }
+
   _render() {
     this._renderTable();
     this._renderPendingBar();
     this._renderHistory();
+    this._renderNeuronModelEditor();
   }
 
   _renderTable() {
