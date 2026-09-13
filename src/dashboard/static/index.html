@@ -683,33 +683,35 @@
         </section>
 
         <section class="release-view-panel release-timeline-panel" data-release-view="timeline" data-workspace-panel hidden aria-labelledby="release-timeline-title">
-          <div class="release-timeline-header">
+          <header class="release-timeline-header">
             <div>
               <span class="workspace-kicker">PROJECT RECORD</span>
               <h2 id="release-timeline-title">Product Timeline</h2>
               <p class="release-subtitle">Chronologisch vom frühesten dokumentierten Release bis zum aktuellen Stand und offenen Backlog.</p>
             </div>
             <span class="release-timeline-count" id="release-timeline-count">Loading...</span>
-          </div>
+          </header>
           <div class="release-timeline-sources" id="release-timeline-sources" aria-label="Timeline sources"></div>
-          <div class="development-track-inline" id="release-development-track" aria-label="Development timeline"></div>
-          <div class="release-timeline-list" id="release-timeline-list" aria-live="polite"></div>
+          <div class="release-timeline-body" id="release-timeline-list" aria-live="polite"></div>
         </section>
 
         <section class="release-view-panel development-timeline-panel" data-release-view="development" data-workspace-panel hidden aria-labelledby="development-timeline-title">
-          <div class="release-timeline-header">
+          <header class="release-timeline-header">
             <div>
               <span class="workspace-kicker">ENGINEERING MATURITY</span>
               <h2 id="development-timeline-title">Entwicklungs-Timeline</h2>
               <p class="release-subtitle">Repository-basierte technische Reife, technische Verifikation und wissenschaftliche Evidenz bleiben getrennt.</p>
             </div>
             <span class="release-timeline-count" id="development-timeline-updated">Loading...</span>
+          </header>
+          <div class="development-notice" id="development-timeline-notice"></div>
+          <div class="development-summary-grid" id="development-score-grid"></div>
+          <div class="dev-horiz-track-wrap">
+            <div class="dev-horiz-track" id="development-timeline-track" role="list" aria-label="Entwicklungsstufen"></div>
           </div>
-          <div class="development-timeline-notice" id="development-timeline-notice"></div>
-          <div class="development-score-grid" id="development-score-grid"></div>
-          <div class="development-track" id="development-timeline-track"></div>
-          <div class="development-runtime-grid" id="development-runtime-grid"></div>
-          <div class="development-scale-grid" id="development-scale-grid"></div>
+          <div class="dev-horiz-scale-wrap">
+            <div class="dev-horiz-scales" id="development-scale-grid"></div>
+          </div>
           <div class="development-stage-list" id="development-stage-list" aria-live="polite"></div>
           <aside class="development-detail" id="development-detail" hidden></aside>
         </section>

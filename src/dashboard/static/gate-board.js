@@ -214,29 +214,47 @@ function renderTimelineEntry(entry) {
     : [];
   const checks = items.filter((item) => typeof item.done === 'boolean');
   const completed = checks.filter((item) => item.done).length;
-  const itemMarkup = items.slice(0, 5).map((item) => `
+  const progress = checks.length ? `${completed}/${checks.length} erledigt` : '';
+  const visible = items.slice(0, 3);
+  const extra = items.slice(3);
+  const hasExtra = extra.length > 0;
+  const extraId = `timeline-extra-${String(entry.title || '').replace(/\s+/g, '-').toLowerCase()}`;
+
+  const itemMarkup = (list) => list.map((item) => `
     <li class="${item.done === true ? 'is-done' : ''}">
       <span class="timeline-item-mark">${item.done === true ? '✓' : '·'}</span>
       <span>${escapeHtml(item.text)}</span>
     </li>
   `).join('');
-  const remaining = items.length - Math.min(items.length, 5);
-  const progress = checks.length ? `${completed}/${checks.length} erledigt` : '';
+
   return `
-    <article class="release-timeline-entry release-timeline-entry-${phase.key} ${entry.date ? '' : 'is-undated'}">
-      <div class="release-timeline-marker" aria-hidden="true"></div>
-      <div class="release-timeline-date">${escapeHtml(formatTimelineDate(entry.date))}</div>
-      <div class="release-timeline-content">
-        <div class="release-timeline-entry-header">
-          <h3>${escapeHtml(entry.title)}</h3>
-          <span class="release-timeline-progress">${escapeHtml(progress)}</span>
+    <article class="timeline-entry timeline-entry-${phase.key} ${entry.date ? '' : 'is-undated'}">
+      <div class="timeline-marker" aria-hidden="true"></div>
+      <div class="timeline-card">
+        <div class="timeline-card-header">
+          <div>
+            <h3>${escapeHtml(entry.title)}</h3>
+            <span class="timeline-date">${escapeHtml(formatTimelineDate(entry.date))}</span>
+          </div>
+          <span class="timeline-phase-badge timeline-phase-${phase.key}">${phase.label}</span>
         </div>
-        <span class="release-timeline-phase-badge release-timeline-phase-badge-${phase.key}">${phase.label}</span>
-        <div class="release-timeline-tags">
+        <div class="timeline-tags">
           ${(entry.sources || []).map((source) => `<span>${escapeHtml(source)}</span>`).join('')}
         </div>
-        ${items.length ? `<ul>${itemMarkup}</ul>` : ''}
-        ${remaining > 0 ? `<p class="release-timeline-more">+${remaining} weitere Punkte in den Quelldokumenten</p>` : ''}
+        ${items.length ? `
+          <ul class="timeline-items">
+            ${itemMarkup(visible)}
+          </ul>
+          ${hasExtra ? `
+            <div class="timeline-items-extra" id="${extraId}">
+              <ul class="timeline-items">
+                ${itemMarkup(extra)}
+              </ul>
+            </div>
+            <button type="button" class="timeline-more-btn" data-timeline-extra="${extraId}" aria-expanded="false">+${extra.length} weitere</button>
+          ` : ''}
+        ` : ''}
+        ${progress ? `<span class="timeline-progress">${escapeHtml(progress)}</span>` : ''}
       </div>
     </article>
   `;
@@ -259,32 +277,39 @@ function renderReleaseTimeline(entries, sources, asOf) {
   }
 
   if (!entries.length) {
-    list.innerHTML = '<p class="release-timeline-empty">No timeline entries available.</p>';
+    list.innerHTML = '<p class="timeline-empty">Keine Timeline-Einträge verfügbar.</p>';
     return;
   }
 
-  const groups = { past: [], current: [], future: [] };
-  for (const entry of entries) {
-    const phase = groups[entry.phase] ? entry.phase : 'current';
-    groups[phase].push(entry);
-  }
   const chronological = [...entries].sort((a, b) => {
     const dateA = a.date || '9999-12-31';
     const dateB = b.date || '9999-12-31';
     return dateA.localeCompare(dateB) || String(a.title || '').localeCompare(String(b.title || ''));
   });
+
   list.innerHTML = `
-    <div class="release-timeline-phase-summary">
-      ${TIMELINE_PHASES.map((phase) => `
-        <div class="release-timeline-phase-summary-item release-timeline-phase-${phase.key}" data-timeline-phase="${phase.key}">
-          <span>${phase.label}</span><strong>${groups[phase.key].length}</strong><small>${phase.hint}</small>
-        </div>
-      `).join('')}
-    </div>
-    <div class="release-timeline-chronological">
+    <div class="timeline-vertical">
       ${chronological.map(renderTimelineEntry).join('')}
     </div>
   `;
+
+  // "Mehr anzeigen" Toggle
+  list.querySelectorAll('[data-timeline-extra]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.timelineExtra);
+      if (!target) return;
+      const isOpen = target.classList.toggle('is-open');
+      btn.classList.toggle('is-open', isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+      btn.textContent = isOpen ? 'weniger' : `+${extraCount(btn)} weitere`;
+    });
+  });
+}
+
+function extraCount(btn) {
+  const target = document.getElementById(btn.dataset.timelineExtra);
+  if (!target) return 0;
+  return target.querySelectorAll('li').length;
 }
 
 function scorePercent(value) {
@@ -332,30 +357,25 @@ function renderDevelopmentTrack(data, containerId) {
   const container = $(containerId);
   if (!container) return;
   const stages = Array.isArray(data.stages) ? data.stages : [];
-  const technicalPosition = Math.max(0, Math.min(10, Number(data.current_stage) || 0)) * 10;
-  const scientificPosition = Math.max(0, Math.min(10, Number(data.scientific_stage) || 0)) * 10;
-  container.innerHTML = `
-    <div class="development-track-header">
-      <span>Entwicklung</span>
-      <small>Maschinenlesbare Repository-Klassifikation</small>
-    </div>
-    <div class="development-track-line" role="list" aria-label="Entwicklungsstufen">
-      ${stages.map((stage) => `
-        <button type="button" class="development-track-node development-track-node-${escapeHtml(stage.status || 'planned')}" data-development-stage="${stage.stage}" role="listitem" title="Stufe ${stage.stage}: ${escapeHtml(stage.name)}">
-          <span class="development-track-node-dot"></span>
-          <span class="development-track-node-label">${escapeHtml(stage.short_label || stage.name)}</span>
-        </button>
-      `).join('')}
-      <span class="development-marker development-marker-technical" data-marker-position="${technicalPosition}" aria-label="Du bist hier: ${escapeHtml(data.current_label || '')}">
-        <strong>Du bist hier</strong>
-        <small>${escapeHtml(data.current_label || '')}</small>
-      </span>
-      <span class="development-marker development-marker-scientific" data-marker-position="${scientificPosition}" aria-label="Wissenschaftlich hier: ${escapeHtml(data.scientific_label || '')}">
-        <strong>Wissenschaftlich hier</strong>
-        <small>${escapeHtml(data.scientific_label || '')}</small>
-      </span>
-    </div>
-  `;
+  const technicalIdx = Math.max(0, Math.min(stages.length - 1, Number(data.current_stage) || 0));
+  const scientificIdx = Math.max(0, Math.min(stages.length - 1, Number(data.scientific_stage) || 0));
+
+  container.innerHTML = stages.map((stage, idx) => {
+    const isTech = idx === technicalIdx;
+    const isSci = idx === scientificIdx;
+    const status = stage.status || 'planned';
+    const score = Math.round(Math.max(0, Math.min(1, Number(stage.implementation_score) || 0)) * 100);
+    return `
+      <button type="button" class="dev-node dev-node-${escapeHtml(status)} ${isTech ? 'is-tech-here' : ''} ${isSci ? 'is-sci-here' : ''}" data-development-stage="${stage.stage}" role="listitem" title="Stufe ${stage.stage}: ${escapeHtml(stage.name)}">
+        <span class="dev-node-number">${stage.stage}</span>
+        <span class="dev-node-label">${escapeHtml(stage.short_label || stage.name)}</span>
+        <span class="dev-node-bar"><span class="dev-node-fill" style="width:${score}%"></span></span>
+        <span class="dev-node-status">${escapeHtml(status)}</span>
+        ${isTech ? '<span class="dev-node-marker dev-node-marker-tech">● hier</span>' : ''}
+        ${isSci && !isTech ? '<span class="dev-node-marker dev-node-marker-sci">○ Evidenz</span>' : ''}
+      </button>
+    `;
+  }).join('');
 }
 
 function renderDevelopmentDetail(stage) {
