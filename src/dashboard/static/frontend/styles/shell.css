@@ -30,15 +30,19 @@
 .fm-viewer-dialog-frame > header .icon-btn:hover { background: var(--paper-4); color: var(--ink); }
 .fm-viewer-content { flex: 1; overflow: auto; padding: 12px; }
 
-/* File tree: larger click areas */
-.fm-tree-item { padding: 3px 0; cursor: pointer; border-radius: var(--r-xs); }
+/* File tree: full-row click areas, no toggle arrow */
+.fm-tree-item { padding: 0; cursor: pointer; border-radius: var(--r-xs); list-style: none; }
 .fm-tree-item:hover { background: var(--paper-3); }
-.fm-tree-file { padding: 4px 6px; font-size: .78rem; display: flex; align-items: center; gap: 4px; }
+.fm-tree-dir { padding: 4px 6px; font-size: .78rem; font-weight: 600; user-select: none; }
+.fm-tree-dir:hover { background: var(--paper-3); }
+.fm-tree-dir.fm-dir-expanded { background: var(--accent-wash); }
+.fm-dir-label { display: inline; }
+.fm-tree-file { padding: 4px 6px 4px 22px; font-size: .78rem; display: flex; align-items: center; gap: 4px; }
 .fm-tree-file:hover { background: var(--accent-wash); }
-.fm-tree-dir { padding: 2px 0; }
-.fm-dir-label { cursor: pointer; padding: 2px 4px; border-radius: var(--r-xs); display: inline-block; }
-.fm-dir-label:hover { background: var(--paper-3); }
-.fm-file-size { margin-left: auto; color: var(--ink-4); font-size: .62rem; font-family: var(--font-mono); }
+.fm-file-size { margin-left: auto; color: var(--ink-4); font-size: .62rem; font-family: var(--font-mono); white-space: nowrap; }
+.fm-dir-toggle, .fm-dir-toggle-expanded { display: none; }
+.fm-tree-list { padding-left: 0; margin: 0; list-style: none; }
+.fm-tree-list .fm-tree-list { padding-left: 16px; }
 
 /* File viewer: error text colour */
 .fm-error-text { color: var(--crimson); }

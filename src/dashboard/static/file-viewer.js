@@ -441,16 +441,11 @@ function renderFMTree(node, container, depth) {
     if (child.type === 'directory') {
       li.className += ' fm-tree-dir';
       li.style.cursor = 'pointer';
-      const toggle = document.createElement('span');
-      toggle.className = 'fm-dir-toggle';
-      toggle.textContent = '▶';
-      toggle.style.pointerEvents = 'none';
 
       const label = document.createElement('span');
       label.className = 'fm-dir-label';
       label.textContent = '📁 ' + child.name;
 
-      li.appendChild(toggle);
       li.appendChild(label);
 
       const childContainer = document.createElement('div');
@@ -458,9 +453,9 @@ function renderFMTree(node, container, depth) {
 
       li.onclick = (event) => {
         if (event.target.closest('.fm-tree-file, .fm-dir-children')) return;
-        const expanded = !childContainer.classList.contains('is-hidden');
-        childContainer.classList.toggle('is-hidden', expanded);
-        toggle.classList.toggle('fm-dir-toggle-expanded', !expanded);
+        const expanded = childContainer.classList.contains('is-hidden');
+        childContainer.classList.toggle('is-hidden', !expanded);
+        li.classList.toggle('fm-dir-expanded', expanded);
         if (!childContainer.dataset.loaded) {
           renderFMTree(child, childContainer, depth + 1);
           childContainer.dataset.loaded = 'true';
@@ -470,6 +465,7 @@ function renderFMTree(node, container, depth) {
       li.appendChild(childContainer);
     } else {
       li.className += ' fm-tree-file';
+      li.style.cursor = 'pointer';
       const icon = child.is_image ? '🖼️' :
                    child.is_video ? '🎬' :
                    child.is_audio ? '🎵' :
@@ -481,7 +477,6 @@ function renderFMTree(node, container, depth) {
         event.stopPropagation();
         openFMFile(child.path);
       });
-      li.style.cursor = 'pointer';
     }
 
     ul.appendChild(li);
