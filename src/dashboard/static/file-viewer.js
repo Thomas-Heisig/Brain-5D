@@ -526,13 +526,8 @@ function renderFMTree(node, container, depth) {
         // Mark selection
         document.querySelectorAll('.fm-tree-selected').forEach(el => el.classList.remove('fm-tree-selected'));
         li.classList.add('fm-tree-selected');
-        // Store last selected path
         fmLastSelectedPath = child.path;
-        if (fmUsePopup) {
-          openFMFile(child.path);
-        } else {
-          showFolderInViewer(child.path, child);
-        }
+        openFMFile(child.path);
       });
     }
 
@@ -542,11 +537,43 @@ function renderFMTree(node, container, depth) {
   container.appendChild(ul);
 }
 
+// Cache for folder tree data to avoid repeated API calls
+let fmFolderCache = null;
+
+async function ensureFolderChildren(path) {
+  if (fmFolderCache) {
+    function findNode(node, targetPath) {
+      if (node.path === targetPath) return node;
+      if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
+      return null;
+    }
+    const found = findNode(fmFolderCache, path);
+    if (found && found.children) return found.children;
+  }
+  try {
+    const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
+    if (res.ok) {
+      const data = await res.json();
+      fmFolderCache = data;
+      function findNode(node, targetPath) {
+        if (node.path === targetPath) return node;
+        if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
+        return null;
+      }
+      const found = findNode(data, path);
+      if (found && found.children) return found.children;
+    }
+  } catch {}
+  return [];
+}
+
 // Show folder contents in the tab viewer (non-popup mode)
-function showFolderInViewer(path, node) {
+async function showFolderInViewer(path, node) {
   const viewer = document.getElementById('fm-viewer');
   if (!viewer) return;
   viewer.classList.remove('fm-viewer-hidden');
+  let items = node?.children || [];
+  if (!items.length) items = await ensureFolderChildren(path);
   // Build a list of items in this folder
   const items = node.children || [];
   let html = `<div class="fm-folder-viewer-header"><span class="workspace-kicker">ORDNERINHALT</span><strong>${escapeHtml(path)}</strong><span class="fm-folder-count">${items.length} Einträge</span></div>`;
@@ -576,21 +603,7 @@ function showFolderInViewer(path, node) {
     el.addEventListener('click', async () => {
       const itemPath = el.dataset.path;
       if (el.classList.contains('fm-folder-dir') || el.classList.contains('fm-folder-up')) {
-        // Load children for this directory
-        try {
-          const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
-          if (res.ok) {
-            const data = await res.json();
-            function findNode(node, targetPath) {
-              if (node.path === targetPath) return node;
-              if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
-              return null;
-            }
-            const found = findNode(data, itemPath);
-            if (found) showFolderInViewer(itemPath, found);
-            else showFolderInViewer(itemPath, { children: [] });
-          }
-        } catch { showFolderInViewer(itemPath, { children: [] }); }
+        await showFolderInViewer(itemPath, null);
       } else {
         openFMFile(itemPath);
       }
