@@ -521,35 +521,36 @@ canvas { display:block; width:100%; height:auto; border:1px solid var(--rule); b
 .wesen-live-dot[data-state="ok"],.wesen-connection-led.ok { background:var(--moss); box-shadow:0 0 0 3px var(--moss-wash); }
 .wesen-live-dot[data-state="warn"],.wesen-connection-led.warn { background:var(--amber); box-shadow:0 0 0 3px var(--amber-wash); }
 .wesen-live-dot[data-state="critical"],.wesen-connection-led.critical { background:var(--crimson); box-shadow:0 0 0 3px var(--crimson-wash); }
-.wesen-layout { display:grid; grid-template-columns:minmax(205px,250px) minmax(500px,1fr) minmax(250px,310px); gap:10px; align-items:start; }
-.wesen-sidebar { display:grid; gap:10px; }
+.wesen-layout { display:grid; grid-template-columns:220px minmax(420px,1fr) 260px; gap:8px; align-items:stretch; }
+.wesen-sidebar { display:grid; gap:8px; align-content:start; }
 .wesen-card,.wesen-stage-card,.wesen-console { overflow:hidden; }
-.wesen-card > header { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:9px 11px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
-.wesen-card > header span { color:var(--ink-3); font:700 .55rem/1 var(--font-mono); letter-spacing:.10em; }
-.wesen-card > header small { color:var(--ink-4); font-size:.58rem; }
-.wesen-metrics,.wesen-inspector-rows,.wesen-self-metrics { padding:7px 11px; }
-.wesen-metric,.wesen-inspector-rows > div,.wesen-self-metrics > div { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:29px; border-bottom:1px solid var(--rule); }
-.wesen-metric span,.wesen-inspector-rows span,.wesen-self-metrics span { color:var(--ink-3); font-size:.66rem; }
-.wesen-metric strong,.wesen-inspector-rows strong,.wesen-self-metrics strong { color:var(--ink); font:600 .65rem/1.2 var(--font-mono); }
-.wesen-spark-wrap { padding:7px 11px 11px; }
-.wesen-spark-wrap > div { display:flex; justify-content:space-between; color:var(--ink-3); font-size:.65rem; }
+.wesen-card > header { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 9px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+.wesen-card > header span { color:var(--ink-3); font:700 .52rem/1 var(--font-mono); letter-spacing:.08em; }
+.wesen-card > header small { color:var(--ink-4); font-size:.55rem; }
+.wesen-metrics,.wesen-inspector-rows,.wesen-self-metrics { padding:4px 9px; }
+.wesen-metric,.wesen-inspector-rows > div,.wesen-self-metrics > div { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:24px; border-bottom:1px solid var(--rule); }
+.wesen-metric span,.wesen-inspector-rows span,.wesen-self-metrics span { color:var(--ink-3); font-size:.62rem; }
+.wesen-metric strong,.wesen-inspector-rows strong,.wesen-self-metrics strong { color:var(--ink); font:600 .62rem/1.2 var(--font-mono); }
+.wesen-spark-wrap { padding:4px 9px 8px; }
+.wesen-spark-wrap > div { display:flex; justify-content:space-between; color:var(--ink-3); font-size:.62rem; }
 #wesen-recurrence-chart,#wesen-self-svg { width:100%; display:block; border:1px solid var(--rule); border-radius:var(--r-xs); background:var(--paper); }
-#wesen-recurrence-chart { height:58px; }
+#wesen-recurrence-chart { height:42px; }
 .wesen-chart-line { fill:none; stroke:var(--accent); stroke-width:1.5; }
 .wesen-chart-point { fill:var(--accent); }
 .wesen-chart-empty { fill:var(--ink-4); font-size:10px; }
-.wesen-view-controls { display:grid; grid-template-columns:1fr 1fr; gap:1px; padding:8px; background:var(--rule); }
-.wesen-view-controls button,.wesen-stage-actions button,#wesen-event-filters button { min-height:29px; border:0; border-radius:0; background:var(--paper-2); color:var(--ink-3); }
+.wesen-view-controls { display:grid; grid-template-columns:1fr 1fr; gap:1px; padding:6px; background:var(--rule); }
+.wesen-view-controls button,.wesen-stage-actions button,#wesen-event-filters button { min-height:26px; border:0; border-radius:0; background:var(--paper-2); color:var(--ink-3); font-size:.64rem; }
 .wesen-view-controls button.active,.wesen-stage-actions button.active,#wesen-event-filters button.active { color:var(--accent-2); background:var(--accent-wash); }
-.wesen-hint,.wesen-integrity-note { margin:0; padding:0 10px 10px; color:var(--ink-4); font-size:.64rem; }
-.wesen-adaptation { padding:9px 11px; }
+.wesen-hint,.wesen-integrity-note { margin:0; padding:0 9px 8px; color:var(--ink-4); font-size:.6rem; }
+.wesen-adaptation { padding:6px 9px; }
+.wesen-adaptation p { margin-top:3px; color:var(--ink-3); font-size:.62rem; }
 .wesen-adaptation p { margin-top:5px; color:var(--ink-3); font-size:.66rem; }
 .wesen-adaptation-state { display:flex; align-items:center; gap:7px; }
 .wesen-adaptation-state span { width:7px; height:7px; border-radius:50%; background:var(--ink-4); }
 .wesen-adaptation-state.ok span { background:var(--moss); }
 .wesen-adaptation-state.warn span { background:var(--amber); }
 .wesen-adaptation-state.critical span { background:var(--crimson); }
-.wesen-stage-card { min-height:690px; display:grid; grid-template-rows:auto minmax(500px,1fr) auto; }
+.wesen-stage-card { display:grid; grid-template-rows:auto minmax(380px,1fr) auto; }
 .wesen-stage-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 11px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
 .wesen-stage-toolbar > div:first-child { display:grid; gap:2px; }
 .wesen-stage-toolbar strong { font-family:var(--font-display); }
