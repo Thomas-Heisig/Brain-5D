@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Öffentliche Nur-Lese-Ansicht für MHRN Neural Symbiosis und Modalitätsspezifische Bahn-Architektur (MSBA).">
+  <title>MHRN · Neural Symbiosis · MSBA</title>
+  <link rel="stylesheet" href="/msba/msba.css">
+</head>
+<body>
+  <header class="masthead">
+    <div>
+      <a class="brand" href="/" aria-label="MHRN Dashboard">MHRN</a>
+      <span class="slash">/</span>
+      <span>Neural Symbiosis · MSBA</span>
+    </div>
+    <span class="publication-badge">PUBLIC · READ ONLY</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="msba-title">
+      <div>
+        <p class="eyebrow">CONTROLLED PERIPHERAL INTEGRATION</p>
+        <h1 id="msba-title">Neural Symbiosis · MSBA</h1>
+        <p class="lede">Kontrollierte Vermittlungsschicht mit modalitätsspezifischen Audio-, Vision- und Digitalbahnen sowie expliziter Ressourcenökonomie.</p>
+      </div>
+      <dl class="hero-status">
+        <div><dt>System</dt><dd id="status-system">lade …</dd></div>
+        <div><dt>Reife</dt><dd id="status-maturity">lade …</dd></div>
+        <div><dt>Gateway</dt><dd id="status-gateway">lade …</dd></div>
+        <div><dt>Modus</dt><dd>Nur-Lese-Publikation</dd></div>
+      </dl>
+    </section>
+
+    <aside class="boundary" aria-label="Wissenschaftliche Grenze">
+      <strong>Wissenschaftliche Grenze</strong>
+      <p>Pipeline-Erreichbarkeit ist keine Aktivierung. Implementierter Code ist keine empirische Evidenz. Gateway-Plastizität bleibt standardmäßig deaktiviert und erfordert einen expliziten, preregistrierten Experimentpfad mit Kontrollen und Human Review.</p>
+    </aside>
+
+    <nav class="section-nav" aria-label="MSBA Bereiche">
+      <a href="#modalities">Modalitäten</a>
+      <a href="#pipelines">Pipelines</a>
+      <a href="#gateway">Gateway</a>
+      <a href="#resources">Ressourcen</a>
+      <a href="#areas">Netzbereiche</a>
+      <a href="#provenance">Provenienz</a>
+    </nav>
+
+    <section id="modalities" class="section-block">
+      <header class="section-title"><div><span>01</span><h2>Modalitätsspezifische Bahnen</h2></div><p>Unterschiedliche Informationsformen erhalten unterschiedliche Projektions- und Ressourcenprofile.</p></header>
+      <div class="three-grid">
+        <article class="surface modality" data-modality="audio">
+          <div class="surface-kicker">AUDIO · TEMPORAL</div>
+          <h3>Temporale Kohärenz-Bahnen</h3>
+          <p>Sequenzielle Verarbeitung entlang der Zeit; Frequenz-, Phasen-, Hüllkurven- und Kanalstruktur bleiben explizit.</p>
+          <dl><div><dt>Achsen</dt><dd>Band · Phase/Hüllkurve · Kanal · Lag · Feature</dd></div><div><dt>Kandidat</dt><dd>temporale STDP / Gateway-Projektion</dd></div><div><dt>Ressourcen</dt><dd>Bandbreite · Update-Rate · Verzögerung</dd></div></dl>
+        </article>
+        <article class="surface modality" data-modality="vision">
+          <div class="surface-kicker">VISION · SPATIOTEMPORAL</div>
+          <h3>Räumliche Multiplex-Bahnen</h3>
+          <p>Parallele räumliche Verarbeitung mit expliziter x/y-Struktur, Skalierung, Frame- und Featurebezug.</p>
+          <dl><div><dt>Achsen</dt><dd>x · y · Feature · Scale · Frame</dd></div><div><dt>Kandidat</dt><dd>räumliche STDP + strukturelles Wachstum</dd></div><div><dt>Ressourcen</dt><dd>FPS · Auflösung · ROI · Kanäle</dd></div></dl>
+        </article>
+        <article class="surface modality" data-modality="digital">
+          <div class="surface-kicker">DIGITAL · HIGH FIDELITY</div>
+          <h3>Quantisierte Integritäts-Bahnen</h3>
+          <p>Symbolische und strukturierte Daten werden verlustkontrolliert, checksum-fähig und routenbezogen vermittelt.</p>
+          <dl><div><dt>Achsen</dt><dd>Symbol · Sequenz · Quelle · Kontext · Route</dd></div><div><dt>Kandidat</dt><dd>Meta-Gating / integrity-preserving projection</dd></div><div><dt>Ressourcen</dt><dd>Admission · Batching · Symbolrate</dd></div></dl>
+        </article>
+      </div>
+    </section>
+
+    <section id="pipelines" class="section-block">
+      <header class="section-title"><div><span>02</span><h2>Periphere Pipelines</h2></div><p>Live-Erreichbarkeit aus der aktuellen Connection-Inventur; Erreichbarkeit bedeutet ausdrücklich nicht Aktivierung.</p></header>
+      <div class="metric-strip">
+        <div><span>Verbindungen</span><strong id="connection-count">—</strong></div>
+        <div><span>Verfügbar</span><strong id="connection-available">—</strong></div>
+        <div><span>Autorisiert</span><strong id="connection-authorized">—</strong></div>
+        <div><span>Aktiv</span><strong id="connection-active">—</strong></div>
+        <div><span>Pipelines erreichbar</span><strong id="pipeline-reachable">—</strong></div>
+      </div>
+      <div id="pipeline-list" class="list-surface" aria-live="polite"><p class="loading">Pipelines werden geladen …</p></div>
+    </section>
+
+    <section id="gateway" class="section-block">
+      <header class="section-title"><div><span>03</span><h2>Experiment-Gateway</h2></div><p>Separat vom kanonischen SNN-Zustand; produktive Aktivierung bleibt gesperrt, solange die experimentelle Validierung nicht abgeschlossen ist.</p></header>
+      <div class="two-grid">
+        <article class="surface">
+          <div class="surface-kicker">RUNTIME STATE</div>
+          <div id="gateway-state" class="kv-grid"><span class="loading">Gateway-Zustand wird geladen …</span></div>
+        </article>
+        <article class="surface">
+          <div class="surface-kicker">SCIENTIFIC GUARD</div>
+          <h3>Fail-closed Aktivierung</h3>
+          <ul class="guard-list">
+            <li>Experimentmodus erforderlich</li>
+            <li>Preregistration für plastische Gateway-Läufe erforderlich</li>
+            <li>Frozen · Random · Shuffle · Plastic als explizite Kontrollen</li>
+            <li>mindestens drei unabhängige Seeds für plastische Gateway-Experimente</li>
+            <li>Human Review vor Evidenz-Promotion</li>
+            <li>keine direkten Schreibrechte in den kanonischen SNN-Kern</li>
+          </ul>
+          <p id="productive-gateway" class="guard-state">Produktiver Gateway-Status wird geladen …</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="resources" class="section-block">
+      <header class="section-title"><div><span>04</span><h2>Ressourcenökonomie</h2></div><p>Gateway-Limits und beobachtete Ressourcenmetriken werden getrennt von wissenschaftlichen Ergebnissen publiziert.</p></header>
+      <div class="two-grid">
+        <article class="surface"><div class="surface-kicker">LIVE METRICS</div><div id="gateway-metrics" class="kv-grid"><span class="loading">Metriken werden geladen …</span></div></article>
+        <article class="surface"><div class="surface-kicker">HARD LIMITS</div><div id="gateway-limits" class="kv-grid"><span class="loading">Limits werden geladen …</span></div></article>
+      </div>
+    </section>
+
+    <section id="areas" class="section-block">
+      <header class="section-title"><div><span>05</span><h2>Offener Netzbereich-Katalog</h2></div><p>Framework-neutraler Adaptervertrag für neuronale und virtuelle Peripherie. Katalogeintrag ≠ instanziiertes Modell ≠ gelernte Nutzung.</p></header>
+      <div id="area-list" class="area-grid" aria-live="polite"><p class="loading">Netzbereiche werden geladen …</p></div>
+    </section>
+
+    <section id="provenance" class="section-block">
+      <header class="section-title"><div><span>06</span><h2>Provenienz & Forschungsstatus</h2></div><p>Die öffentliche Ansicht publiziert nur technische Verträge und Live-Status. Forschungsfragen und Experimente bleiben im kanonischen Research-Tree.</p></header>
+      <div class="surface provenance">
+        <dl>
+          <div><dt>API</dt><dd><code>/api/embodiment/neural-symbiosis</code></dd></div>
+          <div><dt>Connection-Inventur</dt><dd><code>/api/embodiment/connections</code></dd></div>
+          <div><dt>Steuerung</dt><dd>in dieser Ansicht nicht vorhanden</dd></div>
+          <div><dt>Public Scope</dt><dd>read-only technical publication</dd></div>
+          <div><dt>Evidenzstatus</dt><dd>keine automatische Evidenzableitung</dd></div>
+        </dl>
+        <div class="links"><a href="/" class="button">Operator Dashboard</a><a href="/review" class="button secondary">External Review</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>MHRN · Neural Symbiosis / MSBA</span><span id="last-refresh">noch nicht aktualisiert</span></footer>
+  <script type="module" src="/msba/msba.js"></script>
+</body>
+</html>
