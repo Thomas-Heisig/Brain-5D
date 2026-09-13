@@ -81,6 +81,12 @@
 .fm-viewer-dialog-main > header .icon-btn:hover { background: var(--paper-4); color: var(--ink); }
 .fm-viewer-content { flex: 1 1 auto; overflow-y: auto; padding: 12px; min-height: 0; height: 0; }
 
+/* Tab viewer (non-popup): fixed height with permanent scrollbar */
+.fm-layout .fm-viewer { flex: 1; overflow-y: auto; padding: 12px; min-height: 400px; max-height: calc(100vh - 300px); }
+.fm-layout .fm-viewer::-webkit-scrollbar { width: 8px; }
+.fm-layout .fm-viewer::-webkit-scrollbar-track { background: var(--paper-3); }
+.fm-layout .fm-viewer::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4px; }
+
 /* File tree: full-row click areas, no toggle arrow */
 .fm-tree-item { padding: 0; cursor: pointer; border-radius: var(--r-xs); list-style: none; }
 .fm-tree-item:hover { background: var(--paper-3); }

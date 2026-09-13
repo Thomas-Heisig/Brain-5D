@@ -476,18 +476,28 @@ function renderFMTree(node, container, depth) {
         childContainer.classList.toggle('is-hidden', !expanded);
         li.classList.toggle('fm-dir-expanded', expanded);
         if (!childContainer.dataset.loaded) {
-          // Try to load children from API if not already present
-          if (!child.children || !child.children.length) {
-            try {
-              const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}&prefix=${encodeURIComponent(child.path)}`);
-              if (res.ok) {
-                const data = await res.json();
-                if (data.children && data.children.length) {
-                  child.children = data.children;
+          childContainer.innerHTML = '<div class="fm-loading">Lade …</div>';
+          // Always fetch children for this path from the API
+          try {
+            const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
+            if (res.ok) {
+              const data = await res.json();
+              // Find this node in the full tree by path
+              function findNode(node, targetPath) {
+                if (node.path === targetPath) return node;
+                if (node.children) {
+                  for (const c of node.children) {
+                    const found = findNode(c, targetPath);
+                    if (found) return found;
+                  }
                 }
+                return null;
               }
-            } catch {}
-          }
+              const found = findNode(data, child.path);
+              if (found && found.children) child.children = found.children;
+            }
+          } catch {}
+          childContainer.innerHTML = '';
           renderFMTree(child, childContainer, depth + 1);
           childContainer.dataset.loaded = 'true';
         }
