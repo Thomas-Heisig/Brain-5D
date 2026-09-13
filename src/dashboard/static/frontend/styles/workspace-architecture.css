@@ -23,6 +23,24 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
     display: none !important;
 }
 
+/* Science Transparency panel (Observatory) */
+.mhrn-science-transparency { padding: 0; border: 0; background: transparent; }
+.mhrn-science-transparency > header { padding: 10px 0; border-bottom: 1px solid var(--rule); margin-bottom: 10px; }
+.mhrn-science-transparency > header h2 { margin: 3px 0 2px; font-size: .95rem; }
+.mhrn-science-transparency > header p { margin: 0; color: var(--ink-3); font-size: .66rem; }
+.science-transparency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
+.science-transparency-grid > article { padding: 10px; border: 1px solid var(--rule); border-radius: var(--r-md); background: var(--paper-2); }
+.science-transparency-grid > article h3 { margin: 0 0 6px; font-size: .78rem; color: var(--ink); font-family: var(--font-display); }
+.science-transparency-grid > article p { margin: 4px 0; font-size: .66rem; line-height: 1.45; color: var(--ink-2); }
+.science-transparency-grid > article button { margin: 4px 4px 0 0; padding: .3rem .55rem; border: 1px solid var(--rule-2); border-radius: var(--r-xs); background: var(--paper-3); color: var(--ink); font-size: .62rem; cursor: pointer; }
+.science-transparency-grid > article button:hover { background: var(--accent-wash); border-color: var(--accent); }
+.science-transparency-grid b[data-state="failed"] { color: var(--crimson); }
+.science-transparency-grid b[data-state="pending"] { color: var(--amber); }
+#science-chronology p { margin: 3px 0; font-size: .64rem; color: var(--ink-2); font-family: var(--font-mono); }
+#science-chronology p b { color: var(--ink); }
+#science-snapshot-diff { white-space: pre-wrap; font-size: .62rem; font-family: var(--font-mono); color: var(--ink-2); max-height: 180px; overflow: auto; padding: 6px; border: 1px solid var(--rule); border-radius: var(--r-xs); background: var(--paper-3); margin-top: 6px; }
+.snapshot-diff-actions { display: flex; gap: 4px; margin-top: 6px; }
+
 /* Snapshot history panel */
 .mhrn-snapshot-history { margin-top: 12px; }
 .snapshot-history-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
