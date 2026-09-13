@@ -170,7 +170,6 @@ function ensureGeneratedWorkspaces() {
 function overviewMarkup(areaId, area) {
   const routes = area.routes.filter(([id]) => id !== "overview");
   return `<section class="mhrn-area-overview" data-area-overview="${areaId}">
-    <div class="mhrn-area-overview-breadcrumb"><span class="mhrn-breadcrumb-area">${area.number} · ${area.label}</span><span class="mhrn-breadcrumb-divider">/</span><span class="mhrn-breadcrumb-current">Übersicht</span><span class="mhrn-breadcrumb-pipe">|</span><span class="mhrn-breadcrumb-count">${routes.length} Unterbereiche</span></div>
     <div class="mhrn-area-overview-grid"><article><h3>How to</h3><ol>${area.howto.map((item) => `<li>${item}</li>`).join("")}</ol></article><article><h3>Backend-Verträge</h3><div class="mhrn-contract-list">${area.contracts.map((endpoint) => `<div data-contract="${endpoint}"><code>${endpoint}</code><span>prüfe …</span></div>`).join("")}</div></article></div>
     <div class="mhrn-area-route-grid">${routes.map(([id,label], index) => `<button type="button" data-route-card="${id}" title="${label} öffnen"><span>${String(index + 1).padStart(2,"0")}</span><strong>${label}</strong></button>`).join("")}</div>
   </section>`;
@@ -440,6 +439,43 @@ function setOverview(areaId, visible) {
   });
 }
 
+function getRouteLabel(areaId, routeId) {
+  const area = AREAS[areaId];
+  if (!area) return "?";
+  const route = area.routes.find(([id]) => id === routeId);
+  return route ? route[1] : "?";
+}
+
+function ensureBreadcrumbBar(workspace) {
+  const root = rootFor(workspace);
+  if (!root) return;
+  let bar = root.querySelector(":scope > .mhrn-breadcrumb-bar");
+  if (bar) return bar;
+  bar = document.createElement("div");
+  bar.className = "mhrn-breadcrumb-bar";
+  const header = root.querySelector(":scope > .workspace-header, :scope > header");
+  if (header) header.insertAdjacentElement("afterend", bar);
+  else root.prepend(bar);
+  return bar;
+}
+
+function syncBreadcrumb() {
+  const area = AREAS[currentArea];
+  if (!area) return;
+  const route = area.routes.find(([id]) => id === currentRoute);
+  if (!route) return;
+  const [, label, workspace] = route;
+  const bar = ensureBreadcrumbBar(workspace);
+  if (!bar) return;
+  const isOverview = currentRoute === "overview";
+  const routeCount = area.routes.filter(([id]) => id !== "overview").length;
+  if (isOverview) {
+    bar.innerHTML = `<span class="mhrn-breadcrumb-area">${area.number} · ${area.label}</span><span class="mhrn-breadcrumb-divider">/</span><span class="mhrn-breadcrumb-current">Übersicht</span><span class="mhrn-breadcrumb-pipe">|</span><span class="mhrn-breadcrumb-count">${routeCount} Unterbereiche</span>`;
+  } else {
+    bar.innerHTML = `<span class="mhrn-breadcrumb-area">${area.number} · ${area.label}</span><span class="mhrn-breadcrumb-divider">/</span><span class="mhrn-breadcrumb-current">${label}</span>`;
+  }
+}
+
 function syncNav() {
   document.body.dataset.currentArea = currentArea;
   document.body.dataset.currentRoute = currentRoute;
@@ -452,6 +488,7 @@ function syncNav() {
       node.setAttribute("aria-selected", String(active));
     });
   });
+  syncBreadcrumb();
 }
 // ── Contract probing and data refresh ──────────────────────────
 async function probeContracts(areaId) {
