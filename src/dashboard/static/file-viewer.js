@@ -63,6 +63,7 @@ let fmCurrentPath = '';
 let fmCurrentFileSource = '';
 let fmViewerHistory = [];
 let fmUsePopup = localStorage.getItem('mhrn-fm-popup') !== 'false';
+let fmLastSelectedPath = '';
 const FM_RECENT_KEY = 'brain5d_fm_recent';
 const FM_RECENT_MAX = 20;
 
@@ -421,6 +422,11 @@ async function loadFMTree() {
 
     treeEl.innerHTML = '';
     renderFMTree(tree, treeEl, 0);
+    // Restore last selection
+    if (fmLastSelectedPath) {
+      const selected = treeEl.querySelector(`[data-path="${escapeHtml(fmLastSelectedPath)}"], .fm-tree-file[data-path="${escapeHtml(fmLastSelectedPath)}"]`);
+      if (selected) selected.classList.add('fm-tree-selected');
+    }
   } catch (e) {
     treeEl.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(e.message)}</span>`;
   }
@@ -475,22 +481,23 @@ function renderFMTree(node, container, depth) {
         const expanded = childContainer.classList.contains('is-hidden');
         childContainer.classList.toggle('is-hidden', !expanded);
         li.classList.toggle('fm-dir-expanded', expanded);
+        // Mark selection
+        document.querySelectorAll('.fm-tree-selected').forEach(el => el.classList.remove('fm-tree-selected'));
+        li.classList.add('fm-tree-selected');
+        fmLastSelectedPath = child.path;
+        // Show folder contents in viewer (non-popup mode)
+        if (!fmUsePopup && !childContainer.dataset.loaded) {
+          showFolderInViewer(child.path, child);
+        }
         if (!childContainer.dataset.loaded) {
           childContainer.innerHTML = '<div class="fm-loading">Lade …</div>';
-          // Always fetch children for this path from the API
           try {
             const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
             if (res.ok) {
               const data = await res.json();
-              // Find this node in the full tree by path
               function findNode(node, targetPath) {
                 if (node.path === targetPath) return node;
-                if (node.children) {
-                  for (const c of node.children) {
-                    const found = findNode(c, targetPath);
-                    if (found) return found;
-                  }
-                }
+                if (node.children) { for (const c of node.children) { const found = findNode(c, targetPath); if (found) return found; } }
                 return null;
               }
               const found = findNode(data, child.path);
@@ -516,7 +523,16 @@ function renderFMTree(node, container, depth) {
       li.innerHTML = `${icon} ${escapeHtml(child.name)} <span class="fm-file-size">${formatBytes(child.size_bytes)}</span>`;
       li.addEventListener('click', (event) => {
         event.stopPropagation();
-        openFMFile(child.path);
+        // Mark selection
+        document.querySelectorAll('.fm-tree-selected').forEach(el => el.classList.remove('fm-tree-selected'));
+        li.classList.add('fm-tree-selected');
+        // Store last selected path
+        fmLastSelectedPath = child.path;
+        if (fmUsePopup) {
+          openFMFile(child.path);
+        } else {
+          showFolderInViewer(child.path, child);
+        }
       });
     }
 
@@ -524,6 +540,62 @@ function renderFMTree(node, container, depth) {
   });
 
   container.appendChild(ul);
+}
+
+// Show folder contents in the tab viewer (non-popup mode)
+function showFolderInViewer(path, node) {
+  const viewer = document.getElementById('fm-viewer');
+  if (!viewer) return;
+  viewer.classList.remove('fm-viewer-hidden');
+  // Build a list of items in this folder
+  const items = node.children || [];
+  let html = `<div class="fm-folder-viewer-header"><span class="workspace-kicker">ORDNERINHALT</span><strong>${escapeHtml(path)}</strong><span class="fm-folder-count">${items.length} Einträge</span></div>`;
+  html += '<div class="fm-folder-viewer-list">';
+  // Parent directory link (if not root)
+  if (path && path !== '.') {
+    const parentPath = path.split('/').slice(0, -1).join('/') || '.';
+    html += `<div class="fm-folder-item fm-folder-up" data-path="${escapeHtml(parentPath)}"><span class="fm-folder-icon">📁</span> ..</div>`;
+  }
+  // Sort: directories first, then files
+  const sorted = [...items].sort((a, b) => {
+    if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+  for (const item of sorted) {
+    if (item.type === 'directory') {
+      html += `<div class="fm-folder-item fm-folder-dir" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">📁</span> ${escapeHtml(item.name)}</div>`;
+    } else {
+      const icon = item.is_image ? '🖼️' : item.is_video ? '🎬' : item.is_audio ? '🎵' : item.is_spreadsheet ? '📊' : item.is_document ? '📘' : item.is_binary ? '📦' : '📄';
+      html += `<div class="fm-folder-item fm-folder-file" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">${icon}</span> ${escapeHtml(item.name)} <span class="fm-file-size">${formatBytes(item.size_bytes)}</span></div>`;
+    }
+  }
+  html += '</div>';
+  viewer.innerHTML = html;
+  // Click handlers
+  viewer.querySelectorAll('.fm-folder-item').forEach(el => {
+    el.addEventListener('click', async () => {
+      const itemPath = el.dataset.path;
+      if (el.classList.contains('fm-folder-dir') || el.classList.contains('fm-folder-up')) {
+        // Load children for this directory
+        try {
+          const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
+          if (res.ok) {
+            const data = await res.json();
+            function findNode(node, targetPath) {
+              if (node.path === targetPath) return node;
+              if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
+              return null;
+            }
+            const found = findNode(data, itemPath);
+            if (found) showFolderInViewer(itemPath, found);
+            else showFolderInViewer(itemPath, { children: [] });
+          }
+        } catch { showFolderInViewer(itemPath, { children: [] }); }
+      } else {
+        openFMFile(itemPath);
+      }
+    });
+  });
 }
 
 function ensureFMViewerDialog() {
