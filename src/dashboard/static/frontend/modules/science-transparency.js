@@ -9,7 +9,7 @@ let snapshotA = null;
 function ensurePanel() {
   let panel = document.getElementById("mhrn-science-transparency"); if (panel) return panel;
   const workspace = document.getElementById("tab-research"); if (!workspace) return null;
-  panel = document.createElement("section"); panel.id = "mhrn-science-transparency"; panel.className = "mhrn-science-transparency";
+  panel = document.createElement("section"); panel.id = "mhrn-science-transparency"; panel.className = "mhrn-science-transparency"; panel.dataset.mhrnRoute = "science:observatory";
   panel.innerHTML = `<header><div><span class="workspace-kicker">SCIENCE TRANSPARENCY</span><h2>Nachweise, Baselines, Provenienz & Diff</h2><p>Unknown, planned, stale und negative Befunde bleiben eigenständige Zustände.</p></div></header>
   <div class="science-transparency-grid">
     <article><h3>DATA / EVID Chronologie</h3><div id="science-chronology">lade …</div></article>
