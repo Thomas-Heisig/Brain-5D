@@ -383,6 +383,14 @@ function reconcileRouteVisibility(areaId, routeId) {
     if (ws !== workspace) resetWorkspaceVisibility(ws);
   });
 
+  // Hide all data-mhrn-route elements that don't belong to the current route
+  const currentRouteTag = `${areaId}:${routeId}`;
+  document.querySelectorAll("[data-mhrn-route]").forEach((node) => {
+    if (node.dataset.mhrnRoute === currentRouteTag) return;
+    if (isPersistent(node)) return;
+    setRouteElementVisibility(node, false);
+  });
+
   // Show route-specific content
   showRouteContent(areaId, route);
 
