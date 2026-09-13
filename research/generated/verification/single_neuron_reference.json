@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "verified",
+  "scientific_scope": "software reference trajectory only; not biological validation",
+  "model": {
+    "id": "izhikevich-2003",
+    "version": "mhrn-1.0",
+    "canonical": true
+  },
+  "protocol": {
+    "dt_ms": 1.0,
+    "input_current": 10.0,
+    "ticks": 10,
+    "initial_v": -65.0,
+    "initial_u": -13.0,
+    "secondary_mechanisms": false,
+    "refractory_ticks": 0
+  },
+  "trajectory": [
+    {
+      "tick": 0,
+      "v": -58.105000000000004,
+      "u": -12.97242,
+      "spike": false
+    },
+    {
+      "tick": 1,
+      "v": -49.67024344113139,
+      "u": -12.911652573764526,
+      "spike": false
+    },
+    {
+      "tick": 2,
+      "v": -32.148436920936334,
+      "u": -12.78201326997298,
+      "spike": false
+    },
+    {
+      "tick": 3,
+      "v": -65.0,
+      "u": -4.338472415828637,
+      "spike": true
+    },
+    {
+      "tick": 4,
+      "v": -66.56464783539798,
+      "u": -4.517961558853656,
+      "spike": false
+    },
+    {
+      "tick": 5,
+      "v": -67.54301490883427,
+      "u": -4.69777438731192,
+      "spike": false
+    },
+    {
+      "tick": 6,
+      "v": -68.02257493597325,
+      "u": -4.875909199309575,
+      "spike": false
+    },
+    {
+      "tick": 7,
+      "v": -68.15956887629694,
+      "u": -5.051029290828572,
+      "spike": false
+    },
+    {
+      "tick": 8,
+      "v": -68.08658786488807,
+      "u": -5.222355056471552,
+      "spike": false
+    },
+    {
+      "tick": 9,
+      "v": -67.89025577811208,
+      "u": -5.38946897845457,
+      "spike": false
+    }
+  ],
+  "proofs_required": [
+    "golden_trajectory",
+    "deterministic_replay",
+    "spike_reset_recovery",
+    "optional_refractory_variant",
+    "state_roundtrip",
+    "model_switch_provenance"
+  ],
+  "verification_scope": "Stage-0 software contract; not biological validation",
+  "proofs": {
+    "golden_trajectory": true,
+    "deterministic_replay": true,
+    "spike_reset_recovery": true,
+    "optional_refractory_variant": true,
+    "state_roundtrip": true,
+    "model_switch_provenance": true,
+    "yaml_model_selection": true
+  }
+}
