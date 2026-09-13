@@ -62,6 +62,7 @@ let fmRecentFiles = [];
 let fmCurrentPath = '';
 let fmCurrentFileSource = '';
 let fmViewerHistory = [];
+let fmUsePopup = localStorage.getItem('mhrn-fm-popup') !== 'false';
 const FM_RECENT_KEY = 'brain5d_fm_recent';
 const FM_RECENT_MAX = 20;
 
@@ -169,6 +170,21 @@ function initFileManager() {
       });
       toolbar.append(publication);
     }
+    // Popup toggle checkbox
+    const toolbar = document.querySelector('.fm-toolbar');
+    if (toolbar && !document.getElementById('fm-popup-toggle')) {
+      const label = document.createElement('label');
+      label.className = 'fm-popup-toggle';
+      label.title = 'Datei im Popup öffnen';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = 'fm-popup-toggle';
+      cb.checked = fmUsePopup;
+      cb.addEventListener('change', () => { fmUsePopup = cb.checked; localStorage.setItem('mhrn-fm-popup', String(cb.checked)); });
+      label.append(cb, ' Popup');
+      toolbar.append(label);
+    }
+
     loadFMRecent();
     setupFMSourceButtons();
     setupFMExperimentSort();
@@ -501,10 +517,20 @@ function ensureFMViewerDialog() {
 }
 
 export async function openFMFile(path, { recordHistory = true } = {}) {
-  const dialog = ensureFMViewerDialog();
-  // Always open dialog first, then use dialog viewer
-  dialog.showModal();
-  const viewer = document.getElementById('fm-dialog-viewer');
+  // Use popup or tab viewer based on checkbox
+  const usePopup = fmUsePopup;
+  let viewer;
+  if (usePopup) {
+    const dialog = ensureFMViewerDialog();
+    dialog.showModal();
+    viewer = document.getElementById('fm-dialog-viewer');
+  } else {
+    viewer = document.getElementById('fm-viewer');
+    if (viewer) {
+      viewer.classList.remove('fm-viewer-hidden');
+      document.body.classList.remove('fm-viewer-open');
+    }
+  }
   if (!viewer) return;
   path = String(path || '').replaceAll('\\', '/');
   const source = fmCurrentSource;
