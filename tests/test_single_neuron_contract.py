@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pytest
 
+from src.config import load_config
+from src.core.network import Brain5DConfig
 from src.core.neuron import (
     Neuron,
     NeuronConfig,
@@ -184,3 +186,37 @@ def test_invalid_model_and_refractory_config_fail_closed() -> None:
         NeuronConfig(model="not-a-model")
     with pytest.raises(ValueError, match="refractory_ticks"):
         NeuronConfig(refractory_ticks=-1)
+
+
+def test_yaml_model_selection_reaches_core_config(tmp_path: Path) -> None:
+    path = tmp_path / "lif.yaml"
+    path.write_text(
+        "dimensions: [2, 2, 2, 2, 2]\n"
+        "initial_neurons: 1\n"
+        "neuron:\n"
+        "  model: lif\n"
+        "  lif_tau_m_ms: 15.0\n"
+        "  lif_threshold: -52.0\n"
+        "  refractory_ticks: 2\n",
+        encoding="utf-8",
+    )
+    loaded = load_config(path)
+    assert loaded["neuron"]["model"] == "lif-current-v1"
+    config = Brain5DConfig.from_dict(dict(loaded))
+    assert config.neuron.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE
+    assert config.neuron.lif_tau_m_ms == 15.0
+    assert config.neuron.lif_threshold == -52.0
+    assert config.neuron.refractory_ticks == 2
+
+
+def test_yaml_unknown_model_fails_closed(tmp_path: Path) -> None:
+    path = tmp_path / "invalid.yaml"
+    path.write_text(
+        "dimensions: [2, 2, 2, 2, 2]\n"
+        "initial_neurons: 1\n"
+        "neuron:\n"
+        "  model: unknown-theory\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="unsupported neuron.model"):
+        load_config(path)

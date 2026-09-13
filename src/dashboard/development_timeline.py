@@ -147,31 +147,57 @@ def _stage_specs() -> tuple[StageSpec, ...]:
             (
                 "Einzelnes künstliches Neuron",
                 "deterministische Membrandynamik",
-                "Spike- und Refraktärverhalten",
+                "Spike-, Reset- und Erholungsverhalten",
+                "versionierte und umschaltbare Neuronenmodelle",
             ),
             {"neurons": "1", "synapses": "0-1"},
             (
                 CriterionSpec(
-                    "neuron_model", "Neuron model", paths=("src/core/neuron.py",)
+                    "neuron_model",
+                    "Versioned neuron model",
+                    paths=("src/core/neuron.py", "src/core/neuron_models.py"),
+                    tests=("tests/test_single_neuron_contract.py",),
+                    verification=(
+                        "research/generated/verification/single_neuron_reference.json",
+                    ),
                 ),
                 CriterionSpec(
                     "membrane_dynamics",
-                    "Membrane dynamics",
-                    paths=("src/core/neuron.py",),
+                    "Deterministic membrane dynamics",
+                    paths=("src/core/neuron.py", "src/core/neuron_models.py"),
+                    tests=("tests/test_single_neuron_contract.py",),
+                    verification=(
+                        "research/generated/verification/single_neuron_reference.json",
+                    ),
                 ),
                 CriterionSpec(
                     "spike_and_refractory",
-                    "Spike and refractory behavior",
-                    tests=("tests/test_neuron.py",),
+                    "Spike, reset, recovery and refractory variant",
+                    tests=("tests/test_single_neuron_contract.py",),
+                    verification=(
+                        "research/generated/verification/single_neuron_reference.json",
+                    ),
                 ),
                 CriterionSpec(
                     "single_cell_verification",
-                    "Single-cell verification",
-                    tests=("tests/test_neuron.py",),
+                    "Deterministic replay and state continuation",
+                    tests=("tests/test_single_neuron_contract.py",),
+                    verification=(
+                        "research/generated/verification/single_neuron_reference.json",
+                    ),
+                ),
+                CriterionSpec(
+                    "model_switch_provenance",
+                    "Model selection and provenance",
+                    paths=("src/core/neuron_models.py",),
+                    tests=("tests/test_single_neuron_contract.py",),
+                    verification=(
+                        "research/generated/verification/single_neuron_reference.json",
+                    ),
                 ),
             ),
-            ("src/core/neuron.py",),
-            ("tests/test_neuron.py",),
+            ("src/core/neuron.py", "src/core/neuron_models.py"),
+            ("tests/test_neuron.py", "tests/test_single_neuron_contract.py"),
             (),
             (),
             (
