@@ -335,20 +335,14 @@ function renderDevelopmentScales(data) {
     const position = typeof value === 'number' && value > 0
       ? Math.max(0, Math.min(100, Math.log10(value) / scale.maximum * 100))
       : null;
-    const ticks = Array.from({ length: scale.maximum + 1 }, (_, exponent) => {
-      const tickPosition = exponent / scale.maximum * 100;
-      const label = exponent === 0 ? '1' : `10^${exponent}`;
-      return `<span class="development-scale-tick" data-left="${tickPosition}"><i></i><small>${label}</small></span>`;
-    }).join('');
     return `
-      <section class="development-scale" aria-label="Logarithmische ${scale.label}-Skala">
+      <div class="dev-scale" aria-label="Logarithmische ${scale.label}-Skala">
         <header><strong>${scale.label}</strong><span>${runtime.status === 'active' ? 'aktuell' : 'last observed'}</span></header>
-        <div class="development-scale-line">
-          ${ticks}
-          ${position === null ? '<span class="development-scale-unavailable">unavailable</span>' : `<span class="development-scale-marker" data-left="${position}" title="${escapeHtml(runtimeLabel(value))}"></span>`}
+        <div class="dev-scale-line">
+          ${position === null ? '<span class="dev-scale-na">—</span>' : `<span class="dev-scale-marker" style="left:${position}%" title="${escapeHtml(runtimeLabel(value))}"></span>`}
+          <span class="dev-scale-value">${escapeHtml(runtimeLabel(value))}</span>
         </div>
-        <small class="development-scale-value">${escapeHtml(runtimeLabel(value))}</small>
-      </section>
+      </div>
     `;
   }).join('');
 }
@@ -387,26 +381,26 @@ function renderDevelopmentDetail(stage) {
   const criteria = Array.isArray(stage.criteria) ? stage.criteria : [];
   detail.hidden = false;
   detail.innerHTML = `
-    <div class="development-detail-header">
+    <div class="dev-detail-header">
       <div><span class="workspace-kicker">STUFE ${stage.stage}</span><h3>${escapeHtml(stage.name)}</h3></div>
       <button type="button" class="modal-close" data-development-detail-close aria-label="Detail schließen">&times;</button>
     </div>
     <p>${escapeHtml((stage.description || []).join(' · '))}</p>
-    <div class="development-detail-scores">
+    <div class="dev-detail-scores">
       <span>Engineering <strong>${scorePercent(stage.implementation_score)}</strong></span>
       <span>Verification <strong>${scorePercent(stage.verification_score)}</strong></span>
       <span>Scientific readiness <strong>${scorePercent(stage.research_readiness_score)}</strong></span>
     </div>
-    <div class="development-criteria-list">
+    <div class="dev-criteria-list">
       ${criteria.map((criterion) => `
-        <div class="development-criterion development-criterion-${escapeHtml(criterion.status || 'missing')}">
+        <div class="dev-criterion dev-criterion-${escapeHtml(criterion.status || 'missing')}">
           <span>${escapeHtml(criterion.label || criterion.id)}</span>
           <strong>${escapeHtml(criterion.status || 'missing')}</strong>
           ${Array.isArray(criterion.evidence) && criterion.evidence.length ? `<small>${escapeHtml(criterion.evidence.join(' · '))}</small>` : ''}
         </div>
       `).join('')}
     </div>
-    <div class="development-detail-columns">
+    <div class="dev-detail-columns">
       <section><h4>Module</h4>${list(stage.relevant_modules)}</section>
       <section><h4>Tests</h4>${list(stage.relevant_tests)}</section>
       <section><h4>Experimente / RQ</h4>${list([...(stage.relevant_experiments || []), ...(stage.relevant_research_questions || [])])}</section>
@@ -421,36 +415,30 @@ function renderDevelopmentTimeline(data) {
   const stages = Array.isArray(data.stages) ? data.stages : [];
   const scoreGrid = $('development-score-grid');
   const stageList = $('development-stage-list');
-  const runtimeGrid = $('development-runtime-grid');
   const notice = $('development-timeline-notice');
   const updated = $('development-timeline-updated');
   if (updated) updated.textContent = `Stand ${formatTimelineDate((data.last_updated || '').slice(0, 10))}`;
-  if (notice) notice.innerHTML = `<strong>Research frontier:</strong> ${escapeHtml(data.scientific_note || 'Keine automatische Bewusstseinsbehauptung.')} <span class="development-consciousness-guard">${escapeHtml(data.consciousness_claim || 'unsupported')}</span>`;
+  if (notice) notice.innerHTML = `<strong>Research frontier:</strong> ${escapeHtml(data.scientific_note || 'Keine automatische Bewusstseinsbehauptung.')} <span class="dev-consciousness-guard">${escapeHtml(data.consciousness_claim || 'unsupported')}</span>`;
   if (scoreGrid) {
+    const runtime = data.current_runtime || {};
+    const last = data.last_observed_runtime;
     scoreGrid.innerHTML = [
       ['Engineering', data.engineering_score, 'Implementiert / integriert'],
       ['Verification', data.verification_score, 'Technisch reproduziert'],
       ['Scientific Evidence', data.scientific_evidence_score, 'EVID bleibt gate- und reviewgebunden'],
-    ].map(([label, score, hint]) => `<div class="development-score-card"><span>${label}</span><strong>${scorePercent(score)}</strong><small>${hint}</small></div>`).join('');
-  }
-  if (runtimeGrid) {
-    const runtime = data.current_runtime || {};
-    const last = data.last_observed_runtime;
-    runtimeGrid.innerHTML = `
-      <div><span>Aktuelle Runtime</span><strong>${runtime.status === 'active' ? `${runtimeLabel(runtime.neurons)} Neuronen · ${runtimeLabel(runtime.synapses)} Synapsen` : 'unavailable'}</strong><small>Quelle: ${escapeHtml(runtime.source || 'unavailable')}</small></div>
-      <div><span>Last observed</span><strong>${last ? `${runtimeLabel(last.neurons)} Neuronen · ${runtimeLabel(last.synapses)} Synapsen` : 'unavailable'}</strong><small>Snapshot-Größe ist keine aktive Runtime.</small></div>
-      <div><span>Confidence</span><strong>${scorePercent(data.confidence)}</strong><small>Fehlt bei stale/fehlenden Verifikationsdaten.</small></div>
-    `;
+      ['Neuronen', runtime.status === 'active' ? runtimeLabel(runtime.neurons) : (last ? runtimeLabel(last.neurons) : '—'), runtime.status === 'active' ? 'aktuell' : 'last observed'],
+      ['Synapsen', runtime.status === 'active' ? runtimeLabel(runtime.synapses) : (last ? runtimeLabel(last.synapses) : '—'), runtime.status === 'active' ? 'aktuell' : 'last observed'],
+      ['Confidence', `${scorePercent(data.confidence)}`, 'Fehlt bei stale/fehlenden Verifikationsdaten'],
+    ].map(([label, value, hint]) => `<div class="dev-stat"><span>${label}</span><strong>${value}</strong><small>${hint}</small></div>`).join('');
   }
   renderDevelopmentScales(data);
   renderDevelopmentTrack(data, 'development-timeline-track');
-  renderDevelopmentTrack(data, 'release-development-track');
   if (stageList) {
     stageList.innerHTML = stages.map((stage) => `
-      <button type="button" class="development-stage-card development-stage-${escapeHtml(stage.status || 'planned')}" data-development-stage="${stage.stage}">
-        <span class="development-stage-number">${stage.stage}</span>
-        <span class="development-stage-copy"><strong>${escapeHtml(stage.name)}</strong><small>${escapeHtml((stage.description || []).join(' · '))}</small></span>
-        <span class="development-stage-metrics"><b>${scorePercent(stage.implementation_score)}</b><em>${escapeHtml(stage.status || 'planned')}</em></span>
+      <button type="button" class="dev-stage-card dev-stage-${escapeHtml(stage.status || 'planned')}" data-development-stage="${stage.stage}">
+        <span class="dev-stage-number">${stage.stage}</span>
+        <span class="dev-stage-copy"><strong>${escapeHtml(stage.name)}</strong><small>${escapeHtml((stage.description || []).join(' · '))}</small></span>
+        <span class="dev-stage-metrics"><b>${scorePercent(stage.implementation_score)}</b><em>${escapeHtml(stage.status || 'planned')}</em></span>
       </button>
     `).join('');
   }

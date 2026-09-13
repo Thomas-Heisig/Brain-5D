@@ -523,6 +523,94 @@ canvas { display:block; width:100%; height:auto; border:1px solid var(--rule); b
 .development-score-grid > *, .development-runtime-grid > *, .development-scale-grid > * { padding:10px; background:var(--paper-2); }
 .development-timeline-notice,.development-detail { margin:12px 14px; padding:10px 12px; border-left:2px solid var(--accent); background:var(--accent-wash); }
 
+/* ── Entwicklungs-Timeline: horizontal scrollend ── */
+.development-notice { margin:0 14px; padding:8px 10px; border-left:2px solid var(--accent); background:var(--accent-wash); font-size:.7rem; line-height:1.45; color:var(--ink-2); }
+.dev-consciousness-guard { display:inline-block; margin-left:6px; padding:1px 6px; border-radius:99px; color:var(--ink-4); background:var(--paper-3); font:500 .5rem/1 var(--font-mono); letter-spacing:.06em; text-transform:uppercase; }
+
+/* Summary-Karten */
+.development-summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:6px; margin:10px 14px; }
+.dev-stat { padding:8px 10px; border:1px solid var(--rule); border-radius:var(--r-sm); background:var(--paper-2); }
+.dev-stat span { display:block; color:var(--ink-3); font:700 .5rem/1 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
+.dev-stat strong { display:block; margin:3px 0 2px; font:600 .82rem/1.2 var(--font-display); color:var(--ink); }
+.dev-stat small { color:var(--ink-4); font-size:.55rem; }
+
+/* Horizontal scrollbar Track */
+.dev-horiz-track-wrap { overflow-x:auto; margin:0 14px; padding:8px 0 12px; }
+.dev-horiz-track-wrap::-webkit-scrollbar { height:6px; }
+.dev-horiz-track-wrap::-webkit-scrollbar-thumb { border-radius:99px; background:var(--rule-3); }
+.dev-horiz-track { display:flex; gap:8px; min-width:max-content; padding:0 4px; }
+
+/* Node-Karten im Track */
+.dev-node { position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:100px; max-width:120px; padding:10px 8px 8px; border:1px solid var(--rule); border-radius:var(--r-md); background:var(--paper-2); cursor:pointer; text-align:center; transition:border-color .2s,box-shadow .2s; }
+.dev-node:hover { border-color:var(--rule-3); box-shadow:0 2px 8px rgba(0,0,0,.04); }
+.dev-node-number { position:absolute; top:-8px; left:50%; transform:translateX(-50%); display:grid; place-items:center; width:20px; height:20px; border:1px solid var(--rule-2); border-radius:50%; background:var(--paper-3); color:var(--ink-3); font:700 .55rem/1 var(--font-mono); }
+.dev-node-label { font:600 .65rem/1.2 var(--font-ui); color:var(--ink); margin-top:6px; }
+.dev-node-bar { width:100%; height:4px; border-radius:99px; background:var(--paper-4); overflow:hidden; }
+.dev-node-fill { display:block; height:100%; border-radius:99px; background:var(--accent); transition:width .4s; }
+.dev-node-status { font:500 .48rem/1 var(--font-mono); color:var(--ink-4); text-transform:uppercase; letter-spacing:.06em; }
+.dev-node-marker { position:absolute; bottom:-10px; font:700 .45rem/1 var(--font-mono); white-space:nowrap; padding:1px 5px; border-radius:99px; }
+.dev-node-marker-tech { color:var(--moss); background:var(--moss-wash); border:1px solid color-mix(in srgb,var(--moss) 30%,transparent); }
+.dev-node-marker-sci { color:var(--indigo); background:var(--indigo-wash); border:1px solid color-mix(in srgb,var(--indigo) 30%,transparent); }
+
+/* Node-Status-Farben */
+.dev-node-implemented { border-top:2px solid var(--moss); }
+.dev-node-integrated { border-top:2px solid var(--indigo); }
+.dev-node-verified { border-top:2px solid var(--accent); }
+.dev-node-evidencable { border-top:2px solid #8a6d28; }
+.dev-node-planned { border-top:2px dashed var(--rule-3); opacity:.72; }
+.dev-node-missing { border-top:2px dashed var(--crimson); opacity:.6; }
+.dev-node-partial { border-top:2px solid var(--amber); }
+
+/* Scales horizontal */
+.dev-horiz-scale-wrap { margin:0 14px 10px; }
+.dev-horiz-scales { display:flex; gap:12px; }
+.dev-scale { flex:1; min-width:0; padding:8px 10px; border:1px solid var(--rule); border-radius:var(--r-sm); background:var(--paper-2); }
+.dev-scale header { display:flex; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.dev-scale header strong { font-size:.72rem; }
+.dev-scale header span { color:var(--ink-4); font-size:.52rem; }
+.dev-scale-line { position:relative; height:6px; border-radius:99px; background:var(--paper-4); overflow:visible; }
+.dev-scale-marker { position:absolute; top:-3px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid var(--paper-2); box-shadow:0 0 0 1px var(--accent); transform:translateX(-50%); }
+.dev-scale-na { position:absolute; left:50%; top:-5px; transform:translateX(-50%); color:var(--ink-4); font-size:.6rem; }
+.dev-scale-value { display:block; margin-top:4px; color:var(--ink-3); font:500 .58rem/1 var(--font-mono); }
+
+/* Stage-Liste (Detailkarten unter dem Track) */
+.development-stage-list { padding:0 14px 14px; display:grid; gap:6px; }
+.dev-stage-card { display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; border:1px solid var(--rule); border-left:3px solid var(--rule-3); border-radius:var(--r-sm); background:var(--paper-2); cursor:pointer; text-align:left; transition:border-color .2s,background .2s; }
+.dev-stage-card:hover { background:var(--paper-3); }
+.dev-stage-card.dev-stage-implemented { border-left-color:var(--moss); }
+.dev-stage-card.dev-stage-integrated { border-left-color:var(--indigo); }
+.dev-stage-card.dev-stage-verified { border-left-color:var(--accent); }
+.dev-stage-card.dev-stage-evidencable { border-left-color:#8a6d28; }
+.dev-stage-card.dev-stage-planned { border-left-color:var(--rule-3); }
+.dev-stage-number { flex-shrink:0; display:grid; place-items:center; width:24px; height:24px; border:1px solid var(--rule-2); border-radius:50%; font:700 .6rem/1 var(--font-mono); color:var(--ink-3); }
+.dev-stage-copy { flex:1; min-width:0; }
+.dev-stage-copy strong { display:block; font-size:.78rem; }
+.dev-stage-copy small { display:block; margin-top:2px; color:var(--ink-3); font-size:.62rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dev-stage-metrics { flex-shrink:0; text-align:right; }
+.dev-stage-metrics b { display:block; font:600 .7rem/1 var(--font-mono); color:var(--ink); }
+.dev-stage-metrics em { font:500 .5rem/1 var(--font-mono); color:var(--ink-4); font-style:normal; text-transform:uppercase; letter-spacing:.05em; }
+
+/* Detail-Panel (aufklappbar) */
+.development-detail { margin:0 14px 14px; padding:12px 14px; border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:var(--r-md); background:var(--paper-2); }
+.development-detail[hidden] { display:none; }
+.dev-detail-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.dev-detail-header h3 { font-size:.95rem; }
+.dev-detail-scores { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+.dev-detail-scores span { font-size:.65rem; color:var(--ink-3); }
+.dev-detail-scores strong { margin-left:4px; color:var(--ink); font-family:var(--font-mono); }
+.dev-criteria-list { display:grid; gap:4px; margin-bottom:10px; }
+.dev-criterion { display:flex; align-items:center; gap:8px; padding:5px 8px; border:1px solid var(--rule); border-radius:var(--r-xs); font-size:.65rem; }
+.dev-criterion-pass { border-left:3px solid var(--moss); }
+.dev-criterion-fail { border-left:3px solid var(--crimson); }
+.dev-criterion-missing { border-left:3px solid var(--rule-3); }
+.dev-criterion strong { margin-left:auto; font-family:var(--font-mono); font-size:.6rem; }
+.dev-criterion small { display:block; width:100%; margin-top:2px; color:var(--ink-4); font-size:.55rem; }
+.dev-detail-columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; }
+.dev-detail-columns section h4 { font-size:.7rem; margin-bottom:4px; color:var(--ink-3); }
+.dev-detail-columns ul { margin:0; padding-left:14px; font-size:.62rem; color:var(--ink-2); line-height:1.5; }
+.dev-detail-columns li + li { margin-top:2px; }
+.dev-empty { color:var(--ink-4); font-size:.6rem; }
+
 /* Embodiment */
 .embodiment-anatomy,.embodiment-living-map { display:grid; grid-template-columns:minmax(190px,24%) minmax(360px,1fr) minmax(190px,24%); gap:12px; align-items:start; margin-bottom:14px; }
 .anatomy-zone,.organism-core { overflow:hidden; }

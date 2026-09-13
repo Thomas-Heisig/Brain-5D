@@ -171,13 +171,6 @@
 /* Population bar fill: width and colour set via data-* attributes */
 .population-bar-fill { width: 0; background: transparent; }
 
-/* Gate board: development scale ticks and markers (was inline left:%) */
-.development-scale-tick { position: absolute; }
-.development-scale-marker { position: absolute; }
-
-/* Gate board: development markers (was inline --marker-position) */
-.development-marker { position: absolute; }
-
 /* Structural proposal: confidence (was inline --conf) */
 .proposal-conf { }
 
