@@ -242,7 +242,8 @@ function setupFMExperimentSort() {
 
 function updateFMExperimentSortControl() {
   const select = document.getElementById('fm-experiment-sort');
-  if (select) select.disabled = fmCurrentSource !== 'research';
+  // Always enabled — sorts experiment directories by date for all sources
+  if (select) select.disabled = false;
 }
 
 function setupFMRefresh() {
