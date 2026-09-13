@@ -97,7 +97,9 @@ def coerce_neuron_model(value: NeuronModel | str) -> NeuronModel:
         return _MODEL_ALIASES[key]
     except KeyError as exc:
         supported = ", ".join(model.value for model in NeuronModel)
-        raise ValueError(f"Unknown neuron model {value!r}; supported: {supported}") from exc
+        raise ValueError(
+            f"Unknown neuron model {value!r}; supported: {supported}"
+        ) from exc
 
 
 def get_model_descriptor(value: NeuronModel | str) -> NeuronModelDescriptor:
@@ -135,9 +137,9 @@ def integrate_membrane(
         u += dt_ms * a * (b * v - u)
         return v, u
 
-    dv = (
-        (lif_resting_potential - v) + lif_resistance * input_current
-    ) * (dt_ms / lif_tau_m_ms)
+    dv = ((lif_resting_potential - v) + lif_resistance * input_current) * (
+        dt_ms / lif_tau_m_ms
+    )
     return v + dv, u
 
 
