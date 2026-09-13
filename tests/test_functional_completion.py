@@ -28,7 +28,8 @@ def test_neuron_view_profile_is_real_presentation_only_state() -> None:
     assert 'scope: "presentation_only"' in source
     assert "localStorage.setItem" in source
     assert "localStorage.getItem" in source
-    assert "Do not auto-run an expensive analysis job" in source
+    assert "must never" in source
+    assert "backend jobs" in source
 
 
 def test_embodiment_feedback_uses_pipeline_and_state_contracts() -> None:
