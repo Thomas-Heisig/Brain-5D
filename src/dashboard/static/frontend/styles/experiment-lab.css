@@ -1,0 +1,314 @@
+/* Experiment Laboratory — flat, route-isolated research workflow */
+.experiment-lab {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.experiment-lab-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 4px 0 12px;
+  border-bottom: 3px double var(--rule-2, #7f766a);
+}
+
+.experiment-lab-header h2,
+.experiment-lab-panel-title h3 {
+  margin: 2px 0 4px;
+  font-family: var(--font-display, "Iowan Old Style", "Palatino Linotype", Georgia, serif);
+  font-weight: 600;
+  color: var(--ink, #1a1714);
+}
+
+.experiment-lab-header p,
+.experiment-lab-panel-title p {
+  margin: 0;
+  max-width: 74ch;
+  color: var(--ink-3, #5f584f);
+}
+
+.experiment-lab-header-state {
+  display: flex;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.experiment-lab-header-state span {
+  display: grid;
+  gap: 2px;
+  min-width: 120px;
+  font: 600 .64rem/1.2 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4, #746c62);
+}
+
+.experiment-lab-header-state strong {
+  font-size: .72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink, #1a1714);
+}
+
+.experiment-lab-nav {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--rule-2, #b7ad9f);
+  background: var(--paper-1, #f4efe6);
+  overflow-x: auto;
+}
+
+.experiment-lab-nav button {
+  min-width: 112px;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 0;
+  border-right: 1px solid var(--rule-1, #d3cabd);
+  background: transparent;
+  color: var(--ink-3, #5f584f);
+  font: 650 .69rem/1.15 var(--font-ui, system-ui, sans-serif);
+  cursor: pointer;
+  text-align: left;
+}
+
+.experiment-lab-nav button:last-child { border-right: 0; }
+.experiment-lab-nav button:hover { background: var(--paper-2, #ebe4d8); color: var(--ink, #1a1714); }
+.experiment-lab-nav button.active {
+  background: var(--paper-2, #ebe4d8);
+  color: var(--accent, #b23a1a);
+  box-shadow: inset 0 -3px 0 var(--accent, #b23a1a);
+}
+
+.experiment-lab-nav button span {
+  display: block;
+  margin-bottom: 3px;
+  font: 700 .58rem/1 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: .1em;
+  color: var(--ink-4, #746c62);
+}
+
+.experiment-lab-panels { min-width: 0; }
+
+.experiment-lab-panel {
+  margin: 0;
+  min-width: 0;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--rule-2, #b7ad9f);
+  border-radius: 0;
+  background: var(--paper-1, #f4efe6);
+  box-shadow: none;
+}
+
+.experiment-lab-panel-title {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule-1, #d3cabd);
+}
+
+.experiment-lab-panel-title h3 { font-size: 1.2rem; }
+
+.experiment-lab-stage-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule-1, #d3cabd);
+  border-left: 1px solid var(--rule-1, #d3cabd);
+}
+
+.experiment-lab-stage-map button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  min-height: 104px;
+  padding: 13px;
+  border: 0;
+  border-right: 1px solid var(--rule-1, #d3cabd);
+  border-bottom: 1px solid var(--rule-1, #d3cabd);
+  background: transparent;
+  color: var(--ink, #1a1714);
+  text-align: left;
+  cursor: pointer;
+}
+
+.experiment-lab-stage-map button:hover { background: var(--paper-2, #ebe4d8); }
+.experiment-lab-stage-map span {
+  grid-row: 1 / span 2;
+  font: 700 .66rem/1 var(--font-mono, ui-monospace, monospace);
+  color: var(--accent, #b23a1a);
+}
+.experiment-lab-stage-map strong { font: 650 .84rem/1.2 var(--font-ui, system-ui, sans-serif); }
+.experiment-lab-stage-map small { color: var(--ink-3, #5f584f); line-height: 1.35; }
+
+.experiment-lab-boundary {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  margin-top: 14px;
+  padding: 10px 0 0;
+  border-top: 3px double var(--rule-2, #b7ad9f);
+}
+.experiment-lab-boundary strong {
+  flex: 0 0 auto;
+  font: 700 .66rem/1.2 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent, #b23a1a);
+}
+.experiment-lab-boundary span { color: var(--ink-3, #5f584f); }
+
+.experiment-lab-mount {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* The lab owns one outer standard box. Inner legacy surfaces become flat content. */
+.experiment-lab-panel .experiment-lab-flat-content,
+.experiment-lab-panel .research-catalog-selector,
+.experiment-lab-panel .research-contract-card,
+.experiment-lab-panel .experiment-library-card,
+.experiment-lab-panel .workflow-result-actions,
+.experiment-lab-panel .human-review-card,
+.experiment-lab-panel .rq-proposal-card,
+.experiment-lab-panel .research-review-inbox,
+.experiment-lab-panel .research-gateway-experiment,
+.experiment-lab-panel .research-dimension-control {
+  margin: 0 !important;
+  padding: 12px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--rule-1, #d3cabd) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.experiment-lab-panel .experiment-lab-mount > :first-child {
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.experiment-lab-panel .panel-title,
+.experiment-lab-panel .experiment-workflow-header {
+  margin: 0;
+  padding: 0 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--rule-1, #d3cabd);
+  background: transparent;
+  box-shadow: none;
+}
+
+.experiment-lab-panel .workflow-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.experiment-lab-panel .workflow-form-grid .workflow-wide { grid-column: 1 / -1; }
+
+[data-lab-mount="question"] > label {
+  display: grid;
+  gap: 5px;
+}
+
+/* Lists are rows, not nested cards. */
+.experiment-lab-panel .research-catalog-results,
+.experiment-lab-panel .experiment-library-list,
+.experiment-lab-panel .experiment-series-list,
+.experiment-lab-panel .research-review-list {
+  display: grid;
+  gap: 0;
+  max-height: none;
+  overflow: visible;
+  border-top: 1px solid var(--rule-1, #d3cabd);
+}
+
+.experiment-lab-panel .research-rq-card,
+.experiment-lab-panel .experiment-library-item,
+.experiment-lab-panel .research-review-card,
+.experiment-lab-panel .experiment-series-item {
+  margin: 0 !important;
+  padding: 10px 4px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--rule-1, #d3cabd) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.experiment-lab-panel .research-rq-card:hover,
+.experiment-lab-panel .research-rq-card.is-selected {
+  background: var(--paper-2, #ebe4d8) !important;
+  color: var(--ink, #1a1714);
+}
+
+.experiment-lab-panel .experiment-library-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.experiment-lab-panel .experiment-series-item > summary,
+.experiment-lab-panel .experiment-archive-section > summary {
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.experiment-lab-panel .workflow-progress-row,
+.experiment-lab-panel .workflow-actions,
+.experiment-lab-panel .experiment-actions,
+.experiment-lab-panel .button-group,
+.experiment-lab-panel .research-review-controls,
+.experiment-lab-panel .research-gateway-controls {
+  margin: 0;
+}
+
+.experiment-lab-panel pre {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--rule-1, #d3cabd);
+  border-radius: 0;
+  background: var(--paper-2, #ebe4d8);
+}
+
+.experiment-lab-source,
+.research-lanes[data-lab-legacy="true"],
+.research-focus-rail[data-lab-legacy="true"],
+.experiment-lab-hidden {
+  display: none !important;
+}
+
+/* Scientific instrument belongs to Wissenschaft > Observatory, never to Experimente. */
+#mhrn-scientific-metrics[data-mhrn-route="science:observatory"] {
+  margin-top: 0;
+}
+
+@media (max-width: 1100px) {
+  .experiment-lab-nav { grid-template-columns: repeat(4, minmax(140px, 1fr)); }
+  .experiment-lab-stage-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .experiment-lab-header { align-items: start; flex-direction: column; }
+  .experiment-lab-header-state { width: 100%; justify-content: space-between; }
+  .experiment-lab-nav { grid-template-columns: repeat(7, minmax(132px, 1fr)); }
+  .experiment-lab-stage-map { grid-template-columns: 1fr; }
+  .experiment-lab-panel { padding: 13px; }
+  .experiment-lab-panel .workflow-form-grid { grid-template-columns: 1fr; }
+  .experiment-lab-panel .workflow-form-grid .workflow-wide { grid-column: auto; }
+  .experiment-lab-boundary { align-items: start; flex-direction: column; gap: 6px; }
+}
+
+@media print {
+  .experiment-lab-nav { display: none; }
+  .experiment-lab-panel[hidden] { display: none !important; }
+}
