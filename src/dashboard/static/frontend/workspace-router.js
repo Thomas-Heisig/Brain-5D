@@ -12,6 +12,7 @@ function setRouteElementVisibility(element, visible) {
   element.classList.toggle(HIDDEN_CLASS, !visible);
   element.classList.toggle("mhrn-route-focus-hidden", !visible);
   element.setAttribute("aria-hidden", String(!visible));
+  element.style.display = visible ? "" : "none";
   if (!visible && !element.hasAttribute("inert")) {
     element.inert = true;
   } else if (visible && element.inert) {
