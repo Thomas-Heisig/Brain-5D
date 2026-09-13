@@ -171,7 +171,6 @@ function initFileManager() {
       toolbar.append(publication);
     }
     // Popup toggle checkbox
-    const toolbar = document.querySelector('.fm-toolbar');
     if (toolbar && !document.getElementById('fm-popup-toggle')) {
       const label = document.createElement('label');
       label.className = 'fm-popup-toggle';
