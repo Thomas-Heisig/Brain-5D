@@ -34,8 +34,10 @@ function ensurePanel() {
         <div id="cognition-world-model-detail" class="cognition-detail">lade …</div>
       </div>
     </div>`;
+  const subnav = workspace.querySelector(":scope > .wesen-subnav");
   const anchor = workspace.querySelector(":scope > header");
-  if (anchor) anchor.insertAdjacentElement("afterend", panel);
+  if (subnav) subnav.insertAdjacentElement("afterend", panel);
+  else if (anchor) anchor.insertAdjacentElement("afterend", panel);
   else workspace.prepend(panel);
   return panel;
 }

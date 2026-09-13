@@ -10,7 +10,11 @@ function ensurePanel() {
   panel.innerHTML = `<header><div><span class="workspace-kicker">RUNTIME INPUT / OUTPUT</span><h2>Manuelle Operator-Injektion</h2><p>Nur registrierte Input-Neuronen · Experimentmodus ist fail-closed · scientific_evidence=false.</p></div><span id="runtime-io-mode" class="maturity-state pending">unknown</span></header>
   <form id="runtime-io-form"><label>Input-Neuron<select id="runtime-io-neuron"></select></label><label>Strom<input id="runtime-io-current" type="number" step="0.1" min="-1000" max="1000" value="10"></label><label>Ticks<input id="runtime-io-ticks" type="number" min="1" max="10000" value="1"></label><button type="submit">Strom injizieren</button></form>
   <div class="runtime-io-readout"><strong id="runtime-io-status">lade …</strong><pre id="runtime-io-output">Noch kein manueller Eingriff.</pre></div>`;
-  const anchor = workspace.querySelector(":scope > header"); if (anchor) anchor.insertAdjacentElement("afterend", panel); else workspace.prepend(panel);
+  const subnav = workspace.querySelector(":scope > .wesen-subnav");
+  const anchor = workspace.querySelector(":scope > header");
+  if (subnav) subnav.insertAdjacentElement("afterend", panel);
+  else if (anchor) anchor.insertAdjacentElement("afterend", panel);
+  else workspace.prepend(panel);
   panel.querySelector("#runtime-io-form").addEventListener("submit", inject);
   return panel;
 }
