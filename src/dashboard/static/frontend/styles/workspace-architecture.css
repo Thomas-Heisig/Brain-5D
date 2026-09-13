@@ -24,8 +24,8 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
 }
 
 /* Science Transparency panel (Observatory) */
-.mhrn-science-transparency { padding: 0; border: 0; background: transparent; }
-.mhrn-science-transparency > header { padding: 10px 0; border-bottom: 1px solid var(--rule); margin-bottom: 10px; }
+.mhrn-science-transparency.card { padding: 0; }
+.mhrn-science-transparency > header { padding: 10px 0; }
 .mhrn-science-transparency > header h2 { margin: 3px 0 2px; font-size: .95rem; }
 .mhrn-science-transparency > header p { margin: 0; color: var(--ink-3); font-size: .66rem; }
 .science-transparency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
