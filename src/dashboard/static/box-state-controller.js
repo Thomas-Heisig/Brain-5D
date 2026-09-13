@@ -2,7 +2,7 @@
 "use strict";
 const STORAGE_KEY="brain5d-box-states";
 const BOX_SELECTOR=[".card",".panel",".control-card",".overview-surface",".snapshot-info-card",".workspace-tile",".wesen-card",".wesen-stage-card",".wesen-console",".wesen-symbiosis-card",".experiment-workflow",".release-view-panel",".gate-section",".connection-manager",".embodiment-system-strip",".embodiment-loop",".research-focus-rail",".research-catalog-selector",".research-contract-card",".experiment-library-card",".human-review-card",".rq-proposal-card",".research-review-inbox",".mhrn-area-map",".mhrn-science-transparency",".mhrn-scientific-metrics"].join(",");
-const EXCLUDED_SELECTOR=[".site-footer",".workspace-header",".overview-command-bar",".dashboard-generated-header",".dashboard-utility-bar",".experience-ribbon",".experience-welcome",".research-chat-modal",".mhrn-context-nav","dialog"].join(",");
+const EXCLUDED_SELECTOR=[".site-footer",".workspace-header",".overview-command-bar",".dashboard-generated-header",".dashboard-utility-bar",".experience-ribbon",".experience-welcome",".research-chat-modal",".mhrn-context-nav","dialog","[hidden]"].join(",");
 const HEADER_SELECTOR=[":scope > .panel-title",":scope > .overview-surface-title",":scope > .control-card__header",":scope > .console-header",":scope > .experiment-workflow-header",":scope > .gate-header",":scope > .release-header",":scope > header"].join(",");
 let states={},queued=false;
 function load(){try{states=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");}catch(_){states={};}}
