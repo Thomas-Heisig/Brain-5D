@@ -80,7 +80,7 @@ function renderConfig(data) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   const [heatmap, history, config] = await Promise.allSettled([
     apiGet("/api/structural/heatmap"),
     apiGet("/api/structural/history"),

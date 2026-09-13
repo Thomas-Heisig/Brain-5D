@@ -82,7 +82,7 @@ function renderExperiments(data) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   try {
     const [gw, exp] = await Promise.allSettled([
       apiGet("/api/embodiment/gateways"),

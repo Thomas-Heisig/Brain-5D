@@ -25,7 +25,9 @@ function render(payload) {
   panel.querySelector("#runtime-io-status").textContent = payload.manual_injection_allowed ? `bereit · ${payload.counts?.input_neurons ?? 0} Inputs / ${payload.counts?.output_neurons ?? 0} Outputs` : `gesperrt · ${payload.mode || payload.controller_state || "unknown"}`;
 }
 async function refresh() {
-  try { render(await apiGet("/api/runtime/io")); } catch (error) { const panel = ensurePanel(); if (panel) panel.querySelector("#runtime-io-status").textContent = `nicht verfügbar · ${error.message}`; }
+  const panel = ensurePanel();
+  if (!panel || panel.hidden) return;
+  try { render(await apiGet("/api/runtime/io")); } catch (error) { panel.querySelector("#runtime-io-status").textContent = `nicht verfügbar · ${error.message}`; }
 }
 async function inject(event) {
   event.preventDefault(); const panel = ensurePanel(); if (!panel) return;

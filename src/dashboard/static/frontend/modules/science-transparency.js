@@ -24,7 +24,7 @@ function ensurePanel() {
   panel.addEventListener("click", handleClick); return panel;
 }
 async function refresh() {
-  const panel = ensurePanel(); if (!panel) return;
+  const panel = ensurePanel(); if (!panel || panel.hidden) return;
   const [experiments, jobs, gate] = await Promise.allSettled([apiGet("/api/research/experiments"), apiGet("/api/research/analysis-jobs"), apiGet("/api/gate/status")]);
   const expPayload = experiments.status === "fulfilled" ? experiments.value : {};
   const expList = expPayload.experiments || expPayload.items || [];

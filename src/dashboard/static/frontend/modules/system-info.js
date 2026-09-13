@@ -109,7 +109,7 @@ function renderRelease(data) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   const [config, state, release] = await Promise.allSettled([
     apiGet("/api/config"),
     apiGet("/api/state"),

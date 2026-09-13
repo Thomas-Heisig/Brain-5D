@@ -9,5 +9,5 @@ function render(payload){const t=document.getElementById("docs-tree");if(!t)retu
 function stats(data){const t=document.getElementById("docs-statistics");if(t)t.innerHTML=Object.entries(data||{}).map(([k,v])=>`<div><span>${escapeHtml(k)}</span><strong>${escapeHtml(typeof v==="object"?JSON.stringify(v):v)}</strong></div>`).join("")||"Keine Statistik.";}
 async function search(){const q=document.getElementById("docs-search-input")?.value.trim();if(!q)return loadTree();try{render(await apiGet(`/api/docs/search?q=${encodeURIComponent(q)}`));}catch(e){document.getElementById("docs-tree").textContent=`Fehler: ${e.message}`;}}
 async function loadTree(){try{render(await apiGet("/api/docs/tree"));}catch(e){document.getElementById("docs-tree").textContent=`Fehler: ${e.message}`;}}
-async function load(){ensurePanel();await Promise.allSettled([loadTree(),apiGet("/api/docs/statistics").then(stats)]);}
+async function load(){const p=ensurePanel();if(!p||p.hidden)return;await Promise.allSettled([loadTree(),apiGet("/api/docs/statistics").then(stats)]);}
 export function initDocsBrowser(){ensurePanel();load();if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(load,30000);}

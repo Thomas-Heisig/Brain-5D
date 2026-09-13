@@ -98,7 +98,7 @@ function renderWorldModel(data) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   try {
     const [state, memory, worldModel] = await Promise.allSettled([
       apiGet("/api/cognition/state"),

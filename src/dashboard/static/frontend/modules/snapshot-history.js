@@ -116,7 +116,7 @@ function selectSnapshot(id, allSnapshots) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   try {
     const data = await apiGet("/api/snapshots");
     renderSnapshots(data);

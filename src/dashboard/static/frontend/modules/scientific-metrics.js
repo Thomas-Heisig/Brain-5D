@@ -255,7 +255,7 @@ function render(panel, payload, embodiment) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel) return;
+  if (!panel || panel.hidden) return;
   try {
     const [metrics, embodiment] = await Promise.all([apiGet("/api/science/metrics"), apiGet("/api/embodiment/metrics").catch(() => ({}))]);
     render(panel, metrics, embodiment);

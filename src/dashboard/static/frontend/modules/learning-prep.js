@@ -68,7 +68,8 @@ function renderPlans(payload) {
 }
 
 async function refresh() {
-  if (!ensurePanel()) return;
+  const p = ensurePanel();
+  if (!p || p.hidden) return;
   try { renderPlans(await apiGet("/api/learning/preparation")); }
   catch (error) { const target = document.getElementById("learning-prep-detail"); if (target) target.textContent = `Nicht verfügbar: ${error.message}`; const badge = document.getElementById("learning-prep-badge"); if (badge) badge.textContent = "unavailable"; }
 }
