@@ -470,12 +470,24 @@ function renderFMTree(node, container, depth) {
       const childContainer = document.createElement('div');
       childContainer.className = 'fm-dir-children is-hidden';
 
-      li.onclick = (event) => {
+      li.onclick = async (event) => {
         if (event.target.closest('.fm-tree-file, .fm-dir-children')) return;
         const expanded = childContainer.classList.contains('is-hidden');
         childContainer.classList.toggle('is-hidden', !expanded);
         li.classList.toggle('fm-dir-expanded', expanded);
         if (!childContainer.dataset.loaded) {
+          // Try to load children from API if not already present
+          if (!child.children || !child.children.length) {
+            try {
+              const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}&prefix=${encodeURIComponent(child.path)}`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data.children && data.children.length) {
+                  child.children = data.children;
+                }
+              }
+            } catch {}
+          }
           renderFMTree(child, childContainer, depth + 1);
           childContainer.dataset.loaded = 'true';
         }
