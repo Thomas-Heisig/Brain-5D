@@ -64,6 +64,8 @@ let fmCurrentFileSource = '';
 let fmViewerHistory = [];
 let fmUsePopup = localStorage.getItem('mhrn-fm-popup') !== 'false';
 let fmLastSelectedPath = '';
+let fmTreeCache = null; // Full tree cache for recursive lookups
+let fmViewerMode = localStorage.getItem('mhrn-fm-viewer-mode') || 'detail';
 const FM_RECENT_KEY = 'brain5d_fm_recent';
 const FM_RECENT_MAX = 20;
 
@@ -405,6 +407,18 @@ async function loadFMStats() {
   }
 }
 
+function findNodeInTree(node, targetPath) {
+  if (!node) return null;
+  if (node.path === targetPath) return node;
+  if (node.children) {
+    for (const c of node.children) {
+      const found = findNodeInTree(c, targetPath);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 async function loadFMTree() {
   const treeEl = document.getElementById('fm-tree');
   if (!treeEl) return;
@@ -420,12 +434,21 @@ async function loadFMTree() {
       return;
     }
 
+    // Cache the full tree
+    fmTreeCache = tree;
+
     treeEl.innerHTML = '';
     renderFMTree(tree, treeEl, 0);
     // Restore last selection
     if (fmLastSelectedPath) {
-      const selected = treeEl.querySelector(`[data-path="${escapeHtml(fmLastSelectedPath)}"], .fm-tree-file[data-path="${escapeHtml(fmLastSelectedPath)}"]`);
-      if (selected) selected.classList.add('fm-tree-selected');
+      const selected = treeEl.querySelector('.fm-tree-selected');
+      if (!selected) {
+        // Try to find and select the item by path
+        const allItems = treeEl.querySelectorAll('.fm-tree-file, .fm-tree-dir');
+        allItems.forEach(item => {
+          if (item.dataset.path === fmLastSelectedPath) item.classList.add('fm-tree-selected');
+        });
+      }
     }
   } catch (e) {
     treeEl.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(e.message)}</span>`;
@@ -489,33 +512,32 @@ function renderFMTree(node, container, depth) {
         if (!fmUsePopup) {
           showFolderInViewer(child.path, child);
         }
-        // Load children for tree expansion (only once per folder)
+        // Load children from cache on first expand
         if (!childContainer.dataset.loaded && !childContainer.dataset.loading) {
           childContainer.dataset.loading = 'true';
           childContainer.innerHTML = '<div class="fm-loading">Lade …</div>';
-          try {
-            const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
-            if (res.ok) {
-              const data = await res.json();
-              function findNode(node, targetPath) {
-                if (node.path === targetPath) return node;
-                if (node.children) { for (const c of node.children) { const found = findNode(c, targetPath); if (found) return found; } }
-                return null;
+          // Try cache first, fall back to API
+          let found = fmTreeCache ? findNodeInTree(fmTreeCache, child.path) : null;
+          if (!found) {
+            try {
+              const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
+              if (res.ok) {
+                const data = await res.json();
+                fmTreeCache = data;
+                found = findNodeInTree(data, child.path);
               }
-              const found = findNode(data, child.path);
-              if (found && found.children) {
-                child.children = found.children;
-                childContainer.innerHTML = '';
-                renderFMTree(child, childContainer, depth + 1);
-                childContainer.dataset.loaded = 'true';
-              }
-            }
-          } catch {}
-          delete childContainer.dataset.loading;
-          if (!childContainer.dataset.loaded) {
+            } catch {}
+          }
+          if (found && found.children && found.children.length) {
+            child.children = found.children;
+            childContainer.innerHTML = '';
+            renderFMTree(child, childContainer, depth + 1);
+            childContainer.dataset.loaded = 'true';
+          } else {
             childContainer.innerHTML = '<div class="fm-empty">(empty)</div>';
             childContainer.dataset.loaded = 'true';
           }
+          delete childContainer.dataset.loading;
         }
       };
 
@@ -546,30 +568,18 @@ function renderFMTree(node, container, depth) {
   container.appendChild(ul);
 }
 
-// Cache for folder tree data to avoid repeated API calls
-let fmFolderCache = null;
-
 async function ensureFolderChildren(path) {
-  if (fmFolderCache) {
-    function findNode(node, targetPath) {
-      if (node.path === targetPath) return node;
-      if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
-      return null;
-    }
-    const found = findNode(fmFolderCache, path);
+  // Use global tree cache
+  if (fmTreeCache) {
+    const found = findNodeInTree(fmTreeCache, path);
     if (found && found.children) return found.children;
   }
   try {
     const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
     if (res.ok) {
       const data = await res.json();
-      fmFolderCache = data;
-      function findNode(node, targetPath) {
-        if (node.path === targetPath) return node;
-        if (node.children) { for (const c of node.children) { const f = findNode(c, targetPath); if (f) return f; } }
-        return null;
-      }
-      const found = findNode(data, path);
+      fmTreeCache = data;
+      const found = findNodeInTree(data, path);
       if (found && found.children) return found.children;
     }
   } catch {}
@@ -584,7 +594,9 @@ async function showFolderInViewer(path, node) {
   let folderItems = node?.children || [];
   if (!folderItems.length) folderItems = await ensureFolderChildren(path);
   const items = folderItems;
-  let html = `<div class="fm-folder-viewer-header"><span class="workspace-kicker">ORDNERINHALT</span><strong>${escapeHtml(path)}</strong><span class="fm-folder-count">${items.length} Einträge</span></div>`;
+  const gridIcon = fmViewerMode === 'grid' ? '▦' : '☰';
+  const gridTitle = fmViewerMode === 'grid' ? 'Grid' : 'Liste';
+  let html = `<div class="fm-folder-viewer-header"><span class="workspace-kicker">ORDNERINHALT</span><strong>${escapeHtml(path)}</strong><span class="fm-folder-count">${items.length} Einträge</span><button type="button" class="fm-viewer-mode-btn" title="Ansicht: ${gridTitle}" data-fm-toggle-view>${gridIcon}</button></div>`;
   html += '<div class="fm-folder-viewer-list">';
   // Parent directory link (if not root)
   if (path && path !== '.') {
@@ -596,16 +608,25 @@ async function showFolderInViewer(path, node) {
     if (a.type !== b.type) return a.type === 'directory' ? -1 : 1;
     return a.name.localeCompare(b.name);
   });
+  const isGrid = fmViewerMode === 'grid';
+  const containerClass = isGrid ? 'fm-folder-grid' : 'fm-folder-list';
+  html += `<div class="${containerClass}">`;
   for (const item of sorted) {
     if (item.type === 'directory') {
-      html += `<div class="fm-folder-item fm-folder-dir" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">📁</span> ${escapeHtml(item.name)}</div>`;
+      html += `<div class="fm-folder-item fm-folder-dir" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">📁</span><span class="fm-folder-name">${escapeHtml(item.name)}</span></div>`;
     } else {
       const icon = item.is_image ? '🖼️' : item.is_video ? '🎬' : item.is_audio ? '🎵' : item.is_spreadsheet ? '📊' : item.is_document ? '📘' : item.is_binary ? '📦' : '📄';
-      html += `<div class="fm-folder-item fm-folder-file" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">${icon}</span> ${escapeHtml(item.name)} <span class="fm-file-size">${formatBytes(item.size_bytes)}</span></div>`;
+      html += `<div class="fm-folder-item fm-folder-file" data-path="${escapeHtml(item.path)}"><span class="fm-folder-icon">${icon}</span><span class="fm-folder-name">${escapeHtml(item.name)}</span><span class="fm-file-size">${formatBytes(item.size_bytes)}</span></div>`;
     }
   }
   html += '</div>';
   viewer.innerHTML = html;
+  // View mode toggle
+  viewer.querySelector('[data-fm-toggle-view]')?.addEventListener('click', () => {
+    fmViewerMode = fmViewerMode === 'grid' ? 'detail' : 'grid';
+    localStorage.setItem('mhrn-fm-viewer-mode', fmViewerMode);
+    showFolderInViewer(path, null);
+  });
   // Click handlers
   viewer.querySelectorAll('.fm-folder-item').forEach(el => {
     el.addEventListener('click', async () => {
