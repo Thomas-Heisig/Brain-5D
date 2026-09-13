@@ -572,10 +572,9 @@ async function showFolderInViewer(path, node) {
   const viewer = document.getElementById('fm-viewer');
   if (!viewer) return;
   viewer.classList.remove('fm-viewer-hidden');
-  let items = node?.children || [];
-  if (!items.length) items = await ensureFolderChildren(path);
-  // Build a list of items in this folder
-  const items = node.children || [];
+  let folderItems = node?.children || [];
+  if (!folderItems.length) folderItems = await ensureFolderChildren(path);
+  const items = folderItems;
   let html = `<div class="fm-folder-viewer-header"><span class="workspace-kicker">ORDNERINHALT</span><strong>${escapeHtml(path)}</strong><span class="fm-folder-count">${items.length} Einträge</span></div>`;
   html += '<div class="fm-folder-viewer-list">';
   // Parent directory link (if not root)
