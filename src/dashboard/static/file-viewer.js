@@ -21,7 +21,7 @@
 // BibTeX Viewer import (for structured .bib file display)
 // ================================================================
 
-import { renderFile, createTextFile, renderMessage } from './file-renderer.js';
+import { renderFile, createTextFile, renderMessage, iconButton } from './file-renderer.js';
 
 // ================================================================
 // Local helpers (mirrored from app.js to keep this module standalone)
@@ -553,18 +553,15 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
       for (const [label, loader] of [['History', loadFMHistory], ['Analyse', loadFMAnalyze], ['Notizen', loadFMMeta]]) {
         if (label === 'Notizen' && data.read_only) continue;
         const panel = document.createElement('div'); panel.classList.add('is-hidden'); viewer.append(panel);
-        const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
-        button.addEventListener('click', () => loader(path, source, panel)); actions.append(button);
+        actions.append(iconButton(label, () => loader(path, source, panel)));
       }
       const aiPanel = document.createElement('div'); aiPanel.classList.add('is-hidden'); viewer.append(aiPanel);
-      const aiButton = document.createElement('button'); aiButton.type = 'button'; aiButton.textContent = 'KI-Analyse';
-      aiButton.addEventListener('click', () => loadFMAIAnalysis(path, source, aiPanel, data)); actions.append(aiButton);
-      const exportButton = document.createElement('button'); exportButton.type = 'button'; exportButton.textContent = 'Export';
-      exportButton.addEventListener('click', () => {
+      actions.append(iconButton('KI-Analyse', () => loadFMAIAnalysis(path, source, aiPanel, data)));
+      const exportBtn = iconButton('Export', () => {
         const format = window.prompt('Export: html, docx oder md', 'html');
         if (['html', 'docx', 'md'].includes(format)) window.open(`/api/files/export/${encodeURIComponent(path)}?source=${encodeURIComponent(source)}&format=${format}`, '_blank', 'noopener');
       });
-      if (!data.truncated && ['text', 'markdown', 'json', 'table', 'formula'].includes(data.kind)) actions.append(exportButton);
+      if (!data.truncated && ['text', 'markdown', 'json', 'table', 'formula'].includes(data.kind)) actions.append(exportBtn);
     }
   });
 }

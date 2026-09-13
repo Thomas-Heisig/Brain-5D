@@ -29,7 +29,7 @@ const ICONS = {
   'History': '🕐', 'Analyse': '📊', 'Notizen': '📝', 'KI-Analyse': '🤖', 'Export': '📤',
 };
 
-function iconButton(label, action, { icon } = {}) {
+export function iconButton(label, action, { icon } = {}) {
   const control = node('button', icon || ICONS[label] || '•', 'file-renderer-action file-renderer-icon-btn');
   control.type = 'button';
   control.title = label;
@@ -557,7 +557,7 @@ export async function renderFile(container, reference, options = {}) {
     const header = node('header', '', 'fm-file-header file-renderer-header');
     header.append(node('strong', `${source}/${path}`));
     const actions = node('div', '', 'file-renderer-actions'); header.append(actions);
-    const download = node('a', 'Original herunterladen'); download.href = `${raw}&download=1`; download.download = data.name; actions.append(download);
+    const download = node('a', '⬇', 'file-renderer-icon-btn'); download.href = `${raw}&download=1`; download.download = data.name; download.title = 'Original herunterladen'; download.setAttribute('aria-label', 'Original herunterladen'); actions.append(download);
     const body = node('div', '', 'file-renderer-body');
     const notice = node('p', '', 'file-renderer-notice'); notice.setAttribute('role', 'status');
     container.replaceChildren(header, notice, body);
