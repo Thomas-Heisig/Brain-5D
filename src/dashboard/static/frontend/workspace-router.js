@@ -226,8 +226,15 @@ function hideLocalTabs() {
 function resetWorkspaceVisibility(workspace) {
   const root = rootFor(workspace);
   if (!root) return;
-  root.querySelectorAll("section, article, .card, .panel, .overview-subpanel, .research-subpanel, .embodiment-subpanel, .operator-console, .experiment-panel, [data-generated-panel], [data-workspace-panel], [data-network-view], .mhrn-scientific-metrics, .mhrn-cognition, .mhrn-gateway-monitor, .wesen-profile-panel, #wesen-neural-symbiosis, .mhrn-area-overview, .mhrn-learning-prep, .mhrn-structural-inspector").forEach((node) => {
+  // Only hide top-level route-managed panels, not every nested section/article.
+  // This prevents hiding content inside panels that should remain visible.
+  const routeManaged = root.querySelectorAll(":scope > .overview-subpanel, :scope > .research-subpanel, :scope > .embodiment-subpanel, :scope > [data-generated-panel], :scope > [data-workspace-panel], :scope > [data-release-view], :scope > .mhrn-area-overview, :scope > .mhrn-scientific-metrics, :scope > .mhrn-cognition, :scope > .mhrn-gateway-monitor, :scope > .wesen-profile-panel, :scope > #wesen-neural-symbiosis, :scope > .mhrn-learning-prep, :scope > .mhrn-structural-inspector, :scope > .operator-console, :scope > .experiment-panel, :scope > .control-card, :scope > .structural-live-card, :scope > .settings-guardrail-grid, :scope > .settings-mode-selector, :scope > .settings-domain-filter, :scope > .settings-note, :scope > .parameter-inspector-card, :scope > .release-board, :scope > .card.heatmap-panel, :scope > .card.io-flow-panel, :scope > .card.population-panel, :scope > .card.raster-panel, :scope > .card.histogram-panel, :scope > .card.panel, :scope > .wesen-layout, :scope > .wesen-stage-card, :scope > .wesen-console, :scope > .wesen-sidebar, :scope > .embodiment-living-map, :scope > .connection-manager, :scope > .embodiment-system-strip, :scope > .embodiment-loop, :scope > .embodiment-detail-modal, :scope > .wesen-cognition-zone, :scope > .wesen-profile-grid, :scope > .wesen-profile-toolbar, :scope > .wesen-profile-boundary, :scope > .wesen-profile-header");
+  routeManaged.forEach((node) => {
     if (isPersistent(node)) return;
+    setRouteElementVisibility(node, false);
+  });
+  // Also hide any dynamically injected focus-only content that is a direct child
+  root.querySelectorAll(":scope > .mhrn-route-focus-hidden").forEach((node) => {
     setRouteElementVisibility(node, false);
   });
 }
