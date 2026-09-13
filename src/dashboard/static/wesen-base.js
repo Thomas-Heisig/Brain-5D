@@ -1,49 +1,680 @@
-/* MHRN Wesen workspace — stabilisierte Fassung
+/* Brain-5D Wesen workspace — stabilisierte Fassung
  * Read-only, machine-native body visualization.
- * Beobachteter Zustand: kein Lernen, keine Sprache, keine Aktor-Schreibzugriffe.
+ * Observed state only: no learning, language output or actuator writes.
+ *
+ * Wichtigste Änderungen:
+ *  - Langsamerer Poll (1 s statt 750 ms)
+ *  - Adaptive-Profile-Werte werden weichgezeichnet (gleitendes Mittel)
+ *  - Membrane-Pfad wird via CSS transition geglättet
+ *  - animateMotion durch CSS offset-path-Animationen ersetzt (kein Neustart)
  */
 const WESEN_POLL_MS = 1000;
 const NS = "http://www.w3.org/2000/svg";
+
 const WESEN_BASE = [
   { id: "kern", label: "SNN-Kern", kind: "core", hue: "gold", icon: "◆" },
   { id: "innenzustand", label: "Interozeption", kind: "internal", hue: "rose", icon: "♥" },
   { id: "rueckkopplung", label: "Rückkopplung", kind: "feedback", hue: "violet", icon: "↻" },
   { id: "struktur", label: "Körpergrenze", kind: "structure", hue: "green", icon: "⌬" },
 ];
+
 const state = {
-  status: null, embodiment: null, connections: null,
-  selected: "kern", history: [], recurrence: [], morphologyHistory: [],
-  previousSignature: "", paused: false, zoom: 1, filter: "all",
-  timer: null, controller: null, organRefs: null, nerveRefs: null,
+  status: null,
+  embodiment: null,
+  connections: null,
+  selected: "kern",
+  history: [],
+  recurrence: [],
+  morphologyHistory: [],
+  previousSignature: "",
+  paused: false,
+  zoom: 1,
+  filter: "all",
+  timer: null,
+  controller: null,
+  /** Einmal aufgebaute SVG-Referenzen */
+  organRefs: null,
+  nerveRefs: null,
   lastPositions: null,
+  /** Weichzeichnung für adaptiveProfile */
   smoothProfile: { scale: 1, tension: 0, pressure: 0, level: "ok" },
 };
-function num(v) {
-  if (v===null||v===undefined||typeof v==="boolean"||(typeof v==="string"&&v.trim()==="")||!["number","string"].includes(typeof v)) return null;
-  const n=Number(v); return Number.isFinite(n)?n:null;
+
+function num(value) {
+  if (value === null || value === undefined || typeof value === "boolean" ||
+      (typeof value === "string" && value.trim() === "") ||
+      !["number", "string"].includes(typeof value)) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
-function pick(src,paths){for(const p of paths){let v=src;for(const part of p.split("."))v=v&&typeof v==="object"?v[part]:undefined;if(v!==undefined&&v!==null&&v!=="")return v;}return null;}
-function text(src,paths,f="unbekannt"){const v=pick(src,paths);return v===null?f:String(v);}
-function metric(src,paths){return num(pick(src,paths));}
-function fmt(v,s="",d=1){const n=num(v);return n===null?"—":${n.toFixed(d)};}
-function clamp(v,min=0,max=1){return Math.max(min,Math.min(max,v));}
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-async function wesenReadJson(url,signal){const r=await fetch(url,{cache:"no-store",signal});if(!r.ok)throw new Error(${url}: );return r.json();}
-function wesenConnectionArray(){const p=state.connections;if(!p)return[];for(const c of[p.connections,p.items,p.devices,p.available_connections,p]){if(Array.isArray(c))return c;}return[];}
-function connectionLabel(item,i){return text(item,["label","name","id","connection_id","device_id"],Verbindung );}
-function connectionKind(item){return text(item,["kind","type","category","direction","capability"],"connection").toLowerCase();}
-function classifyConnection(item){const r=${connectionLabel(item,0)}  .toLowerCase();if(/actuator|output|printer|display|speaker|robot|motor|arm|write|send/.test(r))return"actuator";if(/camera|micro|audio|sensor|weather|input|network|vision|temperature/.test(r))return"sensor";return"connection";}
-function statusClass(v){const r=String(v??"unknown").toLowerCase();if(/critical|error|failed|offline|unsafe|lost/.test(r))return"critical";if(/warn|degraded|pressure|partial|stale|paused/.test(r))return"warn";if(/ok|healthy|active|running|stable|ready|connected|true|nominal/.test(r))return"ok";return"unknown";}
-function runtimeMetrics(){const s=state.status||{},e=state.embodiment||{};return{tick:pick(s,["tick","runtime.tick","metrics.tick"]),firing:metric(s,["firing_rate_hz","metrics.firing_rate_hz","network.firing_rate_hz"]),targetHz:metric(s,["runtime_clock.target_hz","target_hz","runtime.target_hz"]),achievedHz:metric(s,["runtime_clock.achieved_hz","achieved_hz","runtime.achieved_hz"]),energy:metric(e,["energy","metrics.energy","homeostasis.energy"]),cpu:metric(e,["host.cpu_percent","interoception.cpu_percent","metrics.cpu_percent"]),memory:metric(e,["host.memory_percent","interoception.memory_percent","metrics.memory_percent"]),temp:metric(e,["host.temperature_c","interoception.temperature_c","metrics.temperature_c"]),fan:metric(e,["host.fan_rpm","interoception.fan_rpm","metrics.fan_rpm"]),disk:metric(e,["host.disk_percent","interoception.disk_percent","metrics.disk_percent"]),recurrence:metric(e,["recurrence","metrics.recurrence","loopback.recurrence","feedback.recurrence"]),latency:metric(e,["loopback_latency_ms","metrics.loopback_latency_ms","loopback.latency_ms","feedback.latency_ms"]),regulation:text(e,["regulatory_state","homeostasis.state","homeostasis_status"],"unbekannt"),environment:text(e,["environment.name","environment_status","environment.state"],"nicht beobachtet")};}
-function dynamicNodes(){const n=[...WESEN_BASE];const c=wesenConnectionArray();c.forEach((item,i)=>{const t=classifyConnection(item);n.push({id:conn-,label:connectionLabel(item,i),kind:t,hue:t==="sensor"?"cyan":t==="actuator"?"amber":"blue",icon:t==="sensor"?"◉":t==="actuator"?"▶":"•",source:item});});if(!c.some(i=>classifyConnection(i)==="sensor"))n.push({id:"sensor-placeholder",label:"Sensorik",kind:"sensor",hue:"cyan",icon:"◉",placeholder:true});if(!c.some(i=>classifyConnection(i)==="actuator"))n.push({id:"actuator-placeholder",label:"Aktorik",kind:"actuator",hue:"amber",icon:"▶",placeholder:true});return n;}
-function morphologySignature(n){return n.filter(x=>!x.placeholder).map(x=>${x.kind}:).sort().join("|");}
-function recordMorphology(n){const s=morphologySignature(n);if(!state.previousSignature)state.previousSignature=s;if(s===state.previousSignature)return;state.previousSignature=s;const e={time:new Date().toLocaleTimeString("de-DE",{hour12:false}),signature:s,count:n.length};state.morphologyHistory.unshift(e);if(state.morphologyHistory.length>12)state.morphologyHistory.length=12;pushEvent("structure","Körpergrenze verändert",${n.filter(x=>!x.placeholder).length} beobachtete Körperknoten);}
-function layoutNodes(n){const c={x:450,y:350},g={sensor:[],actuator:[],internal:[],feedback:[],structure:[],connection:[]};n.forEach(x=>{if(x.kind!=="core")(g[x.kind]||g.connection).push(x);});const p={kern:c};const arc=(items,cx,cy,rx,ry,start,end)=>{items.forEach((item,i)=>{const t=items.length===1?.5:i/(items.length-1),a=start+(end-start)*t;p[item.id]={x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry};});};arc(g.sensor,430,340,300,235,Math.PI*1.05,Math.PI*1.55);arc(g.actuator,465,365,310,235,Math.PI*.15,Math.PI*.65);arc(g.connection,450,350,325,210,Math.PI*.72,Math.PI*.98);p.innenzustand={x:340,y:435};p.rueckkopplung={x:555,y:445};p.struktur={x:450,y:565};return p;}
-function computeRawProfile(){const m=runtimeMetrics(),e=state.embodiment||{};const sn=dynamicNodes().filter(x=>x.kind==="sensor"&&!x.placeholder),an=dynamicNodes().filter(x=>x.kind==="actuator"&&!x.placeholder);const sl=pick(e,["sensor_loss","degraded_sensor","metrics.sensor_loss"]),af=pick(e,["actuator_fault","actuator_error","metrics.actuator_fault"]),net=text(e,["host.network_state","network_state","interoception.network_state"],"unknown");const pressure=Math.max(m.cpu===null?0:m.cpu/100,m.memory===null?0:m.memory/100,m.disk===null?0:m.disk/100,m.temp===null?0:clamp((m.temp-45)/45));let label="Stabil beobachtet",level="ok",scale=1,tension=0;if(sl===true||/lost|offline|degraded/.test(String(sl).toLowerCase())){label="Sensorverlust";level="warn";scale=.97;tension=.45;}if(af===true||/failed|error|offline/.test(String(af).toLowerCase())){label="Aktorfehler";level="warn";scale=.96;tension=.5;}if(/offline|isolated|down/.test(net.toLowerCase())){label="Netzwerkisolation";level="warn";scale=.95;tension=.6;}if(pressure>.82){label=m.temp!==null&&m.temp>80?"Thermische Belastung":"Ressourcendruck";level="critical";scale=.91;tension=1;}else if(pressure>.65&&level==="ok"){label="Erhöhte Belastung";level="warn";scale=.96;tension=.5;}return{label,level,scale,tension,pressure,notes:[Sensoren: ,Aktoren: ,Regulation: ,Netzwerk: ,]};}
-function smoothProfile(raw){const s=state.smoothProfile,rate=.35;s.scale=s.scale+(raw.scale-s.scale)*rate;s.tension=s.tension+(raw.tension-s.tension)*rate;s.pressure=s.pressure+(raw.pressure-s.pressure)*rate;s.level=raw.level;return{...s,label:raw.label,notes:raw.notes};}
-function adaptiveProfile(){return smoothProfile(computeRawProfile());}
-function buildSvgOnce(nodes,positions){const ol=document.getElementById("wesen-organ-layer"),cl=document.getElementById("wesen-connection-layer"),pl=document.getElementById("wesen-pin-layer");if(!ol||!cl||!pl)return;state.organRefs={};state.nerveRefs={};state.lastPositions={};const core=positions.kern;nodes.filter(n=>n.id!=="kern").forEach(node=>{const p=positions[node.id];if(!p)return;const path=document.createElementNS(NS,"path");path.setAttribute("d",M   Q    );path.setAttribute("class",wesen-nerve kind-);path.dataset.node=node.id;cl.appendChild(path);state.nerveRefs[node.id]=path;state.lastPositions[node.id]=p;});nodes.forEach(node=>{const p=positions[node.id];if(!p)return;const r=node.kind==="core"?70:node.kind==="sensor"||node.kind==="actuator"?38:48;const g=document.createElementNS(NS,"g");g.setAttribute("transform",	ranslate( ));g.dataset.node=node.id;g.tabIndex=0;g.setAttribute("role","button");g.innerHTML=[<circle class="wesen-organ-halo" r=""/>,<circle class="wesen-organ-body" r=""/>,<circle class="wesen-organ-status" cx="" cy="-" r="6"/>,<text class="wesen-organ-icon" y="-7"></text>,<text class="wesen-organ-label" y="15"></text>,<text class="wesen-organ-value" y="33">—</text>,].join("");ol.appendChild(g);state.organRefs[node.id]={g,r};if(!node.placeholder){const pin=document.createElementNS(NS,"g");pin.setAttribute("transform",	ranslate( ));pin.setAttribute("class","wesen-data-pin");pin.innerHTML=<rect x="0" y="-16" rx="5" width="92" height="23"/><text x="7" y="0">—</text>;pl.appendChild(pin);state.organRefs[node.id].pinText=pin.querySelector("text");}});}
-function nodeValue(node){const m=runtimeMetrics();if(node.id==="kern")return m.firing===null?"—":${m.firing.toFixed(1)} Hz;if(node.id==="innenzustand")return m.regulation;if(node.id==="rueckkopplung")return m.recurrence===null?"—":m.recurrence.toFixed(2);if(node.id==="struktur")return ${wesenConnectionArray().length} Ports;if(node.placeholder)return"nicht verfügbar";return text(node.source,["status","state","available","connected"],"beobachtet");}
-function updateOrgans(nodes,positions){const refs=state.organRefs;if(!refs)return;nodes.forEach(node=>{const ref=refs[node.id];if(!ref)return;const p=positions[node.id];const cls=wesen-organ wesen-hue- kind-;if(ref.g.getAttribute("class")!==cls)ref.g.setAttribute("class",cls);const val=nodeValue(node);if(ref.pinText&&ref.pinText.textContent!==val.slice(0,18))ref.pinText.textContent=val.slice(0,18);const vt=ref.g.querySelector(".wesen-organ-value");if(vt&&vt.textContent!==val)vt.textContent=val;});}
-function updateNerves(nodes,positions){const refs=state.nerveRefs;if(!refs)return;nodes.filter(n=>n.id!=="kern").forEach(node=>{const path=refs[node.id];if(!path)return;const p=positions[node.id];if(!p)return;const core=positions.kern;const d=M   Q    ;if(path.getAttribute("d")!==d)path.setAttribute("d",d);});}
-function membranePath(nodes,positions,profile){const pts=nodes.filter(n=>!n.placeholder&&positions[n.id]).map(n=>positions[n.id]);if(!pts.length)return"M450 80 C720 80 820 220 820 350 C820 570 650 640 450 640 C250 640 80 570 80 350 C80 180 220 80 450 80Z";const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);const minX=Math.max(35,Math.min(...xs)-95),maxX=Math.min(865,Math.max(...xs)+95);const minY=Math.max(45,Math.min(...ys)-90),maxY=Math.min(655,Math.max(...ys)+90);const inset=profile.tension*18;returnM  C      C      C     Z;}
+function pick(source, paths) {
+  for (const path of paths) {
+    let value = source;
+    for (const part of path.split(".")) value = value && typeof value === "object" ? value[part] : undefined;
+    if (value !== undefined && value !== null && value !== "") return value;
+  }
+  return null;
+}
+function text(source, paths, fallback = "unbekannt") {
+  const value = pick(source, paths);
+  return value === null ? fallback : String(value);
+}
+function metric(source, paths) { return num(pick(source, paths)); }
+function fmt(value, suffix = "", digits = 1) {
+  const n = num(value);
+  return n === null ? "—" : `${n.toFixed(digits)}${suffix}`;
+}
+function clamp(value, min = 0, max = 1) { return Math.max(min, Math.min(max, value)); }
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+async function wesenReadJson(url, signal) {
+  const response = await fetch(url, { cache: "no-store", signal });
+  if (!response.ok) throw new Error(`${url}: ${response.status}`);
+  return response.json();
+}
+function wesenConnectionArray() {
+  const payload = state.connections;
+  if (!payload) return [];
+  for (const candidate of [payload.connections, payload.items, payload.devices, payload.available_connections, payload]) {
+    if (Array.isArray(candidate)) return candidate;
+  }
+  return [];
+}
+function connectionLabel(item, index) {
+  return text(item, ["label", "name", "id", "connection_id", "device_id"], `Verbindung ${index + 1}`);
+}
+function connectionKind(item) {
+  return text(item, ["kind", "type", "category", "direction", "capability"], "connection").toLowerCase();
+}
+function classifyConnection(item) {
+  const raw = `${connectionLabel(item, 0)} ${connectionKind(item)} ${JSON.stringify(item)}`.toLowerCase();
+  if (/actuator|output|printer|display|speaker|robot|motor|arm|write|send/.test(raw)) return "actuator";
+  if (/camera|micro|audio|sensor|weather|input|network|vision|temperature/.test(raw)) return "sensor";
+  return "connection";
+}
+function statusClass(value) {
+  const raw = String(value ?? "unknown").toLowerCase();
+  if (/critical|error|failed|offline|unsafe|lost/.test(raw)) return "critical";
+  if (/warn|degraded|pressure|partial|stale|paused/.test(raw)) return "warn";
+  if (/ok|healthy|active|running|stable|ready|connected|true|nominal/.test(raw)) return "ok";
+  return "unknown";
+}
+function runtimeMetrics() {
+  const s = state.status || {};
+  const e = state.embodiment || {};
+  return {
+    tick: pick(s, ["tick", "runtime.tick", "metrics.tick"]),
+    firing: metric(s, ["firing_rate_hz", "metrics.firing_rate_hz", "network.firing_rate_hz"]),
+    targetHz: metric(s, ["runtime_clock.target_hz", "target_hz", "runtime.target_hz"]),
+    achievedHz: metric(s, ["runtime_clock.achieved_hz", "achieved_hz", "runtime.achieved_hz"]),
+    energy: metric(e, ["energy", "metrics.energy", "homeostasis.energy"]),
+    cpu: metric(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]),
+    memory: metric(e, ["host.memory_percent", "interoception.memory_percent", "metrics.memory_percent"]),
+    temp: metric(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]),
+    fan: metric(e, ["host.fan_rpm", "interoception.fan_rpm", "metrics.fan_rpm"]),
+    disk: metric(e, ["host.disk_percent", "interoception.disk_percent", "metrics.disk_percent"]),
+    recurrence: metric(e, ["recurrence", "metrics.recurrence", "loopback.recurrence", "feedback.recurrence"]),
+    latency: metric(e, ["loopback_latency_ms", "metrics.loopback_latency_ms", "loopback.latency_ms", "feedback.latency_ms"]),
+    regulation: text(e, ["regulatory_state", "homeostasis.state", "homeostasis_status"], "unbekannt"),
+    environment: text(e, ["environment.name", "environment_status", "environment.state"], "nicht beobachtet"),
+  };
+}
+
+function dynamicNodes() {
+  const nodes = [...WESEN_BASE];
+  const connections = wesenConnectionArray();
+  connections.forEach((item, index) => {
+    const type = classifyConnection(item);
+    const id = `conn-${index}`;
+    nodes.push({
+      id,
+      label: connectionLabel(item, index),
+      kind: type,
+      hue: type === "sensor" ? "cyan" : type === "actuator" ? "amber" : "blue",
+      icon: type === "sensor" ? "◉" : type === "actuator" ? "▶" : "•",
+      source: item,
+    });
+  });
+  if (!connections.some((item) => classifyConnection(item) === "sensor")) {
+    nodes.push({ id: "sensor-placeholder", label: "Sensorik", kind: "sensor", hue: "cyan", icon: "◉", placeholder: true });
+  }
+  if (!connections.some((item) => classifyConnection(item) === "actuator")) {
+    nodes.push({ id: "actuator-placeholder", label: "Aktorik", kind: "actuator", hue: "amber", icon: "▶", placeholder: true });
+  }
+  return nodes;
+}
+function morphologySignature(nodes) {
+  return nodes.filter((n) => !n.placeholder).map((n) => `${n.kind}:${n.label}`).sort().join("|");
+}
+function recordMorphology(nodes) {
+  const signature = morphologySignature(nodes);
+  if (!state.previousSignature) state.previousSignature = signature;
+  if (signature === state.previousSignature) return;
+  state.previousSignature = signature;
+  const entry = { time: new Date().toLocaleTimeString("de-DE", { hour12: false }), signature, count: nodes.length };
+  state.morphologyHistory.unshift(entry);
+  if (state.morphologyHistory.length > 12) state.morphologyHistory.length = 12;
+  pushEvent("structure", "Körpergrenze verändert", `${nodes.filter((n) => !n.placeholder).length} beobachtete Körperknoten`);
+}
+
+function layoutNodes(nodes) {
+  const center = { x: 450, y: 350 };
+  const groups = { sensor: [], actuator: [], internal: [], feedback: [], structure: [], connection: [] };
+  nodes.forEach((n) => { if (n.kind !== "core") (groups[n.kind] || groups.connection).push(n); });
+  const positions = { kern: center };
+  const placeArc = (items, cx, cy, rx, ry, start, end) => {
+    items.forEach((item, i) => {
+      const t = items.length === 1 ? 0.5 : i / (items.length - 1);
+      const angle = start + (end - start) * t;
+      positions[item.id] = { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
+    });
+  };
+  placeArc(groups.sensor, 430, 340, 300, 235, Math.PI * 1.05, Math.PI * 1.55);
+  placeArc(groups.actuator, 465, 365, 310, 235, Math.PI * 0.15, Math.PI * 0.65);
+  placeArc(groups.connection, 450, 350, 325, 210, Math.PI * 0.72, Math.PI * 0.98);
+  positions.innenzustand = { x: 340, y: 435 };
+  positions.rueckkopplung = { x: 555, y: 445 };
+  positions.struktur = { x: 450, y: 565 };
+  return positions;
+}
+
+function computeRawProfile() {
+  const m = runtimeMetrics();
+  const e = state.embodiment || {};
+  const sensorNodes = dynamicNodes().filter((n) => n.kind === "sensor" && !n.placeholder);
+  const actuatorNodes = dynamicNodes().filter((n) => n.kind === "actuator" && !n.placeholder);
+  const sensorLost = pick(e, ["sensor_loss", "degraded_sensor", "metrics.sensor_loss"]);
+  const actuatorFault = pick(e, ["actuator_fault", "actuator_error", "metrics.actuator_fault"]);
+  const network = text(e, ["host.network_state", "network_state", "interoception.network_state"], "unknown");
+  const pressure = Math.max(
+    m.cpu === null ? 0 : m.cpu / 100,
+    m.memory === null ? 0 : m.memory / 100,
+    m.disk === null ? 0 : m.disk / 100,
+    m.temp === null ? 0 : clamp((m.temp - 45) / 45)
+  );
+  let label = "Stabil beobachtet", level = "ok", scale = 1, tension = 0;
+  if (sensorLost === true || /lost|offline|degraded/.test(String(sensorLost).toLowerCase())) {
+    label = "Sensorverlust"; level = "warn"; scale = 0.97; tension = 0.45;
+  }
+  if (actuatorFault === true || /failed|error|offline/.test(String(actuatorFault).toLowerCase())) {
+    label = "Aktorfehler"; level = "warn"; scale = 0.96; tension = 0.5;
+  }
+  if (/offline|isolated|down/.test(network.toLowerCase())) {
+    label = "Netzwerkisolation"; level = "warn"; scale = 0.95; tension = 0.6;
+  }
+  if (pressure > 0.82) {
+    label = m.temp !== null && m.temp > 80 ? "Thermische Belastung" : "Ressourcendruck";
+    level = "critical"; scale = 0.91; tension = 1;
+  } else if (pressure > 0.65 && level === "ok") {
+    label = "Erhöhte Belastung"; level = "warn"; scale = 0.96; tension = 0.5;
+  }
+  return {
+    label, level, scale, tension, pressure,
+    notes: [
+      `Sensoren: ${sensorNodes.length || "unbekannt"}`,
+      `Aktoren: ${actuatorNodes.length || "unbekannt"}`,
+      `Regulation: ${m.regulation}`,
+      `Netzwerk: ${network}`,
+    ],
+  };
+}
+
+function smoothProfile(raw) {
+  const s = state.smoothProfile;
+  const rate = 0.35;
+  s.scale = s.scale + (raw.scale - s.scale) * rate;
+  s.tension = s.tension + (raw.tension - s.tension) * rate;
+  s.pressure = s.pressure + (raw.pressure - s.pressure) * rate;
+  s.level = raw.level;
+  return { ...s, label: raw.label, notes: raw.notes };
+}
+
+function adaptiveProfile() {
+  return smoothProfile(computeRawProfile());
+}
+
+function ensureWorkspace() {
+  if (document.getElementById("tab-wesen")) return;
+  const main = document.querySelector("main") || document.querySelector(".dashboard-main") || document.body;
+  const section = document.createElement("section");
+  section.id = "tab-wesen";
+  section.className = "tab-content dashboard-workspace wesen-workspace";
+  section.hidden = true;
+  section.innerHTML = `
+    <header class="dashboard-generated-header wesen-header"><div><span class="dashboard-workspace-kicker">LIVE BODY</span><h2>Wesen</h2><p>Maschinen-native Echtzeitansicht aus beobachteten Sensoren, Interozeption, SNN, Aktoren und Rückkopplung.</p></div><div class="wesen-header-tools"><div class="wesen-visibility"><button type="button" class="wesen-visibility-toggle" data-wesen-visibility-toggle aria-expanded="false">Oberflächen</button><div class="wesen-visibility-menu" data-wesen-visibility-menu hidden></div></div><div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div></div></header>
+    <div class="wesen-layout">
+      <aside class="wesen-sidebar wesen-sidebar-left">
+        <section class="wesen-card" data-wesen-panel="body-state"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
+        <section class="wesen-card" data-wesen-panel="body-view"><header><span>ANSICHT</span><small>interaktiv</small></header><div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div><p class="wesen-hint">Klick: Fokus · Mausrad: Zoom · Doppelklick: Gesamtansicht</p></section>
+        <section class="wesen-card" data-wesen-panel="adaptation"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
+      </aside>
+      <section class="wesen-stage-card" data-wesen-panel="body-map">
+        <div class="wesen-stage-toolbar"><div><strong>Adaptive Körperkarte</strong><span id="wesen-stage-subtitle">Körperform entsteht aus real verfügbaren Verbindungen.</span></div><div class="wesen-stage-actions"><button data-wesen-action="reset-view">⌂ Gesamt</button><button data-wesen-action="pause-visual">Ⅱ Visualisierung</button></div></div>
+        <div class="wesen-stage" id="wesen-stage"><svg id="wesen-svg" viewBox="0 0 900 700"><defs><filter id="wesen-glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g id="wesen-camera"><path id="wesen-membrane" class="wesen-membrane"/><g id="wesen-environment-layer"></g><g id="wesen-connection-layer"></g><g id="wesen-signal-layer"></g><g id="wesen-organ-layer"></g><g id="wesen-pin-layer"></g></g></svg><div class="wesen-environment-caption"><span>UMWELT</span><strong id="wesen-environment-label">nicht beobachtet</strong></div><div class="wesen-adaptive-caption"><span>REAKTION</span><strong id="wesen-reaction-label">warte auf Telemetrie</strong></div></div>
+        <div class="wesen-console"><div class="wesen-console-head"><strong>Ereignisse & Kausalität</strong><div id="wesen-event-filters"><button class="active" data-wesen-filter="all">Alle</button><button data-wesen-filter="sensor">Sensorik</button><button data-wesen-filter="actuator">Aktorik</button><button data-wesen-filter="feedback">Loop</button><button data-wesen-filter="structure">Morphologie</button><button data-wesen-filter="system">System</button></div></div><div id="wesen-events" class="wesen-events"></div></div>
+      </section>
+      <aside class="wesen-sidebar wesen-sidebar-right">
+        <section class="wesen-card wesen-inspector" data-wesen-panel="inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
+        <section class="wesen-card" data-wesen-panel="boundary"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
+        <section class="wesen-card" data-wesen-panel="self-model"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></section>
+        <section class="wesen-card" data-wesen-panel="morphology"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
+      </aside>
+    </div>`;
+  main.appendChild(section);
+  bindInteractions();
+  initVisibilityControls();
+}
+
+const WESEN_VISIBILITY_KEY = "brain5d.wesen.visibility.v1";
+const WESEN_PANEL_LABELS = new Map([
+  ["body-state", "Körperzustand"],
+  ["body-view", "Interaktive Ansichten"],
+  ["adaptation", "Automatische Anpassung"],
+  ["body-map", "Körperkarte und Ereignisse"],
+  ["inspector", "Inspektion"],
+  ["boundary", "Körpergrenze"],
+  ["self-model", "Selbst-Modell"],
+  ["morphology", "Morphologie-Historie"],
+  ["symbiosis", "Embodied Multi-Network Interface"],
+]);
+let wesenVisibility = {};
+
+function loadVisibility() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(WESEN_VISIBILITY_KEY) || "{}");
+    if (stored && typeof stored === "object") wesenVisibility = stored;
+  } catch (_) {
+    wesenVisibility = {};
+  }
+}
+
+function saveVisibility() {
+  try { localStorage.setItem(WESEN_VISIBILITY_KEY, JSON.stringify(wesenVisibility)); } catch (_) { /* optional browser storage */ }
+}
+
+function applyVisibility() {
+  document.querySelectorAll("[data-wesen-panel]").forEach((panel) => {
+    const key = panel.dataset.wesenPanel;
+    panel.hidden = key ? wesenVisibility[key] === false : false;
+  });
+}
+
+function renderVisibilityMenu() {
+  const menu = document.querySelector("[data-wesen-visibility-menu]");
+  if (!menu) return;
+  const panels = [...document.querySelectorAll("[data-wesen-panel]")]
+    .map((panel) => panel.dataset.wesenPanel)
+    .filter((key, index, keys) => key && keys.indexOf(key) === index);
+  menu.innerHTML = `<div class="wesen-visibility-heading"><strong>Bereiche ein-/ausblenden</strong><button type="button" data-wesen-visibility-reset>Alle</button></div>${panels.map((key) => `<label><input type="checkbox" data-wesen-panel-toggle="${key}" ${wesenVisibility[key] === false ? "" : "checked"}> <span>${WESEN_PANEL_LABELS.get(key) || key}</span></label>`).join("")}`;
+}
+
+function initVisibilityControls() {
+  loadVisibility();
+  renderVisibilityMenu();
+  applyVisibility();
+  const root = document.getElementById("tab-wesen");
+  if (!root || root.dataset.visibilityBound) return;
+  root.dataset.visibilityBound = "1";
+  root.addEventListener("click", (event) => {
+    const toggle = event.target.closest("[data-wesen-visibility-toggle]");
+    if (toggle) {
+      const menu = root.querySelector("[data-wesen-visibility-menu]");
+      const open = menu?.hidden !== false;
+      if (menu) menu.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      event.stopPropagation();
+      return;
+    }
+    const reset = event.target.closest("[data-wesen-visibility-reset]");
+    if (reset) {
+      wesenVisibility = {};
+      saveVisibility();
+      renderVisibilityMenu();
+      applyVisibility();
+      return;
+    }
+    if (event.target.closest("[data-wesen-visibility-menu]")) event.stopPropagation();
+  });
+  root.addEventListener("change", (event) => {
+    const input = event.target.closest("[data-wesen-panel-toggle]");
+    if (!input) return;
+    wesenVisibility[input.dataset.wesenPanelToggle] = input.checked;
+    saveVisibility();
+    applyVisibility();
+  });
+  document.addEventListener("click", (event) => {
+    if (!root.querySelector("[data-wesen-visibility-menu]")?.contains(event.target) && !event.target.closest("[data-wesen-visibility-toggle]")) {
+      const menu = root.querySelector("[data-wesen-visibility-menu]");
+      const toggle = root.querySelector("[data-wesen-visibility-toggle]");
+      if (menu) menu.hidden = true;
+      toggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+function ensureNav() {
+  if (document.querySelector('.tab-btn[data-tab="wesen"]')) return;
+  const nav = document.querySelector(".tab-nav") || document.querySelector("nav");
+  if (!nav) return;
+  const button = document.createElement("button");
+  button.type = "button"; button.className = "tab-btn"; button.dataset.tab = "wesen"; button.textContent = "◉ WESEN";
+  const ref = nav.querySelector('.tab-btn[data-tab="embodiment"]');
+  if (ref) ref.before(button); else nav.appendChild(button);
+  button.addEventListener("click", activate);
+}
+function activate() {
+  document.querySelectorAll(".tab-btn[data-tab]").forEach((b) => b.classList.toggle("active", b.dataset.tab === "wesen"));
+  document.querySelectorAll(".tab-content[id^='tab-']").forEach((tab) => { const on = tab.id === "tab-wesen"; tab.hidden = !on; tab.classList.toggle("active", on); });
+  document.body.dataset.currentTab = "wesen";
+  document.body.dataset.experienceWorkspace = "wesen";
+}
+
+function membranePath(nodes, positions, profile) {
+  const pts = nodes.filter((n) => !n.placeholder && positions[n.id]).map((n) => positions[n.id]);
+  if (!pts.length) return "M450 80 C720 80 820 220 820 350 C820 570 650 640 450 640 C250 640 80 570 80 350 C80 180 220 80 450 80Z";
+  const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
+  const minX = Math.max(35, Math.min(...xs) - 95), maxX = Math.min(865, Math.max(...xs) + 95);
+  const minY = Math.max(45, Math.min(...ys) - 90), maxY = Math.min(655, Math.max(...ys) + 90);
+  const inset = profile.tension * 18;
+  return `M${(minX + maxX) / 2} ${minY + inset} C${maxX - inset} ${minY} ${maxX} ${(minY + maxY) / 2} ${(maxX - inset)} ${maxY - inset} C${(minX + maxX) / 2} ${maxY} ${minX + inset} ${maxY - inset} ${minX} ${(minY + maxY) / 2} C${minX + inset} ${minY} ${(minX + maxX) / 2} ${minY + inset} ${(minX + maxX) / 2} ${minY + inset}Z`;
+}
+function nodeValue(node) {
+  const m = runtimeMetrics();
+  if (node.id === "kern") return m.firing === null ? "—" : `${m.firing.toFixed(1)} Hz`;
+  if (node.id === "innenzustand") return m.regulation;
+  if (node.id === "rueckkopplung") return m.recurrence === null ? "—" : m.recurrence.toFixed(2);
+  if (node.id === "struktur") return `${wesenConnectionArray().length} Ports`;
+  if (node.placeholder) return "nicht verfügbar";
+  return text(node.source, ["status", "state", "available", "connected"], "beobachtet");
+}
+function buildSvgOnce(nodes, positions) {
+  const organLayer = document.getElementById("wesen-organ-layer");
+  const connectionLayer = document.getElementById("wesen-connection-layer");
+  const pinLayer = document.getElementById("wesen-pin-layer");
+  if (!organLayer || !connectionLayer || !pinLayer) return;
+
+  state.organRefs = {};
+  state.nerveRefs = {};
+  state.lastPositions = {};
+  const core = positions.kern;
+
+  // Nervenbahnen zeichnen
+  nodes.filter((n) => n.id !== "kern").forEach((node) => {
+    const p = positions[node.id]; if (!p) return;
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("d", `M ${core.x} ${core.y} Q ${(core.x + p.x) / 2} ${(core.y + p.y) / 2 - 18} ${p.x} ${p.y}`);
+    path.setAttribute("class", `wesen-nerve kind-${node.kind}`);
+    path.dataset.node = node.id;
+    connectionLayer.appendChild(path);
+    state.nerveRefs[node.id] = path;
+    state.lastPositions[node.id] = p;
+  });
+
+  // Organ-Kreise + Daten-Pins
+  nodes.forEach((node) => {
+    const p = positions[node.id]; if (!p) return;
+    const r = node.kind === "core" ? 70 : node.kind === "sensor" || node.kind === "actuator" ? 38 : 48;
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("transform", `translate(${p.x} ${p.y})`);
+    g.dataset.node = node.id;
+    g.tabIndex = 0;
+    g.setAttribute("role", "button");
+    g.innerHTML = [
+      `<circle class="wesen-organ-halo" r="${r + 16}"/>`,
+      `<circle class="wesen-organ-body" r="${r}"/>`,
+      `<circle class="wesen-organ-status" cx="${r - 7}" cy="-${r - 7}" r="6"/>`,
+      `<text class="wesen-organ-icon" y="-7">${esc(node.icon)}</text>`,
+      `<text class="wesen-organ-label" y="15">${esc(node.label).slice(0, 22)}</text>`,
+      `<text class="wesen-organ-value" y="33">—</text>`,
+    ].join("");
+    organLayer.appendChild(g);
+    state.organRefs[node.id] = { g, r };
+
+    if (!node.placeholder) {
+      const pin = document.createElementNS(NS, "g");
+      pin.setAttribute("transform", `translate(${p.x + r + 12} ${p.y - r - 8})`);
+      pin.setAttribute("class", "wesen-data-pin");
+      pin.innerHTML = `<rect x="0" y="-16" rx="5" width="92" height="23"/><text x="7" y="0">—</text>`;
+      pinLayer.appendChild(pin);
+      state.organRefs[node.id].pinText = pin.querySelector("text");
+    }
+  });
+}
+
+function updateOrgans(nodes, positions) {
+  const refs = state.organRefs;
+  if (!refs) return;
+  nodes.forEach((node) => {
+    const ref = refs[node.id];
+    if (!ref) return;
+    const cls = `wesen-organ wesen-hue-${node.hue} kind-${node.kind}${state.selected === node.id ? " selected" : ""}${node.placeholder ? " unknown" : ""}`;
+    if (ref.g.getAttribute("class") !== cls) ref.g.setAttribute("class", cls);
+    const val = nodeValue(node);
+    if (ref.pinText && ref.pinText.textContent !== val.slice(0, 18)) ref.pinText.textContent = val.slice(0, 18);
+    const vt = ref.g.querySelector(".wesen-organ-value");
+    if (vt && vt.textContent !== val) vt.textContent = val;
+  });
+}
+
+function updateNerves(nodes, positions) {
+  const refs = state.nerveRefs;
+  if (!refs) return;
+  const core = positions.kern;
+  nodes.filter((n) => n.id !== "kern").forEach((node) => {
+    const path = refs[node.id];
+    if (!path) return;
+    const p = positions[node.id];
+    if (!p) return;
+    const d = `M ${core.x} ${core.y} Q ${(core.x + p.x) / 2} ${(core.y + p.y) / 2 - 18} ${p.x} ${p.y}`;
+    if (path.getAttribute("d") !== d) path.setAttribute("d", d);
+  });
+}
+
+function updateBodyGeometry() {
+  const nodes = dynamicNodes();
+  recordMorphology(nodes);
+  const positions = layoutNodes(nodes);
+  updateOrgans(nodes, positions);
+  updateNerves(nodes, positions);
+  const profile = adaptiveProfile();
+  const membrane = document.getElementById("wesen-membrane");
+  if (membrane) {
+    membrane.setAttribute("d", membranePath(nodes, positions, profile));
+    membrane.dataset.state = profile.level;
+  }
+  const camera = document.getElementById("wesen-camera");
+  if (camera) camera.style.setProperty("--wesen-adaptive-scale", String(profile.scale * state.zoom));
+  renderSignals(nodes, positions);
+  renderEnvironment(profile);
+  renderEcho(nodes, positions);
+  renderInspector(nodes);
+  renderConnections();
+  renderHistory();
+}
+
+function renderBody() {
+  // Erster Aufruf: SVG einmal aufbauen
+  if (!state.organRefs) {
+    const nodes = dynamicNodes();
+    recordMorphology(nodes);
+    const positions = layoutNodes(nodes);
+    buildSvgOnce(nodes, positions);
+    updateBodyGeometry();
+  }
+}
+
+function renderSignals(nodes, positions) {
+  const layer = document.getElementById("wesen-signal-layer"); if (!layer) return;
+  if (state.paused) { layer.innerHTML = ""; return; }
+  const core = positions.kern;
+  const existing = layer.querySelectorAll("circle");
+  const nerveCount = Object.keys(state.nerveRefs || {}).length;
+  // Nur neu aufbauen wenn Anzahl der Nerven sich geändert hat
+  if (existing.length !== nerveCount * 2) {
+    layer.innerHTML = "";
+    Object.entries(state.nerveRefs || {}).forEach(([id, path], idx) => {
+      const d = path.getAttribute("d");
+      const dot = document.createElementNS(NS, "circle");
+      dot.setAttribute("r", "3.5");
+      dot.setAttribute("class", "wesen-signal-dot");
+      dot.style.offsetPath = `path("${d}")`;
+      dot.style.animationDuration = `${1 + (idx % 5) * 0.17}s`;
+      layer.appendChild(dot);
+      const p = positions[id];
+      if (p) {
+        const echo = document.createElementNS(NS, "circle");
+        echo.setAttribute("r", "3");
+        echo.setAttribute("class", "wesen-signal-dot feedback-echo");
+        const ed = `M ${p.x} ${p.y} Q ${(p.x + core.x) / 2} ${(p.y + core.y) / 2 + 18} ${core.x} ${core.y}`;
+        echo.style.offsetPath = `path("${ed}")`;
+        echo.style.animationDuration = "1.35s";
+        echo.style.animationDelay = ".22s";
+        layer.appendChild(echo);
+      }
+    });
+  }
+}
+function renderEnvironment(profile) {
+  const m = runtimeMetrics();
+  document.getElementById("wesen-environment-label").textContent = m.environment;
+  const reaction = document.getElementById("wesen-reaction-label"); reaction.textContent = profile.label; reaction.dataset.state = profile.level;
+  const layer = document.getElementById("wesen-environment-layer");
+  if (layer) layer.innerHTML = `<g class="wesen-env-node" transform="translate(72 100)"><circle r="28"/><text y="4">ENV</text></g><text class="wesen-env-label" x="110" y="104">${esc(m.environment)}</text>`;
+  const root = document.getElementById("wesen-adaptation");
+  root.innerHTML = `<div class="wesen-adaptation-state ${profile.level}"><span></span><strong>${esc(profile.label)}</strong></div>${profile.notes.map((n) => `<p>${esc(n)}</p>`).join("")}`;
+}
+function renderEcho(nodes, positions) {
+  const svg = document.getElementById("wesen-self-svg"); if (!svg) return;
+  const m = runtimeMetrics(); const delay = m.latency === null ? "Latenz unbekannt" : `${m.latency.toFixed(1)} ms`;
+  const opacity = m.recurrence === null ? 0.25 : 0.25 + clamp(m.recurrence) * 0.65;
+  const scaleX = 0.29, scaleY = 0.23;
+  const dots = nodes.filter((n) => positions[n.id]).map((n) => {
+    const p = positions[n.id]; const x = 18 + p.x * scaleX, y = 12 + p.y * scaleY;
+    return `<circle cx="${x}" cy="${y}" r="${n.kind === "core" ? 9 : 4}" class="kind-${n.kind}"/>`;
+  }).join("");
+  const lines = nodes.filter((n) => n.id !== "kern" && positions[n.id]).map((n) => {
+    const p = positions[n.id], c = positions.kern;
+    return `<line x1="${18 + c.x * scaleX}" y1="${12 + c.y * scaleY}" x2="${18 + p.x * scaleX}" y2="${12 + p.y * scaleY}"/>`;
+  }).join("");
+  svg.innerHTML = `<g class="wesen-self-body" style="opacity:${opacity}">${lines}${dots}</g><text x="150" y="172" text-anchor="middle">Echo ${esc(delay)}</text>`;
+  document.getElementById("wesen-self-metrics").innerHTML = `<div><span>Recurrence</span><strong>${m.recurrence === null ? "—" : m.recurrence.toFixed(2)}</strong></div><div><span>Loop-Latenz</span><strong>${esc(delay)}</strong></div>`;
+}
+
+function renderVitals() {
+  const m = runtimeMetrics();
+  const rows = [
+    ["Tick", m.tick ?? "—"], ["Feuerrate", fmt(m.firing, " Hz", 1)], ["Target Hz", fmt(m.targetHz, " Hz", 0)], ["Achieved Hz", fmt(m.achievedHz, " Hz", 1)],
+    ["Energie", fmt(m.energy, "", 3)], ["CPU", fmt(m.cpu, " %", 0)], ["RAM", fmt(m.memory, " %", 0)], ["Temperatur", fmt(m.temp, " °C", 1)], ["Fan", fmt(m.fan, " rpm", 0)], ["Disk", fmt(m.disk, " %", 0)],
+  ];
+  document.getElementById("wesen-vitals").innerHTML = rows.map(([a,b]) => `<div class="wesen-metric"><span>${a}</span><strong>${esc(b)}</strong></div>`).join("");
+  document.getElementById("wesen-recurrence-value").textContent = m.recurrence === null ? "—" : m.recurrence.toFixed(2);
+  if (m.recurrence !== null) { state.recurrence.push(m.recurrence); if (state.recurrence.length > 100) state.recurrence.shift(); }
+  drawRecurrence();
+}
+function drawRecurrence() {
+  const svg = document.getElementById("wesen-recurrence-chart"); const values = state.recurrence;
+  if (!values.length) { svg.innerHTML = '<text x="120" y="31" text-anchor="middle" class="wesen-chart-empty">keine Messwerte</text>'; return; }
+  const pts = values.map((v,i) => `${i / Math.max(1, values.length - 1) * 240},${52 - clamp(v) * 46}`).join(" ");
+  const [x,y] = pts.split(" ").at(-1).split(",");
+  svg.innerHTML = `<polyline class="wesen-chart-line" points="${pts}"/><circle class="wesen-chart-point" cx="${x}" cy="${y}" r="3"/>`;
+}
+function selectedNode(nodes) { return nodes.find((n) => n.id === state.selected) || nodes[0]; }
+function renderInspector(nodes) {
+  const node = selectedNode(nodes); state.selected = node.id;
+  const m = runtimeMetrics(); const root = document.getElementById("wesen-inspector");
+  const rows = node.source ? Object.entries(node.source).filter(([,v]) => ["string","number","boolean"].includes(typeof v)).slice(0,7) : [];
+  const generic = node.id === "kern" ? [["Feuerrate", fmt(m.firing," Hz",1)],["Tick",m.tick??"—"]] : node.id === "innenzustand" ? [["Regulation",m.regulation],["CPU",fmt(m.cpu," %",0)],["Temperatur",fmt(m.temp," °C",1)]] : node.id === "rueckkopplung" ? [["Recurrence",m.recurrence===null?"—":m.recurrence.toFixed(2)],["Latenz",fmt(m.latency," ms",1)]] : [["Status",nodeValue(node)],["Typ",node.kind]];
+  const data = rows.length ? rows : generic;
+  document.getElementById("wesen-inspector-status").textContent = node.placeholder ? "unbekannt" : "beobachtet";
+  root.innerHTML = `<div class="wesen-inspector-title wesen-hue-${node.hue}"><span>${esc(node.icon)}</span><div><strong>${esc(node.label)}</strong><small>${esc(node.kind)}</small></div></div><div class="wesen-inspector-rows">${data.map(([a,b]) => `<div><span>${esc(a)}</span><strong>${esc(b)}</strong></div>`).join("")}</div><p class="wesen-integrity-note">OBSERVED/UNKNOWN: keine erfundenen Ersatzwerte. Darstellung ist Visualisierung, keine Bewusstseinsmessung.</p>`;
+}
+function renderConnections() {
+  const root = document.getElementById("wesen-connections"); const items = wesenConnectionArray();
+  if (!items.length) { root.innerHTML = '<p class="wesen-empty">Keine realen Verbindungen gemeldet.</p>'; return; }
+  root.innerHTML = items.slice(0,14).map((item,index) => {
+    const status = text(item,["status","state","available","connected"],"beobachtet");
+    const kind = classifyConnection(item);
+    return `<button class="wesen-connection-row" data-node="conn-${index}"><span class="wesen-connection-led ${statusClass(status)}"></span><span><strong>${esc(connectionLabel(item,index))}</strong><small>${esc(kind)}</small></span><em>${esc(status)}</em></button>`;
+  }).join("");
+}
+function renderHistory() {
+  const root = document.getElementById("wesen-morphology-history");
+  root.innerHTML = state.morphologyHistory.length ? state.morphologyHistory.map((h) => `<div><time>${h.time}</time><span>${h.count} Knoten</span></div>`).join("") : '<p class="wesen-empty">Noch keine Änderung der Körpergrenze.</p>';
+}
+function pushEvent(type,label,detail) {
+  state.history.unshift({ time:new Date().toLocaleTimeString("de-DE",{hour12:false}), type, label, detail });
+  if (state.history.length > 40) state.history.length = 40;
+}
+function snapshot() {
+  const m = runtimeMetrics();
+  return { recurrence:m.recurrence, latency:m.latency, cpu:m.cpu, temp:m.temp, regulation:m.regulation, connections:wesenConnectionArray().length };
+}
+function recordEvents() {
+  const next = snapshot(), prev = state.lastSnapshot; state.lastSnapshot = next; if (!prev) return;
+  const changed = (a,b,t=0.01) => a!==null && b!==null && Math.abs(a-b)>t;
+  if (changed(next.recurrence,prev.recurrence)) pushEvent("feedback","Rückkopplung verändert",`${prev.recurrence?.toFixed(2)} → ${next.recurrence?.toFixed(2)}`);
+  if (changed(next.latency,prev.latency,0.5)) pushEvent("feedback","Loop-Latenz verändert",`${prev.latency?.toFixed(1)} → ${next.latency?.toFixed(1)} ms`);
+  if (changed(next.cpu,prev.cpu,3)) pushEvent("system","CPU-Belastung verändert",`${prev.cpu?.toFixed(0)} → ${next.cpu?.toFixed(0)} %`);
+  if (changed(next.temp,prev.temp,1)) pushEvent("system","Temperatur verändert",`${prev.temp?.toFixed(1)} → ${next.temp?.toFixed(1)} °C`);
+  if (next.connections!==prev.connections) pushEvent("structure","Körpergrenze verändert",`${prev.connections} → ${next.connections} Verbindungen`);
+  if (next.regulation!==prev.regulation) pushEvent("system","Regulation verändert",`${prev.regulation} → ${next.regulation}`);
+  renderEvents();
+}
+function renderEvents() {
+  const root = document.getElementById("wesen-events");
+  const events = state.history.filter((e) => state.filter === "all" || e.type === state.filter).slice(0,20);
+  root.innerHTML = events.length ? events.map((e) => `<button class="wesen-event-row"><time>${e.time}</time><span class="wesen-event-kind ${e.type}"></span><strong>${esc(e.label)}</strong><em>${esc(e.detail)}</em></button>`).join("") : '<p class="wesen-empty">Noch keine Zustandsänderung im Beobachtungsfenster.</p>';
+}
+function updateLive(error=null) {
+  const label=document.getElementById("wesen-live-label"), dot=document.querySelector(".wesen-live-dot");
+  if (error) { label.textContent="Telemetrie nicht erreichbar"; dot.dataset.state="critical"; return; }
+  const runtime=text(state.status||{},["state","runtime.state","status"],"verbunden"); label.textContent=runtime; dot.dataset.state=statusClass(runtime);
+}
+function renderAll() {
+  renderVitals();
+  // SVG beim ersten Mal aufbauen, danach nur aktualisieren
+  if (!state.organRefs) {
+    const nodes = dynamicNodes();
+    recordMorphology(nodes);
+    const positions = layoutNodes(nodes);
+    buildSvgOnce(nodes, positions);
+  }
+  updateBodyGeometry();
+  recordEvents();
+  updateLive();
+}
+
+async function poll() {
+  state.controller?.abort(); state.controller = new AbortController();
+  try {
+    const results = await Promise.allSettled([
+      wesenReadJson("/api/status",state.controller.signal),
+      wesenReadJson("/api/embodiment/state",state.controller.signal),
+      wesenReadJson("/api/embodiment/connections",state.controller.signal),
+    ]);
+    if (results[0].status==="fulfilled") state.status=results[0].value;
+    if (results[1].status==="fulfilled") state.embodiment=results[1].value;
+    if (results[2].status==="fulfilled") state.connections=results[2].value;
+    if (results.every((r)=>r.status==="rejected")) throw new Error("Keine Telemetriequelle erreichbar");
+    renderAll();
+  } catch (error) { if (error.name!=="AbortError") updateLive(error); }
+  finally { clearTimeout(state.timer); state.timer=setTimeout(poll,WESEN_POLL_MS); }
+}
+
+function selectNode(id) { state.selected = id; updateBodyGeometry(); }
+function bindInteractions() {
+  const root=document.getElementById("tab-wesen"); if (!root || root.dataset.bound) return; root.dataset.bound="1";
+  root.addEventListener("click",(event)=>{
+    const node=event.target.closest("[data-node]"); if (node) selectNode(node.dataset.node);
+    const filter=event.target.closest("[data-wesen-filter]"); if (filter) { state.filter=filter.dataset.wesenFilter; document.querySelectorAll("[data-wesen-filter]").forEach((b)=>b.classList.toggle("active",b===filter)); renderEvents(); }
+    const view=event.target.closest("[data-wesen-view]"); if (view) { view.classList.toggle("active"); document.getElementById("wesen-svg")?.classList.toggle(`show-${view.dataset.wesenView}`,view.classList.contains("active")); }
+    const action=event.target.closest("[data-wesen-action]")?.dataset.wesenAction;
+    if (action==="reset-view") { state.zoom=1; state.selected="kern"; updateBodyGeometry(); }
+    if (action==="pause-visual") { state.paused=!state.paused; event.target.textContent=state.paused?"▶ Visualisierung":"Ⅱ Visualisierung"; renderSignals(); }
+  });
+  document.getElementById("wesen-stage")?.addEventListener("wheel",(event)=>{ event.preventDefault(); state.zoom=clamp(state.zoom + (event.deltaY<0?0.08:-0.08),0.72,1.45); updateBodyGeometry(); },{passive:false});
+  document.getElementById("wesen-stage")?.addEventListener("dblclick",()=>{ state.zoom=1; state.selected="kern"; updateBodyGeometry(); });
+}
+function initWesenWorkspace() { ensureWorkspace(); ensureNav(); if (!state.timer) poll(); }
+window.Brain5DWesen={init:initWesenWorkspace,activate,refresh:poll,registerPanel:(key,label)=>{ WESEN_PANEL_LABELS.set(key,label); renderVisibilityMenu(); applyVisibility(); }};
+if (document.readyState==="loading") document.addEventListener("DOMContentLoaded",initWesenWorkspace,{once:true}); else initWesenWorkspace();
