@@ -52,14 +52,29 @@ export function initResearchChat() {
   const settings = document.getElementById('chat-settings');
   const settingsRefresh = document.getElementById('chat-settings-refresh');
   const settingsSave = document.getElementById('chat-settings-save');
+  const settingsBack = document.getElementById('chat-settings-back');
+  const chatView = document.getElementById('chat-view');
   const webSearch = document.getElementById('chat-web-search');
   const responseMode = document.getElementById('chat-response-mode');
   const imageInput = document.getElementById('chat-image-input');
-  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput || !responseMode) return;
+  if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput || !responseMode || !settingsBack || !chatView) return;
   const state = loadState();
   // Initialize webSearch from persisted state; default to true if never set
   if (state.webSearchEnabled === undefined) state.webSearchEnabled = true;
   webSearch.checked = state.webSearchEnabled === true;
+
+  // ── View switching: chat vs settings ──
+  function showChatView() {
+    chatView.hidden = false;
+    settings.hidden = true;
+    settingsToggle.classList.remove('active');
+  }
+  function showSettingsView() {
+    chatView.hidden = true;
+    settings.hidden = false;
+    settingsToggle.classList.add('active');
+    loadSettings();
+  }
 
   function activeRoom() {
     return state.rooms.find((room) => room.id === state.activeId) || state.rooms[0];
@@ -227,9 +242,10 @@ function renderInteractionTrace(metadata) {
     }
   }
   settingsToggle.addEventListener('click', () => {
-    settings.hidden = !settings.hidden;
-    if (!settings.hidden) loadSettings();
+    if (settings.hidden) showSettingsView();
+    else showChatView();
   });
+  settingsBack.addEventListener('click', showChatView);
   settingsRefresh.addEventListener('click', loadSettings);
   promptGenerate.addEventListener('click', () => { document.getElementById('chat-setting-prompt').value = DEFAULT_PROMPT; });
   settingsReset.addEventListener('click', () => {
