@@ -52,6 +52,7 @@ function mergeEmbodimentIntoWesen() {
     if (workspace.querySelector(":scope > .wesen-subnav")) continue;
     const nav = document.createElement("nav");
     nav.className = "wesen-subnav";
+    nav.dataset.mhrnPersistent = "";
     nav.setAttribute("aria-label", "Runtime und Wesen Unterbereiche");
     nav.innerHTML = `
       <button type="button" data-wesen-tab="wesen" ${current === "wesen" ? 'class="active"' : ''}>🧠 Wesen</button>

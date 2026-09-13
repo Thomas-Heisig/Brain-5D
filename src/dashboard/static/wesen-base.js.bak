@@ -1,8 +1,16 @@
-/* MHRN Wesen workspace
+/* MHRN Wesen workspace — stabilisierte Fassung
  * Read-only, machine-native body visualization.
- * Observed state only: no learning, language output or actuator writes.
+ * Beobachteter Zustand: kein Lernen, keine Sprache, keine Aktor-Schreibzugriffe.
+ *
+ * Wichtigste Änderungen gegenüber der Vorgängerversion:
+ *  - SVG wird einmal aufgebaut und dann per Attribut-Updates aktualisiert (kein innerHTML = "" mehr)
+ *  - Node-Positionen werden nur bei Morphologie-Änderungen neu berechnet
+ *  - animateMotion wurde durch CSS-Animationen ersetzt (kein Flackern/Neustart)
+ *  - Membrane-Pfad wird mit CSS transition geglättet
+ *  - Adaptive-Profile-Werte werden weichgezeichnet (einfaches gleitendes Mittel)
  */
-const WESEN_POLL_MS = 750;
+
+const WESEN_POLL_MS = 1000;
 const NS = "http://www.w3.org/2000/svg";
 
 const WESEN_BASE = [
@@ -26,6 +34,14 @@ const state = {
   filter: "all",
   timer: null,
   controller: null,
+  /** Einmal aufgebaute SVG-Organ-Referenzen: { [nodeId]: { g, labelText, valueText, statusCircle, pinValue } } */
+  organRefs: null,
+  /** Einmal aufgebaute Nerve-Pfad-Referenzen: { [nodeId]: pathElement } */
+  nerveRefs: null,
+  /** Letzte bekannte Positionen für Signal-Dots */
+  lastPositions: null,
+  /** Weichzeichnung für adaptiveProfile */
+  smoothProfile: { scale: 1, tension: 0, pressure: 0, level: "ok" },
 };
 
 function num(value) {
@@ -54,159 +70,7 @@ function fmt(value, suffix = "", digits = 1) {
 }
 function clamp(value, min = 0, max = 1) { return Math.max(min, Math.min(max, value)); }
 function esc(value) {
-  return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
-async function wesenReadJson(url, signal) {
-  const response = await fetch(url, { cache: "no-store", signal });
-  if (!response.ok) throw new Error(`${url}: ${response.status}`);
-  return response.json();
-}
-function wesenConnectionArray() {
-  const payload = state.connections;
-  if (!payload) return [];
-  for (const candidate of [payload.connections, payload.items, payload.devices, payload.available_connections, payload]) {
-    if (Array.isArray(candidate)) return candidate;
-  }
-  return [];
-}
-function connectionLabel(item, index) {
-  return text(item, ["label", "name", "id", "connection_id", "device_id"], `Verbindung ${index + 1}`);
-}
-function connectionKind(item) {
-  return text(item, ["kind", "type", "category", "direction", "capability"], "connection").toLowerCase();
-}
-function classifyConnection(item) {
-  const raw = `${connectionLabel(item, 0)} ${connectionKind(item)} ${JSON.stringify(item)}`.toLowerCase();
-  if (/actuator|output|printer|display|speaker|robot|motor|arm|write|send/.test(raw)) return "actuator";
-  if (/camera|micro|audio|sensor|weather|input|network|vision|temperature/.test(raw)) return "sensor";
-  return "connection";
-}
-function statusClass(value) {
-  const raw = String(value ?? "unknown").toLowerCase();
-  if (/critical|error|failed|offline|unsafe|lost/.test(raw)) return "critical";
-  if (/warn|degraded|pressure|partial|stale|paused/.test(raw)) return "warn";
-  if (/ok|healthy|active|running|stable|ready|connected|true|nominal/.test(raw)) return "ok";
-  return "unknown";
-}
-function runtimeMetrics() {
-  const s = state.status || {};
-  const e = state.embodiment || {};
-  return {
-    tick: pick(s, ["tick", "runtime.tick", "metrics.tick"]),
-    firing: metric(s, ["firing_rate_hz", "metrics.firing_rate_hz", "network.firing_rate_hz"]),
-    targetHz: metric(s, ["runtime_clock.target_hz", "target_hz", "runtime.target_hz"]),
-    achievedHz: metric(s, ["runtime_clock.achieved_hz", "achieved_hz", "runtime.achieved_hz"]),
-    energy: metric(e, ["energy", "metrics.energy", "homeostasis.energy"]),
-    cpu: metric(e, ["host.cpu_percent", "interoception.cpu_percent", "metrics.cpu_percent"]),
-    memory: metric(e, ["host.memory_percent", "interoception.memory_percent", "metrics.memory_percent"]),
-    temp: metric(e, ["host.temperature_c", "interoception.temperature_c", "metrics.temperature_c"]),
-    fan: metric(e, ["host.fan_rpm", "interoception.fan_rpm", "metrics.fan_rpm"]),
-    disk: metric(e, ["host.disk_percent", "interoception.disk_percent", "metrics.disk_percent"]),
-    recurrence: metric(e, ["recurrence", "metrics.recurrence", "loopback.recurrence", "feedback.recurrence"]),
-    latency: metric(e, ["loopback_latency_ms", "metrics.loopback_latency_ms", "loopback.latency_ms", "feedback.latency_ms"]),
-    regulation: text(e, ["regulatory_state", "homeostasis.state", "homeostasis_status"], "unbekannt"),
-    environment: text(e, ["environment.name", "environment_status", "environment.state"], "nicht beobachtet"),
-  };
-}
-
-function dynamicNodes() {
-  const nodes = [...WESEN_BASE];
-  const connections = wesenConnectionArray();
-  connections.forEach((item, index) => {
-    const type = classifyConnection(item);
-    const id = `conn-${index}`;
-    nodes.push({
-      id,
-      label: connectionLabel(item, index),
-      kind: type,
-      hue: type === "sensor" ? "cyan" : type === "actuator" ? "amber" : "blue",
-      icon: type === "sensor" ? "◉" : type === "actuator" ? "▶" : "•",
-      source: item,
-    });
-  });
-  if (!connections.some((item) => classifyConnection(item) === "sensor")) {
-    nodes.push({ id: "sensor-placeholder", label: "Sensorik", kind: "sensor", hue: "cyan", icon: "◉", placeholder: true });
-  }
-  if (!connections.some((item) => classifyConnection(item) === "actuator")) {
-    nodes.push({ id: "actuator-placeholder", label: "Aktorik", kind: "actuator", hue: "amber", icon: "▶", placeholder: true });
-  }
-  return nodes;
-}
-function morphologySignature(nodes) {
-  return nodes.filter((n) => !n.placeholder).map((n) => `${n.kind}:${n.label}`).sort().join("|");
-}
-function recordMorphology(nodes) {
-  const signature = morphologySignature(nodes);
-  if (!state.previousSignature) state.previousSignature = signature;
-  if (signature === state.previousSignature) return;
-  state.previousSignature = signature;
-  const entry = { time: new Date().toLocaleTimeString("de-DE", { hour12: false }), signature, count: nodes.length };
-  state.morphologyHistory.unshift(entry);
-  if (state.morphologyHistory.length > 12) state.morphologyHistory.length = 12;
-  pushEvent("structure", "Körpergrenze verändert", `${nodes.filter((n) => !n.placeholder).length} beobachtete Körperknoten`);
-}
-
-function layoutNodes(nodes) {
-  const center = { x: 450, y: 350 };
-  const groups = { sensor: [], actuator: [], internal: [], feedback: [], structure: [], connection: [] };
-  nodes.forEach((n) => { if (n.kind !== "core") (groups[n.kind] || groups.connection).push(n); });
-  const positions = { kern: center };
-  const placeArc = (items, cx, cy, rx, ry, start, end) => {
-    items.forEach((item, i) => {
-      const t = items.length === 1 ? 0.5 : i / (items.length - 1);
-      const angle = start + (end - start) * t;
-      positions[item.id] = { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
-    });
-  };
-  placeArc(groups.sensor, 430, 340, 300, 235, Math.PI * 1.05, Math.PI * 1.55);
-  placeArc(groups.actuator, 465, 365, 310, 235, Math.PI * 0.15, Math.PI * 0.65);
-  placeArc(groups.connection, 450, 350, 325, 210, Math.PI * 0.72, Math.PI * 0.98);
-  positions.innenzustand = { x: 340, y: 435 };
-  positions.rueckkopplung = { x: 555, y: 445 };
-  positions.struktur = { x: 450, y: 565 };
-  return positions;
-}
-
-function adaptiveProfile() {
-  const m = runtimeMetrics();
-  const e = state.embodiment || {};
-  const sensorNodes = dynamicNodes().filter((n) => n.kind === "sensor" && !n.placeholder);
-  const actuatorNodes = dynamicNodes().filter((n) => n.kind === "actuator" && !n.placeholder);
-  const sensorLost = pick(e, ["sensor_loss", "degraded_sensor", "metrics.sensor_loss"]);
-  const actuatorFault = pick(e, ["actuator_fault", "actuator_error", "metrics.actuator_fault"]);
-  const network = text(e, ["host.network_state", "network_state", "interoception.network_state"], "unknown");
-  const pressure = Math.max(
-    m.cpu === null ? 0 : m.cpu / 100,
-    m.memory === null ? 0 : m.memory / 100,
-    m.disk === null ? 0 : m.disk / 100,
-    m.temp === null ? 0 : clamp((m.temp - 45) / 45)
-  );
-  let label = "Stabil beobachtet", level = "ok", scale = 1, tension = 0;
-  if (sensorLost === true || /lost|offline|degraded/.test(String(sensorLost).toLowerCase())) {
-    label = "Sensorverlust"; level = "warn"; scale = 0.97; tension = 0.45;
-  }
-  if (actuatorFault === true || /failed|error|offline/.test(String(actuatorFault).toLowerCase())) {
-    label = "Aktorfehler"; level = "warn"; scale = 0.96; tension = 0.5;
-  }
-  if (/offline|isolated|down/.test(network.toLowerCase())) {
-    label = "Netzwerkisolation"; level = "warn"; scale = 0.95; tension = 0.6;
-  }
-  if (pressure > 0.82) {
-    label = m.temp !== null && m.temp > 80 ? "Thermische Belastung" : "Ressourcendruck";
-    level = "critical"; scale = 0.91; tension = 1;
-  } else if (pressure > 0.65 && level === "ok") {
-    label = "Erhöhte Belastung"; level = "warn"; scale = 0.96; tension = 0.5;
-  }
-  return {
-    label, level, scale, tension, pressure,
-    notes: [
-      `Sensoren: ${sensorNodes.length || "unbekannt"}`,
-      `Aktoren: ${actuatorNodes.length || "unbekannt"}`,
-      `Regulation: ${m.regulation}`,
-      `Netzwerk: ${network}`,
-    ],
-  };
-}
+  return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">
 
 function ensureWorkspace() {
   if (document.getElementById("tab-wesen")) return;

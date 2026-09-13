@@ -340,9 +340,7 @@ body .embedding-analysis-form button { padding:0 10px !important; border:1px sol
 .toast.warning { border-left-color:var(--amber); }
 .toast.error { border-left-color:var(--crimson); }
 
-/* generated runtime IO panels */
-#mhrn-runtime-io,.runtime-io-panel,.runtime-io-card { margin:14px 0 0; border:1px solid var(--rule); border-radius:var(--r-md); background:var(--paper-2); overflow:hidden; }
-#mhrn-runtime-io > header,.runtime-io-panel > header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+/* generated runtime IO panels — uses .card styling from styles.css */
 .runtime-io-grid,.runtime-io-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--rule); }
 .runtime-io-grid > *,.runtime-io-metrics > * { padding:9px 10px; background:var(--paper-2); }
 
