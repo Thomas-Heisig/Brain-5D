@@ -486,10 +486,12 @@ function renderFMTree(node, container, depth) {
         li.classList.add('fm-tree-selected');
         fmLastSelectedPath = child.path;
         // Show folder contents in viewer (non-popup mode)
-        if (!fmUsePopup && !childContainer.dataset.loaded) {
+        if (!fmUsePopup) {
           showFolderInViewer(child.path, child);
         }
-        if (!childContainer.dataset.loaded) {
+        // Load children for tree expansion (only once per folder)
+        if (!childContainer.dataset.loaded && !childContainer.dataset.loading) {
+          childContainer.dataset.loading = 'true';
           childContainer.innerHTML = '<div class="fm-loading">Lade …</div>';
           try {
             const res = await fetch(`/api/files/tree?source=${encodeURIComponent(fmCurrentSource)}`);
@@ -501,12 +503,19 @@ function renderFMTree(node, container, depth) {
                 return null;
               }
               const found = findNode(data, child.path);
-              if (found && found.children) child.children = found.children;
+              if (found && found.children) {
+                child.children = found.children;
+                childContainer.innerHTML = '';
+                renderFMTree(child, childContainer, depth + 1);
+                childContainer.dataset.loaded = 'true';
+              }
             }
           } catch {}
-          childContainer.innerHTML = '';
-          renderFMTree(child, childContainer, depth + 1);
-          childContainer.dataset.loaded = 'true';
+          delete childContainer.dataset.loading;
+          if (!childContainer.dataset.loaded) {
+            childContainer.innerHTML = '<div class="fm-empty">(empty)</div>';
+            childContainer.dataset.loaded = 'true';
+          }
         }
       };
 
