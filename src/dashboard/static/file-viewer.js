@@ -440,9 +440,11 @@ function renderFMTree(node, container, depth) {
 
     if (child.type === 'directory') {
       li.className += ' fm-tree-dir';
+      li.style.cursor = 'pointer';
       const toggle = document.createElement('span');
       toggle.className = 'fm-dir-toggle';
       toggle.textContent = '▶';
+      toggle.style.pointerEvents = 'none';
 
       const label = document.createElement('span');
       label.className = 'fm-dir-label';
@@ -454,11 +456,11 @@ function renderFMTree(node, container, depth) {
       const childContainer = document.createElement('div');
       childContainer.className = 'fm-dir-children is-hidden';
 
-      toggle.onclick = () => {
+      li.onclick = (event) => {
+        if (event.target.closest('.fm-tree-file, .fm-dir-children')) return;
         const expanded = !childContainer.classList.contains('is-hidden');
         childContainer.classList.toggle('is-hidden', expanded);
         toggle.classList.toggle('fm-dir-toggle-expanded', !expanded);
-        // Load children lazily on first expand
         if (!childContainer.dataset.loaded) {
           renderFMTree(child, childContainer, depth + 1);
           childContainer.dataset.loaded = 'true';
@@ -474,12 +476,12 @@ function renderFMTree(node, container, depth) {
                    child.is_spreadsheet ? '📊' :
                    child.is_document ? '📘' :
                    child.is_binary ? '📦' : '📄';
-      const label = document.createElement('span');
-      label.className = 'fm-file-label';
-      label.innerHTML = `${icon} ${escapeHtml(child.name)} <span class="fm-file-size">${formatBytes(child.size_bytes)}</span>`;
-      label.addEventListener('click', () => openFMFile(child.path));
-
-      li.appendChild(label);
+      li.innerHTML = `${icon} ${escapeHtml(child.name)} <span class="fm-file-size">${formatBytes(child.size_bytes)}</span>`;
+      li.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openFMFile(child.path);
+      });
+      li.style.cursor = 'pointer';
     }
 
     ul.appendChild(li);
@@ -488,7 +490,23 @@ function renderFMTree(node, container, depth) {
   container.appendChild(ul);
 }
 
+function ensureFMViewerDialog() {
+  let dialog = document.getElementById('fm-viewer-dialog');
+  if (dialog) return dialog;
+  dialog = document.createElement('dialog');
+  dialog.id = 'fm-viewer-dialog';
+  dialog.className = 'fm-viewer-dialog';
+  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-viewer" class="fm-viewer-content"></div></div>';
+  document.body.appendChild(dialog);
+  dialog.querySelector('#fm-dialog-close').addEventListener('click', () => closeFMViewer());
+  dialog.querySelector('#fm-dialog-back').addEventListener('click', () => goBackFMViewer());
+  dialog.addEventListener('click', (event) => { if (event.target === dialog) closeFMViewer(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && dialog.open) closeFMViewer(); });
+  return dialog;
+}
+
 export async function openFMFile(path, { recordHistory = true } = {}) {
+  const dialog = ensureFMViewerDialog();
   const viewer = document.getElementById('fm-viewer');
   if (!viewer) return;
   path = String(path || '').replaceAll('\\', '/');
@@ -498,9 +516,8 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
   }
   fmCurrentPath = path;
   fmCurrentFileSource = source;
-  viewer.classList.remove('fm-viewer-hidden');
-  viewer.classList.add('fm-viewer-modal');
   document.body.classList.add('fm-viewer-open');
+  dialog.showModal();
   addFMRecent(path, path.split('/').pop() || path, source);
   await renderFile(viewer, { source, path }, {
     onClose: closeFMViewer,
@@ -525,6 +542,12 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
       if (!data.truncated && ['text', 'markdown', 'json', 'table', 'formula'].includes(data.kind)) actions.append(exportButton);
     }
   });
+}
+
+async function closeFMViewer() {
+  const dialog = document.getElementById('fm-viewer-dialog');
+  if (dialog?.open) dialog.close();
+  document.body.classList.remove('fm-viewer-open');
 }
 
 async function goBackFMViewer() {

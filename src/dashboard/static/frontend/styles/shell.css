@@ -20,6 +20,26 @@
 /* Clickable cursor for elements that were previously styled inline */
 .is-clickable { cursor: pointer; }
 
+/* File viewer: global dialog */
+.fm-viewer-dialog { width: min(90vw, 1100px); height: min(85vh, 800px); padding: 0; border: 1px solid var(--rule-3); border-radius: var(--r-lg); background: var(--paper); color: var(--ink); box-shadow: var(--shadow-float); overflow: hidden; }
+.fm-viewer-dialog::backdrop { background: color-mix(in srgb, var(--ink) 46%, transparent); backdrop-filter: blur(3px); }
+.fm-viewer-dialog-frame { display: flex; flex-direction: column; height: 100%; }
+.fm-viewer-dialog-frame > header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--rule); background: var(--paper-3); }
+.fm-viewer-dialog-frame > header h2 { margin: 0; font-size: .9rem; flex: 1; }
+.fm-viewer-dialog-frame > header .icon-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: var(--r-xs); background: transparent; color: var(--ink-3); cursor: pointer; font-size: .9rem; }
+.fm-viewer-dialog-frame > header .icon-btn:hover { background: var(--paper-4); color: var(--ink); }
+.fm-viewer-content { flex: 1; overflow: auto; padding: 12px; }
+
+/* File tree: larger click areas */
+.fm-tree-item { padding: 3px 0; cursor: pointer; border-radius: var(--r-xs); }
+.fm-tree-item:hover { background: var(--paper-3); }
+.fm-tree-file { padding: 4px 6px; font-size: .78rem; display: flex; align-items: center; gap: 4px; }
+.fm-tree-file:hover { background: var(--accent-wash); }
+.fm-tree-dir { padding: 2px 0; }
+.fm-dir-label { cursor: pointer; padding: 2px 4px; border-radius: var(--r-xs); display: inline-block; }
+.fm-dir-label:hover { background: var(--paper-3); }
+.fm-file-size { margin-left: auto; color: var(--ink-4); font-size: .62rem; font-family: var(--font-mono); }
+
 /* File viewer: error text colour */
 .fm-error-text { color: var(--crimson); }
 
