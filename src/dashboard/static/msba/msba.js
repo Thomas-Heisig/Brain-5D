@@ -31,22 +31,38 @@ function kvMarkup(entries) {
   return entries.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(displayValue(value))}</strong></div>`).join("");
 }
 
-function renderPipelines(catalog) {
+function availableConnectionIds(connectionPayload) {
+  const rows = Array.isArray(connectionPayload?.connections) ? connectionPayload.connections : [];
+  return new Set(rows.filter((item) => item?.available && item?.connection_id).map((item) => String(item.connection_id)));
+}
+
+function endpointReachable(endpoint, available) {
+  if (!endpoint || String(endpoint).startsWith("virtual.")) return true;
+  return [...available].some((item) => item === endpoint || item.startsWith(`${endpoint}.`));
+}
+
+function renderPipelines(catalog, connectionPayload) {
   const root = byId("pipeline-list");
   if (!root) return;
   const pipelines = Array.isArray(catalog?.pipelines) ? catalog.pipelines : [];
-  text("pipeline-reachable", catalog?.reachable_pipelines ?? 0);
+  const available = availableConnectionIds(connectionPayload);
+  const states = pipelines.map((pipeline) => ({
+    pipeline,
+    reachable: endpointReachable(pipeline.source_connection, available) && endpointReachable(pipeline.sink_connection, available),
+  }));
+  text("pipeline-reachable", states.filter((item) => item.reachable).length);
   if (!pipelines.length) {
     root.innerHTML = '<p class="loading">Keine Pipeline-Deskriptoren publiziert.</p>';
     return;
   }
-  root.innerHTML = pipelines.map((pipeline) => {
+  root.innerHTML = states.map(({ pipeline, reachable }) => {
     const stages = Array.isArray(pipeline.stages) ? pipeline.stages.join(" → ") : "—";
     const endpoint = [pipeline.source_connection, pipeline.sink_connection].filter(Boolean).join(" → ") || "virtuell / intern";
+    const source = pipeline.reachable === reachable ? "catalog + live inventory" : "live inventory override";
     return `<article class="pipeline-row">
-      <div><strong>${escapeHtml(pipeline.name || pipeline.pipeline_id)}</strong><small>${escapeHtml(pipeline.direction || "unknown")} · ${escapeHtml(endpoint)}</small></div>
+      <div><strong>${escapeHtml(pipeline.name || pipeline.pipeline_id)}</strong><small>${escapeHtml(pipeline.direction || "unknown")} · ${escapeHtml(endpoint)} · ${escapeHtml(source)}</small></div>
       <div class="pipeline-stages">${escapeHtml(stages)}</div>
-      <span class="state ${pipeline.reachable ? "reachable" : "unreachable"}">${pipeline.reachable ? "ERREICHBAR" : "NICHT ERREICHBAR"}</span>
+      <span class="state ${reachable ? "reachable" : "unreachable"}">${reachable ? "ERREICHBAR" : "NICHT ERREICHBAR"}</span>
     </article>`;
   }).join("");
 }
@@ -156,7 +172,7 @@ async function refresh() {
     text("status-maturity", symbiosis.maturity_level || "unknown");
     text("status-gateway", symbiosis.gateway?.state || "unknown");
     renderConnections(connections);
-    renderPipelines(symbiosis.catalog || {});
+    renderPipelines(symbiosis.catalog || {}, connections);
     renderAreas(symbiosis.catalog || {});
     renderGateway(symbiosis.gateway || {}, symbiosis.productive_gateway || {});
     text("last-refresh", `aktualisiert ${new Date().toLocaleString("de-DE")}`);
