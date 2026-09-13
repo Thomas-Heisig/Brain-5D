@@ -20,7 +20,7 @@ function ensurePanel() {
     <article><h3>Export Center</h3><div id="science-export">JSON-/CSV-Artefakte erscheinen nach einem Analysis-Job.</div></article>
     <article><h3>Runtime Snapshot Diff</h3><p>Vergleicht zwei bewusst erfasste Live-Samples im Browser; scientific_evidence=false.</p><div class="snapshot-diff-actions"><button data-snapshot="a">Snapshot A</button><button data-snapshot="b">Snapshot B + Diff</button></div><pre id="science-snapshot-diff">Noch kein Vergleich.</pre></article>
   </div>`;
-  const anchor = workspace.querySelector(":scope > .mhrn-context-nav, :scope > .mhrn-breadcrumb-bar, :scope > .workspace-header") || workspace.firstElementChild; anchor?.insertAdjacentElement("afterend", panel);
+  workspace.append(panel);
   panel.addEventListener("click", handleClick); return panel;
 }
 async function refresh() {
