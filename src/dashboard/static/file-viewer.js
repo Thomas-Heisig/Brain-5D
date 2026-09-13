@@ -510,7 +510,7 @@ function ensureFMViewerDialog() {
   dialog = document.createElement('dialog');
   dialog.id = 'fm-viewer-dialog';
   dialog.className = 'fm-viewer-dialog';
-  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><div class="fm-viewer-dialog-main"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-dialog-viewer" class="fm-viewer-content"></div></div></div>';
+  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><div class="fm-viewer-dialog-main"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-dialog-viewer" class="fm-viewer-content"></div></div><aside id="fm-toc-panel" class="fm-toc-panel is-hidden"></aside></div>';
   document.body.appendChild(dialog);
   dialog.querySelector('#fm-dialog-close').addEventListener('click', () => closeFMViewer());
   dialog.querySelector('#fm-dialog-back').addEventListener('click', () => goBackFMViewer());
@@ -544,6 +544,19 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
   fmCurrentFileSource = source;
   document.body.classList.add('fm-viewer-open');
   addFMRecent(path, path.split('/').pop() || path, source);
+
+  // Listen for TOC from markdown renderer
+  const tocHandler = (event) => {
+    const tocPanel = document.getElementById('fm-toc-panel');
+    if (tocPanel && event.detail?.toc) {
+      tocPanel.classList.remove('is-hidden');
+      tocPanel.innerHTML = '<header><span class="workspace-kicker">INHALT</span><button type="button" class="icon-btn" id="fm-toc-close" title="Schließen">×</button></header>';
+      tocPanel.appendChild(event.detail.toc);
+      tocPanel.querySelector('#fm-toc-close')?.addEventListener('click', () => tocPanel.classList.add('is-hidden'));
+    }
+  };
+  viewer.addEventListener('fm-toc-ready', tocHandler, { once: true });
+
   await renderFile(viewer, { source, path }, {
     onClose: closeFMViewer,
     onBack: goBackFMViewer,

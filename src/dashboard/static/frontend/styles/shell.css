@@ -95,6 +95,19 @@
 .fm-tree-list { padding-left: 0; margin: 0; list-style: none; }
 .fm-tree-list .fm-tree-list { padding-left: 16px; }
 
+/* TOC panel (Outline) */
+.fm-toc-panel { width: 220px; border-left: 1px solid var(--rule); background: var(--paper-2); overflow-y: auto; flex-shrink: 0; font-size: .7rem; }
+.fm-toc-panel > header { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--paper-2); }
+.fm-toc-panel > header .icon-btn { width: 22px; height: 22px; min-height: 22px; padding: 0; border: 0; background: transparent; color: var(--ink-3); cursor: pointer; margin-left: auto; }
+.fm-toc-panel > header .icon-btn:hover { color: var(--ink); }
+.fm-toc-panel ul { list-style: none; padding: 6px 0; margin: 0; }
+.fm-toc-panel li { padding: 2px 8px; }
+.fm-toc-panel li.fm-toc-h2 { padding-left: 20px; }
+.fm-toc-panel li.fm-toc-h3 { padding-left: 32px; }
+.fm-toc-panel a { color: var(--ink-3); text-decoration: none; display: block; padding: 2px 4px; border-radius: var(--r-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fm-toc-panel a:hover { background: var(--paper-3); color: var(--ink); }
+.fm-toc-panel a.fm-toc-active { color: var(--accent); font-weight: 600; background: var(--accent-wash); }
+
 /* File viewer: icon buttons */
 .file-renderer-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 .file-renderer-icon-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; border: 1px solid transparent; border-radius: var(--r-xs); background: transparent; color: var(--ink-3); cursor: pointer; font-size: .8rem; display: grid; place-items: center; }

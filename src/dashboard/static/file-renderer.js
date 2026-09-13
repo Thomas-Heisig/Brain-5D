@@ -468,10 +468,63 @@ async function renderFormulaSource(container, data) {
 
 registerFileRenderer('text', renderSource);
 registerFileRenderer('json', renderJson);
+function buildTOC(container) {
+  const toc = document.createElement('nav');
+  toc.className = 'fm-toc';
+  toc.setAttribute('aria-label', 'Inhaltsverzeichnis');
+  const headings = container.querySelectorAll('h1, h2, h3');
+  if (headings.length < 2) return null;
+  const list = document.createElement('ul');
+  headings.forEach((h) => {
+    const level = parseInt(h.tagName[1], 10);
+    const text = h.textContent.trim();
+    if (!text) return;
+    const id = text.toLowerCase().replace(/[^a-z0-9\u00e4\u00f6\u00fc\u00df]+/g, '-').replace(/^-|-$/g, '');
+    h.id = id;
+    const li = document.createElement('li');
+    li.className = `fm-toc-h${level}`;
+    const a = document.createElement('a');
+    a.href = `#${id}`;
+    a.textContent = text;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', `#${id}`);
+    });
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+  toc.appendChild(list);
+  return toc;
+}
+
+function syncTOCScroll(toc, container) {
+  if (!toc || !container) return;
+  const handler = () => {
+    const headings = container.querySelectorAll('h1, h2, h3');
+    let active = null;
+    headings.forEach((h) => {
+      if (h.getBoundingClientRect().top <= 100) active = h.id;
+    });
+    toc.querySelectorAll('a').forEach((a) => {
+      a.classList.toggle('fm-toc-active', a.getAttribute('href') === `#${active}`);
+    });
+  };
+  container.addEventListener('scroll', handler, { passive: true });
+  handler();
+}
+
 registerFileRenderer('markdown', async (container, data, options) => {
   container.classList.add('fm-markdown');
   renderText(container, data.content, data, options.onOpen);
   await renderMermaidBlocks(container);
+  // Build TOC and dispatch event for the viewer to pick it up
+  const toc = buildTOC(container);
+  if (toc) {
+    container.dataset.hasToc = 'true';
+    container.dispatchEvent(new CustomEvent('fm-toc-ready', { detail: { toc } }));
+    syncTOCScroll(toc, container);
+  }
 });
 registerFileRenderer('formula', renderFormulaSource);
 registerFileRenderer('table', renderTable);
