@@ -337,14 +337,11 @@ function showRouteContent(areaId, route) {
     return;
   }
 
-  // For "generated" action: show matching generated panel
+  // For "generated" action: show matching generated panel (any workspace)
   if (action === "generated") {
-    const root = rootFor(workspace);
-    if (root) {
-      root.querySelectorAll("[data-generated-panel]").forEach((node) => {
-        setRouteElementVisibility(node, node.dataset.generatedPanel === arg);
-      });
-    }
+    document.querySelectorAll("[data-generated-panel]").forEach((node) => {
+      setRouteElementVisibility(node, node.dataset.generatedPanel === arg);
+    });
     return;
   }
 
