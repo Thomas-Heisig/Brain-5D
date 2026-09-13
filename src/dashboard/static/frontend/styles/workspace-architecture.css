@@ -23,6 +23,24 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
     display: none !important;
 }
 
+/* Unified panel header style (matching Neuron Model Viewer design) */
+.card > .panel-title,
+.card > header.nmv-head { padding: .85rem 1rem .7rem; display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--rule); }
+.card > .panel-title h2,
+.card > header.nmv-head h2 { margin: 0; font-size: 1.05rem; font-family: var(--font-display); }
+.card > .panel-title p,
+.card > header.nmv-head p { margin: .25rem 0 0; color: var(--ink-3); font-size: .72rem; max-width: 68ch; }
+.card > .panel-title .button-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.card > .panel-title .badge { align-self: center; }
+
+/* Network panel footer stats (matching NMV footer design) */
+.card > .nmv-footer,
+.heatmap-panel .nmv-footer,
+.io-flow-panel .nmv-footer { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .5rem; padding: .75rem 1rem 1rem; border-top: 1px solid var(--rule); }
+.nmv-stat { padding: .6rem .7rem; border: 1px solid var(--rule); border-radius: var(--r-sm); background: var(--paper-2); }
+.nmv-stat span { display: block; font-size: .6rem; color: var(--ink-4); text-transform: uppercase; letter-spacing: .07em; }
+.nmv-stat strong { display: block; margin-top: .2rem; font-size: .78rem; color: var(--ink); font-family: var(--font-mono); }
+
 /* Research / Experimente subtab — lanes as tab bar, cards below */
 .research-lanes { display: flex; gap: 4px; margin-bottom: 10px; padding: 4px; border-bottom: 1px solid var(--rule); overflow-x: auto; }
 .research-lanes button { flex: 0 0 auto; min-height: 30px; padding: 0 10px; border: 0; border-radius: 0; background: transparent; color: var(--ink-3); font: 600 .58rem/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
