@@ -244,22 +244,45 @@ function ensureWorkspace() {
   section.innerHTML = `
     <header class="dashboard-generated-header wesen-header"><div><span class="dashboard-workspace-kicker">LIVE BODY</span><h2>Wesen</h2><p>Maschinen-native Echtzeitansicht aus beobachteten Sensoren, Interozeption, SNN, Aktoren und Rückkopplung.</p></div><div class="wesen-header-tools"><div class="wesen-visibility"><button type="button" class="wesen-visibility-toggle" data-wesen-visibility-toggle aria-expanded="false">Oberflächen</button><div class="wesen-visibility-menu" data-wesen-visibility-menu hidden></div></div><div class="wesen-live-state"><span class="wesen-live-dot"></span><strong id="wesen-live-label">verbinde …</strong></div></div></header>
     <div class="wesen-layout">
-      <aside class="wesen-sidebar wesen-sidebar-left">
-        <section class="wesen-card" data-wesen-panel="body-state"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
-        <section class="wesen-card" data-wesen-panel="body-view"><header><span>ANSICHT</span><small>interaktiv</small></header><div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div><p class="wesen-hint">Klick: Fokus · Mausrad: Zoom · Doppelklick: Gesamtansicht</p></section>
-        <section class="wesen-card" data-wesen-panel="adaptation"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
-      </aside>
+      <section class="wesen-card" data-wesen-panel="body-state"><header><span>KÖRPER-ZUSTAND</span><small>beobachtet</small></header><div id="wesen-vitals" class="wesen-metrics"></div><div class="wesen-spark-wrap"><div><span>Recurrence</span><strong id="wesen-recurrence-value">—</strong></div><svg id="wesen-recurrence-chart" viewBox="0 0 240 56" preserveAspectRatio="none"></svg></div></section>
+
       <section class="wesen-stage-card" data-wesen-panel="body-map">
-        <div class="wesen-stage-toolbar"><div><strong>Adaptive Körperkarte</strong><span id="wesen-stage-subtitle">Körperform entsteht aus real verfügbaren Verbindungen.</span></div><div class="wesen-stage-actions"><button data-wesen-action="reset-view">⌂ Gesamt</button><button data-wesen-action="pause-visual">Ⅱ Visualisierung</button></div></div>
+        <div class="wesen-stage-toolbar">
+          <div><strong>Adaptive Körperkarte</strong><span id="wesen-stage-subtitle">Körperform entsteht aus real verfügbaren Verbindungen.</span></div>
+          <div class="wesen-stage-actions">
+            <div class="wesen-view-controls"><button class="active" data-wesen-view="signals">Signale</button><button data-wesen-view="causality">Kausalpfade</button><button class="active" data-wesen-view="connections">Verbindungen</button><button class="active" data-wesen-view="environment">Umwelt</button></div>
+            <button data-wesen-action="reset-view" title="Gesamtansicht">⌂</button><button data-wesen-action="pause-visual" title="Visualisierung pausieren">Ⅱ</button>
+          </div>
+        </div>
         <div class="wesen-stage" id="wesen-stage"><svg id="wesen-svg" viewBox="0 0 900 700"><defs><filter id="wesen-glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g id="wesen-camera"><path id="wesen-membrane" class="wesen-membrane"/><g id="wesen-environment-layer"></g><g id="wesen-connection-layer"></g><g id="wesen-signal-layer"></g><g id="wesen-organ-layer"></g><g id="wesen-pin-layer"></g></g></svg><div class="wesen-environment-caption"><span>UMWELT</span><strong id="wesen-environment-label">nicht beobachtet</strong></div><div class="wesen-adaptive-caption"><span>REAKTION</span><strong id="wesen-reaction-label">warte auf Telemetrie</strong></div></div>
         <div class="wesen-console"><div class="wesen-console-head"><strong>Ereignisse & Kausalität</strong><div id="wesen-event-filters"><button class="active" data-wesen-filter="all">Alle</button><button data-wesen-filter="sensor">Sensorik</button><button data-wesen-filter="actuator">Aktorik</button><button data-wesen-filter="feedback">Loop</button><button data-wesen-filter="structure">Morphologie</button><button data-wesen-filter="system">System</button></div></div><div id="wesen-events" class="wesen-events"></div></div>
       </section>
-      <aside class="wesen-sidebar wesen-sidebar-right">
-        <section class="wesen-card wesen-inspector" data-wesen-panel="inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
-        <section class="wesen-card" data-wesen-panel="boundary"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
-        <section class="wesen-card" data-wesen-panel="self-model"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></section>
-        <section class="wesen-card" data-wesen-panel="morphology"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
-      </aside>
+
+      <section class="wesen-card" data-wesen-panel="adaptation"><header><span>AUTOMATISCHE ANPASSUNG</span><small>read-only</small></header><div id="wesen-adaptation" class="wesen-adaptation"></div></section>
+
+      <section class="wesen-card" data-wesen-panel="self-model"><header><span>SELBST-MODELL</span><small>zeitversetzt</small></header><div class="wesen-self-body"><svg id="wesen-self-svg" viewBox="0 0 300 180"></svg><div id="wesen-self-metrics" class="wesen-self-metrics"></div></div></section>
+
+      <section class="wesen-card wesen-inspector" data-wesen-panel="inspector"><header><span>INSPEKTION</span><small id="wesen-inspector-status">—</small></header><div id="wesen-inspector"></div></section>
+
+      <section class="wesen-card" data-wesen-panel="boundary"><header><span>KÖRPERGRENZE</span><small>live</small></header><div id="wesen-connections" class="wesen-connection-list"></div></section>
+
+      <section class="wesen-card" data-wesen-panel="morphology"><header><span>MORPHOLOGIE-HISTORIE</span><small>Session</small></header><div id="wesen-morphology-history" class="wesen-history"></div></section>
+
+      <section class="wesen-card wesen-runtime-io" id="mhrn-runtime-io" data-wesen-panel="runtime-io">
+        <header><div><span class="workspace-kicker">RUNTIME INPUT / OUTPUT</span><h2>Manuelle Operator-Injektion</h2></div><span id="runtime-io-mode" class="maturity-state pending">unknown</span></header>
+        <div class="wesen-runtime-io-body">
+          <form id="runtime-io-form" class="wesen-runtime-io-form">
+            <label>Input-Neuron<select id="runtime-io-neuron"></select></label>
+            <label>Strom<input id="runtime-io-current" type="number" step="0.1" min="-1000" max="1000" value="10"></label>
+            <label>Ticks<input id="runtime-io-ticks" type="number" min="1" max="10000" value="1"></label>
+            <button type="submit">Strom injizieren</button>
+          </form>
+          <div class="wesen-runtime-io-readout">
+            <strong id="runtime-io-status">lade …</strong>
+            <pre id="runtime-io-output">Noch kein manueller Eingriff.</pre>
+          </div>
+        </div>
+      </section>
     </div>`;
   main.appendChild(section);
   bindInteractions();
@@ -269,13 +292,13 @@ function ensureWorkspace() {
 const WESEN_VISIBILITY_KEY = "brain5d.wesen.visibility.v1";
 const WESEN_PANEL_LABELS = new Map([
   ["body-state", "Körperzustand"],
-  ["body-view", "Interaktive Ansichten"],
   ["adaptation", "Automatische Anpassung"],
+  ["self-model", "Selbst-Modell"],
   ["body-map", "Körperkarte und Ereignisse"],
   ["inspector", "Inspektion"],
   ["boundary", "Körpergrenze"],
-  ["self-model", "Selbst-Modell"],
   ["morphology", "Morphologie-Historie"],
+  ["runtime-io", "Manuelle Operator-Injektion"],
   ["symbiosis", "Embodied Multi-Network Interface"],
 ]);
 let wesenVisibility = {};

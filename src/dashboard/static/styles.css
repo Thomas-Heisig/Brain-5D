@@ -521,16 +521,15 @@ canvas { display:block; width:100%; height:auto; border:1px solid var(--rule); b
 .wesen-live-dot[data-state="ok"],.wesen-connection-led.ok { background:var(--moss); box-shadow:0 0 0 3px var(--moss-wash); }
 .wesen-live-dot[data-state="warn"],.wesen-connection-led.warn { background:var(--amber); box-shadow:0 0 0 3px var(--amber-wash); }
 .wesen-live-dot[data-state="critical"],.wesen-connection-led.critical { background:var(--crimson); box-shadow:0 0 0 3px var(--crimson-wash); }
-.wesen-layout { display:grid; grid-template-columns:220px minmax(420px,1fr) 260px; gap:8px; align-items:stretch; }
-.wesen-sidebar { display:grid; gap:8px; align-content:start; }
+.wesen-layout { display:flex; flex-direction:column; gap:8px; }
 .wesen-card,.wesen-stage-card,.wesen-console { overflow:hidden; }
-.wesen-card > header { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 9px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
-.wesen-card > header span { color:var(--ink-3); font:700 .52rem/1 var(--font-mono); letter-spacing:.08em; }
-.wesen-card > header small { color:var(--ink-4); font-size:.55rem; }
-.wesen-metrics,.wesen-inspector-rows,.wesen-self-metrics { padding:4px 9px; }
-.wesen-metric,.wesen-inspector-rows > div,.wesen-self-metrics > div { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:24px; border-bottom:1px solid var(--rule); }
-.wesen-metric span,.wesen-inspector-rows span,.wesen-self-metrics span { color:var(--ink-3); font-size:.62rem; }
-.wesen-metric strong,.wesen-inspector-rows strong,.wesen-self-metrics strong { color:var(--ink); font:600 .62rem/1.2 var(--font-mono); }
+.wesen-card > header { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 8px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+.wesen-card > header span { color:var(--ink-3); font:700 .5rem/1 var(--font-mono); letter-spacing:.07em; }
+.wesen-card > header small { color:var(--ink-4); font-size:.52rem; }
+.wesen-metrics,.wesen-inspector-rows { padding:4px 9px; }
+.wesen-metric,.wesen-inspector-rows > div { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:24px; border-bottom:1px solid var(--rule); }
+.wesen-metric span,.wesen-inspector-rows span { color:var(--ink-3); font-size:.62rem; }
+.wesen-metric strong,.wesen-inspector-rows strong { color:var(--ink); font:600 .62rem/1.2 var(--font-mono); }
 .wesen-spark-wrap { padding:4px 9px 8px; }
 .wesen-spark-wrap > div { display:flex; justify-content:space-between; color:var(--ink-3); font-size:.62rem; }
 #wesen-recurrence-chart,#wesen-self-svg { width:100%; display:block; border:1px solid var(--rule); border-radius:var(--r-xs); background:var(--paper); }
@@ -538,24 +537,24 @@ canvas { display:block; width:100%; height:auto; border:1px solid var(--rule); b
 .wesen-chart-line { fill:none; stroke:var(--accent); stroke-width:1.5; }
 .wesen-chart-point { fill:var(--accent); }
 .wesen-chart-empty { fill:var(--ink-4); font-size:10px; }
-.wesen-view-controls { display:grid; grid-template-columns:1fr 1fr; gap:1px; padding:6px; background:var(--rule); }
-.wesen-view-controls button,.wesen-stage-actions button,#wesen-event-filters button { min-height:26px; border:0; border-radius:0; background:var(--paper-2); color:var(--ink-3); font-size:.64rem; }
-.wesen-view-controls button.active,.wesen-stage-actions button.active,#wesen-event-filters button.active { color:var(--accent-2); background:var(--accent-wash); }
-.wesen-hint,.wesen-integrity-note { margin:0; padding:0 9px 8px; color:var(--ink-4); font-size:.6rem; }
+.wesen-integrity-note { margin:0; padding:0 9px 8px; color:var(--ink-4); font-size:.6rem; }
 .wesen-adaptation { padding:6px 9px; }
 .wesen-adaptation p { margin-top:3px; color:var(--ink-3); font-size:.62rem; }
-.wesen-adaptation-state { display:flex; align-items:center; gap:7px; }
+.wesen-adaptation-state { display:flex; align-items:center; gap:6px; }
 .wesen-adaptation-state span { width:7px; height:7px; border-radius:50%; background:var(--ink-4); }
 .wesen-adaptation-state.ok span { background:var(--moss); }
 .wesen-adaptation-state.warn span { background:var(--amber); }
 .wesen-adaptation-state.critical span { background:var(--crimson); }
-.wesen-stage-card { display:grid; grid-template-rows:auto 1fr auto; }
-.wesen-stage-toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 9px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+.wesen-stage-card { display:flex; flex-direction:column; }
+.wesen-stage-toolbar { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:5px 8px; border-bottom:1px solid var(--rule); background:var(--paper-3); flex-shrink:0; }
 .wesen-stage-toolbar > div:first-child { display:grid; gap:1px; }
-.wesen-stage-toolbar strong { font-family:var(--font-display); font-size:.82rem; }
-.wesen-stage-toolbar span { color:var(--ink-3); font-size:.6rem; }
-.wesen-stage-actions { display:flex; gap:3px; }
-.wesen-stage { position:relative; min-height:380px; overflow:hidden; background:radial-gradient(circle at 50% 46%,var(--accent-wash),transparent 34%),linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px),var(--paper); background-size:auto,44px 44px,44px 44px,auto; }
+.wesen-stage-toolbar strong { font-family:var(--font-display); font-size:.8rem; }
+.wesen-stage-toolbar span { color:var(--ink-3); font-size:.58rem; }
+.wesen-stage-toolbar .wesen-view-controls { display:inline-flex; gap:1px; padding:0; background:transparent; }
+.wesen-stage-toolbar .wesen-view-controls button { min-height:24px; padding:0 7px; border:1px solid var(--rule); border-radius:var(--r-xs); background:var(--paper-2); color:var(--ink-3); font-size:.6rem; cursor:pointer; }
+.wesen-stage-toolbar .wesen-view-controls button.active { color:var(--accent-2); background:var(--accent-wash); border-color:color-mix(in srgb,var(--accent) 30%,transparent); }
+.wesen-stage-actions { display:flex; align-items:center; gap:4px; }
+.wesen-stage { position:relative; height:420px; overflow:hidden; background:radial-gradient(circle at 50% 46%,var(--accent-wash),transparent 34%),linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px),var(--paper); background-size:auto,44px 44px,44px 44px,auto; flex-shrink:0; }
 #wesen-svg { position:absolute; inset:0; width:100%; height:100%; }
 #wesen-svg { position:absolute; inset:0; width:100%; height:100%; }
 #wesen-camera { transform-origin:450px 350px; }
@@ -586,31 +585,55 @@ canvas { display:block; width:100%; height:auto; border:1px solid var(--rule); b
 .wesen-adaptive-caption { right:10px; text-align:right; }
 .wesen-environment-caption span,.wesen-adaptive-caption span { color:var(--ink-4); font:700 .52rem/1 var(--font-mono); letter-spacing:.10em; }
 .wesen-environment-caption strong,.wesen-adaptive-caption strong { color:var(--ink); font-size:.68rem; }
-.wesen-console { margin:8px; }
-.wesen-console-head { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 8px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+.wesen-console { margin:0; border-top:1px solid var(--rule); }
+.wesen-console-head { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:4px 8px; background:var(--paper-3); font-size:.62rem; }
 #wesen-event-filters { display:flex; flex-wrap:wrap; gap:2px; }
-.wesen-events { min-height:80px; max-height:120px; overflow:auto; }
-.wesen-event-row,.wesen-connection-row { width:100%; display:grid; align-items:center; gap:6px; text-align:left; border:0; border-bottom:1px solid var(--rule); border-radius:0; background:transparent; color:var(--ink-2); cursor:pointer; }
-.wesen-event-row { grid-template-columns:54px 6px minmax(100px,.7fr) 1fr; padding:4px 8px; font-size:.62rem; }
-.wesen-connection-row { grid-template-columns:8px minmax(0,1fr) auto; padding:5px 8px; font-size:.62rem; }
+#wesen-event-filters button { min-height:22px; padding:0 6px; border:0; border-radius:var(--r-xs); background:var(--paper-2); color:var(--ink-3); font-size:.55rem; cursor:pointer; }
+#wesen-event-filters button.active { color:var(--accent-2); background:var(--accent-wash); }
+.wesen-events { max-height:100px; overflow:auto; }
+.wesen-event-row,.wesen-connection-row { width:100%; display:grid; align-items:center; gap:4px; text-align:left; border:0; border-bottom:1px solid var(--rule); border-radius:0; background:transparent; color:var(--ink-2); cursor:pointer; }
+.wesen-event-row { grid-template-columns:44px 5px minmax(80px,.65fr) 1fr; padding:3px 7px; font-size:.58rem; }
+.wesen-connection-row { grid-template-columns:6px minmax(0,1fr) auto; padding:4px 7px; font-size:.58rem; }
 .wesen-event-row:hover,.wesen-connection-row:hover { background:var(--paper-3); }
-.wesen-event-row time,.wesen-event-row em,.wesen-connection-row small,.wesen-connection-row em { color:var(--ink-4); font-size:.58rem; font-style:normal; }
-.wesen-event-kind { width:6px; height:6px; border-radius:50%; background:var(--indigo); }
+.wesen-event-row time,.wesen-event-row em,.wesen-connection-row small,.wesen-connection-row em { color:var(--ink-4); font-size:.55rem; font-style:normal; }
+.wesen-event-kind { width:5px; height:5px; border-radius:50%; background:var(--indigo); flex-shrink:0; }
 .wesen-event-kind.sensor,.wesen-event-kind.sensorik { background:var(--indigo); }
 .wesen-event-kind.actuator { background:var(--amber); }
 .wesen-event-kind.feedback,.wesen-event-kind.rueckkopplung { background:#66527d; }
 .wesen-event-kind.structure,.wesen-event-kind.struktur { background:var(--moss); }
 .wesen-event-kind.system,.wesen-event-kind.innenzustand { background:var(--crimson); }
-.wesen-inspector-title { display:flex; gap:7px; align-items:center; padding:8px; }
-.wesen-inspector-title > span { display:grid; place-items:center; width:32px; height:32px; border:1px solid currentColor; border-radius:50%; font-size:.85rem; }
+.wesen-inspector-title { display:flex; gap:6px; align-items:center; padding:6px 8px; }
+.wesen-inspector-title > span { display:grid; place-items:center; width:28px; height:28px; border:1px solid currentColor; border-radius:50%; font-size:.75rem; }
 .wesen-inspector-title > div { display:grid; gap:1px; }
-.wesen-inspector-title small { color:var(--ink-3); font-size:.6rem; }
-.wesen-connection-list { max-height:180px; overflow:auto; }
-.wesen-empty { margin:0; padding:8px; color:var(--ink-4); font:.6rem/1.3 var(--font-mono); }
-.wesen-self-model { padding:6px 8px; }
-#wesen-self-svg { min-height:100px; }
-.wesen-history { max-height:140px; overflow:auto; padding:5px 8px; }
-.wesen-history > div { display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid var(--rule); color:var(--ink-3); font-size:.6rem; }
+.wesen-inspector-title strong { font-size:.78rem; }
+.wesen-inspector-title small { color:var(--ink-3); font-size:.55rem; }
+.wesen-connection-list { max-height:140px; overflow:auto; }
+.wesen-empty { margin:0; padding:6px 8px; color:var(--ink-4); font:.55rem/1.3 var(--font-mono); }
+.wesen-self-body { display:flex; gap:8px; align-items:center; padding:6px 8px; }
+#wesen-self-svg { width:140px; min-height:80px; flex-shrink:0; border:1px solid var(--rule); border-radius:var(--r-xs); background:var(--paper); }
+.wesen-self-metrics { flex:1; min-width:0; display:grid; gap:2px; }
+.wesen-self-metrics > div { display:flex; justify-content:space-between; gap:8px; padding:3px 0; border-bottom:1px solid var(--rule); font-size:.6rem; }
+.wesen-self-metrics span { color:var(--ink-3); }
+.wesen-self-metrics strong { color:var(--ink); font-family:var(--font-mono); }
+.wesen-history { max-height:100px; overflow:auto; padding:3px 8px; }
+.wesen-history > div { display:flex; justify-content:space-between; gap:6px; padding:3px 0; border-bottom:1px solid var(--rule); color:var(--ink-3); font-size:.55rem; }
+
+/* Runtime I/O */
+.wesen-runtime-io > header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 10px; border-bottom:1px solid var(--rule); background:var(--paper-3); }
+.wesen-runtime-io > header h2 { font-size:.85rem; }
+.wesen-runtime-io-body { display:grid; grid-template-columns:auto 1fr; gap:12px; padding:8px 10px; align-items:start; }
+.wesen-runtime-io-form { display:flex; gap:8px; align-items:end; flex-wrap:wrap; }
+.wesen-runtime-io-form label { display:grid; gap:3px; color:var(--ink-3); font-size:.65rem; }
+.wesen-runtime-io-form select,
+.wesen-runtime-io-form input { min-height:28px; padding:4px 7px; border:1px solid var(--rule-2); border-radius:var(--r-xs); background:var(--paper-2); color:var(--ink); font-size:.72rem; }
+.wesen-runtime-io-form select { min-width:140px; }
+.wesen-runtime-io-form input[type="number"] { width:80px; }
+.wesen-runtime-io-form button { min-height:28px; padding:0 12px; border:1px solid var(--accent); border-radius:var(--r-xs); background:var(--accent); color:var(--paper-2); font:600 .68rem/1 var(--font-ui); cursor:pointer; }
+.wesen-runtime-io-form button:hover { background:var(--accent-2); }
+.wesen-runtime-io-form button:disabled { opacity:.4; cursor:not-allowed; }
+.wesen-runtime-io-readout { min-width:0; }
+.wesen-runtime-io-readout strong { display:block; margin-bottom:4px; color:var(--ink-3); font:600 .6rem/1 var(--font-mono); }
+.wesen-runtime-io-readout pre { margin:0; max-height:80px; overflow:auto; padding:6px 8px; border:1px solid var(--rule); border-radius:var(--r-xs); background:var(--paper); color:var(--ink-2); font-size:.62rem; line-height:1.4; }
 
 /* ── Footer — zweizeilig: oben stabil, unten Telemetrie ── */
 .mhrn-footer { position:fixed; bottom:0; left:0; right:0; z-index:500; display:flex; flex-direction:column; border-top:1px solid var(--rule-2); background:var(--paper-2); color:var(--ink-3); box-shadow:0 -4px 14px -8px rgba(26,23,20,.18); }
@@ -700,8 +723,8 @@ body[data-theme="light"][data-contrast="high"] { --rule:rgba(240,233,218,.32); -
   .overview-body-surface { grid-column:1/-1; }
   .embodiment-anatomy,.embodiment-living-map { grid-template-columns:1fr 1fr; }
   .organism-core { grid-column:1/-1; grid-row:1; }
-  .wesen-layout { grid-template-columns:190px minmax(360px,1fr); }
-  .wesen-sidebar-right { grid-column:1/-1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+  .wesen-layout { gap:6px; }
+  .wesen-runtime-io-body { grid-template-columns:1fr; }
   .mhrn-footer-row { flex-wrap:wrap; padding-inline:10px; }
   .mhrn-divider { display:none; }
   .mhrn-footer-status { display:flex; flex-wrap:wrap; }
@@ -732,9 +755,9 @@ body[data-theme="light"][data-contrast="high"] { --rule:rgba(240,233,218,.32); -
   .embodiment-anatomy,.embodiment-living-map { grid-template-columns:1fr; }
   .organism-core { grid-column:auto; grid-row:auto; }
   .embodiment-system-strip { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  .wesen-layout { display:block; }
-  .wesen-sidebar-left,.wesen-sidebar-right { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); margin-bottom:10px; }
-  .wesen-stage-card { margin-bottom:8px; }
+  .wesen-layout { gap:6px; }
+  .wesen-stage-card { margin-bottom:6px; }
+  .wesen-runtime-io-body { grid-template-columns:1fr; }
   .mhrn-footer-row { flex-wrap:wrap; }
   .mhrn-footer-status { display:flex; flex-wrap:wrap; }
 }
@@ -761,12 +784,15 @@ body[data-theme="light"][data-contrast="high"] { --rule:rgba(240,233,218,.32); -
   .parameter-inspector__toolbar { align-items:stretch; flex-direction:column; }
   .parameter-inspector__toolbar input { min-width:0; }
   .embodiment-system-strip { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .wesen-sidebar-left,.wesen-sidebar-right { grid-template-columns:1fr; }
-  .wesen-stage-card { min-height:auto; grid-template-rows:auto 470px auto; }
-  .wesen-stage { min-height:470px; }
-  .wesen-stage-toolbar,.wesen-console-head { align-items:flex-start; flex-direction:column; }
-  .wesen-event-row { grid-template-columns:58px 7px minmax(0,1fr); }
+  .wesen-stage-card { min-height:auto; }
+  .wesen-stage { height:360px; }
+  .wesen-stage-toolbar { align-items:flex-start; flex-direction:column; gap:4px; }
+  .wesen-console-head { align-items:flex-start; flex-direction:column; }
+  .wesen-event-row { grid-template-columns:44px 5px minmax(0,1fr); }
   .wesen-event-row em { grid-column:1/-1; }
+  .wesen-runtime-io-body { grid-template-columns:1fr; }
+  .wesen-self-body { flex-direction:column; align-items:stretch; }
+  #wesen-self-svg { width:100%; }
   .mhrn-footer-row { flex-wrap:wrap; padding-inline:10px; }
   .mhrn-footer-status { display:flex; flex-wrap:wrap; }
   .mhrn-kpi-muted:not(.kpi-warn) { display:none; }
