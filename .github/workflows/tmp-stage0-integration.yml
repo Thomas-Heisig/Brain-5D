@@ -1,0 +1,344 @@
+name: Temporary Stage0 Integration
+
+on:
+  push:
+    branches:
+      - feature/single-neuron-model-contract
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/single-neuron-model-contract
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Patch config, runtime and dashboard integration
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'expected block not found in {path}: {old[:80]!r}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          # network.py: preserve all model-specific neuron fields instead of rebuilding a legacy subset.
+          replace_once(
+              'src/core/network.py',
+              'from typing import Any\n',
+              'from typing import Any, cast\n',
+          )
+          replace_once(
+              'src/core/network.py',
+              '        net = data.get("network", {})\n\n        return cls(\n',
+              '        net = data.get("network", {})\n'
+              '        neuron_data = cast(dict[str, Any], data.get("neuron", {}))\n'
+              '        energy_data = cast(dict[str, Any], data.get("energy", {}))\n'
+              '        neuron_payload = dict(neuron_data)\n'
+              '        neuron_payload.setdefault("dt_ms", float(sim.get("dt_ms", 1.0)))\n'
+              '        neuron_payload["spike_cost"] = float(\n'
+              '            energy_data.get("spike_cost", neuron_payload.get("spike_cost", 0.001))\n'
+              '        )\n'
+              '        neuron_payload["resting_energy"] = float(\n'
+              '            energy_data.get("initial", neuron_payload.get("resting_energy", 1.0))\n'
+              '        )\n\n'
+              '        return cls(\n',
+          )
+          replace_once(
+              'src/core/network.py',
+              '            neuron=NeuronConfig(\n'
+              '                a=float(data.get("neuron", {}).get("a", 0.02)),\n'
+              '                b=float(data.get("neuron", {}).get("b", 0.2)),\n'
+              '                c=float(data.get("neuron", {}).get("c", -65.0)),\n'
+              '                d=float(data.get("neuron", {}).get("d", 8.0)),\n'
+              '                initial_v=float(data.get("neuron", {}).get("initial_v", -65.0)),\n'
+              '                initial_u=float(data.get("neuron", {}).get("initial_u", -13.0)),\n'
+              '                spike_cost=float(data.get("energy", {}).get("spike_cost", 0.001)),\n'
+              '                resting_energy=float(data.get("energy", {}).get("initial", 1.0)),\n'
+              '            ),\n',
+              '            neuron=NeuronConfig.from_dict(neuron_payload),\n',
+          )
+
+          # config/loader.py: expose model family and model-specific parameters in YAML/JSON.
+          replace_once(
+              'src/config/loader.py',
+              'class NeuronConfig(TypedDict, total=False):\n'
+              '    """Configuration for neuron parameters."""\n\n'
+              '    a: float\n'
+              '    b: float\n'
+              '    c: float\n'
+              '    d: float\n'
+              '    initial_v: float\n'
+              '    initial_u: float\n',
+              'class NeuronConfig(TypedDict, total=False):\n'
+              '    """Configuration for neuron parameters and dynamics model."""\n\n'
+              '    model: str\n'
+              '    a: float\n'
+              '    b: float\n'
+              '    c: float\n'
+              '    d: float\n'
+              '    initial_v: float\n'
+              '    initial_u: float\n'
+              '    izhikevich_threshold: float\n'
+              '    lif_resting_potential: float\n'
+              '    lif_tau_m_ms: float\n'
+              '    lif_resistance: float\n'
+              '    lif_threshold: float\n'
+              '    lif_reset: float\n'
+              '    refractory_ticks: int\n'
+              '    enable_threshold_adaptation: bool\n'
+              '    enable_energy_dynamics: bool\n'
+              '    enable_traces: bool\n'
+              '    enable_homeostasis: bool\n',
+          )
+          replace_once(
+              'src/config/loader.py',
+              '    "neuron": {\n'
+              '        "a": 0.02,\n'
+              '        "b": 0.2,\n'
+              '        "c": -65.0,\n'
+              '        "d": 8.0,\n'
+              '        "initial_v": -65.0,\n'
+              '        "initial_u": -13.0,\n'
+              '    },\n',
+              '    "neuron": {\n'
+              '        "model": "izhikevich-2003",\n'
+              '        "a": 0.02,\n'
+              '        "b": 0.2,\n'
+              '        "c": -65.0,\n'
+              '        "d": 8.0,\n'
+              '        "initial_v": -65.0,\n'
+              '        "initial_u": -13.0,\n'
+              '        "izhikevich_threshold": 30.0,\n'
+              '        "lif_resting_potential": -65.0,\n'
+              '        "lif_tau_m_ms": 20.0,\n'
+              '        "lif_resistance": 1.0,\n'
+              '        "lif_threshold": -50.0,\n'
+              '        "lif_reset": -65.0,\n'
+              '        "refractory_ticks": 0,\n'
+              '        "enable_threshold_adaptation": True,\n'
+              '        "enable_energy_dynamics": True,\n'
+              '        "enable_traces": True,\n'
+              '        "enable_homeostasis": True,\n'
+              '    },\n',
+          )
+          replace_once(
+              'src/config/loader.py',
+              '    result: NeuronConfig = {}\n\n'
+              '    for key in ["a", "b", "c", "d", "initial_v", "initial_u"]:\n',
+              '    result: NeuronConfig = {}\n\n'
+              '    model_raw = raw.get("model", defaults.get("model", "izhikevich-2003"))\n'
+              '    if not isinstance(model_raw, str):\n'
+              '        raise ValueError(\n'
+              '            f"neuron.model must be a string, got {type(model_raw).__name__}"\n'
+              '        )\n'
+              '    model_aliases = {\n'
+              '        "izh": "izhikevich-2003",\n'
+              '        "izhikevich": "izhikevich-2003",\n'
+              '        "izhikevich-2003": "izhikevich-2003",\n'
+              '        "lif": "lif-current-v1",\n'
+              '        "leaky-integrate-and-fire": "lif-current-v1",\n'
+              '        "lif-current-v1": "lif-current-v1",\n'
+              '    }\n'
+              '    try:\n'
+              '        result["model"] = model_aliases[model_raw.strip().lower()]\n'
+              '    except KeyError as exc:\n'
+              '        raise ValueError(\n'
+              '            f"unsupported neuron.model {model_raw!r}; expected izhikevich or lif"\n'
+              '        ) from exc\n\n'
+              '    for key in [\n'
+              '        "a",\n'
+              '        "b",\n'
+              '        "c",\n'
+              '        "d",\n'
+              '        "initial_v",\n'
+              '        "initial_u",\n'
+              '        "izhikevich_threshold",\n'
+              '        "lif_resting_potential",\n'
+              '        "lif_tau_m_ms",\n'
+              '        "lif_resistance",\n'
+              '        "lif_threshold",\n'
+              '        "lif_reset",\n'
+              '    ]:\n',
+          )
+          replace_once(
+              'src/config/loader.py',
+              '        result[key] = float(value)  # type: ignore[literal-required]\n\n    return result\n',
+              '        result[key] = float(value)  # type: ignore[literal-required]\n\n'
+              '    if result.get("lif_tau_m_ms", 20.0) <= 0.0:\n'
+              '        raise ValueError("neuron.lif_tau_m_ms must be > 0")\n\n'
+              '    refractory_raw = raw.get(\n'
+              '        "refractory_ticks", defaults.get("refractory_ticks", 0)\n'
+              '    )\n'
+              '    if not isinstance(refractory_raw, (int, float)):\n'
+              '        raise ValueError("neuron.refractory_ticks must be numeric")\n'
+              '    result["refractory_ticks"] = int(refractory_raw)\n'
+              '    if result["refractory_ticks"] < 0:\n'
+              '        raise ValueError("neuron.refractory_ticks must be >= 0")\n\n'
+              '    for key in [\n'
+              '        "enable_threshold_adaptation",\n'
+              '        "enable_energy_dynamics",\n'
+              '        "enable_traces",\n'
+              '        "enable_homeostasis",\n'
+              '    ]:\n'
+              '        result[key] = bool(raw.get(key, defaults.get(key, True)))  # type: ignore[literal-required]\n\n'
+              '    return result\n',
+          )
+          replace_once(
+              'src/config/loader.py',
+              '    net = config.get("network")\n'
+              '    if net:\n'
+              '        _validate_network_config(\n'
+              '            cast("dict[str, Any]", net), cast("NetworkConfig", defaults["network"])\n'
+              '        )\n\n\n# ============================================================================\n',
+              '    net = config.get("network")\n'
+              '    if net:\n'
+              '        _validate_network_config(\n'
+              '            cast("dict[str, Any]", net), cast("NetworkConfig", defaults["network"])\n'
+              '        )\n\n'
+              '    neuron = config.get("neuron")\n'
+              '    if neuron:\n'
+              '        _validate_neuron_config(\n'
+              '            cast("dict[str, Any]", neuron), cast("NeuronConfig", defaults["neuron"])\n'
+              '        )\n\n\n# ============================================================================\n',
+          )
+
+          # Dashboard: Stage 0 now describes the actual contract and evidence.
+          replace_once(
+              'src/dashboard/development_timeline.py',
+              '                "Spike- und Refraktärverhalten",\n',
+              '                "Spike-, Reset- und Erholungsverhalten",\n'
+              '                "versionierte und umschaltbare Neuronenmodelle",\n',
+          )
+          replace_once(
+              'src/dashboard/development_timeline.py',
+              '                CriterionSpec(\n'
+              '                    "neuron_model", "Neuron model", paths=("src/core/neuron.py",)\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "membrane_dynamics",\n'
+              '                    "Membrane dynamics",\n'
+              '                    paths=("src/core/neuron.py",),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "spike_and_refractory",\n'
+              '                    "Spike and refractory behavior",\n'
+              '                    tests=("tests/test_neuron.py",),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "single_cell_verification",\n'
+              '                    "Single-cell verification",\n'
+              '                    tests=("tests/test_neuron.py",),\n'
+              '                ),\n'
+              '            ),\n'
+              '            ("src/core/neuron.py",),\n'
+              '            ("tests/test_neuron.py",),\n',
+              '                CriterionSpec(\n'
+              '                    "neuron_model",\n'
+              '                    "Versioned neuron model",\n'
+              '                    paths=("src/core/neuron.py", "src/core/neuron_models.py"),\n'
+              '                    tests=("tests/test_single_neuron_contract.py",),\n'
+              '                    verification=(\n'
+              '                        "research/generated/verification/single_neuron_reference.json",\n'
+              '                    ),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "membrane_dynamics",\n'
+              '                    "Deterministic membrane dynamics",\n'
+              '                    paths=("src/core/neuron.py", "src/core/neuron_models.py"),\n'
+              '                    tests=("tests/test_single_neuron_contract.py",),\n'
+              '                    verification=(\n'
+              '                        "research/generated/verification/single_neuron_reference.json",\n'
+              '                    ),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "spike_and_refractory",\n'
+              '                    "Spike, reset, recovery and refractory variant",\n'
+              '                    tests=("tests/test_single_neuron_contract.py",),\n'
+              '                    verification=(\n'
+              '                        "research/generated/verification/single_neuron_reference.json",\n'
+              '                    ),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "single_cell_verification",\n'
+              '                    "Deterministic replay and state continuation",\n'
+              '                    tests=("tests/test_single_neuron_contract.py",),\n'
+              '                    verification=(\n'
+              '                        "research/generated/verification/single_neuron_reference.json",\n'
+              '                    ),\n'
+              '                ),\n'
+              '                CriterionSpec(\n'
+              '                    "model_switch_provenance",\n'
+              '                    "Model selection and provenance",\n'
+              '                    paths=("src/core/neuron_models.py",),\n'
+              '                    tests=("tests/test_single_neuron_contract.py",),\n'
+              '                    verification=(\n'
+              '                        "research/generated/verification/single_neuron_reference.json",\n'
+              '                    ),\n'
+              '                ),\n'
+              '            ),\n'
+              '            ("src/core/neuron.py", "src/core/neuron_models.py"),\n'
+              '            ("tests/test_neuron.py", "tests/test_single_neuron_contract.py"),\n',
+          )
+
+          # Contract tests: configuration loader and Brain5DConfig must carry model identity end-to-end.
+          test_path = Path('tests/test_single_neuron_contract.py')
+          test_text = test_path.read_text(encoding='utf-8')
+          test_text = test_text.replace(
+              'from src.core.neuron_models import integrate_membrane\n',
+              'from src.config import load_config\n'
+              'from src.core.network import Brain5DConfig\n'
+              'from src.core.neuron_models import integrate_membrane\n',
+              1,
+          )
+          test_text += '''\n\ndef test_yaml_model_selection_reaches_core_config(tmp_path: Path) -> None:\n    path = tmp_path / "lif.yaml"\n    path.write_text(\n        "dimensions: [2, 2, 2, 2, 2]\\n"\n        "initial_neurons: 1\\n"\n        "neuron:\\n"\n        "  model: lif\\n"\n        "  lif_tau_m_ms: 15.0\\n"\n        "  lif_threshold: -52.0\\n"\n        "  refractory_ticks: 2\\n",\n        encoding="utf-8",\n    )\n    loaded = load_config(path)\n    assert loaded["neuron"]["model"] == "lif-current-v1"\n    config = Brain5DConfig.from_dict(dict(loaded))\n    assert config.neuron.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE\n    assert config.neuron.lif_tau_m_ms == 15.0\n    assert config.neuron.lif_threshold == -52.0\n    assert config.neuron.refractory_ticks == 2\n\n\ndef test_yaml_unknown_model_fails_closed(tmp_path: Path) -> None:\n    path = tmp_path / "invalid.yaml"\n    path.write_text(\n        "dimensions: [2, 2, 2, 2, 2]\\n"\n        "initial_neurons: 1\\n"\n        "neuron:\\n"\n        "  model: unknown-theory\\n",\n        encoding="utf-8",\n    )\n    with pytest.raises(ValueError, match="unsupported neuron.model"):\n        load_config(path)\n'''
+          test_path.write_text(test_text, encoding='utf-8')
+          PY
+      - name: Install project test tools
+        run: python -m pip install -e ".[dev]"
+      - name: Format and type-check Stage 0 changes
+        run: |
+          python -m black src/core/neuron.py src/core/neuron_models.py src/core/network.py src/config/loader.py src/dashboard/development_timeline.py tests/test_single_neuron_contract.py
+          python -m ruff check src/core/neuron.py src/core/neuron_models.py src/core/network.py src/config/loader.py src/dashboard/development_timeline.py tests/test_single_neuron_contract.py
+          python -m mypy src/core/neuron.py src/core/neuron_models.py src/core/network.py src/config/loader.py src/dashboard/development_timeline.py
+      - name: Run Stage 0 verification suite
+        run: python -m pytest -q tests/test_neuron.py tests/test_single_neuron_contract.py
+      - name: Promote software verification artifact
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('research/generated/verification/single_neuron_reference.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          data['status'] = 'verified'
+          data['verification_scope'] = 'Stage-0 software contract; not biological validation'
+          data['proofs'] = {
+              'golden_trajectory': True,
+              'deterministic_replay': True,
+              'spike_reset_recovery': True,
+              'optional_refractory_variant': True,
+              'state_roundtrip': True,
+              'model_switch_provenance': True,
+              'yaml_model_selection': True,
+          }
+          path.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Commit verified integration and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/tmp-stage0-integration.yml
+          git add src/core/network.py src/config/loader.py src/dashboard/development_timeline.py tests/test_single_neuron_contract.py research/generated/verification/single_neuron_reference.json src/core/neuron.py src/core/neuron_models.py
+          git commit -m "feat(neuron): integrate model selection across config and dashboard"
+          git push origin HEAD:feature/single-neuron-model-contract
