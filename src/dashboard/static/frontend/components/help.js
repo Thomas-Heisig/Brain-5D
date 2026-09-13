@@ -5,7 +5,6 @@ const HELP = {
   "science-maturity-panel": { title: "Wissenschaftliche Reifegrade", source: "06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md", basis: "Engineering-Reife und wissenschaftliche Evidenz werden getrennt behandelt." },
   "runtime-capability-board": { title: "Runtime & Wesen", source: "02-architecture/EMBODIMENT_FOUNDATION.md", basis: "Embodiment, Sensoren und Aktoren folgen expliziten Adapter- und Kausalitätsgrenzen." },
   "mhrn-runtime-io": { title: "Runtime Input/Output", source: "02-architecture/EMBODIMENT_FOUNDATION.md", basis: "Manuelle Injektionen sind Operator-/Debug-Eingriffe und niemals automatische Evidenz." },
-  "mhrn-science-transparency": { title: "Science Transparency", source: "06-research/RESEARCH_POSITIONING_AND_EVIDENCE_PROGRAM.md", basis: "DATA, EVID, Baselines, negative Befunde und offene Programme bleiben explizit getrennt." },
   "neuron-model-viewer": { title: "Neuron Model Viewer", source: "03-dashboard/DASHBOARD.md", basis: "Projektionen sind Analyseartefakte auf realen Runtime-Samples; sie beweisen keine Hypothese." },
 };
 function ensureDialog() {
