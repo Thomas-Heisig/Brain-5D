@@ -433,7 +433,7 @@ function setOverview(areaId, visible) {
   const overview = root.querySelector(`[data-area-overview="${areaId}"]`);
   if (overview) overview.hidden = !visible;
   [...root.children].forEach((node) => {
-    if (node === overview || node.classList?.contains("mhrn-context-nav") || node.classList?.contains("workspace-header") || node.classList?.contains("overview-command-bar")) return;
+    if (node === overview || node.classList?.contains("mhrn-context-nav") || node.classList?.contains("workspace-header") || node.classList?.contains("overview-command-bar") || node.classList?.contains("mhrn-breadcrumb-bar")) return;
     if (visible) node.classList.add("mhrn-overview-content-hidden");
     else node.classList.remove("mhrn-overview-content-hidden");
   });
