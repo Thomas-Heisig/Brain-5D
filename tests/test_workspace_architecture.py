@@ -3,19 +3,20 @@ from pathlib import Path
 STATIC = Path("src/dashboard/static")
 
 
-def test_seven_first_class_workspaces_and_parameter_ownership() -> None:
+def test_eight_first_class_workspaces_and_parameter_ownership() -> None:
     router = (STATIC / "frontend" / "workspace-router.js").read_text(encoding="utf-8")
-    for area in ("dashboard", "science", "wesen", "control", "release", "settings", "review"):
+    for area in ("dashboard", "science", "wesen", "control", "release", "settings", "review", "files"):
         assert f"  {area}: {{" in router
-    assert 'number: "07"' in router
+    assert 'number: "08"' in router
     assert '["parameters", "Parameter", "settings"]' in router
     assert 'owner: "appsettings"' in router
     assert 'owner: "review"' in router
+    assert 'owner: "research"' in router
 
 
 def test_every_main_area_has_overview_howto_and_backend_contracts() -> None:
     router = (STATIC / "frontend" / "workspace-router.js").read_text(encoding="utf-8")
-    assert router.count('["overview", "Übersicht"') >= 7
+    assert router.count('["overview", "Übersicht"') >= 8
     assert "howto:" in router
     assert "contracts:" in router
     for endpoint in (

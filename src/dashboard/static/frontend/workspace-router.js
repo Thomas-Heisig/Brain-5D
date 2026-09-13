@@ -45,8 +45,7 @@ const AREAS = Object.freeze({
       ["overview", "Übersicht", "research"], ["observatory", "Observatory", "research", "focus", "#mhrn-scientific-metrics"],
       ["experiments", "Experimente", "research", "research", "experiments"], ["network", "Netzwerk", "network", "view", "visual"],
       ["dynamics", "Dynamik", "network", "view", "dynamics"], ["inspect", "Inspektor", "network", "view", "inspect"],
-      ["data", "Daten", "network", "view", "data"], ["files", "Dateien", "research", "research", "files"],
-      ["registry", "Registry", "research", "research", "registry"],
+      ["data", "Daten", "network", "view", "data"], ["registry", "Registry", "research", "research", "registry"],
     ],
   },
   wesen: {
@@ -98,6 +97,15 @@ const AREAS = Object.freeze({
     howto: ["Offene Review-Items im Inbox-Untertab prüfen.", "AI-Interpretationen nur als Interpretation akzeptieren oder ablehnen.", "Probandenantworten bleiben außerhalb des Research-AI-Kontexts."],
     contracts: ["/api/research/reviews", "/api/research/external-review", "/api/research/ai-reports"],
     routes: [["overview", "Übersicht", "review"], ["inbox", "Review Inbox", "review", "generated", "inbox"], ["ai", "AI Reports", "review", "generated", "ai"], ["external", "External Review", "review", "generated", "external"], ["portal", "Prüferportal", "review", "generated", "portal"], ["method", "Methoden & Ethik", "review", "generated", "method"]],
+  },
+  files: {
+    number: "08", label: "Dateien", subtitle: "File Viewer & Explorer", owner: "research",
+    purpose: "Zentraler Dateibrowser für Research-Artefakte, Dokumente und wissenschaftliche Quellen.",
+    howto: ["Dateibaum durchsuchen oder Suche verwenden.", "Vorschau für Markdown, Code, JSON, CSV, Bilder, Office und PDF.", "Dateien immer im kanonischen File Viewer öffnen."],
+    contracts: ["/api/research/tree", "/api/research/search", "/api/docs/tree"],
+    routes: [
+      ["overview", "Übersicht", "research"], ["browse", "Datei-Explorer", "research", "research", "files"],
+    ],
   },
 });
 let currentArea = "dashboard";
@@ -564,7 +572,7 @@ async function refreshReview() {
     list.innerHTML = items.length ? items.map(reviewItem).join("") : "<p>Keine offenen Review-Items.</p>";
     list.querySelectorAll("[data-review-path]").forEach((button) => button.addEventListener("click", () => {
       document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: button.dataset.reviewPath } }));
-      selectRoute("science", "files");
+      selectRoute("files", "browse");
     }));
   } catch (error) {
     if (byId("review-inbox-list")) byId("review-inbox-list").textContent = `Nicht verfügbar: ${error.message}`;
@@ -583,7 +591,7 @@ function bindGeneratedActions() {
     const file = event.target.closest("[data-review-file]");
     if (file) {
       document.dispatchEvent(new CustomEvent("brain5d:open-file", { detail: { source: "research", path: file.dataset.reviewFile } }));
-      selectRoute("science", "files");
+      selectRoute("files", "browse");
     }
   });
   byId("appsettings-open-chat")?.addEventListener("click", () => {
