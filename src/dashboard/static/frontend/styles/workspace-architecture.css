@@ -23,11 +23,7 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
     display: none !important;
 }
 
-/* Science Transparency panel (Observatory) */
-.mhrn-science-transparency.card { padding: 0; }
-.mhrn-science-transparency > header { padding: 10px 0; }
-.mhrn-science-transparency > header h2 { margin: 3px 0 2px; font-size: .95rem; }
-.mhrn-science-transparency > header p { margin: 0; color: var(--ink-3); font-size: .66rem; }
+/* Science Transparency panel (Observatory) — uses standard .card rules */
 .science-transparency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
 .science-transparency-grid > article { padding: 10px; border: 1px solid var(--rule); border-radius: var(--r-md); background: var(--paper-2); }
 .science-transparency-grid > article h3 { margin: 0 0 6px; font-size: .78rem; color: var(--ink); font-family: var(--font-display); }
