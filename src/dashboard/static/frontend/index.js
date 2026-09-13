@@ -16,6 +16,7 @@ import { initLearningPrep } from "./modules/learning-prep.js";
 import { initStructuralInspector } from "./modules/structural-inspector.js";
 import { initSystemInfo } from "./modules/system-info.js";
 import { initSnapshotHistory } from "./modules/snapshot-history.js";
+import { initReviewLink } from "./modules/review-link.js";
 import { initOverviewSubtabs } from "./modules/overview-subtabs.js";
 import { initResearchSubtabs } from "./modules/research-subtabs.js";
 import { initWorkspaceRouter } from "./workspace-router.js";
@@ -38,6 +39,7 @@ function init() {
   initStructuralInspector();
   initSystemInfo();
   initSnapshotHistory();
+  initReviewLink();
   initOverviewSubtabs();
   initResearchSubtabs();
 }

@@ -36,7 +36,7 @@ function ensurePanel() {
   if (!workspace) return null;
   panel = document.createElement("section");
   panel.id = "mhrn-scientific-metrics";
-  panel.className = "mhrn-scientific-metrics";
+  panel.className = "mhrn-scientific-metrics card";
   panel.innerHTML = `<header class="science-metrics-header"><div><span class="workspace-kicker">SCIENTIFIC INSTRUMENT</span><h2>Dynamics, causality, statistics and falsification</h2><p>Measured values are separated from unavailable analyses. No null is treated as zero.</p></div><div class="science-metrics-actions"><span id="science-metrics-status" class="science-state unknown">UNKNOWN</span><button type="button" data-science-action="refresh">Refresh</button><button type="button" data-science-action="auto">Auto: off</button></div></header>
   <div class="science-metrics-toolbar"><span id="science-metrics-source">source: unknown</span><span id="science-metrics-tick">tick: unknown</span><span id="science-metrics-unknowns">unknown fields: 0</span><button type="button" data-science-action="capture">Capture comparison baseline</button><button type="button" data-science-action="compare">Compare current</button><button type="button" data-science-action="network">Open network drill-down</button><button type="button" data-science-action="runtime">Open runtime manipulator</button></div>
   <div class="science-metrics-grid">
@@ -49,8 +49,7 @@ function ensurePanel() {
   </div>
   <section class="science-evidence-strip"><div><span>UNKNOWN-STATE / PROVENANCE</span><strong id="science-telemetry">Telemetry: UNKNOWN</strong><p id="science-provenance-note">No scientific claim is made for unavailable values.</p></div><div><span>FALSIFICATION NOTE</span><label for="science-falsification-note">What observation would disconfirm the current hypothesis?</label><textarea id="science-falsification-note" rows="2" placeholder="Record a falsifiable prediction or null result."></textarea><button type="button" data-science-action="save-note">Save local annotation</button><small id="science-note-status">Not part of scientific evidence until exported with an experiment.</small></div><pre id="science-comparison" class="science-comparison" hidden></pre></section>`;
   const host = document.getElementById("research-panel-experiments") || workspace;
-  const anchor = host.querySelector(".research-lanes") || host.firstElementChild;
-  anchor?.insertAdjacentElement("beforebegin", panel);
+  host.append(panel);
   upgradePanelToWorkbench(panel);
   panel.addEventListener("click", handleAction);
   const note = panel.querySelector("#science-falsification-note");
