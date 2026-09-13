@@ -502,8 +502,9 @@ function ensureFMViewerDialog() {
 
 export async function openFMFile(path, { recordHistory = true } = {}) {
   const dialog = ensureFMViewerDialog();
-  // Use dialog viewer when dialog is open, fall back to tab viewer
-  const viewer = dialog?.open ? document.getElementById('fm-dialog-viewer') : document.getElementById('fm-viewer');
+  // Always open dialog first, then use dialog viewer
+  dialog.showModal();
+  const viewer = document.getElementById('fm-dialog-viewer');
   if (!viewer) return;
   path = String(path || '').replaceAll('\\', '/');
   const source = fmCurrentSource;
@@ -513,7 +514,6 @@ export async function openFMFile(path, { recordHistory = true } = {}) {
   fmCurrentPath = path;
   fmCurrentFileSource = source;
   document.body.classList.add('fm-viewer-open');
-  dialog.showModal();
   addFMRecent(path, path.split('/').pop() || path, source);
   await renderFile(viewer, { source, path }, {
     onClose: closeFMViewer,
