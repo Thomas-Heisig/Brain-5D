@@ -23,6 +23,17 @@ main{width:min(calc(100% - var(--gutter)*2 - var(--mhrn-sidebar-width)),var(--ma
     display: none !important;
 }
 
+/* Research / Experimente subtab — lanes as tab bar, cards below */
+.research-lanes { display: flex; gap: 4px; margin-bottom: 10px; padding: 4px; border-bottom: 1px solid var(--rule); overflow-x: auto; }
+.research-lanes button { flex: 0 0 auto; min-height: 30px; padding: 0 10px; border: 0; border-radius: 0; background: transparent; color: var(--ink-3); font: 600 .58rem/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.research-lanes button:hover { color: var(--ink); }
+.research-lanes button.active { color: var(--accent-2); box-shadow: inset 0 -2px var(--accent); }
+.research-focus-rail.card { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; padding: 0; overflow: hidden; border: 1px solid var(--rule); background: var(--rule); }
+.research-focus-rail.card > article { padding: 10px; background: var(--paper-2); }
+.research-focus-rail.card > article span { display: block; color: var(--accent); font: 700 .5rem/1 var(--font-mono); letter-spacing: .08em; margin-bottom: 4px; }
+.research-focus-rail.card > article strong { display: block; font-size: .78rem; font-family: var(--font-display); margin-bottom: 3px; }
+.research-focus-rail.card > article small { color: var(--ink-3); font-size: .62rem; }
+
 /* Science Transparency panel (Observatory) — uses standard .card rules */
 .science-transparency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
 .science-transparency-grid > article { padding: 10px; border: 1px solid var(--rule); border-radius: var(--r-md); background: var(--paper-2); }
