@@ -77,6 +77,24 @@ if ($Help) {
     exit 0
 }
 
+# ── Research Chat (Ollama) automatisch aktivieren ─────────────────────────
+# Entspricht der Logik in start.cmd: Wenn ollama auf dem PATH ist und keine
+# BRAIN5D_CHAT_MODEL explizit gesetzt wurde, wird der lokale Chat aktiviert.
+$ollamaOnPath = $null -ne (Get-Command "ollama" -ErrorAction SilentlyContinue)
+if ($ollamaOnPath) {
+    if (-not [string]::IsNullOrWhiteSpace($env:BRAIN5D_CHAT_MODEL)) {
+        Write-Host "  Research Chat: $env:BRAIN5D_CHAT_MODEL (via env)" -ForegroundColor Gray
+    } else {
+        $env:BRAIN5D_CHAT_MODEL = "gemma4:latest"
+        Write-Host "  Research Chat: gemma4:latest (Ollama erkannt)" -ForegroundColor Gray
+    }
+    if ([string]::IsNullOrWhiteSpace($env:BRAIN5D_CHAT_WEB_SEARCH)) {
+        $env:BRAIN5D_CHAT_WEB_SEARCH = "true"
+    }
+} else {
+    Write-Host "  Research Chat: deaktiviert (Ollama nicht gefunden)" -ForegroundColor Gray
+}
+
 # Launcher-Argumente bauen
 $arguments = @(
     (Join-Path $ProjectRoot "scripts" "mhrn_launcher.py"),

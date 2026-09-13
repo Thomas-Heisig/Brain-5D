@@ -57,6 +57,8 @@ export function initResearchChat() {
   const imageInput = document.getElementById('chat-image-input');
   if (!form || !input || !log || !modal || !toggle || !close || !roomList || !newRoom || !childRoom || !archivedToggle || !settingsToggle || !settings || !settingsRefresh || !settingsSave || !promptGenerate || !settingsReset || !copilotLogin || !webSearch || !imageInput || !responseMode) return;
   const state = loadState();
+  // Initialize webSearch from persisted state; default to true if never set
+  if (state.webSearchEnabled === undefined) state.webSearchEnabled = true;
   webSearch.checked = state.webSearchEnabled === true;
 
   function activeRoom() {
@@ -186,15 +188,23 @@ function renderInteractionTrace(metadata) {
   dropZone.addEventListener('drop', (event) => addFiles(event.dataTransfer.files));
   imageInput.addEventListener('change', () => dropZone.classList.toggle('has-files', imageInput.files.length > 0));
   async function loadSettings() {
+    const health = document.getElementById('chat-provider-health');
     try {
-      const response = await fetch('/api/research/chat/settings');
-      const payload = await response.json();
-      const providers = await (await fetch('/api/research/chat/providers')).json();
+      const [settingsResp, providersResp] = await Promise.all([
+        fetch('/api/research/chat/settings'),
+        fetch('/api/research/chat/providers')
+      ]);
+      if (!settingsResp.ok) throw new Error(`Settings HTTP ${settingsResp.status}`);
+      const payload = await settingsResp.json();
+      const providers = providersResp.ok ? await providersResp.json() : { models: [] };
       document.getElementById('chat-setting-provider').value = payload.provider || '';
       const modelSelect = document.getElementById('chat-setting-model');
+      const currentModel = modelSelect.dataset.persistedModel || payload.model || '';
       modelSelect.innerHTML = (providers.models || []).map((model) => `<option value="${escapeChat(model)}">${escapeChat(model)}</option>`).join('');
-      if (payload.model && !(providers.models || []).includes(payload.model)) modelSelect.insertAdjacentHTML('afterbegin', `<option value="${escapeChat(payload.model)}">${escapeChat(payload.model)}</option>`);
-      modelSelect.value = payload.model || '';
+      if (currentModel && !(providers.models || []).includes(currentModel)) {
+        modelSelect.insertAdjacentHTML('afterbegin', `<option value="${escapeChat(currentModel)}">${escapeChat(currentModel)}</option>`);
+      }
+      modelSelect.value = currentModel;
       document.getElementById('chat-setting-endpoint').value = payload.endpoint || '';
       document.getElementById('chat-setting-temperature').value = payload.temperature ?? 0;
       document.getElementById('chat-setting-top-p').value = payload.top_p ?? 0.9;
@@ -204,15 +214,16 @@ function renderInteractionTrace(metadata) {
       document.getElementById('chat-setting-handoff').value = payload.handoff_prompt || '';
       document.getElementById('chat-setting-vision').checked = payload.vision_enabled === true;
       document.getElementById('chat-setting-tools').checked = payload.tools_enabled === true;
-      const health = document.getElementById('chat-provider-health');
       health.className = 'provider-health pending';
-      health.lastChild.textContent = ' checking';
+      health.lastChild.textContent = ' checking…';
       const healthResponse = await fetch('/api/research/chat/health');
-      const healthPayload = await healthResponse.json();
+      const healthPayload = healthResponse.ok ? await healthResponse.json() : { ok: false };
       health.className = `provider-health ${healthPayload.ok ? 'online' : 'offline'}`;
-      health.lastChild.textContent = healthPayload.ok ? ' online' : ' offline';
+      health.lastChild.textContent = healthPayload.ok ? ' ✓ online' : ' ✗ offline';
     } catch (_) {
       document.getElementById('chat-setting-provider').value = 'unavailable';
+      health.className = 'provider-health offline';
+      health.lastChild.textContent = ' ✗ Fehler';
     }
   }
   settingsToggle.addEventListener('click', () => {
@@ -236,14 +247,30 @@ function renderInteractionTrace(metadata) {
   });
   settingsSave.addEventListener('click', async () => {
     const value = (id) => document.getElementById(id).value;
-    const response = await fetch('/api/research/chat/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-      model: value('chat-setting-model'), endpoint: value('chat-setting-endpoint'), temperature: Number(value('chat-setting-temperature')),
-      top_p: Number(value('chat-setting-top-p')), max_tokens: Number(value('chat-setting-max-tokens')), max_context_chars: Number(value('chat-setting-context')),
-      system_prompt: value('chat-setting-prompt'), handoff_prompt: value('chat-setting-handoff'),
-      vision_enabled: document.getElementById('chat-setting-vision').checked, tools_enabled: document.getElementById('chat-setting-tools').checked
-    })});
-    if (!response.ok) window.alert((await response.json()).error || 'Settings konnten nicht gespeichert werden.');
-    else await loadSettings();
+    settingsSave.disabled = true;
+    settingsSave.textContent = 'Speichern …';
+    try {
+      const response = await fetch('/api/research/chat/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
+        model: value('chat-setting-model'), endpoint: value('chat-setting-endpoint'), temperature: Number(value('chat-setting-temperature')),
+        top_p: Number(value('chat-setting-top-p')), max_tokens: Number(value('chat-setting-max-tokens')), max_context_chars: Number(value('chat-setting-context')),
+        system_prompt: value('chat-setting-prompt'), handoff_prompt: value('chat-setting-handoff'),
+        vision_enabled: document.getElementById('chat-setting-vision').checked, tools_enabled: document.getElementById('chat-setting-tools').checked
+      })});
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        window.alert(err.error || 'Settings konnten nicht gespeichert werden.');
+      } else {
+        // Persist selected model across page reloads
+        document.getElementById('chat-setting-model').dataset.persistedModel = value('chat-setting-model');
+        await loadSettings();
+      }
+    } catch (err) {
+      window.alert('Netzwerkfehler: ' + err.message);
+    } finally {
+      settingsSave.disabled = false;
+      settingsSave.textContent = '✓ Gespeichert';
+      setTimeout(() => { settingsSave.textContent = 'Settings speichern'; }, 2000);
+    }
   });
   webSearch.addEventListener('change', () => {
     state.webSearchEnabled = webSearch.checked;
@@ -262,7 +289,7 @@ function renderInteractionTrace(metadata) {
     input.value = '';
     try {
       const images = await Promise.all([...imageInput.files].slice(0, 4).map((file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); })));
-      log.insertAdjacentHTML('beforeend', '<div class="chat-message waiting" id="chat-waiting"><strong>MHRN</strong><p>Antwort wird im lokalen Provider verarbeitet ...</p></div>');
+      log.insertAdjacentHTML('beforeend', '<div class="chat-message waiting" id="chat-waiting"><strong>MHRN</strong><p>Antwort wird im lokalen Provider verarbeitet …</p><span class="chat-waiting-dots"></span></div>');
       const response = await fetch('/api/research/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, images, response_mode: responseMode.value, web_search: webSearch.checked, conversation_context: hierarchyContext(room)}) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
@@ -274,7 +301,7 @@ function renderInteractionTrace(metadata) {
       render();
     } catch (error) {
       document.getElementById('chat-waiting')?.remove();
-      log.insertAdjacentHTML('beforeend', `<div class="chat-message error"><strong>Unavailable</strong><p>${escapeChat(error.message)}</p></div>`);
+      log.insertAdjacentHTML('beforeend', `<div class="chat-message error" role="alert"><strong>Fehler</strong><p>${escapeChat(error.message)}</p></div>`);
     }
     log.scrollTop = log.scrollHeight;
   });

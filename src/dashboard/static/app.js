@@ -2309,8 +2309,57 @@ function setupThemeToggle() {
   const btn = $('theme-toggle');
   if (!btn) return;
   setTheme(getSavedTheme());
-  btn.addEventListener('click', toggleTheme);
+  btn.addEventListener('click', () => { toggleTheme(); syncAppearancePanel(); });
 }
+
+function syncAppearancePanel() {
+  const grid = $('appearance-controls');
+  if (!grid) return;
+  const theme = document.body.dataset.theme || 'dark';
+  const contrast = document.body.classList.contains('contrast-mode');
+  const reader = document.body.classList.contains('reader-mode');
+  const accessibility = document.body.classList.contains('accessibility-mode');
+  grid.innerHTML = `
+    <button type="button" class="appearance-card" data-appearance="theme" data-active="${theme}">
+      <span class="appearance-icon">${theme === 'dark' ? '◐' : '◑'}</span>
+      <span class="appearance-label">Theme</span>
+      <span class="appearance-value">${theme === 'dark' ? 'Dark · Papier' : 'Light · Nachtpapier'}</span>
+    </button>
+    <button type="button" class="appearance-card ${contrast ? 'is-active' : ''}" data-appearance="contrast">
+      <span class="appearance-icon">◩</span>
+      <span class="appearance-label">Kontrast</span>
+      <span class="appearance-value">${contrast ? 'An' : 'Aus'}</span>
+    </button>
+    <button type="button" class="appearance-card ${reader ? 'is-active' : ''}" data-appearance="reader">
+      <span class="appearance-icon">📖</span>
+      <span class="appearance-label">Reader Mode</span>
+      <span class="appearance-value">${reader ? 'An' : 'Aus'}</span>
+    </button>
+    <button type="button" class="appearance-card ${accessibility ? 'is-active' : ''}" data-appearance="accessibility">
+      <span class="appearance-icon">A+</span>
+      <span class="appearance-label">Accessibility</span>
+      <span class="appearance-value">${accessibility ? 'An' : 'Aus'}</span>
+    </button>
+  `;
+  // Event-Listener für die Karten
+  grid.querySelectorAll('[data-appearance]').forEach((card) => {
+    card.addEventListener('click', () => {
+      const action = card.dataset.appearance;
+      if (action === 'theme') { toggleTheme(); }
+      else if (action === 'contrast') { document.querySelector('#contrast-toggle')?.click(); }
+      else if (action === 'reader') { document.querySelector('#reader-toggle')?.click(); }
+      else if (action === 'accessibility') { document.querySelector('#accessibility-toggle')?.click(); }
+      syncAppearancePanel();
+    });
+  });
+}
+
+// Initial sync when settings panel is shown
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-mhrn-area="settings"]') || e.target.closest('[data-area-route="appearance"]')) {
+    setTimeout(syncAppearancePanel, 100);
+  }
+});
 
 function setupAccessibilityToggle() {
   const btn = $('accessibility-toggle');
@@ -2458,7 +2507,11 @@ function init() {
   // Setup header controls
   setupThemeToggle();
   setupAccessibilityToggle();
+  setupReaderToggle();
   setupGlobalChrome();
+
+  // Initial sync of appearance panel (if settings page is visible)
+  setTimeout(syncAppearancePanel, 200);
 
   console.log('✅ Dashboard ready');
 }

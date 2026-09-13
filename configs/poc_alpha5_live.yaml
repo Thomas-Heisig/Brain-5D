@@ -202,3 +202,19 @@ structural:
   structural_mutations: approval_gated
   structural_journal:
     enabled: true
+
+# ── Research Chat — lokale KI-Assistenz (Ollama) ──────────────────────────
+# Wird automatisch aktiviert wenn ollama auf dem System installiert ist.
+# Überschreibbar via BRAIN5D_CHAT_* Umgebungsvariablen.
+research_chat:
+  model: "gemma4:latest"
+  endpoint: "http://127.0.0.1:11434/api/generate"
+  temperature: 0.0
+  top_p: 0.9
+  max_tokens: 2048
+  max_context_chars: 24000
+  web_search_enabled: false
+  system_prompt: ""
+  handoff_prompt: ""
+  vision_enabled: false
+  tools_enabled: false

@@ -99,51 +99,92 @@ function renderReleaseTree(releases, current) {
   if (!container) return;
   container.innerHTML = '';
 
-  const tree = document.createElement('div');
-  tree.className = 'release-tree-list';
-
   const all = [...releases];
-  if (current) {
-    all.push(current);
-  }
+  if (current) all.push(current);
 
-  // Sort by PEP440 version string roughly matching the release order.
+  // Sort by PEP440
   all.sort((a, b) => (a.pep440 || '').localeCompare(b.pep440 || ''));
   const range = $('release-range');
   if (range && all.length) {
     range.textContent = `${all[0].version || '0.1'} bis ${all[all.length - 1].version || 'aktuell'}`;
   }
 
-  for (const rel of all) {
-    const status = rel.status || 'unknown';
-    const isCurrent = status === 'development';
-    const isReleased = status === 'released';
-    const statusClass = isReleased ? 'released' : isCurrent ? 'current' : status;
-    const statusIcon = isReleased ? '✅' : isCurrent ? '🚧' : '❓';
-    const gate = rel.gate || '—';
-    const gateIcon = gate === 'passed' ? '✅' : gate === 'open' ? '🔓' : '—';
+  container.innerHTML = `
+    <div class="release-cards">
+      ${all.map((rel) => {
+        const status = rel.status || 'unknown';
+        const isCurrent = status === 'development';
+        const isReleased = status === 'released';
+        const statusClass = isReleased ? 'released' : isCurrent ? 'current' : status;
+        const gate = rel.gate || '—';
+        const gateLabel = gate === 'passed' ? 'Bestanden' : gate === 'open' ? 'Offen' : gate === 'failed' ? 'Fehlgeschlagen' : '—';
+        const gateClass = gate === 'passed' ? 'pass' : gate === 'failed' ? 'fail' : 'pending';
+        const baseline = rel.baseline;
+        const hasTests = baseline && (baseline.passed > 0 || baseline.failed > 0 || baseline.skipped > 0);
+        const features = Array.isArray(rel.features) ? rel.features : [];
+        const changes = Array.isArray(rel.changelog) ? rel.changelog : [];
+        const items = features.length ? features : changes;
+        const extraId = `rel-extra-${String(rel.version || '').replace(/\./g, '-')}`;
+        const visible = items.slice(0, 4);
+        const extra = items.slice(4);
 
-    const row = document.createElement('div');
-    row.className = `release-tree-node release-${statusClass}`;
-    row.innerHTML = `
-      <div class="release-node-header">
-        <span class="release-node-icon">${statusIcon}</span>
-        <span class="release-node-version">${rel.version || 'unknown'}</span>
-        <span class="release-node-status release-status-${statusClass}">${status}</span>
-        ${isReleased ? `<span class="release-node-gate" title="gate: ${gate}">${gateIcon}</span>` : ''}
-      </div>
-      <div class="release-node-body">
-        <strong>${rel.title || ''}</strong>
-        ${rel.subtitle ? `<p>${rel.subtitle}</p>` : ''}
-        ${isReleased && rel.baseline ? `<p>Tests: ${rel.baseline.passed} / ${rel.baseline.failed} / ${rel.baseline.skipped}</p>` : ''}
-        ${isReleased && rel.tag ? `<p class="release-node-meta">tag: ${rel.tag} · commit: ${(rel.commit || '').slice(0, 9)} · ${rel.date || ''}</p>` : ''}
-        ${isCurrent && rel.note ? `<p class="release-node-note">${rel.note}</p>` : ''}
-      </div>
-    `;
-    tree.appendChild(row);
-  }
+        return `
+          <article class="release-card release-${statusClass}">
+            <div class="release-card-top">
+              <span class="release-version-badge release-version-${statusClass}">${escapeHtml(rel.version || 'unknown')}</span>
+              <span class="release-status-pill release-pill-${statusClass}">${isReleased ? 'Veröffentlicht' : isCurrent ? 'In Entwicklung' : status}</span>
+              ${isReleased ? `<span class="release-gate-pill release-gate-${gateClass}">Gate: ${gateLabel}</span>` : ''}
+              <span class="release-date">${escapeHtml(rel.date || rel.as_of || '—')}</span>
+            </div>
+            <h3 class="release-card-title">${escapeHtml(rel.title || '')}</h3>
+            ${rel.subtitle ? `<p class="release-card-sub">${escapeHtml(rel.subtitle)}</p>` : ''}
+            <div class="release-card-meta">
+              ${rel.tag ? `<span><b>Tag</b> ${escapeHtml(rel.tag)}</span>` : ''}
+              ${rel.commit ? `<span><b>Commit</b> <code>${escapeHtml(rel.commit).slice(0, 12)}</code></span>` : ''}
+              ${rel.pep440 ? `<span><b>PEP 440</b> ${escapeHtml(rel.pep440)}</span>` : ''}
+            </div>
+            ${hasTests ? `
+              <div class="release-test-bar">
+                <span class="release-test-pass" style="flex:${baseline.passed}">${baseline.passed} passed</span>
+                <span class="release-test-fail" style="flex:${baseline.failed}">${baseline.failed} failed</span>
+                <span class="release-test-skip" style="flex:${baseline.skipped}">${baseline.skipped} skipped</span>
+              </div>
+            ` : ''}
+            ${items.length ? `
+              <div class="release-items">
+                <ul class="release-item-list">
+                  ${visible.map((item) => `<li>${escapeHtml(typeof item === 'string' ? item : item.text || item.title || '')}</li>`).join('')}
+                </ul>
+                ${extra.length ? `
+                  <div class="release-items-extra" id="${extraId}">
+                    <ul class="release-item-list">
+                      ${extra.map((item) => `<li>${escapeHtml(typeof item === 'string' ? item : item.text || item.title || '')}</li>`).join('')}
+                    </ul>
+                  </div>
+                  <button type="button" class="release-more-btn" data-rel-extra="${extraId}" aria-expanded="false">+${extra.length} weitere Einträge</button>
+                ` : ''}
+              </div>
+            ` : ''}
+            ${isCurrent && rel.note ? `<div class="release-card-note">${escapeHtml(rel.note)}</div>` : ''}
+          </article>
+        `;
+      }).join('')}
+    </div>
+  `;
 
-  container.appendChild(tree);
+  // "Mehr" Toggle
+  container.querySelectorAll('[data-rel-extra]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.relExtra);
+      if (!target) return;
+      const isOpen = target.classList.toggle('is-open');
+      btn.classList.toggle('is-open', isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+      const count = target.querySelectorAll('li').length;
+      btn.textContent = isOpen ? 'Weniger anzeigen' : `+${count} weitere Einträge`;
+    });
+  });
+
   renderCurrentReleasePreview(current);
 }
 
@@ -151,7 +192,7 @@ function renderCurrentReleasePreview(current) {
   const container = $('release-preview');
   if (!container) return;
   if (!current) {
-    container.innerHTML = '<p class="release-timeline-empty">Keine aktuelle Release-Vorschau verfügbar.</p>';
+    container.innerHTML = '<p class="release-empty">Keine aktuelle Release-Vorschau verfügbar.</p>';
     return;
   }
   const scope = Array.isArray(current.scope) ? current.scope : [];
@@ -160,23 +201,103 @@ function renderCurrentReleasePreview(current) {
   const releaseBlockers = Number.isFinite(Number(current.release_blockers))
     ? Number(current.release_blockers)
     : null;
+  const gate = current.gate || 'open';
+  const gateClass = gate === 'passed' ? 'pass' : gate === 'failed' ? 'fail' : 'pending';
+  const gateLabel = gate === 'passed' ? 'Bestanden' : gate === 'failed' ? 'Fehlgeschlagen' : 'Offen';
+
+  // Aufklappbare Items
+  const renderItems = (items, extraId) => {
+    if (!items.length) return '';
+    const visible = items.slice(0, 5);
+    const extra = items.slice(5);
+    return `
+      <ul class="preview-item-list">
+        ${visible.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+      </ul>
+      ${extra.length ? `
+        <div class="preview-items-extra" id="${extraId}">
+          <ul class="preview-item-list">
+            ${extra.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
+          </ul>
+        </div>
+        <button type="button" class="preview-more-btn" data-preview-extra="${extraId}" aria-expanded="false">+${extra.length} weitere</button>
+      ` : ''}
+    `;
+  };
+
   container.innerHTML = `
-    <div class="release-preview-header">
-      <div><span class="release-node-version">${escapeHtml(current.version || 'unknown')}</span><span class="release-node-status release-status-current">${escapeHtml(current.status || 'development')}</span></div>
-      <span class="release-preview-gate">Gate: ${escapeHtml(current.gate || 'open')}</span>
+    <div class="release-preview-card">
+      <div class="preview-head">
+        <div class="preview-head-left">
+          <span class="preview-version-badge">${escapeHtml(current.version || 'unknown')}</span>
+          <span class="preview-status-pill">${escapeHtml(current.status || 'development')}</span>
+        </div>
+        <div class="preview-head-right">
+          <span class="preview-gate-badge preview-gate-${gateClass}">Gate: ${gateLabel}</span>
+          <span class="preview-date">${escapeHtml(current.as_of || '—')}</span>
+        </div>
+      </div>
+
+      <h3 class="preview-title">${escapeHtml(current.title || 'Current release')}</h3>
+
+      <div class="preview-stats">
+        <div class="preview-stat">
+          <span>Meilenstein</span>
+          <strong>${escapeHtml(current.milestone_status || 'development')}</strong>
+        </div>
+        <div class="preview-stat">
+          <span>Release-Blocker</span>
+          <strong>${releaseBlockers === null ? '—' : releaseBlockers}</strong>
+        </div>
+        <div class="preview-stat">
+          <span>Abgeschlossen</span>
+          <strong>${completed.length}</strong>
+        </div>
+        <div class="preview-stat">
+          <span>Offen</span>
+          <strong>${open.length}</strong>
+        </div>
+      </div>
+
+      ${current.note || current.subtitle ? `<p class="preview-note">${escapeHtml(current.note || current.subtitle)}</p>` : ''}
+
+      <div class="preview-sections">
+        ${completed.length ? `
+          <section class="preview-section">
+            <header><span>✓</span><h4>Abgeschlossen</h4><small>${completed.length}</small></header>
+            ${renderItems(completed, 'preview-completed-extra')}
+          </section>
+        ` : ''}
+        ${open.length ? `
+          <section class="preview-section">
+            <header><span>○</span><h4>Offen</h4><small>${open.length}</small></header>
+            ${renderItems(open, 'preview-open-extra')}
+          </section>
+        ` : ''}
+        ${scope.length ? `
+          <section class="preview-section preview-section-scope">
+            <header><span>◈</span><h4>Meilenstein-Scope</h4><small>${scope.length}</small></header>
+            ${renderItems(scope, 'preview-scope-extra')}
+          </section>
+        ` : ''}
+      </div>
+
+      ${current.research_boundary ? `<div class="preview-boundary"><strong>Wissenschaftliche Grenze:</strong> ${escapeHtml(current.research_boundary)}</div>` : ''}
     </div>
-    <h3>${escapeHtml(current.title || 'Current release')}</h3>
-    <div class="release-preview-facts">
-      <span><strong>Stand</strong>${escapeHtml(current.as_of || '—')}</span>
-      <span><strong>Milestone</strong>${escapeHtml(current.milestone_status || 'development')}</span>
-      <span><strong>Release-Blocker</strong>${releaseBlockers === null ? '—' : releaseBlockers}</span>
-    </div>
-    <p class="release-preview-note">${escapeHtml(current.note || current.subtitle || '')}</p>
-    ${completed.length ? `<section class="release-preview-section"><h4>Abgeschlossen</h4><ul>${completed.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
-    ${open.length ? `<section class="release-preview-section"><h4>Offen</h4><ul>${open.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
-    ${scope.length ? `<details class="release-preview-scope"><summary>Meilenstein-Scope</summary><ul>${scope.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>` : ''}
-    ${current.research_boundary ? `<p class="release-preview-boundary"><strong>Wissenschaftliche Grenze:</strong> ${escapeHtml(current.research_boundary)}</p>` : ''}
   `;
+
+  // "Mehr" Toggle
+  container.querySelectorAll('[data-preview-extra]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.previewExtra);
+      if (!target) return;
+      const isOpen = target.classList.toggle('is-open');
+      btn.classList.toggle('is-open', isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+      const count = target.querySelectorAll('li').length;
+      btn.textContent = isOpen ? 'Weniger' : `+${count} weitere`;
+    });
+  });
 }
 
 async function loadReleaseTree() {
