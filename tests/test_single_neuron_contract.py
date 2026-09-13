@@ -32,9 +32,9 @@ def test_isolated_reference_disables_secondary_dynamics() -> None:
 
 def test_izhikevich_golden_trajectory() -> None:
     fixture = json.loads(
-        (ROOT / "research/generated/verification/single_neuron_reference.json").read_text(
-            encoding="utf-8"
-        )
+        (
+            ROOT / "research/generated/verification/single_neuron_reference.json"
+        ).read_text(encoding="utf-8")
     )
     n = create_neuron(1, config=NeuronConfig.isolated_reference())
     for reference in fixture["trajectory"]:
@@ -78,9 +78,7 @@ def test_spike_reset_matches_izhikevich_contract() -> None:
 
 
 def test_optional_absolute_refractory_extension_is_explicit() -> None:
-    n = create_neuron(
-        1, config=NeuronConfig.isolated_reference(refractory_ticks=2)
-    )
+    n = create_neuron(1, config=NeuronConfig.isolated_reference(refractory_ticks=2))
     assert n.step(100.0, 0)
     assert not n.step(100.0, 1)
     assert not n.step(100.0, 2)
@@ -108,9 +106,7 @@ def test_declared_izhikevich_type_defaults(
 
 
 def test_lif_is_a_real_alternative_model() -> None:
-    config = NeuronConfig.isolated_reference(
-        model=NeuronModel.LEAKY_INTEGRATE_AND_FIRE
-    )
+    config = NeuronConfig.isolated_reference(model=NeuronModel.LEAKY_INTEGRATE_AND_FIRE)
     n = create_neuron(1, config=config)
     spikes = [n.step(20.0, tick) for tick in range(28)]
     assert spikes[:27] == [False] * 27
@@ -134,9 +130,7 @@ def test_live_model_change_requires_explicit_switch() -> None:
     n.step(0.0, 0)
     with pytest.raises(ValueError, match="switch_model"):
         n.set_config(
-            NeuronConfig.isolated_reference(
-                model=NeuronModel.LEAKY_INTEGRATE_AND_FIRE
-            )
+            NeuronConfig.isolated_reference(model=NeuronModel.LEAKY_INTEGRATE_AND_FIRE)
         )
     n.switch_model(NeuronModel.LEAKY_INTEGRATE_AND_FIRE, tick=1)
     assert n.model_switch_count == 1

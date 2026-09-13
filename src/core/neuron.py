@@ -11,7 +11,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field, fields, replace
 from enum import Enum, auto
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 from .neuron_models import (
     NeuronModel,
@@ -151,13 +151,18 @@ class Neuron:
     _last_update_tick: int = 0
     _refractory_until_tick: int = -1
     _has_stepped: bool = False
-    _dirty_callback: Callable[[], None] | None = field(default=None, repr=False, init=False)
+    _dirty_callback: Callable[[], None] | None = field(
+        default=None, repr=False, init=False
+    )
 
     def __post_init__(self) -> None:
         self.model = coerce_neuron_model(self.model)
         if self._config is None:
             self._config = NeuronConfig(model=self.model)
-        if self.model is NeuronModel.IZHIKEVICH and self.neuron_type is not NeuronType.REGULAR_SPIKING:
+        if (
+            self.model is NeuronModel.IZHIKEVICH
+            and self.neuron_type is not NeuronType.REGULAR_SPIKING
+        ):
             params = self.neuron_type.default_params
             if self.a == 0.02 and self.b == 0.2 and self.c == -65.0 and self.d == 8.0:
                 self.a, self.b, self.c, self.d = params
@@ -205,7 +210,11 @@ class Neuron:
             izhikevich_threshold=self.config.izhikevich_threshold,
             lif_threshold=self.config.lif_threshold,
         )
-        return base + self.threshold_adaptation if self.config.enable_threshold_adaptation else base
+        return (
+            base + self.threshold_adaptation
+            if self.config.enable_threshold_adaptation
+            else base
+        )
 
     def switch_model(
         self,
@@ -217,7 +226,9 @@ class Neuron:
     ) -> None:
         target = coerce_neuron_model(model)
         if tick < self._last_update_tick:
-            raise ValueError("model switch tick cannot precede the current neuron state")
+            raise ValueError(
+                "model switch tick cannot precede the current neuron state"
+            )
         next_config = config or replace(self.config, model=target)
         if coerce_neuron_model(next_config.model) is not target:
             raise ValueError("switch_model config.model must match target model")
@@ -229,7 +240,11 @@ class Neuron:
         self.last_model_switch_tick = tick
         self._refractory_until_tick = -1
         if reset_state:
-            self.v = next_config.lif_resting_potential if target is NeuronModel.LEAKY_INTEGRATE_AND_FIRE else next_config.initial_v
+            self.v = (
+                next_config.lif_resting_potential
+                if target is NeuronModel.LEAKY_INTEGRATE_AND_FIRE
+                else next_config.initial_v
+            )
             self.u = next_config.initial_u
             self.threshold_adaptation = 0.0
             self.firing_rate_estimate = 0.0
@@ -247,17 +262,25 @@ class Neuron:
             ext = 0.0 if external_current is None else float(external_current)
             syn = 0.0 if synaptic_current is None else float(synaptic_current)
             if not math.isclose(ext + syn, input_current, rel_tol=1e-12, abs_tol=1e-12):
-                raise ValueError("external_current + synaptic_current must equal input_current")
+                raise ValueError(
+                    "external_current + synaptic_current must equal input_current"
+                )
             self.last_external_current = ext
             self.last_synaptic_current = syn
             return
         observed_total = self.last_external_current + self.last_synaptic_current
-        if not math.isclose(observed_total, input_current, rel_tol=1e-12, abs_tol=1e-12):
+        if not math.isclose(
+            observed_total, input_current, rel_tol=1e-12, abs_tol=1e-12
+        ):
             self.last_external_current = float(input_current)
             self.last_synaptic_current = 0.0
 
     def _reset_potential(self) -> float:
-        return self.config.lif_reset if self.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE else self.c
+        return (
+            self.config.lif_reset
+            if self.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE
+            else self.c
+        )
 
     def _finish_tick(self, tick: int) -> None:
         if self.config.enable_traces:
@@ -343,7 +366,9 @@ class Neuron:
     def _update_firing_rate(self, dt: int) -> None:
         alpha = 1.0 / (10.0 + dt)
         rate = self._spike_count_window / max(1, dt)
-        self.firing_rate_estimate = (1.0 - alpha) * self.firing_rate_estimate + alpha * rate
+        self.firing_rate_estimate = (
+            1.0 - alpha
+        ) * self.firing_rate_estimate + alpha * rate
         if dt > 100:
             self._spike_count_window = 0
 
@@ -374,7 +399,11 @@ class Neuron:
 
     def reset_state(self, reset_v: bool = True) -> None:
         if reset_v:
-            self.v = self.config.lif_resting_potential if self.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE else self.config.initial_v
+            self.v = (
+                self.config.lif_resting_potential
+                if self.model is NeuronModel.LEAKY_INTEGRATE_AND_FIRE
+                else self.config.initial_v
+            )
             self.u = self.config.initial_u
         self.threshold_adaptation = 0.0
         self.energy = self.config.resting_energy
@@ -429,7 +458,7 @@ class Neuron:
         neuron_type = NeuronType[data.get("neuron_type", "REGULAR_SPIKING")]
         config_data = data.get("config")
         if isinstance(config_data, dict):
-            config = NeuronConfig.from_dict(config_data)
+            config = NeuronConfig.from_dict(cast(dict[str, Any], config_data))
         else:
             config = NeuronConfig(
                 model=data.get("model", NeuronModel.IZHIKEVICH.value),
@@ -468,7 +497,11 @@ class Neuron:
         neuron._spike_count_window = int(data.get("spike_count_window", 0))
         neuron._last_update_tick = int(data.get("last_update_tick", 0))
         neuron._refractory_until_tick = int(data.get("refractory_until_tick", -1))
-        neuron._has_stepped = bool(data.get("has_stepped", neuron.spike_counter > 0 or neuron._last_update_tick != 0))
+        neuron._has_stepped = bool(
+            data.get(
+                "has_stepped", neuron.spike_counter > 0 or neuron._last_update_tick != 0
+            )
+        )
         return neuron
 
     def __str__(self) -> str:
