@@ -21,11 +21,25 @@ function node(tag, text = '', className = '') {
   return element;
 }
 
-function button(label, action) {
-  const control = node('button', label, 'file-renderer-action');
+const ICONS = {
+  'Original herunterladen': '⬇', 'Zurueck': '←', 'Schliessen': '✕', 'Im Chat anzeigen': '💬',
+  'Bearbeiten': '✏', 'Umbenennen': '✎', 'In Papierkorb': '🗑', 'Text kopieren': '📋',
+  'Speichern': '💾', 'Abbrechen': '✕', 'Erneut laden': '↻',
+  'Datei vorlesen': '▶', 'Pause': '⏸', 'Stopp': '⏹',
+  'History': '🕐', 'Analyse': '📊', 'Notizen': '📝', 'KI-Analyse': '🤖', 'Export': '📤',
+};
+
+function iconButton(label, action, { icon } = {}) {
+  const control = node('button', icon || ICONS[label] || '•', 'file-renderer-action file-renderer-icon-btn');
   control.type = 'button';
+  control.title = label;
+  control.setAttribute('aria-label', label);
   control.addEventListener('click', action);
   return control;
+}
+
+function button(label, action) {
+  return iconButton(label, action);
 }
 
 function canonicalFilePath(value) {

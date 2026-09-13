@@ -95,6 +95,12 @@
 .fm-tree-list { padding-left: 0; margin: 0; list-style: none; }
 .fm-tree-list .fm-tree-list { padding-left: 16px; }
 
+/* File viewer: icon buttons */
+.file-renderer-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.file-renderer-icon-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; border: 1px solid transparent; border-radius: var(--r-xs); background: transparent; color: var(--ink-3); cursor: pointer; font-size: .8rem; display: grid; place-items: center; }
+.file-renderer-icon-btn:hover { background: var(--paper-3); border-color: var(--rule); color: var(--ink); }
+.file-renderer-icon-btn[title="Schliessen"] { margin-left: auto; }
+
 /* File viewer: error text colour */
 .fm-error-text { color: var(--crimson); }
 

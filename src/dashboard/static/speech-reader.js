@@ -110,9 +110,9 @@ export function createSpeechControls(mount, getText, { label = "Text vorlesen", 
   controls.className = "speech-reader-controls";
   controls.setAttribute("role", "group");
   controls.setAttribute("aria-label", label);
-  controls.innerHTML = `${includeStart ? `<button type="button" class="speech-reader-start" title="${label}">Vorlesen</button>` : ""}
-    <button type="button" class="speech-reader-pause" title="Vorlesen pausieren" disabled>Pause</button>
-    <button type="button" class="speech-reader-stop" title="Vorlesen anhalten" disabled>Stopp</button>
+  controls.innerHTML = `${includeStart ? `<button type="button" class="speech-reader-start" title="${label}">▶</button>` : ""}
+    <button type="button" class="speech-reader-pause" title="Vorlesen pausieren" disabled>⏸</button>
+    <button type="button" class="speech-reader-stop" title="Vorlesen anhalten" disabled>⏹</button>
     <span class="speech-reader-status" role="status" aria-live="polite"></span>`;
   mount.append(controls);
   const start = controls.querySelector(".speech-reader-start");
