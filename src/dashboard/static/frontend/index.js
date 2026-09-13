@@ -21,6 +21,7 @@ import { initSnapshotHistory } from "./modules/snapshot-history.js";
 import { initReviewLink } from "./modules/review-link.js";
 import { initOverviewSubtabs } from "./modules/overview-subtabs.js";
 import { initResearchSubtabs } from "./modules/research-subtabs.js";
+import { initNeuronModelScience } from "./modules/neuron-model-science.js";
 import { initWorkspaceRouter } from "./workspace-router.js";
 
 function init() {
@@ -46,6 +47,7 @@ function init() {
   initReviewLink();
   initOverviewSubtabs();
   initResearchSubtabs();
+  initNeuronModelScience();
 }
 
 if (document.readyState === "loading") {

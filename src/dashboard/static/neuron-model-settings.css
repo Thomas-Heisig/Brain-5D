@@ -1,6 +1,6 @@
 /* Dedicated Stage-0 neuron model editor.
- * Loaded by parameter-inspector.js so the existing settings page does not
- * need a second source of truth for mutation workflows.
+ * Shared by the legacy parameter inspector and the scientific Cell Model
+ * workbench so both surfaces render the same model/provenance contract.
  */
 
 .neuron-model-settings {
@@ -193,6 +193,10 @@
   background: var(--paper-3);
 }
 
+.neuron-model-actions--science {
+  grid-template-columns: minmax(220px, 1fr) repeat(4, auto);
+}
+
 .neuron-model-status {
   color: var(--ink-3);
   font: 600 .61rem/1.45 var(--font-mono);
@@ -210,6 +214,16 @@
   color: var(--moss);
 }
 
+@media (max-width: 1120px) {
+  .neuron-model-actions--science {
+    grid-template-columns: minmax(0, 1fr) repeat(2, auto);
+  }
+
+  .neuron-model-actions--science .neuron-model-status {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 980px) {
   .neuron-model-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -219,7 +233,8 @@
 @media (max-width: 720px) {
   .neuron-model-selector-row,
   .neuron-model-fields,
-  .neuron-model-actions {
+  .neuron-model-actions,
+  .neuron-model-actions--science {
     grid-template-columns: 1fr;
   }
 
@@ -227,7 +242,8 @@
     justify-content: flex-start;
   }
 
-  .neuron-model-actions > button {
+  .neuron-model-actions > button,
+  .neuron-model-actions--science > button {
     width: 100%;
   }
 }
