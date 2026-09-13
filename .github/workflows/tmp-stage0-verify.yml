@@ -24,7 +24,7 @@ jobs:
           sed -i 's/_validate_synapse_config/_validate_energy_config/g' scripts/tmp_stage0_integrate.py
           python scripts/tmp_stage0_integrate.py
       - name: Install tools
-        run: python -m pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev]" python-docx
       - name: Format
         run: |
           python -m ruff check --fix src/core/neuron.py src/core/neuron_models.py src/core/network.py src/config/loader.py src/dashboard/development_timeline.py tests/test_single_neuron_contract.py
