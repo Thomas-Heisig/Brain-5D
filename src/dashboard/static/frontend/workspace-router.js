@@ -103,7 +103,7 @@ const AREAS = Object.freeze({
     number: "08", label: "Dateien", subtitle: "File Viewer & Explorer", owner: "research",
     purpose: "Zentraler Dateibrowser für Research-Artefakte, Dokumente und wissenschaftliche Quellen.",
     howto: ["Dateibaum durchsuchen oder Suche verwenden.", "Vorschau für Markdown, Code, JSON, CSV, Bilder, Office und PDF.", "Dateien immer im kanonischen File Viewer öffnen."],
-    contracts: ["/api/research/tree", "/api/research/search", "/api/docs/tree"],
+    contracts: ["/api/files/statistics", "/api/docs/tree"],
     routes: [
       ["overview", "Übersicht", "research"], ["browse", "Datei-Explorer", "research", "research", "files"],
     ],

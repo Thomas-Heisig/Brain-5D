@@ -11,6 +11,7 @@ function ensurePanel() {
   panel = document.createElement("section");
   panel.id = "mhrn-structural-inspector";
   panel.className = "mhrn-structural-inspector card";
+  panel.hidden = true;
   panel.innerHTML = `
     <header>
       <div>
@@ -80,7 +81,7 @@ function renderConfig(data) {
 
 async function refresh() {
   const panel = ensurePanel();
-  if (!panel || panel.hidden) return;
+  if (!panel || panel.hidden || panel.closest('.tab-content')?.hidden) return;
   const [heatmap, history, config] = await Promise.allSettled([
     apiGet("/api/structural/heatmap"),
     apiGet("/api/structural/history"),
