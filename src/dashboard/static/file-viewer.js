@@ -491,7 +491,7 @@ function ensureFMViewerDialog() {
   dialog = document.createElement('dialog');
   dialog.id = 'fm-viewer-dialog';
   dialog.className = 'fm-viewer-dialog';
-  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-viewer" class="fm-viewer-content"></div></div>';
+  dialog.innerHTML = '<div class="fm-viewer-dialog-frame"><div class="fm-viewer-dialog-main"><header><h2>Datei-Vorschau</h2><button type="button" id="fm-dialog-back" class="icon-btn" title="Zurück" aria-label="Zurück">←</button><button type="button" id="fm-dialog-close" class="icon-btn" title="Schließen" aria-label="Schließen">×</button></header><div id="fm-viewer" class="fm-viewer-content"></div></div></div>';
   document.body.appendChild(dialog);
   dialog.querySelector('#fm-dialog-close').addEventListener('click', () => closeFMViewer());
   dialog.querySelector('#fm-dialog-back').addEventListener('click', () => goBackFMViewer());
@@ -742,24 +742,156 @@ async function loadFMMeta(path, source, container) {
   }
 }
 
-function closeFMViewer() {
-  const viewer = document.getElementById('fm-viewer');
-  if (!viewer) return;
-  viewer.classList.add('fm-viewer-hidden');
-  viewer.classList.remove('fm-viewer-modal');
-  document.body.classList.remove('fm-viewer-open');
-  fmViewerHistory = [];
-  fmCurrentPath = '';
-  fmCurrentFileSource = '';
+// ── Unknown-State Icons ────────────────────────────────────────
+// Four distinct states: measured empty, not present, not loaded (lazy), stale
+function unknownStateIcon(state) {
+  switch (state) {
+    case 'empty': return '<span class="fm-state-empty" title="Vorhanden, aber kein Inhalt">◇</span>';
+    case 'absent': return '<span class="fm-state-absent" title="Nicht vorhanden / fehlt">○</span>';
+    case 'stale': return '<span class="fm-state-stale" title="Veraltet – nicht mehr aktuell">◌</span>';
+    default: return '<span class="fm-state-loading" title="Nicht geladen (Lazy)">…</span>';
+  }
 }
 
-document.addEventListener('click', event => {
-  if (event.target.closest?.('#fm-close-viewer')) closeFMViewer();
-});
+// ── DATA/EVID visual separation ────────────────────────────────
+function sourceBadge(source) {
+  if (source === 'research') return '<span class="fm-source-badge fm-source-data">DATA</span>';
+  if (source === 'docs') return '<span class="fm-source-badge fm-source-docs">DOCS</span>';
+  return '';
+}
 
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && document.body.classList.contains('fm-viewer-open')) closeFMViewer();
-});
+// ── Provenance Side-Panel ──────────────────────────────────────
+function ensureProvenancePanel() {
+  let panel = document.getElementById('fm-provenance-panel');
+  if (panel) return panel;
+  panel = document.createElement('aside');
+  panel.id = 'fm-provenance-panel';
+  panel.className = 'fm-provenance-panel is-hidden';
+  panel.innerHTML = '<header><span class="workspace-kicker">PROVENIENZ</span><h3>Artefakt-Metadaten</h3><button type="button" class="icon-btn" id="fm-provenance-close" title="Schließen">×</button></header><div id="fm-provenance-body"></div>';
+  document.getElementById('fm-viewer-dialog')?.querySelector('.fm-viewer-dialog-frame')?.append(panel);
+  panel.querySelector('#fm-provenance-close')?.addEventListener('click', () => panel.classList.add('is-hidden'));
+  return panel;
+}
+
+async function loadProvenance(path, source) {
+  const panel = ensureProvenancePanel();
+  const body = document.getElementById('fm-provenance-body');
+  if (!body) return;
+  panel.classList.remove('is-hidden');
+  body.innerHTML = '<div class="fm-meta-loading">Lade Provenienz …</div>';
+  try {
+    const res = await fetch(`/api/files/provenance/${encodeURIComponent(path)}?source=${encodeURIComponent(source)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    body.innerHTML = `<dl class="fm-prov-dl">
+      <dt>Pfad</dt><dd><code>${escapeHtml(data.path || path)}</code><button class="fm-copy-btn" data-copy="${escapeHtml(data.path || path)}" title="Pfad kopieren">📋</button></dd>
+      <dt>Größe</dt><dd>${formatBytes(data.size_bytes)}</dd>
+      <dt>Geändert</dt><dd>${escapeHtml(data.mtime || '—')}</dd>
+      <dt>Erstellt</dt><dd>${escapeHtml(data.ctime || '—')}</dd>
+      <dt>Hash (SHA256)</dt><dd><code>${escapeHtml((data.hash || '').slice(0, 16))}…</code><button class="fm-copy-btn" data-copy="${escapeHtml(data.hash || '')}" title="Hash kopieren">📋</button></dd>
+      <dt>Experiment-ID</dt><dd>${data.experiment_id ? `<code>${escapeHtml(data.experiment_id)}</code><button class="fm-copy-btn" data-copy="${escapeHtml(data.experiment_id)}" title="ID kopieren">📋</button>` : '<span class="fm-state-absent">—</span>'}</dd>
+      <dt>Git-Commit</dt><dd><code>${escapeHtml((data.git_commit || '').slice(0, 12))}…</code></dd>
+      <dt>Source</dt><dd>${sourceBadge(source)}</dd>
+      <dt>Status</dt><dd>${data.available === false ? unknownStateIcon('absent') + ' nicht verfügbar' : data.size_bytes === 0 ? unknownStateIcon('empty') + ' leer' : unknownStateIcon('loaded') + ' verfügbar'}</dd>
+    </dl>`;
+    body.querySelectorAll('.fm-copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(btn.dataset.copy); btn.textContent = '✓'; setTimeout(() => btn.textContent = '📋', 1500); }
+        catch { btn.textContent = '✗'; }
+      });
+    });
+  } catch (e) {
+    body.innerHTML = `<span class="fm-error-text">⚠️ ${escapeHtml(e.message)}</span>`;
+  }
+}
+
+// ── Keyboard navigation & multi-select ─────────────────────────
+let fmSelectedIndices = new Set();
+let fmLastSelectedIndex = -1;
+
+function setupFMKeyboardNav() {
+  document.addEventListener('keydown', (event) => {
+    const tree = document.getElementById('fm-tree');
+    if (!tree || !tree.isConnected) return;
+    const items = [...tree.querySelectorAll('.fm-tree-file, .fm-tree-dir')];
+    if (!items.length) return;
+    const target = event.target;
+    if (!tree.contains(target) && target.tagName !== 'BODY') return;
+
+    // Only handle if no input is focused
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+
+    let focused = items.indexOf(document.querySelector('.fm-tree-focused'));
+    if (focused === -1) focused = 0;
+
+    switch (event.key) {
+      case 'j': case 'ArrowDown':
+        event.preventDefault();
+        focused = Math.min(focused + 1, items.length - 1);
+        break;
+      case 'k': case 'ArrowUp':
+        event.preventDefault();
+        focused = Math.max(focused - 1, 0);
+        break;
+      case 'Enter': case ' ':
+        event.preventDefault();
+        const item = items[focused];
+        if (item.classList.contains('fm-tree-file')) {
+          const path = item.dataset.path || item.querySelector('[data-path]')?.dataset.path || '';
+          if (path) openFMFile(path);
+        } else if (item.classList.contains('fm-tree-dir')) {
+          item.click();
+        }
+        return;
+      case '/':
+        if (event.key === '/') {
+          event.preventDefault();
+          const searchInput = document.getElementById('fm-search');
+          if (searchInput) searchInput.focus();
+        }
+        return;
+      default: return;
+    }
+
+    items.forEach(el => el.classList.remove('fm-tree-focused'));
+    items[focused].classList.add('fm-tree-focused');
+    items[focused].scrollIntoView({ block: 'nearest' });
+  });
+}
+
+// ── Expose provenance on file click ────────────────────────────
+function patchFMOpenWithProvenance() {
+  const origOpen = openFMFile;
+  const patchedOpen = async (path, opts) => {
+    const result = await origOpen(path, opts);
+    loadProvenance(path, fmCurrentSource);
+    return result;
+  };
+  window.__fmOpenPatched = true;
+  // We override the export by patching the module's reference
+  // Since we can't easily do that, we add a click listener on the tree
+  document.addEventListener('click', (event) => {
+    const fileEl = event.target.closest('.fm-tree-file');
+    if (fileEl) {
+      const path = fileEl.dataset.path || '';
+      if (path) setTimeout(() => loadProvenance(path, fmCurrentSource), 100);
+    }
+  });
+}
+
+// ── Init extensions ────────────────────────────────────────────
+function initFMAdvanced() {
+  setupFMKeyboardNav();
+  patchFMOpenWithProvenance();
+}
+
+// Patch initFileManager to include advanced features
+const origInit = initFileManager;
+initFileManager = function() {
+  if (!origInit()) return false;
+  initFMAdvanced();
+  return true;
+};
 
 function initResearchBrowser() { initFileManager(); }
 function initDocumentationBrowser() { initFileManager(); }

@@ -20,14 +20,42 @@
 /* Clickable cursor for elements that were previously styled inline */
 .is-clickable { cursor: pointer; }
 
+/* File tree: unknown states */
+.fm-state-empty { color: var(--amber); opacity: .7; }
+.fm-state-absent { color: var(--ink-4); opacity: .5; }
+.fm-state-stale { color: var(--crimson); opacity: .7; }
+.fm-state-loading { color: var(--ink-4); }
+
+/* File tree: DATA/EVID source badges */
+.fm-source-badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font: 700 .48rem/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.fm-source-data { background: var(--moss-wash); color: var(--moss); }
+.fm-source-docs { background: var(--indigo-wash); color: var(--indigo); }
+
+/* Provenance side panel */
+.fm-provenance-panel { width: 320px; border-left: 1px solid var(--rule); background: var(--paper-2); overflow-y: auto; flex-shrink: 0; }
+.fm-provenance-panel > header { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--rule); }
+.fm-provenance-panel > header h3 { margin: 0; font-size: .78rem; flex: 1; }
+.fm-provenance-panel > header .icon-btn { width: 24px; height: 24px; min-height: 24px; padding: 0; border: 0; background: transparent; color: var(--ink-3); cursor: pointer; }
+.fm-provenance-panel > header .icon-btn:hover { color: var(--ink); }
+.fm-prov-dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; padding: 8px 10px; font-size: .66rem; }
+.fm-prov-dl dt { color: var(--ink-4); font-weight: 600; white-space: nowrap; }
+.fm-prov-dl dd { margin: 0; color: var(--ink-2); display: flex; align-items: center; gap: 4px; overflow: hidden; }
+.fm-prov-dl dd code { font-size: .6rem; overflow: hidden; text-overflow: ellipsis; }
+.fm-copy-btn { background: none; border: none; cursor: pointer; padding: 0 2px; font-size: .7rem; color: var(--ink-3); flex-shrink: 0; }
+.fm-copy-btn:hover { color: var(--accent); }
+
+/* File tree: keyboard focus */
+.fm-tree-focused { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-xs); }
+
 /* File viewer: global dialog */
 .fm-viewer-dialog { width: min(90vw, 1100px); height: min(85vh, 800px); padding: 0; border: 1px solid var(--rule-3); border-radius: var(--r-lg); background: var(--paper); color: var(--ink); box-shadow: var(--shadow-float); overflow: hidden; }
 .fm-viewer-dialog::backdrop { background: color-mix(in srgb, var(--ink) 46%, transparent); backdrop-filter: blur(3px); }
-.fm-viewer-dialog-frame { display: flex; flex-direction: column; height: 100%; }
-.fm-viewer-dialog-frame > header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--rule); background: var(--paper-3); }
-.fm-viewer-dialog-frame > header h2 { margin: 0; font-size: .9rem; flex: 1; }
-.fm-viewer-dialog-frame > header .icon-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: var(--r-xs); background: transparent; color: var(--ink-3); cursor: pointer; font-size: .9rem; }
-.fm-viewer-dialog-frame > header .icon-btn:hover { background: var(--paper-4); color: var(--ink); }
+.fm-viewer-dialog-frame { display: flex; flex-direction: row; height: 100%; }
+.fm-viewer-dialog-frame > .fm-viewer-dialog-main { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.fm-viewer-dialog-main > header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--rule); background: var(--paper-3); }
+.fm-viewer-dialog-main > header h2 { margin: 0; font-size: .9rem; flex: 1; }
+.fm-viewer-dialog-main > header .icon-btn { width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: var(--r-xs); background: transparent; color: var(--ink-3); cursor: pointer; font-size: .9rem; }
+.fm-viewer-dialog-main > header .icon-btn:hover { background: var(--paper-4); color: var(--ink); }
 .fm-viewer-content { flex: 1; overflow: auto; padding: 12px; }
 
 /* File tree: full-row click areas, no toggle arrow */
