@@ -1,0 +1,30 @@
+name: Temporary Neuron Formatter
+
+on:
+  push:
+    branches:
+      - feature/single-neuron-model-contract
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install Black
+        run: python -m pip install black==26.5.1
+      - name: Format neuron files
+        run: python -m black src/core/neuron.py src/core/neuron_models.py tests/test_single_neuron_contract.py
+      - name: Upload formatted files
+        uses: actions/upload-artifact@v6
+        with:
+          name: formatted-neuron-files
+          path: |
+            src/core/neuron.py
+            src/core/neuron_models.py
+            tests/test_single_neuron_contract.py
