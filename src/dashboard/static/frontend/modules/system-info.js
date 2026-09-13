@@ -33,10 +33,6 @@ function ensurePanel() {
         <h3>Aktuelles Release</h3>
         <div id="system-release-detail" class="system-info-detail">lade …</div>
       </div>
-      <div class="system-info-section">
-        <h3>Snapshots</h3>
-        <div id="system-snapshots-detail" class="system-info-detail">lade …</div>
-      </div>
     </div>`;
   sysInfoPanel.append(panel);
   return panel;
@@ -111,24 +107,13 @@ function renderRelease(data) {
     </div>`;
 }
 
-function renderSnapshots(data) {
-  const el = document.getElementById("system-snapshots-detail");
-  if (!el) return;
-  const snapshots = Array.isArray(data) ? data : (data?.snapshots || []);
-  if (!snapshots.length) { el.textContent = "Keine Snapshots."; return; }
-  el.innerHTML = `<table class="snapshots-table"><thead><tr><th>ID</th><th>Tick</th><th>Erstellt</th><th>Größe</th></tr></thead><tbody>
-    ${snapshots.slice(0, 10).map(s => `<tr><td>${escapeHtml(s.id || s.snapshot_id || "—")}</td><td>${s.tick ?? "—"}</td><td>${escapeHtml(s.created_at || s.date || "—")}</td><td>${escapeHtml(s.size || "—")}</td></tr>`).join("")}
-  </tbody></table>`;
-}
-
 async function refresh() {
   const panel = ensurePanel();
   if (!panel) return;
-  const [config, state, release, snapshots] = await Promise.allSettled([
+  const [config, state, release] = await Promise.allSettled([
     apiGet("/api/config"),
     apiGet("/api/state"),
     apiGet("/api/releases/current"),
-    apiGet("/api/snapshots"),
   ]);
   if (config.status === "fulfilled") renderConfig(config.value);
   else document.getElementById("system-config-detail").textContent = `Fehler: ${config.reason.message}`;
@@ -136,8 +121,6 @@ async function refresh() {
   else document.getElementById("system-state-detail").textContent = `Fehler: ${state.reason.message}`;
   if (release.status === "fulfilled") renderRelease(release.value);
   else document.getElementById("system-release-detail").textContent = `Fehler: ${release.reason.message}`;
-  if (snapshots.status === "fulfilled") renderSnapshots(snapshots.value);
-  else document.getElementById("system-snapshots-detail").textContent = `Fehler: ${snapshots.reason.message}`;
 }
 
 function escapeHtml(s) {
